@@ -16,5 +16,6 @@ yarn.lock
 *.sublime-project
 *.sublime-workspace
 
+coverage
 .cache
 .nyc_output

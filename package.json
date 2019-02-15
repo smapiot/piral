@@ -5,11 +5,17 @@
     "packages/*"
   ],
   "scripts": {
+    "bootstrap": "lerna bootstrap --hoist",
+    "test": "jest",
     "publish": "lerna run build && lerna publish"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.5",
+    "jest": "^24.1.0",
+    "jest-cli": "^24.1.0",
     "lerna": "^3.10.7",
     "prettier": "^1.16.4",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",

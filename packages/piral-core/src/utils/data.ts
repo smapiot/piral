@@ -1,36 +1,41 @@
-import { DataStoreOptions, CustomDataStoreOptions, Dict, SharedDataItem } from '../types';
+import { DataStoreOptions, CustomDataStoreOptions, Dict, SharedDataItem, DataStoreTarget } from '../types';
 
-export function createDataView(data: Dict<SharedDataItem>) {
+const defaultTarget: DataStoreTarget = 'memory';
+
+export function createDataView(data: Dict<SharedDataItem>): Readonly<Dict<any>> {
   const proxyName = 'Proxy';
-  return window[proxyName]
-    ? new Proxy(data, {
-        get(target, name) {
-          const item = target[name as string];
-          return item && item.value;
-        },
-        set(_target, _name, _value) {
-          return true;
-        },
-      })
-    : data;
+  return (
+    window[proxyName] &&
+    new Proxy(data, {
+      get(target, name) {
+        const item = target[name as string];
+        return item && item.value;
+      },
+      set(_target, _name, _value) {
+        return true;
+      },
+    })
+  );
 }
 
-export function createDataOptions(options: DataStoreOptions = 'memory'): CustomDataStoreOptions {
+export function createDataOptions(options: DataStoreOptions = defaultTarget): CustomDataStoreOptions {
   if (typeof options === 'string') {
     return {
       target: options,
     };
-  } else if (typeof options === 'object') {
+  } else if (options && typeof options === 'object' && !Array.isArray(options)) {
     return options;
   } else {
-    return {};
+    return {
+      target: defaultTarget,
+    };
   }
 }
 
 export function getDataExpiration(expires?: number | Date | 'never') {
   if (typeof expires === 'number') {
     return expires;
-  } else if (typeof expires === 'object') {
+  } else if (expires instanceof Date) {
     return expires.valueOf();
   }
 
