@@ -1,5 +1,6 @@
 {
   "name": "piral-sample",
+  "private": true,
   "version": "0.1.0",
   "description": "Example project illustrating the use of the piral-core and piral-cli packages.",
   "keywords": [
