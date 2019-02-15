@@ -1,0 +1,44 @@
+{
+  "name": "piral-core",
+  "version": "0.1.0",
+  "description": "The core library for a Piral instance.",
+  "keywords": [
+    "portal",
+    "smapiot",
+    "modules",
+    "spa",
+    "base",
+    "functional"
+  ],
+  "author": "smapiot",
+  "homepage": "https://smapiot.com",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/history": "^4.7.2",
+    "@types/react": "^16.8.1",
+    "@types/react-router": "^4.4.3",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "dependencies": {
+    "@dbeining/react-atom": "^4.0.0",
+    "react-arbiter": "^0.4.0"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "extends": [
+    "tslint-config-prettier"
+  ],
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ],
+  "rules": {
+    "prettier": true,
+    "prefer-for-of": true,
+    "curly": [
+      true,
+      "ignore-same-line"
+    ],
+    "no-duplicate-variable": true,
+    "no-null-keyword": true,
+    "no-string-literal": true,
+    "no-var-keyword": true,
+    "radix": true,
+    "triple-equals": [
+      true,
+      "allow-undefined-check"
+    ],
+    "array-type": [
+      true,
+      "generic"
+    ],
+    "arrow-return-shorthand": true,
+    "no-consecutive-blank-lines": true,
+    "one-variable-per-declaration": [
+      true,
+      "ignore-for-loop"
+    ],
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case",
+      "allow-leading-underscore"
+    ],
+    "no-eval": true,
+    "prefer-const": true,
+    "import-blacklist": [true, "styled-components"]
+  }
+}
