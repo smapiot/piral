@@ -1,6 +1,6 @@
 [![Piral Logo](docs/logo.png)](https://piral.io)
 
-# [Piral](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![Lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/) [![Build Status](https://travis-ci.org/smapiot/piral.svg?branch=master)](https://travis-ci.org/smapiot/piral) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
+# [Piral](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![Lerna](https://img.shields.io/badge/monorepo-lerna-cc00ff.svg)](https://lernajs.io/) [![Build Status](https://travis-ci.org/smapiot/piral.svg?branch=master)](https://travis-ci.org/smapiot/piral) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
 
 Easily build a next generation portal application. Piral enables you to create a modular frontend application that is extended at runtime with decoupled modules called *pilets*.
 
@@ -52,11 +52,12 @@ For development you need to have the following software installed:
 
 - Node.js with NPM (for instructions see [Node.js website](https://nodejs.org/en/))
 - Lerna, see [official website](https://lernajs.io)
+- Yarn, see [official website](https://yarnpkg.com/lang/en/)
 
-On the command line install Lerna:
+On the command line install Lerna and Yarn:
 
 ```sh
-npm install --global lerna
+npm install --global lerna yarn
 ```
 
 Once you cloned the repository make sure to bootstrap it (installs all dependencies and more).
