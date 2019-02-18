@@ -5,7 +5,8 @@
     "packages/*"
   ],
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist",
+    "bootstrap": "lerna clean && lerna bootstrap --hoist",
+    "init": "npm run bootstrap && lerna run build && npm run bootstrap",
     "test": "jest",
     "publish": "lerna run build && lerna publish"
   },

@@ -15,7 +15,7 @@ export const storage: PortalStorage = {
 };
 
 export const cookie: PortalStorage = {
-  setItem(name: string, data: string, expires: string = '') {
+  setItem(name: string, data: string, expires = '') {
     const domain = location.hostname;
     const domainPart = domain ? `domain=.${domain};` : '';
     document.cookie = `${name}=${encodeURIComponent(data)};expires="${expires}";path=/;${domainPart}`;
@@ -24,6 +24,6 @@ export const cookie: PortalStorage = {
     return document.cookie.replace(crx, (_m: any, p1: string, p2: string) => (name === p1 ? p2 : ''));
   },
   removeItem(name: string) {
-    this.setItem(name, '', -1);
+    this.setItem(name, '', '-1');
   },
 };
