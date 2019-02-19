@@ -1,3 +1,4 @@
+import { useGlobalState } from '../hooks';
 import { LocalizationMessages } from '../types';
 
 function getMissingKeyString(key: string, language: string): string {
@@ -16,24 +17,29 @@ function translateMessage<T>(language: string, messages: LocalizationMessages, k
   return translation && (variables ? formatMessage(translation, variables) : translation);
 }
 
-export function localize<T>(messages: LocalizationMessages, key: string, variables?: T) {
-  const language = this.language;
+function localizeBase<T>(language: string, key: string, variables?: T) {
+  const messages = useGlobalState(m => m.app.language.translations);
   const message = translateMessage(language, messages, key, variables);
-
-  if (message === undefined) {
-    return localizeBase(key, variables);
-  }
-
-  return message;
-}
-
-export function localizeBase<T>(key: string, variables?: T) {
-  const language = this.language;
-  const message = translateMessage(language, this.messages, key, variables);
 
   if (message === undefined) {
     return getMissingKeyString(key, language);
   }
 
   return message;
+}
+
+export function localizeLocal<T>(messages: LocalizationMessages, key: string, variables?: T) {
+  const language = useGlobalState(m => m.app.language.selected);
+  const message = translateMessage(language, messages, key, variables);
+
+  if (message === undefined) {
+    return localizeBase(language, key, variables);
+  }
+
+  return message;
+}
+
+export function localizeGlobal<T>(key: string, variables?: T) {
+  const language = useGlobalState(m => m.app.language.selected);
+  return localizeBase(language, key, variables);
 }

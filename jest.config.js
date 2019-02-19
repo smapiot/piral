@@ -4,8 +4,8 @@ module.exports = {
     'packages/',
   ],
   transform: {
-    '^.+\\.(ts|tsx?)$': 'ts-jest',
-    '^.+\\.js?$': 'babel-jest',
+    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.jsx?$': 'babel-jest',
   },
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],

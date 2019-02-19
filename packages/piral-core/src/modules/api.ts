@@ -1,5 +1,5 @@
 import { ArbiterModuleMetadata, wrapElement } from 'react-arbiter';
-import { localize } from './localize';
+import { localizeLocal } from './localize';
 import { withFeed, withApi } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
@@ -72,7 +72,7 @@ export function createApi<TApi>(target: ArbiterModuleMetadata, { events, context
         translations = messages;
       },
       translate(tag, variables) {
-        return localize(translations, tag, variables);
+        return localizeLocal(translations, tag, variables);
       },
       trackEvent(name, properties = {}, measurements = {}) {
         events.emit('track', {

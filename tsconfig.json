@@ -4,6 +4,7 @@
     "declaration": true,
     "noImplicitAny": false,
     "removeComments": false,
+    "jsx": "react",
     "noLib": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
