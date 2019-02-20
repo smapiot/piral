@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "bootstrap": "lerna clean --yes && lerna bootstrap --hoist",
+    "bootstrap": "lerna clean --yes && lerna bootstrap",
     "setup": "yarn bootstrap && yarn build && yarn bootstrap",
     "build": "lerna run build",
     "test": "jest",
