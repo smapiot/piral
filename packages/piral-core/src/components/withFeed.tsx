@@ -4,8 +4,8 @@ import { useGlobalState, useAction } from '../hooks';
 import { ConnectorDetails } from '../types';
 
 export function withFeed<TData, TItem, TProps>(
-  options: ConnectorDetails<TData, TItem>,
   Component: React.ComponentType<TProps & { data: TData }>,
+  options: ConnectorDetails<TData, TItem>,
 ) {
   const FeedView: React.SFC<TProps> = ({ ...props }) => {
     const { loaded, loading, error, data } = useGlobalState(s => s.feeds[options.id]);

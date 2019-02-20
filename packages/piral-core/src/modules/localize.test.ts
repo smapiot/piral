@@ -1,25 +1,25 @@
-jest.doMock('../hooks', () => ({
-  useGlobalState(select: any) {
-    return select({
-      app: {
-        language: {
-          selected: 'en',
-          translations: {
-            en: {
-              hi: 'hello',
-              greeting: 'Hi {{name}}, welcome back',
-            },
-            de: {
-              hi: 'hallo',
-            },
+import * as hooks from '../hooks';
+import { localizeLocal, localizeGlobal } from './localize';
+
+jest.mock('../hooks');
+
+(hooks as any).useGlobalState = (select: any) =>
+  select({
+    app: {
+      language: {
+        selected: 'en',
+        translations: {
+          en: {
+            hi: 'hello',
+            greeting: 'Hi {{name}}, welcome back',
+          },
+          de: {
+            hi: 'hallo',
           },
         },
       },
-    });
-  },
-}));
-
-const { localizeLocal, localizeGlobal } = require('./localize');
+    },
+  });
 
 describe('Localize Module', () => {
   it('localizeLocal translates from the local translations if available', () => {

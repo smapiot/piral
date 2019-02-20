@@ -24,7 +24,10 @@ function buildName(prefix: string, name: string | number) {
   return `${prefix}://${name}`;
 }
 
-export function createApi<TApi>(target: ArbiterModuleMetadata, { events, context, extendApi }: PortalContainer<TApi>) {
+export function createApi<TApi>(
+  target: ArbiterModuleMetadata,
+  { events, context, extendApi }: PortalContainer<TApi>,
+): PortalApi<TApi> {
   let translations: LocalizationMessages = {};
   let feeds = 0;
   const prefix = target.name;
@@ -66,7 +69,7 @@ export function createApi<TApi>(target: ArbiterModuleMetadata, { events, context
           context.loadFeed(options);
         }
 
-        return component => withFeed(options, component);
+        return component => withFeed(component, options);
       },
       provideTranslations(messages) {
         translations = messages;

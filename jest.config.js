@@ -1,5 +1,8 @@
 module.exports = {
   collectCoverage: true,
+  setupFiles: [
+    './test/setup.ts',
+  ],
   roots: [
     'packages/',
   ],
