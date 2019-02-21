@@ -133,4 +133,14 @@ describe('Helpers Module', () => {
     const result = withoutKey(undefined, 'a');
     expect(result).toEqual({});
   });
+
+  it('withoutKey works without a valid key', () => {
+    const result = withoutKey({}, undefined as any);
+    expect(result).toEqual({});
+  });
+
+  it('withoutKey works with a number', () => {
+    const result = withoutKey({ 0: 'hello' }, 0 as any);
+    expect(result).toEqual({});
+  });
 });

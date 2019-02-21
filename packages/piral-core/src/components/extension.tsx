@@ -7,7 +7,7 @@ function defaultRender(items: Array<React.ReactNode>) {
 }
 
 export function getExtensionSlot(name: string) {
-  const ExtensionSlotView: React.SFC<ExtensionSlotProps> = ({ render = defaultRender, empty, params }) => {
+  const ExtensionSlotView: React.SFC<ExtensionSlotProps> = ({ render = defaultRender, empty, params = {} }) => {
     const extensions = useGlobalState(s => s.components.extensions[name] || []);
 
     return render(

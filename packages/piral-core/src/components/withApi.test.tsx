@@ -3,6 +3,8 @@ import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { withApi } from './withApi';
 
+jest.mock('../hooks');
+
 (hooks as any).useGlobalState = (select: any) =>
   select({
     app: {

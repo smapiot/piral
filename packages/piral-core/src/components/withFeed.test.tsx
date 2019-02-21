@@ -3,6 +3,8 @@ import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { withFeed } from './withFeed';
 
+jest.mock('../hooks');
+
 (React as any).useEffect = jest.fn(fn => fn());
 
 (hooks as any).useGlobalState = (select: any) =>

@@ -11,6 +11,8 @@ const mountWithRouter = (node, url = '/') =>
     </MemoryRouter>,
   );
 
+jest.mock('../hooks');
+
 (hooks as any).useGlobalState = (select: any) =>
   select({
     app: {

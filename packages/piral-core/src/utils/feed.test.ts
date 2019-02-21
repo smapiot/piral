@@ -6,12 +6,14 @@ describe('Feed Module', () => {
     const result = createFeedOptions('foo', resolver);
     result.initialize();
     result.update(undefined, undefined);
-    result.connect(undefined);
     expect(result.immediately).toBeFalsy();
     expect(result.id).toBe('foo');
     expect(result.initialize).not.toBeUndefined();
     expect(result.update).not.toBeUndefined();
     expect(result.connect).not.toBeUndefined();
+    const cleanup = result.connect(undefined);
+    expect(cleanup).not.toBeUndefined();
+    cleanup();
     expect(resolver).toHaveBeenCalled();
   });
 
