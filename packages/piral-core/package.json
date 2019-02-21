@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The core library for a Piral instance.",
   "keywords": [
     "portal",
