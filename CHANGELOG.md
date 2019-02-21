@@ -1,10 +1,7 @@
-## [Unreleased]
-<details>
-  <summary>
-    Changes that have landed in master but are not yet released.
-    Click to see more.
-  </summary>
-</details>
+## 0.1.0 (February 21, 2019)
+
+* Initial pre-alpha release of piral-core
+* Unfinished rudimentary piral-cli
 
 ## 0.0.1 (February 15, 2019)
 
