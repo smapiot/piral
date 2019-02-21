@@ -9,7 +9,8 @@
     "setup": "yarn bootstrap && yarn build && yarn bootstrap",
     "build": "lerna run build",
     "test": "jest",
-    "publish": "yarn build && lerna publish"
+    "prepublish": "yarn build",
+    "release": "lerna publish"
   },
   "devDependencies": {
     "@types/enzyme": "^3.1.18",

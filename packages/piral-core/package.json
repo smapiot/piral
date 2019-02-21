@@ -40,6 +40,5 @@
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
     "react-arbiter": "^0.4.0"
-  },
-  "gitHead": "586b62ddcbfb4222d2a6f5b7334ef0b02f1b9f44"
+  }
 }
