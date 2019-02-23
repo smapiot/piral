@@ -4,11 +4,12 @@
   "description": "The standard CLI for creating and building a Piral instance or a Pilet.",
   "keywords": [
     "portal",
+    "modules",
     "base",
     "functional"
   ],
   "author": "smapiot",
-  "homepage": "https://smapiot.com",
+  "homepage": "https://piral.io",
   "license": "MIT",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -19,6 +20,13 @@
   "files": [
     "lib"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
   "bin": {
     "pb": "./lib/pb-cli.js",
     "piral": "./lib/piral-cli.js",
@@ -30,12 +38,16 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/express": "^4.16.1",
+    "@types/get-port": "^4.0.1",
     "@types/node": "^10.12.21",
     "@types/parcel-bundler": "^1.10.1",
     "@types/yargs": "^12.0.8"
   },
   "dependencies": {
     "chalk": "^2.4.2",
+    "get-port": "^4.1.0",
+    "kras": "0.8.1",
     "parcel-bundler": "^1.11.0",
     "yargs": "^13.1.0"
   }

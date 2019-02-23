@@ -1,14 +1,13 @@
 {
-  "name": "piral-core",
+  "name": "piral",
   "version": "0.1.1",
-  "description": "The core library for creating a Piral instance.",
+  "description": "The all-in-one piral package.",
   "keywords": [
-    "portal",
     "smapiot",
+    "piral",
     "modules",
-    "spa",
-    "base",
-    "functional"
+    "portal",
+    "spa"
   ],
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -29,15 +28,13 @@
   "bugs": {
     "url": "https://github.com/smapiot/piral/issues"
   },
-  "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: run tests from root\" && exit 1"
-  },
   "devDependencies": {
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
     "@types/react-router": "^4.4.3",
+    "@dbeining/react-atom": "^4.0.0",
     "react": "^16.8.1",
+    "react-arbiter": "^0.4.0",
     "react-dom": "^16.8.1"
   },
   "peerDependencies": {
@@ -45,7 +42,11 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@dbeining/react-atom": "^4.0.0",
-    "react-arbiter": "^0.4.0"
+    "piral-core": "^0.1.1",
+    "piral-ext": "^0.1.1"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
   }
 }

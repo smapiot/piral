@@ -6,9 +6,9 @@ Piral CLI is a command-line tool that can also be used as a library. It should m
 
 Internally, Piral CLI is build upon existing tools with connection points to their respective eco-systems. For instance, the build / debug commands use [Parcel](https://parceljs.org) and can be configured / extended just like a normal Parcel build job could be. This way the whole Parcel ecosystem including possibilities for you to roll out your own plugins is possible.
 
-## Available Commands
+## Documentation
 
-(tbd)
+For details on the available commands check out the [documentation at Piral](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs/commands).
 
 ## License
 

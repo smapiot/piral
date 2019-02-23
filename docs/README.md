@@ -6,8 +6,7 @@ Piral is a React library that tries to help you building a modular single page a
 
 Piral is open-source software. We try to make everything as transparent and contribution friendly as possible. This includes the documentation. If you think something is missing or described poorly then let us know (or even better: file directly a pull request with the desired changes).
 
-## Overview
+## Available Content
 
-We call the modules pilets. A pilet is a small module that lives inside a piral instance.
-
-(tbd)
+- [Piral - Introduction](./introduction.md)
+- [Piral CLI - Commands](./commands/README.md)

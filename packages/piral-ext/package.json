@@ -1,14 +1,15 @@
 {
-  "name": "piral-core",
+  "name": "piral-ext",
   "version": "0.1.1",
-  "description": "The core library for creating a Piral instance.",
+  "description": "Useful API extensions and component definitions for extending piral-core.",
   "keywords": [
-    "portal",
+    "piral",
     "smapiot",
+    "portal",
     "modules",
-    "spa",
-    "base",
-    "functional"
+    "api",
+    "extension",
+    "spa"
   ],
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -32,20 +33,5 @@
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
-  },
-  "devDependencies": {
-    "@types/history": "^4.7.2",
-    "@types/react": "^16.8.1",
-    "@types/react-router": "^4.4.3",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
-  },
-  "dependencies": {
-    "@dbeining/react-atom": "^4.0.0",
-    "react-arbiter": "^0.4.0"
   }
 }

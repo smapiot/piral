@@ -4,6 +4,10 @@
 
 This is the core library that is required for any Piral instance. Plugins and pre-made layouts or templates build upon this layer. While `piral-core` is certainly opinionated the library tries to keep most options as flexible as possible.
 
+## Documentation
+
+For details on the various commands check out the [documentation at Piral](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
