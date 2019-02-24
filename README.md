@@ -1,4 +1,4 @@
-[![Piral Logo](docs/logo.png)](https://piral.io)
+[![Piral Logo](docs/assets/logo.png)](https://piral.io)
 
 # [Piral](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![Lerna](https://img.shields.io/badge/monorepo-lerna-cc00ff.svg)](https://lernajs.io/) [![Build Status](https://smapiot.visualstudio.com/piral/_apis/build/status/piral-CI)](https://smapiot.visualstudio.com/piral/_build/latest?definitionId=10) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
 
@@ -30,7 +30,7 @@ const App = createInstance({
 
 **Remark**: For all available API options make sure to check out the [documentation](https://docs.piral.io).
 
-**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed or your own API / mechanism to serve the modules.
+**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [feed.piral.io](https://feed.piral.io)) or your own API / mechanism to serve the modules.
 
 Finally, you can render this Piral instance by using the `render` function from `react-dom`:
 

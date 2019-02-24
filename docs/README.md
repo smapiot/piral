@@ -9,4 +9,6 @@ Piral is open-source software. We try to make everything as transparent and cont
 ## Available Content
 
 - [Piral - Introduction](./introduction.md)
+- [Piral - Architecture](./architecture.md)
+- [Piral - Specifications](./spcs/README.md)
 - [Piral CLI - Commands](./commands/README.md)
