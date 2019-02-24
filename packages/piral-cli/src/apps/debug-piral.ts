@@ -9,8 +9,13 @@ export interface DebugPiralOptions {
   port?: number;
 }
 
+export const debugPiralDefaults = {
+  entry: './src/index.html',
+  port: 1234,
+};
+
 export function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions = {}) {
-  const { entry = './src/index.html', port = 1234 } = options;
+  const { entry = debugPiralDefaults.entry, port = debugPiralDefaults.port } = options;
   const entryFiles = join(baseDir, entry);
   const krasConfig = readKrasConfig({ port }, krasrc);
 

@@ -22,9 +22,14 @@ export const allCommands: Array<ToolCommand<any>> = [
     arguments: ['[source]'],
     flags(argv) {
       return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source index.html file for collecting all the information.',
+          default: apps.buildPiralDefaults.entry,
+        })
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
-        .default('port', 1234);
+        .default('port', apps.debugPiralDefaults.port);
     },
     run(args) {
       return apps.debugPiral(args.baseDir, {
@@ -40,9 +45,14 @@ export const allCommands: Array<ToolCommand<any>> = [
     arguments: ['[source]'],
     flags(argv) {
       return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source index.html file for collecting all the information.',
+          default: apps.buildPiralDefaults.entry,
+        })
         .string('target')
         .describe('target', 'Sets the target file of bundling.')
-        .default('target', './dist/index.html');
+        .default('target', apps.buildPiralDefaults.target);
     },
     run(args) {
       return apps.buildPiral(args.baseDir, {
@@ -68,9 +78,29 @@ export const allCommands: Array<ToolCommand<any>> = [
   {
     name: 'new-pilet',
     alias: ['create-pilet', 'new', 'create'],
-    description: '',
-    arguments: [],
-    run(args) {},
+    description: 'Scaffolds a new pilet for a specified Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source package containing a Piral instance for templating the scaffold process.',
+          default: apps.newPiletDefaults.source,
+        })
+        .string('target')
+        .describe('target', 'Sets the target directory for scaffolding. By default, the current directory.')
+        .default('target', apps.newPiletDefaults.target)
+        .string('registry')
+        .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
+        .default('registry', apps.newPiletDefaults.registry);
+    },
+    run(args) {
+      return apps.newPilet(args.baseDir, {
+        target: args.target as string,
+        source: args.source as string,
+        registry: args.registry as string,
+      });
+    },
   },
 ];
 

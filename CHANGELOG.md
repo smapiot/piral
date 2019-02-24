@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.1.2 (unreleased)
+## 0.1.2 (February 25, 2019)
 
 * Finished CI pipeline for packages
 
