@@ -1,7 +1,7 @@
 import * as Bundler from 'parcel-bundler';
 import chalk from 'chalk';
 import { join } from 'path';
-import { extendConfig, startServer, liveIcon, getFreePort } from './common';
+import { extendConfig, startServer, liveIcon, getFreePort, settingsIcon } from './common';
 import { buildKrasWithCli, readKrasConfig, krasrc } from 'kras';
 
 export interface DebugPiralOptions {
@@ -22,6 +22,10 @@ export function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions =
     krasConfig.map = {};
   }
 
+  if (krasConfig.api === undefined) {
+    krasConfig.api = '/manage-mock-server';
+  }
+
   (async function() {
     const buildServerPort = await getFreePort(64834);
     const bundler = new Bundler(entryFiles, extendConfig({}));
@@ -31,6 +35,7 @@ export function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions =
     krasServer.on('open', svc => {
       const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
       console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
+      console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
       startServer(buildServerPort, (bundler as any).middleware());
     });
     krasServer.start();
