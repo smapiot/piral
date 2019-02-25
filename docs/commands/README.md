@@ -4,11 +4,16 @@ The Piral CLI is a command line tool that helps to simplify everyday tasks for m
 
 ## Piral Related Commands
 
-(tbd)
+These commands have all a `-piral` suffix when called from the generic `pb` tool. They are also available on the `piral` tool (here without the suffix, i.e., `pb build-piral` is equivalent to `piral build`).
+
+- [build-piral](./build-piral.md)
+- [debug-piral](./debug-piral.md)
 
 ## Pilet Related Commands
 
-(tbd)
+These commands have all a `-pilet` suffix when called from the generic `pb` tool. They are also available on the `pilet` tool (here without the suffix, i.e., `pb new-pilet` is equivalent to `pilet new`).
+
+- [new-pilet](./new-pilet.md)
 
 ## Other Commands
 

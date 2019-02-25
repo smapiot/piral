@@ -1,9 +1,7 @@
 import { Argv, Arguments } from 'yargs';
 import { apps } from './index';
 
-export interface ParsedArgs {
-  baseDir: string;
-}
+export interface ParsedArgs {}
 
 export interface ToolCommand<T> {
   name: string;
@@ -29,10 +27,13 @@ export const allCommands: Array<ToolCommand<any>> = [
         })
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
-        .default('port', apps.debugPiralDefaults.port);
+        .default('port', apps.debugPiralDefaults.port)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
-      return apps.debugPiral(args.baseDir, {
+      return apps.debugPiral(args.base as string, {
         entry: args.source as string,
         port: args.port as number,
       });
@@ -52,10 +53,13 @@ export const allCommands: Array<ToolCommand<any>> = [
         })
         .string('target')
         .describe('target', 'Sets the target file of bundling.')
-        .default('target', apps.buildPiralDefaults.target);
+        .default('target', apps.buildPiralDefaults.target)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
-      return apps.buildPiral(args.baseDir, {
+      return apps.buildPiral(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
       });
@@ -92,10 +96,13 @@ export const allCommands: Array<ToolCommand<any>> = [
         .default('target', apps.newPiletDefaults.target)
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
-        .default('registry', apps.newPiletDefaults.registry);
+        .default('registry', apps.newPiletDefaults.registry)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
-      return apps.newPilet(args.baseDir, {
+      return apps.newPilet(args.base as string, {
         target: args.target as string,
         source: args.source as string,
         registry: args.registry as string,
