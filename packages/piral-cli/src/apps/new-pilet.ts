@@ -77,6 +77,7 @@ export function setup(app: ${apiName}) {
     const packageFiles = await getPackage(source, registry);
 
     for (const file of packageFiles) {
+      //TODO
     }
 
     updateExistingJson(root, 'package.json', {
