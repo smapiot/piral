@@ -14,9 +14,9 @@ debug-piral [source]
 
 ## Aliases
 
-- watch-piral
-- debug-portal
-- watch-portal
+- `watch-piral`
+- `debug-portal`
+- `watch-portal`
 
 ## Positionals
 

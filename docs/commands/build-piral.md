@@ -14,9 +14,9 @@ build-piral [source]
 
 ## Aliases
 
-- bundle-piral
-- build-portal
-- bundle-portal
+- `bundle-piral`
+- `build-portal`
+- `bundle-portal`
 
 ## Positionals
 

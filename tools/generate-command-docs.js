@@ -47,7 +47,7 @@ function printAlias(aliases) {
     return 'No aliases available.';
   }
 
-  return aliases.map(alias => `- ${alias}`).join(nl);
+  return aliases.map(alias => `- \`${alias}\``).join(nl);
 }
 
 function getCommandData(retrieve) {

@@ -12,9 +12,9 @@ debug-pilet
 
 ## Aliases
 
-- watch-pilet
-- debug
-- watch
+- `watch-pilet`
+- `debug`
+- `watch`
 
 ## Positionals
 

@@ -14,9 +14,9 @@ new-pilet [source]
 
 ## Aliases
 
-- create-pilet
-- new
-- create
+- `create-pilet`
+- `new`
+- `create`
 
 ## Positionals
 

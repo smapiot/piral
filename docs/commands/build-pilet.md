@@ -12,9 +12,9 @@ build-pilet
 
 ## Aliases
 
-- bundle-pilet
-- build
-- bundle
+- `bundle-pilet`
+- `build`
+- `bundle`
 
 ## Positionals
 
