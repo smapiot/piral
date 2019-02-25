@@ -29,6 +29,18 @@ Sets the source index.html file for collecting all the information.
 
 ## Flags
 
-Not applicable.
+### `--target`
+
+Sets the target file of bundling.
+
+- Type: `string`
+- Default: `./dist/index.html`
+
+### `--base`
+
+Sets the base directory. By default the current directory is used.
+
+- Type: `string`
+- Default: `/Users/rapplf/Code/Smapiot/piral`
 
 <!--end:auto-generated-->

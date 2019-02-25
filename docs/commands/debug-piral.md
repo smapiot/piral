@@ -29,6 +29,18 @@ Sets the source index.html file for collecting all the information.
 
 ## Flags
 
-Not applicable.
+### `--port`
+
+Sets the port of the local development server.
+
+- Type: `number`
+- Default: `1234`
+
+### `--base`
+
+Sets the base directory. By default the current directory is used.
+
+- Type: `string`
+- Default: `/Users/rapplf/Code/Smapiot/piral`
 
 <!--end:auto-generated-->

@@ -65,7 +65,14 @@ function getCommandData(retrieve) {
     },
     swap(name, swapper) {
       const [flag] = data.flags.filter(m => m.name === name);
-      swapper(flag || { name });
+      const newFlag = swapper(flag || { name });
+
+      if (!flag) {
+        data.flags.push(newFlag);
+      } else {
+        Object.assign(flag, newFlag);
+      }
+
       return this;
     },
     string(name) {
@@ -111,7 +118,7 @@ function details(args) {
 ${arg.describe || 'No description available.'}
 
 - Type: \`${arg.type}\`
-- Default: \`${arg.default}\``).join(nl);
+- Default: \`${arg.default}\``).join(nl + nl);
 }
 
 function generateFrom(command) {
