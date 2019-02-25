@@ -68,14 +68,14 @@ export const allCommands: Array<ToolCommand<any>> = [
   {
     name: 'debug-pilet',
     alias: ['watch-pilet', 'debug', 'watch'],
-    description: '',
+    description: '(currently not implemented)',
     arguments: [],
     run(args) {},
   },
   {
     name: 'build-pilet',
     alias: ['bundle-pilet', 'build', 'bundle'],
-    description: '',
+    description: '(currently not implemented)',
     arguments: [],
     run(args) {},
   },

@@ -1,7 +1,5 @@
 # `debug-piral`
 
-(tbd)
-
 <!--start:auto-generated-->
 
 Starts the debugging process for a Piral instance.

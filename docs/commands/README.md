@@ -14,7 +14,9 @@ These commands have all a `-piral` suffix when called from the generic `pb` tool
 These commands have all a `-pilet` suffix when called from the generic `pb` tool. They are also available on the `pilet` tool (here without the suffix, i.e., `pb new-pilet` is equivalent to `pilet new`).
 
 - [new-pilet](./new-pilet.md)
+- [build-pilet](./build-pilet.md)
+- [debug-pilet](./debug-pilet.md)
 
 ## Other Commands
 
-(tbd)
+Currently, there are no other commands available.

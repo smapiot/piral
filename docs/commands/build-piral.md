@@ -1,7 +1,5 @@
 # `build-piral`
 
-(tbd)
-
 <!--start:auto-generated-->
 
 Creates a production build for a Piral instance.

@@ -1,7 +1,5 @@
 # `new-pilet`
 
-(tbd)
-
 <!--start:auto-generated-->
 
 Scaffolds a new pilet for a specified Piral instance.
