@@ -8,6 +8,8 @@
     "bootstrap": "lerna clean --yes && lerna bootstrap",
     "setup": "yarn bootstrap && yarn build && yarn bootstrap",
     "build": "lerna run build",
+    "lint": "tslint -c tslint.json 'packages/**/*.{ts,tsx}' --project tsconfig.json",
+    "prettify": "prettier --config prettier.config.js --write 'packages/**/*.{ts,tsx}'",
     "test": "jest",
     "prepublish": "yarn build",
     "release": "lerna publish",

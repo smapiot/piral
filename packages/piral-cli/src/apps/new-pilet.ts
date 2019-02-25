@@ -1,5 +1,5 @@
 import { resolve, join, basename } from 'path';
-import { createDirectory, createFileIfNotExists, updateExistingJson, cliVersion } from './common';
+import { createDirectory, createFileIfNotExists, updateExistingJson, cliVersion, getPackage } from './common';
 
 export interface NewPiletOptions {
   registry?: string;
@@ -13,7 +13,7 @@ export const newPiletDefaults = {
   source: 'piral',
 };
 
-export function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
+export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
   const {
     target = newPiletDefaults.target,
     registry = newPiletDefaults.registry,
@@ -23,6 +23,13 @@ export function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {})
   const src = join(root, 'src');
   const apiName = 'Api';
   const sourceVersion = '1.0.0';
+  const devDependencies = {
+    [source]: `^${sourceVersion}`,
+    'pilet-cli': `^${cliVersion}`,
+  };
+  const peerDependencies = {
+    [source]: `*`,
+  };
 
   if (createDirectory(root)) {
     createFileIfNotExists(
@@ -67,14 +74,14 @@ export function setup(app: ${apiName}) {
 `,
     );
 
+    const packageFiles = await getPackage(source, registry);
+
+    for (const file of packageFiles) {
+    }
+
     updateExistingJson(root, 'package.json', {
-      devDependencies: {
-        [source]: `^${sourceVersion}`,
-        'pilet-cli': `^${cliVersion}`,
-      },
-      peerDependencies: {
-        [source]: `*`,
-      },
+      devDependencies,
+      peerDependencies,
       scripts: {
         'debug-pilet': 'pilet debug',
         'build-pilet': 'pilet build',
