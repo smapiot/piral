@@ -2,15 +2,19 @@
 
 <!--start:auto-generated-->
 
-No description available.
+(currently not implemented)
 
 ## Syntax
 
+From the command line:
+
 ```sh
-build-pilet 
+pb build-pilet 
 ```
 
 ## Aliases
+
+Instead of `build-pilet` you can also use:
 
 - `bundle-pilet`
 - `build`

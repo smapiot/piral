@@ -6,11 +6,15 @@ Starts the debugging process for a Piral instance.
 
 ## Syntax
 
+From the command line:
+
 ```sh
-debug-piral [source]
+pb debug-piral [source]
 ```
 
 ## Aliases
+
+Instead of `debug-piral` you can also use:
 
 - `watch-piral`
 - `debug-portal`
@@ -39,6 +43,6 @@ Sets the port of the local development server.
 Sets the base directory. By default the current directory is used.
 
 - Type: `string`
-- Default: `/Users/rapplf/Code/Smapiot/piral`
+- Default: `process.cwd()`
 
 <!--end:auto-generated-->

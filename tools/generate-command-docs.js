@@ -88,6 +88,12 @@ function getCommandData(retrieve) {
       }));
     },
     default(name, value) {
+      if (value === resolve(__dirname, '..')) {
+        value = 'process.cwd()';
+      } else {
+        value = JSON.stringify(value);
+      }
+
       return this.swap(name, flag => ({
         ...flag,
         default: value,
@@ -128,9 +134,13 @@ ${command.description || 'No description available.'}
 
 ## Syntax
 
-${shell(`${command.name} ${command.arguments.join(' ')}`)}
+From the command line:
+
+${shell(`pb ${command.name} ${command.arguments.join(' ')}`)}
 
 ## Aliases
+
+Instead of \`${command.name}\` you can also use:
 
 ${printAlias(command.alias)}
 

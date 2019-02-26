@@ -6,11 +6,15 @@ Creates a production build for a Piral instance.
 
 ## Syntax
 
+From the command line:
+
 ```sh
-build-piral [source]
+pb build-piral [source]
 ```
 
 ## Aliases
+
+Instead of `build-piral` you can also use:
 
 - `bundle-piral`
 - `build-portal`
@@ -32,13 +36,13 @@ Sets the source index.html file for collecting all the information.
 Sets the target file of bundling.
 
 - Type: `string`
-- Default: `./dist/index.html`
+- Default: `"./dist/index.html"`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
 - Type: `string`
-- Default: `/Users/rapplf/Code/Smapiot/piral`
+- Default: `process.cwd()`
 
 <!--end:auto-generated-->

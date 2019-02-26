@@ -6,11 +6,15 @@ Scaffolds a new pilet for a specified Piral instance.
 
 ## Syntax
 
+From the command line:
+
 ```sh
-new-pilet [source]
+pb new-pilet [source]
 ```
 
 ## Aliases
+
+Instead of `new-pilet` you can also use:
 
 - `create-pilet`
 - `new`
@@ -32,20 +36,20 @@ Sets the source package containing a Piral instance for templating the scaffold 
 Sets the target directory for scaffolding. By default, the current directory.
 
 - Type: `string`
-- Default: `.`
+- Default: `"."`
 
 ### `--registry`
 
 Sets the package registry to use for resolving the specified Piral app.
 
 - Type: `string`
-- Default: `https://registry.npmjs.org/`
+- Default: `"https://registry.npmjs.org/"`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
 - Type: `string`
-- Default: `/Users/rapplf/Code/Smapiot/piral`
+- Default: `process.cwd()`
 
 <!--end:auto-generated-->

@@ -2,15 +2,19 @@
 
 <!--start:auto-generated-->
 
-No description available.
+(currently not implemented)
 
 ## Syntax
 
+From the command line:
+
 ```sh
-debug-pilet 
+pb debug-pilet 
 ```
 
 ## Aliases
+
+Instead of `debug-pilet` you can also use:
 
 - `watch-pilet`
 - `debug`
