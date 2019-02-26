@@ -3,10 +3,6 @@ import { ToolCommand } from './commands';
 
 let argv = yargs;
 
-interface BaseArgs {
-  base: string;
-}
-
 function buildCommand<T>(command: ToolCommand<T>) {
   if (command.arguments.length > 0) {
     return `${command.name} ${command.arguments.join(' ')}`;
@@ -17,7 +13,7 @@ function buildCommand<T>(command: ToolCommand<T>) {
 
 export function setupCli(commands: Array<ToolCommand<any>>) {
   for (const command of commands) {
-    argv = argv.command<BaseArgs>(
+    argv = argv.command(
       [buildCommand(command), ...command.alias],
       command.description,
       argv => {
@@ -26,20 +22,12 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
         }
         return argv;
       },
-      args => {
-        command.run({
-          baseDir: args.base,
-          ...args,
-        });
-      },
+      args => command.run(args),
     );
   }
 
   argv
     .epilog('For more information, check out the documentation at https://piral.io.')
-    .string('base')
-    .default('base', process.cwd())
-    .describe('base', 'Sets the base directory. By default the current directory is used.')
     .help()
     .strict().argv;
 }

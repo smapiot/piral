@@ -1,14 +1,16 @@
-## Types of Changes
+# New Pull Request
 
 For more information, see the `CONTRIBUTING` guide.
 
-### Prerequisites
+## Prerequisites
 
 Please make sure you can check the following boxes:
 
 - [ ] I have read the **CONTRIBUTING** document
 - [ ] My code follows the code style of this project
 - [ ] All new and existing tests passed
+
+## Type(s) of Changes
 
 ### Contribution Type
 

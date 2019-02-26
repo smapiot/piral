@@ -1,18 +1,19 @@
 {
-  "name": "piral-ext",
+  "name": "piral-documentation-page",
   "version": "0.1.2",
-  "description": "Useful API extensions and component definitions for extending piral-core.",
+  "private": true,
+  "description": "The documentation page for Piral.",
   "keywords": [
     "piral",
-    "smapiot",
-    "portal",
-    "modules",
-    "api",
-    "extension",
-    "spa"
+    "page",
+    "documentation",
+    "docs",
+    "website",
+    "modular",
+    "smapiot"
   ],
   "author": "smapiot",
-  "homepage": "https://piral.io",
+  "homepage": "https://docs.piral.io",
   "license": "MIT",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

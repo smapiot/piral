@@ -17,5 +17,11 @@
       "piral-*": ["./piral-*/src"]
     }
   },
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "packages/**/node_modules",
+    "packages/**/lib"
+  ]
 }

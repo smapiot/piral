@@ -1,18 +1,18 @@
 {
-  "name": "piral-ext",
+  "name": "piral-landing-page",
   "version": "0.1.2",
-  "description": "Useful API extensions and component definitions for extending piral-core.",
+  "private": true,
+  "description": "The landing page for Piral.",
   "keywords": [
     "piral",
-    "smapiot",
-    "portal",
-    "modules",
-    "api",
-    "extension",
-    "spa"
+    "page",
+    "landing",
+    "website",
+    "modular",
+    "smapiot"
   ],
   "author": "smapiot",
-  "homepage": "https://piral.io",
+  "homepage": "https://www.piral.io",
   "license": "MIT",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
