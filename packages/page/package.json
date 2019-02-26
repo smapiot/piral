@@ -1,0 +1,37 @@
+{
+  "name": "piral-page",
+  "version": "0.1.2",
+  "private": true,
+  "description": "The landing page for Piral.",
+  "keywords": [
+    "piral",
+    "page",
+    "landing",
+    "website",
+    "modular",
+    "smapiot"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
