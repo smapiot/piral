@@ -1,5 +1,5 @@
 {
-  "name": "piral-page",
+  "name": "piral-landing-page",
   "version": "0.1.2",
   "private": true,
   "description": "The landing page for Piral.",
@@ -12,7 +12,7 @@
     "smapiot"
   ],
   "author": "smapiot",
-  "homepage": "https://piral.io",
+  "homepage": "https://www.piral.io",
   "license": "MIT",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

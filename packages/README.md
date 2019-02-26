@@ -12,4 +12,5 @@ Piral is developed as a monorepo.
 
 ## Auxiliary Folders
 
-- [page](./page/README.md) is the landing page ([piral.io](https://piral.io))
+- [page-www](./page-www/README.md) is the landing page ([piral.io](https://piral.io))
+- [page-docs](./page-docs/README.md) is the documentation page ([docs.piral.io](https://docs.piral.io))
