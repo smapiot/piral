@@ -23,10 +23,10 @@ function downloadPackage(name: string, registry: string): Promise<Buffer> {
 }
 
 export async function getPackage(name: string, registry: string) {
-  var pckg = await downloadPackage(name, registry);
-  var files = await getDefinition(pckg);
+  const pckg = await downloadPackage(name, registry);
+  const files = await getDefinition(pckg);
   return Object.keys(files).map(name => ({
     content: files[name],
     name,
-  }))
+  }));
 }
