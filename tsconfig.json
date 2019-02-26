@@ -11,11 +11,17 @@
     "skipLibCheck": true,
     "target": "es6",
     "sourceMap": true,
-    "lib": ["es6"],
+    "lib": ["es6", "dom"],
     "baseUrl": "./packages",
     "paths": {
       "piral-*": ["./piral-*/src"]
     }
   },
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "packages/**/node_modules",
+    "packages/**/lib"
+  ]
 }

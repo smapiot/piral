@@ -1,6 +1,9 @@
+import * as tar from 'tar';
+import { createGunzip } from 'zlib';
 import { mkdirSync, existsSync, writeFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { deepMerge } from './merge';
+import { TarFiles, ReadEntry } from './types';
 
 export function createDirectory(targetDir: string) {
   try {
@@ -38,4 +41,26 @@ export function mergeWithJson<T>(targetDir: string, fileName: string, newContent
 export function updateExistingJson<T>(targetDir: string, fileName: string, newContent: T) {
   const content = mergeWithJson(targetDir, fileName, newContent);
   updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));
+}
+
+export function untarPackage(stream: NodeJS.ReadableStream): Promise<TarFiles> {
+  return new Promise((resolve, reject) => {
+    const files: TarFiles = {};
+    stream
+      .on('error', reject)
+      .pipe(createGunzip())
+      .on('error', reject)
+      .pipe(new (tar.Parse as any)())
+      .on('error', reject)
+      .on('entry', (e: ReadEntry) => {
+        const content: Array<Buffer> = [];
+        const p = e.path;
+        e.on('error', reject);
+        e.on('data', (c: Buffer) => content.push(c));
+        e.on('end', () => {
+          files[p] = Buffer.concat(content).toString();
+        });
+      })
+      .on('end', () => resolve(files));
+  });
 }

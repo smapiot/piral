@@ -1,0 +1,38 @@
+{
+  "name": "piral-documentation-page",
+  "version": "0.1.2",
+  "private": true,
+  "description": "The documentation page for Piral.",
+  "keywords": [
+    "piral",
+    "page",
+    "documentation",
+    "docs",
+    "website",
+    "modular",
+    "smapiot"
+  ],
+  "author": "smapiot",
+  "homepage": "https://docs.piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "echo \"No build yet.\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}

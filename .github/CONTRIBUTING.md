@@ -14,7 +14,7 @@ This project and everyone participating in it is governed by the [Code of Conduc
 
 ### Reporting Bugs
 
-Before creating bug report, please make sure that you first check the [existing issues](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Abug), as you might find that the issue is already reported. Fill out [the required template](https://github.com/smapiot/piral/issues/new?template=bugs.md), the information it asks for helps us resolve issues faster.
+Before creating bug report, please make sure that you first check the [existing issues](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Abug), as you might find that the issue is already reported. Fill out [the required template](https://github.com/smapiot/piral/issues/new?template=bug_report.md), the information it asks for helps us resolve issues faster.
 
 Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer:, and find related reports :mag_right:.
 
@@ -22,7 +22,7 @@ Following these guidelines helps maintainers and the community understand your r
 
 This section guides you through submitting an enhancement suggestion for Piral, including completely new features and minor improvements to existing functionality.
 
-Before creating enhancement suggestions, please make sure that you first check the [existing suggestions](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement), as you might find that the enhancement has already been requested. Fill out [the template](https://github.com/smapiot/piral/issues/new?template=features.md), including the steps that you imagine you would take if the feature you're requesting existed.
+Before creating enhancement suggestions, please make sure that you first check the [existing suggestions](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement), as you might find that the enhancement has already been requested. Fill out [the template](https://github.com/smapiot/piral/issues/new?template=feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
 #### How Do I Submit a Suggestion?
 

@@ -8,9 +8,12 @@
     "bootstrap": "lerna clean --yes && lerna bootstrap",
     "setup": "yarn bootstrap && yarn build && yarn bootstrap",
     "build": "lerna run build",
+    "lint": "tslint -c tslint.json 'packages/**/*.{ts,tsx}' --project tsconfig.json",
+    "prettify": "prettier --config prettier.config.js --write 'packages/**/*.{ts,tsx}'",
     "test": "jest",
     "prepublish": "yarn build",
     "release": "lerna publish",
+    "docgen": "node tools/generate-command-docs.js",
     "ci:version": "node tools/changelog-version.js",
     "ci:prerelease": "lerna publish $(yarn --silent ci:version)-pre.$BUILD_BUILDID --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish"
