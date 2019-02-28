@@ -58,6 +58,9 @@ export function patchPiletPackage(root: string, name: string, version: string) {
         deps[name] = '*';
         return deps;
       }, {}),
+      '@dbeining/react-atom': '*',
+      react: '*',
+      'react-dom': '*',
       [name]: `*`,
     },
     scripts: {
