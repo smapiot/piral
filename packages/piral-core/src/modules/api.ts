@@ -31,15 +31,15 @@ export function createApi<TApi>(
   let translations: LocalizationMessages = {};
   let feeds = 0;
   const prefix = target.name;
-  const meta = {
-    name: target.name,
-    version: target.version,
-    dependencies: target.dependencies,
-    hash: target.hash,
-  };
   const api = extendApi(
     {
       ...events,
+      meta: {
+        name: target.name,
+        version: target.version,
+        dependencies: target.dependencies,
+        hash: target.hash,
+      },
       getData(name) {
         return context.readDataValue(name);
       },
@@ -190,8 +190,15 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterModal(id);
       },
-      pluginMeta() {
-        return meta;
+      registerSearchProvider(name, provider) {
+        const id = buildName(prefix, name);
+        context.registerSearchProvider(id, {
+          provider,
+        });
+      },
+      unregisterSearchProvider(name) {
+        const id = buildName(prefix, name);
+        context.unregisterSearchProvider(id);
       },
     },
     target,

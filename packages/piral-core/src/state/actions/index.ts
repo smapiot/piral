@@ -4,4 +4,5 @@ export * from './data';
 export * from './feeds';
 export * from './modals';
 export * from './notifications';
+export * from './search';
 export * from './user';

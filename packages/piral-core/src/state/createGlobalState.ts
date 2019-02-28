@@ -67,6 +67,10 @@ export function createGlobalState({
       features: {},
       permissions: {},
     },
+    search: {
+      input: '',
+      providers: {},
+    },
   });
 
   if (process.env.NODE_ENV !== 'production') {
