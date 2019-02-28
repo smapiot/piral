@@ -1,7 +1,15 @@
 import { Argv, Arguments } from 'yargs';
 import { apps } from './index';
 
-export interface ParsedArgs {}
+function specializeCommands(suffix: string) {
+  return allCommands
+    .filter(m => m.name.endsWith(suffix))
+    .map(m => ({
+      ...m,
+      name: m.name.replace(suffix, ''),
+      alias: [],
+    }));
+}
 
 export interface ToolCommand<T> {
   name: string;
@@ -9,7 +17,7 @@ export interface ToolCommand<T> {
   arguments: Array<string>;
   flags?(argv: Argv<T>): Argv<T>;
   alias: Array<string>;
-  run<U extends ParsedArgs>(args: Arguments<U>): void | Promise<void>;
+  run<U>(args: Arguments<U>): void | Promise<void>;
 }
 
 export const allCommands: Array<ToolCommand<any>> = [
@@ -109,17 +117,31 @@ export const allCommands: Array<ToolCommand<any>> = [
       });
     },
   },
+  {
+    name: 'upgrade-pilet',
+    alias: ['upgrade'],
+    description: 'Upgrades an existing pilet to the latest version of the used Piral instance.',
+    arguments: [],
+    flags(argv) {
+      return argv
+        .string('target')
+        .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
+        .default('target', apps.upgradePiletDefaults.target)
+        .string('version')
+        .describe('version', 'Sets the version of the Piral instance to upgrade to. By default, the latest version.')
+        .default('version', apps.upgradePiletDefaults.version)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.upgradePilet(args.base as string, {
+        target: args.target as string,
+        version: args.version as string,
+      });
+    },
+  },
 ];
-
-function specializeCommands(suffix: string) {
-  return allCommands
-    .filter(m => m.name.endsWith(suffix))
-    .map(m => ({
-      ...m,
-      name: m.name.replace(suffix, ''),
-      alias: [],
-    }));
-}
 
 export const piletCommands = specializeCommands('-pilet');
 

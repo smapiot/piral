@@ -81,6 +81,11 @@ export function setup(app: ${apiName}) {
     }
 
     updateExistingJson(root, 'package.json', {
+      piral: {
+        name: source,
+        version: sourceVersion,
+        tooling: cliVersion,
+      },
       devDependencies,
       peerDependencies,
       scripts: {

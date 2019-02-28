@@ -38,6 +38,12 @@ export function mergeWithJson<T>(targetDir: string, fileName: string, newContent
   return deepMerge(originalContent, newContent);
 }
 
+export function readJson<T = any>(targetDir: string, fileName: string) {
+  const targetFile = join(targetDir, fileName);
+  const content = readFileSync(targetFile, 'utf8');
+  return JSON.parse(content || '{}') as T;
+}
+
 export function updateExistingJson<T>(targetDir: string, fileName: string, newContent: T) {
   const content = mergeWithJson(targetDir, fileName, newContent);
   updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));
