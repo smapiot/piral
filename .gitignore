@@ -19,3 +19,6 @@ yarn.lock
 coverage
 .cache
 .nyc_output
+
+# Generated Typings
+docs/types/*.json
