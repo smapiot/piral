@@ -10,7 +10,7 @@ export interface CardProps {
 }
 
 export const Card: React.SFC<CardProps> = ({ kind = 'green', icon, to, title, children }) => (
-  <div className={cn('item', `item-${kind}`, 'col-lg-4', 'col-6')}>
+  <div className={cn('item', `item-${kind}`, 'col-lg-4', 'col-md-6', 'col-12')}>
     <div className="item-inner">
       <div className="icon-holder">
         <Icon content={icon} />

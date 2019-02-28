@@ -12,7 +12,7 @@ export const Header: React.SFC<HeaderProps> = ({ centered, children }) => (
         <h1 className="logo">
           <a href="/">
             <span aria-hidden="true" className="icon_documents_alt icon" />
-            <span className="text-highlight">Pretty</span>
+            <span className="text-highlight">Piral</span>
             <span className="text-bold">Docs</span>
           </a>
         </h1>
