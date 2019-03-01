@@ -32,6 +32,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const apiName = 'Api';
   const [sourceName, sourceVersion, hadVersion] = dissectPackageName(source);
   if (createDirectory(root)) {
+    console.log(`Scaffolding new pilet in ${root} ...`);
+
     createFileIfNotExists(
       root,
       'package.json',
@@ -55,6 +57,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     createDirectory(src);
 
     if (registry !== newPiletDefaults.registry) {
+      console.log(`Setting up NPM registry (${registry}) ...`);
+
       createFileIfNotExists(
         src,
         '.npmrc',
@@ -62,6 +66,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
 always-auth=true`,
       );
     }
+
+    console.log(`Installing NPM package ${sourceName}@${sourceVersion} ...`);
 
     await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
 
@@ -76,7 +82,11 @@ export function setup(app: ${apiName}) {
 `,
     );
 
+    console.log(`Taking care of templating ...`);
+
     const files = patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
     copyPiralFiles(root, sourceName, files);
+
+    console.log(`All done!`);
   }
 }
