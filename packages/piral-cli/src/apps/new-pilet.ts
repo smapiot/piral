@@ -63,7 +63,7 @@ always-auth=true`,
       );
     }
 
-    await installPackage(sourceName, sourceVersion, root, '--no-save');
+    await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
 
     createFileIfNotExists(
       src,

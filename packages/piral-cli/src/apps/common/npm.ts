@@ -1,4 +1,4 @@
-import { spawn } from 'child_process';
+import { exec } from 'child_process';
 import { resolve } from 'path';
 import { isWindows } from './info';
 
@@ -6,15 +6,16 @@ const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
 function runNpmProcess(args: Array<string>, target: string) {
   const cwd = resolve(process.cwd(), target);
+  const cmd = [npmCommand, ...args].join(' ');
   return new Promise((resolve, reject) => {
-    spawn(npmCommand, args, { cwd })
+    exec(cmd, { cwd })
       .on('error', reject)
-      .on('end', resolve);
+      .on('close', resolve);
   });
 }
 
 export function installPackage(name: string, version = 'latest', target = '.', ...flags: Array<string>) {
-  return runNpmProcess([`${name}@${version}`, ...flags], target);
+  return runNpmProcess(['install', `${name}@${version}`, ...flags], target);
 }
 
 export function dissectPackageName(fullName: string): [string, string, boolean] {
