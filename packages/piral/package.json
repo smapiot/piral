@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -28,6 +28,11 @@
   "bugs": {
     "url": "https://github.com/smapiot/piral/issues"
   },
+  "pilets": {
+    "sharedDependencies": [],
+    "files": [],
+    "scripts": {}
+  },
   "devDependencies": {
     "@dbeining/react-atom": "^4.0.0",
     "@types/history": "^4.7.2",
@@ -42,8 +47,8 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "piral-core": "^0.1.2",
-    "piral-ext": "^0.1.2"
+    "piral-core": "^0.1.3",
+    "piral-ext": "^0.1.3"
   },
   "scripts": {
     "build": "tsc",

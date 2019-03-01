@@ -5,6 +5,7 @@ import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { Dict, LocalizationMessages, Disposable, SeverityLevel, EventEmitter } from './utils';
+import { SearchProvider } from './search';
 import {
   ForeignComponent,
   ModalComponentProps,
@@ -15,21 +16,21 @@ import {
   MenuComponentProps,
 } from './components';
 
-export interface PluginMetadata {
+export interface PiletMetadata {
   /**
-   * The name of the plugin.
+   * The name of the pilet.
    */
   name: string;
   /**
-   * The version of the plugin.
+   * The version of the pilet.
    */
   version: string;
   /**
-   * The dependencies of the plugin.
+   * The dependencies of the pilet.
    */
   dependencies: Dict<string>;
   /**
-   * The hashcode of the plugin.
+   * The hashcode of the pilet.
    */
   hash: string;
 }
@@ -44,6 +45,10 @@ export interface Tracker {
 export type PortalApi<TExtraApi> = PortalBaseApi<TExtraApi> & TExtraApi;
 
 export interface PortalBaseApi<TExtraApi> extends EventEmitter {
+  /**
+   * Gets the metadata of the current pilet.
+   */
+  meta: PiletMetadata;
   /**
    * Creates a connector for wrapping components with data relations.
    * @param resolver The resolver for the initial data set.
@@ -60,8 +65,8 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   getData<TKey extends string>(name: TKey): SharedData[TKey];
   /**
-   * Sets the data using a given name. The name needs to be used exclusively by the current plugin.
-   * Using the name occupied by another plugin will result in no change.
+   * Sets the data using a given name. The name needs to be used exclusively by the current pilet.
+   * Using the name occupied by another pilet will result in no change.
    * @param name The name of the data to store.
    * @param value The value of the data to store.
    * @param options The optional configuration for storing this piece of data.
@@ -97,7 +102,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   translate<T = Dict<string>>(tag: string, variables?: T): string;
   /**
    * Provides translations to the portal.
-   * The translations will be exlusively used for retrieving translations for the plugin.
+   * The translations will be exlusively used for retrieving translations for the pilet.
    * @param messages The messages to use as transslation basis.
    */
   provideTranslations(messages: LocalizationMessages): void;
@@ -118,14 +123,14 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   showModal<TOpts = any>(name: string, options?: TOpts): Disposable;
   /**
    * Registers a modal dialog using a generic rendering function.
-   * The name needs to be unique to be used without the plugin's name.
+   * The name needs to be unique to be used without the pilet's name.
    * @param name The name of the modal to register.
    * @param render The function that is being called once rendering begins.
    */
   registerModal<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PortalApi<TExtraApi>, TOpts>>): void;
   /**
    * Registers a modal dialog using a React component.
-   * The name needs to be unique to be used without the plugin's name.
+   * The name needs to be unique to be used without the pilet's name.
    * @param name The name of the modal to register.
    * @param Component The component to render the page.
    */
@@ -158,7 +163,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   unregisterPage(route: string): void;
   /**
    * Registers a tile for general components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the tile.
    * @param render The function that is being called once rendering begins.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
@@ -170,7 +175,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   ): void;
   /**
    * Registers a tile for React components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the tile.
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
@@ -209,7 +214,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<PortalApi<TExtraApi>, T>>): void;
   /**
    * Registers a menu item for general components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the menu item.
    * @param render The function that is being called once rendering begins.
    * @param settings The optional configuration for the menu item.
@@ -221,7 +226,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   ): void;
   /**
    * Registers a menu item for React components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the menu item.
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
@@ -238,7 +243,16 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   unregisterMenu(name: string): void;
   /**
-   * Gets the metadata of the current plugin.
+   * Registers a search provider to respond to search queries.
+   * The name has to be unique within the current pilet.
+   * @param name The name of the search provider.
+   * @param provider The callback to be used for searching.
    */
-  pluginMeta(): PluginMetadata;
+  registerSearchProvider(name: string, provider: SearchProvider<PortalApi<TExtraApi>>): void;
+  /**
+   * Unregisters a search provider known by the given name.
+   * Only previously registered search providers can be unregistered.
+   * @param name The name of the search provider to unregister.
+   */
+  unregisterSearchProvider(name: string): void;
 }

@@ -6,6 +6,7 @@ import { UserInfo, UserFeatures, UserPermissions } from './user';
 import { ConnectorDetails } from './feed';
 import { TilePreferences } from './tile';
 import { MenuSettings } from './menu';
+import { SearchProvider } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
 import { Dict, Without, LocalizationMessages } from './utils';
@@ -57,6 +58,10 @@ export interface MenuRegistration {
 export interface ExtensionRegistration {
   component: WrappedComponent<ExtensionComponentProps<any>>;
   reference: any;
+}
+
+export interface SearchProviderRegistration {
+  provider: SearchProvider<any>;
 }
 
 export interface AppState {
@@ -184,6 +189,17 @@ export interface UserState {
   current: UserInfo | undefined;
 }
 
+export interface SearchState {
+  /**
+   * Gets the current input value.
+   */
+  input: string;
+  /**
+   * Gets the registered search providers.
+   */
+  providers: Dict<SearchProviderRegistration>;
+}
+
 export interface GlobalState {
   /**
    * The relevant state for the app itself.
@@ -201,6 +217,10 @@ export interface GlobalState {
    * The relevant state for the current user.
    */
   user: UserState;
+  /**
+   * The relevant state for the in-site search.
+   */
+  search: SearchState;
 }
 
 export interface StateActions {
@@ -226,6 +246,8 @@ export interface StateActions {
   unregisterMenuItem(name: string): void;
   registerModal(name: string, value: ModalRegistration): void;
   unregisterModal(name: string): void;
+  registerSearchProvider(name: string, value: SearchProviderRegistration): void;
+  unregisterSearchProvider(name: string): void;
 }
 
 export interface GlobalStateContext extends StateActions {

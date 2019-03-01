@@ -1,5 +1,13 @@
 import { resolve, join, basename } from 'path';
-import { createDirectory, createFileIfNotExists, updateExistingJson, cliVersion, getPackage } from './common';
+import {
+  createDirectory,
+  createFileIfNotExists,
+  defaultRegistry,
+  installPackage,
+  dissectPackageName,
+  copyPiralFiles,
+  patchPiletPackage,
+} from './common';
 
 export interface NewPiletOptions {
   registry?: string;
@@ -9,7 +17,7 @@ export interface NewPiletOptions {
 
 export const newPiletDefaults = {
   target: '.',
-  registry: 'https://registry.npmjs.org/',
+  registry: defaultRegistry,
   source: 'piral',
 };
 
@@ -22,16 +30,10 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const root = resolve(baseDir, target);
   const src = join(root, 'src');
   const apiName = 'Api';
-  const sourceVersion = '1.0.0';
-  const devDependencies = {
-    [source]: `^${sourceVersion}`,
-    'pilet-cli': `^${cliVersion}`,
-  };
-  const peerDependencies = {
-    [source]: `*`,
-  };
-
+  const [sourceName, sourceVersion, hadVersion] = dissectPackageName(source);
   if (createDirectory(root)) {
+    console.log(`Scaffolding new pilet in ${root} ...`);
+
     createFileIfNotExists(
       root,
       'package.json',
@@ -55,6 +57,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     createDirectory(src);
 
     if (registry !== newPiletDefaults.registry) {
+      console.log(`Setting up NPM registry (${registry}) ...`);
+
       createFileIfNotExists(
         src,
         '.npmrc',
@@ -63,10 +67,14 @@ always-auth=true`,
       );
     }
 
+    console.log(`Installing NPM package ${sourceName}@${sourceVersion} ...`);
+
+    await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
+
     createFileIfNotExists(
       src,
       'index.tsx',
-      `import { ${apiName} } from '${source}';
+      `import { ${apiName} } from '${sourceName}';
 
 export function setup(app: ${apiName}) {
   app.showNotification('Hello World!');
@@ -74,19 +82,11 @@ export function setup(app: ${apiName}) {
 `,
     );
 
-    const packageFiles = await getPackage(source, registry);
+    console.log(`Taking care of templating ...`);
 
-    for (const file of packageFiles) {
-      //TODO
-    }
+    const files = patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
+    copyPiralFiles(root, sourceName, files);
 
-    updateExistingJson(root, 'package.json', {
-      devDependencies,
-      peerDependencies,
-      scripts: {
-        'debug-pilet': 'pilet debug',
-        'build-pilet': 'pilet build',
-      },
-    });
+    console.log(`All done!`);
   }
 }

@@ -6,6 +6,7 @@ export * from './feed';
 export * from './layout';
 export * from './menu';
 export * from './plugin';
+export * from './search';
 export * from './state';
 export * from './tile';
 export * from './user';
