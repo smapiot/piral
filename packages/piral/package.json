@@ -28,6 +28,11 @@
   "bugs": {
     "url": "https://github.com/smapiot/piral/issues"
   },
+  "pilets": {
+    "sharedDependencies": [],
+    "files": [],
+    "scripts": {}
+  },
   "devDependencies": {
     "@dbeining/react-atom": "^4.0.0",
     "@types/history": "^4.7.2",

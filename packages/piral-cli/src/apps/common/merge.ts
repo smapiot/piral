@@ -13,6 +13,15 @@ function emptyTarget(val: any) {
 }
 
 function cloneIfNecessary(value: any) {
+  switch (typeof value) {
+    case 'boolean':
+    case 'number':
+    case 'string':
+    case 'symbol':
+    case 'undefined':
+      return value;
+  }
+
   return deepMerge(emptyTarget(value), value);
 }
 

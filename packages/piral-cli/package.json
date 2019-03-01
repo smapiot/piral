@@ -54,7 +54,6 @@
     "get-port": "^4.1.0",
     "kras": "0.8.1",
     "parcel-bundler": "^1.11.0",
-    "streamifier": "^0.1.1",
     "tar": "^4.4.8",
     "yargs": "^13.1.0"
   }
