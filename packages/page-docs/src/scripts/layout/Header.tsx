@@ -11,7 +11,6 @@ export const Header: React.SFC<HeaderProps> = ({ centered, children }) => (
       <div className="branding">
         <h1 className="logo">
           <a href="/">
-            <span aria-hidden="true" className="icon_documents_alt icon" />
             <span className="text-highlight">Piral</span>
             <span className="text-bold">Docs</span>
           </a>

@@ -5,7 +5,7 @@ import { Icon } from './Icon';
 export interface InfoProps {
   title?: string;
   updated?: string;
-  icon?: IconName | React.ReactElement;
+  icon?: IconName;
 }
 
 export const Info: React.SFC<InfoProps> = ({ updated, title, icon = 'paper-plane' }) => (

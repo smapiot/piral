@@ -14,4 +14,9 @@ export type IconName =
   | 'download'
   | 'code-branch'
   | 'play-circle'
-  | 'cloud-download-alt';
+  | 'cloud-download-alt'
+  | 'life-ring'
+  | 'gavel'
+  | 'gift'
+  | 'book'
+  | 'puzzle-piece';

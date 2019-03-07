@@ -2,9 +2,11 @@ import * as React from 'react';
 import { IconName, cn } from './utils';
 
 export interface IconProps {
-  content?: IconName | React.ReactElement;
+  content?: IconName;
 }
 
-export const Icon: React.SFC<IconProps> = ({ content = null }) =>
-  (typeof content === 'string' && <i className={cn('icon', 'fa', `fa-${content}`)} />) ||
-  (content as React.ReactElement);
+// tslint:disable-next-line
+const defaultIcon = null;
+
+export const Icon: React.SFC<IconProps> = ({ content = defaultIcon }) =>
+  (typeof content === 'string' && <i className={cn('icon', 'fa', `fa-${content}`)} />) || content;

@@ -9,9 +9,7 @@ export const Landing: React.SFC = ({ children }) => (
       <Header centered>
         <TagLine />
       </Header>
-      <div className="doc-wrapper">
-        {children}
-      </div>
+      <div className="doc-wrapper">{children}</div>
     </div>
     <Footer />
   </div>

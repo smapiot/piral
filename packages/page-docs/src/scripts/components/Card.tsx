@@ -3,7 +3,7 @@ import { IconName, cn, ColorKind } from './utils';
 import { Icon } from './Icon';
 
 export interface CardProps {
-  icon?: IconName | React.ReactElement;
+  icon?: IconName;
   title?: string;
   to?: string;
   kind?: ColorKind;

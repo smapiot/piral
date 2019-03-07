@@ -12,9 +12,7 @@ export const Standard: React.SFC<InfoProps> = ({ children, title, icon }) => (
       <div className="doc-wrapper">
         <div className="container">
           <Info updated="July 18th, 2018" title={title} icon={icon} />
-          <div className="doc-body row">
-            {children}
-          </div>
+          <div className="doc-body row">{children}</div>
         </div>
       </div>
     </div>
