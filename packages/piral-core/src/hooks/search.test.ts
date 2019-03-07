@@ -31,6 +31,7 @@ describe('Search Module', () => {
   it('just returns current input value', () => {
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
     const [value] = useSearch();
     expect(value).toBe('abc');
   });
@@ -38,6 +39,7 @@ describe('Search Module', () => {
   it('sets the value using the action', () => {
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
     const [_, setValue] = useSearch();
     setValue('foo');
     expect(availableActions.setSearchInput).toHaveBeenCalledWith('foo');
@@ -47,6 +49,7 @@ describe('Search Module', () => {
     state.search.input = 'foo';
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
     useSearch();
     expect(availableActions.resetSearchResults).toHaveBeenCalledWith(true);
   });
@@ -55,6 +58,7 @@ describe('Search Module', () => {
     state.search.input = '';
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
     useSearch();
     expect(availableActions.resetSearchResults).toHaveBeenCalledWith(false);
   });
@@ -68,6 +72,7 @@ describe('Search Module', () => {
     };
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
     useSearch();
     expect(search).toHaveBeenCalledTimes(2);
   });
@@ -83,7 +88,47 @@ describe('Search Module', () => {
     };
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
     useSearch();
+    await (state.components.searchProviders as any).foo.search().catch(m => m);
+  });
+
+  it('stops existing search', async () => {
+    state.search.input = 'test';
+    state.components.searchProviders = {
+      foo: {
+        search() {
+          return Promise.resolve(['Hello', 'World']);
+        },
+      },
+    };
+    const usedEffect = jest.fn(fn => fn());
+    const usedRef = jest.fn(current => ({ current }));
+    (React as any).useEffect = usedEffect;
+    (React as any).useRef = usedRef;
+    useSearch();
+    usedRef.mock.results[0].value.current();
+    await (state.components.searchProviders as any).foo.search().catch(m => m);
+  });
+
+  it('cancels existing search', async () => {
+    state.search.input = 'test';
+    state.components.searchProviders = {
+      foo: {
+        search() {
+          return Promise.resolve(['Hello', 'World']);
+        },
+      },
+    };
+    const usedEffect = jest.fn(fn => {
+      fn();
+      return fn;
+    });
+    const usedRef = jest.fn(current => ({ current }));
+    (React as any).useEffect = usedEffect;
+    (React as any).useRef = usedRef;
+    useSearch();
+    usedEffect.mock.results[0].value();
     await (state.components.searchProviders as any).foo.search().catch(m => m);
   });
 
@@ -99,6 +144,7 @@ describe('Search Module', () => {
     };
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
     useSearch();
     await (state.components.searchProviders as any).foo.search().catch(m => m);
     expect(console.warn).toHaveBeenCalled();
