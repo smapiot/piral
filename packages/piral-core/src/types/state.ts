@@ -6,7 +6,7 @@ import { UserInfo, UserFeatures, UserPermissions } from './user';
 import { ConnectorDetails } from './feed';
 import { TilePreferences } from './tile';
 import { MenuSettings } from './menu';
-import { SearchProvider } from './search';
+import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
 import { Dict, Without, LocalizationMessages } from './utils';
@@ -50,7 +50,7 @@ export interface ModalRegistration {
   component: WrappedComponent<ModalComponentProps<any, any>>;
 }
 
-export interface MenuRegistration {
+export interface MenuItemRegistration {
   component: WrappedComponent<MenuComponentProps<any>>;
   settings: MenuSettings;
 }
@@ -61,7 +61,7 @@ export interface ExtensionRegistration {
 }
 
 export interface SearchProviderRegistration {
-  provider: SearchProvider<any>;
+  search: SearchHandler;
 }
 
 export interface AppState {
@@ -146,11 +146,15 @@ export interface ComponentsState {
   /**
    * The registered menu items for global display.
    */
-  menuItems: Dict<MenuRegistration>;
+  menuItems: Dict<MenuItemRegistration>;
   /**
    * The registered extension components for extension slots.
    */
   extensions: Dict<Array<ExtensionRegistration>>;
+  /**
+   * The registered search providers for context aware search.
+   */
+  searchProviders: Dict<SearchProviderRegistration>;
 }
 
 export interface FeedsState {
@@ -195,9 +199,13 @@ export interface SearchState {
    */
   input: string;
   /**
-   * Gets the registered search providers.
+   * Gets weather the search is still loading.
    */
-  providers: Dict<SearchProviderRegistration>;
+  loading: boolean;
+  /**
+   * The results to display for the current search.
+   */
+  results: Array<ReactChild>;
 }
 
 export interface GlobalState {
@@ -242,12 +250,16 @@ export interface StateActions {
   unregisterTile(name: string): void;
   registerExtension(name: string, value: ExtensionRegistration): void;
   unregisterExtension(name: string, reference: any): void;
-  registerMenuItem(name: string, value: MenuRegistration): void;
+  registerMenuItem(name: string, value: MenuItemRegistration): void;
   unregisterMenuItem(name: string): void;
   registerModal(name: string, value: ModalRegistration): void;
   unregisterModal(name: string): void;
   registerSearchProvider(name: string, value: SearchProviderRegistration): void;
   unregisterSearchProvider(name: string): void;
+  setSearchInput(input: string): void;
+  resetSearchResults(loading: boolean): void;
+  appendSearchResults(items: Array<ReactChild>, done: boolean): void;
+  prependSearchResults(items: Array<ReactChild>, done: boolean): void;
 }
 
 export interface GlobalStateContext extends StateActions {

@@ -60,6 +60,7 @@ export function createGlobalState({
       modals: {},
       pages: {},
       tiles: {},
+      searchProviders: {},
     },
     feeds: {},
     user: {
@@ -69,7 +70,8 @@ export function createGlobalState({
     },
     search: {
       input: '',
-      providers: {},
+      loading: false,
+      results: [],
     },
   });
 

@@ -8,6 +8,14 @@ export function appendItem<T>(items: Array<T>, item: T) {
   return [...(items || []), item];
 }
 
+export function prependItems<T>(items: Array<T>, newItems: Array<T>) {
+  return [...newItems, ...(items || [])];
+}
+
+export function appendItems<T>(items: Array<T>, newItems: Array<T>) {
+  return [...(items || []), ...newItems];
+}
+
 export function excludeItem<T>(items: Array<T>, item: T) {
   return (items || []).filter(m => m !== item);
 }

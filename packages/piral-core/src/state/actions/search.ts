@@ -1,23 +1,47 @@
+import { ReactChild } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
-import { GlobalState, SearchProviderRegistration } from '../../types';
-import { withKey, withoutKey } from '../../utils';
+import { GlobalState } from '../../types';
+import { appendItems, prependItems } from '../../utils';
 
-export function registerSearchProvider(name: string, value: SearchProviderRegistration) {
+export function setSearchInput(input: string) {
   swap(this as Atom<GlobalState>, state => ({
     ...state,
     search: {
       ...state.search,
-      providers: withKey(state.search.providers, name, value),
+      input,
     },
   }));
 }
 
-export function unregisterSearchProvider(name: string) {
+export function resetSearchResults(loading: boolean) {
   swap(this as Atom<GlobalState>, state => ({
     ...state,
     search: {
       ...state.search,
-      providers: withoutKey(state.search.providers, name),
+      loading,
+      results: [],
+    },
+  }));
+}
+
+export function appendSearchResults(items: Array<ReactChild>, done: boolean) {
+  swap(this as Atom<GlobalState>, state => ({
+    ...state,
+    search: {
+      ...state.search,
+      loading: !done,
+      results: appendItems(state.search.results, items),
+    },
+  }));
+}
+
+export function prependSearchResults(items: Array<ReactChild>, done: boolean) {
+  swap(this as Atom<GlobalState>, state => ({
+    ...state,
+    search: {
+      ...state.search,
+      loading: !done,
+      results: prependItems(state.search.results, items),
     },
   }));
 }

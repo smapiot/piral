@@ -42,9 +42,9 @@ export interface Tracker {
   (properties?: any, measurements?: any): void;
 }
 
-export type PortalApi<TExtraApi> = PortalBaseApi<TExtraApi> & TExtraApi;
+export type PiralApi<TExtraApi = {}> = PiralCoreApi<TExtraApi> & TExtraApi;
 
-export interface PortalBaseApi<TExtraApi> extends EventEmitter {
+export interface PiralCoreApi<TExtraApi> extends EventEmitter {
   /**
    * Gets the metadata of the current pilet.
    */
@@ -127,14 +127,14 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param name The name of the modal to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerModal<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PortalApi<TExtraApi>, TOpts>>): void;
+  registerModal<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
   /**
    * Registers a modal dialog using a React component.
    * The name needs to be unique to be used without the pilet's name.
    * @param name The name of the modal to register.
    * @param Component The component to render the page.
    */
-  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<PortalApi<TExtraApi>, TOpts>>): void;
+  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
   /**
    * Unregisters a modal by its name.
    * @param name The name that was previously registered.
@@ -147,7 +147,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerPage(route: string, render: ForeignComponent<PageComponentProps<PortalApi<TExtraApi>>>): void;
+  registerPage(route: string, render: ForeignComponent<PageComponentProps<PiralApi<TExtraApi>>>): void;
   /**
    * Registers a route for React component.
    * The route needs to be unique and can contain params.
@@ -155,7 +155,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param Component The component to render the page.
    */
-  registerPage(route: string, Component: ComponentType<PageComponentProps<PortalApi<TExtraApi>>>): void;
+  registerPage(route: string, Component: ComponentType<PageComponentProps<PiralApi<TExtraApi>>>): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
@@ -170,7 +170,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   registerTile(
     name: string,
-    render: ForeignComponent<TileComponentProps<PortalApi<TExtraApi>>>,
+    render: ForeignComponent<TileComponentProps<PiralApi<TExtraApi>>>,
     preferences?: TilePreferences,
   ): void;
   /**
@@ -182,7 +182,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   registerTile(
     name: string,
-    Component: ComponentType<TileComponentProps<PortalApi<TExtraApi>>>,
+    Component: ComponentType<TileComponentProps<PiralApi<TExtraApi>>>,
     preferences?: TilePreferences,
   ): void;
   /**
@@ -197,21 +197,21 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param name The global name of the extension slot.
    * @param render The function that is being called once rendering begins.
    */
-  registerExtension<T>(name: string, render: ForeignComponent<ExtensionComponentProps<PortalApi<TExtraApi>, T>>): void;
+  registerExtension<T>(name: string, render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
   /**
    * Registers an extension component with a React component.
    * The name must refer to the extension slot.
    * @param name The global name of the extension slot.
    * @param Component The component to be rendered.
    */
-  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<PortalApi<TExtraApi>, T>>): void;
+  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
    * @param hook The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<PortalApi<TExtraApi>, T>>): void;
+  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
   /**
    * Registers a menu item for general components.
    * The name has to be unique within the current pilet.
@@ -221,7 +221,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   registerMenu(
     name: string,
-    render: ForeignComponent<MenuComponentProps<PortalApi<TExtraApi>>>,
+    render: ForeignComponent<MenuComponentProps<PiralApi<TExtraApi>>>,
     settings?: MenuSettings,
   ): void;
   /**
@@ -233,7 +233,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   registerMenu(
     name: string,
-    Component: ComponentType<MenuComponentProps<PortalApi<TExtraApi>>>,
+    Component: ComponentType<MenuComponentProps<PiralApi<TExtraApi>>>,
     settings?: MenuSettings,
   ): void;
   /**
@@ -248,7 +248,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param name The name of the search provider.
    * @param provider The callback to be used for searching.
    */
-  registerSearchProvider(name: string, provider: SearchProvider<PortalApi<TExtraApi>>): void;
+  registerSearchProvider(name: string, provider: SearchProvider<PiralApi<TExtraApi>>): void;
   /**
    * Unregisters a search provider known by the given name.
    * Only previously registered search providers can be unregistered.

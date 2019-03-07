@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArbiterModule } from 'react-arbiter';
 import {
   PageComponentProps,
-  PortalApi,
+  PiralApi,
   ExtensionComponentProps,
   TileComponentProps,
   ErrorInfoProps,
@@ -16,7 +16,7 @@ import {
  * Also registeres some custom error page handlers. For details
  * on this, see DashboardModule.
  */
-export const Module1: ArbiterModule<PortalApi<{}>> = {
+export const Module1: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Example Module',
@@ -35,7 +35,7 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerTile(
       'example-react',
-      class extends React.Component<TileComponentProps<PortalApi<{}>>> {
+      class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
           return <div className="tile">Rendered a tile from React.</div>;
         }
@@ -44,9 +44,9 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerMenu(
       'example',
-      class extends React.Component<MenuComponentProps<PortalApi<{}>>> {
+      class extends React.Component<MenuComponentProps<PiralApi>> {
         render() {
-          return <Link to="/example1">Example 1</Link>;
+          return <Link to="http://www.google.com">Google</Link>;
         }
       },
       { type: 'general' },
@@ -54,7 +54,7 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerPage(
       '/example1',
-      class extends React.Component<PageComponentProps<PortalApi<{}>>> {
+      class extends React.Component<PageComponentProps<PiralApi>> {
         render() {
           return (
             <div>
@@ -103,7 +103,7 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerPage(
       '/example2',
-      class extends React.Component<PageComponentProps<PortalApi<{}>>> {
+      class extends React.Component<PageComponentProps<PiralApi>> {
         render() {
           return (
             <div>
@@ -130,7 +130,7 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerExtension(
       'error',
-      class extends React.Component<ExtensionComponentProps<PortalApi<{}>, ErrorInfoProps>> {
+      class extends React.Component<ExtensionComponentProps<PiralApi, ErrorInfoProps>> {
         render() {
           return <div>Custom Error page</div>;
         }
@@ -139,7 +139,7 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerExtension(
       'error',
-      class extends React.Component<ExtensionComponentProps<PortalApi<{}>, ErrorInfoProps>> {
+      class extends React.Component<ExtensionComponentProps<PiralApi, ErrorInfoProps>> {
         render() {
           if (this.props.params.type === 'not_found') {
             return <div>The page was not found!!!</div>;
