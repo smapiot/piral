@@ -11,6 +11,7 @@
     "lint": "tslint -c tslint.json 'packages/**/*.{ts,tsx}' --project tsconfig.json",
     "prettify": "prettier --config prettier.config.js --write 'packages/**/*.{ts,tsx}'",
     "test": "jest",
+    "demo": "piral debug packages/piral-sample/src/index.html",
     "prepublish": "yarn build",
     "release": "lerna publish",
     "docgen": "node tools/generate-command-docs.js && lerna run typedoc",
