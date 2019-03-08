@@ -18,6 +18,7 @@ const Highlight: React.SFC<HighlightProps> = ({ highlight }) => {
       return <span className="badge badge-warning">Updated</span>;
   }
 
+  // tslint:disable-next-line
   return null;
 };
 

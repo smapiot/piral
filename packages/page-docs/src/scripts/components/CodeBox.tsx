@@ -16,7 +16,7 @@ export interface CodeBoxProps {
 }
 
 export const CodeBox: React.SFC<CodeBoxProps> = ({ async, code, language }) => {
-  const container = useRef(null);
+  const container = useRef(undefined);
   useEffect(() => {
     Prism.highlightElement(container.current, async);
   });

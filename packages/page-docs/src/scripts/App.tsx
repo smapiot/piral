@@ -1,15 +1,25 @@
 import * as React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { Page as DocumentationPage } from './documentation';
-import { Page as QuestionsPage } from './questions';
-import { Page as LandingPage } from './landing';
+import { Loader } from './components';
+
+const LandingPage = React.lazy(() => import('./landing'));
+const DocumentationPage = React.lazy(() => import('./documentation'));
+const SpecificationsPage = React.lazy(() => import('./specifications'));
+const ToolingPage = React.lazy(() => import('./tooling'));
+const QuestionsPage = React.lazy(() => import('./questions'));
+const NotFoundPage = React.lazy(() => import('./notfound'));
 
 export const App = () => (
   <BrowserRouter>
-    <Switch>
-      <Route exact path="/" component={LandingPage} />
-      <Route exact path="/documentation" component={DocumentationPage} />
-      <Route exact path="/questions" component={QuestionsPage} />
-    </Switch>
+    <React.Suspense fallback={<Loader />}>
+      <Switch>
+        <Route exact path="/" component={LandingPage} />
+        <Route path="/documentation" component={DocumentationPage} />
+        <Route path="/specifications" component={SpecificationsPage} />
+        <Route path="/tooling" component={ToolingPage} />
+        <Route path="/questions" component={QuestionsPage} />
+        <Route component={NotFoundPage} />
+      </Switch>
+    </React.Suspense>
   </BrowserRouter>
 );

@@ -1,17 +1,23 @@
 import * as React from 'react';
 import { Footer } from './footer';
 import { Header } from './header';
-import { Breadcrumbs, Info, InfoProps } from '../components';
+import { Breadcrumbs, Info, InfoProps, Breadcrumb } from '../components';
 
-export const Standard: React.SFC<InfoProps> = ({ children, title, icon }) => (
+const buildTime = process.env.BUILD_TIME;
+
+export interface StandardProps extends InfoProps {
+  breadcrumbs?: Array<Breadcrumb>;
+}
+
+export const Standard: React.SFC<StandardProps> = ({ children, title, icon, breadcrumbs }) => (
   <div className="body-green">
     <div className="page-wrapper">
       <Header>
-        <Breadcrumbs current={title} />
+        <Breadcrumbs current={title} intermediate={breadcrumbs} />
       </Header>
       <div className="doc-wrapper">
         <div className="container">
-          <Info updated="July 18th, 2018" title={title} icon={icon} />
+          <Info updated={buildTime} title={title} icon={icon} />
           <div className="doc-body row">{children}</div>
         </div>
       </div>

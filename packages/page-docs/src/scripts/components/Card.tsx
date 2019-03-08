@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { IconName, cn, ColorKind } from './utils';
 import { Icon } from './Icon';
 
@@ -18,9 +19,9 @@ export const Card: React.SFC<CardProps> = ({ kind = 'green', icon, to, title, ch
       {title && <h3 className="title">{title}</h3>}
       <p className="intro">{children}</p>
       {to && (
-        <a className="link" href={to}>
+        <Link className="link" to={to}>
           <span />
-        </a>
+        </Link>
       )}
     </div>
   </div>

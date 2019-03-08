@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { Menu } from './menu';
+import { Menu } from '../components';
 import { Content } from './Content';
 import { Standard } from '../layout';
 
-export const Page: React.SFC = () => (
-  <Standard title="FAQs" icon="life-ring">
-    <Content />
-    <Menu />
-  </Standard>
-);
+export const Page: React.SFC = () => {
+  const ref = React.useRef(undefined);
+
+  return (
+    <Standard title="FAQs" icon="life-ring">
+      <Content ref={ref} />
+      <Menu content={ref} maxLevel={1} />
+    </Standard>
+  );
+};

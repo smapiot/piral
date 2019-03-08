@@ -19,4 +19,6 @@ export type IconName =
   | 'gavel'
   | 'gift'
   | 'book'
-  | 'puzzle-piece';
+  | 'puzzle-piece'
+  | 'pencil-alt'
+  | 'home';

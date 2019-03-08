@@ -4,39 +4,30 @@ import { Card, Button } from '../components';
 export const Content: React.SFC = () => (
   <section className="cards-section text-center">
     <div className="container">
-      <h2 className="title">Getting started is easy!</h2>
+      <h2 className="title">Welcome to the Piral documentation!</h2>
       <div className="intro">
         <p>
-          Welcome to prettyDocs. This landing page is an example of how you can use a card view to present segments of
-          your documentation. You can customise the icon fonts based on your needs.
+          We are glad to have you here. The Piral documentation should help you find what you need. If you spot any
+          outdated or misleading information please use the link at the bottom to help us fix the issue.
         </p>
         <div className="cta-container">
-          <Button
-            icon="cloud-download-alt"
-            href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/prettydocs-free-bootstrap-theme-for-developers-and-startups/"
-            target="_blank">
-            Download Now
+          <Button icon="cloud-download-alt" href="https://www.npmjs.com/package/piral" target="_blank">
+            Install from NPM
           </Button>
         </div>
       </div>
       <div id="cards-wrapper" className="cards-wrapper row">
-        <Card title="Quick Start" icon="paper-plane" to="/documentation" kind="green">
-          Demo example, consectetuer adipiscing elit
+        <Card title="Documentation" icon="book" to="/documentation" kind="primary">
+          The full documentation for using and developing Piral.
         </Card>
-        <Card title="Components" icon="puzzle-piece" to="/questions" kind="pink">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit
+        <Card title="Specifications" icon="puzzle-piece" to="/specifications" kind="primary">
+          The specifications for Piral, Pilets, and the service infrastructure.
         </Card>
-        <Card title="Charts" icon="book" to="/documentation" kind="blue">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit
+        <Card title="Tooling" icon="paper-plane" to="/tooling" kind="primary">
+          The full documentation for using the Piral CLI.
         </Card>
-        <Card title="FAQ" icon="life-ring" to="/questions" kind="purple">
-          Layout for FAQ page. Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-        </Card>
-        <Card title="Showcase" icon="gift" to="/" kind="primary">
-          Layout for showcase page. Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-        </Card>
-        <Card title="License & Credits" icon="gavel" to="/documentation" kind="orange">
-          Layout for license &amp; credits page. Consectetuer adipiscing elit.
+        <Card title="FAQ" icon="life-ring" to="/questions" kind="primary">
+          Answers to frequently asked questions regarding Piral.
         </Card>
       </div>
     </div>

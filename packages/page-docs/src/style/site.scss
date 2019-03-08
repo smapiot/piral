@@ -20,6 +20,11 @@ $smoky-white: #f5f5f5;
 $smoky-grey: #f9f9fb;
 $divider: #f0f0f0;
 
+$border-width: 4px;
+$basic-spinner-dimensions: 50px;
+$main-spinner-dimensions: $basic-spinner-dimensions - $border-width * 2;
+$small-spinner-dimensions: $main-spinner-dimensions * 0.7;
+
 $new: #60A823;
 $error: #E65348;
 $facebook: #3b5998;
@@ -31,3 +36,4 @@ $github: #444;
 @import "base";
 @import "doc";
 @import "landing";
+@import "loader";

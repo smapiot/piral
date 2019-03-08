@@ -234,3 +234,25 @@ select {
       color: $color-pink;
   }
 }
+
+.edit-github {
+  text-align: right;
+  font-size: 0.9em;
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+.responsive-image {
+  max-width: 100%;
+}
+
+#app {
+  height: 100%;
+  background: $smoky-grey;
+
+  & > div {
+    height: 100%;
+  }
+}

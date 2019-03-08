@@ -1,3 +1,3 @@
-export * from './Content';
-export * from './Menu';
-export * from './Page';
+import { Page } from './Page';
+
+export default Page;

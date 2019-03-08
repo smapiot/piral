@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
 import ScrollSpy from 'vanillajs-scrollspy';
 
 export const Sidebar: React.SFC = ({ children }) => {
-  const container = useRef(null);
+  const container = useRef(undefined);
   useEffect(() => {
     const spy = new ScrollSpy(container.current);
     Stickyfill.add(container.current);
