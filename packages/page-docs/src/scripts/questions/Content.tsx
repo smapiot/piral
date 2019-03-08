@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { ResponsiveContent, Section, Md, Question, EditSection } from '../components';
 
-import General from '../../../../../docs/questions/general.md';
-import Tooling from '../../../../../docs/questions/tooling.md';
-
 // tslint:disable-next-line
 const defaultResult = null;
 
@@ -26,13 +23,15 @@ export interface ContentProps {
 
 export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
+    {/* start:auto-generated */}
     <Section id="general" title="General">
-      <Mdq>{General}</Mdq>
+      <Mdq>{require('../../../../../docs/questions/general.md').default}</Mdq>
       <EditSection link="questions/general.md" />
     </Section>
     <Section id="tooling" title="Tooling">
-      <Mdq>{Tooling}</Mdq>
+      <Mdq>{require('../../../../../docs/questions/tooling.md').default}</Mdq>
       <EditSection link="questions/tooling.md" />
     </Section>
+    {/* end:auto-generated */}
   </ResponsiveContent>
 ));
