@@ -15,5 +15,6 @@ export * from './Section';
 export * from './Sidebar';
 export * from './Table';
 export * from './TagLine';
+export * from './Ti';
 export * from './utils';
 export * from './Video';

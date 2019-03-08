@@ -6,6 +6,7 @@ const LandingPage = React.lazy(() => import('./landing'));
 const DocumentationPage = React.lazy(() => import('./documentation'));
 const SpecificationsPage = React.lazy(() => import('./specifications'));
 const ToolingPage = React.lazy(() => import('./tooling'));
+const TypesPage = React.lazy(() => import('./types'));
 const QuestionsPage = React.lazy(() => import('./questions'));
 const NotFoundPage = React.lazy(() => import('./notfound'));
 
@@ -18,6 +19,7 @@ export const App = () => (
         <Route path="/specifications" component={SpecificationsPage} />
         <Route path="/tooling" component={ToolingPage} />
         <Route path="/questions" component={QuestionsPage} />
+        <Route path="/types" component={TypesPage} />
         <Route component={NotFoundPage} />
       </Switch>
     </React.Suspense>

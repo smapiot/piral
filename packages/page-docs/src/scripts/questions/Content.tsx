@@ -24,12 +24,12 @@ export interface ContentProps {
 export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
     {/* start:auto-generated */}
-    <Section id="general" title="General">
-      <Mdq>{require('../../../../../docs/questions/general.md').default}</Mdq>
+    <Section id="section-general" title="General">
+      <Mdq>{require('../../../../../docs/questions/general.md')}</Mdq>
       <EditSection link="questions/general.md" />
     </Section>
-    <Section id="tooling" title="Tooling">
-      <Mdq>{require('../../../../../docs/questions/tooling.md').default}</Mdq>
+    <Section id="section-tooling" title="Tooling">
+      <Mdq>{require('../../../../../docs/questions/tooling.md')}</Mdq>
       <EditSection link="questions/tooling.md" />
     </Section>
     {/* end:auto-generated */}

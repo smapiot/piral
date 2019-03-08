@@ -21,4 +21,5 @@ export type IconName =
   | 'book'
   | 'puzzle-piece'
   | 'pencil-alt'
-  | 'home';
+  | 'home'
+  | 'binoculars';

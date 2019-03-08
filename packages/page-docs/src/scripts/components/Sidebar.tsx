@@ -1,15 +1,8 @@
 import * as React from 'react';
-import * as Stickyfill from 'stickyfilljs';
-import { useRef, useEffect } from 'react';
-import ScrollSpy from 'vanillajs-scrollspy';
+import { useStickySidebar } from '../hooks';
 
 export const Sidebar: React.SFC = ({ children }) => {
-  const container = useRef(undefined);
-  useEffect(() => {
-    const spy = new ScrollSpy(container.current);
-    Stickyfill.add(container.current);
-    spy.init();
-  });
+  const container = useStickySidebar();
 
   return (
     <div className="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">

@@ -26,6 +26,9 @@ export const Content: React.SFC = () => (
         <Card title="Tooling" icon="paper-plane" to="/tooling" kind="primary">
           The full documentation for using the Piral CLI.
         </Card>
+        <Card title="Types" icon="binoculars" to="/types" kind="primary">
+          Extensive type reference for all Piral libraries.
+        </Card>
         <Card title="FAQ" icon="life-ring" to="/questions" kind="primary">
           Answers to frequently asked questions regarding Piral.
         </Card>

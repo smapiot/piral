@@ -8,16 +8,16 @@ export interface ContentProps {
 export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
     {/* start:auto-generated */}
-    <Section id="download-section" title="Download">
-      <Md>{require('../../../../../docs/introduction.md').default}</Md>
+    <Section id="section-introduction" title="Introduction">
+      <Md>{require('../../../../../docs/introduction.md')}</Md>
       <EditSection link="introduction.md" />
     </Section>
-    <Section id="architecture-section" title="Architecture">
-      <Md>{require('../../../../../docs/architecture.md').default}</Md>
+    <Section id="section-architecture" title="Architecture">
+      <Md>{require('../../../../../docs/architecture.md')}</Md>
       <EditSection link="architecture.md" />
     </Section>
-    <Section id="development-section" title="Development">
-      <Md>{require('../../../../../docs/development.md').default}</Md>
+    <Section id="section-development" title="Development">
+      <Md>{require('../../../../../docs/development.md')}</Md>
       <EditSection link="development.md" />
     </Section>
     {/* end:auto-generated */}
