@@ -233,3 +233,50 @@ ul.app-nav {
     margin-right: 1em;
   }
 }
+
+.search {
+  margin-bottom: 2em;
+  position: relative;
+
+  input[type=search] {
+    font-size: 1em;
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+    width: 250px;
+    box-sizing: border-box;
+  }
+
+  input[type=search]:focus + .search-results {
+    display: block;
+  }
+
+  .search-results {
+    display: none;
+    position: absolute;
+    z-index: 99;
+    top: 100%;
+    width: 250px;
+    left: 0;
+    box-sizing: border-box;
+    background: #f0f0f0;
+    padding: 1px;
+  }
+
+  .search-results-item {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+  }
+
+  .search-results-item:hover {
+    background-color: #e9e9e9;
+  }
+
+  .search-results-loading {
+    padding: 30px;
+    background-color: #fff;
+  }
+}

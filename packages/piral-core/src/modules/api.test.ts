@@ -418,4 +418,17 @@ describe('API Module', () => {
       container.context.registerSearchProvider.mock.calls[0][0],
     );
   });
+
+  it('createApi registration of a search provider wraps it', () => {
+    const container = createMockContainer();
+    container.context = {
+      registerSearchProvider: jest.fn(),
+      unregisterSearchProvider: jest.fn(),
+    };
+    const api = createApi<{}>(moduleMetadata, container);
+    const search = jest.fn();
+    api.registerSearchProvider('my-sp', search);
+    container.context.registerSearchProvider.mock.calls[0][1].search('foo');
+    expect(search).toHaveBeenCalledWith('foo', api);
+  });
 });

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ArbiterModule } from 'react-arbiter';
-import { PageComponentProps, PortalApi, TileComponentProps, MenuComponentProps } from 'piral-core';
+import { PageComponentProps, PiralApi, TileComponentProps, MenuComponentProps } from 'piral-core';
 
 /**
  * Shows the usage of another module, here with a
  * feed connector.
  */
-export const Module2: ArbiterModule<PortalApi<{}>> = {
+export const Module2: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Sample Module',
@@ -34,7 +34,7 @@ export const Module2: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerTile(
       'example',
-      class extends React.Component<TileComponentProps<PortalApi<{}>>> {
+      class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
           return <div className="tile">Rendered tile from another module.</div>;
         }
@@ -43,7 +43,7 @@ export const Module2: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerMenu(
       'example',
-      class extends React.Component<MenuComponentProps<PortalApi<{}>>> {
+      class extends React.Component<MenuComponentProps<PiralApi>> {
         render() {
           return <Link to="/example3">Example 3</Link>;
         }
@@ -54,7 +54,7 @@ export const Module2: ArbiterModule<PortalApi<{}>> = {
     portal.registerPage(
       '/example3',
       connect(
-        class extends React.Component<PageComponentProps<PortalApi<{}>> & { data: Array<string> }> {
+        class extends React.Component<PageComponentProps<PiralApi> & { data: Array<string> }> {
           render() {
             return (
               <div>

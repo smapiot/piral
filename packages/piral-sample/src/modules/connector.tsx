@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ArbiterModule } from 'react-arbiter';
-import { PortalApi, TileComponentProps } from 'piral-core';
+import { PiralApi, TileComponentProps } from 'piral-core';
 
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorModule: ArbiterModule<PortalApi<{}>> = {
+export const ConnectorModule: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Connector Module',
@@ -26,7 +26,7 @@ export const ConnectorModule: ArbiterModule<PortalApi<{}>> = {
 
     portal.registerTile(
       'example',
-      class extends React.Component<TileComponentProps<PortalApi<{}>>> {
+      class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
           return (
             <div className="tile">

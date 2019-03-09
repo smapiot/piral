@@ -1,0 +1,310 @@
+.doc-wrapper {
+  padding: 45px 0;
+  background: $smoky-grey;
+}
+
+.doc-body {
+  position: relative;
+}
+
+.doc-header {
+  margin-bottom: 30px;
+
+  .doc-title {
+    color: $color-green;
+    margin-top: 0;
+    font-size: 36px;
+  }
+
+  .icon {
+    font-size: 30px;
+  }
+
+  .meta {
+    color: $grey;
+  }
+}
+
+.doc-section {
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  .section-title {
+    font-size: 26px;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 1px solid darken($divider, 10%);
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  h5 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  h6 {
+    font-size: 14px;
+    font-weight: bold;
+  }
+}
+
+.section-block {
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  .block-title {
+    margin-top: 0;
+  }
+
+  .list {
+    &>li {
+      margin-bottom: 10px;
+    }
+
+    ul {
+      &> li {
+        margin-top:5px;
+      }
+    }
+  }
+}
+
+.question {
+  font-weight: 400 !important;
+  color: darken($color-green, 5%);
+
+  .svg-inline--fa {
+    @include opacity(0.6);
+    position: relative;
+    top: -2px;
+  }
+
+  .badge {
+    font-size: 11px;
+    vertical-align: middle;
+  }
+}
+
+.answer {
+  color: $text-color-secondary;
+}
+
+.code-block {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.callout-block {
+  padding: 30px;
+  @include border-radius(4px);
+  position: relative;
+  margin-bottom: 30px;
+
+  a {
+    color: rgba(0, 0, 0, 0.55) !important;
+    &:hover {
+      color: rgba(0, 0, 0, 0.65) !important;
+    }
+  }
+
+  .icon-holder {
+    font-size: 30px;
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    color: rgba(0, 0, 0, 0.25);
+  }
+
+  .content {
+    margin-left: 60px;
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .callout-title {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: rgba(0, 0, 0, 0.65);
+  }
+}
+
+.callout-info {
+  background: $color-blue;
+  color: #fff;
+}
+
+.callout-success {
+  background: $color-green;
+  color: #fff;
+}
+
+.callout-warning {
+  background: $color-orange;
+  color: #fff;
+}
+
+.callout-danger {
+  background: $color-red;
+  color: #fff;
+}
+
+.table>thead>tr>th {
+  border-bottom-color: lighten($color-green, 20%);
+}
+.table-bordered>thead>tr>th {
+  border-bottom-color: inherit;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: $smoky-white;
+}
+
+.jumbotron {
+  h1 {
+    font-size: 28px;
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+}
+
+body {
+  .header {
+    border-color: $color-green;
+  }
+
+  a {
+    color: $color-green;
+    &:hover {
+      color: darken($color-green, 10%);
+    }
+  }
+}
+
+.doc-nav {
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+
+  &:before,
+  &:after {
+    content: '';
+    display: table;
+  }
+}
+
+.doc-menu {
+  list-style: none;
+
+  .nav-link {
+    margin-bottom: 5px;
+    display: block;
+    padding: 5px 15px;
+    color: $text-color-secondary;
+    border-left: 3px solid transparent;
+
+    &:hover, &:focus {
+      color: $text-color;
+      text-decoration: none;
+      background: none;
+    }
+
+    &.active {
+      background: none;
+      color: $color-green;
+      border-color: $color-green;
+    }
+  }
+}
+
+.doc-sub-menu {
+  list-style: none;
+  padding-left: 0;
+
+  .nav-link {
+    margin-bottom: 10px;
+    font-size: 12px;
+    display: block;
+    color: $text-color-secondary;
+    padding: 0;
+    padding-left: 34px;
+    background: none;
+
+    &:first-child {
+      padding-top: 5px;
+    }
+
+    &:hover{
+      color: $text-color;
+      text-decoration: none;
+      background: none;
+    }
+
+    &:focus {
+      background: none;
+    }
+
+    &.active {
+      background: none;
+      color: $color-green;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .jumbotron {
+    padding: 30px 15px;
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 18px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+
+}
+
+@media (min-width: 992px) {
+
+}
+
+@media (min-width: 1200px) {
+
+}
