@@ -1,4 +1,5 @@
 export * from './emoji';
+export * from './envs';
 export * from './io';
 export * from './info';
 export * from './merge';

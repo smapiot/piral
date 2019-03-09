@@ -1,6 +1,6 @@
 import * as Bundler from 'parcel-bundler';
 import { join, dirname, basename } from 'path';
-import { extendConfig } from './common';
+import { extendConfig, setStandardEnvs } from './common';
 
 export interface BuildPiralOptions {
   entry?: string;
@@ -16,9 +16,11 @@ export function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions =
   const { entry = buildPiralDefaults.entry, target = buildPiralDefaults.target } = options;
   const entryFiles = join(baseDir, entry);
 
-  process.env.NODE_ENV = 'production';
-
   (async function() {
+    setStandardEnvs({
+      production: true,
+      target: dirname(entry),
+    });
     const bundler = new Bundler(
       entryFiles,
       extendConfig({

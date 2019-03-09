@@ -1,7 +1,7 @@
 import * as Bundler from 'parcel-bundler';
 import chalk from 'chalk';
-import { join } from 'path';
-import { extendConfig, startServer, liveIcon, getFreePort, settingsIcon } from './common';
+import { join, dirname } from 'path';
+import { extendConfig, startServer, liveIcon, getFreePort, settingsIcon, setStandardEnvs } from './common';
 import { buildKrasWithCli, readKrasConfig, krasrc } from 'kras';
 
 export interface DebugPiralOptions {
@@ -33,6 +33,9 @@ export function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions =
 
   (async function() {
     const buildServerPort = await getFreePort(64834);
+    setStandardEnvs({
+      target: dirname(entry),
+    });
     const bundler = new Bundler(entryFiles, extendConfig({}));
     krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
     const krasServer = buildKrasWithCli(krasConfig);

@@ -30,7 +30,7 @@ export function copyPiralFiles(root: string, name: string, files: Array<string |
   }
 }
 
-export function patchPiletPackage(root: string, name: string, version: string) {
+export function patchPiletPackage(root: string, name: string, version?: string) {
   const piralInfo = readPiralPackage(root, name);
   const piralDependencies = piralInfo.dependencies || {};
   const piralVersion = version || piralInfo.version;

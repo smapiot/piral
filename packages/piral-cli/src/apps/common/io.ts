@@ -1,5 +1,5 @@
 import { mkdirSync, existsSync, writeFileSync, readFileSync, copyFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { deepMerge } from './merge';
 
 export function createDirectory(targetDir: string) {
@@ -10,6 +10,22 @@ export function createDirectory(targetDir: string) {
     console.error(`Error while creating ${targetDir}: `, e);
     return false;
   }
+}
+
+export function findFile(topDir: string, fileName: string) {
+  const path = join(topDir, fileName);
+
+  if (!existsSync(path)) {
+    const parentDir = resolve(topDir, '..');
+
+    if (parentDir !== topDir) {
+      return findFile(parentDir, fileName);
+    }
+
+    return undefined;
+  }
+
+  return path;
 }
 
 export function createFileIfNotExists(targetDir: string, fileName: string, content: string) {
