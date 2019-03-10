@@ -14,7 +14,7 @@
 
 .landing-page {
   .header {
-    background: $text-color;
+    @include gradient($text-color, darken($text-color, 15%));
     color: rgba(256, 256, 256, 0.85);
     padding: 60px 0;
 

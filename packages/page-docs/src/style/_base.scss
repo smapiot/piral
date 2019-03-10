@@ -168,7 +168,7 @@ select {
 }
 
 .header {
-  background: $text-color;
+  @include gradient($text-color, darken($text-color, 15%));
   color: rgba(256, 256, 256, 0.85);
   border-top: 5px solid $color-primary;
   padding: 30px 0;
