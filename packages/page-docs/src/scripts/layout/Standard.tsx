@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Footer } from './footer';
-import { Header } from './header';
+import { Footer } from './Footer';
+import { Header } from './Header';
 import { Breadcrumbs, Info, InfoProps, Breadcrumb } from '../components';
 
 const buildTime = process.env.BUILD_TIME;
