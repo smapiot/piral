@@ -79,7 +79,7 @@ export function createGlobalState({
     addChangeHandler(globalState, 'debugging', ({ current, previous }) => {
       const action = new Error().stack.split('\n')[6].replace(/^\s+at\s+Atom\./, '');
       console.group(
-        `%c Portal State Change %c ${new Date().toLocaleTimeString()}`,
+        `%c Piral State Change %c ${new Date().toLocaleTimeString()}`,
         'color: gray; font-weight: lighter;',
         'color: black; font-weight: bold;',
       );

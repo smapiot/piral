@@ -13,10 +13,10 @@ export const Module2: ArbiterModule<PiralApi> = {
   name: 'Sample Module',
   version: '1.0.0',
   hash: '2',
-  setup(portal) {
-    console.log(portal);
+  setup(piral) {
+    console.log(piral);
 
-    const connect = portal.createConnector<Array<string>, string>({
+    const connect = piral.createConnector<Array<string>, string>({
       initialize() {
         return new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 2000));
       },
@@ -32,7 +32,7 @@ export const Module2: ArbiterModule<PiralApi> = {
       },
     });
 
-    portal.registerTile(
+    piral.registerTile(
       'example',
       class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
@@ -41,7 +41,7 @@ export const Module2: ArbiterModule<PiralApi> = {
       },
     );
 
-    portal.registerMenu(
+    piral.registerMenu(
       'example',
       class extends React.Component<MenuComponentProps<PiralApi>> {
         render() {
@@ -51,7 +51,7 @@ export const Module2: ArbiterModule<PiralApi> = {
       { type: 'general' },
     );
 
-    portal.registerPage(
+    piral.registerPage(
       '/example3',
       connect(
         class extends React.Component<PageComponentProps<PiralApi> & { data: Array<string> }> {

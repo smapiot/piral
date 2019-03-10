@@ -101,7 +101,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    */
   translate<T = Dict<string>>(tag: string, variables?: T): string;
   /**
-   * Provides translations to the portal.
+   * Provides translations to the application.
    * The translations will be exlusively used for retrieving translations for the pilet.
    * @param messages The messages to use as transslation basis.
    */

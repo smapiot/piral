@@ -12,7 +12,7 @@ export const DashboardModule: ArbiterModule<PiralApi> = {
   name: 'Dashboard Module',
   version: '1.0.0',
   hash: '3',
-  setup(portal) {
+  setup(piral) {
     const CustomDashboard: React.SFC<ExtensionComponentProps<PiralApi, { tiles: Dict<TileRegistration> }>> = ({
       params: { tiles },
     }) => {
@@ -27,6 +27,6 @@ export const DashboardModule: ArbiterModule<PiralApi> = {
     };
     CustomDashboard.displayName = 'CustomDashboard';
 
-    portal.registerExtension('dashboard', CustomDashboard);
+    piral.registerExtension('dashboard', CustomDashboard);
   },
 };

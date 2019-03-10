@@ -22,10 +22,10 @@ export const Module1: ArbiterModule<PiralApi> = {
   name: 'Example Module',
   version: '1.0.0',
   hash: '1',
-  setup(portal) {
-    console.log(portal);
+  setup(piral) {
+    console.log(piral);
 
-    portal.registerTile('example-general', (element, props) => {
+    piral.registerTile('example-general', (element, props) => {
       element.innerHTML = `
         <div class="tile">
           General rendering for a ${props.columns}x${props.rows} tile.
@@ -33,7 +33,7 @@ export const Module1: ArbiterModule<PiralApi> = {
       `;
     });
 
-    portal.registerTile(
+    piral.registerTile(
       'example-react',
       class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
@@ -42,7 +42,7 @@ export const Module1: ArbiterModule<PiralApi> = {
       },
     );
 
-    portal.registerMenu(
+    piral.registerMenu(
       'example',
       class extends React.Component<MenuComponentProps<PiralApi>> {
         render() {
@@ -52,7 +52,7 @@ export const Module1: ArbiterModule<PiralApi> = {
       { type: 'general' },
     );
 
-    portal.registerPage(
+    piral.registerPage(
       '/example1',
       class extends React.Component<PageComponentProps<PiralApi>> {
         render() {
@@ -64,27 +64,27 @@ export const Module1: ArbiterModule<PiralApi> = {
               <p>Click for a notification.</p>
               <ul>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!')}>Notify me! (Default)</button>
+                  <button onClick={() => piral.showNotification('Hello there!')}>Notify me! (Default)</button>
                 </li>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!', { type: 'error' })}>
+                  <button onClick={() => piral.showNotification('Hello there!', { type: 'error' })}>
                     Notify me! (Error)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!', { title: 'Some title' })}>
+                  <button onClick={() => piral.showNotification('Hello there!', { title: 'Some title' })}>
                     Notify me! (With Title)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!', { autoClose: 1000, type: 'success' })}>
+                  <button onClick={() => piral.showNotification('Hello there!', { autoClose: 1000, type: 'success' })}>
                     Notify me! (1s)
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={() =>
-                      portal.showNotification(
+                      piral.showNotification(
                         <span>
                           Hello there; this is <b>some longer text</b>!
                         </span>,
@@ -101,7 +101,7 @@ export const Module1: ArbiterModule<PiralApi> = {
       },
     );
 
-    portal.registerPage(
+    piral.registerPage(
       '/example2',
       class extends React.Component<PageComponentProps<PiralApi>> {
         render() {
@@ -114,7 +114,7 @@ export const Module1: ArbiterModule<PiralApi> = {
                 IF YOU ARE IN AN ADVENTUROUS MOOD TRY{' '}
                 <a
                   onClick={e => {
-                    portal.unregisterPage('/example2');
+                    piral.unregisterPage('/example2');
                     e.preventDefault();
                   }}
                   href="#">
@@ -128,7 +128,7 @@ export const Module1: ArbiterModule<PiralApi> = {
       },
     );
 
-    portal.registerExtension(
+    piral.registerExtension(
       'error',
       class extends React.Component<ExtensionComponentProps<PiralApi, ErrorInfoProps>> {
         render() {
@@ -137,7 +137,7 @@ export const Module1: ArbiterModule<PiralApi> = {
       },
     );
 
-    portal.registerExtension(
+    piral.registerExtension(
       'error',
       class extends React.Component<ExtensionComponentProps<PiralApi, ErrorInfoProps>> {
         render() {

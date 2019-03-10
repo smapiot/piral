@@ -11,8 +11,8 @@ export const ConnectorModule: ArbiterModule<PiralApi> = {
   name: 'Connector Module',
   version: '1.0.0',
   hash: '4',
-  setup(portal) {
-    const connect = portal.createConnector<Array<string>>(
+  setup(piral) {
+    const connect = piral.createConnector<Array<string>>(
       () => new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 5000)),
     );
 
@@ -24,7 +24,7 @@ export const ConnectorModule: ArbiterModule<PiralApi> = {
       </ul>
     ));
 
-    portal.registerTile(
+    piral.registerTile(
       'example',
       class extends React.Component<TileComponentProps<PiralApi>> {
         render() {

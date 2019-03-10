@@ -11,8 +11,11 @@ export const SearchModule: ArbiterModule<PiralApi> = {
   name: 'Search Module',
   version: '1.0.0',
   hash: '428',
-  setup(portal) {
-    portal.registerSearchProvider(
+  setup(piral) {
+    const htmlResult = document.createElement('div');
+    htmlResult.innerHTML = '<span style="color: red;">I AM HTML</span>';
+
+    piral.registerSearchProvider(
       'example1',
       q =>
         new Promise(resolve =>
@@ -23,13 +26,14 @@ export const SearchModule: ArbiterModule<PiralApi> = {
                 <i>Sample result 2 for {q}</i>,
                 <span>Third result</span>,
                 <div>4th result</div>,
+                htmlResult,
               ]),
             1000,
           ),
         ),
     );
 
-    portal.registerSearchProvider(
+    piral.registerSearchProvider(
       'example2',
       q => new Promise(resolve => setTimeout(() => resolve([<div>Another result ({q})</div>]), 3500)),
     );

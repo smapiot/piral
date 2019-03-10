@@ -12,19 +12,18 @@ const ComponentError: React.SFC<ComponentErrorProps> = ({ error }) => {
   return <ErrorInfo type="feed" error={error} />;
 };
 
-export function withApi<TApi, TProps>(
-  component: AnyComponent<TProps & { portal: PiralApi<TApi> }>,
-  api: PiralApi<TApi>,
-) {
-  return wrapComponent<TProps & { portal: TApi }, 'portal'>(component, {
-    forwardProps: {
-      portal: api as any,
-    },
+type ApiForward<TApi> = {
+  piral: PiralApi<TApi>;
+};
+
+export function withApi<TApi, TProps>(component: AnyComponent<TProps & ApiForward<TApi>>, piral: PiralApi<TApi>) {
+  return wrapComponent<TProps, ApiForward<TApi>>(component, {
+    forwardProps: { piral },
     onError(error: Error) {
-      api.trackError(error, { origin: 'portal-error-boundary' });
+      piral.trackError(error, { origin: 'piral-error-boundary' });
     },
     renderError(error) {
       return <ComponentError error={error} />;
     },
-  }) as React.ComponentType<TProps>;
+  });
 }

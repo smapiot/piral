@@ -1,4 +1,4 @@
-export interface PortalStorage {
+export interface PiralStorage {
   setItem(name: string, data: string, expires?: string): void;
   getItem(name: string): string | null;
   removeItem(name: string): void;
@@ -30,7 +30,7 @@ export interface Listener<T> {
   (arg: T): void;
 }
 
-export interface StoreDataPortalEvent {
+export interface PiralStoreDataEvent {
   name: string;
   target: string;
   value: any;
@@ -38,14 +38,14 @@ export interface StoreDataPortalEvent {
   expires: number;
 }
 
-export interface TrackEventPortalEvent {
+export interface PiralTrackEventEvent {
   type: 'event';
   name: string;
   properties: any;
   measurements: any;
 }
 
-export interface TrackErrorPortalEvent {
+export interface PiralTrackErrorEvent {
   type: 'error';
   error: any;
   properties: any;
@@ -53,27 +53,27 @@ export interface TrackErrorPortalEvent {
   severityLevel: SeverityLevel;
 }
 
-export interface TrackStartFramePortalEvent {
+export interface PiralTrackStartFrameEvent {
   type: 'start-frame';
   name: string;
 }
 
-export interface TrackEndFramePortalEvent {
+export interface PiralTrackEndFrameEvent {
   type: 'end-frame';
   name: string;
   properties: any;
   measurements: any;
 }
 
-export type TrackPortalEvent =
-  | TrackEventPortalEvent
-  | TrackErrorPortalEvent
-  | TrackStartFramePortalEvent
-  | TrackEndFramePortalEvent;
+export type PiralTrackEvent =
+  | PiralTrackEventEvent
+  | PiralTrackErrorEvent
+  | PiralTrackStartFrameEvent
+  | PiralTrackEndFrameEvent;
 
-export interface PortalEventMap {
-  store: StoreDataPortalEvent;
-  track: TrackPortalEvent;
+export interface PiralEventMap {
+  store: PiralStoreDataEvent;
+  track: PiralTrackEvent;
   [custom: string]: any;
 }
 
@@ -83,19 +83,19 @@ export interface EventEmitter {
    * @param type The type of the event to listen for.
    * @param callback The callback to trigger.
    */
-  on<K extends keyof PortalEventMap>(type: K, callback: Listener<PortalEventMap[K]>): EventEmitter;
+  on<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
   /**
    * Detaches an existing event listener.
    * @param type The type of the event to listen for.
    * @param callback The callback to trigger.
    */
-  off<K extends keyof PortalEventMap>(type: K, callback: Listener<PortalEventMap[K]>): EventEmitter;
+  off<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
   /**
    * Emits a new event with the given type.
    * @param type The type of the event to emit.
    * @param arg The payload of the event.
    */
-  emit<K extends keyof PortalEventMap>(type: K, arg: PortalEventMap[K]): EventEmitter;
+  emit<K extends keyof PiralEventMap>(type: K, arg: PiralEventMap[K]): EventEmitter;
 }
 
 export const enum SeverityLevel {
