@@ -26,7 +26,7 @@ export const Module1: ArbiterModule<PiralApi> = {
     console.log(portal);
 
     portal.registerTile('example-general', (element, props) => {
-      element.outerHTML = `
+      element.innerHTML = `
         <div class="tile">
           General rendering for a ${props.columns}x${props.rows} tile.
         </div>
