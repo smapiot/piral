@@ -1,4 +1,7 @@
-import { dissectPackageName } from './npm';
+import * as cp from 'child_process';
+import { dissectPackageName, installPackage } from './npm';
+
+jest.mock('child_process');
 
 describe('NPM Module', () => {
   it('dissects a fully qualified name with latest correctly', () => {
@@ -41,5 +44,26 @@ describe('NPM Module', () => {
     expect(hadVersion).toBe(true);
     expect(version).toBe('^1.x');
     expect(name).toBe('@foo/bar');
+  });
+
+  it('installs a package using the NPM command line tool without a target', () => {
+    const emitter = jest.fn(() => ({ on: emitter }));
+    (cp as any).exec = emitter;
+    installPackage('foo', 'latest');
+    expect(emitter).toHaveBeenCalledTimes(3);
+  });
+
+  it('installs a package using the NPM command line tool without a version', () => {
+    const emitter = jest.fn(() => ({ on: emitter }));
+    (cp as any).exec = emitter;
+    installPackage('foo');
+    expect(emitter).toHaveBeenCalledTimes(3);
+  });
+
+  it('installs a package using the NPM command line tool with some flag', () => {
+    const emitter = jest.fn(() => ({ on: emitter }));
+    (cp as any).exec = emitter;
+    installPackage('foo', '1.3', '.', '--a=b');
+    expect(emitter).toHaveBeenCalledTimes(3);
   });
 });

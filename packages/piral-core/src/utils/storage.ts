@@ -1,8 +1,8 @@
-import { PortalStorage } from '../types';
+import { PiralStorage } from '../types';
 
 const crx = /\s*(.*?)=(.*?)($|;|,(?! ))/g;
 
-export const storage: PortalStorage = {
+export const storage: PiralStorage = {
   setItem(name: string, data: string) {
     return localStorage.setItem(name, data);
   },
@@ -14,7 +14,7 @@ export const storage: PortalStorage = {
   },
 };
 
-export const cookie: PortalStorage = {
+export const cookie: PiralStorage = {
   setItem(name: string, data: string, expires = '') {
     const domain = location.hostname;
     const domainPart = domain ? `domain=.${domain};` : '';

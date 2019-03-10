@@ -15,21 +15,13 @@
 	background-clip: padding-box;
 }
 
-@mixin border-radiuses ($topright: 0, $bottomright: 0, $bottomleft: 0, $topleft: 0) {
-	border-top-right-radius: $topright;
-	border-bottom-right-radius: $bottomright;
-	border-bottom-left-radius: $bottomleft;
-	border-top-left-radius: $topleft;
-	background-clip: padding-box;
-}
-
 @mixin opacity ($opacity: 0.5) {
 	opacity: $opacity;
 }
 
 @mixin gradient ($startColor: #eee, $endColor: white) {
 	background-color: $startColor;
-	background: linear-gradient(top, $startColor, $endColor);
+	background: linear-gradient($startColor, $endColor);
 }
 
 @mixin horizontal-gradient ($startColor: #eee, $endColor: white) {

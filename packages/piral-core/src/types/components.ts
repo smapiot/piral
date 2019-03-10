@@ -4,9 +4,9 @@ import { Dict } from './utils';
 
 export interface BaseComponentProps<TApi> {
   /**
-   * The currently used portal API.
+   * The currently used piral API.
    */
-  portal: TApi;
+  piral: TApi;
 }
 
 export interface ExtensionComponentProps<TApi, T = Dict<any>> extends BaseComponentProps<TApi> {

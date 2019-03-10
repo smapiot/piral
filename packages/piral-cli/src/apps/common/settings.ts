@@ -1,8 +1,6 @@
 import { ParcelOptions } from 'parcel-bundler';
 
 export function extendConfig(options: ParcelOptions): ParcelOptions {
-  process.env.BUILD_TIME = new Date().toDateString();
-
   return {
     cache: true,
     cacheDir: '.cache',

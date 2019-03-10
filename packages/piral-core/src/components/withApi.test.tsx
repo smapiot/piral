@@ -26,7 +26,7 @@ const StubComponent: React.SFC<{ shouldCrash?: boolean }> = ({ shouldCrash }) =>
 StubComponent.displayName = 'StubComponent';
 
 describe('withApi Module', () => {
-  it('wraps a component and forwards the API as portal', () => {
+  it('wraps a component and forwards the API as piral', () => {
     const api: any = {};
     const Component = withApi(StubComponent, api);
     const node = mount(<Component />);
@@ -34,7 +34,7 @@ describe('withApi Module', () => {
       node
         .find(StubComponent)
         .first()
-        .prop('portal'),
+        .prop('piral'),
     ).toBe(api);
   });
 
