@@ -7,6 +7,7 @@
 * Renamed `PortalApi` to `PiralApi`
 * Renamed `PortalInstance` to `PiralInstance`
 * Added `registerSearchProvider` API
+* Implemented `pilet-upgrade` command (#11)
 
 ## 0.1.3 (February 26, 2019)
 
