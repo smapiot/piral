@@ -1,4 +1,4 @@
-import { ReactChild, createElement } from 'react';
+import * as React from 'react';
 import { TiId, TiType } from './types';
 
 export function gid(node: { id: TiId }) {
@@ -13,11 +13,11 @@ export function gref(id?: TiId) {
   return id && `#${gid({ id })}`;
 }
 
-export function withSep(items: Array<ReactChild>, sep: string) {
-  const newItems: Array<ReactChild> = [];
+export function withSep(items: Array<React.ReactChild>, sep: string) {
+  const newItems: Array<React.ReactChild> = [];
 
   items.forEach((item, i) => {
-    newItems.push(item, createElement('span', { key: i }, sep));
+    newItems.push(item, <span key={i}>{sep}</span>);
   });
 
   newItems.pop();
