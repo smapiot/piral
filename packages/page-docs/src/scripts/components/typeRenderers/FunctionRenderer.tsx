@@ -2,28 +2,33 @@ import * as React from 'react';
 import { TiNode, TiKind } from './types';
 import { Callout } from '../Callout';
 import { gid } from './utils';
+import { SignatureRenderer } from './SignatureRenderer';
 
 export interface FunctionRendererProps {
   node: TiNode;
+  render(child: TiNode): JSX.Element;
 }
 
-export const FunctionRenderer: React.SFC<FunctionRendererProps> = ({ node }) => (
+export const FunctionRenderer: React.SFC<FunctionRendererProps> = ({ node, render }) => (
   <Callout type="success" title={node.name} icon="puzzle-piece" id={gid(node)}>
     <p>
       <b>{node.kindString}</b>
     </p>
-    {node.signatures.map(
-      child =>
-        child.kind === TiKind.CallSignature && (
-          <div key={child.id}>
-            <p>{child.comment && child.comment.shortText}</p>
-            <p>
-              <code>
-                {child.name}({(child.parameters || []).map(p => `${p.name}: ${p.type.name || 'any'}`).join(', ')})
-              </code>
-            </p>
-          </div>
-        ),
-    )}
+    <ul className="interface-map">
+      {node.signatures.map(
+        child =>
+          child.kind === TiKind.CallSignature && (
+            <li key={child.id}>
+              {child.comment && child.comment.shortText}
+              <span className="block">
+                <code>
+                  {child.name}
+                  <SignatureRenderer node={child} render={render} />
+                </code>
+              </span>
+            </li>
+          ),
+      )}
+    </ul>
   </Callout>
 );

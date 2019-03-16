@@ -25,8 +25,26 @@ html, body {
   height: 50px;
 }
 
+ul.interface-map {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+
+  &:empty {
+    display: none;
+  }
+
+  li {
+    margin: 0.5em 0;
+  }
+}
+
 p {
   line-height: 1.5;
+}
+
+span.block {
+  display: block;
 }
 
 a {

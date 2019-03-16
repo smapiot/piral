@@ -4,6 +4,7 @@ import { Callout } from '../Callout';
 
 export interface EnumerationRendererProps {
   node: TiNode;
+  render(child: TiNode): JSX.Element;
 }
 
 export const EnumerationRenderer: React.SFC<EnumerationRendererProps> = ({ node }) => (
@@ -11,16 +12,21 @@ export const EnumerationRenderer: React.SFC<EnumerationRendererProps> = ({ node 
     <p>
       <b>{node.kindString}</b>
     </p>
-    {node.children.map(
-      child =>
-        child.kind === TiKind.EnumerationMember && (
-          <p key={child.id}>
-            <code>
-              {child.name} = {child.defaultValue}
-            </code>{' '}
-            ({child.comment && child.comment.shortText})
-          </p>
-        ),
-    )}
+    <p>{node.comment && node.comment.shortText}</p>
+    <ul className="interface-map">
+      {node.children.map(
+        child =>
+          child.kind === TiKind.EnumerationMember && (
+            <li key={child.id}>
+              {child.comment && child.comment.shortText}
+              <span className="block">
+                <code>
+                  {child.name} = {child.defaultValue}
+                </code>
+              </span>
+            </li>
+          ),
+      )}
+    </ul>
   </Callout>
 );

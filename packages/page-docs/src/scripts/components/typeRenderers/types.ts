@@ -12,6 +12,7 @@ export const enum TiKind {
   IndexSignature = 8192,
   Parameter = 32768,
   TypeLiteral = 65536,
+  TypeParameter = 131072,
   ObjectLiteral = 2097152,
   TypeAlias = 4194304,
 }
@@ -22,6 +23,7 @@ export interface TiType {
   type: string;
   id?: TiId;
   name?: string;
+  value?: string;
   types?: Array<TiType>;
   typeArguments?: Array<TiType>;
   declaration?: TiNode;
@@ -45,6 +47,7 @@ export interface TiNode {
     isConst?: boolean;
   };
   signatures?: Array<TiNode>;
+  indexSignature?: Array<TiNode>;
   typeParameter?: Array<TiNode>;
   type?: TiType;
   parameters?: Array<TiNode>;

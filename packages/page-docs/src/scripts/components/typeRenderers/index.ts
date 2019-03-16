@@ -6,3 +6,4 @@ export * from './ModuleRenderer';
 export * from './ObjectLiteralRenderer';
 export * from './TypeAliasRenderer';
 export * from './VariableRenderer';
+export * from './TypeLiteralRenderer';

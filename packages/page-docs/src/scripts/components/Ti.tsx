@@ -6,6 +6,7 @@ import {
   ModuleRenderer,
   EnumerationRenderer,
   TypeAliasRenderer,
+  TypeLiteralRenderer,
   ObjectLiteralRenderer,
   VariableRenderer,
   FunctionRenderer,
@@ -21,17 +22,19 @@ function render(node: TiNode) {
     case TiKind.ExternalModule:
       return <ModuleRenderer node={node} render={render} />;
     case TiKind.Interface:
-      return <InterfaceRenderer node={node} />;
+      return <InterfaceRenderer node={node} render={render} />;
     case TiKind.Function:
-      return <FunctionRenderer node={node} />;
+      return <FunctionRenderer node={node} render={render} />;
     case TiKind.ObjectLiteral:
-      return <ObjectLiteralRenderer node={node} />;
+      return <ObjectLiteralRenderer node={node} render={render} />;
     case TiKind.Variable:
-      return <VariableRenderer node={node} />;
+      return <VariableRenderer node={node} render={render} />;
+    case TiKind.TypeLiteral:
+      return <TypeLiteralRenderer node={node} render={render} />;
     case TiKind.TypeAlias:
-      return <TypeAliasRenderer node={node} />;
+      return <TypeAliasRenderer node={node} render={render} />;
     case TiKind.Enumeration:
-      return <EnumerationRenderer node={node} />;
+      return <EnumerationRenderer node={node} render={render} />;
     default:
       return <span>{node.name}</span>;
   }
