@@ -27,7 +27,7 @@ const availableActions = {
 
 (actions as any).useActions = () => availableActions;
 
-describe('Search Module', () => {
+describe('Search Hook Module', () => {
   it('just returns current input value', () => {
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;

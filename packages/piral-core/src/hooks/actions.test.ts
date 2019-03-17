@@ -9,7 +9,7 @@ jest.mock('react', () => {
   };
 });
 
-describe('Actions Module', () => {
+describe('Actions Hook Module', () => {
   it('selects all available functions from context', () => {
     const result = useActions();
     expect(result).toEqual({

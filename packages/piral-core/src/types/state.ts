@@ -178,6 +178,31 @@ export interface FeedsState {
   };
 }
 
+export interface FormsState {
+  [id: string]: {
+    /**
+     * Indicates if the form is currently submitting.
+     */
+    submitting: boolean;
+    /**
+     * The error that happened during submission.
+     */
+    error: any;
+    /**
+     * The currently stored form data.
+     */
+    currentData: any;
+    /**
+     * The initially stored form data.
+     */
+    initialData: any;
+    /**
+     * Reflects if the initial data is different from the current data.
+     */
+    changed: boolean;
+  };
+}
+
 export interface UserState {
   /**
    * The provided features, if any.
@@ -222,6 +247,10 @@ export interface GlobalState {
    */
   feeds: FeedsState;
   /**
+   * The relevant state for the registered forms.
+   */
+  forms: FormsState;
+  /**
    * The relevant state for the current user.
    */
   user: UserState;
@@ -240,6 +269,9 @@ export interface StateActions {
   removeLanguage(language: string): void;
   createFeed(id: string): void;
   loadFeed<TData, TItem>(feed: ConnectorDetails<TData, TItem>): void;
+  createForm(id: string): void;
+  resetForm(id: string, data: any): void;
+  changeForm(id: string, data: any, changed: boolean): void;
   openNotification(notification: OpenNotification): void;
   closeNotification(notification: OpenNotification): void;
   openModal(dialog: OpenModalDialog): void;

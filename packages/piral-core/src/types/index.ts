@@ -3,6 +3,7 @@ export * from './components';
 export * from './data';
 export * from './extension';
 export * from './feed';
+export * from './form';
 export * from './layout';
 export * from './menu';
 export * from './plugin';

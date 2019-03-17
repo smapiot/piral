@@ -4,6 +4,7 @@ import { TilePreferences } from './tile';
 import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
+import { InputFormOptions, FormCreator } from './form';
 import { Dict, LocalizationMessages, Disposable, SeverityLevel, EventEmitter } from './utils';
 import { SearchProvider } from './search';
 import {
@@ -59,6 +60,11 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param options The options for creating the connector.
    */
   createConnector<TData, TItem>(options: FeedConnectorOptions<TData, TItem>): FeedConnector<TData>;
+  /**
+   * Creates an input form for tracking user input intelligently.
+   * @param options The options for creating the form.
+   */
+  createForm<TFormData>(options: InputFormOptions<TFormData>): FormCreator<TFormData>;
   /**
    * Gets a shared data value.
    * @param name The name of the data to retrieve.

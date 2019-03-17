@@ -1,22 +1,14 @@
 import * as React from 'react';
-import { useEffect } from 'react';
-import { useGlobalState, useAction } from '../hooks';
-import { ConnectorDetails } from '../types';
+import { useFeed, useGlobalState } from '../hooks';
+import { ConnectorDetails, ConnectorProps } from '../types';
 
 export function withFeed<TData, TItem, TProps>(
-  Component: React.ComponentType<TProps & { data: TData }>,
+  Component: React.ComponentType<TProps & ConnectorProps<TData>>,
   options: ConnectorDetails<TData, TItem>,
 ) {
-  const FeedView: React.SFC<TProps> = ({ ...props }) => {
-    const { loaded, loading, error, data } = useGlobalState(s => s.feeds[options.id]);
+  const FeedView: React.SFC<TProps> = props => {
     const { Loader, ErrorInfo } = useGlobalState(s => s.app.components);
-    const load = useAction('loadFeed');
-
-    useEffect(() => {
-      if (!loaded && !loading) {
-        load(options);
-      }
-    }, []);
+    const [loaded, data, error] = useFeed(options);
 
     if (!loaded) {
       return <Loader />;

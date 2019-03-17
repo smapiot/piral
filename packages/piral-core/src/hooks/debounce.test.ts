@@ -3,7 +3,7 @@ import { useDebounce } from './debounce';
 
 jest.mock('react');
 
-describe('Debounce Module', () => {
+describe('Debounce Hook Module', () => {
   it('just returns initial value if nothing has been changed', () => {
     const usedEffect = jest.fn();
     const usedState = jest.fn(value => [value]);
