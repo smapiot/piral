@@ -73,7 +73,7 @@ export function createApi<TApi>(
       },
       createForm(options) {
         const id = buildName(prefix, feeds++);
-        context.createForm(id);
+        context.resetForm(id, options.initialData);
         return component => withForm(component, { id, ...options });
       },
       provideTranslations(messages) {

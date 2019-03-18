@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, ChangeEvent } from 'react';
 
 export interface FormProps<TFormData> {
   /**
@@ -23,15 +23,21 @@ export interface FormProps<TFormData> {
    */
   changed: boolean;
   /**
-   * Gets the current form data, if any.
+   * Gets the current form data.
    */
-  formData?: TFormData;
+  formData: TFormData;
   /**
    * Sets the (partially) updated form data. If no current form data is
    * given this is treated as the initial state.
    * @param data The updated form data.
    */
   setFormData<TKeys extends keyof TFormData>(data: Pick<TFormData, TKeys>): void;
+  /**
+   * Changes the form field given by the name of the input element that
+   * emits the corresponding event.
+   * @param e The event arguments.
+   */
+  changeForm(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void;
 }
 
 export interface FormCreator<TFormData> {
@@ -60,6 +66,10 @@ export interface InputFormOptions<TFormData> {
    * Optionally, overrides the message to show when the form data would be lost.
    */
   message?: PromptMessage;
+  /**
+   * Sets the initial data of the form.
+   */
+  initialData: TFormData;
   /**
    * Callback to be invoked when the form is submitted.
    * In case of an error reject the promise. The error will be handed back to the

@@ -19,7 +19,9 @@ StubComponent.displayName = 'StubComponent';
 describe('withForm Module', () => {
   it('shows loading without invoking action if already loading', () => {
     const options: any = { id: 'bar' };
-    const usedForm = jest.fn(() => {});
+    const usedForm = jest.fn(() => ({
+      submit() {},
+    }));
     (hooks as any).useForm = usedForm;
     const Component: any = withForm(StubComponent, options);
     mountWithRouter(<Component />);

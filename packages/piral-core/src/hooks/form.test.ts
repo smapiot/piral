@@ -22,6 +22,7 @@ describe('Form Hook Module', () => {
     (React as any).useContext = () => ({
       resetForm: jest.fn(),
       changeForm: jest.fn(),
+      submitForm: jest.fn(),
     });
     (prompt as any).usePrompt = promptFake;
     (globalState as any).useGlobalState = (select: any) => select(pseudoState);

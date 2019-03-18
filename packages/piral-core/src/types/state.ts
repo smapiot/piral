@@ -268,9 +268,10 @@ export interface StateActions {
   addLanguage(language: string): void;
   removeLanguage(language: string): void;
   createFeed(id: string): void;
+  destroyFeed(id: string): void;
   loadFeed<TData, TItem>(feed: ConnectorDetails<TData, TItem>): void;
-  createForm(id: string): void;
   resetForm(id: string, data: any): void;
+  submitForm(id: string, worker: Promise<any>): void;
   changeForm(id: string, data: any, changed: boolean): void;
   openNotification(notification: OpenNotification): void;
   closeNotification(notification: OpenNotification): void;

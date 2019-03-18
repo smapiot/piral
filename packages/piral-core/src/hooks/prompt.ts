@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { History } from 'history';
+import { History, Location } from 'history';
 import { PromptMessage } from '../types';
 
 /**
@@ -9,7 +9,12 @@ import { PromptMessage } from '../types';
  * @param history The history of the currently used router.
  * @param message The message to display when the prompt is shown.
  */
-export function usePrompt(active: boolean, history: History, message: PromptMessage) {
+export function usePrompt(
+  active: boolean,
+  history: History,
+  message: PromptMessage,
+  onTransition?: (location: Location) => void,
+) {
   useEffect(() => {
     if (active) {
       const beforeUnload = (ev: BeforeUnloadEvent) => {
@@ -17,9 +22,11 @@ export function usePrompt(active: boolean, history: History, message: PromptMess
         ev.returnValue = msg;
         return msg;
       };
+      const unlisten = history.listen(onTransition);
       const unblock = history.block(message);
       window.addEventListener('beforeunload', beforeUnload);
       return () => {
+        unlisten();
         unblock();
         window.removeEventListener('beforeunload', beforeUnload);
       };

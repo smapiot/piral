@@ -1,26 +1,6 @@
 import { swap, Atom } from '@dbeining/react-atom';
-import { withKey, withoutKey } from '../../utils';
+import { withKey } from '../../utils';
 import { GlobalState } from '../../types';
-
-export function createForm(id: string) {
-  swap(this as Atom<GlobalState>, state => ({
-    ...state,
-    forms: withKey(state.forms, id, {
-      submitting: false,
-      error: undefined,
-      currentData: undefined,
-      initialData: undefined,
-      changed: false,
-    }),
-  }));
-}
-
-export function destroyForm(id: string) {
-  swap(this as Atom<GlobalState>, state => ({
-    ...state,
-    forms: withoutKey(state.forms, id),
-  }));
-}
 
 export function resetForm(id: string, data: any) {
   swap(this as Atom<GlobalState>, state => ({
@@ -44,4 +24,42 @@ export function changeForm(id: string, data: any, changed: boolean) {
       changed,
     }),
   }));
+}
+
+export function submitForm(id: string, worker: Promise<any>) {
+  const ctx = this as Atom<GlobalState>;
+  swap(ctx, state => {
+    const data = state.forms[id].currentData;
+    Promise.resolve(worker)
+      .then(() => {
+        swap(ctx, state => ({
+          ...state,
+          forms: withKey(state.forms, id, {
+            ...state.forms[id],
+            submitting: false,
+            error: undefined,
+            initialData: data,
+          }),
+        }));
+      })
+      .catch(error => {
+        swap(ctx, state => ({
+          ...state,
+          forms: withKey(state.forms, id, {
+            ...state.forms[id],
+            submitting: false,
+            changed: true,
+            error,
+          }),
+        }));
+      });
+    return {
+      ...state,
+      forms: withKey(state.forms, id, {
+        ...state.forms[id],
+        submitting: true,
+        changed: false,
+      }),
+    };
+  });
 }

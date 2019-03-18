@@ -9,7 +9,11 @@ export function withForm<TFormData, TProps>(
 ): React.ComponentType<TProps> {
   const FormView: React.SFC<TProps & RouteComponentProps> = props => {
     const formProps = useForm(options, props.history);
-    return <Component {...props} {...formProps} />;
+    return (
+      <form onSubmit={formProps.submit}>
+        <Component {...props} {...formProps} />
+      </form>
+    );
   };
   FormView.displayName = `FormView_${options.id}`;
 

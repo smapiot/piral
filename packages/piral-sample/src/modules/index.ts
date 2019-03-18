@@ -3,6 +3,7 @@ import { DashboardModule } from './dashboard';
 import { Module1 } from './module1';
 import { Module2 } from './module2';
 import { SearchModule } from './search';
+import { FormModule } from './form';
 
 /**
  * Normally all these modules would come from some API and
@@ -13,4 +14,4 @@ import { SearchModule } from './search';
  * repository (or at least in its own folder / structure in a
  * monorepo).
  */
-export const modules = [DashboardModule, ConnectorModule, Module1, Module2, SearchModule];
+export const modules = [DashboardModule, ConnectorModule, Module1, Module2, SearchModule, FormModule];

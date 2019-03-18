@@ -12,6 +12,7 @@ describe('Prompt Hook Module', () => {
     const usedEffect = jest.fn();
     const history = {
       block: jest.fn(() => () => {}),
+      listen: jest.fn(() => () => {}),
     };
     (React as any).useEffect = usedEffect;
     usePrompt(false, history as any, 'blocked');
@@ -33,6 +34,7 @@ describe('Prompt Hook Module', () => {
     const usedEffect = jest.fn();
     const history = {
       block: jest.fn(() => () => {}),
+      listen: jest.fn(() => () => {}),
     };
     (React as any).useEffect = usedEffect;
     usePrompt(true, history as any, 'blocked');
@@ -54,6 +56,7 @@ describe('Prompt Hook Module', () => {
     const usedEffect = jest.fn();
     const history = {
       block: jest.fn(() => () => {}),
+      listen: jest.fn(() => () => {}),
     };
     (React as any).useEffect = usedEffect;
     usePrompt(true, history as any, 'blocked');
@@ -73,6 +76,7 @@ describe('Prompt Hook Module', () => {
     const usedEffect = jest.fn();
     const history = {
       block: jest.fn(() => () => {}),
+      listen: jest.fn(() => () => {}),
     };
     (React as any).useEffect = usedEffect;
     usePrompt(true, history as any, () => 'block!');
