@@ -2,7 +2,6 @@ export * from './action';
 export * from './actions';
 export * from './debounce';
 export * from './feed';
-export * from './form';
 export * from './globalState';
 export * from './lockBodyScroll';
 export * from './media';

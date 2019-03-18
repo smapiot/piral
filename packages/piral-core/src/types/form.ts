@@ -77,10 +77,3 @@ export interface InputFormOptions<TFormData> {
    */
   onSubmit(data: TFormData): Promise<void>;
 }
-
-export interface FormDetails<TFormData> extends InputFormOptions<TFormData> {
-  /**
-   * The unique ID of the form.
-   */
-  id: string;
-}

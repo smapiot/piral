@@ -22,12 +22,12 @@ export function usePrompt(
         ev.returnValue = msg;
         return msg;
       };
-      const unlisten = history.listen(onTransition);
-      const unblock = history.block(message);
+      const unlisten = onTransition && history.listen(onTransition);
+      const unblock = message && history.block(message);
       window.addEventListener('beforeunload', beforeUnload);
       return () => {
-        unlisten();
-        unblock();
+        unlisten && unlisten();
+        unblock && unblock();
         window.removeEventListener('beforeunload', beforeUnload);
       };
     }

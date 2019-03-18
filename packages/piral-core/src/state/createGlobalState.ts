@@ -63,7 +63,6 @@ export function createGlobalState({
       searchProviders: {},
     },
     feeds: {},
-    forms: {},
     user: {
       current: undefined,
       features: {},

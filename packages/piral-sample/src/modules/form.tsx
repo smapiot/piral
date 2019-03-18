@@ -24,8 +24,13 @@ export const FormModule: ArbiterModule<PiralApi> = {
         lastName: '',
       },
       onSubmit(data) {
-        console.log('Submitting data', data);
-        return new Promise(resolve => setTimeout(resolve, 5000));
+        console.log('Submitting data ...', data);
+        return new Promise(resolve =>
+          setTimeout(() => {
+            resolve();
+            console.log('Submitted data!', data);
+          }, 5000),
+        );
       },
     });
     piral.registerPage(
