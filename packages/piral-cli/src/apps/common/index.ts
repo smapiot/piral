@@ -5,6 +5,7 @@ export * from './info';
 export * from './merge';
 export * from './npm';
 export * from './package';
+export * from './pilet';
 export * from './port';
 export * from './server';
 export * from './settings';

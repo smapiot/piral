@@ -1,6 +1,10 @@
 import { ParcelOptions } from 'parcel-bundler';
 
-export function extendConfig(options: ParcelOptions): ParcelOptions {
+export interface ParcelConfig extends ParcelOptions {
+  global?: string;
+}
+
+export function extendConfig(options: ParcelConfig): ParcelConfig {
   return {
     cache: true,
     cacheDir: '.cache',

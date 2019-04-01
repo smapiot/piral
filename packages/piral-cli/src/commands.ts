@@ -1,5 +1,6 @@
 import { Argv, Arguments } from 'yargs';
 import { apps } from './index';
+import { forceOverwriteKeys, keyOfForceOverwrite, valueOfForceOverwrite } from './helpers';
 
 function specializeCommands(suffix: string) {
   return allCommands
@@ -83,9 +84,50 @@ export const allCommands: Array<ToolCommand<any>> = [
   {
     name: 'build-pilet',
     alias: ['bundle-pilet', 'build', 'bundle'],
-    description: '(currently not implemented)',
-    arguments: [],
-    run(args) {},
+    description: 'Creates a production build for a pilet.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source index.tsx file for collecting all the information.',
+          default: apps.buildPiletDefaults.entry,
+        })
+        .string('target')
+        .describe('target', 'Sets the target file of bundling.')
+        .default('target', apps.buildPiletDefaults.target)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.buildPilet(args.base as string, {
+        entry: args.source as string,
+        target: args.target as string,
+      });
+    },
+  },
+  {
+    name: 'pack-pilet',
+    alias: ['package-pilet', 'pack', 'package'],
+    description: 'Creates a pilet package that can be published.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source packae.json file for creating the package.',
+          default: apps.packPiletDefaults.source,
+        })
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.packPilet(args.base as string, {
+        source: args.source as string,
+      });
+    },
   },
   {
     name: 'new-pilet',
@@ -105,6 +147,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
         .default('registry', apps.newPiletDefaults.registry)
+        .choices('force-overwrite', forceOverwriteKeys)
+        .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
+        .default('force-overwrite', keyOfForceOverwrite(apps.newPiletDefaults.forceOverwrite))
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -114,6 +159,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         source: args.source as string,
         registry: args.registry as string,
+        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
       });
     },
   },
@@ -130,6 +176,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('version')
         .describe('version', 'Sets the version of the Piral instance to upgrade to. By default, the latest version.')
         .default('version', apps.upgradePiletDefaults.version)
+        .choices('force-overwrite', forceOverwriteKeys)
+        .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
+        .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -138,6 +187,7 @@ export const allCommands: Array<ToolCommand<any>> = [
       return apps.upgradePilet(args.base as string, {
         target: args.target as string,
         version: args.version as string,
+        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
       });
     },
   },

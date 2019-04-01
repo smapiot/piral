@@ -7,18 +7,21 @@ import {
   dissectPackageName,
   copyPiralFiles,
   patchPiletPackage,
+  ForceOverwrite,
 } from './common';
 
 export interface NewPiletOptions {
   registry?: string;
   target?: string;
   source?: string;
+  forceOverwrite?: ForceOverwrite;
 }
 
 export const newPiletDefaults = {
   target: '.',
   registry: defaultRegistry,
   source: 'piral',
+  forceOverwrite: ForceOverwrite.no,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -26,6 +29,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     target = newPiletDefaults.target,
     registry = newPiletDefaults.registry,
     source = newPiletDefaults.source,
+    forceOverwrite = ForceOverwrite.no,
   } = options;
   const root = resolve(baseDir, target);
   const src = join(root, 'src');
@@ -64,6 +68,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
         '.npmrc',
         `registry=${registry}
 always-auth=true`,
+        forceOverwrite,
       );
     }
 
@@ -80,12 +85,13 @@ export function setup(app: ${apiName}) {
   app.showNotification('Hello World!');
 }
 `,
+      forceOverwrite,
     );
 
     console.log(`Taking care of templating ...`);
 
     const files = patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
-    copyPiralFiles(root, sourceName, files);
+    copyPiralFiles(root, sourceName, files, forceOverwrite);
 
     console.log(`All done!`);
   }

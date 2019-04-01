@@ -1,6 +1,18 @@
-import { mkdirSync, existsSync, writeFileSync, readFileSync, copyFileSync } from 'fs';
+import { mkdirSync, existsSync, writeFileSync, readFileSync, copyFileSync, constants } from 'fs';
 import { join, resolve } from 'path';
 import { deepMerge } from './merge';
+import { promptSelect } from './interactive';
+
+export enum ForceOverwrite {
+  no,
+  prompt,
+  yes,
+}
+
+function promptOverwrite(file: string) {
+  const message = `The file ${file} exists already. Do you want to overwrite it?`;
+  return promptSelect(message, ['no', 'yes'], 'no') === 'yes';
+}
 
 export function createDirectory(targetDir: string) {
   try {
@@ -12,7 +24,7 @@ export function createDirectory(targetDir: string) {
   }
 }
 
-export function findFile(topDir: string, fileName: string) {
+export function findFile(topDir: string, fileName: string): string {
   const path = join(topDir, fileName);
 
   if (!existsSync(path)) {
@@ -28,10 +40,19 @@ export function findFile(topDir: string, fileName: string) {
   return path;
 }
 
-export function createFileIfNotExists(targetDir: string, fileName: string, content: string) {
+export function createFileIfNotExists(
+  targetDir: string,
+  fileName: string,
+  content: string,
+  forceOverwrite = ForceOverwrite.no,
+) {
   const targetFile = join(targetDir, fileName);
 
-  if (!existsSync(targetFile)) {
+  if (
+    !existsSync(targetFile) ||
+    forceOverwrite === ForceOverwrite.yes ||
+    (forceOverwrite === ForceOverwrite.prompt && promptOverwrite(targetFile))
+  ) {
     writeFileSync(targetFile, content, 'utf8');
   }
 }
@@ -62,6 +83,17 @@ export function updateExistingJson<T>(targetDir: string, fileName: string, newCo
   updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));
 }
 
-export function copyFile(source: string, target: string) {
-  copyFileSync(source, target);
+export function copyFile(source: string, target: string, forceOverwrite = ForceOverwrite.no) {
+  try {
+    const flag = forceOverwrite === ForceOverwrite.yes ? 0 : constants.COPYFILE_EXCL;
+    copyFileSync(source, target, flag);
+  } catch (e) {
+    if (forceOverwrite === ForceOverwrite.prompt) {
+      if (promptOverwrite(target)) {
+        copyFile(source, target, ForceOverwrite.yes);
+      }
+    } else {
+      console.warn(e.message || `Did not overwrite: File ${target} already exists.`);
+    }
+  }
 }

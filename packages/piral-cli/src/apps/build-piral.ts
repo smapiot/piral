@@ -20,6 +20,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     production: true,
     target: dirname(entry),
   });
+
   const bundler = new Bundler(
     entryFiles,
     extendConfig({

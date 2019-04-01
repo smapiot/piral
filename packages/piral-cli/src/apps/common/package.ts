@@ -1,5 +1,5 @@
 import { resolve, join } from 'path';
-import { readJson, copyFile, updateExistingJson } from './io';
+import { readJson, copyFile, updateExistingJson, ForceOverwrite } from './io';
 import { cliVersion } from './info';
 
 export interface TemplateFileLocation {
@@ -21,12 +21,17 @@ export function readPiralPackage(root: string, name: string) {
   return readJson(path, 'package.json');
 }
 
-export function copyPiralFiles(root: string, name: string, files: Array<string | TemplateFileLocation>) {
+export function copyPiralFiles(
+  root: string,
+  name: string,
+  files: Array<string | TemplateFileLocation>,
+  forceOverwrite: ForceOverwrite,
+) {
   for (const file of files) {
     const { from, to } = typeof file === 'string' ? { from: file, to: file } : file;
     const sourcePath = getPiralFile(root, name, from);
     const targetPath = resolve(root, to);
-    copyFile(sourcePath, targetPath);
+    copyFile(sourcePath, targetPath, forceOverwrite);
   }
 }
 
