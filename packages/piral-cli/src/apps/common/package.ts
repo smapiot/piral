@@ -1,5 +1,5 @@
 import { resolve, join } from 'path';
-import { readJson, copyFile, updateExistingJson, ForceOverwrite } from './io';
+import { readJson, copy, updateExistingJson, ForceOverwrite } from './io';
 import { cliVersion } from './info';
 
 export interface TemplateFileLocation {
@@ -21,7 +21,7 @@ export function readPiralPackage(root: string, name: string) {
   return readJson(path, 'package.json');
 }
 
-export function copyPiralFiles(
+export async function copyPiralFiles(
   root: string,
   name: string,
   files: Array<string | TemplateFileLocation>,
@@ -31,16 +31,16 @@ export function copyPiralFiles(
     const { from, to } = typeof file === 'string' ? { from: file, to: file } : file;
     const sourcePath = getPiralFile(root, name, from);
     const targetPath = resolve(root, to);
-    copyFile(sourcePath, targetPath, forceOverwrite);
+    await copy(sourcePath, targetPath, forceOverwrite);
   }
 }
 
-export function patchPiletPackage(root: string, name: string, version?: string) {
-  const piralInfo = readPiralPackage(root, name);
+export async function patchPiletPackage(root: string, name: string, version?: string) {
+  const piralInfo = await readPiralPackage(root, name);
   const piralDependencies = piralInfo.dependencies || {};
   const piralVersion = version || piralInfo.version;
   const { files = [], sharedDependencies = [], scripts = {} } = piralInfo.pilets || {};
-  updateExistingJson(root, 'package.json', {
+  await updateExistingJson(root, 'package.json', {
     piral: {
       comment: 'Keep this section to allow running "piral upgrade".',
       name,

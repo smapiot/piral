@@ -16,7 +16,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const { entry = buildPiletDefaults.entry, target = buildPiletDefaults.target } = options;
   const entryFiles = join(baseDir, entry);
   const targetDir = dirname(entry);
-  const packageJson = findFile(targetDir, 'package.json');
+  const packageJson = await findFile(targetDir, 'package.json');
 
   if (!packageJson) {
     return console.error('Cannot find any package.json. You need a valid package.json for your pilet.');
@@ -24,7 +24,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const externals = Object.keys(require(packageJson).peerDependencies);
 
-  setStandardEnvs({
+  await setStandardEnvs({
     production: true,
     target: targetDir,
   });

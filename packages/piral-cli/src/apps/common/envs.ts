@@ -5,8 +5,8 @@ export interface StandardEnvProps {
   target?: string;
 }
 
-function readNextPackageJson(dir: string) {
-  const path = findFile(dir, 'package.json');
+async function readNextPackageJson(dir: string) {
+  const path = await findFile(dir, 'package.json');
 
   if (path) {
     return require(path);
@@ -19,8 +19,8 @@ function readNextPackageJson(dir: string) {
   };
 }
 
-export function setStandardEnvs(options: StandardEnvProps = {}) {
-  const packageJson = readNextPackageJson(options.target || process.cwd());
+export async function setStandardEnvs(options: StandardEnvProps = {}) {
+  const packageJson = await readNextPackageJson(options.target || process.cwd());
 
   process.env.BUILD_TIME = new Date().toDateString();
   process.env.BUILD_TIME_FULL = new Date().toISOString();

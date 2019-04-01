@@ -16,7 +16,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const { entry = buildPiralDefaults.entry, target = buildPiralDefaults.target } = options;
   const entryFiles = join(baseDir, entry);
 
-  setStandardEnvs({
+  await setStandardEnvs({
     production: true,
     target: dirname(entry),
   });

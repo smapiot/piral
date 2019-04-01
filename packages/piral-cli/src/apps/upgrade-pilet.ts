@@ -20,7 +20,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     forceOverwrite = upgradePiletDefaults.forceOverwrite,
   } = options;
   const root = resolve(baseDir, target);
-  const pckg = readJson(root, 'package.json');
+  const pckg = await readJson(root, 'package.json');
   const piralInfo = pckg.piral;
 
   if (piralInfo) {
@@ -32,8 +32,8 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     console.log(`Taking care of templating ...`);
 
-    const files = patchPiletPackage(root, sourceName);
-    copyPiralFiles(root, sourceName, files, forceOverwrite);
+    const files = await patchPiletPackage(root, sourceName);
+    await copyPiralFiles(root, sourceName, files, forceOverwrite);
 
     console.log(`All done!`);
   } else {

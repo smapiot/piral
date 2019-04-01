@@ -33,19 +33,23 @@ export function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions =
 
   (async function() {
     const buildServerPort = await getFreePort(64834);
-    setStandardEnvs({
+
+    await setStandardEnvs({
       target: dirname(entry),
     });
+
     const bundler = new Bundler(entryFiles, extendConfig({}));
     krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
     const krasServer = buildKrasWithCli(krasConfig);
     krasServer.removeAllListeners('open');
+
     krasServer.on('open', svc => {
       const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
       console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
       console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
       startServer(buildServerPort, (bundler as any).middleware());
     });
+
     krasServer.start();
   })();
 }

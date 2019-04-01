@@ -12,7 +12,7 @@ export const packPiletDefaults = {
 export async function packPilet(baseDir = process.cwd(), options: PackPiletOptions = {}) {
   const { source = packPiletDefaults.source } = options;
   const root = resolve(baseDir, source);
-  const pckg = readJson(root, 'package.json');
+  const pckg = await readJson(root, 'package.json');
 
   await createPackage(root);
   //TODO
