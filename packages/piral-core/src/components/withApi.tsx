@@ -12,9 +12,9 @@ const ComponentError: React.SFC<ComponentErrorProps> = ({ error }) => {
   return <ErrorInfo type="feed" error={error} />;
 };
 
-export type ApiForward<TApi> = {
+export interface ApiForward<TApi> {
   piral: PiralApi<TApi>;
-};
+}
 
 export function withApi<TApi, TProps>(component: AnyComponent<TProps & ApiForward<TApi>>, piral: PiralApi<TApi>) {
   return wrapComponent<TProps, ApiForward<TApi>>(component, {

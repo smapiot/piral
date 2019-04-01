@@ -11,7 +11,7 @@ export interface FormProps<TFormData> {
    */
   reset(): void;
   /**
-   * Indicats an error while submitting the form
+   * Indicats an error while submitting the form.
    */
   error?: any;
   /**
@@ -40,40 +40,59 @@ export interface FormProps<TFormData> {
   changeForm(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void;
 }
 
-export interface FormCreator<TFormData> {
+export interface FormCreator<TFormData, TProps> {
   /**
    * Form function for wrapping a component.
    */
-  <TProps>(component: ComponentType<TProps & FormProps<TFormData>>): ComponentType<TProps>;
+  (component: ComponentType<TProps & FormProps<TFormData>>): ComponentType<TProps>;
 }
 
 export type PromptMessage = string | (() => string);
 
-export interface InputFormOptions<TFormData> {
+export interface InputFormOptions<TFormData, TProps> {
+  /**
+   * The optional name of the form. Should be unique.
+   * If not given the name is auto-determined from the order of calling.
+   * For persistent forms a good name should be chosen.
+   */
+  name?: string;
   /**
    * If enabled does not notify the user that form data could be lost on page transitions.
    */
   silent?: boolean;
   /**
+   * If enabled forces the user to stay on the form until onSubmit has finished.
+   */
+  wait?: boolean;
+  /**
    * If enabled persists the form until it is submitted or cancelled.
    */
   persist?: boolean;
-  /**
-   * Allows opening the same form multiple times. By default false.
-   */
-  multiple?: boolean;
   /**
    * Optionally, overrides the message to show when the form data would be lost.
    */
   message?: PromptMessage;
   /**
+   * Loads the initial form data from the provided props, which are the auxiliary props given
+   * to the form component.
+   */
+  loadData?(props: TProps): Promise<TFormData>;
+  /**
    * Sets the initial data of the form.
    */
-  initialData: TFormData;
+  emptyData: TFormData;
   /**
    * Callback to be invoked when the form is submitted.
    * In case of an error reject the promise. The error will be handed back to the
    * form.
+   * @param data The entered form data.
    */
   onSubmit(data: TFormData): Promise<void>;
+  /**
+   * Callback to be invoked when the form data has changed.
+   * Has the ability of changing the form data by returning
+   * a promise leading to the modified form data.
+   * @param data The currently entered form data.
+   */
+  onChange?(data: TFormData): Promise<Partial<TFormData>>;
 }

@@ -10,6 +10,7 @@ export const globalDependencies: AvailableDependencies = {
 
 export function getLocalDependencies(): AvailableDependencies {
   return {
+    ...globalDependencies,
     'react-arbiter': require('react-arbiter'),
     'react-dom': require('react-dom'),
   };

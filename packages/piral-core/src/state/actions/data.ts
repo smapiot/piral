@@ -1,5 +1,5 @@
 import { swap, Atom, deref, DeepImmutableObject } from '@dbeining/react-atom';
-import { withKey } from '../../utils';
+import { updateKey } from '../../utils';
 import { GlobalState, SharedDataItem, DataStoreTarget } from '../../types';
 
 export function resetData() {
@@ -24,16 +24,20 @@ export function readDataValue(key: string) {
 }
 
 export function writeDataItem(key: string, value: any, owner: string, target: DataStoreTarget, expires: number) {
-  swap(this as Atom<GlobalState>, state => ({
-    ...state,
-    app: {
-      ...state.app,
-      data: withKey<SharedDataItem>(state.app.data, key, {
+  const isNull = !value && typeof value === 'object';
+  const data = isNull
+    ? value
+    : {
         value,
         owner,
         target,
         expires,
-      }),
+      };
+  swap(this as Atom<GlobalState>, state => ({
+    ...state,
+    app: {
+      ...state.app,
+      data: updateKey<SharedDataItem>(state.app.data, key, data),
     },
   }));
 }

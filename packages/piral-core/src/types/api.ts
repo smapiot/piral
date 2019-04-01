@@ -64,7 +64,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * Creates an input form for tracking user input intelligently.
    * @param options The options for creating the form.
    */
-  createForm<TFormData>(options: InputFormOptions<TFormData>): FormCreator<TFormData>;
+  createForm<TFormData, TProps = any>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
   /**
    * Gets a shared data value.
    * @param name The name of the data to retrieve.
