@@ -17,56 +17,104 @@ export const FormModule: ArbiterModule<PiralApi> = {
   version: '1.0.0',
   hash: '429',
   setup(piral) {
-    const withForm = piral.createForm({
+    class MyForm extends React.Component<PageComponentProps<PiralCoreApi<{}>> & FormProps<SampleFormData>> {
+      render() {
+        const { formData, changeForm, changed, submitting, reset, error } = this.props;
+        const { firstName, lastName } = formData;
+
+        return (
+          <div>
+            <div className="form-row">
+              <label>First Name:</label>
+              <input value={firstName} name="firstName" onChange={changeForm} />
+            </div>
+            <div className="form-row">
+              <label>Last Name:</label>
+              <input value={lastName} name="lastName" onChange={changeForm} />
+            </div>
+            <div className="form-row">
+              <button disabled={!changed || submitting}>{submitting ? 'Saving ...' : 'Save'}</button>{' '}
+              {!submitting && (
+                <>
+                  {'| '}
+                  <button disabled={!changed} type="button" onClick={reset}>
+                    Reset
+                  </button>
+                </>
+              )}
+            </div>
+            {error && (
+              <div className="form-row">
+                <div className="notification error">
+                  <div className="notification-content">
+                    <div className="notification-message">{error.message}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      }
+    }
+    const withSimpleForm = piral.createForm({
       message: `Really lose the data?`,
-      initialData: {
+      emptyData: {
         firstName: '',
         lastName: '',
       },
       onSubmit(data) {
-        console.log('Submitting data ...', data);
+        console.log('Submitting simple data ...', data);
         return new Promise(resolve =>
           setTimeout(() => {
             resolve();
-            console.log('Submitted data!', data);
+            console.log('Submitted simple data!', data);
           }, 5000),
         );
       },
     });
-    piral.registerPage(
-      '/form-example',
-      withForm(
-        class extends React.Component<PageComponentProps<PiralCoreApi<{}>> & FormProps<SampleFormData>> {
-          render() {
-            const { formData, changeForm, changed, submitting, reset } = this.props;
-            const { firstName, lastName } = formData;
+    piral.registerPage('/form-simple-example', withSimpleForm(MyForm));
 
-            return (
-              <div>
-                <div className="form-row">
-                  <label>First Name:</label>
-                  <input value={firstName} name="firstName" onChange={changeForm} />
-                </div>
-                <div className="form-row">
-                  <label>Last Name:</label>
-                  <input value={lastName} name="lastName" onChange={changeForm} />
-                </div>
-                <div className="form-row">
-                  <button disabled={!changed || submitting}>{submitting ? 'Saving ...' : 'Save'}</button>{' '}
-                  {!submitting && (
-                    <>
-                      {'| '}
-                      <button disabled={!changed} type="button" onClick={reset}>
-                        Reset
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          }
-        },
-      ),
-    );
+    const withAsyncForm = piral.createForm({
+      message: `Really lose the data?`,
+      emptyData: {
+        firstName: '',
+        lastName: '',
+      },
+      onSubmit(data) {
+        console.log('Submitting async data ...', data);
+        return new Promise(resolve =>
+          setTimeout(() => {
+            resolve();
+            console.log('Submitted async data!', data);
+          }, 5000),
+        );
+      },
+      loadData(props: PageComponentProps<PiralCoreApi<{}>>) {
+        return new Promise<SampleFormData>(resolve =>
+          setTimeout(
+            () =>
+              resolve({
+                firstName: 'My',
+                lastName: 'User_' + props.match.params.id,
+              }),
+            5000,
+          ),
+        );
+      },
+    });
+    piral.registerPage('/form-async-example/:id', withAsyncForm(MyForm));
+
+    const withFailingForm = piral.createForm({
+      message: `Really lose the data?`,
+      emptyData: {
+        firstName: '',
+        lastName: '',
+      },
+      onSubmit(data) {
+        console.log('Submitting failing data ...', data);
+        return new Promise((_, reject) => setTimeout(() => reject(new Error('The form failed!')), 3000));
+      },
+    });
+    piral.registerPage('/form-failing-example', withFailingForm(MyForm));
   },
 };

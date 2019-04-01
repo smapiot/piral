@@ -73,31 +73,29 @@ export function useForm<TFormData>(
     submit(e?: FormEvent) {
       e && e.preventDefault();
 
-      if (!state.changed) {
-        return false;
-      }
+      if (state.changed) {
+        updateState(id, state, {
+          changed: !!wait,
+          submitting: true,
+        });
 
-      updateState(id, state, {
-        changed: !!wait,
-        submitting: true,
-      });
-
-      if (typeof onSubmit === 'function') {
-        Promise.resolve(onSubmit(state.currentData))
-          .then(() =>
-            updateState(id, state, {
-              initialData: state.currentData,
-              changed: false,
-              submitting: false,
-            }),
-          )
-          .catch(error =>
-            updateState(id, state, {
-              error,
-              changed: true,
-              submitting: false,
-            }),
-          );
+        if (typeof onSubmit === 'function') {
+          Promise.resolve(onSubmit(state.currentData))
+            .then(() =>
+              updateState(id, state, {
+                initialData: state.currentData,
+                changed: false,
+                submitting: false,
+              }),
+            )
+            .catch(error =>
+              updateState(id, state, {
+                error,
+                changed: true,
+                submitting: false,
+              }),
+            );
+        }
       }
 
       return false;
