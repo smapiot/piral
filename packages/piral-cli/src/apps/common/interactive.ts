@@ -1,6 +1,6 @@
 import { prompt } from 'inquirer';
 
-export function promptSelect(message: string, values: Array<string>, defaultValue: string) {
+export function promptSelect(message: string, values: Array<string>, defaultValue: string): Promise<string> {
   const questions = [
     {
       name: 'q',
@@ -10,10 +10,10 @@ export function promptSelect(message: string, values: Array<string>, defaultValu
       default: defaultValue,
     },
   ];
-  return prompt(questions).then(answers => answers.q);
+  return prompt(questions).then((answers: any) => answers.q);
 }
 
-export function promptConfirm(message: string, defaultValue: boolean) {
+export function promptConfirm(message: string, defaultValue: boolean): Promise<boolean> {
   const questions = [
     {
       name: 'q',
@@ -22,5 +22,5 @@ export function promptConfirm(message: string, defaultValue: boolean) {
       default: defaultValue,
     },
   ];
-  return prompt(questions).then(answers => answers.q);
+  return prompt(questions).then((answers: any) => answers.q);
 }
