@@ -26,8 +26,9 @@ function updateData<TFormData>(
   state: FormDataState,
   updateState: StateUpdater,
   newData: TFormData,
-  onChange?: (data: TFormData) => Promise<Partial<TFormData>>,
+  options: InputFormOptions<TFormData, any>,
 ) {
+  const { onChange } = options;
   updateState(id, state, {
     currentData: newData,
     changed: !compare(newData, state.initialData),
@@ -56,9 +57,9 @@ function submitData<TFormData>(
   id: string,
   state: FormDataState,
   updateState: StateUpdater,
-  wait: boolean,
-  onSubmit?: (data: TFormData) => Promise<void>,
+  options: InputFormOptions<TFormData, any>,
 ) {
+  const { onSubmit, wait } = options;
   updateState(id, state, {
     changed: !!wait,
     submitting: true,
@@ -89,7 +90,6 @@ function createProps<TFormData>(
   updateState: StateUpdater,
   options: InputFormOptions<TFormData, any>,
 ): FormProps<TFormData> {
-  const { onSubmit, wait, onChange } = options;
   return {
     changed: state.changed,
     formData: state.currentData,
@@ -98,7 +98,7 @@ function createProps<TFormData>(
       e && e.preventDefault();
 
       if (state.changed) {
-        submitData(id, state, updateState, wait, onSubmit);
+        submitData(id, state, updateState, options);
       }
 
       return false;
@@ -112,11 +112,11 @@ function createProps<TFormData>(
       });
     },
     setFormData(updatedData) {
-      updateData(id, state, updateState, { ...state.currentData, ...updatedData }, onChange);
+      updateData(id, state, updateState, { ...state.currentData, ...updatedData }, options);
     },
     changeForm(e) {
       const { name, value } = e.target;
-      updateData(id, state, updateState, { ...state.currentData, [name]: value }, onChange);
+      updateData(id, state, updateState, { ...state.currentData, [name]: value }, options);
     },
   };
 }

@@ -28,7 +28,13 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 ### Pilet Feed Service
 
-The pilet feed service needs to provide the following resources:
+#### Service Facing
+
+(tbd)
+
+#### User Facing
+
+The pilet feed service needs to provide the following resources to be consumed by end users:
 
 ```graphql
 type PiletMetadata

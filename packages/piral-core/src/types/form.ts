@@ -51,12 +51,6 @@ export type PromptMessage = string | (() => string);
 
 export interface InputFormOptions<TFormData, TProps> {
   /**
-   * The optional name of the form. Should be unique.
-   * If not given the name is auto-determined from the order of calling.
-   * For persistent forms a good name should be chosen.
-   */
-  name?: string;
-  /**
    * If enabled does not notify the user that form data could be lost on page transitions.
    */
   silent?: boolean;
@@ -64,10 +58,6 @@ export interface InputFormOptions<TFormData, TProps> {
    * If enabled forces the user to stay on the form until onSubmit has finished.
    */
   wait?: boolean;
-  /**
-   * If enabled persists the form until it is submitted or cancelled.
-   */
-  persist?: boolean;
   /**
    * Optionally, overrides the message to show when the form data would be lost.
    */
