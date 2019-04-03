@@ -18,7 +18,7 @@ export function withForm<TFormData, TProps>(
   const FormLoader: React.SFC<TProps & RouteComponentProps> = props => {
     const { loadData, emptyData } = options;
     const { Loader, ErrorInfo } = useGlobalState(s => s.app.components);
-    const { loading, data, error } = usePromise(
+    const { loading, data, error } = usePromise(() =>
       typeof loadData !== 'function' ? Promise.resolve(emptyData) : loadData(props),
     );
 

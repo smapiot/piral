@@ -8,9 +8,9 @@ export interface UsePromiseResult<T> {
 
 /**
  * Hook for introducing a complete local loading state for a promise.
- * @param promise The promise to wait for.
+ * @param promise The callback for the promise to wait for.
  */
-export function usePromise<T>(promise: Promise<T>) {
+export function usePromise<T>(promise: () => Promise<T>) {
   const [result, setResult] = useState<UsePromiseResult<T>>({
     loading: true,
     data: undefined,
@@ -19,7 +19,7 @@ export function usePromise<T>(promise: Promise<T>) {
   useEffect(() => {
     let cancelled = false;
 
-    promise
+    promise()
       .then(data => !cancelled && setResult({ data, error: undefined, loading: false }))
       .catch(error => !cancelled && setResult({ data: undefined, error, loading: false }));
 

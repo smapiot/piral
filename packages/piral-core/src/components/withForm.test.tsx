@@ -16,15 +16,135 @@ const mountWithRouter = (node, url = '/') =>
 const StubComponent: React.SFC<{ data: any }> = () => <div />;
 StubComponent.displayName = 'StubComponent';
 
+const LoaderComponent: React.SFC<{ data: any }> = () => <div />;
+LoaderComponent.displayName = 'LoaderComponent';
+
+const ErrorComponent: React.SFC<{ data: any }> = () => <div />;
+ErrorComponent.displayName = 'ErrorComponent';
+
 describe('withForm Module', () => {
-  it('shows loading without invoking action if already loading', () => {
-    const options: any = { id: 'bar' };
+  it('shows error component if nothing is loading and no data is available', () => {
+    const options: any = { emptyData: {} };
     const usedForm = jest.fn(() => ({
       submit() {},
     }));
+    const usePromise = jest.fn(() => ({
+      loading: false,
+      data: undefined,
+      error: undefined,
+    }));
+    const useGlobalState = jest.fn(select =>
+      select({
+        app: {
+          components: {
+            Loader: LoaderComponent,
+            ErrorInfo: ErrorComponent,
+          },
+        },
+      }),
+    );
     (hooks as any).useForm = usedForm;
+    (hooks as any).usePromise = usePromise;
+    (hooks as any).useGlobalState = useGlobalState;
+    const Component: any = withForm(StubComponent, options);
+    const node = mountWithRouter(<Component />);
+    expect(node.find(ErrorComponent).length).toBe(1);
+  });
+
+  it('shows data component if nothing is loading and data is available', () => {
+    const options: any = { emptyData: {} };
+    const usedForm = jest.fn(() => ({
+      submit() {},
+    }));
+    const usePromise = jest.fn(() => ({
+      loading: false,
+      data: {},
+      error: undefined,
+    }));
+    const useGlobalState = jest.fn(() => ({
+      Loader: LoaderComponent,
+      ErrorInfo: ErrorComponent,
+    }));
+    (hooks as any).useForm = usedForm;
+    (hooks as any).usePromise = usePromise;
+    (hooks as any).useGlobalState = useGlobalState;
+    const Component: any = withForm(StubComponent, options);
+    const node = mountWithRouter(<Component />);
+    expect(node.find(StubComponent).length).toBe(1);
+  });
+
+  it('shows loading component if it is loading', () => {
+    const options: any = { emptyData: {} };
+    const usedForm = jest.fn(() => ({
+      submit() {},
+    }));
+    const usePromise = jest.fn(() => ({
+      loading: true,
+      data: undefined,
+      error: undefined,
+    }));
+    const useGlobalState = jest.fn(() => ({
+      Loader: LoaderComponent,
+      ErrorInfo: ErrorComponent,
+    }));
+    (hooks as any).useForm = usedForm;
+    (hooks as any).usePromise = usePromise;
+    (hooks as any).useGlobalState = useGlobalState;
+    const Component: any = withForm(StubComponent, options);
+    const node = mountWithRouter(<Component />);
+    expect(node.find(LoaderComponent).length).toBe(1);
+  });
+
+  it('calls load data if its there', () => {
+    const loadData = jest.fn(() => () => Promise.resolve({}));
+    const usedForm = jest.fn(() => ({
+      submit() {},
+    }));
+    const usePromise = jest.fn(fn => {
+      fn();
+      return {
+        loading: false,
+        data: undefined,
+        error: undefined,
+      };
+    });
+    const useGlobalState = jest.fn(() => ({
+      Loader: LoaderComponent,
+      ErrorInfo: ErrorComponent,
+    }));
+    (hooks as any).useForm = usedForm;
+    (hooks as any).usePromise = usePromise;
+    (hooks as any).useGlobalState = useGlobalState;
+    const options: any = { emptyData: {}, loadData };
     const Component: any = withForm(StubComponent, options);
     mountWithRouter(<Component />);
-    expect(usedForm).toHaveBeenCalled();
+    expect(usePromise).toHaveBeenCalledTimes(1);
+    expect(loadData).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not call load data if its missing', () => {
+    const loadData = undefined;
+    const usedForm = jest.fn(() => ({
+      submit() {},
+    }));
+    const usePromise = jest.fn(fn => {
+      const data = fn();
+      return {
+        loading: false,
+        data,
+        error: undefined,
+      };
+    });
+    const useGlobalState = jest.fn(() => ({
+      Loader: LoaderComponent,
+      ErrorInfo: ErrorComponent,
+    }));
+    (hooks as any).useForm = usedForm;
+    (hooks as any).usePromise = usePromise;
+    (hooks as any).useGlobalState = useGlobalState;
+    const options: any = { emptyData: {}, loadData };
+    const Component: any = withForm(StubComponent, options);
+    mountWithRouter(<Component />);
+    expect(usePromise).toHaveBeenCalledTimes(1);
   });
 });
