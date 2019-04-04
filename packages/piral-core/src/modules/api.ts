@@ -1,6 +1,6 @@
 import { ArbiterModuleMetadata, wrapElement } from 'react-arbiter';
 import { localizeLocal } from './localize';
-import { withFeed, withApi } from '../components';
+import { withFeed, withApi, withForm } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
   LocalizationMessages,
@@ -9,7 +9,7 @@ import {
   FeedConnector,
   PageComponentProps,
   AnyComponent,
-  PortalApi,
+  PiralApi,
   TileComponentProps,
   ExtensionComponentProps,
   MenuComponentProps,
@@ -17,7 +17,7 @@ import {
   MenuSettings,
   TilePreferences,
   SeverityLevel,
-  PortalContainer,
+  PiralContainer,
 } from '../types';
 
 function buildName(prefix: string, name: string | number) {
@@ -26,20 +26,20 @@ function buildName(prefix: string, name: string | number) {
 
 export function createApi<TApi>(
   target: ArbiterModuleMetadata,
-  { events, context, extendApi }: PortalContainer<TApi>,
-): PortalApi<TApi> {
+  { events, context, extendApi }: PiralContainer<TApi>,
+): PiralApi<TApi> {
   let translations: LocalizationMessages = {};
   let feeds = 0;
   const prefix = target.name;
-  const meta = {
-    name: target.name,
-    version: target.version,
-    dependencies: target.dependencies,
-    hash: target.hash,
-  };
   const api = extendApi(
     {
       ...events,
+      meta: {
+        name: target.name,
+        version: target.version,
+        dependencies: target.dependencies,
+        hash: target.hash,
+      },
       getData(name) {
         return context.readDataValue(name);
       },
@@ -70,6 +70,9 @@ export function createApi<TApi>(
         }
 
         return component => withFeed(component, options);
+      },
+      createForm(options) {
+        return component => withForm(component, options);
       },
       provideTranslations(messages) {
         translations = messages;
@@ -135,7 +138,7 @@ export function createApi<TApi>(
         context.openModal(dialog);
         return dialog.close;
       },
-      registerPage(route: string, arg: AnyComponent<PageComponentProps<PortalApi<TApi>>>) {
+      registerPage(route: string, arg: AnyComponent<PageComponentProps<PiralApi<TApi>>>) {
         context.registerPage(route, {
           component: withApi(arg, api),
         });
@@ -145,7 +148,7 @@ export function createApi<TApi>(
       },
       registerTile(
         name: string,
-        arg: AnyComponent<TileComponentProps<PortalApi<TApi>>>,
+        arg: AnyComponent<TileComponentProps<PiralApi<TApi>>>,
         preferences: TilePreferences = {},
       ) {
         const id = buildName(prefix, name);
@@ -158,16 +161,16 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterTile(id);
       },
-      registerExtension(name: string, arg: AnyComponent<ExtensionComponentProps<PortalApi<TApi>>>) {
+      registerExtension(name: string, arg: AnyComponent<ExtensionComponentProps<PiralApi<TApi>>>) {
         context.registerExtension(name, {
           component: withApi(arg, api),
           reference: arg,
         });
       },
-      unregisterExtension(name: string, arg: AnyComponent<ExtensionComponentProps<PortalApi<TApi>>>) {
+      unregisterExtension(name: string, arg: AnyComponent<ExtensionComponentProps<PiralApi<TApi>>>) {
         context.unregisterExtension(name, arg);
       },
-      registerMenu(name: string, arg: AnyComponent<MenuComponentProps<PortalApi<TApi>>>, settings: MenuSettings = {}) {
+      registerMenu(name: string, arg: AnyComponent<MenuComponentProps<PiralApi<TApi>>>, settings: MenuSettings = {}) {
         const id = buildName(prefix, name);
         context.registerMenuItem(id, {
           component: withApi(arg, api),
@@ -180,7 +183,7 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterMenuItem(id);
       },
-      registerModal<TOpts>(name: string, arg: AnyComponent<ModalComponentProps<PortalApi<TApi>, TOpts>>) {
+      registerModal<TOpts>(name: string, arg: AnyComponent<ModalComponentProps<PiralApi<TApi>, TOpts>>) {
         const id = buildName(prefix, name);
         context.registerModal(id, {
           component: withApi(arg, api),
@@ -190,8 +193,17 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterModal(id);
       },
-      pluginMeta() {
-        return meta;
+      registerSearchProvider(name, provider) {
+        const id = buildName(prefix, name);
+        context.registerSearchProvider(id, {
+          search(q) {
+            return provider(q, api);
+          },
+        });
+      },
+      unregisterSearchProvider(name) {
+        const id = buildName(prefix, name);
+        context.unregisterSearchProvider(id);
       },
     },
     target,

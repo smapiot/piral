@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { wrapComponent } from 'react-arbiter';
 import { useGlobalState } from '../hooks';
-import { AnyComponent, PortalApi } from '../types';
+import { AnyComponent, PiralApi } from '../types';
 
 interface ComponentErrorProps {
   error: Error;
@@ -12,19 +12,18 @@ const ComponentError: React.SFC<ComponentErrorProps> = ({ error }) => {
   return <ErrorInfo type="feed" error={error} />;
 };
 
-export function withApi<TApi, TProps>(
-  component: AnyComponent<TProps & { portal: PortalApi<TApi> }>,
-  api: PortalApi<TApi>,
-) {
-  return wrapComponent<TProps & { portal: TApi }, 'portal'>(component, {
-    forwardProps: {
-      portal: api as any,
-    },
-    onError(error: Error) {
-      api.trackError(error, { origin: 'portal-error-boundary' });
+export interface ApiForward<TApi> {
+  piral: PiralApi<TApi>;
+}
+
+export function withApi<TApi, TProps>(component: AnyComponent<TProps & ApiForward<TApi>>, piral: PiralApi<TApi>) {
+  return wrapComponent<TProps, ApiForward<TApi>>(component, {
+    forwardProps: { piral },
+    onError(error) {
+      piral.trackError(error, { origin: 'piral-error-boundary' });
     },
     renderError(error) {
       return <ComponentError error={error} />;
     },
-  }) as React.ComponentType<TProps>;
+  });
 }

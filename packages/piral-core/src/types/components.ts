@@ -4,9 +4,9 @@ import { Dict } from './utils';
 
 export interface BaseComponentProps<TApi> {
   /**
-   * The currently used portal API.
+   * The currently used piral API.
    */
-  portal: TApi;
+  piral: TApi;
 }
 
 export interface ExtensionComponentProps<TApi, T = Dict<any>> extends BaseComponentProps<TApi> {
@@ -80,6 +80,17 @@ export interface FeedErrorInfoProps {
   error: any;
 }
 
+export interface FormErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'form';
+  /**
+   * The provided error details.
+   */
+  error: any;
+}
+
 export interface LoadingErrorInfoProps {
   /**
    * The type of the error.
@@ -91,7 +102,12 @@ export interface LoadingErrorInfoProps {
   error: any;
 }
 
-export type ErrorInfoProps = NotFoundErrorInfoProps | PageErrorInfoProps | FeedErrorInfoProps | LoadingErrorInfoProps;
+export type ErrorInfoProps =
+  | NotFoundErrorInfoProps
+  | PageErrorInfoProps
+  | FeedErrorInfoProps
+  | LoadingErrorInfoProps
+  | FormErrorInfoProps;
 
 export interface LoaderProps {}
 

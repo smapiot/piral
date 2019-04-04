@@ -1,8 +1,14 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps } from 'piral-core';
+import { createInstance, useGlobalState, LoaderProps, useSearch } from 'piral-core';
 import { modules } from './modules';
+
+const Loader: React.SFC<LoaderProps> = () => (
+  <div className="app-center">
+    <div className="spinner circles">Loading ...</div>
+  </div>
+);
 
 const Sitemap: React.SFC = () => {
   const pages = useGlobalState(s => s.components.pages);
@@ -12,11 +18,13 @@ const Sitemap: React.SFC = () => {
       <li>
         <Link to="/">Go to /</Link>
       </li>
-      {Object.keys(pages).map(url => (
-        <li key={url}>
-          <Link to={url}>Go to {url}</Link>
-        </li>
-      ))}
+      {Object.keys(pages)
+        .map(url => url.replace(':id', `${~~(Math.random() * 1000)}`))
+        .map(url => (
+          <li key={url}>
+            <Link to={url}>Go to {url}</Link>
+          </li>
+        ))}
       <li>
         <Link to="/sitemap">Go to /sitemap</Link>
       </li>
@@ -56,6 +64,38 @@ const Menu: React.SFC = () => {
   );
 };
 
+const SearchResults: React.SFC = () => {
+  const { loading, items } = useGlobalState(m => ({
+    loading: m.search.loading,
+    items: m.search.results,
+  }));
+  return (
+    <div className="search-results">
+      {items.map((item, i) => (
+        <div className="search-results-item" key={i}>
+          {item}
+        </div>
+      ))}
+      {loading && (
+        <div className="search-results-loading">
+          <Loader />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const SearchForm: React.SFC = () => {
+  const [value, setValue] = useSearch();
+
+  return (
+    <div className="search">
+      <input type="search" placeholder="Search" onChange={e => setValue(e.target.value)} value={value} />
+      <SearchResults />
+    </div>
+  );
+};
+
 const Notifications: React.SFC = () => {
   const notifications = useGlobalState(s => s.app.notifications);
 
@@ -76,12 +116,6 @@ const Notifications: React.SFC = () => {
   );
 };
 
-const Loader: React.SFC<LoaderProps> = () => (
-  <div className="app-center">
-    <div className="spinner circles">Loading ...</div>
-  </div>
-);
-
 const Layout: React.SFC = ({ children }) => {
   const layout = useGlobalState(s => s.app.layout.current);
 
@@ -90,6 +124,7 @@ const Layout: React.SFC = ({ children }) => {
       <Notifications />
       <div className="app-header">
         <h1>Sample Portal ({layout})</h1>
+        <SearchForm />
         <Menu />
       </div>
       <div className="app-content">{children}</div>
@@ -101,7 +136,7 @@ const Layout: React.SFC = ({ children }) => {
 const Portal = createInstance({
   availableModules: modules,
   requestModules() {
-    return new Promise((resolve, reject) => setTimeout(() => resolve([]), 1000));
+    return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
   Loader,
   routes: {

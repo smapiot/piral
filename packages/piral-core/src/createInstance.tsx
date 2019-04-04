@@ -3,13 +3,13 @@ import { withRecall, ArbiterModule, DependencyGetter } from 'react-arbiter';
 import { Portal, PortalProps } from './components';
 import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
 import { createGlobalState, createActions, StateContext, GlobalStateOptions } from './state';
-import { PortalBaseApi, PortalApi, EventEmitter, ScaffoldPlugin, Extend, ModuleRequester } from './types';
+import { PiralCoreApi, PiralApi, EventEmitter, ScaffoldPlugin, Extend, ModuleRequester } from './types';
 
 function defaultModuleRequester() {
   return Promise.resolve([]);
 }
 
-function defaultApiExtender<TApi>(value: PortalBaseApi<TApi>): PortalApi<TApi> {
+function defaultApiExtender<TApi>(value: PiralCoreApi<TApi>): PiralApi<TApi> {
   return value as any;
 }
 
@@ -23,7 +23,7 @@ function getExtender(plugins: Array<ScaffoldPlugin>): ScaffoldPlugin {
   };
 }
 
-export interface PortalInstanceOptions<TApi> extends GlobalStateOptions {
+export interface PiralConfiguration<TApi> extends GlobalStateOptions {
   /**
    * Function to extend the API creator with some additional functionality.
    */
@@ -41,28 +41,28 @@ export interface PortalInstanceOptions<TApi> extends GlobalStateOptions {
    * The given modules are all already evaluated.
    * This can be used for customization or for debugging purposes.
    */
-  availableModules?: Array<ArbiterModule<PortalApi<TApi>>>;
+  availableModules?: Array<ArbiterModule<PiralApi<TApi>>>;
   /**
    * Plugins for extending the core portal functionality.
    */
   plugins?: Array<ScaffoldPlugin>;
 }
 
-export type PortalInstance = React.SFC<PortalProps> & EventEmitter;
+export type PiralInstance = React.SFC<PortalProps> & EventEmitter;
 
 /**
- * Creates a new PortalInstance component, which can be used for
+ * Creates a new PiralInstance component, which can be used for
  * bootstrapping the application easily.
  *
  * @example
 ```tsx
-const Portal = createInstance({
+const Piral = createInstance({
   requestModules() {
     return fetch(...);
   },
 });
 
-const App: React.SFC = () => <Portal>{content => <Layout>{content}</Layout>}</Portal>;
+const App: React.SFC = () => <Piral>{content => <Layout>{content}</Layout>}</Piral>;
 render(<App />, document.querySelector('#app'));
 ```
  */
@@ -73,7 +73,7 @@ export function createInstance<TApi>({
   getDependencies = getLocalDependencies,
   plugins = [],
   ...options
-}: PortalInstanceOptions<TApi>): PortalInstance {
+}: PiralConfiguration<TApi>): PiralInstance {
   const extender = getExtender(plugins);
   const state = createGlobalState(options);
   const container = extender({
@@ -100,11 +100,11 @@ export function createInstance<TApi>({
     },
   });
 
-  const PortalInstance: React.SFC<PortalProps> = props => (
+  const piralInstance: React.SFC<PortalProps> = props => (
     <StateContext.Provider value={container.context}>
       <RecallPortal {...props} />
     </StateContext.Provider>
   );
 
-  return Object.assign(PortalInstance, container.events);
+  return Object.assign(piralInstance, container.events);
 }

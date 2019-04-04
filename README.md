@@ -46,40 +46,6 @@ Alternatively, you can use your new Piral instance anywhere as a component.
 
 Your Piral app can be build with any technology that you like or already use (e.g., Webpack, Parcel, ...). If you are unsure what to you use you may fall back to `piral-cli`, which (among other things) also contains a build mechanism that *should just work* :rocket:.
 
-## Development
-
-For development you need to have the following software installed:
-
-- Node.js with NPM (for instructions see [Node.js website](https://nodejs.org/en/))
-- Lerna, see [official website](https://lernajs.io)
-- Yarn, see [official website](https://yarnpkg.com/lang/en/)
-
-On the command line install Lerna and Yarn:
-
-```sh
-npm install --global lerna yarn
-```
-
-Once you cloned the repository make sure to bootstrap it (installs all dependencies and more).
-
-```sh
-lerna bootstrap
-```
-
-Now you are ready to build all contained modules:
-
-```sh
-lerna run build
-```
-
-If you want to run the sample application you can already do it with our CLI tool (which should be available after building, otherwise use `lerna bootstrap` again):
-
-```sh
-node node_modules/.bin/piral debug packages/piral-sample/src/index.html
-```
-
-This will open a development server sitting at `http://localhost:1234`. Right now our CLI is just a tiny wrapper around Parcel :rocket:.
-
 ## Contributing
 
 The main purpose of this repository is to continue to evolve Piral core, making it faster, more powerful, and easier to use. Development of Piral happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving Piral.

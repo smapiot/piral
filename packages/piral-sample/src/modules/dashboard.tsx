@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { ArbiterModule } from 'react-arbiter';
-import { PortalApi, ExtensionComponentProps, Dict, TileRegistration } from 'piral-core';
+import { PiralApi, ExtensionComponentProps, Dict, TileRegistration } from 'piral-core';
 
 /**
  * Shows the possibility of extending default functionality (e.g., the dashboard)
  * with an extension defined by a module.
  */
-export const DashboardModule: ArbiterModule<PortalApi<{}>> = {
+export const DashboardModule: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Dashboard Module',
   version: '1.0.0',
   hash: '3',
-  setup(portal) {
-    const CustomDashboard: React.SFC<ExtensionComponentProps<PortalApi<{}>, { tiles: Dict<TileRegistration> }>> = ({
+  setup(piral) {
+    const CustomDashboard: React.SFC<ExtensionComponentProps<PiralApi, { tiles: Dict<TileRegistration> }>> = ({
       params: { tiles },
     }) => {
       return (
@@ -27,6 +27,6 @@ export const DashboardModule: ArbiterModule<PortalApi<{}>> = {
     };
     CustomDashboard.displayName = 'CustomDashboard';
 
-    portal.registerExtension('dashboard', CustomDashboard);
+    piral.registerExtension('dashboard', CustomDashboard);
   },
 };

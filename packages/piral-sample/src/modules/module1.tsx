@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArbiterModule } from 'react-arbiter';
 import {
   PageComponentProps,
-  PortalApi,
+  PiralApi,
   ExtensionComponentProps,
   TileComponentProps,
   ErrorInfoProps,
@@ -16,45 +16,45 @@ import {
  * Also registeres some custom error page handlers. For details
  * on this, see DashboardModule.
  */
-export const Module1: ArbiterModule<PortalApi<{}>> = {
+export const Module1: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Example Module',
   version: '1.0.0',
   hash: '1',
-  setup(portal) {
-    console.log(portal);
+  setup(piral) {
+    console.log(piral);
 
-    portal.registerTile('example-general', (element, props) => {
-      element.outerHTML = `
+    piral.registerTile('example-general', (element, props) => {
+      element.innerHTML = `
         <div class="tile">
           General rendering for a ${props.columns}x${props.rows} tile.
         </div>
       `;
     });
 
-    portal.registerTile(
+    piral.registerTile(
       'example-react',
-      class extends React.Component<TileComponentProps<PortalApi<{}>>> {
+      class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
           return <div className="tile">Rendered a tile from React.</div>;
         }
       },
     );
 
-    portal.registerMenu(
+    piral.registerMenu(
       'example',
-      class extends React.Component<MenuComponentProps<PortalApi<{}>>> {
+      class extends React.Component<MenuComponentProps<PiralApi>> {
         render() {
-          return <Link to="/example1">Example 1</Link>;
+          return <Link to="http://www.google.com">Google</Link>;
         }
       },
       { type: 'general' },
     );
 
-    portal.registerPage(
+    piral.registerPage(
       '/example1',
-      class extends React.Component<PageComponentProps<PortalApi<{}>>> {
+      class extends React.Component<PageComponentProps<PiralApi>> {
         render() {
           return (
             <div>
@@ -64,27 +64,27 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
               <p>Click for a notification.</p>
               <ul>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!')}>Notify me! (Default)</button>
+                  <button onClick={() => piral.showNotification('Hello there!')}>Notify me! (Default)</button>
                 </li>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!', { type: 'error' })}>
+                  <button onClick={() => piral.showNotification('Hello there!', { type: 'error' })}>
                     Notify me! (Error)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!', { title: 'Some title' })}>
+                  <button onClick={() => piral.showNotification('Hello there!', { title: 'Some title' })}>
                     Notify me! (With Title)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => portal.showNotification('Hello there!', { autoClose: 1000, type: 'success' })}>
+                  <button onClick={() => piral.showNotification('Hello there!', { autoClose: 1000, type: 'success' })}>
                     Notify me! (1s)
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={() =>
-                      portal.showNotification(
+                      piral.showNotification(
                         <span>
                           Hello there; this is <b>some longer text</b>!
                         </span>,
@@ -101,9 +101,9 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
       },
     );
 
-    portal.registerPage(
+    piral.registerPage(
       '/example2',
-      class extends React.Component<PageComponentProps<PortalApi<{}>>> {
+      class extends React.Component<PageComponentProps<PiralApi>> {
         render() {
           return (
             <div>
@@ -114,7 +114,7 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
                 IF YOU ARE IN AN ADVENTUROUS MOOD TRY{' '}
                 <a
                   onClick={e => {
-                    portal.unregisterPage('/example2');
+                    piral.unregisterPage('/example2');
                     e.preventDefault();
                   }}
                   href="#">
@@ -128,18 +128,18 @@ export const Module1: ArbiterModule<PortalApi<{}>> = {
       },
     );
 
-    portal.registerExtension(
+    piral.registerExtension(
       'error',
-      class extends React.Component<ExtensionComponentProps<PortalApi<{}>, ErrorInfoProps>> {
+      class extends React.Component<ExtensionComponentProps<PiralApi, ErrorInfoProps>> {
         render() {
           return <div>Custom Error page</div>;
         }
       },
     );
 
-    portal.registerExtension(
+    piral.registerExtension(
       'error',
-      class extends React.Component<ExtensionComponentProps<PortalApi<{}>, ErrorInfoProps>> {
+      class extends React.Component<ExtensionComponentProps<PiralApi, ErrorInfoProps>> {
         render() {
           if (this.props.params.type === 'not_found') {
             return <div>The page was not found!!!</div>;

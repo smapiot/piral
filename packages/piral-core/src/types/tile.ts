@@ -1,12 +1,12 @@
 export interface TilePreferences {
   /**
    * Sets the desired initial number of columns.
-   * This may be overriden either by the user (if resizable true), or by the portal.
+   * This may be overriden either by the user (if resizable true), or by the dashboard.
    */
   initialColumns?: number;
   /**
    * Sets the desired initial number of rows.
-   * This may be overriden either by the user (if resizable true), or by the portal.
+   * This may be overriden either by the user (if resizable true), or by the dashboard.
    */
   initialRows?: number;
   /**

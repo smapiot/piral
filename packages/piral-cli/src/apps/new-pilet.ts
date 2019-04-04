@@ -1,16 +1,27 @@
 import { resolve, join, basename } from 'path';
-import { createDirectory, createFileIfNotExists, updateExistingJson, cliVersion, getPackage } from './common';
+import {
+  createDirectory,
+  createFileIfNotExists,
+  defaultRegistry,
+  installPackage,
+  dissectPackageName,
+  copyPiralFiles,
+  patchPiletPackage,
+  ForceOverwrite,
+} from './common';
 
 export interface NewPiletOptions {
   registry?: string;
   target?: string;
   source?: string;
+  forceOverwrite?: ForceOverwrite;
 }
 
 export const newPiletDefaults = {
   target: '.',
-  registry: 'https://registry.npmjs.org/',
+  registry: defaultRegistry,
   source: 'piral',
+  forceOverwrite: ForceOverwrite.no,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -18,21 +29,18 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     target = newPiletDefaults.target,
     registry = newPiletDefaults.registry,
     source = newPiletDefaults.source,
+    forceOverwrite = ForceOverwrite.no,
   } = options;
   const root = resolve(baseDir, target);
   const src = join(root, 'src');
   const apiName = 'Api';
-  const sourceVersion = '1.0.0';
-  const devDependencies = {
-    [source]: `^${sourceVersion}`,
-    'pilet-cli': `^${cliVersion}`,
-  };
-  const peerDependencies = {
-    [source]: `*`,
-  };
+  const [sourceName, sourceVersion, hadVersion] = dissectPackageName(source);
+  const success = await createDirectory(root);
 
-  if (createDirectory(root)) {
-    createFileIfNotExists(
+  if (success) {
+    console.log(`Scaffolding new pilet in ${root} ...`);
+
+    await createFileIfNotExists(
       root,
       'package.json',
       JSON.stringify(
@@ -52,41 +60,41 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
         2,
       ),
     );
-    createDirectory(src);
+    await createDirectory(src);
 
     if (registry !== newPiletDefaults.registry) {
-      createFileIfNotExists(
+      console.log(`Setting up NPM registry (${registry}) ...`);
+
+      await createFileIfNotExists(
         src,
         '.npmrc',
         `registry=${registry}
 always-auth=true`,
+        forceOverwrite,
       );
     }
 
-    createFileIfNotExists(
+    console.log(`Installing NPM package ${sourceName}@${sourceVersion} ...`);
+
+    await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
+
+    await createFileIfNotExists(
       src,
       'index.tsx',
-      `import { ${apiName} } from '${source}';
+      `import { ${apiName} } from '${sourceName}';
 
 export function setup(app: ${apiName}) {
   app.showNotification('Hello World!');
 }
 `,
+      forceOverwrite,
     );
 
-    const packageFiles = await getPackage(source, registry);
+    console.log(`Taking care of templating ...`);
 
-    for (const file of packageFiles) {
-      //TODO
-    }
+    const files = await patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
+    await copyPiralFiles(root, sourceName, files, forceOverwrite);
 
-    updateExistingJson(root, 'package.json', {
-      devDependencies,
-      peerDependencies,
-      scripts: {
-        'debug-pilet': 'pilet debug',
-        'build-pilet': 'pilet build',
-      },
-    });
+    console.log(`All done!`);
   }
 }

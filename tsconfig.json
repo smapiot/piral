@@ -11,7 +11,7 @@
     "skipLibCheck": true,
     "target": "es6",
     "sourceMap": true,
-    "lib": ["es6", "dom"],
+    "lib": ["es6", "dom", "esnext"],
     "baseUrl": "./packages",
     "paths": {
       "piral-*": ["./piral-*/src"]

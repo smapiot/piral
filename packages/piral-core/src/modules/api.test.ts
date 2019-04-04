@@ -120,8 +120,7 @@ describe('API Module', () => {
   it('createApi pluginMeta returns the metadata', () => {
     const container = createMockContainer();
     const api = createApi<{}>(moduleMetadata, container);
-    const meta = api.pluginMeta();
-    expect(meta).toEqual({
+    expect(api.meta).toEqual({
       name: moduleMetadata.name,
       version: moduleMetadata.version,
       dependencies: moduleMetadata.dependencies,
@@ -362,6 +361,22 @@ describe('API Module', () => {
     });
   });
 
+  it('createApi allows using the created form creator as a HOC', () => {
+    const container = createMockContainer();
+    container.context = {
+      updateFormState: jest.fn(),
+    };
+    const api = createApi<{}>(moduleMetadata, container);
+    const create = api.createForm({
+      emptyData: {},
+      onSubmit() {
+        return Promise.resolve();
+      },
+    });
+    const NewComponent = create(StubComponent);
+    expect(NewComponent.displayName).toBe('withRouter(FormLoader)');
+  });
+
   it('createApi provides the option to create a feed connector', () => {
     const container = createMockContainer();
     container.context = {
@@ -401,5 +416,35 @@ describe('API Module', () => {
     const connect = api.createConnector(() => Promise.resolve(true));
     const NewComponent = connect(StubComponent);
     expect(NewComponent.displayName).toBe('FeedView_my-module://0');
+  });
+
+  it('createApi can register and unregister a search provider', () => {
+    const container = createMockContainer();
+    container.context = {
+      registerSearchProvider: jest.fn(),
+      unregisterSearchProvider: jest.fn(),
+    };
+    const api = createApi<{}>(moduleMetadata, container);
+    api.registerSearchProvider('my-sp', () => Promise.resolve([]));
+    expect(container.context.registerSearchProvider).toHaveBeenCalledTimes(1);
+    expect(container.context.unregisterSearchProvider).toHaveBeenCalledTimes(0);
+    api.unregisterSearchProvider('my-sp');
+    expect(container.context.registerSearchProvider).toHaveBeenCalledTimes(1);
+    expect(container.context.unregisterSearchProvider.mock.calls[0][0]).toBe(
+      container.context.registerSearchProvider.mock.calls[0][0],
+    );
+  });
+
+  it('createApi registration of a search provider wraps it', () => {
+    const container = createMockContainer();
+    container.context = {
+      registerSearchProvider: jest.fn(),
+      unregisterSearchProvider: jest.fn(),
+    };
+    const api = createApi<{}>(moduleMetadata, container);
+    const search = jest.fn();
+    api.registerSearchProvider('my-sp', search);
+    container.context.registerSearchProvider.mock.calls[0][1].search('foo');
+    expect(search).toHaveBeenCalledWith('foo', api);
   });
 });

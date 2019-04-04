@@ -4,7 +4,9 @@ import { TilePreferences } from './tile';
 import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
+import { InputFormOptions, FormCreator } from './form';
 import { Dict, LocalizationMessages, Disposable, SeverityLevel, EventEmitter } from './utils';
+import { SearchProvider } from './search';
 import {
   ForeignComponent,
   ModalComponentProps,
@@ -15,21 +17,21 @@ import {
   MenuComponentProps,
 } from './components';
 
-export interface PluginMetadata {
+export interface PiletMetadata {
   /**
-   * The name of the plugin.
+   * The name of the pilet.
    */
   name: string;
   /**
-   * The version of the plugin.
+   * The version of the pilet.
    */
   version: string;
   /**
-   * The dependencies of the plugin.
+   * The dependencies of the pilet.
    */
   dependencies: Dict<string>;
   /**
-   * The hashcode of the plugin.
+   * The hashcode of the pilet.
    */
   hash: string;
 }
@@ -41,9 +43,13 @@ export interface Tracker {
   (properties?: any, measurements?: any): void;
 }
 
-export type PortalApi<TExtraApi> = PortalBaseApi<TExtraApi> & TExtraApi;
+export type PiralApi<TExtraApi = {}> = PiralCoreApi<TExtraApi> & TExtraApi;
 
-export interface PortalBaseApi<TExtraApi> extends EventEmitter {
+export interface PiralCoreApi<TExtraApi> extends EventEmitter {
+  /**
+   * Gets the metadata of the current pilet.
+   */
+  meta: PiletMetadata;
   /**
    * Creates a connector for wrapping components with data relations.
    * @param resolver The resolver for the initial data set.
@@ -55,13 +61,18 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   createConnector<TData, TItem>(options: FeedConnectorOptions<TData, TItem>): FeedConnector<TData>;
   /**
+   * Creates an input form for tracking user input intelligently.
+   * @param options The options for creating the form.
+   */
+  createForm<TFormData, TProps = any>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
+  /**
    * Gets a shared data value.
    * @param name The name of the data to retrieve.
    */
   getData<TKey extends string>(name: TKey): SharedData[TKey];
   /**
-   * Sets the data using a given name. The name needs to be used exclusively by the current plugin.
-   * Using the name occupied by another plugin will result in no change.
+   * Sets the data using a given name. The name needs to be used exclusively by the current pilet.
+   * Using the name occupied by another pilet will result in no change.
    * @param name The name of the data to store.
    * @param value The value of the data to store.
    * @param options The optional configuration for storing this piece of data.
@@ -96,8 +107,8 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   translate<T = Dict<string>>(tag: string, variables?: T): string;
   /**
-   * Provides translations to the portal.
-   * The translations will be exlusively used for retrieving translations for the plugin.
+   * Provides translations to the application.
+   * The translations will be exlusively used for retrieving translations for the pilet.
    * @param messages The messages to use as transslation basis.
    */
   provideTranslations(messages: LocalizationMessages): void;
@@ -118,18 +129,18 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   showModal<TOpts = any>(name: string, options?: TOpts): Disposable;
   /**
    * Registers a modal dialog using a generic rendering function.
-   * The name needs to be unique to be used without the plugin's name.
+   * The name needs to be unique to be used without the pilet's name.
    * @param name The name of the modal to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerModal<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PortalApi<TExtraApi>, TOpts>>): void;
+  registerModal<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
   /**
    * Registers a modal dialog using a React component.
-   * The name needs to be unique to be used without the plugin's name.
+   * The name needs to be unique to be used without the pilet's name.
    * @param name The name of the modal to register.
    * @param Component The component to render the page.
    */
-  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<PortalApi<TExtraApi>, TOpts>>): void;
+  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
   /**
    * Unregisters a modal by its name.
    * @param name The name that was previously registered.
@@ -142,7 +153,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerPage(route: string, render: ForeignComponent<PageComponentProps<PortalApi<TExtraApi>>>): void;
+  registerPage(route: string, render: ForeignComponent<PageComponentProps<PiralApi<TExtraApi>>>): void;
   /**
    * Registers a route for React component.
    * The route needs to be unique and can contain params.
@@ -150,7 +161,7 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param Component The component to render the page.
    */
-  registerPage(route: string, Component: ComponentType<PageComponentProps<PortalApi<TExtraApi>>>): void;
+  registerPage(route: string, Component: ComponentType<PageComponentProps<PiralApi<TExtraApi>>>): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
@@ -158,26 +169,26 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
   unregisterPage(route: string): void;
   /**
    * Registers a tile for general components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the tile.
    * @param render The function that is being called once rendering begins.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
   registerTile(
     name: string,
-    render: ForeignComponent<TileComponentProps<PortalApi<TExtraApi>>>,
+    render: ForeignComponent<TileComponentProps<PiralApi<TExtraApi>>>,
     preferences?: TilePreferences,
   ): void;
   /**
    * Registers a tile for React components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the tile.
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
   registerTile(
     name: string,
-    Component: ComponentType<TileComponentProps<PortalApi<TExtraApi>>>,
+    Component: ComponentType<TileComponentProps<PiralApi<TExtraApi>>>,
     preferences?: TilePreferences,
   ): void;
   /**
@@ -192,43 +203,43 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    * @param name The global name of the extension slot.
    * @param render The function that is being called once rendering begins.
    */
-  registerExtension<T>(name: string, render: ForeignComponent<ExtensionComponentProps<PortalApi<TExtraApi>, T>>): void;
+  registerExtension<T>(name: string, render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
   /**
    * Registers an extension component with a React component.
    * The name must refer to the extension slot.
    * @param name The global name of the extension slot.
    * @param Component The component to be rendered.
    */
-  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<PortalApi<TExtraApi>, T>>): void;
+  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
    * @param hook The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<PortalApi<TExtraApi>, T>>): void;
+  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
   /**
    * Registers a menu item for general components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the menu item.
    * @param render The function that is being called once rendering begins.
    * @param settings The optional configuration for the menu item.
    */
   registerMenu(
     name: string,
-    render: ForeignComponent<MenuComponentProps<PortalApi<TExtraApi>>>,
+    render: ForeignComponent<MenuComponentProps<PiralApi<TExtraApi>>>,
     settings?: MenuSettings,
   ): void;
   /**
    * Registers a menu item for React components.
-   * The name has to be unique within the current plugin.
+   * The name has to be unique within the current pilet.
    * @param name The name of the menu item.
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
   registerMenu(
     name: string,
-    Component: ComponentType<MenuComponentProps<PortalApi<TExtraApi>>>,
+    Component: ComponentType<MenuComponentProps<PiralApi<TExtraApi>>>,
     settings?: MenuSettings,
   ): void;
   /**
@@ -238,7 +249,16 @@ export interface PortalBaseApi<TExtraApi> extends EventEmitter {
    */
   unregisterMenu(name: string): void;
   /**
-   * Gets the metadata of the current plugin.
+   * Registers a search provider to respond to search queries.
+   * The name has to be unique within the current pilet.
+   * @param name The name of the search provider.
+   * @param provider The callback to be used for searching.
    */
-  pluginMeta(): PluginMetadata;
+  registerSearchProvider(name: string, provider: SearchProvider<PiralApi<TExtraApi>>): void;
+  /**
+   * Unregisters a search provider known by the given name.
+   * Only previously registered search providers can be unregistered.
+   * @param name The name of the search provider to unregister.
+   */
+  unregisterSearchProvider(name: string): void;
 }

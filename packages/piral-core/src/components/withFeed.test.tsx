@@ -5,8 +5,6 @@ import { withFeed } from './withFeed';
 
 jest.mock('../hooks');
 
-(React as any).useEffect = jest.fn(fn => fn());
-
 (hooks as any).useGlobalState = (select: any) =>
   select({
     app: {
@@ -15,61 +13,30 @@ jest.mock('../hooks');
         Loader: StubLoader,
       },
     },
-    feeds: {
-      fresh: {
-        loaded: false,
-        loading: false,
-        error: undefined,
-        data: undefined,
-      },
-      foo: {
-        loaded: true,
-        loading: false,
-        error: undefined,
-        data: [1, 2, 3],
-      },
-      bar: {
-        loaded: false,
-        loading: true,
-        error: undefined,
-        data: undefined,
-      },
-      errored: {
-        loaded: true,
-        loading: false,
-        error: 'my-error',
-        data: undefined,
-      },
-    },
   });
 
-const actions = {
-  loadFeed: jest.fn(),
-};
-
-(hooks as any).useAction = () => actions.loadFeed;
-
-const StubLoader: React.SFC = props => <div />;
+const StubLoader: React.SFC = () => <div />;
 StubLoader.displayName = 'StubLoader';
 
-const StubErrorInfo: React.SFC = props => <div />;
+const StubErrorInfo: React.SFC = () => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
-const StubComponent: React.SFC<{ data: any }> = props => <div />;
+const StubComponent: React.SFC<{ data: any }> = () => <div />;
 StubComponent.displayName = 'StubComponent';
 
 describe('withFeed Module', () => {
   it('shows loading without invoking action if already loading', () => {
     const options: any = { id: 'bar' };
+    (hooks as any).useFeed = () => [false, undefined, undefined];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
-    expect(actions.loadFeed).not.toHaveBeenCalled();
     expect(node.find(StubLoader).length).toBe(1);
     expect(node.find(StubComponent).length).toBe(0);
   });
 
   it('shows the component if loaded', () => {
     const options: any = { id: 'foo' };
+    (hooks as any).useFeed = () => [true, [1, 2, 3], undefined];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
     expect(node.find(StubLoader).length).toBe(0);
@@ -83,6 +50,7 @@ describe('withFeed Module', () => {
 
   it('shows the error if the feed errored', () => {
     const options: any = { id: 'errored' };
+    (hooks as any).useFeed = () => [true, undefined, 'my-error'];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
     expect(node.find(StubLoader).length).toBe(0);
@@ -104,9 +72,9 @@ describe('withFeed Module', () => {
 
   it('calls the load inside useEffect', () => {
     const options: any = { id: 'fresh' };
+    (hooks as any).useFeed = () => [false, undefined, undefined];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
-    expect(actions.loadFeed).toHaveBeenCalledWith(options);
     expect(node.find(StubLoader).length).toBe(1);
     expect(node.find(StubComponent).length).toBe(0);
     expect(node.find(StubErrorInfo).length).toBe(0);

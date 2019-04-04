@@ -1,15 +1,16 @@
 import { swap, Atom } from '@dbeining/react-atom';
 import { appendItem, excludeOn, withKey, withoutKey } from '../../utils';
 import {
-  MenuRegistration,
+  MenuItemRegistration,
   ModalRegistration,
   PageRegistration,
   TileRegistration,
   ExtensionRegistration,
   GlobalState,
+  SearchProviderRegistration,
 } from '../../types';
 
-export function registerMenuItem(name: string, value: MenuRegistration) {
+export function registerMenuItem(name: string, value: MenuItemRegistration) {
   swap(this as Atom<GlobalState>, state => ({
     ...state,
     components: {
@@ -109,6 +110,26 @@ export function unregisterExtension(name: string, reference: any) {
         name,
         excludeOn(state.components.extensions[name], m => m.reference === reference),
       ),
+    },
+  }));
+}
+
+export function registerSearchProvider(name: string, value: SearchProviderRegistration) {
+  swap(this as Atom<GlobalState>, state => ({
+    ...state,
+    components: {
+      ...state.components,
+      searchProviders: withKey(state.components.searchProviders, name, value),
+    },
+  }));
+}
+
+export function unregisterSearchProvider(name: string) {
+  swap(this as Atom<GlobalState>, state => ({
+    ...state,
+    components: {
+      ...state.components,
+      searchProviders: withoutKey(state.components.searchProviders, name),
     },
   }));
 }

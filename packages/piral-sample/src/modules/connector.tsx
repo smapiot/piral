@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { ArbiterModule } from 'react-arbiter';
-import { PortalApi, TileComponentProps } from 'piral-core';
+import { PiralApi, TileComponentProps } from 'piral-core';
 
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorModule: ArbiterModule<PortalApi<{}>> = {
+export const ConnectorModule: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Connector Module',
   version: '1.0.0',
   hash: '4',
-  setup(portal) {
-    const connect = portal.createConnector<Array<string>>(
+  setup(piral) {
+    const connect = piral.createConnector<Array<string>>(
       () => new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 5000)),
     );
 
@@ -24,9 +24,9 @@ export const ConnectorModule: ArbiterModule<PortalApi<{}>> = {
       </ul>
     ));
 
-    portal.registerTile(
+    piral.registerTile(
       'example',
-      class extends React.Component<TileComponentProps<PortalApi<{}>>> {
+      class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
           return (
             <div className="tile">

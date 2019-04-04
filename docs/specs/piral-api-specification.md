@@ -26,6 +26,48 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 (tbd)
 
+### Pilet Feed Service
+
+#### Service Facing
+
+(tbd)
+
+#### User Facing
+
+The pilet feed service needs to provide the following resources to be consumed by end users:
+
+```graphql
+type PiletMetadata
+{
+  id: ID!
+  author: PiletAuthor
+  content: String
+  hash: String
+}
+
+type PiletLicense
+{
+  pilet: ID!
+  author: PiletAuthor
+  type: String
+  text: String
+}
+
+type PiletAuthor
+{
+  name: String
+  email: String
+  website: String
+}
+
+type Query
+{
+  pilets(hashes: [String]): [PiletMetadata]
+
+  piletLicense(pilet: ID!): PiletLicense
+}
+```
+
 ## Extended API Design
 
 (tbd)

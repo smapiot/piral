@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ArbiterModule } from 'react-arbiter';
-import { PageComponentProps, PortalApi, TileComponentProps, MenuComponentProps } from 'piral-core';
+import { PageComponentProps, PiralApi, TileComponentProps, MenuComponentProps } from 'piral-core';
 
 /**
  * Shows the usage of another module, here with a
  * feed connector.
  */
-export const Module2: ArbiterModule<PortalApi<{}>> = {
+export const Module2: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Sample Module',
   version: '1.0.0',
   hash: '2',
-  setup(portal) {
-    console.log(portal);
+  setup(piral) {
+    console.log(piral);
 
-    const connect = portal.createConnector<Array<string>, string>({
+    const connect = piral.createConnector<Array<string>, string>({
       initialize() {
         return new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 2000));
       },
@@ -32,18 +32,18 @@ export const Module2: ArbiterModule<PortalApi<{}>> = {
       },
     });
 
-    portal.registerTile(
+    piral.registerTile(
       'example',
-      class extends React.Component<TileComponentProps<PortalApi<{}>>> {
+      class extends React.Component<TileComponentProps<PiralApi>> {
         render() {
           return <div className="tile">Rendered tile from another module.</div>;
         }
       },
     );
 
-    portal.registerMenu(
+    piral.registerMenu(
       'example',
-      class extends React.Component<MenuComponentProps<PortalApi<{}>>> {
+      class extends React.Component<MenuComponentProps<PiralApi>> {
         render() {
           return <Link to="/example3">Example 3</Link>;
         }
@@ -51,10 +51,10 @@ export const Module2: ArbiterModule<PortalApi<{}>> = {
       { type: 'general' },
     );
 
-    portal.registerPage(
+    piral.registerPage(
       '/example3',
       connect(
-        class extends React.Component<PageComponentProps<PortalApi<{}>> & { data: Array<string> }> {
+        class extends React.Component<PageComponentProps<PiralApi> & { data: Array<string> }> {
           render() {
             return (
               <div>

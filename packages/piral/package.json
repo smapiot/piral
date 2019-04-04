@@ -28,13 +28,17 @@
   "bugs": {
     "url": "https://github.com/smapiot/piral/issues"
   },
+  "pilets": {
+    "sharedDependencies": [],
+    "files": [],
+    "scripts": {}
+  },
   "devDependencies": {
     "@dbeining/react-atom": "^4.0.0",
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
     "@types/react-router": "^4.4.3",
     "react": "^16.8.1",
-    "react-arbiter": "^0.4.0",
     "react-dom": "^16.8.1"
   },
   "peerDependencies": {
@@ -47,6 +51,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typedoc": "typedoc --json ../../docs/types/piral.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   }
 }
