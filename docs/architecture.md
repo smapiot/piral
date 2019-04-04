@@ -41,6 +41,7 @@ Piral comes with integrated state management focused around a created Piral inst
 - current application state (language, layout, ...)
 - current search state (input, results, ...)
 - keeping track of connected data feeds
+- keeping track of input forms
 - managing the current user (data)
 
 ## Pilet API

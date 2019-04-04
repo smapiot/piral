@@ -2,14 +2,14 @@
 
 <!--start:auto-generated-->
 
-(currently not implemented)
+Creates a production build for a pilet.
 
 ## Syntax
 
 From the command line:
 
 ```sh
-pb build-pilet 
+pb build-pilet [source]
 ```
 
 ## Aliases
@@ -22,10 +22,27 @@ Instead of `build-pilet` you can also use:
 
 ## Positionals
 
-Not applicable.
+### `source`
+
+Sets the source index.tsx file for collecting all the information.
+
+- Type: `string`undefined
+- Default: `./src/index`
 
 ## Flags
 
-Not applicable.
+### `--target`
+
+Sets the target file of bundling.
+
+- Type: `string`undefined
+- Default: `"./dist/index.js"`
+
+### `--base`
+
+Sets the base directory. By default the current directory is used.
+
+- Type: `string`undefined
+- Default: `process.cwd()`
 
 <!--end:auto-generated-->

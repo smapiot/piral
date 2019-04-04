@@ -26,7 +26,7 @@ Instead of `debug-piral` you can also use:
 
 Sets the source index.html file for collecting all the information.
 
-- Type: `string`
+- Type: `string`undefined
 - Default: `./src/index.html`
 
 ## Flags
@@ -35,14 +35,14 @@ Sets the source index.html file for collecting all the information.
 
 Sets the port of the local development server.
 
-- Type: `number`
+- Type: `number`undefined
 - Default: `1234`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
-- Type: `string`
+- Type: `string`undefined
 - Default: `process.cwd()`
 
 <!--end:auto-generated-->
