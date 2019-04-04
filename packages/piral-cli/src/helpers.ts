@@ -1,6 +1,6 @@
 import { ForceOverwrite } from './apps/common';
 
-export const forceOverwriteKeys = Object.keys(ForceOverwrite);
+export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter(m => typeof ForceOverwrite[m] === 'number');
 
 export function valueOfForceOverwrite(key: string): ForceOverwrite {
   for (const forceOverwriteKey of forceOverwriteKeys) {

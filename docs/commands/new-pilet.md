@@ -26,7 +26,7 @@ Instead of `new-pilet` you can also use:
 
 Sets the source package containing a Piral instance for templating the scaffold process.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `piral`
 
 ## Flags
@@ -35,29 +35,29 @@ Sets the source package containing a Piral instance for templating the scaffold 
 
 Sets the target directory for scaffolding. By default, the current directory.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `"."`
 
 ### `--registry`
 
 Sets the package registry to use for resolving the specified Piral app.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `"https://registry.npmjs.org/"`
 
 ### `--force-overwrite`
 
 Determines if files should be overwritten by the scaffolding.
 
-- Type: `undefined`
-- Allowed values: `0`, `1`, `2`, `no`, `prompt`, `yes`
+- Type: `string`
+- Allowed values: `"no"`, `"prompt"`, `"yes"`
 - Default: `"no"`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `process.cwd()`
 
 <!--end:auto-generated-->

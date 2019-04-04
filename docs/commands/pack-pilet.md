@@ -26,7 +26,7 @@ Instead of `pack-pilet` you can also use:
 
 Sets the source packae.json file for creating the package.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `.`
 
 ## Flags
@@ -35,7 +35,7 @@ Sets the source packae.json file for creating the package.
 
 Sets the base directory. By default the current directory is used.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `process.cwd()`
 
 <!--end:auto-generated-->

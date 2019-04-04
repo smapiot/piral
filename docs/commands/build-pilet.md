@@ -26,7 +26,7 @@ Instead of `build-pilet` you can also use:
 
 Sets the source index.tsx file for collecting all the information.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `./src/index`
 
 ## Flags
@@ -35,14 +35,14 @@ Sets the source index.tsx file for collecting all the information.
 
 Sets the target file of bundling.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `"./dist/index.js"`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
-- Type: `string`undefined
+- Type: `string`
 - Default: `process.cwd()`
 
 <!--end:auto-generated-->
