@@ -14,8 +14,11 @@ export const DefaultDashboard: React.SFC<DashboardProps> = props => {
       empty={() => (
         <React.Fragment key="default_dashboard">
           {Object.keys(tiles).map(tile => {
-            const Component = tiles[tile].component;
-            return <Component key={tile} columns={1} rows={1} />;
+            const {
+              component: Component,
+              preferences: { initialColumns = 1, initialRows = 1 },
+            } = tiles[tile];
+            return <Component key={tile} columns={initialColumns} rows={initialRows} />;
           })}
         </React.Fragment>
       )}
