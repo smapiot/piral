@@ -50,7 +50,7 @@ Sets the package registry to use for resolving the specified Piral app.
 Determines if files should be overwritten by the scaffolding.
 
 - Type: `string`
-- Allowed values: `"no"`, `"prompt"`, `"yes"`
+- Choices: `"no"`, `"prompt"`, `"yes"`
 - Default: `"no"`
 
 ### `--base`

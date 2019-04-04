@@ -43,7 +43,7 @@ Sets the version of the Piral instance to upgrade to. By default, the latest ver
 Determines if files should be overwritten by the upgrading process.
 
 - Type: `string`
-- Allowed values: `"no"`, `"prompt"`, `"yes"`
+- Choices: `"no"`, `"prompt"`, `"yes"`
 - Default: `"no"`
 
 ### `--base`

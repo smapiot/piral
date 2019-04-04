@@ -132,7 +132,7 @@ function details(args) {
 
 ${arg.describe || 'No description available.'}
 
-- Type: \`${arg.type}\`${arg.values ? nl + `- Allowed values: \`${arg.values.join('\`, \`')}\`` : ''}
+- Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('\`, \`')}\`` : ''}
 - Default: \`${arg.default}\``).join(nl + nl);
 }
 
