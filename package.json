@@ -20,7 +20,7 @@
     "docgen:page": "node tools/generate-page-docs.js",
     "docgen:types": "lerna run typedoc",
     "docgen": "yarn docgen:cli && yarn docgen:types && yarn docgen:page",
-    "ci:version": "node tools/changelog-version.js",
+    "ci:version": "node tools/changelog-version.js --update",
     "ci:docs": "yarn docgen && yarn build:docs && git checkout -- .",
     "ci:prerelease": "lerna publish $(yarn --silent ci:version)-pre.$BUILD_BUILDID --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish"

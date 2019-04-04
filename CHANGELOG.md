@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.3.0 (not released yet)
+
+* Documentation enhancements
+* Added project landing page
+* Integration tests for Piral CLI
+
 ## 0.2.0 (April 4, 2019)
 
 * Further tooling improvements
@@ -7,7 +13,7 @@
 * Renamed `PortalApi` to `PiralApi`
 * Renamed `PortalInstance` to `PiralInstance`
 * Added `registerSearchProvider` API
-* * Added `createForm` API
+* Added `createForm` API
 * Implemented `pilet-upgrade` command (#11)
 * Renamed the forwarded API to `piral`
 
