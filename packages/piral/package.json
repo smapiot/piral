@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -46,8 +46,8 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "piral-core": "^0.1.3",
-    "piral-ext": "^0.1.3"
+    "piral-core": "^0.2.0",
+    "piral-ext": "^0.2.0"
   },
   "scripts": {
     "build": "tsc",
