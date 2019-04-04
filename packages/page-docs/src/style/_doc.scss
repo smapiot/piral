@@ -123,6 +123,7 @@
 
   a {
     color: rgba(0, 0, 0, 0.55) !important;
+
     &:hover {
       color: rgba(0, 0, 0, 0.65) !important;
     }
@@ -189,6 +190,14 @@
     font-size: 28px;
     margin-top: 0;
     margin-bottom: 30px;
+  }
+}
+
+code a.ref {
+  color: white !important;
+
+  &:hover {
+    color: #f2f2f2 !important;
   }
 }
 

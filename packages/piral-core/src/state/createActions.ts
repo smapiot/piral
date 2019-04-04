@@ -8,7 +8,7 @@ export function createActions(globalState: Atom<GlobalState>): StateActions {
   const newActions = {
     ...actions,
   };
-  Object.keys(newActions).map(actionName => {
+  Object.keys(newActions).forEach(actionName => {
     newActions[actionName] = newActions[actionName].bind(globalState);
   });
   return newActions;

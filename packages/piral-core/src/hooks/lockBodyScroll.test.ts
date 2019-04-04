@@ -3,7 +3,7 @@ import { useLockBodyScroll } from './lockBodyScroll';
 
 jest.mock('react');
 
-describe('LockBodyScroll Module', () => {
+describe('LockBodyScroll Hook Module', () => {
   it('sets the body overflow to hidden on being initiated', () => {
     const usedEffect = jest.fn();
     (React as any).useLayoutEffect = usedEffect;

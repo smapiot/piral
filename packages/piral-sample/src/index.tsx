@@ -18,11 +18,13 @@ const Sitemap: React.SFC = () => {
       <li>
         <Link to="/">Go to /</Link>
       </li>
-      {Object.keys(pages).map(url => (
-        <li key={url}>
-          <Link to={url}>Go to {url}</Link>
-        </li>
-      ))}
+      {Object.keys(pages)
+        .map(url => url.replace(':id', `${~~(Math.random() * 1000)}`))
+        .map(url => (
+          <li key={url}>
+            <Link to={url}>Go to {url}</Link>
+          </li>
+        ))}
       <li>
         <Link to="/sitemap">Go to /sitemap</Link>
       </li>
@@ -134,7 +136,7 @@ const Layout: React.SFC = ({ children }) => {
 const Portal = createInstance({
   availableModules: modules,
   requestModules() {
-    return new Promise((resolve, reject) => setTimeout(() => resolve([]), 1000));
+    return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
   Loader,
   routes: {

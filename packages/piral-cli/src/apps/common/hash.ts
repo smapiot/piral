@@ -1,7 +1,13 @@
 import { createHash } from 'crypto';
 
 export function computeHash(content: string | Buffer) {
-  const sha1sum = createHash('sha1');
-  sha1sum.update(content || '');
-  return sha1sum.digest('hex');
+  return createHash('sha1')
+    .update(content || '')
+    .digest('hex');
+}
+
+export function computeMd5(content: string | Buffer) {
+  return createHash('md5')
+    .update(content || '')
+    .digest('hex');
 }

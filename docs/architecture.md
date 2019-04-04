@@ -18,9 +18,11 @@ Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to r
 
 ![Building blocks of Piral](./diagrams/blocks.svg)
 
-As far as `piral` is concerned we take `piral-core` (main library without any backend or specialized API) and `piral-ext` (useful API extensions and backend connection) into account to become a single package.
+As far as `piral` is concerned we take `piral-core` (main library without any backend or specialized API) and `piral-ext` (useful API extensions and backend connection) into account to become a single package. `piral` can be thought of as a framework, while the other building blocks are just ordinary libraries.
 
 To give any development another boost the Piral ecosystem also contains pre-made layouts and plugins. Any kind of layout plus any number of plugins may be used when creating your own Piral instance.
+
+An (technically speaking: inaccurate) analogy to illustrate what this means is that `piral-core` is like the Linux kernel. A certain distribution like Ubuntu would be `piral`. Additionally to the kernel there can be some special programs ("drivers"), which would be the Piral plugins. An application running in user space would then be a pilet.
 
 ## Initial Loading
 
@@ -29,6 +31,17 @@ The initial loading of a Piral instance is a multi-stage process. Essentially, c
 ![Loading a Piral instance](./diagrams/loading.svg)
 
 Note that while pilets can be loaded from cache as well, we usually require at least one communication with a server to ensure that the cached pilets are the ones that should be loaded for the user. Updates on the pilets, different feature flags and other factors may influence this decision.
+
+## State Management
+
+Piral comes with integrated state management focused around a created Piral instance. The state management involves
+
+- book keeping of internally used components
+- coordination / book keeping of components coming from pilets
+- current application state (language, layout, ...)
+- current search state (input, results, ...)
+- keeping track of connected data feeds
+- managing the current user (data)
 
 ## Pilet API
 
@@ -39,3 +52,7 @@ Setting up components may involve setting up dedicated (routes to) pages, tiles 
 ![Piral API registration methods](./diagrams/piral-api.svg)
 
 For every `register*` API there is an `unregister*` API. All registrations can only be modified by their owners, i.e., if pilet A registered page A it cannot be unregistered by pilet B. The unregistration can be, however, performed at any time. Removing, e.g., a route will immediately remove it from the router. Thus if the page is currently shown we will instead of see the not found page.
+
+Besides the `register*` kind of APIs there are also `show*` kind of APIs. These do not have a counterpart like `hide*`. Instead, these APIs return a disposer function to yield the power for closing them only to the openers and trusted friends (i.e., functions that received the disposer).
+
+Finally, the last category of API calls are the `create*` functions. These create a new kind of function that can be used to wrap existing components inside them. The perfect fit for this would be between `register*` APIs or within some React tree.

@@ -280,3 +280,31 @@ ul.app-nav {
     background-color: #fff;
   }
 }
+
+.form-row {
+  margin: 1em;
+
+  label {
+    display: block;
+    margin-bottom: 0.2em;
+  }
+
+  input {
+    padding: 0.3rem;
+    font-size: 1rem;
+  }
+
+  button {
+    padding: 0.5em 1em;
+    border: 1px solid black;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    border: 1px solid #ccc;
+    color: #ccc;
+    cursor: default;
+  }
+}

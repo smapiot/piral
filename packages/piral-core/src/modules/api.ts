@@ -1,6 +1,6 @@
 import { ArbiterModuleMetadata, wrapElement } from 'react-arbiter';
 import { localizeLocal } from './localize';
-import { withFeed, withApi } from '../components';
+import { withFeed, withApi, withForm } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
   LocalizationMessages,
@@ -70,6 +70,9 @@ export function createApi<TApi>(
         }
 
         return component => withFeed(component, options);
+      },
+      createForm(options) {
+        return component => withForm(component, options);
       },
       provideTranslations(messages) {
         translations = messages;

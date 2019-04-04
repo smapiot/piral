@@ -1,18 +1,18 @@
 import { ComponentType } from 'react';
 import { Disposable } from './utils';
 
-export interface ConnectorDetails<TData, TItem> extends FeedConnectorOptions<TData, TItem> {
+export interface ConnectorProps<TData> {
   /**
-   * The ID of the connector.
+   * The current data from the feed.
    */
-  id: string;
+  data: TData;
 }
 
-export interface FeedConnector<T> {
+export interface FeedConnector<TData> {
   /**
    * Connector function for wrapping a component.
    */
-  <TProps>(component: ComponentType<TProps & { data: T }>): ComponentType<TProps>;
+  <TProps>(component: ComponentType<TProps & ConnectorProps<TData>>): ComponentType<TProps>;
 }
 
 export interface FeedResolver<TData> {
@@ -54,4 +54,11 @@ export interface FeedConnectorOptions<TData, TItem> {
    * Optional flag to avoid lazy loading and initialize the data directly.
    */
   immediately?: boolean;
+}
+
+export interface ConnectorDetails<TData, TItem> extends FeedConnectorOptions<TData, TItem> {
+  /**
+   * The ID of the connector.
+   */
+  id: string;
 }

@@ -80,6 +80,17 @@ export interface FeedErrorInfoProps {
   error: any;
 }
 
+export interface FormErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'form';
+  /**
+   * The provided error details.
+   */
+  error: any;
+}
+
 export interface LoadingErrorInfoProps {
   /**
    * The type of the error.
@@ -91,7 +102,12 @@ export interface LoadingErrorInfoProps {
   error: any;
 }
 
-export type ErrorInfoProps = NotFoundErrorInfoProps | PageErrorInfoProps | FeedErrorInfoProps | LoadingErrorInfoProps;
+export type ErrorInfoProps =
+  | NotFoundErrorInfoProps
+  | PageErrorInfoProps
+  | FeedErrorInfoProps
+  | LoadingErrorInfoProps
+  | FormErrorInfoProps;
 
 export interface LoaderProps {}
 

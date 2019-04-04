@@ -18,7 +18,7 @@ jest.mock('react', () => {
   };
 });
 
-describe('GlobalState Module', () => {
+describe('GlobalState Hook Module', () => {
   it('selects key from state', () => {
     const result = useGlobalState(m => (m as any).foo);
     expect(result).toBe(5);

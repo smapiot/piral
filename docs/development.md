@@ -1,6 +1,6 @@
 # Development
 
-## Prequisites
+## Prerequisites
 
 For development you need to have the following software installed:
 

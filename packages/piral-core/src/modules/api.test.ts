@@ -361,6 +361,22 @@ describe('API Module', () => {
     });
   });
 
+  it('createApi allows using the created form creator as a HOC', () => {
+    const container = createMockContainer();
+    container.context = {
+      updateFormState: jest.fn(),
+    };
+    const api = createApi<{}>(moduleMetadata, container);
+    const create = api.createForm({
+      emptyData: {},
+      onSubmit() {
+        return Promise.resolve();
+      },
+    });
+    const NewComponent = create(StubComponent);
+    expect(NewComponent.displayName).toBe('withRouter(FormLoader)');
+  });
+
   it('createApi provides the option to create a feed connector', () => {
     const container = createMockContainer();
     container.context = {

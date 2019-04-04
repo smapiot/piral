@@ -7,8 +7,13 @@ export const Footer: React.SFC = () => (
         Designed with <i className="fas fa-heart" /> by{' '}
         <a href="https://themes.3rdwavemedia.com/" target="_blank">
           Xiaoying Riley
-        </a>{' '}
-        for developers
+        </a>
+      </small>
+      {' | '}
+      <small className="copyright">
+        <a href="https://www.smapiot.com/en/imprint/" target="_blank">
+          Imprint
+        </a>
       </small>
     </div>
   </footer>

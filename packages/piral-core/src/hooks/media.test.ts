@@ -5,7 +5,7 @@ jest.mock('react');
 
 (React as any).useState = v => [v(), jest.fn()];
 
-describe('Media Module', () => {
+describe('Media Hook Module', () => {
   it('picks default mode if nothing else if given', () => {
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;

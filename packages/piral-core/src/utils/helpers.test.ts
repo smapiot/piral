@@ -7,6 +7,7 @@ import {
   withoutKey,
   prependItems,
   appendItems,
+  updateKey,
 } from './helpers';
 
 describe('Helpers Module', () => {
@@ -205,5 +206,15 @@ describe('Helpers Module', () => {
   it('withoutKey works with a number', () => {
     const result = withoutKey({ 0: 'hello' }, 0 as any);
     expect(result).toEqual({});
+  });
+
+  it('updateKey with the removeIndicator', () => {
+    const result = updateKey({ b: '1233' }, 'b', null);
+    expect(result).toEqual({});
+  });
+
+  it('updateKey with a new value', () => {
+    const result = updateKey({ b: '1233' }, 'b', '1244');
+    expect(result).toEqual({ b: '1244' });
   });
 });
