@@ -15,7 +15,7 @@ export const buildPiletDefaults = {
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
   const { entry = buildPiletDefaults.entry, target = buildPiletDefaults.target } = options;
   const entryFiles = join(baseDir, entry);
-  const targetDir = dirname(entry);
+  const targetDir = dirname(entryFiles);
   const packageJson = await findFile(targetDir, 'package.json');
 
   if (!packageJson) {

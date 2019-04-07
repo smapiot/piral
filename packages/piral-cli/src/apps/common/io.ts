@@ -91,8 +91,8 @@ export async function mergeWithJson<T>(targetDir: string, fileName: string, newC
 
 export async function readJson<T = any>(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
-  const content = await new Promise<string>((resolve, reject) => {
-    readFile(targetFile, 'utf8', (err, c) => (err ? reject(err) : resolve(c)));
+  const content = await new Promise<string>(resolve => {
+    readFile(targetFile, 'utf8', (err, c) => (err ? resolve('') : resolve(c)));
   });
   return JSON.parse(content || '{}') as T;
 }
