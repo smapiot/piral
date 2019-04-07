@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Banner, Capabilities, Feature, Footer, Companies, Status, GitHubCat } from './components';
+import { Banner, Capabilities, Feature, Footer, Companies, GitHubCat, Technologies } from './components';
 
 export const App: React.SFC = () => (
   <>
     <GitHubCat url="https://github.com/smapiot/piral" />
     <Banner />
-    <Status />
     <Capabilities />
     <Feature>
       <div className="col-md-6">
@@ -14,7 +13,7 @@ export const App: React.SFC = () => (
           Keen to see how Piral looks in practice? Watch our introductory video.
           <br /> The video shows what Piral can give you out of the box already.
         </p>
-        <a href="#" className="btn my-4 font-weight-bold atlas-cta cta-blue">
+        <a href="https://youtube.com/" className="btn my-4 font-weight-bold atlas-cta cta-blue">
           Watch Video
         </a>
       </div>
@@ -29,15 +28,16 @@ export const App: React.SFC = () => (
           Like what you see and want to take it to the next level?
           <br /> We have different support options and plans to offer if you need help.
         </p>
-        <a href="#" className="btn my-4 font-weight-bold atlas-cta cta-blue">
-          Options
+        <a href="https://smapiot.com/piral" className="btn my-4 font-weight-bold atlas-cta cta-blue">
+          See Options
         </a>
       </div>
       <div className="col-md-6 align-self-center flex-md-first">
         <img src={require('../assets/feature-2.png')} alt="Safe and reliable" className="mx-auto d-block" />
       </div>
     </Feature>
-    <Companies />
+    <Technologies />
+    {/*<Companies />*/}
     <Footer />
   </>
 );

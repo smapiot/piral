@@ -1,5 +1,6 @@
-$color-primary: #00FFAD;//#56aa1c
+$color-primary: #00FFAD;
 $color-secondary: #192440;
+$heart-color: #ea5395;
 
 body {
   font-family: 'Lato', arial, sans-serif;
@@ -18,15 +19,12 @@ img {
 }
 
 .badges {
-  margin-top: 1em;
-  display: flex;
-  width: 80%;
-  max-width: 600px;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: inline-block;
+  vertical-align: baseline;
 
-  & > a {
-    margin: 0.3em;
+  img {
+    display: inline-block;
+    margin: 0 0.1em;
   }
 }
 
@@ -147,7 +145,7 @@ button {
   }
 
   .fa-heart {
-    color: rgb(219, 8, 36);
+    color: $heart-color;
   }
 }
 
@@ -173,6 +171,10 @@ button {
     right: 0;
   }
 
+  .octo-arm {
+    transform-origin: 130px 106px;
+  }
+
   &:hover .octo-arm {
     animation: octocat-wave 560ms ease-in-out;
   }
@@ -182,7 +184,7 @@ button {
       animation: none;
     }
 
-    .octo-arm{
+    .octo-arm {
       animation: octocat-wave 560ms ease-in-out;
     }
   }
