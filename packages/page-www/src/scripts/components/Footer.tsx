@@ -19,6 +19,10 @@ export const Footer: React.SFC = () => (
           Copyright &copy; 2019 smapiot GmbH.
           <br />
           Made with <i className="fa fa-heart" aria-hidden="true" /> in Munich.
+          <br />
+          <a href="https://www.smapiot.com/en/imprint/" className="imprint" target="_blank">
+            Imprint
+          </a>
         </div>
         <div className="col-md-6 align-self-center text-center text-md-right my-2 social-media">
           <IconLink href="https://smapiot.com" logo="fas fa-globe" />
