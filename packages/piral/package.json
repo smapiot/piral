@@ -37,17 +37,14 @@
     "@dbeining/react-atom": "^4.0.0",
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
-    "@types/react-router": "^4.4.3",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1"
+    "@types/react-router": "^4.4.3"
   },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
-  },
+  "peerDependencies": {},
   "dependencies": {
     "piral-core": "^0.2.0",
-    "piral-ext": "^0.2.0"
+    "piral-ext": "^0.2.0",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1"
   },
   "scripts": {
     "build": "tsc",

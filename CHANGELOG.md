@@ -1,10 +1,13 @@
 # Piral Changelog
 
-## 0.3.0 (not released yet)
+## 0.3.0 (to be determined)
 
 * Documentation enhancements
 * Added project landing page
 * Integration tests for Piral CLI
+* Updated homepage
+* Included fetch and GraphQL API extensions in `piral-ext`
+* Changed `piral` to a framework (`piral-core` remains a library)
 
 ## 0.2.0 (April 4, 2019)
 
