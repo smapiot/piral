@@ -1,3 +1,6 @@
+import 'whatwg-fetch';
+import 'url-polyfill';
+
 import { PiralApi } from 'piral-core';
 import { PiralFetchApi, PiralGqlApi } from 'piral-ext';
 

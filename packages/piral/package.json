@@ -39,12 +39,13 @@
     "@types/react": "^16.8.1",
     "@types/react-router": "^4.4.3"
   },
-  "peerDependencies": {},
   "dependencies": {
     "piral-core": "^0.2.0",
     "piral-ext": "^0.2.0",
     "react": "^16.8.1",
-    "react-dom": "^16.8.1"
+    "react-dom": "^16.8.1",
+    "url-polyfill": "^1.1.5",
+    "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
     "build": "tsc",
