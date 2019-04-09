@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.3.0 (to be determined)
+
+* Updated homepage
+* Included fetch and GraphQL API extensions in `piral-ext`
+* Changed `piral` to a framework (`piral-core` remains a library)
+
 ## 0.2.0 (April 4, 2019)
 
 * Further tooling improvements
@@ -7,7 +13,7 @@
 * Renamed `PortalApi` to `PiralApi`
 * Renamed `PortalInstance` to `PiralInstance`
 * Added `registerSearchProvider` API
-* * Added `createForm` API
+* Added `createForm` API
 * Implemented `pilet-upgrade` command (#11)
 * Renamed the forwarded API to `piral`
 

@@ -1,0 +1,196 @@
+$color-primary: #00FFAD;
+$color-secondary: #192440;
+$heart-color: #ea5395;
+
+body {
+  font-family: 'Lato', arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h2 {
+  font-size: 2.8rem !important;
+  font-weight: 700;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.badges {
+  display: inline-block;
+  vertical-align: baseline;
+
+  img {
+    display: inline-block;
+    margin: 0 0.1em;
+  }
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+.jumbotron {
+  margin-bottom: 0 !important;
+}
+
+.atlas-cta {
+  border-radius: 22px !important;
+  padding: 12px 30px !important;
+  font-weight: 700;
+  transition: .3s ease-in-out !important;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.atlas-cta-wide {
+  width: 100%;
+}
+
+.cta-green {
+  background: $color-primary;
+  color: $color-secondary;
+
+  &:hover {
+    color: $color-secondary;
+    background: lighten($color-primary, 40%);
+  }
+}
+
+.cta-blue {
+  background: $color-secondary;
+  color: #fff;
+
+  &:hover {
+    color: #fff;
+    background: lighten($color-secondary, 20%);
+  }
+}
+
+.cta-ghost {
+  border: 2px solid $color-secondary !important;
+  color: $color-secondary;
+
+  &:hover {
+    color: #fff;
+    background: lighten($color-secondary, 20%);
+  }
+}
+
+.banner {
+  background-size: cover;
+  background-image: url(../assets/banner.jpg);
+
+  header {
+    overflow: hidden;
+
+    img {
+      max-width: 80px;
+    }
+  }
+
+  @media (max-width: 575px) {
+    h1 {
+        font-size: 3.6rem;
+    }
+  }
+}
+
+.features {
+  background: $color-primary;
+  background: linear-gradient(168deg, #fff 40%, $color-primary 0);
+  padding-top: 0;
+  padding-bottom: 0;
+
+  & > div {
+    padding: 4rem 0;
+  }
+
+  img {
+    width: 100%;
+    max-width: 480px;
+  }
+}
+
+.copyright {
+  background: $color-secondary;
+  padding: 2rem 3rem;
+
+  .social-media {
+    a {
+      width: 40px;
+      height: 40px;
+      border-radius: 99%;
+      background: #fff;
+      transition: .4s ease;
+
+      i {
+        color: $color-secondary;
+        font-size: 1.2rem;
+        line-height: 40px;
+      }
+
+      &:hover {
+        background: $color-primary;
+
+        i {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .imprint {
+    color: $color-primary;
+  }
+
+  .fa-heart {
+    color: $heart-color;
+  }
+}
+
+@keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+  40%, 80% {
+    transform: rotate(10deg);
+  }
+}
+
+.github-corner {
+  svg {
+    fill: $color-primary;
+    color: $color-secondary;
+    position: absolute;
+    top: 0;
+    border: 0;
+    right: 0;
+  }
+
+  .octo-arm {
+    transform-origin: 130px 106px;
+  }
+
+  &:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
+
+  @media (max-width:500px) {
+    &:hover .octo-arm {
+      animation: none;
+    }
+
+    .octo-arm {
+      animation: octocat-wave 560ms ease-in-out;
+    }
+  }
+}
