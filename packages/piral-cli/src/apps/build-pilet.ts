@@ -29,7 +29,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     target: targetDir,
   });
 
-  modifyBundler(Bundler.prototype, externals);
+  modifyBundler(Bundler.prototype, externals, targetDir);
 
   const bundler = new Bundler(
     entryFiles,
