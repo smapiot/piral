@@ -8,6 +8,8 @@
 * Updated homepage
 * Included fetch and GraphQL API extensions in `piral-ext`
 * Changed `piral` to a framework (`piral-core` remains a library)
+* Implemented support for pilet split (#1)
+* Added version to documentation page (#16)
 
 ## 0.2.0 (April 4, 2019)
 
