@@ -1,13 +1,14 @@
 @import "../../../../node_modules/bootstrap/scss/bootstrap";
 @import "../../../../node_modules/prismjs/themes/prism.css";
 
-$color-primary: #40babd;
-$color-green: #56aa1c;
-$color-red: #f77b6b;
+$color-primary: #845EC2;
+$color-green: #00C9A7;
+$color-red: #FF9671;
 $color-blue: #58bbee;
-$color-orange: #F88C30;
-$color-pink: #EA5395;
-$color-purple: #8A40A7;
+$color-orange: #FFC75F;
+$color-yellow: #F9F871;
+$color-pink: #FF6F91;
+$color-purple: #D65DB1;
 
 $text-color: #494d55;
 $text-color-secondary: lighten($text-color, 10%);
