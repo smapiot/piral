@@ -109,6 +109,8 @@ export type ErrorInfoProps =
   | LoadingErrorInfoProps
   | FormErrorInfoProps;
 
+export type ErrorType = ErrorInfoProps['type'];
+
 export interface LoaderProps {}
 
 export interface DashboardProps extends RouteComponentProps {}

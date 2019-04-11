@@ -1,16 +1,7 @@
 import * as React from 'react';
 import { wrapComponent } from 'react-arbiter';
-import { useGlobalState } from '../hooks';
+import { ComponentError, ComponentLoader } from './helpers';
 import { AnyComponent, PiralApi } from '../types';
-
-interface ComponentErrorProps {
-  error: Error;
-}
-
-const ComponentError: React.SFC<ComponentErrorProps> = ({ error }) => {
-  const { ErrorInfo } = useGlobalState(s => s.app.components);
-  return <ErrorInfo type="feed" error={error} />;
-};
 
 export interface ApiForward<TApi> {
   piral: PiralApi<TApi>;
@@ -22,8 +13,11 @@ export function withApi<TApi, TProps>(component: AnyComponent<TProps & ApiForwar
     onError(error) {
       piral.trackError(error, { origin: 'piral-error-boundary' });
     },
+    renderChild(child) {
+      return <React.Suspense fallback={<ComponentLoader />}>{child}</React.Suspense>;
+    },
     renderError(error) {
-      return <ComponentError error={error} />;
+      return <ComponentError type="feed" error={error} />;
     },
   });
 }

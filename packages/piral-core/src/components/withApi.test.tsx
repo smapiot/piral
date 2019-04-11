@@ -28,6 +28,9 @@ StubComponent.displayName = 'StubComponent';
 describe('withApi Module', () => {
   it('wraps a component and forwards the API as piral', () => {
     const api: any = {};
+    const Suspense = ({ children }) => <div>{children}</div>;
+    Suspense.displayName = 'Suspense';
+    (React as any).Suspense = Suspense;
     const Component = withApi(StubComponent, api);
     const node = mount(<Component />);
     expect(

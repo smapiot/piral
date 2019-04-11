@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { useForm, useGlobalState, usePromise } from '../hooks';
+import { ComponentError, ComponentLoader } from './helpers';
+import { useForm, usePromise } from '../hooks';
 import { InputFormOptions, FormProps } from '../types';
 
 export function withForm<TFormData, TProps>(
@@ -17,17 +18,16 @@ export function withForm<TFormData, TProps>(
   };
   const FormLoader: React.SFC<TProps & RouteComponentProps> = props => {
     const { loadData, emptyData } = options;
-    const { Loader, ErrorInfo } = useGlobalState(s => s.app.components);
     const { loading, data, error } = usePromise(() =>
       typeof loadData !== 'function' ? Promise.resolve(emptyData) : loadData(props),
     );
 
     if (loading) {
-      return <Loader />;
+      return <ComponentLoader />;
     } else if (data) {
       return <FormView {...props} initialData={data} />;
     } else {
-      return <ErrorInfo type="form" error={error} />;
+      return <ComponentError type="form" error={error} />;
     }
   };
 
