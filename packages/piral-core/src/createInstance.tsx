@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { withRecall, ArbiterModule, DependencyGetter } from 'react-arbiter';
+import { withRecall, ArbiterModule, DependencyGetter, isfunc } from 'react-arbiter';
 import { Portal, PortalProps } from './components';
 import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
 import { createGlobalState, createActions, StateContext, GlobalStateOptions } from './state';
@@ -14,7 +14,7 @@ function defaultApiExtender<TApi>(value: PiralCoreApi<TApi>): PiralApi<TApi> {
 }
 
 function getExtender(plugins: Array<ScaffoldPlugin>): ScaffoldPlugin {
-  const extenders = plugins.filter(m => typeof m === 'function');
+  const extenders = plugins.filter(isfunc);
   return container => {
     extenders.forEach(extender => {
       container = extender(container);
