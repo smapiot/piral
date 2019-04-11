@@ -17,9 +17,32 @@ function resolveModule(name: string, targetDir: string) {
   }
 }
 
+function modifyRawAsset(proto: any) {
+  const g = proto.generate;
+  proto.generate = function() {
+    const result = g.call(this);
+
+    if (Array.isArray(result) && result.length === 1) {
+      const item = result[0];
+      const match = /^module\.exports=(.*);$/.exec(item.value);
+
+      if (match) {
+        // remove the first character (/) to prepare for concat
+        const path = JSON.stringify(JSON.parse(match[1]).substr(1));
+        const bundleURL = JSON.stringify('parcel-bundler/src/builtins/bundle-url');
+        item.value = `var r=require(${bundleURL}).getBundleURL();module.exports=r+${path};`;
+      }
+    }
+
+    return result;
+  };
+}
+
 export function extendBundler(bundler: any) {
+  const RawAsset = bundler.parser.findParser('sample.png');
   bundler.parser.registerExtension('vm', VirtualAsset);
   bundler.packagers.add('vm', VirtualPackager);
+  modifyRawAsset(RawAsset.prototype);
 }
 
 export function modifyBundler(proto: any, externalNames: Array<string>, targetDir: string) {
@@ -48,9 +71,6 @@ export function postProcess(bundle: Bundler.ParcelBundle) {
         // https://gist.github.com/dfkaye/f43dbdfbcdee427dbe4339870ed979d0
         //let result = /js/.test(child.type) ? transformHTML(data) : transformCSS(data);
         let result = data;
-
-        // Fail the build if the transforms didn't work
-        // assert(result.match(RegExp(getProdSrc(), 'g')), 'should match at least one transformed URL for ' + child.name);
 
         if (/js/.test(bundle.type)) {
           /*
