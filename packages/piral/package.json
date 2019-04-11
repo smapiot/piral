@@ -37,17 +37,15 @@
     "@dbeining/react-atom": "^4.0.0",
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
-    "@types/react-router": "^4.4.3",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "@types/react-router": "^4.4.3"
   },
   "dependencies": {
     "piral-core": "^0.2.0",
-    "piral-ext": "^0.2.0"
+    "piral-ext": "^0.2.0",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "url-polyfill": "^1.1.5",
+    "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
     "build": "tsc",

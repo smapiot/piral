@@ -38,6 +38,14 @@ Sets the version of the Piral instance to upgrade to. By default, the latest ver
 - Type: `string`
 - Default: `"latest"`
 
+### `--force-overwrite`
+
+Determines if files should be overwritten by the upgrading process.
+
+- Type: `string`
+- Choices: `"no"`, `"prompt"`, `"yes"`
+- Default: `"no"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

@@ -3,11 +3,13 @@ import { writeFile, readFile } from 'fs';
 import { VirtualPackager } from './VirtualPackager';
 import { VirtualAsset } from './VirtualAsset';
 
-function resolveModule(name: string) {
+function resolveModule(name: string, targetDir: string) {
   try {
     return {
       name,
-      path: require.resolve(name),
+      path: require.resolve(name, {
+        paths: [targetDir],
+      }),
     };
   } catch (ex) {
     console.warn(`Could not find module ${name}.`);
@@ -20,8 +22,8 @@ export function extendBundler(bundler: any) {
   bundler.packagers.add('vm', VirtualPackager);
 }
 
-export function modifyBundler(proto: any, externalNames: Array<string>) {
-  const externals = externalNames.map(resolveModule).filter(m => !!m);
+export function modifyBundler(proto: any, externalNames: Array<string>, targetDir: string) {
+  const externals = externalNames.map(name => resolveModule(name, targetDir)).filter(m => !!m);
   const ra = proto.getLoadedAsset;
   proto.getLoadedAsset = function(path: string) {
     const [external] = externals.filter(m => m.path === path);
@@ -58,7 +60,13 @@ export function postProcess(bundle: Bundler.ParcelBundle) {
            * @see https://github.com/parcel-bundler/parcel/issues/1401
            */
 
-          result = ["!(function(global,parcelRequire){'use strict;'", result, '}(window));'].join('\n');
+          result = [
+            "!(function(global,parcelRequire){'use strict;'",
+            result
+              .split('"function"==typeof parcelRequire&&parcelRequire')
+              .join('"function"==typeof global.$pr&&global.$pr'),
+            ';global.$pr=parcelRequire}(window, window.$pr));',
+          ].join('\n');
         }
 
         writeFile(bundle.name, result, 'utf8', err => {

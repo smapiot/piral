@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isfunc } from 'react-arbiter';
 import { useGlobalState } from '../hooks';
 import { ExtensionSlotProps } from '../types';
 
@@ -11,7 +12,7 @@ export function getExtensionSlot(name: string) {
     const extensions = useGlobalState(s => s.components.extensions[name] || []);
 
     return render(
-      extensions.length === 0 && typeof empty === 'function'
+      extensions.length === 0 && isfunc(empty)
         ? [empty()]
         : extensions.map(({ component: Component }, i) => <Component key={i} params={params} />),
     );

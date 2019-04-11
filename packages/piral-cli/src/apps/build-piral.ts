@@ -1,6 +1,6 @@
 import * as Bundler from 'parcel-bundler';
 import { join, dirname, basename } from 'path';
-import { extendConfig, setStandardEnvs } from './common';
+import { extendConfig, setStandardEnvs, checkExists } from './common';
 
 export interface BuildPiralOptions {
   entry?: string;
@@ -15,6 +15,11 @@ export const buildPiralDefaults = {
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
   const { entry = buildPiralDefaults.entry, target = buildPiralDefaults.target } = options;
   const entryFiles = join(baseDir, entry);
+  const exists = await checkExists(entryFiles);
+
+  if (!exists) {
+    return console.error('The given entry pointing to "%s" does not exist.', entryFiles);
+  }
 
   await setStandardEnvs({
     production: true,

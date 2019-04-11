@@ -1,5 +1,5 @@
 const { join } = require('path');
-const { readFileSync } = require('fs');
+const { readFileSync, writeFileSync } = require('fs');
 
 const defaultPath = join(__dirname, '..', 'CHANGELOG.md');
 
@@ -15,9 +15,28 @@ function getChangelogVersion(changelogPath = defaultPath) {
   return version;
 }
 
+function updateChangelogDate(changelogPath = defaultPath) {
+  const CHANGELOG = readFileSync(changelogPath, 'utf8');
+  const matches = /^\#\# (\d+\.\d+\.\d+) .*/gm.exec(CHANGELOG);
+  const date = new Date().toLocaleDateString('en-us', {
+    month: 'long',
+    year: 'numeric',
+    day: 'numeric',
+  });
+  const newContent = CHANGELOG.replace(matches[0], `## ${matches[1]} (${date})`);
+  writeFileSync(changelogPath, newContent, 'utf8');
+}
+
 if (require.main === module) {
   const version = getChangelogVersion();
   console.log(version);
+
+  if (process.argv.pop() === '--update') {
+    updateChangelogDate();
+  }
 } else {
-  module.exports = getChangelogVersion;
+  module.exports = {
+    getChangelogVersion,
+    updateChangelogDate,
+  };
 }

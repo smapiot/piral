@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { isfunc } from 'react-arbiter';
 import { History, Location } from 'history';
 import { PromptMessage } from '../types';
 
@@ -18,7 +19,7 @@ export function usePrompt(
   useEffect(() => {
     if (active) {
       const beforeUnload = (ev: BeforeUnloadEvent) => {
-        const msg = typeof message === 'function' ? message() : message;
+        const msg = isfunc(message) ? message() : message;
         ev.returnValue = msg;
         return msg;
       };

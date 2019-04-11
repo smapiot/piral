@@ -50,6 +50,14 @@ function printAlias(aliases) {
   return aliases.map(alias => `- \`${alias}\``).join(nl);
 }
 
+function printValue(value) {
+  if (value === resolve(__dirname, '..')) {
+    return 'process.cwd()';
+  } else {
+    return JSON.stringify(value);
+  }
+}
+
 function getCommandData(retrieve) {
   const data = {
     positionals: [],
@@ -75,6 +83,13 @@ function getCommandData(retrieve) {
 
       return this;
     },
+    choices(name, choices) {
+      return this.swap(name, flag => ({
+        ...flag,
+        type: 'string',
+        values: choices.map(printValue),
+      }));
+    },
     string(name) {
       return this.swap(name, flag => ({
         ...flag,
@@ -88,15 +103,9 @@ function getCommandData(retrieve) {
       }));
     },
     default(name, value) {
-      if (value === resolve(__dirname, '..')) {
-        value = 'process.cwd()';
-      } else {
-        value = JSON.stringify(value);
-      }
-
       return this.swap(name, flag => ({
         ...flag,
-        default: value,
+        default: printValue(value),
       }));
     },
     number(name) {
@@ -123,7 +132,7 @@ function details(args) {
 
 ${arg.describe || 'No description available.'}
 
-- Type: \`${arg.type}\`
+- Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('\`, \`')}\`` : ''}
 - Default: \`${arg.default}\``).join(nl + nl);
 }
 

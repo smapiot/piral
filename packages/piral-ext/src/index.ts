@@ -1,1 +1,2 @@
-export const placeHolder = 'Hello Piral Ext!';
+export * from './fetch';
+export * from './gql';

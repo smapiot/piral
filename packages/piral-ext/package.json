@@ -34,5 +34,9 @@
     "build": "tsc",
     "typedoc": "typedoc --json ../../docs/types/piral-ext.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "subscriptions-transport-ws": "^0.9.16",
+    "urql": "^1.0.4"
   }
 }

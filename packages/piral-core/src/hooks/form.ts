@@ -5,6 +5,7 @@ import { useAction } from './action';
 import { useGlobalState } from './globalState';
 import { compare, generateId } from '../utils';
 import { FormProps, InputFormOptions, FormDataState } from '../types';
+import { isfunc } from 'react-arbiter';
 
 interface StateUpdater {
   (id: string, state: FormDataState, patch: Partial<FormDataState>): void;
@@ -35,7 +36,7 @@ function updateData<TFormData>(
     error: undefined,
   });
 
-  if (typeof onChange === 'function') {
+  if (isfunc(onChange)) {
     Promise.resolve(onChange(newData))
       .then(data => {
         const updatedData = { ...newData, ...data };
@@ -65,7 +66,7 @@ function submitData<TFormData>(
     submitting: true,
   });
 
-  if (typeof onSubmit === 'function') {
+  if (isfunc(onSubmit)) {
     Promise.resolve(onSubmit(state.currentData))
       .then(() =>
         updateState(id, state, {

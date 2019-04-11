@@ -1,3 +1,4 @@
+import { isfunc } from 'react-arbiter';
 import { FeedResolver, FeedConnectorOptions, ConnectorDetails } from '../types';
 
 export function createFeedOptions<TData, TItem>(
@@ -6,7 +7,7 @@ export function createFeedOptions<TData, TItem>(
 ): ConnectorDetails<TData, TItem> {
   let initialized: Promise<TData>;
 
-  if (typeof resolver === 'function') {
+  if (isfunc(resolver)) {
     return {
       id,
       connect() {

@@ -4,6 +4,7 @@ import { Header } from './Header';
 import { Breadcrumbs, Info, InfoProps, Breadcrumb } from '../components';
 
 const buildTime = process.env.BUILD_TIME;
+const version = process.env.BUILD_PCKG_VERSION;
 
 export interface StandardProps extends InfoProps {
   breadcrumbs?: Array<Breadcrumb>;
@@ -17,7 +18,7 @@ export const Standard: React.SFC<StandardProps> = ({ children, title, icon, brea
       </Header>
       <div className="doc-wrapper">
         <div className="container">
-          <Info updated={buildTime} title={title} icon={icon} />
+          <Info updated={buildTime} title={title} icon={icon} version={version} />
           <div className="doc-body row">{children}</div>
         </div>
       </div>

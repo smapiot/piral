@@ -6,9 +6,10 @@ export interface InfoProps {
   title?: string;
   updated?: string;
   icon?: IconName;
+  version?: string;
 }
 
-export const Info: React.SFC<InfoProps> = ({ updated, title, icon = 'paper-plane' }) => (
+export const Info: React.SFC<InfoProps> = ({ version, updated, title, icon = 'paper-plane' }) => (
   <div id="doc-header" className="doc-header text-center">
     {title && (
       <h1 className="doc-title">
@@ -16,6 +17,11 @@ export const Info: React.SFC<InfoProps> = ({ updated, title, icon = 'paper-plane
       </h1>
     )}
     <div className="meta">
+      {version && (
+        <>
+          <i className="fas fa-code-branch" /> v{version}{' '}
+        </>
+      )}
       {updated && (
         <>
           <i className="far fa-clock" /> Last updated: {updated}

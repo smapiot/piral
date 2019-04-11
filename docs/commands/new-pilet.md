@@ -45,6 +45,14 @@ Sets the package registry to use for resolving the specified Piral app.
 - Type: `string`
 - Default: `"https://registry.npmjs.org/"`
 
+### `--force-overwrite`
+
+Determines if files should be overwritten by the scaffolding.
+
+- Type: `string`
+- Choices: `"no"`, `"prompt"`, `"yes"`
+- Default: `"no"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

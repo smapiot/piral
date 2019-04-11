@@ -1,18 +1,36 @@
 export interface PiralStorage {
+  /**
+   * Sets the value of an item.
+   * @param name The name of the item to set.
+   * @param data The new value of the item.
+   * @param expires Optional expiration information.
+   */
   setItem(name: string, data: string, expires?: string): void;
+  /**
+   * Gets the value of an item.
+   * @param name The name of the item to look for.
+   */
   getItem(name: string): string | null;
+  /**
+   * Removes an item from the storage.
+   * @param name The name of the item to remove.
+   */
   removeItem(name: string): void;
 }
 
 export interface LocalizationMessages {
+  /**
+   * The available languages (lang to wordings).
+   */
   [lang: string]: {
+    /**
+     * The available wordings (tag to translation).
+     */
     [tag: string]: string;
   };
 }
 
-export interface Dict<T> {
-  [name: string]: T;
-}
+export type Dict<T> = Record<string, T>;
 
 export type Without<T, K> = Pick<T, Exclude<keyof T, K>>;
 

@@ -47,6 +47,6 @@
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
-    "react-arbiter": "^0.4.1"
+    "react-arbiter": "^0.5.0"
   }
 }

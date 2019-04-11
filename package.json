@@ -10,6 +10,8 @@
     "build": "lerna run build",
     "build:docs": "piral build packages/page-docs/src/index.html --target dist/docs/index.html",
     "watch:docs": "piral debug packages/page-docs/src/index.html",
+    "build:page": "piral build packages/page-www/src/index.html --target dist/www/index.html",
+    "watch:page": "piral debug packages/page-www/src/index.html",
     "lint": "tslint -c tslint.json 'packages/**/*.{ts,tsx}' --project tsconfig.json",
     "prettify": "prettier --config prettier.config.js --write 'packages/**/*.{ts,tsx}'",
     "test": "jest",
@@ -20,7 +22,7 @@
     "docgen:page": "node tools/generate-page-docs.js",
     "docgen:types": "lerna run typedoc",
     "docgen": "yarn docgen:cli && yarn docgen:types && yarn docgen:page",
-    "ci:version": "node tools/changelog-version.js",
+    "ci:version": "node tools/changelog-version.js --update",
     "ci:docs": "yarn docgen && yarn build:docs && git checkout -- .",
     "ci:prerelease": "lerna publish $(yarn --silent ci:version)-pre.$BUILD_BUILDID --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish"
