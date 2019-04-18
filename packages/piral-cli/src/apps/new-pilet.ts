@@ -1,4 +1,4 @@
-import { resolve, join, basename } from 'path';
+import { resolve, basename } from 'path';
 import {
   createDirectory,
   createFileIfNotExists,
@@ -8,6 +8,9 @@ import {
   copyPiralFiles,
   patchPiletPackage,
   ForceOverwrite,
+  PiletLanguage,
+  getDevDependencies,
+  scaffoldSourceFiles,
 } from './common';
 
 export interface NewPiletOptions {
@@ -15,6 +18,7 @@ export interface NewPiletOptions {
   target?: string;
   source?: string;
   forceOverwrite?: ForceOverwrite;
+  language?: PiletLanguage;
 }
 
 export const newPiletDefaults = {
@@ -22,6 +26,7 @@ export const newPiletDefaults = {
   registry: defaultRegistry,
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
+  language: PiletLanguage.ts,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -29,16 +34,17 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     target = newPiletDefaults.target,
     registry = newPiletDefaults.registry,
     source = newPiletDefaults.source,
-    forceOverwrite = ForceOverwrite.no,
+    forceOverwrite = newPiletDefaults.forceOverwrite,
+    language = newPiletDefaults.language,
   } = options;
   const root = resolve(baseDir, target);
-  const src = join(root, 'src');
-  const apiName = 'Api';
   const [sourceName, sourceVersion, hadVersion] = dissectPackageName(source);
   const success = await createDirectory(root);
 
   if (success) {
     console.log(`Scaffolding new pilet in ${root} ...`);
+
+    const devDependencies = getDevDependencies(language);
 
     await createFileIfNotExists(
       root,
@@ -50,7 +56,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
           description: '',
           keywords: ['pilet'],
           dependencies: {},
-          devDependencies: {},
+          devDependencies,
           peerDependencies: {},
           scripts: {},
           main: 'dist/index.js',
@@ -60,13 +66,12 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
         2,
       ),
     );
-    await createDirectory(src);
 
     if (registry !== newPiletDefaults.registry) {
       console.log(`Setting up NPM registry (${registry}) ...`);
 
       await createFileIfNotExists(
-        src,
+        root,
         '.npmrc',
         `registry=${registry}
 always-auth=true`,
@@ -78,19 +83,9 @@ always-auth=true`,
 
     await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
 
-    await createFileIfNotExists(
-      src,
-      'index.tsx',
-      `import { ${apiName} } from '${sourceName}';
-
-export function setup(app: ${apiName}) {
-  app.showNotification('Hello World!');
-}
-`,
-      forceOverwrite,
-    );
-
     console.log(`Taking care of templating ...`);
+
+    await scaffoldSourceFiles(language, root, sourceName, forceOverwrite);
 
     const files = await patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
     await copyPiralFiles(root, sourceName, files, forceOverwrite);

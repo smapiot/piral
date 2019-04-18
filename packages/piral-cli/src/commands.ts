@@ -1,6 +1,13 @@
 import { Argv, Arguments } from 'yargs';
 import { apps } from './index';
-import { forceOverwriteKeys, keyOfForceOverwrite, valueOfForceOverwrite } from './helpers';
+import {
+  forceOverwriteKeys,
+  keyOfForceOverwrite,
+  valueOfForceOverwrite,
+  keyOfPiletLanguage,
+  piletLanguageKeys,
+  valueOfPiletLanguage,
+} from './helpers';
 
 function specializeCommands(suffix: string) {
   return allCommands
@@ -116,9 +123,12 @@ export const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source packae.json file for creating the package.',
+          describe: 'Sets the source package.json file for creating the package.',
           default: apps.packPiletDefaults.source,
         })
+        .string('target')
+        .describe('target', 'Sets the target directory or file of packing.')
+        .default('target', apps.packPiletDefaults.target)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -126,6 +136,37 @@ export const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.packPilet(args.base as string, {
         source: args.source as string,
+        target: args.target as string,
+      });
+    },
+  },
+  {
+    name: 'publish-pilet',
+    alias: ['post-pilet', 'publish'],
+    description: 'Publishes a pilet package to a pilet feed.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source previously packed *.tgz bundle to publish.',
+          default: apps.publishPiletDefaults.source,
+        })
+        .string('url')
+        .describe('url', 'Sets the explicit URL where to publish the pilet to.')
+        .default('url', apps.publishPiletDefaults.url)
+        .string('api-key')
+        .describe('api-key', 'Sets the potential API key to send to the service.')
+        .default('api-key', apps.publishPiletDefaults.apiKey)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.publishPilet(args.base as string, {
+        source: args.source as string,
+        apiKey: args.apiKey as string,
+        url: args.url as string,
       });
     },
   },
@@ -150,6 +191,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiletDefaults.forceOverwrite))
+        .choices('language', piletLanguageKeys)
+        .describe('language', 'Determines the programming language for the new pilet.')
+        .default('language', keyOfPiletLanguage(apps.newPiletDefaults.language))
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -160,6 +204,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         source: args.source as string,
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        language: valueOfPiletLanguage(args.language as string),
       });
     },
   },

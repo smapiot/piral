@@ -97,6 +97,13 @@ export async function readJson<T = any>(targetDir: string, fileName: string) {
   return JSON.parse(content || '{}') as T;
 }
 
+export function readBinary(targetDir: string, fileName: string) {
+  const targetFile = join(targetDir, fileName);
+  return new Promise<Buffer>(resolve => {
+    readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(c)));
+  });
+}
+
 export async function updateExistingJson<T>(targetDir: string, fileName: string, newContent: T) {
   const content = await mergeWithJson(targetDir, fileName, newContent);
   await updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));

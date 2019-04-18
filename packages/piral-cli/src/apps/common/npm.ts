@@ -18,10 +18,20 @@ export function installPackage(name: string, version = 'latest', target = '.', .
   return runNpmProcess(['install', `${name}@${version}`, ...flags], target);
 }
 
-export function createPackage(target = '.', ...flags: Array<string>) {
+export function createPackage(name: string, target = '.', ...flags: Array<string>) {
   return runNpmProcess(['pack', ...flags], target);
 }
 
+/**
+ * Looks at the provided package name and normalizes it
+ * resulting in the following tuple:
+ * [
+ *   normalized / real package name,
+ *   found package version / version identifier,
+ *   indicator if an explicit version was used
+ * ]
+ * @param fullName The provided package name.
+ */
 export function dissectPackageName(fullName: string): [string, string, boolean] {
   const index = fullName.indexOf('@', 1);
 

@@ -4,3 +4,4 @@ export * from './new-pilet';
 export * from './upgrade-pilet';
 export * from './build-pilet';
 export * from './pack-pilet';
+export * from './publish-pilet';
