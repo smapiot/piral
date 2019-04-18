@@ -10,6 +10,7 @@ Piral is open-source software. We try to make everything as transparent and cont
 
 - [Introduction](./introduction.md)
 - [Architecture](./architecture.md)
+- [Browser Compatibility](./browsers‚.md)
 - [Development](./development.md)
 
 Furthermore, we also have some additional references online. For instance, we have the [specifications](./specs/README.md) for creating your own tooling or backend services. If you like to get some help using our CLI tool see the [command reference](./commands/README.md).
