@@ -17,6 +17,8 @@ These commands have all a `-pilet` suffix when called from the generic `pb` tool
 - [upgrade-pilet](./upgrade-pilet.md)
 - [build-pilet](./build-pilet.md)
 - [debug-pilet](./debug-pilet.md)
+- [pack-pilet](./pack-pilet.md)
+- [publish-pilet](./publish-pilet.md)
 
 ## Other Commands
 

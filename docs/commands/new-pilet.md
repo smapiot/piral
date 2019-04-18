@@ -53,6 +53,14 @@ Determines if files should be overwritten by the scaffolding.
 - Choices: `"no"`, `"prompt"`, `"yes"`
 - Default: `"no"`
 
+### `--language`
+
+Determines the programming language for the new pilet.
+
+- Type: `string`
+- Choices: `"ts"`, `"js"`
+- Default: `"ts"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
