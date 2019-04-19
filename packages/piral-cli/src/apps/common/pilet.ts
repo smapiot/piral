@@ -17,6 +17,17 @@ function resolveModule(name: string, targetDir: string) {
   }
 }
 
+function getPath(path: string) {
+  try {
+    require.resolve(path);
+    return path;
+  } catch (_) {
+    return require.resolve(path, {
+      paths: [__dirname],
+    });
+  }
+}
+
 function modifyRawAsset(proto: any) {
   const g = proto.generate;
   proto.generate = function() {
@@ -29,7 +40,7 @@ function modifyRawAsset(proto: any) {
       if (match) {
         // remove the first character (/) to prepare for concat
         const path = JSON.stringify(JSON.parse(match[1]).substr(1));
-        const bundleURL = JSON.stringify('parcel-bundler/src/builtins/bundle-url');
+        const bundleURL = JSON.stringify(getPath('parcel-bundler/src/builtins/bundle-url'));
         item.value = `var r=require(${bundleURL}).getBundleURL();module.exports=r+${path};`;
       }
     }

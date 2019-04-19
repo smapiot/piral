@@ -18,7 +18,7 @@ export function installPackage(name: string, version = 'latest', target = '.', .
   return runNpmProcess(['install', `${name}@${version}`, ...flags], target);
 }
 
-export function createPackage(name: string, target = '.', ...flags: Array<string>) {
+export function createPackage(target = '.', ...flags: Array<string>) {
   return runNpmProcess(['pack', ...flags], target);
 }
 

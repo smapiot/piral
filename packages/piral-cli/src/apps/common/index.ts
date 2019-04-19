@@ -1,3 +1,4 @@
+export * from './config';
 export * from './emoji';
 export * from './envs';
 export * from './hash';
