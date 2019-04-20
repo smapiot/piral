@@ -1,4 +1,5 @@
-import { postFile, readBinary } from './common';
+import { relative } from 'path';
+import { postFile, readBinary, matchFiles } from './common';
 
 export interface PublishPiletOptions {
   source?: string;
@@ -18,18 +19,38 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     url = publishPiletDefaults.url,
     apiKey = publishPiletDefaults.apiKey,
   } = options;
-  //perform glob in baseDir against source
-  //const root = resolve(baseDir, source);
+  const files = await matchFiles(baseDir, source);
 
-  // if multiple files hit --> error
-  // if no file hits --> error
-
-  const content = await readBinary(baseDir, source);
-
-  if (!content) {
-    return console.error(`No file found at ${source}.`);
+  if (files.length === 0) {
+    return console.error(`No files found at '${source}'.`);
   }
 
-  await postFile(url, apiKey, content);
-  //TODO
+  for (const file of files) {
+    console.log(file);
+    const fileName = relative(baseDir, file);
+    const content = await readBinary(baseDir, fileName);
+
+    if (!content) {
+      console.warn(`Content of '${fileName}' cannot be read.`);
+      continue;
+    }
+
+    console.log(`Publishing '${file}' to '${url}' ...`);
+
+    try {
+    const result = await postFile(url, apiKey, content);
+
+
+    if (result) {
+      console.log(`Uploaded successfully!`);
+    } else {
+      console.warn(`Something went wrong. Check the provided API key.`);
+    }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  console.log('All done!');
 }

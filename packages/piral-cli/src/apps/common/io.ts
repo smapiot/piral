@@ -1,3 +1,4 @@
+import * as glob from 'glob';
 import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync } from 'fs';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
 import { deepMerge } from './merge';
@@ -97,6 +98,21 @@ export async function findFile(topDir: string, fileName: string): Promise<string
   }
 
   return path;
+}
+
+export async function matchFiles(baseDir: string, pattern: string) {
+  return new Promise<Array<string>>((resolve, reject) => {
+    glob(pattern, {
+      cwd: baseDir,
+      absolute: true,
+    }, (err, files) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(files);
+      }
+    });
+  });
 }
 
 export async function createFileIfNotExists(
