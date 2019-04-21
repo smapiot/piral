@@ -48,6 +48,7 @@
     "@types/node": "^10.12.21",
     "@types/parcel-bundler": "^1.10.1",
     "@types/rc": "^1.1.0",
+    "@types/request": "^2.48.1",
     "@types/tar": "^4.0.0",
     "@types/yargs": "^12.0.8"
   },
@@ -59,6 +60,7 @@
     "kras": "0.8.1",
     "parcel-bundler": "^1.11.0",
     "rc": "^1.2.8",
+    "request": "^2.88.0",
     "tar": "^4.4.8",
     "yargs": "^13.1.0"
   }

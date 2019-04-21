@@ -26,7 +26,6 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   }
 
   for (const file of files) {
-    console.log(file);
     const fileName = relative(baseDir, file);
     const content = await readBinary(baseDir, fileName);
 
@@ -38,17 +37,15 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     console.log(`Publishing '${file}' to '${url}' ...`);
 
     try {
-    const result = await postFile(url, apiKey, content);
+      const result = await postFile(url, apiKey, content);
 
-
-    if (result) {
-      console.log(`Uploaded successfully!`);
-    } else {
-      console.warn(`Something went wrong. Check the provided API key.`);
-    }
-
+      if (result) {
+        console.log(`Uploaded successfully!`);
+      } else {
+        console.warn(`Something went wrong. Check the provided API key.`);
+      }
     } catch (e) {
-      console.log(e);
+      return console.error(e);
     }
   }
 
