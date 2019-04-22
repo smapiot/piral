@@ -35,13 +35,18 @@
   },
   "devDependencies": {
     "@dbeining/react-atom": "^4.0.0",
+    "@types/fluent": "^0.11.0",
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
     "@types/react-router": "^4.4.3"
   },
   "dependencies": {
+    "@webcomponents/custom-elements": "^1.2.4",
+    "fluent": "^0.12.0",
+    "fluent-intl-polyfill": "^0.1.0",
     "piral-core": "^0.2.0",
     "piral-ext": "^0.2.0",
+    "promise-polyfill": "^8.1.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "url-polyfill": "^1.1.5",
