@@ -14,7 +14,7 @@ export function postFile(target: string, key: string, file: Buffer) {
           'user-agent': `pilet-cli/http.node-${os}`,
         },
       },
-      (err, res, body) => {
+      (err, res) => {
         if (err) {
           console.warn(err);
           resolve(false);

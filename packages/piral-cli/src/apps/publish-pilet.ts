@@ -42,7 +42,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
       if (result) {
         console.log(`Uploaded successfully!`);
       } else {
-        console.warn(`Something went wrong. Check the provided API key.`);
+        console.warn(`Failed to upload!`);
       }
     } catch (e) {
       return console.error(e);
