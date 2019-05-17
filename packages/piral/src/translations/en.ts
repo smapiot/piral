@@ -1,25 +1,15 @@
-import { FluentBundle, ftl } from 'fluent';
-
-export const en = new FluentBundle('en-US');
-
-en.addMessages(ftl`
-  loading = Loading ...
-  pageError =
-    .title = The page crashed.
-    .description =
-  notFoundError =
-    .title = Page not found.
-    .description =
-  loadingError =
-    .title = Something went wrong.
-    .description =
-  feedError =
-    .title = Data unavailable.
-    .description =
-  formError =
-    .title = Form submission failed.
-    .description =
-  unknownError =
-    .title = An unknown error occured.
-    .description =
-`);
+export const en = {
+  loading: 'Loading ...',
+  pageErrorTitle: 'The page crashed.',
+  pageErrorDescription: '',
+  notFoundErrorTitle: 'Page not found.',
+  notFoundErrorDescription: '',
+  loadingErrorTitle: 'Something went wrong.',
+  loadingErrorDescription: '',
+  feedErrorTitle: 'Data unavailable.',
+  feedErrorDescription: '',
+  formErrorTitle: 'Form submission failed.',
+  formErrorDescription: '',
+  unknownErrorTitle: 'An unknown error occured.',
+  unknownErrorDescription: '',
+};

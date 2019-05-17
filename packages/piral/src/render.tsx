@@ -5,7 +5,7 @@ import { Provider } from 'urql';
 import { createInstance, PiralCoreApi, LocalizationMessages } from 'piral-core';
 import { createFetchApi, createGqlApi, setupGqlClient } from 'piral-ext';
 import { getGateway, getContainer, getAvailableModules } from './options';
-import { getTranslations, getLanguage } from './translations';
+import { getTranslations } from './translations';
 import { Loader, Dashboard, ErrorInfo } from './components';
 import { PiExtApi, PiletApi } from './api';
 import { Layout } from './layout';
@@ -44,7 +44,6 @@ export function renderInstance(options: PiralOptions = {}) {
         ...createGqlApi(client),
       };
     },
-    language: getLanguage(language),
     translations: getTranslations(translations),
     routes,
   });

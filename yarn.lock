@@ -1291,6 +1291,11 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/fluent@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@types/fluent/-/fluent-0.11.0.tgz#c2ab4dc1284193651b00fc49daf4eeda20176fce"
+  integrity sha512-Fk3ZxqFhHhX3CSpziii7Q8pVbIPSvEv7NICbwoFGcPqVUpISY8KqfgP3QqGxernq/MOD8mHSfz+LMtUpWB8oHg==
+
 "@types/form-data@*":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@types/form-data/-/form-data-2.2.1.tgz#ee2b3b8eaa11c0938289953606b745b738c54b1e"
@@ -1469,6 +1474,11 @@
 "@types/yargs@^12.0.8":
   version "12.0.8"
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-12.0.8.tgz#0b45bf0607a5509b921335658d87489c12955176"
+
+"@webcomponents/custom-elements@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@webcomponents/custom-elements/-/custom-elements-1.2.4.tgz#7074543155396114617722724d6f6cb7b3800a14"
+  integrity sha512-WiTlgz6/kuwajYIcgyq64rSlCtb2AvbxwwrExP3wr6rKbJ72I3hi/sb4KdGUumfC+isDn2F0btZGk4MnWpyO1Q==
 
 JSONStream@^1.0.4, JSONStream@^1.3.4:
   version "1.3.5"
@@ -3782,6 +3792,18 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
+fluent-intl-polyfill@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/fluent-intl-polyfill/-/fluent-intl-polyfill-0.1.0.tgz#1133944ab2477883473995596883e0d39cf885cf"
+  integrity sha1-ETOUSrJHeINHOZVZaIPg05z4hc8=
+  dependencies:
+    intl-pluralrules projectfluent/IntlPluralRules#module
+
+fluent@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/fluent/-/fluent-0.12.0.tgz#c5a5fcf042817abb1f786a700aff9dc068b5fb0d"
+  integrity sha512-rE5FSBv/1LoJ91suQy+dJm8vGhfq2fnzURgbC6/cfJQG/xVZn0TBeh3NVoZD9mlpryLJ37NKCKnX2u5gB4s2BQ==
+
 flush-write-stream@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.1.1.tgz#8dd7d873a1babc207d94ead0c2e0e44276ebf2e8"
@@ -4431,6 +4453,10 @@ inquirer@^6.2.0, inquirer@^6.2.2:
 interpret@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.2.0.tgz#d5061a6224be58e8083985f5014d844359576296"
+
+intl-pluralrules@projectfluent/IntlPluralRules#module:
+  version "0.1.0"
+  resolved "https://codeload.github.com/projectfluent/IntlPluralRules/tar.gz/94cb0fa1c23ad943bc5aafef43cea132fa51d68b"
 
 invariant@^2.2.1, invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
@@ -7437,6 +7463,11 @@ progress@^2.0.0:
 promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
+
+promise-polyfill@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.1.0.tgz#30059da54d1358ce905ac581f287e184aedf995d"
+  integrity sha512-OzSf6gcCUQ01byV4BgwyUCswlaQQ6gzXc23aLQWhicvfX9kfsUiUhgt3CCQej8jDnl8/PhGF31JdHX2/MzF3WA==
 
 promise-retry@^1.1.1:
   version "1.1.1"

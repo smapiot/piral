@@ -4,9 +4,22 @@ import { Link } from 'react-router-dom';
 import { createInstance, useGlobalState, LoaderProps, useSearch } from 'piral-core';
 import { modules } from './modules';
 
+customElements.define(
+  'pi-spinner',
+  class extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      this.classList.add('spinner', 'circles');
+    }
+  },
+);
+
 const Loader: React.SFC<LoaderProps> = () => (
   <div className="app-center">
-    <div className="spinner circles">Loading ...</div>
+    <pi-spinner>Loading ...</pi-spinner>
   </div>
 );
 
@@ -136,6 +149,9 @@ const Layout: React.SFC = ({ children }) => {
 const Portal = createInstance({
   availableModules: modules,
   requestModules() {
+    // return fetch('http://localhost:9000/api/pilet')
+    //   .then(res => res.json())
+    //   .then(res => res.items);
     return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
   Loader,

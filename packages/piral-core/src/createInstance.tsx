@@ -1,27 +1,10 @@
 import * as React from 'react';
-import { withRecall, ArbiterModule, DependencyGetter, isfunc } from 'react-arbiter';
+import { withRecall, ArbiterModule, DependencyGetter } from 'react-arbiter';
 import { Portal, PortalProps } from './components';
+import { defaultApiExtender, defaultModuleRequester, getExtender } from './helpers';
 import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
 import { createGlobalState, createActions, StateContext, GlobalStateOptions } from './state';
-import { PiralCoreApi, PiralApi, EventEmitter, ScaffoldPlugin, Extend, ModuleRequester } from './types';
-
-function defaultModuleRequester() {
-  return Promise.resolve([]);
-}
-
-function defaultApiExtender<TApi>(value: PiralCoreApi<TApi>): PiralApi<TApi> {
-  return value as any;
-}
-
-function getExtender(plugins: Array<ScaffoldPlugin>): ScaffoldPlugin {
-  const extenders = plugins.filter(isfunc);
-  return container => {
-    extenders.forEach(extender => {
-      container = extender(container);
-    });
-    return container;
-  };
-}
+import { PiralApi, EventEmitter, ScaffoldPlugin, Extend, ModuleRequester } from './types';
 
 export interface PiralConfiguration<TApi> extends GlobalStateOptions {
   /**
