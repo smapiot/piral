@@ -17,7 +17,7 @@
     "node_modules",
     "**/*.test.ts",
     "**/*.test.tsx",
-    "packages/**/node_modules",
-    "packages/**/lib"
+    "src/**/node_modules",
+    "src/**/lib"
   ]
 }

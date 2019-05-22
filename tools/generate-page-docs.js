@@ -9,7 +9,7 @@ const endMarker = `{/* end:${autoGenMessage} */}`;
 const refFormat = /\- \[(.*)\]\((.*)\)/g;
 
 const rootDocsFolder = resolve(__dirname, '..', 'docs');
-const rootScriptsFolder = resolve(__dirname, '..', 'packages', 'page-docs', 'src', 'scripts');
+const rootScriptsFolder = resolve(__dirname, '..', 'src', 'packages', 'page-docs', 'src', 'scripts');
 
 const sources = [
   {
