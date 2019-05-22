@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PageErrorInfoProps } from 'piral-core';
-import { useTranslation } from '../hooks';
+import { useTranslation } from '../../hooks';
 
 export const PageErrorInfo: React.SFC<PageErrorInfoProps> = props => {
   const { pageErrorTitle, pageErrorDescription } = useTranslation();

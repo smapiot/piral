@@ -21,7 +21,9 @@ export function getAvailableModules() {
   const availableModules = [];
 
   for (const debugModule of debugModules) {
-    availableModules.push(require(debugModule));
+    if (debugModule) {
+      availableModules.push(require(debugModule));
+    }
   }
 
   return availableModules;

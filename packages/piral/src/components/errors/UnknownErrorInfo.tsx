@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTranslation } from '../hooks';
+import { useTranslation } from '../../hooks';
 
 export const UnknownErrorInfo: React.SFC = () => {
   const { unknownErrorTitle, unknownErrorDescription } = useTranslation();

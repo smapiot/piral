@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LoaderProps } from 'piral-core';
-import { useTranslation } from './hooks';
+import { useTranslation } from '../hooks';
 
 export const Loader: React.SFC<LoaderProps> = () => {
   const { loading } = useTranslation();

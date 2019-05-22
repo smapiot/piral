@@ -4,22 +4,22 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Provider } from 'urql';
 import { createInstance, PiralCoreApi, LocalizationMessages } from 'piral-core';
 import { createFetchApi, createGqlApi, setupGqlClient } from 'piral-ext';
-import { getGateway, getContainer, getAvailableModules } from './options';
+import { getGateway, getContainer, getAvailableModules } from './utils';
+import { getLayout } from './layout';
 import { getTranslations } from './translations';
 import { Loader, Dashboard, ErrorInfo } from './components';
 import { PiExtApi, PiletApi } from './api';
-import { Layout } from './layout';
 
 export interface PiralOptions {
   selector?: string | Element;
   gateway?: string;
-  language?: string;
   routes?: Record<string, React.ComponentType<RouteComponentProps>>;
   translations?: LocalizationMessages;
+  components?: Record<string, React.ComponentType<any>>;
 }
 
 export function renderInstance(options: PiralOptions = {}) {
-  const { routes = {}, selector, gateway, language, translations } = options;
+  const { routes = {}, selector = '#app', gateway, translations, components } = options;
   const origin = getGateway(gateway);
   const client = setupGqlClient({
     url: origin,
@@ -32,6 +32,7 @@ export function renderInstance(options: PiralOptions = {}) {
         .then(res => res.json())
         .then(res => res.items);
     },
+    components,
     Loader,
     Dashboard,
     ErrorInfo,
@@ -48,6 +49,7 @@ export function renderInstance(options: PiralOptions = {}) {
     routes,
   });
 
+  const Layout = getLayout();
   const App: React.SFC = () => (
     <Provider value={client}>
       <Piral>{content => <Layout>{content}</Layout>}</Piral>

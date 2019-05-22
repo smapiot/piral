@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LoadingErrorInfoProps } from 'piral-core';
-import { useTranslation } from '../hooks';
+import { useTranslation } from '../../hooks';
 
 export const LoadingErrorInfo: React.SFC<LoadingErrorInfoProps> = props => {
   const { loadingErrorTitle, loadingErrorDescription } = useTranslation();

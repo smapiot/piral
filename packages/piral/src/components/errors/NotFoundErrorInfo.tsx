@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NotFoundErrorInfoProps } from 'piral-core';
-import { useTranslation } from '../hooks';
+import { useTranslation } from '../../hooks';
 
 export const NotFoundErrorInfo: React.SFC<NotFoundErrorInfoProps> = props => {
   const { notFoundErrorTitle, notFoundErrorDescription } = useTranslation();
