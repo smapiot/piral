@@ -1,6 +1,6 @@
 [![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Sample](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE)
+# [Piral Core Sample App](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE)
 
 The sample application should demonstrate you the use of `piral-core` to create your own Piral instance (or portal). The pilets are not served from any backend, but are provided out of the box. Some delays are inserted to showcase the loading spinners.
 
@@ -11,7 +11,7 @@ The provided pilets show some of the features of the standard API created by `pi
 If you want to run the sample you can do it with our CLI tool (which should be available after building, otherwise use `lerna bootstrap` again). Make sure to run the following command from the root of the monorepo:
 
 ```sh
-node node_modules/.bin/piral debug packages/piral-sample/src/index.html
+yarn demos:core
 ```
 
 This will open a development server sitting at `http://localhost:1234`. Right now our CLI is just a tiny wrapper around Parcel :rocket:.
