@@ -21,6 +21,7 @@ export interface GlobalStateOptions {
   Dashboard?: ComponentType<DashboardProps>;
   Loader?: ComponentType<LoaderProps>;
   ErrorInfo?: ComponentType<ErrorInfoProps>;
+  components?: Record<string, ComponentType<any>>;
 }
 
 export function createGlobalState({
@@ -28,6 +29,7 @@ export function createGlobalState({
   translations = {},
   routes = {},
   language,
+  components = {},
   Dashboard = DefaultDashboard,
   Loader = DefaultLoader,
   ErrorInfo = DefaultErrorInfo,
@@ -48,6 +50,7 @@ export function createGlobalState({
         Dashboard,
         ErrorInfo,
         Loader,
+        custom: components,
       },
       data: {},
       modals: [],
