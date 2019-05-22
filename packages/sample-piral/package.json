@@ -1,0 +1,46 @@
+{
+  "name": "sample-piral",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Example project illustrating the use of the piral and piral-cli packages.",
+  "keywords": [
+    "portal",
+    "smapiot",
+    "modules",
+    "spa"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "dependencies": {
+    "piral": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.2",
+    "@types/react-dom": "^16.8.0",
+    "@types/react-router": "^4.4.3",
+    "@types/react-router-dom": "^4.3.1",
+    "piral-cli": "^0.2.0",
+    "sass": "^1.17.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
