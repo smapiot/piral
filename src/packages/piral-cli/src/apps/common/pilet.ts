@@ -1,10 +1,23 @@
 import * as Bundler from 'parcel-bundler';
 import { writeFile, readFile } from 'fs';
+import { resolve, dirname } from 'path';
 import { VirtualPackager } from './VirtualPackager';
 import { VirtualAsset } from './VirtualAsset';
 
 function resolveModule(name: string, targetDir: string) {
   try {
+    const moduleDefinitionFile = `${name}/package.json`;
+    const moduleDefinition = require(moduleDefinitionFile);
+
+    if (moduleDefinition && typeof moduleDefinition.module === 'string') {
+      const moduleRoot = dirname(require.resolve(moduleDefinitionFile));
+
+      return {
+        name,
+        path: resolve(moduleRoot, moduleDefinition.module),
+      };
+    }
+
     return {
       name,
       path: require.resolve(name, {
