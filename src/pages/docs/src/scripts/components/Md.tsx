@@ -17,7 +17,11 @@ const Figure: React.SFC<any> = props => <img {...props} className="responsive-im
 const Code: React.SFC<any> = ({ className = '', children }) => (
   <CodeBox code={children} language={className.substr(5)} />
 );
-const Table: React.SFC = props => <table {...props} className="table" />;
+const Table: React.SFC = props => (
+  <div className="table-responsive">
+    <table {...props} className="table table-hover" />
+  </div>
+);
 
 export const Md: React.SFC<MdProps> = ({ children, overrides }) => {
   return (

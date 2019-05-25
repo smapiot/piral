@@ -8,7 +8,7 @@ export const Features: React.SFC = () => (
         Keen to see how Piral looks in practice? Watch our introductory video.
         <br /> The video shows what Piral can give you out of the box already.
       </p>
-      <a href="https://youtube.com/" className="btn my-4 font-weight-bold atlas-cta cta-blue">
+      <a href="https://youtu.be/SkKvpBHy_5I" className="btn my-4 font-weight-bold atlas-cta cta-blue">
         Watch Video
       </a>
     </Feature>

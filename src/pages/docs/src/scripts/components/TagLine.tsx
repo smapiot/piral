@@ -6,7 +6,7 @@ export interface TagLineProps {
 
 export const TagLine: React.SFC<TagLineProps> = ({ version }) => (
   <div className="tagline">
-    <p>Easily build a next generation portal application</p>
+    <p>easily build a next generation portal application</p>
     <div className="meta">
       {version && (
         <>
