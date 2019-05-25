@@ -17,7 +17,9 @@ export const Banner: React.SFC = () => (
           </div>*/}
         </div>
       </header>
-      <h1 className="display-3 text-white font-weight-bold my-5">Piral <Status /></h1>
+      <h1 className="display-3 text-white font-weight-bold my-5">
+        Piral <Status />
+      </h1>
       <p className="lead text-white my-4">
         Build highly modular applications fully flexible for large scale portal solutions.
         <br /> Adjusted to your development needs, not the other way around.
