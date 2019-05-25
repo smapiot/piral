@@ -1,5 +1,7 @@
 # Features and Alternatives
 
+## Core Features
+
 Piral comes with the following features:
 
 - Highly modular
@@ -11,6 +13,46 @@ Piral comes with the following features:
 - CLI tool
 
 The primary target framework of Piral is React, but due to the secondary ("foreign") API any framework that can be attached to the DOM can be used.
+
+Let's check our list against common checklists for microfrontends.
+
+✔️ **Implementation, complexity, and integration**
+
+> The process is simple and doesn't require to learn new complex skills or framework.
+
+Indeed Piral works in a standard configuration by relying only on the NPM eco system and proper bundling. Our CLI ships with the best bundling configuration, but if you have custom needs you can use any other bundler or bundling configuration.
+
+✔️ **Code isolation and separation of concerns**
+
+> Code and styles are isolated to prevent conflicts or unintended overrides.
+
+A pilet is sandboxed from the main application. It cannot crash the main application or other pilets. Pilet specific translations or state is always kept in isolation. Communication between the pilets is done indirectly via events or extensible components.
+
+✔️ **Separate deployment and team owners**
+
+> Each microfrontend is deployed and managed separately to prevent downtime and reduce deployment time.
+
+A pilet is deployed to a dedicated service or feed independently of the main application, which may be hosted on a CDN. The deployment and release cycle of each pilet is completely independent from each other and the main application.
+
+✔️ **Support different technologies**
+
+> We can use different technologies: React, Angular; and the same one with different versions.
+
+Even though Piral supports this way we strongly recommend avoiding multiple technologies within one application. Nevertheless, its all possible since every Pilet can package up any module. Furthermore, Piral has two APIs for bringing in components; one with the already packaged version of React and a generic API providing a "naked" DOM node to host any framework.
+
+✔️ **Cross-browser compatibility**
+
+> The solution is cross-browser compatible including support for IE11.
+
+Piral itself tries to be as reachable as possible. Currently, the minimum requirement is indeed IE11. If certain corners (e.g., bundle splitting) are cut then support may also include IE10 or even IE9.
+
+✔️ **Performance**
+
+> Browser strategically reloads to prevent memory pollution, network saturation, among others.
+
+One reason for Piral's design is to cache as much as possible. In the full framework we also make use of GraphQL to leverage live data feeds (subscriptions) and request batching to gain more efficiency.
+
+## Alternative Solutions
 
 We think that Piral hits a sweep spot that makes development easy and fun, while making applications robust, flexibile, and efficient. Nevertheless, some of the alternatives to Piral are.
 
@@ -45,6 +87,8 @@ The links for the alternatives listed above.
 - [Web Components](https://www.webcomponents.org)
 - [Project Mosaic](https://www.mosaic9.org)
 - [Luigi](https://github.com/SAP/luigi)
+
+## Further Reading
 
 There are further reads on the topic of microfrontends.
 
