@@ -37,15 +37,16 @@
   "devDependencies": {
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
-    "@types/react-router": "^4.4.3",
+    "@types/react-router": "^5.0.0",
+    "@types/react-router-dom": "latest",
     "react": "^16.8.1",
     "react-dom": "^16.8.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
-    "react-router": ">=16.8.0",
-    "react-router-dom": ">=16.8.0"
+    "react-router": ">=5.0.0",
+    "react-router-dom": ">=5.0.0"
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
