@@ -43,7 +43,9 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react-dom": ">=16.8.0",
+    "react-router": ">=16.8.0",
+    "react-router-dom": ">=16.8.0"
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
