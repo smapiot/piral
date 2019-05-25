@@ -17,6 +17,7 @@ const Figure: React.SFC<any> = props => <img {...props} className="responsive-im
 const Code: React.SFC<any> = ({ className = '', children }) => (
   <CodeBox code={children} language={className.substr(5)} />
 );
+const Table: React.SFC = props => <table {...props} className="table" />;
 
 export const Md: React.SFC<MdProps> = ({ children, overrides }) => {
   return (
@@ -26,6 +27,7 @@ export const Md: React.SFC<MdProps> = ({ children, overrides }) => {
           h1: Empty,
           h2: Heading,
           img: Figure,
+          table: Table,
           code: Code,
           ...overrides,
         },

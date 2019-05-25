@@ -7,7 +7,7 @@ export const Banner: React.SFC = () => (
       <header>
         <div className="row justify-content-between">
           <div className="col-2">
-            <img src={require('../../../../../docs/assets/logo-simple.png')} alt="logo" />
+            <img src={require('../../../../../../docs/assets/logo-simple.png')} alt="logo" />
           </div>
           {/*
           <div className="col-6 align-self-center text-right">

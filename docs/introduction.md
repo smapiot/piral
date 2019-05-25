@@ -15,7 +15,7 @@ Piral offers us many choices to help us creating an outstanding portal-like appl
 
 We will look at both ways. For simplicity, we start with 1. to have a working application in no time.
 
-### 1. A Standard Piral Application
+### A Standard Piral Application
 
 The main boost for implementing an application based on `piral` comes from the fact that `piral` can be considered a framework. All the choices are already made for us, e.g., how the application renders or which version of React is used.
 
@@ -42,6 +42,6 @@ npm i piral-cli --save-dev
 
 To help us see the commands in action we can also use a *global* version of the CLI. Make sure to have it installed via `npm i piral-cli -g`.
 
-### 2. A Piral-Core Based Application
+### A Piral-Core Based Application
 
 Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-arbiter` are straight dependencies, common dependencies such as `react` are only peer referenced. This leaves many of the open choices up to the developer providing greater freedom.

@@ -8,7 +8,7 @@ const Content: React.SFC = () => {
     <>
       <ResponsiveContent ref={ref}>
         <Section id="specification" title="Piral API">
-          <Md>{require('../../../../../docs/specs/piral-api-specification.md')}</Md>
+          <Md>{require('../../../../../../docs/specs/piral-api-specification.md')}</Md>
           <EditSection link="specs/piral-api-specification.md" />
         </Section>
       </ResponsiveContent>
