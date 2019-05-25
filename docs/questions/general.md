@@ -14,6 +14,8 @@ With `piral-core` you get a library that sits on top of other libraries. While s
 
 The technical differences aside `piral` is fully opinionated about the design of your backend. If you have already a backend or don't want to follow the official backend specification then `piral-core` would be the one to install.
 
+---------------------------------------
+
 ## One pilet is rather large - can I make it smaller?
 
 Pilets can be bundle split like any other module. Ideally, especially for larger pilets, the splitting occurs already in the root module that contains the `setup` function.
