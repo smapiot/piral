@@ -1,5 +1,5 @@
 import * as glob from 'glob';
-import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync } from 'fs';
+import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync, existsSync } from 'fs';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
 import { deepMerge } from './merge';
 import { promptConfirm } from './interactive';
@@ -83,6 +83,22 @@ export function checkIsDirectory(target: string) {
   });
 }
 
+export function getFileWithExtension(fileName: string): string {
+  if (!extname(fileName)) {
+    const extensions = ['.tsx', '.ts', '.jsx', '.js'];
+
+    for (const extension of extensions) {
+      const file = fileName + extension;
+
+      if (existsSync(file)) {
+        return file;
+      }
+    }
+  }
+
+  return fileName;
+}
+
 export async function findFile(topDir: string, fileName: string): Promise<string> {
   const path = join(topDir, fileName);
   const exists = await checkExists(path);
@@ -102,16 +118,20 @@ export async function findFile(topDir: string, fileName: string): Promise<string
 
 export async function matchFiles(baseDir: string, pattern: string) {
   return new Promise<Array<string>>((resolve, reject) => {
-    glob(pattern, {
-      cwd: baseDir,
-      absolute: true,
-    }, (err, files) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(files);
-      }
-    });
+    glob(
+      pattern,
+      {
+        cwd: baseDir,
+        absolute: true,
+      },
+      (err, files) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(files);
+        }
+      },
+    );
   });
 }
 

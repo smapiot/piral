@@ -26,7 +26,7 @@ export async function scaffoldSourceFiles(
   sourceName: string,
   forceOverwrite: ForceOverwrite,
 ) {
-  const apiName = 'Api';
+  const apiName = 'PiletApi';
   const src = join(root, 'src');
 
   await createDirectory(src);
@@ -37,27 +37,27 @@ export async function scaffoldSourceFiles(
         root,
         'tsconfig.json',
         `{
-"compilerOptions": {
-  "declaration": true,
-  "noImplicitAny": false,
-  "removeComments": false,
-  "noLib": false,
-  "emitDecoratorMetadata": true,
-  "experimentalDecorators": true,
-  "target": "es6",
-  "sourceMap": true,
-  "outDir": "./dist",
-  "skipLibCheck": true,
-  "lib": ["dom", "es2018"],
-  "module": "esnext",
-  "jsx": "react"
-},
-"include": [
-  "./src"
-],
-"exclude": [
-  "node_modules"
-]
+  "compilerOptions": {
+    "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "noLib": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "lib": ["dom", "es2018"],
+    "module": "esnext",
+    "jsx": "react"
+  },
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
       `,
         forceOverwrite,
@@ -69,7 +69,7 @@ export async function scaffoldSourceFiles(
         `import { ${apiName} } from '${sourceName}';
 
 export function setup(app: ${apiName}) {
-app.showNotification('Hello World!');
+  app.showNotification('Hello World!');
 }
 `,
         forceOverwrite,
@@ -80,7 +80,7 @@ app.showNotification('Hello World!');
         src,
         'index.jsx',
         `export function setup(app) {
-app.showNotification('Hello World!');
+  app.showNotification('Hello World!');
 }
 `,
         forceOverwrite,

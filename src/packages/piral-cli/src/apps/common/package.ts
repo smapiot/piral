@@ -56,7 +56,7 @@ export async function patchPiletPackage(root: string, name: string, version?: st
         return deps;
       }, {}),
       [name]: `${piralVersion}`,
-      'pilet-cli': `^${cliVersion}`,
+      'piral-cli': `^${cliVersion}`,
     },
     peerDependencies: {
       ...sharedDependencies.reduce((deps, name) => {

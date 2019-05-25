@@ -1,6 +1,14 @@
 import * as Bundler from 'parcel-bundler';
 import { join, dirname, basename } from 'path';
-import { extendConfig, setStandardEnvs, findFile, modifyBundler, extendBundler, postProcess } from './common';
+import {
+  extendConfig,
+  setStandardEnvs,
+  findFile,
+  modifyBundler,
+  extendBundler,
+  postProcess,
+  getFileWithExtension,
+} from './common';
 
 export interface BuildPiletOptions {
   entry?: string;
@@ -14,7 +22,7 @@ export const buildPiletDefaults = {
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
   const { entry = buildPiletDefaults.entry, target = buildPiletDefaults.target } = options;
-  const entryFiles = join(baseDir, entry);
+  const entryFiles = getFileWithExtension(join(baseDir, entry));
   const targetDir = dirname(entryFiles);
   const packageJson = await findFile(targetDir, 'package.json');
 

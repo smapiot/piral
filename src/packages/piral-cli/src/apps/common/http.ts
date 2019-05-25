@@ -11,7 +11,7 @@ export function postFile(target: string, key: string, file: Buffer) {
         method: 'POST',
         headers: {
           authorization: `Basic ${key}`,
-          'user-agent': `pilet-cli/http.node-${os}`,
+          'user-agent': `piral-cli/http.node-${os}`,
         },
       },
       (err, res) => {
