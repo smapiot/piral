@@ -16,12 +16,9 @@
   "engines": {
     "node": ">=10.0"
   },
-  "directories": {
-    "lib": "lib",
-    "test": "tests"
-  },
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "repository": {
     "type": "git",
