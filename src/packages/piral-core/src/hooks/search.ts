@@ -22,12 +22,12 @@ export function useSearch(): [string, (value: string) => void] {
   const cancel = useRef<Disposable>(undefined);
 
   useEffect(() => {
-    const load = !!q;
+    const providerKeys = Object.keys(providers);
+    const load = !!q && providerKeys.length > 0;
     cancel.current && cancel.current();
     resetSearchResults(load);
 
     if (load) {
-      const providerKeys = Object.keys(providers);
       let searchCount = providerKeys.length;
       let active = true;
       cancel.current = () => (active = false);

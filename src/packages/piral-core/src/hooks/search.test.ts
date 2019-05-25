@@ -45,8 +45,20 @@ describe('Search Hook Module', () => {
     expect(availableActions.setSearchInput).toHaveBeenCalledWith('foo');
   });
 
-  it('immediately resets with loading true if some value is given', () => {
+  it('immediately resets with loading false if some value is given but no provider found', () => {
     state.search.input = 'foo';
+    const usedEffect = jest.fn(fn => fn());
+    (React as any).useEffect = usedEffect;
+    (React as any).useRef = current => ({ current });
+    useSearch();
+    expect(availableActions.resetSearchResults).toHaveBeenCalledWith(false);
+  });
+
+  it('immediately resets with loading true if some value is given and a provider is found', () => {
+    state.search.input = 'foo';
+    state.components.searchProviders['example'] = {
+      search(q: string) { return Promise.resolve([]); }
+    };
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
