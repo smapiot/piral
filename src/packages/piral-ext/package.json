@@ -1,0 +1,39 @@
+{
+  "name": "piral-ext",
+  "version": "0.2.0",
+  "description": "Useful API extensions and component definitions for extending piral-core.",
+  "keywords": [
+    "piral",
+    "smapiot",
+    "portal",
+    "modules",
+    "api",
+    "extension",
+    "spa"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typedoc": "typedoc --json ../../../docs/types/piral-ext.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "subscriptions-transport-ws": "^0.9.16",
+    "urql": "^1.0.4"
+  }
+}

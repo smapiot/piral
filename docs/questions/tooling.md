@@ -8,6 +8,8 @@ Our custom tooling is only a thin layer on established tools (e.g., Parcel) to a
 
 We strongly believe that our tooling should hit the sweep spot for almost everyone. Anyone who is not in this group still has our full support. Our ultimate goal is to provide a layer that just works and can be adopted to almost every development workflow instead of requiring development workflows to change.
 
+---------------------------------------
+
 ## Why is testing not part of the CLI?
 
 We've debated a lot if (unit or end-to-end) testing are good targets for the CLI to be covered. In the end we've decided to leave this to the development team of a particular Piral instance.
@@ -16,9 +18,13 @@ While the Piral CLI is certainly opinionated we tried to make it not overly rest
 
 Needless to say we think about integrating an extension mechanism in the CLI which would allow integrating a pre-made testing module that can be freely chosen (or developed).
 
+---------------------------------------
+
 ## Is the CLI cross-platform?
 
 Since the CLI uses Node.js it seems so. Nevertheless, there is always the chance that some dependency or included code has a bug on some platform. If you hit such a bug please report it immediately.
+
+---------------------------------------
 
 ## What's the motivation for pilet publish?
 

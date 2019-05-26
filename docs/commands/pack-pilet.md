@@ -24,12 +24,19 @@ Instead of `pack-pilet` you can also use:
 
 ### `source`
 
-Sets the source packae.json file for creating the package.
+Sets the source package.json file for creating the package.
 
 - Type: `string`
 - Default: `.`
 
 ## Flags
+
+### `--target`
+
+Sets the target directory or file of packing.
+
+- Type: `string`
+- Default: `"."`
 
 ### `--base`
 

@@ -4,7 +4,7 @@ module.exports = {
     './test/setup.ts',
   ],
   roots: [
-    'packages/',
+    'src/packages/',
   ],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',

@@ -24,6 +24,12 @@ To give any development another boost the Piral ecosystem also contains pre-made
 
 An (technically speaking: inaccurate) analogy to illustrate what this means is that `piral-core` is like the Linux kernel. A certain distribution like Ubuntu would be `piral`. Additionally to the kernel there can be some special programs ("drivers"), which would be the Piral plugins. An application running in user space would then be a pilet.
 
+A pilet is just an NPM package containing a library. The library (JS file) is consumed by Piral, while the package is inspected and unpacked by a service (pilet feed service). The package contains some meta data, one or more JS files and potentially some other assets.
+
+![Layers of a pilet package](./diagrams/pilet-layers.svg)
+
+The previous diagram shows the different layers contained in a pilet package. More information on the pilet format can be found in the specification.
+
 ## Initial Loading
 
 The initial loading of a Piral instance is a multi-stage process. Essentially, compared to a standard React / JavaScript app we inserted the middle three boxes, which render the Piral instance triggering the pilet loading and their eventual integration.

@@ -1,6 +1,8 @@
 # Exclude compiled files
 dist
-packages/*/lib
+src/packages/*/lib
+src/pages/*/lib
+src/samples/*/lib
 
 # OS files
 .DS_STORE

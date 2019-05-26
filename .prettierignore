@@ -1,4 +1,4 @@
 package.json
 package-lock.json
-packages/**/node_modules
-packages/**/lib
+src/**/node_modules
+src/**/lib

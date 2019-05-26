@@ -9,7 +9,8 @@ const endMarker = `{/* end:${autoGenMessage} */}`;
 const refFormat = /\- \[(.*)\]\((.*)\)/g;
 
 const rootDocsFolder = resolve(__dirname, '..', 'docs');
-const rootScriptsFolder = resolve(__dirname, '..', 'packages', 'page-docs', 'src', 'scripts');
+const rootScriptsFolder = resolve(__dirname, '..', 'src', 'pages', 'docs', 'src', 'scripts');
+const relRoot = '../../../../../../docs';
 
 const sources = [
   {
@@ -42,7 +43,7 @@ function generateMdSection({ title, link, comp }) {
   const id = title.replace(/\s/g, '-').toLowerCase();
   const relLink = relative(rootDocsFolder, link);
   return `<Section id="section-${id}" title="${title}">
-  <${comp}>{require('../../../../../docs/${relLink}')}</${comp}>
+  <${comp}>{require('${relRoot}/${relLink}')}</${comp}>
   <EditSection link="${relLink}" />
 </Section>`.split(nl).join(`${nl}${intend}`);
 }
@@ -50,7 +51,7 @@ function generateMdSection({ title, link, comp }) {
 function generateTiSection({ file }) {
   const name = file.substr(0, file.indexOf('.'));
   return `<Section id="section-${name}" title="${name}">
-  <Ti>{require('../../../../../docs/types/${name}.json')}</Ti>
+  <Ti>{require('${relRoot}/types/${name}.json')}</Ti>
 </Section>`.split(nl).join(`${nl}${intend}`);
 }
 

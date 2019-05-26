@@ -1,6 +1,6 @@
 const { join, resolve } = require('path');
 const { readFileSync, writeFileSync, existsSync } = require('fs');
-const { allCommands } = require('../packages/piral-cli/lib/commands');
+const { allCommands } = require('../src/packages/piral-cli/lib/commands');
 const nl = '\n';
 const autoGenMessage = 'auto-generated';
 const startMarker = `<!--start:${autoGenMessage}-->`;
