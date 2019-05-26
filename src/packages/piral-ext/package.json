@@ -1,6 +1,6 @@
 {
   "name": "piral-ext",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Useful API extensions and component definitions for extending piral-core.",
   "keywords": [
     "piral",
