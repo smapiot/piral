@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.3.1 (to be determined)
+
+* (tbd)
+
 ## 0.3.0 (May 26, 2019)
 
 * Documentation enhancements
