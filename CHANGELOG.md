@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.3.0 (to be determined)
+## 0.3.0 (May 26, 2019)
 
 * Documentation enhancements
 * Added project landing page
