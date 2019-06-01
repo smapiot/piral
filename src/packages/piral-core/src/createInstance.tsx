@@ -71,6 +71,17 @@ export function createInstance<TApi>({
     availableModules,
   });
 
+  if (process.env.DEBUG_PILET) {
+    container.availableModules.push({
+      content: '',
+      dependencies: {},
+      name: 'Debug Module',
+      version: '1.0.0',
+      hash: '1',
+      setup: require(process.env.DEBUG_PILET),
+    });
+  }
+
   const RecallPortal = withRecall<PortalProps, TApi>(Portal, {
     modules: container.availableModules,
     getDependencies: container.getDependencies,

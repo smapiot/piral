@@ -13,7 +13,7 @@ import { PiExtApi, PiletApi } from './api';
 export interface PiralOptions {
   selector?: string | Element;
   gateway?: string;
-  routes?: Record<string, React.ComponentType<RouteComponentProps>>;
+  routes?: Record<string, React.ComponentType<Partial<RouteComponentProps>>>;
   translations?: LocalizationMessages;
   components?: Record<string, React.ComponentType<any>>;
 }
@@ -25,7 +25,7 @@ export function renderInstance(options: PiralOptions = {}) {
     url: origin,
   });
 
-  const Piral = createInstance({
+  const Piral = createInstance<PiExtApi>({
     availableModules: getAvailableModules(),
     requestModules() {
       return fetch(`${origin}/api/v1/pilet`)
@@ -36,7 +36,7 @@ export function renderInstance(options: PiralOptions = {}) {
     Loader,
     Dashboard,
     ErrorInfo,
-    extendApi(api: PiralCoreApi<PiExtApi>): PiletApi {
+    extendApi(api): PiletApi {
       return {
         ...api,
         ...createFetchApi({

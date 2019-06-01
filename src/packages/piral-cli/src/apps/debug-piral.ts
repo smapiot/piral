@@ -14,7 +14,7 @@ export const debugPiralDefaults = {
   port: 1234,
 };
 
-export function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions = {}) {
+export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions = {}) {
   const { entry = debugPiralDefaults.entry, port = debugPiralDefaults.port } = options;
   const entryFiles = join(baseDir, entry);
   const krasConfig = readKrasConfig({ port }, krasrc);
@@ -31,25 +31,23 @@ export function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions =
     krasConfig.api = '/manage-mock-server';
   }
 
-  (async function() {
-    const buildServerPort = await getFreePort(64834);
+  const buildServerPort = await getFreePort(64834);
 
-    await setStandardEnvs({
-      target: dirname(entry),
-    });
+  await setStandardEnvs({
+    target: dirname(entry),
+  });
 
-    const bundler = new Bundler(entryFiles, extendConfig({}));
-    krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
-    const krasServer = buildKrasWithCli(krasConfig);
-    krasServer.removeAllListeners('open');
+  const bundler = new Bundler(entryFiles, extendConfig({}));
+  krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
+  const krasServer = buildKrasWithCli(krasConfig);
+  krasServer.removeAllListeners('open');
 
-    krasServer.on('open', svc => {
-      const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
-      console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
-      console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
-      startServer(buildServerPort, (bundler as any).middleware());
-    });
+  krasServer.on('open', svc => {
+    const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
+    console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
+    console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
+    startServer(buildServerPort, (bundler as any).middleware());
+  });
 
-    krasServer.start();
-  })();
+  krasServer.start();
 }

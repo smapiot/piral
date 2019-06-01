@@ -15,7 +15,7 @@ import {
 
 export interface GlobalStateOptions {
   language?: string;
-  routes?: Dict<ComponentType<RouteComponentProps>>;
+  routes?: Dict<ComponentType<Partial<RouteComponentProps>>>;
   translations?: LocalizationMessages;
   breakpoints?: LayoutBreakpoints;
   Dashboard?: ComponentType<DashboardProps>;
