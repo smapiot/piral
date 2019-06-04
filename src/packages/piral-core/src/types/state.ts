@@ -131,7 +131,7 @@ export interface AppState {
   /**
    * The used application routes.
    */
-  routes: Dict<ComponentType<RouteComponentProps>>;
+  routes: Dict<ComponentType<Partial<RouteComponentProps>>>;
 }
 
 export interface ComponentsState {

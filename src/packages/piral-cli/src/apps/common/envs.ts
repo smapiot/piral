@@ -3,6 +3,7 @@ import { findFile } from './io';
 export interface StandardEnvProps {
   production?: boolean;
   target?: string;
+  pilet?: string;
 }
 
 async function readNextPackageJson(dir: string) {
@@ -31,5 +32,9 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
     process.env.NODE_ENV = 'production';
   } else if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'development';
+  }
+
+  if (options.pilet) {
+    process.env.DEBUG_PILET = options.pilet;
   }
 }
