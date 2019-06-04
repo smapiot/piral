@@ -96,6 +96,8 @@ export const allCommands: Array<ToolCommand<any>> = [
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiletDefaults.port)
+        .string('app')
+        .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -104,6 +106,7 @@ export const allCommands: Array<ToolCommand<any>> = [
       return apps.debugPilet(args.base as string, {
         entry: args.source as string,
         port: args.port as number,
+        app: args.app as string,
       });
     },
   },

@@ -1,31 +1,44 @@
-import * as Bundler from 'parcel-bundler';
-import chalk from 'chalk';
-import { join, dirname } from 'path';
-import { extendConfig, startServer, liveIcon, getFreePort, settingsIcon, setStandardEnvs, findFile } from './common';
-import { buildKrasWithCli, readKrasConfig, krasrc } from 'kras';
+import { join, dirname, relative, resolve } from 'path';
+import { findFile, runDebug } from './common';
 
-function findRoot(pck: string | Array<string>, baseDir: string) {
+function findRoot(pck: string | Array<string>, baseDir: string, app = false) {
   if (Array.isArray(pck)) {
     for (const item of pck) {
-      const result = findRoot(item, baseDir);
+      const result = findRoot(item, baseDir, app);
 
       if (result) {
         return result;
       }
     }
   } else {
-    const p = require.resolve(pck, {
-      paths: [baseDir],
-    });
+    const suffix = app ? '/package.json' : '';
 
-    console.log(p);
-    return p;
+    try {
+      const path = require.resolve(`${pck}${suffix}`, {
+        paths: [baseDir],
+      });
+
+      if (app && path) {
+        const relPath = require(path).app;
+
+        if (relPath) {
+          return resolve(dirname(path), relPath);
+        }
+
+        return undefined;
+      }
+
+      return path;
+    } catch (ex) {
+      return undefined;
+    }
   }
 }
 
 export interface DebugPiletOptions {
   entry?: string;
   port?: number;
+  app?: string;
 }
 
 export const debugPiletDefaults = {
@@ -34,9 +47,9 @@ export const debugPiletDefaults = {
 };
 
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
-  const { entry = debugPiletDefaults.entry, port = debugPiletDefaults.port } = options;
-  const entryFiles = join(baseDir, entry);
-  const targetDir = dirname(entryFiles);
+  const { entry = debugPiletDefaults.entry, port = debugPiletDefaults.port, app } = options;
+  const entryFile = join(baseDir, entry);
+  const targetDir = dirname(entryFile);
   const packageJson = await findFile(targetDir, 'package.json');
 
   if (!packageJson) {
@@ -44,48 +57,27 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   const packageContent = require(packageJson);
-  const krasConfig = readKrasConfig({ port }, krasrc);
 
-  process.env.DEBUG_PILET = entryFiles;
-
-  if (krasConfig.ssl === undefined) {
-    krasConfig.ssl = undefined;
-  }
-
-  if (krasConfig.map === undefined) {
-    krasConfig.map = {};
-  }
-
-  if (krasConfig.api === undefined) {
-    krasConfig.api = '/manage-mock-server';
-  }
-
-  const buildServerPort = await getFreePort(64834);
-
-  await setStandardEnvs({
-    target: dirname(entry),
-  });
-
-  const rootFile = findRoot(
-    (packageContent.piral && packageContent.piral.name) || Object.keys(packageContent.devDependencies),
+  const appFile = findRoot(
+    app || (packageContent.piral && packageContent.piral.name) || Object.keys(packageContent.devDependencies),
     targetDir,
+    true,
   );
 
-  if (!rootFile) {
-    return console.error('Cannot find the root for the Piral instance. Make sure your package.json is valid .');
+  if (!appFile) {
+    return console.error(
+      'Cannot find the Piral instance. Make sure the package.json of the Piral instance is valid (has a `app` field).',
+    );
   }
 
-  const bundler = new Bundler(rootFile, extendConfig({}));
-  krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
-  const krasServer = buildKrasWithCli(krasConfig);
-  krasServer.removeAllListeners('open');
+  const coreFile = findRoot('piral-core', appFile);
 
-  krasServer.on('open', svc => {
-    const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
-    console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
-    console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
-    startServer(buildServerPort, (bundler as any).middleware());
+  if (!coreFile) {
+    return console.error('Cannot find the piral-core package. Make sure your dependencies are correctly resolved.');
+  }
+
+  await runDebug(port, appFile, {
+    target: dirname(entry),
+    pilet: relative(dirname(coreFile), entryFile),
   });
-
-  krasServer.start();
 }
