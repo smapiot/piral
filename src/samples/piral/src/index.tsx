@@ -8,3 +8,5 @@ renderInstance({
     User,
   },
 });
+
+export * from 'piral';

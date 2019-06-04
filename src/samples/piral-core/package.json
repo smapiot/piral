@@ -12,10 +12,8 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "main": "src/index.html",
   "files": [
-    "lib",
     "src"
   ],
   "repository": {
