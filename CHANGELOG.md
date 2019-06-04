@@ -2,7 +2,8 @@
 
 ## 0.3.1 (to be determined)
 
-* (tbd)
+* Updated dependencies
+* Added `debug-pilet` command
 
 ## 0.3.0 (May 26, 2019)
 
