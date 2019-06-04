@@ -78,7 +78,7 @@ export function createInstance<TApi>({
       name: 'Debug Module',
       version: '1.0.0',
       hash: '1',
-      setup: require(process.env.DEBUG_PILET),
+      setup: require(process.env.DEBUG_PILET).setup,
     });
   }
 
@@ -87,7 +87,13 @@ export function createInstance<TApi>({
     getDependencies: container.getDependencies,
     dependencies: globalDependencies,
     fetchModules() {
-      return container.requestModules();
+      const promise = container.requestModules();
+
+      if (process.env.DEBUG_PILET) {
+        return promise.catch(() => []);
+      }
+
+      return promise;
     },
     createApi(target) {
       return createApi(target, container);

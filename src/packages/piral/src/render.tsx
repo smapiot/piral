@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { RouteComponentProps } from 'react-router-dom';
 import { Provider } from 'urql';
-import { createInstance, PiralCoreApi, LocalizationMessages } from 'piral-core';
+import { createInstance, LocalizationMessages } from 'piral-core';
 import { createFetchApi, createGqlApi, setupGqlClient } from 'piral-ext';
 import { getGateway, getContainer, getAvailableModules } from './utils';
 import { getLayout } from './layout';
