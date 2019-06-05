@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { useGlobalState } from 'piral-core';
 
-export const Menu: React.SFC = () => {
+export interface MenuProps {
+  type?: string;
+}
+
+export const Menu: React.SFC<MenuProps> = ({ type = 'general' }) => {
   const menuItems = useGlobalState(s => s.components.menuItems);
 
   return (
@@ -9,7 +13,7 @@ export const Menu: React.SFC = () => {
       {Object.keys(menuItems).map(name => {
         const item = menuItems[name];
 
-        if (item.settings.type === 'general') {
+        if (item.settings.type === type) {
           const Component = item.component;
           return (
             <pi-item key={name}>
