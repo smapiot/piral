@@ -8322,10 +8322,10 @@ rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-arbiter@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/react-arbiter/-/react-arbiter-0.5.0.tgz#9e74b037464614815293c67796d3312540994167"
-  integrity sha512-T5gMXC7l5getSuaRL/C8R+Y6SYwpW/duwm2N5phDetYBL05elOaJQKgYirM6xbqp3JE/fc0O1INtd6skQ63fww==
+react-arbiter@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-arbiter/-/react-arbiter-0.6.0.tgz#ea6e01222aa85ebec467af07ef29f370edf38fb0"
+  integrity sha512-stjka+VY49wLBBnpj2RIsNjH/pIbj8bhvt1eSUEM+YcNrOomy3+6jKJGuCP1ooWbqXcOEPJKA1jVA6YfePhvxQ==
 
 react-dom@^16.8.1:
   version "16.8.6"
