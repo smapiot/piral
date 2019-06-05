@@ -8,22 +8,28 @@ export interface RoutesProps {
 }
 
 export const Routes: React.SFC<RoutesProps> = ({ Home, NotFound }) => {
-  const { pages, routes } = useGlobalState(s => ({
+  const { pages, routes, trackers } = useGlobalState(s => ({
     pages: s.components.pages,
     routes: s.app.routes,
+    trackers: s.app.trackers,
   }));
 
   return (
-    <Switch>
-      <Route exact path="/" component={Home} />
-      {Object.keys(routes).map(url => (
-        <Route exact key={url} path={url} component={routes[url]} />
+    <>
+      {trackers.map((tracker, i) => (
+        <Route key={i} path="/" component={tracker} />
       ))}
-      {Object.keys(pages).map(url => (
-        <Route exact key={url} path={url} component={pages[url].component} />
-      ))}
-      <Route component={NotFound} />
-    </Switch>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        {Object.keys(routes).map(url => (
+          <Route exact key={url} path={url} component={routes[url]} />
+        ))}
+        {Object.keys(pages).map(url => (
+          <Route exact key={url} path={url} component={pages[url].component} />
+        ))}
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 };
 Routes.displayName = 'Routes';

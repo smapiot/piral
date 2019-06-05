@@ -129,9 +129,13 @@ export interface AppState {
    */
   modals: Array<OpenModalDialog>;
   /**
-   * The used application routes.
+   * The used (exact) application routes.
    */
-  routes: Dict<ComponentType<Partial<RouteComponentProps>>>;
+  routes: Dict<ComponentType<RouteComponentProps>>;
+  /**
+   * The used application trackers.
+   */
+  trackers: Array<ComponentType<RouteComponentProps>>;
 }
 
 export interface ComponentsState {
