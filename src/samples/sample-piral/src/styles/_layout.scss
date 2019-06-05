@@ -163,35 +163,65 @@ a {
 
 .app-footer {
   font-size: 0.8em;
-  text-align: center;
-  margin: 1em 0;
+  padding: 1em 0;
+  background: $footer-color;
+
+  .pi-menu {
+    margin: 0 auto;
+    max-width: 1000px;
+    column-width: 300px;
+    display: block;
+
+    .pi-item {
+      display: block;
+      padding: 1em 2em;
+    }
+  }
 }
 
-.pi-menu {
+.app-menu {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: row;
-  align-content: space-between;
   width: 300px;
   max-width: 100%;
   background: lighten($header-color, 15%);
   transform: translateX(-100%);
   transition: all 0.1s ease;
   box-shadow: $menu-shadow-size 0px $menu-shadow-size (-$menu-shadow-size) rgba(0, 0, 0, 0.2);
+  padding-top: 85px;
 
   &.is-open {
     transform: none;
   }
 
-  > .pi-item {
-    flex: 1;
-    text-align: center;
+  .app-menu-content {
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .pi-menu {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+
+    > .pi-item {
+      flex: 1;
+      margin: 1px 0;
+
+      > a {
+        display: block;
+        border-left: 5px solid $header-color;
+        padding: 1em;
+
+        &:hover {
+          border-left-color: $menu-color;
+        }
+      }
+    }
   }
 }
 

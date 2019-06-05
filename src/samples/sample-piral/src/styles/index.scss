@@ -1,6 +1,8 @@
 $bg-color: white;
 $basic-dark-color: #56aa1c;
 $header-color: #abcdef;
+$footer-color: lighten($header-color, 10%);
+$menu-color: darken($header-color, 20%);
 $border-width: 4px;
 $basic-spinner-dimensions: 50px;
 $main-spinner-dimensions: $basic-spinner-dimensions - $border-width * 2;

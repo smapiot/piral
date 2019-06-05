@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { createInstance, useGlobalState, LoaderProps, useSearch } from 'piral-core';
 import { modules } from './modules';
 
@@ -23,7 +23,7 @@ const Loader: React.SFC<LoaderProps> = () => (
   </div>
 );
 
-const Sitemap: React.SFC = () => {
+const Sitemap: React.SFC<RouteComponentProps> = () => {
   const pages = useGlobalState(s => s.components.pages);
 
   return (
