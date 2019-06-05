@@ -31,6 +31,15 @@ export interface PiralConfiguration<TApi> extends GlobalStateOptions {
   plugins?: Array<ScaffoldPlugin>;
 }
 
+declare global {
+  interface NodeModule {
+    hot?: {
+      accept(errHandler?: (err: any) => void): void;
+      dispose(callback: (data: any) => void): void;
+    };
+  }
+}
+
 export type PiralInstance = React.SFC<PortalProps> & EventEmitter;
 
 /**
