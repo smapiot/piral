@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.3.1 (to be determined)
+## 0.3.1 (June 5, 2019)
 
 * Updated dependencies
 * Added `debug-pilet` command
