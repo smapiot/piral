@@ -16,7 +16,12 @@
 </div>
 <template for="layout">
   <div class="app-container">
-    <area for="Menu" />
+    <div class="app-menu">
+      <div class="app-menu-content">
+        <area for="Menu" type="general" />
+        <area for="Menu" type="admin" />
+      </div>
+    </div>
     <area for="Notifications" />
     <div class="app-header">
       <div class="app-title">
@@ -24,13 +29,14 @@
         <h1>Piral Sample</h1>
       </div>
       <area for="Search" />
+      <area for="Menu" type="header" />
       <area for="User" />
     </div>
     <div class="app-content">
       <area for="Content" />
     </div>
     <div class="app-footer">
-      For more information or the source code check out our GitHub repository.
+      <area for="Menu" type="footer" />
     </div>
   </div>
 </template>

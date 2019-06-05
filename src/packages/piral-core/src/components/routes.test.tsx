@@ -20,6 +20,7 @@ jest.mock('../hooks');
         '/': StubComponent,
         '/custom': StubCustomPage,
       },
+      trackers: [],
     },
     components: {
       pages: {

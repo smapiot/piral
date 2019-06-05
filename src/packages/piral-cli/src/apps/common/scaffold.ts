@@ -49,6 +49,7 @@ export async function scaffoldSourceFiles(
     "outDir": "./dist",
     "skipLibCheck": true,
     "lib": ["dom", "es2018"],
+    "moduleResolution": "node",
     "module": "esnext",
     "jsx": "react"
   },

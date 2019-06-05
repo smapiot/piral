@@ -30,6 +30,7 @@ describe('Create Global State Module', () => {
         modals: [],
         notifications: [],
         routes: {},
+        trackers: [],
       },
       components: {
         extensions: {},
@@ -78,6 +79,7 @@ describe('Create Global State Module', () => {
         modals: [],
         notifications: [],
         routes: {},
+        trackers: [],
       },
       components: {
         extensions: {},
@@ -131,6 +133,7 @@ describe('Create Global State Module', () => {
         modals: [],
         notifications: [],
         routes,
+        trackers: [],
       },
       components: {
         extensions: {},

@@ -2,14 +2,14 @@
 
 <!--start:auto-generated-->
 
-(currently not implemented)
+Starts the debugging process for a pilet using a Piral instance.
 
 ## Syntax
 
 From the command line:
 
 ```sh
-pb debug-pilet 
+pb debug-pilet [source]
 ```
 
 ## Aliases
@@ -22,10 +22,34 @@ Instead of `debug-pilet` you can also use:
 
 ## Positionals
 
-Not applicable.
+### `source`
+
+Sets the source file containing the pilet root module.
+
+- Type: `string`
+- Default: `./src/index`
 
 ## Flags
 
-Not applicable.
+### `--port`
+
+Sets the port of the local development server.
+
+- Type: `number`
+- Default: `1234`
+
+### `--app`
+
+Sets the name of the Piral instance.
+
+- Type: `string`
+- Default: `undefined`
+
+### `--base`
+
+Sets the base directory. By default the current directory is used.
+
+- Type: `string`
+- Default: `process.cwd()`
 
 <!--end:auto-generated-->

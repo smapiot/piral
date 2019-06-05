@@ -54,7 +54,7 @@ One reason for Piral's design is to cache as much as possible. In the full frame
 
 ## Alternative Solutions
 
-We think that Piral hits a sweep spot that makes development easy and fun, while making applications robust, flexibile, and efficient. Nevertheless, some of the alternatives to Piral are.
+We think that Piral hits a sweep spot that makes development easy and fun, while making applications robust, flexible, and efficient. Nevertheless, some of the alternatives to Piral are.
 
 | Feature              | Piral  | Single SPA | Web Components | Mosaic  | Luigi   |
 |----------------------|--------|------------|----------------|---------|---------|
@@ -75,7 +75,7 @@ We think that Piral hits a sweep spot that makes development easy and fun, while
 | Notifications        | ✔️     | ❌          | ✔️             | ❌       | ✔️      |
 | Module Communication | ✔️     | ✔️         | ✔️             | ❌       | ❌       |
 | TypeScript Support   | ✔️     | ❌          | ✔️             | ❌       | ✔️      |
-| Stiching Location    | Client | Client     | Client         | Server  | Client  |
+| Stitching Location   | Client | Client     | Client         | Server  | Client  |
 
 While some of the alternatives focus on multi-frameworks (i.e., having multiple runtimes in the same application) Piral tries to be efficient without having too strong restrictions on the developer. Obviously, React is preferred, however, if one really feels the need there is also an escape hatch to register full components based on a DOM node given by Piral. As such any framework that attaches to a DOM node can be used.
 
@@ -96,3 +96,5 @@ There are further reads on the topic of microfrontends.
 - [Micro Front-Ends: Available Solutions](https://medium.embengineering.com/micro-front-ends-whats-the-best-solution-3bc31218eae4)
 - [Exploring micro-frontends](https://medium.com/@benjamin.d.johnson/exploring-micro-frontends-87a120b3f71c)
 - [Taming the front-end monolith](https://blog.logrocket.com/taming-the-front-end-monolith-dbaede402c39)
+- [Micro Frontends - extending the microservice idea to frontend development](https://micro-frontends.org)
+- [6 micro-front-end types in direct comparison: These are the pros and cons (translated)](https://bit.ly/2K1zbu2)

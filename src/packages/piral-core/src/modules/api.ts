@@ -69,7 +69,7 @@ export function createApi<TApi>(
           context.loadFeed(options);
         }
 
-        return component => withFeed(component, options);
+        return component => withFeed(component, options) as any;
       },
       createForm(options) {
         return component => withForm(component, options);
@@ -140,7 +140,7 @@ export function createApi<TApi>(
       },
       registerPage(route: string, arg: AnyComponent<PageComponentProps<PiralApi<TApi>>>) {
         context.registerPage(route, {
-          component: withApi(arg, api),
+          component: withApi(arg, api) as any,
         });
       },
       unregisterPage(route) {
@@ -153,7 +153,7 @@ export function createApi<TApi>(
       ) {
         const id = buildName(prefix, name);
         context.registerTile(id, {
-          component: withApi(arg, api),
+          component: withApi(arg, api) as any,
           preferences,
         });
       },
@@ -163,17 +163,17 @@ export function createApi<TApi>(
       },
       registerExtension(name: string, arg: AnyComponent<ExtensionComponentProps<PiralApi<TApi>>>) {
         context.registerExtension(name, {
-          component: withApi(arg, api),
+          component: withApi(arg, api) as any,
           reference: arg,
         });
       },
-      unregisterExtension(name: string, arg: AnyComponent<ExtensionComponentProps<PiralApi<TApi>>>) {
+      unregisterExtension(name, arg) {
         context.unregisterExtension(name, arg);
       },
       registerMenu(name: string, arg: AnyComponent<MenuComponentProps<PiralApi<TApi>>>, settings: MenuSettings = {}) {
         const id = buildName(prefix, name);
         context.registerMenuItem(id, {
-          component: withApi(arg, api),
+          component: withApi(arg, api) as any,
           settings: {
             type: settings.type || 'general',
           },
@@ -186,7 +186,7 @@ export function createApi<TApi>(
       registerModal<TOpts>(name: string, arg: AnyComponent<ModalComponentProps<PiralApi<TApi>, TOpts>>) {
         const id = buildName(prefix, name);
         context.registerModal(id, {
-          component: withApi(arg, api),
+          component: withApi(arg, api) as any,
         });
       },
       unregisterModal(name) {

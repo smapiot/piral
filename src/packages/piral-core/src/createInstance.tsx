@@ -31,6 +31,15 @@ export interface PiralConfiguration<TApi> extends GlobalStateOptions {
   plugins?: Array<ScaffoldPlugin>;
 }
 
+declare global {
+  interface NodeModule {
+    hot?: {
+      accept(errHandler?: (err: any) => void): void;
+      dispose(callback: (data: any) => void): void;
+    };
+  }
+}
+
 export type PiralInstance = React.SFC<PortalProps> & EventEmitter;
 
 /**
@@ -71,12 +80,30 @@ export function createInstance<TApi>({
     availableModules,
   });
 
+  if (process.env.DEBUG_PILET) {
+    const { setup } = require(process.env.DEBUG_PILET);
+    container.availableModules.push({
+      content: '',
+      dependencies: {},
+      name: 'Debug Module',
+      version: '1.0.0',
+      hash: '1',
+      setup,
+    });
+  }
+
   const RecallPortal = withRecall<PortalProps, TApi>(Portal, {
     modules: container.availableModules,
     getDependencies: container.getDependencies,
     dependencies: globalDependencies,
     fetchModules() {
-      return container.requestModules();
+      const promise = container.requestModules();
+
+      if (process.env.DEBUG_PILET) {
+        return promise.catch(() => []);
+      }
+
+      return promise;
     },
     createApi(target) {
       return createApi(target, container);

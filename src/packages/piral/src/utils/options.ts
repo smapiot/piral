@@ -1,3 +1,6 @@
+import { isfunc, ArbiterModule } from 'react-arbiter';
+import { PiralAttachment, PiletApi } from '../api';
+
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
     return document.querySelector(selector);
@@ -16,14 +19,24 @@ export function getGateway(url?: string) {
   }
 }
 
-export function getAvailableModules() {
-  const debugModules = (process.env.DEBUG_MODULE_PATHS || '').split(',');
-  const availableModules = [];
+export function getAvailableModules(setup?: PiralAttachment) {
+  const debugModules = (process.env.DEBUG_PILETS || '').split(',');
+  const availableModules: Array<ArbiterModule<PiletApi>> = [];
 
   for (const debugModule of debugModules) {
     if (debugModule) {
       availableModules.push(require(debugModule));
     }
+  }
+
+  if (isfunc(setup)) {
+    availableModules.push({
+      setup,
+      hash: '',
+      version: process.env.BUILD_PCKG_VERSION || '0.0.0',
+      name: 'app',
+      dependencies: {},
+    });
   }
 
   return availableModules;

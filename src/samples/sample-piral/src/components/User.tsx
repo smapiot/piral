@@ -5,9 +5,20 @@ import { withClass } from './utils';
 export const User: React.SFC = () => {
   const [open, setOpen] = React.useState(false);
   const currentUser = useGlobalState(m => m.user.current);
+  const menuItems = useGlobalState(m => m.components.menuItems);
+  const itemNames = Object.keys(menuItems).filter(m => menuItems[m].settings.type === 'user');
   const { name, logout, login } = useTranslation();
   const container = React.useRef<HTMLDivElement>(undefined);
   const image = currentUser ? require('../images/male.png') : require('../images/female.png');
+  const items = itemNames.length > 0 && (
+    <>
+      <li className="sep" />
+      {itemNames.map(name => {
+        const Component = menuItems[name].component;
+        return <Component key={name} />;
+      })}
+    </>
+  );
   useOnClickOutside(container, () => setOpen(false));
 
   return (
@@ -22,15 +33,19 @@ export const User: React.SFC = () => {
               <span className="user-name">{name}</span>
               {currentUser.firstName} {currentUser.lastName}
             </li>
+            {items}
             <li className="sep" />
             <li>
               <a href="#">{logout}</a>
             </li>
           </>
         ) : (
-          <li>
-            <a href="">{login}</a>
-          </li>
+          <>
+            <li>
+              <a href="">{login}</a>
+            </li>
+            {items}
+          </>
         )}
       </ul>
     </div>

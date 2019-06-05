@@ -16,6 +16,7 @@ import {
 export interface GlobalStateOptions {
   language?: string;
   routes?: Dict<ComponentType<RouteComponentProps>>;
+  trackers?: Array<ComponentType<RouteComponentProps>>;
   translations?: LocalizationMessages;
   breakpoints?: LayoutBreakpoints;
   Dashboard?: ComponentType<DashboardProps>;
@@ -28,6 +29,7 @@ export function createGlobalState({
   breakpoints = defaultBreakpoints,
   translations = {},
   routes = {},
+  trackers = [],
   language,
   components = {},
   Dashboard = DefaultDashboard,
@@ -56,6 +58,7 @@ export function createGlobalState({
       modals: [],
       notifications: [],
       routes,
+      trackers,
     },
     components: {
       extensions: {},

@@ -1,16 +1,19 @@
 import * as React from 'react';
+import { withRouter } from 'react-router';
 import { withClass } from './utils';
 
-export const MenuToggle: React.SFC = () => {
+export const MenuToggle = withRouter(({ history }) => {
   const [active, setActive] = React.useState(false);
 
   React.useEffect(() => {
+    const node = document.querySelector('.app-menu');
+
     if (active) {
-      document.querySelector('.pi-menu').classList.add('is-open');
+      node.classList.add('is-open');
     } else {
-      document.querySelector('.pi-menu').classList.remove('is-open');
+      node.classList.remove('is-open');
     }
-    return () => {};
+    return history.listen(() => active && setActive(false));
   }, [active]);
 
   return (
@@ -23,4 +26,4 @@ export const MenuToggle: React.SFC = () => {
       </span>
     </button>
   );
-};
+});

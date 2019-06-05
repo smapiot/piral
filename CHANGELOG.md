@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.3.1 (to be determined)
+
+* Updated dependencies
+* Added `debug-pilet` command
+* Added setup for trackers
+* Added ability to attach a static module into `piral`
+
 ## 0.3.0 (May 26, 2019)
 
 * Documentation enhancements

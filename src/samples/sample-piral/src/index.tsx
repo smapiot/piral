@@ -1,5 +1,6 @@
 import { renderInstance } from 'piral';
 import { MenuToggle, User } from './components';
+import { setupFooter, setupMenu } from './parts';
 
 renderInstance({
   gateway: 'https://sample.piral.io',
@@ -7,4 +8,10 @@ renderInstance({
     MenuToggle,
     User,
   },
+  attach(api) {
+    setupFooter(api);
+    setupMenu(api);
+  },
 });
+
+export * from 'piral';

@@ -15,9 +15,9 @@ export const Companies: React.SFC = () => (
   <div className="jumbotron jumbotron-fluid">
     <div className="container">
       <div className="row">
-        <Company image={require('../../assets/company-2.png')} title="Sample Company" />
-        <Company image={require('../../assets/company-1.png')} title="Sample Company" />
-        <Company image={require('../../assets/company-3.png')} title="Sample Company" />
+        <Company image={require('../../assets/Company-2.png')} title="Sample Company" />
+        <Company image={require('../../assets/Company-1.png')} title="Sample Company" />
+        <Company image={require('../../assets/Company-3.png')} title="Sample Company" />
       </div>
     </div>
   </div>

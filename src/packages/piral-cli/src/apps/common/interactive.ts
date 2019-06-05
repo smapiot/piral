@@ -4,7 +4,7 @@ export function promptSelect(message: string, values: Array<string>, defaultValu
   const questions = [
     {
       name: 'q',
-      type: 'list',
+      type: 'list' as const,
       choices: values,
       message,
       default: defaultValue,
@@ -17,7 +17,7 @@ export function promptConfirm(message: string, defaultValue: boolean): Promise<b
   const questions = [
     {
       name: 'q',
-      type: 'confirm',
+      type: 'confirm' as const,
       message,
       default: defaultValue,
     },
