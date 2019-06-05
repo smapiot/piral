@@ -72,13 +72,14 @@ export function createInstance<TApi>({
   });
 
   if (process.env.DEBUG_PILET) {
+    const { setup } = require(process.env.DEBUG_PILET);
     container.availableModules.push({
       content: '',
       dependencies: {},
       name: 'Debug Module',
       version: '1.0.0',
       hash: '1',
-      setup: require(process.env.DEBUG_PILET).setup,
+      setup,
     });
   }
 
