@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 0.4.0 (to be determined)
+
+* Introduced `subscriptionUrl`
+* Renamed `gateway` to `gatewayUrl`
+* Renamed `availableModules` to `availablePilets`
+* Renamed `requestModules` to `requestPilets`
+* Added possibility to override pilet requesting
+
 ## 0.3.1 (June 5, 2019)
 
 * Updated dependencies
