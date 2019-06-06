@@ -16,7 +16,7 @@ import {
  * Also registeres some custom error page handlers. For details
  * on this, see DashboardModule.
  */
-export const Module1: ArbiterModule<PiralApi> = {
+export const Pilet1: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Example Module',

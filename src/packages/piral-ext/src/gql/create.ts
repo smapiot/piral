@@ -1,9 +1,9 @@
 import { Client, defaultExchanges, subscriptionExchange, createRequest, OperationResult } from 'urql';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { SubscriptionClient, OperationOptions } from 'subscriptions-transport-ws';
 import { pipe, subscribe, Source } from 'wonka';
 import { PiralGqlApi, GqlConfig } from './types';
 
-function pipeToPromise<T>(source: Source<OperationResult<T>>) {
+export function pipeToPromise<T>(source: Source<OperationResult<T>>) {
   return new Promise<T>((resolve, reject) => {
     pipe(
       source,
@@ -25,31 +25,38 @@ function pipeToPromise<T>(source: Source<OperationResult<T>>) {
 export function setupGqlClient(config: GqlConfig = {}) {
   const url = config.url || location.origin;
   const subscriptionUrl = (config.subscriptionUrl || url).replace(/^http/i, 'ws');
-  const subscriptionClient = new SubscriptionClient(subscriptionUrl, {
-    reconnect: true,
-    lazy: config.lazy || false,
-    inactivityTimeout: 0,
-    connectionCallback(err) {
-      const { onConnected, onDisconnected } = config;
-      const errors = err && (Array.isArray(err) ? err : [err]);
+  const subscriptionClient =
+    config.subscriptionUrl !== false &&
+    new SubscriptionClient(subscriptionUrl, {
+      reconnect: true,
+      lazy: config.lazy || false,
+      inactivityTimeout: 0,
+      connectionCallback(err) {
+        const { onConnected, onDisconnected } = config;
+        const errors = err && (Array.isArray(err) ? err : [err]);
 
-      if (errors && errors.length > 0) {
-        typeof onDisconnected === 'function' && onDisconnected(errors);
-      } else {
-        typeof onConnected === 'function' && onConnected();
-      }
-    },
-  });
-  const forwardSubscription = operation => subscriptionClient.request(operation);
-  return new Client({
-    url,
-    fetchOptions: config.default || {},
-    exchanges: [
-      ...defaultExchanges,
+        if (errors && errors.length > 0) {
+          typeof onDisconnected === 'function' && onDisconnected(errors);
+        } else {
+          typeof onConnected === 'function' && onConnected();
+        }
+      },
+    });
+  const forwardSubscription = (operation: OperationOptions) => subscriptionClient.request(operation);
+  const exchanges = [...defaultExchanges];
+
+  if (subscriptionClient) {
+    exchanges.push(
       subscriptionExchange({
         forwardSubscription,
       }),
-    ],
+    );
+  }
+
+  return new Client({
+    url,
+    fetchOptions: config.default || {},
+    exchanges,
   });
 }
 

@@ -7,7 +7,7 @@ import { PageComponentProps, PiralApi, TileComponentProps, MenuComponentProps } 
  * Shows the usage of another module, here with a
  * feed connector.
  */
-export const Module2: ArbiterModule<PiralApi> = {
+export const Pilet2: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Sample Module',

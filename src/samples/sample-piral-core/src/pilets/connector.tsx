@@ -5,7 +5,7 @@ import { PiralApi, TileComponentProps } from 'piral-core';
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorModule: ArbiterModule<PiralApi> = {
+export const ConnectorPilet: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Connector Module',

@@ -4,7 +4,7 @@ import { Portal, PortalProps } from './components';
 import { defaultApiExtender, defaultModuleRequester, getExtender } from './helpers';
 import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
 import { createGlobalState, createActions, StateContext, GlobalStateOptions } from './state';
-import { PiralApi, EventEmitter, ScaffoldPlugin, Extend, ModuleRequester } from './types';
+import { PiralApi, EventEmitter, ScaffoldPlugin, Extend, PiletRequester } from './types';
 
 export interface PiralConfiguration<TApi> extends GlobalStateOptions {
   /**
@@ -14,7 +14,7 @@ export interface PiralConfiguration<TApi> extends GlobalStateOptions {
   /**
    * Function to load the modules asynchronously, e.g., from a server 🚚.
    */
-  requestModules?: ModuleRequester;
+  requestPilets?: PiletRequester;
   /**
    * Function to get the dependencies for a given module.
    */
@@ -24,7 +24,7 @@ export interface PiralConfiguration<TApi> extends GlobalStateOptions {
    * The given modules are all already evaluated.
    * This can be used for customization or for debugging purposes.
    */
-  availableModules?: Array<ArbiterModule<PiralApi<TApi>>>;
+  availablePilets?: Array<ArbiterModule<PiralApi<TApi>>>;
   /**
    * Plugins for extending the core portal functionality.
    */
@@ -40,6 +40,9 @@ declare global {
   }
 }
 
+/**
+ * The PiralInstance component, which is a React functional component combined with an event emitter.
+ */
 export type PiralInstance = React.SFC<PortalProps> & EventEmitter;
 
 /**
@@ -49,7 +52,7 @@ export type PiralInstance = React.SFC<PortalProps> & EventEmitter;
  * @example
 ```tsx
 const Piral = createInstance({
-  requestModules() {
+  requestPilets() {
     return fetch(...);
   },
 });
@@ -59,9 +62,9 @@ render(<App />, document.querySelector('#app'));
 ```
  */
 export function createInstance<TApi>({
-  availableModules,
+  availablePilets,
   extendApi = defaultApiExtender,
-  requestModules = defaultModuleRequester,
+  requestPilets = defaultModuleRequester,
   getDependencies = getLocalDependencies,
   plugins = [],
   ...options
@@ -76,13 +79,13 @@ export function createInstance<TApi>({
     events: createListener(),
     getDependencies,
     extendApi,
-    requestModules,
-    availableModules,
+    requestPilets,
+    availablePilets,
   });
 
   if (process.env.DEBUG_PILET) {
     const { setup } = require(process.env.DEBUG_PILET);
-    container.availableModules.push({
+    container.availablePilets.push({
       content: '',
       dependencies: {},
       name: 'Debug Module',
@@ -93,11 +96,11 @@ export function createInstance<TApi>({
   }
 
   const RecallPortal = withRecall<PortalProps, TApi>(Portal, {
-    modules: container.availableModules,
+    modules: container.availablePilets,
     getDependencies: container.getDependencies,
     dependencies: globalDependencies,
     fetchModules() {
-      const promise = container.requestModules();
+      const promise = container.requestPilets();
 
       if (process.env.DEBUG_PILET) {
         return promise.catch(() => []);

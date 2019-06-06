@@ -13,7 +13,7 @@ export interface Extend<TApi> {
   (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): PiralApi<TApi>;
 }
 
-export interface ModuleRequester {
+export interface PiletRequester {
   (): Promise<Array<ArbiterModuleMetadata>>;
 }
 
@@ -21,8 +21,8 @@ export interface PiralContainer<TApi> {
   context: GlobalStateContext;
   events: EventEmitter;
   getDependencies: DependencyGetter;
-  requestModules: ModuleRequester;
-  availableModules: Array<ArbiterModule<PiralApi<TApi>>>;
+  requestPilets: PiletRequester;
+  availablePilets: Array<ArbiterModule<PiralApi<TApi>>>;
   extendApi: Extend<TApi>;
 }
 

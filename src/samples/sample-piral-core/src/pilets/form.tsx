@@ -10,7 +10,7 @@ interface SampleFormData {
 /**
  * Shows a form.
  */
-export const FormModule: ArbiterModule<PiralApi> = {
+export const FormPilet: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Form Module',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { createInstance, useGlobalState, LoaderProps, useSearch } from 'piral-core';
-import { modules } from './modules';
+import { availablePilets } from './pilets';
 
 customElements.define(
   'pi-spinner',
@@ -147,8 +147,8 @@ const Layout: React.SFC = ({ children }) => {
 };
 
 const Portal = createInstance({
-  availableModules: modules,
-  requestModules() {
+  availablePilets,
+  requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
     //   .then(res => res.json())
     //   .then(res => res.items);

@@ -6,7 +6,7 @@ import { PiralApi, ExtensionComponentProps, Dict, TileRegistration } from 'piral
  * Shows the possibility of extending default functionality (e.g., the dashboard)
  * with an extension defined by a module.
  */
-export const DashboardModule: ArbiterModule<PiralApi> = {
+export const DashboardPilet: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Dashboard Module',

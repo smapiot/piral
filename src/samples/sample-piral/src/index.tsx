@@ -3,7 +3,7 @@ import { MenuToggle, User } from './components';
 import { setupFooter, setupMenu } from './parts';
 
 renderInstance({
-  gateway: 'https://sample.piral.io',
+  subscriptionUrl: false,
   components: {
     MenuToggle,
     User,

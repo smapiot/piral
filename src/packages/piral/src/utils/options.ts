@@ -19,7 +19,7 @@ export function getGateway(url?: string) {
   }
 }
 
-export function getAvailableModules(setup?: PiralAttachment) {
+export function getAvailablePilets(setup?: PiralAttachment) {
   const debugModules = (process.env.DEBUG_PILETS || '').split(',');
   const availableModules: Array<ArbiterModule<PiletApi>> = [];
 

@@ -57,7 +57,7 @@ export interface GqlConfig {
   /**
    * Sets the URL for the GraphQL subscription endpoint.
    */
-  subscriptionUrl?: string;
+  subscriptionUrl?: false | string;
   /**
    * Sets if the subscription should be lazy initialized.
    */

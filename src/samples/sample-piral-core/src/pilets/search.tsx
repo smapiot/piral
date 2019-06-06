@@ -5,7 +5,7 @@ import { PiralApi } from 'piral-core';
 /**
  * Shows a custom search registration.
  */
-export const SearchModule: ArbiterModule<PiralApi> = {
+export const SearchPilet: ArbiterModule<PiralApi> = {
   content: '',
   dependencies: {},
   name: 'Search Module',
