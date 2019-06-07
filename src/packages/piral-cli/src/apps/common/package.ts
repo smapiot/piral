@@ -35,7 +35,14 @@ export async function copyPiralFiles(
   }
 }
 
-export function getPiletsInfo(piralInfo: any) {
+export interface PiletsInfo {
+  files: Array<string>;
+  externals: Array<string>;
+  devDependencies: Record<string, string>;
+  scripts: Record<string, string>;
+}
+
+export function getPiletsInfo(piralInfo: any): PiletsInfo {
   const { files = [], externals = [], scripts = {}, devDependencies = {} } = piralInfo.pilets || {};
   return {
     files,
@@ -52,7 +59,7 @@ export async function patchPiletPackage(root: string, name: string, version?: st
   const { files, externals, scripts, devDependencies } = getPiletsInfo(piralInfo);
   await updateExistingJson(root, 'package.json', {
     piral: {
-      comment: 'Keep this section to allow running "piral upgrade".',
+      comment: 'Keep this section to allow running `piral upgrade`.',
       name,
       version: piralVersion,
       tooling: cliVersion,
@@ -63,18 +70,24 @@ export async function patchPiletPackage(root: string, name: string, version?: st
     },
     devDependencies: {
       ...devDependencies,
-      ...externals.reduce((deps, name) => {
-        deps[name] = piralDependencies[name] || 'latest';
-        return deps;
-      }, {}),
+      ...externals.reduce(
+        (deps, name) => {
+          deps[name] = piralDependencies[name] || 'latest';
+          return deps;
+        },
+        {} as Record<string, string>,
+      ),
       [name]: `${piralVersion}`,
       'piral-cli': `^${cliVersion}`,
     },
     peerDependencies: {
-      ...externals.reduce((deps, name) => {
-        deps[name] = '*';
-        return deps;
-      }, {}),
+      ...externals.reduce(
+        (deps, name) => {
+          deps[name] = '*';
+          return deps;
+        },
+        {} as Record<string, string>,
+      ),
       '@dbeining/react-atom': '*',
       react: '*',
       'react-dom': '*',
