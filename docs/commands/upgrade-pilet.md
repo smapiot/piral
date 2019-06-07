@@ -31,9 +31,9 @@ Sets the target directory to upgrade. By default, the current directory.
 - Type: `string`
 - Default: `"."`
 
-### `--version`
+### `--tag`
 
-Sets the version of the Piral instance to upgrade to. By default, the latest version.
+Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".
 
 - Type: `string`
 - Default: `"latest"`
