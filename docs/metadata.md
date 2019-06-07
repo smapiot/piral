@@ -38,7 +38,7 @@ The list of `files` contains paths to files relative to the `package.json` that 
 
 The determined `scripts` provide an easy way to extend the scripts section of the `package.json` of a new pilet. The reason for this section is - like the `files` section - coherence. Likewise, the `devDependencies` can be used to inject some additional tools into a scaffolded pilet, e.g., a preferred solution for unit test, linting, or style coherence.
 
-**Remark**: The difference between the `devDependencies` (format like in the *package.json* - names with semver constraints) and the `externals` (just names, no version constraints) is explained fairly simple:
+**Remark**: The difference between the `devDependencies` (format like in the *package.json* - names with semver constraints) and the `externals` (just names, no version constraints) is explained fairly simple: every name mentioned in `externals` needs to be also present in the provided Piral instance (i.e., needs to occur in `dependencies` with a semver constraint), however, the `devDependencies` for a pilet do not need to be present in the Piral instance at all - thus specifying the semver constraint is necessary.
 
 ## Pilets - Package Extensions
 
@@ -46,6 +46,7 @@ The additional fields for a pilet package are as follows:
 
 ```json
 {
+  "name": "my-awesome-pilet",
   // ...
   "piral": {
     "comment": "Warning to not remove it - no functional consequence.",
