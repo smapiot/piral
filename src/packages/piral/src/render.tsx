@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { RouteComponentProps } from 'react-router-dom';
+import { ArbiterModuleMetadata } from 'react-arbiter';
 import { Provider, createRequest } from 'urql';
 import { createInstance, LocalizationMessages, PiletRequester } from 'piral-core';
 import { createFetchApi, createGqlApi, setupGqlClient, pipeToPromise } from 'piral-ext';
@@ -9,7 +10,6 @@ import { getLayout } from './layout';
 import { getTranslations } from './translations';
 import { Loader, Dashboard, ErrorInfo } from './components';
 import { PiExtApi, PiletApi, PiralAttachment } from './api';
-import { ArbiterModuleMetadata } from 'react-arbiter';
 
 interface PiletRequest {
   pilets: Array<ArbiterModuleMetadata>;

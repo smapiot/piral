@@ -1,5 +1,13 @@
 import { AvailableDependencies } from 'react-arbiter';
 
+const sharedDependencies = (process.env.SHARED_DEPENDENCIES || '').split(',').reduce(
+  (depMap, dependency) => {
+    depMap[dependency] = require(dependency);
+    return depMap;
+  },
+  {} as AvailableDependencies,
+);
+
 export const globalDependencies: AvailableDependencies = {
   react: require('react'),
   'react-router': require('react-router'),
@@ -11,7 +19,6 @@ export const globalDependencies: AvailableDependencies = {
 export function getLocalDependencies(): AvailableDependencies {
   return {
     ...globalDependencies,
-    'react-arbiter': require('react-arbiter'),
-    'react-dom': require('react-dom'),
+    ...sharedDependencies,
   };
 }
