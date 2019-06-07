@@ -11,6 +11,7 @@ Piral is open-source software. We try to make everything as transparent and cont
 - [Introduction](./introduction.md)
 - [Features and Alternatives](./features.md)
 - [Architecture](./architecture.md)
+- [Package Metadata](./metadata.md)
 - [Browser Compatibility](./browsers.md)
 - [Development](./development.md)
 - [History](./history.md)

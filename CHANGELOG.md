@@ -7,6 +7,8 @@
 * Renamed `availableModules` to `availablePilets`
 * Renamed `requestModules` to `requestPilets`
 * Added possibility to override pilet requesting
+* Automatically insert shared dependencies
+* Changed and documented meta format for Piral and pilets
 
 ## 0.3.1 (June 5, 2019)
 
