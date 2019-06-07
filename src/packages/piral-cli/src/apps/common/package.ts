@@ -35,23 +35,35 @@ export async function copyPiralFiles(
   }
 }
 
+export function getPiletsInfo(piralInfo: any) {
+  const { files = [], externals = [], scripts = {}, devDependencies = {} } = piralInfo.pilets || {};
+  return {
+    files,
+    externals,
+    devDependencies,
+    scripts,
+  };
+}
+
 export async function patchPiletPackage(root: string, name: string, version?: string) {
   const piralInfo = await readPiralPackage(root, name);
   const piralDependencies = piralInfo.dependencies || {};
   const piralVersion = version || piralInfo.version;
-  const { files = [], sharedDependencies = [], scripts = {} } = piralInfo.pilets || {};
+  const { files, externals, scripts, devDependencies } = getPiletsInfo(piralInfo);
   await updateExistingJson(root, 'package.json', {
     piral: {
       comment: 'Keep this section to allow running "piral upgrade".',
       name,
       version: piralVersion,
       tooling: cliVersion,
-      sharedDependencies,
+      externals,
+      devDependencies,
       scripts,
       files,
     },
     devDependencies: {
-      ...sharedDependencies.reduce((deps, name) => {
+      ...devDependencies,
+      ...externals.reduce((deps, name) => {
         deps[name] = piralDependencies[name] || 'latest';
         return deps;
       }, {}),
@@ -59,18 +71,21 @@ export async function patchPiletPackage(root: string, name: string, version?: st
       'piral-cli': `^${cliVersion}`,
     },
     peerDependencies: {
-      ...sharedDependencies.reduce((deps, name) => {
+      ...externals.reduce((deps, name) => {
         deps[name] = '*';
         return deps;
       }, {}),
       '@dbeining/react-atom': '*',
       react: '*',
       'react-dom': '*',
+      'react-router': '*',
+      'react-router-dom': '*',
       [name]: `*`,
     },
     scripts: {
       'debug-pilet': 'pilet debug',
       'build-pilet': 'pilet build',
+      'upgrade-pilet': 'pilet upgrade',
       ...scripts,
     },
   });

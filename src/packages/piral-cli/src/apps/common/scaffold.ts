@@ -12,6 +12,9 @@ export function getDevDependencies(language: PiletLanguage) {
       return {
         typescript: 'latest',
         '@types/react': 'latest',
+        '@types/react-dom': 'latest',
+        '@types/react-router': 'latest',
+        '@types/react-router-dom': 'latest',
         '@types/node': 'latest',
       };
     case PiletLanguage.js:
