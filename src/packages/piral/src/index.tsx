@@ -1,11 +1,8 @@
 import 'promise-polyfill';
-import 'whatwg-fetch';
 import 'url-polyfill';
-import '@webcomponents/custom-elements';
-import './elements';
+import 'whatwg-fetch';
 
 export * from 'piral-core';
-export * from 'piral-ext';
-export * from './api';
+export * from './types';
 export * from './render';
 export * from './hooks';

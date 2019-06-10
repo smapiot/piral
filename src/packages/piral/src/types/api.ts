@@ -13,7 +13,3 @@ export type PiPageComponentProps = PageComponentProps<PiletApi>;
 export type PiTileComponentProps = TileComponentProps<PiletApi>;
 export type PiMenuComponentProps = MenuComponentProps<PiletApi>;
 export type PiExtensionComponentProps<T = Record<string, any>> = ExtensionComponentProps<PiletApi, T>;
-
-export interface PiralAttachment {
-  (api: PiletApi): void;
-}
