@@ -3,9 +3,9 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Atom, addChangeHandler } from '@dbeining/react-atom';
 import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from '../components/default';
 import { getCurrentLayout, defaultBreakpoints, defaultLayouts, getUserLocale } from '../utils';
-import { GlobalState, LayoutBreakpoints, DashboardProps, LoaderProps, ErrorInfoProps, Dict, Setup } from '../types';
+import { GlobalState, LayoutBreakpoints, Dict, Setup, AppComponents } from '../types';
 
-export interface GlobalStateOptions<TState extends GlobalState> {
+export interface GlobalStateOptions<TState extends GlobalState> extends Partial<AppComponents> {
   /**
    * Function to extend the global state with some additional information.
    */
@@ -33,9 +33,6 @@ export interface GlobalStateOptions<TState extends GlobalState> {
    * Sets the available layout breakpoints.
    */
   breakpoints?: LayoutBreakpoints;
-  Dashboard?: ComponentType<DashboardProps>;
-  Loader?: ComponentType<LoaderProps>;
-  ErrorInfo?: ComponentType<ErrorInfoProps>;
 }
 
 function defaultInitializer<TState extends GlobalState>(state: GlobalState): TState {
@@ -98,7 +95,7 @@ export function createGlobalState<TState extends GlobalState>({
   });
   const globalState = Atom.of(initialState);
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     addChangeHandler(globalState, 'debugging', ({ current, previous }) => {
       const action = new Error().stack.split('\n')[6].replace(/^\s+at\s+Atom\./, '');
       console.group(

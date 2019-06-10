@@ -53,6 +53,54 @@ describe('Create Global State Module', () => {
     });
   });
 
+  it('global state works with language as empty string', () => {
+    const globalState = createGlobalState({
+      language: '',
+    });
+    expect(deref(globalState)).toEqual({
+      app: {
+        language: {
+          selected: '',
+          available: [],
+        },
+        layout: {
+          current: 'desktop',
+          breakpoints: defaultBreakpoints,
+        },
+        components: {
+          Dashboard: DefaultDashboard,
+          ErrorInfo: DefaultErrorInfo,
+          Loader: DefaultLoader,
+        },
+        data: {},
+        modals: [],
+        notifications: [],
+        routes: {},
+        trackers: [],
+      },
+      components: {
+        extensions: {},
+        menuItems: {},
+        modals: {},
+        pages: {},
+        tiles: {},
+        searchProviders: {},
+      },
+      feeds: {},
+      forms: {},
+      user: {
+        current: undefined,
+        features: {},
+        permissions: {},
+      },
+      search: {
+        input: '',
+        loading: false,
+        results: [],
+      },
+    });
+  });
+
   it('global state with custom language and translations', () => {
     const languages = ['de', 'fr', 'en'];
     const globalState = createGlobalState({ language: 'fr', languages });

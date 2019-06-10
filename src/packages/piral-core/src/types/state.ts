@@ -64,6 +64,21 @@ export interface SearchProviderRegistration {
   search: SearchHandler;
 }
 
+export interface AppComponents {
+  /**
+   * The home page renderer.
+   */
+  Dashboard: ComponentType<DashboardProps>;
+  /**
+   * The progress indicator renderer.
+   */
+  Loader: ComponentType<LoaderProps>;
+  /**
+   * The error renderer.
+   */
+  ErrorInfo: ComponentType<ErrorInfoProps>;
+}
+
 export interface AppState {
   /**
    * Information for the layout computation.
@@ -94,20 +109,7 @@ export interface AppState {
   /**
    * Components relevant for rendering parts of the app.
    */
-  components: {
-    /**
-     * The home page renderer.
-     */
-    Dashboard: ComponentType<DashboardProps>;
-    /**
-     * The progress indicator renderer.
-     */
-    Loader: ComponentType<LoaderProps>;
-    /**
-     * The error renderer.
-     */
-    ErrorInfo: ComponentType<ErrorInfoProps>;
-  };
+  components: AppComponents;
   /**
    * The application's shared data.
    */
