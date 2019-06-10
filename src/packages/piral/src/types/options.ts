@@ -46,11 +46,6 @@ export interface PiralOptions extends ComponentOptions {
    */
   translations?: LocalizationMessages;
   /**
-   * Overrides the defaults and sets some custom components.
-   * @default {}
-   */
-  components?: Record<string, ComponentType<any>>;
-  /**
    * Attaches a single static module to the application.
    */
   attach?: PiralAttachment;

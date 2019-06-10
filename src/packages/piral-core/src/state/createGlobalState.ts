@@ -11,9 +11,14 @@ import {
   LoaderProps,
   ErrorInfoProps,
   Dict,
+  Setup,
 } from '../types';
 
-export interface GlobalStateOptions {
+export interface GlobalStateOptions<TState extends GlobalState> {
+  /**
+   * Function to extend the global state with some additional information.
+   */
+  setupState?: Setup<TState>;
   language?: string;
   routes?: Dict<ComponentType<RouteComponentProps>>;
   trackers?: Array<ComponentType<RouteComponentProps>>;
@@ -22,22 +27,25 @@ export interface GlobalStateOptions {
   Dashboard?: ComponentType<DashboardProps>;
   Loader?: ComponentType<LoaderProps>;
   ErrorInfo?: ComponentType<ErrorInfoProps>;
-  components?: Record<string, ComponentType<any>>;
 }
 
-export function createGlobalState({
+function defaultInitializer<TState extends GlobalState>(state: GlobalState): TState {
+  return state as TState;
+}
+
+export function createGlobalState<TState extends GlobalState>({
   breakpoints = defaultBreakpoints,
+  setupState = defaultInitializer,
   translations = {},
   routes = {},
   trackers = [],
   language,
-  components = {},
   Dashboard = DefaultDashboard,
   Loader = DefaultLoader,
   ErrorInfo = DefaultErrorInfo,
-}: GlobalStateOptions = {}) {
+}: GlobalStateOptions<TState> = {}) {
   const available = Object.keys(translations);
-  const globalState = Atom.of<GlobalState>({
+  const initialState = setupState({
     app: {
       language: {
         selected: getUserLocale(available, available[0] || 'en', language),
@@ -52,7 +60,6 @@ export function createGlobalState({
         Dashboard,
         ErrorInfo,
         Loader,
-        custom: components,
       },
       data: {},
       modals: [],
@@ -81,6 +88,7 @@ export function createGlobalState({
       results: [],
     },
   });
+  const globalState = Atom.of(initialState);
 
   if (process.env.NODE_ENV !== 'production') {
     addChangeHandler(globalState, 'debugging', ({ current, previous }) => {

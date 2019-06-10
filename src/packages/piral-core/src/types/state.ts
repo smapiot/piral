@@ -111,10 +111,6 @@ export interface AppState {
      * The error renderer.
      */
     ErrorInfo: ComponentType<ErrorInfoProps>;
-    /**
-     * A collection of custom components.
-     */
-    custom: Record<string, ComponentType<any>>;
   };
   /**
    * The application's shared data.

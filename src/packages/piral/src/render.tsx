@@ -51,7 +51,6 @@ export function renderInstance(options: PiralOptions) {
     gatewayUrl: gateway,
     subscriptionUrl,
     translations,
-    components,
     attach,
     Loader,
     DashboardContainer,
@@ -72,7 +71,6 @@ export function renderInstance(options: PiralOptions) {
   const Piral = createInstance<PiExtApi>({
     availablePilets: getAvailablePilets(attach),
     requestPilets,
-    components,
     Loader,
     Dashboard: createDashboard({
       DashboardContainer,

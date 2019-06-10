@@ -10,7 +10,7 @@ export function getLayout(): React.SFC {
   return ({ children }) => {
     const components = useGlobalState(m => m.app.components);
     const layout = vitalize(elements, children, id => {
-      return components.custom[id] || components[id] || standardComponents[id];
+      return components[id] || standardComponents[id];
     });
     return <>{layout}</>;
   };
