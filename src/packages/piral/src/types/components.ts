@@ -34,7 +34,7 @@ export interface SearchContainerProps {
 }
 
 export interface SearchInputProps {
-  onChange(value: string): void;
+  setValue(value: string): void;
   value: string;
 }
 
@@ -59,4 +59,5 @@ export interface ComponentOptions {
   SearchResult: ComponentType<SearchResultProps>;
   NotificationsContainer: ComponentType<NotificationsContainerProps>;
   NotificationItem: ComponentType<OpenNotification>;
+  custom?: Record<string, ComponentType>;
 }

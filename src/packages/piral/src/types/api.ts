@@ -5,9 +5,9 @@ import {
   MenuComponentProps,
   ExtensionComponentProps,
 } from 'piral-core';
-import { PiralFetchApi, PiralGqlApi } from 'piral-ext';
+import { PiralFetchApi, PiralGqlApi, PiralLocaleApi } from 'piral-ext';
 
-export type PiExtApi = PiralFetchApi & PiralGqlApi;
+export type PiExtApi = PiralFetchApi & PiralGqlApi & PiralLocaleApi;
 export type PiletApi = PiralApi<PiExtApi>;
 export type PiPageComponentProps = PageComponentProps<PiletApi>;
 export type PiTileComponentProps = TileComponentProps<PiletApi>;

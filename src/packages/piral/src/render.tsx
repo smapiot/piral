@@ -6,7 +6,7 @@ import { createInstance } from 'piral-core';
 import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets } from './utils';
 import { getLayout } from './layout';
-import { createDashboard, createErrorInfo } from './components';
+import { createDashboard, createErrorInfo, createMenu, createNotifications, createSearch } from './components';
 import { PiExtApi, PiletApi, PiralOptions } from './types';
 
 interface PiletRequest {
@@ -58,6 +58,14 @@ export function renderInstance(options: PiralOptions) {
     FeedErrorInfo = UnknownErrorInfo,
     FormErrorInfo = UnknownErrorInfo,
     LoadingErrorInfo = UnknownErrorInfo,
+    MenuContainer,
+    MenuItem,
+    NotificationItem,
+    NotificationsContainer,
+    SearchContainer,
+    SearchInput,
+    SearchResult,
+    custom,
   } = options;
   const origin = getGateway(gateway);
   const client = setupGqlClient({
@@ -84,6 +92,30 @@ export function renderInstance(options: PiralOptions) {
       PageErrorInfo,
       UnknownErrorInfo,
     }),
+    setupState(state) {
+      return {
+        ...state,
+        app: {
+          ...state.app,
+          components: {
+            ...state.app.components,
+            Menu: createMenu({
+              MenuContainer,
+              MenuItem,
+            }),
+            Notifications: createNotifications({
+              NotificationItem,
+              NotificationsContainer,
+            }),
+            Search: createSearch({
+              SearchContainer,
+              SearchInput,
+              SearchResult,
+            }),
+          },
+        },
+      };
+    },
     extendApi(api): PiletApi {
       return {
         ...api,
@@ -99,7 +131,7 @@ export function renderInstance(options: PiralOptions) {
     trackers,
   });
 
-  const Layout = getLayout();
+  const Layout = getLayout(custom);
   const App: React.SFC = () => (
     <Provider value={client}>
       <Piral>{content => <Layout>{content}</Layout>}</Piral>

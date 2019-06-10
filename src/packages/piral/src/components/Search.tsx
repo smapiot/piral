@@ -17,7 +17,7 @@ export function createSearch({ SearchContainer, SearchInput, SearchResult }: Sea
     }));
     const search = (
       <SearchInput
-        onChange={setValue}
+        setValue={setValue}
         value={value}
       />
     );
