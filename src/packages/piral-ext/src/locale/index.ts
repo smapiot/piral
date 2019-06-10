@@ -1,3 +1,3 @@
 export * from './types';
-export * from './queries';
+export * from './localize';
 export * from './create';

@@ -1,6 +1,7 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { LocalizationMessages, PiletRequester } from 'piral-core';
+import { PiletRequester } from 'piral-core';
+import { LocalizationMessages } from 'piral-ext';
 import { PiletApi } from './api';
 import { ComponentOptions } from './components';
 

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { ArbiterModuleMetadata } from 'react-arbiter';
-import { Provider, createRequest } from 'urql';
+import { Provider } from 'urql';
 import { createInstance } from 'piral-core';
-import { createFetchApi, createGqlApi, setupGqlClient, pipeToPromise } from 'piral-ext';
+import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets } from './utils';
 import { getLayout } from './layout';
 import { createDashboard, createErrorInfo } from './components';
@@ -27,8 +27,7 @@ export * from 'piral';
  */
 export function renderInstance(options: PiralOptions) {
   const defaultRequestPilets = () => {
-    const source = client.executeQuery(
-      createRequest(`
+    return gqlQuery<PiletRequest>(client, `
       query initialData {
         pilets {
           hash
@@ -39,9 +38,7 @@ export function renderInstance(options: PiralOptions) {
           dependencies
         }
       }
-    `),
-    );
-    return pipeToPromise<PiletRequest>(source).then(({ pilets }) => pilets);
+    `).then(({ pilets }) => pilets);
   };
   const {
     routes = {},
@@ -50,7 +47,7 @@ export function renderInstance(options: PiralOptions) {
     requestPilets = defaultRequestPilets,
     gatewayUrl: gateway,
     subscriptionUrl,
-    translations,
+    translations = {},
     attach,
     Loader,
     DashboardContainer,
@@ -66,6 +63,9 @@ export function renderInstance(options: PiralOptions) {
   const client = setupGqlClient({
     url: origin,
     subscriptionUrl,
+  });
+  const localizer = setupLocalizer({
+    messages: translations,
   });
 
   const Piral = createInstance<PiExtApi>({
@@ -91,9 +91,10 @@ export function renderInstance(options: PiralOptions) {
           base: origin,
         }),
         ...createGqlApi(client),
+        ...createLocaleApi(localizer),
       };
     },
-    translations,
+    languages: Object.keys(translations),
     routes,
     trackers,
   });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGlobalState, useTranslation, useOnClickOutside } from 'piral';
+import { useGlobalState, useOnClickOutside } from 'piral';
 import { withClass } from './utils';
 
 export const User: React.SFC = () => {
@@ -7,7 +7,6 @@ export const User: React.SFC = () => {
   const currentUser = useGlobalState(m => m.user.current);
   const menuItems = useGlobalState(m => m.components.menuItems);
   const itemNames = Object.keys(menuItems).filter(m => menuItems[m].settings.type === 'user');
-  const { name, logout, login } = useTranslation();
   const container = React.useRef<HTMLDivElement>(undefined);
   const image = currentUser ? require('../images/male.png') : require('../images/female.png');
   const items = itemNames.length > 0 && (
@@ -30,19 +29,19 @@ export const User: React.SFC = () => {
         {currentUser ? (
           <>
             <li>
-              <span className="user-name">{name}</span>
+              <span className="user-name">Name</span>
               {currentUser.firstName} {currentUser.lastName}
             </li>
             {items}
             <li className="sep" />
             <li>
-              <a href="#">{logout}</a>
+              <a href="#">Logout</a>
             </li>
           </>
         ) : (
           <>
             <li>
-              <a href="">{login}</a>
+              <a href="">Login</a>
             </li>
             {items}
           </>

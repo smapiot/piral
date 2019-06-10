@@ -9,7 +9,7 @@ import { MenuSettings } from './menu';
 import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
-import { Dict, Without, LocalizationMessages } from './utils';
+import { Dict, Without } from './utils';
 import {
   TileComponentProps,
   BaseComponentProps,
@@ -90,10 +90,6 @@ export interface AppState {
      * The available languages.
      */
     available: Array<string>;
-    /**
-     * The global translations.
-     */
-    translations: LocalizationMessages;
   };
   /**
    * Components relevant for rendering parts of the app.
@@ -309,16 +305,6 @@ export interface StateActions {
    * @param selected The selected language.
    */
   selectLanguage(selected: string): void;
-  /**
-   * Adds another language to the available languages.
-   * @param language The language to add.
-   */
-  addLanguage(language: string): void;
-  /**
-   * Remnoves an existing language from the available languages.
-   * @param language The language to remove.
-   */
-  removeLanguage(language: string): void;
   /**
    * Creates a new (empty) feed.
    * @param id The id of the feed.

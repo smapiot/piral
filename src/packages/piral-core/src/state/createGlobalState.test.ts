@@ -13,8 +13,7 @@ describe('Create Global State Module', () => {
       app: {
         language: {
           selected: 'en',
-          available: [],
-          translations: {},
+          available: ['en'],
         },
         layout: {
           current: 'desktop',
@@ -24,7 +23,6 @@ describe('Create Global State Module', () => {
           Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
-          custom: {},
         },
         data: {},
         modals: [],
@@ -56,14 +54,13 @@ describe('Create Global State Module', () => {
   });
 
   it('global state with custom language and translations', () => {
-    const translations = { de: {}, fr: {}, en: {} };
-    const globalState = createGlobalState({ language: 'fr', translations });
+    const languages = ['de', 'fr', 'en'];
+    const globalState = createGlobalState({ language: 'fr', languages });
     expect(deref(globalState)).toEqual({
       app: {
         language: {
           selected: 'fr',
           available: ['de', 'fr', 'en'],
-          translations,
         },
         layout: {
           current: 'desktop',
@@ -73,7 +70,6 @@ describe('Create Global State Module', () => {
           Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
-          custom: {},
         },
         data: {},
         modals: [],
@@ -105,19 +101,18 @@ describe('Create Global State Module', () => {
   });
 
   it('global state with non-default breakpoints and more routes', () => {
-    const translations = { de: {}, en: {} };
+    const languages = ['de', 'en'];
     const routes = {
       '/': '...' as any,
       '/foo': '...' as any,
     };
     const breakpoints: LayoutBreakpoints = ['12px', '24px', '360px'];
-    const globalState = createGlobalState({ translations, breakpoints, routes });
+    const globalState = createGlobalState({ languages, breakpoints, routes });
     expect(deref(globalState)).toEqual({
       app: {
         language: {
           selected: 'en',
           available: ['de', 'en'],
-          translations,
         },
         layout: {
           current: 'desktop',
@@ -127,7 +122,6 @@ describe('Create Global State Module', () => {
           Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
-          custom: {},
         },
         data: {},
         modals: [],
