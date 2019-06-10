@@ -9,6 +9,9 @@
 * Added possibility to override pilet requesting
 * Automatically insert shared dependencies
 * Changed and documented meta format for Piral and pilets
+* Moved `provideTranslations` to `piral-ext`
+* Moved `translate` to `piral-ext`
+* Provided ability to extend the global state during setup
 
 ## 0.3.1 (June 5, 2019)
 
