@@ -4,9 +4,9 @@ import { Portal, PortalProps } from './components';
 import { defaultApiExtender, defaultModuleRequester, getExtender } from './helpers';
 import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
 import { createGlobalState, createActions, StateContext, GlobalStateOptions } from './state';
-import { PiralApi, EventEmitter, ScaffoldPlugin, Extend, PiletRequester } from './types';
+import { PiralApi, EventEmitter, ScaffoldPlugin, Extend, PiletRequester, GlobalState } from './types';
 
-export interface PiralConfiguration<TApi> extends GlobalStateOptions {
+export interface PiralConfiguration<TApi, TState extends GlobalState = GlobalState> extends GlobalStateOptions<TState> {
   /**
    * Function to extend the API creator with some additional functionality.
    */
@@ -61,14 +61,14 @@ const App: React.SFC = () => <Piral>{content => <Layout>{content}</Layout>}</Pir
 render(<App />, document.querySelector('#app'));
 ```
  */
-export function createInstance<TApi>({
+export function createInstance<TApi, TState extends GlobalState = GlobalState>({
   availablePilets,
   extendApi = defaultApiExtender,
   requestPilets = defaultModuleRequester,
   getDependencies = getLocalDependencies,
   plugins = [],
   ...options
-}: PiralConfiguration<TApi>): PiralInstance {
+}: PiralConfiguration<TApi, TState>): PiralInstance {
   const extender = getExtender(plugins);
   const state = createGlobalState(options);
   const container = extender({
@@ -90,7 +90,7 @@ export function createInstance<TApi>({
       dependencies: {},
       name: 'Debug Module',
       version: '1.0.0',
-      hash: '1',
+      hash: '',
       setup,
     });
   }

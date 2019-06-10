@@ -18,18 +18,6 @@ export interface PiralStorage {
   removeItem(name: string): void;
 }
 
-export interface LocalizationMessages {
-  /**
-   * The available languages (lang to wordings).
-   */
-  [lang: string]: {
-    /**
-     * The available wordings (tag to translation).
-     */
-    [tag: string]: string;
-  };
-}
-
 export type Dict<T> = Record<string, T>;
 
 export type Without<T, K> = Pick<T, Exclude<keyof T, K>>;

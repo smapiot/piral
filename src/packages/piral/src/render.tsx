@@ -1,66 +1,16 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { RouteComponentProps } from 'react-router-dom';
 import { ArbiterModuleMetadata } from 'react-arbiter';
-import { Provider, createRequest } from 'urql';
-import { createInstance, LocalizationMessages, PiletRequester } from 'piral-core';
-import { createFetchApi, createGqlApi, setupGqlClient, pipeToPromise } from 'piral-ext';
+import { Provider } from 'urql';
+import { createInstance } from 'piral-core';
+import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets } from './utils';
 import { getLayout } from './layout';
-import { getTranslations } from './translations';
-import { Loader, Dashboard, ErrorInfo } from './components';
-import { PiExtApi, PiletApi, PiralAttachment } from './api';
+import { createDashboard, createErrorInfo, createMenu, createNotifications, createSearch } from './components';
+import { PiExtApi, PiletApi, PiralOptions } from './types';
 
 interface PiletRequest {
   pilets: Array<ArbiterModuleMetadata>;
-}
-
-export interface PiralOptions {
-  /**
-   * Sets the selector of the element to render into.
-   * @default '#app'
-   */
-  selector?: string | Element;
-  /**
-   * Sets the function to request the pilets. By default the
-   * pilets are requested via the standardized GraphQL resource.
-   */
-  requestPilets?: PiletRequester;
-  /**
-   * Sets the URL of the portal gateway to the backend.
-   * @default document.location.origin,
-   */
-  gatewayUrl?: string;
-  /**
-   * Sets the URL of the GraphQL subscription or prevents
-   * creating a subscription.
-   * @default gatewayUrl,
-   */
-  subscriptionUrl?: false | string;
-  /**
-   * Sets additional routes (pages) to be available.
-   * @default {}
-   */
-  routes?: Record<string, React.ComponentType<RouteComponentProps>>;
-  /**
-   * Sets additional trackers to be available.
-   * @default []
-   */
-  trackers?: Array<React.ComponentType<RouteComponentProps>>;
-  /**
-   * Sets the default translations to be available.
-   * @default {}
-   */
-  translations?: LocalizationMessages;
-  /**
-   * Overrides the defaults and sets some custom components.
-   * @default {}
-   */
-  components?: Record<string, React.ComponentType<any>>;
-  /**
-   * Attaches a single static module to the application.
-   */
-  attach?: PiralAttachment;
 }
 
 /**
@@ -75,10 +25,9 @@ renderInstance();
 export * from 'piral';
 ```
  */
-export function renderInstance(options: PiralOptions = {}) {
+export function renderInstance(options: PiralOptions) {
   const defaultRequestPilets = () => {
-    const source = client.executeQuery(
-      createRequest(`
+    return gqlQuery<PiletRequest>(client, `
       query initialData {
         pilets {
           hash
@@ -89,9 +38,7 @@ export function renderInstance(options: PiralOptions = {}) {
           dependencies
         }
       }
-    `),
-    );
-    return pipeToPromise<PiletRequest>(source).then(({ pilets }) => pilets);
+    `).then(({ pilets }) => pilets);
   };
   const {
     routes = {},
@@ -100,23 +47,75 @@ export function renderInstance(options: PiralOptions = {}) {
     requestPilets = defaultRequestPilets,
     gatewayUrl: gateway,
     subscriptionUrl,
-    translations,
-    components,
+    translations = {},
     attach,
+    Loader,
+    DashboardContainer,
+    Tile,
+    UnknownErrorInfo,
+    PageErrorInfo = UnknownErrorInfo,
+    NotFoundErrorInfo = UnknownErrorInfo,
+    FeedErrorInfo = UnknownErrorInfo,
+    FormErrorInfo = UnknownErrorInfo,
+    LoadingErrorInfo = UnknownErrorInfo,
+    MenuContainer,
+    MenuItem,
+    NotificationItem,
+    NotificationsContainer,
+    SearchContainer,
+    SearchInput,
+    SearchResult,
+    custom,
   } = options;
   const origin = getGateway(gateway);
   const client = setupGqlClient({
     url: origin,
     subscriptionUrl,
   });
+  const localizer = setupLocalizer({
+    messages: translations,
+  });
 
   const Piral = createInstance<PiExtApi>({
     availablePilets: getAvailablePilets(attach),
     requestPilets,
-    components,
     Loader,
-    Dashboard,
-    ErrorInfo,
+    Dashboard: createDashboard({
+      DashboardContainer,
+      Tile,
+    }),
+    ErrorInfo: createErrorInfo({
+      FeedErrorInfo,
+      FormErrorInfo,
+      LoadingErrorInfo,
+      NotFoundErrorInfo,
+      PageErrorInfo,
+      UnknownErrorInfo,
+    }),
+    setupState(state) {
+      return {
+        ...state,
+        app: {
+          ...state.app,
+          components: {
+            ...state.app.components,
+            Menu: createMenu({
+              MenuContainer,
+              MenuItem,
+            }),
+            Notifications: createNotifications({
+              NotificationItem,
+              NotificationsContainer,
+            }),
+            Search: createSearch({
+              SearchContainer,
+              SearchInput,
+              SearchResult,
+            }),
+          },
+        },
+      };
+    },
     extendApi(api): PiletApi {
       return {
         ...api,
@@ -124,14 +123,15 @@ export function renderInstance(options: PiralOptions = {}) {
           base: origin,
         }),
         ...createGqlApi(client),
+        ...createLocaleApi(localizer),
       };
     },
-    translations: getTranslations(translations),
+    languages: Object.keys(translations),
     routes,
     trackers,
   });
 
-  const Layout = getLayout();
+  const Layout = getLayout(custom);
   const App: React.SFC = () => (
     <Provider value={client}>
       <Piral>{content => <Layout>{content}</Layout>}</Piral>

@@ -65,7 +65,7 @@ export function updateFeed<TData, TItem>(id: string, item: TItem, reducer: FeedR
   const result = reducer(feed.data, item);
 
   if (result instanceof Promise) {
-    result
+    return result
       .then(data => loadedFeed.call(globalState, id, data, undefined))
       .catch(error => loadedFeed.call(globalState, id, undefined, error));
   } else if (result !== feed.data) {

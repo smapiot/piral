@@ -5,7 +5,7 @@ import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { InputFormOptions, FormCreator } from './form';
-import { Dict, LocalizationMessages, Disposable, SeverityLevel, EventEmitter } from './utils';
+import { Dict, Disposable, SeverityLevel, EventEmitter } from './utils';
 import { SearchProvider } from './search';
 import {
   ForeignComponent,
@@ -99,19 +99,6 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @returns The method to use for ending the current event frame.
    */
   trackFrame(name: string): Tracker;
-  /**
-   * Translates the given tag (using the optional variables) into a string using the current language.
-   * The used template can contain placeholders in form of `{{variableName}}`.
-   * @param tag The tag to translate.
-   * @param variables The optional variables to fill into the temnplate.
-   */
-  translate<T = Dict<string>>(tag: string, variables?: T): string;
-  /**
-   * Provides translations to the application.
-   * The translations will be exlusively used for retrieving translations for the pilet.
-   * @param messages The messages to use as transslation basis.
-   */
-  provideTranslations(messages: LocalizationMessages): void;
   /**
    * Shows a notification in the determined spot using the provided content.
    * @param content The content to display. Normally, a string would be sufficient.

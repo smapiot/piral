@@ -1,9 +1,7 @@
 import { ArbiterModuleMetadata, wrapElement } from 'react-arbiter';
-import { localizeLocal } from './localize';
 import { withFeed, withApi, withForm } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
-  LocalizationMessages,
   FeedResolver,
   FeedConnectorOptions,
   FeedConnector,
@@ -28,7 +26,6 @@ export function createApi<TApi>(
   target: ArbiterModuleMetadata,
   { events, context, extendApi }: PiralContainer<TApi>,
 ): PiralApi<TApi> {
-  let translations: LocalizationMessages = {};
   let feeds = 0;
   const prefix = target.name;
   const api = extendApi(
@@ -73,12 +70,6 @@ export function createApi<TApi>(
       },
       createForm(options) {
         return component => withForm(component, options);
-      },
-      provideTranslations(messages) {
-        translations = messages;
-      },
-      translate(tag, variables) {
-        return localizeLocal(translations, tag, variables);
       },
       trackEvent(name, properties = {}, measurements = {}) {
         events.emit('track', {

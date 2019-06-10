@@ -2,7 +2,10 @@ import { AvailableDependencies } from 'react-arbiter';
 
 const sharedDependencies = (process.env.SHARED_DEPENDENCIES || '').split(',').reduce(
   (depMap, dependency) => {
-    depMap[dependency] = require(dependency);
+    if (dependency) {
+      depMap[dependency] = require(dependency);
+    }
+
     return depMap;
   },
   {} as AvailableDependencies,

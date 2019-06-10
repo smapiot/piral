@@ -1,22 +1,7 @@
-import { Client, defaultExchanges, subscriptionExchange, createRequest, OperationResult } from 'urql';
+import { Client, defaultExchanges, subscriptionExchange } from 'urql';
 import { SubscriptionClient, OperationOptions } from 'subscriptions-transport-ws';
-import { pipe, subscribe, Source } from 'wonka';
+import { gqlQuery, gqlMutation, gqlSubscription } from './queries';
 import { PiralGqlApi, GqlConfig } from './types';
-
-export function pipeToPromise<T>(source: Source<OperationResult<T>>) {
-  return new Promise<T>((resolve, reject) => {
-    pipe(
-      source,
-      subscribe(({ data, error }) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      }),
-    );
-  });
-}
 
 /**
  * Sets up an urql client by using the given config.
@@ -66,29 +51,14 @@ export function setupGqlClient(config: GqlConfig = {}) {
  */
 export function createGqlApi(client: Client): PiralGqlApi {
   return {
-    query(q, options = {}) {
-      const { variables, cache } = options;
-      const request = createRequest(q, variables);
-      const response = client.executeQuery(request, { requestPolicy: cache });
-      return pipeToPromise<any>(response);
+    query(q, options) {
+      return gqlQuery(client, q, options);
     },
-    mutate(q, options = {}) {
-      const { variables } = options;
-      const request = createRequest(q, variables);
-      const response = client.executeMutation(request);
-      return pipeToPromise<any>(response);
+    mutate(q, options) {
+      return gqlMutation(client, q, options);
     },
-    subscribe(q, subscriber, options = {}) {
-      const { variables } = options;
-      const request = createRequest(q, variables);
-      const response = client.executeSubscription(request);
-      const [teardown] = pipe(
-        response,
-        subscribe(({ data, error }) => {
-          subscriber(data, error);
-        }),
-      );
-      return teardown;
+    subscribe(q, subscriber, options) {
+      return gqlSubscription(client, q, subscriber, options);
     },
   };
 }

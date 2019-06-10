@@ -1,29 +1,31 @@
-import * as hooks from '../hooks';
-import { localizeLocal, localizeGlobal } from './localize';
+import * as piralCore from 'piral-core';
+import { Localizer } from './localize';
 
-jest.mock('../hooks');
+jest.mock('piral-core');
 
-(hooks as any).useGlobalState = (select: any) =>
+piralCore.useGlobalState = (select: any) =>
   select({
     app: {
       language: {
         selected: 'en',
-        translations: {
-          en: {
-            hi: 'hello',
-            greeting: 'Hi {{name}}, welcome back',
-          },
-          de: {
-            hi: 'hallo',
-          },
-        },
       },
     },
   });
 
+const messages = {
+  en: {
+    hi: 'hello',
+    greeting: 'Hi {{name}}, welcome back',
+  },
+  de: {
+    hi: 'hallo',
+  },
+};
+
 describe('Localize Module', () => {
   it('localizeLocal translates from the local translations if available', () => {
-    const result = localizeLocal(
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeLocal(
       {
         en: {
           hi: 'hiho',
@@ -35,7 +37,8 @@ describe('Localize Module', () => {
   });
 
   it('localizeLocal translates from the global translations if local not available', () => {
-    const result = localizeLocal(
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeLocal(
       {
         en: {
           ho: 'hiho',
@@ -47,32 +50,38 @@ describe('Localize Module', () => {
   });
 
   it('localizeGlobal translates from the global translations', () => {
-    const result = localizeGlobal('hi');
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeGlobal('hi');
     expect(result).toBe('hello');
   });
 
   it('localizeGlobal translates with variable interpolation', () => {
-    const result = localizeGlobal('greeting', { name: 'User' });
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeGlobal('greeting', { name: 'User' });
     expect(result).toBe('Hi User, welcome back');
   });
 
   it('localizeGlobal variable interpolation ignores non-used variables', () => {
-    const result = localizeGlobal('greeting', { name: 'User', age: 99 });
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeGlobal('greeting', { name: 'User', age: 99 });
     expect(result).toBe('Hi User, welcome back');
   });
 
   it('localizeGlobal ignores non-available variables', () => {
-    const result = localizeGlobal('greeting', { nom: 'User' });
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeGlobal('greeting', { nom: 'User' });
     expect(result).toBe('Hi {{name}}, welcome back');
   });
 
   it('localizeGlobal places missing string placeholder if not found', () => {
-    const result = localizeGlobal('ho');
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeGlobal('ho');
     expect(result).toBe('__en_ho__');
   });
 
   it('localizeGlobal replaces undefined variables with an empty string', () => {
-    const result = localizeGlobal('greeting', { name: undefined });
+    const localizer = new Localizer(messages);
+    const result = localizer.localizeGlobal('greeting', { name: undefined });
     expect(result).toBe('Hi , welcome back');
   });
 });

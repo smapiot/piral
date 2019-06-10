@@ -9,7 +9,7 @@ import { MenuSettings } from './menu';
 import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
-import { Dict, Without, LocalizationMessages } from './utils';
+import { Dict, Without } from './utils';
 import {
   TileComponentProps,
   BaseComponentProps,
@@ -64,6 +64,21 @@ export interface SearchProviderRegistration {
   search: SearchHandler;
 }
 
+export interface AppComponents {
+  /**
+   * The home page renderer.
+   */
+  Dashboard: ComponentType<DashboardProps>;
+  /**
+   * The progress indicator renderer.
+   */
+  Loader: ComponentType<LoaderProps>;
+  /**
+   * The error renderer.
+   */
+  ErrorInfo: ComponentType<ErrorInfoProps>;
+}
+
 export interface AppState {
   /**
    * Information for the layout computation.
@@ -90,32 +105,11 @@ export interface AppState {
      * The available languages.
      */
     available: Array<string>;
-    /**
-     * The global translations.
-     */
-    translations: LocalizationMessages;
   };
   /**
    * Components relevant for rendering parts of the app.
    */
-  components: {
-    /**
-     * The home page renderer.
-     */
-    Dashboard: ComponentType<DashboardProps>;
-    /**
-     * The progress indicator renderer.
-     */
-    Loader: ComponentType<LoaderProps>;
-    /**
-     * The error renderer.
-     */
-    ErrorInfo: ComponentType<ErrorInfoProps>;
-    /**
-     * A collection of custom components.
-     */
-    custom: Record<string, ComponentType<any>>;
-  };
+  components: AppComponents;
   /**
    * The application's shared data.
    */
@@ -313,16 +307,6 @@ export interface StateActions {
    * @param selected The selected language.
    */
   selectLanguage(selected: string): void;
-  /**
-   * Adds another language to the available languages.
-   * @param language The language to add.
-   */
-  addLanguage(language: string): void;
-  /**
-   * Remnoves an existing language from the available languages.
-   * @param language The language to remove.
-   */
-  removeLanguage(language: string): void;
   /**
    * Creates a new (empty) feed.
    * @param id The id of the feed.

@@ -1,5 +1,5 @@
 import { isfunc, ArbiterModule } from 'react-arbiter';
-import { PiralAttachment, PiletApi } from '../api';
+import { PiralAttachment, PiletApi } from '../types';
 
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
