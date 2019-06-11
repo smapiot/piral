@@ -1,7 +1,16 @@
 import { ArbiterModule, ArbiterModuleMetadata, DependencyGetter } from 'react-arbiter';
 import { PiralApi, PiralCoreApi } from './api';
 import { EventEmitter } from './utils';
-import { GlobalStateContext } from './state';
+import { GlobalStateContext, GlobalState } from './state';
+
+export interface Setup<TState extends GlobalState> {
+  /**
+   * Initializes the given global state, potentially extending it.
+   * @param state The global state created by the base layer.
+   * @returns The initialized state.
+   */
+  (state: GlobalState): TState;
+}
 
 export interface Extend<TApi> {
   /**
@@ -13,7 +22,7 @@ export interface Extend<TApi> {
   (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): PiralApi<TApi>;
 }
 
-export interface ModuleRequester {
+export interface PiletRequester {
   (): Promise<Array<ArbiterModuleMetadata>>;
 }
 
@@ -21,8 +30,8 @@ export interface PiralContainer<TApi> {
   context: GlobalStateContext;
   events: EventEmitter;
   getDependencies: DependencyGetter;
-  requestModules: ModuleRequester;
-  availableModules: Array<ArbiterModule<PiralApi<TApi>>>;
+  requestPilets: PiletRequester;
+  availablePilets: Array<ArbiterModule<PiralApi<TApi>>>;
   extendApi: Extend<TApi>;
 }
 

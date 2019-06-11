@@ -1,43 +1,125 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { RouteComponentProps } from 'react-router-dom';
+import { ArbiterModuleMetadata } from 'react-arbiter';
 import { Provider } from 'urql';
-import { createInstance, LocalizationMessages } from 'piral-core';
-import { createFetchApi, createGqlApi, setupGqlClient } from 'piral-ext';
-import { getGateway, getContainer, getAvailableModules } from './utils';
-import { getLayout } from './layout';
-import { getTranslations } from './translations';
-import { Loader, Dashboard, ErrorInfo } from './components';
-import { PiExtApi, PiletApi, PiralAttachment } from './api';
+import { createInstance } from 'piral-core';
+import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
+import { getGateway, getContainer, getAvailablePilets } from './utils';
+import {
+  createDashboard,
+  createErrorInfo,
+  createMenu,
+  createNotifications,
+  createSearch,
+  createModals,
+} from './components';
+import { PiExtApi, PiletApi, PiralOptions } from './types';
 
-export interface PiralOptions {
-  selector?: string | Element;
-  gateway?: string;
-  routes?: Record<string, React.ComponentType<RouteComponentProps>>;
-  trackers?: Array<React.ComponentType<RouteComponentProps>>;
-  translations?: LocalizationMessages;
-  components?: Record<string, React.ComponentType<any>>;
-  attach?: PiralAttachment;
+interface PiletRequest {
+  pilets: Array<ArbiterModuleMetadata>;
 }
 
-export function renderInstance(options: PiralOptions = {}) {
-  const { routes = {}, trackers = [], selector = '#app', gateway, translations, components, attach } = options;
+/**
+ * Sets up a new Piral instance and renders it using the provided options.
+ * Can be used as simple as calling the function directly without any
+ * arguments.
+ * @param options The options to use when setting up the Piral instance.
+ * @example
+```tsx
+import { renderInstance } from 'piral';
+renderInstance();
+export * from 'piral';
+```
+ */
+export function renderInstance(options: PiralOptions) {
+  const defaultRequestPilets = () => {
+    return gqlQuery<PiletRequest>(
+      client,
+      `
+      query initialData {
+        pilets {
+          hash
+          link
+          name
+          version
+          author
+          dependencies
+        }
+      }
+    `,
+    ).then(({ pilets }) => pilets);
+  };
+  const {
+    routes = {},
+    trackers = [],
+    selector = '#app',
+    requestPilets = defaultRequestPilets,
+    gatewayUrl: gateway,
+    subscriptionUrl,
+    translations = {},
+    attach,
+    Loader,
+    DashboardContainer,
+    Tile,
+    UnknownErrorInfo,
+    PageErrorInfo = UnknownErrorInfo,
+    NotFoundErrorInfo = UnknownErrorInfo,
+    FeedErrorInfo = UnknownErrorInfo,
+    FormErrorInfo = UnknownErrorInfo,
+    LoadingErrorInfo = UnknownErrorInfo,
+    MenuContainer,
+    MenuItem,
+    NotificationItem,
+    NotificationsContainer,
+    ModalDialog,
+    ModalsContainer,
+    SearchContainer,
+    SearchInput,
+    SearchResult,
+    Layout,
+  } = options;
   const origin = getGateway(gateway);
   const client = setupGqlClient({
     url: origin,
+    subscriptionUrl,
+  });
+  const localizer = setupLocalizer({
+    messages: translations,
+  });
+  const Menu = createMenu({
+    MenuContainer,
+    MenuItem,
+  });
+  const Notifications = createNotifications({
+    NotificationItem,
+    NotificationsContainer,
+  });
+  const Search = createSearch({
+    SearchContainer,
+    SearchInput,
+    SearchResult,
+  });
+  const Modals = createModals({
+    ModalDialog,
+    ModalsContainer,
   });
 
   const Piral = createInstance<PiExtApi>({
-    availableModules: getAvailableModules(attach),
-    requestModules() {
-      return fetch(`${origin}/api/v1/pilet`)
-        .then(res => res.json())
-        .then(res => res.items);
-    },
-    components,
+    availablePilets: getAvailablePilets(attach),
+    requestPilets,
     Loader,
-    Dashboard,
-    ErrorInfo,
+    Dashboard: createDashboard({
+      DashboardContainer,
+      Tile,
+    }),
+    ErrorInfo: createErrorInfo({
+      FeedErrorInfo,
+      FormErrorInfo,
+      LoadingErrorInfo,
+      NotFoundErrorInfo,
+      PageErrorInfo,
+      UnknownErrorInfo,
+    }),
     extendApi(api): PiletApi {
       return {
         ...api,
@@ -45,17 +127,23 @@ export function renderInstance(options: PiralOptions = {}) {
           base: origin,
         }),
         ...createGqlApi(client),
+        ...createLocaleApi(localizer),
       };
     },
-    translations: getTranslations(translations),
+    languages: Object.keys(translations),
     routes,
     trackers,
   });
 
-  const Layout = getLayout();
   const App: React.SFC = () => (
     <Provider value={client}>
-      <Piral>{content => <Layout>{content}</Layout>}</Piral>
+      <Piral>
+        {content => (
+          <Layout Menu={Menu} Modals={Modals} Notifications={Notifications} Search={Search}>
+            {content}
+          </Layout>
+        )}
+      </Piral>
     </Provider>
   );
 

@@ -22,47 +22,25 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 ## Glossary
 
-CDN
+**CDN**: Content Delivery Network
 
-: Content Delivery Network
+**IIFE**: Immediately Invoked Function Expression
 
-IIFE
+**ISC**: Internet Systems Consortium
 
-: Immediately Invoked Function Expression
+**JS**: JavaScript
 
-ISC
+**JSON**: JavaScript Object Notation
 
-: Internet Systems Consortium
+**MIT**: Massachusetts Institute of Technology
 
-JS
+**NPM**: Node Package Manager
 
-: JavaScript
+**UMD**: Universal Module Definition
 
-JSON
+**URL**: Uniform Resource Locator
 
-: JavaScript Object Notation
-
-MIT
-
-: Massachusetts Institute of Technology
-
-NPM
-
-: Node Package Manager
-
-UMD
-
-: Universal Module Definition
-
-URL
-
-: Uniform Resource Locator
-
-SPA
-
-: Single Page Application
-
-(tbd)
+**SPA**: Single Page Application
 
 ## Package Layout
 
@@ -230,5 +208,6 @@ The maximum specified file size of a pilet is 16 MB. Anything larger is potentia
 
 ## References
 
+* [RFC2119](https://tools.ietf.org/html/rfc2119)
 * [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
 * [UMD: Patterns and Examples](https://github.com/umdjs/umd)

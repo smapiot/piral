@@ -40,4 +40,4 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 ## References
 
-(tbd)
+* [RFC2119](https://tools.ietf.org/html/rfc2119)

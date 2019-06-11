@@ -20,4 +20,4 @@ In a nutshell Piral tries to allow you to
 
 We want to provide the full end-to-end experience, from development to releasing in production.
 
-In December 2018 we began planning the project. In February 2019 the first code was written. The first real applications using Piral are expected to be released in the second half of 2019. Currently, the first production-ready version is anticipated for H1 2020.
+In the Fall of 2018 we began planning the project. In February 2019 the first code was written. The first real applications using Piral are expected to be released in the second half of 2019. Currently, the first production-ready version is anticipated for H1 2020.

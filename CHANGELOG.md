@@ -1,5 +1,19 @@
 # Piral Changelog
 
+## 0.4.0 (to be determined)
+
+* Introduced `subscriptionUrl`
+* Renamed `gateway` to `gatewayUrl`
+* Renamed `availableModules` to `availablePilets`
+* Renamed `requestModules` to `requestPilets`
+* Added possibility to override pilet requesting
+* Automatically insert shared dependencies
+* Changed and documented meta format for Piral and pilets
+* Moved `provideTranslations` to `piral-ext`
+* Moved `translate` to `piral-ext`
+* Provided ability to extend the global state during setup
+* Suffixed foreign APIs with `X`, e.g., `registerTileX`
+
 ## 0.3.1 (June 5, 2019)
 
 * Updated dependencies

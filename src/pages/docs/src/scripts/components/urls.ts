@@ -2,7 +2,8 @@ const imageBaseUrl = 'https://raw.githubusercontent.com/smapiot/piral/master/doc
 const docBaseUrl = 'https://github.com/smapiot/piral/tree/master/docs';
 
 export function imgRef(path: string) {
-  return `${imageBaseUrl}/${path}?sanitize=true`;
+  const relPath = path.replace(/^..\//g, '');
+  return `${imageBaseUrl}/${relPath}?sanitize=true`;
 }
 
 export function docRef(path: string) {

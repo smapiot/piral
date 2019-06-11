@@ -25,10 +25,9 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
   if (piralInfo) {
     const sourceName = piralInfo.name;
-    const sourceVersion = version;
-    console.log(`Updating NPM package to ${sourceName}@${sourceVersion} ...`);
+    console.log(`Updating NPM package to ${sourceName}@${version} ...`);
 
-    await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
+    await installPackage(sourceName, version, root, '--no-save', '--no-package-lock');
 
     console.log(`Taking care of templating ...`);
 

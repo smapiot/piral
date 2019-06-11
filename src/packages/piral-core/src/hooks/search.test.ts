@@ -57,7 +57,9 @@ describe('Search Hook Module', () => {
   it('immediately resets with loading true if some value is given and a provider is found', () => {
     state.search.input = 'foo';
     state.components.searchProviders['example'] = {
-      search(q: string) { return Promise.resolve([]); }
+      search(q: string) {
+        return Promise.resolve([]);
+      },
     };
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;

@@ -35,42 +35,70 @@ export async function copyPiralFiles(
   }
 }
 
+export interface PiletsInfo {
+  files: Array<string>;
+  externals: Array<string>;
+  devDependencies: Record<string, string>;
+  scripts: Record<string, string>;
+}
+
+export function getPiletsInfo(piralInfo: any): PiletsInfo {
+  const { files = [], externals = [], scripts = {}, devDependencies = {} } = piralInfo.pilets || {};
+  return {
+    files,
+    externals,
+    devDependencies,
+    scripts,
+  };
+}
+
 export async function patchPiletPackage(root: string, name: string, version?: string) {
   const piralInfo = await readPiralPackage(root, name);
   const piralDependencies = piralInfo.dependencies || {};
   const piralVersion = version || piralInfo.version;
-  const { files = [], sharedDependencies = [], scripts = {} } = piralInfo.pilets || {};
+  const { files, externals, scripts, devDependencies } = getPiletsInfo(piralInfo);
   await updateExistingJson(root, 'package.json', {
     piral: {
-      comment: 'Keep this section to allow running "piral upgrade".',
+      comment: 'Keep this section to allow running `piral upgrade`.',
       name,
       version: piralVersion,
       tooling: cliVersion,
-      sharedDependencies,
+      externals,
+      devDependencies,
       scripts,
       files,
     },
     devDependencies: {
-      ...sharedDependencies.reduce((deps, name) => {
-        deps[name] = piralDependencies[name] || 'latest';
-        return deps;
-      }, {}),
+      ...devDependencies,
+      ...externals.reduce(
+        (deps, name) => {
+          deps[name] = piralDependencies[name] || 'latest';
+          return deps;
+        },
+        {} as Record<string, string>,
+      ),
       [name]: `${piralVersion}`,
       'piral-cli': `^${cliVersion}`,
     },
     peerDependencies: {
-      ...sharedDependencies.reduce((deps, name) => {
-        deps[name] = '*';
-        return deps;
-      }, {}),
+      ...externals.reduce(
+        (deps, name) => {
+          deps[name] = '*';
+          return deps;
+        },
+        {} as Record<string, string>,
+      ),
       '@dbeining/react-atom': '*',
       react: '*',
       'react-dom': '*',
+      'react-router': '*',
+      'react-router-dom': '*',
       [name]: `*`,
     },
     scripts: {
       'debug-pilet': 'pilet debug',
       'build-pilet': 'pilet build',
+      'upgrade-pilet': 'pilet upgrade',
       ...scripts,
     },
   });

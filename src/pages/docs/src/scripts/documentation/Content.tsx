@@ -20,6 +20,10 @@ export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
       <Md>{require('../../../../../../docs/architecture.md')}</Md>
       <EditSection link="architecture.md" />
     </Section>
+    <Section id="section-package-metadata" title="Package Metadata">
+      <Md>{require('../../../../../../docs/metadata.md')}</Md>
+      <EditSection link="metadata.md" />
+    </Section>
     <Section id="section-browser-compatibility" title="Browser Compatibility">
       <Md>{require('../../../../../../docs/browsers.md')}</Md>
       <EditSection link="browsers.md" />

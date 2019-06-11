@@ -4,6 +4,7 @@ export interface StandardEnvProps {
   production?: boolean;
   target?: string;
   pilet?: string;
+  dependencies?: Array<string>;
 }
 
 async function readNextPackageJson(dir: string) {
@@ -36,5 +37,9 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
 
   if (options.pilet) {
     process.env.DEBUG_PILET = options.pilet;
+  }
+
+  if (options.dependencies) {
+    process.env.SHARED_DEPENDENCIES = options.dependencies.join(',');
   }
 }

@@ -1,5 +1,6 @@
 import * as Bundler from 'parcel-bundler';
 import chalk from 'chalk';
+import { dirname, join } from 'path';
 import { buildKrasWithCli, readKrasConfig, krasrc } from 'kras';
 import { getFreePort } from './port';
 import { setStandardEnvs, StandardEnvProps } from './envs';
@@ -9,6 +10,10 @@ import { liveIcon, settingsIcon } from './emoji';
 
 export async function runDebug(port: number, entry: string, options: StandardEnvProps) {
   const krasConfig = readKrasConfig({ port }, krasrc);
+
+  if (krasConfig.directory === undefined) {
+    krasConfig.directory = join(dirname(entry), 'mocks');
+  }
 
   if (krasConfig.ssl === undefined) {
     krasConfig.ssl = undefined;

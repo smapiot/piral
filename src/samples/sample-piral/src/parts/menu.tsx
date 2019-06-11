@@ -6,9 +6,7 @@ function attachMenu() {
   let count = 0;
 
   return (api: PiletApi, element: React.ReactElement) => {
-    const Item: React.SFC = () => element;
-    Item.displayName = 'Item';
-    api.registerMenu(`menu_${count++}`, Item, { type: 'general' });
+    api.registerMenu(`menu_${count++}`, () => element, { type: 'general' });
   };
 }
 

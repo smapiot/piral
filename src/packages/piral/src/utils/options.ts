@@ -1,5 +1,5 @@
 import { isfunc, ArbiterModule } from 'react-arbiter';
-import { PiralAttachment, PiletApi } from '../api';
+import { PiralAttachment, PiletApi } from '../types';
 
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
@@ -19,7 +19,7 @@ export function getGateway(url?: string) {
   }
 }
 
-export function getAvailableModules(setup?: PiralAttachment) {
+export function getAvailablePilets(setup?: PiralAttachment) {
   const debugModules = (process.env.DEBUG_PILETS || '').split(',');
   const availableModules: Array<ArbiterModule<PiletApi>> = [];
 

@@ -3,46 +3,59 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Atom, addChangeHandler } from '@dbeining/react-atom';
 import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from '../components/default';
 import { getCurrentLayout, defaultBreakpoints, defaultLayouts, getUserLocale } from '../utils';
-import {
-  GlobalState,
-  LocalizationMessages,
-  LayoutBreakpoints,
-  DashboardProps,
-  LoaderProps,
-  ErrorInfoProps,
-  Dict,
-} from '../types';
+import { GlobalState, LayoutBreakpoints, Dict, Setup, AppComponents } from '../types';
 
-export interface GlobalStateOptions {
+export interface GlobalStateOptions<TState extends GlobalState> extends Partial<AppComponents> {
+  /**
+   * Function to extend the global state with some additional information.
+   */
+  setupState?: Setup<TState>;
+  /**
+   * Sets the available languages.
+   * By default, only the default language is used.
+   */
+  languages?: Array<string>;
+  /**
+   * Sets the default language.
+   * By default, English is used.
+   * @default 'en'
+   */
   language?: string;
+  /**
+   * Sets the additional / initial routes to register.
+   */
   routes?: Dict<ComponentType<RouteComponentProps>>;
+  /**
+   * Sets the available trackers to register.
+   */
   trackers?: Array<ComponentType<RouteComponentProps>>;
-  translations?: LocalizationMessages;
+  /**
+   * Sets the available layout breakpoints.
+   */
   breakpoints?: LayoutBreakpoints;
-  Dashboard?: ComponentType<DashboardProps>;
-  Loader?: ComponentType<LoaderProps>;
-  ErrorInfo?: ComponentType<ErrorInfoProps>;
-  components?: Record<string, ComponentType<any>>;
 }
 
-export function createGlobalState({
+function defaultInitializer<TState extends GlobalState>(state: GlobalState): TState {
+  return state as TState;
+}
+
+export function createGlobalState<TState extends GlobalState>({
   breakpoints = defaultBreakpoints,
-  translations = {},
+  setupState = defaultInitializer,
+  language = 'en',
+  languages = (language && [language]) || [],
   routes = {},
   trackers = [],
-  language,
-  components = {},
   Dashboard = DefaultDashboard,
   Loader = DefaultLoader,
   ErrorInfo = DefaultErrorInfo,
-}: GlobalStateOptions = {}) {
-  const available = Object.keys(translations);
-  const globalState = Atom.of<GlobalState>({
+}: GlobalStateOptions<TState> = {}) {
+  const [defaultLanguage = language] = languages;
+  const initialState = setupState({
     app: {
       language: {
-        selected: getUserLocale(available, available[0] || 'en', language),
-        available,
-        translations,
+        selected: getUserLocale(languages, defaultLanguage, language),
+        available: languages,
       },
       layout: {
         current: getCurrentLayout(breakpoints, defaultLayouts, 'desktop'),
@@ -52,7 +65,6 @@ export function createGlobalState({
         Dashboard,
         ErrorInfo,
         Loader,
-        custom: components,
       },
       data: {},
       modals: [],
@@ -81,8 +93,9 @@ export function createGlobalState({
       results: [],
     },
   });
+  const globalState = Atom.of(initialState);
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     addChangeHandler(globalState, 'debugging', ({ current, previous }) => {
       const action = new Error().stack.split('\n')[6].replace(/^\s+at\s+Atom\./, '');
       console.group(
