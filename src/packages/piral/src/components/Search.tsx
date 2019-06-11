@@ -15,12 +15,7 @@ export function createSearch({ SearchContainer, SearchInput, SearchResult }: Sea
       loading: m.search.loading,
       items: m.search.results,
     }));
-    const search = (
-      <SearchInput
-        setValue={setValue}
-        value={value}
-      />
-    );
+    const search = <SearchInput setValue={setValue} value={value} />;
 
     return (
       <SearchContainer input={search} loading={loading}>

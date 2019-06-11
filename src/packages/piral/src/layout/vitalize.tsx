@@ -1,6 +1,10 @@
 import { Children, createElement, cloneElement, ReactNode, ReactChild, ReactElement } from 'react';
 
-export function vitalize(elements: Array<ReactChild>, children: ReactNode, getArea: (id: string) => React.ComponentType<any>) {
+export function vitalize(
+  elements: Array<ReactChild>,
+  children: ReactNode,
+  getArea: (id: string) => React.ComponentType<any>,
+) {
   const target = Children.toArray(elements);
 
   for (let i = 0; i < target.length; i++) {

@@ -27,7 +27,9 @@ export * from 'piral';
  */
 export function renderInstance(options: PiralOptions) {
   const defaultRequestPilets = () => {
-    return gqlQuery<PiletRequest>(client, `
+    return gqlQuery<PiletRequest>(
+      client,
+      `
       query initialData {
         pilets {
           hash
@@ -38,7 +40,8 @@ export function renderInstance(options: PiralOptions) {
           dependencies
         }
       }
-    `).then(({ pilets }) => pilets);
+    `,
+    ).then(({ pilets }) => pilets);
   };
   const {
     routes = {},

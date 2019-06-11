@@ -146,7 +146,7 @@ describe('Data Actions Module', () => {
           bar: {
             owner: 'me',
             value: 5,
-          }
+          },
         },
       },
     });
@@ -163,7 +163,7 @@ describe('Data Actions Module', () => {
           bar: {
             owner: 'you',
             value: 5,
-          }
+          },
         },
       },
     });
