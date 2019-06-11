@@ -75,6 +75,7 @@ export function renderInstance(options: PiralOptions) {
     SearchContainer,
     SearchInput,
     SearchResult,
+    initialize,
     Layout,
   } = options;
   const origin = getGateway(gateway);
@@ -132,6 +133,7 @@ export function renderInstance(options: PiralOptions) {
     languages: Object.keys(translations),
     routes,
     trackers,
+    setupState: initialize,
   });
 
   const App: React.SFC = () => (
