@@ -1,6 +1,6 @@
 {
   "name": "piral-ext",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Useful API extensions and component definitions for extending piral-core.",
   "keywords": [
     "piral",
@@ -34,9 +34,9 @@
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
+    "piral-core": "^0.3.1",
     "react": ">= 16.8.0",
-    "react-dom": ">= 16.8.0",
-    "piral-core": "^0.3.1"
+    "react-dom": ">= 16.8.0"
   },
   "dependencies": {
     "subscriptions-transport-ws": "^0.9.16",
