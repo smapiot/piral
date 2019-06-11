@@ -3,13 +3,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Atom, addChangeHandler } from '@dbeining/react-atom';
 import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from '../components/default';
 import { getCurrentLayout, defaultBreakpoints, defaultLayouts, getUserLocale } from '../utils';
-import { GlobalState, LayoutBreakpoints, Dict, Setup, AppComponents } from '../types';
+import { GlobalState, LayoutBreakpoints, Setup, AppComponents, UserState } from '../types';
 
-export interface GlobalStateOptions<TState extends GlobalState> extends Partial<AppComponents> {
+export interface GlobalStateOptions<TState extends GlobalState<TUser>, TUser = {}> extends Partial<AppComponents> {
   /**
    * Function to extend the global state with some additional information.
    */
-  setupState?: Setup<TState>;
+  setupState?: Setup<TState, TUser>;
   /**
    * Sets the available languages.
    * By default, only the default language is used.
@@ -24,7 +24,7 @@ export interface GlobalStateOptions<TState extends GlobalState> extends Partial<
   /**
    * Sets the additional / initial routes to register.
    */
-  routes?: Dict<ComponentType<RouteComponentProps>>;
+  routes?: Record<string, ComponentType<RouteComponentProps>>;
   /**
    * Sets the available trackers to register.
    */
@@ -33,13 +33,22 @@ export interface GlobalStateOptions<TState extends GlobalState> extends Partial<
    * Sets the available layout breakpoints.
    */
   breakpoints?: LayoutBreakpoints;
+  /**
+   * Sets the initially available user information.
+   */
+  user?: UserState<TUser>;
 }
 
-function defaultInitializer<TState extends GlobalState>(state: GlobalState): TState {
+function defaultInitializer<TState extends GlobalState, TUser = {}>(state: GlobalState): TState {
   return state as TState;
 }
 
 export function createGlobalState<TState extends GlobalState>({
+  user = {
+    current: undefined,
+    features: {},
+    permissions: {},
+  },
   breakpoints = defaultBreakpoints,
   setupState = defaultInitializer,
   language = 'en',
@@ -82,11 +91,7 @@ export function createGlobalState<TState extends GlobalState>({
     },
     feeds: {},
     forms: {},
-    user: {
-      current: undefined,
-      features: {},
-      permissions: {},
-    },
+    user,
     search: {
       input: '',
       loading: false,

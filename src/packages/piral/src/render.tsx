@@ -43,8 +43,6 @@ export function renderInstance(options: PiralOptions) {
           link
           name
           version
-          author
-          dependencies
         }
       }
     `,

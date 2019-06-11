@@ -222,7 +222,7 @@ export interface FormsState {
   [id: string]: FormDataState;
 }
 
-export interface UserState {
+export interface UserState<T = {}> {
   /**
    * The provided features, if any.
    */
@@ -234,7 +234,7 @@ export interface UserState {
   /**
    * The current user, if available.
    */
-  current: UserInfo | undefined;
+  current: UserInfo<T> | undefined;
 }
 
 export interface SearchState {
@@ -252,7 +252,7 @@ export interface SearchState {
   results: Array<ReactChild>;
 }
 
-export interface GlobalState {
+export interface GlobalState<TUser = {}> {
   /**
    * The relevant state for the app itself.
    */
@@ -272,7 +272,7 @@ export interface GlobalState {
   /**
    * The relevant state for the current user.
    */
-  user: UserState;
+  user: UserState<TUser>;
   /**
    * The relevant state for the in-site search.
    */
@@ -280,6 +280,13 @@ export interface GlobalState {
 }
 
 export interface StateActions {
+  /**
+   * Sets the currently logged in user.
+   * @param user The current user or undefined is anonymous.
+   * @param features The features for the current user, if any.
+   * @param permissions The permissions of the current user, if any.
+   */
+  setUser<T>(user: UserInfo<T>, features: UserFeatures, permissions: UserPermissions): void;
   /**
    * Reads the value of a shared data item.
    * @param name The name of the shared item.

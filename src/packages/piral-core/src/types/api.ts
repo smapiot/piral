@@ -5,7 +5,7 @@ import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { InputFormOptions, FormCreator } from './form';
-import { Dict, Disposable, SeverityLevel, EventEmitter } from './utils';
+import { Disposable, SeverityLevel, EventEmitter } from './utils';
 import { SearchProvider } from './search';
 import {
   ForeignComponent,
@@ -29,7 +29,7 @@ export interface PiletMetadata {
   /**
    * The dependencies of the pilet.
    */
-  dependencies: Dict<string>;
+  dependencies: Record<string, string>;
   /**
    * The hashcode of the pilet.
    */

@@ -3,13 +3,13 @@ import { PiralApi, PiralCoreApi } from './api';
 import { EventEmitter } from './utils';
 import { GlobalStateContext, GlobalState } from './state';
 
-export interface Setup<TState extends GlobalState> {
+export interface Setup<TState extends GlobalState, TUser = {}> {
   /**
    * Initializes the given global state, potentially extending it.
    * @param state The global state created by the base layer.
    * @returns The initialized state.
    */
-  (state: GlobalState): TState;
+  (state: GlobalState<TUser>): TState;
 }
 
 export interface Extend<TApi> {
