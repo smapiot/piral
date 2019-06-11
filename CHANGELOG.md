@@ -12,6 +12,7 @@
 * Moved `provideTranslations` to `piral-ext`
 * Moved `translate` to `piral-ext`
 * Provided ability to extend the global state during setup
+* Suffixed foreign APIs with `X`, e.g., `registerTileX`
 
 ## 0.3.1 (June 5, 2019)
 
