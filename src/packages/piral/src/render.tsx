@@ -12,6 +12,7 @@ import {
   createNotifications,
   createSearch,
   createModals,
+  AppLayout,
 } from './components';
 import { PiExtApi, PiletApi, PiralOptions } from './types';
 
@@ -139,9 +140,9 @@ export function renderInstance(options: PiralOptions) {
     <Provider value={client}>
       <Piral>
         {content => (
-          <Layout Menu={Menu} Modals={Modals} Notifications={Notifications} Search={Search}>
+          <AppLayout Menu={Menu} Modals={Modals} Notifications={Notifications} Search={Search} Layout={Layout}>
             {content}
-          </Layout>
+          </AppLayout>
         )}
       </Piral>
     </Provider>

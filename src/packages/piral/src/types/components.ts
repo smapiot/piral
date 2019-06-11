@@ -9,6 +9,8 @@ import {
   FormErrorInfoProps,
   OpenNotification,
   OpenModalDialog,
+  LayoutType,
+  UserInfo,
 } from 'piral-core';
 
 export interface MenuProps {
@@ -47,9 +49,23 @@ export interface SearchResultProps {}
 
 export interface NotificationsContainerProps {}
 
-export interface ModalsContainerProps {}
+export interface ModalsContainerProps {
+  open: boolean;
+  close(): void;
+}
 
-export interface LayoutProps {
+export interface LayoutProps extends LayoutComponents {
+  Menu: ComponentType<MenuProps>;
+  Search: ComponentType;
+  Modals: ComponentType;
+  Notifications: ComponentType;
+  selectedLanguage: string;
+  availableLanguages: Array<string>;
+  currentLayout: LayoutType;
+  user: UserInfo;
+}
+
+export interface LayoutComponents {
   Menu: ComponentType<MenuProps>;
   Search: ComponentType;
   Modals: ComponentType;

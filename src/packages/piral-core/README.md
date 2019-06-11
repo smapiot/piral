@@ -6,7 +6,7 @@ This is the core library that is required for any Piral instance. Plugins and pr
 
 ## Documentation
 
-For details on the various commands check out the [documentation at Piral](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
+For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
 
 ## License
 

@@ -2,7 +2,7 @@
 
 ## 0.4.1 (to be determined)
 
-* (no changes yet)
+* Added more props to the `Layout`
 
 ## 0.4.0 (June 11, 2019)
 
