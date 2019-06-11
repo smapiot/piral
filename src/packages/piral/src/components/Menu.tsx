@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGlobalState } from 'piral-core';
+import { useGlobalState, MenuType } from 'piral-core';
 import { MenuContainerProps, MenuItemProps, MenuProps } from '../types';
 
 export interface MenuCreator {
@@ -8,7 +8,7 @@ export interface MenuCreator {
 }
 
 export function createMenu({ MenuContainer, MenuItem }: MenuCreator): React.SFC<MenuProps> {
-  return ({ type = 'general' }) => {
+  return ({ type = 'general' as MenuType }) => {
     const menuItems = useGlobalState(s => s.components.menuItems);
 
     return (
