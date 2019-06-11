@@ -25,7 +25,7 @@ export const Pilet1: ArbiterModule<PiralApi> = {
   setup(piral) {
     console.log(piral);
 
-    piral.registerTile('example-general', (element, props) => {
+    piral.registerTileX('example-general', (element, props) => {
       element.innerHTML = `
         <div class="tile">
           General rendering for a ${props.columns}x${props.rows} tile.

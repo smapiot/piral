@@ -120,7 +120,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param name The name of the modal to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerModal<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
+  registerModalX<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
   /**
    * Registers a modal dialog using a React component.
    * The name needs to be unique to be used without the pilet's name.
@@ -140,7 +140,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerPage(route: string, render: ForeignComponent<PageComponentProps<PiralApi<TExtraApi>>>): void;
+  registerPageX(route: string, render: ForeignComponent<PageComponentProps<PiralApi<TExtraApi>>>): void;
   /**
    * Registers a route for React component.
    * The route needs to be unique and can contain params.
@@ -161,7 +161,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(
+  registerTileX(
     name: string,
     render: ForeignComponent<TileComponentProps<PiralApi<TExtraApi>>>,
     preferences?: TilePreferences,
@@ -190,7 +190,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param name The global name of the extension slot.
    * @param render The function that is being called once rendering begins.
    */
-  registerExtension<T>(name: string, render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
+  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
   /**
    * Registers an extension component with a React component.
    * The name must refer to the extension slot.
@@ -212,7 +212,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(
+  registerMenuX(
     name: string,
     render: ForeignComponent<MenuComponentProps<PiralApi<TExtraApi>>>,
     settings?: MenuSettings,

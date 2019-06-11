@@ -1,6 +1,6 @@
 # Introduction
 
-Piral is a solution for frontend modularization, where the different modules can be developed independently without any binding to the host system. We call these modules *pilets*. We therefore refer to a pilet as a small module that lives inside a piral instance. Piral gives you a set of tools for developing your application using microfrontends.
+Piral is a solution for frontend modularization, where the different modules can be developed independently without any binding to the host system. We call these modules *pilets*. We therefore refer to a pilet as a small module that lives inside a piral instance. Piral gives you a set of tools for developing your application using [micro frontends](https://martinfowler.com/articles/micro-frontends.html).
 
 While the idea of smaller (independent) modules is not new the provided approach has some advantages (and - depending on the use-case - disadvantages) over, e.g., bundle splitting as its done in modern build systems. Actually, the given approach is not exclusive and can be used together with bundle splitting.
 

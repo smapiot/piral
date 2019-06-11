@@ -5,9 +5,7 @@ function attachFooter() {
   let count = 0;
 
   return (api: PiletApi, element: React.ReactElement) => {
-    const Item: React.SFC = () => element;
-    Item.displayName = 'Item';
-    api.registerMenu(`footer_${count++}`, Item, { type: 'footer' });
+    api.registerMenu(`footer_${count++}`, () => element, { type: 'footer' });
   };
 }
 
