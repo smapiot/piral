@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.4.0 (to be determined)
+## 0.4.0 (June 11, 2019)
 
 * Introduced `subscriptionUrl`
 * Renamed `gateway` to `gatewayUrl`
