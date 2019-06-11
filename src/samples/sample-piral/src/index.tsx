@@ -9,10 +9,6 @@ renderInstance({
     setupFooter(api);
     setupMenu(api);
   },
-  custom: {
-    MenuToggle,
-    User,
-  },
   Loader: () => (
     <div className="pi-center">
       <div className="pi-spinner">Loading</div>
@@ -92,6 +88,33 @@ renderInstance({
         <div className="pi-description">{content}</div>
       </div>
       <div className="pi-close" onClick={close} />
+    </div>
+  ),
+  ModalsContainer: ({ children }) => <div className="pi-modal">{children}</div>,
+  ModalDialog: ({ children }) => <div className="pi-modal">{children}</div>,
+  Layout: ({ Menu, Notifications, Search, children, Modals }) => (
+    <div className="app-container">
+      <div className="app-menu">
+        <div className="app-menu-content">
+          <Menu type="general" />
+          <Menu type="admin" />
+        </div>
+      </div>
+      <Notifications />
+      <Modals />
+      <div className="app-header">
+        <div className="app-title">
+          <MenuToggle />
+          <h1>Piral Sample</h1>
+        </div>
+        <Search />
+        <Menu type="header" />
+        <User />
+      </div>
+      <div className="app-content">{children}</div>
+      <div className="app-footer">
+        <Menu type="footer" />
+      </div>
     </div>
   ),
 });

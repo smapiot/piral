@@ -8,7 +8,12 @@ import {
   FeedErrorInfoProps,
   FormErrorInfoProps,
   OpenNotification,
+  OpenModalDialog,
 } from 'piral-core';
+
+export interface MenuProps {
+  type?: MenuType;
+}
 
 export interface DashboardContainerProps {}
 
@@ -42,6 +47,15 @@ export interface SearchResultProps {}
 
 export interface NotificationsContainerProps {}
 
+export interface ModalsContainerProps {}
+
+export interface LayoutProps {
+  Menu: ComponentType<MenuProps>;
+  Search: ComponentType;
+  Modals: ComponentType;
+  Notifications: ComponentType;
+}
+
 export interface ComponentOptions {
   Loader?: ComponentType<LoaderProps>;
   FeedErrorInfo?: ComponentType<FeedErrorInfoProps>;
@@ -59,5 +73,7 @@ export interface ComponentOptions {
   SearchResult: ComponentType<SearchResultProps>;
   NotificationsContainer: ComponentType<NotificationsContainerProps>;
   NotificationItem: ComponentType<OpenNotification>;
-  custom?: Record<string, ComponentType>;
+  ModalsContainer: ComponentType<ModalsContainerProps>;
+  ModalDialog: ComponentType<OpenModalDialog>;
+  Layout: ComponentType<LayoutProps>;
 }

@@ -1,10 +1,6 @@
 import * as React from 'react';
-import { useGlobalState, MenuType } from 'piral-core';
-import { MenuContainerProps, MenuItemProps } from '../types';
-
-export interface MenuProps {
-  type?: MenuType;
-}
+import { useGlobalState } from 'piral-core';
+import { MenuContainerProps, MenuItemProps, MenuProps } from '../types';
 
 export interface MenuCreator {
   MenuContainer: React.ComponentType<MenuContainerProps>;

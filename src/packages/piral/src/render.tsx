@@ -5,8 +5,14 @@ import { Provider } from 'urql';
 import { createInstance } from 'piral-core';
 import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets } from './utils';
-import { getLayout } from './layout';
-import { createDashboard, createErrorInfo, createMenu, createNotifications, createSearch } from './components';
+import {
+  createDashboard,
+  createErrorInfo,
+  createMenu,
+  createNotifications,
+  createSearch,
+  createModals,
+} from './components';
 import { PiExtApi, PiletApi, PiralOptions } from './types';
 
 interface PiletRequest {
@@ -65,10 +71,12 @@ export function renderInstance(options: PiralOptions) {
     MenuItem,
     NotificationItem,
     NotificationsContainer,
+    ModalDialog,
+    ModalsContainer,
     SearchContainer,
     SearchInput,
     SearchResult,
-    custom,
+    Layout,
   } = options;
   const origin = getGateway(gateway);
   const client = setupGqlClient({
@@ -77,6 +85,23 @@ export function renderInstance(options: PiralOptions) {
   });
   const localizer = setupLocalizer({
     messages: translations,
+  });
+  const Menu = createMenu({
+    MenuContainer,
+    MenuItem,
+  });
+  const Notifications = createNotifications({
+    NotificationItem,
+    NotificationsContainer,
+  });
+  const Search = createSearch({
+    SearchContainer,
+    SearchInput,
+    SearchResult,
+  });
+  const Modals = createModals({
+    ModalDialog,
+    ModalsContainer,
   });
 
   const Piral = createInstance<PiExtApi>({
@@ -95,30 +120,6 @@ export function renderInstance(options: PiralOptions) {
       PageErrorInfo,
       UnknownErrorInfo,
     }),
-    setupState(state) {
-      return {
-        ...state,
-        app: {
-          ...state.app,
-          components: {
-            ...state.app.components,
-            Menu: createMenu({
-              MenuContainer,
-              MenuItem,
-            }),
-            Notifications: createNotifications({
-              NotificationItem,
-              NotificationsContainer,
-            }),
-            Search: createSearch({
-              SearchContainer,
-              SearchInput,
-              SearchResult,
-            }),
-          },
-        },
-      };
-    },
     extendApi(api): PiletApi {
       return {
         ...api,
@@ -134,10 +135,15 @@ export function renderInstance(options: PiralOptions) {
     trackers,
   });
 
-  const Layout = getLayout(custom);
   const App: React.SFC = () => (
     <Provider value={client}>
-      <Piral>{content => <Layout>{content}</Layout>}</Piral>
+      <Piral>
+        {content => (
+          <Layout Menu={Menu} Modals={Modals} Notifications={Notifications} Search={Search}>
+            {content}
+          </Layout>
+        )}
+      </Piral>
     </Provider>
   );
 
