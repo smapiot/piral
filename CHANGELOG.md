@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.4.1 (to be determined)
+
+* (no changes yet)
+
 ## 0.4.0 (June 11, 2019)
 
 * Introduced `subscriptionUrl`
