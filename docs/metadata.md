@@ -22,7 +22,7 @@ The additional fields for a Piral instance package are as follows:
       "publish-pilet": "pilet publish --api-key $PILET_PUBLISH_KEY"
     },
     "devDependencies": {
-      "prettier": "^1.16.4",
+      "prettier": "^1.16.4"
     }
   }
 }
@@ -63,7 +63,7 @@ The additional fields for a pilet package are as follows:
       ".editorconfig"
     ],
     "devDependencies": {
-      "prettier": "^1.16.4",
+      "prettier": "^1.16.4"
     }
   },
 }
