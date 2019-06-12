@@ -21,8 +21,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   } = options;
   const entryFiles = join(baseDir, entry);
   const { externals } = await retrievePiletsInfo(entryFiles);
-  return runDebug(port, entryFiles, publicUrl, {
-    target: dirname(entry),
-    dependencies: externals,
+  return runDebug(port, entryFiles, {
+    publicUrl,
+    options: {
+      target: dirname(entry),
+      dependencies: externals,
+    },
   });
 }

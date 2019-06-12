@@ -32,6 +32,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     const [value] = useSearch();
     expect(value).toBe('abc');
   });
@@ -40,6 +41,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     const [_, setValue] = useSearch();
     setValue('foo');
     expect(availableActions.setSearchInput).toHaveBeenCalledWith('foo');
@@ -50,6 +52,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     expect(availableActions.resetSearchResults).toHaveBeenCalledWith(false);
   });
@@ -64,6 +67,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     expect(availableActions.resetSearchResults).toHaveBeenCalledWith(true);
   });
@@ -73,6 +77,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     expect(availableActions.resetSearchResults).toHaveBeenCalledWith(false);
   });
@@ -87,6 +92,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     expect(search).toHaveBeenCalledTimes(2);
   });
@@ -103,6 +109,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     await (state.components.searchProviders as any).foo.search().catch(m => m);
   });
@@ -120,6 +127,7 @@ describe('Search Hook Module', () => {
     const usedRef = jest.fn(current => ({ current }));
     (React as any).useEffect = usedEffect;
     (React as any).useRef = usedRef;
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     usedRef.mock.results[0].value.current();
     await (state.components.searchProviders as any).foo.search().catch(m => m);
@@ -141,6 +149,7 @@ describe('Search Hook Module', () => {
     const usedRef = jest.fn(current => ({ current }));
     (React as any).useEffect = usedEffect;
     (React as any).useRef = usedRef;
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     usedEffect.mock.results[0].value();
     await (state.components.searchProviders as any).foo.search().catch(m => m);
@@ -159,6 +168,7 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
+    (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
     await (state.components.searchProviders as any).foo.search().catch(m => m);
     expect(console.warn).toHaveBeenCalled();

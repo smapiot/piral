@@ -79,8 +79,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     throw new Error('Invalid dependency structure.');
   }
 
-  await runDebug(port, appFile, undefined, {
-    target: dirname(entry),
-    pilet: relative(dirname(coreFile), entryFile),
+  await runDebug(port, appFile, {
+    source: entryFile,
+    options: {
+      target: dirname(entry),
+      pilet: relative(dirname(coreFile), entryFile),
+    },
   });
 }

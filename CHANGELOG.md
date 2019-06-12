@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.4.1 (to be determined)
+## 0.5.0 (to be determined)
 
 * Added more props to the `Layout`
 * Allow setting and extending the user
@@ -8,6 +8,7 @@
 * Added `public-url` option in Piral CLI
 * Fixed `piral-cli` build for scoped shared dependencies
 * Added error code and output to Piral CLI
+* Added more options to the search provider
 
 ## 0.4.0 (June 11, 2019)
 
