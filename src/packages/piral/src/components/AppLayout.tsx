@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { useGlobalState, GlobalState } from 'piral-core';
-import { LayoutComponents, LayoutProps } from '../types';
-
-export interface AppLayoutProps extends LayoutComponents {
-  Layout: React.ComponentType<LayoutProps>;
-}
+import { MenuProps, LayoutProps } from '../types';
 
 function selectContent(state: GlobalState) {
   return {
@@ -15,11 +11,21 @@ function selectContent(state: GlobalState) {
   };
 }
 
-export const AppLayout: React.SFC<AppLayoutProps> = ({ Layout, children, ...props }) => {
-  const content = useGlobalState(selectContent);
-  return (
-    <Layout {...content} {...props}>
-      {children}
-    </Layout>
-  );
-};
+export interface AppLayoutCreator {
+  Layout: React.ComponentType<LayoutProps>;
+  Menu: React.ComponentType<MenuProps>;
+  Notifications: React.ComponentType;
+  Search: React.ComponentType;
+  Modals: React.ComponentType;
+}
+
+export function createAppLayout({ Layout, ...props }: AppLayoutCreator): React.SFC {
+  return ({ children }) => {
+    const content = useGlobalState(selectContent);
+    return (
+      <Layout {...content} {...props}>
+        {children}
+      </Layout>
+    );
+  };
+}

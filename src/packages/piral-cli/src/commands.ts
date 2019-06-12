@@ -39,11 +39,14 @@ export const allCommands: Array<ToolCommand<any>> = [
         .positional('source', {
           type: 'string',
           describe: 'Sets the source index.html file for collecting all the information.',
-          default: apps.buildPiralDefaults.entry,
+          default: apps.debugPiralDefaults.entry,
         })
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiralDefaults.port)
+        .string('public-url')
+        .describe('public-url', 'Sets the public URL (path) of the bundle.')
+        .default('public-url', apps.debugPiralDefaults.publicUrl)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -52,6 +55,7 @@ export const allCommands: Array<ToolCommand<any>> = [
       return apps.debugPiral(args.base as string, {
         entry: args.source as string,
         port: args.port as number,
+        publicUrl: args.publicUrl as string,
       });
     },
   },
@@ -70,6 +74,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target file of bundling.')
         .default('target', apps.buildPiralDefaults.target)
+        .string('public-url')
+        .describe('public-url', 'Sets the public URL (path) of the bundle.')
+        .default('public-url', apps.buildPiralDefaults.publicUrl)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -78,6 +85,7 @@ export const allCommands: Array<ToolCommand<any>> = [
       return apps.buildPiral(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
+        publicUrl: args.publicUrl as string,
       });
     },
   },

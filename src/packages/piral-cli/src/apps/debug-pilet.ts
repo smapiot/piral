@@ -76,7 +76,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     return console.error('Cannot find the piral-core package. Make sure your dependencies are correctly resolved.');
   }
 
-  await runDebug(port, appFile, {
+  await runDebug(port, appFile, undefined, {
     target: dirname(entry),
     pilet: relative(dirname(coreFile), entryFile),
   });

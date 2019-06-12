@@ -12,7 +12,7 @@ import {
   createNotifications,
   createSearch,
   createModals,
-  AppLayout,
+  createAppLayout,
 } from './components';
 import { PiExtApi, PiletApi, PiralOptions } from './types';
 
@@ -86,23 +86,29 @@ export function renderInstance(options: PiralOptions) {
   const localizer = setupLocalizer({
     messages: translations,
   });
-  const Menu = createMenu({
-    MenuContainer,
-    MenuItem,
+
+  const AppLayout = createAppLayout({
+    Layout,
+    Menu: createMenu({
+      MenuContainer,
+      MenuItem,
+    }),
+    Notifications: createNotifications({
+      NotificationItem,
+      NotificationsContainer,
+    }),
+    Search: createSearch({
+      SearchContainer,
+      SearchInput,
+      SearchResult,
+    }),
+    Modals: createModals({
+      ModalDialog,
+      ModalsContainer,
+    }),
   });
-  const Notifications = createNotifications({
-    NotificationItem,
-    NotificationsContainer,
-  });
-  const Search = createSearch({
-    SearchContainer,
-    SearchInput,
-    SearchResult,
-  });
-  const Modals = createModals({
-    ModalDialog,
-    ModalsContainer,
-  });
+
+  const renderLayout = (content: React.ReactNode) => <AppLayout>{content}</AppLayout>;
 
   const Piral = createInstance<PiExtApi>({
     availablePilets: getAvailablePilets(attach),
@@ -138,13 +144,7 @@ export function renderInstance(options: PiralOptions) {
 
   const App: React.SFC = () => (
     <Provider value={client}>
-      <Piral>
-        {content => (
-          <AppLayout Menu={Menu} Modals={Modals} Notifications={Notifications} Search={Search} Layout={Layout}>
-            {content}
-          </AppLayout>
-        )}
-      </Piral>
+      <Piral>{renderLayout}</Piral>
     </Provider>
   );
 

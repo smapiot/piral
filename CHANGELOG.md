@@ -4,6 +4,7 @@
 
 * Added more props to the `Layout`
 * Allow setting and extending the user
+* Fixed rendering of modals
 
 ## 0.4.0 (June 11, 2019)
 
