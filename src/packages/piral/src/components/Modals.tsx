@@ -13,15 +13,29 @@ export interface ModalsCreator {
 
 export function createModals({ ModalsContainer, ModalDialog }: ModalsCreator): React.SFC {
   return () => {
-    const modals = useGlobalState(s => s.app.modals);
-    const open = modals.length > 0;
-    const close = () => closeAll(modals);
+    const { dialogs, components } = useGlobalState(s => ({
+      dialogs: s.app.modals,
+      components: s.components.modals,
+    }));
+    const close = () => closeAll(dialogs);
+    const children = dialogs
+      .map(n => {
+        const reg = components[n.name];
+        const Component = reg && reg.component;
+        return (
+          Component && (
+            <ModalDialog {...n} key={n.name}>
+              <Component onClose={n.close} options={n.options} />
+            </ModalDialog>
+          )
+        );
+      })
+      .filter(m => !!m);
+    const open = children.length > 0;
 
     return (
       <ModalsContainer open={open} close={close}>
-        {modals.map(n => (
-          <ModalDialog {...n} key={n.name} />
-        ))}
+        {children}
       </ModalsContainer>
     );
   };
