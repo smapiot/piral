@@ -189,7 +189,7 @@ export function createApi<TApi>(
       },
       showModal(name, options) {
         const dialog = {
-          name,
+          name: buildName(prefix, name),
           options,
           close() {
             context.closeModal(dialog);
