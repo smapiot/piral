@@ -6,6 +6,7 @@
 * Allow setting and extending the user
 * Fixed rendering of modals
 * Added `public-url` option in Piral CLI
+* Fixed `piral-cli` build for scoped shared dependencies
 
 ## 0.4.0 (June 11, 2019)
 
