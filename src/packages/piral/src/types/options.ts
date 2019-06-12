@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { PiletRequester, GlobalState } from 'piral-core';
+import { PiletRequester, GlobalState, ScaffoldPlugin } from 'piral-core';
 import { LocalizationMessages } from 'piral-ext';
 import { PiletApi } from './api';
 import { ComponentOptions } from './components';
@@ -59,4 +59,8 @@ export interface PiralOptions extends ComponentOptions {
    * @param state The proposed initial state.
    */
   initialize?: PiralInitializer;
+  /**
+   * Plugins for extending the core portal functionality.
+   */
+  plugins?: Array<ScaffoldPlugin>;
 }

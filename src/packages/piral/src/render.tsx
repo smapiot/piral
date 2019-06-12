@@ -49,15 +49,12 @@ export function renderInstance(options: PiralOptions) {
     ).then(({ pilets }) => pilets);
   };
   const {
-    routes = {},
-    trackers = [],
     selector = '#app',
     requestPilets = defaultRequestPilets,
     gatewayUrl: gateway,
     subscriptionUrl,
     translations = {},
     attach,
-    Loader,
     DashboardContainer,
     Tile,
     UnknownErrorInfo,
@@ -77,6 +74,7 @@ export function renderInstance(options: PiralOptions) {
     SearchResult,
     initialize,
     Layout,
+    ...forwardOptions
   } = options;
   const origin = getGateway(gateway);
   const client = setupGqlClient({
@@ -111,9 +109,9 @@ export function renderInstance(options: PiralOptions) {
   const renderLayout = (content: React.ReactNode) => <AppLayout>{content}</AppLayout>;
 
   const Piral = createInstance<PiExtApi>({
+    ...forwardOptions,
     availablePilets: getAvailablePilets(attach),
     requestPilets,
-    Loader,
     Dashboard: createDashboard({
       DashboardContainer,
       Tile,
@@ -137,8 +135,6 @@ export function renderInstance(options: PiralOptions) {
       };
     },
     languages: Object.keys(translations),
-    routes,
-    trackers,
     setupState: initialize,
   });
 

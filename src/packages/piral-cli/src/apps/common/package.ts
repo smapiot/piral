@@ -1,5 +1,5 @@
 import { resolve, join } from 'path';
-import { readJson, copy, updateExistingJson, ForceOverwrite } from './io';
+import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists } from './io';
 import { cliVersion } from './info';
 
 export interface TemplateFileLocation {
@@ -50,6 +50,24 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
     devDependencies,
     scripts,
   };
+}
+
+export async function retrievePiletsInfo(entryFile: string) {
+  const exists = await checkExists(entryFile);
+
+  if (!exists) {
+    console.error('The given entry pointing to "%s" does not exist.', entryFile);
+    throw new Error('Invalid Piral instance.');
+  }
+
+  const packageJson = await findFile(entryFile, 'package.json');
+
+  if (!packageJson) {
+    console.error('Cannot find any package.json. You need a valid package.json for your Piral instance.');
+    throw new Error('Invalid Piral instance.');
+  }
+
+  return getPiletsInfo(packageJson);
 }
 
 export async function patchPiletPackage(root: string, name: string, version?: string) {

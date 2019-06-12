@@ -11,7 +11,10 @@ describe('Build Piral Command', () => {
   it('missing source should result in an error', async () => {
     const dir = createTempDir();
     console.error = jest.fn();
-    await buildPiral(dir);
+    try {
+      await buildPiral(dir);
+    } catch {}
+
     expect(console.error).toHaveBeenCalled();
   });
 });
