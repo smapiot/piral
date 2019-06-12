@@ -5,6 +5,7 @@
 * Added more props to the `Layout`
 * Allow setting and extending the user
 * Fixed rendering of modals
+* Added `public-url` option in Piral CLI
 
 ## 0.4.0 (June 11, 2019)
 
