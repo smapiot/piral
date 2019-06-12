@@ -91,5 +91,7 @@ always-auth=true`,
     await copyPiralFiles(root, sourceName, files, forceOverwrite);
 
     console.log(`All done!`);
+  } else {
+    throw new Error('Could not create directory.');
   }
 }

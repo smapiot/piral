@@ -18,15 +18,18 @@ export async function packPilet(baseDir = process.cwd(), options: PackPiletOptio
   const pckg = await readJson(root, 'package.json');
 
   if (!pckg) {
-    return console.error('No valid package.json found.');
+    console.error('No valid package.json found.');
+    throw new Error('Invalid pilet.');
   }
 
   if (!pckg.name) {
-    return console.error('Cannot pack the pilet - missing name.');
+    console.error('Cannot pack the pilet - missing name.');
+    throw new Error('Invalid pilet.');
   }
 
   if (!pckg.version) {
-    return console.error('Cannot pack the pilet - missing version.');
+    console.error('Cannot pack the pilet - missing version.');
+    throw new Error('Invalid pilet.');
   }
 
   console.log(`Packing pilet in ${resolve(baseDir, target)} ...`);

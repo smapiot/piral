@@ -11,7 +11,11 @@ describe('Build Pilet Command', () => {
   it('missing package.json should result in an error', async () => {
     const dir = createTempDir();
     console.error = jest.fn();
-    await buildPilet(dir);
+
+    try {
+      await buildPilet(dir);
+    } catch {}
+
     expect(console.error).toHaveBeenCalled();
   });
 });

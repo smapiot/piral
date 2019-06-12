@@ -11,7 +11,11 @@ describe('Upgrade Pilet Command', () => {
   it('cannot upgrade in a directory without a package.json', async () => {
     const dir = createTempDir();
     console.error = jest.fn();
-    await upgradePilet(dir);
+
+    try {
+      await upgradePilet(dir);
+    } catch {}
+
     expect(console.error).toHaveBeenCalled();
   });
 });
