@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.5.0 (to be determined)
+## 0.5.0 (June 13, 2019)
 
 * Added more props to the `Layout`
 * Allow setting and extending the user
