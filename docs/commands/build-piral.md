@@ -38,6 +38,13 @@ Sets the target file of bundling.
 - Type: `string`
 - Default: `"./dist/index.html"`
 
+### `--public-url`
+
+Sets the public URL (path) of the bundle.
+
+- Type: `string`
+- Default: `"/"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

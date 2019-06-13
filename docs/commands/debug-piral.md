@@ -38,6 +38,13 @@ Sets the port of the local development server.
 - Type: `number`
 - Default: `1234`
 
+### `--public-url`
+
+Sets the public URL (path) of the bundle.
+
+- Type: `string`
+- Default: `"/"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

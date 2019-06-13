@@ -1,4 +1,4 @@
-import { ArbiterModuleMetadata, wrapElement } from 'react-arbiter';
+import { ArbiterModuleMetadata, wrapElement, isfunc } from 'react-arbiter';
 import { withFeed, withApi, withForm } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
@@ -97,6 +97,7 @@ export function createApi<TApi>(
 ): PiralApi<TApi> {
   let feeds = 0;
   const prefix = target.name;
+  const noop = () => {};
   const api = extendApi(
     {
       ...events,
@@ -189,7 +190,7 @@ export function createApi<TApi>(
       },
       showModal(name, options) {
         const dialog = {
-          name,
+          name: buildName(prefix, name),
           options,
           close() {
             context.closeModal(dialog);
@@ -257,9 +258,13 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterModal(id);
       },
-      registerSearchProvider(name, provider) {
+      registerSearchProvider(name, provider, settings = {}) {
         const id = buildName(prefix, name);
+        const { onlyImmediate = false, onCancel, onClear } = settings;
         context.registerSearchProvider(id, {
+          onlyImmediate,
+          cancel: isfunc(onCancel) ? onCancel : noop,
+          clear: isfunc(onClear) ? onClear : noop,
           search(q) {
             return provider(q, api);
           },

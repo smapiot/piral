@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useSearch } from 'piral-core';
+import { createInstance, useGlobalState, LoaderProps, useSearch, useAction } from 'piral-core';
 import { availablePilets } from './pilets';
 
 customElements.define(
@@ -100,12 +100,18 @@ const SearchResults: React.SFC = () => {
 
 const SearchForm: React.SFC = () => {
   const [value, setValue] = useSearch();
+  const search = useAction('triggerSearch');
 
   return (
-    <div className="search">
+    <form
+      className="search"
+      onSubmit={ev => {
+        search(value, true);
+        return ev.preventDefault();
+      }}>
       <input type="search" placeholder="Search" onChange={e => setValue(e.target.value)} value={value} />
       <SearchResults />
-    </div>
+    </form>
   );
 };
 

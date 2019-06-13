@@ -1,12 +1,16 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { PiletRequester } from 'piral-core';
+import { PiletRequester, GlobalState, ScaffoldPlugin } from 'piral-core';
 import { LocalizationMessages } from 'piral-ext';
 import { PiletApi } from './api';
 import { ComponentOptions } from './components';
 
 export interface PiralAttachment {
   (api: PiletApi): void;
+}
+
+export interface PiralInitializer {
+  <TState extends GlobalState<TUser>, TUser = {}>(state: GlobalState<TUser>): TState;
 }
 
 export interface PiralOptions extends ComponentOptions {
@@ -50,4 +54,13 @@ export interface PiralOptions extends ComponentOptions {
    * Attaches a single static module to the application.
    */
   attach?: PiralAttachment;
+  /**
+   * Initializes the global state container.
+   * @param state The proposed initial state.
+   */
+  initialize?: PiralInitializer;
+  /**
+   * Plugins for extending the core portal functionality.
+   */
+  plugins?: Array<ScaffoldPlugin>;
 }

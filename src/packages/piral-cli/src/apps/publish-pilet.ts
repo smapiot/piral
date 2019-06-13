@@ -35,17 +35,13 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     }
 
     console.log(`Publishing '${file}' to '${url}' ...`);
+    const result = await postFile(url, apiKey, content);
 
-    try {
-      const result = await postFile(url, apiKey, content);
-
-      if (result) {
-        console.log(`Uploaded successfully!`);
-      } else {
-        console.warn(`Failed to upload!`);
-      }
-    } catch (e) {
-      return console.error(e);
+    if (result) {
+      console.log(`Uploaded successfully!`);
+    } else {
+      console.warn(`Failed to upload!`);
+      throw new Error('Could not upload.');
     }
   }
 

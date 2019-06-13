@@ -53,7 +53,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const packageJson = await findFile(targetDir, 'package.json');
 
   if (!packageJson) {
-    return console.error('Cannot find any package.json. You need a valid package.json for your pilet.');
+    console.error('Cannot find any package.json. You need a valid package.json for your pilet.');
+    throw new Error('Invalid pilet.');
   }
 
   const packageContent = require(packageJson);
@@ -65,19 +66,24 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   );
 
   if (!appFile) {
-    return console.error(
+    console.error(
       'Cannot find the Piral instance. Make sure the package.json of the Piral instance is valid (has a `app` field).',
     );
+    throw new Error('Invalid Piral instance selected.');
   }
 
   const coreFile = findRoot('piral-core', appFile);
 
   if (!coreFile) {
-    return console.error('Cannot find the piral-core package. Make sure your dependencies are correctly resolved.');
+    console.error('Cannot find the piral-core package. Make sure your dependencies are correctly resolved.');
+    throw new Error('Invalid dependency structure.');
   }
 
   await runDebug(port, appFile, {
-    target: dirname(entry),
-    pilet: relative(dirname(coreFile), entryFile),
+    source: entryFile,
+    options: {
+      target: dirname(entry),
+      pilet: relative(dirname(coreFile), entryFile),
+    },
   });
 }

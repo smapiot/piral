@@ -37,5 +37,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     console.log(`All done!`);
   } else {
     console.error('Could not find a "piral" section in the "package.json" file. Aborting.');
+    throw new Error('Invalid pilet.');
   }
 }

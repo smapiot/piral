@@ -8,11 +8,17 @@ import { extendConfig } from './settings';
 import { startServer } from './server';
 import { liveIcon, settingsIcon } from './emoji';
 
-export async function runDebug(port: number, entry: string, options: StandardEnvProps) {
+export interface DebugOptions {
+  publicUrl?: string;
+  options: StandardEnvProps;
+  source?: string;
+}
+
+export async function runDebug(port: number, entry: string, { publicUrl, options, source = entry }: DebugOptions) {
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
-    krasConfig.directory = join(dirname(entry), 'mocks');
+    krasConfig.directory = join(dirname(source), 'mocks');
   }
 
   if (krasConfig.ssl === undefined) {
@@ -31,7 +37,12 @@ export async function runDebug(port: number, entry: string, options: StandardEnv
 
   await setStandardEnvs(options);
 
-  const bundler = new Bundler(entry, extendConfig({}));
+  const bundler = new Bundler(
+    entry,
+    extendConfig({
+      publicUrl,
+    }),
+  );
   krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');

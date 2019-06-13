@@ -1,5 +1,14 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { appendSearchResults, prependSearchResults, resetSearchResults, setSearchInput } from './search';
+import { appendSearchResults, prependSearchResults, resetSearchResults, setSearchInput, triggerSearch } from './search';
+
+const state = {
+  search: {
+    input: 'abc',
+  },
+  components: {
+    searchProviders: {},
+  },
+};
 
 describe('Search Action Module', () => {
   it('appendSearchResults cont appends new items with still loading', () => {
@@ -91,7 +100,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    resetSearchResults.call(state, true);
+    resetSearchResults.call(state, 'yo', true);
     expect(deref(state)).toEqual({
       foo: [1, 2],
       search: {
@@ -111,7 +120,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    resetSearchResults.call(state, false);
+    resetSearchResults.call(state, 'yo y', false);
     expect(deref(state)).toEqual({
       foo: 5,
       search: {
@@ -140,5 +149,141 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
+  });
+
+  it('immediately resets with loading false if some value is given but no provider found', () => {
+    state.search.input = 'foo';
+    const ctx = Atom.of(state as any);
+    triggerSearch.call(ctx);
+    expect(deref(ctx).search.loading).toBe(false);
+  });
+
+  it('immediately resets with loading true if some value is given and a provider is found', () => {
+    state.search.input = 'foo';
+    state.components.searchProviders['example' as any] = {
+      search() {
+        return Promise.resolve([]);
+      },
+      clear() {},
+      cancel() {},
+    };
+    const ctx = Atom.of(state as any);
+    triggerSearch.call(ctx);
+    expect(deref(ctx).search.loading).toBe(true);
+  });
+
+  it('immediately resets with loading false if no value is given implicitly', () => {
+    state.search.input = '';
+    const ctx = Atom.of(state as any);
+    triggerSearch.call(ctx);
+    expect(deref(ctx).search.loading).toBe(false);
+  });
+
+  it('immediately resets with loading false if no value is given explicitly', () => {
+    const ctx = Atom.of(state as any);
+    const dispose = triggerSearch.call(ctx, '');
+    dispose();
+    expect(deref(ctx).search.loading).toBe(false);
+  });
+
+  it('immediately resets with loading false if no value is given explicitly though immediate', () => {
+    const ctx = Atom.of(state as any);
+    const dispose = triggerSearch.call(ctx, '', true);
+    dispose();
+    expect(deref(ctx).search.loading).toBe(false);
+  });
+
+  it('resets with loading true if no value is given explicitly', () => {
+    state.search.input = '';
+    state.components.searchProviders['example' as any] = {
+      search() {
+        return Promise.resolve([]);
+      },
+      clear() {},
+      cancel() {},
+    };
+    const ctx = Atom.of(state as any);
+    triggerSearch.call(ctx, 'foo');
+    expect(deref(ctx).search.loading).toBe(true);
+  });
+
+  it('walks over all search providers', () => {
+    const search = jest.fn(() => Promise.resolve([]));
+    const clear = jest.fn();
+    const cancel = jest.fn();
+    state.search.input = 'test';
+    state.components.searchProviders = {
+      foo: { search, clear, cancel },
+      bar: { search, clear, cancel },
+    };
+    triggerSearch.call(Atom.of(state));
+    expect(search).toHaveBeenCalledTimes(2);
+  });
+
+  it('wraps results', async () => {
+    state.search.input = 'test';
+    state.components.searchProviders = {
+      foo: {
+        search() {
+          return Promise.resolve(['Hello', 'World']);
+        },
+        clear() {},
+        cancel() {},
+      },
+    };
+    triggerSearch.call(Atom.of(state));
+    await (state.components.searchProviders as any).foo.search().catch(m => m);
+  });
+
+  it('stops existing search', async () => {
+    const cancel = jest.fn();
+    state.search.input = 'test';
+    state.components.searchProviders = {
+      foo: {
+        search() {
+          return Promise.resolve(['Hello', 'World']);
+        },
+        clear() {},
+        cancel,
+      },
+    };
+    triggerSearch.call(Atom.of(state));
+    await (state.components.searchProviders as any).foo.search().catch(m => m);
+    expect(cancel).toHaveBeenCalledTimes(0);
+  });
+
+  it('cancels existing search', async () => {
+    const cancel = jest.fn();
+    state.search.input = 'test';
+    state.components.searchProviders = {
+      foo: {
+        search() {
+          return Promise.resolve(['Hello', 'World']);
+        },
+        clear() {},
+        cancel,
+      },
+    };
+    const dispose = triggerSearch.call(Atom.of(state));
+    dispose();
+    await (state.components.searchProviders as any).foo.search().catch(m => m);
+    expect(cancel).toHaveBeenCalledTimes(1);
+  });
+
+  it('catches any emitted exceptions', async () => {
+    console.warn = jest.fn();
+    state.search.input = 'test';
+    state.components.searchProviders = {
+      foo: {
+        search() {
+          return Promise.reject('ouch!');
+        },
+        clear() {},
+        cancel() {},
+      },
+    };
+    triggerSearch.call(Atom.of(state));
+    await (state.components.searchProviders as any).foo.search().catch(m => m);
+    expect(console.warn).toHaveBeenCalled();
   });
 });

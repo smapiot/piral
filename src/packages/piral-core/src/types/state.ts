@@ -9,7 +9,7 @@ import { MenuSettings } from './menu';
 import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
-import { Dict, Without } from './utils';
+import { Dict, Without, Disposable } from './utils';
 import {
   TileComponentProps,
   BaseComponentProps,
@@ -62,6 +62,9 @@ export interface ExtensionRegistration {
 
 export interface SearchProviderRegistration {
   search: SearchHandler;
+  cancel(): void;
+  clear(): void;
+  onlyImmediate: boolean;
 }
 
 export interface AppComponents {
@@ -222,7 +225,7 @@ export interface FormsState {
   [id: string]: FormDataState;
 }
 
-export interface UserState {
+export interface UserState<T = {}> {
   /**
    * The provided features, if any.
    */
@@ -234,7 +237,7 @@ export interface UserState {
   /**
    * The current user, if available.
    */
-  current: UserInfo | undefined;
+  current: UserInfo<T> | undefined;
 }
 
 export interface SearchState {
@@ -252,7 +255,7 @@ export interface SearchState {
   results: Array<ReactChild>;
 }
 
-export interface GlobalState {
+export interface GlobalState<TUser = {}> {
   /**
    * The relevant state for the app itself.
    */
@@ -272,7 +275,7 @@ export interface GlobalState {
   /**
    * The relevant state for the current user.
    */
-  user: UserState;
+  user: UserState<TUser>;
   /**
    * The relevant state for the in-site search.
    */
@@ -280,6 +283,13 @@ export interface GlobalState {
 }
 
 export interface StateActions {
+  /**
+   * Sets the currently logged in user.
+   * @param user The current user or undefined is anonymous.
+   * @param features The features for the current user, if any.
+   * @param permissions The permissions of the current user, if any.
+   */
+  setUser<T>(user: UserInfo<T>, features: UserFeatures, permissions: UserPermissions): void;
   /**
    * Reads the value of a shared data item.
    * @param name The name of the shared item.
@@ -423,9 +433,10 @@ export interface StateActions {
   updateFormState(id: string, original: FormDataState, patch: Partial<FormDataState>): void;
   /**
    * Resets the search results.
+   * @param input The input to set.
    * @param loading Determines if further results are currently loading.
    */
-  resetSearchResults(loading: boolean): void;
+  resetSearchResults(input: string, loading: boolean): void;
   /**
    * Appends more results to the existing results.
    * @param items The items to append.
@@ -438,6 +449,12 @@ export interface StateActions {
    * @param done Determines if more results are pending.
    */
   prependSearchResults(items: Array<ReactChild>, done: boolean): void;
+  /**
+   * Triggers the search explicitly.
+   * @param input Optionally sets the query to look for. Otherwise the current input is taken.
+   * @param immediate Optionally, determins if the search was invoked immediately.
+   */
+  triggerSearch(input?: string, immediate?: boolean): Disposable;
 }
 
 export interface GlobalStateContext extends StateActions {

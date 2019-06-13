@@ -12,6 +12,7 @@ import {
   createNotifications,
   createSearch,
   createModals,
+  createAppLayout,
 } from './components';
 import { PiExtApi, PiletApi, PiralOptions } from './types';
 
@@ -42,23 +43,18 @@ export function renderInstance(options: PiralOptions) {
           link
           name
           version
-          author
-          dependencies
         }
       }
     `,
     ).then(({ pilets }) => pilets);
   };
   const {
-    routes = {},
-    trackers = [],
     selector = '#app',
     requestPilets = defaultRequestPilets,
     gatewayUrl: gateway,
     subscriptionUrl,
     translations = {},
     attach,
-    Loader,
     DashboardContainer,
     Tile,
     UnknownErrorInfo,
@@ -76,7 +72,9 @@ export function renderInstance(options: PiralOptions) {
     SearchContainer,
     SearchInput,
     SearchResult,
+    initialize,
     Layout,
+    ...forwardOptions
   } = options;
   const origin = getGateway(gateway);
   const client = setupGqlClient({
@@ -86,28 +84,34 @@ export function renderInstance(options: PiralOptions) {
   const localizer = setupLocalizer({
     messages: translations,
   });
-  const Menu = createMenu({
-    MenuContainer,
-    MenuItem,
-  });
-  const Notifications = createNotifications({
-    NotificationItem,
-    NotificationsContainer,
-  });
-  const Search = createSearch({
-    SearchContainer,
-    SearchInput,
-    SearchResult,
-  });
-  const Modals = createModals({
-    ModalDialog,
-    ModalsContainer,
+
+  const AppLayout = createAppLayout({
+    Layout,
+    Menu: createMenu({
+      MenuContainer,
+      MenuItem,
+    }),
+    Notifications: createNotifications({
+      NotificationItem,
+      NotificationsContainer,
+    }),
+    Search: createSearch({
+      SearchContainer,
+      SearchInput,
+      SearchResult,
+    }),
+    Modals: createModals({
+      ModalDialog,
+      ModalsContainer,
+    }),
   });
 
+  const renderLayout = (content: React.ReactNode) => <AppLayout>{content}</AppLayout>;
+
   const Piral = createInstance<PiExtApi>({
+    ...forwardOptions,
     availablePilets: getAvailablePilets(attach),
     requestPilets,
-    Loader,
     Dashboard: createDashboard({
       DashboardContainer,
       Tile,
@@ -131,19 +135,12 @@ export function renderInstance(options: PiralOptions) {
       };
     },
     languages: Object.keys(translations),
-    routes,
-    trackers,
+    setupState: initialize,
   });
 
   const App: React.SFC = () => (
     <Provider value={client}>
-      <Piral>
-        {content => (
-          <Layout Menu={Menu} Modals={Modals} Notifications={Notifications} Search={Search}>
-            {content}
-          </Layout>
-        )}
-      </Piral>
+      <Piral>{renderLayout}</Piral>
     </Provider>
   );
 

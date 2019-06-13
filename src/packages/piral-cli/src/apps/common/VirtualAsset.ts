@@ -6,10 +6,7 @@ export class VirtualAsset extends (Bundler as any).Asset {
 
   constructor(name, options) {
     super(name, options);
-    const [refName] = name
-      .split('/')
-      .reverse()
-      .map(m => m.replace(/\.vm$/, ''));
+    const refName = name.substr(1).replace(/\.vm$/, '');
     this.content = `module.exports=require('${refName}');`;
   }
 
