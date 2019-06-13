@@ -15,7 +15,8 @@ export function setSearchInput(input: string) {
 }
 
 export function triggerSearch(query?: string, immediate = false): Disposable {
-  const state = deref(this as Atom<GlobalState>);
+  const ctx = this as Atom<GlobalState>;
+  const state = deref(ctx);
   const providers = state.components.searchProviders;
   const { input, loading } = state.search;
 
@@ -27,7 +28,7 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
     const allProviders = Object.keys(providers);
     const providerKeys = allProviders.filter(m => !providers[m].onlyImmediate || immediate);
     const load = !!query && providerKeys.length > 0;
-    resetSearchResults.call(this, query, load);
+    resetSearchResults.call(ctx, query, load);
 
     if (load) {
       let searchCount = providerKeys.length;
@@ -40,11 +41,11 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
       providerKeys.forEach(key =>
         providers[key].search(opts).then(
           results => {
-            active && appendSearchResults.call(this, results.map(m => wrapElement(m)), --searchCount === 0);
+            active && appendSearchResults.call(ctx, results.map(m => wrapElement(m)), --searchCount === 0);
           },
           ex => {
             console.warn(ex);
-            active && --searchCount === 0 && appendSearchResults.call(this, [], true);
+            active && --searchCount === 0 && appendSearchResults.call(ctx, [], true);
           },
         ),
       );
@@ -52,6 +53,7 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
       return () => {
         active = false;
         providerKeys.forEach(key => providers[key].cancel());
+        appendSearchResults.call(ctx, [], load);
       };
     } else if (!query) {
       allProviders.forEach(key => providers[key].clear());
