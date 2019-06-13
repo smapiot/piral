@@ -13,6 +13,21 @@ export interface SearchOptions {
   immediate: boolean;
 }
 
+export interface SearchSettings {
+  /**
+   * Only invoke the search provider if its an immediate search.
+   */
+  onlyImmediate?: boolean;
+  /**
+   * Callback to be fired when the search is cleared.
+   */
+  onClear?(): void;
+  /**
+   * Callback to be fired when an existing search is cancelled.
+   */
+  onCancel?(): void;
+}
+
 export interface SearchProvider<TApi> {
   (options: SearchOptions, api: TApi): Promise<Array<ReactNode | HTMLElement>>;
 }

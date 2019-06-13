@@ -8,7 +8,8 @@
 * Added `public-url` option in Piral CLI
 * Fixed `piral-cli` build for scoped shared dependencies
 * Added error code and output to Piral CLI
-* Added more options to the search provider
+* Added more options to the search provider registration
+* Provide immediate argument to search provider
 
 ## 0.4.0 (June 11, 2019)
 

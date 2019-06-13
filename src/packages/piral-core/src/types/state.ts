@@ -9,7 +9,7 @@ import { MenuSettings } from './menu';
 import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
-import { Dict, Without } from './utils';
+import { Dict, Without, Disposable } from './utils';
 import {
   TileComponentProps,
   BaseComponentProps,
@@ -62,6 +62,9 @@ export interface ExtensionRegistration {
 
 export interface SearchProviderRegistration {
   search: SearchHandler;
+  cancel(): void;
+  clear(): void;
+  onlyImmediate: boolean;
 }
 
 export interface AppComponents {
@@ -430,9 +433,10 @@ export interface StateActions {
   updateFormState(id: string, original: FormDataState, patch: Partial<FormDataState>): void;
   /**
    * Resets the search results.
+   * @param input The input to set.
    * @param loading Determines if further results are currently loading.
    */
-  resetSearchResults(loading: boolean): void;
+  resetSearchResults(input: string, loading: boolean): void;
   /**
    * Appends more results to the existing results.
    * @param items The items to append.
@@ -445,6 +449,12 @@ export interface StateActions {
    * @param done Determines if more results are pending.
    */
   prependSearchResults(items: Array<ReactChild>, done: boolean): void;
+  /**
+   * Triggers the search explicitly.
+   * @param input Optionally sets the query to look for. Otherwise the current input is taken.
+   * @param immediate Optionally, determins if the search was invoked immediately.
+   */
+  triggerSearch(input?: string, immediate?: boolean): Disposable;
 }
 
 export interface GlobalStateContext extends StateActions {

@@ -6,7 +6,7 @@ import { SharedData, DataStoreOptions } from './data';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { InputFormOptions, FormCreator } from './form';
 import { Disposable, SeverityLevel, EventEmitter } from './utils';
-import { SearchProvider } from './search';
+import { SearchProvider, SearchSettings } from './search';
 import {
   ForeignComponent,
   ModalComponentProps,
@@ -240,8 +240,9 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * The name has to be unique within the current pilet.
    * @param name The name of the search provider.
    * @param provider The callback to be used for searching.
+   * @param settings The optional settings for the search provider.
    */
-  registerSearchProvider(name: string, provider: SearchProvider<PiralApi<TExtraApi>>): void;
+  registerSearchProvider(name: string, provider: SearchProvider<PiralApi<TExtraApi>>, settings?: SearchSettings): void;
   /**
    * Unregisters a search provider known by the given name.
    * Only previously registered search providers can be unregistered.

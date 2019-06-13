@@ -102,10 +102,10 @@ const SearchForm: React.SFC = () => {
   const [value, setValue] = useSearch();
 
   return (
-    <div className="search">
+    <form className="search">
       <input type="search" placeholder="Search" onChange={e => setValue(e.target.value)} value={value} />
       <SearchResults />
-    </div>
+    </form>
   );
 };
 

@@ -22,10 +22,11 @@ export const SearchPilet: ArbiterModule<PiralApi> = {
           setTimeout(
             () =>
               resolve([
-                <b>Sample result 1 for {q}</b>,
-                <i>Sample result 2 for {q}</i>,
+                <b>Sample result 1 for {q.query}</b>,
+                <i>Sample result 2 for {q.query}</i>,
                 <span>Third result</span>,
                 <div>4th result</div>,
+                <div>{q.immediate ? 'IMMEDIATE' : 'chill'}</div>,
                 htmlResult,
               ]),
             1000,
@@ -35,7 +36,7 @@ export const SearchPilet: ArbiterModule<PiralApi> = {
 
     piral.registerSearchProvider(
       'example2',
-      q => new Promise(resolve => setTimeout(() => resolve([<div>Another result ({q})</div>]), 3500)),
+      q => new Promise(resolve => setTimeout(() => resolve([<div>Another result ({q.query})</div>]), 3500)),
     );
   },
 };

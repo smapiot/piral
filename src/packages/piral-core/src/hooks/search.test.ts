@@ -21,8 +21,7 @@ const state = {
 
 const availableActions = {
   setSearchInput: jest.fn(),
-  resetSearchResults: jest.fn(),
-  appendSearchResults: jest.fn(),
+  triggerSearch: jest.fn(),
 };
 
 (actions as any).useActions = () => availableActions;
@@ -32,7 +31,6 @@ describe('Search Hook Module', () => {
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
-    (React as any).useState = initial => [initial, jest.fn()];
     const [value] = useSearch();
     expect(value).toBe('abc');
   });
@@ -47,130 +45,22 @@ describe('Search Hook Module', () => {
     expect(availableActions.setSearchInput).toHaveBeenCalledWith('foo');
   });
 
-  it('immediately resets with loading false if some value is given but no provider found', () => {
-    state.search.input = 'foo';
+  it('triggers the search without immediate mode', () => {
     const usedEffect = jest.fn(fn => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = current => ({ current });
     (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
-    expect(availableActions.resetSearchResults).toHaveBeenCalledWith(false);
+    expect(availableActions.triggerSearch).toHaveBeenCalledWith('abc', false);
   });
 
-  it('immediately resets with loading true if some value is given and a provider is found', () => {
-    state.search.input = 'foo';
-    state.components.searchProviders['example'] = {
-      search(q: string) {
-        return Promise.resolve([]);
-      },
-    };
+  it('cancels the current search', () => {
     const usedEffect = jest.fn(fn => fn());
+    const cancel = jest.fn();
     (React as any).useEffect = usedEffect;
-    (React as any).useRef = current => ({ current });
+    (React as any).useRef = _ => ({ current: cancel });
     (React as any).useState = initial => [initial, jest.fn()];
     useSearch();
-    expect(availableActions.resetSearchResults).toHaveBeenCalledWith(true);
-  });
-
-  it('immediately resets with loading false if no value is given', () => {
-    state.search.input = '';
-    const usedEffect = jest.fn(fn => fn());
-    (React as any).useEffect = usedEffect;
-    (React as any).useRef = current => ({ current });
-    (React as any).useState = initial => [initial, jest.fn()];
-    useSearch();
-    expect(availableActions.resetSearchResults).toHaveBeenCalledWith(false);
-  });
-
-  it('walks over all search providers', () => {
-    const search = jest.fn(() => Promise.resolve([]));
-    state.search.input = 'test';
-    state.components.searchProviders = {
-      foo: { search },
-      bar: { search },
-    };
-    const usedEffect = jest.fn(fn => fn());
-    (React as any).useEffect = usedEffect;
-    (React as any).useRef = current => ({ current });
-    (React as any).useState = initial => [initial, jest.fn()];
-    useSearch();
-    expect(search).toHaveBeenCalledTimes(2);
-  });
-
-  it('wraps results', async () => {
-    state.search.input = 'test';
-    state.components.searchProviders = {
-      foo: {
-        search() {
-          return Promise.resolve(['Hello', 'World']);
-        },
-      },
-    };
-    const usedEffect = jest.fn(fn => fn());
-    (React as any).useEffect = usedEffect;
-    (React as any).useRef = current => ({ current });
-    (React as any).useState = initial => [initial, jest.fn()];
-    useSearch();
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
-  });
-
-  it('stops existing search', async () => {
-    state.search.input = 'test';
-    state.components.searchProviders = {
-      foo: {
-        search() {
-          return Promise.resolve(['Hello', 'World']);
-        },
-      },
-    };
-    const usedEffect = jest.fn(fn => fn());
-    const usedRef = jest.fn(current => ({ current }));
-    (React as any).useEffect = usedEffect;
-    (React as any).useRef = usedRef;
-    (React as any).useState = initial => [initial, jest.fn()];
-    useSearch();
-    usedRef.mock.results[0].value.current();
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
-  });
-
-  it('cancels existing search', async () => {
-    state.search.input = 'test';
-    state.components.searchProviders = {
-      foo: {
-        search() {
-          return Promise.resolve(['Hello', 'World']);
-        },
-      },
-    };
-    const usedEffect = jest.fn(fn => {
-      fn();
-      return fn;
-    });
-    const usedRef = jest.fn(current => ({ current }));
-    (React as any).useEffect = usedEffect;
-    (React as any).useRef = usedRef;
-    (React as any).useState = initial => [initial, jest.fn()];
-    useSearch();
-    usedEffect.mock.results[0].value();
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
-  });
-
-  it('catches any emitted exceptions', async () => {
-    console.warn = jest.fn();
-    state.search.input = 'test';
-    state.components.searchProviders = {
-      foo: {
-        search() {
-          return Promise.reject('ouch!');
-        },
-      },
-    };
-    const usedEffect = jest.fn(fn => fn());
-    (React as any).useEffect = usedEffect;
-    (React as any).useRef = current => ({ current });
-    (React as any).useState = initial => [initial, jest.fn()];
-    useSearch();
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
-    expect(console.warn).toHaveBeenCalled();
+    expect(cancel).toHaveBeenCalledTimes(1);
   });
 });
