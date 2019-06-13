@@ -40,11 +40,11 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
       providerKeys.forEach(key =>
         providers[key].search(opts).then(
           results => {
-            active && appendSearchResults(results.map(m => wrapElement(m)), --searchCount === 0);
+            active && appendSearchResults.call(this, results.map(m => wrapElement(m)), --searchCount === 0);
           },
           ex => {
             console.warn(ex);
-            active && --searchCount === 0 && appendSearchResults([], true);
+            active && --searchCount === 0 && appendSearchResults.call(this, [], true);
           },
         ),
       );

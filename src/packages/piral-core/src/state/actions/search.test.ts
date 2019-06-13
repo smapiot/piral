@@ -227,6 +227,8 @@ describe('Search Action Module', () => {
         search() {
           return Promise.resolve(['Hello', 'World']);
         },
+        clear() {},
+        cancel() {},
       },
     };
     triggerSearch.call(Atom.of(state));
