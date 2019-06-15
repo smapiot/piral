@@ -1,55 +1,44 @@
 import * as React from 'react';
-import * as globalState from '../../hooks';
 import { mount } from 'enzyme';
 import { DefaultErrorInfo } from './errorInfo';
+
+jest.mock('../../hooks/globalState', () => ({
+  useGlobalState(select: any) {
+    return select(state);
+  },
+}));
+
+const state = {
+  components: {
+    extensions: {},
+  },
+};
+
+(React as any).useMemo = cb => cb();
 
 const StubErrorInfo: React.SFC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
 describe('Default Error Info Component', () => {
   it('renders the switch-case in the feed error case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          extensions: {},
-        },
-      });
     const node = mount(<DefaultErrorInfo type="feed" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(0);
     expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
   });
 
   it('renders the switch-case in the form error case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          extensions: {},
-        },
-      });
     const node = mount(<DefaultErrorInfo type="form" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(0);
     expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
   });
 
   it('renders the switch-case in the loading error case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          extensions: {},
-        },
-      });
     const node = mount(<DefaultErrorInfo type="loading" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(0);
     expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
   });
 
   it('renders the switch-case in the not_found error case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          extensions: {},
-        },
-      });
     const node = mount(
       <DefaultErrorInfo
         type="not_found"
@@ -63,12 +52,6 @@ describe('Default Error Info Component', () => {
   });
 
   it('renders the switch-case in the page error case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          extensions: {},
-        },
-      });
     const node = mount(
       <DefaultErrorInfo
         type="page"
@@ -82,18 +65,11 @@ describe('Default Error Info Component', () => {
   });
 
   it('renders the react fragment in the default case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          extensions: {
-            error: [
-              {
-                component: StubErrorInfo,
-              },
-            ],
-          },
-        },
-      });
+      (state.components.extensions as any).error = [
+      {
+        component: StubErrorInfo,
+      },
+    ];
     const node = mount(<DefaultErrorInfo type="feed" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(1);
     expect(node.findWhere(n => n.key() === 'default_error').length).toBe(0);

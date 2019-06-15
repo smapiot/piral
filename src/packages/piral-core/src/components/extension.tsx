@@ -1,23 +1,12 @@
 import * as React from 'react';
-import { isfunc } from 'react-arbiter';
-import { useGlobalState } from '../hooks';
+import { useExtension } from '../hooks';
 import { ExtensionSlotProps } from '../types';
 
-function defaultRender(items: Array<React.ReactNode>) {
-  return <>{items}</>;
-}
-
 export function getExtensionSlot(name: string) {
-  const ExtensionSlotView: React.SFC<ExtensionSlotProps> = ({ render = defaultRender, empty, params = {} }) => {
-    const extensions = useGlobalState(s => s.components.extensions[name] || []);
-
-    return render(
-      extensions.length === 0 && isfunc(empty)
-        ? [empty()]
-        : extensions.map(({ component: Component }, i) => <Component key={i} params={params} />),
-    );
+  const ExtensionSlotView: React.SFC<ExtensionSlotProps> = props => {
+    const Extension = useExtension(name);
+    return <Extension {...props} />;
   };
   ExtensionSlotView.displayName = `ExtensionSlot_${name}`;
-
   return ExtensionSlotView;
 }
