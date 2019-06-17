@@ -1,5 +1,5 @@
-import { join, dirname } from 'path';
-import { runDebug, retrievePiletsInfo } from './common';
+import { dirname } from 'path';
+import { runDebug, retrievePiletsInfo, retrievePiralRoot } from './common';
 
 export interface DebugPiralOptions {
   entry?: string;
@@ -8,7 +8,7 @@ export interface DebugPiralOptions {
 }
 
 export const debugPiralDefaults = {
-  entry: './src/index.html',
+  entry: './',
   port: 1234,
   publicUrl: '/',
 };
@@ -19,12 +19,12 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     port = debugPiralDefaults.port,
     publicUrl = debugPiralDefaults.publicUrl,
   } = options;
-  const entryFiles = join(baseDir, entry);
+  const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals } = await retrievePiletsInfo(entryFiles);
   return runDebug(port, entryFiles, {
     publicUrl,
     options: {
-      target: dirname(entry),
+      target: dirname(entryFiles),
       dependencies: externals,
     },
   });

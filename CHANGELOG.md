@@ -5,6 +5,7 @@
 * Added new optional library `piral-ng`
 * Extended APIs for `registerExtension` and `registerModal`
 * Improved documentation
+* Added more flexibility to `piral build` and `piral debug` commands
 
 ## 0.5.0 (June 13, 2019)
 

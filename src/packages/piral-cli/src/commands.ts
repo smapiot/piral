@@ -38,7 +38,7 @@ export const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source index.html file for collecting all the information.',
+          describe: 'Sets the source root directory or index.html file for collecting all the information.',
           default: apps.debugPiralDefaults.entry,
         })
         .number('port')
@@ -68,11 +68,11 @@ export const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source index.html file for collecting all the information.',
+          describe: 'Sets the source root directory or index.html file for collecting all the information.',
           default: apps.buildPiralDefaults.entry,
         })
         .string('target')
-        .describe('target', 'Sets the target file of bundling.')
+        .describe('target', 'Sets the target directory or file of bundling.')
         .default('target', apps.buildPiralDefaults.target)
         .string('public-url')
         .describe('public-url', 'Sets the public URL (path) of the bundle.')

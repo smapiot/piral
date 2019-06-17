@@ -24,10 +24,10 @@ Instead of `debug-piral` you can also use:
 
 ### `source`
 
-Sets the source index.html file for collecting all the information.
+Sets the source root directory or index.html file for collecting all the information.
 
 - Type: `string`
-- Default: `./src/index.html`
+- Default: `./`
 
 ## Flags
 

@@ -1,4 +1,4 @@
-import { resolve, join } from 'path';
+import { resolve, join, extname, basename, dirname } from 'path';
 import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists } from './io';
 import { cliVersion } from './info';
 
@@ -52,11 +52,36 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
   };
 }
 
+export async function retrievePiralRoot(baseDir: string, entry: string) {
+  const rootDir = join(baseDir, entry);
+
+  if (extname(rootDir) !== '.html') {
+    const packageName = basename(rootDir) === 'package.json' ? rootDir : join(rootDir, 'package.json');
+    const exists = await checkExists(packageName);
+
+    if (!exists) {
+      console.error(`Cannot find a valid entry point. Missing package.json in "${rootDir}".`);
+      throw new Error('Invalid Piral instance.');
+    }
+
+    const { app } = require(packageName);
+
+    if (!app) {
+      console.error(`Cannot find a valid entry point. Missing field app in the package.json.`);
+      throw new Error('Invalid Piral instance.');
+    }
+
+    return join(dirname(packageName), app);
+  }
+
+  return rootDir;
+}
+
 export async function retrievePiletsInfo(entryFile: string) {
   const exists = await checkExists(entryFile);
 
   if (!exists) {
-    console.error('The given entry pointing to "%s" does not exist.', entryFile);
+    console.error(`The given entry pointing to "${entryFile}" does not exist.`);
     throw new Error('Invalid Piral instance.');
   }
 
