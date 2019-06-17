@@ -51,6 +51,7 @@ function modifyRawAsset(proto: any) {
       const match = /^module\.exports=(.*);$/.exec(item.value);
 
       if (match) {
+        console.log('in here ... %s', item.value);
         // remove the first character (/) to prepare for concat
         const path = JSON.stringify(JSON.parse(match[1]).substr(1));
         const bundleURL = JSON.stringify(getPath('parcel-bundler/src/builtins/bundle-url'));

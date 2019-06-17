@@ -18,6 +18,11 @@ describe('Events Module', () => {
     events.emit('init', undefined);
   });
 
+  it('should not try to remove non-existing listener', () => {
+    const events = createListener();
+    events.off('init', jest.fn());
+  });
+
   it('should not be possible to emit after event removed', done => {
     const events = createListener();
     const mockCallback = jest.fn();
