@@ -119,15 +119,25 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * The name needs to be unique to be used without the pilet's name.
    * @param name The name of the modal to register.
    * @param render The function that is being called once rendering begins.
+   * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModalX<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
+  registerModalX<TOpts>(
+    name: string,
+    render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>,
+    defaults?: TOpts,
+  ): void;
   /**
    * Registers a modal dialog using a React component.
    * The name needs to be unique to be used without the pilet's name.
    * @param name The name of the modal to register.
    * @param Component The component to render the page.
+   * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>): void;
+  registerModal<TOpts>(
+    name: string,
+    Component: ComponentType<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>,
+    defaults?: TOpts,
+  ): void;
   /**
    * Unregisters a modal by its name.
    * @param name The name that was previously registered.
@@ -189,15 +199,25 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * The name must refer to the extension slot.
    * @param name The global name of the extension slot.
    * @param render The function that is being called once rendering begins.
+   * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
+  registerExtensionX<T>(
+    name: string,
+    render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>,
+    defaults?: T,
+  ): void;
   /**
    * Registers an extension component with a React component.
    * The name must refer to the extension slot.
    * @param name The global name of the extension slot.
    * @param Component The component to be rendered.
+   * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
+  registerExtension<T>(
+    name: string,
+    Component: ComponentType<ExtensionComponentProps<PiralApi<TExtraApi>, T>>,
+    defaults?: T,
+  ): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.

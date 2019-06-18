@@ -1,7 +1,21 @@
 import * as React from 'react';
-import * as globalState from '../../hooks';
 import { mount } from 'enzyme';
 import { DefaultDashboard } from './dashboard';
+
+jest.mock('../../hooks/globalState', () => ({
+  useGlobalState(select: any) {
+    return select(state);
+  },
+}));
+
+const state = {
+  components: {
+    tiles: {},
+    extensions: {},
+  },
+};
+
+(React as any).useMemo = cb => cb();
 
 const StubDashboard: React.SFC = props => <div />;
 StubDashboard.displayName = 'StubDashboard';
@@ -11,37 +25,21 @@ StubTile.displayName = 'StubTile';
 
 describe('Default Dashboard Component', () => {
   it('renders the react fragment in the default case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          tiles: {
-            a: {
-              component: StubTile,
-              preferences: {},
-            },
-          },
-          extensions: {},
-        },
-      });
+    (state.components.tiles as any).a = {
+      component: StubTile,
+      preferences: {},
+    };
     const node = mount(<DefaultDashboard history={undefined} location={undefined} match={undefined} />);
     expect(node.find(StubDashboard).length).toBe(0);
     expect(node.find(StubTile).length).toBe(1);
   });
 
   it('renders the react fragment in the default case', () => {
-    (globalState as any).useGlobalState = (select: any) =>
-      select({
-        components: {
-          tiles: {},
-          extensions: {
-            dashboard: [
-              {
-                component: StubDashboard,
-              },
-            ],
-          },
-        },
-      });
+    (state.components.extensions as any).dashboard = [
+      {
+        component: StubDashboard,
+      },
+    ];
     const node = mount(<DefaultDashboard history={undefined} location={undefined} match={undefined} />);
     expect(node.find(StubTile).length).toBe(0);
     expect(node.find(StubDashboard).length).toBe(1);

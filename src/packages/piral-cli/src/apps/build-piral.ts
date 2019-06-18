@@ -1,6 +1,22 @@
 import * as Bundler from 'parcel-bundler';
-import { join, dirname, basename } from 'path';
-import { extendConfig, setStandardEnvs, retrievePiletsInfo } from './common';
+import { dirname, basename, extname } from 'path';
+import { extendConfig, setStandardEnvs, retrievePiletsInfo, retrievePiralRoot } from './common';
+
+function getDestination(entryFiles: string, target: string) {
+  const isdir = extname(target) !== '.html';
+
+  if (isdir) {
+    return {
+      outDir: target,
+      outFile: basename(entryFiles),
+    };
+  } else {
+    return {
+      outDir: dirname(target),
+      outFile: basename(target),
+    };
+  }
+}
 
 export interface BuildPiralOptions {
   entry?: string;
@@ -9,8 +25,8 @@ export interface BuildPiralOptions {
 }
 
 export const buildPiralDefaults = {
-  entry: './src/index.html',
-  target: './dist/index.html',
+  entry: './',
+  target: './dist',
   publicUrl: '/',
 };
 
@@ -20,20 +36,19 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     target = buildPiralDefaults.target,
     publicUrl = buildPiralDefaults.publicUrl,
   } = options;
-  const entryFiles = join(baseDir, entry);
+  const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals } = await retrievePiletsInfo(entryFiles);
 
   await setStandardEnvs({
     production: true,
-    target: dirname(entry),
+    target: dirname(entryFiles),
     dependencies: externals,
   });
 
   const bundler = new Bundler(
     entryFiles,
     extendConfig({
-      outDir: dirname(target),
-      outFile: basename(target),
+      ...getDestination(entryFiles, target),
       watch: false,
       minify: true,
       scopeHoist: false,

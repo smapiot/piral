@@ -24,19 +24,19 @@ Instead of `build-piral` you can also use:
 
 ### `source`
 
-Sets the source index.html file for collecting all the information.
+Sets the source root directory or index.html file for collecting all the information.
 
 - Type: `string`
-- Default: `./src/index.html`
+- Default: `./`
 
 ## Flags
 
 ### `--target`
 
-Sets the target file of bundling.
+Sets the target directory or file of bundling.
 
 - Type: `string`
-- Default: `"./dist/index.html"`
+- Default: `"./dist"`
 
 ### `--public-url`
 

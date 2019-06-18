@@ -1,6 +1,7 @@
 export * from './action';
 export * from './actions';
 export * from './debounce';
+export * from './extension';
 export * from './feed';
 export * from './form';
 export * from './globalState';

@@ -2,6 +2,36 @@
 # yarn lockfile v1
 
 
+"@angular/common@^8.0.0":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-8.0.1.tgz#8af5a320bf5e44e0527ad27b8b7b1e8786272023"
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/compiler@^8.0.0":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-8.0.1.tgz#5458f9f4943cc8fc84adc823d1f5c780f4ebce31"
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/core@^8.0.0":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-8.0.1.tgz#29dd1236fba716d1b16e9df3e62b32b1fa22dc37"
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/platform-browser-dynamic@^8.0.0":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-8.0.1.tgz#bdf1d4c6f2bbf4d611c44caa939f3d37b0335210"
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/platform-browser@^8.0.0":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-8.0.1.tgz#c58d09fd019a13928852a76d5bfda6c895c6d79b"
+  dependencies:
+    tslib "^1.9.0"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.0.0 <7.4.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0.tgz#06e2ab19bdb535385559aabb5ba59729482800f8"

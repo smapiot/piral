@@ -3,33 +3,38 @@ import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { getExtensionSlot } from './extension';
 
+jest.mock('../hooks/globalState', () => ({
+  useGlobalState(select: any) {
+    return select(state);
+  },
+}));
+
 const StubComponent1: React.SFC = props => <div children={props.children} />;
 StubComponent1.displayName = 'StubComponent1';
 
 const StubComponent2: React.SFC = props => <div children={props.children} />;
 StubComponent2.displayName = 'StubComponent2';
 
-jest.mock('../hooks');
-
-(hooks as any).useGlobalState = (select: any) =>
-  select({
-    components: {
-      extensions: {
-        foo: [],
-        bar: [
-          {
-            component: StubComponent1,
-          },
-          {
-            component: StubComponent1,
-          },
-          {
-            component: StubComponent2,
-          },
-        ],
-      },
+const state = {
+  components: {
+    extensions: {
+      foo: [],
+      bar: [
+        {
+          component: StubComponent1,
+        },
+        {
+          component: StubComponent1,
+        },
+        {
+          component: StubComponent2,
+        },
+      ],
     },
-  });
+  },
+};
+
+(React as any).useMemo = (cb) => cb();
 
 describe('Extension Module', () => {
   it('is able to default render not available extension', () => {

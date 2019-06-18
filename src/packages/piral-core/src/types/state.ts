@@ -48,6 +48,7 @@ export interface PageRegistration {
 
 export interface ModalRegistration {
   component: WrappedComponent<ModalComponentProps<any, any>>;
+  defaults: any;
 }
 
 export interface MenuItemRegistration {
@@ -58,6 +59,7 @@ export interface MenuItemRegistration {
 export interface ExtensionRegistration {
   component: WrappedComponent<ExtensionComponentProps<any>>;
   reference: any;
+  defaults: any;
 }
 
 export interface SearchProviderRegistration {

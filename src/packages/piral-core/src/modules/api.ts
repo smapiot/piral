@@ -58,10 +58,12 @@ function addExtension<TApi, T>(
   api: PiralApi<TApi>,
   name: string,
   arg: AnyComponent<ExtensionComponentProps<PiralApi<TApi>, T>>,
+  defaults?: T,
 ) {
   context.registerExtension(name, {
     component: withApi(arg, api) as any,
     reference: arg,
+    defaults,
   });
 }
 
@@ -85,9 +87,11 @@ function addModal<TApi, TOpts>(
   api: PiralApi<TApi>,
   id: string,
   arg: AnyComponent<ModalComponentProps<PiralApi<TApi>, TOpts>>,
+  defaults?: TOpts,
 ) {
   context.registerModal(id, {
     component: withApi(arg, api) as any,
+    defaults,
   });
 }
 
@@ -222,12 +226,12 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterTile(id);
       },
-      registerExtensionX(name, arg) {
-        addExtension(context, api, name, arg);
+      registerExtensionX(name, arg, defaults) {
+        addExtension(context, api, name, arg, defaults);
       },
-      registerExtension(name, arg) {
+      registerExtension(name, arg, defaults) {
         markReact(arg, `Extension:${name}`);
-        addExtension(context, api, name, arg);
+        addExtension(context, api, name, arg, defaults);
       },
       unregisterExtension(name, arg) {
         context.unregisterExtension(name, arg);
@@ -245,14 +249,14 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterMenuItem(id);
       },
-      registerModalX(name, arg) {
+      registerModalX(name, arg, defaults) {
         const id = buildName(prefix, name);
-        addModal(context, api, id, arg);
+        addModal(context, api, id, arg, defaults);
       },
-      registerModal(name, arg) {
+      registerModal(name, arg, defaults) {
         const id = buildName(prefix, name);
         markReact(arg, `Modal:${name}`);
-        addModal(context, api, id, arg);
+        addModal(context, api, id, arg, defaults);
       },
       unregisterModal(name) {
         const id = buildName(prefix, name);

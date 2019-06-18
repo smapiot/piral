@@ -22,10 +22,17 @@ export function createModals({ ModalsContainer, ModalDialog }: ModalsCreator): R
       .map(n => {
         const reg = components[n.name];
         const Component = reg && reg.component;
+        const defaults = reg && reg.defaults;
         return (
           Component && (
             <ModalDialog {...n} key={n.name}>
-              <Component onClose={n.close} options={n.options} />
+              <Component
+                onClose={n.close}
+                options={{
+                  ...defaults,
+                  ...n.options,
+                }}
+              />
             </ModalDialog>
           )
         );

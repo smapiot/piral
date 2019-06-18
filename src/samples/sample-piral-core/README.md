@@ -11,10 +11,20 @@ The provided pilets show some of the features of the standard API created by `pi
 If you want to run the sample you can do it with our CLI tool (which should be available after building, otherwise use `lerna bootstrap` again). Make sure to run the following command from the root of the monorepo:
 
 ```sh
-yarn demos:core
+yarn watch:demo-core
 ```
 
 This will open a development server sitting at `http://localhost:1234`. Right now our CLI is just a tiny wrapper around Parcel :rocket:.
+
+## Building
+
+You can also build the sample web app built on top of `piral-core` to see what the outcome ("produced assets") of such a web app is. Running
+
+```sh
+yarn build:demo-core
+```
+
+will produce the assets in the *dist/demo-core* directory.
 
 ## License
 
