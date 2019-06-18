@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.5.1 (to be determined)
+## 0.5.1 (June 18, 2019)
 
 * Added new optional library `piral-ng`
 * Extended APIs for `registerExtension` and `registerModal`
