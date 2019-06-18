@@ -30,17 +30,6 @@ function resolveModule(name: string, targetDir: string) {
   }
 }
 
-function getPath(path: string) {
-  try {
-    require.resolve(path);
-    return path;
-  } catch (_) {
-    return require.resolve(path, {
-      paths: [__dirname],
-    });
-  }
-}
-
 function modifyRawAsset(proto: any) {
   const g = proto.generate;
   proto.generate = function() {
@@ -51,11 +40,8 @@ function modifyRawAsset(proto: any) {
       const match = /^module\.exports=(.*);$/.exec(item.value);
 
       if (match) {
-        console.log('in here ... %s', item.value);
-        // remove the first character (/) to prepare for concat
         const path = JSON.stringify(JSON.parse(match[1]).substr(1));
-        const bundleURL = JSON.stringify(getPath('parcel-bundler/src/builtins/bundle-url'));
-        item.value = `var r=require(${bundleURL}).getBundleURL();module.exports=r+${path};`;
+        item.value = `module.exports=__bundleUrl__+${path};`;
       }
     }
 
@@ -84,7 +70,13 @@ export function modifyBundler(proto: any, externalNames: Array<string>, targetDi
   };
 }
 
-export function postProcess(bundle: Bundler.ParcelBundle) {
+export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
+  const bundleUrl = `var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}();`;
+
+  if (!prName) {
+    prName = `pr_${(bundle as any).getHash()}`;
+  }
+
   const promise = new Promise<void>((resolve, reject) => {
     if (/js|css/.test(bundle.type)) {
       readFile(bundle.name, 'utf8', (err, data) => {
@@ -92,9 +84,6 @@ export function postProcess(bundle: Bundler.ParcelBundle) {
           return reject(err);
         }
 
-        // Replace all the relative /src/img paths with the absolute prodution URL
-        // https://gist.github.com/dfkaye/f43dbdfbcdee427dbe4339870ed979d0
-        //let result = /js/.test(child.type) ? transformHTML(data) : transformCSS(data);
         let result = data;
 
         if (/js/.test(bundle.type)) {
@@ -104,14 +93,15 @@ export function postProcess(bundle: Bundler.ParcelBundle) {
            * from leaking into global (window).
            * @see https://github.com/parcel-bundler/parcel/issues/1401
            */
-
           result = [
-            "!(function(global,parcelRequire){'use strict;'",
+            `!(function(global,parcelRequire){'use strict';${bundleUrl}`,
             result
               .split('"function"==typeof parcelRequire&&parcelRequire')
-              .join('"function"==typeof global.$pr&&global.$pr'),
-            ';global.$pr=parcelRequire}(window, window.$pr));',
+              .join(`"function"==typeof global.${prName}&&global.${prName}`),
+            `;global.${prName}=parcelRequire}(window, window.${prName}));`,
           ].join('\n');
+        } else if (/css/.test(bundle.type)) {
+          // tbd
         }
 
         writeFile(bundle.name, result, 'utf8', err => {
@@ -126,7 +116,7 @@ export function postProcess(bundle: Bundler.ParcelBundle) {
   });
   const promises = [promise];
 
-  (bundle as any).childBundles.forEach(child => promises.push(postProcess(child)));
+  (bundle as any).childBundles.forEach(child => promises.push(postProcess(child, prName)));
 
   return Promise.all(promises).then(() => {});
 }

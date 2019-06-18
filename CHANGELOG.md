@@ -6,6 +6,7 @@
 * Extended APIs for `registerExtension` and `registerModal`
 * Improved documentation
 * Added more flexibility to `piral build` and `piral debug` commands
+* Improved bundling with splitting, module resolution, and URLs
 
 ## 0.5.0 (June 13, 2019)
 

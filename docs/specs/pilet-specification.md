@@ -65,7 +65,7 @@ For proper bundling of the JS files the UMD specification should be followed. Th
 3. If a global `require` (C) is given prefer this as fallback. Otherwise, define it in the end with the defined module resolver (A).
 4. Work through the bundled modules using the module resolver (A) for resolving dependencies.
 
-*Remark*: As global `require` (C) the `window.$pr` should be used.
+*Remark*: As global `require` (C) a `window.pr_...` function should be used that is generated (and valid) for the current bundle only.
 
 The dynamic splitting of the single bundle into multiple files needs to adhere to the following algorithm.
 
