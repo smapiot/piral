@@ -3,45 +3,43 @@ import { ngTile, ngPage, ngExtension, ngMenu, ngModal } from './register';
 
 export interface PiralNgApi {
   /**
-   * Registers a tile for an Angular module.
-   * @param id The id of the element to bootstrap into.
-   * @param Module The Angular module to bootstrap.
+   * Registers a tile for an Angular component.
+   * @param id The name of the tile element.
+   * @param component The Angular component to bootstrap.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTileNg(id: string, Module: any, options?: TilePreferences);
+  registerTileNg(id: string, component: any, options?: TilePreferences);
   /**
-   * Registers a route for an Angular module.
+   * Registers a route for an Angular component.
    * The route needs to be unique and can contain params.
    * Params are following the path-to-regexp notation, e.g., :id for an id parameter.
-   * @param id The id of the element to bootstrap into.
-   * @param Module The Angular module to bootstrap.
    * @param route The route to register.
+   * @param component The Angular component to bootstrap.
    */
-  registerPageNg(id: string, Module: any, route: string);
+  registerPageNg(route: string, component: any);
   /**
-   * Registers an extension component with an Angular module.
+   * Registers an extension component with an Angular component.
    * The slot name must refer to the extension slot.
-   * @param id The id of the element to bootstrap into.
-   * @param Module The Angular module to bootstrap.
-   * @param slot The global name of the extension slot.
+   * @param id The global name of the extension slot.
+   * @param component The Angular component to bootstrap.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtensionNg<T>(id: string, Module: any, slot: string, defaults?: T);
+  registerExtensionNg<T>(id: string, component: any, defaults?: T);
   /**
-   * Registers a menu item for an Angular module.
+   * Registers a menu item for an Angular component.
    * The name has to be unique within the current pilet.
-   * @param id The id of the element to bootstrap into.
-   * @param Module The Angular module to bootstrap.
+   * @param id The name of the menu element.
+   * @param component The Angular component to bootstrap.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenuNg(id: string, Module: any, settings: MenuSettings);
+  registerMenuNg(id: string, component: any, settings: MenuSettings);
   /**
-   * Registers a modal dialog using an Angular module.
-   * @param id The id of the element to bootstrap into.
-   * @param Module The Angular module to bootstrap.
+   * Registers a modal dialog using an Angular component.
+   * @param id The name of the modal element.
+   * @param component The Angular component to bootstrap.
    * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModalNg<T>(id: string, Module: any, defaults?: T);
+  registerModalNg<T>(id: string, component: any, defaults?: T);
 }
 
 /**
@@ -50,20 +48,20 @@ export interface PiralNgApi {
  */
 export function createNgApi<T>(api: PiralCoreApi<T>): PiralNgApi {
   return {
-    registerTileNg(id, Module, options) {
-      ngTile(api, id, Module, options);
+    registerTileNg(id, component, options) {
+      ngTile(api, id, component, options);
     },
-    registerPageNg(id, Module, route) {
-      ngPage(api, id, Module, route);
+    registerPageNg(route, component) {
+      ngPage(api, route, component);
     },
-    registerExtensionNg(id, Module, slot, defaults) {
-      ngExtension(api, id, Module, slot, defaults);
+    registerExtensionNg(slot, component, defaults) {
+      ngExtension(api, slot, component, defaults);
     },
-    registerMenuNg(id, Module, settings) {
-      ngMenu(api, id, Module, settings);
+    registerMenuNg(id, component, settings) {
+      ngMenu(api, id, component, settings);
     },
-    registerModalNg(id, Module, defaults) {
-      ngModal(api, id, Module, defaults);
+    registerModalNg(id, component, defaults) {
+      ngModal(api, id, component, defaults);
     },
   };
 }

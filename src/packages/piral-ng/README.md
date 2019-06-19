@@ -8,6 +8,61 @@ This is an extension library that only has a peer dependency to `piral-core`. Wh
 
 For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
 
+## Setup and Bootstrapping
+
+The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular 2+.
+
+The following polyfills / vendor libs should be imported *before* any other package.
+
+```ts
+import '@angular/platform-browser';
+import '@angular/platform-browser-dynamic';
+import '@angular/core';
+import '@angular/common';
+import '@angular/http';
+import '@core-js/es7/reflect';
+import 'zone.js/dist/zone';
+```
+
+Furthermore, switching on the production mode may be useful.
+
+```ts
+import { enableProdMod } from '@angular/core';
+
+if (process.env.NODE_ENV === 'production') {
+  enableProdMod();
+}
+```
+
+## Injected Services
+
+Depending on the mounted component different services are injected. the following table lists the names of the injected services per component type.
+
+| Component | Props            | Piral   | Context   |
+|-----------|------------------|---------|-----------|
+| Tile      | `TileProps`      | `Piral` | `Context` |
+| Page      | `PageProps`      | `Piral` | `Context` |
+| Modal     | `ModalProps`     | `Piral` | `Context` |
+| Extension | `ExtensionProps` | `Piral` | `Context` |
+| Menu      | `MenuProps`      | `Piral` | `Context` |
+
+To use such a service the `@Inject` decorator should be used with the explicit name.
+
+The following code snippet illustrates the injection of the `TileProps` service into a sample tile component.
+
+```ts
+@Component({
+  template: `
+    <div class="tile">
+      <p>{{ props.rows }} rows and {{ props.columns }} columns</p>
+    </div>
+  `,
+})
+export class SampleTileComponent {
+  constructor(@Inject('TileProps') public props: TileComponentProps<any>) {}
+}
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
