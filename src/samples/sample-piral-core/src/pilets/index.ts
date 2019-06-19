@@ -4,6 +4,7 @@ import { Pilet1 } from './pilet1';
 import { Pilet2 } from './pilet2';
 import { SearchPilet } from './search';
 import { FormPilet } from './form';
+import { VuePilet } from './vuePilet';
 
 /**
  * Normally all these pilets would come from some API and
@@ -14,4 +15,4 @@ import { FormPilet } from './form';
  * repository (or at least in its own folder / structure in a
  * monorepo).
  */
-export const availablePilets = [DashboardPilet, ConnectorPilet, Pilet1, Pilet2, SearchPilet, FormPilet];
+export const availablePilets = [DashboardPilet, ConnectorPilet, Pilet1, Pilet2, SearchPilet, FormPilet, VuePilet];

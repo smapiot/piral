@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ArbiterModule } from 'react-arbiter';
-import { PiralApi, PageComponentProps, FormProps, PiralCoreApi } from 'piral-core';
+import { PageComponentProps, FormProps, PiralCoreApi } from 'piral-core';
+import { SampleApi } from '../types';
 
 interface SampleFormData {
   firstName: string;
@@ -10,7 +11,7 @@ interface SampleFormData {
 /**
  * Shows a form.
  */
-export const FormPilet: ArbiterModule<PiralApi> = {
+export const FormPilet: ArbiterModule<SampleApi> = {
   content: '',
   dependencies: {},
   name: 'Form Module',
@@ -102,7 +103,7 @@ export const FormPilet: ArbiterModule<PiralApi> = {
         );
       },
     });
-    piral.registerPage('/form-async-example/:id', withAsyncForm(MyForm));
+    piral.registerPage('/form-async-example/:id', withAsyncForm(MyForm) as any);
 
     const withFailingForm = piral.createForm({
       message: `Really lose the data?`,

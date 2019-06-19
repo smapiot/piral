@@ -1,6 +1,6 @@
 [![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Sample App](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE)
+# [Piral Sample App](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/sample-piral.svg?style=flat)](https://www.npmjs.com/package/sample-piral)
 
 The sample application should demonstrate you the use of `piral` to create your own Piral instance (or portal). The pilets are served from a sample backend.
 
@@ -25,6 +25,18 @@ yarn build:demo-full
 ```
 
 will produce the assets in the *dist/demo-full* directory.
+
+## Using
+
+This example is also published on NPM as `sample-piral`.
+
+You can scaffold a new pilet for this instance using the `piral-cli`:
+
+```sh
+pilet new sample-piral --target my-first-pilet
+```
+
+This will create a new pilet called `my-first-pilet` in the *./my-first-pilet* folder. Afterwards run `npm install` in the directory to resolve all dependencies followed by `npm start` to start the instance locally.
 
 ## License
 

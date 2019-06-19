@@ -28,15 +28,19 @@
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router": ">=5.0.0",
-    "react-router-dom": ">=5.0.0"
+    "react-router-dom": ">=5.0.0",
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3"
   },
   "devDependencies": {
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "latest",
+    "@vue/component-compiler-utils": "^3.0.0",
     "piral-cli": "^0.5.1",
-    "sass": "^1.17.0"
+    "sass": "^1.17.0",
+    "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
     "build": "tsc",
