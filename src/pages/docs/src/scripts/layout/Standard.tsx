@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { Footer } from './Footer';
 import { Header } from './Header';
-import { Breadcrumbs, Info, InfoProps, Breadcrumb } from '../components';
+import { Breadcrumbs, Info, InfoProps, Breadcrumb, ColorKind } from '../components';
 
 const buildTime = process.env.BUILD_TIME;
 const version = process.env.BUILD_PCKG_VERSION;
 
 export interface StandardProps extends InfoProps {
   breadcrumbs?: Array<Breadcrumb>;
+  kind?: ColorKind;
 }
 
-export const Standard: React.SFC<StandardProps> = ({ children, title, icon, breadcrumbs }) => (
-  <div className="body-green">
+export const Standard: React.SFC<StandardProps> = ({ children, title, icon, breadcrumbs, kind = 'green' }) => (
+  <div className={`body-${kind}`}>
     <div className="page-wrapper">
       <Header>
         <Breadcrumbs current={title} intermediate={breadcrumbs} />

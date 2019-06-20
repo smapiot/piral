@@ -7,7 +7,7 @@ export const Page: React.SFC = () => {
   const ref = React.useRef(undefined);
 
   return (
-    <Standard title="Tooling" icon="paper-plane">
+    <Standard title="Tooling" icon="paper-plane" kind="orange">
       <Content ref={ref} />
       <Menu content={ref} maxLevel={1} />
     </Standard>
