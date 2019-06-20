@@ -10,8 +10,20 @@ $color-yellow: #F9F871;
 $color-pink: #FF6F91;
 $color-purple: #D65DB1;
 
+$colors: (
+  'primary': $color-primary,
+  'green': $color-green,
+  'red': $color-red,
+  'blue': $color-blue,
+  'orange': $color-orange,
+  'yellow': $color-yellow,
+  'pink': $color-pink,
+  'purple': $color-purple,
+);
+
 $text-color: #494d55;
 $text-color-secondary: lighten($text-color, 10%);
+$text-color-tertiary: lighten($text-color, 20%);
 $text-grey: lighten($text-color-secondary, 25%);
 $grey: lighten($text-color-secondary, 25%);
 $light-grey: #c3c3c3;
@@ -37,6 +49,7 @@ $github: #444;
 @import "base";
 @import "doc";
 @import "landing";
+@import "theme";
 @import "loader";
 
 blockquote {

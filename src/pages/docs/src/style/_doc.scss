@@ -78,12 +78,12 @@
   }
 
   .list {
-    &>li {
+    & > li {
       margin-bottom: 10px;
     }
 
     ul {
-      &> li {
+      & > li {
         margin-top:5px;
       }
     }
@@ -174,14 +174,15 @@
   color: #fff;
 }
 
-.table>thead>tr>th {
+.table > thead > tr > th {
   border-bottom-color: lighten($color-green, 20%);
 }
-.table-bordered>thead>tr>th {
+
+.table-bordered > thead > tr > th {
   border-bottom-color: inherit;
 }
 
-.table-striped>tbody>tr:nth-of-type(odd) {
+.table-striped > tbody > tr:nth-of-type(odd) {
   background-color: $smoky-white;
 }
 
@@ -215,7 +216,7 @@ body {
 }
 
 .doc-nav {
-  position:absolute;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -274,7 +275,7 @@ body {
       padding-top: 5px;
     }
 
-    &:hover{
+    &:hover {
       color: $text-color;
       text-decoration: none;
       background: none;

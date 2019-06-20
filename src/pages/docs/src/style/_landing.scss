@@ -82,11 +82,18 @@
     font-weight: 600;
   }
 
-  .intro {
+  .intro, .outro {
     margin: 0 auto;
     max-width: 800px;
     margin-bottom: 60px;
+  }
+
+  .intro {
     color: $text-color-secondary;
+  }
+
+  .outro {
+    color: $text-color-tertiary;
   }
 
   .cards-wrapper {
