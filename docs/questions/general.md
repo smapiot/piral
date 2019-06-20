@@ -49,3 +49,23 @@ export function setup(app: PiralApi) {
 The loading indicator will already be displayed by Piral itself, so there is no need to take care of setting up one.
 
 ---------------------------------------
+
+## What do I need to get started?
+
+A Piral instance requires the following things:
+
+1. A React SPA that uses `piral-core` or `piral` (recommended, sample [available](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral))
+2. A backend service to provision the pilets (a sample using Node.js Express is [available](https://github.com/smapiot/sample-pilet-service))
+3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) NPM feed or a Git repository
+
+The SPA can be hosted on a static storage, while the backend service may be run anyway - serverless may be an option here, too.
+
+---------------------------------------
+
+## How strong is the coupling from Piral to my pilets?
+
+This is a matter of your architecture. Naturally, a single file (root module) is required to touch / integrate your pilet components to the Piral instance. This is the `setup` function. Besides this single point of contact no other touchpoint is required - you could write just "plain" React components using your own abstractions and be happy.
+
+In general we recommend to design and use the pilets in such a way that reuse of common or presumably generic code is easily possible.
+
+---------------------------------------

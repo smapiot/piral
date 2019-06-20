@@ -55,8 +55,7 @@ The exact response may be defined by the implementation (e.g., could be a JSON m
 The pilet feed service needs to provide the following resources to be consumed by end users:
 
 ```graphql
-type PiletMetadata
-{
+type PiletMetadata {
   name: ID!
   version: String
   author: PiletAuthor
@@ -65,29 +64,25 @@ type PiletMetadata
   dependencies: [PiletDependency]
 }
 
-type PiletDependency
-{
+type PiletDependency {
   name: String
   link: String
 }
 
-type PiletLicense
-{
+type PiletLicense {
   pilet: ID!
   author: PiletAuthor
   type: String
   text: String
 }
 
-type PiletAuthor
-{
+type PiletAuthor {
   name: String
   email: String
 }
 
-type Query
-{
-  pilets(hashes: [String]): [PiletMetadata]
+type Query {
+  pilets: [PiletMetadata]
 
   piletLicense(pilet: ID!): PiletLicense
 }
