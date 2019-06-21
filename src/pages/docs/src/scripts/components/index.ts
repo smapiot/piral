@@ -3,6 +3,7 @@ export * from './Button';
 export * from './Callout';
 export * from './Card';
 export * from './CodeBox';
+export * from './Demo';
 export * from './EditSection';
 export * from './Icon';
 export * from './Info';
