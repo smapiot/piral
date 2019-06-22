@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { TiNode } from './types';
-import { Callout } from '../Callout';
-import { gid } from './utils';
 import { TypeLiteralRenderer } from './TypeLiteralRenderer';
+import { gid } from './utils';
+import { TiNode } from './types';
+import { Details } from './Details';
 
 export interface InterfaceRendererProps {
   node: TiNode;
@@ -10,11 +10,16 @@ export interface InterfaceRendererProps {
 }
 
 export const InterfaceRenderer: React.SFC<InterfaceRendererProps> = ({ node, render }) => (
-  <Callout type="info" title={node.name} icon="puzzle-piece" id={gid(node)}>
-    <p>
-      <b>{node.kindString}</b>
-    </p>
-    <p>{node.comment && node.comment.shortText}</p>
-    <TypeLiteralRenderer node={node} render={render} />
-  </Callout>
+  <Details
+    color="blue"
+    id={gid(node)}
+    title={
+      <>
+        <b>{node.kindString}</b>
+        <h3>{node.name}</h3>
+        <p>{node.comment && node.comment.shortText}</p>
+      </>
+    }
+    details={<TypeLiteralRenderer node={node} render={render} />}
+  />
 );

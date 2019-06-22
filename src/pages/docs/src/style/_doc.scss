@@ -3,6 +3,34 @@
   background: $smoky-grey;
 }
 
+.type-info {
+  border-left: 5px solid $color-green;
+  padding-left: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.type-title {
+  cursor: pointer;
+  background: #eee;
+  padding: 0.5em;
+}
+
+.type-details {
+  padding: 0.5em;
+  overflow: hidden;
+  transition: opacity 500ms ease;
+
+  &.open {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  &.close {
+    max-height: 0;
+    opacity: 0;
+  }
+}
+
 .doc-body {
   position: relative;
 }

@@ -21,6 +21,7 @@ function render(node: TiNode) {
     case TiKind.Root:
     case TiKind.ExternalModule:
       return <ModuleRenderer node={node} render={render} />;
+    case TiKind.Class:
     case TiKind.Interface:
       return <InterfaceRenderer node={node} render={render} />;
     case TiKind.Function:
@@ -40,6 +41,4 @@ function render(node: TiNode) {
   }
 }
 
-export const Ti: React.SFC<TiProps> = ({ children }) => {
-  return render(children);
-};
+export const Ti: React.SFC<TiProps> = ({ children }) => render(children);

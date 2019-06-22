@@ -39,5 +39,9 @@
       border-bottom-color: lighten($color, 20%);
     }
   }
+
+  .type-info-#{$name} {
+    border-left-color: $color;
+  }
 }
 

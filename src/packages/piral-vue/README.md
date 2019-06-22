@@ -8,6 +8,44 @@ This is an extension library that only has a peer dependency to `piral-core`. Wh
 
 For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
 
+## Setup and Bootstrapping
+
+Using Vue with Piral is as simple as installing `piral-vue` and `vue`.
+
+```tsx
+import 'vue';
+import { createVueApi } from 'piral-vue';
+```
+
+This is pretty much everything that needs to be done for the setup. For the integration this depends on the Piral instance.
+
+For `piral-core`-based instances this boils down to:
+
+```ts
+const PiralInstance = createInstance({
+  // important part
+  extendApi(api) {
+    return {
+      ...createVueApi(api),
+      ...api,
+    };
+  },
+  // ...
+});
+```
+
+For `piral`-based instances the integration looks like:
+
+```tsx
+renderInstance({
+  // important part
+  extensions: {
+    api: [createVueApi],
+  },
+  // ...
+});
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

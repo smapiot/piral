@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TiType, TiNode, TiKind } from './types';
 import { withSep, gref, keyOf } from './utils';
+import { TiType, TiNode, TiKind } from './types';
 
 export interface TypeRendererProps {
   node: TiType;
@@ -61,11 +61,15 @@ export const TypeRenderer: React.SFC<TypeRendererProps> = ({ node, render }) => 
         </>
       );
     case 'reflection':
-      return render(node.declaration);
+      return node.declaration ? render(node.declaration) : <span>any</span>;
     case 'unknown':
     case 'typeParameter':
     case 'intrinsic':
       return <span>{node.name}</span>;
+    case 'tuple':
+      return (
+        <span>[{withSep(node.elements.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ', ')}]</span>
+      );
     default:
       return (
         <span>

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { TiNode, TiKind } from './types';
 import { TypeRenderer } from './TypeRenderer';
 import { SignatureRenderer } from './SignatureRenderer';
+import { TiNode, TiKind } from './types';
 
 export interface TypeLiteralRendererProps {
   node: TiNode;
@@ -13,7 +13,7 @@ export const TypeLiteralRenderer: React.SFC<TypeLiteralRendererProps> = ({ node,
     {(node.children || []).map(child =>
       child.kind === TiKind.Property ? (
         <li key={child.id}>
-          {child.comment && child.comment.shortText}
+          <span className="block">{child.comment && child.comment.shortText}</span>
           <span className="block">
             <code>
               {child.name}
@@ -23,7 +23,7 @@ export const TypeLiteralRenderer: React.SFC<TypeLiteralRendererProps> = ({ node,
         </li>
       ) : child.kind === TiKind.Method ? (
         <li key={child.id}>
-          {child.comment && child.comment.shortText}
+          <span className="block">{child.signatures[0].comment && child.signatures[0].comment.shortText}</span>
           <span className="block">
             <code>
               {child.name}
@@ -34,10 +34,10 @@ export const TypeLiteralRenderer: React.SFC<TypeLiteralRendererProps> = ({ node,
         </li>
       ) : child.kind === TiKind.EnumerationMember ? (
         <li key={child.id}>
+          <span className="block">{child.comment && child.comment.shortText}</span>
           <code>
             {child.name}: <TypeRenderer node={child.type} render={render} />
           </code>{' '}
-          ({child.comment && child.comment.shortText})
         </li>
       ) : (
         undefined
@@ -47,7 +47,7 @@ export const TypeLiteralRenderer: React.SFC<TypeLiteralRendererProps> = ({ node,
       child =>
         child.kind === TiKind.CallSignature && (
           <li key={child.id}>
-            {child.comment && child.comment.shortText}
+            <span className="block">{child.comment && child.comment.shortText}</span>
             <span className="block">
               <code>
                 <SignatureRenderer node={child} render={render} />
@@ -60,7 +60,7 @@ export const TypeLiteralRenderer: React.SFC<TypeLiteralRendererProps> = ({ node,
       child =>
         child.kind === TiKind.IndexSignature && (
           <li key={child.id}>
-            {child.comment && child.comment.shortText}
+            <span className="block">{child.comment && child.comment.shortText}</span>
             <span className="block">
               <code>
                 <SignatureRenderer node={child} render={render} brackets="[]" />

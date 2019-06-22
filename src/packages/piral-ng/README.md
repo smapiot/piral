@@ -34,6 +34,41 @@ if (process.env.NODE_ENV === 'production') {
 }
 ```
 
+For the setup itself you'll need to import `createNgApi` from the `piral-ng` package.
+
+```tsx
+import { createNgApi } from 'piral-ng';
+```
+
+For the integration this depends on the Piral instance.
+
+For `piral-core`-based instances this boils down to:
+
+```ts
+const PiralInstance = createInstance({
+  // important part
+  extendApi(api) {
+    return {
+      ...createNgApi(api),
+      ...api,
+    };
+  },
+  // ...
+});
+```
+
+For `piral`-based instances the integration looks like:
+
+```tsx
+renderInstance({
+  // important part
+  extensions: {
+    api: [createNgApi],
+  },
+  // ...
+});
+```
+
 ## Injected Services
 
 Depending on the mounted component different services are injected. the following table lists the names of the injected services per component type.
