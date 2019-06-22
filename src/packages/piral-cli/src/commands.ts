@@ -90,6 +90,40 @@ export const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'install-piral',
+    alias: ['add-piral', 'integrate-piral', 'setup-piral'],
+    description: 'Sets up a Piral instance by adding all files and changes to the current project.',
+    arguments: ['[target]'],
+    flags(argv) {
+      return argv
+        .positional('target', {
+          type: 'string',
+          describe: "Sets the project's root directory for making the changes.",
+          default: apps.installPiralDefaults.target,
+        })
+        .string('app')
+        .describe('app', "Sets the path to the app's source HTML file.")
+        .default('app', apps.installPiralDefaults.app)
+        .boolean('only-core')
+        .describe('only-core', 'Sets if piral-core should be used. Otherwise, piral is used.')
+        .default('only-core', apps.installPiralDefaults.onlyCore)
+        .string('tag')
+        .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
+        .default('tag', apps.installPiralDefaults.version)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.installPiral(args.base as string, {
+        app: args.app as string,
+        target: args.target as string,
+        onlyCore: args.onlyCore as boolean,
+        version: args.tag as string,
+      });
+    },
+  },
+  {
     name: 'debug-pilet',
     alias: ['watch-pilet', 'debug', 'watch'],
     description: 'Starts the debugging process for a pilet using a Piral instance.',
