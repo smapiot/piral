@@ -8,9 +8,6 @@ export interface ContentProps {
 export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
     {/* start:auto-generated */}
-    <Section id="section-piral-cli" title="piral-cli">
-      <Ti>{require('../../../../../../docs/types/piral-cli.json')}</Ti>
-    </Section>
     <Section id="section-piral-core" title="piral-core">
       <Ti>{require('../../../../../../docs/types/piral-core.json')}</Ti>
     </Section>

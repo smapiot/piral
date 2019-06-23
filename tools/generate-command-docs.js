@@ -96,6 +96,12 @@ function getCommandData(retrieve) {
         type: 'string',
       }));
     },
+    boolean(name) {
+      return this.swap(name, flag => ({
+        ...flag,
+        type: 'boolean',
+      }));
+    },
     describe(name, value) {
       return this.swap(name, flag => ({
         ...flag,
