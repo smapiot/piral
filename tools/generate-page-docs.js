@@ -39,6 +39,155 @@ const sources = [
   },
 ];
 
+function getTypeInfo(id, node) {
+  for (const child of node.children) {
+    if (child.id === id) {
+      return child;
+    } else if (child.children) {
+      const info = getTypeInfo(id, child);
+
+      if (info) {
+        return info;
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function getTypeIds(type) {
+  if (type) {
+    if (type.id) {
+      return [type.id];
+    } else if (type.types) {
+      return type.types.map(getTypeIds).reduce((prev, curr) => [...prev, ...curr], []);
+    } else if (type.elements) {
+      return type.elements.map(getTypeIds).reduce((prev, curr) => [...prev, ...curr], []);
+    }
+  }
+
+  return [];
+}
+
+function fillTypeRefInformation(typeNode, content, children) {
+  const ids = getTypeIds(typeNode) || [];
+
+  for (const id of ids) {
+    const [available] = children.filter(m => m.id === id);
+
+    if (!available) {
+      const typeInfo = getTypeInfo(id, content);
+
+      if (typeInfo) {
+        switch (typeInfo.kind) {
+          case 128: // Class
+          case 256: // Interface
+          case 65536: // TypeLiteral
+          case 2097152: // ObjectLiteral
+            fillInterfaceInformation(typeInfo, content, children);
+            break;
+          default:
+            children.push(typeInfo);
+            break;
+        }
+      }
+    }
+  }
+}
+
+function fillTypeSignatureInformation(signatures, content, children) {
+  for (const signature of signatures) {
+    fillTypeRefInformation(signature.type, content, children);
+
+    for (const parameter of (signature.parameters || [])) {
+      fillTypeRefInformation(parameter.type, content, children);
+    }
+
+    fillTypeRefInformation(signature.typeParameter, content, children);
+  }
+}
+
+function fillInterfaceInformation(node, content, children) {
+  children.push(node);
+  fillTypeRefInformation(node.type, content, children);
+  fillTypeSignatureInformation(node.signatures || [], content, children);
+  fillTypeSignatureInformation(node.indexSignatures || [], content, children);
+
+  if (node.children) {
+    for (const child of node.children) {
+      fillTypeRefInformation(child.type, content, children);
+      fillTypeSignatureInformation(child.signatures || [], content, children);
+    }
+  }
+}
+
+function fillTypeInformation(node, content, children) {
+  switch (node.kind) {
+    case 0: //Root
+    case 1: //ExternalModule
+      if (node.children) {
+        for (const child of node.children) {
+          fillTypeInformation(child, content, children);
+        }
+      }
+      break;
+    case 4: // Enumeration
+      if (node.comment && node.comment.shortText) {
+        children.push(node);
+      }
+      break;
+    case 32: // Variable
+    case 4194304: // TypeAlias
+      if (node.comment && node.comment.shortText) {
+        children.push(node);
+        fillTypeRefInformation(node.type, content, children);
+      }
+      break;
+    case 64: // Function
+      const singature = node.signatures && node.signatures[0];
+
+      if (singature.comment && singature.comment.shortText) {
+        children.push(node);
+        fillTypeSignatureInformation(node.signatures, content, children);
+      }
+      break;
+    case 128: // Class
+    case 256: // Interface
+    case 65536: // TypeLiteral
+    case 2097152: // ObjectLiteral
+      if (node.comment && node.comment.shortText) {
+        fillInterfaceInformation(node, content, children);
+      }
+      break;
+  }
+}
+
+function normalizeTypes(oldContent) {
+  const children = [];
+
+  for (const child of oldContent.children) {
+    fillTypeInformation(child, oldContent, children);
+  }
+
+  const ids = children.map(m => m.id);
+
+  for (let k = ids.length; k--; ) {
+    const id = ids[k];
+
+    if (ids.indexOf(id) !== k) {
+      children.splice(k, 1);
+    }
+  }
+
+  return {
+    id: oldContent.id,
+    name: oldContent.name,
+    kind: oldContent.kind,
+    flags: oldContent.flags,
+    children,
+  };
+}
+
 function generateMdSection({ title, link, comp }) {
   const id = title.replace(/\s/g, '-').toLowerCase();
   const relLink = relative(rootDocsFolder, link);
@@ -90,7 +239,15 @@ const modes = {
   types(source) {
     const dirPath = resolve(rootDocsFolder, source.dir);
     const files = readdirSync(dirPath);
-    return generateSections(files.map(file => ({ file })), generateTiSection);
+    const sections = files.map(file => {
+      const p = resolve(rootDocsFolder, source.dir, file)
+      const oldContent = JSON.parse(readFileSync(p, 'utf8'));
+      const newContent = normalizeTypes(oldContent);
+      writeFileSync(p, JSON.stringify(newContent), 'utf8');
+      return { file };
+    });
+
+    return generateSections(sections, generateTiSection);
   },
 };
 

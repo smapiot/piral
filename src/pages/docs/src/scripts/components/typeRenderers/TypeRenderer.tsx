@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TiType, TiNode, TiKind } from './types';
 import { withSep, gref, keyOf } from './utils';
+import { TiType, TiNode, TiKind } from './types';
 
 export interface TypeRendererProps {
   node: TiType;
@@ -47,6 +47,8 @@ export const TypeParameterRenderer: React.SFC<TypeParameterRendererProps> = ({ a
 
 export const TypeRenderer: React.SFC<TypeRendererProps> = ({ node, render }) => {
   switch (node.type) {
+    case 'intersection':
+      return <>{withSep(node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ' & ')}</>;
     case 'union':
       return <>{withSep(node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ' | ')}</>;
     case 'stringLiteral':
@@ -54,18 +56,22 @@ export const TypeRenderer: React.SFC<TypeRendererProps> = ({ node, render }) => 
     case 'reference':
       return (
         <>
-          <a href={gref(node.id)} className="ref">
+          <a href={gref(node)} className="ref">
             {node.name}
           </a>
           {<TypeArgumentRenderer render={render} args={node.typeArguments} />}
         </>
       );
     case 'reflection':
-      return render(node.declaration);
+      return node.declaration ? render(node.declaration) : <span>any</span>;
     case 'unknown':
     case 'typeParameter':
     case 'intrinsic':
       return <span>{node.name}</span>;
+    case 'tuple':
+      return (
+        <span>[{withSep(node.elements.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ', ')}]</span>
+      );
     default:
       return (
         <span>

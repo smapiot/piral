@@ -1,5 +1,5 @@
 import * as queue from './queue';
-import * as bootstrap from './bootstrap';
+import { bootstrap } from './bootstrap';
 import { ngPage, ngTile, ngMenu, ngExtension, ngModal } from './register';
 
 jest.mock('./queue', () => ({
@@ -21,7 +21,7 @@ describe('register', () => {
       },
     };
 
-    ngPage(portalMock as any, 'foo', {}, '/bar');
+    ngPage(portalMock as any, '/bar', {});
 
     expect(Object.keys(registrations)).toEqual(['/bar']);
     expect(typeof registrations['/bar']).toBe('function');
@@ -63,7 +63,7 @@ describe('register', () => {
       },
     };
 
-    ngExtension(portalMock as any, 'foo', {}, 'slot_foo');
+    ngExtension(portalMock as any, 'slot_foo', {});
 
     expect(Object.keys(registrations)).toEqual(['slot_foo']);
     expect(typeof registrations.slot_foo).toBe('function');
@@ -91,8 +91,8 @@ describe('register', () => {
       },
     };
 
-    ngPage(portalMock as any, 'foo', {}, '/bar');
-    expect(node.id).toBe('foo');
+    ngPage(portalMock as any, '/bar', {});
+    expect(bootstrap.mock.calls[0][3]).toBe('/bar');
   });
 
   it('uses a new tile component', () => {
@@ -104,6 +104,7 @@ describe('register', () => {
     };
 
     ngTile(portalMock as any, 'foo', {});
+    expect(bootstrap.mock.calls.pop()[3]).toBe('foo');
   });
 
   it('uses a new menu item component', () => {
@@ -115,7 +116,7 @@ describe('register', () => {
     };
 
     ngMenu(portalMock as any, 'foo', {});
-    expect(node.id).toBe('foo');
+    expect(bootstrap.mock.calls.pop()[3]).toBe('foo');
   });
 
   it('uses a new extension component', () => {
@@ -126,8 +127,8 @@ describe('register', () => {
       },
     };
 
-    ngExtension(portalMock as any, 'foo', {}, 'slot_foo');
-    expect(node.id).toBe('foo');
+    ngExtension(portalMock as any, 'slot_foo', {});
+    expect(bootstrap.mock.calls.pop()[3]).toBe('slot_foo');
   });
 
   it('uses a new modal component', () => {
@@ -139,6 +140,6 @@ describe('register', () => {
     };
 
     ngModal(portalMock as any, 'foo', {});
-    expect(node.id).toBe('foo');
+    expect(bootstrap.mock.calls.pop()[3]).toBe('foo');
   });
 });

@@ -18,7 +18,7 @@ export function useExtension<TData, TItem>(name: string) {
     const ExtensionView: React.SFC<ExtensionSlotProps> = ({ render = defaultRender, empty, params = {} }) =>
       render(
         extensions.length === 0 && isfunc(empty)
-          ? [empty()]
+          ? [<React.Fragment key="empty">{empty()}</React.Fragment>]
           : extensions.map(({ component: Component, defaults = {} }, i) => (
               <Component
                 key={`${Component.displayName || '_'}${i}`}

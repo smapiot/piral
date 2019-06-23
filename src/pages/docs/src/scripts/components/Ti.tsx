@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   TiNode,
   TiKind,
+  InlineInterfaceRenderer,
   InterfaceRenderer,
   ModuleRenderer,
   EnumerationRenderer,
   TypeAliasRenderer,
-  TypeLiteralRenderer,
   ObjectLiteralRenderer,
   VariableRenderer,
   FunctionRenderer,
@@ -21,16 +21,17 @@ function render(node: TiNode) {
     case TiKind.Root:
     case TiKind.ExternalModule:
       return <ModuleRenderer node={node} render={render} />;
+    case TiKind.Class:
     case TiKind.Interface:
       return <InterfaceRenderer node={node} render={render} />;
     case TiKind.Function:
-      return <FunctionRenderer node={node} render={render} />;
+      return node.signatures && node.signatures[0].comment && <FunctionRenderer node={node} render={render} />;
     case TiKind.ObjectLiteral:
       return <ObjectLiteralRenderer node={node} render={render} />;
     case TiKind.Variable:
       return <VariableRenderer node={node} render={render} />;
     case TiKind.TypeLiteral:
-      return <TypeLiteralRenderer node={node} render={render} />;
+      return <InlineInterfaceRenderer node={node} render={render} />;
     case TiKind.TypeAlias:
       return <TypeAliasRenderer node={node} render={render} />;
     case TiKind.Enumeration:
@@ -40,6 +41,4 @@ function render(node: TiNode) {
   }
 }
 
-export const Ti: React.SFC<TiProps> = ({ children }) => {
-  return render(children);
-};
+export const Ti: React.SFC<TiProps> = ({ children }) => render(children);

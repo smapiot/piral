@@ -47,6 +47,9 @@ export interface FormCreator<TFormData, TProps> {
   (component: ComponentType<TProps & FormProps<TFormData>>): ComponentType<TProps>;
 }
 
+/**
+ * Potential value types for defining a prompt message.
+ */
 export type PromptMessage = string | (() => string);
 
 export interface InputFormOptions<TFormData, TProps> {

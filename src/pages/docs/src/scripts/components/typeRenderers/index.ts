@@ -1,6 +1,7 @@
 export * from './types';
 export * from './EnumerationRenderer';
 export * from './FunctionRenderer';
+export * from './InlineInterfaceRenderer';
 export * from './InterfaceRenderer';
 export * from './ModuleRenderer';
 export * from './ObjectLiteralRenderer';

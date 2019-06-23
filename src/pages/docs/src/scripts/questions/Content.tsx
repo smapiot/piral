@@ -28,6 +28,10 @@ export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
       <Mdq>{require('../../../../../../docs/questions/general.md')}</Mdq>
       <EditSection link="questions/general.md" />
     </Section>
+    <Section id="section-extensions" title="Extensions">
+      <Mdq>{require('../../../../../../docs/questions/extensions.md')}</Mdq>
+      <EditSection link="questions/extensions.md" />
+    </Section>
     <Section id="section-tooling" title="Tooling">
       <Mdq>{require('../../../../../../docs/questions/tooling.md')}</Mdq>
       <EditSection link="questions/tooling.md" />

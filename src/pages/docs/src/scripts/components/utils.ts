@@ -22,4 +22,7 @@ export type IconName =
   | 'puzzle-piece'
   | 'pencil-alt'
   | 'home'
-  | 'binoculars';
+  | 'binoculars'
+  | 'desktop'
+  | 'comment'
+  | 'link';

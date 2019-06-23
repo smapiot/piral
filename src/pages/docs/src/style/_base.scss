@@ -14,10 +14,11 @@ html, body {
   min-height: 100%;
   /* equal to footer height */
   margin-bottom: -50px;
+
   &:after {
-      content: "";
-      display: block;
-      height: 50px;
+    content: "";
+    display: block;
+    height: 50px;
   }
 }
 
@@ -79,6 +80,16 @@ code {
     margin-right: 5px;
     position: relative;
     top: -1px;
+  }
+}
+
+.cta-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .btn {
+    margin: 1em;
   }
 }
 
@@ -164,7 +175,7 @@ code {
 }
 
 .form-control {
- @include box-shadow(none);
+  @include box-shadow(none);
   height: 40px;
   border-color: $divider;
   @include placeholder(lighten($grey, 5%));
@@ -190,6 +201,7 @@ select {
   color: rgba(256, 256, 256, 0.85);
   border-top: 5px solid $color-primary;
   padding: 30px 0;
+
   a {
     color: #fff;
   }
@@ -198,24 +210,29 @@ select {
 .branding {
   text-transform: uppercase;
   margin-bottom: 10px;
+
   .logo {
     font-size: 28px;
     margin-top: 0;
     margin-bottom: 0;
+
     a {
       text-decoration: none;
     }
   }
+
   .text-highlight {
-    color: $color-green;
+    color: $color-primary;
   }
+
   .text-bold {
     font-weight: 800;
     color: #fff;
   }
+
   .icon {
     font-size: 24px;
-    color: $color-green;
+    color: $color-primary;
   }
 }
 
@@ -223,21 +240,25 @@ select {
   background: none;
   margin-bottom: 0;
   padding: 0;
+
   li {
     color: rgba(256, 256, 256, 0.5);
+
     &.active {
       color: rgba(256, 256, 256, 0.5);
     }
+
     a {
       color: rgba(256, 256, 256, 0.5);
+
       &:hover {
-          color: #fff;
+        color: #fff;
       }
     }
   }
 }
 
-.breadcrumb>li+li:before {
+.breadcrumb > li + li:before {
   color: rgba(0, 0, 0, 0.4);
 }
 
@@ -245,11 +266,14 @@ select {
   background: darken($text-color, 15%);
   color: rgba(256, 256, 256, 0.6);
   padding: 15px 0;
+
   a {
-      color: $color-green;
+    color: $color-green;
   }
+
   .fa-heart {
-      color: $color-pink;
+    color: $color-pink;
+    margin: 0 2px;
   }
 }
 

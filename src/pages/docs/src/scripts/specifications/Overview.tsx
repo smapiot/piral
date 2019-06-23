@@ -6,13 +6,13 @@ const Overview: React.SFC = () => (
     <div className="container">
       <h2 className="title">Piral Specifications</h2>
       <div id="cards-wrapper" className="cards-wrapper row">
-        <Card title="Gateway" icon="puzzle-piece" to="/specifications/gateway" kind="primary">
+        <Card title="Gateway" icon="puzzle-piece" to="/specifications/gateway" kind="green">
           The Gateway specification.
         </Card>
-        <Card title="Piral API" icon="puzzle-piece" to="/specifications/piral-api" kind="primary">
+        <Card title="Piral API" icon="puzzle-piece" to="/specifications/piral-api" kind="green">
           The Piral API specification.
         </Card>
-        <Card title="Pilet" icon="puzzle-piece" to="/specifications/pilet" kind="primary">
+        <Card title="Pilet" icon="puzzle-piece" to="/specifications/pilet" kind="green">
           The Pilet specification.
         </Card>
       </div>

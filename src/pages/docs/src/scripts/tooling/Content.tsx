@@ -16,6 +16,10 @@ export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
       <Md>{require('../../../../../../docs/commands/debug-piral.md')}</Md>
       <EditSection link="commands/debug-piral.md" />
     </Section>
+    <Section id="section-install-piral" title="install-piral">
+      <Md>{require('../../../../../../docs/commands/install-piral.md')}</Md>
+      <EditSection link="commands/install-piral.md" />
+    </Section>
     <Section id="section-new-pilet" title="new-pilet">
       <Md>{require('../../../../../../docs/commands/new-pilet.md')}</Md>
       <EditSection link="commands/new-pilet.md" />

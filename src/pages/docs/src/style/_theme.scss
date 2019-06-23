@@ -1,0 +1,47 @@
+@each $name, $color in $colors {
+  .body-#{$name} {
+    .header {
+      border-top: 5px solid $color;
+    }
+
+    a {
+      color: $color;
+
+      &:hover {
+        color: darken($color, 10%);
+      }
+    }
+
+    .branding {
+      .text-highlight {
+        color: $color;
+      }
+
+      .icon {
+        color: $color;
+      }
+    }
+
+    .doc-menu .nav-link.active {
+      color: $color;
+      border-color: $color;
+    }
+
+    .doc-header .doc-title {
+      color: $color;
+    }
+
+    .question {
+      color: darken($color, 5%);
+    }
+
+    .table > thead > tr > th {
+      border-bottom-color: lighten($color, 20%);
+    }
+  }
+
+  .type-info-#{$name} {
+    border-left-color: $color;
+  }
+}
+

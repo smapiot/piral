@@ -5,6 +5,7 @@ export const enum TiKind {
   EnumerationMember = 16,
   Variable = 32,
   Function = 64,
+  Class = 128,
   Interface = 256,
   Property = 1024,
   Method = 2048,
@@ -27,6 +28,15 @@ export interface TiType {
   types?: Array<TiType>;
   typeArguments?: Array<TiType>;
   declaration?: TiNode;
+  elements?: Array<TiType>;
+}
+
+export interface TiComment {
+  shortText: string;
+  tags?: Array<{
+    tag: string;
+    text: string;
+  }>;
 }
 
 export interface TiNode {
@@ -51,13 +61,7 @@ export interface TiNode {
   typeParameter?: Array<TiNode>;
   type?: TiType;
   parameters?: Array<TiNode>;
-  comment?: {
-    shortText: string;
-    tags?: Array<{
-      tag: string;
-      text: string;
-    }>;
-  };
+  comment?: TiComment;
   groups?: Array<{
     title: string;
     kind: TiKind;

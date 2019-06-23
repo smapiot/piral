@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ArbiterModule } from 'react-arbiter';
-import { PageComponentProps, PiralApi, TileComponentProps, MenuComponentProps } from 'piral-core';
+import { SampleApi } from '../types';
 
 /**
  * Shows the usage of another module, here with a
  * feed connector.
  */
-export const Pilet2: ArbiterModule<PiralApi> = {
+export const Pilet2: ArbiterModule<SampleApi> = {
   content: '',
   dependencies: {},
   name: 'Sample Module',
@@ -32,44 +32,23 @@ export const Pilet2: ArbiterModule<PiralApi> = {
       },
     });
 
-    piral.registerTile(
-      'example',
-      class extends React.Component<TileComponentProps<PiralApi>> {
-        render() {
-          return <div className="tile">Rendered tile from another module.</div>;
-        }
-      },
-    );
+    piral.registerTile('example', () => <div className="tile">Rendered tile from another module.</div>);
 
-    piral.registerMenu(
-      'example',
-      class extends React.Component<MenuComponentProps<PiralApi>> {
-        render() {
-          return <Link to="/example3">Example 3</Link>;
-        }
-      },
-      { type: 'general' },
-    );
+    piral.registerMenu('example', () => <Link to="/example3">Example 3</Link>, { type: 'general' });
 
     piral.registerPage(
       '/example3',
-      connect(
-        class extends React.Component<PageComponentProps<PiralApi> & { data: Array<string> }> {
-          render() {
-            return (
-              <div>
-                <b>This is the example page from module 2 (sample module)!</b>
-                <p>Loaded the following data:</p>
-                <ul>
-                  {this.props.data.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          }
-        },
-      ),
+      connect(({ data }) => (
+        <div>
+          <b>This is the example page from module 2 (sample module)!</b>
+          <p>Loaded the following data:</p>
+          <ul>
+            {data.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )),
     );
   },
 };

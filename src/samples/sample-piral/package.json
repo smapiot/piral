@@ -1,11 +1,13 @@
 {
   "name": "sample-piral",
-  "private": true,
   "version": "0.5.1",
   "description": "Example project illustrating the use of the piral and piral-cli packages.",
   "keywords": [
     "portal",
     "smapiot",
+    "sample",
+    "example",
+    "microfrontend",
     "modules",
     "spa"
   ],
@@ -17,7 +19,8 @@
   "app": "src/index.html",
   "files": [
     "src",
-    "lib"
+    "lib",
+    "tsconfig.json"
   ],
   "repository": {
     "type": "git",
@@ -27,7 +30,16 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
+    "images": "^3.0.2",
     "piral": "^0.5.1"
+  },
+  "pilets": {
+    "externals": [],
+    "files": [],
+    "scripts": {
+      "start": "pilet debug",
+      "upgrade-pilet": "pilet upgrade --force-overwrite yes"
+    }
   },
   "devDependencies": {
     "@types/react": "^16.8.2",

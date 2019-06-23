@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 0.5.2 (to be determined)
+
+* Added new optional library `piral-vue`
+* Improved API of `piral-ng`
+* Added `piral-install` command to Piral CLI
+* Support local CLI installation over global one
+* Added samples to documentation page
+
 ## 0.5.1 (June 18, 2019)
 
 * Added new optional library `piral-ng`

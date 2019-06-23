@@ -1,13 +1,13 @@
 # Introduction
 
-Piral is a solution for frontend modularization, where the different modules can be developed independently without any binding to the host system. We call these modules *pilets*. We therefore refer to a pilet as a small module that lives inside a piral instance. Piral gives you a set of tools for developing your application using [micro frontends](https://martinfowler.com/articles/micro-frontends.html).
+Piral is a solution for frontend modularization, where the different modules can be developed independently without any binding to the host system. We call these modules *pilets*. We therefore refer to a pilet as a small module that lives inside a piral instance. Piral gives you a set of tools for developing your application using [microfrontends](https://martinfowler.com/articles/micro-frontends.html).
 
 While the idea of smaller (independent) modules is not new the provided approach has some advantages (and - depending on the use-case - disadvantages) over, e.g., bundle splitting as its done in modern build systems. Actually, the given approach is not exclusive and can be used together with bundle splitting.
 
 A pilet is not only independent of the main application (a "piral instance"), but also independently developed. This means we can give an independent development team the task to build a module in our application without requiring the same repository or infrastructure.
 
 <div class="responsive-container">
-<iframe allowFullScreen="allowFullScreen" src="https://www.youtube.com/embed/SkKvpBHy_5I?ecver=1&amp;iv_load_policy=1&amp;yt:stretch=16:9&amp;autohide=1&amp;color=red&amp;width=560&amp;width=560" width="560" height="315" allowtransparency="true" frameborder="0"></iframe>
+<iframe allowFullScreen="allowFullScreen" src="https://www.youtube.com/embed/SkKvpBHy_5I?ecver=1&amp;iv_load_policy=1&amp;yt:stretch=16:9&amp;autohide=1&amp;color=red&amp;width=560&amp;width=560" width="560" height="315" rameborder="0"></iframe>
 </div>
 
 The introduction video is available on [YouTube](https://youtu.be/SkKvpBHy_5I).

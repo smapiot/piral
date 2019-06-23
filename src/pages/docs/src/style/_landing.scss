@@ -59,15 +59,24 @@
       font-size: 0.6em;
     }
   }
+}
 
-  .fa-heart {
-    color: $color-pink;
-    margin: 0 2px;
-  }
+.cta-container {
+  margin-top: 30px;
+}
 
-  .cta-container {
-    margin-top: 30px;
-  }
+.intro, .outro {
+  margin: 0 auto;
+  max-width: 800px;
+  margin-bottom: 60px;
+}
+
+.intro {
+  color: $text-color-secondary;
+}
+
+.outro {
+  color: $text-color-tertiary;
 }
 
 .cards-section {
@@ -80,13 +89,6 @@
     margin-bottom: 15px;
     font-size: 24px;
     font-weight: 600;
-  }
-
-  .intro {
-    margin: 0 auto;
-    max-width: 800px;
-    margin-bottom: 60px;
-    color: $text-color-secondary;
   }
 
   .cards-wrapper {

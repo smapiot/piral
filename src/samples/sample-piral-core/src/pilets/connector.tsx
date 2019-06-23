@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ArbiterModule } from 'react-arbiter';
-import { PiralApi, TileComponentProps } from 'piral-core';
+import { SampleApi } from '../types';
 
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorPilet: ArbiterModule<PiralApi> = {
+export const ConnectorPilet: ArbiterModule<SampleApi> = {
   content: '',
   dependencies: {},
   name: 'Connector Module',
@@ -24,18 +24,11 @@ export const ConnectorPilet: ArbiterModule<PiralApi> = {
       </ul>
     ));
 
-    piral.registerTile(
-      'example',
-      class extends React.Component<TileComponentProps<PiralApi>> {
-        render() {
-          return (
-            <div className="tile">
-              <b>This is the example tile from connector module.</b>
-              <DataView />
-            </div>
-          );
-        }
-      },
-    );
+    piral.registerTile('example', () => (
+      <div className="tile">
+        <b>This is the example tile from connector module.</b>
+        <DataView />
+      </div>
+    ));
   },
 };

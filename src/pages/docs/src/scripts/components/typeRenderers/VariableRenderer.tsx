@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { TiNode } from './types';
-import { Callout } from '../Callout';
 import { TypeRenderer } from './TypeRenderer';
+import { TiNode } from './types';
+import { Details } from './Details';
 
 export interface VariableRendererProps {
   node: TiNode;
@@ -9,15 +9,11 @@ export interface VariableRendererProps {
 }
 
 export const VariableRenderer: React.SFC<VariableRendererProps> = ({ node, render }) => (
-  <Callout type="warning" title={node.name} icon="puzzle-piece">
-    <p>
-      <b>{node.kindString}</b>
-    </p>
-    <p>{node.comment && node.comment.shortText}</p>
+  <Details color="purple" kind={node.kindString} description={node.comment} title={node.name}>
     <p>
       <code>
-        {node.name}: <TypeRenderer render={render} node={node.type} /> = {node.defaultValue}
+        {node.name}: <TypeRenderer render={render} node={node.type} />
       </code>
     </p>
-  </Callout>
+  </Details>
 );

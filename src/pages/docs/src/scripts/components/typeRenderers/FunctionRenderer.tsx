@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { TiNode, TiKind } from './types';
-import { Callout } from '../Callout';
-import { gid } from './utils';
 import { SignatureRenderer } from './SignatureRenderer';
+import { gid } from './utils';
+import { TiNode, TiKind } from './types';
+import { Details } from './Details';
 
 export interface FunctionRendererProps {
   node: TiNode;
@@ -10,16 +10,17 @@ export interface FunctionRendererProps {
 }
 
 export const FunctionRenderer: React.SFC<FunctionRendererProps> = ({ node, render }) => (
-  <Callout type="success" title={node.name} icon="puzzle-piece" id={gid(node)}>
-    <p>
-      <b>{node.kindString}</b>
-    </p>
+  <Details
+    color="green"
+    id={gid(node)}
+    kind={node.kindString}
+    title={node.name}
+    description={node.signatures[0].comment}>
     <ul className="interface-map">
       {node.signatures.map(
         child =>
           child.kind === TiKind.CallSignature && (
             <li key={child.id}>
-              {child.comment && child.comment.shortText}
               <span className="block">
                 <code>
                   {child.name}
@@ -30,5 +31,5 @@ export const FunctionRenderer: React.SFC<FunctionRendererProps> = ({ node, rende
           ),
       )}
     </ul>
-  </Callout>
+  </Details>
 );

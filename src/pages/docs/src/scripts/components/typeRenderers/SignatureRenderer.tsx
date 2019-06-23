@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { TiNode } from './types';
 import { TypeParameterRenderer, TypeRenderer } from './TypeRenderer';
 import { withSep } from './utils';
+import { TiNode } from './types';
 
 export interface SignatureRendererProps {
   node: TiNode;

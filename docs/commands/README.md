@@ -8,6 +8,7 @@ These commands have all a `-piral` suffix when called from the generic `pb` tool
 
 - [build-piral](./build-piral.md)
 - [debug-piral](./debug-piral.md)
+- [install-piral](./install-piral.md)
 
 ## Pilet Related Commands
 

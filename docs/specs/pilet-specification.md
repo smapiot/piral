@@ -176,7 +176,7 @@ The property contains a boolean value indicating whether the current pilet shoul
 
 This allows a pilet feed service to selectively increment preview versions of the same pilet. In case of a non-conflicting prerelease derived from semantic versioning the `preview` field wins.
 
-By default the `preview`field is set to `false`.
+By default the `preview` field is set to `false`.
 
 ## Root Module Layout
 

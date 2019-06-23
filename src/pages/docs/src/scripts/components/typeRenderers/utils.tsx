@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { TiId, TiType } from './types';
+import { TiType, TiNode } from './types';
 
-export function gid(node: { id: TiId }) {
-  return node.id && `ti-node-${node.id}`;
+export function gid(node: TiType | TiNode) {
+  return node.id && `ti-node-${node.name || 'id'}-${node.id}`;
 }
 
 export function keyOf(node: TiType) {
   return node.id || `${node.name}-${~~(Math.random() * 1000)}`;
 }
 
-export function gref(id?: TiId) {
-  return id && `#${gid({ id })}`;
+export function gref(node: TiType) {
+  return node && node.id && `#${gid(node)}`;
 }
 
 export function withSep(items: Array<React.ReactChild>, sep: string) {

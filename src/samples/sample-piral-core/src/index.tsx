@@ -1,8 +1,14 @@
+import 'core-js/es7/reflect';
+import 'zone.js/dist/zone';
+
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { createInstance, useGlobalState, LoaderProps, useSearch, useAction } from 'piral-core';
+import { createNgApi } from 'piral-ng';
+import { createVueApi } from 'piral-vue';
 import { availablePilets } from './pilets';
+import { SampleApi } from './types';
 
 customElements.define(
   'pi-spinner',
@@ -152,8 +158,15 @@ const Layout: React.SFC = ({ children }) => {
   );
 };
 
-const Portal = createInstance({
+const Portal = createInstance<SampleApi>({
   availablePilets,
+  extendApi(api) {
+    return {
+      ...createVueApi(api),
+      ...createNgApi(api),
+      ...api,
+    } as any;
+  },
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
     //   .then(res => res.json())

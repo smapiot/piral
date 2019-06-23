@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TiNode, TiKind } from './types';
-import { Callout } from '../Callout';
+import { Details } from './Details';
 
 export interface ObjectLiteralRendererProps {
   node: TiNode;
@@ -8,11 +8,7 @@ export interface ObjectLiteralRendererProps {
 }
 
 export const ObjectLiteralRenderer: React.SFC<ObjectLiteralRendererProps> = ({ node }) => (
-  <Callout type="danger" title={node.name} icon="puzzle-piece">
-    <p>
-      <b>{node.kindString}</b>
-    </p>
-    <p>{node.comment && node.comment.shortText}</p>
+  <Details color="red" kind={node.kindString} description={node.comment} title={node.name}>
     <ul className="interface-map">
       {node.children.map(
         child =>
@@ -25,5 +21,5 @@ export const ObjectLiteralRenderer: React.SFC<ObjectLiteralRendererProps> = ({ n
           ),
       )}
     </ul>
-  </Callout>
+  </Details>
 );

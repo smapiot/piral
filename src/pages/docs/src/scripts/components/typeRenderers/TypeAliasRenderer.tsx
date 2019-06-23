@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { TiNode } from './types';
-import { Callout } from '../Callout';
-import { gid } from './utils';
 import { TypeRenderer } from './TypeRenderer';
+import { gid } from './utils';
+import { TiNode } from './types';
+import { Details } from './Details';
 
 export interface TypeAliasRendererProps {
   node: TiNode;
@@ -10,14 +10,11 @@ export interface TypeAliasRendererProps {
 }
 
 export const TypeAliasRenderer: React.SFC<TypeAliasRendererProps> = ({ node, render }) => (
-  <Callout type="info" title={node.name} icon="puzzle-piece" id={gid(node)}>
-    <p>
-      <b>{node.kindString}</b>
-    </p>
+  <Details color="pink" id={gid(node)} kind={node.kindString} title={node.name} description={node.comment}>
     <span className="block">
       <code>
         <TypeRenderer node={node.type} render={render} />
       </code>
     </span>
-  </Callout>
+  </Details>
 );

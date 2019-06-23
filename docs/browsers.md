@@ -2,7 +2,7 @@
 
 The different Piral libraries (`piral-x`, e.g., `piral-core`) are all distributed using a more recent ECMAScript standard. The used functions and browser capabilities will require some polyfills. The polyfills are not supplied by these libraries.
 
-The exception is the `piral`packages. `piral` understands itself as a framework and comes with everything specified for you. It delivers specific versions of `react`, `react-dom`, `react-router`, etc. and bundles polyfills for all known dependent functionality.
+The exception is the `piral` packages. `piral` understands itself as a framework and comes with everything specified for you. It delivers specific versions of `react`, `react-dom`, `react-router`, etc. and bundles polyfills for all known dependent functionality.
 
 ## Compatibility Table
 

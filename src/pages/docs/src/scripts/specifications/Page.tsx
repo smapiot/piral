@@ -24,6 +24,7 @@ export const Page: React.SFC<RouteComponentProps> = ({ location }) => {
 
   return (
     <Standard
+      kind="green"
       title={isOverview ? rootTitle : getName(location.pathname)}
       icon="puzzle-piece"
       breadcrumbs={isOverview ? [] : [{ title: rootTitle, to: rootPath }]}>

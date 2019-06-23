@@ -17,6 +17,9 @@ export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
     <Section id="section-piral-ng" title="piral-ng">
       <Ti>{require('../../../../../../docs/types/piral-ng.json')}</Ti>
     </Section>
+    <Section id="section-piral-vue" title="piral-vue">
+      <Ti>{require('../../../../../../docs/types/piral-vue.json')}</Ti>
+    </Section>
     <Section id="section-piral" title="piral">
       <Ti>{require('../../../../../../docs/types/piral.json')}</Ti>
     </Section>
