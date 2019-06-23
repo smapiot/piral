@@ -149,6 +149,7 @@ export async function createFileIfNotExists(
     forceOverwrite === ForceOverwrite.yes ||
     (forceOverwrite === ForceOverwrite.prompt && (await promptOverwrite(targetFile)))
   ) {
+    await createDirectory(dirname(targetFile));
     await new Promise((resolve, reject) => {
       writeFile(targetFile, content, 'utf8', err => (err ? reject(err) : resolve()));
     });
