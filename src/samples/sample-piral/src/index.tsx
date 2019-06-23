@@ -16,6 +16,7 @@ renderInstance({
   ),
   FeedErrorInfo: ({ error }) => (
     <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error"/>
       <div className="pi-title">Data Unavailable</div>
       <div className="pi-description">
         The demanded data has not been found. Please contact support to resolve this issue.
@@ -25,12 +26,14 @@ renderInstance({
   ),
   FormErrorInfo: () => (
     <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error"/>
       <div className="pi-title">Submission Failed</div>
       <div className="pi-description">The form could not be submitted.</div>
     </div>
   ),
   LoadingErrorInfo: () => (
     <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error"/>
       <div className="pi-title">Something Went Wrong</div>
       <div className="pi-description">
         An error occured during the loading process. Try refreshing or come back later.
@@ -39,6 +42,7 @@ renderInstance({
   ),
   NotFoundErrorInfo: () => (
     <div className="pi-error">
+      <img src={require('./images/not-found.svg')} alt="Not Found"/>
       <div className="pi-title">Page Not Found</div>
       <div className="pi-description">
         The provided URL does not map to a page. Please contact support to resolve this issue.
@@ -47,6 +51,7 @@ renderInstance({
   ),
   PageErrorInfo: () => (
     <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error"/>
       <div className="pi-title">Page Crashed</div>
       <div className="pi-description">
         Sorry for the inconvenience. We try to resolve the issue as soon as possible.
@@ -55,6 +60,7 @@ renderInstance({
   ),
   UnknownErrorInfo: () => (
     <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error"/>
       <div className="pi-title">Unknown Error</div>
       <div className="pi-description">An unknown error occured.</div>
     </div>
@@ -117,6 +123,10 @@ renderInstance({
       </div>
     </div>
   ),
+  requestPilets: () =>
+    fetch('https://sample.piral.io/api/v1/pilet')
+      .then(res => res.json())
+      .then(res => res.items),
 });
 
 export * from 'piral';

@@ -30,6 +30,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
+    "images": "^3.0.2",
     "piral": "^0.5.1"
   },
   "pilets": {

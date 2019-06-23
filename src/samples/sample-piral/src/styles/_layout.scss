@@ -191,11 +191,11 @@ a {
   background: lighten($header-color, 15%);
   transform: translateX(-100%);
   transition: all 0.1s ease;
-  box-shadow: $menu-shadow-size 0px $menu-shadow-size (-$menu-shadow-size) rgba(0, 0, 0, 0.2);
   padding-top: 85px;
 
   &.is-open {
     transform: none;
+    box-shadow: $menu-shadow-size 0px $menu-shadow-size (-$menu-shadow-size) rgba(0, 0, 0, 0.2);
   }
 
   .app-menu-content {
@@ -396,18 +396,26 @@ a {
 }
 
 .pi-error {
+  > img {
+    width: 600px;
+    max-width: 100%;
+    margin: 1em 0;
+  }
+
   .pi-title {
     color: $basic-dark-color;
     display: block;
+    font-size: 1.5em;
   }
+
   .pi-description {
     display: block;
-    font-size: 0.8em;
-    margin: 0.2em 0;
+    margin: 0.5em 0;
   }
+
   .pi-details {
     display: block;
-    margin: 0.2em 0;
+    margin: 0.5em 0;
     color: #3e3e3e;
     font-size: 0.8em;
   }
