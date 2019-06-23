@@ -23,21 +23,21 @@ function render(node: TiNode) {
       return <ModuleRenderer node={node} render={render} />;
     case TiKind.Class:
     case TiKind.Interface:
-      return <InterfaceRenderer node={node} render={render} />;
+      return node.comment && <InterfaceRenderer node={node} render={render} /> || null;
     case TiKind.Function:
-      return <FunctionRenderer node={node} render={render} />;
+      return node.signatures && node.signatures[0].comment && <FunctionRenderer node={node} render={render} /> || null;
     case TiKind.ObjectLiteral:
-      return <ObjectLiteralRenderer node={node} render={render} />;
+      return node.comment && <ObjectLiteralRenderer node={node} render={render} /> || null;
     case TiKind.Variable:
-      return <VariableRenderer node={node} render={render} />;
+      return node.comment && <VariableRenderer node={node} render={render} /> || null;
     case TiKind.TypeLiteral:
-      return <TypeLiteralRenderer node={node} render={render} />;
+      return node.comment && <TypeLiteralRenderer node={node} render={render} /> || null;
     case TiKind.TypeAlias:
-      return <TypeAliasRenderer node={node} render={render} />;
+      return node.comment && <TypeAliasRenderer node={node} render={render} /> || null;
     case TiKind.Enumeration:
-      return <EnumerationRenderer node={node} render={render} />;
+      return node.comment && <EnumerationRenderer node={node} render={render} /> || null;
     default:
-      return <span>{node.name}</span>;
+      return node.comment && <span>{node.name}</span> || null;
   }
 }
 

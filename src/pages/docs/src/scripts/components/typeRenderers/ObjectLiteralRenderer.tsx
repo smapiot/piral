@@ -8,28 +8,18 @@ export interface ObjectLiteralRendererProps {
 }
 
 export const ObjectLiteralRenderer: React.SFC<ObjectLiteralRendererProps> = ({ node }) => (
-  <Details
-    color="red"
-    title={
-      <>
-        <b>{node.kindString}</b>
-        <h3>{node.name}</h3>
-        <p>{node.comment && node.comment.shortText}</p>
-      </>
-    }
-    details={
-      <ul className="interface-map">
-        {node.children.map(
-          child =>
-            child.kind === TiKind.Variable && (
-              <li key={child.id}>
-                <code>
-                  {child.name}: {child.defaultValue}
-                </code>
-              </li>
-            ),
-        )}
-      </ul>
-    }
-  />
+  <Details color="red" kind={node.kindString} description={node.comment} title={node.name}>
+    <ul className="interface-map">
+      {node.children.map(
+        child =>
+          child.kind === TiKind.Variable && (
+            <li key={child.id}>
+              <code>
+                {child.name}: {child.defaultValue}
+              </code>
+            </li>
+          ),
+      )}
+    </ul>
+  </Details>
 );

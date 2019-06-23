@@ -10,16 +10,7 @@ export interface InterfaceRendererProps {
 }
 
 export const InterfaceRenderer: React.SFC<InterfaceRendererProps> = ({ node, render }) => (
-  <Details
-    color="blue"
-    id={gid(node)}
-    title={
-      <>
-        <b>{node.kindString}</b>
-        <h3>{node.name}</h3>
-        <p>{node.comment && node.comment.shortText}</p>
-      </>
-    }
-    details={<TypeLiteralRenderer node={node} render={render} />}
-  />
+  <Details color="blue" id={gid(node)} kind={node.kindString} description={node.comment} title={node.name}>
+    <TypeLiteralRenderer node={node} render={render} />
+  </Details>
 );

@@ -31,6 +31,14 @@ export interface TiType {
   elements?: Array<TiType>;
 }
 
+export interface TiComment {
+  shortText: string;
+  tags?: Array<{
+    tag: string;
+    text: string;
+  }>;
+}
+
 export interface TiNode {
   id: TiId;
   name: string;
@@ -53,13 +61,7 @@ export interface TiNode {
   typeParameter?: Array<TiNode>;
   type?: TiType;
   parameters?: Array<TiNode>;
-  comment?: {
-    shortText: string;
-    tags?: Array<{
-      tag: string;
-      text: string;
-    }>;
-  };
+  comment?: TiComment;
   groups?: Array<{
     title: string;
     kind: TiKind;

@@ -13,29 +13,23 @@ export const FunctionRenderer: React.SFC<FunctionRendererProps> = ({ node, rende
   <Details
     color="green"
     id={gid(node)}
-    title={
-      <>
-        <b>{node.kindString}</b>
-        <h3>{node.name}</h3>
-      </>
-    }
-    details={
-      <ul className="interface-map">
-        {node.signatures.map(
-          child =>
-            child.kind === TiKind.CallSignature && (
-              <li key={child.id}>
-                {child.comment && child.comment.shortText}
-                <span className="block">
-                  <code>
-                    {child.name}
-                    <SignatureRenderer node={child} render={render} />
-                  </code>
-                </span>
-              </li>
-            ),
-        )}
-      </ul>
-    }
-  />
+    kind={node.kindString}
+    title={node.name}
+    description={node.signatures[0].comment}>
+    <ul className="interface-map">
+      {node.signatures.map(
+        child =>
+          child.kind === TiKind.CallSignature && (
+            <li key={child.id}>
+              <span className="block">
+                <code>
+                  {child.name}
+                  <SignatureRenderer node={child} render={render} />
+                </code>
+              </span>
+            </li>
+          ),
+      )}
+    </ul>
+  </Details>
 );

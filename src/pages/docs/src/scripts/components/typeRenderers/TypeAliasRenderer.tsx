@@ -10,21 +10,11 @@ export interface TypeAliasRendererProps {
 }
 
 export const TypeAliasRenderer: React.SFC<TypeAliasRendererProps> = ({ node, render }) => (
-  <Details
-    color="pink"
-    id={gid(node)}
-    title={
-      <>
-        <b>{node.kindString}</b>
-        <h3>{node.name}</h3>
-      </>
-    }
-    details={
-      <span className="block">
-        <code>
-          <TypeRenderer node={node.type} render={render} />
-        </code>
-      </span>
-    }
-  />
+  <Details color="pink" id={gid(node)} kind={node.kindString} title={node.name} description={node.comment}>
+    <span className="block">
+      <code>
+        <TypeRenderer node={node.type} render={render} />
+      </code>
+    </span>
+  </Details>
 );

@@ -9,21 +9,11 @@ export interface VariableRendererProps {
 }
 
 export const VariableRenderer: React.SFC<VariableRendererProps> = ({ node, render }) => (
-  <Details
-    color="purple"
-    title={
-      <>
-        <b>{node.kindString}</b>
-        <h3>{node.name}</h3>
-        <p>{node.comment && node.comment.shortText}</p>
-      </>
-    }
-    details={
-      <p>
-        <code>
-          {node.name}: <TypeRenderer render={render} node={node.type} />
-        </code>
-      </p>
-    }
-  />
+  <Details color="purple" kind={node.kindString} description={node.comment} title={node.name}>
+    <p>
+      <code>
+        {node.name}: <TypeRenderer render={render} node={node.type} />
+      </code>
+    </p>
+  </Details>
 );
