@@ -112,6 +112,8 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
           }
         });
       });
+    } else {
+      resolve();
     }
   });
   const promises = [promise];

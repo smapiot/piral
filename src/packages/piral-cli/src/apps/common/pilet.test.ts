@@ -10,8 +10,12 @@ jest.mock('fs', () => ({
   },
 }));
 
+jest.mock('parcel-bundler', () => ({}));
+jest.mock('./VirtualPackager', () => ({}));
+jest.mock('./VirtualAsset', () => ({}));
+
 let readContent = '';
-let writeContent = '';
+let writeContent: string = undefined;
 
 describe('Pilet Build Module', () => {
   it('extendBundler should create generate prototype function', () => {
@@ -42,7 +46,7 @@ describe('Pilet Build Module', () => {
     expect(Bundler.prototype.getLoadedAsset).not.toBeUndefined();
   });
 
-  it('postProcess should not change the content if not JS', async () => {
+  it('postProcess should not write out the content if not JS', async () => {
     readContent = 'no-js';
     await postProcess({
       getHash() {
@@ -52,6 +56,34 @@ describe('Pilet Build Module', () => {
       name: '',
       childBundles: [],
     } as any);
-    expect(writeContent).toBe(readContent);
+    expect(writeContent).toBeUndefined();
+  });
+
+  it('postProcess should write out the content if CSS', async () => {
+    readContent = 'no-js';
+    await postProcess({
+      getHash() {
+        return 'abcdef';
+      },
+      type: 'css',
+      name: '',
+      childBundles: [],
+    } as any);
+    expect(writeContent).toBe('no-js');
+  });
+
+  it('postProcess should change the content if JS', async () => {
+    readContent = 'no-js';
+    await postProcess({
+      getHash() {
+        return 'abcdef';
+      },
+      type: 'js',
+      name: '',
+      childBundles: [],
+    } as any);
+    expect(writeContent).toBe(`!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
+no-js
+;global.pr_abcdef=parcelRequire}(window, window.pr_abcdef));`);
   });
 });
