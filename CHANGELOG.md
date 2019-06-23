@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.5.2 (to be determined)
+## 0.5.2 (June 23, 2019)
 
 * Added new optional library `piral-vue`
 * Improved API of `piral-ng`
