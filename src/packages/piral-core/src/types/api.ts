@@ -17,6 +17,9 @@ import {
   MenuComponentProps,
 } from './components';
 
+/**
+ * Defines the metadata used to describe a pilet.
+ */
 export interface PiletMetadata {
   /**
    * The name of the pilet.
@@ -34,8 +37,15 @@ export interface PiletMetadata {
    * The hashcode of the pilet.
    */
   hash: string;
+  /**
+   * The link to the root module of the pilet.
+   */
+  link: string;
 }
 
+/**
+ * Defines the shape of a tracker function.
+ */
 export interface Tracker {
   /**
    * Finishes the created frame by optionally passing the given properties and measurements.
@@ -43,8 +53,14 @@ export interface Tracker {
   (properties?: any, measurements?: any): void;
 }
 
+/**
+ * Alias for an extensible Pilet API given from piral-core.
+ */
 export type PiralApi<TExtraApi = {}> = PiralCoreApi<TExtraApi> & TExtraApi;
 
+/**
+ * Defines the Pilet API from piral-core.
+ */
 export interface PiralCoreApi<TExtraApi> extends EventEmitter {
   /**
    * Gets the metadata of the current pilet.

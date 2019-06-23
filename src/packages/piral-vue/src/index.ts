@@ -11,6 +11,9 @@ import {
 } from 'piral-core';
 import { mount } from './mount';
 
+/**
+ * Defines the provided set of Vue Pilet API extensions.
+ */
 export interface PiralVueApi<T = PiralCoreApi<{}>> {
   /**
    * Registers a tile for a Vue component.
@@ -18,7 +21,11 @@ export interface PiralVueApi<T = PiralCoreApi<{}>> {
    * @param component The Vue component.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTileVue(id: string, component: FunctionalComponentOptions<TileComponentProps<T>>, options?: TilePreferences);
+  registerTileVue(
+    id: string,
+    component: FunctionalComponentOptions<TileComponentProps<T>>,
+    options?: TilePreferences,
+  ): void;
   /**
    * Registers a route for a Vue component.
    * The route needs to be unique and can contain params.
@@ -26,7 +33,7 @@ export interface PiralVueApi<T = PiralCoreApi<{}>> {
    * @param route The route to register.
    * @param component The Vue component.
    */
-  registerPageVue(route: string, component: FunctionalComponentOptions<PageComponentProps<T>>);
+  registerPageVue(route: string, component: FunctionalComponentOptions<PageComponentProps<T>>): void;
   /**
    * Registers an extension component with a Vue component.
    * The slot name must refer to the extension slot.
@@ -38,7 +45,7 @@ export interface PiralVueApi<T = PiralCoreApi<{}>> {
     name: string,
     component: FunctionalComponentOptions<ExtensionComponentProps<T, TOpt>>,
     defaults?: T,
-  );
+  ): void;
   /**
    * Registers a menu item for a Vue component.
    * The name has to be unique within the current pilet.
@@ -46,14 +53,22 @@ export interface PiralVueApi<T = PiralCoreApi<{}>> {
    * @param component The Vue component.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenuVue(id: string, component: FunctionalComponentOptions<MenuComponentProps<T>>, settings: MenuSettings);
+  registerMenuVue(
+    id: string,
+    component: FunctionalComponentOptions<MenuComponentProps<T>>,
+    settings: MenuSettings,
+  ): void;
   /**
    * Registers a modal dialog using a Vue component.
    * @param id The name of the modal dialog.
    * @param component The Vue component.
    * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModalVue<TOpt>(id: string, component: FunctionalComponentOptions<ModalComponentProps<T, TOpt>>, defaults?: T);
+  registerModalVue<TOpt>(
+    id: string,
+    component: FunctionalComponentOptions<ModalComponentProps<T, TOpt>>,
+    defaults?: T,
+  ): void;
 }
 
 /**

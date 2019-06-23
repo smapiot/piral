@@ -79,7 +79,17 @@ function fillTypeRefInformation(typeNode, content, children) {
       const typeInfo = getTypeInfo(id, content);
 
       if (typeInfo) {
-        children.push(typeInfo);
+        switch (typeInfo.kind) {
+          case 128: // Class
+          case 256: // Interface
+          case 65536: // TypeLiteral
+          case 2097152: // ObjectLiteral
+            fillInterfaceInformation(typeInfo, content, children);
+            break;
+          default:
+            children.push(typeInfo);
+            break;
+        }
       }
     }
   }
@@ -94,6 +104,20 @@ function fillTypeSignatureInformation(signatures, content, children) {
     }
 
     fillTypeRefInformation(signature.typeParameter, content, children);
+  }
+}
+
+function fillInterfaceInformation(node, content, children) {
+  children.push(node);
+  fillTypeRefInformation(node.type, content, children);
+  fillTypeSignatureInformation(node.signatures || [], content, children);
+  fillTypeSignatureInformation(node.indexSignatures || [], content, children);
+
+  if (node.children) {
+    for (const child of node.children) {
+      fillTypeRefInformation(child.type, content, children);
+      fillTypeSignatureInformation(child.signatures || [], content, children);
+    }
   }
 }
 
@@ -132,17 +156,7 @@ function fillTypeInformation(node, content, children) {
     case 65536: // TypeLiteral
     case 2097152: // ObjectLiteral
       if (node.comment && node.comment.shortText) {
-        children.push(node);
-        fillTypeSignatureInformation(node, content, children);
-        fillTypeSignatureInformation(node.signatures || [], content, children);
-        fillTypeSignatureInformation(node.indexSignatures || [], content, children);
-
-        if (node.children) {
-          for (const child of node.children) {
-            fillTypeRefInformation(child.type, content, children);
-            fillTypeSignatureInformation(child.signatures || [], content, children);
-          }
-        }
+        fillInterfaceInformation(node, content, children);
       }
       break;
   }

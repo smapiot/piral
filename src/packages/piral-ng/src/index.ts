@@ -1,6 +1,9 @@
 import { PiralCoreApi, TilePreferences, MenuSettings } from 'piral-core';
 import { ngTile, ngPage, ngExtension, ngMenu, ngModal } from './register';
 
+/**
+ * Defines the provided set of Angular Pilet API extensions.
+ */
 export interface PiralNgApi {
   /**
    * Registers a tile for an Angular component.
@@ -8,7 +11,7 @@ export interface PiralNgApi {
    * @param component The Angular component to bootstrap.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTileNg(id: string, component: any, options?: TilePreferences);
+  registerTileNg(id: string, component: any, options?: TilePreferences): void;
   /**
    * Registers a route for an Angular component.
    * The route needs to be unique and can contain params.
@@ -16,7 +19,7 @@ export interface PiralNgApi {
    * @param route The route to register.
    * @param component The Angular component to bootstrap.
    */
-  registerPageNg(route: string, component: any);
+  registerPageNg(route: string, component: any): void;
   /**
    * Registers an extension component with an Angular component.
    * The slot name must refer to the extension slot.
@@ -24,7 +27,7 @@ export interface PiralNgApi {
    * @param component The Angular component to bootstrap.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtensionNg<T>(id: string, component: any, defaults?: T);
+  registerExtensionNg<T>(id: string, component: any, defaults?: T): void;
   /**
    * Registers a menu item for an Angular component.
    * The name has to be unique within the current pilet.
@@ -32,14 +35,14 @@ export interface PiralNgApi {
    * @param component The Angular component to bootstrap.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenuNg(id: string, component: any, settings: MenuSettings);
+  registerMenuNg(id: string, component: any, settings: MenuSettings): void;
   /**
    * Registers a modal dialog using an Angular component.
    * @param id The name of the modal element.
    * @param component The Angular component to bootstrap.
    * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModalNg<T>(id: string, component: any, defaults?: T);
+  registerModalNg<T>(id: string, component: any, defaults?: T): void;
 }
 
 /**
