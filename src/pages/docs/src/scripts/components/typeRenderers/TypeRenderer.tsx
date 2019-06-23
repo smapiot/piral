@@ -47,6 +47,8 @@ export const TypeParameterRenderer: React.SFC<TypeParameterRendererProps> = ({ a
 
 export const TypeRenderer: React.SFC<TypeRendererProps> = ({ node, render }) => {
   switch (node.type) {
+    case 'intersection':
+      return <>{withSep(node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ' & ')}</>;
     case 'union':
       return <>{withSep(node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ' | ')}</>;
     case 'stringLiteral':
@@ -54,7 +56,7 @@ export const TypeRenderer: React.SFC<TypeRendererProps> = ({ node, render }) => 
     case 'reference':
       return (
         <>
-          <a href={gref(node.id)} className="ref">
+          <a href={gref(node)} className="ref">
             {node.name}
           </a>
           {<TypeArgumentRenderer render={render} args={node.typeArguments} />}
