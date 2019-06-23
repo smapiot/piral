@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   TiNode,
   TiKind,
+  InlineInterfaceRenderer,
   InterfaceRenderer,
   ModuleRenderer,
   EnumerationRenderer,
   TypeAliasRenderer,
-  TypeLiteralRenderer,
   ObjectLiteralRenderer,
   VariableRenderer,
   FunctionRenderer,
@@ -31,13 +31,7 @@ function render(node: TiNode) {
     case TiKind.Variable:
       return <VariableRenderer node={node} render={render} />;
     case TiKind.TypeLiteral:
-      return (
-        <>
-          {'{'}
-          <TypeLiteralRenderer node={node} render={render} />
-          {'}'}
-        </>
-      );
+      return <InlineInterfaceRenderer node={node} render={render} />;
     case TiKind.TypeAlias:
       return <TypeAliasRenderer node={node} render={render} />;
     case TiKind.Enumeration:

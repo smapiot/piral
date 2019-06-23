@@ -83,8 +83,14 @@ code {
   }
 }
 
-.btn + .btn {
-  margin-left: 2em;
+.cta-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .btn {
+    margin: 1em;
+  }
 }
 
 .btn-primary, a.btn-primary {

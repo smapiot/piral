@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { TiType } from './types';
+import { TiType, TiNode } from './types';
 
-export function gid(node: TiType) {
+export function gid(node: TiType | TiNode) {
   return node.id && `ti-node-${node.name || 'id'}-${node.id}`;
 }
 

@@ -11,7 +11,7 @@ export interface TypeLiteralRendererProps {
 export const TypeLiteralRenderer: React.SFC<TypeLiteralRendererProps> = ({ node, render }) => (
   <ul className="interface-map">
     {(node.children || []).map(child =>
-      child.kind === TiKind.Property ? (
+      child.kind === TiKind.Property || child.kind === TiKind.Variable ? (
         <li key={child.id}>
           <span className="block">{child.comment && child.comment.shortText}</span>
           <span className="block">
