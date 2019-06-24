@@ -5,15 +5,6 @@ import { Provider } from 'urql';
 import { createInstance } from 'piral-core';
 import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets } from './utils';
-import {
-  createDashboard,
-  createErrorInfo,
-  createMenu,
-  createNotifications,
-  createSearch,
-  createModals,
-  createAppLayout,
-} from './components';
 import { PiExtApi, PiletApi, PiralOptions } from './types';
 
 interface PiletRequest {
@@ -55,25 +46,8 @@ export function renderInstance(options: PiralOptions) {
     subscriptionUrl,
     translations = {},
     attach,
-    DashboardContainer,
-    Tile,
-    UnknownErrorInfo,
-    PageErrorInfo = UnknownErrorInfo,
-    NotFoundErrorInfo = UnknownErrorInfo,
-    FeedErrorInfo = UnknownErrorInfo,
-    FormErrorInfo = UnknownErrorInfo,
-    LoadingErrorInfo = UnknownErrorInfo,
-    MenuContainer,
-    MenuItem,
-    NotificationItem,
-    NotificationsContainer,
-    ModalDialog,
-    ModalsContainer,
-    SearchContainer,
-    SearchInput,
-    SearchResult,
     initialize,
-    Layout,
+    layout,
     ...forwardOptions
   } = options;
   const origin = getGateway(gateway);
@@ -85,45 +59,14 @@ export function renderInstance(options: PiralOptions) {
     messages: translations,
   });
 
-  const AppLayout = createAppLayout({
-    Layout,
-    Menu: createMenu({
-      MenuContainer,
-      MenuItem,
-    }),
-    Notifications: createNotifications({
-      NotificationItem,
-      NotificationsContainer,
-    }),
-    Search: createSearch({
-      SearchContainer,
-      SearchInput,
-      SearchResult,
-    }),
-    Modals: createModals({
-      ModalDialog,
-      ModalsContainer,
-    }),
-  });
-
+  const [AppLayout, config] = layout.build();
   const renderLayout = (content: React.ReactNode) => <AppLayout>{content}</AppLayout>;
 
   const Piral = createInstance<PiExtApi>({
     ...forwardOptions,
+    ...config,
     availablePilets: getAvailablePilets(attach),
     requestPilets,
-    Dashboard: createDashboard({
-      DashboardContainer,
-      Tile,
-    }),
-    ErrorInfo: createErrorInfo({
-      FeedErrorInfo,
-      FormErrorInfo,
-      LoadingErrorInfo,
-      NotFoundErrorInfo,
-      PageErrorInfo,
-      UnknownErrorInfo,
-    }),
     extendApi(api): PiletApi {
       return {
         ...api,

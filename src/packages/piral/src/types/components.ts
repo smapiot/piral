@@ -1,17 +1,5 @@
 import { ComponentType } from 'react';
-import {
-  MenuType,
-  LoaderProps,
-  NotFoundErrorInfoProps,
-  PageErrorInfoProps,
-  LoadingErrorInfoProps,
-  FeedErrorInfoProps,
-  FormErrorInfoProps,
-  OpenNotification,
-  OpenModalDialog,
-  LayoutType,
-  UserInfo,
-} from 'piral-core';
+import { MenuType, LayoutType, UserInfo } from 'piral-core';
 
 export interface MenuProps {
   type?: MenuType;
@@ -55,10 +43,6 @@ export interface ModalsContainerProps {
 }
 
 export interface LayoutProps extends LayoutComponents {
-  Menu: ComponentType<MenuProps>;
-  Search: ComponentType;
-  Modals: ComponentType;
-  Notifications: ComponentType;
   selectedLanguage: string;
   availableLanguages: Array<string>;
   currentLayout: LayoutType;
@@ -70,26 +54,4 @@ export interface LayoutComponents {
   Search: ComponentType;
   Modals: ComponentType;
   Notifications: ComponentType;
-}
-
-export interface ComponentOptions {
-  Loader?: ComponentType<LoaderProps>;
-  FeedErrorInfo?: ComponentType<FeedErrorInfoProps>;
-  FormErrorInfo?: ComponentType<FormErrorInfoProps>;
-  LoadingErrorInfo?: ComponentType<LoadingErrorInfoProps>;
-  NotFoundErrorInfo?: ComponentType<NotFoundErrorInfoProps>;
-  PageErrorInfo?: ComponentType<PageErrorInfoProps>;
-  UnknownErrorInfo: ComponentType<UnknownErrorInfoProps>;
-  DashboardContainer: ComponentType<DashboardContainerProps>;
-  Tile: ComponentType<TileProps>;
-  MenuContainer: ComponentType<MenuContainerProps>;
-  MenuItem: ComponentType<MenuItemProps>;
-  SearchContainer: ComponentType<SearchContainerProps>;
-  SearchInput: ComponentType<SearchInputProps>;
-  SearchResult: ComponentType<SearchResultProps>;
-  NotificationsContainer: ComponentType<NotificationsContainerProps>;
-  NotificationItem: ComponentType<OpenNotification>;
-  ModalsContainer: ComponentType<ModalsContainerProps>;
-  ModalDialog: ComponentType<OpenModalDialog>;
-  Layout: ComponentType<LayoutProps>;
 }

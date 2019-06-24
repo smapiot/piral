@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { PiletRequester, GlobalState, ScaffoldPlugin } from 'piral-core';
 import { LocalizationMessages } from 'piral-ext';
 import { PiletApi } from './api';
-import { ComponentOptions } from './components';
+import { LayoutBuilder } from './layout';
 
 export interface PiralAttachment {
   (api: PiletApi): void;
@@ -13,7 +13,10 @@ export interface PiralInitializer {
   <TState extends GlobalState<TUser>, TUser = {}>(state: GlobalState<TUser>): TState;
 }
 
-export interface PiralOptions extends ComponentOptions {
+/**
+ * Defines the options for rendering a Piral instance.
+ */
+export interface PiralOptions {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
@@ -35,11 +38,6 @@ export interface PiralOptions extends ComponentOptions {
    * @default gatewayUrl,
    */
   subscriptionUrl?: false | string;
-  /**
-   * Sets additional routes (pages) to be available.
-   * @default {}
-   */
-  routes?: Record<string, ComponentType<RouteComponentProps>>;
   /**
    * Sets additional trackers to be available.
    * @default []
@@ -63,4 +61,8 @@ export interface PiralOptions extends ComponentOptions {
    * Plugins for extending the core portal functionality.
    */
   plugins?: Array<ScaffoldPlugin>;
+  /**
+   * Gets the layout builder to construct the design to display.
+   */
+  layout: LayoutBuilder;
 }
