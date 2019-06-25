@@ -8,6 +8,7 @@ export * from './io';
 export * from './info';
 export * from './merge';
 export * from './npm';
+export * from './pack';
 export * from './package';
 export * from './pilet';
 export * from './port';

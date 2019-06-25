@@ -237,6 +237,7 @@ export async function move(source: string, target: string, forceOverwrite = Forc
     target = resolve(target, file);
   }
 
-  await copy(source, target);
+  await copy(source, target, forceOverwrite);
   await remove(source);
+  return target;
 }

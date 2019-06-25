@@ -222,6 +222,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('api-key')
         .describe('api-key', 'Sets the potential API key to send to the service.')
         .default('api-key', apps.publishPiletDefaults.apiKey)
+        .boolean('fresh')
+        .describe('fresh', 'Performs a fresh build, then packages and finally publishes the pilet.')
+        .default('fresh', apps.publishPiletDefaults.fresh)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -231,6 +234,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         source: args.source as string,
         apiKey: args.apiKey as string,
         url: args.url as string,
+        fresh: args.fresh as boolean,
       });
     },
   },

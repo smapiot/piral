@@ -1,25 +1,42 @@
-import { relative } from 'path';
-import { postFile, readBinary, matchFiles } from './common';
+import { relative, join } from 'path';
+import { postFile, readBinary, matchFiles, createPiletPackage } from './common';
+import { buildPilet } from './build-pilet';
 
 export interface PublishPiletOptions {
   source?: string;
   url?: string;
   apiKey?: string;
+  fresh?: boolean;
 }
 
 export const publishPiletDefaults = {
   source: '*.tgz',
   url: 'https://sample.piral.io/api/v1/pilet',
   apiKey: '',
+  fresh: false,
 };
+
+async function getFiles(baseDir: string, source: string, fresh: boolean) {
+  if (fresh) {
+    const details = require(join(baseDir, 'package.json'));
+    await buildPilet(baseDir, {
+      target: details.main,
+    });
+    const file = await createPiletPackage(baseDir, '.', '.');
+    return [file];
+  }
+
+  return await matchFiles(baseDir, source);
+}
 
 export async function publishPilet(baseDir = process.cwd(), options: PublishPiletOptions = {}) {
   const {
     source = publishPiletDefaults.source,
     url = publishPiletDefaults.url,
     apiKey = publishPiletDefaults.apiKey,
+    fresh = publishPiletDefaults.fresh,
   } = options;
-  const files = await matchFiles(baseDir, source);
+  const files = await getFiles(baseDir, source, fresh);
 
   if (files.length === 0) {
     return console.error(`No files found at '${source}'.`);
