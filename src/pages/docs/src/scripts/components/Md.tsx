@@ -11,19 +11,19 @@ export interface MdProps {
 }
 
 //tslint:disable-next-line
-const Empty: React.SFC = () => null;
-const Heading: React.SFC = props => <h3 {...props} />;
-const Figure: React.SFC<any> = props => <img {...props} className="responsive-image" src={imgRef(props.src)} />;
-const Code: React.SFC<any> = ({ className = '', children }) => (
+const Empty: React.FC = () => null;
+const Heading: React.FC = props => <h3 {...props} />;
+const Figure: React.FC<any> = props => <img {...props} className="responsive-image" src={imgRef(props.src)} />;
+const Code: React.FC<any> = ({ className = '', children }) => (
   <CodeBox code={children} language={className.substr(5)} />
 );
-const Table: React.SFC = props => (
+const Table: React.FC = props => (
   <div className="table-responsive">
     <table {...props} className="table table-hover" />
   </div>
 );
 
-export const Md: React.SFC<MdProps> = ({ children, overrides }) => {
+export const Md: React.FC<MdProps> = ({ children, overrides }) => {
   return (
     <Markdown
       options={{

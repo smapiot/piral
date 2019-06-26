@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Card, Button } from '../components';
 
-export const Content: React.SFC = () => (
+export const Content: React.FC = () => (
   <section className="cards-section text-center">
     <div className="container">
       <h2 className="title">Welcome to the Piral documentation!</h2>

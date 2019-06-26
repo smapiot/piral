@@ -10,7 +10,7 @@ export interface QuestionProps extends HighlightProps {
   title: string;
 }
 
-const Highlight: React.SFC<HighlightProps> = ({ highlight }) => {
+const Highlight: React.FC<HighlightProps> = ({ highlight }) => {
   switch (highlight) {
     case 'new':
       return <span className="badge badge-success">New</span>;
@@ -22,7 +22,7 @@ const Highlight: React.SFC<HighlightProps> = ({ highlight }) => {
   return null;
 };
 
-export const Question: React.SFC<QuestionProps> = ({ title, children, highlight }) => (
+export const Question: React.FC<QuestionProps> = ({ title, children, highlight }) => (
   <div className="section-block">
     <h3 className="question">
       <i className="fas fa-question-circle" /> {title} <Highlight highlight={highlight} />

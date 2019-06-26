@@ -5,13 +5,13 @@ interface CompanyProps {
   title: string;
 }
 
-const Company: React.SFC<CompanyProps> = ({ image, title }) => (
+const Company: React.FC<CompanyProps> = ({ image, title }) => (
   <div className="col-sm-4 col-md-2 py-2 align-self-center">
     <img src={image} alt={title} className="mx-auto d-block" />
   </div>
 );
 
-export const Companies: React.SFC = () => (
+export const Companies: React.FC = () => (
   <div className="jumbotron jumbotron-fluid">
     <div className="container">
       <div className="row">

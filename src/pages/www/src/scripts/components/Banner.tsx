@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Status } from './Status';
 
-export const Banner: React.SFC = () => (
+export const Banner: React.FC = () => (
   <div className="jumbotron jumbotron-fluid banner">
     <div className="container text-center text-md-left">
       <header>

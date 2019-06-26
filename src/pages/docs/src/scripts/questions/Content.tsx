@@ -15,13 +15,13 @@ function createQuestionScope() {
   };
 }
 
-const Mdq: React.SFC<{ children: string }> = ({ children }) => <Md overrides={createQuestionScope()}>{children}</Md>;
+const Mdq: React.FC<{ children: string }> = ({ children }) => <Md overrides={createQuestionScope()}>{children}</Md>;
 
 export interface ContentProps {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
+export const Content: React.FC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
     {/* start:auto-generated */}
     <Section id="section-general" title="General">

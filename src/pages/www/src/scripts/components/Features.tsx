@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Feature } from './Feature';
 
-export const Features: React.SFC = () => (
+export const Features: React.FC = () => (
   <div className="jumbotron jumbotron-fluid features">
     <Feature title="Take a look inside" image={require('../../assets/feature-1.png')}>
       <p className="my-4">

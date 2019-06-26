@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useGlobalState, useOnClickOutside } from 'piral';
 import { withClass } from './utils';
 
-export const User: React.SFC = () => {
+export const User: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const currentUser = useGlobalState(m => m.user.current);
   const menuItems = useGlobalState(m => m.components.menuItems);

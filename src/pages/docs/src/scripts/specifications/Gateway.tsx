@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Section, ResponsiveContent, Md, EditSection, Menu } from '../components';
 
-const Content: React.SFC = () => {
+const Content: React.FC = () => {
   const ref = React.useRef(undefined);
 
   return (

@@ -5,7 +5,7 @@ import { TagLine } from '../components';
 
 const version = process.env.BUILD_PCKG_VERSION;
 
-export const Landing: React.SFC = ({ children }) => (
+export const Landing: React.FC = ({ children }) => (
   <div className="landing-page body-green">
     <div className="page-wrapper">
       <Header centered>

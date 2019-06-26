@@ -7,7 +7,7 @@ export interface DemoProps {
   codeLink: string;
 }
 
-export const Demo: React.SFC<DemoProps> = ({ title, appLink, codeLink, children }) => (
+export const Demo: React.FC<DemoProps> = ({ title, appLink, codeLink, children }) => (
   <div className="col-lg-6 intro text-center">
     <h2>{title}</h2>
     {children}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export const Footer: React.SFC = () => (
+export const Footer: React.FC = () => (
   <footer className="footer text-center">
     <div className="container">
       <small className="copyright">

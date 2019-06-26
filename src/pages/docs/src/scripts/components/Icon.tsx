@@ -8,5 +8,5 @@ export interface IconProps {
 // tslint:disable-next-line
 const defaultIcon = null;
 
-export const Icon: React.SFC<IconProps> = ({ content = defaultIcon }) =>
+export const Icon: React.FC<IconProps> = ({ content = defaultIcon }) =>
   (typeof content === 'string' && <i className={cn('icon', 'fa', `fa-${content}`)} />) || content;

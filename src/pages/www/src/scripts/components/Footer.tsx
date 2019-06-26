@@ -5,13 +5,13 @@ interface IconLinkProps {
   logo: string;
 }
 
-const IconLink: React.SFC<IconLinkProps> = ({ href, logo }) => (
+const IconLink: React.FC<IconLinkProps> = ({ href, logo }) => (
   <a href={href} title={href} className="d-inline-block text-center ml-2">
     <i className={logo} aria-hidden="true" />
   </a>
 );
 
-export const Footer: React.SFC = () => (
+export const Footer: React.FC = () => (
   <div className="jumbotron jumbotron-fluid copyright">
     <div className="container">
       <div className="row justify-content-between">

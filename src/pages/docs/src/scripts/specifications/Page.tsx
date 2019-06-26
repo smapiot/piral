@@ -17,7 +17,7 @@ function getName(path: string) {
   return parts.map(m => capitalize(m)).join(' ');
 }
 
-export const Page: React.SFC<RouteComponentProps> = ({ location }) => {
+export const Page: React.FC<RouteComponentProps> = ({ location }) => {
   const rootPath = '/specifications';
   const rootTitle = 'Specifications';
   const isOverview = location.pathname === rootPath;

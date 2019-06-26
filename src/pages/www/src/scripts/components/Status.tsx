@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export const Status: React.SFC = () => (
+export const Status: React.FC = () => (
   <span className="badges">
     <a href="https://www.npmjs.com/package/piral">
       <img src="https://img.shields.io/npm/v/piral.svg?style=flat" alt="npm version" />

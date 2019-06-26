@@ -41,4 +41,4 @@ function render(node: TiNode) {
   }
 }
 
-export const Ti: React.SFC<TiProps> = ({ children }) => render(children);
+export const Ti: React.FC<TiProps> = ({ children }) => render(children);

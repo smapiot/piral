@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Capability } from './Capability';
 
-export const Capabilities: React.SFC = () => (
+export const Capabilities: React.FC = () => (
   <div className="container my-5 py-2">
     <h2 className="text-center font-weight-bold my-5">Breaking the Frontend Monolith!</h2>
     <div className="text-center">

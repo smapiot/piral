@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Demo } from '../components';
 
-export const CoreDemo: React.SFC = () => (
+export const CoreDemo: React.FC = () => (
   <Demo
     title="Piral Core Application"
     appLink="https://demo-core.piral.io"

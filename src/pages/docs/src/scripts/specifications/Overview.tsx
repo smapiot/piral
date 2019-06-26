@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Card } from '../components';
 
-const Overview: React.SFC = () => (
+const Overview: React.FC = () => (
   <section className="cards-section text-center">
     <div className="container">
       <h2 className="title">Piral Specifications</h2>

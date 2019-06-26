@@ -8,7 +8,7 @@ export interface CalloutProps {
   icon?: IconName;
 }
 
-export const Callout: React.SFC<CalloutProps> = ({ title, type = 'info', icon, id, children }) => (
+export const Callout: React.FC<CalloutProps> = ({ title, type = 'info', icon, id, children }) => (
   <div className={cn('callout-block', `callout-${type}`)} id={id}>
     <div className="icon-holder">{icon && <i className={cn('fas', `fa-${icon}`)} />}</div>
     <div className="content">

@@ -35,17 +35,17 @@ function convertParamToArg(param: TiNode): TiType {
   }
 }
 
-export const TypeArgumentRenderer: React.SFC<TypeArgumentRendererProps> = ({ args, render }) =>
+export const TypeArgumentRenderer: React.FC<TypeArgumentRendererProps> = ({ args, render }) =>
   (args && (
     <span>&lt;{withSep(args.map(ta => <TypeRenderer key={keyOf(ta)} render={render} node={ta} />), ', ')}&gt;</span>
   )) ||
   defaultResult;
 
-export const TypeParameterRenderer: React.SFC<TypeParameterRendererProps> = ({ args, render }) => (
+export const TypeParameterRenderer: React.FC<TypeParameterRendererProps> = ({ args, render }) => (
   <TypeArgumentRenderer render={render} args={args && args.map(convertParamToArg)} />
 );
 
-export const TypeRenderer: React.SFC<TypeRendererProps> = ({ node, render }) => {
+export const TypeRenderer: React.FC<TypeRendererProps> = ({ node, render }) => {
   switch (node.type) {
     case 'intersection':
       return <>{withSep(node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ' & ')}</>;

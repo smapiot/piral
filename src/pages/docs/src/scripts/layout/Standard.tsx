@@ -11,7 +11,7 @@ export interface StandardProps extends InfoProps {
   kind?: ColorKind;
 }
 
-export const Standard: React.SFC<StandardProps> = ({ children, title, icon, breadcrumbs, kind = 'green' }) => (
+export const Standard: React.FC<StandardProps> = ({ children, title, icon, breadcrumbs, kind = 'green' }) => (
   <div className={`body-${kind}`}>
     <div className="page-wrapper">
       <Header>

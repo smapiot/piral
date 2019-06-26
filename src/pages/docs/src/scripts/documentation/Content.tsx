@@ -5,7 +5,7 @@ export interface ContentProps {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
+export const Content: React.FC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
     {/* start:auto-generated */}
     <Section id="section-introduction" title="Introduction">

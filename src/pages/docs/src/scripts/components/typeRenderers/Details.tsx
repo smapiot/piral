@@ -10,7 +10,7 @@ export interface DetailsProps {
   id?: string;
 }
 
-export const Details: React.SFC<DetailsProps> = ({ title, kind, description, children, id, color = 'primary' }) => {
+export const Details: React.FC<DetailsProps> = ({ title, kind, description, children, id, color = 'primary' }) => {
   const [open, setOpen] = React.useState(false);
   const toggleOpen = () => setOpen(!open);
 
