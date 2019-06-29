@@ -6,6 +6,7 @@ import { SearchPilet } from './search';
 import { FormPilet } from './form';
 import { VuePilet } from './vuePilet';
 import { NgPilet } from './ngPilet';
+import { ContainerPilet } from './container';
 
 /**
  * Normally all these pilets would come from some API and
@@ -25,4 +26,5 @@ export const availablePilets = [
   FormPilet,
   VuePilet,
   NgPilet,
+  ContainerPilet,
 ];
