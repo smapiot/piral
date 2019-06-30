@@ -3,6 +3,22 @@ import { renderInstance } from 'piral';
 import { MenuToggle, User } from './components';
 import { setupFooter, setupMenu } from './parts';
 
+function getTileClass(cols: number, rows: number) {
+  const baseCls = 'pi-tile';
+
+  if (cols > 3 && rows > 3) {
+    return `${baseCls} large`;
+  } else if (cols > 3) {
+    return `${baseCls} wide`;
+  } else if (cols > 1 && rows > 1) {
+    return `${baseCls} medium`;
+  } else if (cols === 1 || rows === 1) {
+    return `${baseCls} small`;
+  }
+
+  return baseCls;
+}
+
 renderInstance({
   subscriptionUrl: false,
   attach(api) {
@@ -16,7 +32,7 @@ renderInstance({
   ),
   FeedErrorInfo: ({ error }) => (
     <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error"/>
+      <img src={require('./images/error.svg')} alt="Error" />
       <div className="pi-title">Data Unavailable</div>
       <div className="pi-description">
         The demanded data has not been found. Please contact support to resolve this issue.
@@ -26,14 +42,14 @@ renderInstance({
   ),
   FormErrorInfo: () => (
     <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error"/>
+      <img src={require('./images/error.svg')} alt="Error" />
       <div className="pi-title">Submission Failed</div>
       <div className="pi-description">The form could not be submitted.</div>
     </div>
   ),
   LoadingErrorInfo: () => (
     <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error"/>
+      <img src={require('./images/error.svg')} alt="Error" />
       <div className="pi-title">Something Went Wrong</div>
       <div className="pi-description">
         An error occured during the loading process. Try refreshing or come back later.
@@ -42,7 +58,7 @@ renderInstance({
   ),
   NotFoundErrorInfo: () => (
     <div className="pi-error">
-      <img src={require('./images/not-found.svg')} alt="Not Found"/>
+      <img src={require('./images/not-found.svg')} alt="Not Found" />
       <div className="pi-title">Page Not Found</div>
       <div className="pi-description">
         The provided URL does not map to a page. Please contact support to resolve this issue.
@@ -51,7 +67,7 @@ renderInstance({
   ),
   PageErrorInfo: () => (
     <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error"/>
+      <img src={require('./images/error.svg')} alt="Error" />
       <div className="pi-title">Page Crashed</div>
       <div className="pi-description">
         Sorry for the inconvenience. We try to resolve the issue as soon as possible.
@@ -60,13 +76,13 @@ renderInstance({
   ),
   UnknownErrorInfo: () => (
     <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error"/>
+      <img src={require('./images/error.svg')} alt="Error" />
       <div className="pi-title">Unknown Error</div>
       <div className="pi-description">An unknown error occured.</div>
     </div>
   ),
   DashboardContainer: ({ children }) => <div className="pi-dashboard">{children}</div>,
-  Tile: ({ children }) => <div className="pi-tile">{children}</div>,
+  Tile: ({ children, columns, rows }) => <div className={getTileClass(columns, rows)}>{children}</div>,
   MenuContainer: ({ children }) => <div className="pi-menu">{children}</div>,
   MenuItem: ({ children }) => <div className="pi-item">{children}</div>,
   SearchContainer: ({ input, loading, children }) => (
@@ -96,8 +112,25 @@ renderInstance({
       <div className="pi-close" onClick={close} />
     </div>
   ),
-  ModalsContainer: ({ children }) => <div className="pi-modal">{children}</div>,
-  ModalDialog: ({ children }) => <div className="pi-modal">{children}</div>,
+  ModalsContainer: ({ children, open }) => {
+    React.useEffect(() => {
+      const body = document.body;
+
+      if (open) {
+        body.style.top = `-${window.scrollY}px`;
+        body.classList.add('pi-modal-open');
+      } else {
+        const offset = -parseInt(body.style.top || '0');
+        body.classList.remove('pi-modal-open');
+        body.style.top = '';
+        window.scrollTo(0, offset);
+      }
+
+      return () => {};
+    }, [open]);
+    return <div className="pi-modal">{children}</div>;
+  },
+  ModalDialog: ({ children }) => <div className="pi-modal-dialog">{children}</div>,
   Layout: ({ Menu, Notifications, Search, children, Modals }) => (
     <div className="app-container">
       <div className="app-menu">
