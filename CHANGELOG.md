@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.6.0 (tbd)
+
+* Improved the sample
+
 ## 0.5.2 (June 23, 2019)
 
 * Added new optional library `piral-vue`

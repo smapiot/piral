@@ -13,6 +13,6 @@ function attachMenu() {
 const attach = attachMenu();
 
 export function setupMenu(api: PiletApi) {
-  attach(api, <Link to="/">Dashboard</Link>);
+  attach(api, <Link to="/">Home</Link>);
   attach(api, <Link to="/error">Not Found</Link>);
 }

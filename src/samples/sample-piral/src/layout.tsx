@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { buildLayout } from 'piral';
 import { MenuToggle, User } from './components';
+import { getTileClass } from './utils';
 
 export const layout = buildLayout()
   .withLoader(() => (
@@ -36,7 +37,7 @@ export const layout = buildLayout()
   .createDashboard(dashboard =>
     dashboard
       .container(({ children }) => <div className="pi-dashboard">{children}</div>)
-      .tile(({ children }) => <div className="pi-tile">{children}</div>),
+      .tile(({ children, rows, columns }) => <div className={getTileClass(columns, rows)}>{children}</div>),
   )
   .createError(error =>
     error
@@ -132,6 +133,23 @@ export const layout = buildLayout()
   )
   .createModals(modals =>
     modals
-      .container(({ children }) => <div className="pi-modal">{children}</div>)
-      .dialog(({ children }) => <div className="pi-modal">{children}</div>),
+      .container(({ children }) => {
+        React.useEffect(() => {
+          const body = document.body;
+
+          if (open) {
+            body.style.top = `-${window.scrollY}px`;
+            body.classList.add('pi-modal-open');
+          } else {
+            const offset = -parseInt(body.style.top || '0', 10);
+            body.classList.remove('pi-modal-open');
+            body.style.top = '';
+            window.scrollTo(0, offset);
+          }
+
+          return () => {};
+        }, [open]);
+        return <div className="pi-modal">{children}</div>;
+      })
+      .dialog(({ children }) => <div className="pi-modal-dialog">{children}</div>),
   );

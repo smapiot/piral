@@ -20,6 +20,52 @@ a {
   }
 }
 
+.pi-modal {
+  display: none;
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.4);
+  animation: fade-in 0.4s;
+
+  .pi-modal-dialog {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    background: #fefefe;
+    animation: fade-in 0.4s;
+  }
+}
+
+body.pi-modal-open {
+  height: 100vh;
+  overflow-y: hidden;
+  padding-right: 15px;
+  position: fixed;
+
+  .pi-modal {
+    display: block;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .app-container {
   flex: 1;
   position: relative;
@@ -140,6 +186,7 @@ a {
   justify-content: space-between;
   background: $header-color;
   position: relative;
+  z-index: 2;
 
   h1 {
     white-space: nowrap;
@@ -192,6 +239,7 @@ a {
   transform: translateX(-100%);
   transition: all 0.1s ease;
   padding-top: 85px;
+  z-index: 1;
 
   &.is-open {
     transform: none;
@@ -286,21 +334,54 @@ a {
   }
 }
 
+$tile-height: 70px;
+$tile-width: 70px;
+$tile-gap: 10px;
+
 .pi-dashboard {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  margin: -1em;
+  flex: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, $tile-width);
+  grid-template-rows: repeat(auto-fit, $tile-height);
+  grid-gap: $tile-gap;
+  overflow: visible;
 
   .pi-tile {
-    width: 200px;
-    height: 150px;
-    border: 1px solid #ccc;
-    box-shadow: 0 5px 5px #000;
-    margin: 1em;
-    padding: 1em;
     display: flex;
-    flex-direction: column;
+    position: relative;
+
+    &.small {
+      grid-column: span 1;
+      grid-row: span 1;
+      width: $tile-width;
+      height: $tile-height;
+    }
+
+    &.medium {
+      grid-column: span 2;
+      grid-row: span 2;
+      width: 2 * $tile-width + 1 * $tile-gap;
+      height: 2 * $tile-height + 1 * $tile-gap;
+    }
+
+    &.wide {
+      grid-column: span 4;
+      grid-row: span 2;
+      width: 4 * $tile-width + 3 * $tile-gap;
+      height: 2 * $tile-height + 1 * $tile-gap;
+    }
+
+    &.large {
+      grid-column: span 4;
+      grid-row: span 4;
+      width: 4 * $tile-width + 3 * $tile-gap;
+      height: 4 * $tile-height + 3 * $tile-gap;
+    }
+
+    &:hover {
+      outline: rgba(29, 29, 29, 0.1) solid 4px;
+    }
   }
 }
 
@@ -324,15 +405,15 @@ a {
     @media screen and (max-width: $breakpoint-mobile) {
       width: 100px;
     }
+  }
 
-    &:focus {
-      width: 90%;
-      max-width: 90%;
+  &:focus-within input[type=search] {
+    width: 90%;
+    max-width: 90%;
 
-      & + .pi-details:not(:empty) {
-        display: block;
-        opacity: 1;
-      }
+    & + .pi-details:not(:empty) {
+      display: block;
+      opacity: 1;
     }
   }
 
@@ -340,7 +421,7 @@ a {
     display: none;
     opacity: 0;
     position: absolute;
-    z-index: 99;
+    z-index: 2;
     top: 100%;
     width: 90%;
     box-sizing: border-box;
