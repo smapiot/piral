@@ -11,7 +11,7 @@ describe('User Actions Module', () => {
         permissions: {},
       },
     });
-    setUser.call(state, 'User', { a: 'on' }, { allow: true });
+    setUser(state, 'User', { a: 'on' }, { allow: true });
     expect(deref(state)).toEqual({
       foo: 5,
       user: {
@@ -39,7 +39,7 @@ describe('User Actions Module', () => {
         },
       },
     });
-    setUser.call(state, undefined, {}, {});
+    setUser(state, undefined, {}, {});
     expect(deref(state)).toEqual({
       foo: 5,
       user: {

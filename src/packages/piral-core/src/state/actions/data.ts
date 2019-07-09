@@ -2,8 +2,8 @@ import { swap, Atom, deref, DeepImmutableObject } from '@dbeining/react-atom';
 import { updateKey } from '../../utils';
 import { GlobalState, SharedDataItem, DataStoreTarget } from '../../types';
 
-export function resetData() {
-  swap(this as Atom<GlobalState>, state => ({
+export function resetData(ctx: Atom<GlobalState>) {
+  swap(ctx, state => ({
     ...state,
     app: {
       ...state.app,
@@ -12,18 +12,23 @@ export function resetData() {
   }));
 }
 
-export function readDataItem(key: string) {
-  const globalState = this as Atom<GlobalState>;
-  return deref(globalState).app.data[key];
+export function readDataItem(ctx: Atom<GlobalState>, key: string) {
+  return deref(ctx).app.data[key];
 }
 
-export function readDataValue(key: string) {
-  const globalState = this as Atom<GlobalState>;
-  const item = readDataItem.call(globalState, key);
+export function readDataValue(ctx: Atom<GlobalState>, key: string) {
+  const item = readDataItem(ctx, key);
   return item && item.value;
 }
 
-export function writeDataItem(key: string, value: any, owner: string, target: DataStoreTarget, expires: number) {
+export function writeDataItem(
+  ctx: Atom<GlobalState>,
+  key: string,
+  value: any,
+  owner: string,
+  target: DataStoreTarget,
+  expires: number,
+) {
   const isNull = !value && typeof value === 'object';
   const data = isNull
     ? value
@@ -33,7 +38,7 @@ export function writeDataItem(key: string, value: any, owner: string, target: Da
         target,
         expires,
       };
-  swap(this as Atom<GlobalState>, state => ({
+  swap(ctx, state => ({
     ...state,
     app: {
       ...state.app,
@@ -42,9 +47,15 @@ export function writeDataItem(key: string, value: any, owner: string, target: Da
   }));
 }
 
-export function tryWriteDataItem(key: string, value: any, owner: string, target: DataStoreTarget, expires: number) {
-  const globalState = this as Atom<GlobalState>;
-  const item: DeepImmutableObject<SharedDataItem> = readDataItem.call(globalState, key);
+export function tryWriteDataItem(
+  ctx: Atom<GlobalState>,
+  key: string,
+  value: any,
+  owner: string,
+  target: DataStoreTarget,
+  expires: number,
+) {
+  const item: DeepImmutableObject<SharedDataItem> = readDataItem(ctx, key);
 
   if (item && item.owner !== owner) {
     console.error(
@@ -55,6 +66,6 @@ export function tryWriteDataItem(key: string, value: any, owner: string, target:
     return false;
   }
 
-  writeDataItem.call(globalState, key, value, owner, target, expires);
+  writeDataItem(ctx, key, value, owner, target, expires);
   return true;
 }

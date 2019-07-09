@@ -2,8 +2,8 @@ import { swap, Atom } from '@dbeining/react-atom';
 import { GlobalState, OpenNotification } from '../../types';
 import { prependItem, excludeItem } from '../../utils';
 
-export function openNotification(dialog: OpenNotification) {
-  swap(this as Atom<GlobalState>, state => ({
+export function openNotification(ctx: Atom<GlobalState>, dialog: OpenNotification) {
+  swap(ctx, state => ({
     ...state,
     app: {
       ...state.app,
@@ -12,8 +12,8 @@ export function openNotification(dialog: OpenNotification) {
   }));
 }
 
-export function closeNotification(dialog: OpenNotification) {
-  swap(this as Atom<GlobalState>, state => ({
+export function closeNotification(ctx: Atom<GlobalState>, dialog: OpenNotification) {
+  swap(ctx, state => ({
     ...state,
     app: {
       ...state.app,

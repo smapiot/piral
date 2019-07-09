@@ -11,7 +11,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const value = readDataItem.call(state, 'foo');
+    const value = readDataItem(state, 'foo');
     expect(value).toBe(10);
   });
   it('readDataValue reads the current value', () => {
@@ -25,7 +25,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const value = readDataValue.call(state, 'foo');
+    const value = readDataValue(state, 'foo');
     expect(value).toBe(15);
   });
 
@@ -39,7 +39,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    resetData.call(state);
+    resetData(state);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -58,7 +58,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem.call(state, 'fi', 0);
+    writeDataItem(state, 'fi', 0);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -86,7 +86,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem.call(state, 'bar', 0);
+    writeDataItem(state, 'bar', 0);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -113,7 +113,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem.call(state, 'bar', null);
+    writeDataItem(state, 'bar', null);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -133,7 +133,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem.call(state, 'bar', 10, 'me');
+    const success = tryWriteDataItem(state, 'bar', 10, 'me');
     expect(success).toBe(true);
   });
 
@@ -150,7 +150,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem.call(state, 'bar', 10, 'me');
+    const success = tryWriteDataItem(state, 'bar', 10, 'me');
     expect(success).toBe(true);
   });
 
@@ -167,7 +167,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem.call(state, 'bar', 10, 'me');
+    const success = tryWriteDataItem(state, 'bar', 10, 'me');
     expect(success).toBe(false);
   });
 });

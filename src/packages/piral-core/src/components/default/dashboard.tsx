@@ -5,7 +5,7 @@ import { DashboardProps } from '../../types';
 
 const ExtensionSlot = getExtensionSlot('dashboard');
 
-export const DefaultDashboard: React.SFC<DashboardProps> = props => {
+export const DefaultDashboard: React.FC<DashboardProps> = props => {
   const tiles = useGlobalState(s => s.components.tiles);
 
   return (

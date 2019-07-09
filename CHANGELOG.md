@@ -1,8 +1,14 @@
 # Piral Changelog
 
-## 0.6.0 (tbd)
+## 0.6.0 (to be determined)
 
 * Improved the sample
+* Added new layout builder API
+* Unified Piral extension API
+* Support asynchronous language switch
+* Enable lazy loading of pilets (#2)
+* Introduced local pilet state management
+* Added `--fresh` flag to the `pilet-publish` command
 
 ## 0.5.2 (June 23, 2019)
 

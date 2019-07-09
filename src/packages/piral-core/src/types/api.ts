@@ -3,6 +3,7 @@ import { MenuSettings } from './menu';
 import { TilePreferences } from './tile';
 import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
+import { ContainerOptions, ContainerConnector } from './container';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { InputFormOptions, FormCreator } from './form';
 import { Disposable, SeverityLevel, EventEmitter } from './utils';
@@ -76,6 +77,11 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param options The options for creating the connector.
    */
   createConnector<TData, TItem>(options: FeedConnectorOptions<TData, TItem>): FeedConnector<TData>;
+  /**
+   * Creates a state container for persisting some global state.
+   * @param options The options for creating the state container.
+   */
+  createContainer<TState, TAction>(options: ContainerOptions<TState, TAction>): ContainerConnector<TState, TAction>;
   /**
    * Creates an input form for tracking user input intelligently.
    * @param options The options for creating the form.

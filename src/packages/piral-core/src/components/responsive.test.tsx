@@ -20,7 +20,7 @@ jest.mock('../hooks');
 const changeTo = jest.fn();
 (hooks as any).useAction = () => changeTo;
 
-const StubComponent: React.SFC = props => <div />;
+const StubComponent: React.FC = props => <div />;
 StubComponent.displayName = 'StubComponent';
 
 describe('Responsive Module', () => {

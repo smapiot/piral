@@ -4,7 +4,6 @@ import {
   ErrorInfoProps,
   DashboardProps,
   LoaderProps,
-  PiralConfiguration,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
   LoadingErrorInfoProps,
@@ -12,6 +11,7 @@ import {
   FormErrorInfoProps,
   OpenModalDialog,
   OpenNotification,
+  GlobalStateOptions,
 } from 'piral-core';
 import {
   MenuProps,
@@ -90,5 +90,5 @@ export interface LayoutBuilder {
   withRoute(route: string, Component: ComponentType<RouteComponentProps>): LayoutBuilder;
   withTracker(Component: ComponentType<RouteComponentProps>): LayoutBuilder;
   withLayout(Component: ComponentType<LayoutProps>): LayoutBuilder;
-  build(): [ComponentType, PiralConfiguration<any>];
+  build(): [ComponentType, GlobalStateOptions];
 }

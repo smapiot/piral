@@ -12,7 +12,7 @@ describe('App Actions Module', () => {
         },
       },
     });
-    changeLayout.call(state, 'mobile');
+    changeLayout(state, 'mobile');
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -34,7 +34,7 @@ describe('App Actions Module', () => {
         },
       },
     });
-    selectLanguage.call(state, 'de');
+    selectLanguage(state, 'de');
     expect(deref(state)).toEqual({
       foo: 5,
       app: {

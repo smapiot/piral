@@ -10,7 +10,7 @@ describe('Feeds Actions Module', () => {
         bar: 10,
       },
     });
-    destroyFeed.call(state, 'foo');
+    destroyFeed(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -26,7 +26,7 @@ describe('Feeds Actions Module', () => {
         foo: 5,
       },
     });
-    createFeed.call(state, 'bar');
+    createFeed(state, 'bar');
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -48,7 +48,7 @@ describe('Feeds Actions Module', () => {
         foo: 5,
       },
     });
-    loadedFeed.call(state, 'bar', 'test', 'errror');
+    loadedFeed(state, 'bar', 'test', 'errror');
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -76,7 +76,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    updateFeed.call(state, 'bar', 15, (data, item) => [...data, item]);
+    updateFeed(state, 'bar', 15, (data, item) => [...data, item]);
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -104,7 +104,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    await updateFeed.call(state, 'bar', 15, (data, item) => Promise.resolve([...data, item]));
+    await updateFeed(state, 'bar', 15, (data, item) => Promise.resolve([...data, item]));
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -132,7 +132,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    await updateFeed.call(state, 'bar', 15, (data, item) => Promise.reject('Failed'));
+    await updateFeed(state, 'bar', 15, (data, item) => Promise.reject('Failed'));
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -161,7 +161,7 @@ describe('Feeds Actions Module', () => {
       },
     });
     let cb = undefined;
-    const promise = loadFeed.call(state, {
+    const promise = loadFeed(state, {
       id: 'bar',
       initialize() {
         return Promise.resolve([1, 2, 3]);
@@ -226,7 +226,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    await loadFeed.call(state, {
+    await loadFeed(state, {
       id: 'bar',
       initialize() {
         return Promise.reject('error');

@@ -10,8 +10,13 @@ function getNewFormState(newState: FormDataState, patch: Partial<FormDataState>)
   return newState.active || newState.submitting || newState.changed ? newState : removeIndicator;
 }
 
-export function updateFormState(id: string, initial: FormDataState, patch: Partial<FormDataState>) {
-  swap(this as Atom<GlobalState>, state => {
+export function updateFormState(
+  ctx: Atom<GlobalState>,
+  id: string,
+  initial: FormDataState,
+  patch: Partial<FormDataState>,
+) {
+  swap(ctx, state => {
     const newState = {
       ...initial,
       ...(state.forms[id] || {}),

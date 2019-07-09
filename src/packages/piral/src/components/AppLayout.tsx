@@ -19,7 +19,7 @@ export interface AppLayoutCreator {
   Modals: React.ComponentType;
 }
 
-export function createAppLayout({ Layout, ...props }: AppLayoutCreator): React.SFC {
+export function createAppLayout({ Layout, ...props }: AppLayoutCreator): React.FC {
   return ({ children }) => {
     const content = useGlobalState(selectContent);
     return (

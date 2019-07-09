@@ -1,8 +1,8 @@
 import { swap, Atom } from '@dbeining/react-atom';
 import { UserInfo, UserFeatures, UserPermissions, GlobalState } from '../../types';
 
-export function setUser(user: UserInfo, features: UserFeatures, permissions: UserPermissions) {
-  swap(this as Atom<GlobalState>, state => ({
+export function setUser(ctx: Atom<GlobalState>, user: UserInfo, features: UserFeatures, permissions: UserPermissions) {
+  swap(ctx, state => ({
     ...state,
     user: {
       current: user,

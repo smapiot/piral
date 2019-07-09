@@ -15,13 +15,13 @@ jest.mock('../hooks');
     },
   });
 
-const StubLoader: React.SFC = () => <div />;
+const StubLoader: React.FC = () => <div />;
 StubLoader.displayName = 'StubLoader';
 
-const StubErrorInfo: React.SFC = () => <div />;
+const StubErrorInfo: React.FC = () => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
-const StubComponent: React.SFC<{ data: any }> = () => <div />;
+const StubComponent: React.FC<{ data: any }> = () => <div />;
 StubComponent.displayName = 'StubComponent';
 
 describe('withFeed Module', () => {

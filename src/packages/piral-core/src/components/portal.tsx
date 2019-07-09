@@ -9,7 +9,7 @@ export interface PortalProps {
   children(content: React.ReactNode): React.ReactElement<any>;
 }
 
-export const Portal: React.SFC<PortalProps & RecallProps> = ({ children, loaded, error }) => {
+export const Portal: React.FC<PortalProps & RecallProps> = ({ children, loaded, error }) => {
   const { Dashboard, ErrorInfo, Loader } = useGlobalState(s => s.app.components);
 
   return (

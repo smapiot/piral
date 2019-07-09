@@ -1,18 +1,25 @@
 import { ComponentType } from 'react';
+import { FeedConnectorProps } from './connector';
 import { Disposable } from './utils';
-
-export interface ConnectorProps<TData> {
-  /**
-   * The current data from the feed.
-   */
-  data: TData;
-}
 
 export interface FeedConnector<TData> {
   /**
    * Connector function for wrapping a component.
+   * @param component The component to connect by providing a data prop.
    */
-  <TProps>(component: ComponentType<TProps & ConnectorProps<TData>>): ComponentType<TProps>;
+  <TProps>(component: ComponentType<TProps & FeedConnectorProps<TData>>): ComponentType<TProps>;
+  /**
+   * Connector function for wrapping a component.
+   * The selector will allow renaming the injected prop or sub-selecting values,
+   * which are then shallow compared.
+   * Rendering takes only place if the selected values changed.
+   * @param component The component to connect with a custom prop selection.
+   * @param select The selector for the injected props.
+   */
+  <TProps, TMixin>(
+    component: ComponentType<TProps & TMixin>,
+    select: (props: FeedConnectorProps<TData>) => TMixin,
+  ): ComponentType<TProps>;
 }
 
 export interface FeedResolver<TData> {

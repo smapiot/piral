@@ -28,7 +28,7 @@ export function createErrorInfo({
   FeedErrorInfo,
   FormErrorInfo,
   UnknownErrorInfo,
-}: ErrorInfoCreator): React.SFC<ErrorInfoProps> {
+}: ErrorInfoCreator): React.FC<ErrorInfoProps> {
   function getErrorInfo(props: ErrorInfoProps) {
     switch (props.type) {
       case 'not_found':

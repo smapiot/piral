@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { Provider } from 'urql';
 import { render } from 'react-dom';
 import { ArbiterModuleMetadata } from 'react-arbiter';
-import { Provider } from 'urql';
-import { createInstance } from 'piral-core';
+import { createInstance, setupState } from 'piral-core';
 import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets } from './utils';
 import { PiExtApi, PiletApi, PiralOptions } from './types';
+
+function defaultExtendApi(api: PiletApi) {
+  return api;
+}
 
 interface PiletRequest {
   pilets: Array<ArbiterModuleMetadata>;
@@ -42,15 +46,15 @@ export function renderInstance(options: PiralOptions) {
   const {
     selector = '#app',
     requestPilets = defaultRequestPilets,
-    gatewayUrl: gateway,
+    gatewayUrl,
     subscriptionUrl,
     translations = {},
     attach,
-    initialize,
     layout,
+    extendApi = defaultExtendApi,
     ...forwardOptions
   } = options;
-  const origin = getGateway(gateway);
+  const origin = getGateway(gatewayUrl);
   const client = setupGqlClient({
     url: origin,
     subscriptionUrl,
@@ -64,24 +68,28 @@ export function renderInstance(options: PiralOptions) {
 
   const Piral = createInstance<PiExtApi>({
     ...forwardOptions,
-    ...config,
     availablePilets: getAvailablePilets(attach),
     requestPilets,
-    extendApi(api): PiletApi {
-      return {
-        ...api,
-        ...createFetchApi({
-          base: origin,
-        }),
-        ...createGqlApi(client),
-        ...createLocaleApi(localizer),
-      };
+    extendApi(api, target) {
+      return extendApi(
+        {
+          ...api,
+          ...createFetchApi({
+            base: origin,
+          }),
+          ...createGqlApi(client),
+          ...createLocaleApi(localizer),
+        },
+        target,
+      );
     },
-    languages: Object.keys(translations),
-    setupState: initialize,
+    state: setupState({
+      ...config,
+      languages: Object.keys(translations),
+    }),
   });
 
-  const App: React.SFC = () => (
+  const App: React.FC = () => (
     <Provider value={client}>
       <Piral>{renderLayout}</Piral>
     </Provider>

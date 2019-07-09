@@ -1,6 +1,4 @@
-import { ComponentType } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { PiletRequester, GlobalState, ScaffoldPlugin } from 'piral-core';
+import { PiralConfiguration } from 'piral-core';
 import { LocalizationMessages } from 'piral-ext';
 import { PiletApi } from './api';
 import { LayoutBuilder } from './layout';
@@ -9,24 +7,15 @@ export interface PiralAttachment {
   (api: PiletApi): void;
 }
 
-export interface PiralInitializer {
-  <TState extends GlobalState<TUser>, TUser = {}>(state: GlobalState<TUser>): TState;
-}
-
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions {
+export interface PiralOptions extends PiralConfiguration<PiletApi> {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
    */
   selector?: string | Element;
-  /**
-   * Sets the function to request the pilets. By default the
-   * pilets are requested via the standardized GraphQL resource.
-   */
-  requestPilets?: PiletRequester;
   /**
    * Sets the URL of the portal gateway to the backend.
    * @default document.location.origin,
@@ -39,11 +28,6 @@ export interface PiralOptions {
    */
   subscriptionUrl?: false | string;
   /**
-   * Sets additional trackers to be available.
-   * @default []
-   */
-  trackers?: Array<ComponentType<RouteComponentProps>>;
-  /**
    * Sets the default translations to be available.
    * @default {}
    */
@@ -52,15 +36,6 @@ export interface PiralOptions {
    * Attaches a single static module to the application.
    */
   attach?: PiralAttachment;
-  /**
-   * Initializes the global state container.
-   * @param state The proposed initial state.
-   */
-  initialize?: PiralInitializer;
-  /**
-   * Plugins for extending the core portal functionality.
-   */
-  plugins?: Array<ScaffoldPlugin>;
   /**
    * Gets the layout builder to construct the design to display.
    */

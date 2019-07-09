@@ -9,7 +9,7 @@ export interface DashboardCreator {
   Tile: React.ComponentType<TileProps>;
 }
 
-export function createDashboard({ DashboardContainer, Tile }: DashboardCreator): React.SFC<DashboardProps> {
+export function createDashboard({ DashboardContainer, Tile }: DashboardCreator): React.FC<DashboardProps> {
   return props => {
     const tiles = useGlobalState(s => s.components.tiles);
 

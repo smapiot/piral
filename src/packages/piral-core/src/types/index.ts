@@ -1,5 +1,7 @@
 export * from './api';
 export * from './components';
+export * from './connector';
+export * from './container';
 export * from './data';
 export * from './extension';
 export * from './feed';

@@ -7388,9 +7388,10 @@ rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-arbiter@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/react-arbiter/-/react-arbiter-0.6.0.tgz#ea6e01222aa85ebec467af07ef29f370edf38fb0"
+react-arbiter@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/react-arbiter/-/react-arbiter-0.7.0.tgz#94ba5befa034d86874cf0955ff9d0078dfb76b5a"
+  integrity sha512-/fO503019mp4TfI5ZZvdneL2qAHsv1B6XQAUNHE/oekSweAak52kvv1wivkjzMz7CR+l0hg9VLx7FdsBkwn8kA==
 
 react-dom@^16.8.1:
   version "16.8.6"

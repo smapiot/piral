@@ -24,6 +24,7 @@ describe('Create Global State Module', () => {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
+        loading: false,
         data: {},
         modals: [],
         notifications: [],
@@ -50,6 +51,7 @@ describe('Create Global State Module', () => {
         loading: false,
         results: [],
       },
+      modules: [],
     });
   });
 
@@ -72,6 +74,7 @@ describe('Create Global State Module', () => {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
+        loading: false,
         data: {},
         modals: [],
         notifications: [],
@@ -98,6 +101,7 @@ describe('Create Global State Module', () => {
         loading: false,
         results: [],
       },
+      modules: [],
     });
   });
 
@@ -119,6 +123,7 @@ describe('Create Global State Module', () => {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
+        loading: false,
         data: {},
         modals: [],
         notifications: [],
@@ -145,6 +150,7 @@ describe('Create Global State Module', () => {
         loading: false,
         results: [],
       },
+      modules: [],
     });
   });
 
@@ -171,6 +177,7 @@ describe('Create Global State Module', () => {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
+        loading: false,
         data: {},
         modals: [],
         notifications: [],
@@ -197,6 +204,7 @@ describe('Create Global State Module', () => {
         loading: false,
         results: [],
       },
+      modules: [],
     });
   });
 });

@@ -1,5 +1,6 @@
 import { ComponentType, ReactChild } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { ArbiterModuleMetadata } from 'react-arbiter';
 import { Atom } from '@dbeining/react-atom';
 import { LayoutType, LayoutBreakpoints } from './layout';
 import { UserInfo, UserFeatures, UserPermissions } from './user';
@@ -69,6 +70,36 @@ export interface SearchProviderRegistration {
   onlyImmediate: boolean;
 }
 
+export interface GlobalStateOptions<TUser = {}> extends Partial<AppComponents> {
+  /**
+   * Sets the available languages.
+   * By default, only the default language is used.
+   */
+  languages?: Array<string>;
+  /**
+   * Sets the default language.
+   * By default, English is used.
+   * @default 'en'
+   */
+  language?: string;
+  /**
+   * Sets the additional / initial routes to register.
+   */
+  routes?: Record<string, ComponentType<RouteComponentProps>>;
+  /**
+   * Sets the available trackers to register.
+   */
+  trackers?: Array<ComponentType<RouteComponentProps>>;
+  /**
+   * Sets the available layout breakpoints.
+   */
+  breakpoints?: LayoutBreakpoints;
+  /**
+   * Sets the initially available user information.
+   */
+  user?: UserState<TUser>;
+}
+
 export interface AppComponents {
   /**
    * The home page renderer.
@@ -111,6 +142,12 @@ export interface AppState {
      */
     available: Array<string>;
   };
+  /**
+   * Gets if the application is currently performing a background loading
+   * activity, e.g., for loading modules asynchronously or fetching
+   * translations.
+   */
+  loading: boolean;
   /**
    * Components relevant for rendering parts of the app.
    */
@@ -282,6 +319,10 @@ export interface GlobalState<TUser = {}> {
    * The relevant state for the in-site search.
    */
   search: SearchState;
+  /**
+   * Gets the loaded modules.
+   */
+  modules: Array<ArbiterModuleMetadata>;
 }
 
 export interface StateActions {

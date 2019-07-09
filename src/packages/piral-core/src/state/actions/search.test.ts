@@ -20,7 +20,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    appendSearchResults.call(state, ['a', 'b'], false);
+    appendSearchResults(state, ['a', 'b'], false);
     expect(deref(state)).toEqual({
       foo: 5,
       search: {
@@ -40,7 +40,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    appendSearchResults.call(state, ['a'], true);
+    appendSearchResults(state, ['a'], true);
     expect(deref(state)).toEqual({
       foo: [1, 2],
       search: {
@@ -60,7 +60,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    prependSearchResults.call(state, ['a', 'b'], false);
+    prependSearchResults(state, ['a', 'b'], false);
     expect(deref(state)).toEqual({
       foo: 5,
       search: {
@@ -80,7 +80,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    prependSearchResults.call(state, ['a'], true);
+    prependSearchResults(state, ['a'], true);
     expect(deref(state)).toEqual({
       foo: [1, 2],
       search: {
@@ -100,7 +100,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    resetSearchResults.call(state, 'yo', true);
+    resetSearchResults(state, 'yo', true);
     expect(deref(state)).toEqual({
       foo: [1, 2],
       search: {
@@ -120,7 +120,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    resetSearchResults.call(state, 'yo y', false);
+    resetSearchResults(state, 'yo y', false);
     expect(deref(state)).toEqual({
       foo: 5,
       search: {
@@ -140,7 +140,7 @@ describe('Search Action Module', () => {
         results: ['c'],
       },
     });
-    setSearchInput.call(state, 'test input');
+    setSearchInput(state, 'test input');
     expect(deref(state)).toEqual({
       foo: 5,
       search: {
@@ -154,7 +154,7 @@ describe('Search Action Module', () => {
   it('immediately resets with loading false if some value is given but no provider found', () => {
     state.search.input = 'foo';
     const ctx = Atom.of(state as any);
-    triggerSearch.call(ctx);
+    triggerSearch(ctx);
     expect(deref(ctx).search.loading).toBe(false);
   });
 
@@ -168,27 +168,27 @@ describe('Search Action Module', () => {
       cancel() {},
     };
     const ctx = Atom.of(state as any);
-    triggerSearch.call(ctx);
+    triggerSearch(ctx);
     expect(deref(ctx).search.loading).toBe(true);
   });
 
   it('immediately resets with loading false if no value is given implicitly', () => {
     state.search.input = '';
     const ctx = Atom.of(state as any);
-    triggerSearch.call(ctx);
+    triggerSearch(ctx);
     expect(deref(ctx).search.loading).toBe(false);
   });
 
   it('immediately resets with loading false if no value is given explicitly', () => {
     const ctx = Atom.of(state as any);
-    const dispose = triggerSearch.call(ctx, '');
+    const dispose = triggerSearch(ctx, '');
     dispose();
     expect(deref(ctx).search.loading).toBe(false);
   });
 
   it('immediately resets with loading false if no value is given explicitly though immediate', () => {
     const ctx = Atom.of(state as any);
-    const dispose = triggerSearch.call(ctx, '', true);
+    const dispose = triggerSearch(ctx, '', true);
     dispose();
     expect(deref(ctx).search.loading).toBe(false);
   });
@@ -203,7 +203,7 @@ describe('Search Action Module', () => {
       cancel() {},
     };
     const ctx = Atom.of(state as any);
-    triggerSearch.call(ctx, 'foo');
+    triggerSearch(ctx, 'foo');
     expect(deref(ctx).search.loading).toBe(true);
   });
 
@@ -216,7 +216,7 @@ describe('Search Action Module', () => {
       foo: { search, clear, cancel },
       bar: { search, clear, cancel },
     };
-    triggerSearch.call(Atom.of(state));
+    triggerSearch(Atom.of(state));
     expect(search).toHaveBeenCalledTimes(2);
   });
 
@@ -231,7 +231,7 @@ describe('Search Action Module', () => {
         cancel() {},
       },
     };
-    triggerSearch.call(Atom.of(state));
+    triggerSearch(Atom.of(state));
     await (state.components.searchProviders as any).foo.search().catch(m => m);
   });
 
@@ -247,7 +247,7 @@ describe('Search Action Module', () => {
         cancel,
       },
     };
-    triggerSearch.call(Atom.of(state));
+    triggerSearch(Atom.of(state));
     await (state.components.searchProviders as any).foo.search().catch(m => m);
     expect(cancel).toHaveBeenCalledTimes(0);
   });
@@ -264,7 +264,7 @@ describe('Search Action Module', () => {
         cancel,
       },
     };
-    const dispose = triggerSearch.call(Atom.of(state));
+    const dispose = triggerSearch(Atom.of(state));
     dispose();
     await (state.components.searchProviders as any).foo.search().catch(m => m);
     expect(cancel).toHaveBeenCalledTimes(1);
@@ -282,7 +282,7 @@ describe('Search Action Module', () => {
         cancel() {},
       },
     };
-    triggerSearch.call(Atom.of(state));
+    triggerSearch(Atom.of(state));
     await (state.components.searchProviders as any).foo.search().catch(m => m);
     expect(console.warn).toHaveBeenCalled();
   });

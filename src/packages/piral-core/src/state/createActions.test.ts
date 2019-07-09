@@ -1,10 +1,10 @@
 import { createActions } from './createActions';
 
 jest.mock('./actions', () => ({
-  a(this: any) {
-    return this;
+  a(arg) {
+    return arg;
   },
-  b(this: any) {
+  b() {
     return 'foo';
   },
 }));

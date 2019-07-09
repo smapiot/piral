@@ -16,7 +16,7 @@ const state = {
 
 (React as any).useMemo = cb => cb();
 
-const StubErrorInfo: React.SFC = props => <div />;
+const StubErrorInfo: React.FC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
 describe('Default Error Info Component', () => {

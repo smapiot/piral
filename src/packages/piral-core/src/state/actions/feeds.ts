@@ -2,8 +2,8 @@ import { swap, Atom, deref } from '@dbeining/react-atom';
 import { withKey, withoutKey } from '../../utils';
 import { GlobalState, ConnectorDetails, FeedReducer } from '../../types';
 
-export function createFeed(id: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function createFeed(ctx: Atom<GlobalState>, id: string) {
+  swap(ctx, state => ({
     ...state,
     feeds: withKey(state.feeds, id, {
       data: undefined,
@@ -14,18 +14,17 @@ export function createFeed(id: string) {
   }));
 }
 
-export function destroyFeed(id: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function destroyFeed(ctx: Atom<GlobalState>, id: string) {
+  swap(ctx, state => ({
     ...state,
     feeds: withoutKey(state.feeds, id),
   }));
 }
 
-export function loadFeed<TData, TItem>(options: ConnectorDetails<TData, TItem>) {
+export function loadFeed<TData, TItem>(ctx: Atom<GlobalState>, options: ConnectorDetails<TData, TItem>) {
   const { id } = options;
-  const globalState = this as Atom<GlobalState>;
 
-  swap(globalState, state => ({
+  swap(ctx, state => ({
     ...state,
     feeds: withKey(state.feeds, id, {
       data: undefined,
@@ -37,18 +36,18 @@ export function loadFeed<TData, TItem>(options: ConnectorDetails<TData, TItem>) 
 
   return options.initialize().then(
     baseData => {
-      loadedFeed.call(globalState, id, baseData, undefined);
+      loadedFeed(ctx, id, baseData, undefined);
 
       options.connect(item => {
-        updateFeed.call(globalState, id, item, options.update);
+        updateFeed(ctx, id, item, options.update);
       });
     },
-    err => loadedFeed.call(globalState, id, undefined, err),
+    err => loadedFeed(ctx, id, undefined, err),
   );
 }
 
-export function loadedFeed(id: string, data: any, error: any) {
-  swap(this as Atom<GlobalState>, state => ({
+export function loadedFeed(ctx: Atom<GlobalState>, id: string, data: any, error: any) {
+  swap(ctx, state => ({
     ...state,
     feeds: withKey(state.feeds, id, {
       loading: false,
@@ -59,16 +58,20 @@ export function loadedFeed(id: string, data: any, error: any) {
   }));
 }
 
-export function updateFeed<TData, TItem>(id: string, item: TItem, reducer: FeedReducer<TData, TItem>) {
-  const globalState = this as Atom<GlobalState>;
-  const feed = deref(globalState).feeds[id];
+export function updateFeed<TData, TItem>(
+  ctx: Atom<GlobalState>,
+  id: string,
+  item: TItem,
+  reducer: FeedReducer<TData, TItem>,
+) {
+  const feed = deref(ctx).feeds[id];
   const result = reducer(feed.data, item);
 
   if (result instanceof Promise) {
     return result
-      .then(data => loadedFeed.call(globalState, id, data, undefined))
-      .catch(error => loadedFeed.call(globalState, id, undefined, error));
+      .then(data => loadedFeed(ctx, id, data, undefined))
+      .catch(error => loadedFeed(ctx, id, undefined, error));
   } else if (result !== feed.data) {
-    loadedFeed.call(globalState, id, result, undefined);
+    loadedFeed(ctx, id, result, undefined);
   }
 }

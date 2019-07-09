@@ -14,10 +14,10 @@ jest.mock('../hooks');
     },
   });
 
-const StubErrorInfo: React.SFC = props => <div />;
+const StubErrorInfo: React.FC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
-const StubComponent: React.SFC<{ shouldCrash?: boolean }> = ({ shouldCrash }) => {
+const StubComponent: React.FC<{ shouldCrash?: boolean }> = ({ shouldCrash }) => {
   if (shouldCrash) {
     throw new Error('I should crash!');
   }

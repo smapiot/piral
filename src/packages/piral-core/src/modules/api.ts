@@ -17,6 +17,7 @@ import {
   SeverityLevel,
   PiralContainer,
   GlobalStateContext,
+  ContainerOptions,
 } from '../types';
 
 function buildName(prefix: string, name: string | number) {
@@ -24,7 +25,7 @@ function buildName(prefix: string, name: string | number) {
 }
 
 function markReact<T>(arg: React.ComponentType<T>, displayName: string) {
-  if (!arg.displayName) {
+  if (arg && !arg.displayName) {
     arg.displayName = displayName;
   }
 }
@@ -141,7 +142,39 @@ export function createApi<TApi>(
           context.loadFeed(options);
         }
 
-        return component => withFeed(component, options) as any;
+        return (component, select = undefined) => withFeed(component, options, select);
+      },
+      createContainer<TState, TAction>(options: ContainerOptions<TState, TAction>) {
+        const actions = {};
+        const connector = api.createConnector<TState, (data: TState) => Promise<TState>>({
+          initialize() {
+            return Promise.resolve(options.state);
+          },
+          connect(cb) {
+            Object.keys(options.actions).forEach(key => {
+              const action = options.actions[key];
+              actions[key] = (...args) => action(cb, api, ...args);
+            });
+            return () => {};
+          },
+          update(data, action) {
+            return {
+              ...data,
+              ...action(data),
+            };
+          },
+        });
+        return (component, select = undefined) => {
+          return connector(component, ({ data: state }) => {
+            const props = { state, actions };
+
+            if (isfunc(select)) {
+              return select(props);
+            }
+
+            return props;
+          });
+        };
       },
       createForm(options) {
         return component => withForm(component, options);

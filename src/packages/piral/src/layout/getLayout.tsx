@@ -3,7 +3,7 @@ import { useGlobalState } from 'piral-core';
 import { rehydrate } from './rehydrate';
 import { vitalize } from './vitalize';
 
-export function getLayout(customComponents: Record<string, React.ComponentType> = {}): React.SFC {
+export function getLayout(customComponents: Record<string, React.ComponentType> = {}): React.FC {
   const elements = rehydrate(document.querySelector('template[for=layout]'));
 
   return ({ children }) => {
