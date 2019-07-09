@@ -4,7 +4,7 @@ import 'zone.js/dist/zone';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useSearch, useAction } from 'piral-core';
+import { createInstance, useGlobalState, LoaderProps, useSearch, useAction, setupState, extendApis } from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
 import { availablePilets } from './pilets';
@@ -158,27 +158,22 @@ const Layout: React.FC = ({ children }) => {
   );
 };
 
-const Portal = createInstance<SampleApi>({
+const App = createInstance<SampleApi>({
   availablePilets,
-  extendApi(api) {
-    return {
-      ...createVueApi(api),
-      ...createNgApi(api),
-      ...api,
-    } as any;
-  },
+  extendApi: extendApis([createVueApi, createNgApi]),
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
     //   .then(res => res.json())
     //   .then(res => res.items);
     return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
-  Loader,
-  routes: {
-    '/sitemap': Sitemap,
-  },
+  state: setupState({
+    Loader,
+    routes: {
+      '/sitemap': Sitemap,
+    },
+  }),
 });
 
-const App: React.FC = () => <Portal>{content => <Layout>{content}</Layout>}</Portal>;
-
-render(<App />, document.querySelector('#app'));
+const app = <App>{content => <Layout>{content}</Layout>}</App>;
+render(app, document.querySelector('#app'));

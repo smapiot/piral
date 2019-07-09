@@ -133,7 +133,7 @@ export const layout = buildLayout()
   )
   .createModals(modals =>
     modals
-      .container(({ children }) => {
+      .container(({ children, open }) => {
         React.useEffect(() => {
           const body = document.body;
 
