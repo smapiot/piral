@@ -24,7 +24,7 @@ Now you can create a new Piral instance in your code:
 import { createInstance } from 'piral-core';
 
 const App = createInstance({
-  requestModules: () => fetch('https://sample.piral.io/api/v1/pilet'),
+  requestPilets: () => fetch('https://sample.piral.io/api/v1/pilet'),
 });
 ```
 

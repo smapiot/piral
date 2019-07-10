@@ -7,7 +7,7 @@
 * Unified Piral extension API
 * Support asynchronous language switch
 * Enable lazy loading of pilets (#2)
-* Introduced local pilet state management
+* Introduced explicit local pilet state management
 * Added `--fresh` flag to the `pilet-publish` command
 
 ## 0.5.2 (June 23, 2019)
