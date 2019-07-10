@@ -78,12 +78,12 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState>(
   config: PiralConfiguration<TApi, TState>,
 ): PiralInstance {
   const {
+    state,
     availablePilets,
     extendApi = defaultApiExtender,
     requestPilets = defaultModuleRequester,
     getDependencies = getLocalDependencies,
     async = false,
-    state = {},
   } = config;
   const globalState = createGlobalState(state);
   const container = {

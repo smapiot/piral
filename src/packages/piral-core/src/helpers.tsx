@@ -53,7 +53,6 @@ export function setupState<TUser = {}>(options: GlobalStateOptions<TUser> = {}):
         ErrorInfo,
         Loader,
       },
-      loading: false,
       routes,
       trackers,
     },

@@ -1,16 +1,34 @@
 import { Atom, addChangeHandler } from '@dbeining/react-atom';
+import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from '../components/default';
+import { defaultBreakpoints } from '../utils';
 import { GlobalState, NestedPartial } from '../types';
 
-export function createGlobalState<TState extends GlobalState>(state: NestedPartial<TState>) {
+export function createGlobalState<TState extends GlobalState>(state: NestedPartial<TState> = {}) {
   const globalState = Atom.of({
     feeds: {},
     forms: {},
     modules: [],
     ...state,
     app: {
+      language: {
+        selected: '',
+        available: [],
+      },
+      layout: {
+        current: 'desktop',
+        breakpoints: defaultBreakpoints,
+      },
+      components: {
+        Dashboard: DefaultDashboard,
+        ErrorInfo: DefaultErrorInfo,
+        Loader: DefaultLoader,
+      },
+      routes: {},
+      trackers: [],
       data: {},
       modals: [],
       notifications: [],
+      loading: false,
       ...state.app,
     },
     components: {
