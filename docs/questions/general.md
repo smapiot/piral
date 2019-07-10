@@ -87,3 +87,13 @@ This is a matter of your architecture. Naturally, a single file (root module) is
 In general we recommend to design and use the pilets in such a way that reuse of common or presumably generic code is easily possible.
 
 ---------------------------------------
+
+## Is this really a microfrontend architecture?
+
+Sometimes people believe that only web components follow a microfrontend architecture. Sometimes people think that having no API (e.g., just using the DOM for transporting events) is necessary for microfrontends. Both things are not true. This is one extreme perspective, which we have found not to be optimal for real-world scenarios.
+
+In reality the application shell will be constructed using some kind of framework or UI library. Realistically, there will be a tendency towards some UI solution such as React - mostly given by some kind of pattern library or preferred UI framework. In such cases it does not make sense to hide the framework of choice from the different modules. Piral makes sharing such dependencies easy.
+
+We think Piral hits a sweep spot as it takes what makes puristic microfrontends great (independent applications coming together, independent releases, independent development) and adds the reason why we build monoliths for the UI in the first place (least bundle size, optimal user experience, coherent design by using a common UI framework).
+
+---------------------------------------
