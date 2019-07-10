@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Section, ResponsiveContent, Md, EditSection } from '../components';
+import { Section, ResponsiveContent, Md, EditSection, Callout } from '../components';
 
 export interface ContentProps {
   ref?: React.Ref<HTMLDivElement>;
@@ -20,6 +20,9 @@ export const Content: React.FC<ContentProps> = React.forwardRef((_, ref) => (
       <Md>{require('../../../../../../docs/architecture.md')}</Md>
       <EditSection link="architecture.md" />
     </Section>
+    <Callout title="Pilet Guideline" type="warning" icon="exclamation-triangle" to="/guidelines/static-piral-instance">
+      <p>Looking for help on creating a Piral instance? Check out our guideline for an easy approach.</p>
+    </Callout>
     <Section id="section-package-metadata" title="Package Metadata">
       <Md>{require('../../../../../../docs/metadata.md')}</Md>
       <EditSection link="metadata.md" />
@@ -32,6 +35,9 @@ export const Content: React.FC<ContentProps> = React.forwardRef((_, ref) => (
       <Md>{require('../../../../../../docs/development.md')}</Md>
       <EditSection link="development.md" />
     </Section>
+    <Callout title="Pilet Guideline" type="warning" icon="exclamation-triangle" to="/guidelines/first-pilet">
+      <p>Looking for help on developing pilets? Check out our guidelines for developing pilets.</p>
+    </Callout>
     <Section id="section-history" title="History">
       <Md>{require('../../../../../../docs/history.md')}</Md>
       <EditSection link="history.md" />
