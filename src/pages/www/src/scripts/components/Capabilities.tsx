@@ -6,8 +6,8 @@ export const Capabilities: React.FC = () => (
     <h2 className="text-center font-weight-bold my-5">Breaking the Frontend Monolith!</h2>
     <div className="text-center">
       Piral is a framework for next generation portal applications. It allows you to build web apps that follow the
-      micro frontends architecture in basically no time. Piral lets you use your standard tooling to be as efficient
-      as possible.
+      microfrontends architecture in basically no time. Piral lets you use your standard tooling to be as efficient as
+      possible.
     </div>
     <div className="row">
       <Capability image={require('../../assets/capability-cloud.png')} title="Cloud Ready">
