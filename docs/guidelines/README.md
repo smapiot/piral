@@ -7,6 +7,7 @@ We divide this collection into two areas; recipes for setting up a Piral instanc
 ## Recipes for Piral Instances
 
 - [A Static Piral Instance](./static-piral-instance.md)
+- [Server-Side Rendering](./server-side-rendering.md)
 
 ## Patterns for Creating Pilets
 
