@@ -22,6 +22,11 @@ export interface FetchOptions {
    * Sets the CORS mode of the request.
    */
   mode?: RequestMode;
+  /**
+   * Sets the result mode of the request.
+   * @default 'auto'
+   */
+  result?: 'auto' | 'json' | 'text';
 }
 
 export interface FetchResponse<T> {
