@@ -23,6 +23,7 @@ export function createFetchApi(config: FetchConfig = {}): PiralFetchApi {
         cache,
         mode,
       };
+      console.log(url.href);
       return fetch(url.href, init).then(res => {
         const contentType = res.headers.get('content-type');
         const json = contentType.indexOf('json') !== -1;
