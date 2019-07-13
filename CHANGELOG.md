@@ -9,6 +9,7 @@
 * Enable lazy loading of pilets (#2)
 * Introduced explicit local pilet state management
 * Added `--fresh` flag to the `pilet-publish` command
+* Added new optional library `piral-hyperapp`
 
 ## 0.5.2 (June 23, 2019)
 

@@ -7,6 +7,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { createInstance, useGlobalState, LoaderProps, useSearch, useAction, setupState, extendApis } from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
+import { createHyperappApi } from 'piral-hyperapp';
 import { availablePilets } from './pilets';
 import { SampleApi } from './types';
 
@@ -160,7 +161,7 @@ const Layout: React.FC = ({ children }) => {
 
 const App = createInstance<SampleApi>({
   availablePilets,
-  extendApi: extendApis([createVueApi, createNgApi]),
+  extendApi: extendApis([createVueApi, createNgApi, createHyperappApi]),
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
     //   .then(res => res.json())

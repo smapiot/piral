@@ -1,0 +1,43 @@
+{
+  "name": "piral-hyperapp",
+  "version": "0.5.2",
+  "description": "Extensions for hyperapp to the piral-core pilet API.",
+  "keywords": [
+    "piral",
+    "smapiot",
+    "portal",
+    "modules",
+    "api",
+    "extension",
+    "hyperapp"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typedoc": "typedoc --json ../../../docs/types/piral-vue.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "piral-core": "^0.5.2",
+    "hyperapp": "^1.2.10"
+  },
+  "peerDependencies": {
+    "piral-core": "^0.4.0 || ^0.5.0 || ^0.6.0",
+    "hyperapp": "^1.0.0"
+  }
+}
