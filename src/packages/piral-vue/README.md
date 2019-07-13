@@ -24,12 +24,7 @@ For `piral-core`-based instances this boils down to:
 ```ts
 const PiralInstance = createInstance({
   // important part
-  extendApi(api) {
-    return {
-      ...createVueApi(api),
-      ...api,
-    };
-  },
+  extendApi: extendApis([createVueApi]),
   // ...
 });
 ```
@@ -39,9 +34,7 @@ For `piral`-based instances the integration looks like:
 ```tsx
 renderInstance({
   // important part
-  extensions: {
-    api: [createVueApi],
-  },
+  extendApi: extendApis([createVueApi]),
   // ...
 });
 ```

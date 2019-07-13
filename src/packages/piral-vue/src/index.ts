@@ -56,7 +56,7 @@ export interface PiralVueApi<T = PiralCoreApi<{}>> {
   registerMenuVue(
     id: string,
     component: FunctionalComponentOptions<MenuComponentProps<T>>,
-    settings: MenuSettings,
+    settings?: MenuSettings,
   ): void;
   /**
    * Registers a modal dialog using a Vue component.
