@@ -1,16 +1,49 @@
-import { PiralConfiguration } from 'piral-core';
-import { LocalizationMessages } from 'piral-ext';
+import { ArbiterModuleMetadata } from 'react-arbiter';
+import { PiralStateConfiguration, GlobalState, PiletRequester, Extend } from 'piral-core';
+import { LocalizationMessages, PiralGqlApiQuery, PiralFetchApiFetch } from 'piral-ext';
 import { PiletApi } from './api';
 import { LayoutBuilder } from './layout';
 
-export interface PiralAttachment {
-  (api: PiletApi): void;
+export interface PiralAttachment<TApi = PiletApi> {
+  (api: TApi): void;
+}
+
+export type PiletsMetadata = Array<ArbiterModuleMetadata>;
+
+export interface PiletQueryResult {
+  pilets: PiletsMetadata;
+}
+
+export interface PiralConfig<TApi = PiletApi, TState extends GlobalState = GlobalState>
+  extends PiralStateConfiguration<TState> {
+  /**
+   * Sets the default translations to be available.
+   * @default {}
+   */
+  translations?: LocalizationMessages;
+  /**
+   * Attaches a single static module to the application.
+   */
+  attach?: PiralAttachment<TApi>;
+  /**
+   * Sets the function for loading the pilets or the loaded pilet (metadata) itself.
+   */
+  pilets?: PiletRequester | PiletsMetadata;
+  /**
+   * Optionally provides a function to extend the API creator with some additional
+   * functionality.
+   */
+  extendApi?: Extend<PiletApi, TApi>;
+}
+
+export interface PiralLoader<TApi = PiletApi, TState extends GlobalState = GlobalState> {
+  (options: { query: PiralGqlApiQuery; fetch: PiralFetchApiFetch }): Promise<PiralConfig<TApi, TState> | undefined>;
 }
 
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions extends PiralConfiguration<PiletApi> {
+export interface PiralOptions<TApi = PiletApi, TState extends GlobalState = GlobalState> {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
@@ -28,14 +61,9 @@ export interface PiralOptions extends PiralConfiguration<PiletApi> {
    */
   subscriptionUrl?: false | string;
   /**
-   * Sets the default translations to be available.
-   * @default {}
+   * Defines some optional initial data loading.
    */
-  translations?: LocalizationMessages;
-  /**
-   * Attaches a single static module to the application.
-   */
-  attach?: PiralAttachment;
+  loader?: PiralConfig<TApi, TState> | PiralLoader<TApi, TState>;
   /**
    * Gets the layout builder to construct the design to display.
    */

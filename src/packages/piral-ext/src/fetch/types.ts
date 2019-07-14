@@ -8,7 +8,7 @@ export interface FetchOptions {
    * Sets the body of the request.
    * @default null
    */
-  body?: string | Blob | FormData;
+  body?: string | Blob | FormData | Array<any> | {} | number;
   /**
    * Sets the headers of the request.
    * @default {}
@@ -57,11 +57,15 @@ export interface FetchConfig {
   base?: string;
 }
 
+export interface PiralFetchApiFetch {
+  <T = any>(url: string, options?: FetchOptions): Promise<FetchResponse<T>>;
+}
+
 export interface PiralFetchApi {
   /**
    * Performs an HTTP fetch operation against the given URL.
    * @param url The target of the fetch.
    * @param options The options to be used.
    */
-  fetch<T = any>(url: string, options?: FetchOptions): Promise<FetchResponse<T>>;
+  fetch: PiralFetchApiFetch;
 }

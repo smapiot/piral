@@ -1,3 +1,6 @@
+import { ArbiterModuleMetadata } from 'react-arbiter';
+import { UserInfo } from './user';
+
 export interface PiralStorage {
   /**
    * Sets the value of an item.
@@ -53,14 +56,12 @@ export interface PiralStoreDataEvent {
 }
 
 export interface PiralTrackEventEvent {
-  type: 'event';
   name: string;
   properties: any;
   measurements: any;
 }
 
 export interface PiralTrackErrorEvent {
-  type: 'error';
   error: any;
   properties: any;
   measurements: any;
@@ -68,26 +69,47 @@ export interface PiralTrackErrorEvent {
 }
 
 export interface PiralTrackStartFrameEvent {
-  type: 'start-frame';
   name: string;
 }
 
 export interface PiralTrackEndFrameEvent {
-  type: 'end-frame';
   name: string;
   properties: any;
   measurements: any;
 }
 
-export type PiralTrackEvent =
-  | PiralTrackEventEvent
-  | PiralTrackErrorEvent
-  | PiralTrackStartFrameEvent
-  | PiralTrackEndFrameEvent;
+export interface PiralChangeLanguageEvent {
+  previous: string;
+  selected: string;
+}
+
+export interface PiralChangeLayoutEvent {
+  previous: string;
+  current: string;
+}
+
+export interface PiralChangeUserEvent {
+  previous: UserInfo;
+  current: UserInfo;
+}
+
+export interface PiralStartLoadEvent {}
+
+export interface PiralEndLoadEvent {
+  modules: Array<ArbiterModuleMetadata>;
+}
 
 export interface PiralEventMap {
-  store: PiralStoreDataEvent;
-  track: PiralTrackEvent;
+  'store-data': PiralStoreDataEvent;
+  'track-event': PiralTrackEventEvent;
+  'track-error': PiralTrackErrorEvent;
+  'track-frame-start': PiralTrackStartFrameEvent;
+  'track-frame-end': PiralTrackEndFrameEvent;
+  'change-language': PiralChangeLanguageEvent;
+  'change-layout': PiralChangeLayoutEvent;
+  'change-user': PiralChangeUserEvent;
+  'load-start': PiralStartLoadEvent;
+  'load-end': PiralEndLoadEvent;
   [custom: string]: any;
 }
 

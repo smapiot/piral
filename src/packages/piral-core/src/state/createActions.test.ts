@@ -1,4 +1,5 @@
 import { createActions } from './createActions';
+import { createListener } from '../modules/events';
 
 jest.mock('./actions', () => ({
   a(arg) {
@@ -11,19 +12,22 @@ jest.mock('./actions', () => ({
 
 describe('Create Actions Module', () => {
   it('createActions works with all actions', () => {
-    const actions = createActions('abc' as any);
+    const events = createListener(undefined);
+    const actions = createActions('abc' as any, events);
     expect(Object.keys(actions)).toEqual(['a', 'b']);
   });
 
   it('createActions binds against given context', () => {
-    const actions = createActions('abc' as any);
+    const events = createListener(undefined);
+    const actions = createActions('abc' as any, events);
     expect((actions as any).a()).toEqual('abc');
     expect((actions as any).b()).toEqual('foo');
   });
 
   it('createActions returns unique instances', () => {
-    const actions1 = createActions('abc' as any);
-    const actions2 = createActions('bdf' as any);
+    const events = createListener(undefined);
+    const actions1 = createActions('abc' as any, events);
+    const actions2 = createActions('bdf' as any, events);
     expect((actions1 as any).a()).toEqual('abc');
     expect((actions2 as any).a()).toEqual('bdf');
   });

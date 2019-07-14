@@ -98,8 +98,9 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param name The name of the data to store.
    * @param value The value of the data to store.
    * @param options The optional configuration for storing this piece of data.
+   * @returns True if the data could be set, otherwise false.
    */
-  setData<TKey extends string>(name: TKey, value: SharedData[TKey], options?: DataStoreOptions): void;
+  setData<TKey extends string>(name: TKey, value: SharedData[TKey], options?: DataStoreOptions): boolean;
   /**
    * Tracks a simple (singular) event at the current point in time.
    * @param name The name of the event to track.

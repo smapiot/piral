@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { withRecall, ArbiterModule, DependencyGetter } from 'react-arbiter';
+import { withRecall, ArbiterModule, DependencyGetter, ArbiterModuleMetadata } from 'react-arbiter';
 import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
 import { createGlobalState, createActions, StateContext } from './state';
 import { Portal, PortalProps } from './components';
 import { PiralApi, EventEmitter, Extend, PiletRequester, GlobalState, NestedPartial, PiralCoreApi } from './types';
 
-function defaultModuleRequester() {
+function defaultModuleRequester(): Promise<Array<ArbiterModuleMetadata>> {
   return Promise.resolve([]);
 }
 
@@ -22,26 +22,29 @@ declare global {
   }
 }
 
-export interface PiralConfiguration<TApi, TState extends GlobalState = GlobalState> {
-  /**
-   * Optionally provides a function to extend the API creator with some additional
-   * functionality.
-   */
-  extendApi?: Extend<PiralCoreApi<TApi>, PiralApi<TApi>>;
+export interface PiralPiletConfiguration<TApi> {
   /*
    * Function to load the modules asynchronously, e.g., from a server 🚚.
    */
   requestPilets?: PiletRequester;
-  /**
-   * Function to get the dependencies for a given module.
-   */
-  getDependencies?: DependencyGetter;
   /**
    * Determines the modules, which are available already from the start 🚀.
    * The given modules are all already evaluated.
    * This can be used for customization or for debugging purposes.
    */
   availablePilets?: Array<ArbiterModule<PiralApi<TApi>>>;
+  /**
+   * Optionally provides a function to extend the API creator with some additional
+   * functionality.
+   */
+  extendApi?: Extend<PiralCoreApi<TApi>, PiralApi<TApi>>;
+}
+
+export interface PiralStateConfiguration<TState extends GlobalState = GlobalState> {
+  /**
+   * Function to get the dependencies for a given module.
+   */
+  getDependencies?: DependencyGetter;
   /**
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.
@@ -52,6 +55,9 @@ export interface PiralConfiguration<TApi, TState extends GlobalState = GlobalSta
    */
   state?: NestedPartial<TState>;
 }
+
+export type PiralConfiguration<TApi, TState extends GlobalState = GlobalState> = PiralPiletConfiguration<TApi> &
+  PiralStateConfiguration<TState>;
 
 /**
  * The PiralInstance component, which is a React functional component combined with an event emitter.
@@ -86,12 +92,10 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState>(
     async = false,
   } = config;
   const globalState = createGlobalState(state);
+  const events = createListener(globalState);
   const container = {
-    context: {
-      ...createActions(globalState),
-      state: globalState,
-    },
-    events: createListener(),
+    context: createActions(globalState, events),
+    events,
     extendApi,
   };
 
@@ -112,11 +116,18 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState>(
     getDependencies,
     dependencies: globalDependencies,
     fetchModules() {
-      const promise = requestPilets();
+      events.emit('load-start', {});
+      let promise = requestPilets();
 
       if (process.env.DEBUG_PILET) {
-        return promise.catch(() => []);
+        promise = promise.catch(() => []);
       }
+
+      promise.then(modules =>
+        events.emit('load-end', {
+          modules,
+        }),
+      );
 
       return promise;
     },
@@ -132,5 +143,5 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState>(
     </StateContext.Provider>
   );
   PiralInstance.displayName = 'Piral';
-  return Object.assign(PiralInstance, container.events);
+  return Object.assign(PiralInstance, events);
 }

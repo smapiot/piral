@@ -1,18 +1,20 @@
 import * as actions from './actions';
 import { Atom } from '@dbeining/react-atom';
-import { GlobalState, StateActions } from '../types';
+import { GlobalState, GlobalStateContext, EventEmitter } from '../types';
 
-function convert(ctx: Atom<GlobalState>, key: string) {
+function convert(ctx: Atom<GlobalState>, events: EventEmitter, key: string) {
   const action: any = actions[key];
-  return (...args) => action(ctx, ...args);
+  return (...args) => action.call(events, ctx, ...args);
 }
 
-export function createActions(ctx: Atom<GlobalState>): StateActions {
+export function createActions(ctx: Atom<GlobalState>, events: EventEmitter) {
   return Object.keys(actions).reduce(
     (prev, curr) => {
-      prev[curr] = convert(ctx, curr);
+      prev[curr] = convert(ctx, events, curr);
       return prev;
     },
-    {} as any,
+    {
+      state: ctx,
+    } as GlobalStateContext,
   );
 }

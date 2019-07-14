@@ -119,17 +119,7 @@ export function createApi<TApi>(
       setData(name, value, options) {
         const { target = 'memory', expires } = createDataOptions(options);
         const expiration = getDataExpiration(expires);
-        const result = context.tryWriteDataItem(name, value, prefix, target, expiration);
-
-        if (result && target !== 'memory') {
-          events.emit('store', {
-            name,
-            target,
-            value,
-            owner: prefix,
-            expires: expiration,
-          });
-        }
+        return context.tryWriteDataItem(name, value, prefix, target, expiration);
       },
       createConnector<TData, TItem>(
         resolver: FeedResolver<TData> | FeedConnectorOptions<TData, TItem>,
@@ -180,16 +170,14 @@ export function createApi<TApi>(
         return component => withForm(component, options);
       },
       trackEvent(name, properties = {}, measurements = {}) {
-        events.emit('track', {
-          type: 'event',
+        events.emit('track-event', {
           name,
           properties,
           measurements,
         });
       },
       trackError(error, properties = {}, measurements = {}, severityLevel = SeverityLevel.Information) {
-        events.emit('track', {
-          type: 'error',
+        events.emit('track-error', {
           error,
           properties,
           measurements,
@@ -197,13 +185,11 @@ export function createApi<TApi>(
         });
       },
       trackFrame(name) {
-        events.emit('track', {
-          type: 'start-frame',
+        events.emit('track-frame-start', {
           name,
         });
         return (properties = {}, measurements = {}) =>
-          events.emit('track', {
-            type: 'end-frame',
+          events.emit('track-frame-end', {
             name,
             properties,
             measurements,

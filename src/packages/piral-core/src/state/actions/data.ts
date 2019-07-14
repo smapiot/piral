@@ -1,6 +1,6 @@
 import { swap, Atom, deref, DeepImmutableObject } from '@dbeining/react-atom';
 import { updateKey } from '../../utils';
-import { GlobalState, SharedDataItem, DataStoreTarget } from '../../types';
+import { GlobalState, SharedDataItem, DataStoreTarget, EventEmitter } from '../../types';
 
 export function resetData(ctx: Atom<GlobalState>) {
   swap(ctx, state => ({
@@ -22,6 +22,7 @@ export function readDataValue(ctx: Atom<GlobalState>, key: string) {
 }
 
 export function writeDataItem(
+  this: EventEmitter,
   ctx: Atom<GlobalState>,
   key: string,
   value: any,
@@ -45,9 +46,20 @@ export function writeDataItem(
       data: updateKey<SharedDataItem>(state.app.data, key, data),
     },
   }));
+
+  if (target !== 'memory') {
+    this.emit('store-data', {
+      name,
+      target,
+      value,
+      owner,
+      expires,
+    });
+  }
 }
 
 export function tryWriteDataItem(
+  this: EventEmitter,
   ctx: Atom<GlobalState>,
   key: string,
   value: any,
@@ -66,6 +78,6 @@ export function tryWriteDataItem(
     return false;
   }
 
-  writeDataItem(ctx, key, value, owner, target, expires);
+  writeDataItem.call(this, ctx, key, value, owner, target, expires);
   return true;
 }

@@ -1,13 +1,19 @@
+export interface Translations {
+  /**
+   * The available wordings (tag to translation).
+   */
+  [tag: string]: string;
+}
+
 export interface LocalizationMessages {
   /**
    * The available languages (lang to wordings).
    */
-  [lang: string]: {
-    /**
-     * The available wordings (tag to translation).
-     */
-    [tag: string]: string;
-  };
+  [lang: string]: Translations;
+}
+
+export interface TranslationLoader {
+  (language: string, pilet?: string): Promise<Translations>;
 }
 
 export interface PiralLocaleApi {
@@ -32,4 +38,12 @@ export interface LocaleConfig {
    * @default {}
    */
   messages?: LocalizationMessages;
+  /**
+   * Sets the default language to use.
+   */
+  language?: string;
+  /**
+   * Sets the default language to use.
+   */
+  load?: TranslationLoader;
 }

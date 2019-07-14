@@ -1,5 +1,6 @@
-import { isfunc, ArbiterModule } from 'react-arbiter';
-import { PiralAttachment, PiletApi } from '../types';
+import { PiletRequester, GlobalState } from 'piral-core';
+import { isfunc, ArbiterModule, ArbiterModuleMetadata } from 'react-arbiter';
+import { PiralAttachment, PiletApi, PiralConfig, PiralLoader } from '../types';
 
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
@@ -17,6 +18,16 @@ export function getGateway(url?: string) {
   } else {
     return document.location.origin;
   }
+}
+
+export function getLoader<TApi, TState extends GlobalState = GlobalState>(
+  loader: PiralConfig<TApi, TState> | PiralLoader<TApi, TState>,
+) {
+  return isfunc(loader) ? loader : () => Promise.resolve(loader);
+}
+
+export function getPiletRequester(pilets: PiletRequester | Array<ArbiterModuleMetadata>) {
+  return isfunc(pilets) ? pilets : () => Promise.resolve(pilets);
 }
 
 export function getAvailablePilets(setup?: PiralAttachment) {

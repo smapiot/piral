@@ -1,5 +1,4 @@
-import { useGlobalState } from 'piral-core';
-import { LocalizationMessages } from './types';
+import { LocalizationMessages, TranslationLoader } from './types';
 
 function getMissingKeyString(key: string, language: string): string {
   return `__${language}_${key}__`;
@@ -31,7 +30,25 @@ export class Localizer {
   /**
    * Creates a new instance of a localizer.
    */
-  constructor(private globalMessages: LocalizationMessages) {}
+  constructor(
+    private globalMessages: LocalizationMessages,
+    private language: string,
+    private load?: TranslationLoader,
+  ) {}
+
+  public get currentLanguage(): string {
+    return this.language;
+  }
+
+  public changeLanguage(language: string) {
+    if (this.language !== language) {
+      this.language = language;
+
+      if (typeof this.load === 'function') {
+        this.load(this.language);
+      }
+    }
+  }
 
   /**
    * Localizes the given key via the global translations.
@@ -39,7 +56,7 @@ export class Localizer {
    * @param variables The optional variables to use.
    */
   public localizeGlobal<T>(key: string, variables?: T) {
-    const language = useGlobalState(m => m.app.language.selected);
+    const language = this.language;
     const messages = this.globalMessages;
     return localizeBase(messages, language, key, variables);
   }
@@ -52,7 +69,7 @@ export class Localizer {
    * @param variables The optional variables to use.
    */
   public localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T) {
-    const language = useGlobalState(m => m.app.language.selected);
+    const language = this.language;
     const message = translateMessage(language, localMessages, key, variables);
 
     if (message === undefined) {

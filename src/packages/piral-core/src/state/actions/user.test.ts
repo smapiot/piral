@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { setUser } from './user';
+import { createListener } from '../../modules/events';
 
 describe('User Actions Module', () => {
   it('Sets the new user successfully', () => {
@@ -11,7 +12,8 @@ describe('User Actions Module', () => {
         permissions: {},
       },
     });
-    setUser(state, 'User', { a: 'on' }, { allow: true });
+    const events = createListener(undefined);
+    setUser.call(events, state, 'User', { a: 'on' }, { allow: true });
     expect(deref(state)).toEqual({
       foo: 5,
       user: {
@@ -39,7 +41,8 @@ describe('User Actions Module', () => {
         },
       },
     });
-    setUser(state, undefined, {}, {});
+    const events = createListener(undefined);
+    setUser.call(events, state, undefined, {}, {});
     expect(deref(state)).toEqual({
       foo: 5,
       user: {

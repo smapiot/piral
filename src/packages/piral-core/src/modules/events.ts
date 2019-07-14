@@ -6,12 +6,12 @@ function nameOf(type: string | number) {
   return `piral-${type}`;
 }
 
-export function createListener(): EventEmitter {
+export function createListener(state: any): EventEmitter {
   const eventListeners: EventListeners = [];
 
   return {
     on(type, callback) {
-      const listener = (ev: CustomEvent) => callback(ev.detail);
+      const listener = ({ detail }: CustomEvent) => detail && detail.state === state && callback(detail.arg);
       document.body.addEventListener(nameOf(type), listener);
       eventListeners.push([callback, listener]);
       return this;
@@ -28,7 +28,10 @@ export function createListener(): EventEmitter {
     },
     emit(type, arg) {
       const ce = document.createEvent('CustomEvent');
-      ce.initCustomEvent(nameOf(type), false, false, arg);
+      ce.initCustomEvent(nameOf(type), false, false, {
+        arg,
+        state,
+      });
       document.body.dispatchEvent(ce);
       return this;
     },

@@ -13,6 +13,15 @@ describe('Create fetch API Module', () => {
     expect(result[0].name).toBe('Leanne Graham');
   });
 
+  it('interprets the result as text if explicitly used despite JSON API', async () => {
+    const { fetch } = createFetchApi({
+      base: 'https://jsonplaceholder.typicode.com',
+    });
+    const result = await fetch('users', { result: 'text' }).then(m => m.body);
+    expect(typeof result).toBe('string');
+    expect(Array.isArray(JSON.parse(result))).toBeTruthy();
+  });
+
   it('has the correct response code', async () => {
     const { fetch } = createFetchApi({
       base: 'https://jsonplaceholder.typicode.com',

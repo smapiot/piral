@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { readDataItem, readDataValue, resetData, tryWriteDataItem, writeDataItem } from './data';
+import { createListener } from '../../modules/events';
 
 describe('Data Actions Module', () => {
   it('readDataItem reads the current item', () => {
@@ -58,7 +59,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem(state, 'fi', 0);
+    const events = createListener(undefined);
+    writeDataItem.call(events, state, 'fi', 0);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -86,7 +88,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem(state, 'bar', 0);
+    const events = createListener(undefined);
+    writeDataItem.call(events, state, 'bar', 0);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -113,7 +116,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem(state, 'bar', null);
+    const events = createListener(undefined);
+    writeDataItem.call(events, state, 'bar', null);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -133,7 +137,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem(state, 'bar', 10, 'me');
+    const events = createListener(undefined);
+    const success = tryWriteDataItem.call(events, state, 'bar', 10, 'me');
     expect(success).toBe(true);
   });
 
@@ -150,7 +155,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem(state, 'bar', 10, 'me');
+    const events = createListener(undefined);
+    const success = tryWriteDataItem.call(events, state, 'bar', 10, 'me');
     expect(success).toBe(true);
   });
 
@@ -167,7 +173,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem(state, 'bar', 10, 'me');
+    const events = createListener(undefined);
+    const success = tryWriteDataItem.call(events, state, 'bar', 10, 'me');
     expect(success).toBe(false);
   });
 });
