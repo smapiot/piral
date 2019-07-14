@@ -6,7 +6,7 @@ describe('VirtualAsset extension module', () => {
       rootDir: '/',
     });
     const content = asset.generate();
-    expect(content.js).toBe('module.exports=require(\'react\');');
+    expect(content.js).toBe("module.exports=require('react');");
   });
 
   it('Generates the right module entry for a scoped package', () => {
@@ -14,6 +14,6 @@ describe('VirtualAsset extension module', () => {
       rootDir: '/',
     });
     const content = asset.generate();
-    expect(content.js).toBe('module.exports=require(\'@smapiot/foobar\');');
+    expect(content.js).toBe("module.exports=require('@smapiot/foobar');");
   });
 });

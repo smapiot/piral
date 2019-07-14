@@ -65,7 +65,7 @@ describe('Default Error Info Component', () => {
   });
 
   it('renders the react fragment in the default case', () => {
-      (state.components.extensions as any).error = [
+    (state.components.extensions as any).error = [
       {
         component: StubErrorInfo,
       },

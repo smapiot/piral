@@ -34,7 +34,7 @@ const state = {
   },
 };
 
-(React as any).useMemo = (cb) => cb();
+(React as any).useMemo = cb => cb();
 
 describe('Extension Module', () => {
   it('is able to default render not available extension', () => {
