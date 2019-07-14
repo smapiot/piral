@@ -1,6 +1,6 @@
 import { LocalizationMessages, TranslationLoader } from './types';
 
-function getMissingKeyString(key: string, language: string): string {
+function defaultFallback(key: string, language: string): string {
   return `__${language}_${key}__`;
 }
 
@@ -16,16 +16,6 @@ function translateMessage<T>(language: string, messages: LocalizationMessages, k
   return translation && (variables ? formatMessage(translation, variables) : translation);
 }
 
-function localizeBase<T>(messages: LocalizationMessages, language: string, key: string, variables?: T) {
-  const message = translateMessage(language, messages, key, variables);
-
-  if (message === undefined) {
-    return getMissingKeyString(key, language);
-  }
-
-  return message;
-}
-
 export class Localizer {
   /**
    * Creates a new instance of a localizer.
@@ -33,6 +23,7 @@ export class Localizer {
   constructor(
     private globalMessages: LocalizationMessages,
     private language: string,
+    private fallback = defaultFallback,
     private load?: TranslationLoader,
   ) {}
 
@@ -58,7 +49,7 @@ export class Localizer {
   public localizeGlobal<T>(key: string, variables?: T) {
     const language = this.language;
     const messages = this.globalMessages;
-    return localizeBase(messages, language, key, variables);
+    return this.localizeBase(messages, language, key, variables);
   }
 
   /**
@@ -73,7 +64,17 @@ export class Localizer {
     const message = translateMessage(language, localMessages, key, variables);
 
     if (message === undefined) {
-      return localizeBase(this.globalMessages, language, key, variables);
+      return this.localizeBase(this.globalMessages, language, key, variables);
+    }
+
+    return message;
+  }
+
+  private localizeBase<T>(messages: LocalizationMessages, language: string, key: string, variables?: T) {
+    const message = translateMessage(language, messages, key, variables);
+
+    if (message === undefined) {
+      return this.fallback(key, language);
     }
 
     return message;

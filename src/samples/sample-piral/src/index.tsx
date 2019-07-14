@@ -5,7 +5,7 @@ import { layout } from './layout';
 renderInstance({
   subscriptionUrl: false,
   layout,
-  loader: () => Promise.resolve({
+  config: {
     attach(api) {
       setupFooter(api);
       setupMenu(api);
@@ -14,7 +14,7 @@ renderInstance({
       fetch('https://sample.piral.io/api/v1/pilet')
         .then(res => res.json())
         .then(res => res.items),
-  }),
+  },
 });
 
 export * from 'piral';

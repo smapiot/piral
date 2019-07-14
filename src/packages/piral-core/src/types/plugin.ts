@@ -12,14 +12,24 @@ export interface Setup<TState extends GlobalState, TUser = {}> {
   (state: GlobalState<TUser>): TState;
 }
 
-export interface Extend<TSource, TTarget> {
+export interface Extend<TApi> {
   /**
    * Extends the base API with a custom set of functionality to be used by modules.
    * @param api The API created by the base layer.
    * @param target The target the API is created for.
    * @returns The extended API.
    */
-  (api: TSource, target: ArbiterModuleMetadata): TTarget;
+  (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): PiralApi<TApi>;
+}
+
+export interface Append<TApi> {
+  /**
+   * Appends a custom set of functionality to be used by modules.
+   * @param api The API created by the base layer.
+   * @param target The target the API is created for.
+   * @returns The API to append.
+   */
+  (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): Partial<PiralApi<TApi>>;
 }
 
 export interface PiletRequester {
@@ -29,5 +39,5 @@ export interface PiletRequester {
 export interface PiralContainer<TApi> {
   context: GlobalStateContext;
   events: EventEmitter;
-  extendApi: Extend<PiralCoreApi<TApi>, PiralApi<TApi>>;
+  extendApi: Extend<TApi>;
 }

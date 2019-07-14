@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { withRecall, ArbiterModule, DependencyGetter, ArbiterModuleMetadata } from 'react-arbiter';
-import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
-import { createGlobalState, createActions, StateContext } from './state';
 import { Portal, PortalProps } from './components';
+import { createGlobalState, createActions, StateContext } from './state';
+import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
 import { PiralApi, EventEmitter, Extend, PiletRequester, GlobalState, NestedPartial, PiralCoreApi } from './types';
 
 function defaultModuleRequester(): Promise<Array<ArbiterModuleMetadata>> {
@@ -37,7 +37,7 @@ export interface PiralPiletConfiguration<TApi> {
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  extendApi?: Extend<PiralCoreApi<TApi>, PiralApi<TApi>>;
+  extendApi?: Extend<TApi>;
 }
 
 export interface PiralStateConfiguration<TState extends GlobalState = GlobalState> {

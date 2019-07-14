@@ -16,6 +16,10 @@ export interface TranslationLoader {
   (language: string, pilet?: string): Promise<Translations>;
 }
 
+export interface TranslationFallback {
+  (key: string, language: string): string;
+}
+
 export interface PiralLocaleApi {
   /**
    * Translates the given tag (using the optional variables) into a string using the current language.
@@ -46,4 +50,8 @@ export interface LocaleConfig {
    * Sets the default language to use.
    */
   load?: TranslationLoader;
+  /**
+   * Sets the optional fallback to use.
+   */
+  fallback?: TranslationFallback;
 }

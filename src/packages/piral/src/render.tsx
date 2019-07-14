@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Provider } from 'urql';
 import { render } from 'react-dom';
-import { createInstance, setupState, EventEmitter } from 'piral-core';
+import { Provider } from 'urql';
+import { createInstance, setupState, EventEmitter, GlobalState } from 'piral-core';
 import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
 import { PiExtApi, PiletApi, PiralOptions, PiletQueryResult } from './types';
@@ -31,14 +31,17 @@ const piletsQuery = `query initialData {
  * @example
 ```tsx
 import { renderInstance } from 'piral';
-renderInstance();
+import { layout } from './my-layout';
+renderInstance({ layout });
 export * from 'piral';
 ```
  */
-export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
-  const { selector = '#app', gatewayUrl, subscriptionUrl, loader = defaultLoader, layout } = options;
-  const [AppLayout, config] = layout.build();
-  const load = getLoader(loader);
+export function renderInstance<TApi = PiExtApi, TState extends GlobalState = GlobalState>(
+  options: PiralOptions<TApi, TState>,
+): Promise<EventEmitter> {
+  const { selector = '#app', gatewayUrl, subscriptionUrl, loader = defaultLoader, config = {}, layout } = options;
+  const [AppLayout, initialState] = layout.build();
+  const load = getLoader(loader, config);
   const base = getGateway(gatewayUrl);
   const client = setupGqlClient({
     url: base,
@@ -60,27 +63,25 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
       ...forwardOptions
     } = {}) => {
       const state = setupState({
-        ...config,
+        ...initialState,
         languages: Object.keys(translations),
       });
       const localizer = setupLocalizer({
         language: state.app.language.selected,
         messages: translations,
       });
-      const Piral = createInstance<PiExtApi>({
+      const Piral = createInstance({
         ...forwardOptions,
         availablePilets: getAvailablePilets(attach),
         requestPilets: getPiletRequester(pilets),
         extendApi(api, target) {
-          return extendApi(
-            {
-              ...api,
-              ...createFetchApi(uri),
-              ...createGqlApi(client),
-              ...createLocaleApi(localizer),
-            },
-            target,
-          );
+          const newApi: any = {
+            ...createFetchApi(uri),
+            ...createGqlApi(client),
+            ...createLocaleApi(localizer),
+            ...api,
+          };
+          return extendApi(newApi, target) as any;
         },
         state,
       });

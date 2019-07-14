@@ -1,12 +1,12 @@
 import { defaultBreakpoints, getUserLocale, getCurrentLayout, defaultLayouts } from './utils';
 import { DefaultDashboard, DefaultLoader, DefaultErrorInfo } from './components/default';
-import { PiralApi, Extend, GlobalStateOptions, NestedPartial, GlobalState, PiralCoreApi } from './types';
+import { PiralApi, Append, Extend, GlobalStateOptions, NestedPartial, GlobalState } from './types';
 
 /**
  * Creates an API extender from the given array of API declarations.
  * @param apis The APIs to use as source.
  */
-export function extendApis<TApi>(apis: Array<Extend<PiralCoreApi<TApi>, any>>): Extend<PiralCoreApi<TApi>, any> {
+export function extendApis<TApi>(apis: Array<Append<TApi>>): Extend<TApi> {
   return (init, target) => {
     let api = init as PiralApi<TApi>;
 

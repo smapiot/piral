@@ -8,7 +8,7 @@ import { PiralLocaleApi, LocalizationMessages, LocaleConfig } from './types';
 export function setupLocalizer(config: LocaleConfig = {}) {
   const msgs = config.messages || {};
   const lang = config.language || Object.keys(msgs)[0] || 'en';
-  return new Localizer(msgs, lang, config.load);
+  return new Localizer(msgs, lang, config.fallback, config.load);
 }
 
 /**

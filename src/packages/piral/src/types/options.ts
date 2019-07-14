@@ -1,11 +1,11 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralStateConfiguration, GlobalState, PiletRequester, Extend } from 'piral-core';
+import { PiralStateConfiguration, GlobalState, PiletRequester, Extend, PiralApi } from 'piral-core';
 import { LocalizationMessages, PiralGqlApiQuery, PiralFetchApiFetch } from 'piral-ext';
-import { PiletApi } from './api';
+import { PiExtApi } from './api';
 import { LayoutBuilder } from './layout';
 
-export interface PiralAttachment<TApi = PiletApi> {
-  (api: TApi): void;
+export interface PiralAttachment<TApi = PiExtApi> {
+  (api: PiralApi<TApi>): void;
 }
 
 export type PiletsMetadata = Array<ArbiterModuleMetadata>;
@@ -14,7 +14,7 @@ export interface PiletQueryResult {
   pilets: PiletsMetadata;
 }
 
-export interface PiralConfig<TApi = PiletApi, TState extends GlobalState = GlobalState>
+export interface PiralConfig<TApi = PiExtApi, TState extends GlobalState = GlobalState>
   extends PiralStateConfiguration<TState> {
   /**
    * Sets the default translations to be available.
@@ -33,17 +33,17 @@ export interface PiralConfig<TApi = PiletApi, TState extends GlobalState = Globa
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  extendApi?: Extend<PiletApi, TApi>;
+  extendApi?: Extend<TApi>;
 }
 
-export interface PiralLoader<TApi = PiletApi, TState extends GlobalState = GlobalState> {
+export interface PiralLoader<TApi = PiExtApi, TState extends GlobalState = GlobalState> {
   (options: { query: PiralGqlApiQuery; fetch: PiralFetchApiFetch }): Promise<PiralConfig<TApi, TState> | undefined>;
 }
 
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions<TApi = PiletApi, TState extends GlobalState = GlobalState> {
+export interface PiralOptions<TApi = PiExtApi, TState extends GlobalState = GlobalState> {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
@@ -61,9 +61,13 @@ export interface PiralOptions<TApi = PiletApi, TState extends GlobalState = Glob
    */
   subscriptionUrl?: false | string;
   /**
-   * Defines some optional initial data loading.
+   * Gets the optional initial configuration.
    */
-  loader?: PiralConfig<TApi, TState> | PiralLoader<TApi, TState>;
+  config?: PiralConfig<TApi, TState>;
+  /**
+   * Defines some optional initial configuration loading.
+   */
+  loader?: PiralLoader<TApi, TState>;
   /**
    * Gets the layout builder to construct the design to display.
    */

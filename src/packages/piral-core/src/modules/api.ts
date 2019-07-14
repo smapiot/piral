@@ -18,6 +18,7 @@ import {
   PiralContainer,
   GlobalStateContext,
   ContainerOptions,
+  PiralCoreApi,
 } from '../types';
 
 function buildName(prefix: string, name: string | number) {
