@@ -13,7 +13,7 @@ export interface LocalizationMessages {
 }
 
 export interface TranslationLoader {
-  (language: string, pilet?: string): Promise<Translations>;
+  (language: string): Promise<Translations>;
 }
 
 export interface TranslationFallback {

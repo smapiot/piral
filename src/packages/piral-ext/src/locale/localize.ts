@@ -27,16 +27,25 @@ export class Localizer {
     private load?: TranslationLoader,
   ) {}
 
+  /**
+   * Gets the currently set language.
+   */
   public get currentLanguage(): string {
     return this.language;
   }
 
+  /**
+   * Changes the currently set language.
+   * @param language The language to change to.
+   */
   public changeLanguage(language: string) {
     if (this.language !== language) {
       this.language = language;
 
       if (typeof this.load === 'function') {
-        this.load(this.language);
+        this.load(language).then(translations => {
+          this.globalMessages[language] = translations;
+        });
       }
     }
   }

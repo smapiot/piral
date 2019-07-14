@@ -36,8 +36,7 @@ describe('API Module', () => {
     const container = createMockContainer();
     const api = createApi<{}>(moduleMetadata, container);
     api.trackError('my error');
-    expect(container.events.emit).toHaveBeenCalledWith('track', {
-      type: 'error',
+    expect(container.events.emit).toHaveBeenCalledWith('track-error', {
       error: 'my error',
       properties: {},
       measurements: {},
@@ -49,8 +48,7 @@ describe('API Module', () => {
     const container = createMockContainer();
     const api = createApi<{}>(moduleMetadata, container);
     api.trackEvent('my event');
-    expect(container.events.emit).toHaveBeenCalledWith('track', {
-      type: 'event',
+    expect(container.events.emit).toHaveBeenCalledWith('track-event', {
       name: 'my event',
       properties: {},
       measurements: {},
@@ -61,13 +59,11 @@ describe('API Module', () => {
     const container = createMockContainer();
     const api = createApi<{}>(moduleMetadata, container);
     const tracker = api.trackFrame('my frame');
-    expect(container.events.emit).toHaveBeenCalledWith('track', {
-      type: 'start-frame',
+    expect(container.events.emit).toHaveBeenCalledWith('track-frame-start', {
       name: 'my frame',
     });
     tracker();
-    expect(container.events.emit).toHaveBeenLastCalledWith('track', {
-      type: 'end-frame',
+    expect(container.events.emit).toHaveBeenLastCalledWith('track-frame-end', {
       name: 'my frame',
       properties: {},
       measurements: {},
@@ -251,7 +247,7 @@ describe('API Module', () => {
     expect(container.events.emit).not.toHaveBeenCalled();
   });
 
-  it('createApi write data by the simple option shall pass with remote emitting an event', () => {
+  it('createApi write data by the simple option shall pass with remote', () => {
     const container = createMockContainer();
     container.context = {
       tryWriteDataItem: jest.fn(() => true),
@@ -259,16 +255,9 @@ describe('API Module', () => {
     const api = createApi<{}>(moduleMetadata, container);
     api.setData('foo', 5, 'remote');
     expect(container.context.tryWriteDataItem).toHaveBeenCalled();
-    expect(container.events.emit).toHaveBeenCalledWith('store', {
-      name: 'foo',
-      target: 'remote',
-      value: 5,
-      owner: moduleMetadata.name,
-      expires: -1,
-    });
   });
 
-  it('createApi write data by the object options shall pass with remote emitting an event', () => {
+  it('createApi write data by the object options shall pass with remote', () => {
     const container = createMockContainer();
     container.context = {
       tryWriteDataItem: jest.fn(() => true),
@@ -279,13 +268,6 @@ describe('API Module', () => {
       target: 'local',
     });
     expect(container.context.tryWriteDataItem).toHaveBeenCalled();
-    expect(container.events.emit).toHaveBeenCalledWith('store', {
-      name: 'foo',
-      target: 'local',
-      value: 15,
-      owner: moduleMetadata.name,
-      expires: 10,
-    });
   });
 
   it('createApi allows using the created form creator as a HOC', () => {
