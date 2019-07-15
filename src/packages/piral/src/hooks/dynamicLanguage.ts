@@ -1,8 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useActions } from 'piral-core';
 import { LanguageLoader, TranslationsActions } from '../types';
 
-export function useDynamicLanguage(selected: string, load: LanguageLoader) {
+export function useDynamicLanguage(
+  defaultSelected: string,
+  load: LanguageLoader,
+): [string, (language: string) => void] {
+  const [selected, setSelected] = useState(defaultSelected);
   const { selectLanguage, setLoading, setTranslations, getTranslations } = useActions<TranslationsActions>();
 
   useEffect(() => {
@@ -23,4 +27,5 @@ export function useDynamicLanguage(selected: string, load: LanguageLoader) {
       .then(() => setLoading(false));
     return () => (active = false);
   }, [selected]);
+  return [selected, setSelected];
 }
