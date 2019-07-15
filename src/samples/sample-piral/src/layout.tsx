@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { buildLayout } from 'piral';
-import { MenuToggle, User } from './components';
+import { buildLayout, useTranslate } from 'piral';
+import { MenuToggle, User, LanguagePicker } from './components';
 import { getTileClass } from './utils';
 
 export const layout = buildLayout()
@@ -9,7 +9,7 @@ export const layout = buildLayout()
       <div className="pi-spinner">Loading</div>
     </div>
   ))
-  .withLayout(({ Menu, Notifications, Search, children, Modals }) => (
+  .withLayout(({ Menu, Notifications, Search, children, Modals, selectedLanguage, availableLanguages }) => (
     <div className="app-container">
       <div className="app-menu">
         <div className="app-menu-content">
@@ -30,13 +30,22 @@ export const layout = buildLayout()
       </div>
       <div className="app-content">{children}</div>
       <div className="app-footer">
+        <LanguagePicker selected={selectedLanguage} available={availableLanguages} />
         <Menu type="footer" />
       </div>
     </div>
   ))
   .createDashboard(dashboard =>
     dashboard
-      .container(({ children }) => <div className="pi-dashboard">{children}</div>)
+      .container(({ children }) => {
+        const translate = useTranslate();
+        return (
+          <div className="pi-content">
+            <h1>{translate('sample')}</h1>
+            <div className="pi-dashboard">{children}</div>
+          </div>
+        );
+      })
       .tile(({ children, rows, columns }) => <div className={getTileClass(columns, rows)}>{children}</div>),
   )
   .createError(error =>
