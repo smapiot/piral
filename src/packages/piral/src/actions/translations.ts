@@ -3,6 +3,9 @@ import { PiletsBag, TranslationsActions } from '../types';
 
 export function createTranslationsActions(localizer: Localizer, apis: PiletsBag): TranslationsActions {
   return {
+    translate(key, variables) {
+      return localizer.localizeGlobal(key, variables);
+    },
     setTranslations(language, data) {
       localizer.messages[language] = data.global;
 

@@ -1,7 +1,7 @@
 import { LocalizationMessages } from './types';
 
 function defaultFallback(key: string, language: string): string {
-  return `__${language}_${key}__`;
+  return language ? `__${language}_${key}__` : '';
 }
 
 function formatMessage<T>(message: string, variables: T): string {

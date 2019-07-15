@@ -8,6 +8,7 @@ export function useDynamicLanguage(selected: string, load: LanguageLoader) {
   useEffect(() => {
     let active = true;
     const current = getTranslations(selected);
+    selectLanguage(undefined);
     setLoading(true);
     load(selected, current)
       .then(

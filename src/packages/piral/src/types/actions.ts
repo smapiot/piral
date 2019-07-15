@@ -25,7 +25,19 @@ export interface GetTranslationsAction {
   (language: string): LanguageData;
 }
 
+export interface TranslateAction {
+  /**
+   * Gets the translation for the given key at the current
+   * language.
+   */
+  (tag: string, variables?: Record<string, string>): string;
+}
+
 export interface TranslationsActions {
+  /**
+   * Tries to find a translation for the given key.
+   */
+  translate: TranslateAction;
   /**
    * Sets the translations for the given language.
    */
