@@ -27,7 +27,7 @@ describe('Create Localize API', () => {
       },
     };
     const api = createLocaleApi(setupLocalizer(config));
-    api.provideTranslations({
+    api.setTranslations({
       fr: {
         foo: 'boo',
       },
@@ -47,7 +47,7 @@ describe('Create Localize API', () => {
       },
     };
     const api = createLocaleApi(setupLocalizer(config));
-    api.provideTranslations({
+    api.setTranslations({
       fr: {
         foo: 'boo',
       },

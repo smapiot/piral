@@ -14,8 +14,8 @@ export interface PiletQueryResult {
   pilets: PiletsMetadata;
 }
 
-export interface PiralConfig<TApi = PiExtApi, TState extends GlobalState = GlobalState>
-  extends PiralStateConfiguration<TState> {
+export interface PiralConfig<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>
+  extends PiralStateConfiguration<TState, TActions> {
   /**
    * Sets the default translations to be available.
    * @default {}
@@ -36,14 +36,16 @@ export interface PiralConfig<TApi = PiExtApi, TState extends GlobalState = Globa
   extendApi?: Extend<TApi>;
 }
 
-export interface PiralLoader<TApi = PiExtApi, TState extends GlobalState = GlobalState> {
-  (options: { query: PiralGqlApiQuery; fetch: PiralFetchApiFetch }): Promise<PiralConfig<TApi, TState> | undefined>;
+export interface PiralLoader<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+  (options: { query: PiralGqlApiQuery; fetch: PiralFetchApiFetch }): Promise<
+    PiralConfig<TApi, TState, TActions> | undefined
+  >;
 }
 
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions<TApi = PiExtApi, TState extends GlobalState = GlobalState> {
+export interface PiralOptions<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
@@ -63,11 +65,11 @@ export interface PiralOptions<TApi = PiExtApi, TState extends GlobalState = Glob
   /**
    * Gets the optional initial configuration.
    */
-  config?: PiralConfig<TApi, TState>;
+  config?: PiralConfig<TApi, TState, TActions>;
   /**
    * Defines some optional initial configuration loading.
    */
-  loader?: PiralLoader<TApi, TState>;
+  loader?: PiralLoader<TApi, TState, TActions>;
   /**
    * Gets the layout builder to construct the design to display.
    */

@@ -7,14 +7,19 @@ function convert(ctx: Atom<GlobalState>, events: EventEmitter, key: string) {
   return (...args) => action.call(events, ctx, ...args);
 }
 
-export function createActions(ctx: Atom<GlobalState>, events: EventEmitter) {
+export function createActions<TActions extends {} = {}>(
+  ctx: Atom<GlobalState>,
+  events: EventEmitter,
+  moreActions: TActions,
+) {
   return Object.keys(actions).reduce(
     (prev, curr) => {
       prev[curr] = convert(ctx, events, curr);
       return prev;
     },
     {
+      ...moreActions,
       state: ctx,
-    } as GlobalStateContext,
+    } as GlobalStateContext<TActions>,
   );
 }

@@ -12,10 +12,6 @@ export interface LocalizationMessages {
   [lang: string]: Translations;
 }
 
-export interface TranslationLoader {
-  (language: string): Promise<Translations>;
-}
-
 export interface TranslationFallback {
   (key: string, language: string): string;
 }
@@ -31,9 +27,13 @@ export interface PiralLocaleApi {
   /**
    * Provides translations to the application.
    * The translations will be exlusively used for retrieving translations for the pilet.
-   * @param messages The messages to use as transslation basis.
+   * @param messages The messages to use as translation basis.
    */
-  provideTranslations(messages: LocalizationMessages): void;
+  setTranslations(messages: LocalizationMessages): void;
+  /**
+   * Gets the currently provided translations by the pilet.
+   */
+  getTranslations(): LocalizationMessages;
 }
 
 export interface LocaleConfig {
@@ -46,10 +46,6 @@ export interface LocaleConfig {
    * Sets the default language to use.
    */
   language?: string;
-  /**
-   * Sets the default language to use.
-   */
-  load?: TranslationLoader;
   /**
    * Sets the optional fallback to use.
    */

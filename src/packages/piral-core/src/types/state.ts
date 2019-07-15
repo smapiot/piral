@@ -498,11 +498,18 @@ export interface StateActions {
    * @param immediate Optionally, determins if the search was invoked immediately.
    */
   triggerSearch(input?: string, immediate?: boolean): Disposable;
+  /**
+   * Sets the loading state of the application, which can be helpful for indicating loading of
+   * required data.
+   * @param loading The current loading state.
+   */
+  setLoading(loading: boolean): void;
 }
 
-export interface GlobalStateContext extends StateActions {
-  /**
-   * The global state context atom.
-   */
-  state: Atom<GlobalState>;
-}
+export type GlobalStateContext<TActions extends {} = {}> = StateActions &
+  TActions & {
+    /**
+     * The global state context atom.
+     */
+    state: Atom<GlobalState>;
+  };

@@ -40,7 +40,7 @@ export interface PiralPiletConfiguration<TApi> {
   extendApi?: Extend<TApi>;
 }
 
-export interface PiralStateConfiguration<TState extends GlobalState = GlobalState> {
+export interface PiralStateConfiguration<TState extends GlobalState = GlobalState, TActions extends {} = {}> {
   /**
    * Function to get the dependencies for a given module.
    */
@@ -54,10 +54,17 @@ export interface PiralStateConfiguration<TState extends GlobalState = GlobalStat
    * Optionally, sets up the initial state of the application.
    */
   state?: NestedPartial<TState>;
+  /**
+   * Optionally, sets additional actions to be included.
+   */
+  actions?: TActions;
 }
 
-export type PiralConfiguration<TApi, TState extends GlobalState = GlobalState> = PiralPiletConfiguration<TApi> &
-  PiralStateConfiguration<TState>;
+export type PiralConfiguration<
+  TApi,
+  TState extends GlobalState = GlobalState,
+  TActions extends {} = {}
+> = PiralPiletConfiguration<TApi> & PiralStateConfiguration<TState, TActions>;
 
 /**
  * The PiralInstance component, which is a React functional component combined with an event emitter.
@@ -80,8 +87,8 @@ const App: React.FC = () => <Piral>{content => <Layout>{content}</Layout>}</Pira
 render(<App />, document.querySelector('#app'));
 ```
  */
-export function createInstance<TApi, TState extends GlobalState = GlobalState>(
-  config: PiralConfiguration<TApi, TState>,
+export function createInstance<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
+  config: PiralConfiguration<TApi, TState, TActions>,
 ): PiralInstance {
   const {
     state,
@@ -90,11 +97,12 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState>(
     requestPilets = defaultModuleRequester,
     getDependencies = getLocalDependencies,
     async = false,
+    actions,
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
   const container = {
-    context: createActions(globalState, events),
+    context: createActions(globalState, events, actions),
     events,
     extendApi,
   };

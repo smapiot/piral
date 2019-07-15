@@ -3,8 +3,9 @@ import { render } from 'react-dom';
 import { Provider } from 'urql';
 import { createInstance, setupState, EventEmitter, GlobalState } from 'piral-core';
 import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
+import { createTranslationsActions } from './actions';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
-import { PiExtApi, PiletApi, PiralOptions, PiletQueryResult } from './types';
+import { PiExtApi, PiletApi, PiralOptions, PiletQueryResult, PiletsBag } from './types';
 
 function defaultExtendApi(api: PiletApi) {
   return api;
@@ -36,8 +37,8 @@ renderInstance({ layout });
 export * from 'piral';
 ```
  */
-export function renderInstance<TApi = PiExtApi, TState extends GlobalState = GlobalState>(
-  options: PiralOptions<TApi, TState>,
+export function renderInstance<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
+  options: PiralOptions<TApi, TState, TActions>,
 ): Promise<EventEmitter> {
   const { selector = '#app', gatewayUrl, subscriptionUrl, loader = defaultLoader, config = {}, layout } = options;
   const [AppLayout, initialState] = layout.build();
@@ -58,8 +59,9 @@ export function renderInstance<TApi = PiExtApi, TState extends GlobalState = Glo
     ({
       pilets = defaultRequestPilets,
       translations = {},
-      attach,
       extendApi = defaultExtendApi,
+      attach,
+      actions,
       ...forwardOptions
     } = {}) => {
       const state = setupState({
@@ -70,10 +72,15 @@ export function renderInstance<TApi = PiExtApi, TState extends GlobalState = Glo
         language: state.app.language.selected,
         messages: translations,
       });
+      const apis: PiletsBag = {};
       const Piral = createInstance({
         ...forwardOptions,
         availablePilets: getAvailablePilets(attach),
         requestPilets: getPiletRequester(pilets),
+        actions: {
+          ...actions,
+          ...createTranslationsActions(localizer, apis),
+        },
         extendApi(api, target) {
           const newApi: any = {
             ...createFetchApi(uri),
@@ -81,13 +88,14 @@ export function renderInstance<TApi = PiExtApi, TState extends GlobalState = Glo
             ...createLocaleApi(localizer),
             ...api,
           };
+          apis[target.name] = newApi;
           return extendApi(newApi, target) as any;
         },
         state,
       });
 
       Piral.on('change-language', ev => {
-        localizer.changeLanguage(ev.selected);
+        localizer.language = ev.selected;
       });
 
       const App: React.FC = () => (

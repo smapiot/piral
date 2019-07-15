@@ -99,6 +99,8 @@ export interface PiralEndLoadEvent {
   modules: Array<ArbiterModuleMetadata>;
 }
 
+export interface PiralLoadingEvent {}
+
 export interface PiralEventMap {
   'store-data': PiralStoreDataEvent;
   'track-event': PiralTrackEventEvent;
@@ -110,6 +112,7 @@ export interface PiralEventMap {
   'change-user': PiralChangeUserEvent;
   'load-start': PiralStartLoadEvent;
   'load-end': PiralEndLoadEvent;
+  loading: PiralLoadingEvent;
   [custom: string]: any;
 }
 

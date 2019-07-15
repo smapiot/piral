@@ -38,3 +38,18 @@ export function changeLayout(this: EventEmitter, ctx: Atom<GlobalState>, current
     };
   });
 }
+
+export function setLoading(this: EventEmitter, ctx: Atom<GlobalState>, loading: boolean) {
+  swap(ctx, state => {
+    this.emit('loading', {
+      loading,
+    });
+    return {
+      ...state,
+      app: {
+        ...state.app,
+        loading,
+      },
+    };
+  });
+}

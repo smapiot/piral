@@ -14,7 +14,7 @@ import { Disposable } from '../types';
  * will be integrated as they arrive.
  */
 export function useSearch(): [string, (value: string) => void] {
-  const { setSearchInput, triggerSearch } = useActions();
+  const { setSearchInput, triggerSearch } = useActions<{}>();
   const searchInput = useGlobalState(m => m.search.input);
   const query = useDebounce(searchInput);
   const cancel = useRef<Disposable>(undefined);

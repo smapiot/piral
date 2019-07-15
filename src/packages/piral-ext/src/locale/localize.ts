@@ -1,4 +1,4 @@
-import { LocalizationMessages, TranslationLoader } from './types';
+import { LocalizationMessages } from './types';
 
 function defaultFallback(key: string, language: string): string {
   return `__${language}_${key}__`;
@@ -10,45 +10,11 @@ function formatMessage<T>(message: string, variables: T): string {
   });
 }
 
-function translateMessage<T>(language: string, messages: LocalizationMessages, key: string, variables?: T) {
-  const translations = language && messages[language];
-  const translation = translations && translations[key];
-  return translation && (variables ? formatMessage(translation, variables) : translation);
-}
-
 export class Localizer {
   /**
    * Creates a new instance of a localizer.
    */
-  constructor(
-    private globalMessages: LocalizationMessages,
-    private language: string,
-    private fallback = defaultFallback,
-    private load?: TranslationLoader,
-  ) {}
-
-  /**
-   * Gets the currently set language.
-   */
-  public get currentLanguage(): string {
-    return this.language;
-  }
-
-  /**
-   * Changes the currently set language.
-   * @param language The language to change to.
-   */
-  public changeLanguage(language: string) {
-    if (this.language !== language) {
-      this.language = language;
-
-      if (typeof this.load === 'function') {
-        this.load(language).then(translations => {
-          this.globalMessages[language] = translations;
-        });
-      }
-    }
-  }
+  constructor(public messages: LocalizationMessages, public language: string, private fallback = defaultFallback) {}
 
   /**
    * Localizes the given key via the global translations.
@@ -56,9 +22,7 @@ export class Localizer {
    * @param variables The optional variables to use.
    */
   public localizeGlobal<T>(key: string, variables?: T) {
-    const language = this.language;
-    const messages = this.globalMessages;
-    return this.localizeBase(messages, language, key, variables);
+    return this.localizeBase(key, variables);
   }
 
   /**
@@ -69,23 +33,29 @@ export class Localizer {
    * @param variables The optional variables to use.
    */
   public localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T) {
-    const language = this.language;
-    const message = translateMessage(language, localMessages, key, variables);
+    const message = this.translateMessage(localMessages, key, variables);
 
     if (message === undefined) {
-      return this.localizeBase(this.globalMessages, language, key, variables);
+      return this.localizeBase(key, variables);
     }
 
     return message;
   }
 
-  private localizeBase<T>(messages: LocalizationMessages, language: string, key: string, variables?: T) {
-    const message = translateMessage(language, messages, key, variables);
+  private localizeBase<T>(key: string, variables?: T) {
+    const message = this.translateMessage(this.messages, key, variables);
 
     if (message === undefined) {
-      return this.fallback(key, language);
+      return this.fallback(key, this.language);
     }
 
     return message;
+  }
+
+  private translateMessage<T>(messages: LocalizationMessages, key: string, variables?: T) {
+    const language = this.language;
+    const translations = language && messages[language];
+    const translation = translations && translations[key];
+    return translation && (variables ? formatMessage(translation, variables) : translation);
   }
 }
