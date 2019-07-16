@@ -44,6 +44,13 @@ Sets the potential API key to send to the service.
 - Type: `string`
 - Default: `""`
 
+### `--fresh`
+
+Performs a fresh build, then packages and finally publishes the pilet.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
