@@ -20,7 +20,7 @@ export const Footer: React.FC = () => (
           <br />
           Made with <i className="fa fa-heart" aria-hidden="true" /> in Munich.
           <br />
-          <a href="https://www.smapiot.com/en/imprint/" className="imprint" target="_blank">
+          <a href="https://smapiot.com/legal/imprint/" className="imprint" target="_blank">
             Imprint
           </a>
         </div>

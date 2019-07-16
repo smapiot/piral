@@ -11,7 +11,7 @@ export const Footer: React.FC = () => (
       </small>
       {' | '}
       <small className="copyright">
-        <a href="https://www.smapiot.com/en/imprint/" target="_blank">
+        <a href="https://smapiot.com/legal/imprint/" target="_blank">
           Imprint
         </a>
       </small>
