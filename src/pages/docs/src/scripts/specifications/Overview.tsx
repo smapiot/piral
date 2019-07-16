@@ -7,14 +7,14 @@ const Overview: React.FC = () => (
       <h2 className="title">Piral Specifications</h2>
       <div id="cards-wrapper" className="cards-wrapper row">
         {/* start:auto-generated */}
-        <Card title="Gateway" icon="puzzle-piece" to="/specifications/gateway" kind="green">
-          The Gateway specification.
+        <Card title="Gateway Specification" icon="puzzle-piece" to="/specifications/gateway-specification" kind="green">
+          The Gateway Specification.
         </Card>
-        <Card title="Piral API" icon="puzzle-piece" to="/specifications/piral-api" kind="green">
-          The Piral API specification.
+        <Card title="Pilet Specification" icon="puzzle-piece" to="/specifications/pilet-specification" kind="green">
+          The Pilet Specification.
         </Card>
-        <Card title="Pilet" icon="puzzle-piece" to="/specifications/pilet" kind="green">
-          The Pilet specification.
+        <Card title="Piral API Specification" icon="puzzle-piece" to="/specifications/piral-api-specification" kind="green">
+          The Piral API Specification.
         </Card>
         {/* end:auto-generated */}
       </div>

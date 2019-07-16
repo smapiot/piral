@@ -4,9 +4,9 @@ import { Standard } from '../layout';
 
 const Overview = React.lazy(() => import('./Overview'));
 /* start:auto-generated */
-const GatewaySpecification = React.lazy(() => import('./GatewaySpecification'));
-const PiletSpecification = React.lazy(() => import('./PiletSpecification'));
-const PiralAPISpecification = React.lazy(() => import('./PiralAPISpecification'));
+const FirstPilet = React.lazy(() => import('./FirstPilet'));
+const ServerSideRendering = React.lazy(() => import('./ServerSideRendering'));
+const StaticPiralInstance = React.lazy(() => import('./StaticPiralInstance'));
 /* end:auto-generated */
 
 function capitalize(str: string) {
@@ -20,8 +20,8 @@ function getName(path: string) {
 }
 
 export const Page: React.FC<RouteComponentProps> = ({ location }) => {
-  const rootPath = '/specifications';
-  const rootTitle = 'Specifications';
+  const rootPath = '/guidelines';
+  const rootTitle = 'Guidelines';
   const isOverview = location.pathname === rootPath;
 
   return (
@@ -31,11 +31,11 @@ export const Page: React.FC<RouteComponentProps> = ({ location }) => {
       icon="puzzle-piece"
       breadcrumbs={isOverview ? [] : [{ title: rootTitle, to: rootPath }]}>
       <Switch>
-        <Route exact path="/specifications" component={Overview} />
+        <Route exact path="/guidelines" component={Overview} />
         {/* start:auto-generated */}
-        <Route exact path="/specifications/gateway-specification" component={GatewaySpecification} />
-        <Route exact path="/specifications/pilet-specification" component={PiletSpecification} />
-        <Route exact path="/specifications/piral-api-specification" component={PiralAPISpecification} />
+        <Route exact path="/guidelines/first-pilet" component={FirstPilet} />
+        <Route exact path="/guidelines/server-side-rendering" component={ServerSideRendering} />
+        <Route exact path="/guidelines/static-piral-instance" component={StaticPiralInstance} />
         {/* end:auto-generated */}
       </Switch>
     </Standard>

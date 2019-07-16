@@ -7,9 +7,9 @@ const Content: React.FC = () => {
   return (
     <>
       <ResponsiveContent ref={ref}>
-        <Section id="specification" title="Gateway">
-          <Md>{require('../../../../../../docs/specs/gateway-specification.md')}</Md>
-          <EditSection link="specs/gateway-specification.md" />
+        <Section id="static-piral-instance" title="Static Piral Instance">
+          <Md>{require('../../../../../../docs/guidelines/static-piral-instance.md')}</Md>
+          <EditSection link="guidelines/static-piral-instance.md" />
         </Section>
       </ResponsiveContent>
       <Menu content={ref} />

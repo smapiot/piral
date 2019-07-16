@@ -7,9 +7,9 @@ const Content: React.FC = () => {
   return (
     <>
       <ResponsiveContent ref={ref}>
-        <Section id="specification" title="Pilet">
-          <Md>{require('../../../../../../docs/specs/pilet-specification.md')}</Md>
-          <EditSection link="specs/pilet-specification.md" />
+        <Section id="gateway-specification" title="Gateway Specification">
+          <Md>{require('../../../../../../docs/specs/gateway-specification.md')}</Md>
+          <EditSection link="specs/gateway-specification.md" />
         </Section>
       </ResponsiveContent>
       <Menu content={ref} />

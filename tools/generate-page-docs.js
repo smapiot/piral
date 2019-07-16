@@ -46,6 +46,8 @@ const sources = [
     target: './specifications',
     rootUrl: '/specifications',
     mode: 'pages',
+    description: 'The %{title}.',
+    sep: nl + intend + intend,
   },
   {
     dir: './guidelines',
@@ -53,21 +55,47 @@ const sources = [
     target: './guidelines',
     rootUrl: '/guidelines',
     mode: 'pages',
+    description: 'How to do "%{title}".',
+    sep: nl + intend + intend,
   },
 ];
+
+function fill(template, params) {
+  let content = template;
+
+  Object.keys(params).forEach(key => {
+    const replace = `%{${key}}`;
+    const value = params[key];
+    content = content.split(replace).join(value);
+  });
+
+  return content;
+}
+
+function capitalize(str) {
+  switch (str) {
+    case 'api':
+      return 'API';
+    default:
+      return str[0].toUpperCase() + str.substr(1);
+  }
+}
+
+function getTitle(file) {
+  const parts = file.split('-');
+  return parts.map(m => capitalize(m)).join(' ');
+}
+
+function getComponentName(title) {
+  return title.split(' ').join('');
+}
 
 readdirSync(templatesFolder).forEach(file => {
   const fn = resolve(templatesFolder, file);
   const template = readFileSync(fn, 'utf8');
   const name = file.substr(0, file.indexOf('.'));
   templates[name] = (params, intend = '') => {
-    let content = template;
-
-    Object.keys(params).forEach(key => {
-      const replace = `%{${key}}`;
-      const value = params[key];
-      content = content.split(replace).join(value);
-    });
+    const content = fill(template, params);
 
     if (intend) {
       return content
@@ -79,19 +107,6 @@ readdirSync(templatesFolder).forEach(file => {
     return content;
   };
 });
-
-function capitalize(str) {
-  return str[0].toUpperCase() + str.substr(1);
-}
-
-function getTitle(file) {
-  const parts = file.split('-');
-  return parts.map(m => capitalize(m)).join(' ');
-}
-
-function getComponentName(title) {
-  return title.split(' ').join('');
-}
 
 function getTypeInfo(id, node) {
   for (const child of node.children) {
@@ -295,12 +310,12 @@ function generateOverviewCard({ title, url, description }) {
       url,
       description,
     },
-    intend,
+    intend + intend,
   );
 }
 
-function generateSections(results, genSec) {
-  return results.map(genSec).join(`${nl}${intend}`);
+function generateSections(results, genSec, sep = nl + intend) {
+  return results.map(genSec).join(sep);
 }
 
 function replaceBody(content, body, start = startJsxMarker, end = endJsxMarker, sep = nl + intend) {
@@ -364,7 +379,7 @@ const modes = {
       const target = resolve(rootScriptsFolder, source.target, componentName + '.tsx');
       const relLink = relative(rootDocsFolder, resolve(dirPath, file));
       const content = templates.MdPageContent({
-        id: componentName,
+        id: fileName,
         title,
         relRoot,
         relLink,
@@ -376,7 +391,9 @@ const modes = {
         componentName,
         title,
         url: `${source.rootUrl}/${fileName}`,
-        description: 'Foo bar',
+        description: fill(source.description, {
+          title,
+        }),
       };
     });
 
@@ -384,7 +401,7 @@ const modes = {
     const pageOldContent = readFileSync(page, 'utf8');
     const pageNewContent = fillPage(pageOldContent, links);
     writeFileSync(page, pageNewContent, 'utf8');
-    return generateSections(links, generateOverviewCard);
+    return generateSections(links, generateOverviewCard, nl + intend + intend);
   },
 };
 
@@ -393,7 +410,7 @@ function generatePageDocs() {
     const tsxPath = resolve(rootScriptsFolder, `${source.tsx}.tsx`);
     const tsxContent = readFileSync(tsxPath, 'utf8');
     const body = modes[source.mode](source);
-    const newTsxContent = replaceBody(tsxContent, body);
+    const newTsxContent = replaceBody(tsxContent, body, source.start, source.end, source.sep);
     writeFileSync(tsxPath, newTsxContent, 'utf8');
   }
 }
