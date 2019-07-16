@@ -46,6 +46,8 @@ const sources = [
     target: './specifications',
     rootUrl: '/specifications',
     mode: 'pages',
+    icon: 'puzzle-piece',
+    color: 'green',
     description: 'The %{title}.',
     sep: nl + intend + intend,
   },
@@ -55,6 +57,8 @@ const sources = [
     target: './guidelines',
     rootUrl: '/guidelines',
     mode: 'pages',
+    icon: 'monument',
+    color: 'primary',
     description: 'How to do "%{title}".',
     sep: nl + intend + intend,
   },
@@ -303,12 +307,14 @@ function generateRoute({ componentName, url }) {
   );
 }
 
-function generateOverviewCard({ title, url, description }) {
+function generateOverviewCard({ title, url, description, icon, color }) {
   return templates.MdPageLink(
     {
+      icon,
       title,
       url,
       description,
+      color,
     },
     intend + intend,
   );
@@ -389,6 +395,8 @@ const modes = {
         file,
         fileName,
         componentName,
+        icon: source.icon,
+        color: source.color,
         title,
         url: `${source.rootUrl}/${fileName}`,
         description: fill(source.description, {

@@ -26,9 +26,9 @@ export const Page: React.FC<RouteComponentProps> = ({ location }) => {
 
   return (
     <Standard
-      kind="green"
+      kind="primary"
       title={isOverview ? rootTitle : getName(location.pathname)}
-      icon="puzzle-piece"
+      icon="monument"
       breadcrumbs={isOverview ? [] : [{ title: rootTitle, to: rootPath }]}>
       <Switch>
         <Route exact path="/guidelines" component={Overview} />

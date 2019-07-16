@@ -20,6 +20,9 @@ export const Content: React.FC = () => (
         <Card title="Documentation" icon="book" to="/documentation" kind="blue">
           The full documentation for using and developing Piral.
         </Card>
+        <Card title="Guidelines" icon="monument" to="/guidelines" kind="primary">
+          Some guidelines to solve common problems by example.
+        </Card>
         <Card title="Specifications" icon="puzzle-piece" to="/specifications" kind="green">
           The specifications for Piral, Pilets, and the service infrastructure.
         </Card>
