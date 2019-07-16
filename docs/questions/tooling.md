@@ -35,3 +35,15 @@ The Pilet Feed service determines how the contents of a Pilet are stored. Furthe
 Publishing a Pilet can be in any form, however, once you want to be standard conform you will need to publish the Pilet (directly or indirectly) via the Pilet Feed service's API. We have integrated the direct way in the CLI to make it super convenient for any developer to publish to any feed that follows the standard specification.
 
 ---------------------------------------
+
+## Can pilet metadata (e.g., URLs, tiles, ...) be extracted and used?
+
+This is a feature of, e.g., the feed service. Out of the box no such feature is provided even though it may be useful (e.g., finding what URLs are registered in total vs what URLs are available to the current user).
+
+---------------------------------------
+
+## Can the CLI be extended?
+
+Not yet, but we are thinking about it.
+
+---------------------------------------
