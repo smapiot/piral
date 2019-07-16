@@ -1,1 +1,1 @@
-const %{componentName} = React.lazy(() => import('./%{file}'));
+const %{componentName} = React.lazy(() => import('./%{componentName}'));

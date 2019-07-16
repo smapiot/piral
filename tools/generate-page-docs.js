@@ -10,6 +10,7 @@ const startJsxMarker = `{${startPlainMarker}}`;
 const endJsxMarker = `{${endPlainMarker}}`;
 const refFormat = /\- \[(.*)\]\((.*)\)/g;
 
+const templatesFolder = resolve(__dirname, 'templates');
 const rootDocsFolder = resolve(__dirname, '..', 'docs');
 const rootScriptsFolder = resolve(__dirname, '..', 'src', 'pages', 'docs', 'src', 'scripts');
 const relRoot = '../../../../../../docs';
@@ -55,8 +56,8 @@ const sources = [
   },
 ];
 
-readdirSync('./templates').forEach(file => {
-  const fn = resolve(__dirname, 'templates', file);
+readdirSync(templatesFolder).forEach(file => {
+  const fn = resolve(templatesFolder, file);
   const template = readFileSync(fn, 'utf8');
   const name = file.substr(0, file.indexOf('.'));
   templates[name] = (params, intend = '') => {
@@ -302,19 +303,21 @@ function generateSections(results, genSec) {
   return results.map(genSec).join(`${nl}${intend}`);
 }
 
-function replaceBody(content, body, start = startJsxMarker, end = endJsxMarker) {
+function replaceBody(content, body, start = startJsxMarker, end = endJsxMarker, sep = nl + intend) {
   const startIndex = content.indexOf(start);
   const endIndex = content.indexOf(end, startIndex);
   const head = content.substring(0, startIndex + start.length);
   const rest = content.substring(endIndex);
-  return head + nl + intend + body + nl + intend + rest;
+  return [head, body, rest].join(sep);
 }
 
 function fillPage(content, links) {
-  const loading = links.map(generateLoading).join(nl);
-  const routes = links.map(generateRoute).join(nl);
-  const body1 = replaceBody(content, loading, startPlainMarker, endPlainMarker);
-  const body2 = replaceBody(body1, routes, startJsxMarker, endJsxMarker);
+  const loadingSep = nl;
+  const routesSep = nl + intend + intend;
+  const loading = links.map(generateLoading).join(loadingSep);
+  const routes = links.map(generateRoute).join(routesSep);
+  const body1 = replaceBody(content, loading, startPlainMarker, endPlainMarker, loadingSep);
+  const body2 = replaceBody(body1, routes, startJsxMarker, endJsxMarker, routesSep);
   return body2;
 }
 
