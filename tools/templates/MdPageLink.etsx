@@ -1,0 +1,3 @@
+<Card title="%{title}" icon="puzzle-piece" to="%{url}" kind="green">
+  %{description}
+</Card>
