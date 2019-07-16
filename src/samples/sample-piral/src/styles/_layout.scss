@@ -391,6 +391,7 @@ $tile-gap: 10px;
 .pi-content {
   flex: 1;
   display: flex;
+  flex-direction: column;
 }
 
 .pi-dashboard {
