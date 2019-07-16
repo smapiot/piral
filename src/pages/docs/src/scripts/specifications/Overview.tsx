@@ -6,6 +6,7 @@ const Overview: React.FC = () => (
     <div className="container">
       <h2 className="title">Piral Specifications</h2>
       <div id="cards-wrapper" className="cards-wrapper row">
+        {/* start:auto-generated */}
         <Card title="Gateway" icon="puzzle-piece" to="/specifications/gateway" kind="green">
           The Gateway specification.
         </Card>
@@ -15,6 +16,7 @@ const Overview: React.FC = () => (
         <Card title="Pilet" icon="puzzle-piece" to="/specifications/pilet" kind="green">
           The Pilet specification.
         </Card>
+        {/* end:auto-generated */}
       </div>
     </div>
   </section>
