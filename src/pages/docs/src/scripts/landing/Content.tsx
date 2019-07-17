@@ -20,20 +20,20 @@ export const Content: React.FC = () => (
         <Card title="Documentation" icon="book" to="/documentation" kind="blue">
           The full documentation for using and developing Piral.
         </Card>
-        <Card title="Guidelines" icon="monument" to="/guidelines" kind="primary">
-          Some guidelines to solve common problems by example.
-        </Card>
-        <Card title="Specifications" icon="puzzle-piece" to="/specifications" kind="green">
+        <Card title="Specifications" icon="puzzle-piece" to="/specifications" kind="blue">
           The specifications for Piral, Pilets, and the service infrastructure.
         </Card>
-        <Card title="Tooling" icon="paper-plane" to="/tooling" kind="orange">
+        <Card title="Tooling" icon="paper-plane" to="/tooling" kind="blue">
           The full documentation for using the Piral CLI.
-        </Card>
-        <Card title="Samples" icon="desktop" to="/samples" kind="pink">
-          Available examples and sample applications.
         </Card>
         <Card title="Types" icon="binoculars" to="/types" kind="purple">
           Extensive type reference for all Piral libraries.
+        </Card>
+        <Card title="Guidelines" icon="monument" to="/guidelines" kind="pink">
+          Some guidelines to solve common problems by example.
+        </Card>
+        <Card title="Samples" icon="desktop" to="/samples" kind="pink">
+          Available examples and sample applications.
         </Card>
         <Card title="FAQ" icon="life-ring" to="/questions" kind="red">
           Answers to frequently asked questions regarding Piral.

@@ -7,13 +7,13 @@ const Overview: React.FC = () => (
       <h2 className="title">Piral Guidelines</h2>
       <div id="cards-wrapper" className="cards-wrapper row">
         {/* start:auto-generated */}
-        <Card title="First Pilet" icon="monument" to="/guidelines/first-pilet" kind="primary">
+        <Card title="First Pilet" icon="monument" to="/guidelines/first-pilet" kind="pink">
           How to do "First Pilet".
         </Card>
-        <Card title="Server Side Rendering" icon="monument" to="/guidelines/server-side-rendering" kind="primary">
+        <Card title="Server Side Rendering" icon="monument" to="/guidelines/server-side-rendering" kind="pink">
           How to do "Server Side Rendering".
         </Card>
-        <Card title="Static Piral Instance" icon="monument" to="/guidelines/static-piral-instance" kind="primary">
+        <Card title="Static Piral Instance" icon="monument" to="/guidelines/static-piral-instance" kind="pink">
           How to do "Static Piral Instance".
         </Card>
         {/* end:auto-generated */}

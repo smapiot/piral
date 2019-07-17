@@ -17,6 +17,8 @@ pb new-pilet [source]
 Instead of `new-pilet` you can also use:
 
 - `create-pilet`
+- `scaffold-pilet`
+- `scaffold`
 - `new`
 - `create`
 
