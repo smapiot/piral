@@ -135,4 +135,8 @@ For this we create a new file `backend.js` in `src/mocks`.
 
 ## Next Steps
 
-(tbd)
+Once everything has been done we should take care of getting access to a pilet feed. We can either set up our own feed service somewhere (e.g., by using the sample feed service implemented in Node.js from our GitHub repository) or use our publicly available feed service. We have a free community plan that should be good enough to get started.
+
+The next step would be finish the app shell by creating an appropriate layout and adding more shared dependencies (e.g., useful libraries, a pattern library for common UX/UI elements). Also the authentication needs to be set up properly.
+
+The final step is to publish the created Piral to an NPM feed. This could be the public NPM feed even though a private feed may make much more sense. If no NPM feed is available the instance could also be shared via its Git repository or an NPM package ending with *.tgz*.
