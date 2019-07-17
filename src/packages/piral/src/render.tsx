@@ -64,15 +64,21 @@ export function renderInstance<TApi = PiExtApi, TState extends GlobalState = Glo
       actions,
       ...forwardOptions
     } = {}) => {
+      const apis: PiletsBag = {};
+      const messages = Array.isArray(translations)
+        ? translations.reduce((prev, curr) => {
+            prev[curr] = {};
+            return prev;
+          }, {})
+        : translations;
       const state = setupState({
         ...initialState,
-        languages: Object.keys(translations),
+        languages: Object.keys(messages),
       });
       const localizer = setupLocalizer({
         language: state.app.language.selected,
-        messages: translations,
+        messages,
       });
-      const apis: PiletsBag = {};
       const Piral = createInstance({
         ...forwardOptions,
         availablePilets: getAvailablePilets(attach),

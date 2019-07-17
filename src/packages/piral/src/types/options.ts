@@ -17,10 +17,11 @@ export interface PiletQueryResult {
 export interface PiralConfig<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>
   extends PiralStateConfiguration<TState, TActions> {
   /**
-   * Sets the default translations to be available.
+   * Sets the default translations to be available. Alternatively,
+   * sets the available languages.
    * @default {}
    */
-  translations?: LocalizationMessages;
+  translations?: LocalizationMessages | Array<string>;
   /**
    * Attaches a single static module to the application.
    */
