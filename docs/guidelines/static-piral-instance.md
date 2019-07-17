@@ -11,7 +11,7 @@ We start by creating the basis for our app shell. This kind of scaffolding can e
 In the easy way we use the `piral-cli` to scaffold a new Piral instance.
 
 ```sh
-piral setup --target my-piral-instance
+piral new --target my-piral-instance
 ```
 
 The scaffolding set up everything that makes it a runnable Piral instance. From this point on we can spent our time tackling the next steps described in the final section.
