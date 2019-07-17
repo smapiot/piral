@@ -1,38 +1,13 @@
 import * as React from 'react';
 import { buildLayout, useTranslate } from 'piral';
-import { MenuToggle, User, LanguagePicker } from './components';
+import { Layout } from './components';
 import { getTileClass } from './utils';
 
 export const layout = buildLayout()
+  .withLayout(Layout)
   .withLoader(() => (
     <div className="pi-center">
       <div className="pi-spinner">Loading</div>
-    </div>
-  ))
-  .withLayout(({ Menu, Notifications, Search, children, Modals, selectedLanguage, availableLanguages }) => (
-    <div className="app-container">
-      <div className="app-menu">
-        <div className="app-menu-content">
-          <Menu type="general" />
-          <Menu type="admin" />
-        </div>
-      </div>
-      <Notifications />
-      <Modals />
-      <div className="app-header">
-        <div className="app-title">
-          <MenuToggle />
-          <h1>Piral Sample</h1>
-        </div>
-        <Search />
-        <Menu type="header" />
-        <User />
-      </div>
-      <div className="app-content">{children}</div>
-      <div className="app-footer">
-        <LanguagePicker selected={selectedLanguage} available={availableLanguages} />
-        <Menu type="footer" />
-      </div>
     </div>
   ))
   .createDashboard(dashboard =>
@@ -122,9 +97,18 @@ export const layout = buildLayout()
           </div>
         </div>
       ))
-      .input(({ setValue, value }) => (
-        <input type="search" required placeholder="Search ..." onChange={e => setValue(e.target.value)} value={value} />
-      ))
+      .input(({ setValue, value }) => {
+        const translate = useTranslate();
+        return (
+          <input
+            type="search"
+            required
+            placeholder={translate('search')}
+            onChange={e => setValue(e.target.value)}
+            value={value}
+          />
+        );
+      })
       .result(({ children }) => <div className="pi-item">{children}</div>),
   )
   .createNotifications(notifications =>

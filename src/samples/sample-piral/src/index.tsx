@@ -6,10 +6,7 @@ renderInstance({
   subscriptionUrl: false,
   layout,
   config: {
-    translations: {
-      en: {},
-      de: {},
-    },
+    translations: ['en', 'de'],
     attach(api) {
       setupFooter(api);
       setupMenu(api);

@@ -1,42 +1,18 @@
 import * as React from 'react';
-import { useOnClickOutside, useDynamicLanguage, LanguageData } from 'piral';
+import { useOnClickOutside, useDynamicLanguage, useTranslate } from 'piral';
 import { LanguageIcon } from './LanguageIcon';
+import { loadLanguage } from '../language';
 
 export interface LanguagePickerProps {
   selected: string;
   available: Array<string>;
 }
 
-function getSampleTranslations(language: string) {
-  switch (language) {
-    case 'en':
-      return {
-        sample: 'Welcome to the Piral Sample App!',
-      };
-    case 'de':
-      return {
-        sample: 'Willkommen in der Piral Beispielanwendung!',
-      };
-  }
-}
-
-function loadLanguage(language: string, data: LanguageData) {
-  return new Promise<LanguageData>(resolve =>
-    setTimeout(
-      () =>
-        resolve({
-          ...data,
-          global: getSampleTranslations(language),
-        }),
-      500,
-    ),
-  );
-}
-
 export const LanguagePicker: React.FC<LanguagePickerProps> = ({ selected, available }) => {
   const [open, setOpen] = React.useState(false);
   const [language, setLanguage] = useDynamicLanguage(selected, loadLanguage);
   const container = React.useRef<HTMLDivElement>();
+  const translate = useTranslate();
   useOnClickOutside(container, () => setOpen(false));
 
   return (
@@ -47,7 +23,7 @@ export const LanguagePicker: React.FC<LanguagePickerProps> = ({ selected, availa
       <ul className={open ? 'open' : 'closed'}>
         {available.map(lang => (
           <li key={lang} onClick={() => setLanguage(lang)}>
-            <LanguageIcon language={lang} />
+            <LanguageIcon language={lang} /> <span>{translate(lang)}</span>
           </li>
         ))}
       </ul>
