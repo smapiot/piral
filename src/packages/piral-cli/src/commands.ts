@@ -15,7 +15,7 @@ function specializeCommands(suffix: string) {
     .map(m => ({
       ...m,
       name: m.name.replace(suffix, ''),
-      alias: [],
+      alias: m.alias.filter(n => n.endsWith(suffix)).map(n => n.replace(suffix, '')),
     }));
 }
 
@@ -90,36 +90,44 @@ export const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
-    name: 'install-piral',
-    alias: ['add-piral', 'integrate-piral', 'setup-piral'],
-    description: 'Sets up a Piral instance by adding all files and changes to the current project.',
+    name: 'new-piral',
+    alias: ['create-piral', 'scaffold-piral', 'setup-piral'],
+    description: 'Creates a new Piral instance by adding all files and changes to the current project.',
     arguments: ['[target]'],
     flags(argv) {
       return argv
         .positional('target', {
           type: 'string',
           describe: "Sets the project's root directory for making the changes.",
-          default: apps.installPiralDefaults.target,
+          default: apps.newPiralDefaults.target,
         })
         .string('app')
         .describe('app', "Sets the path to the app's source HTML file.")
-        .default('app', apps.installPiralDefaults.app)
+        .default('app', apps.newPiralDefaults.app)
         .boolean('only-core')
-        .describe('only-core', 'Sets if piral-core should be used. Otherwise, piral is used.')
-        .default('only-core', apps.installPiralDefaults.onlyCore)
+        .describe('only-core', 'Sets if "piral-core" should be used. Otherwise, "piral" is used.')
+        .default('only-core', apps.newPiralDefaults.onlyCore)
         .string('tag')
         .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
-        .default('tag', apps.installPiralDefaults.version)
+        .default('tag', apps.newPiralDefaults.version)
+        .choices('force-overwrite', forceOverwriteKeys)
+        .describe('force-overwrite', 'Determines if files should be overwritten by the installation.')
+        .default('force-overwrite', keyOfForceOverwrite(apps.newPiralDefaults.forceOverwrite))
+        .choices('language', piletLanguageKeys)
+        .describe('language', 'Determines the programming language for the new Piral instance.')
+        .default('language', keyOfPiletLanguage(apps.newPiralDefaults.language))
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
-      return apps.installPiral(args.base as string, {
+      return apps.newPiral(args.base as string, {
         app: args.app as string,
         target: args.target as string,
         onlyCore: args.onlyCore as boolean,
         version: args.tag as string,
+        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        language: valueOfPiletLanguage(args.language as string),
       });
     },
   },
@@ -240,7 +248,7 @@ export const allCommands: Array<ToolCommand<any>> = [
   },
   {
     name: 'new-pilet',
-    alias: ['create-pilet', 'new', 'create'],
+    alias: ['create-pilet', 'scaffold-pilet', 'scaffold', 'new', 'create'],
     description: 'Scaffolds a new pilet for a specified Piral instance.',
     arguments: ['[source]'],
     flags(argv) {

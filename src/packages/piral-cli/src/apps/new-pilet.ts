@@ -10,7 +10,7 @@ import {
   ForceOverwrite,
   PiletLanguage,
   getDevDependencies,
-  scaffoldSourceFiles,
+  scaffoldPiletSourceFiles,
 } from './common';
 
 export interface NewPiletOptions {
@@ -85,7 +85,7 @@ always-auth=true`,
 
     console.log(`Taking care of templating ...`);
 
-    await scaffoldSourceFiles(language, root, sourceName, forceOverwrite);
+    await scaffoldPiletSourceFiles(language, root, sourceName, forceOverwrite);
 
     const files = await patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
     await copyPiralFiles(root, sourceName, files, forceOverwrite);

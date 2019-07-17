@@ -1,6 +1,6 @@
 export * from './debug-piral';
 export * from './build-piral';
-export * from './install-piral';
+export * from './new-piral';
 export * from './new-pilet';
 export * from './upgrade-pilet';
 export * from './debug-pilet';
