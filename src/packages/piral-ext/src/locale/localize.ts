@@ -1,7 +1,16 @@
 import { LocalizationMessages } from './types';
 
 function defaultFallback(key: string, language: string): string {
-  return language ? `__${language}_${key}__` : '';
+  if (process.env.NODE_ENV === 'production') {
+    return language ? '...' : '';
+  } else {
+    if (language) {
+      console.warn(`Missing translation of "${key}" in language "${language}".`);
+      return `__${language}_${key}__`;
+    } else {
+      return '';
+    }
+  }
 }
 
 function formatMessage<T>(message: string, variables: T): string {
