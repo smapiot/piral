@@ -32,44 +32,6 @@ function createMockContainer() {
 }
 
 describe('API Module', () => {
-  it('createApi trackError fires an event', () => {
-    const container = createMockContainer();
-    const api = createApi<{}>(moduleMetadata, container);
-    api.trackError('my error');
-    expect(container.events.emit).toHaveBeenCalledWith('track-error', {
-      error: 'my error',
-      properties: {},
-      measurements: {},
-      severityLevel: 1,
-    });
-  });
-
-  it('createApi trackEvent fires an event', () => {
-    const container = createMockContainer();
-    const api = createApi<{}>(moduleMetadata, container);
-    api.trackEvent('my event');
-    expect(container.events.emit).toHaveBeenCalledWith('track-event', {
-      name: 'my event',
-      properties: {},
-      measurements: {},
-    });
-  });
-
-  it('createApi trackFrame fires an event and leaves back a tracker', () => {
-    const container = createMockContainer();
-    const api = createApi<{}>(moduleMetadata, container);
-    const tracker = api.trackFrame('my frame');
-    expect(container.events.emit).toHaveBeenCalledWith('track-frame-start', {
-      name: 'my frame',
-    });
-    tracker();
-    expect(container.events.emit).toHaveBeenLastCalledWith('track-frame-end', {
-      name: 'my frame',
-      properties: {},
-      measurements: {},
-    });
-  });
-
   it('createApi showModal uses an action and leaves a disposer', () => {
     const container = createMockContainer();
     container.context = {

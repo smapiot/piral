@@ -40,9 +40,7 @@ describe('withApi Module', () => {
 
   it('is protected against a component crash', () => {
     console.error = jest.fn();
-    const api: any = {
-      trackError: jest.fn(),
-    };
+    const api: any = {};
     const Component = withApi(StubComponent, api);
     const node = mount(<Component shouldCrash />);
     expect(
@@ -53,13 +51,15 @@ describe('withApi Module', () => {
     ).toBe('feed');
   });
 
-  it('reports to trackError when an error is hit', () => {
+  it('reports to console.error when an error is hit', () => {
     console.error = jest.fn();
     const api: any = {
-      trackError: jest.fn(),
+      meta: {
+        name: 'my pilet',
+      },
     };
     const Component = withApi(StubComponent, api);
     mount(<Component shouldCrash />);
-    expect(api.trackError).toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
   });
 });
