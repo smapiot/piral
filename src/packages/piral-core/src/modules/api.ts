@@ -1,5 +1,5 @@
 import { ArbiterModuleMetadata, wrapElement, isfunc } from 'react-arbiter';
-import { withFeed, withApi, withForm } from '../components';
+import { withFeed, withApi, withForm, withPiletState } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
   FeedResolver,
@@ -16,7 +16,11 @@ import {
   TilePreferences,
   PiralContainer,
   GlobalStateContext,
-  ContainerOptions,
+  StateContainerOptions,
+  StateContainer,
+  StateDispatcher,
+  StateContainerActions,
+  StateContainerReducers,
 } from '../types';
 
 function buildName(prefix: string, name: string | number) {
@@ -120,9 +124,7 @@ export function createApi<TApi>(
         const expiration = getDataExpiration(expires);
         return context.tryWriteDataItem(name, value, prefix, target, expiration);
       },
-      createConnector<TData, TItem>(
-        resolver: FeedResolver<TData> | FeedConnectorOptions<TData, TItem>,
-      ): FeedConnector<TData> {
+      createConnector(resolver) {
         const id = buildName(prefix, feeds++);
         const options = createFeedOptions(id, resolver);
         context.createFeed(options.id);
@@ -131,39 +133,18 @@ export function createApi<TApi>(
           context.loadFeed(options);
         }
 
-        return (component, select = undefined) => withFeed(component, options, select);
+        return component => withFeed(component, options) as any;
       },
-      createContainer<TState, TAction>(options: ContainerOptions<TState, TAction>) {
+      createState(options) {
         const actions = {};
-        const connector = api.createConnector<TState, (data: TState) => Promise<TState>>({
-          initialize() {
-            return Promise.resolve(options.state);
-          },
-          connect(cb) {
-            Object.keys(options.actions).forEach(key => {
-              const action = options.actions[key];
-              actions[key] = (...args) => action(cb, api, ...args);
-            });
-            return () => {};
-          },
-          update(data, action) {
-            return {
-              ...data,
-              ...action(data),
-            };
-          },
+        const id = buildName(prefix, feeds++);
+        const cb = dispatch => context.replaceState(id, dispatch);
+        context.createState(id, options.state);
+        Object.keys(options.actions).forEach(key => {
+          const action = options.actions[key];
+          actions[key] = (...args) => action.call(api, cb, ...args);
         });
-        return (component, select = undefined) => {
-          return connector(component, ({ data: state }) => {
-            const props = { state, actions };
-
-            if (isfunc(select)) {
-              return select(props);
-            }
-
-            return props;
-          });
-        };
+        return component => withPiletState(component, id, actions) as any;
       },
       createForm(options) {
         return component => withForm(component, options);

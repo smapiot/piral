@@ -11,6 +11,7 @@ import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
 import { Dict, Without, Disposable } from './utils';
+import { StateDispatcher } from './container';
 import {
   TileComponentProps,
   BaseComponentProps,
@@ -308,6 +309,10 @@ export interface GlobalState<TUser = {}> {
    */
   feeds: FeedsState;
   /**
+   * The relevant state for the registered containers.
+   */
+  containers: Record<string, any>;
+  /**
    * The relevant state for the active forms.
    */
   forms: FormsState;
@@ -360,6 +365,23 @@ export interface StateActions {
    * @param selected The selected language.
    */
   selectLanguage(selected: string): void;
+  /**
+   * Creates a new local state.
+   * @param id The id of the state.
+   * @param state The initial state to use.
+   */
+  createState<TState>(id: string, state: TState): void;
+  /**
+   * Destroys an existing local state.
+   * @param id The id of the state.
+   */
+  destroyState(id: string): void;
+  /**
+   * Replaces the local state with the provided state.
+   * @param id The id of the local state.
+   * @param state The new state to use.
+   */
+  replaceState<TState>(id: string, reducer: StateDispatcher<TState>): void;
   /**
    * Creates a new (empty) feed.
    * @param id The id of the feed.

@@ -1,7 +1,16 @@
 import * as React from 'react';
 import { ArbiterModule } from 'react-arbiter';
+import { TileComponentProps, RemainingArgs } from 'piral-core';
 import { SampleApi } from '../types';
-import { TileComponentProps } from 'piral-core';
+
+const MyTile: React.FC<{ count: number; increment(): void }> = ({ count, increment }) => (
+  <div className="tile">
+    <div>
+      <b>Preserves the count</b>
+    </div>
+    <button onClick={increment}>{count}</button>
+  </div>
+);
 
 /**
  * Shows an advanced usage of the global state container.
@@ -13,7 +22,7 @@ export const ContainerPilet: ArbiterModule<SampleApi> = {
   version: '1.0.0',
   hash: '14',
   setup(piral) {
-    const connect = piral.createContainer({
+    const connect = piral.createState({
       state: {
         count: 0,
       },
@@ -28,20 +37,9 @@ export const ContainerPilet: ArbiterModule<SampleApi> = {
 
     piral.registerTile(
       'example',
-      connect<TileComponentProps<SampleApi>, { count: number; increment(): void }>(
-        ({ count, increment }) => (
-          <div className="tile">
-            <div>
-              <b>Preserves the count</b>
-            </div>
-            <button onClick={increment}>{count}</button>
-          </div>
-        ),
-        props => ({
-          count: props.state.count,
-          increment: props.actions.increment,
-        }),
-      ),
+      connect<TileComponentProps<SampleApi>>(({ state, actions }) => (
+        <MyTile count={state.count} increment={actions.increment} />
+      )),
     );
   },
 };

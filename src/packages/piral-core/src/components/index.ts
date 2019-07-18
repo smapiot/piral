@@ -5,3 +5,4 @@ export * from './routes';
 export * from './withApi';
 export * from './withFeed';
 export * from './withForm';
+export * from './withPiletState';
