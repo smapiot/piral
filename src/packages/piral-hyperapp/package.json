@@ -4,6 +4,7 @@
   "description": "Extensions for hyperapp to the piral-core pilet API.",
   "keywords": [
     "piral",
+    "pilet-api",
     "smapiot",
     "portal",
     "modules",
