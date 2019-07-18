@@ -2,9 +2,6 @@ import { ArbiterModuleMetadata, wrapElement, isfunc } from 'react-arbiter';
 import { withFeed, withApi, withForm, withPiletState } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
-  FeedResolver,
-  FeedConnectorOptions,
-  FeedConnector,
   PageComponentProps,
   AnyComponent,
   PiralApi,
@@ -16,11 +13,6 @@ import {
   TilePreferences,
   PiralContainer,
   GlobalStateContext,
-  StateContainerOptions,
-  StateContainer,
-  StateDispatcher,
-  StateContainerActions,
-  StateContainerReducers,
 } from '../types';
 
 function buildName(prefix: string, name: string | number) {

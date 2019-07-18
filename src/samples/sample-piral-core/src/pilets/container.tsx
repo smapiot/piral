@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ArbiterModule } from 'react-arbiter';
-import { TileComponentProps, RemainingArgs } from 'piral-core';
+import { TileComponentProps } from 'piral-core';
 import { SampleApi } from '../types';
 
 const MyTile: React.FC<{ count: number; increment(): void }> = ({ count, increment }) => (
