@@ -13,11 +13,7 @@ const Overview: React.FC = () => (
         <Card title="Pilet Specification" icon="puzzle-piece" to="/specifications/pilet-specification" kind="blue">
           The Pilet Specification.
         </Card>
-        <Card
-          title="Piral API Specification"
-          icon="puzzle-piece"
-          to="/specifications/piral-api-specification"
-          kind="blue">
+        <Card title="Piral API Specification" icon="puzzle-piece" to="/specifications/piral-api-specification" kind="blue">
           The Piral API Specification.
         </Card>
         {/* end:auto-generated */}

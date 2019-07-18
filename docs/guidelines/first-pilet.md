@@ -52,6 +52,20 @@ pilet debug
 
 This should open a local server accessible at port `1234`. Go to `http://localhost:1234` in your web browser. Our Piral sample instance should be visible with a small "Hello World!" notification visible.
 
+For simplicity we could augment the `package.json` to look as follows:
+
+```json
+{
+  // ...
+  "scripts": {
+    "start": "pilet debug"
+    // ...
+  }
+}
+```
+
+This way we can run the pilet by calling `npm start` on the command line.
+
 ## Understanding the Pilet API
 
 Let's open the repository in your favorite editor and inspect what has been created. Besides all the configuration files (e.g., `package.json`, `tsconfig.json`) we also have a `src` folder containing an `index.tsx` file. Open the file.
