@@ -235,7 +235,8 @@ export const allCommands: Array<ToolCommand<any>> = [
         .default('fresh', apps.publishPiletDefaults.fresh)
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .demandOption('url');
     },
     run(args) {
       return apps.publishPilet(args.base as string, {

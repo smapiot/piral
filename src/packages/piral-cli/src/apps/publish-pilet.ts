@@ -11,7 +11,7 @@ export interface PublishPiletOptions {
 
 export const publishPiletDefaults = {
   source: '*.tgz',
-  url: 'https://sample.piral.io/api/v1/pilet',
+  url: '',
   apiKey: '',
   fresh: false,
 };
@@ -37,6 +37,11 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     fresh = publishPiletDefaults.fresh,
   } = options;
   const files = await getFiles(baseDir, source, fresh);
+
+  if (!url) {
+    console.warn(`Missing URL of the pilet feed!`);
+    throw new Error('Incomplete configuration.');
+  }
 
   if (files.length === 0) {
     return console.error(`No files found at '${source}'.`);
