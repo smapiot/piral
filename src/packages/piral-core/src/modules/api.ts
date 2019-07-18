@@ -14,11 +14,9 @@ import {
   ModalComponentProps,
   MenuSettings,
   TilePreferences,
-  SeverityLevel,
   PiralContainer,
   GlobalStateContext,
   ContainerOptions,
-  PiralCoreApi,
 } from '../types';
 
 function buildName(prefix: string, name: string | number) {
@@ -169,32 +167,6 @@ export function createApi<TApi>(
       },
       createForm(options) {
         return component => withForm(component, options);
-      },
-      trackEvent(name, properties = {}, measurements = {}) {
-        events.emit('track-event', {
-          name,
-          properties,
-          measurements,
-        });
-      },
-      trackError(error, properties = {}, measurements = {}, severityLevel = SeverityLevel.Information) {
-        events.emit('track-error', {
-          error,
-          properties,
-          measurements,
-          severityLevel,
-        });
-      },
-      trackFrame(name) {
-        events.emit('track-frame-start', {
-          name,
-        });
-        return (properties = {}, measurements = {}) =>
-          events.emit('track-frame-end', {
-            name,
-            properties,
-            measurements,
-          });
       },
       showNotification(content, options = {}) {
         const notification = {

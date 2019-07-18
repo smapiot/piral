@@ -11,7 +11,7 @@ export function withApi<TApi, TProps>(component: AnyComponent<TProps & ApiForwar
   return wrapComponent<TProps, ApiForward<TApi>>(component, {
     forwardProps: { piral },
     onError(error) {
-      piral.trackError(error, { origin: 'piral-error-boundary' });
+      console.error(piral.meta.name, error);
     },
     renderChild(child) {
       return <React.Suspense fallback={<ComponentLoader />}>{child}</React.Suspense>;

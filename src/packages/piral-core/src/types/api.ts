@@ -6,7 +6,7 @@ import { SharedData, DataStoreOptions } from './data';
 import { ContainerOptions, ContainerConnector } from './container';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { InputFormOptions, FormCreator } from './form';
-import { Disposable, SeverityLevel, EventEmitter } from './utils';
+import { Disposable, EventEmitter } from './utils';
 import { SearchProvider, SearchSettings } from './search';
 import {
   ForeignComponent,
@@ -42,16 +42,6 @@ export interface PiletMetadata {
    * The link to the root module of the pilet.
    */
   link: string;
-}
-
-/**
- * Defines the shape of a tracker function.
- */
-export interface Tracker {
-  /**
-   * Finishes the created frame by optionally passing the given properties and measurements.
-   */
-  (properties?: any, measurements?: any): void;
 }
 
 /**
@@ -101,27 +91,6 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @returns True if the data could be set, otherwise false.
    */
   setData<TKey extends string>(name: TKey, value: SharedData[TKey], options?: DataStoreOptions): boolean;
-  /**
-   * Tracks a simple (singular) event at the current point in time.
-   * @param name The name of the event to track.
-   * @param properties The optional tracking properties to submit.
-   * @param measurements The optional tracking measurements to submit.
-   */
-  trackEvent(name: string, properties?: any, measurements?: any): void;
-  /**
-   * Tracks an exception event at the current point in time.
-   * @param exception The Error from a catch clause, or the string error message.
-   * @param properties The optional tracking properties to submit.
-   * @param measurements The optional tracking measurements to submit.
-   * @param severityLevel The optional severity level of error.
-   */
-  trackError(error: Error | string, properties?: any, measurements?: any, severityLevel?: SeverityLevel): void;
-  /**
-   * Starts tracking an event frame at the current point in time.
-   * @param name The name of the event to start tracking.
-   * @returns The method to use for ending the current event frame.
-   */
-  trackFrame(name: string): Tracker;
   /**
    * Shows a notification in the determined spot using the provided content.
    * @param content The content to display. Normally, a string would be sufficient.
