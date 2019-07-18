@@ -12,7 +12,7 @@ renderInstance({
       setupMenu(api);
     },
     pilets: () =>
-      fetch('https://sample.piral.io/api/v1/pilet')
+      fetch('https://feed.piral.io/api/v1/pilet/sample')
         .then(res => res.json())
         .then(res => res.items),
   },
