@@ -47,6 +47,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('public-url')
         .describe('public-url', 'Sets the public URL (path) of the bundle.')
         .default('public-url', apps.debugPiralDefaults.publicUrl)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.buildPiralDefaults.logLevel)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -56,6 +59,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         port: args.port as number,
         publicUrl: args.publicUrl as string,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -77,6 +81,12 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('public-url')
         .describe('public-url', 'Sets the public URL (path) of the bundle.')
         .default('public-url', apps.buildPiralDefaults.publicUrl)
+        .boolean('detailed-report')
+        .describe('detailed-report', 'Sets if a detailed report should be created.')
+        .default('detailed-report', apps.buildPiralDefaults.detailedReport)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.buildPiralDefaults.logLevel)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -86,6 +96,8 @@ export const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         publicUrl: args.publicUrl as string,
+        detailedReport: args.detailedReport as boolean,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -146,6 +158,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiletDefaults.port)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.buildPiralDefaults.logLevel)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -157,6 +172,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         port: args.port as number,
         app: args.app as string,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -175,6 +191,12 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target file of bundling.')
         .default('target', apps.buildPiletDefaults.target)
+        .boolean('detailed-report')
+        .describe('detailed-report', 'Sets if a detailed report should be created.')
+        .default('detailed-report', apps.buildPiralDefaults.detailedReport)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.buildPiralDefaults.logLevel)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -183,6 +205,8 @@ export const allCommands: Array<ToolCommand<any>> = [
       return apps.buildPilet(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
+        detailedReport: args.detailedReport as boolean,
+        logLevel: args.logLevel as any,
       });
     },
   },

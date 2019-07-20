@@ -2,7 +2,6 @@ import * as Bundler from 'parcel-bundler';
 import { writeFile, readFile } from 'fs';
 import { resolve, dirname } from 'path';
 import { VirtualPackager } from './VirtualPackager';
-import { VirtualAsset } from './VirtualAsset';
 
 function resolveModule(name: string, targetDir: string) {
   try {
@@ -49,14 +48,14 @@ function modifyRawAsset(proto: any) {
   };
 }
 
-export function extendBundler(bundler: any) {
+export function extendBundlerForPilet(bundler: any) {
   const RawAsset = bundler.parser.findParser('sample.png');
-  bundler.parser.registerExtension('vm', VirtualAsset);
+  bundler.parser.registerExtension('vm', require.resolve('./VirtualAsset'));
   bundler.packagers.add('vm', VirtualPackager);
   modifyRawAsset(RawAsset.prototype);
 }
 
-export function modifyBundler(proto: any, externalNames: Array<string>, targetDir: string) {
+export function modifyBundlerForPilet(proto: any, externalNames: Array<string>, targetDir: string) {
   const externals = externalNames.map(name => resolveModule(name, targetDir)).filter(m => !!m);
   const ra = proto.getLoadedAsset;
   proto.getLoadedAsset = function(path: string) {

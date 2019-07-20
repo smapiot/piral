@@ -39,7 +39,7 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
     process.env.DEBUG_PILET = options.pilet;
   }
 
-  if (options.dependencies) {
+  if (options.dependencies && options.dependencies.length) {
     process.env.SHARED_DEPENDENCIES = options.dependencies.join(',');
   }
 }

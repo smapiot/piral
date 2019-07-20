@@ -12,9 +12,14 @@ export interface DebugOptions {
   publicUrl?: string;
   options: StandardEnvProps;
   source?: string;
+  logLevel: 1 | 2 | 3;
 }
 
-export async function runDebug(port: number, entry: string, { publicUrl, options, source = entry }: DebugOptions) {
+export async function runDebug(
+  port: number,
+  entry: string,
+  { publicUrl, options, source = entry, logLevel }: DebugOptions,
+) {
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
@@ -41,6 +46,7 @@ export async function runDebug(port: number, entry: string, { publicUrl, options
     entry,
     extendConfig({
       publicUrl,
+      logLevel,
     }),
   );
   krasConfig.map['/'] = `http://localhost:${buildServerPort}`;

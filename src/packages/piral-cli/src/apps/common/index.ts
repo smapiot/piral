@@ -11,6 +11,7 @@ export * from './merge';
 export * from './npm';
 export * from './pack';
 export * from './package';
+export * from './piral';
 export * from './pilet';
 export * from './port';
 export * from './scaffoldPilet';
