@@ -45,6 +45,13 @@ Sets the public URL (path) of the bundle.
 - Type: `string`
 - Default: `"/"`
 
+### `--log-level`
+
+Sets the log level to use (1-5).
+
+- Type: `number`
+- Default: `3`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
