@@ -3,7 +3,7 @@ import { AvailableDependencies, isfunc } from 'react-arbiter';
 const sharedDependencies: AvailableDependencies = {};
 
 if (process.env.SHARED_DEPENDENCIES) {
-  const fillDependencies = require(process.env.SHARED_DEPENDENCIES);
+  const fillDependencies = require('piral-cli/lib/shared-dependencies');
 
   if (isfunc(fillDependencies)) {
     fillDependencies(sharedDependencies);
@@ -27,5 +27,3 @@ export function getLocalDependencies(): AvailableDependencies {
     ...sharedDependencies,
   };
 }
-
-// change getDependencies to only add dependencies
