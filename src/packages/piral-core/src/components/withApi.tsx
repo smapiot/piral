@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { wrapComponent } from 'react-arbiter';
 import { ComponentError, ComponentLoader } from './helpers';
-import { AnyComponent, PiralApi } from '../types';
+import { AnyComponent } from '../types';
 
 export interface ApiForward<TApi> {
-  piral: PiralApi<TApi>;
+  piral: TApi;
 }
 
-export function withApi<TApi, TProps>(component: AnyComponent<TProps & ApiForward<TApi>>, piral: PiralApi<TApi>) {
+export function withApi<TApi, TProps>(component: AnyComponent<TProps & ApiForward<TApi>>, piral: TApi) {
   return wrapComponent<TProps, ApiForward<TApi>>(component, {
     forwardProps: { piral },
     onError(error) {
-      const { name } = (piral && piral.meta) || { name: '' };
-      console.error(name, error);
+      console.error(piral, error);
     },
     renderChild(child) {
       return <React.Suspense fallback={<ComponentLoader />}>{child}</React.Suspense>;

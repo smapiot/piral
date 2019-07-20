@@ -4,7 +4,6 @@ import { createFeedOptions, createDataOptions, getDataExpiration } from '../util
 import {
   PageComponentProps,
   AnyComponent,
-  PiralApi,
   TileComponentProps,
   ExtensionComponentProps,
   MenuComponentProps,
@@ -27,9 +26,9 @@ function markReact<T>(arg: React.ComponentType<T>, displayName: string) {
 
 function addPage<TApi>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   route: string,
-  arg: AnyComponent<PageComponentProps<PiralApi<TApi>>>,
+  arg: AnyComponent<PageComponentProps<TApi>>,
 ) {
   context.registerPage(route, {
     component: withApi(arg, api) as any,
@@ -38,9 +37,9 @@ function addPage<TApi>(
 
 function addTile<TApi>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   id: string,
-  arg: AnyComponent<TileComponentProps<PiralApi<TApi>>>,
+  arg: AnyComponent<TileComponentProps<TApi>>,
   preferences: TilePreferences = {},
 ) {
   context.registerTile(id, {
@@ -51,9 +50,9 @@ function addTile<TApi>(
 
 function addExtension<TApi, T>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   name: string,
-  arg: AnyComponent<ExtensionComponentProps<PiralApi<TApi>, T>>,
+  arg: AnyComponent<ExtensionComponentProps<TApi, T>>,
   defaults?: T,
 ) {
   context.registerExtension(name, {
@@ -65,9 +64,9 @@ function addExtension<TApi, T>(
 
 function addMenu<TApi>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   id: string,
-  arg: AnyComponent<MenuComponentProps<PiralApi<TApi>>>,
+  arg: AnyComponent<MenuComponentProps<TApi>>,
   settings: MenuSettings = {},
 ) {
   context.registerMenuItem(id, {
@@ -80,9 +79,9 @@ function addMenu<TApi>(
 
 function addModal<TApi, TOpts>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   id: string,
-  arg: AnyComponent<ModalComponentProps<PiralApi<TApi>, TOpts>>,
+  arg: AnyComponent<ModalComponentProps<TApi, TOpts>>,
   defaults?: TOpts,
 ) {
   context.registerModal(id, {
@@ -94,7 +93,7 @@ function addModal<TApi, TOpts>(
 export function createApi<TApi>(
   target: ArbiterModuleMetadata,
   { events, context, extendApi }: PiralContainer<TApi>,
-): PiralApi<TApi> {
+): TApi {
   let feeds = 0;
   const prefix = target.name;
   const noop = () => {};

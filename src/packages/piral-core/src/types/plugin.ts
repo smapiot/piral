@@ -1,5 +1,5 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralApi, PiralCoreApi } from './api';
+import { PiralCoreApi } from './api';
 import { EventEmitter } from './utils';
 import { GlobalStateContext, GlobalState } from './state';
 
@@ -19,17 +19,17 @@ export interface Extend<TApi> {
    * @param target The target the API is created for.
    * @returns The extended API.
    */
-  (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): PiralApi<TApi>;
+  (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): TApi;
 }
 
-export interface Append<TApi> {
+export interface Append {
   /**
    * Appends a custom set of functionality to be used by modules.
    * @param api The API created by the base layer.
    * @param target The target the API is created for.
    * @returns The API to append.
    */
-  (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): Partial<PiralApi<TApi>>;
+  (api: PiralCoreApi<any>, target: ArbiterModuleMetadata): any;
 }
 
 export interface PiletRequester {

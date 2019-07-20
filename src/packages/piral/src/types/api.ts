@@ -1,5 +1,5 @@
 import {
-  PiralApi,
+  PiralCoreApi,
   PageComponentProps,
   TileComponentProps,
   MenuComponentProps,
@@ -9,7 +9,8 @@ import {
 import { PiralFetchApi, PiralGqlApi, PiralLocaleApi } from 'piral-ext';
 
 export type PiExtApi = PiralFetchApi & PiralGqlApi & PiralLocaleApi;
-export type PiletApi = PiralApi<PiExtApi>;
+export type PiralApi = PiralCoreApi & PiExtApi;
+export type PiletApi = PiralCoreApi<PiralApi> & PiExtApi;
 export type PiPageComponentProps = PageComponentProps<PiletApi>;
 export type PiTileComponentProps = TileComponentProps<PiletApi>;
 export type PiModalComponentProps<TOpts> = ModalComponentProps<PiletApi, TOpts>;

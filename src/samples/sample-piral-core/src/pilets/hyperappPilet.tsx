@@ -1,5 +1,5 @@
 import { ArbiterModule } from 'react-arbiter';
-import { TileComponentProps, PiralApi } from 'piral-core';
+import { TileComponentProps } from 'piral-core';
 import { Component } from 'piral-hyperapp';
 import { SampleApi } from '../types';
 
@@ -20,7 +20,7 @@ const actions = {
   up: value => state => ({ count: state.count + value }),
 };
 
-const Tile: Component<TileComponentProps<PiralApi>, typeof state, typeof actions> = props => (state, actions) =>
+const Tile: Component<TileComponentProps<any>, typeof state, typeof actions> = props => (state, actions) =>
   h(
     'div',
     {

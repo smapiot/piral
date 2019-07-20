@@ -45,14 +45,9 @@ export interface PiletMetadata {
 }
 
 /**
- * Alias for an extensible Pilet API given from piral-core.
- */
-export type PiralApi<TExtraApi = {}> = PiralCoreApi<TExtraApi> & TExtraApi;
-
-/**
  * Defines the Pilet API from piral-core.
  */
-export interface PiralCoreApi<TExtraApi> extends EventEmitter {
+export interface PiralCoreApi<TApi = {}> extends EventEmitter {
   /**
    * Gets the metadata of the current pilet.
    */
@@ -117,7 +112,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    */
   registerModalX<TOpts>(
     name: string,
-    render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>,
+    render: ForeignComponent<ModalComponentProps<TApi, TOpts>>,
     defaults?: TOpts,
   ): void;
   /**
@@ -129,7 +124,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    */
   registerModal<TOpts>(
     name: string,
-    Component: ComponentType<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>,
+    Component: ComponentType<ModalComponentProps<TApi, TOpts>>,
     defaults?: TOpts,
   ): void;
   /**
@@ -144,7 +139,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerPageX(route: string, render: ForeignComponent<PageComponentProps<PiralApi<TExtraApi>>>): void;
+  registerPageX(route: string, render: ForeignComponent<PageComponentProps<TApi>>): void;
   /**
    * Registers a route for React component.
    * The route needs to be unique and can contain params.
@@ -152,7 +147,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param Component The component to render the page.
    */
-  registerPage(route: string, Component: ComponentType<PageComponentProps<PiralApi<TExtraApi>>>): void;
+  registerPage(route: string, Component: ComponentType<PageComponentProps<TApi>>): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
@@ -165,11 +160,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTileX(
-    name: string,
-    render: ForeignComponent<TileComponentProps<PiralApi<TExtraApi>>>,
-    preferences?: TilePreferences,
-  ): void;
+  registerTileX(name: string, render: ForeignComponent<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
   /**
    * Registers a tile for React components.
    * The name has to be unique within the current pilet.
@@ -177,11 +168,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(
-    name: string,
-    Component: ComponentType<TileComponentProps<PiralApi<TExtraApi>>>,
-    preferences?: TilePreferences,
-  ): void;
+  registerTile(name: string, Component: ComponentType<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
   /**
    * Unregisters a tile known by the given name.
    * Only previously registered tiles can be unregistered.
@@ -195,11 +182,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtensionX<T>(
-    name: string,
-    render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>,
-    defaults?: T,
-  ): void;
+  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<TApi, T>>, defaults?: T): void;
   /**
    * Registers an extension component with a React component.
    * The name must refer to the extension slot.
@@ -207,18 +190,14 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param Component The component to be rendered.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T>(
-    name: string,
-    Component: ComponentType<ExtensionComponentProps<PiralApi<TExtraApi>, T>>,
-    defaults?: T,
-  ): void;
+  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<TApi, T>>, defaults?: T): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
    * @param hook The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
+  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<TApi, T>>): void;
   /**
    * Registers a menu item for general components.
    * The name has to be unique within the current pilet.
@@ -226,11 +205,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenuX(
-    name: string,
-    render: ForeignComponent<MenuComponentProps<PiralApi<TExtraApi>>>,
-    settings?: MenuSettings,
-  ): void;
+  registerMenuX(name: string, render: ForeignComponent<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
   /**
    * Registers a menu item for React components.
    * The name has to be unique within the current pilet.
@@ -238,11 +213,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(
-    name: string,
-    Component: ComponentType<MenuComponentProps<PiralApi<TExtraApi>>>,
-    settings?: MenuSettings,
-  ): void;
+  registerMenu(name: string, Component: ComponentType<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
   /**
    * Unregisters a menu item known by the given name.
    * Only previously registered menu items can be unregistered.
@@ -256,7 +227,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param provider The callback to be used for searching.
    * @param settings The optional settings for the search provider.
    */
-  registerSearchProvider(name: string, provider: SearchProvider<PiralApi<TExtraApi>>, settings?: SearchSettings): void;
+  registerSearchProvider(name: string, provider: SearchProvider<TApi>, settings?: SearchSettings): void;
   /**
    * Unregisters a search provider known by the given name.
    * Only previously registered search providers can be unregistered.

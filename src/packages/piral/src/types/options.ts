@@ -1,11 +1,10 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralStateConfiguration, GlobalState, PiletRequester, Extend, PiralApi } from 'piral-core';
+import { PiralStateConfiguration, GlobalState, PiletRequester, Extend } from 'piral-core';
 import { LocalizationMessages, PiralGqlApiQuery, PiralFetchApiFetch } from 'piral-ext';
-import { PiExtApi } from './api';
 import { LayoutBuilder } from './layout';
 
-export interface PiralAttachment<TApi = PiExtApi> {
-  (api: PiralApi<TApi>): void;
+export interface PiralAttachment<TApi> {
+  (api: TApi): void;
 }
 
 export type PiletsMetadata = Array<ArbiterModuleMetadata>;
@@ -14,7 +13,7 @@ export interface PiletQueryResult {
   pilets: PiletsMetadata;
 }
 
-export interface PiralConfig<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>
+export interface PiralConfig<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>
   extends PiralStateConfiguration<TState, TActions> {
   /**
    * Sets the default translations to be available. Alternatively,
@@ -37,7 +36,7 @@ export interface PiralConfig<TApi = PiExtApi, TState extends GlobalState = Globa
   extendApi?: Extend<TApi>;
 }
 
-export interface PiralLoader<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+export interface PiralLoader<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
   (options: { query: PiralGqlApiQuery; fetch: PiralFetchApiFetch }): Promise<
     PiralConfig<TApi, TState, TActions> | undefined
   >;
@@ -46,7 +45,7 @@ export interface PiralLoader<TApi = PiExtApi, TState extends GlobalState = Globa
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+export interface PiralOptions<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'

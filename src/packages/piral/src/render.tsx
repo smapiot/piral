@@ -5,7 +5,7 @@ import { createInstance, setupState, EventEmitter, GlobalState } from 'piral-cor
 import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
 import { createTranslationsActions } from './actions';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
-import { PiExtApi, PiletApi, PiralOptions, PiletQueryResult, PiletsBag } from './types';
+import { PiletApi, PiralOptions, PiletQueryResult, PiletsBag, PiralApi } from './types';
 
 function defaultExtendApi(api: PiletApi) {
   return api;
@@ -37,7 +37,7 @@ renderInstance({ layout });
 export * from 'piral';
 ```
  */
-export function renderInstance<TApi = PiExtApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
+export function renderInstance<TApi = PiletApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
   options: PiralOptions<TApi, TState, TActions>,
 ): Promise<EventEmitter> {
   const { selector = '#app', gatewayUrl, subscriptionUrl, loader = defaultLoader, config = {}, layout } = options;

@@ -39,7 +39,7 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
 /**
  * Defines the provided set of hyperapp Pilet API extensions.
  */
-export interface PiralHyperappApi<T = PiralCoreApi<{}>> {
+export interface PiralHyperappApi<T> {
   /**
    * Registers a tile for a hyperapp component.
    * @param id The name of the tile.

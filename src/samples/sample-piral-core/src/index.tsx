@@ -9,7 +9,6 @@ import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
 import { createHyperappApi } from 'piral-hyperapp';
 import { availablePilets } from './pilets';
-import { SampleApi } from './types';
 
 customElements.define(
   'pi-spinner',
@@ -159,7 +158,7 @@ const Layout: React.FC = ({ children }) => {
   );
 };
 
-const App = createInstance<SampleApi>({
+const App = createInstance({
   availablePilets,
   extendApi: extendApis([createVueApi, createNgApi, createHyperappApi]),
   requestPilets() {
