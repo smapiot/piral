@@ -13,6 +13,7 @@
 * Moved `track...` API to optional library `piral-tracking`
 * Aliases are now also available for shorthand CLI commands
 * Refactored and improved `piral install` to be `piral new`
+* Fixed indirect use of shared dependencies (#30)
 
 ## 0.5.2 (June 23, 2019)
 
