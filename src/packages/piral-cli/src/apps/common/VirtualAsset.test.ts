@@ -1,8 +1,8 @@
-import { VirtualAsset } from './VirtualAsset';
+import * as VirtualAsset from './VirtualAsset';
 
 describe('VirtualAsset extension module', () => {
   it('Generates the right module entry for react', () => {
-    const asset = new VirtualAsset('/react.vm', {
+    const asset = new (VirtualAsset as any)('/react.vm', {
       rootDir: '/',
     });
     const content = asset.generate();
@@ -10,7 +10,7 @@ describe('VirtualAsset extension module', () => {
   });
 
   it('Generates the right module entry for a scoped package', () => {
-    const asset = new VirtualAsset('/@smapiot/foobar.vm', {
+    const asset = new (VirtualAsset as any)('/@smapiot/foobar.vm', {
       rootDir: '/',
     });
     const content = asset.generate();

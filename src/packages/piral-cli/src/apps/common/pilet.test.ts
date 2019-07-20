@@ -1,4 +1,4 @@
-import { extendBundler, modifyBundler, postProcess } from './pilet';
+import { extendBundlerForPilet, modifyBundlerForPilet, postProcess } from './pilet';
 
 jest.mock('fs', () => ({
   readFile(name: string, enc: string, cb: Function) {
@@ -33,7 +33,7 @@ describe('Pilet Build Module', () => {
     };
     const bundler = new Bundler();
     expect(Parser.prototype.generate).toBeUndefined();
-    extendBundler(bundler);
+    extendBundlerForPilet(bundler);
     expect(bundler.parser.registerExtension).toHaveBeenCalled();
     expect(bundler.packagers.add).toHaveBeenCalled();
     expect(Parser.prototype.generate).not.toBeUndefined();
@@ -42,7 +42,7 @@ describe('Pilet Build Module', () => {
   it('modifyBundler should create getLoadedAsset prototype function', () => {
     const Bundler = function() {};
     expect(Bundler.prototype.getLoadedAsset).toBeUndefined();
-    modifyBundler(Bundler.prototype, [], '');
+    modifyBundlerForPilet(Bundler.prototype, [], '');
     expect(Bundler.prototype.getLoadedAsset).not.toBeUndefined();
   });
 
