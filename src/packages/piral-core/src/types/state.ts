@@ -10,7 +10,8 @@ import { MenuSettings } from './menu';
 import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
-import { Dict, Without, Disposable } from './utils';
+import { Dict, Without } from './common';
+import { Disposable } from './utils';
 import { StateDispatcher } from './container';
 import {
   TileComponentProps,

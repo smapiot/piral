@@ -21,18 +21,6 @@ export interface PiralStorage {
   removeItem(name: string): void;
 }
 
-export type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U> ? Array<DeepPartial<U>> : T[P] extends {} ? DeepPartial<T[P]> : T[P]
-};
-
-export type NestedPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U> ? Array<Partial<U>> : T[P] extends {} ? Partial<T[P]> : T[P]
-};
-
-export type Dict<T> = Record<string, T>;
-
-export type Without<T, K> = Pick<T, Exclude<keyof T, K>>;
-
 export interface Disposable {
   /**
    * Disposes the created resource.

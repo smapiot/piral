@@ -1,6 +1,6 @@
 import { ArbiterModule, DependencyGetter } from 'react-arbiter';
+import { NestedPartial } from './common';
 import { PiletRequester, Extend } from './plugin';
-import { NestedPartial } from './utils';
 import { GlobalState } from './state';
 
 export interface PiralPiletConfiguration<TApi> {

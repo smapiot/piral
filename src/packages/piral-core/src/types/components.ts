@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Dict } from './utils';
+import { Dict } from './common';
 
 export interface BaseComponentProps<TApi> {
   /**

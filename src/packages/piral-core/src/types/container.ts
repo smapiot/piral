@@ -1,5 +1,6 @@
 import { ComponentType } from 'react';
 import { StateConnectorProps } from './connector';
+import { RemainingArgs } from './common';
 
 export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
@@ -8,8 +9,6 @@ export interface StateDispatcher<TState> {
 export interface StateContainerReducer<TState> {
   (dispatch: StateDispatcher<TState>): void;
 }
-
-export type RemainingArgs<T> = T extends (_: any, ...args: infer U) => any ? U : never;
 
 export type StateContainerReducers<TState> = {
   [name: string]: (dispatch: StateContainerReducer<TState>, ...args: any) => void;
