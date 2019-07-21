@@ -1,49 +1,17 @@
 import * as React from 'react';
-import { withRecall, ArbiterModule, DependencyGetter } from 'react-arbiter';
-import { Portal, PortalProps } from './components';
-import { defaultApiExtender, defaultModuleRequester, getExtender } from './helpers';
+import { withRecall, ArbiterModuleMetadata } from 'react-arbiter';
+import { Portal } from './components';
+import { createGlobalState, createActions, StateContext } from './state';
 import { createApi, getLocalDependencies, createListener, globalDependencies } from './modules';
-import { createGlobalState, createActions, StateContext, GlobalStateOptions } from './state';
-import { PiralApi, EventEmitter, ScaffoldPlugin, Extend, PiletRequester, GlobalState } from './types';
+import { GlobalState, PiralCoreApi, PiralConfiguration, PortalProps, PiralInstance } from './types';
 
-export interface PiralConfiguration<TApi, TState extends GlobalState = GlobalState> extends GlobalStateOptions<TState> {
-  /**
-   * Function to extend the API creator with some additional functionality.
-   */
-  extendApi?: Extend<TApi>;
-  /**
-   * Function to load the modules asynchronously, e.g., from a server 🚚.
-   */
-  requestPilets?: PiletRequester;
-  /**
-   * Function to get the dependencies for a given module.
-   */
-  getDependencies?: DependencyGetter;
-  /**
-   * Determines the modules, which are available already from the start 🚀.
-   * The given modules are all already evaluated.
-   * This can be used for customization or for debugging purposes.
-   */
-  availablePilets?: Array<ArbiterModule<PiralApi<TApi>>>;
-  /**
-   * Plugins for extending the core portal functionality.
-   */
-  plugins?: Array<ScaffoldPlugin>;
+function defaultModuleRequester(): Promise<Array<ArbiterModuleMetadata>> {
+  return Promise.resolve([]);
 }
 
-declare global {
-  interface NodeModule {
-    hot?: {
-      accept(errHandler?: (err: any) => void): void;
-      dispose(callback: (data: any) => void): void;
-    };
-  }
+function defaultApiExtender<TApi>(value: PiralCoreApi<TApi>): TApi {
+  return value as any;
 }
-
-/**
- * The PiralInstance component, which is a React functional component combined with an event emitter.
- */
-export type PiralInstance = React.SFC<PortalProps> & EventEmitter;
 
 /**
  * Creates a new PiralInstance component, which can be used for
@@ -57,67 +25,73 @@ const Piral = createInstance({
   },
 });
 
-const App: React.SFC = () => <Piral>{content => <Layout>{content}</Layout>}</Piral>;
+const App: React.FC = () => <Piral>{content => <Layout>{content}</Layout>}</Piral>;
 render(<App />, document.querySelector('#app'));
 ```
  */
-export function createInstance<TApi, TState extends GlobalState = GlobalState>({
-  availablePilets,
-  extendApi = defaultApiExtender,
-  requestPilets = defaultModuleRequester,
-  getDependencies = getLocalDependencies,
-  plugins = [],
-  ...options
-}: PiralConfiguration<TApi, TState>): PiralInstance {
-  const extender = getExtender(plugins);
-  const state = createGlobalState(options);
-  const container = extender({
-    context: {
-      ...createActions(state),
-      state,
-    },
-    events: createListener(),
-    getDependencies,
-    extendApi,
-    requestPilets,
+export function createInstance<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
+  config: PiralConfiguration<TApi, TState, TActions>,
+): PiralInstance {
+  const {
+    state,
     availablePilets,
-  });
+    extendApi = defaultApiExtender,
+    requestPilets = defaultModuleRequester,
+    getDependencies = getLocalDependencies,
+    async = false,
+    actions,
+  } = config;
+  const globalState = createGlobalState(state);
+  const events = createListener(globalState);
+  const container = {
+    context: createActions(globalState, events, actions),
+    events,
+    extendApi,
+  };
 
   if (process.env.DEBUG_PILET) {
     const { setup } = require(process.env.DEBUG_PILET);
-    container.availablePilets.push({
+    availablePilets.push({
       content: '',
       dependencies: {},
-      name: 'Debug Module',
-      version: '1.0.0',
+      name: process.env.BUILD_PCKG_NAME || 'dbg',
+      version: process.env.BUILD_PCKG_VERSION || '1.0.0',
       hash: '',
       setup,
     });
   }
 
   const RecallPortal = withRecall<PortalProps, TApi>(Portal, {
-    modules: container.availablePilets,
-    getDependencies: container.getDependencies,
+    modules: availablePilets,
+    getDependencies,
     dependencies: globalDependencies,
     fetchModules() {
-      const promise = container.requestPilets();
+      events.emit('load-start', {});
+      let promise = requestPilets();
 
       if (process.env.DEBUG_PILET) {
-        return promise.catch(() => []);
+        promise = promise.catch(() => []);
       }
+
+      promise.then(modules =>
+        events.emit('load-end', {
+          modules,
+        }),
+      );
 
       return promise;
     },
     createApi(target) {
       return createApi(target, container);
     },
+    async,
   });
 
-  const piralInstance: React.SFC<PortalProps> = props => (
+  const PiralInstance: React.FC<PortalProps> = props => (
     <StateContext.Provider value={container.context}>
       <RecallPortal {...props} />
     </StateContext.Provider>
   );
-
-  return Object.assign(piralInstance, container.events);
+  PiralInstance.displayName = 'Piral';
+  return Object.assign(PiralInstance, events);
 }

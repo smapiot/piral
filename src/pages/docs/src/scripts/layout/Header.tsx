@@ -5,7 +5,7 @@ export interface HeaderProps {
   centered?: boolean;
 }
 
-export const Header: React.SFC<HeaderProps> = ({ centered, children }) => (
+export const Header: React.FC<HeaderProps> = ({ centered, children }) => (
   <header className={cn('header', centered && 'text-center')}>
     <div className="container">
       <div className="branding">

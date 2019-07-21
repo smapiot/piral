@@ -10,12 +10,24 @@ export function createFetchApi(config: FetchConfig = {}): PiralFetchApi {
 
   return {
     fetch(path, options = {}) {
-      const { method = 'get', body, headers = {}, cache = baseInit.cache, mode = baseInit.mode } = options;
+      const ct = 'content-type';
+      const {
+        method = 'get',
+        body,
+        headers = {},
+        cache = baseInit.cache,
+        mode = baseInit.mode,
+        result = 'auto',
+      } = options;
+      const json =
+        Array.isArray(body) ||
+        typeof body === 'number' ||
+        (typeof body === 'object' && body instanceof FormData === false && body instanceof Blob === false);
       const url = new URL(path, baseUrl);
       const init: RequestInit = {
         ...baseInit,
         method,
-        body,
+        body: json ? JSON.stringify(body) : (body as BodyInit),
         headers: {
           ...baseHeaders,
           ...headers,
@@ -23,9 +35,14 @@ export function createFetchApi(config: FetchConfig = {}): PiralFetchApi {
         cache,
         mode,
       };
+
+      if (json) {
+        init.headers[ct] = 'application/json';
+      }
+
       return fetch(url.href, init).then(res => {
-        const contentType = res.headers.get('content-type');
-        const json = contentType.indexOf('json') !== -1;
+        const contentType = res.headers.get(ct);
+        const json = result === 'json' || (result === 'auto' && contentType.indexOf('json') !== -1);
         const promise = json ? res.json() : res.text();
 
         return promise.then(body => ({

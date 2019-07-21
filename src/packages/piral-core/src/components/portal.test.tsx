@@ -5,13 +5,13 @@ import * as responsive from './responsive';
 import { mount } from 'enzyme';
 import { Portal } from './portal';
 
-const StubDashboard: React.SFC = props => <div />;
+const StubDashboard: React.FC = props => <div />;
 StubDashboard.displayName = 'StubDashboard';
 
-const StubErrorInfo: React.SFC = props => <div />;
+const StubErrorInfo: React.FC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
-const StubLoader: React.SFC = props => <div />;
+const StubLoader: React.FC = props => <div />;
 StubLoader.displayName = 'StubLoader';
 
 jest.mock('../hooks');

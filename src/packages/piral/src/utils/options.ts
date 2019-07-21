@@ -1,5 +1,6 @@
-import { isfunc, ArbiterModule } from 'react-arbiter';
-import { PiralAttachment, PiletApi } from '../types';
+import { PiletRequester, GlobalState } from 'piral-core';
+import { isfunc, ArbiterModule, ArbiterModuleMetadata } from 'react-arbiter';
+import { PiralAttachment, PiletApi, PiralConfig, PiralLoader } from '../types';
 
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
@@ -19,9 +20,20 @@ export function getGateway(url?: string) {
   }
 }
 
-export function getAvailablePilets(setup?: PiralAttachment) {
+export function getLoader<TApi, TState extends GlobalState = GlobalState>(
+  loader: PiralLoader<TApi, TState>,
+  oldConfig: PiralConfig<TApi, TState>,
+): PiralLoader<TApi, TState> {
+  return opts => loader(opts).then(newConfig => ({ ...oldConfig, ...newConfig }));
+}
+
+export function getPiletRequester(pilets: PiletRequester | Array<ArbiterModuleMetadata>) {
+  return isfunc(pilets) ? pilets : () => Promise.resolve(pilets);
+}
+
+export function getAvailablePilets<TApi>(setup?: PiralAttachment<TApi>) {
   const debugModules = (process.env.DEBUG_PILETS || '').split(',');
-  const availableModules: Array<ArbiterModule<PiletApi>> = [];
+  const availableModules: Array<ArbiterModule<TApi>> = [];
 
   for (const debugModule of debugModules) {
     if (debugModule) {

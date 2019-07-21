@@ -31,10 +31,13 @@
   },
   "dependencies": {
     "images": "^3.0.2",
-    "piral": "^0.5.2"
+    "piral": "^0.5.2",
+    "reactstrap": "^8.0.1"
   },
   "pilets": {
-    "externals": [],
+    "externals": [
+      "reactstrap"
+    ],
     "files": [],
     "scripts": {
       "start": "pilet debug",

@@ -21,7 +21,7 @@ function renderMenuItems(items: MenuItems, maxLevel = Number.MAX_VALUE, level = 
   return [];
 }
 
-export const Menu: React.SFC<MenuProps> = ({ content, maxLevel }) => {
+export const Menu: React.FC<MenuProps> = ({ content, maxLevel }) => {
   const items = useMenuItems(content && content.current);
   return <Sidebar>{renderMenuItems(items, maxLevel)}</Sidebar>;
 };

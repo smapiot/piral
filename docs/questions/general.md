@@ -18,56 +18,6 @@ The technical differences aside `piral` is fully opinionated about the design of
 
 ---------------------------------------
 
-## One pilet is rather large - can I make it smaller?
-
-Pilets can be bundle split like any other module. Ideally, especially for larger pilets, the splitting occurs already in the root module that contains the `setup` function.
-
-Compare without bundle splitting:
-
-```tsx
-import MyTile from './MyTile';
-
-export function setup(app: PiralApi) {
-  app.registerTile(
-    'tile',
-    MyTile,
-  );
-}
-```
-
-to a solution that uses bundle splitting:
-
-```tsx
-const MyTile = React.lazy(() => import('./MyTile'));
-
-export function setup(app: PiralApi) {
-  app.registerTile(
-    'tile',
-    MyTile,
-  );
-}
-```
-
-The loading indicator will already be displayed by Piral itself, so there is no need to take care of setting up one.
-
----------------------------------------
-
-## My pilet has to ship with resources such as CSS, images, videos, ... - how?
-
-The approach for bundle splitting works for resources out of the boxes. As with any standard bundler just use the `require` function with your resources or include CSS files directly:
-
-```tsx
-import './foo.css';
-
-const imagePath = require('./images/bar.png');
-```
-
-Note that larger assets (e.g., videos) should be embedded via CDNs or specialized services. A pilet has a maximum file limit of 16 MB (which may be larger in your implemention, however, we do not recommend it).
-
-Our recommendation is to only include development-relevant resources (e.g., CSS files) or fast changing assets (e.g., icons only made for the current UX and very specific to the currently offered functionality) in the pilet. Everything else should be referenced from global resources.
-
----------------------------------------
-
 ## What do I need to get started?
 
 A Piral instance requires the following things:
@@ -80,10 +30,38 @@ The SPA can be hosted on a static storage, while the backend service may be run 
 
 ---------------------------------------
 
-## How strong is the coupling from Piral to my pilets?
+## Is this really a microfrontend architecture?
 
-This is a matter of your architecture. Naturally, a single file (root module) is required to touch / integrate your pilet components to the Piral instance. This is the `setup` function. Besides this single point of contact no other touchpoint is required - you could write just "plain" React components using your own abstractions and be happy.
+Sometimes people believe that only web components follow a microfrontend architecture. Sometimes people think that having no API (e.g., just using the DOM for transporting events) is necessary for microfrontends. Both things are not true. This is one extreme perspective, which we have found not to be optimal for real-world scenarios.
 
-In general we recommend to design and use the pilets in such a way that reuse of common or presumably generic code is easily possible.
+In reality the application shell will be constructed using some kind of framework or UI library. Realistically, there will be a tendency towards some UI solution such as React - mostly given by some kind of pattern library or preferred UI framework. In such cases it does not make sense to hide the framework of choice from the different modules. Piral makes sharing such dependencies easy.
+
+We think Piral hits a sweep spot as it takes what makes puristic microfrontends great (independent applications coming together, independent releases, independent development) and adds the reason why we build monoliths for the UI in the first place (least bundle size, optimal user experience, coherent design by using a common UI framework).
+
+---------------------------------------
+
+## How is this working in non-JS environments?
+
+Piral was created with microfrontend architectures relying on heavy client-side interaction in mind. As such, the primary use case of Piral requires users to enable JavaScript.
+
+Nevertheless, for a couple of reasons you may want to offer a non-JS (or progressive) version of your application. You may want to offer enhanced SEO capabilities. You may want to reduce initial loading / rendering time. You may want to give non-JS users a bit more capabilities than just stating "Sorry - you need to enable JavaScript". We hear you loud and clear.
+
+Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../guidelines/server-side-rendering.md).
+
+---------------------------------------
+
+## Why does Piral require an app shell?
+
+The concept of an app shell is an ingredient that is optional for microfrontends, but for us a necessary usability and efficiency factor to ensure rapid development of the different pilets.
+
+The app shell could be also used fairly minimal and without any of the features that come for free with Piral (e.g., dashboard, menu entries, modal dialog management, ...). It will still be required to load the pilets and ensure proper isolation as well as communication between them.
+
+---------------------------------------
+
+## Are all pilets are loaded in the start?
+
+Yes and no. No, only the pilets applicable to the current user are loaded. Yes, all applicable pilets are loaded. This does, however, not mean that *all content* was loaded, e.g., a pilet that is larger will eventually use bundle splitting and does only provide the metadata and necessary integrations (e.g., menu entries) at first.
+
+All components that are larger or not immediately needed should be lazy loaded.
 
 ---------------------------------------

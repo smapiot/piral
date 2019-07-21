@@ -1,66 +1,89 @@
-import { defaultApiExtender, defaultModuleRequester, getExtender } from './helpers';
+import { extendApis, setupState } from './helpers';
+import { defaultBreakpoints } from './utils';
+import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from './components/default';
+import { LayoutBreakpoints } from './types';
 
 describe('Helper Module', () => {
-  it('defaultApiExtender is identity function', () => {
-    const original = {};
-    const result = defaultApiExtender(original as any);
-    expect(result).toBe(original);
-  });
+  window.matchMedia = jest.fn(q => ({ matches: false })) as any;
 
-  it('defaultModuleRequester returns an empty array', async () => {
-    const result = await defaultModuleRequester();
-    expect(result).toEqual([]);
-  });
-
-  it('getExtender works with an empty array', () => {
-    const ext = getExtender([]);
-    const original = {};
-    const result = ext(original as any);
-    expect(result).toBe(original);
-  });
-
-  it('getExtender removes non-functions', () => {
-    const ext = getExtender(['foo' as any]);
-    const original = {};
-    const result = ext(original as any);
-    expect(result).toBe(original);
-  });
-
-  it('getExtender applies single function', () => {
-    const ext = getExtender([
-      c => ({
-        ...c,
-        b: 7,
-      }),
-    ]);
-    const original = {
-      a: 5,
-    };
-    const result = ext(original as any);
-    expect(result).toEqual({
-      a: 5,
-      b: 7,
+  it('global state works with language as empty string', () => {
+    const globalState = setupState({
+      language: '',
+    });
+    expect(globalState).toEqual({
+      app: {
+        language: {
+          selected: '',
+          available: [],
+        },
+        layout: {
+          current: 'desktop',
+          breakpoints: defaultBreakpoints,
+        },
+        components: {
+          Dashboard: DefaultDashboard,
+          ErrorInfo: DefaultErrorInfo,
+          Loader: DefaultLoader,
+        },
+        routes: {},
+        trackers: [],
+      },
+      user: undefined,
     });
   });
 
-  it('getExtender applies multiple functions', () => {
-    const ext = getExtender([
-      c => ({
-        ...c,
-        b: 7,
-      }),
-      c => ({
-        ...c,
-        b: 10,
-      }),
-    ]);
-    const original = {
-      a: 5,
+  it('global state with custom language and translations', () => {
+    const languages = ['de', 'fr', 'en'];
+    const globalState = setupState({ language: 'fr', languages });
+    expect(globalState).toEqual({
+      app: {
+        language: {
+          selected: 'fr',
+          available: ['de', 'fr', 'en'],
+        },
+        layout: {
+          current: 'desktop',
+          breakpoints: defaultBreakpoints,
+        },
+        components: {
+          Dashboard: DefaultDashboard,
+          ErrorInfo: DefaultErrorInfo,
+          Loader: DefaultLoader,
+        },
+        routes: {},
+        trackers: [],
+      },
+      user: undefined,
+    });
+  });
+
+  it('global state with non-default breakpoints and more routes', () => {
+    const languages = ['de', 'en'];
+    const routes = {
+      '/': '...' as any,
+      '/foo': '...' as any,
     };
-    const result = ext(original as any);
-    expect(result).toEqual({
-      a: 5,
-      b: 10,
+    const breakpoints: LayoutBreakpoints = ['12px', '24px', '360px'];
+    const globalState = setupState({ languages, breakpoints, routes });
+    expect(globalState).toEqual({
+      app: {
+        language: {
+          selected: 'en',
+          available: ['de', 'en'],
+        },
+        layout: {
+          current: 'desktop',
+          breakpoints,
+        },
+        components: {
+          Dashboard: DefaultDashboard,
+          ErrorInfo: DefaultErrorInfo,
+          Loader: DefaultLoader,
+        },
+        routes,
+        trackers: [],
+      },
+      user: undefined,
     });
   });
 });

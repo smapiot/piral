@@ -8,7 +8,7 @@ export interface VariableRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const VariableRenderer: React.SFC<VariableRendererProps> = ({ node, render }) => (
+export const VariableRenderer: React.FC<VariableRendererProps> = ({ node, render }) => (
   <Details color="purple" kind={node.kindString} description={node.comment} title={node.name}>
     <p>
       <code>

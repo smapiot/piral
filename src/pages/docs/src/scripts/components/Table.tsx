@@ -11,7 +11,7 @@ export interface TableProps {
   };
 }
 
-export const Table: React.SFC<TableProps> = ({ indexed, bordered, striped, data: { head, body } }) => (
+export const Table: React.FC<TableProps> = ({ indexed, bordered, striped, data: { head, body } }) => (
   <div className="table-responsive">
     <table className={cn('table', striped && 'table-striped', bordered && 'table-bordered')}>
       {head && (

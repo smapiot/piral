@@ -1,29 +1,56 @@
-import { ComponentType } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { PiletRequester, GlobalState, ScaffoldPlugin } from 'piral-core';
-import { LocalizationMessages } from 'piral-ext';
-import { PiletApi } from './api';
-import { ComponentOptions } from './components';
+import { ArbiterModuleMetadata } from 'react-arbiter';
+import { PiralStateConfiguration, GlobalState, PiletRequester, Extend } from 'piral-core';
+import { LocalizationMessages, PiralGqlApiQuery, PiralFetchApiFetch } from 'piral-ext';
+import { LayoutBuilder } from './layout';
 
-export interface PiralAttachment {
-  (api: PiletApi): void;
+export interface PiralAttachment<TApi> {
+  (api: TApi): void;
 }
 
-export interface PiralInitializer {
-  <TState extends GlobalState<TUser>, TUser = {}>(state: GlobalState<TUser>): TState;
+export type PiletsMetadata = Array<ArbiterModuleMetadata>;
+
+export interface PiletQueryResult {
+  pilets: PiletsMetadata;
 }
 
-export interface PiralOptions extends ComponentOptions {
+export interface PiralConfig<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>
+  extends PiralStateConfiguration<TState, TActions> {
+  /**
+   * Sets the default translations to be available. Alternatively,
+   * sets the available languages.
+   * @default {}
+   */
+  translations?: LocalizationMessages | Array<string>;
+  /**
+   * Attaches a single static module to the application.
+   */
+  attach?: PiralAttachment<TApi>;
+  /**
+   * Sets the function for loading the pilets or the loaded pilet (metadata) itself.
+   */
+  pilets?: PiletRequester | PiletsMetadata;
+  /**
+   * Optionally provides a function to extend the API creator with some additional
+   * functionality.
+   */
+  extendApi?: Extend<TApi>;
+}
+
+export interface PiralLoader<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+  (options: { query: PiralGqlApiQuery; fetch: PiralFetchApiFetch }): Promise<
+    PiralConfig<TApi, TState, TActions> | undefined
+  >;
+}
+
+/**
+ * Defines the options for rendering a Piral instance.
+ */
+export interface PiralOptions<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
    */
   selector?: string | Element;
-  /**
-   * Sets the function to request the pilets. By default the
-   * pilets are requested via the standardized GraphQL resource.
-   */
-  requestPilets?: PiletRequester;
   /**
    * Sets the URL of the portal gateway to the backend.
    * @default document.location.origin,
@@ -36,31 +63,15 @@ export interface PiralOptions extends ComponentOptions {
    */
   subscriptionUrl?: false | string;
   /**
-   * Sets additional routes (pages) to be available.
-   * @default {}
+   * Gets the optional initial configuration.
    */
-  routes?: Record<string, ComponentType<RouteComponentProps>>;
+  config?: PiralConfig<TApi, TState, TActions>;
   /**
-   * Sets additional trackers to be available.
-   * @default []
+   * Defines some optional initial configuration loading.
    */
-  trackers?: Array<ComponentType<RouteComponentProps>>;
+  loader?: PiralLoader<TApi, TState, TActions>;
   /**
-   * Sets the default translations to be available.
-   * @default {}
+   * Gets the layout builder to construct the design to display.
    */
-  translations?: LocalizationMessages;
-  /**
-   * Attaches a single static module to the application.
-   */
-  attach?: PiralAttachment;
-  /**
-   * Initializes the global state container.
-   * @param state The proposed initial state.
-   */
-  initialize?: PiralInitializer;
-  /**
-   * Plugins for extending the core portal functionality.
-   */
-  plugins?: Array<ScaffoldPlugin>;
+  layout: LayoutBuilder;
 }

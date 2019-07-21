@@ -1,0 +1,1 @@
+<Route exact path="%{url}" component={%{componentName}} />

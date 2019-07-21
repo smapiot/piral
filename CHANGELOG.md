@@ -1,10 +1,26 @@
 # Piral Changelog
 
+## 0.6.0 (to be determined)
+
+* Improved the sample
+* Added new layout builder API
+* Unified Piral extension API
+* Support asynchronous language switch
+* Enable lazy loading of pilets (#2)
+* Introduced explicit local pilet state management
+* Added `--fresh` flag to the `pilet-publish` command
+* Added new optional library `piral-hyperapp`
+* Moved `track...` API to optional library `piral-tracking`
+* Aliases are now also available for shorthand CLI commands
+* Refactored and improved `piral install` to be `piral new`
+* Fixed indirect use of shared dependencies (#30)
+* Added `--detailed-report` and `--log-level` to many commands
+
 ## 0.5.2 (June 23, 2019)
 
 * Added new optional library `piral-vue`
 * Improved API of `piral-ng`
-* Added `piral-install` command to Piral CLI
+* Added `piral install` command to Piral CLI
 * Support local CLI installation over global one
 * Added samples to documentation page
 

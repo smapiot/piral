@@ -4,13 +4,17 @@ const { readFileSync, writeFileSync, readdirSync } = require('fs');
 const nl = '\n';
 const intend = '    ';
 const autoGenMessage = 'auto-generated';
-const startMarker = `{/* start:${autoGenMessage} */}`;
-const endMarker = `{/* end:${autoGenMessage} */}`;
+const startPlainMarker = `/* start:${autoGenMessage} */`;
+const endPlainMarker = `/* end:${autoGenMessage} */`;
+const startJsxMarker = `{${startPlainMarker}}`;
+const endJsxMarker = `{${endPlainMarker}}`;
 const refFormat = /\- \[(.*)\]\((.*)\)/g;
 
+const templatesFolder = resolve(__dirname, 'templates');
 const rootDocsFolder = resolve(__dirname, '..', 'docs');
 const rootScriptsFolder = resolve(__dirname, '..', 'src', 'pages', 'docs', 'src', 'scripts');
 const relRoot = '../../../../../../docs';
+const templates = {};
 
 const sources = [
   {
@@ -18,7 +22,6 @@ const sources = [
     tsx: './documentation/Content',
     mode: 'mdlinks',
     name: 'Md',
-
   },
   {
     md: './questions/README',
@@ -37,7 +40,77 @@ const sources = [
     tsx: './types/Content',
     mode: 'types',
   },
+  {
+    dir: './specs',
+    tsx: './specifications/Overview',
+    target: './specifications',
+    rootUrl: '/specifications',
+    mode: 'pages',
+    icon: 'puzzle-piece',
+    color: 'blue',
+    description: 'The %{title}.',
+    sep: nl + intend + intend,
+  },
+  {
+    dir: './guidelines',
+    tsx: './guidelines/Overview',
+    target: './guidelines',
+    rootUrl: '/guidelines',
+    mode: 'pages',
+    icon: 'monument',
+    color: 'pink',
+    description: 'How to do "%{title}".',
+    sep: nl + intend + intend,
+  },
 ];
+
+function fill(template, params) {
+  let content = template;
+
+  Object.keys(params).forEach(key => {
+    const replace = `%{${key}}`;
+    const value = params[key];
+    content = content.split(replace).join(value);
+  });
+
+  return content;
+}
+
+function capitalize(str) {
+  switch (str) {
+    case 'api':
+      return 'API';
+    default:
+      return str[0].toUpperCase() + str.substr(1);
+  }
+}
+
+function getTitle(file) {
+  const parts = file.split('-');
+  return parts.map(m => capitalize(m)).join(' ');
+}
+
+function getComponentName(title) {
+  return title.split(' ').join('');
+}
+
+readdirSync(templatesFolder).forEach(file => {
+  const fn = resolve(templatesFolder, file);
+  const template = readFileSync(fn, 'utf8');
+  const name = file.substr(0, file.indexOf('.'));
+  templates[name] = (params, intend = '') => {
+    const content = fill(template, params);
+
+    if (intend) {
+      return content
+        .replace(/\n$/, '')
+        .split(nl)
+        .join(`${nl}${intend}`);
+    }
+
+    return content;
+  };
+});
 
 function getTypeInfo(id, node) {
   for (const child of node.children) {
@@ -99,7 +172,7 @@ function fillTypeSignatureInformation(signatures, content, children) {
   for (const signature of signatures) {
     fillTypeRefInformation(signature.type, content, children);
 
-    for (const parameter of (signature.parameters || [])) {
+    for (const parameter of signature.parameters || []) {
       fillTypeRefInformation(parameter.type, content, children);
     }
 
@@ -191,29 +264,82 @@ function normalizeTypes(oldContent) {
 function generateMdSection({ title, link, comp }) {
   const id = title.replace(/\s/g, '-').toLowerCase();
   const relLink = relative(rootDocsFolder, link);
-  return `<Section id="section-${id}" title="${title}">
-  <${comp}>{require('${relRoot}/${relLink}')}</${comp}>
-  <EditSection link="${relLink}" />
-</Section>`.split(nl).join(`${nl}${intend}`);
+  return templates.MdSection(
+    {
+      id,
+      title,
+      comp,
+      relRoot,
+      relLink,
+    },
+    intend,
+  );
 }
 
 function generateTiSection({ file }) {
   const name = file.substr(0, file.indexOf('.'));
-  return `<Section id="section-${name}" title="${name}">
-  <Ti>{require('${relRoot}/types/${name}.json')}</Ti>
-</Section>`.split(nl).join(`${nl}${intend}`);
+  return templates.TiSection(
+    {
+      name,
+      relRoot,
+    },
+    intend,
+  );
 }
 
-function generateSections(results, genSec) {
-  return results.map(genSec).join(`${nl}${intend}`);
+function generateLoading({ componentName, file }) {
+  return templates.MdPageLoad(
+    {
+      componentName,
+      file,
+    },
+    intend,
+  );
 }
 
-function replaceBody(content, body) {
-  const startIndex = content.indexOf(startMarker);
-  const endIndex = content.indexOf(endMarker, startIndex);
-  const head = content.substring(0, startIndex + startMarker.length);
+function generateRoute({ componentName, url }) {
+  return templates.MdPageRoute(
+    {
+      componentName,
+      url,
+    },
+    intend,
+  );
+}
+
+function generateOverviewCard({ title, url, description, icon, color }) {
+  return templates.MdPageLink(
+    {
+      icon,
+      title,
+      url,
+      description,
+      color,
+    },
+    intend + intend,
+  );
+}
+
+function generateSections(results, genSec, sep = nl + intend) {
+  return results.map(genSec).join(sep);
+}
+
+function replaceBody(content, body, start = startJsxMarker, end = endJsxMarker, sep = nl + intend) {
+  const startIndex = content.indexOf(start);
+  const endIndex = content.indexOf(end, startIndex);
+  const head = content.substring(0, startIndex + start.length);
   const rest = content.substring(endIndex);
-  return head + nl + intend + body + nl + intend + rest;
+  return [head, body, rest].join(sep);
+}
+
+function fillPage(content, links) {
+  const loadingSep = nl;
+  const routesSep = nl + intend + intend;
+  const loading = links.map(generateLoading).join(loadingSep);
+  const routes = links.map(generateRoute).join(routesSep);
+  const body1 = replaceBody(content, loading, startPlainMarker, endPlainMarker, loadingSep);
+  const body2 = replaceBody(body1, routes, startJsxMarker, endJsxMarker, routesSep);
+  return body2;
 }
 
 const modes = {
@@ -240,7 +366,7 @@ const modes = {
     const dirPath = resolve(rootDocsFolder, source.dir);
     const files = readdirSync(dirPath);
     const sections = files.map(file => {
-      const p = resolve(rootDocsFolder, source.dir, file)
+      const p = resolve(dirPath, file);
       const oldContent = JSON.parse(readFileSync(p, 'utf8'));
       const newContent = normalizeTypes(oldContent);
       writeFileSync(p, JSON.stringify(newContent), 'utf8');
@@ -249,6 +375,42 @@ const modes = {
 
     return generateSections(sections, generateTiSection);
   },
+  pages(source) {
+    const dirPath = resolve(rootDocsFolder, source.dir);
+    const files = readdirSync(dirPath).filter(m => m !== 'README.md' && /\.md$/.test(m));
+    const links = files.map(file => {
+      const fileName = file.replace(/\.md$/, '');
+      const title = getTitle(fileName);
+      const componentName = getComponentName(title);
+      const target = resolve(rootScriptsFolder, source.target, componentName + '.tsx');
+      const relLink = relative(rootDocsFolder, resolve(dirPath, file));
+      const content = templates.MdPageContent({
+        id: fileName,
+        title,
+        relRoot,
+        relLink,
+      });
+      writeFileSync(target, content, 'utf8');
+      return {
+        file,
+        fileName,
+        componentName,
+        icon: source.icon,
+        color: source.color,
+        title,
+        url: `${source.rootUrl}/${fileName}`,
+        description: fill(source.description, {
+          title,
+        }),
+      };
+    });
+
+    const page = resolve(rootScriptsFolder, source.target, 'Page.tsx');
+    const pageOldContent = readFileSync(page, 'utf8');
+    const pageNewContent = fillPage(pageOldContent, links);
+    writeFileSync(page, pageNewContent, 'utf8');
+    return generateSections(links, generateOverviewCard, nl + intend + intend);
+  },
 };
 
 function generatePageDocs() {
@@ -256,7 +418,7 @@ function generatePageDocs() {
     const tsxPath = resolve(rootScriptsFolder, `${source.tsx}.tsx`);
     const tsxContent = readFileSync(tsxPath, 'utf8');
     const body = modes[source.mode](source);
-    const newTsxContent = replaceBody(tsxContent, body);
+    const newTsxContent = replaceBody(tsxContent, body, source.start, source.end, source.sep);
     writeFileSync(tsxPath, newTsxContent, 'utf8');
   }
 }

@@ -6,11 +6,10 @@ import { SampleApi } from '../types';
 @Component({
   template: `
     <div class="tile">
-      <h3>Rendered from Angular</h3>
+      <h3>Angular: {{ counter }}</h3>
       <p>{{ props.rows }} rows and {{ props.columns }} columns</p>
       <button (click)="increment()">Increment</button>
       <button (click)="decrement()">Decrement</button>
-      <div>{{ counter }}</div>
     </div>
   `,
 })

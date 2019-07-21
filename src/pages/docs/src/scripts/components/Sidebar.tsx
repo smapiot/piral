@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStickySidebar } from '../hooks';
 
-export const Sidebar: React.SFC = ({ children }) => {
+export const Sidebar: React.FC = ({ children }) => {
   const container = useStickySidebar();
 
   return (

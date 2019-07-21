@@ -38,6 +38,20 @@ Sets the target file of bundling.
 - Type: `string`
 - Default: `"./dist/index.js"`
 
+### `--detailed-report`
+
+Sets if a detailed report should be created.
+
+- Type: `boolean`
+- Default: `false`
+
+### `--log-level`
+
+Sets the log level to use (1-5).
+
+- Type: `number`
+- Default: `3`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

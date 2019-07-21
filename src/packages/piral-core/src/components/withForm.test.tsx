@@ -13,13 +13,13 @@ const mountWithRouter = (node, url = '/') =>
     </MemoryRouter>,
   );
 
-const StubComponent: React.SFC<{ data: any }> = () => <div />;
+const StubComponent: React.FC<{ data: any }> = () => <div />;
 StubComponent.displayName = 'StubComponent';
 
-const LoaderComponent: React.SFC<{ data: any }> = () => <div />;
+const LoaderComponent: React.FC<{ data: any }> = () => <div />;
 LoaderComponent.displayName = 'LoaderComponent';
 
-const ErrorComponent: React.SFC<{ data: any }> = () => <div />;
+const ErrorComponent: React.FC<{ data: any }> = () => <div />;
 ErrorComponent.displayName = 'ErrorComponent';
 
 describe('withForm Module', () => {

@@ -4,11 +4,11 @@ import 'zone.js/dist/zone';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useSearch, useAction } from 'piral-core';
+import { createInstance, useGlobalState, LoaderProps, useSearch, useAction, setupState, extendApis } from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
+import { createHyperappApi } from 'piral-hyperapp';
 import { availablePilets } from './pilets';
-import { SampleApi } from './types';
 
 customElements.define(
   'pi-spinner',
@@ -23,13 +23,13 @@ customElements.define(
   },
 );
 
-const Loader: React.SFC<LoaderProps> = () => (
+const Loader: React.FC<LoaderProps> = () => (
   <div className="app-center">
     <pi-spinner>Loading ...</pi-spinner>
   </div>
 );
 
-const Sitemap: React.SFC<RouteComponentProps> = () => {
+const Sitemap: React.FC<RouteComponentProps> = () => {
   const pages = useGlobalState(s => s.components.pages);
 
   return (
@@ -54,7 +54,7 @@ const Sitemap: React.SFC<RouteComponentProps> = () => {
   );
 };
 
-const Menu: React.SFC = () => {
+const Menu: React.FC = () => {
   const menuItems = useGlobalState(s => s.components.menuItems);
 
   return (
@@ -83,7 +83,7 @@ const Menu: React.SFC = () => {
   );
 };
 
-const SearchResults: React.SFC = () => {
+const SearchResults: React.FC = () => {
   const { loading, items } = useGlobalState(m => ({
     loading: m.search.loading,
     items: m.search.results,
@@ -104,7 +104,7 @@ const SearchResults: React.SFC = () => {
   );
 };
 
-const SearchForm: React.SFC = () => {
+const SearchForm: React.FC = () => {
   const [value, setValue] = useSearch();
   const search = useAction('triggerSearch');
 
@@ -121,7 +121,7 @@ const SearchForm: React.SFC = () => {
   );
 };
 
-const Notifications: React.SFC = () => {
+const Notifications: React.FC = () => {
   const notifications = useGlobalState(s => s.app.notifications);
 
   return (
@@ -141,7 +141,7 @@ const Notifications: React.SFC = () => {
   );
 };
 
-const Layout: React.SFC = ({ children }) => {
+const Layout: React.FC = ({ children }) => {
   const layout = useGlobalState(s => s.app.layout.current);
 
   return (
@@ -158,27 +158,22 @@ const Layout: React.SFC = ({ children }) => {
   );
 };
 
-const Portal = createInstance<SampleApi>({
+const App = createInstance({
   availablePilets,
-  extendApi(api) {
-    return {
-      ...createVueApi(api),
-      ...createNgApi(api),
-      ...api,
-    } as any;
-  },
+  extendApi: extendApis([createVueApi, createNgApi, createHyperappApi]),
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
     //   .then(res => res.json())
     //   .then(res => res.items);
     return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
-  Loader,
-  routes: {
-    '/sitemap': Sitemap,
-  },
+  state: setupState({
+    Loader,
+    routes: {
+      '/sitemap': Sitemap,
+    },
+  }),
 });
 
-const App: React.SFC = () => <Portal>{content => <Layout>{content}</Layout>}</Portal>;
-
-render(<App />, document.querySelector('#app'));
+const app = <App>{content => <Layout>{content}</Layout>}</App>;
+render(app, document.querySelector('#app'));

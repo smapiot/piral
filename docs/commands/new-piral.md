@@ -1,23 +1,23 @@
-# `install-piral`
+# `new-piral`
 
 <!--start:auto-generated-->
 
-Sets up a Piral instance by adding all files and changes to the current project.
+Creates a new Piral instance by adding all files and changes to the current project.
 
 ## Syntax
 
 From the command line:
 
 ```sh
-pb install-piral [target]
+pb new-piral [target]
 ```
 
 ## Aliases
 
-Instead of `install-piral` you can also use:
+Instead of `new-piral` you can also use:
 
-- `add-piral`
-- `integrate-piral`
+- `create-piral`
+- `scaffold-piral`
 - `setup-piral`
 
 ## Positionals
@@ -40,7 +40,7 @@ Sets the path to the app's source HTML file.
 
 ### `--only-core`
 
-Sets if piral-core should be used. Otherwise, piral is used.
+Sets if "piral-core" should be used. Otherwise, "piral" is used.
 
 - Type: `boolean`
 - Default: `false`
@@ -51,6 +51,22 @@ Sets the tag or version of the package to install. By default, it is "latest".
 
 - Type: `string`
 - Default: `"latest"`
+
+### `--force-overwrite`
+
+Determines if files should be overwritten by the installation.
+
+- Type: `string`
+- Choices: `"no"`, `"prompt"`, `"yes"`
+- Default: `"no"`
+
+### `--language`
+
+Determines the programming language for the new Piral instance.
+
+- Type: `string`
+- Choices: `"ts"`, `"js"`
+- Default: `"ts"`
 
 ### `--base`
 

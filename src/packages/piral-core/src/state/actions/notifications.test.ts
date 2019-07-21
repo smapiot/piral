@@ -10,7 +10,7 @@ describe('Notifications Actions Module', () => {
         notifications: ['b'],
       },
     });
-    openNotification.call(state, 'a');
+    openNotification(state, 'a');
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -28,7 +28,7 @@ describe('Notifications Actions Module', () => {
         notifications: ['a', 'b', 'c'],
       },
     });
-    closeNotification.call(state, 'b');
+    closeNotification(state, 'b');
     expect(deref(state)).toEqual({
       foo: 5,
       app: {

@@ -7,7 +7,7 @@ export interface MenuCreator {
   MenuItem: React.ComponentType<MenuItemProps>;
 }
 
-export function createMenu({ MenuContainer, MenuItem }: MenuCreator): React.SFC<MenuProps> {
+export function createMenu({ MenuContainer, MenuItem }: MenuCreator): React.FC<MenuProps> {
   return ({ type = 'general' as MenuType }) => {
     const menuItems = useGlobalState(s => s.components.menuItems);
 

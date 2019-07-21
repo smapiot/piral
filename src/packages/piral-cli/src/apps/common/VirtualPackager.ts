@@ -7,7 +7,9 @@ export class VirtualPackager extends (Bundler as any).Packager {
 
   setup() {}
 
-  async addAsset() {}
+  async addAsset(_) {
+    console.log(_);
+  }
 
   getSize() {
     return 0;

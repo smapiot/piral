@@ -73,28 +73,36 @@ export interface GqlConfig {
   onDisconnected?(err: Array<Error>): void;
 }
 
+export interface PiralGqlApiQuery {
+  <T = any>(query: string, options?: GqlQueryOptions): Promise<T>;
+}
+
+export interface PiralGqlApiMutate {
+  <T = any>(mutation: string, options?: GqlMutationOptions): Promise<T>;
+}
+
+export interface PiralGqlApiSubscribe {
+  <T = any>(subscription: string, subscriber: GqlSubscriber<T>, options?: GqlSubscriptionOptions): GqlUnsubscriber;
+}
+
 export interface PiralGqlApi {
   /**
    * Executes the given GraphQL query.
    * @param query The GraphQL query.
    * @param options Options for the query.
    */
-  query<T = any>(query: string, options?: GqlQueryOptions): Promise<T>;
+  query: PiralGqlApiQuery;
   /**
    * Executes the given GraphQL mutation.
    * @param mutation The GraphQL mutation query.
    * @param options Options for the mutation.
    */
-  mutate<T = any>(mutation: string, options?: GqlMutationOptions): Promise<T>;
+  mutate: PiralGqlApiMutate;
   /**
    * Establishes the given GraphQL subscription.
    * @param subscription The GraphQL subscription query.
    * @param subscriber The callback to use when data is received.
    * @param options Options for the subscription.
    */
-  subscribe<T = any>(
-    subscription: string,
-    subscriber: GqlSubscriber<T>,
-    options?: GqlSubscriptionOptions,
-  ): GqlUnsubscriber;
+  subscribe: PiralGqlApiSubscribe;
 }

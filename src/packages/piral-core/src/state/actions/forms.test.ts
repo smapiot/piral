@@ -7,7 +7,7 @@ describe('Forms Actions Module', () => {
       foo: 5,
       forms: {},
     });
-    updateFormState.call(state, 'a', { name: 'Foo', active: true }, { name: 'Bar' });
+    updateFormState(state, 'a', { name: 'Foo', active: true }, { name: 'Bar' });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -28,7 +28,7 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState.call(state, 'a', { name: 'Foo', active: true }, {});
+    updateFormState(state, 'a', { name: 'Foo', active: true }, {});
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -49,7 +49,7 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState.call(state, 'a', { name: 'Foo', active: true }, { name: 'bazeol' });
+    updateFormState(state, 'a', { name: 'Foo', active: true }, { name: 'bazeol' });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -70,7 +70,7 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState.call(state, 'a', { name: 'Foo' }, { active: false });
+    updateFormState(state, 'a', { name: 'Foo' }, { active: false });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {},
@@ -86,7 +86,7 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState.call(state, 'a', { name: 'Foo', submitting: true }, { active: false });
+    updateFormState(state, 'a', { name: 'Foo', submitting: true }, { active: false });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -108,7 +108,7 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState.call(state, 'a', { name: 'Foo', changed: true }, { submitting: false, active: '' });
+    updateFormState(state, 'a', { name: 'Foo', changed: true }, { submitting: false, active: '' });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -131,7 +131,7 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState.call(state, 'a', { name: 'Foo', changed: false, active: '' }, { submitting: false });
+    updateFormState(state, 'a', { name: 'Foo', changed: false, active: '' }, { submitting: false });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {},

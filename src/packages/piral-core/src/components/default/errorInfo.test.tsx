@@ -16,7 +16,7 @@ const state = {
 
 (React as any).useMemo = cb => cb();
 
-const StubErrorInfo: React.SFC = props => <div />;
+const StubErrorInfo: React.FC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
 describe('Default Error Info Component', () => {
@@ -65,7 +65,7 @@ describe('Default Error Info Component', () => {
   });
 
   it('renders the react fragment in the default case', () => {
-      (state.components.extensions as any).error = [
+    (state.components.extensions as any).error = [
       {
         component: StubErrorInfo,
       },

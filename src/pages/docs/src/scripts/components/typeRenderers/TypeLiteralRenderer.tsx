@@ -8,7 +8,7 @@ export interface TypeLiteralRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const TypeLiteralRenderer: React.SFC<TypeLiteralRendererProps> = ({ node, render }) => (
+export const TypeLiteralRenderer: React.FC<TypeLiteralRendererProps> = ({ node, render }) => (
   <ul className="interface-map">
     {(node.children || []).map(child =>
       child.kind === TiKind.Property || child.kind === TiKind.Variable ? (

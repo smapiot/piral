@@ -10,4 +10,9 @@ export const config = rc('piral', {
    * Hostname to API key specifications.
    */
   apiKeys: {},
+  /**
+   * URL to be used for publishing a pilet in case
+   * there is no specialized key in url specified.
+   */
+  url: '',
 });

@@ -7,7 +7,7 @@ export interface EnumerationRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const EnumerationRenderer: React.SFC<EnumerationRendererProps> = ({ node }) => (
+export const EnumerationRenderer: React.FC<EnumerationRendererProps> = ({ node }) => (
   <Details color="orange" description={node.comment} kind={node.kindString} title={node.name}>
     <ul className="interface-map">
       {node.children.map(

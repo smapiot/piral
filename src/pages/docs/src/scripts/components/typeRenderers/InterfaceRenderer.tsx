@@ -9,7 +9,7 @@ export interface InterfaceRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const InterfaceRenderer: React.SFC<InterfaceRendererProps> = ({ node, render }) => (
+export const InterfaceRenderer: React.FC<InterfaceRendererProps> = ({ node, render }) => (
   <Details color="blue" id={gid(node)} kind={node.kindString} description={node.comment} title={node.name}>
     <TypeLiteralRenderer node={node} render={render} />
   </Details>

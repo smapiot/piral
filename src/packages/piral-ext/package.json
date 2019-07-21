@@ -4,6 +4,7 @@
   "description": "Useful API extensions and component definitions for extending piral-core.",
   "keywords": [
     "piral",
+    "pilet-api",
     "smapiot",
     "portal",
     "modules",

@@ -9,7 +9,7 @@ export interface ButtonProps
   to?: string;
 }
 
-export const Button: React.SFC<ButtonProps> = ({ kind = 'primary', icon, children, to, ...props }) =>
+export const Button: React.FC<ButtonProps> = ({ kind = 'primary', icon, children, to, ...props }) =>
   React.createElement(
     to ? Link : 'a',
     {

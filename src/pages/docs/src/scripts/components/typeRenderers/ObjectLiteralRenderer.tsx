@@ -7,7 +7,7 @@ export interface ObjectLiteralRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const ObjectLiteralRenderer: React.SFC<ObjectLiteralRendererProps> = ({ node }) => (
+export const ObjectLiteralRenderer: React.FC<ObjectLiteralRendererProps> = ({ node }) => (
   <Details color="red" kind={node.kindString} description={node.comment} title={node.name}>
     <ul className="interface-map">
       {node.children.map(

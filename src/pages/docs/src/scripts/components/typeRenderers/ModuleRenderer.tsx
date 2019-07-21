@@ -11,6 +11,6 @@ function isExported(node: TiNode) {
   return flags && flags.isExported;
 }
 
-export const ModuleRenderer: React.SFC<ModuleRendererProps> = ({ node, render }) => (
+export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ node, render }) => (
   <>{(node.children || []).map(child => isExported(child) && <div key={child.id}>{render(child)}</div>)}</>
 );

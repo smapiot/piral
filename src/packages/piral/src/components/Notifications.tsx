@@ -7,7 +7,7 @@ export interface NotificationsCreator {
   NotificationItem: React.ComponentType<OpenNotification>;
 }
 
-export function createNotifications({ NotificationsContainer, NotificationItem }: NotificationsCreator): React.SFC {
+export function createNotifications({ NotificationsContainer, NotificationItem }: NotificationsCreator): React.FC {
   return () => {
     const notifications = useGlobalState(s => s.app.notifications);
 

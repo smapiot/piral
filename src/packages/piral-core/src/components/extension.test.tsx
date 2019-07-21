@@ -9,10 +9,10 @@ jest.mock('../hooks/globalState', () => ({
   },
 }));
 
-const StubComponent1: React.SFC = props => <div children={props.children} />;
+const StubComponent1: React.FC = props => <div children={props.children} />;
 StubComponent1.displayName = 'StubComponent1';
 
-const StubComponent2: React.SFC = props => <div children={props.children} />;
+const StubComponent2: React.FC = props => <div children={props.children} />;
 StubComponent2.displayName = 'StubComponent2';
 
 const state = {
@@ -34,7 +34,7 @@ const state = {
   },
 };
 
-(React as any).useMemo = (cb) => cb();
+(React as any).useMemo = cb => cb();
 
 describe('Extension Module', () => {
   it('is able to default render not available extension', () => {

@@ -1,8 +1,8 @@
-export interface SharedData {
+export interface SharedData<TValue = any> {
   /**
    * Access a shared value by its name.
    */
-  readonly [key: string]: any;
+  readonly [key: string]: TValue;
 }
 
 export type DataStoreTarget = 'memory' | 'local' | 'remote';
@@ -20,11 +20,11 @@ export interface CustomDataStoreOptions {
 
 export type DataStoreOptions = DataStoreTarget | CustomDataStoreOptions;
 
-export interface SharedDataItem {
+export interface SharedDataItem<TValue = any> {
   /**
    * Gets the associated value.
    */
-  value: any;
+  value: TValue;
   /**
    * Gets the owner of the item.
    */

@@ -9,7 +9,7 @@ export interface SignatureRendererProps {
   brackets?: string;
 }
 
-export const SignatureRenderer: React.SFC<SignatureRendererProps> = ({ node, render, brackets = '()' }) => (
+export const SignatureRenderer: React.FC<SignatureRendererProps> = ({ node, render, brackets = '()' }) => (
   <>
     <TypeParameterRenderer args={node.typeParameter} render={render} />
     {brackets[0]}

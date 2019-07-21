@@ -10,8 +10,8 @@ import {
   SearchProviderRegistration,
 } from '../../types';
 
-export function registerMenuItem(name: string, value: MenuItemRegistration) {
-  swap(this as Atom<GlobalState>, state => ({
+export function registerMenuItem(ctx: Atom<GlobalState>, name: string, value: MenuItemRegistration) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -20,8 +20,8 @@ export function registerMenuItem(name: string, value: MenuItemRegistration) {
   }));
 }
 
-export function unregisterMenuItem(name: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function unregisterMenuItem(ctx: Atom<GlobalState>, name: string) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -30,8 +30,8 @@ export function unregisterMenuItem(name: string) {
   }));
 }
 
-export function registerModal(name: string, value: ModalRegistration) {
-  swap(this as Atom<GlobalState>, state => ({
+export function registerModal(ctx: Atom<GlobalState>, name: string, value: ModalRegistration) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -40,8 +40,8 @@ export function registerModal(name: string, value: ModalRegistration) {
   }));
 }
 
-export function unregisterModal(name: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function unregisterModal(ctx: Atom<GlobalState>, name: string) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -50,8 +50,8 @@ export function unregisterModal(name: string) {
   }));
 }
 
-export function registerPage(name: string, value: PageRegistration) {
-  swap(this as Atom<GlobalState>, state => ({
+export function registerPage(ctx: Atom<GlobalState>, name: string, value: PageRegistration) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -60,8 +60,8 @@ export function registerPage(name: string, value: PageRegistration) {
   }));
 }
 
-export function unregisterPage(name: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function unregisterPage(ctx: Atom<GlobalState>, name: string) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -70,8 +70,8 @@ export function unregisterPage(name: string) {
   }));
 }
 
-export function registerTile(name: string, value: TileRegistration) {
-  swap(this as Atom<GlobalState>, state => ({
+export function registerTile(ctx: Atom<GlobalState>, name: string, value: TileRegistration) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -80,8 +80,8 @@ export function registerTile(name: string, value: TileRegistration) {
   }));
 }
 
-export function unregisterTile(name: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function unregisterTile(ctx: Atom<GlobalState>, name: string) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -90,8 +90,8 @@ export function unregisterTile(name: string) {
   }));
 }
 
-export function registerExtension(name: string, value: ExtensionRegistration) {
-  swap(this as Atom<GlobalState>, state => ({
+export function registerExtension(ctx: Atom<GlobalState>, name: string, value: ExtensionRegistration) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -100,8 +100,8 @@ export function registerExtension(name: string, value: ExtensionRegistration) {
   }));
 }
 
-export function unregisterExtension(name: string, reference: any) {
-  swap(this as Atom<GlobalState>, state => ({
+export function unregisterExtension(ctx: Atom<GlobalState>, name: string, reference: any) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -114,8 +114,8 @@ export function unregisterExtension(name: string, reference: any) {
   }));
 }
 
-export function registerSearchProvider(name: string, value: SearchProviderRegistration) {
-  swap(this as Atom<GlobalState>, state => ({
+export function registerSearchProvider(ctx: Atom<GlobalState>, name: string, value: SearchProviderRegistration) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,
@@ -124,8 +124,8 @@ export function registerSearchProvider(name: string, value: SearchProviderRegist
   }));
 }
 
-export function unregisterSearchProvider(name: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function unregisterSearchProvider(ctx: Atom<GlobalState>, name: string) {
+  swap(ctx, state => ({
     ...state,
     components: {
       ...state.components,

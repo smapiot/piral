@@ -1,20 +1,15 @@
 import { ArbiterModuleMetadata, wrapElement, isfunc } from 'react-arbiter';
-import { withFeed, withApi, withForm } from '../components';
+import { withFeed, withApi, withForm, withPiletState } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
-  FeedResolver,
-  FeedConnectorOptions,
-  FeedConnector,
   PageComponentProps,
   AnyComponent,
-  PiralApi,
   TileComponentProps,
   ExtensionComponentProps,
   MenuComponentProps,
   ModalComponentProps,
   MenuSettings,
   TilePreferences,
-  SeverityLevel,
   PiralContainer,
   GlobalStateContext,
 } from '../types';
@@ -24,16 +19,16 @@ function buildName(prefix: string, name: string | number) {
 }
 
 function markReact<T>(arg: React.ComponentType<T>, displayName: string) {
-  if (!arg.displayName) {
+  if (arg && !arg.displayName) {
     arg.displayName = displayName;
   }
 }
 
 function addPage<TApi>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   route: string,
-  arg: AnyComponent<PageComponentProps<PiralApi<TApi>>>,
+  arg: AnyComponent<PageComponentProps<TApi>>,
 ) {
   context.registerPage(route, {
     component: withApi(arg, api) as any,
@@ -42,9 +37,9 @@ function addPage<TApi>(
 
 function addTile<TApi>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   id: string,
-  arg: AnyComponent<TileComponentProps<PiralApi<TApi>>>,
+  arg: AnyComponent<TileComponentProps<TApi>>,
   preferences: TilePreferences = {},
 ) {
   context.registerTile(id, {
@@ -55,9 +50,9 @@ function addTile<TApi>(
 
 function addExtension<TApi, T>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   name: string,
-  arg: AnyComponent<ExtensionComponentProps<PiralApi<TApi>, T>>,
+  arg: AnyComponent<ExtensionComponentProps<TApi, T>>,
   defaults?: T,
 ) {
   context.registerExtension(name, {
@@ -69,9 +64,9 @@ function addExtension<TApi, T>(
 
 function addMenu<TApi>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   id: string,
-  arg: AnyComponent<MenuComponentProps<PiralApi<TApi>>>,
+  arg: AnyComponent<MenuComponentProps<TApi>>,
   settings: MenuSettings = {},
 ) {
   context.registerMenuItem(id, {
@@ -84,9 +79,9 @@ function addMenu<TApi>(
 
 function addModal<TApi, TOpts>(
   context: GlobalStateContext,
-  api: PiralApi<TApi>,
+  api: TApi,
   id: string,
-  arg: AnyComponent<ModalComponentProps<PiralApi<TApi>, TOpts>>,
+  arg: AnyComponent<ModalComponentProps<TApi, TOpts>>,
   defaults?: TOpts,
 ) {
   context.registerModal(id, {
@@ -98,7 +93,7 @@ function addModal<TApi, TOpts>(
 export function createApi<TApi>(
   target: ArbiterModuleMetadata,
   { events, context, extendApi }: PiralContainer<TApi>,
-): PiralApi<TApi> {
+): TApi {
   let feeds = 0;
   const prefix = target.name;
   const noop = () => {};
@@ -118,21 +113,9 @@ export function createApi<TApi>(
       setData(name, value, options) {
         const { target = 'memory', expires } = createDataOptions(options);
         const expiration = getDataExpiration(expires);
-        const result = context.tryWriteDataItem(name, value, prefix, target, expiration);
-
-        if (result && target !== 'memory') {
-          events.emit('store', {
-            name,
-            target,
-            value,
-            owner: prefix,
-            expires: expiration,
-          });
-        }
+        return context.tryWriteDataItem(name, value, prefix, target, expiration);
       },
-      createConnector<TData, TItem>(
-        resolver: FeedResolver<TData> | FeedConnectorOptions<TData, TItem>,
-      ): FeedConnector<TData> {
+      createConnector(resolver) {
         const id = buildName(prefix, feeds++);
         const options = createFeedOptions(id, resolver);
         context.createFeed(options.id);
@@ -143,38 +126,19 @@ export function createApi<TApi>(
 
         return component => withFeed(component, options) as any;
       },
+      createState(options) {
+        const actions = {};
+        const id = buildName(prefix, feeds++);
+        const cb = dispatch => context.replaceState(id, dispatch);
+        context.createState(id, options.state);
+        Object.keys(options.actions).forEach(key => {
+          const action = options.actions[key];
+          actions[key] = (...args) => action.call(api, cb, ...args);
+        });
+        return component => withPiletState(component, id, actions) as any;
+      },
       createForm(options) {
         return component => withForm(component, options);
-      },
-      trackEvent(name, properties = {}, measurements = {}) {
-        events.emit('track', {
-          type: 'event',
-          name,
-          properties,
-          measurements,
-        });
-      },
-      trackError(error, properties = {}, measurements = {}, severityLevel = SeverityLevel.Information) {
-        events.emit('track', {
-          type: 'error',
-          error,
-          properties,
-          measurements,
-          severityLevel,
-        });
-      },
-      trackFrame(name) {
-        events.emit('track', {
-          type: 'start-frame',
-          name,
-        });
-        return (properties = {}, measurements = {}) =>
-          events.emit('track', {
-            type: 'end-frame',
-            name,
-            properties,
-            measurements,
-          });
       },
       showNotification(content, options = {}) {
         const notification = {

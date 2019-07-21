@@ -35,7 +35,8 @@ Sets the source previously packed *.tgz bundle to publish.
 Sets the explicit URL where to publish the pilet to.
 
 - Type: `string`
-- Default: `"https://sample.piral.io/api/v1/pilet"`
+- Default: `""`
+- **Caution: This flag is required!**
 
 ### `--api-key`
 
@@ -43,6 +44,13 @@ Sets the potential API key to send to the service.
 
 - Type: `string`
 - Default: `""`
+
+### `--fresh`
+
+Performs a fresh build, then packages and finally publishes the pilet.
+
+- Type: `boolean`
+- Default: `false`
 
 ### `--base`
 

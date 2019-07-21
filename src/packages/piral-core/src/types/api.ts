@@ -3,9 +3,10 @@ import { MenuSettings } from './menu';
 import { TilePreferences } from './tile';
 import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
+import { StateContainerOptions, StateContainer, StateContainerActions, StateContainerReducers } from './container';
 import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { InputFormOptions, FormCreator } from './form';
-import { Disposable, SeverityLevel, EventEmitter } from './utils';
+import { Disposable, EventEmitter } from './utils';
 import { SearchProvider, SearchSettings } from './search';
 import {
   ForeignComponent,
@@ -44,24 +45,9 @@ export interface PiletMetadata {
 }
 
 /**
- * Defines the shape of a tracker function.
- */
-export interface Tracker {
-  /**
-   * Finishes the created frame by optionally passing the given properties and measurements.
-   */
-  (properties?: any, measurements?: any): void;
-}
-
-/**
- * Alias for an extensible Pilet API given from piral-core.
- */
-export type PiralApi<TExtraApi = {}> = PiralCoreApi<TExtraApi> & TExtraApi;
-
-/**
  * Defines the Pilet API from piral-core.
  */
-export interface PiralCoreApi<TExtraApi> extends EventEmitter {
+export interface PiralCoreApi<TApi = {}> extends EventEmitter {
   /**
    * Gets the metadata of the current pilet.
    */
@@ -76,6 +62,13 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param options The options for creating the connector.
    */
   createConnector<TData, TItem>(options: FeedConnectorOptions<TData, TItem>): FeedConnector<TData>;
+  /**
+   * Creates a state container for persisting some global state.
+   * @param options The options for creating the state container.
+   */
+  createState<TState, TActions extends StateContainerReducers<TState>>(
+    options: StateContainerOptions<TState, TActions>,
+  ): StateContainer<TState, StateContainerActions<TActions>>;
   /**
    * Creates an input form for tracking user input intelligently.
    * @param options The options for creating the form.
@@ -92,29 +85,9 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param name The name of the data to store.
    * @param value The value of the data to store.
    * @param options The optional configuration for storing this piece of data.
+   * @returns True if the data could be set, otherwise false.
    */
-  setData<TKey extends string>(name: TKey, value: SharedData[TKey], options?: DataStoreOptions): void;
-  /**
-   * Tracks a simple (singular) event at the current point in time.
-   * @param name The name of the event to track.
-   * @param properties The optional tracking properties to submit.
-   * @param measurements The optional tracking measurements to submit.
-   */
-  trackEvent(name: string, properties?: any, measurements?: any): void;
-  /**
-   * Tracks an exception event at the current point in time.
-   * @param exception The Error from a catch clause, or the string error message.
-   * @param properties The optional tracking properties to submit.
-   * @param measurements The optional tracking measurements to submit.
-   * @param severityLevel The optional severity level of error.
-   */
-  trackError(error: Error | string, properties?: any, measurements?: any, severityLevel?: SeverityLevel): void;
-  /**
-   * Starts tracking an event frame at the current point in time.
-   * @param name The name of the event to start tracking.
-   * @returns The method to use for ending the current event frame.
-   */
-  trackFrame(name: string): Tracker;
+  setData<TKey extends string>(name: TKey, value: SharedData[TKey], options?: DataStoreOptions): boolean;
   /**
    * Shows a notification in the determined spot using the provided content.
    * @param content The content to display. Normally, a string would be sufficient.
@@ -139,7 +112,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    */
   registerModalX<TOpts>(
     name: string,
-    render: ForeignComponent<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>,
+    render: ForeignComponent<ModalComponentProps<TApi, TOpts>>,
     defaults?: TOpts,
   ): void;
   /**
@@ -151,7 +124,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    */
   registerModal<TOpts>(
     name: string,
-    Component: ComponentType<ModalComponentProps<PiralApi<TExtraApi>, TOpts>>,
+    Component: ComponentType<ModalComponentProps<TApi, TOpts>>,
     defaults?: TOpts,
   ): void;
   /**
@@ -166,7 +139,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerPageX(route: string, render: ForeignComponent<PageComponentProps<PiralApi<TExtraApi>>>): void;
+  registerPageX(route: string, render: ForeignComponent<PageComponentProps<TApi>>): void;
   /**
    * Registers a route for React component.
    * The route needs to be unique and can contain params.
@@ -174,7 +147,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param route The route to register.
    * @param Component The component to render the page.
    */
-  registerPage(route: string, Component: ComponentType<PageComponentProps<PiralApi<TExtraApi>>>): void;
+  registerPage(route: string, Component: ComponentType<PageComponentProps<TApi>>): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
@@ -187,11 +160,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTileX(
-    name: string,
-    render: ForeignComponent<TileComponentProps<PiralApi<TExtraApi>>>,
-    preferences?: TilePreferences,
-  ): void;
+  registerTileX(name: string, render: ForeignComponent<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
   /**
    * Registers a tile for React components.
    * The name has to be unique within the current pilet.
@@ -199,11 +168,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(
-    name: string,
-    Component: ComponentType<TileComponentProps<PiralApi<TExtraApi>>>,
-    preferences?: TilePreferences,
-  ): void;
+  registerTile(name: string, Component: ComponentType<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
   /**
    * Unregisters a tile known by the given name.
    * Only previously registered tiles can be unregistered.
@@ -217,11 +182,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtensionX<T>(
-    name: string,
-    render: ForeignComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>,
-    defaults?: T,
-  ): void;
+  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<TApi, T>>, defaults?: T): void;
   /**
    * Registers an extension component with a React component.
    * The name must refer to the extension slot.
@@ -229,18 +190,14 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param Component The component to be rendered.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T>(
-    name: string,
-    Component: ComponentType<ExtensionComponentProps<PiralApi<TExtraApi>, T>>,
-    defaults?: T,
-  ): void;
+  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<TApi, T>>, defaults?: T): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
    * @param hook The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<PiralApi<TExtraApi>, T>>): void;
+  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<TApi, T>>): void;
   /**
    * Registers a menu item for general components.
    * The name has to be unique within the current pilet.
@@ -248,11 +205,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenuX(
-    name: string,
-    render: ForeignComponent<MenuComponentProps<PiralApi<TExtraApi>>>,
-    settings?: MenuSettings,
-  ): void;
+  registerMenuX(name: string, render: ForeignComponent<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
   /**
    * Registers a menu item for React components.
    * The name has to be unique within the current pilet.
@@ -260,11 +213,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(
-    name: string,
-    Component: ComponentType<MenuComponentProps<PiralApi<TExtraApi>>>,
-    settings?: MenuSettings,
-  ): void;
+  registerMenu(name: string, Component: ComponentType<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
   /**
    * Unregisters a menu item known by the given name.
    * Only previously registered menu items can be unregistered.
@@ -278,7 +227,7 @@ export interface PiralCoreApi<TExtraApi> extends EventEmitter {
    * @param provider The callback to be used for searching.
    * @param settings The optional settings for the search provider.
    */
-  registerSearchProvider(name: string, provider: SearchProvider<PiralApi<TExtraApi>>, settings?: SearchSettings): void;
+  registerSearchProvider(name: string, provider: SearchProvider<TApi>, settings?: SearchSettings): void;
   /**
    * Unregisters a search provider known by the given name.
    * Only previously registered search providers can be unregistered.

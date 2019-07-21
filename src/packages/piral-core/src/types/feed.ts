@@ -1,18 +1,13 @@
 import { ComponentType } from 'react';
+import { FeedConnectorProps } from './connector';
 import { Disposable } from './utils';
-
-export interface ConnectorProps<TData> {
-  /**
-   * The current data from the feed.
-   */
-  data: TData;
-}
 
 export interface FeedConnector<TData> {
   /**
    * Connector function for wrapping a component.
+   * @param component The component to connect by providing a data prop.
    */
-  <TProps>(component: ComponentType<TProps & ConnectorProps<TData>>): ComponentType<TProps>;
+  <TProps>(component: ComponentType<TProps & FeedConnectorProps<TData>>): ComponentType<TProps>;
 }
 
 export interface FeedResolver<TData> {

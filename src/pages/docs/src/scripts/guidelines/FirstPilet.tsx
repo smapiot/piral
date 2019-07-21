@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Section, ResponsiveContent, Md, EditSection, Menu } from '../components';
 
-const Content: React.SFC = () => {
+const Content: React.FC = () => {
   const ref = React.useRef(undefined);
 
   return (
     <>
       <ResponsiveContent ref={ref}>
-        <Section id="specification" title="Piral API">
-          <Md>{require('../../../../../../docs/specs/piral-api-specification.md')}</Md>
-          <EditSection link="specs/piral-api-specification.md" />
+        <Section id="first-pilet" title="First Pilet">
+          <Md>{require('../../../../../../docs/guidelines/first-pilet.md')}</Md>
+          <EditSection link="guidelines/first-pilet.md" />
         </Section>
       </ResponsiveContent>
       <Menu content={ref} />

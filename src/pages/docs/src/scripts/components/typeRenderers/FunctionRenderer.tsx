@@ -9,7 +9,7 @@ export interface FunctionRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const FunctionRenderer: React.SFC<FunctionRendererProps> = ({ node, render }) => (
+export const FunctionRenderer: React.FC<FunctionRendererProps> = ({ node, render }) => (
   <Details
     color="green"
     id={gid(node)}

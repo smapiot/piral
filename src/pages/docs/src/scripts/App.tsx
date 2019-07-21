@@ -5,6 +5,7 @@ import { Loader } from './components';
 const LandingPage = React.lazy(() => import('./landing'));
 const DocumentationPage = React.lazy(() => import('./documentation'));
 const SpecificationsPage = React.lazy(() => import('./specifications'));
+const GuidelinesPage = React.lazy(() => import('./guidelines'));
 const ToolingPage = React.lazy(() => import('./tooling'));
 const SamplesPage = React.lazy(() => import('./samples'));
 const TypesPage = React.lazy(() => import('./types'));
@@ -18,6 +19,7 @@ export const App = () => (
         <Route exact path="/" component={LandingPage} />
         <Route path="/documentation" component={DocumentationPage} />
         <Route path="/specifications" component={SpecificationsPage} />
+        <Route path="/guidelines" component={GuidelinesPage} />
         <Route path="/tooling" component={ToolingPage} />
         <Route path="/questions" component={QuestionsPage} />
         <Route path="/types" component={TypesPage} />

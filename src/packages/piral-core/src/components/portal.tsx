@@ -4,12 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { Routes } from './routes';
 import { Responsive } from './responsive';
 import { useGlobalState } from '../hooks';
+import { PortalProps } from '../types';
 
-export interface PortalProps {
-  children(content: React.ReactNode): React.ReactElement<any>;
-}
-
-export const Portal: React.SFC<PortalProps & RecallProps> = ({ children, loaded, error }) => {
+export const Portal: React.FC<PortalProps & RecallProps> = ({ children, loaded, error }) => {
   const { Dashboard, ErrorInfo, Loader } = useGlobalState(s => s.app.components);
 
   return (
