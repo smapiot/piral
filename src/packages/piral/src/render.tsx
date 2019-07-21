@@ -6,6 +6,7 @@ import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLoc
 import { createTranslationsActions } from './actions';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
 import { PiletApi, PiralOptions, PiletQueryResult, PiletsBag, PiralApi } from './types';
+import { mergeStates } from './state';
 
 function defaultExtendApi(api: PiletApi) {
   return api;
@@ -62,6 +63,7 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
       extendApi = defaultExtendApi,
       attach,
       actions,
+      state: explicitState,
       ...forwardOptions
     } = {}) => {
       const apis: PiletsBag = {};
@@ -71,10 +73,13 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
             return prev;
           }, {})
         : translations;
-      const state = setupState({
-        ...initialState,
-        languages: Object.keys(messages),
-      });
+      const state = mergeStates(
+        setupState({
+          ...initialState,
+          languages: Object.keys(messages),
+        }),
+        explicitState,
+      );
       const localizer = setupLocalizer({
         language: state.app.language.selected,
         messages,
