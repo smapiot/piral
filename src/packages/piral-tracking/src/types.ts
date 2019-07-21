@@ -1,6 +1,4 @@
-import * as piralCore from 'piral-core';
-
-declare module 'piral-core' {
+declare module 'piral-core/lib/types/utils' {
   interface PiralEventMap {
     'track-event': PiralTrackEventEvent;
     'track-error': PiralTrackErrorEvent;
