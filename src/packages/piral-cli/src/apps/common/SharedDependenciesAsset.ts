@@ -3,21 +3,26 @@ import { computeMd5 } from './hash';
 
 class SharedDependenciesAsset extends (Bundler as any).Asset {
   private readonly content: string;
+  public readonly type: string;
 
   constructor(name, options) {
     super(name, options);
     const externals = (process.env.SHARED_DEPENDENCIES || '').split(',');
     const deps = externals.map(name => `deps['${name}']=require('${name}')`);
     const code = deps.join(';');
-    this.content = `module.exports=function(deps){${code}};`;
+    this.type = 'js';
+    this.content = `exports = function(deps){${code}}`;
   }
 
   load() {}
 
   generate() {
-    return {
-      js: this.content,
-    };
+    return [
+      {
+        type: 'js',
+        value: this.content,
+      },
+    ];
   }
 
   generateHash() {
@@ -25,4 +30,4 @@ class SharedDependenciesAsset extends (Bundler as any).Asset {
   }
 }
 
-module.exports = SharedDependenciesAsset;
+export = SharedDependenciesAsset;

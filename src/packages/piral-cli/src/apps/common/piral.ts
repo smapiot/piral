@@ -1,11 +1,12 @@
+import { join } from 'path';
 import { VirtualPackager } from './VirtualPackager';
 
-export function modifyBundlerForPiral(proto: any) {
+export function modifyBundlerForPiral(proto: any, targetDir: string) {
   const name = '/lib/shared-dependencies.js';
   const ra = proto.getLoadedAsset;
   proto.getLoadedAsset = function(path: string) {
     if (path.endsWith(name)) {
-      path = `/shared-dependencies.vm`;
+      path = join(targetDir, 'shared-dependencies.vm');
     }
 
     return ra.call(this, path);

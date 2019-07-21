@@ -50,15 +50,16 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logLevel = buildPiralDefaults.logLevel,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
+  const targetDir = dirname(entryFiles);
   const { externals } = await retrievePiletsInfo(entryFiles);
 
   await setStandardEnvs({
     production: true,
-    target: dirname(entryFiles),
+    target: targetDir,
     dependencies: externals,
   });
 
-  modifyBundlerForPiral(Bundler.prototype);
+  modifyBundlerForPiral(Bundler.prototype, targetDir);
 
   const bundler = new Bundler(
     entryFiles,

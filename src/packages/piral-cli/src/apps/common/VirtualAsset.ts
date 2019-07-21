@@ -23,4 +23,4 @@ class VirtualAsset extends (Bundler as any).Asset {
   }
 }
 
-module.exports = VirtualAsset;
+export = VirtualAsset;
