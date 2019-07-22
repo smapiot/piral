@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.6.0 (to be determined)
+## 0.6.0 (July 22, 2019)
 
 * Improved the sample
 * Added new layout builder API
