@@ -1,6 +1,12 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
 import { PiralStateConfiguration, GlobalState, PiletRequester, Extend } from 'piral-core';
-import { LocalizationMessages, PiralGqlApiQuery, PiralFetchApiFetch } from 'piral-ext';
+import {
+  LocalizationMessages,
+  PiralGqlApiQuery,
+  PiralFetchApiFetch,
+  PiralGqlApiMutate,
+  PiralGqlApiSubscribe,
+} from 'piral-ext';
 import { LayoutBuilder } from './layout';
 
 export interface PiralAttachment<TApi> {
@@ -36,10 +42,15 @@ export interface PiralConfig<TApi, TState extends GlobalState = GlobalState, TAc
   extendApi?: Extend<TApi>;
 }
 
+export interface PiralLoaderOptions {
+  query: PiralGqlApiQuery;
+  fetch: PiralFetchApiFetch;
+  mutate: PiralGqlApiMutate;
+  subscribe: PiralGqlApiSubscribe;
+}
+
 export interface PiralLoader<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
-  (options: { query: PiralGqlApiQuery; fetch: PiralFetchApiFetch }): Promise<
-    PiralConfig<TApi, TState, TActions> | undefined
-  >;
+  (options: PiralLoaderOptions): Promise<PiralConfig<TApi, TState, TActions> | undefined>;
 }
 
 /**

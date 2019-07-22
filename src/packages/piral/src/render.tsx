@@ -2,10 +2,19 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'urql';
 import { createInstance, setupState, EventEmitter, GlobalState } from 'piral-core';
-import { createFetchApi, createGqlApi, createLocaleApi, setupGqlClient, setupLocalizer, gqlQuery } from 'piral-ext';
+import {
+  createFetchApi,
+  createGqlApi,
+  createLocaleApi,
+  setupGqlClient,
+  setupLocalizer,
+  gqlQuery,
+  gqlMutation,
+  gqlSubscription,
+} from 'piral-ext';
 import { createTranslationsActions } from './actions';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
-import { PiletApi, PiralOptions, PiletQueryResult, PiletsBag, PiralApi } from './types';
+import { PiletApi, PiralOptions, PiletQueryResult, PiletsBag } from './types';
 import { mergeStates } from './state';
 
 function defaultExtendApi(api: PiletApi) {
@@ -56,6 +65,8 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
   return load({
     fetch: (url, options) => createFetchApi(uri).fetch(url, options),
     query: (query, options) => gqlQuery(client, query, options),
+    mutate: (mutation, options) => gqlMutation(client, mutation, options),
+    subscribe: (subscription, subscriber, options) => gqlSubscription(client, subscription, subscriber, options),
   }).then(
     ({
       pilets = defaultRequestPilets,
