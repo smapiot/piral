@@ -5,7 +5,7 @@ export interface CapabilityProps {
   title: string;
 }
 
-export const Capability: React.SFC<CapabilityProps> = ({ image, title, children }) => (
+export const Capability: React.FC<CapabilityProps> = ({ image, title, children }) => (
   <div className="col-md-4 text-center">
     <img src={image} alt={title} className="mx-auto" />
     <h4>{title}</h4>

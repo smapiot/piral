@@ -3,7 +3,7 @@ import { Standard } from '../layout';
 import { FullDemo } from './full';
 import { CoreDemo } from './core';
 
-export const Page: React.SFC = () => {
+export const Page: React.FC = () => {
   return (
     <Standard title="Samples" icon="desktop" kind="pink">
       <div className="intro text-center">

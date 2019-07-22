@@ -4,7 +4,7 @@ import { defaultLayouts } from '../utils';
 
 export interface ResponsiveProps {}
 
-export const Responsive: React.SFC<ResponsiveProps> = ({ children }) => {
+export const Responsive: React.FC<ResponsiveProps> = ({ children }) => {
   const { breakpoints, current } = useGlobalState(m => m.app.layout);
   const changeTo = useAction('changeLayout');
   const selected = useMedia(breakpoints, defaultLayouts, current);

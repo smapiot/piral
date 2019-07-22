@@ -25,4 +25,6 @@ export type IconName =
   | 'binoculars'
   | 'desktop'
   | 'comment'
-  | 'link';
+  | 'link'
+  | 'monument'
+  | 'brain';

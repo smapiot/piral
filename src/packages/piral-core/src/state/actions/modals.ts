@@ -2,8 +2,8 @@ import { swap, Atom } from '@dbeining/react-atom';
 import { GlobalState, OpenModalDialog } from '../../types';
 import { prependItem, excludeItem } from '../../utils';
 
-export function openModal(dialog: OpenModalDialog) {
-  swap(this as Atom<GlobalState>, state => ({
+export function openModal(ctx: Atom<GlobalState>, dialog: OpenModalDialog) {
+  swap(ctx, state => ({
     ...state,
     app: {
       ...state.app,
@@ -12,8 +12,8 @@ export function openModal(dialog: OpenModalDialog) {
   }));
 }
 
-export function closeModal(dialog: OpenModalDialog) {
-  swap(this as Atom<GlobalState>, state => ({
+export function closeModal(ctx: Atom<GlobalState>, dialog: OpenModalDialog) {
+  swap(ctx, state => ({
     ...state,
     app: {
       ...state.app,

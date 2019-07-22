@@ -11,7 +11,7 @@ export interface BreadcrumbsProps {
   intermediate?: Array<Breadcrumb>;
 }
 
-export const Breadcrumbs: React.SFC<BreadcrumbsProps> = ({ current, intermediate = [] }) => (
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ current, intermediate = [] }) => (
   <ol className="breadcrumb">
     <li className="breadcrumb-item">
       <Link to="/">Home</Link>

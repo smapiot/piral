@@ -92,7 +92,7 @@ export async function retrievePiletsInfo(entryFile: string) {
     throw new Error('Invalid Piral instance.');
   }
 
-  return getPiletsInfo(packageJson);
+  return getPiletsInfo(require(packageJson));
 }
 
 export async function patchPiletPackage(root: string, name: string, version?: string) {

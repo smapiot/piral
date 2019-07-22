@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Demo } from '../components';
 
-export const FullDemo: React.SFC = () => (
+export const FullDemo: React.FC = () => (
   <Demo
     title="Piral Application"
     appLink="https://demo-full.piral.io"

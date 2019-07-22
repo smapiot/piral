@@ -7,7 +7,7 @@ export interface RoutesProps {
   NotFound: React.ComponentType<RouteComponentProps>;
 }
 
-export const Routes: React.SFC<RoutesProps> = ({ Home, NotFound }) => {
+export const Routes: React.FC<RoutesProps> = ({ Home, NotFound }) => {
   const { pages, routes, trackers } = useGlobalState(s => ({
     pages: s.components.pages,
     routes: s.app.routes,

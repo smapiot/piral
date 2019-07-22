@@ -15,7 +15,7 @@ export function useExtension<TData, TItem>(name: string) {
   const extensions = useGlobalState(s => s.components.extensions[name] || []);
 
   return React.useMemo(() => {
-    const ExtensionView: React.SFC<ExtensionSlotProps> = ({ render = defaultRender, empty, params = {} }) =>
+    const ExtensionView: React.FC<ExtensionSlotProps> = ({ render = defaultRender, empty, params = {} }) =>
       render(
         extensions.length === 0 && isfunc(empty)
           ? [<React.Fragment key="empty">{empty()}</React.Fragment>]

@@ -5,7 +5,7 @@ export interface SectionProps {
   title?: string;
 }
 
-export const Section: React.SFC<SectionProps> = ({ id, title, children }) => (
+export const Section: React.FC<SectionProps> = ({ id, title, children }) => (
   <section id={id} className="doc-section">
     {title && <h2 className="section-title">{title}</h2>}
     <div className="section-block">{children}</div>

@@ -6,7 +6,7 @@ export interface EditSectionProps {
   link: string;
 }
 
-export const EditSection: React.SFC<EditSectionProps> = ({ link }) => (
+export const EditSection: React.FC<EditSectionProps> = ({ link }) => (
   <div className="edit-github">
     <a href={docRef(link)} target="_blank">
       <Icon content="pencil-alt" /> Edit on GitHub

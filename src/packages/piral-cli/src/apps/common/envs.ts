@@ -22,7 +22,7 @@ async function readNextPackageJson(dir: string) {
 }
 
 export async function setStandardEnvs(options: StandardEnvProps = {}) {
-  const packageJson = await readNextPackageJson(options.target || process.cwd());
+  const packageJson = await readNextPackageJson(options.pilet || options.target || process.cwd());
 
   process.env.BUILD_TIME = new Date().toDateString();
   process.env.BUILD_TIME_FULL = new Date().toISOString();
@@ -39,7 +39,7 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
     process.env.DEBUG_PILET = options.pilet;
   }
 
-  if (options.dependencies) {
+  if (options.dependencies && options.dependencies.length) {
     process.env.SHARED_DEPENDENCIES = options.dependencies.join(',');
   }
 }

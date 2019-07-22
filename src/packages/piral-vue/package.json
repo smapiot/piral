@@ -4,6 +4,7 @@
   "description": "Extensions for Vue to the piral-core pilet API.",
   "keywords": [
     "piral",
+    "pilet-api",
     "smapiot",
     "portal",
     "modules",

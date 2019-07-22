@@ -38,6 +38,13 @@ Sets the port of the local development server.
 - Type: `number`
 - Default: `1234`
 
+### `--log-level`
+
+Sets the log level to use (1-5).
+
+- Type: `number`
+- Default: `3`
+
 ### `--app`
 
 Sets the name of the Piral instance.

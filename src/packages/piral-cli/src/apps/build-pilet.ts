@@ -4,8 +4,8 @@ import {
   extendConfig,
   setStandardEnvs,
   findFile,
-  modifyBundler,
-  extendBundler,
+  modifyBundlerForPilet,
+  extendBundlerForPilet,
   postProcess,
   getFileWithExtension,
 } from './common';
@@ -13,15 +13,24 @@ import {
 export interface BuildPiletOptions {
   entry?: string;
   target?: string;
+  detailedReport?: boolean;
+  logLevel?: 1 | 2 | 3;
 }
 
 export const buildPiletDefaults = {
   entry: './src/index',
   target: './dist/index.js',
+  detailedReport: false,
+  logLevel: 3 as const,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
-  const { entry = buildPiletDefaults.entry, target = buildPiletDefaults.target } = options;
+  const {
+    entry = buildPiletDefaults.entry,
+    target = buildPiletDefaults.target,
+    detailedReport = buildPiletDefaults.detailedReport,
+    logLevel = buildPiletDefaults.logLevel,
+  } = options;
   const entryFiles = getFileWithExtension(join(baseDir, entry));
   const targetDir = dirname(entryFiles);
   const packageJson = await findFile(targetDir, 'package.json');
@@ -38,7 +47,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     target: targetDir,
   });
 
-  modifyBundler(Bundler.prototype, externals, targetDir);
+  modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
 
   const bundler = new Bundler(
     entryFiles,
@@ -49,10 +58,11 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       minify: true,
       scopeHoist: false,
       contentHash: true,
+      detailedReport,
     }),
   );
 
-  extendBundler(bundler);
+  extendBundlerForPilet(bundler);
 
   const bundle = await bundler.bundle();
 

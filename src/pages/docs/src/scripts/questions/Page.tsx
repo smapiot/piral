@@ -3,7 +3,7 @@ import { Menu } from '../components';
 import { Content } from './Content';
 import { Standard } from '../layout';
 
-export const Page: React.SFC = () => {
+export const Page: React.FC = () => {
   const ref = React.useRef(undefined);
 
   return (

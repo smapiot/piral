@@ -23,7 +23,7 @@ describe('Components Actions Module', () => {
         extensions: {},
       },
     });
-    registerExtension.call(state, 'foo', 10);
+    registerExtension(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -33,7 +33,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterExtension.call(state, 'foo');
+    unregisterExtension(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -53,7 +53,7 @@ describe('Components Actions Module', () => {
         menuItems: {},
       },
     });
-    registerMenuItem.call(state, 'foo', 10);
+    registerMenuItem(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -63,7 +63,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterMenuItem.call(state, 'foo');
+    unregisterMenuItem(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -81,7 +81,7 @@ describe('Components Actions Module', () => {
         modals: {},
       },
     });
-    registerModal.call(state, 'foo', 10);
+    registerModal(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -91,7 +91,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterModal.call(state, 'foo');
+    unregisterModal(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -109,7 +109,7 @@ describe('Components Actions Module', () => {
         pages: {},
       },
     });
-    registerPage.call(state, 'foo', 10);
+    registerPage(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -119,7 +119,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterPage.call(state, 'foo');
+    unregisterPage(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -137,7 +137,7 @@ describe('Components Actions Module', () => {
         searchProviders: {},
       },
     });
-    registerSearchProvider.call(state, 'foo', 10);
+    registerSearchProvider(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -147,7 +147,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterSearchProvider.call(state, 'foo');
+    unregisterSearchProvider(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -165,7 +165,7 @@ describe('Components Actions Module', () => {
         tiles: {},
       },
     });
-    registerTile.call(state, 'foo', 10);
+    registerTile(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       components: {
@@ -175,7 +175,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterTile.call(state, 'foo');
+    unregisterTile(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       components: {

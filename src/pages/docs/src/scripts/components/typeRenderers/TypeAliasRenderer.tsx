@@ -9,7 +9,7 @@ export interface TypeAliasRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const TypeAliasRenderer: React.SFC<TypeAliasRendererProps> = ({ node, render }) => (
+export const TypeAliasRenderer: React.FC<TypeAliasRendererProps> = ({ node, render }) => (
   <Details color="pink" id={gid(node)} kind={node.kindString} title={node.name} description={node.comment}>
     <span className="block">
       <code>

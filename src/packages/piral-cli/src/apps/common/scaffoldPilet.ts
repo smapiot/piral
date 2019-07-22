@@ -1,29 +1,19 @@
-import { ForceOverwrite, createDirectory, createFileIfNotExists } from './io';
 import { join } from 'path';
+import { ForceOverwrite, createDirectory, createFileIfNotExists } from './io';
+import { PiletLanguage } from './language';
 
-export enum PiletLanguage {
-  ts,
-  js,
-}
+const sampleContent = `
+  app.showNotification('Hello World!');
+  app.registerMenu('sample-entry', () =>
+    <a href="https://docs.piral.io" target="_blank">Documentation</a>
+  );
+  app.registerTile('sample-tile', () => <div>Hello World!</div>, {
+    initialColumns: 2,
+    initialRows: 1,
+  });
+`;
 
-export function getDevDependencies(language: PiletLanguage) {
-  switch (language) {
-    case PiletLanguage.ts:
-      return {
-        typescript: 'latest',
-        '@types/react': 'latest',
-        '@types/react-dom': 'latest',
-        '@types/react-router': 'latest',
-        '@types/react-router-dom': 'latest',
-        '@types/node': 'latest',
-      };
-    case PiletLanguage.js:
-    default:
-      return {};
-  }
-}
-
-export async function scaffoldSourceFiles(
+export async function scaffoldPiletSourceFiles(
   language: PiletLanguage,
   root: string,
   sourceName: string,
@@ -71,10 +61,9 @@ export async function scaffoldSourceFiles(
         src,
         'index.tsx',
         `import { ${apiName} } from '${sourceName}';
+import * as React from 'react';
 
-export function setup(app: ${apiName}) {
-  app.showNotification('Hello World!');
-}
+export function setup(app: ${apiName}) {${sampleContent}}
 `,
         forceOverwrite,
       );
@@ -83,9 +72,9 @@ export function setup(app: ${apiName}) {
       await createFileIfNotExists(
         src,
         'index.jsx',
-        `export function setup(app) {
-  app.showNotification('Hello World!');
-}
+        `import * as React from 'react';
+
+export function setup(app) {${sampleContent}}
 `,
         forceOverwrite,
       );

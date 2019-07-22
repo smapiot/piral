@@ -14,19 +14,19 @@ const attach = attachFooter();
 export function setupFooter(api: PiletApi) {
   attach(
     api,
-    <a href="https://www.smapiot.com/en/imprint/" target="_blank">
+    <a href="https://smapiot.com/legal/imprint/" target="_blank">
       Imprint
     </a>,
   );
   attach(
     api,
-    <a href="https://www.smapiot.com/en/dataprivacy/" target="_blank">
+    <a href="https://smapiot.com/legal/privacy/" target="_blank">
       Data Privacy
     </a>,
   );
   attach(
     api,
-    <a href="https://www.smapiot.com/en/disclaimer/" target="_blank">
+    <a href="https://smapiot.com/legal/disclaimer/" target="_blank">
       Legal Disclaimer
     </a>,
   );

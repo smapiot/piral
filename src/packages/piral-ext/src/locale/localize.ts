@@ -1,8 +1,16 @@
-import { useGlobalState } from 'piral-core';
 import { LocalizationMessages } from './types';
 
-function getMissingKeyString(key: string, language: string): string {
-  return `__${language}_${key}__`;
+function defaultFallback(key: string, language: string): string {
+  if (process.env.NODE_ENV === 'production') {
+    return language ? '...' : '';
+  } else {
+    if (language) {
+      console.warn(`Missing translation of "${key}" in language "${language}".`);
+      return `__${language}_${key}__`;
+    } else {
+      return '';
+    }
+  }
 }
 
 function formatMessage<T>(message: string, variables: T): string {
@@ -11,27 +19,11 @@ function formatMessage<T>(message: string, variables: T): string {
   });
 }
 
-function translateMessage<T>(language: string, messages: LocalizationMessages, key: string, variables?: T) {
-  const translations = language && messages[language];
-  const translation = translations && translations[key];
-  return translation && (variables ? formatMessage(translation, variables) : translation);
-}
-
-function localizeBase<T>(messages: LocalizationMessages, language: string, key: string, variables?: T) {
-  const message = translateMessage(language, messages, key, variables);
-
-  if (message === undefined) {
-    return getMissingKeyString(key, language);
-  }
-
-  return message;
-}
-
 export class Localizer {
   /**
    * Creates a new instance of a localizer.
    */
-  constructor(private globalMessages: LocalizationMessages) {}
+  constructor(public messages: LocalizationMessages, public language: string, private fallback = defaultFallback) {}
 
   /**
    * Localizes the given key via the global translations.
@@ -39,9 +31,7 @@ export class Localizer {
    * @param variables The optional variables to use.
    */
   public localizeGlobal<T>(key: string, variables?: T) {
-    const language = useGlobalState(m => m.app.language.selected);
-    const messages = this.globalMessages;
-    return localizeBase(messages, language, key, variables);
+    return this.localizeBase(key, variables);
   }
 
   /**
@@ -52,13 +42,29 @@ export class Localizer {
    * @param variables The optional variables to use.
    */
   public localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T) {
-    const language = useGlobalState(m => m.app.language.selected);
-    const message = translateMessage(language, localMessages, key, variables);
+    const message = this.translateMessage(localMessages, key, variables);
 
     if (message === undefined) {
-      return localizeBase(this.globalMessages, language, key, variables);
+      return this.localizeBase(key, variables);
     }
 
     return message;
+  }
+
+  private localizeBase<T>(key: string, variables?: T) {
+    const message = this.translateMessage(this.messages, key, variables);
+
+    if (message === undefined) {
+      return this.fallback(key, this.language);
+    }
+
+    return message;
+  }
+
+  private translateMessage<T>(messages: LocalizationMessages, key: string, variables?: T) {
+    const language = this.language;
+    const translations = language && messages[language];
+    const translation = translations && translations[key];
+    return translation && (variables ? formatMessage(translation, variables) : translation);
   }
 }

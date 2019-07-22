@@ -120,6 +120,12 @@ function getCommandData(retrieve) {
         type: 'number',
       }));
     },
+    demandOption(name) {
+      return this.swap(name, flag => ({
+        ...flag,
+        required: true,
+      }));
+    }
   };
 
   if (typeof retrieve === 'function') {
@@ -139,7 +145,7 @@ function details(args) {
 ${arg.describe || 'No description available.'}
 
 - Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('\`, \`')}\`` : ''}
-- Default: \`${arg.default}\``).join(nl + nl);
+- Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}`).join(nl + nl);
 }
 
 function generateFrom(command) {

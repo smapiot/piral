@@ -1,11 +1,11 @@
 import { ReactChild } from 'react';
 import { wrapElement } from 'react-arbiter';
 import { swap, Atom, deref } from '@dbeining/react-atom';
-import { GlobalState, Disposable, SearchOptions } from '../../types';
 import { appendItems, prependItems } from '../../utils';
+import { GlobalState, Disposable, SearchOptions } from '../../types';
 
-export function setSearchInput(input: string) {
-  swap(this as Atom<GlobalState>, state => ({
+export function setSearchInput(ctx: Atom<GlobalState>, input: string) {
+  swap(ctx, state => ({
     ...state,
     search: {
       ...state.search,
@@ -14,8 +14,7 @@ export function setSearchInput(input: string) {
   }));
 }
 
-export function triggerSearch(query?: string, immediate = false): Disposable {
-  const ctx = this as Atom<GlobalState>;
+export function triggerSearch(ctx: Atom<GlobalState>, query?: string, immediate = false): Disposable {
   const state = deref(ctx);
   const providers = state.components.searchProviders;
   const { input, loading } = state.search;
@@ -28,7 +27,7 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
     const allProviders = Object.keys(providers);
     const providerKeys = allProviders.filter(m => !providers[m].onlyImmediate || immediate);
     const load = !!query && providerKeys.length > 0;
-    resetSearchResults.call(ctx, query, load);
+    resetSearchResults(ctx, query, load);
 
     if (load) {
       let searchCount = providerKeys.length;
@@ -41,11 +40,11 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
       providerKeys.forEach(key =>
         providers[key].search(opts).then(
           results => {
-            active && appendSearchResults.call(ctx, results.map(m => wrapElement(m)), --searchCount === 0);
+            active && appendSearchResults(ctx, results.map(m => wrapElement(m)), --searchCount === 0);
           },
           ex => {
             console.warn(ex);
-            active && --searchCount === 0 && appendSearchResults.call(ctx, [], true);
+            active && --searchCount === 0 && appendSearchResults(ctx, [], true);
           },
         ),
       );
@@ -53,7 +52,7 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
       return () => {
         active = false;
         providerKeys.forEach(key => providers[key].cancel());
-        appendSearchResults.call(ctx, [], load);
+        appendSearchResults(ctx, [], load);
       };
     } else if (!query) {
       allProviders.forEach(key => providers[key].clear());
@@ -63,8 +62,8 @@ export function triggerSearch(query?: string, immediate = false): Disposable {
   return () => {};
 }
 
-export function resetSearchResults(input: string, loading: boolean) {
-  swap(this as Atom<GlobalState>, state => ({
+export function resetSearchResults(ctx: Atom<GlobalState>, input: string, loading: boolean) {
+  swap(ctx, state => ({
     ...state,
     search: {
       ...state.search,
@@ -75,8 +74,8 @@ export function resetSearchResults(input: string, loading: boolean) {
   }));
 }
 
-export function appendSearchResults(items: Array<ReactChild>, done: boolean) {
-  swap(this as Atom<GlobalState>, state => ({
+export function appendSearchResults(ctx: Atom<GlobalState>, items: Array<ReactChild>, done: boolean) {
+  swap(ctx, state => ({
     ...state,
     search: {
       ...state.search,
@@ -86,8 +85,8 @@ export function appendSearchResults(items: Array<ReactChild>, done: boolean) {
   }));
 }
 
-export function prependSearchResults(items: Array<ReactChild>, done: boolean) {
-  swap(this as Atom<GlobalState>, state => ({
+export function prependSearchResults(ctx: Atom<GlobalState>, items: Array<ReactChild>, done: boolean) {
+  swap(ctx, state => ({
     ...state,
     search: {
       ...state.search,

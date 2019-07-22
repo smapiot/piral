@@ -11,6 +11,8 @@ function selectContent(state: GlobalState) {
   };
 }
 
+const defaultLayout: React.FC<LayoutProps> = ({ children }) => <>{children}</>;
+
 export interface AppLayoutCreator {
   Layout: React.ComponentType<LayoutProps>;
   Menu: React.ComponentType<MenuProps>;
@@ -19,7 +21,7 @@ export interface AppLayoutCreator {
   Modals: React.ComponentType;
 }
 
-export function createAppLayout({ Layout, ...props }: AppLayoutCreator): React.SFC {
+export function createAppLayout({ Layout = defaultLayout, ...props }: AppLayoutCreator): React.FC {
   return ({ children }) => {
     const content = useGlobalState(selectContent);
     return (

@@ -31,25 +31,25 @@ jest.mock('../hooks');
     },
   });
 
-const StubHome: React.SFC = props => <div />;
+const StubHome: React.FC = props => <div />;
 StubHome.displayName = 'StubHome';
 
-const StubCustomPage: React.SFC = props => <div />;
+const StubCustomPage: React.FC = props => <div />;
 StubCustomPage.displayName = 'StubCustomPage';
 
-const StubNotFound: React.SFC = props => <div />;
+const StubNotFound: React.FC = props => <div />;
 StubNotFound.displayName = 'StubNotFound';
 
-const StubComponent: React.SFC<{ data: any }> = props => <div />;
+const StubComponent: React.FC<{ data: any }> = props => <div />;
 StubComponent.displayName = 'StubComponent';
 
-const StubFooPage: React.SFC<{ data: any }> = props => <div />;
+const StubFooPage: React.FC<{ data: any }> = props => <div />;
 StubFooPage.displayName = 'StubFooPage';
 
-const StubFooBarPage: React.SFC<{ data: any }> = props => <div />;
+const StubFooBarPage: React.FC<{ data: any }> = props => <div />;
 StubFooBarPage.displayName = 'StubFooBarPage';
 
-const StubBarPage: React.SFC<{ data: any }> = props => <div />;
+const StubBarPage: React.FC<{ data: any }> = props => <div />;
 StubBarPage.displayName = 'StubBarPage';
 
 describe('Routes Module', () => {

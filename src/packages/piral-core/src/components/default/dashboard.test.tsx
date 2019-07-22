@@ -17,10 +17,10 @@ const state = {
 
 (React as any).useMemo = cb => cb();
 
-const StubDashboard: React.SFC = props => <div />;
+const StubDashboard: React.FC = props => <div />;
 StubDashboard.displayName = 'StubDashboard';
 
-const StubTile: React.SFC = props => <div />;
+const StubTile: React.FC = props => <div />;
 StubTile.displayName = 'StubTile';
 
 describe('Default Dashboard Component', () => {

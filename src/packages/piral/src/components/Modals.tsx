@@ -11,7 +11,7 @@ export interface ModalsCreator {
   ModalDialog: React.ComponentType<OpenModalDialog>;
 }
 
-export function createModals({ ModalsContainer, ModalDialog }: ModalsCreator): React.SFC {
+export function createModals({ ModalsContainer, ModalDialog }: ModalsCreator): React.FC {
   return () => {
     const { dialogs, components } = useGlobalState(s => ({
       dialogs: s.app.modals,

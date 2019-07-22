@@ -6,7 +6,7 @@ export interface FeatureProps {
   reverse?: boolean;
 }
 
-export const Feature: React.SFC<FeatureProps> = ({ title, image, children, reverse }) => {
+export const Feature: React.FC<FeatureProps> = ({ title, image, children, reverse }) => {
   const dir = reverse ? 'right' : 'left';
   const pos1 = reverse ? 'first' : 'last';
   const pos2 = reverse ? 'last' : 'first';

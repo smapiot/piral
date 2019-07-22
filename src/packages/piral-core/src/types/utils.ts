@@ -1,3 +1,6 @@
+import { ArbiterModuleMetadata } from 'react-arbiter';
+import { UserInfo } from './user';
+
 export interface PiralStorage {
   /**
    * Sets the value of an item.
@@ -17,10 +20,6 @@ export interface PiralStorage {
    */
   removeItem(name: string): void;
 }
-
-export type Dict<T> = Record<string, T>;
-
-export type Without<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export interface Disposable {
   /**
@@ -44,42 +43,37 @@ export interface PiralStoreDataEvent {
   expires: number;
 }
 
-export interface PiralTrackEventEvent {
-  type: 'event';
-  name: string;
-  properties: any;
-  measurements: any;
+export interface PiralChangeLanguageEvent {
+  previous: string;
+  selected: string;
 }
 
-export interface PiralTrackErrorEvent {
-  type: 'error';
-  error: any;
-  properties: any;
-  measurements: any;
-  severityLevel: SeverityLevel;
+export interface PiralChangeLayoutEvent {
+  previous: string;
+  current: string;
 }
 
-export interface PiralTrackStartFrameEvent {
-  type: 'start-frame';
-  name: string;
+export interface PiralChangeUserEvent {
+  previous: UserInfo;
+  current: UserInfo;
 }
 
-export interface PiralTrackEndFrameEvent {
-  type: 'end-frame';
-  name: string;
-  properties: any;
-  measurements: any;
+export interface PiralStartLoadEvent {}
+
+export interface PiralEndLoadEvent {
+  modules: Array<ArbiterModuleMetadata>;
 }
 
-export type PiralTrackEvent =
-  | PiralTrackEventEvent
-  | PiralTrackErrorEvent
-  | PiralTrackStartFrameEvent
-  | PiralTrackEndFrameEvent;
+export interface PiralLoadingEvent {}
 
 export interface PiralEventMap {
-  store: PiralStoreDataEvent;
-  track: PiralTrackEvent;
+  'store-data': PiralStoreDataEvent;
+  'change-language': PiralChangeLanguageEvent;
+  'change-layout': PiralChangeLayoutEvent;
+  'change-user': PiralChangeUserEvent;
+  'load-start': PiralStartLoadEvent;
+  'load-end': PiralEndLoadEvent;
+  loading: PiralLoadingEvent;
   [custom: string]: any;
 }
 
@@ -102,27 +96,4 @@ export interface EventEmitter {
    * @param arg The payload of the event.
    */
   emit<K extends keyof PiralEventMap>(type: K, arg: PiralEventMap[K]): EventEmitter;
-}
-
-export const enum SeverityLevel {
-  /**
-   * Verbose severity level.
-   */
-  Verbose = 0,
-  /**
-   * Information severity level.
-   */
-  Information = 1,
-  /**
-   * Warning severity level.
-   */
-  Warning = 2,
-  /**
-   * Error severity level.
-   */
-  Error = 3,
-  /**
-   * Critical severity level.
-   */
-  Critical = 4,
 }

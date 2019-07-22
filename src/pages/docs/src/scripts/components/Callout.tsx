@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router';
 import { cn, IconName } from './utils';
 
 export interface CalloutProps {
@@ -6,10 +7,22 @@ export interface CalloutProps {
   id?: string;
   type?: 'success' | 'info' | 'warning' | 'danger';
   icon?: IconName;
+  to?: string;
 }
 
-export const Callout: React.SFC<CalloutProps> = ({ title, type = 'info', icon, id, children }) => (
-  <div className={cn('callout-block', `callout-${type}`)} id={id}>
+const CalloutImpl: React.FC<CalloutProps & RouteComponentProps> = ({
+  title,
+  type = 'info',
+  icon,
+  id,
+  children,
+  history,
+  to,
+}) => (
+  <div
+    className={cn('callout-block', `callout-${type}`, to && 'callout-link')}
+    id={id}
+    onClick={() => to && history.push(to)}>
     <div className="icon-holder">{icon && <i className={cn('fas', `fa-${icon}`)} />}</div>
     <div className="content">
       {title && <h4 className="callout-title">{title}</h4>}
@@ -17,3 +30,5 @@ export const Callout: React.SFC<CalloutProps> = ({ title, type = 'info', icon, i
     </div>
   </div>
 );
+
+export const Callout = withRouter(CalloutImpl);

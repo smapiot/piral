@@ -1,5 +1,6 @@
 import { ComponentType, ReactChild } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { ArbiterModuleMetadata } from 'react-arbiter';
 import { Atom } from '@dbeining/react-atom';
 import { LayoutType, LayoutBreakpoints } from './layout';
 import { UserInfo, UserFeatures, UserPermissions } from './user';
@@ -9,7 +10,9 @@ import { MenuSettings } from './menu';
 import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
-import { Dict, Without, Disposable } from './utils';
+import { Dict, Without } from './common';
+import { Disposable } from './utils';
+import { StateDispatcher } from './container';
 import {
   TileComponentProps,
   BaseComponentProps,
@@ -69,6 +72,36 @@ export interface SearchProviderRegistration {
   onlyImmediate: boolean;
 }
 
+export interface GlobalStateOptions<TUser = {}> extends Partial<AppComponents> {
+  /**
+   * Sets the available languages.
+   * By default, only the default language is used.
+   */
+  languages?: Array<string>;
+  /**
+   * Sets the default language.
+   * By default, English is used.
+   * @default 'en'
+   */
+  language?: string;
+  /**
+   * Sets the additional / initial routes to register.
+   */
+  routes?: Record<string, ComponentType<RouteComponentProps>>;
+  /**
+   * Sets the available trackers to register.
+   */
+  trackers?: Array<ComponentType<RouteComponentProps>>;
+  /**
+   * Sets the available layout breakpoints.
+   */
+  breakpoints?: LayoutBreakpoints;
+  /**
+   * Sets the initially available user information.
+   */
+  user?: UserState<TUser>;
+}
+
 export interface AppComponents {
   /**
    * The home page renderer.
@@ -111,6 +144,12 @@ export interface AppState {
      */
     available: Array<string>;
   };
+  /**
+   * Gets if the application is currently performing a background loading
+   * activity, e.g., for loading modules asynchronously or fetching
+   * translations.
+   */
+  loading: boolean;
   /**
    * Components relevant for rendering parts of the app.
    */
@@ -271,6 +310,10 @@ export interface GlobalState<TUser = {}> {
    */
   feeds: FeedsState;
   /**
+   * The relevant state for the registered containers.
+   */
+  containers: Record<string, any>;
+  /**
    * The relevant state for the active forms.
    */
   forms: FormsState;
@@ -282,6 +325,10 @@ export interface GlobalState<TUser = {}> {
    * The relevant state for the in-site search.
    */
   search: SearchState;
+  /**
+   * Gets the loaded modules.
+   */
+  modules: Array<ArbiterModuleMetadata>;
 }
 
 export interface StateActions {
@@ -319,6 +366,23 @@ export interface StateActions {
    * @param selected The selected language.
    */
   selectLanguage(selected: string): void;
+  /**
+   * Creates a new local state.
+   * @param id The id of the state.
+   * @param state The initial state to use.
+   */
+  createState<TState>(id: string, state: TState): void;
+  /**
+   * Destroys an existing local state.
+   * @param id The id of the state.
+   */
+  destroyState(id: string): void;
+  /**
+   * Replaces the local state with the provided state.
+   * @param id The id of the local state.
+   * @param state The new state to use.
+   */
+  replaceState<TState>(id: string, reducer: StateDispatcher<TState>): void;
   /**
    * Creates a new (empty) feed.
    * @param id The id of the feed.
@@ -457,11 +521,18 @@ export interface StateActions {
    * @param immediate Optionally, determins if the search was invoked immediately.
    */
   triggerSearch(input?: string, immediate?: boolean): Disposable;
+  /**
+   * Sets the loading state of the application, which can be helpful for indicating loading of
+   * required data.
+   * @param loading The current loading state.
+   */
+  setLoading(loading: boolean): void;
 }
 
-export interface GlobalStateContext extends StateActions {
-  /**
-   * The global state context atom.
-   */
-  state: Atom<GlobalState>;
-}
+export type GlobalStateContext<TActions extends {} = {}> = StateActions &
+  TActions & {
+    /**
+     * The global state context atom.
+     */
+    state: Atom<GlobalState>;
+  };

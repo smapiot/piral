@@ -10,7 +10,7 @@ describe('Modals Actions Module', () => {
         modals: ['b'],
       },
     });
-    openModal.call(state, 'a');
+    openModal(state, 'a');
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -28,7 +28,7 @@ describe('Modals Actions Module', () => {
         modals: ['a', 'b', 'c'],
       },
     });
-    closeModal.call(state, 'b');
+    closeModal(state, 'b');
     expect(deref(state)).toEqual({
       foo: 5,
       app: {

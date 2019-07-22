@@ -39,15 +39,22 @@ export interface DebugPiletOptions {
   entry?: string;
   port?: number;
   app?: string;
+  logLevel?: 1 | 2 | 3;
 }
 
 export const debugPiletDefaults = {
   entry: './src/index',
   port: 1234,
+  logLevel: 3 as const,
 };
 
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
-  const { entry = debugPiletDefaults.entry, port = debugPiletDefaults.port, app } = options;
+  const {
+    entry = debugPiletDefaults.entry,
+    port = debugPiletDefaults.port,
+    logLevel = debugPiletDefaults.logLevel,
+    app,
+  } = options;
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const packageJson = await findFile(targetDir, 'package.json');
@@ -81,6 +88,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await runDebug(port, appFile, {
     source: entryFile,
+    logLevel,
     options: {
       target: dirname(entry),
       pilet: relative(dirname(coreFile), entryFile),

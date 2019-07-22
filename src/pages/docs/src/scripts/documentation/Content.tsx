@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { Section, ResponsiveContent, Md, EditSection } from '../components';
+import { Section, ResponsiveContent, Md, EditSection, Callout } from '../components';
 
 export interface ContentProps {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
+export const Content: React.FC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
+    <Callout title="Pilet Guideline" type="warning" icon="exclamation-triangle" to="/guidelines/static-piral-instance">
+      <p>Looking for help on creating a Piral instance? Check out our guideline for an easy approach.</p>
+    </Callout>
     {/* start:auto-generated */}
     <Section id="section-introduction" title="Introduction">
       <Md>{require('../../../../../../docs/introduction.md')}</Md>
@@ -37,5 +40,8 @@ export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
       <EditSection link="history.md" />
     </Section>
     {/* end:auto-generated */}
+    <Callout title="Pilet Guideline" type="warning" icon="exclamation-triangle" to="/guidelines/first-pilet">
+      <p>Looking for help on developing pilets? Check out our guidelines for developing pilets.</p>
+    </Callout>
   </ResponsiveContent>
 ));

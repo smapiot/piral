@@ -152,6 +152,11 @@ img.responsive {
   @include border-radius(4px);
   position: relative;
   margin-bottom: 30px;
+  color: rgba(0, 0, 0, 0.65) !important;
+
+  &.callout-link {
+    cursor: pointer;
+  }
 
   a {
     color: rgba(0, 0, 0, 0.55) !important;
@@ -182,7 +187,6 @@ img.responsive {
   .callout-title {
     margin-top: 0;
     margin-bottom: 5px;
-    color: rgba(0, 0, 0, 0.65);
   }
 }
 

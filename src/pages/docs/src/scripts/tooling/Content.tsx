@@ -5,7 +5,7 @@ export interface ContentProps {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
+export const Content: React.FC<ContentProps> = React.forwardRef((_, ref) => (
   <ResponsiveContent ref={ref}>
     {/* start:auto-generated */}
     <Section id="section-build-piral" title="build-piral">
@@ -16,9 +16,9 @@ export const Content: React.SFC<ContentProps> = React.forwardRef((_, ref) => (
       <Md>{require('../../../../../../docs/commands/debug-piral.md')}</Md>
       <EditSection link="commands/debug-piral.md" />
     </Section>
-    <Section id="section-install-piral" title="install-piral">
-      <Md>{require('../../../../../../docs/commands/install-piral.md')}</Md>
-      <EditSection link="commands/install-piral.md" />
+    <Section id="section-new-piral" title="new-piral">
+      <Md>{require('../../../../../../docs/commands/new-piral.md')}</Md>
+      <EditSection link="commands/new-piral.md" />
     </Section>
     <Section id="section-new-pilet" title="new-pilet">
       <Md>{require('../../../../../../docs/commands/new-pilet.md')}</Md>

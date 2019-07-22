@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { readDataItem, readDataValue, resetData, tryWriteDataItem, writeDataItem } from './data';
+import { createListener } from '../../modules/events';
 
 describe('Data Actions Module', () => {
   it('readDataItem reads the current item', () => {
@@ -11,7 +12,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const value = readDataItem.call(state, 'foo');
+    const value = readDataItem(state, 'foo');
     expect(value).toBe(10);
   });
   it('readDataValue reads the current value', () => {
@@ -25,7 +26,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const value = readDataValue.call(state, 'foo');
+    const value = readDataValue(state, 'foo');
     expect(value).toBe(15);
   });
 
@@ -39,7 +40,7 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    resetData.call(state);
+    resetData(state);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -58,7 +59,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem.call(state, 'fi', 0);
+    const events = createListener(undefined);
+    writeDataItem.call(events, state, 'fi', 0);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -86,7 +88,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem.call(state, 'bar', 0);
+    const events = createListener(undefined);
+    writeDataItem.call(events, state, 'bar', 0);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -113,7 +116,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    writeDataItem.call(state, 'bar', null);
+    const events = createListener(undefined);
+    writeDataItem.call(events, state, 'bar', null);
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
@@ -133,7 +137,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem.call(state, 'bar', 10, 'me');
+    const events = createListener(undefined);
+    const success = tryWriteDataItem.call(events, state, 'bar', 10, 'me');
     expect(success).toBe(true);
   });
 
@@ -150,7 +155,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem.call(state, 'bar', 10, 'me');
+    const events = createListener(undefined);
+    const success = tryWriteDataItem.call(events, state, 'bar', 10, 'me');
     expect(success).toBe(true);
   });
 
@@ -167,7 +173,8 @@ describe('Data Actions Module', () => {
         },
       },
     });
-    const success = tryWriteDataItem.call(state, 'bar', 10, 'me');
+    const events = createListener(undefined);
+    const success = tryWriteDataItem.call(events, state, 'bar', 10, 'me');
     expect(success).toBe(false);
   });
 });

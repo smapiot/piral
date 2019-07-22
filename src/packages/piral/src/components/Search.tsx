@@ -8,7 +8,7 @@ export interface SearchCreator {
   SearchResult: React.ComponentType<SearchResultProps>;
 }
 
-export function createSearch({ SearchContainer, SearchInput, SearchResult }: SearchCreator): React.SFC {
+export function createSearch({ SearchContainer, SearchInput, SearchResult }: SearchCreator): React.FC {
   return () => {
     const [value, setValue] = useSearch();
     const { loading, items } = useGlobalState(m => ({

@@ -3,7 +3,7 @@ import { useExtension } from '../hooks';
 import { ExtensionSlotProps } from '../types';
 
 export function getExtensionSlot(name: string) {
-  const ExtensionSlotView: React.SFC<ExtensionSlotProps> = props => {
+  const ExtensionSlotView: React.FC<ExtensionSlotProps> = props => {
     const Extension = useExtension(name);
     return <Extension {...props} />;
   };

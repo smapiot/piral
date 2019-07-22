@@ -9,7 +9,7 @@ export interface InlineInterfaceRendererProps {
   render(child: TiNode): JSX.Element;
 }
 
-export const InlineInterfaceRenderer: React.SFC<InlineInterfaceRendererProps> = ({ node, render }) => (
+export const InlineInterfaceRenderer: React.FC<InlineInterfaceRendererProps> = ({ node, render }) => (
   <>
     {'{'}
     <TypeLiteralRenderer node={node} render={render} />
