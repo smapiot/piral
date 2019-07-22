@@ -11,7 +11,7 @@ class SharedDependenciesAsset extends (Bundler as any).Asset {
     const deps = externals.map(name => `deps['${name}']=require('${name}')`);
     const code = deps.join(';');
     this.type = 'js';
-    this.content = `exports = function(deps){${code}}`;
+    this.content = `module.exports = function(deps){${code}}`;
   }
 
   load() {}

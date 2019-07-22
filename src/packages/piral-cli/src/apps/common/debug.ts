@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { dirname, join } from 'path';
 import { buildKrasWithCli, readKrasConfig, krasrc } from 'kras';
 import { getFreePort } from './port';
+import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
 import { setStandardEnvs, StandardEnvProps } from './envs';
 import { extendConfig } from './settings';
 import { startServer } from './server';
@@ -42,6 +43,10 @@ export async function runDebug(
 
   await setStandardEnvs(options);
 
+  if (options.dependencies) {
+    modifyBundlerForPiral(Bundler.prototype, options.target);
+  }
+
   const bundler = new Bundler(
     entry,
     extendConfig({
@@ -49,6 +54,11 @@ export async function runDebug(
       logLevel,
     }),
   );
+
+  if (options.dependencies) {
+    extendBundlerForPiral(bundler);
+  }
+
   krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
