@@ -103,7 +103,7 @@ describe('Merge State Module', () => {
           loading: true,
         },
       },
-      undefined
+      undefined,
     );
 
     expect(state).toEqual({

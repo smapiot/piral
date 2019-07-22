@@ -49,28 +49,47 @@ export function extendApis<T extends Array<Append>>(
 /**
  * Sets up the initial state from the given options.
  * @param options The options for setting up the initial state.
+ * @param state The optional parent state for deriving the defaults.
  */
-export function setupState<TUser = {}>(options: GlobalStateOptions<TUser> = {}): NestedPartial<GlobalState<TUser>> {
+export function setupState<TUser = {}>(
+  options: GlobalStateOptions<TUser> = {},
+  state: NestedPartial<GlobalState<TUser>> = {},
+): NestedPartial<GlobalState<TUser>> {
+  const {
+    components: defaultComponentsState = {
+      Dashboard: undefined,
+      Loader: undefined,
+      ErrorInfo: undefined,
+    },
+    language: defaultLanguageState = {
+      available: undefined,
+      selected: undefined,
+    },
+    layout: defaultLayoutState = {
+      breakpoints: undefined,
+      current: undefined,
+    },
+  } = state.app || {};
   const {
     user,
-    breakpoints = defaultBreakpoints,
+    breakpoints = defaultLayoutState.breakpoints || defaultBreakpoints,
     language = 'en',
-    languages = (language && [language]) || [],
+    languages = defaultLanguageState.available || (language && [language]) || [],
     routes = {},
     trackers = [],
-    Dashboard = DefaultDashboard,
-    Loader = DefaultLoader,
-    ErrorInfo = DefaultErrorInfo,
+    Dashboard = defaultComponentsState.Dashboard || DefaultDashboard,
+    Loader = defaultComponentsState.Loader || DefaultLoader,
+    ErrorInfo = defaultComponentsState.ErrorInfo || DefaultErrorInfo,
   } = options;
   const [defaultLanguage = language] = languages;
   return {
     app: {
       language: {
-        selected: getUserLocale(languages, defaultLanguage, language),
+        selected: defaultLanguageState.selected || getUserLocale(languages, defaultLanguage, language),
         available: languages,
       },
       layout: {
-        current: getCurrentLayout(breakpoints, defaultLayouts, 'desktop'),
+        current: defaultLayoutState.current || getCurrentLayout(breakpoints, defaultLayouts, 'desktop'),
         breakpoints,
       },
       components: {

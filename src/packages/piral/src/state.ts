@@ -20,7 +20,9 @@ function merge(target: any, source: any) {
   }
 }
 
-export function mergeStates<TState extends GlobalState>(...states: Array<NestedPartial<TState>>): NestedPartial<TState> {
+export function mergeStates<TState extends GlobalState>(
+  ...states: Array<NestedPartial<TState>>
+): NestedPartial<TState> {
   const state: NestedPartial<TState> = {};
 
   for (const s of states) {
