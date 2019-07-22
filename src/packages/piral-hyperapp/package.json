@@ -1,6 +1,6 @@
 {
   "name": "piral-hyperapp",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Extensions for hyperapp to the piral-core pilet API.",
   "keywords": [
     "piral",
@@ -34,11 +34,11 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.5.2",
-    "hyperapp": "^1.2.10"
+    "hyperapp": "^1.2.10",
+    "piral-core": "^0.6.0"
   },
   "peerDependencies": {
-    "piral-core": "^0.4.0 || ^0.5.0 || ^0.6.0",
-    "hyperapp": "^1.0.0"
+    "hyperapp": "^1.0.0",
+    "piral-core": "^0.4.0 || ^0.5.0 || ^0.6.0"
   }
 }
