@@ -69,6 +69,8 @@ export function setupState<TUser = {}>(
       breakpoints: undefined,
       current: undefined,
     },
+    routes: defaultRoutes = {},
+    trackers: defaultTrackers = [],
   } = state.app || {};
   const {
     user,
@@ -83,7 +85,9 @@ export function setupState<TUser = {}>(
   } = options;
   const [defaultLanguage = language] = languages;
   return {
+    ...state,
     app: {
+      ...state.app,
       language: {
         selected: defaultLanguageState.selected || getUserLocale(languages, defaultLanguage, language),
         available: languages,
@@ -97,9 +101,15 @@ export function setupState<TUser = {}>(
         ErrorInfo,
         Loader,
       },
-      routes,
-      trackers,
+      routes: {
+        ...defaultRoutes,
+        ...routes,
+      },
+      trackers: [...defaultTrackers, ...trackers],
     },
-    user,
+    user: {
+      ...state.user,
+      ...user,
+    },
   };
 }

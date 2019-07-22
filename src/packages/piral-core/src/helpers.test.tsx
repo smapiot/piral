@@ -28,7 +28,7 @@ describe('Helper Module', () => {
         routes: {},
         trackers: [],
       },
-      user: undefined,
+      user: {},
     });
   });
 
@@ -53,7 +53,7 @@ describe('Helper Module', () => {
         routes: {},
         trackers: [],
       },
-      user: undefined,
+      user: {},
     });
   });
 
@@ -83,7 +83,7 @@ describe('Helper Module', () => {
         routes,
         trackers: [],
       },
-      user: undefined,
+      user: {},
     });
   });
 });

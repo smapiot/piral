@@ -15,7 +15,6 @@ import {
 import { createTranslationsActions } from './actions';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
 import { PiletApi, PiralOptions, PiletQueryResult, PiletsBag } from './types';
-import { mergeStates } from './state';
 
 function defaultExtendApi(api: PiletApi) {
   return api;
@@ -84,11 +83,11 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
             return prev;
           }, {})
         : translations;
-      const state = mergeStates(
-        setupState({
+      const state = setupState(
+        {
           ...initialState,
           languages: Object.keys(messages),
-        }),
+        },
         explicitState,
       );
       const localizer = setupLocalizer({
