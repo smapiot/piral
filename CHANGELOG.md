@@ -4,6 +4,7 @@
 
 * Fixed externals resolution (#33)
 * Included custom metadata from pilets (#34)
+* Added ability to configure the used `history` (#37)
 
 ## 0.6.0 (July 22, 2019)
 

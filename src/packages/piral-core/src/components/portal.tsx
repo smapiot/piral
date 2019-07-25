@@ -1,16 +1,16 @@
 import * as React from 'react';
+import { Router } from 'react-router-dom';
 import { RecallProps } from 'react-arbiter';
-import { BrowserRouter } from 'react-router-dom';
 import { Routes } from './routes';
 import { Responsive } from './responsive';
 import { useGlobalState } from '../hooks';
 import { PortalProps } from '../types';
 
 export const Portal: React.FC<PortalProps & RecallProps> = ({ children, loaded, error }) => {
-  const { Dashboard, ErrorInfo, Loader } = useGlobalState(s => s.app.components);
+  const { Dashboard, ErrorInfo, Loader, history } = useGlobalState(s => s.app.components);
 
   return (
-    <BrowserRouter>
+    <Router history={history}>
       <Responsive>
         {loaded ? (
           children(
@@ -24,7 +24,7 @@ export const Portal: React.FC<PortalProps & RecallProps> = ({ children, loaded, 
           <Loader />
         )}
       </Responsive>
-    </BrowserRouter>
+    </Router>
   );
 };
 Portal.displayName = 'Portal';

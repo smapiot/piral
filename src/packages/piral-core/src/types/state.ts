@@ -1,3 +1,4 @@
+import { History } from 'history';
 import { ComponentType, ReactChild } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ArbiterModuleMetadata } from 'react-arbiter';
@@ -100,6 +101,10 @@ export interface GlobalStateOptions<TUser = {}> extends Partial<AppComponents> {
    * Sets the initially available user information.
    */
   user?: UserState<TUser>;
+  /**
+   * Sets the history to use for the router.
+   */
+  history?: History;
 }
 
 export interface AppComponents {
@@ -115,6 +120,10 @@ export interface AppComponents {
    * The error renderer.
    */
   ErrorInfo: ComponentType<ErrorInfoProps>;
+  /**
+   * The history management instance.
+   */
+  history: History;
 }
 
 export interface AppState {
