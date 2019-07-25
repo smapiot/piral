@@ -17,7 +17,6 @@ const MyTile: React.FC<{ count: number; increment(): void }> = ({ count, increme
  */
 export const ContainerPilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Container Module',
   version: '1.0.0',
   hash: '14',

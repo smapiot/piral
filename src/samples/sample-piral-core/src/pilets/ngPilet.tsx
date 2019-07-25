@@ -32,7 +32,6 @@ export class TileComponent {
  */
 export const NgPilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Angular Module',
   version: '1.0.0',
   hash: '430',

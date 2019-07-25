@@ -70,3 +70,5 @@ The additional fields for a pilet package are as follows:
 ```
 
 The `externals`, `scripts`, `devDependencies`, and `files` are added to simplify diffing during an upgrade of the Piral app. Likewise, the `tooling` (version of the used Piral CLI) and `version` (version of the used Piral instance) are informative only. The name of the Piral instance is used to find the right entry point for debugging.
+
+**Remark**: The `piral` field is exclusively used by the Piral CLI. For information regarding what might be picked up by a feed service implementation see the specification of a pilet, which discusses all fields in depth.

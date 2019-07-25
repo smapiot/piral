@@ -8,9 +8,10 @@ const StubComponent: SFC = props => createElement('div', props);
 StubComponent.displayName = 'StubComponent';
 
 const moduleMetadata = {
-  dependencies: {},
   name: 'my-module',
   version: '1.0.0',
+  link: undefined,
+  custom: undefined,
   hash: '123',
 };
 
@@ -81,7 +82,6 @@ describe('API Module', () => {
     expect(api.meta).toEqual({
       name: moduleMetadata.name,
       version: moduleMetadata.version,
-      dependencies: moduleMetadata.dependencies,
       hash: moduleMetadata.hash,
     });
   });

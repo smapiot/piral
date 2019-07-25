@@ -9,7 +9,6 @@ import { SampleApi } from '../types';
  */
 export const DashboardPilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Dashboard Module',
   version: '1.0.0',
   hash: '3',

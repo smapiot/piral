@@ -178,6 +178,16 @@ This allows a pilet feed service to selectively increment preview versions of th
 
 By default the `preview` field is set to `false`.
 
+### `custom`
+
+The `custom` property is a custom NPM field that is optional for a pilet.
+
+The property can contain any value. The content of this field is transported the feed service to the Piral instance.
+
+This allow the client (or special feed service implementation) to receive (and forward) some additional data about the pilet.
+
+By default the `custom` field is set to `null` and thus will not be forwarded.
+
 ## Root Module Layout
 
 The root module must export a single function called `setup`. This function will receive a single argument known as the *pilet API*. The pilet API is the interface between the hosting Piral instance and a pilet.

@@ -13,7 +13,6 @@ interface SampleFormData {
  */
 export const FormPilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Form Module',
   version: '1.0.0',
   hash: '429',

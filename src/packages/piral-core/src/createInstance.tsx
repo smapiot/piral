@@ -53,7 +53,6 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState, T
     const { setup } = require(process.env.DEBUG_PILET);
     availablePilets.push({
       content: '',
-      dependencies: {},
       name: process.env.BUILD_PCKG_NAME || 'dbg',
       version: process.env.BUILD_PCKG_VERSION || '1.0.0',
       hash: '',

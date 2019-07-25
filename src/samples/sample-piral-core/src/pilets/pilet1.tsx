@@ -12,7 +12,6 @@ import { SampleApi } from '../types';
  */
 export const Pilet1: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Example Module',
   version: '1.0.0',
   hash: '1',

@@ -7,7 +7,6 @@ import { SampleApi } from '../types';
  */
 export const SearchPilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Search Module',
   version: '1.0.0',
   hash: '428',

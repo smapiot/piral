@@ -3,6 +3,7 @@
 ## 0.6.1 (to be determined)
 
 * Fixed externals resolution (#33)
+* Included custom metadata from pilets (#34)
 
 ## 0.6.0 (July 22, 2019)
 

@@ -31,10 +31,6 @@ export interface PiletMetadata {
    */
   version: string;
   /**
-   * The dependencies of the pilet.
-   */
-  dependencies: Record<string, string>;
-  /**
    * The hashcode of the pilet.
    */
   hash: string;
@@ -42,6 +38,10 @@ export interface PiletMetadata {
    * The link to the root module of the pilet.
    */
   link: string;
+  /**
+   * The custom data supplied by the pilet.
+   */
+  custom?: any;
 }
 
 /**
