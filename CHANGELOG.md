@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.6.1 (to be determined)
+## 0.6.1 (July 26, 2019)
 
 * Fixed externals resolution (#33)
 * Included custom metadata from pilets (#34)
