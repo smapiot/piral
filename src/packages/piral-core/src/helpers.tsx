@@ -1,4 +1,5 @@
 import { AvailableDependencies } from 'react-arbiter';
+import { createBrowserHistory } from 'history';
 import { globalDependencies } from './modules';
 import { defaultBreakpoints, getUserLocale, getCurrentLayout, defaultLayouts } from './utils';
 import { DefaultDashboard, DefaultLoader, DefaultErrorInfo } from './components/default';
@@ -60,6 +61,7 @@ export function setupState<TUser = {}>(
       Dashboard: undefined,
       Loader: undefined,
       ErrorInfo: undefined,
+      history: undefined,
     },
     language: defaultLanguageState = {
       available: undefined,
@@ -74,6 +76,7 @@ export function setupState<TUser = {}>(
   } = state.app || {};
   const {
     user,
+    history = defaultComponentsState.history || createBrowserHistory(),
     breakpoints = defaultLayoutState.breakpoints || defaultBreakpoints,
     language = 'en',
     languages = defaultLanguageState.available || (language && [language]) || [],
@@ -100,6 +103,7 @@ export function setupState<TUser = {}>(
         Dashboard,
         ErrorInfo,
         Loader,
+        history,
       },
       routes: {
         ...defaultRoutes,

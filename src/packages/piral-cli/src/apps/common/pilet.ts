@@ -7,21 +7,40 @@ function resolveModule(name: string, targetDir: string) {
   try {
     const moduleDefinitionFile = `${name}/package.json`;
     const moduleDefinition = require(moduleDefinitionFile);
+    const replacements = {};
 
-    if (moduleDefinition && typeof moduleDefinition.module === 'string') {
+    if (moduleDefinition) {
       const moduleRoot = dirname(require.resolve(moduleDefinitionFile));
 
-      return {
-        name,
-        path: resolve(moduleRoot, moduleDefinition.module),
-      };
+      if (typeof moduleDefinition.browser === 'string') {
+        return {
+          name,
+          path: resolve(moduleRoot, moduleDefinition.browser),
+        };
+      }
+
+      if (typeof moduleDefinition.browser === 'object') {
+        Object.keys(moduleDefinition.browser).forEach(repl => {
+          const desired = moduleDefinition.browser[repl];
+          replacements[resolve(moduleRoot, repl)] = resolve(moduleRoot, desired);
+        });
+      }
+
+      if (typeof moduleDefinition.module === 'string') {
+        const modulePath = resolve(moduleRoot, moduleDefinition.module);
+        return {
+          name,
+          path: replacements[modulePath] || modulePath,
+        };
+      }
     }
 
+    const directPath = require.resolve(name, {
+      paths: [targetDir],
+    });
     return {
       name,
-      path: require.resolve(name, {
-        paths: [targetDir],
-      }),
+      path: replacements[directPath] || directPath,
     };
   } catch (ex) {
     console.warn(`Could not find module ${name}.`);

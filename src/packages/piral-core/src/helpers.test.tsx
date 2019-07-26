@@ -1,7 +1,11 @@
-import { extendApis, setupState } from './helpers';
+import { setupState } from './helpers';
 import { defaultBreakpoints } from './utils';
 import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from './components/default';
 import { LayoutBreakpoints } from './types';
+
+jest.mock('history', () => ({
+  createBrowserHistory: () => ({}),
+}));
 
 describe('Helper Module', () => {
   window.matchMedia = jest.fn(q => ({ matches: false })) as any;
@@ -24,6 +28,7 @@ describe('Helper Module', () => {
           Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
+          history: {},
         },
         routes: {},
         trackers: [],
@@ -49,6 +54,7 @@ describe('Helper Module', () => {
           Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
+          history: {},
         },
         routes: {},
         trackers: [],
@@ -79,6 +85,7 @@ describe('Helper Module', () => {
           Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
+          history: {},
         },
         routes,
         trackers: [],

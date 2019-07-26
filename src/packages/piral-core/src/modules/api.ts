@@ -103,9 +103,9 @@ export function createApi<TApi>(
       meta: {
         name: target.name,
         version: target.version,
-        dependencies: target.dependencies,
         hash: target.hash,
         link: target.link,
+        custom: target.custom,
       },
       getData(name) {
         return context.readDataValue(name);

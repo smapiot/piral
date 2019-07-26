@@ -3,6 +3,7 @@ import * as hooks from '../hooks';
 import * as routes from './routes';
 import * as responsive from './responsive';
 import { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
 import { Portal } from './portal';
 
 const StubDashboard: React.FC = props => <div />;
@@ -25,6 +26,7 @@ jest.mock('./responsive');
         Dashboard: StubDashboard,
         ErrorInfo: StubErrorInfo,
         Loader: StubLoader,
+        history: createMemoryHistory(),
       },
     },
   });

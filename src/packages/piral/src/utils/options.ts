@@ -1,6 +1,6 @@
 import { PiletRequester, GlobalState } from 'piral-core';
 import { isfunc, ArbiterModule, ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralAttachment, PiletApi, PiralConfig, PiralLoader } from '../types';
+import { PiralAttachment, PiralConfig, PiralLoader } from '../types';
 
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
@@ -47,7 +47,6 @@ export function getAvailablePilets<TApi>(setup?: PiralAttachment<TApi>) {
       hash: '',
       version: process.env.BUILD_PCKG_VERSION || '0.0.0',
       name: 'app',
-      dependencies: {},
     });
   }
 

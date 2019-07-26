@@ -49,7 +49,6 @@ const Tile: Component<TileComponentProps<any>, typeof state, typeof actions> = p
  */
 export const HyperappPilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Hyperapp Module',
   version: '1.0.0',
   hash: '521',

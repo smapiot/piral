@@ -7,7 +7,6 @@ import { SampleApi } from '../types';
  */
 export const ConnectorPilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Connector Module',
   version: '1.0.0',
   hash: '4',

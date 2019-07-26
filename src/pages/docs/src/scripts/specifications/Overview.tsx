@@ -7,9 +7,6 @@ const Overview: React.FC = () => (
       <h2 className="title">Piral Specifications</h2>
       <div id="cards-wrapper" className="cards-wrapper row">
         {/* start:auto-generated */}
-        <Card title="Gateway Specification" icon="puzzle-piece" to="/specifications/gateway-specification" kind="blue">
-          The Gateway Specification.
-        </Card>
         <Card title="Pilet Specification" icon="puzzle-piece" to="/specifications/pilet-specification" kind="blue">
           The Pilet Specification.
         </Card>

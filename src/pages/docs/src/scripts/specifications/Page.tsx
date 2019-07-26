@@ -4,7 +4,6 @@ import { Standard } from '../layout';
 
 const Overview = React.lazy(() => import('./Overview'));
 /* start:auto-generated */
-const GatewaySpecification = React.lazy(() => import('./GatewaySpecification'));
 const PiletSpecification = React.lazy(() => import('./PiletSpecification'));
 const PiralAPISpecification = React.lazy(() => import('./PiralAPISpecification'));
 /* end:auto-generated */
@@ -33,7 +32,6 @@ export const Page: React.FC<RouteComponentProps> = ({ location }) => {
       <Switch>
         <Route exact path="/specifications" component={Overview} />
         {/* start:auto-generated */}
-        <Route exact path="/specifications/gateway-specification" component={GatewaySpecification} />
         <Route exact path="/specifications/pilet-specification" component={PiletSpecification} />
         <Route exact path="/specifications/piral-api-specification" component={PiralAPISpecification} />
         {/* end:auto-generated */}

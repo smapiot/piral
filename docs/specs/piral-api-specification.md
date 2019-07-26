@@ -57,16 +57,12 @@ The pilet feed service needs to provide the following resources to be consumed b
 ```graphql
 type PiletMetadata {
   name: ID!
-  version: String
-  author: PiletAuthor
-  hash: String
+  version: String!
+  author: PiletAuthor!
+  hash: String!
+  content: String
   link: String
-  dependencies: [PiletDependency]
-}
-
-type PiletDependency {
-  name: String
-  link: String
+  custom: JSON
 }
 
 type PiletLicense {

@@ -6,4 +6,3 @@ The available specifications:
 
 - [Piral API specification](./piral-api-specification.md)
 - [Pilet specification](./pilet-specification.md)
-- [Service gateway specification](./gateway-specification.md)

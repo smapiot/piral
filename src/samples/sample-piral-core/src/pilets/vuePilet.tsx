@@ -7,7 +7,6 @@ import { SampleApi } from '../types';
  */
 export const VuePilet: ArbiterModule<SampleApi> = {
   content: '',
-  dependencies: {},
   name: 'Vue Module',
   version: '1.0.0',
   hash: '429',
