@@ -7,9 +7,14 @@ import { PiralNgApi } from './types';
  * @param api The API to extend.
  */
 export function createNgApi<T extends PiralCoreApi<any>>(api: T): PiralNgApi {
+  let next = ~~(Math.random() * 10000);
   return {
-    registerTileNg(id, component, options) {
-      ngTile(api, id, component, options);
+    registerTileNg(id, component, options?) {
+      if (typeof id === 'string') {
+        ngTile(api, id, component, options);
+      } else {
+        ngTile(api, `${next++}`, id, component);
+      }
     },
     registerPageNg(route, component) {
       ngPage(api, route, component);
@@ -17,8 +22,12 @@ export function createNgApi<T extends PiralCoreApi<any>>(api: T): PiralNgApi {
     registerExtensionNg(slot, component, defaults) {
       ngExtension(api, slot, component, defaults);
     },
-    registerMenuNg(id, component, settings) {
-      ngMenu(api, id, component, settings);
+    registerMenuNg(id, component, settings?) {
+      if (typeof id === 'string') {
+        ngMenu(api, id, component, settings);
+      } else {
+        ngMenu(api, `${next++}`, id, component);
+      }
     },
     registerModalNg(id, component, defaults) {
       ngModal(api, id, component, defaults);

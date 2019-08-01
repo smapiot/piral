@@ -15,6 +15,7 @@ import {
 export interface PiralVueApi<T> {
   /**
    * Registers a tile for a Vue component.
+   * The id parameter has to be unique within the current pilet.
    * @param id The name of the tile.
    * @param component The Vue component.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
@@ -24,6 +25,12 @@ export interface PiralVueApi<T> {
     component: FunctionalComponentOptions<TileComponentProps<T>>,
     options?: TilePreferences,
   ): void;
+  /**
+   * Registers a tile for a Vue component.
+   * @param component The Vue component.
+   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
+   */
+  registerTileVue(component: FunctionalComponentOptions<TileComponentProps<T>>, options?: TilePreferences): void;
   /**
    * Registers a route for a Vue component.
    * The route needs to be unique and can contain params.
@@ -46,7 +53,7 @@ export interface PiralVueApi<T> {
   ): void;
   /**
    * Registers a menu item for a Vue component.
-   * The name has to be unique within the current pilet.
+   * The id parameter has to be unique within the current pilet.
    * @param id The name of the menu.
    * @param component The Vue component.
    * @param settings The optional configuration for the menu item.
@@ -56,6 +63,12 @@ export interface PiralVueApi<T> {
     component: FunctionalComponentOptions<MenuComponentProps<T>>,
     settings?: MenuSettings,
   ): void;
+  /**
+   * Registers a menu item for a Vue component.
+   * @param component The Vue component.
+   * @param settings The optional configuration for the menu item.
+   */
+  registerMenuVue(component: FunctionalComponentOptions<MenuComponentProps<T>>, settings?: MenuSettings): void;
   /**
    * Registers a modal dialog using a Vue component.
    * @param id The name of the modal dialog.

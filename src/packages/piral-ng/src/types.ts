@@ -6,11 +6,18 @@ import { TilePreferences, MenuSettings } from 'piral-core';
 export interface PiralNgApi {
   /**
    * Registers a tile for an Angular component.
+   * The id parameter has to be unique within the current pilet.
    * @param id The name of the tile element.
    * @param component The Angular component to bootstrap.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
   registerTileNg(id: string, component: any, options?: TilePreferences): void;
+  /**
+   * Registers a tile for an Angular component.
+   * @param component The Angular component to bootstrap.
+   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
+   */
+  registerTileNg(component: any, options?: TilePreferences): void;
   /**
    * Registers a route for an Angular component.
    * The route needs to be unique and can contain params.
@@ -29,12 +36,18 @@ export interface PiralNgApi {
   registerExtensionNg<T>(id: string, component: any, defaults?: T): void;
   /**
    * Registers a menu item for an Angular component.
-   * The name has to be unique within the current pilet.
+   * The id parameter has to be unique within the current pilet.
    * @param id The name of the menu element.
    * @param component The Angular component to bootstrap.
    * @param settings The optional configuration for the menu item.
    */
   registerMenuNg(id: string, component: any, settings: MenuSettings): void;
+  /**
+   * Registers a menu item for an Angular component.
+   * @param component The Angular component to bootstrap.
+   * @param settings The optional configuration for the menu item.
+   */
+  registerMenuNg(component: any, settings: MenuSettings): void;
   /**
    * Registers a modal dialog using an Angular component.
    * @param id The name of the modal element.
