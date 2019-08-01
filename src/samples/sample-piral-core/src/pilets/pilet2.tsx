@@ -31,9 +31,9 @@ export const Pilet2: ArbiterModule<SampleApi> = {
       },
     });
 
-    piral.registerTile('example', () => <div className="tile">Rendered tile from another module.</div>);
+    piral.registerTile(() => <div className="tile">Rendered tile from another module.</div>);
 
-    piral.registerMenu('example', () => <Link to="/example3">Example 3</Link>, { type: 'general' });
+    piral.registerMenu(() => <Link to="/example3">Example 3</Link>, { type: 'general' });
 
     piral.registerPage(
       '/example3',

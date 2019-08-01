@@ -35,7 +35,6 @@ export const ContainerPilet: ArbiterModule<SampleApi> = {
     });
 
     piral.registerTile(
-      'example',
       connect<TileComponentProps<SampleApi>>(({ state, actions }) => (
         <MyTile count={state.count} increment={actions.increment} />
       )),

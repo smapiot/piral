@@ -13,7 +13,7 @@ export function createNgApi<T extends PiralCoreApi<any>>(api: T): PiralNgApi {
       if (typeof id === 'string') {
         ngTile(api, id, component, options);
       } else {
-        ngTile(api, `${next++}`, id, component);
+        ngTile(api, `ng-${next++}`, id, component);
       }
     },
     registerPageNg(route, component) {
@@ -26,7 +26,7 @@ export function createNgApi<T extends PiralCoreApi<any>>(api: T): PiralNgApi {
       if (typeof id === 'string') {
         ngMenu(api, id, component, settings);
       } else {
-        ngMenu(api, `${next++}`, id, component);
+        ngMenu(api, `ng-${next++}`, id, component);
       }
     },
     registerModalNg(id, component, defaults) {

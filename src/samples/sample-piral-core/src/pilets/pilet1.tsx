@@ -18,7 +18,7 @@ export const Pilet1: ArbiterModule<SampleApi> = {
   setup(piral) {
     console.log(piral);
 
-    piral.registerTileX('example-general', (element, props) => {
+    piral.registerTileX((element, props) => {
       element.innerHTML = `
         <div class="tile">
           General rendering for a ${props.columns}x${props.rows} tile.
@@ -26,9 +26,23 @@ export const Pilet1: ArbiterModule<SampleApi> = {
       `;
     });
 
-    piral.registerTile('example-react', () => <div className="tile">Rendered a tile from React.</div>);
+    piral.registerTile('example-react', () => (
+      <div className="tile">
+        Rendered a tile from React.
+        <div>
+          <button onClick={() => piral.unregisterTile('example-react')}>Unregister me!</button>
+        </div>
+      </div>
+    ));
 
-    piral.registerMenu('example', () => <Link to="http://www.google.com">Google</Link>, { type: 'general' });
+    piral.registerMenu(
+      () => (
+        <a href="http://www.google.com?q=piral" target="_blank">
+          Google
+        </a>
+      ),
+      { type: 'general' },
+    );
 
     piral.registerPage('/example1', () => (
       <div>

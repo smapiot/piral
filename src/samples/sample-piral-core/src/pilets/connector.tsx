@@ -23,7 +23,7 @@ export const ConnectorPilet: ArbiterModule<SampleApi> = {
       </ul>
     ));
 
-    piral.registerTile('example', () => (
+    piral.registerTile(() => (
       <div className="tile">
         <b>This is the example tile from connector module.</b>
         <DataView />

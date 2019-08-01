@@ -11,7 +11,7 @@ export const VuePilet: ArbiterModule<SampleApi> = {
   version: '1.0.0',
   hash: '429',
   setup(piral) {
-    piral.registerTileVue('my-vue-tile', Tile, {
+    piral.registerTileVue(Tile, {
       initialColumns: 2,
       initialRows: 2,
     });
