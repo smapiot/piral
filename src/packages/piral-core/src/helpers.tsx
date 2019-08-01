@@ -1,6 +1,6 @@
-import { AvailableDependencies } from 'react-arbiter';
 import { createBrowserHistory } from 'history';
-import { globalDependencies } from './modules';
+import { AvailableDependencies } from 'react-arbiter';
+import { globalDependencies, getLocalDependencies } from './modules';
 import { defaultBreakpoints, getUserLocale, getCurrentLayout, defaultLayouts } from './utils';
 import { DefaultDashboard, DefaultLoader, DefaultErrorInfo } from './components/default';
 import {
@@ -18,12 +18,26 @@ import {
  * Creates a dependency getter that sets the shared dependencies explicitly.
  * Overrides the potentially set shared dependencies from the Piral CLI, but
  * keeps all global dependencies such as react, react-dom, ...
- * @param dependencies The shared dependencies to declare.
+ * @param sharedDependencies The shared dependencies to declare.
  */
 export function setSharedDependencies(sharedDependencies: AvailableDependencies) {
   const dependencies = {
     ...globalDependencies,
     ...sharedDependencies,
+  };
+  return () => dependencies;
+}
+
+/**
+ * Creates a dependency getter that extends the implicitly set shared
+ * dependencies. Extends the potentially set shared dependencies from the Piral
+ * CLI and keeps all global dependencies such as react, react-dom, ...
+ * @param extraDependencies The dependencies to add.
+ */
+export function extendSharedDependencies(extraDependencies: AvailableDependencies) {
+  const dependencies = {
+    ...getLocalDependencies(),
+    ...extraDependencies,
   };
   return () => dependencies;
 }

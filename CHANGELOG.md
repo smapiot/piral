@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.6.2 (to be determined)
+
+* Added `extendSharedDependencies` helper
+
 ## 0.6.1 (July 26, 2019)
 
 * Fixed externals resolution (#33)
