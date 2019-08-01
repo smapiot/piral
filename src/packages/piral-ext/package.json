@@ -1,6 +1,6 @@
 {
   "name": "piral-ext",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Useful API extensions and component definitions for extending piral-core.",
   "keywords": [
     "piral",
@@ -34,7 +34,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.6.0"
+    "piral-core": "^0.6.1"
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
