@@ -2,7 +2,10 @@
 
 ## 0.6.2 (to be determined)
 
-* Added `extendSharedDependencies` helper
+* Added `extendSharedDependencies` helper (#48)
+* Distinguish between Piral development and contributing (#42)
+* Started improving the Piral documentation structure (#41)
+* Adapt documentation about static Piral instance (#43)
 
 ## 0.6.1 (July 26, 2019)
 

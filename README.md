@@ -8,15 +8,20 @@ Easily build a next generation portal application. Piral enables you to create a
 
 ## Getting Started
 
-(tbd)
-
-## Documentation
-
-All the documentation is available [in the docs folder](./docs/README.md). Alternatively, look into our documentation website at [docs.piral.io](https://docs.piral.io).
+Piral is developed as a monorepo. As such this repository may contain an overwhelming amount of information. Our recommendation is to start at the documentation available at [docs.piral.io](https://docs.piral.io). Working through the available guidelines will give you the necessary information in the best possible order.
 
 ## Contributing
 
 The main purpose of this repository is to continue to evolve Piral core, making it faster, more powerful, and easier to use. Development of Piral happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving Piral.
+
+### Repository Structure
+
+- `docs` contains the (user) documentation
+- `src` has the sources for all the developed packages, samples, and pages
+- `test` contains the test setup and (in the future) system tests
+- `tools` has some of the internal tooling for building the different components
+
+Each subdirectory contains another `README.md` with more information regarding the contents of the specific folder.
 
 ### [Code of Conduct](./CODE_OF_CONDUCT.md)
 
