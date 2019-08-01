@@ -79,8 +79,10 @@ The layout elements (e.g., what loader to use) are all just simple React compone
 
 Running the application now should mostly work - up to an error that no feed was found.
 
+To launch the debug mode just run the following code on the command line:
+
 ```sh
-npm start
+piral debug
 ```
 
 To point to, e.g., the sample feed we could just change the configuration in the `index.tsx`, however, we should already think about scaling the development later. Thus, a better way is to use some backend mock to provide the sample at the same address as the app shell (e.g., `http://localhost:1234`). For this a mock backend has been created in the `backend.js` file of the `src/mocks` folder.
@@ -97,6 +99,16 @@ renderInstance({
   },
 });
 ```
+
+### Building the Application for Production
+
+Similarly, for building the application for a production deployment the `build` command of the `piral-cli` can be used.
+
+```sh
+piral build
+```
+
+For creating an emulator package consisting of the types and sources `npm pack` is sufficient. The `dist` directory can be omitted to save some space (the original sources are sufficient).
 
 ## Next Steps
 
