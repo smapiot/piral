@@ -6,45 +6,13 @@ Easily build a next generation portal application. Piral enables you to create a
 
 :zap: A pilet is capable of dynamically extending other pilets or using such extension slots itself. Otherwise, a pilet is quite isolated (developed and handled) and will never destroy your application.
 
-:warning: This project is still pretty much work in progress.
-
 ## Getting Started
 
-Creating your own Piral app is as simple as installing Piral as a dependency to your React app:
+(tbd)
 
-```sh
-npm i piral-core
-```
+## Documentation
 
-**Remark**: This package already includes TypeScript declarations. No need to install other packages.
-
-Now you can create a new Piral instance in your code:
-
-```jsx
-import { createInstance } from 'piral-core';
-
-const App = createInstance({
-  requestPilets: () => fetch('https://feed.piral.io/api/v1/pilet/sample'),
-});
-```
-
-**Remark**: For all available API options make sure to check out the [documentation](https://docs.piral.io).
-
-**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [feed.piral.io](https://feed.piral.io)) or your own API / mechanism to serve the modules.
-
-Finally, you can render this Piral instance by using the `render` function from `react-dom`:
-
-```jsx
-render((
-  <App>
-    {content => <Layout>{content}</Layout>}
-  </App>
-), document.querySelector('#app'));
-```
-
-Alternatively, you can use your new Piral instance anywhere as a component.
-
-Your Piral app can be build with any technology that you like or already use (e.g., Webpack, Parcel, ...). If you are unsure what to you use you may fall back to `piral-cli`, which (among other things) also contains a build mechanism that *should just work* :rocket:.
+All the documentation is available [in the docs folder](./docs/README.md). Alternatively, look into our documentation website at [docs.piral.io](https://docs.piral.io).
 
 ## Contributing
 
