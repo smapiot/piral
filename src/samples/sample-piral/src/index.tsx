@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { renderInstance } from 'piral';
 import { setupFooter, setupMenu } from './parts';
 import { layout } from './layout';

@@ -63,9 +63,9 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     await updateExistingJson(root, 'package.json', getPiralPackage(app, language));
 
-    console.log(`Installing NPM package ${packageName}@${version} ...`, '--no-package-lock');
+    console.log(`Installing NPM package ${packageName}@${version} ...`);
 
-    await installPackage(packageName, version, root);
+    await installPackage(packageName, version, root, '--no-package-lock');
 
     console.log(`Taking care of templating ...`);
 
