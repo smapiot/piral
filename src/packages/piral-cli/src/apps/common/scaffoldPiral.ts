@@ -112,7 +112,7 @@ export async function scaffoldPiralSourceFiles(
   forceOverwrite: ForceOverwrite,
 ) {
   const src = dirname(join(root, app));
-  const mocks = join(root, 'mocks');
+  const mocks = join(src, 'mocks');
   await createFileIfNotExists(root, app, getPiralAppContent(language), forceOverwrite);
   await createFileIfNotExists(mocks, 'backend.js', getPiralMockContent(), forceOverwrite);
 
