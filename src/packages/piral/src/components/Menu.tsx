@@ -10,23 +10,20 @@ export interface MenuCreator {
 export function createMenu({ MenuContainer, MenuItem }: MenuCreator): React.FC<MenuProps> {
   return ({ type = 'general' as MenuType }) => {
     const menuItems = useGlobalState(s => s.components.menuItems);
+    const renderItems = Object.keys(menuItems)
+      .filter(name => menuItems[name].settings.type === type)
+      .map(name => ({
+        name,
+        Component: menuItems[name].component,
+      }));
 
     return (
       <MenuContainer type={type}>
-        {Object.keys(menuItems).map(name => {
-          const item = menuItems[name];
-
-          if (item.settings.type === type) {
-            const Component = item.component;
-            return (
-              <MenuItem key={name} type={type}>
-                <Component />
-              </MenuItem>
-            );
-          }
-
-          return undefined;
-        })}
+        {renderItems.map(({ name, Component }) => (
+          <MenuItem key={name} type={type}>
+            <Component />
+          </MenuItem>
+        ))}
       </MenuContainer>
     );
   };
