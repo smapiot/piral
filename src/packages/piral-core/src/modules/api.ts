@@ -12,7 +12,11 @@ import {
   TilePreferences,
   PiralContainer,
   GlobalStateContext,
+  SearchProvider,
+  SearchSettings,
 } from '../types';
+
+const noop = () => {};
 
 function buildName(prefix: string, name: string | number) {
   return `${prefix}://${name}`;
@@ -90,13 +94,31 @@ function addModal<TApi, TOpts>(
   });
 }
 
+function addSearchProvider<TApi>(
+  context: GlobalStateContext,
+  api: TApi,
+  id: string,
+  provider: SearchProvider<TApi>,
+  settings: SearchSettings,
+) {
+  const { onlyImmediate = false, onCancel, onClear } = settings;
+  context.registerSearchProvider(id, {
+    onlyImmediate,
+    cancel: isfunc(onCancel) ? onCancel : noop,
+    clear: isfunc(onClear) ? onClear : noop,
+    search(q) {
+      return provider(q, api);
+    },
+  });
+}
+
 export function createApi<TApi>(
   target: ArbiterModuleMetadata,
   { events, context, extendApi }: PiralContainer<TApi>,
 ): TApi {
   let feeds = 0;
+  let next = 0;
   const prefix = target.name;
-  const noop = () => {};
   const api = extendApi(
     {
       ...events,
@@ -178,11 +200,23 @@ export function createApi<TApi>(
       unregisterPage(route) {
         context.unregisterPage(route);
       },
-      registerTileX(name, arg, preferences) {
+      registerTileX(name, arg, preferences?) {
+        if (typeof name !== 'string') {
+          preferences = arg;
+          arg = name;
+          name = '123';
+        }
+
         const id = buildName(prefix, name);
         addTile(context, api, id, arg, preferences);
       },
-      registerTile(name, arg, preferences) {
+      registerTile(name, arg, preferences?) {
+        if (typeof name !== 'string') {
+          preferences = arg;
+          arg = name;
+          name = next++;
+        }
+
         const id = buildName(prefix, name);
         markReact(arg, `Tile:${name}`);
         addTile(context, api, id, arg, preferences);
@@ -201,11 +235,23 @@ export function createApi<TApi>(
       unregisterExtension(name, arg) {
         context.unregisterExtension(name, arg);
       },
-      registerMenuX(name, arg, settings) {
+      registerMenuX(name, arg, settings?) {
+        if (typeof name !== 'string') {
+          settings = arg;
+          arg = name;
+          name = next++;
+        }
+
         const id = buildName(prefix, name);
         addMenu(context, api, id, arg, settings);
       },
-      registerMenu(name, arg, settings) {
+      registerMenu(name, arg, settings?) {
+        if (typeof name !== 'string') {
+          settings = arg;
+          arg = name;
+          name = next++;
+        }
+
         const id = buildName(prefix, name);
         markReact(arg, `Menu:${name}`);
         addMenu(context, api, id, arg, settings);
@@ -227,17 +273,15 @@ export function createApi<TApi>(
         const id = buildName(prefix, name);
         context.unregisterModal(id);
       },
-      registerSearchProvider(name, provider, settings = {}) {
+      registerSearchProvider(name, provider, settings?) {
+        if (typeof name !== 'string') {
+          settings = provider;
+          provider = name;
+          name = next++;
+        }
+
         const id = buildName(prefix, name);
-        const { onlyImmediate = false, onCancel, onClear } = settings;
-        context.registerSearchProvider(id, {
-          onlyImmediate,
-          cancel: isfunc(onCancel) ? onCancel : noop,
-          clear: isfunc(onClear) ? onClear : noop,
-          search(q) {
-            return provider(q, api);
-          },
-        });
+        addSearchProvider(context, api, id, provider, settings || {});
       },
       unregisterSearchProvider(name) {
         const id = buildName(prefix, name);

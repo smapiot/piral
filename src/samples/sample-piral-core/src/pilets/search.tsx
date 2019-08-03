@@ -15,7 +15,6 @@ export const SearchPilet: ArbiterModule<SampleApi> = {
     htmlResult.innerHTML = '<span style="color: red;">I AM HTML</span>';
 
     piral.registerSearchProvider(
-      'example1',
       q =>
         new Promise(resolve =>
           setTimeout(
@@ -34,7 +33,6 @@ export const SearchPilet: ArbiterModule<SampleApi> = {
     );
 
     piral.registerSearchProvider(
-      'example2',
       q => new Promise(resolve => setTimeout(() => resolve([<div>Another result ({q.query})</div>]), 3500)),
       {
         onClear() {
@@ -44,7 +42,6 @@ export const SearchPilet: ArbiterModule<SampleApi> = {
     );
 
     piral.registerSearchProvider(
-      'example3',
       q => new Promise(resolve => setTimeout(() => resolve([<div>ONLY WHEN ENTER: ({q.query})</div>]), 100)),
       {
         onlyImmediate: true,

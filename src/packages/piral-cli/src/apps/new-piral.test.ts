@@ -12,12 +12,13 @@ describe('New Piral Command', () => {
   it('scaffolding in an empty directory works', async () => {
     jest.setTimeout(60000);
     const dir = createTempDir();
-    await newPiral(dir);
+    await newPiral(dir, { skipInstall: true });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
   });
 
@@ -26,12 +27,14 @@ describe('New Piral Command', () => {
     const dir = createTempDir();
     await newPiral(dir, {
       language: PiletLanguage.js,
+      skipInstall: true,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
   });
 
@@ -40,6 +43,7 @@ describe('New Piral Command', () => {
     const dir = createTempDir();
     await newPiral(dir, {
       onlyCore: true,
+      skipInstall: true,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'node_modules/piral-core/package.json'))).toBeTruthy();
@@ -47,6 +51,7 @@ describe('New Piral Command', () => {
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
   });
 });

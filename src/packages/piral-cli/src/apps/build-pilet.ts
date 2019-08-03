@@ -8,6 +8,7 @@ import {
   extendBundlerForPilet,
   postProcess,
   getFileWithExtension,
+  logFail,
 } from './common';
 
 export interface BuildPiletOptions {
@@ -36,7 +37,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const packageJson = await findFile(targetDir, 'package.json');
 
   if (!packageJson) {
-    console.error('Cannot find any package.json. You need a valid package.json for your pilet.');
+    logFail('Cannot find the "%s". You need a valid package.json for your pilet.', 'package.json');
     throw new Error('Invalid pilet.');
   }
 
@@ -58,6 +59,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       minify: true,
       scopeHoist: false,
       contentHash: true,
+      publicUrl: './',
       detailedReport,
     }),
   );

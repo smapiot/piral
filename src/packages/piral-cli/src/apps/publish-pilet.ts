@@ -1,5 +1,5 @@
 import { relative, join } from 'path';
-import { postFile, readBinary, matchFiles, createPiletPackage } from './common';
+import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, logFail } from './common';
 import { buildPilet } from './build-pilet';
 
 export interface PublishPiletOptions {
@@ -39,12 +39,12 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   const files = await getFiles(baseDir, source, fresh);
 
   if (!url) {
-    console.warn(`Missing URL of the pilet feed!`);
+    logWarn(`Missing URL of the pilet feed!`);
     throw new Error('Incomplete configuration.');
   }
 
   if (files.length === 0) {
-    return console.error(`No files found at '${source}'.`);
+    return logFail(`No files found at '%s'.`, source);
   }
 
   for (const file of files) {
@@ -52,20 +52,19 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     const content = await readBinary(baseDir, fileName);
 
     if (!content) {
-      console.warn(`Content of '${fileName}' cannot be read.`);
+      logWarn(`Content of '%s' cannot be read.`, fileName);
       continue;
     }
 
-    console.log(`Publishing '${file}' to '${url}' ...`);
+    logInfo(`Publishing '%s' to '%s' ...`, file, url);
     const result = await postFile(url, apiKey, content);
 
     if (result) {
-      console.log(`Uploaded successfully!`);
+      logDone(`Uploaded successfully!`);
     } else {
-      console.warn(`Failed to upload!`);
       throw new Error('Could not upload.');
     }
   }
 
-  console.log('All done!');
+  logInfo('All done!');
 }

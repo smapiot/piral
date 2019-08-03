@@ -1,5 +1,17 @@
 # Piral Changelog
 
+## 0.6.2 (to be determined)
+
+* Added `extendSharedDependencies` helper (#48)
+* Distinguish between Piral development and contributing (#42)
+* Started improving the Piral documentation structure (#41)
+* Fixed the CSS bundling in pilets
+* Adapt documentation about static Piral instance (#43)
+* Make first argument of many register methods optional (#29)
+* Include *mocks/backend.js* in new Piral instance
+* Scaffold with dependency installation (incl. opt.`skip-install` flag)
+* Improved Piral CLI output
+
 ## 0.6.1 (July 26, 2019)
 
 * Fixed externals resolution (#33)

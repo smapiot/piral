@@ -53,7 +53,7 @@ export const HyperappPilet: ArbiterModule<SampleApi> = {
   version: '1.0.0',
   hash: '521',
   setup(piral) {
-    piral.registerTileHyperapp('my-hyperapp-tile', Tile, state, actions, {
+    piral.registerTileHyperapp(Tile, state, actions, {
       initialColumns: 2,
       initialRows: 2,
     });

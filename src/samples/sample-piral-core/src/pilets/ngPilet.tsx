@@ -36,7 +36,7 @@ export const NgPilet: ArbiterModule<SampleApi> = {
   version: '1.0.0',
   hash: '430',
   setup(piral) {
-    piral.registerTileNg('my-ng-tile', TileComponent, {
+    piral.registerTileNg(TileComponent, {
       initialColumns: 2,
       initialRows: 2,
     });

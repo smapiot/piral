@@ -6,49 +6,22 @@ Easily build a next generation portal application. Piral enables you to create a
 
 :zap: A pilet is capable of dynamically extending other pilets or using such extension slots itself. Otherwise, a pilet is quite isolated (developed and handled) and will never destroy your application.
 
-:warning: This project is still pretty much work in progress.
-
 ## Getting Started
 
-Creating your own Piral app is as simple as installing Piral as a dependency to your React app:
-
-```sh
-npm i piral-core
-```
-
-**Remark**: This package already includes TypeScript declarations. No need to install other packages.
-
-Now you can create a new Piral instance in your code:
-
-```jsx
-import { createInstance } from 'piral-core';
-
-const App = createInstance({
-  requestPilets: () => fetch('https://feed.piral.io/api/v1/pilet/sample'),
-});
-```
-
-**Remark**: For all available API options make sure to check out the [documentation](https://docs.piral.io).
-
-**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [feed.piral.io](https://feed.piral.io)) or your own API / mechanism to serve the modules.
-
-Finally, you can render this Piral instance by using the `render` function from `react-dom`:
-
-```jsx
-render((
-  <App>
-    {content => <Layout>{content}</Layout>}
-  </App>
-), document.querySelector('#app'));
-```
-
-Alternatively, you can use your new Piral instance anywhere as a component.
-
-Your Piral app can be build with any technology that you like or already use (e.g., Webpack, Parcel, ...). If you are unsure what to you use you may fall back to `piral-cli`, which (among other things) also contains a build mechanism that *should just work* :rocket:.
+Piral is developed as a monorepo. As such this repository may contain an overwhelming amount of information. Our recommendation is to start at the documentation available at [docs.piral.io](https://docs.piral.io). Working through the available guidelines will give you the necessary information in the best possible order.
 
 ## Contributing
 
 The main purpose of this repository is to continue to evolve Piral core, making it faster, more powerful, and easier to use. Development of Piral happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving Piral.
+
+### Repository Structure
+
+- `docs` contains the (user) documentation
+- `src` has the sources for all the developed packages, samples, and pages
+- `test` contains the test setup and (in the future) system tests
+- `tools` has some of the internal tooling for building the different components
+
+Each subdirectory contains another `README.md` with more information regarding the contents of the specific folder.
 
 ### [Code of Conduct](./CODE_OF_CONDUCT.md)
 

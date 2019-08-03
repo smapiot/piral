@@ -7,6 +7,7 @@ export * from './http';
 export * from './info';
 export * from './io';
 export * from './language';
+export * from './log';
 export * from './merge';
 export * from './npm';
 export * from './pack';

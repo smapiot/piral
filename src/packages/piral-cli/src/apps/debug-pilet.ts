@@ -1,5 +1,5 @@
 import { join, dirname, relative, resolve } from 'path';
-import { findFile, runDebug } from './common';
+import { findFile, runDebug, logFail } from './common';
 
 function findRoot(pck: string | Array<string>, baseDir: string, app = false) {
   if (Array.isArray(pck)) {
@@ -60,7 +60,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const packageJson = await findFile(targetDir, 'package.json');
 
   if (!packageJson) {
-    console.error('Cannot find any package.json. You need a valid package.json for your pilet.');
+    logFail('Cannot find the "%s". You need a valid package.json for your pilet.', 'package.json');
     throw new Error('Invalid pilet.');
   }
 
@@ -73,8 +73,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   );
 
   if (!appFile) {
-    console.error(
-      'Cannot find the Piral instance. Make sure the package.json of the Piral instance is valid (has a `app` field).',
+    logFail(
+      'Cannot find the Piral instance. Make sure the "%s" of the Piral instance is valid (has an "%s" field).',
+      'package.json',
+      'app',
     );
     throw new Error('Invalid Piral instance selected.');
   }
@@ -82,7 +84,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const coreFile = findRoot('piral-core', appFile);
 
   if (!coreFile) {
-    console.error('Cannot find the piral-core package. Make sure your dependencies are correctly resolved.');
+    logFail('Cannot find the package "%s". Make sure your dependencies are correctly resolved.', 'piral-core');
     throw new Error('Invalid dependency structure.');
   }
 

@@ -47,6 +47,13 @@ Sets the package registry to use for resolving the specified Piral app.
 - Type: `string`
 - Default: `"https://registry.npmjs.org/"`
 
+### `--skip-install`
+
+Skips the installation of the dependencies using NPM.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--force-overwrite`
 
 Determines if files should be overwritten by the scaffolding.

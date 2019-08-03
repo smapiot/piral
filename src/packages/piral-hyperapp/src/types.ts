@@ -1,5 +1,4 @@
 import {
-  PiralCoreApi,
   TilePreferences,
   MenuSettings,
   TileComponentProps,
@@ -42,12 +41,24 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
 export interface PiralHyperappApi<T> {
   /**
    * Registers a tile for a hyperapp component.
+   * The id parameter has to be unique within the current pilet.
    * @param id The name of the tile.
    * @param component The hyperapp component.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
   registerTileHyperapp<State = {}, Actions = {}>(
     id: string,
+    component: Component<TileComponentProps<T>>,
+    state?: State,
+    actions?: Actions,
+    options?: TilePreferences,
+  ): void;
+  /**
+   * Registers a tile for a hyperapp component.
+   * @param component The hyperapp component.
+   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
+   */
+  registerTileHyperapp<State = {}, Actions = {}>(
     component: Component<TileComponentProps<T>>,
     state?: State,
     actions?: Actions,
@@ -82,13 +93,24 @@ export interface PiralHyperappApi<T> {
   ): void;
   /**
    * Registers a menu item for a hyperapp component.
-   * The name has to be unique within the current pilet.
+   * The id parameter has to be unique within the current pilet.
    * @param id The name of the menu.
    * @param component The hyperapp component.
    * @param settings The optional configuration for the menu item.
    */
   registerMenuHyperapp<State = {}, Actions = {}>(
     id: string,
+    component: Component<MenuComponentProps<T>>,
+    state?: State,
+    actions?: Actions,
+    settings?: MenuSettings,
+  ): void;
+  /**
+   * Registers a menu item for a hyperapp component.
+   * @param component The hyperapp component.
+   * @param settings The optional configuration for the menu item.
+   */
+  registerMenuHyperapp<State = {}, Actions = {}>(
     component: Component<MenuComponentProps<T>>,
     state?: State,
     actions?: Actions,

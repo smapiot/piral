@@ -162,6 +162,12 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    */
   registerTileX(name: string, render: ForeignComponent<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
   /**
+   * Registers a tile for general components.
+   * @param render The function that is being called once rendering begins.
+   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
+   */
+  registerTileX(render: ForeignComponent<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
+  /**
    * Registers a tile for React components.
    * The name has to be unique within the current pilet.
    * @param name The name of the tile.
@@ -169,6 +175,12 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
   registerTile(name: string, Component: ComponentType<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
+  /**
+   * Registers a tile for React components.
+   * @param Component The component to be rendered within the Dashboard.
+   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
+   */
+  registerTile(Component: ComponentType<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
   /**
    * Unregisters a tile known by the given name.
    * Only previously registered tiles can be unregistered.
@@ -207,6 +219,12 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    */
   registerMenuX(name: string, render: ForeignComponent<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
   /**
+   * Registers a menu item for general components.
+   * @param render The function that is being called once rendering begins.
+   * @param settings The optional configuration for the menu item.
+   */
+  registerMenuX(render: ForeignComponent<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
+  /**
    * Registers a menu item for React components.
    * The name has to be unique within the current pilet.
    * @param name The name of the menu item.
@@ -214,6 +232,12 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param settings The optional configuration for the menu item.
    */
   registerMenu(name: string, Component: ComponentType<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
+  /**
+   * Registers a menu item for React components.
+   * @param Component The component to be rendered within the menu.
+   * @param settings The optional configuration for the menu item.
+   */
+  registerMenu(Component: ComponentType<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
   /**
    * Unregisters a menu item known by the given name.
    * Only previously registered menu items can be unregistered.
@@ -228,6 +252,12 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param settings The optional settings for the search provider.
    */
   registerSearchProvider(name: string, provider: SearchProvider<TApi>, settings?: SearchSettings): void;
+  /**
+   * Registers a search provider to respond to search queries.
+   * @param provider The callback to be used for searching.
+   * @param settings The optional settings for the search provider.
+   */
+  registerSearchProvider(provider: SearchProvider<TApi>, settings?: SearchSettings): void;
   /**
    * Unregisters a search provider known by the given name.
    * Only previously registered search providers can be unregistered.

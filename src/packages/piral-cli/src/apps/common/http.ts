@@ -1,7 +1,21 @@
 import * as request from 'request';
 import { platform } from 'os';
+import { logWarn } from './log';
 
 const os = platform();
+
+function getMessage(body: string) {
+  if (body) {
+    try {
+      const content = JSON.parse(body);
+      return content.message;
+    } catch (ex) {
+      return body;
+    }
+  }
+
+  return '';
+}
 
 export function postFile(target: string, key: string, file: Buffer) {
   return new Promise<boolean>(resolve => {
@@ -14,16 +28,21 @@ export function postFile(target: string, key: string, file: Buffer) {
           'user-agent': `piral-cli/http.node-${os}`,
         },
       },
-      (err, res) => {
+      (err, res, body) => {
         if (err) {
-          console.warn(err);
+          logWarn(err);
           resolve(false);
         } else {
           const status = res.statusCode;
           const success = status === 200;
 
           if (!success) {
-            console.warn(`Failed to upload: ${res.statusMessage}`);
+            const message = getMessage(body);
+            logWarn(`Failed to upload: ${res.statusMessage} (%s).`, status);
+
+            if (message) {
+              logWarn(message);
+            }
           }
 
           resolve(success);
