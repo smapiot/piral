@@ -72,8 +72,8 @@ import { renderInstance, buildLayout } from 'piral';
 
 renderInstance({
   layout: buildLayout()
-    .withError(({ type, error }) => (
-      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {(error && error.message) || type}</span>
+    .withError(({ type }) => (
+      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
     )),
 });
 `;
