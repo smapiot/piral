@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.6.2 (to be determined)
+## 0.6.2 (August 3, 2019)
 
 * Added `extendSharedDependencies` helper (#48)
 * Distinguish between Piral development and contributing (#42)
