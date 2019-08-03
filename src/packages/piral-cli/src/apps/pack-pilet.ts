@@ -1,4 +1,4 @@
-import { createPiletPackage } from './common';
+import { createPiletPackage, logDone } from './common';
 
 export interface PackPiletOptions {
   source?: string;
@@ -12,6 +12,6 @@ export const packPiletDefaults = {
 
 export async function packPilet(baseDir = process.cwd(), options: PackPiletOptions = {}) {
   const { source = packPiletDefaults.source, target = packPiletDefaults.target } = options;
-  createPiletPackage(baseDir, source, target);
-  console.log(`All done!`);
+  await createPiletPackage(baseDir, source, target);
+  logDone(`All done!`);
 }

@@ -1,6 +1,7 @@
 import { resolve, join, extname, basename, dirname } from 'path';
 import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists } from './io';
 import { cliVersion } from './info';
+import { logFail } from './log';
 
 export interface TemplateFileLocation {
   from: string;
@@ -60,14 +61,14 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
     const exists = await checkExists(packageName);
 
     if (!exists) {
-      console.error(`Cannot find a valid entry point. Missing package.json in "${rootDir}".`);
+      logFail(`Cannot find a valid entry point. Missing package.json in "%s".`, rootDir);
       throw new Error('Invalid Piral instance.');
     }
 
     const { app } = require(packageName);
 
     if (!app) {
-      console.error(`Cannot find a valid entry point. Missing field app in the package.json.`);
+      logFail(`Cannot find a valid entry point. Missing field "%s" in the "%s".`, 'app', 'package.json');
       throw new Error('Invalid Piral instance.');
     }
 
@@ -81,14 +82,14 @@ export async function retrievePiletsInfo(entryFile: string) {
   const exists = await checkExists(entryFile);
 
   if (!exists) {
-    console.error(`The given entry pointing to "${entryFile}" does not exist.`);
+    logFail(`The given entry pointing to "%s" does not exist.`, entryFile);
     throw new Error('Invalid Piral instance.');
   }
 
   const packageJson = await findFile(entryFile, 'package.json');
 
   if (!packageJson) {
-    console.error('Cannot find any package.json. You need a valid package.json for your Piral instance.');
+    logFail('Cannot find any package.json. You need a valid package.json for your Piral instance.');
     throw new Error('Invalid Piral instance.');
   }
 

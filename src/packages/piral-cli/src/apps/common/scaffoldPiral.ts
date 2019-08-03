@@ -36,7 +36,7 @@ function isPiletQuery(content) {
 const apiService = '';// 'https://feed.piral.io/api/v1/pilet/sample';
 
 module.exports = function(_, req, res) {
-  if ((req.path = '/' && req.method === 'POST' && isPiletQuery(req.content)))
+  if ((req.path = '/' && req.method === 'POST' && isPiletQuery(req.content))) {
     if (apiService) {
       return new Promise(resolve => {
         request.get(apiService, (_1, _2, body) => {
@@ -59,6 +59,7 @@ module.exports = function(_, req, res) {
         }),
       });
     }
+  }
 };
 `;
 }
@@ -98,6 +99,18 @@ export function getPiralPackage(app: string, language: PiletLanguage) {
       return {
         ...baseData,
         typings: 'lib/index.d.ts',
+        scripts: {
+          build: 'npm run build:deploy && npm run build:pilets',
+          'build:deploy': 'piral build',
+          'build:pilets': 'tsc',
+        },
+      };
+    case PiletLanguage.js:
+      return {
+        ...baseData,
+        scripts: {
+          build: 'piral build',
+        },
       };
   }
 
@@ -148,7 +161,7 @@ export async function scaffoldPiralSourceFiles(
         src,
         'index.tsx',
         `${getPiralRootModuleContent(packageName)}
-export * from '${packageName}';
+export * from '${packageName}/lib/types';
 `,
         forceOverwrite,
       );

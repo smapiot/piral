@@ -11,6 +11,9 @@ import {
   PiletLanguage,
   getDevDependencies,
   scaffoldPiletSourceFiles,
+  logInfo,
+  logDone,
+  installDependencies,
 } from './common';
 
 export interface NewPiletOptions {
@@ -19,6 +22,7 @@ export interface NewPiletOptions {
   source?: string;
   forceOverwrite?: ForceOverwrite;
   language?: PiletLanguage;
+  skipInstall?: boolean;
 }
 
 export const newPiletDefaults = {
@@ -27,6 +31,7 @@ export const newPiletDefaults = {
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
+  skipInstall: false,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -36,13 +41,14 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     source = newPiletDefaults.source,
     forceOverwrite = newPiletDefaults.forceOverwrite,
     language = newPiletDefaults.language,
+    skipInstall = newPiletDefaults.skipInstall,
   } = options;
   const root = resolve(baseDir, target);
   const [sourceName, sourceVersion, hadVersion] = dissectPackageName(source);
   const success = await createDirectory(root);
 
   if (success) {
-    console.log(`Scaffolding new pilet in ${root} ...`);
+    logInfo(`Scaffolding new pilet in %s ...`, root);
 
     const devDependencies = getDevDependencies(language);
 
@@ -68,7 +74,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     );
 
     if (registry !== newPiletDefaults.registry) {
-      console.log(`Setting up NPM registry (${registry}) ...`);
+      logInfo(`Setting up NPM registry (%s) ...`, registry);
 
       await createFileIfNotExists(
         root,
@@ -79,18 +85,24 @@ always-auth=true`,
       );
     }
 
-    console.log(`Installing NPM package ${sourceName}@${sourceVersion} ...`);
+    logInfo(`Installing NPM package %s ...`, `${sourceName}@${sourceVersion}`);
 
     await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
 
-    console.log(`Taking care of templating ...`);
+    logInfo(`Taking care of templating ...`);
 
     await scaffoldPiletSourceFiles(language, root, sourceName, forceOverwrite);
 
     const files = await patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
     await copyPiralFiles(root, sourceName, files, forceOverwrite);
 
-    console.log(`All done!`);
+    if (!skipInstall) {
+      logInfo(`Installing dependencies ...`);
+
+      await installDependencies(root, '--no-package-lock');
+    }
+
+    logDone(`All done!`);
   } else {
     throw new Error('Could not create directory.');
   }

@@ -1,7 +1,9 @@
 import * as Bundler from 'parcel-bundler';
 import { writeFile, readFile } from 'fs';
-import { resolve, dirname } from 'path';
+import { resolve, dirname, basename } from 'path';
 import { VirtualPackager } from './VirtualPackager';
+
+const bundleUrlRef = '__bundleUrl__';
 
 function resolveModule(name: string, targetDir: string) {
   try {
@@ -59,7 +61,7 @@ function modifyRawAsset(proto: any) {
 
       if (match) {
         const path = JSON.stringify(JSON.parse(match[1]).substr(1));
-        item.value = `module.exports=__bundleUrl__+${path};`;
+        item.value = `module.exports=${bundleUrlRef}+${path};`;
       }
     }
 
@@ -89,7 +91,7 @@ export function modifyBundlerForPilet(proto: any, externalNames: Array<string>, 
 }
 
 export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
-  const bundleUrl = `var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}();`;
+  const bundleUrl = `var ${bundleUrlRef}=function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}();`;
 
   if (!prName) {
     prName = `pr_${(bundle as any).getHash()}`;
@@ -105,6 +107,29 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
         let result = data;
 
         if (/js/.test(bundle.type)) {
+          /**
+           * In pure JS bundles (i.e., we are not starting with an HTML file) Parcel
+           * just omits the included CSS... This is bad (to say the least).
+           * Here, we search for any sibling CSS bundles (there should be at most 1)
+           * and include it asap using a standard approach.
+           * Note: In the future we may llow users to disable this behavior (via a Piral
+           * setting to disallow CSS inject).
+           */
+          const [cssBundle] = [...bundle.childBundles].filter(m => /\.css$/.test(m.name));
+
+          if (cssBundle) {
+            const cssName = basename(cssBundle.name);
+            const stylesheet = [
+              `var d=document`,
+              `var e=d.createElement("link")`,
+              `e.type="text/css"`,
+              `e.rel="stylesheet"`,
+              `e.href=${bundleUrlRef}+${JSON.stringify(cssName)}`,
+              `d.head.appendChild(e)`,
+            ].join(';');
+            result = `(function(){${stylesheet}})();${result}`;
+          }
+
           /*
            * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
            * `parcelRequire` declaration problems, and preventing `parcelRequire`
@@ -118,8 +143,6 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
               .join(`"function"==typeof global.${prName}&&global.${prName}`),
             `;global.${prName}=parcelRequire}(window, window.${prName}));`,
           ].join('\n');
-        } else if (/css/.test(bundle.type)) {
-          // tbd
         }
 
         writeFile(bundle.name, result, 'utf8', err => {

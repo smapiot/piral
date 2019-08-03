@@ -25,7 +25,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
   console.log(`Packing pilet in ${resolve(baseDir, target)} ...`);
 
   await createPackage(root);
-  const name = `${pckg.name}-${pckg.version}.tgz`;
+  const name = `${pckg.name}-${pckg.version}.tgz`.replace(/@/g, '').replace(/\//g, '-');
   const file = join(root, name);
 
   if (dest !== root) {

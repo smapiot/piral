@@ -14,6 +14,10 @@ function runNpmProcess(args: Array<string>, target: string) {
   });
 }
 
+export function installDependencies(target = '.', ...flags: Array<string>) {
+  return runNpmProcess(['install', ...flags], target);
+}
+
 export function installPackage(name: string, version = 'latest', target = '.', ...flags: Array<string>) {
   return runNpmProcess(['install', `${name}@${version}`, ...flags], target);
 }

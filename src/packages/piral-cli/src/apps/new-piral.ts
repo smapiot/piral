@@ -8,6 +8,9 @@ import {
   scaffoldPiralSourceFiles,
   createDirectory,
   createFileIfNotExists,
+  logDone,
+  logInfo,
+  installDependencies,
 } from './common';
 
 export interface NewPiralOptions {
@@ -17,6 +20,7 @@ export interface NewPiralOptions {
   version?: string;
   forceOverwrite?: ForceOverwrite;
   language?: PiletLanguage;
+  skipInstall?: boolean;
 }
 
 export const newPiralDefaults = {
@@ -26,6 +30,7 @@ export const newPiralDefaults = {
   version: 'latest',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
+  skipInstall: false,
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
@@ -36,13 +41,14 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     version = newPiralDefaults.version,
     forceOverwrite = newPiralDefaults.forceOverwrite,
     language = newPiralDefaults.language,
+    skipInstall = newPiralDefaults.skipInstall,
   } = options;
   const root = resolve(baseDir, target);
   const packageName = onlyCore ? 'piral-core' : 'piral';
   const success = await createDirectory(root);
 
   if (success) {
-    console.log(`Creating a new Piral instance in ${root} ...`);
+    logInfo(`Creating a new Piral instance in %s ...`, root);
 
     await createFileIfNotExists(
       root,
@@ -63,15 +69,21 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     await updateExistingJson(root, 'package.json', getPiralPackage(app, language));
 
-    console.log(`Installing NPM package ${packageName}@${version} ...`);
+    logInfo(`Installing NPM package ${packageName}@${version} ...`);
 
     await installPackage(packageName, version, root, '--no-package-lock');
 
-    console.log(`Taking care of templating ...`);
+    logInfo(`Taking care of templating ...`);
 
     await scaffoldPiralSourceFiles(language, root, app, packageName, forceOverwrite);
 
-    console.log(`All done!`);
+    if (!skipInstall) {
+      logInfo(`Installing dependencies ...`);
+
+      await installDependencies(root, '--no-package-lock');
+    }
+
+    logDone(`All done!`);
   } else {
     throw new Error('Could not create directory.');
   }

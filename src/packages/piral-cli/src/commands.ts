@@ -119,6 +119,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .boolean('only-core')
         .describe('only-core', 'Sets if "piral-core" should be used. Otherwise, "piral" is used.')
         .default('only-core', apps.newPiralDefaults.onlyCore)
+        .boolean('skip-install')
+        .describe('skip-install', 'Skips the installation of the dependencies using NPM.')
+        .default('skip-install', apps.newPiralDefaults.skipInstall)
         .string('tag')
         .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
         .default('tag', apps.newPiralDefaults.version)
@@ -140,6 +143,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         version: args.tag as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
+        skipInstall: args.skipInstall as boolean,
       });
     },
   },
@@ -289,6 +293,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
         .default('registry', apps.newPiletDefaults.registry)
+        .boolean('skip-install')
+        .describe('skip-install', 'Skips the installation of the dependencies using NPM.')
+        .default('skip-install', apps.newPiletDefaults.skipInstall)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiletDefaults.forceOverwrite))
@@ -306,6 +313,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
+        skipInstall: args.skipInstall as boolean,
       });
     },
   },
