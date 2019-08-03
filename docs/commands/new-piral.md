@@ -45,6 +45,13 @@ Sets if "piral-core" should be used. Otherwise, "piral" is used.
 - Type: `boolean`
 - Default: `false`
 
+### `--skip-install`
+
+Skips the installation of the dependencies using NPM.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--tag`
 
 Sets the tag or version of the package to install. By default, it is "latest".
