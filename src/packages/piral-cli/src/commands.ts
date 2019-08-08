@@ -87,6 +87,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.buildPiralDefaults.logLevel)
+        .boolean('fresh')
+        .describe('fresh', 'Performs a fresh build by removing the target directory first.')
+        .default('fresh', apps.buildPiralDefaults.fresh)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -197,10 +200,13 @@ export const allCommands: Array<ToolCommand<any>> = [
         .default('target', apps.buildPiletDefaults.target)
         .boolean('detailed-report')
         .describe('detailed-report', 'Sets if a detailed report should be created.')
-        .default('detailed-report', apps.buildPiralDefaults.detailedReport)
+        .default('detailed-report', apps.buildPiletDefaults.detailedReport)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
-        .default('log-level', apps.buildPiralDefaults.logLevel)
+        .default('log-level', apps.buildPiletDefaults.logLevel)
+        .boolean('fresh')
+        .describe('fresh', 'Performs a fresh build by removing the target directory first.')
+        .default('fresh', apps.buildPiletDefaults.fresh)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -210,6 +216,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         detailedReport: args.detailedReport as boolean,
+        fresh: args.fresh as boolean,
         logLevel: args.logLevel as any,
       });
     },

@@ -1,6 +1,6 @@
 import { relative, join } from 'path';
-import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, logFail } from './common';
 import { buildPilet } from './build-pilet';
+import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, logFail } from './common';
 
 export interface PublishPiletOptions {
   source?: string;
@@ -21,6 +21,7 @@ async function getFiles(baseDir: string, source: string, fresh: boolean) {
     const details = require(join(baseDir, 'package.json'));
     await buildPilet(baseDir, {
       target: details.main,
+      fresh: true,
     });
     const file = await createPiletPackage(baseDir, '.', '.');
     return [file];
