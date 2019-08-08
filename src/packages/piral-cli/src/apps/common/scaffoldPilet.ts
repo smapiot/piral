@@ -3,11 +3,11 @@ import { ForceOverwrite, createDirectory, createFileIfNotExists } from './io';
 import { PiletLanguage } from './language';
 
 const sampleContent = `
-  app.showNotification('Hello World!');
+  app.showNotification('Hello from Piral!');
   app.registerMenu('sample-entry', () =>
     <a href="https://docs.piral.io" target="_blank">Documentation</a>
   );
-  app.registerTile('sample-tile', () => <div>Hello World!</div>, {
+  app.registerTile('sample-tile', () => <div>Welcome to Piral!</div>, {
     initialColumns: 2,
     initialRows: 1,
   });
