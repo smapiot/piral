@@ -49,15 +49,27 @@ export * from 'piral';
 export function renderInstance<TApi = PiletApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
   options: PiralOptions<TApi, TState, TActions>,
 ): Promise<EventEmitter> {
-  const { selector = '#app', gatewayUrl, subscriptionUrl, loader = defaultLoader, config = {}, layout } = options;
+  const {
+    selector = '#app',
+    gatewayUrl,
+    subscriptionUrl,
+    loader = defaultLoader,
+    config = {},
+    gql = {},
+    layout,
+  } = options;
   const [AppLayout, initialState] = layout.build();
   const load = getLoader(loader, config);
   const base = getGateway(gatewayUrl);
   const client = setupGqlClient({
     url: base,
     subscriptionUrl,
+    ...gql,
   });
-  const uri = { base };
+  const uri = {
+    base,
+    ...config.fetch,
+  };
   const renderLayout = (content: React.ReactNode) => <AppLayout>{content}</AppLayout>;
   const defaultRequestPilets = () => gqlQuery<PiletQueryResult>(client, piletsQuery).then(({ pilets }) => pilets);
 
@@ -73,6 +85,8 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
       extendApi = defaultExtendApi,
       attach,
       actions,
+      fetch: fetchOptions = uri,
+      locale: localeOptions = config.locale,
       state: explicitState,
       ...forwardOptions
     } = {}) => {
@@ -93,6 +107,7 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
       const localizer = setupLocalizer({
         language: state.app.language.selected,
         messages,
+        ...localeOptions,
       });
       const Piral = createInstance({
         ...forwardOptions,
@@ -104,7 +119,7 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
         },
         extendApi(api, target) {
           const newApi: any = {
-            ...createFetchApi(uri),
+            ...createFetchApi(fetchOptions),
             ...createGqlApi(client),
             ...createLocaleApi(localizer),
             ...api,
