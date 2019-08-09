@@ -14,6 +14,9 @@ import {
   logInfo,
   logDone,
   installDependencies,
+  combinePackageRef,
+  getPackageName,
+  getPackageVersion,
 } from './common';
 
 export interface NewPiletOptions {
@@ -44,13 +47,13 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     skipInstall = newPiletDefaults.skipInstall,
   } = options;
   const root = resolve(baseDir, target);
-  const [sourceName, sourceVersion, hadVersion] = dissectPackageName(source);
+  const [sourceName, sourceVersion, hadVersion, type] = dissectPackageName(source);
   const success = await createDirectory(root);
 
   if (success) {
-    logInfo(`Scaffolding new pilet in %s ...`, root);
-
     const devDependencies = getDevDependencies(language);
+
+    logInfo(`Scaffolding new pilet in %s ...`, root);
 
     await createFileIfNotExists(
       root,
@@ -85,16 +88,20 @@ always-auth=true`,
       );
     }
 
-    logInfo(`Installing NPM package %s ...`, `${sourceName}@${sourceVersion}`);
+    const packageRef = combinePackageRef(sourceName, sourceVersion, type);
+    const packageName = await getPackageName(sourceName, type);
+    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);
 
-    await installPackage(sourceName, sourceVersion, root, '--no-save', '--no-package-lock');
+    logInfo(`Installing NPM package %s ...`, packageRef);
+
+    await installPackage(packageRef, root, '--no-save', '--no-package-lock');
 
     logInfo(`Taking care of templating ...`);
 
-    await scaffoldPiletSourceFiles(language, root, sourceName, forceOverwrite);
+    await scaffoldPiletSourceFiles(language, root, packageName, forceOverwrite);
 
-    const files = await patchPiletPackage(root, sourceName, hadVersion && sourceVersion);
-    await copyPiralFiles(root, sourceName, files, forceOverwrite);
+    const files = await patchPiletPackage(root, packageName, packageVersion);
+    await copyPiralFiles(root, packageName, files, forceOverwrite);
 
     if (!skipInstall) {
       logInfo(`Installing dependencies ...`);

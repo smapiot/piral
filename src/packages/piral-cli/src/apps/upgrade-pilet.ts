@@ -8,6 +8,8 @@ import {
   logInfo,
   logDone,
   logFail,
+  combinePackageRef,
+  logWarn,
 } from './common';
 
 export interface UpgradePiletOptions {
@@ -22,6 +24,25 @@ export const upgradePiletDefaults = {
   forceOverwrite: ForceOverwrite.no,
 };
 
+function getCurrentPackageDetails(
+  sourceName: string,
+  currentVersion: string,
+  version: string,
+): [string, undefined | string] {
+  const wantsFile = version.startsWith('file:');
+
+  if (currentVersion && currentVersion.startsWith('file:') && !wantsFile) {
+    logWarn('The Piral instance is currently resolved locally, but no local file for the upgrade has been specified.');
+    logInfo('Trying to obtain the pilet from NPM instead.');
+  }
+
+  if (wantsFile) {
+    return [combinePackageRef(version.replace('file:', ''), currentVersion, 'file'), version];
+  }
+
+  return [combinePackageRef(sourceName, version, 'registry'), undefined];
+}
+
 export async function upgradePilet(baseDir = process.cwd(), options: UpgradePiletOptions = {}) {
   const {
     version = upgradePiletDefaults.version,
@@ -30,17 +51,20 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   } = options;
   const root = resolve(baseDir, target);
   const pckg = await readJson(root, 'package.json');
-  const piralInfo = pckg.piral;
+  const { devDependencies = {}, piral } = pckg;
 
-  if (piralInfo) {
-    const sourceName = piralInfo.name;
-    logInfo(`Updating NPM package to %s ...`, `${sourceName}@${version}`);
+  if (piral) {
+    const sourceName = piral.name;
+    const currentVersion = devDependencies[sourceName];
+    const [packageRef, packageVersion] = getCurrentPackageDetails(sourceName, currentVersion, version);
 
-    await installPackage(sourceName, version, root, '--no-save', '--no-package-lock');
+    logInfo(`Updating NPM package to %s ...`, packageRef);
+
+    await installPackage(packageRef, root, '--no-save', '--no-package-lock');
 
     logInfo(`Taking care of templating ...`);
 
-    const files = await patchPiletPackage(root, sourceName);
+    const files = await patchPiletPackage(root, sourceName, packageVersion);
     await copyPiralFiles(root, sourceName, files, forceOverwrite);
 
     logDone(`All done!`);
