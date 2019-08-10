@@ -15,7 +15,7 @@ For completing the tutorials, the following general prerequisites must be met:
 ## Setting up the tooling
 Piral comes with a powerful command line tool named `Piral-CLI`. The `Piral-CLI` supports developers in executing the most important tasks and can be installed with the following command:
 
-```sh
+```shell
 # Install the Piral-CLI
 npm i piral-cli -g
 
@@ -31,7 +31,7 @@ A Piral instance builds the application shell and as such the foundation for exe
 #### Setup a new Piral instance
 A Piral instance can be created using `Piral-CLI`. To scaffold a new application shell based on Piral with the name `my-app` execute the following command in a terminal window:
 
-```sh
+```shell
 # Scaffold an application shell
 piral new --target my-app
 ```
@@ -40,7 +40,7 @@ As result we will find in the folder `./my-app` the files for the newly created 
 #### Run the application shell
 To execute the created Piral instance, navigate to the directory `my-app` and run the following Piral-CLI command:
 
-```sh
+```shell
 # Start the Piral instance in debug mode
 piral debug
 ```
@@ -52,7 +52,7 @@ At this point, the application shell shows an empty page, since there is current
 #### Create package for the application shell
 To use the newly created Piral instance as application shell for the development of Pilets, we need to create an **npm package**, which will be referenced within Pilets. To create the package run the command:
 
-```sh
+```shell
 # Create an npm package for the app shell
 npm pack
 ```
@@ -62,7 +62,7 @@ The result will be a tar ball containing the application shell, in our case `my-
 #### Creating a link to the local application shell
 For local development, we can use `npm link` to create a link to the package and reference the package locally without connecting to an npm registry. In the root directory of your application shell (`my-app` in our case) execute the following command:
 
-```sh
+```shell
 # Create global link to the application shell
 npm link
 ```
@@ -71,7 +71,7 @@ A global link to will be created to the local version of the application shell.
 #### Removing the link to the local instance
 At the point at which the application shell is published to a npm feed and reference by Pilets from there, make sure that the local link is removed, when it is no longer required by calling:
 
-```sh
+```shell
 # Remove link to local package
 npm rm --global my-app
 ```
@@ -82,7 +82,7 @@ A Pilet is a module, which implements functionality and can be loaded dynamicall
 #### Create Pilet
 The Piral tooling also supports scaffolding a Pilet to get started. Ensure that you are no longer in the directory of the application shell and run the following command:
 
-```sh
+```shell
 # Scaffold a new Pilet with the name 'my-Pilet' for the app shell 'my-app' 
 Pilet new my-app --target my-Pilet
 ```
@@ -92,7 +92,7 @@ With the `pilet new` command, a new Pilet with pre-defined content is created. T
 #### The Setup method for a Pilet
 There is a single function, which controls the configuration of a Pilet - it is the `setup` method in the file `./src/index.tsx`. The scaffolding process will add the setup function with some configurations:
 
-```js
+```javascript
 export function setup(app: PiletApi) {
   app.showNotification('Hello from Piral!');
   app.registerMenu('sample-entry', () => <a href="https://docs.piral.io" target="_blank">Documentation</a>);
@@ -108,7 +108,7 @@ The `PiralApi` provides a series of useful methods for setting up and configurin
 #### Start the Pilet
 As for the application shell, the Pilet can be started in debug mode using the `Piral-CLI`. In the Pilet folder, in our case `my-pilet`, execute the following command:
 
-```sh
+```shell
 # Start a Pilet in debug mode
 pilet debug
 ```

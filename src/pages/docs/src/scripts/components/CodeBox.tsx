@@ -1,4 +1,5 @@
 import 'prismjs';
+import 'prismjs/components/prism-bash';
 import * as React from 'react';
 import { useRef, useEffect } from 'react';
 import { cn } from './utils';

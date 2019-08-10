@@ -1,0 +1,16 @@
+code[class*="language-"],
+pre[class*="language-"] {
+	font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+    font-size: 0.9em;
+    font-weight:200;
+    text-shadow: none;
+}
+
+:not(pre) > code[class*="language-"], pre[class*="language-"] {
+    background: #f0f0f0;
+}
+
+.token.operator
+{
+	background: none;
+}

@@ -8,6 +8,7 @@ This chapter of the documentation contains tutorials, which are intended to supp
 The following tutorials are currently available:
 
 [Introduction](./01-introduction.md) - introduction into the development with Piral
+
 [Getting Started](./02-getting-started.md) - quick start for the first steps with Piral
 
 Please don't hesitate to send us feedback regarding the tutorials and suggestions for additional topics.
