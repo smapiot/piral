@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { createReadStream } from 'fs';
 import { isWindows } from './info';
 import { inspectPackage } from './inspect';
+import { readJson } from './io';
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
@@ -30,6 +31,9 @@ export function createPackage(target = '.', ...flags: Array<string>) {
 
 export type PackageType = 'registry' | 'file' | 'git';
 
+const gitPrefix = 'git+';
+const filePrefix = 'file:';
+
 /**
  * Looks at the provided package name and normalizes it
  * resulting in the following tuple:
@@ -41,10 +45,14 @@ export type PackageType = 'registry' | 'file' | 'git';
  * @param fullName The provided package name.
  */
 export function dissectPackageName(fullName: string): [string, string, boolean, PackageType] {
-  const localFile = fullName.startsWith('/') || fullName.startsWith('.');
-  const type = localFile ? 'file' : 'registry';
+  const localFile = /^[\.\/\~]/.test(fullName);
+  const git = fullName.startsWith(gitPrefix) || /^(https?|ssh):\/\/.*\.git$/.test(fullName);
+  const type = localFile ? 'file' : git ? 'git' : 'registry';
 
-  if (!localFile) {
+  if (git) {
+    const gitUrl = fullName.startsWith(gitPrefix) ? fullName : `${gitPrefix}${fullName}`;
+    return [gitUrl, 'latest', false, type];
+  } else if (!localFile) {
     const index = fullName.indexOf('@', 1);
 
     if (index !== -1) {
@@ -56,23 +64,24 @@ export function dissectPackageName(fullName: string): [string, string, boolean, 
 }
 
 export function combinePackageRef(name: string, version: string, type: PackageType) {
-  switch (type) {
-    case 'file':
-    case 'git':
-      return name;
-    case 'registry':
-      return `${name}@${version}`;
+  if (type === 'registry') {
+    return `${name}@${version}`;
   }
+
+  return name;
 }
 
-export async function getPackageName(name: string, type: PackageType) {
+export async function getPackageName(root: string, name: string, type: PackageType) {
   switch (type) {
     case 'file':
       const p = resolve(process.cwd(), name);
       const s = createReadStream(p);
       const i = await inspectPackage(s);
       return i.name;
-    case 'git': //TODO
+    case 'git':
+      const pj = await readJson(root, 'package.json');
+      const dd = pj.devDependencies || {};
+      return Object.keys(dd).filter(dep => dd[dep] === name)[0];
     case 'registry':
       return name;
   }

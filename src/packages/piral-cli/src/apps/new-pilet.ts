@@ -89,12 +89,13 @@ always-auth=true`,
     }
 
     const packageRef = combinePackageRef(sourceName, sourceVersion, type);
-    const packageName = await getPackageName(sourceName, type);
-    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);
 
     logInfo(`Installing NPM package %s ...`, packageRef);
 
-    await installPackage(packageRef, root, '--no-save', '--no-package-lock');
+    await installPackage(packageRef, root, '--save-dev', '--no-package-lock');
+
+    const packageName = await getPackageName(root, sourceName, type);
+    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);
 
     logInfo(`Taking care of templating ...`);
 
