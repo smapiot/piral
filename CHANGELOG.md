@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.6.3 (to be determined)
+
+* Allow pilet scaffolding from non-NPM sources (#53)
+* Improved documentation code generation (#52)
+* Support configuration for `piral-ext` extensions (#51)
+* Remove output folder first on publish with `--fresh`
+
 ## 0.6.2 (August 3, 2019)
 
 * Added `extendSharedDependencies` helper (#48)
