@@ -58,6 +58,7 @@
     "inquirer": "^6.2.2",
     "kras": "0.8.1",
     "parcel-bundler": "^1.12.3",
+    "parcel-plugin-codegen": "^0.3.0",
     "rc": "^1.2.8",
     "request": "^2.88.0",
     "rimraf": "^2.6.3",
