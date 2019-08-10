@@ -4,6 +4,7 @@ import { Loader } from './components';
 
 const LandingPage = React.lazy(() => import('./landing'));
 const DocumentationPage = React.lazy(() => import('./documentation'));
+const TutorialsPage = React.lazy(() => import('./tutorials'));
 const SpecificationsPage = React.lazy(() => import('./specifications'));
 const GuidelinesPage = React.lazy(() => import('./guidelines'));
 const ToolingPage = React.lazy(() => import('./tooling'));
@@ -17,6 +18,7 @@ export const App = () => (
     <React.Suspense fallback={<Loader />}>
       <Switch>
         <Route exact path="/" component={LandingPage} />
+        <Route path="/tutorials" component={TutorialsPage} />
         <Route path="/documentation" component={DocumentationPage} />
         <Route path="/specifications" component={SpecificationsPage} />
         <Route path="/guidelines" component={GuidelinesPage} />
