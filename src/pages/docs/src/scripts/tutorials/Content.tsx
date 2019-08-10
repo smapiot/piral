@@ -8,11 +8,11 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>((_, ref) =
 
     <Section id="section-Introduction" title="Introduction">
       <Md>{require('../../../../../../docs/tutorials/01-introduction.md')}</Md>
-      <EditSection link="tutorials/getting-started.md" />
+      <EditSection link="tutorials/01-introduction.md" />
     </Section>
     <Section id="section-getting-started" title="Getting Started">
       <Md>{require('../../../../../../docs/tutorials/02-getting-started.md')}</Md>
-      <EditSection link="tutorials/getting-started.md" />
+      <EditSection link="tutorials/02-getting-started.md" />
     </Section>
 
   </ResponsiveContent>
