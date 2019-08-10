@@ -12,6 +12,7 @@ function getIcon(content: string) {
   switch (content) {
     case 'brain':
     case 'monument':
+    case 'book-reader':
       return `fas fa-${content}`;
     default:
       return `fa fa-${content}`;

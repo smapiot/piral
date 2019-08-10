@@ -17,6 +17,9 @@ export const Content: React.FC = () => (
         </div>
       </div>
       <div id="cards-wrapper" className="cards-wrapper row">
+        <Card title="Tutorials" icon="book" to="/tutorials" kind="blue">
+          Collection of tutorials for developing with Piral
+        </Card>
         <Card title="Documentation" icon="book" to="/documentation" kind="blue">
           The full documentation for using and developing Piral.
         </Card>
@@ -45,11 +48,11 @@ export const Content: React.FC = () => (
           Gitter. We'd love to hear your feedback and improve Piral.
         </p>
         <div className="cta-container">
-          <Button icon="code-branch" href="https://github.com/smapiot/piral" target="_blank" kind="blue">
+          <Button icon="code-branch" href="https://github.com/smapiot/piral" target="_blank" kind="green">
             GitHub Repository
           </Button>
 
-          <Button icon="comment" href="https://gitter.im/piral-io/community" target="_blank" kind="blue">
+          <Button icon="comment" href="https://gitter.im/piral-io/community" target="_blank" kind="green">
             Gitter Community Chat
           </Button>
         </div>
