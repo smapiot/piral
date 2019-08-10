@@ -7,6 +7,7 @@ import {
   retrievePiralRoot,
   extendBundlerForPiral,
   modifyBundlerForPiral,
+  removeDirectory,
 } from './common';
 
 function getDestination(entryFiles: string, target: string) {
@@ -31,6 +32,7 @@ export interface BuildPiralOptions {
   publicUrl?: string;
   detailedReport?: boolean;
   logLevel?: 1 | 2 | 3;
+  fresh?: boolean;
 }
 
 export const buildPiralDefaults = {
@@ -39,6 +41,7 @@ export const buildPiralDefaults = {
   publicUrl: '/',
   detailedReport: false,
   logLevel: 3 as const,
+  fresh: false,
 };
 
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
@@ -48,6 +51,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     publicUrl = buildPiralDefaults.publicUrl,
     detailedReport = buildPiralDefaults.detailedReport,
     logLevel = buildPiralDefaults.logLevel,
+    fresh = buildPiralDefaults.fresh,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const targetDir = dirname(entryFiles);
@@ -59,12 +63,18 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     dependencies: externals,
   });
 
+  const dest = getDestination(entryFiles, target);
+
+  if (fresh) {
+    await removeDirectory(dest.outDir);
+  }
+
   modifyBundlerForPiral(Bundler.prototype, targetDir);
 
   const bundler = new Bundler(
     entryFiles,
     extendConfig({
-      ...getDestination(entryFiles, target),
+      ...dest,
       watch: false,
       minify: true,
       scopeHoist: false,

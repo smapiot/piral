@@ -1,4 +1,5 @@
 import * as glob from 'glob';
+import * as rimraf from 'rimraf';
 import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync, existsSync } from 'fs';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
 import { deepMerge } from './merge';
@@ -47,6 +48,10 @@ function createDirectoryLegacy(targetDir: string) {
 function isLegacy() {
   const parts = nodeVersion.split('.');
   return +parts[0] < 10 || (+parts[0] === 10 && +parts[1] < 12);
+}
+
+export function removeDirectory(targetDir: string) {
+  return new Promise((resolve, reject) => rimraf(targetDir, err => (err ? reject(err) : resolve())));
 }
 
 export async function createDirectory(targetDir: string) {

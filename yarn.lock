@@ -1785,6 +1785,13 @@
     "@types/node" "*"
     "@types/tough-cookie" "*"
 
+"@types/rimraf@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rimraf/-/rimraf-2.0.2.tgz#7f0fc3cf0ff0ad2a99bb723ae1764f30acaf8b6e"
+  dependencies:
+    "@types/glob" "*"
+    "@types/node" "*"
+
 "@types/serve-static@*":
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.2.tgz#f5ac4d7a6420a99a6a45af4719f4dcd8cd907a48"
@@ -6569,7 +6576,7 @@ parallel-transform@^1.1.0:
     inherits "^2.0.3"
     readable-stream "^2.1.5"
 
-parcel-bundler@^1.11.0, parcel-bundler@^1.12.3:
+parcel-bundler@^1.12.3:
   version "1.12.3"
   resolved "https://registry.yarnpkg.com/parcel-bundler/-/parcel-bundler-1.12.3.tgz#2bbf70bfa2d06097f071653285040bd125684d09"
   dependencies:
@@ -6630,6 +6637,10 @@ parcel-bundler@^1.11.0, parcel-bundler@^1.12.3:
     terser "^3.7.3"
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
+
+parcel-plugin-codegen@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-codegen/-/parcel-plugin-codegen-0.3.0.tgz#c30d71b4374ac2d81c23443da3c22f01b1c0b389"
 
 parcel-plugin-markdown-string@^1.3.4:
   version "1.3.5"
@@ -7396,7 +7407,6 @@ rc@^1.2.7, rc@^1.2.8:
 react-arbiter@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/react-arbiter/-/react-arbiter-0.8.0.tgz#8a1dab3b8e249255632cc8bf04f3244a36c5167b"
-  integrity sha512-AUQ25g0tji1zPUp6BgPIE7aEGtO32CF4E70CW0nBinMvsh4GqZi4duAdQ0cSn5vnTBdq/4UoSarMotLm0Oq+hg==
 
 react-dom@^16.8.1:
   version "16.8.6"

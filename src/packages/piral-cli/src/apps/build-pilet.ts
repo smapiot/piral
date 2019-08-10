@@ -9,6 +9,7 @@ import {
   postProcess,
   getFileWithExtension,
   logFail,
+  removeDirectory,
 } from './common';
 
 export interface BuildPiletOptions {
@@ -16,6 +17,7 @@ export interface BuildPiletOptions {
   target?: string;
   detailedReport?: boolean;
   logLevel?: 1 | 2 | 3;
+  fresh?: boolean;
 }
 
 export const buildPiletDefaults = {
@@ -23,6 +25,7 @@ export const buildPiletDefaults = {
   target: './dist/index.js',
   detailedReport: false,
   logLevel: 3 as const,
+  fresh: false,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -31,6 +34,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     target = buildPiletDefaults.target,
     detailedReport = buildPiletDefaults.detailedReport,
     logLevel = buildPiletDefaults.logLevel,
+    fresh = buildPiletDefaults.fresh,
   } = options;
   const entryFiles = getFileWithExtension(join(baseDir, entry));
   const targetDir = dirname(entryFiles);
@@ -48,19 +52,28 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     target: targetDir,
   });
 
+  const dest = {
+    outDir: dirname(target),
+    outFile: basename(target),
+  };
+
+  if (fresh) {
+    await removeDirectory(dest.outDir);
+  }
+
   modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
 
   const bundler = new Bundler(
     entryFiles,
     extendConfig({
-      outDir: dirname(target),
-      outFile: basename(target),
+      ...dest,
       watch: false,
       minify: true,
       scopeHoist: false,
       contentHash: true,
       publicUrl: './',
       detailedReport,
+      logLevel,
     }),
   );
 

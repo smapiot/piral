@@ -1,6 +1,6 @@
 {
   "name": "piral-hyperapp",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Extensions for hyperapp to the piral-core pilet API.",
   "keywords": [
     "piral",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "hyperapp": "^1.2.10",
-    "piral-core": "^0.6.1"
+    "piral-core": "^0.6.2"
   },
   "peerDependencies": {
     "hyperapp": "^1.0.0",
