@@ -3,6 +3,7 @@ dist
 src/packages/*/lib
 src/pages/*/lib
 src/samples/*/lib
+__generated__
 
 # OS files
 .DS_STORE
