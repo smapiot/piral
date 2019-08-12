@@ -1,34 +1,16 @@
 const { join, resolve } = require('path');
-const { readFileSync, writeFileSync, existsSync } = require('fs');
+const { writeFileSync } = require('fs');
 const { allCommands } = require('../src/packages/piral-cli/lib/commands');
 const nl = '\n';
-const autoGenMessage = 'auto-generated';
-const startMarker = `<!--start:${autoGenMessage}-->`;
-const endMarker = `<!--end:${autoGenMessage}-->`;
 
 const rootFolder = resolve(__dirname, '..', 'docs', 'commands');
 
 function generateNewContent(command) {
-  return `# \`${command}\`
-
-${startMarker}
-
-${endMarker}
-`;
+  return `# \`${command}\``;
 }
 
 function getCommandPath(command) {
   return join(rootFolder, `${command}.md`);
-}
-
-function getExistingContent(command) {
-  const commandMdPath = getCommandPath(command);
-
-  if (existsSync(commandMdPath)) {
-    return readFileSync(commandMdPath, 'utf8');
-  }
-
-  return generateNewContent(command);
 }
 
 function writeCommandContent(command, content) {
@@ -150,6 +132,8 @@ ${arg.describe || 'No description available.'}
 
 function generateFrom(command) {
   const { positionals, flags } = getCommandData(command.flags);
+  const hasAlt = command.name.endsWith('-piral') || command.name.endsWith('-pilet');
+  const parts = command.name.split('-');
   return `
 ${command.description || 'No description available.'}
 
@@ -158,7 +142,11 @@ ${command.description || 'No description available.'}
 From the command line:
 
 ${shell(`pb ${command.name} ${command.arguments.join(' ')}`)}
+${hasAlt ? `
+Alternative:
 
+${shell(`${parts.pop()} ${parts.join('-')} ${command.arguments.join(' ')}`)}
+` : ''}
 ## Aliases
 
 Instead of \`${command.name}\` you can also use:
@@ -175,24 +163,15 @@ ${details(flags.map(flag => ({ ...flag, name: `--${flag.name}` })))}
 `;
 }
 
-function replaceBody(command, content, body) {
-  const startIndex = content.indexOf(startMarker);
-
-  if (startIndex === -1) {
-    console.warn(`Could not find start marker. Please do not remove the auto generated blocks. Skipping "${command}".`);
-    return content;
-  }
-
-  const endIndex = content.indexOf(endMarker, startIndex);
-  const rest = endIndex !== -1 ? content.substring(endIndex) : endMarker;
-  return content.substring(0, startIndex + startMarker.length) + nl + body + nl + rest;
+function replaceBody(content, body) {
+  return content + nl + body;
 }
 
 function generateCommandDocs() {
   for (const command of allCommands) {
-    const oldContent = getExistingContent(command.name);
+    const oldContent = generateNewContent(command.name);
     const body = generateFrom(command);
-    const newContent = replaceBody(command.name, oldContent, body);
+    const newContent = replaceBody(oldContent, body);
     writeCommandContent(command.name, newContent);
   }
 }

@@ -1,7 +1,5 @@
 # `debug-piral`
 
-<!--start:auto-generated-->
-
 Starts the debugging process for a Piral instance.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb debug-piral [source]
+```
+
+Alternative:
+
+```sh
+piral debug [source]
 ```
 
 ## Aliases
@@ -58,5 +62,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->

@@ -76,13 +76,13 @@ The `showNotification` API can be used to trigger a notification in the app. All
 
 As an example we could just add a new page using the following code:
 
-```tsx
+```ts
 app.registerPage('/hello', () => <div>Hello from a page!</div>);
 ```
 
 Linking against this page (e.g., from the menu) could be done via a new menu entry:
 
-```tsx
+```ts
 app.registerMenu('hello-link', () => <Link to="/hello">See Page</Link>);
 ```
 

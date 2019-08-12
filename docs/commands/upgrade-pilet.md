@@ -1,7 +1,5 @@
 # `upgrade-pilet`
 
-<!--start:auto-generated-->
-
 Upgrades an existing pilet to the latest version of the used Piral instance.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb upgrade-pilet 
+```
+
+Alternative:
+
+```sh
+pilet upgrade 
 ```
 
 ## Aliases
@@ -52,5 +56,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->
