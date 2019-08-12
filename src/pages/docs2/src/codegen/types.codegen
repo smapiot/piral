@@ -1,0 +1,6 @@
+module.exports = function() {
+  return `
+    const React = require('react');
+    module.exports = () => (<></>);
+  `;
+};

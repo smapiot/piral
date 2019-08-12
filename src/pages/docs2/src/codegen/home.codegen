@@ -1,0 +1,32 @@
+const { render } = require('./markdown');
+const { getTutorials, getName } = require('./paths');
+
+module.exports = function() {
+  const files = getTutorials();
+  const data = files.map(file => {
+    this.addDependency(file, { includedInParent: true });
+    return {
+      ...render(file).meta,
+      file: getName(file),
+    };
+  });
+  const component = data
+    .map(
+      item => `
+    <TutorialCard
+      title="${item.title}"
+      description="${item.description}"
+      level="${item.level}"
+      audience="${item.audience}"
+      link="${item.file}"
+      />
+  `,
+    )
+    .join('');
+
+  return `
+    const React = require('react');
+    const { TutorialCard } = require('../scripts/components');
+    module.exports = () => (<>${component}</>);
+  `;
+};

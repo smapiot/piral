@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "skipLibCheck": true,
+    "lib": ["dom", "es2015", "es2018"],
+    "module": "esnext",
+    "jsx": "react"
+  },
+  "include": [
+    "./src"
+  ]
+ }

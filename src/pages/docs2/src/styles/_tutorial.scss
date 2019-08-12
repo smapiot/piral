@@ -1,0 +1,71 @@
+.tutorial-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1em 0;
+
+  a {
+    width: 130px;
+    height: 40px;
+    background: $color-secondary;
+    border: none;
+    border-radius: .25rem;
+    position: relative;
+    color: #fbfbfb;
+    font-weight: 600;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .4);
+    box-shadow: 0 3px 0 0px rgba(0, 0, 0, .2);
+    cursor: pointer;
+    display: block;
+    line-height: 40px;
+    padding: 0 1em;
+    box-sizing: border-box;
+    margin: 0;
+
+    &:hover {
+      background: lighten($color-secondary, 10%);
+    }
+
+    &:empty {
+      visibility: hidden;
+    }
+
+    &::after {
+      content: "";
+      width: 0;
+      height: 0;
+      display: block;
+      position: absolute;
+      opacity: 0.6;
+    }
+
+    &:first-child {
+      text-align: right;
+
+      &::after {
+        border-top: 20px solid $color-primary;
+        border-bottom: 20px solid $color-primary;
+        border-right: 16px solid transparent;
+        border-left: 20px solid $color-primary;
+        left: 0;
+        top: 0;
+        border-radius: .25rem 0 0 .25rem;
+      }
+    }
+
+    &:last-child {
+      text-align: left;
+
+      &::after {
+        border-top: 20px solid $color-primary;
+        border-bottom: 20px solid $color-primary;
+        border-left: 16px solid transparent;
+        border-right: 20px solid $color-primary;
+        right: 0;
+        top: 0;
+        border-radius: 0 .25rem .25rem 0;
+      }
+    }
+  }
+}
