@@ -8,6 +8,7 @@ import {
   extendBundlerForPiral,
   modifyBundlerForPiral,
   removeDirectory,
+  extendBundlerWithPlugins,
 } from './common';
 
 function getDestination(entryFiles: string, target: string) {
@@ -86,6 +87,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   );
 
   extendBundlerForPiral(bundler);
+  extendBundlerWithPlugins(bundler);
 
   await bundler.bundle();
 }

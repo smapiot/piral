@@ -2,12 +2,13 @@ import * as Bundler from 'parcel-bundler';
 import chalk from 'chalk';
 import { dirname, join } from 'path';
 import { buildKrasWithCli, readKrasConfig, krasrc } from 'kras';
-import { getFreePort } from './port';
 import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
 import { setStandardEnvs, StandardEnvProps } from './envs';
+import { extendBundlerWithPlugins } from './bundler';
+import { liveIcon, settingsIcon } from './emoji';
 import { extendConfig } from './settings';
 import { startServer } from './server';
-import { liveIcon, settingsIcon } from './emoji';
+import { getFreePort } from './port';
 
 export interface DebugOptions {
   publicUrl?: string;
@@ -58,6 +59,8 @@ export async function runDebug(
   if (options.dependencies) {
     extendBundlerForPiral(bundler);
   }
+
+  extendBundlerWithPlugins(bundler);
 
   krasConfig.map['/'] = `http://localhost:${buildServerPort}`;
   const krasServer = buildKrasWithCli(krasConfig);

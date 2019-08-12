@@ -10,6 +10,7 @@ import {
   getFileWithExtension,
   logFail,
   removeDirectory,
+  extendBundlerWithPlugins,
 } from './common';
 
 export interface BuildPiletOptions {
@@ -78,6 +79,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   );
 
   extendBundlerForPilet(bundler);
+  extendBundlerWithPlugins(bundler);
 
   const bundle = await bundler.bundle();
 
