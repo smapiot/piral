@@ -7,12 +7,13 @@ const generated = resolve(__dirname, '__generated__');
 const tutorials = resolve(docs, 'tutorials');
 const questions = resolve(docs, 'questions');
 const commands = resolve(docs, 'commands');
+const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
 
-function getDocsFrom(dir) {
+function getDocsFrom(dir, tester = /\.md$/) {
   return readdirSync(dir)
     .sort()
-    .filter(name => /\.md$/.test(name) && name !== readme)
+    .filter(name => tester.test(name) && name !== readme)
     .map(name => resolve(dir, name));
 }
 
@@ -30,6 +31,10 @@ function getCommands() {
 
 function getSpecs() {
   return getDocsFrom(specs);
+}
+
+function getTypes() {
+  return getDocsFrom(types,  /\.json$/);
 }
 
 function getDocs() {
@@ -72,6 +77,7 @@ module.exports = {
   getQuestions,
   getCommands,
   getSpecs,
+  getTypes,
   getDocs,
   getName,
   getRelativePath,

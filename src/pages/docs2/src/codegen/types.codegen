@@ -1,6 +1,24 @@
+const { readFileSync } = require('fs');
+const { getTypes } = require('./paths');
+
 module.exports = function() {
+  const titles = [];
+  const children = [];
+
+  getTypes().forEach(file => {
+    const content = readFileSync(file, 'utf8');
+    const title = file
+      .split('/')
+      .pop()
+      .replace('.json', '');
+    this.addDependency(file, { includedInParent: true });
+    titles.push(title);
+    children.push(`<TypeInfo>{${content}}</TypeInfo>`);
+  });
+
   return `
     const React = require('react');
-    module.exports = () => (<></>);
+    const { TypeInfo, Tabs } = require('../scripts/components');
+    module.exports = () => (<Tabs titles={${JSON.stringify(titles)}}>{[${children.join(',')}]}</Tabs>);
   `;
 };
