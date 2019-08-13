@@ -3,6 +3,9 @@ $color-primary: #00FFAD;
 $color-secondary: #192440;
 $color-heart: #ea5395;
 $color-text: #000;
+$color-warning: #FFC007;
+$color-danger: #d61c1c;
+$color-purple: #a321a3;
 
 $desktopBrk: 1024px;
 $tabletBrk: 768px;
@@ -16,6 +19,7 @@ $fontFamily: 'Lato', sans-serif;
 @import "loader";
 @import "cards";
 @import "tabs";
+@import "types";
 @import "markdown";
 @import "tutorial";
 @import "demos";

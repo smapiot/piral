@@ -6,3 +6,4 @@ export * from './ScrollToTop';
 export * from './Tabs';
 export * from './Tutorial';
 export * from './TutorialCard';
+export * from './TypeInfo';
