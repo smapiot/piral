@@ -1,3 +1,0 @@
-<Card title="%{title}" icon="%{icon}" to="%{url}" kind="%{color}">
-  %{description}
-</Card>
