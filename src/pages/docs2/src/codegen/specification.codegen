@@ -1,5 +1,5 @@
 const { getSpecs } = require('./paths');
-const { docRef, niceName } = require('./utils');
+const { docRef, getTitle } = require('./utils');
 const { render } = require('./markdown');
 
 module.exports = function() {
@@ -9,7 +9,7 @@ module.exports = function() {
   getSpecs().forEach(file => {
     const { content } = render(file);
     this.addDependency(file, { includedInParent: true });
-    titles.push(niceName(file));
+    titles.push(getTitle(file));
     children.push(`<Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />`);
   });
 

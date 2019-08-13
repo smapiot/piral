@@ -4,6 +4,7 @@
 
 * Allow pilet scaffolding from non-NPM sources (#53)
 * Improved documentation code generation (#52)
+* Draft for new documentation design online
 * Support configuration for `piral-ext` extensions (#51)
 * Remove output folder first on publish with `--fresh`
 

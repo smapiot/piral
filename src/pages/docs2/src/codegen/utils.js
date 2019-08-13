@@ -17,6 +17,20 @@ function docRef(path, basePath) {
   return `${docBaseUrl}/${relPath}`;
 }
 
+function capitalize(str) {
+  switch (str) {
+    case 'api':
+      return 'API';
+    default:
+      return str[0].toUpperCase() + str.substr(1);
+  }
+}
+
+function getTitle(file) {
+  const parts = niceName(file).split('-');
+  return parts.map(m => capitalize(m)).join(' ');
+}
+
 function niceName(path) {
   const ext = extname(path);
   const name = basename(path).replace(ext, '');
@@ -27,4 +41,5 @@ module.exports = {
   imgRef,
   docRef,
   niceName,
+  getTitle,
 };
