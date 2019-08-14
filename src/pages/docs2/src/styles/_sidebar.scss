@@ -1,0 +1,37 @@
+.doc-menu {
+  .nav-link {
+    margin-bottom: 5px;
+    display: block;
+    padding: 5px 15px;
+    color: $color-secondary;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+
+    &:hover, &:focus {
+      color: black;
+      text-decoration: none;
+      background: none;
+    }
+
+    &.active {
+      background: none;
+      color: $color-green;
+      border-color: $color-green;
+    }
+  }
+
+  .doc-sub-menu {
+    padding-left: 0;
+
+    .nav-link {
+      margin-bottom: 10px;
+      font-size: 12px;
+      padding: 0;
+      padding-left: 34px;
+
+      &:first-child {
+        padding-top: 5px;
+      }
+    }
+  }
+}

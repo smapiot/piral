@@ -5736,6 +5736,11 @@ markdown-it-abbr@1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/markdown-it-abbr/-/markdown-it-abbr-1.0.4.tgz#d66b5364521cbb3dd8aa59dadfba2fb6865c8fd8"
 
+markdown-it-anchor@5.2.4:
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/markdown-it-anchor/-/markdown-it-anchor-5.2.4.tgz#d39306fe4c199705b4479d3036842cf34dcba24f"
+  integrity sha512-n8zCGjxA3T+Mx1pG8HEgbJbkB8JFUuRkeTZQuIM8iPY6oQ8sWOPRZJDFC9a/pNg2QkHEjjGkhBEl/RSyzaDZ3A==
+
 markdown-it-emoji@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/markdown-it-emoji/-/markdown-it-emoji-1.4.0.tgz#9bee0e9a990a963ba96df6980c4fddb05dfb4dcc"

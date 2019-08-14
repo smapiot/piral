@@ -10,13 +10,14 @@ export interface TutorialCardProps {
 }
 
 export const TutorialCard: React.FC<TutorialCardProps> = ({ title, description, level, audience, link }) => (
-  <div className="tutorial">
-    <div>{title}</div>
-    <div>{description}</div>
-    <div>{level}</div>
-    <div>{audience}</div>
-    <div>
-      <Link to={`/tutorials/${link}`}>Link</Link>
-    </div>
-  </div>
+  <Link to={`/tutorials/${link}`} className="tutorial-card">
+    <h3>{title}</h3>
+    <p className="audience info">
+      <i className="fas fa-users" /> {audience}
+    </p>
+    <p className="level info">
+      <i className="fas fa-book-open" /> {level}
+    </p>
+    <p>{description}</p>
+  </Link>
 );

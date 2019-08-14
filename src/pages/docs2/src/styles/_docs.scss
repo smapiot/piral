@@ -1,0 +1,15 @@
+.doc-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+  width: 100%;
+
+  .doc-sidebar {
+    flex: 0 0 250px;
+    align-self: flex-start;
+  }
+
+  .doc-content {
+    flex: 1;
+  }
+}

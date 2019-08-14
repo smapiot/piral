@@ -10,12 +10,16 @@ module.exports = function() {
     const { content } = render(file);
     this.addDependency(file, { includedInParent: true });
     titles.push(getTitle(file));
-    children.push(`<Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />`);
+    children.push(`
+      <ContentPage>
+        <Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />
+      </ContentPage>
+    `);
   });
 
   return `
     const React = require('react');
-    const { Tabs, Markdown } = require('../scripts/components');
+    const { Tabs, ContentPage, Markdown } = require('../scripts/components');
     module.exports = () => (<Tabs titles={${JSON.stringify(titles)}}>{[${children.join(',')}]}</Tabs>);
   `;
 };

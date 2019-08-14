@@ -243,6 +243,8 @@
   code, pre {
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
     font-size: 0.75em;
+    white-space: pre-wrap;
+    word-break: break-all;
   }
 
   pre {
@@ -417,7 +419,7 @@
   }
 
   pre {
-    word-wrap: normal;
+    word-wrap: break-word;
     background-color: #f6f8fa;
     border-radius: 3px;
     font-size: 85%;
@@ -431,7 +433,7 @@
       font-size: 100%;
       margin: 0;
       padding: 0;
-      white-space: pre;
+      white-space: pre-wrap;
       word-break: normal;
     }
   }

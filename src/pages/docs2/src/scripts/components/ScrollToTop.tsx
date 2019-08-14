@@ -1,6 +1,4 @@
-import * as React from 'react';
-
-export const ScrollToTop: React.FC = () => {
+export const ScrollToTop = () => {
   window.scrollTo(0, 0);
-  return null;
+  return false;
 };

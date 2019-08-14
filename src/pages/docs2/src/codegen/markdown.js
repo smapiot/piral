@@ -1,6 +1,7 @@
 const YAML = require('yaml');
 const MarkdownIt = require('markdown-it');
 const markdownItAbbr = require('markdown-it-abbr');
+const markdownItAnchor = require('markdown-it-anchor');
 const markdownItEmoji = require('markdown-it-emoji');
 const markdownItFootnote = require('markdown-it-footnote');
 const markdownItFrontMatter = require('markdown-it-front-matter');
@@ -34,6 +35,7 @@ function render(file) {
     },
   })
     .use(markdownItAbbr)
+    .use(markdownItAnchor, { level: [1, 2] })
     .use(markdownItEmoji)
     .use(markdownItFootnote)
     .use(markdownItFrontMatter, fm => (result.meta = YAML.parse(fm)))

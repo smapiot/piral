@@ -14,8 +14,6 @@
     color: #fbfbfb;
     font-weight: 600;
     text-decoration: none;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .4);
-    box-shadow: 0 3px 0 0px rgba(0, 0, 0, .2);
     cursor: pointer;
     display: block;
     line-height: 40px;
@@ -67,5 +65,36 @@
         border-radius: 0 .25rem .25rem 0;
       }
     }
+  }
+}
+
+.tutorial-card {
+  text-decoration: none;
+  color: #444;
+  display: block;
+  padding: 1em;
+
+  h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  &:hover {
+    color: black;
+  }
+
+  p {
+    margin: 0;
+    margin-top: 1em;
+  }
+
+  .info {
+    color: #555;
+    font-size: 0.75em;
+  }
+
+  .info + .info {
+    margin-top: 0;
   }
 }

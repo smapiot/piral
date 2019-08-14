@@ -11,7 +11,7 @@ module.exports = function() {
 
   return `
     const React = require('react');
-    const { Markdown } = require('../scripts/components');
-    module.exports = () => (<>${docs}</>);
+    const { ContentPage, Markdown } = require('../scripts/components');
+    module.exports = () => (<ContentPage>${docs}</ContentPage>);
   `;
 };

@@ -10,23 +10,24 @@ module.exports = function() {
       file: getName(file),
     };
   });
-  const component = data
+  const items = data
     .map(
-      item => `
-    <TutorialCard
-      title="${item.title}"
-      description="${item.description}"
-      level="${item.level}"
-      audience="${item.audience}"
-      link="${item.file}"
-      />
-  `,
+      item => `{
+        content: <TutorialCard
+          title="${item.title}"
+          description="${item.description}"
+          level="${item.level}"
+          audience="${item.audience}"
+          link="${item.file}"
+          />,
+        icon: "${item.file.substr(0, 2)}",
+      }`,
     )
-    .join('');
+    .join(',');
 
   return `
     const React = require('react');
-    const { TutorialCard } = require('../scripts/components');
-    module.exports = () => (<>${component}</>);
+    const { Timeline, TutorialCard } = require('../scripts/components');
+    module.exports = () => (<Timeline items={[${items}]} />);
   `;
 };
