@@ -11,7 +11,7 @@
     "setup": "yarn bootstrap && yarn build && yarn bootstrap",
     "build": "lerna run build",
     "build:docs": "piral build src/pages/docs/src/index.html --target dist/docs/index.html",
-    "watch:docs": "piral debug src/pages/docs2/src/index.html",
+    "watch:docs": "piral debug src/pages/docs/src/index.html",
     "build:page": "piral build src/pages/www/src/index.html --target dist/www/index.html",
     "watch:page": "piral debug src/pages/www/src/index.html",
     "watch:demo-core": "piral debug src/samples/sample-piral-core/src/index.html",
