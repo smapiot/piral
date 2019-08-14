@@ -44,6 +44,7 @@
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "latest",
+    "keyword-extractor": "0.0.17",
     "markdown-it": "^9.0.1",
     "markdown-it-highlightjs": "3.0.0",
     "markdown-it-abbr": "1.0.4",

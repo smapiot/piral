@@ -1,0 +1,72 @@
+const { readFileSync } = require('fs');
+const { extract } = require('keyword-extractor');
+const { getName, getCommands, getDocs, getQuestions, getSpecs, getTutorials, getTypes } = require('./paths');
+
+function findKeywords(sentence) {
+  const result = extract(sentence, {
+    language: 'english',
+    remove_digits: true,
+    return_changed_case: true,
+    remove_duplicates: false,
+  });
+
+  const results = {};
+
+  for (const item of result) {
+    if (!results[item]) {
+      results[item] = 1;
+    } else {
+      results[item]++;
+    }
+  }
+
+  return results;
+}
+
+module.exports = function() {
+  const commands = findKeywords(
+    getCommands()
+      .map(m => readFileSync(m, 'utf8'))
+      .join('\n\n'),
+  );
+
+  const specs = findKeywords(
+    getSpecs()
+      .map(m => readFileSync(m, 'utf8'))
+      .join('\n\n'),
+  );
+
+  const docs = findKeywords(
+    getDocs()
+      .map(m => readFileSync(m, 'utf8'))
+      .join('\n\n'),
+  );
+
+  const questions = findKeywords(
+    getQuestions()
+      .map(m => readFileSync(m, 'utf8'))
+      .join('\n\n'),
+  );
+
+  const types = findKeywords(
+    getTypes()
+      .map(m => readFileSync(m, 'utf8'))
+      .join('\n\n'),
+  );
+
+  const tutorials = getTutorials().map(m => ({
+    result: findKeywords(readFileSync(m, 'utf8')),
+    name: getName(m),
+  }));
+
+  const search = {
+    commands,
+    specs,
+    docs,
+    questions,
+    types,
+    tutorials,
+  };
+
+  return `module.exports = ${JSON.stringify(search)}`;
+};
