@@ -5,6 +5,7 @@ export * from './Loader';
 export * from './Markdown';
 export * from './Menu';
 export * from './ScrollToTop';
+export * from './Search';
 export * from './Sidebar';
 export * from './Tabs';
 export * from './Timeline';
