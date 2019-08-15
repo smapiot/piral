@@ -7,6 +7,12 @@
   .doc-sidebar {
     flex: 0 0 250px;
     align-self: flex-start;
+    padding-right: 1em;
+    box-sizing: border-box;
+
+    @media (max-width: $mobileBrk) {
+      display: none;
+    }
   }
 
   .doc-content {

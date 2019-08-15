@@ -13,7 +13,7 @@ module.exports = function() {
       .replace('.json', '');
     this.addDependency(file, { includedInParent: true });
     titles.push(title);
-    children.push(`<TypeInfo>{${content}}</TypeInfo>`);
+    children.push(`<TypeInfo key="${title}">{${content}}</TypeInfo>`);
   });
 
   return `

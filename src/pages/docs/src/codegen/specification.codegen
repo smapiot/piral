@@ -11,7 +11,7 @@ module.exports = function() {
     this.addDependency(file, { includedInParent: true });
     titles.push(getTitle(file));
     children.push(`
-      <ContentPage>
+      <ContentPage key="${file}">
         <Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />
       </ContentPage>
     `);

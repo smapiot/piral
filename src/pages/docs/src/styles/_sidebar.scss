@@ -1,8 +1,8 @@
 .doc-menu {
   .nav-link {
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
     display: block;
-    padding: 5px 15px;
+    padding: 0.5em 1em;
     color: $color-secondary;
     border-left: 3px solid transparent;
     text-decoration: none;
@@ -22,16 +22,15 @@
 
   .doc-sub-menu {
     padding-left: 0;
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
 
     .nav-link {
-      margin-bottom: 10px;
-      font-size: 12px;
+      margin-top: 1em;
+      margin-bottom: 0;
+      font-size: 0.75em;
       padding: 0;
-      padding-left: 34px;
-
-      &:first-child {
-        padding-top: 5px;
-      }
+      padding-left: 2em;
     }
   }
 }

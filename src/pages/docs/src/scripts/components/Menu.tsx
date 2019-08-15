@@ -13,7 +13,9 @@ function renderMenuItems(items: MenuItems, maxLevel = Number.MAX_VALUE, level = 
         <a className={`nav-link ${item.active ? 'active' : ''}`} href={item.href}>
           {item.title}
         </a>
-        <nav className="doc-sub-menu">{renderMenuItems(item.children, maxLevel, level + 1)}</nav>
+        {item.children.length > 0 && (
+          <nav className="doc-sub-menu">{renderMenuItems(item.children, maxLevel, level + 1)}</nav>
+        )}
       </React.Fragment>
     ));
   }

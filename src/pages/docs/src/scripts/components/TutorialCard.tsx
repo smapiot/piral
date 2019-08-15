@@ -13,10 +13,7 @@ export const TutorialCard: React.FC<TutorialCardProps> = ({ title, description, 
   <Link to={`/tutorials/${link}`} className="tutorial-card">
     <h3>{title}</h3>
     <p className="audience info">
-      <i className="fas fa-users" /> {audience}
-    </p>
-    <p className="level info">
-      <i className="fas fa-book-open" /> {level}
+      <i className="fas fa-users" /> {audience} &middot; <i className="fas fa-book-open" /> {level}
     </p>
     <p>{description}</p>
   </Link>

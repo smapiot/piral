@@ -27,11 +27,7 @@ export const Tabs: React.FC<TabsProps> = ({ titles, children }) => {
         </ul>
       </div>
       <div className="tabs-content">
-        {children.map((child, i) => (
-          <div key={i} className={`tab ${i === active ? 'visible' : 'hidden'}`}>
-            {child}
-          </div>
-        ))}
+        <div className="tab">{children[active]}</div>
       </div>
     </div>
   );
