@@ -1,0 +1,25 @@
+const { getSpecs } = require('./paths');
+const { docRef, getTitle } = require('./utils');
+const { render } = require('./markdown');
+
+module.exports = function() {
+  const titles = [];
+  const children = [];
+
+  getSpecs().forEach(file => {
+    const { content } = render(file);
+    this.addDependency(file, { includedInParent: true });
+    titles.push(getTitle(file));
+    children.push(`
+      <ContentPage key="${file}">
+        <Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />
+      </ContentPage>
+    `);
+  });
+
+  return `
+    const React = require('react');
+    const { Tabs, ContentPage, Markdown } = require('../scripts/components');
+    module.exports = () => (<Tabs titles={${JSON.stringify(titles)}}>{[${children.join(',')}]}</Tabs>);
+  `;
+};

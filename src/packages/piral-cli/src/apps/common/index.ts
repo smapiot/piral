@@ -1,3 +1,4 @@
+export * from './bundler';
 export * from './config';
 export * from './debug';
 export * from './emoji';

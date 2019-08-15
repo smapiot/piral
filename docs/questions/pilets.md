@@ -6,7 +6,7 @@ Pilets can be bundle split like any other module. Ideally, especially for larger
 
 Compare without bundle splitting:
 
-```tsx
+```ts
 import MyTile from './MyTile';
 
 export function setup(app: PiralApi) {
@@ -19,7 +19,7 @@ export function setup(app: PiralApi) {
 
 to a solution that uses bundle splitting:
 
-```tsx
+```ts
 const MyTile = React.lazy(() => import('./MyTile'));
 
 export function setup(app: PiralApi) {
@@ -38,7 +38,7 @@ The loading indicator will already be displayed by Piral itself, so there is no 
 
 The approach for bundle splitting works for resources out of the boxes. As with any standard bundler just use the `require` function with your resources or include CSS files directly:
 
-```tsx
+```ts
 import './foo.css';
 
 const imagePath = require('./images/bar.png');

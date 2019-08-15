@@ -1,0 +1,47 @@
+.tabs {
+  .tabs-header {
+    border-bottom: 1px solid #ddd;
+    position: relative;
+
+    ul {
+      display: block;
+      list-style: none;
+      border: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        margin-right: 1em;
+        display: inline-block;
+        width: auto;
+
+        a {
+          padding: 0 0 0.5em;
+          display: inline-block;
+          width: auto;
+          color: #767676;
+          text-decoration: none;
+
+          &.active {
+            border-bottom: 2px solid #d8d8d8;
+            color: black;
+          }
+        }
+      }
+    }
+  }
+
+  .tabs-content {
+    margin-top: 2rem;
+
+    .tab {
+      &.visible {
+        display: block;
+      }
+
+      &.hidden {
+        display: none;
+      }
+    }
+  }
+}

@@ -10,10 +10,12 @@ function renderMenuItems(items: MenuItems, maxLevel = Number.MAX_VALUE, level = 
   if (maxLevel >= level) {
     return items.map(item => (
       <React.Fragment key={item.href}>
-        <a className="nav-link scrollto" href={item.href}>
+        <a className={`nav-link ${item.active ? 'active' : ''}`} href={item.href}>
           {item.title}
         </a>
-        <nav className="doc-sub-menu nav flex-column">{renderMenuItems(item.children, maxLevel, level + 1)}</nav>
+        {item.children.length > 0 && (
+          <nav className="doc-sub-menu">{renderMenuItems(item.children, maxLevel, level + 1)}</nav>
+        )}
       </React.Fragment>
     ));
   }
@@ -22,6 +24,6 @@ function renderMenuItems(items: MenuItems, maxLevel = Number.MAX_VALUE, level = 
 }
 
 export const Menu: React.FC<MenuProps> = ({ content, maxLevel }) => {
-  const items = useMenuItems(content && content.current);
+  const items = useMenuItems(content);
   return <Sidebar>{renderMenuItems(items, maxLevel)}</Sidebar>;
 };

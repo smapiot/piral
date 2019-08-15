@@ -1,7 +1,5 @@
 # `pack-pilet`
 
-<!--start:auto-generated-->
-
 Creates a pilet package that can be published.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb pack-pilet [source]
+```
+
+Alternative:
+
+```sh
+pilet pack [source]
 ```
 
 ## Aliases
@@ -44,5 +48,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->

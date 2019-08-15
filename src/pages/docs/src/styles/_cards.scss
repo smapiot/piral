@@ -1,0 +1,60 @@
+.card {
+  flex: 0 0 300px;
+  max-width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  i {
+    font-size: 1.4em;
+    color: $color-secondary;
+  }
+
+  small {
+    font-size: 0.8rem;
+    color: #999;
+  }
+}
+
+.image-card {
+  flex: 0 0 200px;
+  text-decoration: none;
+  color: black;
+
+  &.details {
+    flex-basis: 500px;
+  }
+
+  h5 {
+    font-size: 1.2em;
+    margin-bottom: 0;
+  }
+
+  .image {
+    height: 72px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    > img {
+      max-height: 100%;
+      filter: grayscale(100%);
+      transition: all 0.3s ease;
+    }
+  }
+
+  .card-details {
+    padding: 1em;
+    text-align: justify;
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  &:hover {
+    color: $color-secondary;
+
+    .image > img {
+      filter: none;
+    }
+  }
+}

@@ -1,3 +1,0 @@
-<Section id="section-%{name}" title="%{name}">
-  <Ti>{require('%{relRoot}/types/%{name}.json')}</Ti>
-</Section>

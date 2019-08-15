@@ -1,0 +1,134 @@
+html, body {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+html,
+body,
+input,
+textarea,
+select,
+button {
+  font-size: 16px;
+  font-family: $fontFamily;
+  font-weight: 300;
+  color: $color-text;
+}
+
+
+body {
+  display: flex;
+}
+
+.container {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+  box-sizing: border-box;
+
+  @media (min-width: $mobileBrk) {
+    max-width: 540px;
+  }
+
+  @media (min-width: $tabletBrk) {
+    max-width: 720px;
+  }
+
+  @media (min-width: $desktopBrk) {
+    max-width: 900px;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+
+  &.center {
+    justify-content: center;
+  }
+}
+
+.boxes {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+
+p {
+  line-height: 1.5;
+}
+
+.responsive-image {
+  max-width: 100%;
+}
+
+section {
+  padding: 2em 0;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .btn {
+    margin: 1em;
+  }
+}
+
+.btn, a.btn {
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  border-radius: .25rem;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  box-sizing: border-box;
+  display: inline-block;
+
+  i {
+    margin-right: 0.5em;
+    position: relative;
+  }
+
+  &.primary {
+    background: $color-secondary;
+    border: 1px solid $color-secondary;
+    color: #fff !important;
+
+    &:hover, &:focus, &:active, &.active, &.hover {
+      background: lighten($color-secondary, 10%);
+      color: #fff !important;
+      border: 1px solid lighten($color-secondary, 10%);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(38,143,255,.5);
+    }
+  }
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+
+  &:before,
+  &:after {
+    content: '';
+    display: table;
+  }
+}

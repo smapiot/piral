@@ -1,0 +1,29 @@
+$color-green: #56AA1C;
+$color-primary: #00FFAD;
+$color-secondary: #192440;
+$color-heart: #ea5395;
+$color-text: #000;
+$color-warning: #FFC007;
+$color-danger: #d61c1c;
+$color-purple: #a321a3;
+
+$desktopBrk: 1024px;
+$tabletBrk: 768px;
+$mobileBrk: 576px;
+
+$fontFamily: 'Lato', sans-serif;
+
+@import "fonts";
+@import "body";
+@import "layout";
+@import "docs";
+@import "loader";
+@import "sidebar";
+@import "search";
+@import "cards";
+@import "tabs";
+@import "types";
+@import "timeline";
+@import "markdown";
+@import "tutorial";
+@import "demos";
