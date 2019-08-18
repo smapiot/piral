@@ -1,6 +1,6 @@
 {
   "name": "piral-ng",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Extensions for Angular to the piral-core pilet API.",
   "keywords": [
     "piral",
@@ -39,7 +39,7 @@
     "@angular/core": "^8.0.0",
     "@angular/platform-browser": "^8.0.0",
     "@angular/platform-browser-dynamic": "^8.0.0",
-    "piral-core": "^0.6.2"
+    "piral-core": "^0.6.3"
   },
   "peerDependencies": {
     "@angular/core": "^6.0.0 || ^7.0.0 || ^8.0.0",
