@@ -44,23 +44,25 @@ const filePrefix = 'file:';
  * ]
  * @param fullName The provided package name.
  */
-export function dissectPackageName(fullName: string): [string, string, boolean, PackageType] {
-  const localFile = /^[\.\/\~]/.test(fullName);
-  const git = fullName.startsWith(gitPrefix) || /^(https?|ssh):\/\/.*\.git$/.test(fullName);
-  const type = localFile ? 'file' : git ? 'git' : 'registry';
+export function dissectPackageName(baseDir: string, fullName: string): [string, string, boolean, PackageType] {
+  const gitted = fullName.startsWith(gitPrefix);
 
-  if (git) {
-    const gitUrl = fullName.startsWith(gitPrefix) ? fullName : `${gitPrefix}${fullName}`;
-    return [gitUrl, 'latest', false, type];
-  } else if (!localFile) {
+  if (gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName)) {
+    const gitUrl = gitted ? fullName : `${gitPrefix}${fullName}`;
+    return [gitUrl, 'latest', false, 'git'];
+  } else if (/^[\.\/\~]/.test(fullName)) {
+    const fullPath = resolve(baseDir, fullName);
+    return [fullPath, 'latest', false, 'file'];
+  } else {
     const index = fullName.indexOf('@', 1);
+    const type = 'registry';
 
     if (index !== -1) {
       return [fullName.substr(0, index), fullName.substr(index + 1), true, type];
     }
-  }
 
-  return [fullName, 'latest', false, type];
+    return [fullName, 'latest', false, type];
+  }
 }
 
 export function combinePackageRef(name: string, version: string, type: PackageType) {
@@ -92,7 +94,7 @@ export function getPackageVersion(hadVersion: boolean, sourceName: string, sourc
     case 'registry':
       return hadVersion && sourceVersion;
     case 'file':
-      return `file:${sourceName}`;
+      return `${filePrefix}${sourceName}`;
     case 'git':
       return `${sourceName}`;
   }

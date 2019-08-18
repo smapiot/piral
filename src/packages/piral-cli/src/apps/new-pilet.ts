@@ -47,7 +47,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     skipInstall = newPiletDefaults.skipInstall,
   } = options;
   const root = resolve(baseDir, target);
-  const [sourceName, sourceVersion, hadVersion, type] = dissectPackageName(source);
+  const [sourceName, sourceVersion, hadVersion, type] = dissectPackageName(baseDir, source);
   const success = await createDirectory(root);
 
   if (success) {
