@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.6.3 (to be determined)
+## 0.6.3 (August 18, 2019)
 
 * Allow pilet scaffolding from non-NPM sources (#53)
 * Improved documentation code generation (#52)
