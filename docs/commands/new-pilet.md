@@ -1,7 +1,5 @@
 # `new-pilet`
 
-<!--start:auto-generated-->
-
 Scaffolds a new pilet for a specified Piral instance.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb new-pilet [source]
+```
+
+Alternative:
+
+```sh
+pilet new [source]
 ```
 
 ## Aliases
@@ -76,5 +80,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->

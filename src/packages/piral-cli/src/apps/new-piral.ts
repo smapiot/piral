@@ -11,6 +11,7 @@ import {
   logDone,
   logInfo,
   installDependencies,
+  combinePackageRef,
 } from './common';
 
 export interface NewPiralOptions {
@@ -48,6 +49,8 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   const success = await createDirectory(root);
 
   if (success) {
+    const packageRef = combinePackageRef(packageName, version, 'registry');
+
     logInfo(`Creating a new Piral instance in %s ...`, root);
 
     await createFileIfNotExists(
@@ -69,9 +72,9 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     await updateExistingJson(root, 'package.json', getPiralPackage(app, language));
 
-    logInfo(`Installing NPM package ${packageName}@${version} ...`);
+    logInfo(`Installing NPM package ${packageRef} ...`);
 
-    await installPackage(packageName, version, root, '--no-package-lock');
+    await installPackage(packageRef, root, '--no-package-lock');
 
     logInfo(`Taking care of templating ...`);
 

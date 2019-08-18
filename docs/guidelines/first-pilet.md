@@ -50,7 +50,7 @@ Now let's run the scaffolded pilet. We can use the Pilet CLI for starting the de
 pilet debug
 ```
 
-This should open a local server accessible at port `1234`. Go to `http://localhost:1234` in your web browser. Our Piral sample instance should be visible with a small "Hello World!" notification visible.
+This should open a local server accessible at port `1234`. Go to `http://localhost:1234` in your web browser. Our Piral sample instance should be visible with a small "Hello from Piral!" notification visible.
 
 For simplicity we could augment the `package.json` to look as follows:
 
@@ -76,13 +76,13 @@ The `showNotification` API can be used to trigger a notification in the app. All
 
 As an example we could just add a new page using the following code:
 
-```tsx
+```ts
 app.registerPage('/hello', () => <div>Hello from a page!</div>);
 ```
 
 Linking against this page (e.g., from the menu) could be done via a new menu entry:
 
-```tsx
+```ts
 app.registerMenu('hello-link', () => <Link to="/hello">See Page</Link>);
 ```
 

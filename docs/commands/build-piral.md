@@ -1,7 +1,5 @@
 # `build-piral`
 
-<!--start:auto-generated-->
-
 Creates a production build for a Piral instance.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb build-piral [source]
+```
+
+Alternative:
+
+```sh
+piral build [source]
 ```
 
 ## Aliases
@@ -59,11 +63,16 @@ Sets the log level to use (1-5).
 - Type: `number`
 - Default: `3`
 
+### `--fresh`
+
+Performs a fresh build by removing the target directory first.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->

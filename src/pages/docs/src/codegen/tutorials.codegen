@@ -1,0 +1,49 @@
+const { getTutorials, getName, generateFile } = require('./paths');
+const { render } = require('./markdown');
+const { docRef } = require('./utils');
+
+function getRoute(name) {
+  return (name && `/tutorials/${name}`) || '';
+}
+
+module.exports = function() {
+  const files = getTutorials();
+
+  const imports = files
+    .map((file, i) => {
+      const name = getName(file);
+      const previous = getName(files[i - 1]);
+      const next = getName(files[i + 1]);
+      const { content, meta = {} } = render(file);
+      this.addDependency(file, { includedInParent: true });
+      generateFile(
+        name,
+        `
+import * as React from 'react';
+import { Tutorial, Markdown } from '../../scripts/components';
+export default () => (
+  <Tutorial
+    previous="${getRoute(previous)}"
+    next="${getRoute(next)}"
+    meta={${JSON.stringify(meta)}}>
+    <Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />
+  </Tutorial>
+);`,
+        'jsx',
+      );
+      return name;
+    })
+    .map(
+      name => `
+{
+  id: '${name}',
+  route: '${getRoute(name)}',
+  page: lazy(() => import('./__generated__/${name}')),
+}`,
+    );
+
+  return `
+    const { lazy } = require('react');
+    module.exports = [${imports.join(', ')}];
+  `;
+};

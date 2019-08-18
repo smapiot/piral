@@ -1,0 +1,33 @@
+const { render } = require('./markdown');
+const { getTutorials, getName } = require('./paths');
+
+module.exports = function() {
+  const files = getTutorials();
+  const data = files.map(file => {
+    this.addDependency(file, { includedInParent: true });
+    return {
+      ...render(file).meta,
+      file: getName(file),
+    };
+  });
+  const items = data
+    .map(
+      item => `{
+        content: <TutorialCard
+          title="${item.title}"
+          description="${item.description}"
+          level="${item.level}"
+          audience="${item.audience}"
+          link="${item.file}"
+          />,
+        icon: "${item.file.substr(0, 2)}",
+      }`,
+    )
+    .join(',');
+
+  return `
+    const React = require('react');
+    const { Timeline, TutorialCard } = require('../scripts/components');
+    module.exports = () => (<Timeline items={[${items}]} />);
+  `;
+};

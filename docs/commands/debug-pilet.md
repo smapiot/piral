@@ -1,7 +1,5 @@
 # `debug-pilet`
 
-<!--start:auto-generated-->
-
 Starts the debugging process for a pilet using a Piral instance.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb debug-pilet [source]
+```
+
+Alternative:
+
+```sh
+pilet debug [source]
 ```
 
 ## Aliases
@@ -58,5 +62,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->

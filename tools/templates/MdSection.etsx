@@ -1,4 +1,0 @@
-<Section id="section-%{id}" title="%{title}">
-  <%{comp}>{require('%{relRoot}/%{relLink}')}</%{comp}>
-  <EditSection link="%{relLink}" />
-</Section>

@@ -6,9 +6,7 @@ While the idea of smaller (independent) modules is not new the provided approach
 
 A pilet is not only independent of the main application (a "piral instance"), but also independently developed. This means we can give an independent development team the task to build a module in our application without requiring the same repository or infrastructure.
 
-<div class="responsive-container">
-<iframe allowFullScreen="allowFullScreen" src="https://www.youtube.com/embed/SkKvpBHy_5I?ecver=1&amp;iv_load_policy=1&amp;yt:stretch=16:9&amp;autohide=1&amp;color=red&amp;width=560&amp;width=560" width="560" height="315" rameborder="0"></iframe>
-</div>
+@[youtube](SkKvpBHy_5I)
 
 The introduction video is available on [YouTube](https://youtu.be/SkKvpBHy_5I).
 

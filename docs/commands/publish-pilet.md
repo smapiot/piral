@@ -1,7 +1,5 @@
 # `publish-pilet`
 
-<!--start:auto-generated-->
-
 Publishes a pilet package to a pilet feed.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb publish-pilet [source]
+```
+
+Alternative:
+
+```sh
+pilet publish [source]
 ```
 
 ## Aliases
@@ -58,5 +62,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->

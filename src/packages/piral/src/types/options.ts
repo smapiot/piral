@@ -1,12 +1,7 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
+import { LocalizationMessages, FetchConfig, GqlConfig, LocaleConfig } from 'piral-ext';
 import { PiralStateConfiguration, GlobalState, PiletRequester, Extend } from 'piral-core';
-import {
-  LocalizationMessages,
-  PiralGqlApiQuery,
-  PiralFetchApiFetch,
-  PiralGqlApiMutate,
-  PiralGqlApiSubscribe,
-} from 'piral-ext';
+import { PiralGqlApiQuery, PiralFetchApiFetch, PiralGqlApiMutate, PiralGqlApiSubscribe } from 'piral-ext';
 import { LayoutBuilder } from './layout';
 
 export interface PiralAttachment<TApi> {
@@ -40,6 +35,14 @@ export interface PiralConfig<TApi, TState extends GlobalState = GlobalState, TAc
    * functionality.
    */
   extendApi?: Extend<TApi>;
+  /**
+   * Sets up the configuration for fetch.
+   */
+  fetch?: FetchConfig;
+  /**
+   * Sets up the configuration for localization.
+   */
+  locale?: LocaleConfig;
 }
 
 export interface PiralLoaderOptions {
@@ -85,4 +88,8 @@ export interface PiralOptions<TApi, TState extends GlobalState = GlobalState, TA
    * Gets the layout builder to construct the design to display.
    */
   layout: LayoutBuilder;
+  /**
+   * Sets up the configuration for GraphQL.
+   */
+  gql?: GqlConfig;
 }

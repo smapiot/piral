@@ -1,0 +1,17 @@
+const { getDocs } = require('./paths');
+const { docRef } = require('./utils');
+const { render } = require('./markdown');
+
+module.exports = function() {
+  const docs = getDocs().map(file => {
+    const { content } = render(file);
+    this.addDependency(file, { includedInParent: true });
+    return `<Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />`;
+  }).join('');
+
+  return `
+    const React = require('react');
+    const { ContentPage, Markdown } = require('../scripts/components');
+    module.exports = () => (<ContentPage>${docs}</ContentPage>);
+  `;
+};

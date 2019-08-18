@@ -1,0 +1,100 @@
+.tutorial-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1em 0;
+
+  a {
+    width: 130px;
+    height: 40px;
+    background: $color-secondary;
+    border: none;
+    border-radius: .25rem;
+    position: relative;
+    color: #fbfbfb;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+    line-height: 40px;
+    padding: 0 1em;
+    box-sizing: border-box;
+    margin: 0;
+
+    &:hover {
+      background: lighten($color-secondary, 10%);
+    }
+
+    &:empty {
+      visibility: hidden;
+    }
+
+    &::after {
+      content: "";
+      width: 0;
+      height: 0;
+      display: block;
+      position: absolute;
+      opacity: 0.6;
+    }
+
+    &:first-child {
+      text-align: right;
+
+      &::after {
+        border-top: 20px solid $color-primary;
+        border-bottom: 20px solid $color-primary;
+        border-right: 16px solid transparent;
+        border-left: 20px solid $color-primary;
+        left: 0;
+        top: 0;
+        border-radius: .25rem 0 0 .25rem;
+      }
+    }
+
+    &:last-child {
+      text-align: left;
+
+      &::after {
+        border-top: 20px solid $color-primary;
+        border-bottom: 20px solid $color-primary;
+        border-left: 16px solid transparent;
+        border-right: 20px solid $color-primary;
+        right: 0;
+        top: 0;
+        border-radius: 0 .25rem .25rem 0;
+      }
+    }
+  }
+}
+
+.tutorial-card {
+  text-decoration: none;
+  color: #444;
+  display: block;
+  padding: 1em;
+
+  h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  &:hover {
+    color: black;
+  }
+
+  p {
+    margin: 0;
+    margin-top: 1em;
+  }
+
+  .info {
+    color: #555;
+    font-size: 0.75em;
+  }
+
+  .info + .info {
+    margin-top: 0;
+  }
+}

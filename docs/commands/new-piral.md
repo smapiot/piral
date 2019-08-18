@@ -1,7 +1,5 @@
 # `new-piral`
 
-<!--start:auto-generated-->
-
 Creates a new Piral instance by adding all files and changes to the current project.
 
 ## Syntax
@@ -10,6 +8,12 @@ From the command line:
 
 ```sh
 pb new-piral [target]
+```
+
+Alternative:
+
+```sh
+piral new [target]
 ```
 
 ## Aliases
@@ -81,5 +85,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-<!--end:auto-generated-->
