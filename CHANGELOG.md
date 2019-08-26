@@ -5,6 +5,9 @@
 * Documented using different paths for scaffolding (#58)
 * Yield access to the pilet API (#44)
 * Attached the actions on the instance (#38)
+* Directly evaluates static pilets (#39)
+* Evaluates pilets once they arrive instead of all-at-once (#39)
+* Updated dependencies
 
 ## 0.6.3 (August 18, 2019)
 

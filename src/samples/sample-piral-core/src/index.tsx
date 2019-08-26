@@ -158,7 +158,7 @@ const Layout: React.FC = ({ children }) => {
   );
 };
 
-const App = createInstance({
+const Piral = createInstance({
   availablePilets,
   extendApi: extendApis([createVueApi, createNgApi, createHyperappApi]),
   requestPilets() {
@@ -175,5 +175,5 @@ const App = createInstance({
   }),
 });
 
-const app = <App>{content => <Layout>{content}</Layout>}</App>;
+const app = <Piral.App>{content => <Layout>{content}</Layout>}</Piral.App>;
 render(app, document.querySelector('#app'));

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { withRecall, ArbiterModuleMetadata, ApiCreator } from 'react-arbiter';
+import { withRecall, ArbiterModuleMetadata, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
 import { Portal } from './components';
 import { createGlobalState, createActions, StateContext } from './state';
 import { createCoreApi, getLocalDependencies, createListener, globalDependencies } from './modules';
@@ -67,6 +67,7 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState, T
   const RecallPortal = withRecall<PortalProps, TApi>(Portal, {
     modules: availablePilets,
     getDependencies,
+    strategy: createProgressiveStrategy(async),
     dependencies: globalDependencies,
     fetchModules() {
       events.emit('load-start', {});
@@ -85,16 +86,18 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState, T
       return promise;
     },
     createApi,
-    async,
   });
 
-  const PiralInstance: React.FC<PortalProps> = props => (
+  const App: React.FC<PortalProps> = props => (
     <StateContext.Provider value={container.context}>
       <RecallPortal {...props} />
     </StateContext.Provider>
   );
-  PiralInstance.displayName = 'Piral';
-  return Object.assign(PiralInstance, events, {
+  App.displayName = 'Piral';
+
+  return {
+    ...events,
+    App,
     createApi,
     actions: container.context,
     root: createApi({
@@ -102,5 +105,5 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState, T
       version: process.env.BUILD_PCKG_VERSION || '1.0.0',
       hash: '',
     }),
-  });
+  };
 }

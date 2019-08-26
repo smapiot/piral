@@ -141,7 +141,7 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
 
       const App: React.FC = () => (
         <Provider value={client}>
-          <Piral>{renderLayout}</Piral>
+          <Piral.App>{renderLayout}</Piral.App>
         </Provider>
       );
 

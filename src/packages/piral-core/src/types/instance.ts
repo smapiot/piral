@@ -7,11 +7,12 @@ export interface PortalProps {
 }
 
 /**
- * The PiralInstance component, which is a React functional component combined with an event emitter.
+ * The PiralInstance component, which is an event emitter containing the React
+ * functional component as well as some other utilities and helpers.
  */
-export type PiralInstance<TApi, TActions> = React.FC<PortalProps> &
-  EventEmitter & {
-    actions: StateActions & TActions;
-    createApi: ApiCreator<TApi>;
-    root: TApi;
-  };
+export interface PiralInstance<TApi, TActions> extends EventEmitter {
+  App: React.FC<PortalProps>;
+  actions: StateActions & TActions;
+  createApi: ApiCreator<TApi>;
+  root: TApi;
+}
