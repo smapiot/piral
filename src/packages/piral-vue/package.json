@@ -1,6 +1,6 @@
 {
   "name": "piral-vue",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Extensions for Vue to the piral-core pilet API.",
   "keywords": [
     "piral",
@@ -35,7 +35,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.6.2",
+    "piral-core": "^0.6.3",
     "vue": "^2.6.10"
   },
   "peerDependencies": {
