@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isfunc } from 'react-arbiter';
 import { render } from 'react-dom';
 import { Provider } from 'urql';
 import { createInstance, setupState, EventEmitter, GlobalState } from 'piral-core';
@@ -109,9 +110,9 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
         messages,
         ...localeOptions,
       });
-      const Piral = createInstance({
+      const Piral = createInstance<TApi>({
         ...forwardOptions,
-        availablePilets: getAvailablePilets(attach),
+        availablePilets: getAvailablePilets(),
         requestPilets: getPiletRequester(pilets),
         actions: {
           ...actions,
@@ -130,6 +131,10 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
         state,
       });
 
+      if (isfunc(attach)) {
+        attach(Piral.root);
+      }
+
       Piral.on('change-language', ev => {
         localizer.language = ev.selected;
       });
@@ -139,6 +144,7 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
           <Piral>{renderLayout}</Piral>
         </Provider>
       );
+
       render(<App />, getContainer(selector));
       return Piral;
     },

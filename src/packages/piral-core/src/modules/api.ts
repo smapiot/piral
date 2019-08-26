@@ -112,7 +112,7 @@ function addSearchProvider<TApi>(
   });
 }
 
-export function createApi<TApi>(
+export function createCoreApi<TApi>(
   target: ArbiterModuleMetadata,
   { events, context, extendApi }: PiralContainer<TApi>,
 ): TApi {
