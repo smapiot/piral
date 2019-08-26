@@ -16,7 +16,11 @@ The additional fields for a Piral instance package are as follows:
       "my-ui-lib"
     ],
     "files": [
-      ".editorconfig"
+      ".editorconfig",
+      {
+        "from": "scaffold/test.js",
+        "to": "jest.config.js"
+      }
     ],
     "scripts": {
       "publish-pilet": "pilet publish --api-key $PILET_PUBLISH_KEY"
@@ -35,6 +39,8 @@ The names in the list of `externals` need to be aligned with the names of the de
 The list of `files` contains paths to files relative to the `package.json` that should be copied to the pilet when scaffolding (or upgrading). The idea here is to include common files such as an `.editorconfig`, custom `tsconfig.json`, `tslint.json`, or others to provide some coherence when creating new repositories with pilets.
 
 **Note**: Depending on the development model no special files may be wanted, e.g., in a monorepo workflow all essential configuration files such as an *.editorconfig* are already present in the repository's root directory.
+
+**Remark**: Besides specifying simple strings, where the relative path from the Piral instance is the same as the relative path from the pilet, the files can also be specified in form of an object containing the source relative path via `from` and the target relative path via `to`.
 
 The determined `scripts` provide an easy way to extend the scripts section of the `package.json` of a new pilet. The reason for this section is - like the `files` section - coherence. Likewise, the `devDependencies` can be used to inject some additional tools into a scaffolded pilet, e.g., a preferred solution for unit test, linting, or style coherence.
 
