@@ -1,7 +1,7 @@
 {
-  "name": "piral-tracking",
+  "name": "piral-translate",
   "version": "0.6.3",
-  "description": "Extensions for tracking and elementary to the piral-core pilet API.",
+  "description": "Introduces the translate API extension for extending piral-core.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -10,9 +10,10 @@
     "modules",
     "api",
     "extension",
-    "tracking",
-    "telementry",
-    "analytics"
+    "translate",
+    "locale",
+    "localization",
+    "spa"
   ],
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -32,13 +33,16 @@
   },
   "scripts": {
     "build": "tsc",
-    "typedoc": "typedoc --json ../../../docs/types/piral-tracking.json src --exclude \"src/**/*.test.*\"",
+    "typedoc": "typedoc --json ../../../docs/types/piral-translate.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
     "piral-core": "^0.6.3"
   },
   "peerDependencies": {
-    "piral-core": "^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0"
-  }
+    "piral-core": "^0.3.0 || ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0",
+    "react": ">= 16.8.0",
+    "react-dom": ">= 16.8.0"
+  },
+  "dependencies": {}
 }

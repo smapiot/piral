@@ -1,7 +1,7 @@
 {
-  "name": "piral-tracking",
+  "name": "piral-urql",
   "version": "0.6.3",
-  "description": "Extensions for tracking and elementary to the piral-core pilet API.",
+  "description": "Introduces the query, mutate, and subscribe API extensions for extending piral-core.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,10 +9,13 @@
     "portal",
     "modules",
     "api",
+    "graphql",
+    "urql",
+    "query",
+    "mutate",
+    "subscribe",
     "extension",
-    "tracking",
-    "telementry",
-    "analytics"
+    "spa"
   ],
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -32,13 +35,20 @@
   },
   "scripts": {
     "build": "tsc",
-    "typedoc": "typedoc --json ../../../docs/types/piral-tracking.json src --exclude \"src/**/*.test.*\"",
+    "typedoc": "typedoc --json ../../../docs/types/piral-urql.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
     "piral-core": "^0.6.3"
   },
   "peerDependencies": {
-    "piral-core": "^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0"
+    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
+    "piral-core": "^0.3.0 || ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0",
+    "react": ">= 16.8.0",
+    "react-dom": ">= 16.8.0"
+  },
+  "dependencies": {
+    "subscriptions-transport-ws": "^0.9.16",
+    "urql": "^1.0.4"
   }
 }
