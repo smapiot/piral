@@ -1,5 +1,5 @@
 import { dirname } from 'path';
-import { runDebug, retrievePiletsInfo, retrievePiralRoot } from './common';
+import { runDebug, retrievePiletsInfo, retrievePiralRoot } from '../common';
 
 export interface DebugPiralOptions {
   entry?: string;

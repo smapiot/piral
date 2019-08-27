@@ -11,7 +11,7 @@ import {
   logFail,
   removeDirectory,
   extendBundlerWithPlugins,
-} from './common';
+} from '../common';
 
 export interface BuildPiletOptions {
   entry?: string;

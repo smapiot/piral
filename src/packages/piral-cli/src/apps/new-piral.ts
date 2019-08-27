@@ -12,7 +12,7 @@ import {
   logInfo,
   installDependencies,
   combinePackageRef,
-} from './common';
+} from '../common';
 
 export interface NewPiralOptions {
   app?: string;

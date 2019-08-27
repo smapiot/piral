@@ -1,4 +1,4 @@
-import { ForceOverwrite, PiletLanguage } from './apps/common';
+import { ForceOverwrite, PiletLanguage } from './common';
 
 export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter(m => typeof ForceOverwrite[m] === 'number');
 

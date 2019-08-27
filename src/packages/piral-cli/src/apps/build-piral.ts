@@ -9,7 +9,7 @@ import {
   modifyBundlerForPiral,
   removeDirectory,
   extendBundlerWithPlugins,
-} from './common';
+} from '../common';
 
 function getDestination(entryFiles: string, target: string) {
   const isdir = extname(target) !== '.html';

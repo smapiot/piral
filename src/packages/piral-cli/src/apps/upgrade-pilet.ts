@@ -10,7 +10,7 @@ import {
   logFail,
   combinePackageRef,
   logWarn,
-} from './common';
+} from '../common';
 
 export interface UpgradePiletOptions {
   version?: string;

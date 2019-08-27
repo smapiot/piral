@@ -1,5 +1,5 @@
 import { join, dirname, relative, resolve } from 'path';
-import { findFile, runDebug, logFail } from './common';
+import { findFile, runDebug, logFail } from '../common';
 
 function findRoot(pck: string | Array<string>, baseDir: string, app = false) {
   if (Array.isArray(pck)) {

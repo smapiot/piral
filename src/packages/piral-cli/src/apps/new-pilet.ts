@@ -17,7 +17,7 @@ import {
   combinePackageRef,
   getPackageName,
   getPackageVersion,
-} from './common';
+} from '../common';
 
 export interface NewPiletOptions {
   registry?: string;
