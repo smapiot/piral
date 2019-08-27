@@ -102,7 +102,7 @@ always-auth=true`,
     await scaffoldPiletSourceFiles(language, root, packageName, forceOverwrite);
 
     const files = await patchPiletPackage(root, packageName, packageVersion);
-    await copyPiralFiles(root, packageName, files, forceOverwrite);
+    await copyPiralFiles(root, packageName, files, ForceOverwrite.yes);
 
     if (!skipInstall) {
       logInfo(`Installing dependencies ...`);

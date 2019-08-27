@@ -8,6 +8,8 @@
 * Directly evaluates static pilets (#39)
 * Evaluates pilets once they arrive instead of all-at-once (#39)
 * Updated dependencies
+* Overwrite files on initial pilet scaffolding
+* Overwrite unchanged scaffolded files on upgrade
 
 ## 0.6.3 (August 18, 2019)
 

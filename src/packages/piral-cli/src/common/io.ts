@@ -5,6 +5,7 @@ import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path
 import { deepMerge } from './merge';
 import { promptConfirm } from './interactive';
 import { nodeVersion } from './info';
+import { computeHash } from './hash';
 
 export enum ForceOverwrite {
   no,
@@ -170,6 +171,12 @@ export async function updateExistingFile(targetDir: string, fileName: string, co
       writeFile(targetFile, content, 'utf8', err => (err ? reject(err) : resolve()));
     });
   }
+}
+
+export async function getHash(targetFile: string) {
+  return new Promise<string>(resolve => {
+    readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(computeHash(c))));
+  });
 }
 
 export async function mergeWithJson<T>(targetDir: string, fileName: string, newContent: T) {

@@ -10,6 +10,7 @@ import {
   logFail,
   combinePackageRef,
   logWarn,
+  getFileStats,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -57,6 +58,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     const sourceName = piral.name;
     const currentVersion = devDependencies[sourceName];
     const [packageRef, packageVersion] = getCurrentPackageDetails(sourceName, currentVersion, version);
+    const originalFiles = await getFileStats(root, sourceName, piral.files);
 
     logInfo(`Updating NPM package to %s ...`, packageRef);
 
@@ -65,7 +67,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     logInfo(`Taking care of templating ...`);
 
     const files = await patchPiletPackage(root, sourceName, packageVersion);
-    await copyPiralFiles(root, sourceName, files, forceOverwrite);
+    await copyPiralFiles(root, sourceName, files, forceOverwrite, originalFiles);
 
     logDone(`All done!`);
   } else {

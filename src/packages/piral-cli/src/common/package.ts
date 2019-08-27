@@ -1,11 +1,17 @@
 import { resolve, join, extname, basename, dirname } from 'path';
-import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists } from './io';
+import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists, getHash } from './io';
 import { cliVersion } from './info';
 import { logFail } from './log';
 
 export interface TemplateFileLocation {
   from: string;
   to: string;
+}
+
+export interface FileInfo {
+  path: string;
+  hash: string;
+  changed: boolean;
 }
 
 function getPiralPath(root: string, name: string) {
@@ -22,17 +28,41 @@ export function readPiralPackage(root: string, name: string) {
   return readJson(path, 'package.json');
 }
 
+export function getFileStats(
+  root: string,
+  name: string,
+  files: Array<string | TemplateFileLocation> = [],
+): Promise<Array<FileInfo>> {
+  return Promise.all(
+    files.map(async file => {
+      const { from, to } = typeof file === 'string' ? { from: file, to: file } : file;
+      const sourcePath = getPiralFile(root, name, from);
+      const targetPath = resolve(root, to);
+      const sourceHash = await getHash(sourcePath);
+      const targetHash = await getHash(targetPath);
+      return {
+        path: targetPath,
+        hash: targetHash,
+        changed: sourceHash !== targetHash,
+      };
+    }),
+  );
+}
+
 export async function copyPiralFiles(
   root: string,
   name: string,
   files: Array<string | TemplateFileLocation>,
   forceOverwrite: ForceOverwrite,
+  originalFiles: Array<FileInfo> = [],
 ) {
   for (const file of files) {
     const { from, to } = typeof file === 'string' ? { from: file, to: file } : file;
     const sourcePath = getPiralFile(root, name, from);
     const targetPath = resolve(root, to);
-    await copy(sourcePath, targetPath, forceOverwrite);
+    const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
+    const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
+    await copy(sourcePath, targetPath, force);
   }
 }
 
