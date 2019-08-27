@@ -10,6 +10,7 @@
 * Updated dependencies
 * Overwrite files on initial pilet scaffolding
 * Overwrite unchanged scaffolded files on upgrade
+* Split `piral-ext` in several packages (#45)
 
 ## 0.6.3 (August 18, 2019)
 
