@@ -1,0 +1,43 @@
+{
+  "name": "create-piral-instance",
+  "version": "0.6.3",
+  "description": "The NPM initializer to scaffold a new Piral instance.",
+  "keywords": [
+    "scaffold",
+    "portal",
+    "instance",
+    "app-shell",
+    "microfrontend",
+    "initializer"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "engines": {
+    "node": ">=10.0"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "bin": {
+    "create-piral-instance": "./lib/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "piral-cli": "^0.6.3"
+  }
+}

@@ -1,5 +1,6 @@
 # Exclude compiled files
 dist
+src/initializers/*/lib
 src/packages/*/lib
 src/pages/*/lib
 src/samples/*/lib

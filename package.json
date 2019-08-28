@@ -2,6 +2,7 @@
   "name": "piral",
   "private": true,
   "workspaces": [
+    "src/initializers/*",
     "src/packages/*",
     "src/pages/*",
     "src/samples/*"
