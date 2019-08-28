@@ -4,7 +4,8 @@
     "outDir": "./lib",
     "skipLibCheck": true,
     "lib": ["dom", "es2015", "es2018"],
-    "jsx": "react"
+    "jsx": "react",
+    "importHelpers": true
   },
   "include": [
     "./src"
