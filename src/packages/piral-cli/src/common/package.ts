@@ -123,7 +123,13 @@ export async function retrievePiletsInfo(entryFile: string) {
     throw new Error('Invalid Piral instance.');
   }
 
-  return getPiletsInfo(require(packageJson));
+  const packageInfo = require(packageJson);
+
+  return {
+    ...getPiletsInfo(packageInfo),
+    name: packageInfo.name,
+    version: packageInfo.version,
+  };
 }
 
 export async function patchPiletPackage(root: string, name: string, version?: string) {

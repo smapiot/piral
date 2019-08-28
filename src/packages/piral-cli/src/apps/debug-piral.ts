@@ -23,13 +23,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     logLevel = debugPiralDefaults.logLevel,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { externals } = await retrievePiletsInfo(entryFiles);
+  const { externals, name } = await retrievePiletsInfo(entryFiles);
   return runDebug(port, entryFiles, {
     publicUrl,
     logLevel,
     options: {
       target: dirname(entryFiles),
       dependencies: externals,
+      piral: name,
     },
   });
 }

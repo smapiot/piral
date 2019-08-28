@@ -56,11 +56,12 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const targetDir = dirname(entryFiles);
-  const { externals } = await retrievePiletsInfo(entryFiles);
+  const { externals, name } = await retrievePiletsInfo(entryFiles);
 
   await setStandardEnvs({
     production: true,
     target: targetDir,
+    piral: name,
     dependencies: externals,
   });
 
