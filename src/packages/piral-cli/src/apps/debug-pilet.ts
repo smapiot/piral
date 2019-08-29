@@ -59,8 +59,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     app,
   } = options;
   const entryFile = join(baseDir, entry);
-  const targetDir = dirname(entryFile);
-  const packageJson = await findFile(targetDir, 'package.json');
+  const target = dirname(entryFile);
+  const packageJson = await findFile(target, 'package.json');
 
   if (!packageJson) {
     logFail('Cannot find the "%s". You need a valid package.json for your pilet.', 'package.json');
@@ -71,7 +71,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   const appPackage = findPackage(
     app || (packageContent.piral && packageContent.piral.name) || Object.keys(packageContent.devDependencies),
-    targetDir,
+    target,
   );
   const appFile = appPackage && appPackage.app;
 
@@ -96,7 +96,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     source: entryFile,
     logLevel,
     options: {
-      target: dirname(entry),
+      target,
       pilet: relative(dirname(coreFile), entryFile),
       piral: appPackage.name,
       dependencies: externals,
