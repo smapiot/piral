@@ -18,5 +18,6 @@ export * from './pilet';
 export * from './port';
 export * from './scaffoldPilet';
 export * from './scaffoldPiral';
+export * from './scripts';
 export * from './server';
 export * from './settings';

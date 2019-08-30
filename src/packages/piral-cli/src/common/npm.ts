@@ -1,20 +1,16 @@
-import { exec } from 'child_process';
 import { resolve } from 'path';
 import { createReadStream } from 'fs';
 import { isWindows } from './info';
 import { inspectPackage } from './inspect';
 import { readJson } from './io';
+import { runScript } from './scripts';
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
 function runNpmProcess(args: Array<string>, target: string) {
   const cwd = resolve(process.cwd(), target);
   const cmd = [npmCommand, ...args].join(' ');
-  return new Promise((resolve, reject) => {
-    exec(cmd, { cwd })
-      .on('error', reject)
-      .on('close', resolve);
-  });
+  return runScript(cmd, cwd);
 }
 
 export function installDependencies(target = '.', ...flags: Array<string>) {

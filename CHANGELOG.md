@@ -13,6 +13,7 @@
 * Split `piral-ext` in several packages (#45)
 * Added NPM initializers (`create-piral-instance` and `create-pilet`) (#62)
 * Fixed missing shared dependencies when debugging pilets (#60)
+* Fixed scaffolding of pilets due to a missing Piral instance (#63)
 
 ## 0.6.3 (August 18, 2019)
 
