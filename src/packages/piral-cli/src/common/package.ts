@@ -151,7 +151,7 @@ export async function retrievePiletsInfo(entryFile: string) {
 
 export async function patchPiletPackage(root: string, name: string, version: string, piralInfo: any) {
   const piralDependencies = piralInfo.dependencies || {};
-  const { files, externals, scripts, devDependencies } = getPiletsInfo(piralInfo);
+  const { files, externals, scripts, devDependencies, ...rest } = getPiletsInfo(piralInfo);
   await updateExistingJson(root, 'package.json', {
     piral: {
       comment: 'Keep this section to allow running `piral upgrade`.',
@@ -162,6 +162,7 @@ export async function patchPiletPackage(root: string, name: string, version: str
       devDependencies,
       scripts,
       files,
+      ...rest,
     },
     devDependencies: {
       ...devDependencies,
