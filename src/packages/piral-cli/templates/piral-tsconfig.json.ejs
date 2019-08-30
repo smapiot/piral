@@ -8,10 +8,11 @@
     "lib": ["dom", "es2018"],
     "moduleResolution": "node",
     "module": "esnext",
-    "jsx": "react"
+    "jsx": "react",
+    "importHelpers": true
   },
   "include": [
-    "./<%= src %>"
+    "./<%- src %>"
   ],
   "exclude": [
     "node_modules"

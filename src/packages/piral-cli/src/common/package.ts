@@ -1,7 +1,8 @@
 import { resolve, join, extname, basename, dirname } from 'path';
-import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists, getHash } from './io';
-import { cliVersion } from './info';
 import { logFail } from './log';
+import { cliVersion } from './info';
+import { getDevDependencies, PiletLanguage } from './language';
+import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists, getHash } from './io';
 
 export interface TemplateFileLocation {
   from: string;
@@ -26,6 +27,46 @@ function getPiralFile(root: string, name: string, file: string) {
 export function readPiralPackage(root: string, name: string) {
   const path = getPiralPath(root, name);
   return readJson(path, 'package.json');
+}
+
+export function getPiralPackage(app: string, language: PiletLanguage) {
+  const baseData = {
+    app,
+    main: 'lib/index.js',
+    pilets: {
+      ...getPiletsInfo({}),
+      scripts: {
+        build: 'npm run build-pilet',
+        start: 'npm run debug-pilet',
+      },
+    },
+    devDependencies: {
+      ...getDevDependencies(language),
+      'piral-cli': 'latest',
+    },
+  };
+
+  switch (language) {
+    case PiletLanguage.ts:
+      return {
+        ...baseData,
+        typings: 'lib/index.d.ts',
+        scripts: {
+          build: 'npm run build:deploy && npm run build:pilets',
+          'build:deploy': 'piral build',
+          'build:pilets': 'tsc',
+        },
+      };
+    case PiletLanguage.js:
+      return {
+        ...baseData,
+        scripts: {
+          build: 'piral build',
+        },
+      };
+  }
+
+  return baseData;
 }
 
 export function getFileStats(
@@ -185,10 +226,14 @@ export async function patchPiletPackage(root: string, name: string, version: str
         {} as Record<string, string>,
       ),
       '@dbeining/react-atom': '*',
+      '@libre/atom': '*',
+      history: '*',
       react: '*',
       'react-dom': '*',
       'react-router': '*',
       'react-router-dom': '*',
+      tslib: '*',
+      'path-to-regexp': '*',
       [name]: `*`,
     },
     scripts: {

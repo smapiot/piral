@@ -1,7 +1,7 @@
-import { <%= apiName %> } from '<%= sourceName %>';
+import { <%- apiName %> } from '<%- sourceName %>';
 import * as React from 'react';
 
-export function setup(app: <%= apiName %>) {
+export function setup(app: <%- apiName %>) {
   app.showNotification('Hello from Piral!');
   app.registerMenu('sample-entry', () =>
     <a href="https://docs.piral.io" target="_blank">Documentation</a>

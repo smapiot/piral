@@ -16,6 +16,7 @@ export const globalDependencies: AvailableDependencies = {
   'react-router': require('react-router'),
   'react-router-dom': require('react-router-dom'),
   history: require('history'),
+  tslib: require('tslib'),
   'path-to-regexp': require('path-to-regexp'),
   '@libre/atom': require('@libre/atom'),
   '@dbeining/react-atom': require('@dbeining/react-atom'),
