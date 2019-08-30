@@ -17,7 +17,7 @@ In terms of microfrontends, that's as minimal as it can be. Most solutions requi
 
 We designed Piral to be as simple as possible, while remaining as flexible and powerful as possible. The SPA-first approach removes any need for a server. With Piral you can go serverless if you want to.
 
-## The Piral Cloud
+## Piral Cloud Services
 
 In this spirit we provide a free[^1] service that you can use for providing the feed service, as well as a way to publish your pilets. This leaves you at the task of creating a Piral instance.
 

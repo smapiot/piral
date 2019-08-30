@@ -11,5 +11,6 @@ The following tutorials are currently available:
 1. [Introduction](./01-introduction.md) - an introduction into the development with Piral
 2. [Getting Started](./02-getting-started.md) - a quick start for the first steps with Piral
 3. [Publishing Pilets](./03-publishing-pilets.md) - guide for using the public feed service
+4. [The Pilet API](./04-the-pilet-api.md) - a closer look at the Pilet API
 
 Please don't hesitate to send us feedback regarding the tutorials and suggestions for additional topics.
