@@ -15,6 +15,7 @@
 * Added scaffolding hooks for use with the `piral-cli` (#61)
 * Fixed missing shared dependencies when debugging pilets (#60)
 * Fixed scaffolding of pilets due to a missing Piral instance (#63)
+* Improved flexibility for scaffolding dev dependencies (#66)
 * Included `tslib` as a shared dependency (#67)
 
 ## 0.6.3 (August 18, 2019)

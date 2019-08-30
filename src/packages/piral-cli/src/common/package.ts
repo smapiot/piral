@@ -1,5 +1,5 @@
 import { resolve, join, extname, basename, dirname } from 'path';
-import { logFail } from './log';
+import { logFail, logWarn } from './log';
 import { cliVersion } from './info';
 import { getDevDependencies, PiletLanguage } from './language';
 import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists, getHash } from './io';
@@ -22,6 +22,16 @@ function getPiralPath(root: string, name: string) {
 function getPiralFile(root: string, name: string, file: string) {
   const path = getPiralPath(root, name);
   return join(path, file);
+}
+
+function getDependencyVersion(version: string | true, allDependencies: Record<string, string>) {
+  const selected = typeof version === 'string' ? version : version === true ? allDependencies[name] : undefined;
+
+  if (!selected) {
+    logWarn(`The version for "${name}" could not be resolved. Using "latest".`);
+  }
+
+  return selected || 'latest';
 }
 
 export function readPiralPackage(root: string, name: string) {
@@ -129,6 +139,7 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
     preUpgrade = '',
     postUpgrade = '',
   } = piralInfo.pilets || {};
+
   return {
     files,
     externals,
@@ -192,56 +203,68 @@ export async function retrievePiletsInfo(entryFile: string) {
 
 export async function patchPiletPackage(root: string, name: string, version: string, piralInfo: any) {
   const piralDependencies = piralInfo.dependencies || {};
-  const { files, externals, scripts, devDependencies, ...rest } = getPiletsInfo(piralInfo);
+  const piralDevDependencies = piralInfo.devDependencies || {};
+  const allDependencies = {
+    ...piralDependencies,
+    ...piralDevDependencies,
+  };
+  const { externals, ...info } = getPiletsInfo(piralInfo);
+  const piral = {
+    comment: 'Keep this section to allow running `piral upgrade`.',
+    name,
+    version: piralInfo.version,
+    tooling: cliVersion,
+    externals,
+    ...info,
+  };
+  const scripts = {
+    'debug-pilet': 'pilet debug',
+    'build-pilet': 'pilet build',
+    'upgrade-pilet': 'pilet upgrade',
+    ...info.scripts,
+  };
+  const peerDependencies = {
+    ...externals.reduce(
+      (deps, name) => {
+        deps[name] = '*';
+        return deps;
+      },
+      {} as Record<string, string>,
+    ),
+    '@dbeining/react-atom': '*',
+    '@libre/atom': '*',
+    history: '*',
+    react: '*',
+    'react-dom': '*',
+    'react-router': '*',
+    'react-router-dom': '*',
+    tslib: '*',
+    'path-to-regexp': '*',
+    [name]: `*`,
+  };
+  const devDependencies = {
+    ...Object.keys(info.devDependencies).reduce(
+      (deps, name) => {
+        deps[name] = getDependencyVersion(info.devDependencies[name], allDependencies);
+        return deps;
+      },
+      {} as Record<string, string>,
+    ),
+    ...externals.reduce(
+      (deps, name) => {
+        deps[name] = piralDependencies[name] || 'latest';
+        return deps;
+      },
+      {} as Record<string, string>,
+    ),
+    [name]: `${version || piralInfo.version}`,
+    'piral-cli': `^${cliVersion}`,
+  };
   await updateExistingJson(root, 'package.json', {
-    piral: {
-      comment: 'Keep this section to allow running `piral upgrade`.',
-      name,
-      version: piralInfo.version,
-      tooling: cliVersion,
-      externals,
-      devDependencies,
-      scripts,
-      files,
-      ...rest,
-    },
-    devDependencies: {
-      ...devDependencies,
-      ...externals.reduce(
-        (deps, name) => {
-          deps[name] = piralDependencies[name] || 'latest';
-          return deps;
-        },
-        {} as Record<string, string>,
-      ),
-      [name]: `${version || piralInfo.version}`,
-      'piral-cli': `^${cliVersion}`,
-    },
-    peerDependencies: {
-      ...externals.reduce(
-        (deps, name) => {
-          deps[name] = '*';
-          return deps;
-        },
-        {} as Record<string, string>,
-      ),
-      '@dbeining/react-atom': '*',
-      '@libre/atom': '*',
-      history: '*',
-      react: '*',
-      'react-dom': '*',
-      'react-router': '*',
-      'react-router-dom': '*',
-      tslib: '*',
-      'path-to-regexp': '*',
-      [name]: `*`,
-    },
-    scripts: {
-      'debug-pilet': 'pilet debug',
-      'build-pilet': 'pilet build',
-      'upgrade-pilet': 'pilet upgrade',
-      ...scripts,
-    },
+    piral,
+    devDependencies,
+    peerDependencies,
+    scripts,
   });
-  return files;
+  return info.files;
 }
