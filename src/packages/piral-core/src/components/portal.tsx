@@ -13,12 +13,10 @@ export const Portal: React.FC<PortalProps & RecallProps> = ({ children, loaded, 
     <Router history={history}>
       <Responsive>
         {loaded ? (
-          children(
-            error ? (
-              <ErrorInfo type="loading" error={error} />
-            ) : (
-              <Routes Home={Dashboard} NotFound={props => <ErrorInfo type="not_found" {...props} />} />
-            ),
+          error ? (
+            <ErrorInfo type="loading" error={error} />
+          ) : (
+            children(<Routes Home={Dashboard} NotFound={props => <ErrorInfo type="not_found" {...props} />} />)
           )
         ) : (
           <Loader />

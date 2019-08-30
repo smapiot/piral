@@ -4,6 +4,8 @@ import {
   ErrorInfoProps,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
+  TileErrorInfoProps,
+  MenuItemErrorInfoProps,
   LoadingErrorInfoProps,
   FeedErrorInfoProps,
   FormErrorInfoProps,
@@ -18,6 +20,8 @@ export interface ErrorInfoCreator {
   LoadingErrorInfo: React.ComponentType<LoadingErrorInfoProps>;
   FeedErrorInfo?: React.ComponentType<FeedErrorInfoProps>;
   FormErrorInfo?: React.ComponentType<FormErrorInfoProps>;
+  TileErrorInfo?: React.ComponentType<TileErrorInfoProps>;
+  MenuErrorInfo?: React.ComponentType<MenuItemErrorInfoProps>;
   UnknownErrorInfo: React.ComponentType<UnknownErrorInfoProps>;
 }
 
@@ -26,6 +30,8 @@ export function createErrorInfo({
   PageErrorInfo,
   LoadingErrorInfo,
   FeedErrorInfo,
+  TileErrorInfo,
+  MenuErrorInfo,
   FormErrorInfo,
   UnknownErrorInfo,
 }: ErrorInfoCreator): React.FC<ErrorInfoProps> {
@@ -35,6 +41,10 @@ export function createErrorInfo({
         return <NotFoundErrorInfo {...props} />;
       case 'page':
         return <PageErrorInfo {...props} />;
+      case 'tile':
+        return <TileErrorInfo {...props} />;
+      case 'menu':
+        return <MenuErrorInfo {...props} />;
       case 'loading':
         return <LoadingErrorInfo {...props} />;
       case 'feed':

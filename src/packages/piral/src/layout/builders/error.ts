@@ -5,6 +5,8 @@ import {
   LoadingErrorInfoProps,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
+  TileErrorInfoProps,
+  MenuItemErrorInfoProps,
   ErrorInfoProps,
 } from 'piral-core';
 import { createErrorInfo } from '../../components';
@@ -15,6 +17,8 @@ export interface ErrorBuilderState {
   form: ComponentType<FormErrorInfoProps>;
   loading: ComponentType<LoadingErrorInfoProps>;
   notFound: ComponentType<NotFoundErrorInfoProps>;
+  tile: ComponentType<TileErrorInfoProps>;
+  menu: ComponentType<MenuItemErrorInfoProps>;
   page: ComponentType<PageErrorInfoProps>;
   unknown: ComponentType<ErrorInfoProps>;
 }
@@ -25,6 +29,8 @@ function createInitialState(): ErrorBuilderState {
     form: undefined,
     loading: undefined,
     notFound: undefined,
+    tile: undefined,
+    menu: undefined,
     page: undefined,
     unknown: undefined,
   };
@@ -62,6 +68,18 @@ export function errorBuilder(state = createInitialState()): ErrorBuilder {
         page: Component,
       });
     },
+    tile(Component) {
+      return errorBuilder({
+        ...state,
+        tile: Component,
+      });
+    },
+    menu(Component) {
+      return errorBuilder({
+        ...state,
+        menu: Component,
+      });
+    },
     unknown(Component) {
       return errorBuilder({
         ...state,
@@ -74,6 +92,8 @@ export function errorBuilder(state = createInitialState()): ErrorBuilder {
         FormErrorInfo: state.form,
         LoadingErrorInfo: state.loading,
         NotFoundErrorInfo: state.notFound,
+        TileErrorInfo: state.tile,
+        MenuErrorInfo: state.menu,
         PageErrorInfo: state.page,
         UnknownErrorInfo: state.unknown,
       });

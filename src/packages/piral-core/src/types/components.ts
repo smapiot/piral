@@ -1,6 +1,7 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Dict } from './common';
+import { MenuType } from './menu';
 
 export interface BaseComponentProps<TApi> {
   /**
@@ -55,6 +56,9 @@ export interface ForeignComponent<TProps> {
 
 export type AnyComponent<T> = ComponentType<T> | ForeignComponent<T>;
 
+/**
+ * The error used when a route cannot be resolved.
+ */
 export interface NotFoundErrorInfoProps extends RouteComponentProps {
   /**
    * The type of the error.
@@ -62,13 +66,23 @@ export interface NotFoundErrorInfoProps extends RouteComponentProps {
   type: 'not_found';
 }
 
+/**
+ * The error used when a registered page component crashes.
+ */
 export interface PageErrorInfoProps extends RouteComponentProps {
   /**
    * The type of the error.
    */
   type: 'page';
+  /**
+   * The provided error details.
+   */
+  error: any;
 }
 
+/**
+ * The error used when loading a feed resulted in an error.
+ */
 export interface FeedErrorInfoProps {
   /**
    * The type of the error.
@@ -80,6 +94,9 @@ export interface FeedErrorInfoProps {
   error: any;
 }
 
+/**
+ * The error used when a form submission resulted in an error.
+ */
 export interface FormErrorInfoProps {
   /**
    * The type of the error.
@@ -91,6 +108,9 @@ export interface FormErrorInfoProps {
   error: any;
 }
 
+/**
+ * The error used when the app could not be loaded.
+ */
 export interface LoadingErrorInfoProps {
   /**
    * The type of the error.
@@ -102,9 +122,51 @@ export interface LoadingErrorInfoProps {
   error: any;
 }
 
+/**
+ * The error used when a registered tile component crashed.
+ */
+export interface TileErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'tile';
+  /**
+   * The provided error details.
+   */
+  error: any;
+  /**
+   * The currently used number of columns.
+   */
+  columns: number;
+  /**
+   * The currently used number of rows.
+   */
+  rows: number;
+}
+
+/**
+ * The error used when a registered menu item component crashed.
+ */
+export interface MenuItemErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'menu';
+  /**
+   * The provided error details.
+   */
+  error: any;
+  /**
+   * The type of the used menu.
+   */
+  menu: MenuType;
+}
+
 export type ErrorInfoProps =
   | NotFoundErrorInfoProps
   | PageErrorInfoProps
+  | TileErrorInfoProps
+  | MenuItemErrorInfoProps
   | FeedErrorInfoProps
   | LoadingErrorInfoProps
   | FormErrorInfoProps;

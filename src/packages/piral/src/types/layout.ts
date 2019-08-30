@@ -6,6 +6,8 @@ import {
   LoaderProps,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
+  TileErrorInfoProps,
+  MenuItemErrorInfoProps,
   LoadingErrorInfoProps,
   FeedErrorInfoProps,
   FormErrorInfoProps,
@@ -37,6 +39,8 @@ export interface DashboardBuilder {
 export interface ErrorBuilder {
   notFound(Component: ComponentType<NotFoundErrorInfoProps>): ErrorBuilder;
   page(Component: ComponentType<PageErrorInfoProps>): ErrorBuilder;
+  tile(Component: ComponentType<TileErrorInfoProps>): ErrorBuilder;
+  menu(Component: ComponentType<MenuItemErrorInfoProps>): ErrorBuilder;
   loading(Component: ComponentType<LoadingErrorInfoProps>): ErrorBuilder;
   feed(Component: ComponentType<FeedErrorInfoProps>): ErrorBuilder;
   form(Component: ComponentType<FormErrorInfoProps>): ErrorBuilder;
