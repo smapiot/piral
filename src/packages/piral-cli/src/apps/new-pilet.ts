@@ -17,6 +17,9 @@ import {
   combinePackageRef,
   getPackageName,
   getPackageVersion,
+  readPiralPackage,
+  getPiletsInfo,
+  runScript,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -96,18 +99,28 @@ always-auth=true`,
 
     const packageName = await getPackageName(root, sourceName, type);
     const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);
+    const piralInfo = await readPiralPackage(root, packageName);
+    const { preScaffold, postScaffold } = getPiletsInfo(piralInfo);
+
+    if (preScaffold) {
+      await runScript(preScaffold, root);
+    }
 
     logInfo(`Taking care of templating ...`);
 
     await scaffoldPiletSourceFiles(language, root, packageName, forceOverwrite);
 
-    const files = await patchPiletPackage(root, packageName, packageVersion);
+    const files = await patchPiletPackage(root, packageName, packageVersion, piralInfo);
     await copyPiralFiles(root, packageName, files, ForceOverwrite.yes);
 
     if (!skipInstall) {
       logInfo(`Installing dependencies ...`);
 
       await installDependencies(root, '--no-package-lock');
+    }
+
+    if (postScaffold) {
+      await runScript(postScaffold, root);
     }
 
     logDone(`All done!`);

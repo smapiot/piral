@@ -11,6 +11,10 @@ import {
   combinePackageRef,
   logWarn,
   getFileStats,
+  readPiralPackage,
+  getPiletsInfo,
+  runScript,
+  installDependencies,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -59,6 +63,12 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     const currentVersion = devDependencies[sourceName];
     const [packageRef, packageVersion] = getCurrentPackageDetails(sourceName, currentVersion, version);
     const originalFiles = await getFileStats(root, sourceName, piral.files);
+    const piralInfo = await readPiralPackage(root, sourceName);
+    const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
+
+    if (preUpgrade) {
+      await runScript(preUpgrade, root);
+    }
 
     logInfo(`Updating NPM package to %s ...`, packageRef);
 
@@ -66,8 +76,16 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     logInfo(`Taking care of templating ...`);
 
-    const files = await patchPiletPackage(root, sourceName, packageVersion);
+    const files = await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
     await copyPiralFiles(root, sourceName, files, forceOverwrite, originalFiles);
+
+    logInfo(`Updating dependencies ...`);
+
+    await installDependencies(root, '--no-package-lock');
+
+    if (postUpgrade) {
+      await runScript(postUpgrade, root);
+    }
 
     logDone(`All done!`);
   } else {

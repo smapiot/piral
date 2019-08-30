@@ -1,5 +1,6 @@
 import * as cp from 'child_process';
 import { dissectPackageName, installPackage } from './npm';
+import { Stream } from 'stream';
 
 jest.mock('child_process');
 
@@ -85,21 +86,21 @@ describe('NPM Module', () => {
   });
 
   it('installs a package using the NPM command line tool without a target', () => {
-    const emitter = jest.fn(() => ({ on: emitter }));
+    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
     (cp as any).exec = emitter;
     installPackage('foo', 'latest');
     expect(emitter).toHaveBeenCalledTimes(3);
   });
 
   it('installs a package using the NPM command line tool without a version', () => {
-    const emitter = jest.fn(() => ({ on: emitter }));
+    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
     (cp as any).exec = emitter;
     installPackage('foo');
     expect(emitter).toHaveBeenCalledTimes(3);
   });
 
   it('installs a package using the NPM command line tool with some flag', () => {
-    const emitter = jest.fn(() => ({ on: emitter }));
+    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
     (cp as any).exec = emitter;
     installPackage('foo', '1.3', '.', '--a=b');
     expect(emitter).toHaveBeenCalledTimes(3);

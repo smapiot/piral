@@ -71,15 +71,32 @@ export interface PiletsInfo {
   externals: Array<string>;
   devDependencies: Record<string, string>;
   scripts: Record<string, string>;
+  preScaffold: string;
+  postScaffold: string;
+  preUpgrade: string;
+  postUpgrade: string;
 }
 
 export function getPiletsInfo(piralInfo: any): PiletsInfo {
-  const { files = [], externals = [], scripts = {}, devDependencies = {} } = piralInfo.pilets || {};
+  const {
+    files = [],
+    externals = [],
+    scripts = {},
+    devDependencies = {},
+    preScaffold = '',
+    postScaffold = '',
+    preUpgrade = '',
+    postUpgrade = '',
+  } = piralInfo.pilets || {};
   return {
     files,
     externals,
     devDependencies,
     scripts,
+    preScaffold,
+    postScaffold,
+    preUpgrade,
+    postUpgrade,
   };
 }
 
@@ -132,8 +149,7 @@ export async function retrievePiletsInfo(entryFile: string) {
   };
 }
 
-export async function patchPiletPackage(root: string, name: string, version?: string) {
-  const piralInfo = await readPiralPackage(root, name);
+export async function patchPiletPackage(root: string, name: string, version: string, piralInfo: any) {
   const piralDependencies = piralInfo.dependencies || {};
   const { files, externals, scripts, devDependencies } = getPiletsInfo(piralInfo);
   await updateExistingJson(root, 'package.json', {
