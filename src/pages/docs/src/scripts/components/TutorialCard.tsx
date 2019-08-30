@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 export interface TutorialCardProps {
   title: string;
   description: string;
-  level: string;
-  audience: string;
+  level: string; // 'Beginner' | 'Elementary' | 'Intermediate' | 'Advanced' | 'Proficient'
+  audience: string; // Includes: Architects, Developers, Managers, ..., Everyone
   link: string;
 }
 
