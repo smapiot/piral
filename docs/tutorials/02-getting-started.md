@@ -104,7 +104,7 @@ The Piral tooling also supports scaffolding a Pilet to get started. Ensure that 
 
 ```sh
 # Scaffold a new Pilet with the name 'my-Pilet' for the app shell 'my-app'
-Pilet new my-app --target my-Pilet
+pilet new my-app --target my-Pilet
 ```
 
 With the `pilet new` command, a new Pilet with pre-defined content is created. The first parameter `my-app` specifies the application shell, which the Pilet will be built for. If you navigate into the folder `my-pilet`, you'll find the files for the newly created Pilet.
