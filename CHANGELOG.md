@@ -11,7 +11,7 @@
 * Overwrite files on initial pilet scaffolding
 * Overwrite unchanged scaffolded files on upgrade
 * Split `piral-ext` in several packages (#45)
-* Added NPM initializers (`create-piral-instance` and `create-pilet`)
+* Added NPM initializers (`create-piral-instance` and `create-pilet`) (#62)
 * Fixed missing shared dependencies when debugging pilets (#60)
 
 ## 0.6.3 (August 18, 2019)
