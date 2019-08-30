@@ -67,12 +67,16 @@ function generateFile(name, content, type = 'codegen') {
   writeFileSync(resolve(generated, `${name}.${type}`), content, 'utf8');
 }
 
+function getAbsolutePath(path, basePath = docs) {
+  return resolve(dirname(basePath), path);
+}
+
 function getRelativePath(path, basePath = docs) {
-  const fullPath = resolve(dirname(basePath), path);
-  return relative(docs, fullPath);
+  return relative(docs, getAbsolutePath(path, basePath));
 }
 
 module.exports = {
+  generated,
   getTutorials,
   getQuestions,
   getCommands,
@@ -81,5 +85,6 @@ module.exports = {
   getDocs,
   getName,
   getRelativePath,
+  getAbsolutePath,
   generateFile,
 };
