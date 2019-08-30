@@ -38,7 +38,7 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState, T
 ): PiralInstance<TApi, TActions> {
   const {
     state,
-    availablePilets,
+    availablePilets = [],
     extendApi = defaultApiExtender,
     requestPilets = defaultModuleRequester,
     getDependencies = getLocalDependencies,
