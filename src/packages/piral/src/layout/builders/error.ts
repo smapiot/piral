@@ -8,7 +8,10 @@ import {
   TileErrorInfoProps,
   MenuItemErrorInfoProps,
   ErrorInfoProps,
+  ModalErrorInfoProps,
+  ExtensionErrorInfoProps,
 } from 'piral-core';
+import { createBuilder } from './createBuilder';
 import { createErrorInfo } from '../../components';
 import { ErrorBuilder } from '../../types';
 
@@ -18,6 +21,8 @@ export interface ErrorBuilderState {
   loading: ComponentType<LoadingErrorInfoProps>;
   notFound: ComponentType<NotFoundErrorInfoProps>;
   tile: ComponentType<TileErrorInfoProps>;
+  modal: ComponentType<ModalErrorInfoProps>;
+  extension: ComponentType<ExtensionErrorInfoProps>;
   menu: ComponentType<MenuItemErrorInfoProps>;
   page: ComponentType<PageErrorInfoProps>;
   unknown: ComponentType<ErrorInfoProps>;
@@ -30,6 +35,8 @@ function createInitialState(): ErrorBuilderState {
     loading: undefined,
     notFound: undefined,
     tile: undefined,
+    modal: undefined,
+    extension: undefined,
     menu: undefined,
     page: undefined,
     unknown: undefined,
@@ -37,55 +44,7 @@ function createInitialState(): ErrorBuilderState {
 }
 
 export function errorBuilder(state = createInitialState()): ErrorBuilder {
-  return {
-    feed(Component) {
-      return errorBuilder({
-        ...state,
-        feed: Component,
-      });
-    },
-    form(Component) {
-      return errorBuilder({
-        ...state,
-        form: Component,
-      });
-    },
-    loading(Component) {
-      return errorBuilder({
-        ...state,
-        loading: Component,
-      });
-    },
-    notFound(Component) {
-      return errorBuilder({
-        ...state,
-        notFound: Component,
-      });
-    },
-    page(Component) {
-      return errorBuilder({
-        ...state,
-        page: Component,
-      });
-    },
-    tile(Component) {
-      return errorBuilder({
-        ...state,
-        tile: Component,
-      });
-    },
-    menu(Component) {
-      return errorBuilder({
-        ...state,
-        menu: Component,
-      });
-    },
-    unknown(Component) {
-      return errorBuilder({
-        ...state,
-        unknown: Component,
-      });
-    },
+  const initial = {
     build() {
       return createErrorInfo({
         FeedErrorInfo: state.feed,
@@ -93,10 +52,13 @@ export function errorBuilder(state = createInitialState()): ErrorBuilder {
         LoadingErrorInfo: state.loading,
         NotFoundErrorInfo: state.notFound,
         TileErrorInfo: state.tile,
+        ExtensionErrorInfo: state.extension,
+        ModalErrorInfo: state.modal,
         MenuErrorInfo: state.menu,
         PageErrorInfo: state.page,
         UnknownErrorInfo: state.unknown,
       });
     },
-  };
+  } as ErrorBuilder;
+  return createBuilder(initial, state, errorBuilder);
 }

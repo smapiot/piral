@@ -14,6 +14,8 @@ import {
   OpenModalDialog,
   OpenNotification,
   GlobalStateOptions,
+  ModalErrorInfoProps,
+  ExtensionErrorInfoProps,
 } from 'piral-core';
 import {
   MenuProps,
@@ -40,6 +42,8 @@ export interface ErrorBuilder {
   notFound(Component: ComponentType<NotFoundErrorInfoProps>): ErrorBuilder;
   page(Component: ComponentType<PageErrorInfoProps>): ErrorBuilder;
   tile(Component: ComponentType<TileErrorInfoProps>): ErrorBuilder;
+  extension(Component: ComponentType<ExtensionErrorInfoProps>): ErrorBuilder;
+  modal(Component: ComponentType<ModalErrorInfoProps>): ErrorBuilder;
   menu(Component: ComponentType<MenuItemErrorInfoProps>): ErrorBuilder;
   loading(Component: ComponentType<LoadingErrorInfoProps>): ErrorBuilder;
   feed(Component: ComponentType<FeedErrorInfoProps>): ErrorBuilder;

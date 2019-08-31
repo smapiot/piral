@@ -1,4 +1,5 @@
 import { ComponentType } from 'react';
+import { createBuilder } from './createBuilder';
 import { createSearch } from '../../components';
 import { SearchContainerProps, SearchInputProps, SearchResultProps, SearchBuilder } from '../../types';
 
@@ -17,25 +18,7 @@ function createInitialState(): SearchBuilderState {
 }
 
 export function searchBuilder(state = createInitialState()): SearchBuilder {
-  return {
-    container(Component) {
-      return searchBuilder({
-        ...state,
-        container: Component,
-      });
-    },
-    input(Component) {
-      return searchBuilder({
-        ...state,
-        input: Component,
-      });
-    },
-    result(Component) {
-      return searchBuilder({
-        ...state,
-        result: Component,
-      });
-    },
+  const initial = {
     build() {
       return createSearch({
         SearchContainer: state.container,
@@ -43,5 +26,6 @@ export function searchBuilder(state = createInitialState()): SearchBuilder {
         SearchResult: state.result,
       });
     },
-  };
+  } as SearchBuilder;
+  return createBuilder(initial, state, searchBuilder);
 }

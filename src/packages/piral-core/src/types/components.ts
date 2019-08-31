@@ -162,11 +162,45 @@ export interface MenuItemErrorInfoProps {
   menu: MenuType;
 }
 
+/**
+ * The error used when a registered modal dialog crashed.
+ */
+export interface ModalErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'modal';
+  /**
+   * The provided error details.
+   */
+  error: any;
+  /**
+   * Callback for closing the modal programmatically.
+   */
+  onClose(): void;
+}
+
+/**
+ * The error used when a registered extension component crashed.
+ */
+export interface ExtensionErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'extension';
+  /**
+   * The provided error details.
+   */
+  error: any;
+}
+
 export type ErrorInfoProps =
   | NotFoundErrorInfoProps
   | PageErrorInfoProps
   | TileErrorInfoProps
   | MenuItemErrorInfoProps
+  | ExtensionErrorInfoProps
+  | ModalErrorInfoProps
   | FeedErrorInfoProps
   | LoadingErrorInfoProps
   | FormErrorInfoProps;

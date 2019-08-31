@@ -9,6 +9,8 @@ import {
   LoadingErrorInfoProps,
   FeedErrorInfoProps,
   FormErrorInfoProps,
+  ExtensionErrorInfoProps,
+  ModalErrorInfoProps,
 } from 'piral-core';
 import { UnknownErrorInfoProps } from '../types';
 
@@ -21,6 +23,8 @@ export interface ErrorInfoCreator {
   FeedErrorInfo?: React.ComponentType<FeedErrorInfoProps>;
   FormErrorInfo?: React.ComponentType<FormErrorInfoProps>;
   TileErrorInfo?: React.ComponentType<TileErrorInfoProps>;
+  ModalErrorInfo?: React.ComponentType<ModalErrorInfoProps>;
+  ExtensionErrorInfo?: React.ComponentType<ExtensionErrorInfoProps>;
   MenuErrorInfo?: React.ComponentType<MenuItemErrorInfoProps>;
   UnknownErrorInfo: React.ComponentType<UnknownErrorInfoProps>;
 }
@@ -32,6 +36,8 @@ export function createErrorInfo({
   FeedErrorInfo,
   TileErrorInfo,
   MenuErrorInfo,
+  ModalErrorInfo,
+  ExtensionErrorInfo,
   FormErrorInfo,
   UnknownErrorInfo,
 }: ErrorInfoCreator): React.FC<ErrorInfoProps> {
@@ -45,6 +51,10 @@ export function createErrorInfo({
         return <TileErrorInfo {...props} />;
       case 'menu':
         return <MenuErrorInfo {...props} />;
+      case 'extension':
+        return <ExtensionErrorInfo {...props} />;
+      case 'modal':
+        return <ModalErrorInfo {...props} />;
       case 'loading':
         return <LoadingErrorInfo {...props} />;
       case 'feed':

@@ -35,7 +35,7 @@ function addPage<TApi>(
   arg: AnyComponent<PageComponentProps<TApi>>,
 ) {
   context.registerPage(route, {
-    component: withApi(arg, api) as any,
+    component: withApi(arg, api, 'page') as any,
   });
 }
 
@@ -47,7 +47,7 @@ function addTile<TApi>(
   preferences: TilePreferences = {},
 ) {
   context.registerTile(id, {
-    component: withApi(arg, api) as any,
+    component: withApi(arg, api, 'tile') as any,
     preferences,
   });
 }
@@ -60,7 +60,7 @@ function addExtension<TApi, T>(
   defaults?: T,
 ) {
   context.registerExtension(name, {
-    component: withApi(arg, api) as any,
+    component: withApi(arg, api, 'extension') as any,
     reference: arg,
     defaults,
   });
@@ -74,7 +74,7 @@ function addMenu<TApi>(
   settings: MenuSettings = {},
 ) {
   context.registerMenuItem(id, {
-    component: withApi(arg, api) as any,
+    component: withApi(arg, api, 'menu') as any,
     settings: {
       type: settings.type || 'general',
     },
@@ -89,7 +89,7 @@ function addModal<TApi, TOpts>(
   defaults?: TOpts,
 ) {
   context.registerModal(id, {
-    component: withApi(arg, api) as any,
+    component: withApi(arg, api, 'modal') as any,
     defaults,
   });
 }
