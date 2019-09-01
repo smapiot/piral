@@ -1,12 +1,13 @@
-import { resolve, join, extname, basename, dirname } from 'path';
+import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { logFail, logWarn } from './log';
 import { cliVersion } from './info';
 import { getDevDependencies, PiletLanguage } from './language';
-import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists, getHash } from './io';
+import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists, getHash, checkIsDirectory, matchFiles } from './io';
 
 export interface TemplateFileLocation {
   from: string;
   to: string;
+  deep?: boolean;
 }
 
 export interface FileInfo {
@@ -19,11 +20,6 @@ function getPiralPath(root: string, name: string) {
   return resolve(root, 'node_modules', name);
 }
 
-function getPiralFile(root: string, name: string, file: string) {
-  const path = getPiralPath(root, name);
-  return join(path, file);
-}
-
 function getDependencyVersion(version: string | true, allDependencies: Record<string, string>) {
   const selected = typeof version === 'string' ? version : version === true ? allDependencies[name] : undefined;
 
@@ -32,6 +28,29 @@ function getDependencyVersion(version: string | true, allDependencies: Record<st
   }
 
   return selected || 'latest';
+}
+
+async function getFilesOf(root: string, name: string, file: string | TemplateFileLocation) {
+  const { from, to, deep = false } = typeof file === 'string' ? { from: file, to: file, deep: false } : file;
+  const sourcePath = join(getPiralPath(root, name), from);
+  const targetPath = resolve(root, to);
+  const isDirectory = await checkIsDirectory(sourcePath);
+
+  if (isDirectory) {
+    const pattern = deep ? '**/*' : '*';
+    const files = await matchFiles(sourcePath, pattern);
+    return files.map(file => ({
+      sourcePath: file,
+      targetPath: resolve(targetPath, relative(sourcePath, file)),
+    }));
+  }
+
+  return [
+    {
+      sourcePath,
+      targetPath,
+    },
+  ];
 }
 
 export function readPiralPackage(root: string, name: string) {
@@ -79,25 +98,25 @@ export function getPiralPackage(app: string, language: PiletLanguage) {
   return baseData;
 }
 
-export function getFileStats(
-  root: string,
-  name: string,
-  files: Array<string | TemplateFileLocation> = [],
-): Promise<Array<FileInfo>> {
-  return Promise.all(
+export async function getFileStats(root: string, name: string, files: Array<string | TemplateFileLocation> = []) {
+  const results: Array<FileInfo> = [];
+  await Promise.all(
     files.map(async file => {
-      const { from, to } = typeof file === 'string' ? { from: file, to: file } : file;
-      const sourcePath = getPiralFile(root, name, from);
-      const targetPath = resolve(root, to);
-      const sourceHash = await getHash(sourcePath);
-      const targetHash = await getHash(targetPath);
-      return {
-        path: targetPath,
-        hash: targetHash,
-        changed: sourceHash !== targetHash,
-      };
+      const subfiles = await getFilesOf(root, name, file);
+
+      for (const subfile of subfiles) {
+        const { sourcePath, targetPath } = subfile;
+        const sourceHash = await getHash(sourcePath);
+        const targetHash = await getHash(targetPath);
+        results.push({
+          path: targetPath,
+          hash: targetHash,
+          changed: sourceHash !== targetHash,
+        });
+      }
     }),
   );
+  return results;
 }
 
 export async function copyPiralFiles(
@@ -108,12 +127,14 @@ export async function copyPiralFiles(
   originalFiles: Array<FileInfo> = [],
 ) {
   for (const file of files) {
-    const { from, to } = typeof file === 'string' ? { from: file, to: file } : file;
-    const sourcePath = getPiralFile(root, name, from);
-    const targetPath = resolve(root, to);
-    const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
-    const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
-    await copy(sourcePath, targetPath, force);
+    const subfiles = await getFilesOf(root, name, file);
+
+    for (const subfile of subfiles) {
+      const { sourcePath, targetPath } = subfile;
+      const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
+      const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
+      await copy(sourcePath, targetPath, force);
+    }
   }
 }
 

@@ -21,6 +21,7 @@ The additional fields for a Piral instance package are as follows:
     ],
     "files": [
       ".editorconfig",
+      "src/mocks",
       {
         "from": "scaffold/test.js",
         "to": "jest.config.js"
@@ -53,7 +54,9 @@ The list of `files` contains paths to files relative to the `package.json` that 
 
 **Note**: Depending on the development model no special files may be wanted, e.g., in a monorepo workflow all essential configuration files such as an *.editorconfig* are already present in the repository's root directory.
 
-**Remark**: Besides specifying simple strings, where the relative path from the Piral instance is the same as the relative path from the pilet, the files can also be specified in form of an object containing the source relative path via `from` and the target relative path via `to`.
+If a file is actually a folder then all the folder files are actually copied. For simple strings that means that all files from, e.g., `src/mocks` are copied to `src/mocks`. If `from` and `to` are specified then the files from `from` are copied to the directory specified in `to`. Note that by default this is shallow.
+
+**Remark**: Besides specifying simple strings, where the relative path from the Piral instance is the same as the relative path from the pilet, the files can also be specified in form of an object containing the source relative path via `from` and the target relative path via `to`. Optionally, `deep` can be specified for directories, which may either be `true` or `false`.
 
 The determined `scripts` provide an easy way to extend the scripts section of the `package.json` of a new pilet. The reason for this section is - like the `files` section - coherence. Likewise, the `devDependencies` can be used to inject some additional tools into a scaffolded pilet, e.g., a preferred solution for unit test, linting, or style coherence.
 
