@@ -25,6 +25,8 @@ export const layout = buildLayout()
   )
   .createError(error =>
     error
+      .menu(() => <span />)
+      .extension(() => <div />)
       .feed(({ error }) => (
         <div className="pi-error">
           <img src={require('./images/error.svg')} alt="Error" />
@@ -58,6 +60,33 @@ export const layout = buildLayout()
           <div className="pi-description">
             The provided URL does not map to a page. Please contact support to resolve this issue.
           </div>
+        </div>
+      ))
+      .page(() => (
+        <div className="pi-error">
+          <img src={require('./images/error.svg')} alt="Error" />
+          <div className="pi-title">Page Crashed</div>
+          <div className="pi-description">
+            Sorry for the inconvenience. We try to resolve the issue as soon as possible.
+          </div>
+        </div>
+      ))
+      .modal(({ onClose }) => (
+        <div className="pi-error">
+          <img src={require('./images/error.svg')} alt="Error" />
+          <div className="pi-title">Dialog Crashed</div>
+          <div className="pi-description">
+            <p>
+            Sorry for the inconvenience. We try to resolve the issue as soon as possible.
+            </p>
+            <button className="btn btn-primary" onClick={onClose}>Close</button>
+          </div>
+        </div>
+      ))
+      .tile(() => (
+        <div className="pi-error">
+          <div className="pi-title">Tile Crashed</div>
+          <div className="pi-description">Sorry for the inconvenience.</div>
         </div>
       ))
       .page(() => (
