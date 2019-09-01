@@ -65,7 +65,7 @@ At this point, the application shell shows an empty page, since there is current
 
 ### Create Package for the Application Shell
 
-To use the newly created Piral instance as application shell for the development of Pilets, we need to create an **npm package**, which will be referenced within Pilets. To create the package run the command:
+To use the newly created Piral instance as application shell (or simply "app shell") for the development of Pilets, we need to create an **npm package**, which will be referenced within Pilets. To create the package run the command:
 
 ```sh
 # Create an npm package for the app shell
@@ -109,14 +109,15 @@ pilet new my-app --target my-pilet
 
 With the `pilet new` command, a new Pilet with pre-defined content is created. The first parameter `my-app` specifies the application shell, which the Pilet will be built for. If you navigate into the folder `my-pilet`, you'll find the files for the newly created Pilet.
 
-### The Setup method for a Pilet
+### The Setup Method for a Pilet
 
 There is a single function, which controls the configuration of a Pilet - it is the `setup` method in the file `./src/index.tsx`. The scaffolding process will add the setup function with some configurations:
 
-```ts
+```jsx
 export function setup(app: PiletApi) {
   app.showNotification('Hello from Piral!');
-  app.registerMenu('sample-entry', () => <a href="https://docs.piral.io" target="_blank">Documentation</a>);
+  app.registerMenu('sample-entry', () =>
+    <a href="https://docs.piral.io" target="_blank">Documentation</a>);
   app.registerTile('sample-tile', () => <div>Welcome to Piral!</div>, {
     initialColumns: 2,
     initialRows: 1,

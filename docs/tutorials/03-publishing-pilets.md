@@ -9,7 +9,7 @@ level: Elementary
 
 A working Piral system requires the following components:
 
-1. A functional frontend (referred to as "app shell" or "Piral instance")
+1. A functional frontend (referred to as "application shell" or "Piral instance")
 2. A backend / service delivering the pilets (referred to as "feed service")
 3. A way to publish / integrate the created pilets, such that they can be delivered by the feed service
 
@@ -21,7 +21,7 @@ We designed Piral to be as simple as possible, while remaining as flexible and p
 
 In this spirit we provide a free[^1] service that you can use for providing the feed service, as well as a way to publish your pilets. This leaves you at the task of creating a Piral instance.
 
-**Remark**: The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification we also have published a Node.js sample implementation at GitHub (https://github.com/smapiot/sample-pilet-service). The sample implementation can also be installed or run locally very easily.
+**Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification we also have published a Node.js sample implementation at GitHub (https://github.com/smapiot/sample-pilet-service). The sample implementation can also be installed or run locally very easily.
 
 The service can be found at https://feed.piral.io. Registration is possible by using a Microsoft Account to log into the service. We do not need any personal data besides the email / account id, which is provided after your approval.
 
