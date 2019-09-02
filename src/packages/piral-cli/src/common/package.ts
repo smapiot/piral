@@ -20,7 +20,8 @@ function getPiralPath(root: string, name: string) {
   return resolve(root, 'node_modules', name);
 }
 
-function getDependencyVersion(version: string | true, allDependencies: Record<string, string>) {
+function getDependencyVersion(name: string, devDependencies: Record<string, string | true>, allDependencies: Record<string, string>) {
+  const version = devDependencies[name];
   const selected = typeof version === 'string' ? version : version === true ? allDependencies[name] : undefined;
 
   if (!selected) {
@@ -266,7 +267,7 @@ export async function patchPiletPackage(root: string, name: string, version: str
   const devDependencies = {
     ...Object.keys(info.devDependencies).reduce(
       (deps, name) => {
-        deps[name] = getDependencyVersion(info.devDependencies[name], allDependencies);
+        deps[name] = getDependencyVersion(name, info.devDependencies, allDependencies);
         return deps;
       },
       {} as Record<string, string>,
