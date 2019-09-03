@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { createReadStream } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 import { isWindows } from './info';
 import { inspectPackage } from './inspect';
 import { readJson } from './io';
@@ -11,6 +11,16 @@ function runNpmProcess(args: Array<string>, target: string) {
   const cwd = resolve(process.cwd(), target);
   const cmd = [npmCommand, ...args].join(' ');
   return runScript(cmd, cwd);
+}
+
+function isLocalPackage(baseDir: string, fullName: string) {
+  if (/^[\.\/\~]/.test(fullName)) {
+    return true;
+  } else if (fullName.endsWith('.tgz')) {
+    return existsSync(resolve(baseDir, fullName));
+  }
+
+  return false;
 }
 
 export function installDependencies(target = '.', ...flags: Array<string>) {
@@ -46,7 +56,7 @@ export function dissectPackageName(baseDir: string, fullName: string): [string, 
   if (gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName)) {
     const gitUrl = gitted ? fullName : `${gitPrefix}${fullName}`;
     return [gitUrl, 'latest', false, 'git'];
-  } else if (/^[\.\/\~]/.test(fullName)) {
+  } else if (isLocalPackage(baseDir, fullName)) {
     const fullPath = resolve(baseDir, fullName);
     return [fullPath, 'latest', false, 'file'];
   } else {
