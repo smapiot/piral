@@ -2,18 +2,19 @@ import { History } from 'history';
 import { ComponentType, ReactChild } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
-import { LayoutType, LayoutBreakpoints } from './layout';
-import { UserInfo, UserFeatures, UserPermissions } from './user';
-import { ConnectorDetails } from './feed';
-import { TilePreferences } from './tile';
+import { Disposable } from './utils';
 import { MenuSettings } from './menu';
 import { PiletMetadata } from './meta';
 import { SearchHandler } from './search';
-import { SharedDataItem, DataStoreTarget } from './data';
-import { NotificationOptions } from './notifications';
+import { TilePreferences } from './tile';
 import { Dict, Without } from './common';
-import { Disposable } from './utils';
+import { ConnectorDetails } from './feed';
+import { PiralCustomActions } from './custom';
 import { StateDispatcher } from './container';
+import { NotificationOptions } from './notifications';
+import { LayoutType, LayoutBreakpoints } from './layout';
+import { SharedDataItem, DataStoreTarget } from './data';
+import { UserInfo, UserFeatures, UserPermissions } from './user';
 import { ErrorInfoProps, DashboardProps, LoaderProps } from './components';
 import {
   BaseComponentProps,
@@ -338,7 +339,7 @@ export interface GlobalState<TUser = {}> {
   modules: Array<PiletMetadata>;
 }
 
-export interface StateActions {
+export interface PiralActions extends PiralCustomActions {
   /**
    * Sets the currently logged in user.
    * @param user The current user or undefined is anonymous.
@@ -536,10 +537,9 @@ export interface StateActions {
   setLoading(loading: boolean): void;
 }
 
-export type GlobalStateContext<TActions extends {} = {}> = StateActions &
-  TActions & {
-    /**
-     * The global state context atom.
-     */
-    state: Atom<GlobalState>;
-  };
+export interface GlobalStateContext extends PiralActions {
+  /**
+   * The global state context atom.
+   */
+  state: Atom<GlobalState>;
+}

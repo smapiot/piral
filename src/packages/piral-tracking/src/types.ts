@@ -7,7 +7,7 @@ declare module 'piral-core/lib/types/utils' {
   }
 }
 
-declare module 'piral-core/lib/types/api' {
+declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiralTrackingApi {}
 }
 

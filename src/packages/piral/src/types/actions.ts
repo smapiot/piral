@@ -1,6 +1,10 @@
 import { PiletApi } from 'piral-core';
 import { LanguageData } from './hooks';
 
+declare module 'piral-core/lib/types/custom' {
+  interface PiralCustomActions extends TranslationsActions {}
+}
+
 export interface PiletsBag {
   [name: string]: PiletApi;
 }

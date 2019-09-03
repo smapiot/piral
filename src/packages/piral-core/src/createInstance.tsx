@@ -41,9 +41,9 @@ const App: React.FC = () => <Piral>{content => <Layout>{content}</Layout>}</Pira
 render(<App />, document.querySelector('#app'));
 ```
  */
-export function createInstance<TState extends GlobalState = GlobalState, TActions extends {} = {}>(
-  config: PiralConfiguration<TState, TActions>,
-): PiralInstance<TActions> {
+export function createInstance<TState extends GlobalState = GlobalState>(
+  config: PiralConfiguration<TState>,
+): PiralInstance {
   const {
     state,
     availablePilets = [],

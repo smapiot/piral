@@ -5,6 +5,7 @@ import { Dict } from './common';
 import { MenuSettings } from './menu';
 import { TilePreferences } from './tile';
 import { PiletMetadata } from './meta';
+import { PiletCustomApi } from './custom';
 import { Disposable, EventEmitter } from './utils';
 import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
@@ -63,8 +64,6 @@ export interface SearchProvider {
 }
 
 export type Pilet = ArbiterModule<PiletApi>;
-
-export interface PiletCustomApi {}
 
 /**
  * Defines the Pilet API from piral-core.

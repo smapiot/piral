@@ -4,6 +4,7 @@ export * from './components';
 export * from './config';
 export * from './connector';
 export * from './container';
+export * from './custom';
 export * from './data';
 export * from './extension';
 export * from './feed';
