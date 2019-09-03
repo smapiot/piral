@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { withRecall, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
-import { Portal } from './components';
-import { createGlobalState, createActions, StateContext } from './state';
 import { createCoreApi, getLocalDependencies, createListener, globalDependencies } from './modules';
+import { createGlobalState, createActions, StateContext } from './state';
+import { Portal } from './components';
 import {
   GlobalState,
   PiletApi,
