@@ -1,5 +1,9 @@
 import { TilePreferences, MenuSettings } from 'piral-core';
 
+declare module 'piral-core/lib/types/api' {
+  interface PiletCustomApi extends PiralNgApi {}
+}
+
 /**
  * Defines the provided set of Angular Pilet API extensions.
  */

@@ -1,3 +1,9 @@
+import {} from 'piral-core';
+
+declare module 'piral-core/lib/types/api' {
+  interface PiletCustomApi extends PiralFetchApiFetch {}
+}
+
 export interface FetchOptions {
   /**
    * Sets the HTTP method.

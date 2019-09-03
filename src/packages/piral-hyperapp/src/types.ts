@@ -6,7 +6,12 @@ import {
   MenuComponentProps,
   ExtensionComponentProps,
   PageComponentProps,
+  PiletApi,
 } from 'piral-core';
+
+declare module 'piral-core/lib/types/api' {
+  interface PiletCustomApi extends PiralHyperappApi {}
+}
 
 /** The view function describes the application UI as a tree of VNodes.
  * @returns A VNode tree.
@@ -38,7 +43,7 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
 /**
  * Defines the provided set of hyperapp Pilet API extensions.
  */
-export interface PiralHyperappApi<T> {
+export interface PiralHyperappApi {
   /**
    * Registers a tile for a hyperapp component.
    * The id parameter has to be unique within the current pilet.
@@ -48,7 +53,7 @@ export interface PiralHyperappApi<T> {
    */
   registerTileHyperapp<State = {}, Actions = {}>(
     id: string,
-    component: Component<TileComponentProps<T>>,
+    component: Component<TileComponentProps>,
     state?: State,
     actions?: Actions,
     options?: TilePreferences,
@@ -59,7 +64,7 @@ export interface PiralHyperappApi<T> {
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
   registerTileHyperapp<State = {}, Actions = {}>(
-    component: Component<TileComponentProps<T>>,
+    component: Component<TileComponentProps>,
     state?: State,
     actions?: Actions,
     options?: TilePreferences,
@@ -73,7 +78,7 @@ export interface PiralHyperappApi<T> {
    */
   registerPageHyperapp<State = {}, Actions = {}>(
     route: string,
-    component: Component<PageComponentProps<T>>,
+    component: Component<PageComponentProps>,
     state?: State,
     actions?: Actions,
   ): void;
@@ -86,10 +91,10 @@ export interface PiralHyperappApi<T> {
    */
   registerExtensionHyperapp<TOpt, State = {}, Actions = {}>(
     name: string,
-    component: Component<ExtensionComponentProps<T, TOpt>>,
+    component: Component<ExtensionComponentProps<TOpt>>,
     state?: State,
     actions?: Actions,
-    defaults?: T,
+    defaults?: PiletApi,
   ): void;
   /**
    * Registers a menu item for a hyperapp component.
@@ -100,7 +105,7 @@ export interface PiralHyperappApi<T> {
    */
   registerMenuHyperapp<State = {}, Actions = {}>(
     id: string,
-    component: Component<MenuComponentProps<T>>,
+    component: Component<MenuComponentProps>,
     state?: State,
     actions?: Actions,
     settings?: MenuSettings,
@@ -111,7 +116,7 @@ export interface PiralHyperappApi<T> {
    * @param settings The optional configuration for the menu item.
    */
   registerMenuHyperapp<State = {}, Actions = {}>(
-    component: Component<MenuComponentProps<T>>,
+    component: Component<MenuComponentProps>,
     state?: State,
     actions?: Actions,
     settings?: MenuSettings,
@@ -124,9 +129,9 @@ export interface PiralHyperappApi<T> {
    */
   registerModalHyperapp<TOpt, State = {}, Actions = {}>(
     id: string,
-    component: Component<ModalComponentProps<T, TOpt>>,
+    component: Component<ModalComponentProps<TOpt>>,
     state?: State,
     actions?: Actions,
-    defaults?: T,
+    defaults?: PiletApi,
   ): void;
 }

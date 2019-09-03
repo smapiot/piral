@@ -1,19 +1,27 @@
 import * as React from 'react';
-import { withRecall, ArbiterModuleMetadata, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
+import { withRecall, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
 import { Portal } from './components';
 import { createGlobalState, createActions, StateContext } from './state';
 import { createCoreApi, getLocalDependencies, createListener, globalDependencies } from './modules';
-import { GlobalState, PiralCoreApi, PiralConfiguration, PortalProps, PiralInstance, PiralContainer } from './types';
+import {
+  GlobalState,
+  PiletApi,
+  PiralConfiguration,
+  PortalProps,
+  PiralInstance,
+  PiralContainer,
+  PiletMetadata,
+} from './types';
 
-function defaultModuleRequester(): Promise<Array<ArbiterModuleMetadata>> {
+function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
   return Promise.resolve([]);
 }
 
-function defaultApiExtender<TApi>(value: PiralCoreApi<TApi>): TApi {
-  return value as any;
+function defaultApiExtender(value: PiletApi) {
+  return value;
 }
 
-function defaultApiCreator<TApi>(container: PiralContainer<TApi>): ApiCreator<TApi> {
+function defaultApiCreator(container: PiralContainer): ApiCreator<PiletApi> {
   return target => createCoreApi(target, container);
 }
 
@@ -33,9 +41,9 @@ const App: React.FC = () => <Piral>{content => <Layout>{content}</Layout>}</Pira
 render(<App />, document.querySelector('#app'));
 ```
  */
-export function createInstance<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
-  config: PiralConfiguration<TApi, TState, TActions>,
-): PiralInstance<TApi, TActions> {
+export function createInstance<TState extends GlobalState = GlobalState, TActions extends {} = {}>(
+  config: PiralConfiguration<TState, TActions>,
+): PiralInstance<TActions> {
   const {
     state,
     availablePilets = [],
@@ -64,7 +72,7 @@ export function createInstance<TApi, TState extends GlobalState = GlobalState, T
   }
 
   const createApi = defaultApiCreator(container);
-  const RecallPortal = withRecall<PortalProps, TApi>(Portal, {
+  const RecallPortal = withRecall<PortalProps, PiletApi>(Portal, {
     modules: availablePilets,
     getDependencies,
     strategy: createProgressiveStrategy(async),

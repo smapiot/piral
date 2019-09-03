@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { ArbiterModule } from 'react-arbiter';
-import { ErrorInfoProps } from 'piral-core';
-import { SampleApi } from '../types';
+import { ErrorInfoProps, Pilet } from 'piral-core';
 
 /**
  * Shows the general usage of the `setup` function together
@@ -9,7 +7,7 @@ import { SampleApi } from '../types';
  * Also registeres some custom error page handlers. For details
  * on this, see DashboardModule.
  */
-export const Pilet1: ArbiterModule<SampleApi> = {
+export const Pilet1: Pilet = {
   content: '',
   name: 'Example Module',
   version: '1.0.0',

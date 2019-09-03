@@ -1,4 +1,4 @@
-import { PiletApi } from './api';
+import { PiletApi } from 'piral-core';
 import { LanguageData } from './hooks';
 
 export interface PiletsBag {

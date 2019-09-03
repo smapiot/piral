@@ -1,11 +1,10 @@
 import Tile from './Tile.vue';
-import { ArbiterModule } from 'react-arbiter';
-import { SampleApi } from '../types';
+import { Pilet } from 'piral-core';
 
 /**
  * Shows an API extension using Vue components.
  */
-export const VuePilet: ArbiterModule<SampleApi> = {
+export const VuePilet: Pilet = {
   content: '',
   name: 'Vue Module',
   version: '1.0.0',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { isfunc } from 'react-arbiter';
 import { render } from 'react-dom';
 import { Provider } from 'urql';
-import { createInstance, setupState, EventEmitter, GlobalState } from 'piral-core';
+import { createInstance, setupState, EventEmitter, GlobalState, PiletApi } from 'piral-core';
 import {
   createFetchApi,
   createGqlApi,
@@ -15,7 +15,7 @@ import {
 } from 'piral-ext';
 import { createTranslationsActions } from './actions';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
-import { PiletApi, PiralOptions, PiletQueryResult, PiletsBag } from './types';
+import { PiralOptions, PiletQueryResult, PiletsBag } from './types';
 
 function defaultExtendApi(api: PiletApi) {
   return api;
@@ -47,8 +47,8 @@ renderInstance({ layout });
 export * from 'piral';
 ```
  */
-export function renderInstance<TApi = PiletApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>(
-  options: PiralOptions<TApi, TState, TActions>,
+export function renderInstance<TState extends GlobalState = GlobalState, TActions extends {} = {}>(
+  options: PiralOptions<TState, TActions>,
 ): Promise<EventEmitter> {
   const {
     selector = '#app',
@@ -110,7 +110,7 @@ export function renderInstance<TApi = PiletApi, TState extends GlobalState = Glo
         messages,
         ...localeOptions,
       });
-      const Piral = createInstance<TApi>({
+      const Piral = createInstance({
         ...forwardOptions,
         availablePilets: getAvailablePilets(),
         requestPilets: getPiletRequester(pilets),

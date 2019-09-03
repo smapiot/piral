@@ -20,10 +20,10 @@ export function getGateway(url?: string) {
   }
 }
 
-export function getLoader<TApi, TState extends GlobalState = GlobalState>(
-  loader: PiralLoader<TApi, TState>,
-  oldConfig: PiralConfig<TApi, TState>,
-): PiralLoader<TApi, TState> {
+export function getLoader<TState extends GlobalState = GlobalState>(
+  loader: PiralLoader<TState>,
+  oldConfig: PiralConfig<TState>,
+): PiralLoader<TState> {
   return opts => loader(opts).then(newConfig => ({ ...oldConfig, ...newConfig }));
 }
 

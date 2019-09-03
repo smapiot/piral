@@ -7,6 +7,10 @@ declare module 'piral-core/lib/types/utils' {
   }
 }
 
+declare module 'piral-core/lib/types/api' {
+  interface PiletCustomApi extends PiralTrackingApi {}
+}
+
 export const enum SeverityLevel {
   /**
    * Verbose severity level.

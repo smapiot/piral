@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { ArbiterModule } from 'react-arbiter';
-import { SampleApi } from '../types';
+import { Pilet } from 'piral-core';
 
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorPilet: ArbiterModule<SampleApi> = {
+export const ConnectorPilet: Pilet = {
   content: '',
   name: 'Connector Module',
   version: '1.0.0',

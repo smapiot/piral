@@ -1,32 +1,30 @@
 import { History } from 'history';
 import { ComponentType, ReactChild } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { ArbiterModuleMetadata } from 'react-arbiter';
 import { Atom } from '@dbeining/react-atom';
 import { LayoutType, LayoutBreakpoints } from './layout';
 import { UserInfo, UserFeatures, UserPermissions } from './user';
 import { ConnectorDetails } from './feed';
 import { TilePreferences } from './tile';
 import { MenuSettings } from './menu';
+import { PiletMetadata } from './meta';
 import { SearchHandler } from './search';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { NotificationOptions } from './notifications';
 import { Dict, Without } from './common';
 import { Disposable } from './utils';
 import { StateDispatcher } from './container';
+import { ErrorInfoProps, DashboardProps, LoaderProps } from './components';
 import {
-  TileComponentProps,
   BaseComponentProps,
-  ExtensionComponentProps,
-  MenuComponentProps,
-  ModalComponentProps,
+  TileComponentProps,
   PageComponentProps,
-  ErrorInfoProps,
-  DashboardProps,
-  LoaderProps,
-} from './components';
+  ModalComponentProps,
+  MenuComponentProps,
+  ExtensionComponentProps,
+} from './api';
 
-export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps<{}>>>;
+export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
 
 export interface OpenNotification {
   id: string;
@@ -42,21 +40,21 @@ export interface OpenModalDialog {
 }
 
 export interface TileRegistration {
-  component: WrappedComponent<TileComponentProps<any>>;
+  component: WrappedComponent<TileComponentProps>;
   preferences: TilePreferences;
 }
 
 export interface PageRegistration {
-  component: WrappedComponent<PageComponentProps<any>>;
+  component: WrappedComponent<PageComponentProps>;
 }
 
 export interface ModalRegistration {
-  component: WrappedComponent<ModalComponentProps<any, any>>;
+  component: WrappedComponent<ModalComponentProps<any>>;
   defaults: any;
 }
 
 export interface MenuItemRegistration {
-  component: WrappedComponent<MenuComponentProps<any>>;
+  component: WrappedComponent<MenuComponentProps>;
   settings: MenuSettings;
 }
 
@@ -337,7 +335,7 @@ export interface GlobalState<TUser = {}> {
   /**
    * Gets the loaded modules.
    */
-  modules: Array<ArbiterModuleMetadata>;
+  modules: Array<PiletMetadata>;
 }
 
 export interface StateActions {

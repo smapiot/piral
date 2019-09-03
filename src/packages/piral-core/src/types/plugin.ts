@@ -1,6 +1,6 @@
-import { ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralCoreApi } from './api';
+import { PiletApi } from './api';
 import { EventEmitter } from './utils';
+import { PiletMetadata } from './meta';
 import { GlobalStateContext, GlobalState } from './state';
 
 export interface Setup<TState extends GlobalState, TUser = {}> {
@@ -12,14 +12,14 @@ export interface Setup<TState extends GlobalState, TUser = {}> {
   (state: GlobalState<TUser>): TState;
 }
 
-export interface Extend<TApi> {
+export interface Extend {
   /**
    * Extends the base API with a custom set of functionality to be used by modules.
    * @param api The API created by the base layer.
    * @param target The target the API is created for.
    * @returns The extended API.
    */
-  (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): TApi;
+  (api: PiletApi, target: PiletMetadata): PiletApi;
 }
 
 export interface Append {
@@ -29,15 +29,15 @@ export interface Append {
    * @param target The target the API is created for.
    * @returns The API to append.
    */
-  (api: PiralCoreApi<any>, target: ArbiterModuleMetadata): any;
+  (api: PiletApi, target: PiletMetadata): Partial<PiletApi>;
 }
 
 export interface PiletRequester {
-  (): Promise<Array<ArbiterModuleMetadata>>;
+  (): Promise<Array<PiletMetadata>>;
 }
 
-export interface PiralContainer<TApi> {
+export interface PiralContainer {
   context: GlobalStateContext;
   events: EventEmitter;
-  extendApi: Extend<TApi>;
+  extendApi: Extend;
 }

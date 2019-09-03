@@ -11,6 +11,7 @@ export * from './form';
 export * from './instance';
 export * from './layout';
 export * from './menu';
+export * from './meta';
 export * from './plugin';
 export * from './search';
 export * from './state';

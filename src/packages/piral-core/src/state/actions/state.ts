@@ -1,4 +1,4 @@
-import { swap, Atom, deref } from '@dbeining/react-atom';
+import { swap, Atom } from '@dbeining/react-atom';
 import { withKey, withoutKey } from '../../utils';
 import { GlobalState, StateDispatcher } from '../../types';
 

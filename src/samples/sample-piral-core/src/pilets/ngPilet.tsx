@@ -1,7 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { ArbiterModule } from 'react-arbiter';
-import { TileComponentProps } from 'piral-core';
-import { SampleApi } from '../types';
+import { TileComponentProps, Pilet } from 'piral-core';
 
 @Component({
   template: `
@@ -16,7 +14,7 @@ import { SampleApi } from '../types';
 export class TileComponent {
   public counter = 0;
 
-  constructor(@Inject('TileProps') public props: TileComponentProps<any>) {}
+  constructor(@Inject('TileProps') public props: TileComponentProps) {}
 
   increment() {
     this.counter += 1;
@@ -30,7 +28,7 @@ export class TileComponent {
 /**
  * Shows an API extension using Angular components.
  */
-export const NgPilet: ArbiterModule<SampleApi> = {
+export const NgPilet: Pilet = {
   content: '',
   name: 'Angular Module',
   version: '1.0.0',
