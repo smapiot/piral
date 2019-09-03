@@ -2,7 +2,17 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { logFail, logWarn } from './log';
 import { cliVersion } from './info';
 import { getDevDependencies, PiletLanguage } from './language';
-import { readJson, copy, updateExistingJson, ForceOverwrite, findFile, checkExists, getHash, checkIsDirectory, matchFiles } from './io';
+import {
+  readJson,
+  copy,
+  updateExistingJson,
+  ForceOverwrite,
+  findFile,
+  checkExists,
+  getHash,
+  checkIsDirectory,
+  matchFiles,
+} from './io';
 
 export interface TemplateFileLocation {
   from: string;
@@ -20,7 +30,11 @@ function getPiralPath(root: string, name: string) {
   return resolve(root, 'node_modules', name);
 }
 
-function getDependencyVersion(name: string, devDependencies: Record<string, string | true>, allDependencies: Record<string, string>) {
+function getDependencyVersion(
+  name: string,
+  devDependencies: Record<string, string | true>,
+  allDependencies: Record<string, string>,
+) {
   const version = devDependencies[name];
   const selected = typeof version === 'string' ? version : version === true ? allDependencies[name] : undefined;
 
@@ -82,6 +96,7 @@ export function getPiralPackage(app: string, language: PiletLanguage) {
         ...baseData,
         typings: 'lib/index.d.ts',
         scripts: {
+          start: 'piral debug',
           build: 'npm run build:deploy && npm run build:pilets',
           'build:deploy': 'piral build',
           'build:pilets': 'tsc',
@@ -91,6 +106,7 @@ export function getPiralPackage(app: string, language: PiletLanguage) {
       return {
         ...baseData,
         scripts: {
+          start: 'piral debug',
           build: 'piral build',
         },
       };
@@ -223,13 +239,20 @@ export async function retrievePiletsInfo(entryFile: string) {
   };
 }
 
-export async function patchPiletPackage(root: string, name: string, version: string, piralInfo: any) {
+export async function patchPiletPackage(
+  root: string,
+  name: string,
+  version: string,
+  piralInfo: any,
+  language?: PiletLanguage,
+) {
   const piralDependencies = piralInfo.dependencies || {};
   const piralDevDependencies = piralInfo.devDependencies || {};
   const allDependencies = {
     ...piralDependencies,
     ...piralDevDependencies,
   };
+  const typeDependencies = language ? getDevDependencies(language) : {};
   const { externals, ...info } = getPiletsInfo(piralInfo);
   const piral = {
     comment: 'Keep this section to allow running `piral upgrade`.',
@@ -265,6 +288,13 @@ export async function patchPiletPackage(root: string, name: string, version: str
     [name]: `*`,
   };
   const devDependencies = {
+    ...Object.keys(typeDependencies).reduce(
+      (deps, name) => {
+        deps[name] = allDependencies[name] || typeDependencies[name];
+        return deps;
+      },
+      {} as Record<string, string>,
+    ),
     ...Object.keys(info.devDependencies).reduce(
       (deps, name) => {
         deps[name] = getDependencyVersion(name, info.devDependencies, allDependencies);
