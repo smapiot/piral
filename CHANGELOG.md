@@ -18,6 +18,7 @@
 * Improved flexibility for scaffolding dev dependencies (#66)
 * Included `tslib` as a shared dependency (#67)
 * Improved pilet scaffolding with local packages (#71)
+* Updated documentation with big picture and more tutorials (#41)
 
 ## 0.6.3 (August 18, 2019)
 
