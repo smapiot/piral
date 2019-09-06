@@ -65,34 +65,16 @@ At this point, the application shell shows an empty page, since there is current
 
 ### Create Package for the Application Shell
 
-To use the newly created Piral instance as application shell (or simply "app shell") for the development of Pilets, we need to create an **npm package**, which will be referenced within Pilets. To create the package run the command:
+To use the newly created Piral instance as application shell (or simply "app shell") for the development of Pilets, we need to create an **NPM package**, which will be referenced within Pilets. To create the package run the command:
 
 ```sh
-# Create an npm package for the app shell
+# Create an NPM package for the app shell
 npm pack
 ```
 
-The result will be a tar ball containing the application shell, in our case `my-app-1.0.0.tgz`. Usually the application shell will be published to an npm feed, so that all development teams will be able reference and use the same Piral instance for developing their Pilets.
+The result will be a tar ball containing the application shell, in our case `my-app-1.0.0.tgz`. Usually the application shell will be published to a (private) NPM feed, so that all development teams will be able reference and use the same Piral instance for developing their Pilets.
 
-### Creating a Link to the Local Application Shell
-
-For local development, we can use `npm link` to create a link to the package and reference the package locally without connecting to an npm registry. In the root directory of your application shell (`my-app` in our case) execute the following command:
-
-```sh
-# Create global link to the application shell
-npm link
-```
-
-A global link to will be created to the local version of the application shell.
-
-### Removing the Link to the Local Instance
-
-At the point at which the application shell is published to a npm feed and reference by Pilets from there, make sure that the local link is removed, when it is no longer required by calling:
-
-```sh
-# Remove link to local package
-npm rm --global my-app
-```
+For local development (or this tutorial) we can refer to the Piral instance locally.
 
 ## Create Pilet using the Piral CLI
 
@@ -104,7 +86,8 @@ The Piral tooling also supports scaffolding a Pilet to get started. Ensure that 
 
 ```sh
 # Scaffold a new Pilet with the name 'my-pilet' for the app shell 'my-app'
-pilet new my-app --target my-pilet
+# For the path to the tgz we assume the following path, make sure to change it
+pilet new ./my-app/my-app-1.0.0.tgz --target my-pilet
 ```
 
 With the `pilet new` command, a new Pilet with pre-defined content is created. The first parameter `my-app` specifies the application shell, which the Pilet will be built for. If you navigate into the folder `my-pilet`, you'll find the files for the newly created Pilet.
