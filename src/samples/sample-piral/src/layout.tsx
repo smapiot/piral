@@ -76,10 +76,10 @@ export const layout = buildLayout()
           <img src={require('./images/error.svg')} alt="Error" />
           <div className="pi-title">Dialog Crashed</div>
           <div className="pi-description">
-            <p>
-            Sorry for the inconvenience. We try to resolve the issue as soon as possible.
-            </p>
-            <button className="btn btn-primary" onClick={onClose}>Close</button>
+            <p>Sorry for the inconvenience. We try to resolve the issue as soon as possible.</p>
+            <button className="btn btn-primary" onClick={onClose}>
+              Close
+            </button>
           </div>
         </div>
       ))
