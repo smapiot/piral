@@ -1,7 +1,7 @@
 {
   "name": "sample-piral-core",
   "private": true,
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "Example project illustrating the use of the piral-core and piral-cli packages.",
   "keywords": [
     "portal",
@@ -31,10 +31,10 @@
     "@angular/platform-browser-dynamic": "^8.0.0",
     "core-js": "^2.5.7",
     "hyperapp": "^1.2.10",
-    "piral-core": "^0.6.3",
-    "piral-hyperapp": "^0.6.3",
-    "piral-ng": "^0.6.3",
-    "piral-vue": "^0.6.3",
+    "piral-core": "^0.7.0",
+    "piral-hyperapp": "^0.7.0",
+    "piral-ng": "^0.7.0",
+    "piral-vue": "^0.7.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router": ">=5.0.0",
@@ -50,7 +50,7 @@
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "latest",
     "@vue/component-compiler-utils": "^3.0.0",
-    "piral-cli": "^0.6.3",
+    "piral-cli": "^0.7.0",
     "sass": "^1.17.0",
     "vue-template-compiler": "^2.6.10"
   },
