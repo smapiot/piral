@@ -1,6 +1,6 @@
 import { PiletRequester, GlobalState } from 'piral-core';
 import { isfunc, ArbiterModule, ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralAttachment, PiralConfig, PiralLoader } from '../types';
+import { PiralConfig, PiralLoader } from '../types';
 
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
@@ -31,7 +31,7 @@ export function getPiletRequester(pilets: PiletRequester | Array<ArbiterModuleMe
   return isfunc(pilets) ? pilets : () => Promise.resolve(pilets);
 }
 
-export function getAvailablePilets<TApi>(setup?: PiralAttachment<TApi>) {
+export function getAvailablePilets<TApi>() {
   const debugModules = (process.env.DEBUG_PILETS || '').split(',');
   const availableModules: Array<ArbiterModule<TApi>> = [];
 
@@ -39,15 +39,6 @@ export function getAvailablePilets<TApi>(setup?: PiralAttachment<TApi>) {
     if (debugModule) {
       availableModules.push(require(debugModule));
     }
-  }
-
-  if (isfunc(setup)) {
-    availableModules.push({
-      setup,
-      hash: '',
-      version: process.env.BUILD_PCKG_VERSION || '0.0.0',
-      name: 'app',
-    });
   }
 
   return availableModules;

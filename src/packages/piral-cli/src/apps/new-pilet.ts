@@ -9,7 +9,6 @@ import {
   patchPiletPackage,
   ForceOverwrite,
   PiletLanguage,
-  getDevDependencies,
   scaffoldPiletSourceFiles,
   logInfo,
   logDone,
@@ -17,7 +16,10 @@ import {
   combinePackageRef,
   getPackageName,
   getPackageVersion,
-} from './common';
+  readPiralPackage,
+  getPiletsInfo,
+  runScript,
+} from '../common';
 
 export interface NewPiletOptions {
   registry?: string;
@@ -51,8 +53,6 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const success = await createDirectory(root);
 
   if (success) {
-    const devDependencies = getDevDependencies(language);
-
     logInfo(`Scaffolding new pilet in %s ...`, root);
 
     await createFileIfNotExists(
@@ -65,7 +65,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
           description: '',
           keywords: ['pilet'],
           dependencies: {},
-          devDependencies,
+          devDependencies: {},
           peerDependencies: {},
           scripts: {},
           main: 'dist/index.js',
@@ -96,18 +96,28 @@ always-auth=true`,
 
     const packageName = await getPackageName(root, sourceName, type);
     const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);
+    const piralInfo = await readPiralPackage(root, packageName);
+    const { preScaffold, postScaffold } = getPiletsInfo(piralInfo);
+
+    if (preScaffold) {
+      await runScript(preScaffold, root);
+    }
 
     logInfo(`Taking care of templating ...`);
 
     await scaffoldPiletSourceFiles(language, root, packageName, forceOverwrite);
 
-    const files = await patchPiletPackage(root, packageName, packageVersion);
-    await copyPiralFiles(root, packageName, files, forceOverwrite);
+    const files = await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
+    await copyPiralFiles(root, packageName, files, ForceOverwrite.yes);
 
     if (!skipInstall) {
       logInfo(`Installing dependencies ...`);
 
       await installDependencies(root, '--no-package-lock');
+    }
+
+    if (postScaffold) {
+      await runScript(postScaffold, root);
     }
 
     logDone(`All done!`);

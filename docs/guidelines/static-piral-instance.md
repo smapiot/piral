@@ -20,10 +20,11 @@ We start by creating the basis for our app shell. This kind of scaffolding can e
 
 ### Scaffolding using the Piral CLI
 
-In the easy way we use the `piral-cli` to scaffold a new Piral instance.
+In the easy way we use the `create-piral-instance` initializer to scaffold a new Piral instance. The initializer is based on the `piral-cli`, but does not require a global installation.
 
 ```sh
-piral new --target my-piral-instance
+mkdir my-piral-instance && cd my-piral-instance
+npm init piral-instance
 ```
 
 The scaffolding set up everything that makes it a runnable Piral instance. From this point on we can spent our time tackling the modifications in our application.

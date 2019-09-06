@@ -13,22 +13,49 @@ const markdownItSub = require('markdown-it-sub');
 const markdownItSup = require('markdown-it-sup');
 const markdownItVideo = require('markdown-it-video');
 const { readFileSync } = require('fs');
+const { extname, basename, relative } = require('path');
+const { createHash } = require('crypto');
 const { docRef, imgRef } = require('./utils');
 
-function render(file) {
+function computeHash(content) {
+  return createHash('sha1')
+    .update(content || '')
+    .digest('hex');
+}
+
+function getMdValue(result) {
+  let content = result.content
+    .split('`').join('\\`')
+    .split('$').join('\\$');
+  Object.keys(result.images).forEach(id => {
+    const path = result.images[id];
+    content = content
+      .split(id).join('${require("' + path + '")}');
+  });
+  return content;
+}
+
+function render(file, baseDir = __dirname) {
   const content = readFileSync(file, 'utf8');
   const result = {
     meta: {},
     content: '',
+    mdValue: '',
+    images: {},
   };
   const md = new MarkdownIt({
     replaceLink(link) {
       if (/\.md$/.test(link)) {
         return docRef(link, file);
-      } else if (/\.(png|jpg|jpeg|gif)$/.test(link)) {
-        return imgRef(link, file);
-      } else if (/\.svg$/.test(link)) {
-        return `${imgRef(link, file)}?sanitize=true`;
+      } else if (/\.(png|jpg|jpeg|gif|svg)$/.test(link)) {
+        const ext = extname(link);
+        const name = basename(link, ext);
+        const target = imgRef(link, file);
+        const content = readFileSync(target);
+        const hash = computeHash(content);
+        const id = `${name}_${hash}${ext}`;
+        result.images[id] = relative(baseDir, target);
+        return id;
       }
 
       return link;
@@ -47,6 +74,7 @@ function render(file) {
     .use(markdownItSup)
     .use(markdownItVideo);
   result.content = md.render(content);
+  result.mdValue = '`' + getMdValue(result) + '`';
   return result;
 }
 

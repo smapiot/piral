@@ -1,7 +1,6 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { DashboardProps, ErrorInfoProps, LoaderProps } from 'piral-core';
-import { createAppLayout } from '../components';
 import {
   dashboardBuilder,
   errorBuilder,
@@ -10,6 +9,7 @@ import {
   notificationsBuilder,
   searchBuilder,
 } from './builders';
+import { createAppLayout } from '../components';
 import { LayoutBuilder, LayoutProps, MenuProps } from '../types';
 
 interface LayoutBuilderState {

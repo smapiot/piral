@@ -1,5 +1,25 @@
 # Piral Changelog
 
+## 0.7.0 (to be determined)
+
+* Documented using different paths for scaffolding (#58)
+* Yield access to the pilet API (#44)
+* Attached the actions on the instance (#38)
+* Directly evaluates static pilets (#39)
+* Evaluates pilets once they arrive instead of all-at-once (#39)
+* Updated dependencies
+* Overwrite files on initial pilet scaffolding
+* Overwrite unchanged scaffolded files on upgrade
+* Split `piral-ext` in several packages (#45)
+* Added NPM initializers (`create-piral-instance` and `create-pilet`) (#62)
+* Added scaffolding hooks for use with the `piral-cli` (#61)
+* Fixed missing shared dependencies when debugging pilets (#60)
+* Fixed scaffolding of pilets due to a missing Piral instance (#63)
+* Improved flexibility for scaffolding dev dependencies (#66)
+* Included `tslib` as a shared dependency (#67)
+* Improved pilet scaffolding with local packages (#71)
+* Updated documentation with big picture and more tutorials (#41)
+
 ## 0.6.3 (August 18, 2019)
 
 * Allow pilet scaffolding from non-NPM sources (#53)

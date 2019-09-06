@@ -1,5 +1,6 @@
 import { ComponentType } from 'react';
 import { OpenModalDialog } from 'piral-core';
+import { createBuilder } from './createBuilder';
 import { createModals } from '../../components';
 import { ModalsContainerProps, ModalsBuilder } from '../../types';
 
@@ -16,24 +17,13 @@ function createInitialState(): ModalsBuilderState {
 }
 
 export function modalsBuilder(state = createInitialState()): ModalsBuilder {
-  return {
-    container(Component) {
-      return modalsBuilder({
-        ...state,
-        container: Component,
-      });
-    },
-    dialog(Component) {
-      return modalsBuilder({
-        ...state,
-        dialog: Component,
-      });
-    },
+  const initial = {
     build() {
       return createModals({
         ModalsContainer: state.container,
         ModalDialog: state.dialog,
       });
     },
-  };
+  } as ModalsBuilder;
+  return createBuilder(initial, state, modalsBuilder);
 }

@@ -4,6 +4,7 @@ export interface StandardEnvProps {
   production?: boolean;
   target?: string;
   pilet?: string;
+  piral?: string;
   dependencies?: Array<string>;
 }
 
@@ -40,6 +41,8 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
   }
 
   if (options.dependencies && options.dependencies.length) {
-    process.env.SHARED_DEPENDENCIES = options.dependencies.join(',');
+    const excludedDependencies = ['piral', 'piral-core', options.piral];
+    const dependencies = options.dependencies.filter(m => !excludedDependencies.includes(m));
+    process.env.SHARED_DEPENDENCIES = dependencies.join(',');
   }
 }

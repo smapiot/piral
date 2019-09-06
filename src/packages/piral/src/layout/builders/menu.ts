@@ -1,4 +1,5 @@
 import { ComponentType } from 'react';
+import { createBuilder } from './createBuilder';
 import { createMenu } from '../../components';
 import { MenuContainerProps, MenuItemProps, MenuBuilder } from '../../types';
 
@@ -15,24 +16,13 @@ function createInitialState(): MenuBuilderState {
 }
 
 export function menuBuilder(state = createInitialState()): MenuBuilder {
-  return {
-    container(Component) {
-      return menuBuilder({
-        ...state,
-        container: Component,
-      });
-    },
-    item(Component) {
-      return menuBuilder({
-        ...state,
-        item: Component,
-      });
-    },
+  const initial = {
     build() {
       return createMenu({
         MenuContainer: state.container,
         MenuItem: state.item,
       });
     },
-  };
+  } as MenuBuilder;
+  return createBuilder(initial, state, menuBuilder);
 }

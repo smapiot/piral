@@ -1,3 +1,3 @@
-export * from './fetch';
-export * from './gql';
-export * from './locale';
+export * from 'piral-fetch';
+export * from 'piral-translate';
+export * from 'piral-urql';

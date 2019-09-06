@@ -13,7 +13,7 @@ describe('Environment Module', () => {
   });
 
   it('setStandardEnvs reads and sets the current package.json', async () => {
-    const rootPackageJson = require('../../../../../../package.json');
+    const rootPackageJson = require('../../../../../package.json');
     await setStandardEnvs();
     expect(process.env.BUILD_PCKG_VERSION).toBe(rootPackageJson.version);
     expect(process.env.BUILD_PCKG_NAME).toBe(rootPackageJson.name);

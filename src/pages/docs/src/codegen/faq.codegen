@@ -4,9 +4,9 @@ const { render } = require('./markdown');
 
 module.exports = function() {
   const questions = getQuestions().map(file => {
-    const { content } = render(file);
+    const { mdValue } = render(file);
     this.addDependency(file, { includedInParent: true });
-    return `<Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />`;
+    return `<Markdown content={${mdValue}} link="${docRef(file)}" />`;
   }).join('');
 
   return `

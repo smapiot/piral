@@ -54,7 +54,7 @@ describe('Portal Module', () => {
     expect(display).not.toHaveBeenCalled();
   });
 
-  it('renders the error in layout if errored when loading', () => {
+  it('renders the error outside layout if errored when loading', () => {
     const display = jest.fn(content => content);
     const node = mount(
       <Portal loaded error="my error">
@@ -65,7 +65,7 @@ describe('Portal Module', () => {
     expect(node.find(StubErrorInfo).length).toBe(1);
     expect(node.find(StubErrorInfo).prop('type')).toBe('loading');
     expect(node.find(StubDashboard).length).toBe(0);
-    expect(display).toHaveBeenCalled();
+    expect(display).not.toHaveBeenCalled();
   });
 
   it('renders the not found error in layout', () => {

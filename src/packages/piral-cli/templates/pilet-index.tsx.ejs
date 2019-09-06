@@ -1,0 +1,13 @@
+import { <%- apiName %> } from '<%- sourceName %>';
+import * as React from 'react';
+
+export function setup(app: <%- apiName %>) {
+  app.showNotification('Hello from Piral!');
+  app.registerMenu('sample-entry', () =>
+    <a href="https://docs.piral.io" target="_blank">Documentation</a>
+  );
+  app.registerTile('sample-tile', () => <div>Welcome to Piral!</div>, {
+    initialColumns: 2,
+    initialRows: 1,
+  });
+}

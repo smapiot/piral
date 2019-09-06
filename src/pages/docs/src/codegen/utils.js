@@ -1,15 +1,13 @@
 const { basename, extname } = require('path');
-const { getRelativePath } = require('./paths');
+const { getRelativePath, getAbsolutePath } = require('./paths');
 
 const branch = 'documentation';
 const repo = 'smapiot/piral';
 const docsFolder = 'docs';
-const imageBaseUrl = `https://raw.githubusercontent.com/${repo}/${branch}/${docsFolder}`;
 const docBaseUrl = `https://github.com/${repo}/tree/${branch}/${docsFolder}`;
 
 function imgRef(path, basePath) {
-  const relPath = getRelativePath(path, basePath);
-  return `${imageBaseUrl}/${relPath}`;
+  return getAbsolutePath(path, basePath);
 }
 
 function docRef(path, basePath) {

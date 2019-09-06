@@ -27,27 +27,37 @@ npm i piral-cli -g
 
 To scaffold a new pilet called "my-pilet" we can use the Piral CLI. Make sure that you've installed the Piral CLI globally to perform the following command.
 
+**Option 1**
+
 ```sh
 pilet new sample-piral --target my-pilet
 ```
+
+Alternatively, scaffold it using `create-pilet` without using a global Piral CLI:
+
+**Option 2**
+
+```sh
+mkdir my-pilet && cd my-pilet
+npm init pilet
+```
+
+Make sure to select `sample-piral` as your source package containing a Piral instance.
 
 This will create a new folder called `my-pilet` in the current directory. The Piral instance to be used for running the new pilet will be `sample-piral`. The name corresponds to the name of the package on the NPM feed. By default, the public NPM feed is used. The `--registry` flag allows setting a private registry if the package with the Piral instance to be used is available somewhere else.
 
 ## Piral Instance Emulation
 
-Let's go into the directory and install the remaining dependencies.
+Let's go into the directory (if you picked option 1).
 
 ```sh
 cd my-pilet
-npm i
 ```
 
-One of the reasons why the scaffolding did not install the dependencies already is the choice of the package manager. This way, you can decide if you want to use NPM (as above) or Yarn. Both ways work as the Piral CLI tries to stay agnostic.
-
-Now let's run the scaffolded pilet. We can use the Pilet CLI for starting the debug mode.
+Now let's run the scaffolded pilet. We can use the Pilet CLI for starting the debug mode. An NPM script was connected to the local installation of the Piral CLI:
 
 ```sh
-pilet debug
+npm debug-pilet
 ```
 
 This should open a local server accessible at port `1234`. Go to `http://localhost:1234` in your web browser. Our Piral sample instance should be visible with a small "Hello from Piral!" notification visible.
@@ -93,7 +103,7 @@ Here, we need to import `Link` from `react-router-dom` to work properly.
 Later we may want to publish our pilet. The Pilet CLI has this one covered as well. First, let's try to create a production build:
 
 ```sh
-pilet build
+npm run build-pilet
 ```
 
 This should indicate if everything builds successful and what bundle size we expect. We should see that shared dependencies such as React are not integrated and stay as a "virtual module" (*.vm*).

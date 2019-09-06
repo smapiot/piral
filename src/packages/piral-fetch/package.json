@@ -1,0 +1,46 @@
+{
+  "name": "piral-fetch",
+  "version": "0.6.3",
+  "description": "Introduces the fetch API extensions for extending piral-core.",
+  "keywords": [
+    "piral",
+    "pilet-api",
+    "smapiot",
+    "portal",
+    "modules",
+    "api",
+    "fetch",
+    "extension",
+    "spa"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typedoc": "typedoc --json ../../../docs/types/piral-fetch.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "piral-core": "^0.6.3"
+  },
+  "peerDependencies": {
+    "piral-core": "^0.3.0 || ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0",
+    "react": ">= 16.8.0",
+    "react-dom": ">= 16.8.0"
+  },
+  "dependencies": {}
+}

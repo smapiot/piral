@@ -1,4 +1,5 @@
 import { ComponentType } from 'react';
+import { createBuilder } from './createBuilder';
 import { createDashboard } from '../../components';
 import { DashboardContainerProps, TileProps, DashboardBuilder } from '../../types';
 
@@ -15,24 +16,13 @@ function createInitialState(): DashboardBuilderState {
 }
 
 export function dashboardBuilder(state = createInitialState()): DashboardBuilder {
-  return {
-    container(Component) {
-      return dashboardBuilder({
-        ...state,
-        container: Component,
-      });
-    },
-    tile(Component) {
-      return dashboardBuilder({
-        ...state,
-        tile: Component,
-      });
-    },
+  const initial = {
     build() {
       return createDashboard({
         DashboardContainer: state.container,
         Tile: state.tile,
       });
     },
-  };
+  } as DashboardBuilder;
+  return createBuilder(initial, state, dashboardBuilder);
 }

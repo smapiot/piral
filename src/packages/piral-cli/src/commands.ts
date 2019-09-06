@@ -1,5 +1,5 @@
+import * as apps from './apps';
 import { Argv, Arguments } from 'yargs';
-import { apps } from './index';
 import {
   forceOverwriteKeys,
   keyOfForceOverwrite,
@@ -27,6 +27,8 @@ export interface ToolCommand<T> {
   alias: Array<string>;
   run<U>(args: Arguments<U>): void | Promise<void>;
 }
+
+export { apps };
 
 export const allCommands: Array<ToolCommand<any>> = [
   {

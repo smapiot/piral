@@ -1,4 +1,4 @@
-import { createPiletPackage, logDone } from './common';
+import { createPiletPackage, logDone } from '../common';
 
 export interface PackPiletOptions {
   source?: string;

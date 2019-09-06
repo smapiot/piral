@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { ArbiterModule } from 'react-arbiter';
 import { ErrorInfoProps } from 'piral-core';
 import { SampleApi } from '../types';

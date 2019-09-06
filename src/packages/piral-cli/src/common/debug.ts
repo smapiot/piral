@@ -8,6 +8,7 @@ import { extendBundlerWithPlugins } from './bundler';
 import { liveIcon, settingsIcon } from './emoji';
 import { extendConfig } from './settings';
 import { startServer } from './server';
+import { defaultDevServerPort } from './info';
 import { getFreePort } from './port';
 
 export interface DebugOptions {
@@ -40,7 +41,7 @@ export async function runDebug(
     krasConfig.api = '/manage-mock-server';
   }
 
-  const buildServerPort = await getFreePort(64834);
+  const buildServerPort = await getFreePort(defaultDevServerPort);
 
   await setStandardEnvs(options);
 

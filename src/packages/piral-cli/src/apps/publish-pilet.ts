@@ -1,6 +1,6 @@
 import { relative, join } from 'path';
 import { buildPilet } from './build-pilet';
-import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, logFail } from './common';
+import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, logFail } from '../common';
 
 export interface PublishPiletOptions {
   source?: string;

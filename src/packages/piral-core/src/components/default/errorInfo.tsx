@@ -13,8 +13,16 @@ export const DefaultErrorInfo: React.FC<ErrorInfoProps> = props => (
           return <div key="default_error">Page {props.location.pathname} not found.</div>;
         case 'page':
           return <div key="default_error">Page {props.location.pathname} crashed.</div>;
+        case 'tile':
+          return <div key="default_error">Tile crashed: {props.error}.</div>;
+        case 'extension':
+          return <div key="default_error">Extension crashed: {props.error}.</div>;
+        case 'modal':
+          return <div key="default_error">Modal crashed: {props.error}.</div>;
+        case 'menu':
+          return <div key="default_error">Menu crashed: {props.error}.</div>;
         case 'loading':
-          return <div key="default_error">Page could not be loaded: {props.error}.</div>;
+          return <div key="default_error">App could not be loaded: {props.error}.</div>;
         case 'feed':
           return <div key="default_error">Feed error: {props.error}.</div>;
         case 'form':

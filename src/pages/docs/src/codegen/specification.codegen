@@ -7,12 +7,12 @@ module.exports = function() {
   const children = [];
 
   getSpecs().forEach(file => {
-    const { content } = render(file);
+    const { mdValue } = render(file);
     this.addDependency(file, { includedInParent: true });
     titles.push(getTitle(file));
     children.push(`
       <ContentPage key="${file}">
-        <Markdown content={${JSON.stringify(content)}} link="${docRef(file)}" />
+        <Markdown content={${mdValue}} link="${docRef(file)}" />
       </ContentPage>
     `);
   });

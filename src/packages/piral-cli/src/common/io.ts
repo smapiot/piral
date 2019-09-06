@@ -1,10 +1,11 @@
 import * as glob from 'glob';
 import * as rimraf from 'rimraf';
-import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync, existsSync } from 'fs';
+import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync, existsSync, statSync } from 'fs';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
 import { deepMerge } from './merge';
 import { promptConfirm } from './interactive';
 import { nodeVersion } from './info';
+import { computeHash } from './hash';
 
 export enum ForceOverwrite {
   no,
@@ -43,6 +44,10 @@ function createDirectoryLegacy(targetDir: string) {
 
     return curDir;
   }, initDir);
+}
+
+function isFile(file: string) {
+  return statSync(file).isFile();
 }
 
 function isLegacy() {
@@ -133,7 +138,7 @@ export async function matchFiles(baseDir: string, pattern: string) {
         if (err) {
           reject(err);
         } else {
-          resolve(files);
+          resolve(files.filter(isFile));
         }
       },
     );
@@ -170,6 +175,12 @@ export async function updateExistingFile(targetDir: string, fileName: string, co
       writeFile(targetFile, content, 'utf8', err => (err ? reject(err) : resolve()));
     });
   }
+}
+
+export async function getHash(targetFile: string) {
+  return new Promise<string>(resolve => {
+    readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(computeHash(c))));
+  });
 }
 
 export async function mergeWithJson<T>(targetDir: string, fileName: string, newContent: T) {
