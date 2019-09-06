@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.7.0 (to be determined)
+## 0.7.0 (September 6, 2019)
 
 * Documented using different paths for scaffolding (#58)
 * Yield access to the pilet API (#44)
