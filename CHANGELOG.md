@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.8.0 (tbd)
+
+* Use declaration merging instead of generics (#72)
+
 ## 0.7.0 (September 6, 2019)
 
 * Documented using different paths for scaffolding (#58)
