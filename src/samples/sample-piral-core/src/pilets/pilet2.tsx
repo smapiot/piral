@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ArbiterModule } from 'react-arbiter';
-import { SampleApi } from '../types';
+import { Pilet } from 'piral-core';
 
 /**
  * Shows the usage of another module, here with a
  * feed connector.
  */
-export const Pilet2: ArbiterModule<SampleApi> = {
+export const Pilet2: Pilet = {
   content: '',
   name: 'Sample Module',
   version: '1.0.0',

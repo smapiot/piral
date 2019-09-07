@@ -3,16 +3,7 @@ import { createBrowserHistory } from 'history';
 import { globalDependencies, getLocalDependencies } from './modules';
 import { defaultBreakpoints, getUserLocale, getCurrentLayout, defaultLayouts } from './utils';
 import { DefaultDashboard, DefaultLoader, DefaultErrorInfo } from './components/default';
-import {
-  Append,
-  Extend,
-  GlobalStateOptions,
-  NestedPartial,
-  GlobalState,
-  UnionToIntersection,
-  ValuesOf,
-  PiralCoreApi,
-} from './types';
+import { Append, Extend, GlobalStateOptions, NestedPartial, GlobalState } from './types';
 
 /**
  * Creates a dependency getter that sets the shared dependencies explicitly.
@@ -44,11 +35,10 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
  * Creates an API extender from the given array of API declarations.
  * @param apis The APIs to use as source.
  */
-export function extendApis<T extends Array<Append>>(
-  apis: T,
-): Extend<PiralCoreApi<UnionToIntersection<ReturnType<ValuesOf<T>>>> & UnionToIntersection<ReturnType<ValuesOf<T>>>> {
-  return (init, target) =>
-    apis
+export function extendApis(apis: Array<Append>): Extend {
+  return (init, target) => ({
+    ...init,
+    ...apis
       .map(createApi => createApi(init, target))
       .reduce(
         (prev, curr) => ({
@@ -56,7 +46,8 @@ export function extendApis<T extends Array<Append>>(
           ...prev,
         }),
         init,
-      );
+      ),
+  });
 }
 
 /**

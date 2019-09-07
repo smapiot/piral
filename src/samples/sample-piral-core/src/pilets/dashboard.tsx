@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { ArbiterModule } from 'react-arbiter';
-import { Dict, TileRegistration } from 'piral-core';
-import { SampleApi } from '../types';
+import { Dict, TileRegistration, Pilet } from 'piral-core';
 
 /**
  * Shows the possibility of extending default functionality (e.g., the dashboard)
  * with an extension defined by a module.
  */
-export const DashboardPilet: ArbiterModule<SampleApi> = {
+export const DashboardPilet: Pilet = {
   content: '',
   name: 'Dashboard Module',
   version: '1.0.0',

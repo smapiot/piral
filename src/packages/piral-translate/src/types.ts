@@ -1,3 +1,9 @@
+import {} from 'piral-core';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiralLocaleApi {}
+}
+
 export interface Translations {
   /**
    * The available wordings (tag to translation).

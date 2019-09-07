@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { StateContext } from '../state/stateContext';
-import { StateActions, GlobalStateContext } from '../types';
+import { PiralActions, GlobalStateContext } from '../types';
 
-export function useActions<TActions extends {} = {}>() {
-  const { state, ...actions } = useContext<GlobalStateContext<TActions>>(StateContext);
-  return actions as StateActions & TActions;
+export function useActions() {
+  const { state, ...actions } = useContext<GlobalStateContext>(StateContext);
+  return actions as PiralActions;
 }

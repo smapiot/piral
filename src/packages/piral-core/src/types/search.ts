@@ -28,10 +28,6 @@ export interface SearchSettings {
   onCancel?(): void;
 }
 
-export interface SearchProvider<TApi> {
-  (options: SearchOptions, api: TApi): Promise<Array<ReactNode | HTMLElement>>;
-}
-
 export interface SearchHandler {
   (options: SearchOptions): Promise<Array<ReactNode | HTMLElement>>;
 }

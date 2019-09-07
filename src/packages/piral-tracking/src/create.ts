@@ -1,11 +1,11 @@
-import { PiralCoreApi } from 'piral-core';
+import { PiletApi } from 'piral-core';
 import { PiralTrackingApi, SeverityLevel } from './types';
 
 /**
  * Creates a new set of Piral tracking and telemetry API extensions.
  * @param api The API to extend.
  */
-export function createTrackingApi<T>(api: PiralCoreApi<T>): PiralTrackingApi {
+export function createTrackingApi(api: PiletApi): PiralTrackingApi {
   return {
     trackEvent(name, properties = {}, measurements = {}) {
       api.emit('track-event', {

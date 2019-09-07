@@ -1,53 +1,74 @@
 import { ReactNode, ComponentType } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import { ArbiterModule } from 'react-arbiter';
+import { Dict } from './common';
 import { MenuSettings } from './menu';
 import { TilePreferences } from './tile';
+import { PiletMetadata } from './meta';
+import { PiletCustomApi } from './custom';
+import { Disposable, EventEmitter } from './utils';
 import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
-import { StateContainerOptions, StateContainer, StateContainerActions, StateContainerReducers } from './container';
-import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
 import { InputFormOptions, FormCreator } from './form';
-import { Disposable, EventEmitter } from './utils';
-import { SearchProvider, SearchSettings } from './search';
-import {
-  ForeignComponent,
-  ModalComponentProps,
-  PageComponentProps,
-  TileComponentProps,
-  ExtensionComponentProps,
-  AnyComponent,
-  MenuComponentProps,
-} from './components';
+import { SearchSettings, SearchOptions } from './search';
+import { ForeignComponent, AnyComponent } from './components';
+import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
+import { StateContainerOptions, StateContainer, StateContainerActions, StateContainerReducers } from './container';
 
-/**
- * Defines the metadata used to describe a pilet.
- */
-export interface PiletMetadata {
+export interface BaseComponentProps {
   /**
-   * The name of the pilet.
+   * The currently used pilet API.
    */
-  name: string;
-  /**
-   * The version of the pilet.
-   */
-  version: string;
-  /**
-   * The hashcode of the pilet.
-   */
-  hash: string;
-  /**
-   * The link to the root module of the pilet.
-   */
-  link: string;
-  /**
-   * The custom data supplied by the pilet.
-   */
-  custom?: any;
+  piral: PiletApi;
 }
+
+export interface ExtensionComponentProps<T = Dict<any>> extends BaseComponentProps {
+  /**
+   * The provided parameters for showing the extension.
+   */
+  params: T;
+}
+
+export interface MenuComponentProps extends BaseComponentProps {}
+
+export interface TileComponentProps extends BaseComponentProps {
+  /**
+   * The currently used number of columns.
+   */
+  columns: number;
+  /**
+   * The currently used number of rows.
+   */
+  rows: number;
+}
+
+export interface RouteBaseProps<UrlParams = any, UrlState = any>
+  extends RouteComponentProps<UrlParams, {}, UrlState>,
+    BaseComponentProps {}
+
+export interface ModalComponentProps<TOpts> extends BaseComponentProps {
+  /**
+   * Callback for closing the modal programmatically.
+   */
+  onClose(): void;
+  /**
+   * Provides the passed in options for this particular modal.
+   */
+  options?: TOpts;
+}
+
+export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
+
+export interface SearchProvider {
+  (options: SearchOptions, api: PiletApi): Promise<Array<ReactNode | HTMLElement>>;
+}
+
+export type Pilet = ArbiterModule<PiletApi>;
 
 /**
  * Defines the Pilet API from piral-core.
  */
-export interface PiralCoreApi<TApi = {}> extends EventEmitter {
+export interface PiletApi extends PiletCustomApi, EventEmitter {
   /**
    * Gets the metadata of the current pilet.
    */
@@ -110,11 +131,7 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModalX<TOpts>(
-    name: string,
-    render: ForeignComponent<ModalComponentProps<TApi, TOpts>>,
-    defaults?: TOpts,
-  ): void;
+  registerModalX<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
   /**
    * Registers a modal dialog using a React component.
    * The name needs to be unique to be used without the pilet's name.
@@ -122,11 +139,7 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param Component The component to render the page.
    * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModal<TOpts>(
-    name: string,
-    Component: ComponentType<ModalComponentProps<TApi, TOpts>>,
-    defaults?: TOpts,
-  ): void;
+  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
   /**
    * Unregisters a modal by its name.
    * @param name The name that was previously registered.
@@ -139,7 +152,7 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param route The route to register.
    * @param render The function that is being called once rendering begins.
    */
-  registerPageX(route: string, render: ForeignComponent<PageComponentProps<TApi>>): void;
+  registerPageX(route: string, render: ForeignComponent<PageComponentProps>): void;
   /**
    * Registers a route for React component.
    * The route needs to be unique and can contain params.
@@ -147,7 +160,7 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param route The route to register.
    * @param Component The component to render the page.
    */
-  registerPage(route: string, Component: ComponentType<PageComponentProps<TApi>>): void;
+  registerPage(route: string, Component: ComponentType<PageComponentProps>): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
@@ -160,13 +173,13 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTileX(name: string, render: ForeignComponent<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
+  registerTileX(name: string, render: ForeignComponent<TileComponentProps>, preferences?: TilePreferences): void;
   /**
    * Registers a tile for general components.
    * @param render The function that is being called once rendering begins.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTileX(render: ForeignComponent<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
+  registerTileX(render: ForeignComponent<TileComponentProps>, preferences?: TilePreferences): void;
   /**
    * Registers a tile for React components.
    * The name has to be unique within the current pilet.
@@ -174,13 +187,13 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(name: string, Component: ComponentType<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
+  registerTile(name: string, Component: ComponentType<TileComponentProps>, preferences?: TilePreferences): void;
   /**
    * Registers a tile for React components.
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(Component: ComponentType<TileComponentProps<TApi>>, preferences?: TilePreferences): void;
+  registerTile(Component: ComponentType<TileComponentProps>, preferences?: TilePreferences): void;
   /**
    * Unregisters a tile known by the given name.
    * Only previously registered tiles can be unregistered.
@@ -194,7 +207,7 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<TApi, T>>, defaults?: T): void;
+  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<T>>, defaults?: T): void;
   /**
    * Registers an extension component with a React component.
    * The name must refer to the extension slot.
@@ -202,14 +215,14 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param Component The component to be rendered.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<TApi, T>>, defaults?: T): void;
+  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<T>>, defaults?: T): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
    * @param hook The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<TApi, T>>): void;
+  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<T>>): void;
   /**
    * Registers a menu item for general components.
    * The name has to be unique within the current pilet.
@@ -217,13 +230,13 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param render The function that is being called once rendering begins.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenuX(name: string, render: ForeignComponent<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
+  registerMenuX(name: string, render: ForeignComponent<MenuComponentProps>, settings?: MenuSettings): void;
   /**
    * Registers a menu item for general components.
    * @param render The function that is being called once rendering begins.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenuX(render: ForeignComponent<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
+  registerMenuX(render: ForeignComponent<MenuComponentProps>, settings?: MenuSettings): void;
   /**
    * Registers a menu item for React components.
    * The name has to be unique within the current pilet.
@@ -231,13 +244,13 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(name: string, Component: ComponentType<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
+  registerMenu(name: string, Component: ComponentType<MenuComponentProps>, settings?: MenuSettings): void;
   /**
    * Registers a menu item for React components.
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(Component: ComponentType<MenuComponentProps<TApi>>, settings?: MenuSettings): void;
+  registerMenu(Component: ComponentType<MenuComponentProps>, settings?: MenuSettings): void;
   /**
    * Unregisters a menu item known by the given name.
    * Only previously registered menu items can be unregistered.
@@ -251,13 +264,13 @@ export interface PiralCoreApi<TApi = {}> extends EventEmitter {
    * @param provider The callback to be used for searching.
    * @param settings The optional settings for the search provider.
    */
-  registerSearchProvider(name: string, provider: SearchProvider<TApi>, settings?: SearchSettings): void;
+  registerSearchProvider(name: string, provider: SearchProvider, settings?: SearchSettings): void;
   /**
    * Registers a search provider to respond to search queries.
    * @param provider The callback to be used for searching.
    * @param settings The optional settings for the search provider.
    */
-  registerSearchProvider(provider: SearchProvider<TApi>, settings?: SearchSettings): void;
+  registerSearchProvider(provider: SearchProvider, settings?: SearchSettings): void;
   /**
    * Unregisters a search provider known by the given name.
    * Only previously registered search providers can be unregistered.

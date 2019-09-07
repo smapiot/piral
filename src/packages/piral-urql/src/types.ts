@@ -1,3 +1,9 @@
+import {} from 'piral-core';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiralGqlApi {}
+}
+
 export interface GqlUnsubscriber {
   /**
    * Removes (i.e., unsubscribes from) the created subscription.

@@ -1,7 +1,5 @@
-import { ArbiterModule } from 'react-arbiter';
-import { TileComponentProps } from 'piral-core';
+import { TileComponentProps, Pilet } from 'piral-core';
 import { Component } from 'piral-hyperapp';
-import { SampleApi } from '../types';
 
 // If isolated we could easily also import hyperapp
 // and set up tsconfig.json to use jsxFactory h.
@@ -20,7 +18,7 @@ const actions = {
   up: value => state => ({ count: state.count + value }),
 };
 
-const Tile: Component<TileComponentProps<any>, typeof state, typeof actions> = props => (state, actions) =>
+const Tile: Component<TileComponentProps, typeof state, typeof actions> = props => (state, actions) =>
   h(
     'div',
     {
@@ -47,7 +45,7 @@ const Tile: Component<TileComponentProps<any>, typeof state, typeof actions> = p
 /**
  * Shows an API extension using hyperapp components.
  */
-export const HyperappPilet: ArbiterModule<SampleApi> = {
+export const HyperappPilet: Pilet = {
   content: '',
   name: 'Hyperapp Module',
   version: '1.0.0',

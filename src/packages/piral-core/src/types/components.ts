@@ -1,51 +1,6 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Dict } from './common';
 import { MenuType } from './menu';
-
-export interface BaseComponentProps<TApi> {
-  /**
-   * The currently used piral API.
-   */
-  piral: TApi;
-}
-
-export interface ExtensionComponentProps<TApi, T = Dict<any>> extends BaseComponentProps<TApi> {
-  /**
-   * The provided parameters for showing the extension.
-   */
-  params: T;
-}
-
-export interface MenuComponentProps<TApi> extends BaseComponentProps<TApi> {}
-
-export interface TileComponentProps<TApi> extends BaseComponentProps<TApi> {
-  /**
-   * The currently used number of columns.
-   */
-  columns: number;
-  /**
-   * The currently used number of rows.
-   */
-  rows: number;
-}
-
-export interface RouteBaseProps<TApi, UrlParams = any, UrlState = any>
-  extends RouteComponentProps<UrlParams, {}, UrlState>,
-    BaseComponentProps<TApi> {}
-
-export interface ModalComponentProps<TApi, TOpts> extends BaseComponentProps<TApi> {
-  /**
-   * Callback for closing the modal programmatically.
-   */
-  onClose(): void;
-  /**
-   * Provides the passed in options for this particular modal.
-   */
-  options?: TOpts;
-}
-
-export interface PageComponentProps<TApi, T = any, S = any> extends RouteBaseProps<TApi, T, S> {}
 
 export interface ForeignComponent<TProps> {
   /**

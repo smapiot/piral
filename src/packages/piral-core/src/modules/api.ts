@@ -1,4 +1,4 @@
-import { ArbiterModuleMetadata, wrapElement, isfunc } from 'react-arbiter';
+import { wrapElement, isfunc } from 'react-arbiter';
 import { withFeed, withApi, withForm, withPiletState } from '../components';
 import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
 import {
@@ -14,6 +14,8 @@ import {
   GlobalStateContext,
   SearchProvider,
   SearchSettings,
+  PiletApi,
+  PiletMetadata,
 } from '../types';
 
 const noop = () => {};
@@ -28,22 +30,17 @@ function markReact<T>(arg: React.ComponentType<T>, displayName: string) {
   }
 }
 
-function addPage<TApi>(
-  context: GlobalStateContext,
-  api: TApi,
-  route: string,
-  arg: AnyComponent<PageComponentProps<TApi>>,
-) {
+function addPage(context: GlobalStateContext, api: PiletApi, route: string, arg: AnyComponent<PageComponentProps>) {
   context.registerPage(route, {
     component: withApi(arg, api, 'page') as any,
   });
 }
 
-function addTile<TApi>(
+function addTile(
   context: GlobalStateContext,
-  api: TApi,
+  api: PiletApi,
   id: string,
-  arg: AnyComponent<TileComponentProps<TApi>>,
+  arg: AnyComponent<TileComponentProps>,
   preferences: TilePreferences = {},
 ) {
   context.registerTile(id, {
@@ -52,11 +49,11 @@ function addTile<TApi>(
   });
 }
 
-function addExtension<TApi, T>(
+function addExtension<T>(
   context: GlobalStateContext,
-  api: TApi,
+  api: PiletApi,
   name: string,
-  arg: AnyComponent<ExtensionComponentProps<TApi, T>>,
+  arg: AnyComponent<ExtensionComponentProps<T>>,
   defaults?: T,
 ) {
   context.registerExtension(name, {
@@ -66,11 +63,11 @@ function addExtension<TApi, T>(
   });
 }
 
-function addMenu<TApi>(
+function addMenu(
   context: GlobalStateContext,
-  api: TApi,
+  api: PiletApi,
   id: string,
-  arg: AnyComponent<MenuComponentProps<TApi>>,
+  arg: AnyComponent<MenuComponentProps>,
   settings: MenuSettings = {},
 ) {
   context.registerMenuItem(id, {
@@ -81,11 +78,11 @@ function addMenu<TApi>(
   });
 }
 
-function addModal<TApi, TOpts>(
+function addModal<TOpts>(
   context: GlobalStateContext,
-  api: TApi,
+  api: PiletApi,
   id: string,
-  arg: AnyComponent<ModalComponentProps<TApi, TOpts>>,
+  arg: AnyComponent<ModalComponentProps<TOpts>>,
   defaults?: TOpts,
 ) {
   context.registerModal(id, {
@@ -94,11 +91,11 @@ function addModal<TApi, TOpts>(
   });
 }
 
-function addSearchProvider<TApi>(
+function addSearchProvider(
   context: GlobalStateContext,
-  api: TApi,
+  api: PiletApi,
   id: string,
-  provider: SearchProvider<TApi>,
+  provider: SearchProvider,
   settings: SearchSettings,
 ) {
   const { onlyImmediate = false, onCancel, onClear } = settings;
@@ -112,10 +109,7 @@ function addSearchProvider<TApi>(
   });
 }
 
-export function createCoreApi<TApi>(
-  target: ArbiterModuleMetadata,
-  { events, context, extendApi }: PiralContainer<TApi>,
-): TApi {
+export function createCoreApi(target: PiletMetadata, { events, context, extendApi }: PiralContainer): PiletApi {
   let feeds = 0;
   let next = 0;
   const prefix = target.name;

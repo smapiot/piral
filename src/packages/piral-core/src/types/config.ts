@@ -1,9 +1,10 @@
-import { ArbiterModule, DependencyGetter } from 'react-arbiter';
+import { DependencyGetter } from 'react-arbiter';
 import { NestedPartial } from './common';
 import { PiletRequester, Extend } from './plugin';
 import { GlobalState } from './state';
+import { Pilet } from './api';
 
-export interface PiralPiletConfiguration<TApi> {
+export interface PiralPiletConfiguration {
   /*
    * Function to load the modules asynchronously, e.g., from a server 🚚.
    */
@@ -13,12 +14,12 @@ export interface PiralPiletConfiguration<TApi> {
    * The given modules are all already evaluated.
    * This can be used for customization or for debugging purposes.
    */
-  availablePilets?: Array<ArbiterModule<TApi>>;
+  availablePilets?: Array<Pilet>;
   /**
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  extendApi?: Extend<TApi>;
+  extendApi?: Extend;
 }
 
 export interface PiralStateConfiguration<TState extends GlobalState = GlobalState, TActions extends {} = {}> {
@@ -42,7 +43,6 @@ export interface PiralStateConfiguration<TState extends GlobalState = GlobalStat
 }
 
 export type PiralConfiguration<
-  TApi,
   TState extends GlobalState = GlobalState,
   TActions extends {} = {}
-> = PiralPiletConfiguration<TApi> & PiralStateConfiguration<TState, TActions>;
+> = PiralPiletConfiguration & PiralStateConfiguration<TState, TActions>;

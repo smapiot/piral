@@ -1,8 +1,7 @@
 import { useActions, useGlobalState } from 'piral-core';
-import { TranslationsActions } from '../types';
 
 export function useTranslate() {
-  const { translate } = useActions<TranslationsActions>();
+  const { translate } = useActions();
   useGlobalState(m => m.app.language.selected);
   return translate;
 }

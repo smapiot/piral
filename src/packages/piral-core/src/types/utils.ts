@@ -1,5 +1,5 @@
-import { ArbiterModuleMetadata } from 'react-arbiter';
 import { UserInfo } from './user';
+import { PiletMetadata } from './meta';
 
 export interface PiralStorage {
   /**
@@ -61,7 +61,7 @@ export interface PiralChangeUserEvent {
 export interface PiralStartLoadEvent {}
 
 export interface PiralEndLoadEvent {
-  modules: Array<ArbiterModuleMetadata>;
+  modules: Array<PiletMetadata>;
 }
 
 export interface PiralLoadingEvent {}

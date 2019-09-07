@@ -1,4 +1,4 @@
-import { PiralCoreApi } from 'piral-core';
+import { PiletApi } from 'piral-core';
 import { mount } from './mount';
 import { PiralHyperappApi } from './types';
 
@@ -6,7 +6,7 @@ import { PiralHyperappApi } from './types';
  * Creates a new set of Piral hyperapp API extensions.
  * @param api The API to extend.
  */
-export function createHyperappApi<T extends PiralCoreApi<any>>(api: T): PiralHyperappApi<T> {
+export function createHyperappApi(api: PiletApi): PiralHyperappApi {
   return {
     registerTileHyperapp(id, root, state, actions, options?) {
       if (typeof id === 'string') {
