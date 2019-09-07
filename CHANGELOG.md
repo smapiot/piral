@@ -3,6 +3,7 @@
 ## 0.8.0 (tbd)
 
 * Use declaration merging instead of generics (#72)
+* Automatically clear the parcel cache (#59)
 
 ## 0.7.0 (September 6, 2019)
 

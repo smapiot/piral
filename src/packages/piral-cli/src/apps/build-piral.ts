@@ -9,6 +9,7 @@ import {
   modifyBundlerForPiral,
   removeDirectory,
   extendBundlerWithPlugins,
+  clearCache,
 } from '../common';
 
 function getDestination(entryFiles: string, target: string) {
@@ -56,7 +57,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const targetDir = dirname(entryFiles);
-  const { externals, name } = await retrievePiletsInfo(entryFiles);
+  const { externals, name, root } = await retrievePiletsInfo(entryFiles);
 
   await setStandardEnvs({
     production: true,
@@ -68,6 +69,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const dest = getDestination(entryFiles, target);
 
   if (fresh) {
+    await clearCache(root);
     await removeDirectory(dest.outDir);
   }
 

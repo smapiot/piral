@@ -15,6 +15,7 @@ import {
   getPiletsInfo,
   runScript,
   installDependencies,
+  clearCache,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -87,6 +88,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       await runScript(postUpgrade, root);
     }
 
+    await clearCache(root);
     logDone(`All done!`);
   } else {
     logFail('Could not find a "%s" section in the "%s" file. Aborting.', 'piral', 'package.json');

@@ -43,12 +43,14 @@ export interface DebugPiletOptions {
   port?: number;
   app?: string;
   logLevel?: 1 | 2 | 3;
+  fresh?: boolean;
 }
 
 export const debugPiletDefaults = {
   entry: './src/index',
   port: 1234,
   logLevel: 3 as const,
+  fresh: false,
 };
 
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
@@ -56,6 +58,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     entry = debugPiletDefaults.entry,
     port = debugPiletDefaults.port,
     logLevel = debugPiletDefaults.logLevel,
+    fresh = debugPiletDefaults.fresh,
     app,
   } = options;
   const entryFile = join(baseDir, entry);
@@ -67,6 +70,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     throw new Error('Invalid pilet.');
   }
 
+  const root = dirname(packageJson);
   const packageContent = require(packageJson);
 
   const appPackage = findPackage(
@@ -95,6 +99,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   await runDebug(port, appFile, {
     source: entryFile,
     logLevel,
+    fresh,
+    root,
     options: {
       target,
       pilet: relative(dirname(coreFile), entryFile),

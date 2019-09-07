@@ -236,6 +236,7 @@ export async function retrievePiletsInfo(entryFile: string) {
     ...getPiletsInfo(packageInfo),
     name: packageInfo.name,
     version: packageInfo.version,
+    root: dirname(packageJson),
   };
 }
 

@@ -1,7 +1,19 @@
 import * as glob from 'glob';
 import * as rimraf from 'rimraf';
-import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync, existsSync, statSync } from 'fs';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
+import {
+  writeFile,
+  readFile,
+  copyFile,
+  constants,
+  exists,
+  mkdir,
+  lstat,
+  unlink,
+  mkdirSync,
+  existsSync,
+  statSync,
+} from 'fs';
 import { deepMerge } from './merge';
 import { promptConfirm } from './interactive';
 import { nodeVersion } from './info';
@@ -56,7 +68,7 @@ function isLegacy() {
 }
 
 export function removeDirectory(targetDir: string) {
-  return new Promise((resolve, reject) => rimraf(targetDir, err => (err ? reject(err) : resolve())));
+  return new Promise<void>((resolve, reject) => rimraf(targetDir, err => (err ? reject(err) : resolve())));
 }
 
 export async function createDirectory(targetDir: string) {

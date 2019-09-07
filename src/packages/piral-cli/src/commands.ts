@@ -51,7 +51,10 @@ export const allCommands: Array<ToolCommand<any>> = [
         .default('public-url', apps.debugPiralDefaults.publicUrl)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
-        .default('log-level', apps.buildPiralDefaults.logLevel)
+        .default('log-level', apps.debugPiralDefaults.logLevel)
+        .boolean('fresh')
+        .describe('fresh', 'Resets the cache before starting the debug mode.')
+        .default('fresh', apps.debugPiralDefaults.fresh)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -62,6 +65,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         publicUrl: args.publicUrl as string,
         logLevel: args.logLevel as any,
+        fresh: args.fresh as boolean,
       });
     },
   },
@@ -169,7 +173,10 @@ export const allCommands: Array<ToolCommand<any>> = [
         .default('port', apps.debugPiletDefaults.port)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
-        .default('log-level', apps.buildPiralDefaults.logLevel)
+        .default('log-level', apps.debugPiletDefaults.logLevel)
+        .boolean('fresh')
+        .describe('fresh', 'Resets the cache before starting the debug mode.')
+        .default('fresh', apps.debugPiletDefaults.fresh)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -182,6 +189,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         app: args.app as string,
         logLevel: args.logLevel as any,
+        fresh: args.fresh as boolean,
       });
     },
   },
