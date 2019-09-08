@@ -1,5 +1,4 @@
 import * as apps from './apps';
-import { Argv, Arguments } from 'yargs';
 import {
   forceOverwriteKeys,
   keyOfForceOverwrite,
@@ -8,24 +7,26 @@ import {
   piletLanguageKeys,
   valueOfPiletLanguage,
 } from './helpers';
+import { ToolCommand } from './types';
 
-function specializeCommands(suffix: string) {
-  return allCommands
-    .filter(m => m.name.endsWith(suffix))
-    .map(m => ({
-      ...m,
-      name: m.name.replace(suffix, ''),
-      alias: m.alias.filter(n => n.endsWith(suffix)).map(n => n.replace(suffix, '')),
-    }));
+function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
+  if (command.name.endsWith(suffix)) {
+    commands.push({
+      ...command,
+      name: command.name.replace(suffix, ''),
+      alias: command.alias.filter(n => n.endsWith(suffix)).map(n => n.replace(suffix, '')),
+    });
+  }
 }
 
-export interface ToolCommand<T> {
-  name: string;
-  description: string;
-  arguments: Array<string>;
-  flags?(argv: Argv<T>): Argv<T>;
-  alias: Array<string>;
-  run<U>(args: Arguments<U>): void | Promise<void>;
+function specializeCommands(suffix: string) {
+  const commands: Array<ToolCommand<any>> = [];
+
+  for (const command of allCommands) {
+    specializeCommand(commands, command, suffix);
+  }
+
+  return commands;
 }
 
 export { apps };
@@ -367,3 +368,9 @@ export const allCommands: Array<ToolCommand<any>> = [
 export const piletCommands = specializeCommands('-pilet');
 
 export const piralCommands = specializeCommands('-piral');
+
+export function addCommand<T>(command: ToolCommand<T>) {
+  allCommands.push(command);
+  specializeCommand(piletCommands, command, '-pilet');
+  specializeCommand(piralCommands, command, '-piral');
+}
