@@ -49,6 +49,13 @@ Sets the log level to use (1-5).
 - Type: `number`
 - Default: `3`
 
+### `--fresh`
+
+Resets the cache before starting the debug mode.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--app`
 
 Sets the name of the Piral instance.
