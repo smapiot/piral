@@ -31,7 +31,7 @@ function specializeCommands(suffix: string) {
 
 export { apps };
 
-export const allCommands: Array<ToolCommand<any>> = [
+const allCommands: Array<ToolCommand<any>> = [
   {
     name: 'debug-piral',
     alias: ['watch-piral', 'debug-portal', 'watch-portal'],
@@ -365,12 +365,16 @@ export const allCommands: Array<ToolCommand<any>> = [
   },
 ];
 
-export const piletCommands = specializeCommands('-pilet');
+class Commands {
+  public all = allCommands;
 
-export const piralCommands = specializeCommands('-piral');
+  public get pilet() {
+    return specializeCommands('-pilet');
+  }
 
-export function addCommand<T>(command: ToolCommand<T>) {
-  allCommands.push(command);
-  specializeCommand(piletCommands, command, '-pilet');
-  specializeCommand(piralCommands, command, '-piral');
+  public get piral() {
+    return specializeCommands('-piral');
+  }
 }
+
+export const commands = new Commands();

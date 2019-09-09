@@ -12,11 +12,11 @@ function getPath() {
   }
 }
 
-export async function select(fromCommands: (commands: any) => any) {
+export async function select(from: (commands: any) => any) {
   const path = getPath();
   const { loadPlugins } = require(join(path, 'plugin'));
-  const commands = fromCommands(require(join(path, 'commands')));
+  const { commands } = require(join(path, 'commands'));
   const { setupCli } = require(join(path, 'cli'));
   await loadPlugins();
-  setupCli(commands);
+  setupCli(from(commands));
 }

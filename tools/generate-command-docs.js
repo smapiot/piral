@@ -1,6 +1,6 @@
 const { join, resolve } = require('path');
 const { writeFileSync } = require('fs');
-const { allCommands } = require('../src/packages/piral-cli/lib/commands');
+const { commands } = require('../src/packages/piral-cli/lib/commands');
 const nl = '\n';
 
 const rootFolder = resolve(__dirname, '..', 'docs', 'commands');
@@ -168,7 +168,7 @@ function replaceBody(content, body) {
 }
 
 function generateCommandDocs() {
-  for (const command of allCommands) {
+  for (const command of commands.all) {
     const oldContent = generateNewContent(command.name);
     const body = generateFrom(command);
     const newContent = replaceBody(oldContent, body);

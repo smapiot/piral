@@ -2,4 +2,4 @@
 
 import { select } from './select';
 
-select(commands => commands.allCommands);
+select(commands => commands.all);

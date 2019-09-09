@@ -2,4 +2,4 @@
 
 import { select } from './select';
 
-select(commands => commands.piletCommands);
+select(commands => commands.pilet);
