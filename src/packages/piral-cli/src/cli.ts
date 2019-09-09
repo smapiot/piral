@@ -1,5 +1,5 @@
 import * as yargs from 'yargs';
-import { ToolCommand } from './commands';
+import { ToolCommand } from './types';
 
 let argv = yargs;
 

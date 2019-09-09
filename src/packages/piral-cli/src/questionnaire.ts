@@ -1,5 +1,5 @@
 import { prompt } from 'inquirer';
-import { allCommands } from './commands';
+import { commands } from './commands';
 
 type FlagType = 'string' | 'number' | 'boolean';
 
@@ -113,7 +113,7 @@ function getType(flag: Flag) {
 }
 
 export function runQuestionnaire(commandName: string, ignoredInstructions = ['base']) {
-  const [command] = allCommands.filter(m => m.name === commandName);
+  const [command] = commands.all.filter(m => m.name === commandName);
   const instructions = getCommandData(command.flags);
   const questions = instructions.filter(instruction => !ignoredInstructions.includes(instruction.name)).map(instruction => ({
     name: instruction.name,
