@@ -6,6 +6,7 @@
 * Automatically clear the parcel cache (#59)
 * Support of plugins for extending the Piral CLI (#47)
 * Extracted optional `piral-auth` library
+* Added `validate` command for Piral instances (#69)
 
 ## 0.7.0 (September 6, 2019)
 
