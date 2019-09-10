@@ -1,29 +1,38 @@
 import { commands } from './commands';
-import { ToolCommand, ToolCommandRunner, ToolCommandWrapper } from './types';
+import { ToolCommand, ToolCommandRunner, ToolCommandWrapper, ToolCommandFlagsSetter } from './types';
 
-export function withCommand<T>(command: ToolCommand<T>) {
+function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index: number) => void) {
+  for (let i = commands.all.length; i--; ) {
+    const command = commands.all[i];
+
+    if (command.name === commandName) {
+      cb(command, i);
+    }
+  }
+}
+
+export function withCommand<T, U>(command: ToolCommand<T, U>) {
   commands.all.push(command);
   return this;
 }
 
 export function withoutCommand(commandName: string) {
-  for (let i = commands.all.length; i--; ) {
-    const command = commands.all[i];
+  findAll(commandName, (_, i) => commands.all.splice(i, 1));
+  return this;
+}
 
-    if (command.name === commandName) {
-      commands.all.splice(i, 1);
-    }
-  }
-
+export function withFlags<T>(commandName: string, setter: ToolCommandFlagsSetter<T>) {
+  findAll(commandName, command => {
+    const current = command.flags || (x => x);
+    command.flags = argv => current(setter(argv));
+  });
   return this;
 }
 
 export function wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<U>) {
-  commands.all.forEach(command => {
-    if (command.name === commandName) {
-      const current = command.run;
-      command.run = args => wrapper(args, current);
-    }
+  findAll(commandName, command => {
+    const current = command.run;
+    command.run = args => wrapper(args, current);
   });
   return this;
 }
