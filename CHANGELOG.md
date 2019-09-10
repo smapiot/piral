@@ -5,6 +5,7 @@
 * Use declaration merging instead of generics (#72)
 * Automatically clear the parcel cache (#59)
 * Support of plugins for extending the Piral CLI (#47)
+* Added `validate` command for Piral instances (#69)
 
 ## 0.7.0 (September 6, 2019)
 

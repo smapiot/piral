@@ -156,9 +156,9 @@ export async function copyPiralFiles(
 }
 
 export interface PiletsInfo {
-  files: Array<string>;
+  files: Array<string | TemplateFileLocation>;
   externals: Array<string>;
-  devDependencies: Record<string, string>;
+  devDependencies: Record<string, string | true>;
   scripts: Record<string, string>;
   preScaffold: string;
   postScaffold: string;
