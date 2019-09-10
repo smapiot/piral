@@ -5,6 +5,7 @@
 * Use declaration merging instead of generics (#72)
 * Automatically clear the parcel cache (#59)
 * Support of plugins for extending the Piral CLI (#47)
+* Extracted optional `piral-auth` library
 
 ## 0.7.0 (September 6, 2019)
 

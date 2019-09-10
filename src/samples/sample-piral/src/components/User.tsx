@@ -4,7 +4,7 @@ import { withClass } from './utils';
 
 export const User: React.FC = () => {
   const [open, setOpen] = React.useState(false);
-  const currentUser = useGlobalState(m => m.user.current);
+  const currentUser = useGlobalState(m => m.user);
   const menuItems = useGlobalState(m => m.components.menuItems);
   const itemNames = Object.keys(menuItems).filter(m => menuItems[m].settings.type === 'user');
   const container = React.useRef<HTMLDivElement>(undefined);
