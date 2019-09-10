@@ -1,6 +1,6 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
 import { LocalizationMessages, FetchConfig, GqlConfig, LocaleConfig } from 'piral-ext';
-import { PiralStateConfiguration, GlobalState, PiletRequester, Extend, PiletApi } from 'piral-core';
+import { PiralStateConfiguration, PiletRequester, Extend, PiletApi } from 'piral-core';
 import { PiralGqlApiQuery, PiralFetchApiFetch, PiralGqlApiMutate, PiralGqlApiSubscribe } from 'piral-ext';
 import { LayoutBuilder } from './layout';
 
@@ -14,8 +14,7 @@ export interface PiletQueryResult {
   pilets: PiletsMetadata;
 }
 
-export interface PiralConfig<TState extends GlobalState = GlobalState, TActions extends {} = {}>
-  extends PiralStateConfiguration<TState, TActions> {
+export interface PiralConfig extends PiralStateConfiguration {
   /**
    * Sets the default translations to be available. Alternatively,
    * sets the available languages.
@@ -52,14 +51,14 @@ export interface PiralLoaderOptions {
   subscribe: PiralGqlApiSubscribe;
 }
 
-export interface PiralLoader<TState extends GlobalState = GlobalState, TActions extends {} = {}> {
-  (options: PiralLoaderOptions): Promise<PiralConfig<TState, TActions> | undefined>;
+export interface PiralLoader {
+  (options: PiralLoaderOptions): Promise<PiralConfig | undefined>;
 }
 
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions<TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+export interface PiralOptions {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
@@ -79,11 +78,11 @@ export interface PiralOptions<TState extends GlobalState = GlobalState, TActions
   /**
    * Gets the optional initial configuration.
    */
-  config?: PiralConfig<TState, TActions>;
+  config?: PiralConfig;
   /**
    * Defines some optional initial configuration loading.
    */
-  loader?: PiralLoader<TState, TActions>;
+  loader?: PiralLoader;
   /**
    * Gets the layout builder to construct the design to display.
    */

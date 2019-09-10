@@ -1,13 +1,13 @@
-declare module 'piral-core/lib/types/utils' {
-  interface PiralEventMap {
+import {} from 'piral-core';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiralCustomEventMap {
     'track-event': PiralTrackEventEvent;
     'track-error': PiralTrackErrorEvent;
     'track-frame-start': PiralTrackStartFrameEvent;
     'track-frame-end': PiralTrackEndFrameEvent;
   }
-}
 
-declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiralTrackingApi {}
 }
 

@@ -9,12 +9,11 @@ import { SearchHandler } from './search';
 import { TilePreferences } from './tile';
 import { Dict, Without } from './common';
 import { ConnectorDetails } from './feed';
-import { PiralCustomActions } from './custom';
+import { PiralCustomActions, PiralCustomState } from './custom';
 import { StateDispatcher } from './container';
 import { NotificationOptions } from './notifications';
 import { LayoutType, LayoutBreakpoints } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
-import { UserInfo, UserFeatures, UserPermissions } from './user';
 import { ErrorInfoProps, DashboardProps, LoaderProps } from './components';
 import {
   BaseComponentProps,
@@ -72,7 +71,7 @@ export interface SearchProviderRegistration {
   onlyImmediate: boolean;
 }
 
-export interface GlobalStateOptions<TUser = {}> extends Partial<AppComponents> {
+export interface GlobalStateOptions extends Partial<AppComponents> {
   /**
    * Sets the available languages.
    * By default, only the default language is used.
@@ -96,10 +95,6 @@ export interface GlobalStateOptions<TUser = {}> extends Partial<AppComponents> {
    * Sets the available layout breakpoints.
    */
   breakpoints?: LayoutBreakpoints;
-  /**
-   * Sets the initially available user information.
-   */
-  user?: UserState<TUser>;
   /**
    * Sets the history to use for the router.
    */
@@ -274,21 +269,6 @@ export interface FormsState {
   [id: string]: FormDataState;
 }
 
-export interface UserState<T = {}> {
-  /**
-   * The provided features, if any.
-   */
-  features: UserFeatures;
-  /**
-   * The given permissions, if any.
-   */
-  permissions: UserPermissions;
-  /**
-   * The current user, if available.
-   */
-  current: UserInfo<T> | undefined;
-}
-
 export interface SearchState {
   /**
    * Gets the current input value.
@@ -304,7 +284,7 @@ export interface SearchState {
   results: Array<ReactChild>;
 }
 
-export interface GlobalState<TUser = {}> {
+export interface GlobalState extends PiralCustomState {
   /**
    * The relevant state for the app itself.
    */
@@ -326,10 +306,6 @@ export interface GlobalState<TUser = {}> {
    */
   forms: FormsState;
   /**
-   * The relevant state for the current user.
-   */
-  user: UserState<TUser>;
-  /**
    * The relevant state for the in-site search.
    */
   search: SearchState;
@@ -340,13 +316,6 @@ export interface GlobalState<TUser = {}> {
 }
 
 export interface PiralActions extends PiralCustomActions {
-  /**
-   * Sets the currently logged in user.
-   * @param user The current user or undefined is anonymous.
-   * @param features The features for the current user, if any.
-   * @param permissions The permissions of the current user, if any.
-   */
-  setUser<T>(user: UserInfo<T>, features: UserFeatures, permissions: UserPermissions): void;
   /**
    * Reads the value of a shared data item.
    * @param name The name of the shared item.

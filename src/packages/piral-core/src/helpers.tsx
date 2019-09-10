@@ -55,10 +55,10 @@ export function extendApis(apis: Array<Append>): Extend {
  * @param options The options for setting up the initial state.
  * @param state The optional parent state for deriving the defaults.
  */
-export function setupState<TUser = {}>(
-  options: GlobalStateOptions<TUser> = {},
-  state: NestedPartial<GlobalState<TUser>> = {},
-): NestedPartial<GlobalState<TUser>> {
+export function setupState(
+  options: GlobalStateOptions = {},
+  state: NestedPartial<GlobalState> = {},
+): NestedPartial<GlobalState> {
   const {
     components: defaultComponentsState = {
       Dashboard: undefined,
@@ -78,7 +78,6 @@ export function setupState<TUser = {}>(
     trackers: defaultTrackers = [],
   } = state.app || {};
   const {
-    user,
     history = defaultComponentsState.history || createBrowserHistory(),
     breakpoints = defaultLayoutState.breakpoints || defaultBreakpoints,
     language = 'en',
@@ -113,10 +112,6 @@ export function setupState<TUser = {}>(
         ...routes,
       },
       trackers: [...defaultTrackers, ...trackers],
-    },
-    user: {
-      ...state.user,
-      ...user,
     },
   };
 }

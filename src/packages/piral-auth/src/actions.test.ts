@@ -1,5 +1,5 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { setUser } from './user';
+import { setUser } from './actions';
 import { createListener } from '../../modules/events';
 
 describe('User Actions Module', () => {

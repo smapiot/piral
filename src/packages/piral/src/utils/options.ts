@@ -1,4 +1,4 @@
-import { PiletRequester, GlobalState } from 'piral-core';
+import { PiletRequester } from 'piral-core';
 import { isfunc, ArbiterModule, ArbiterModuleMetadata } from 'react-arbiter';
 import { PiralConfig, PiralLoader } from '../types';
 
@@ -20,10 +20,7 @@ export function getGateway(url?: string) {
   }
 }
 
-export function getLoader<TState extends GlobalState = GlobalState>(
-  loader: PiralLoader<TState>,
-  oldConfig: PiralConfig<TState>,
-): PiralLoader<TState> {
+export function getLoader(loader: PiralLoader, oldConfig: PiralConfig): PiralLoader {
   return opts => loader(opts).then(newConfig => ({ ...oldConfig, ...newConfig }));
 }
 

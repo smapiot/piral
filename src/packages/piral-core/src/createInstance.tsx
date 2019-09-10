@@ -1,17 +1,9 @@
 import * as React from 'react';
 import { withRecall, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
-import { createCoreApi, getLocalDependencies, createListener, globalDependencies } from './modules';
-import { createGlobalState, createActions, StateContext } from './state';
 import { Portal } from './components';
-import {
-  GlobalState,
-  PiletApi,
-  PiralConfiguration,
-  PortalProps,
-  PiralInstance,
-  PiralContainer,
-  PiletMetadata,
-} from './types';
+import { createGlobalState, createActions, StateContext } from './state';
+import { createCoreApi, getLocalDependencies, createListener, globalDependencies } from './modules';
+import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiralContainer, PiletMetadata } from './types';
 
 function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
   return Promise.resolve([]);
@@ -41,9 +33,7 @@ const App: React.FC = () => <Piral>{content => <Layout>{content}</Layout>}</Pira
 render(<App />, document.querySelector('#app'));
 ```
  */
-export function createInstance<TState extends GlobalState = GlobalState>(
-  config: PiralConfiguration<TState>,
-): PiralInstance {
+export function createInstance(config: PiralConfiguration): PiralInstance {
   const {
     state,
     availablePilets = [],

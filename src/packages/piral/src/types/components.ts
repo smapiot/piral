@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import { MenuType, LayoutType, UserInfo } from 'piral-core';
+import { MenuType, LayoutType } from 'piral-core';
 
 export interface MenuProps {
   type?: MenuType;
@@ -46,7 +46,6 @@ export interface LayoutProps extends LayoutComponents {
   selectedLanguage: string;
   availableLanguages: Array<string>;
   currentLayout: LayoutType;
-  user: UserInfo;
 }
 
 export interface LayoutComponents {

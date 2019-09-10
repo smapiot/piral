@@ -1,16 +1,7 @@
 import { PiletApi } from './api';
 import { EventEmitter } from './utils';
 import { PiletMetadata } from './meta';
-import { GlobalStateContext, GlobalState } from './state';
-
-export interface Setup<TState extends GlobalState, TUser = {}> {
-  /**
-   * Initializes the given global state, potentially extending it.
-   * @param state The global state created by the base layer.
-   * @returns The initialized state.
-   */
-  (state: GlobalState<TUser>): TState;
-}
+import { GlobalStateContext } from './state';
 
 export interface Extend {
   /**

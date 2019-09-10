@@ -3,6 +3,7 @@ import { NestedPartial } from './common';
 import { PiletRequester, Extend } from './plugin';
 import { GlobalState } from './state';
 import { Pilet } from './api';
+import { PiralCustomActions } from './custom';
 
 export interface PiralPiletConfiguration {
   /*
@@ -22,7 +23,7 @@ export interface PiralPiletConfiguration {
   extendApi?: Extend;
 }
 
-export interface PiralStateConfiguration<TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+export interface PiralStateConfiguration {
   /**
    * Function to get the dependencies for a given module.
    */
@@ -35,14 +36,11 @@ export interface PiralStateConfiguration<TState extends GlobalState = GlobalStat
   /**
    * Optionally, sets up the initial state of the application.
    */
-  state?: NestedPartial<TState>;
+  state?: NestedPartial<GlobalState>;
   /**
    * Optionally, sets additional actions to be included.
    */
-  actions?: TActions;
+  actions?: PiralCustomActions;
 }
 
-export type PiralConfiguration<
-  TState extends GlobalState = GlobalState,
-  TActions extends {} = {}
-> = PiralPiletConfiguration & PiralStateConfiguration<TState, TActions>;
+export type PiralConfiguration = PiralPiletConfiguration & PiralStateConfiguration;

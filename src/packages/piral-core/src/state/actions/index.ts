@@ -7,4 +7,3 @@ export * from './modals';
 export * from './notifications';
 export * from './search';
 export * from './state';
-export * from './user';

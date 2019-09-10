@@ -2,11 +2,12 @@ import * as React from 'react';
 import { isfunc } from 'react-arbiter';
 import { render } from 'react-dom';
 import { Provider } from 'urql';
-import { createInstance, setupState, EventEmitter, GlobalState, PiletApi } from 'piral-core';
+import { createInstance, setupState, EventEmitter, PiletApi } from 'piral-core';
 import {
   createFetchApi,
   createGqlApi,
   createLocaleApi,
+  createUserApi,
   setupGqlClient,
   setupLocalizer,
   gqlQuery,
@@ -47,9 +48,7 @@ renderInstance({ layout });
 export * from 'piral';
 ```
  */
-export function renderInstance<TState extends GlobalState = GlobalState, TActions extends {} = {}>(
-  options: PiralOptions<TState, TActions>,
-): Promise<EventEmitter> {
+export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
   const {
     selector = '#app',
     gatewayUrl,
@@ -123,6 +122,7 @@ export function renderInstance<TState extends GlobalState = GlobalState, TAction
             ...createFetchApi(fetchOptions),
             ...createGqlApi(client),
             ...createLocaleApi(localizer),
+            ...createUserApi(),
             ...api,
           };
           apis[target.name] = newApi;

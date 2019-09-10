@@ -17,5 +17,4 @@ export * from './plugin';
 export * from './search';
 export * from './state';
 export * from './tile';
-export * from './user';
 export * from './utils';

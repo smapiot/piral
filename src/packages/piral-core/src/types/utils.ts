@@ -1,5 +1,5 @@
-import { UserInfo } from './user';
 import { PiletMetadata } from './meta';
+import { PiralCustomEventMap } from './custom';
 
 export interface PiralStorage {
   /**
@@ -53,11 +53,6 @@ export interface PiralChangeLayoutEvent {
   current: string;
 }
 
-export interface PiralChangeUserEvent {
-  previous: UserInfo;
-  current: UserInfo;
-}
-
 export interface PiralStartLoadEvent {}
 
 export interface PiralEndLoadEvent {
@@ -66,11 +61,10 @@ export interface PiralEndLoadEvent {
 
 export interface PiralLoadingEvent {}
 
-export interface PiralEventMap {
+export interface PiralEventMap extends PiralCustomEventMap {
   'store-data': PiralStoreDataEvent;
   'change-language': PiralChangeLanguageEvent;
   'change-layout': PiralChangeLayoutEvent;
-  'change-user': PiralChangeUserEvent;
   'load-start': PiralStartLoadEvent;
   'load-end': PiralEndLoadEvent;
   loading: PiralLoadingEvent;

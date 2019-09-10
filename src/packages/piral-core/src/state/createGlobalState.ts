@@ -40,12 +40,6 @@ export function createGlobalState<TState extends GlobalState>(state: NestedParti
       searchProviders: {},
       ...state.components,
     },
-    user: {
-      current: undefined,
-      features: {},
-      permissions: {},
-      ...state.user,
-    },
     search: {
       input: '',
       loading: false,
