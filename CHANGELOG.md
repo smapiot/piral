@@ -7,6 +7,7 @@
 * Support of plugins for extending the Piral CLI (#47)
 * Extracted optional `piral-auth` library
 * Added `validate` command for Piral instances (#69)
+* Added `validate` command for pilets (#70)
 
 ## 0.7.0 (September 6, 2019)
 

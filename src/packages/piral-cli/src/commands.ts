@@ -389,6 +389,35 @@ const allCommands: Array<ToolCommand<any>> = [
       });
     },
   },
+  {
+    name: 'validate-pilet',
+    alias: ['verify-pilet', 'check-pilet', 'lint-pilet', 'assert-pilet'],
+    description: 'Checks the validity of the current pilet according to the rules defined by the Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source file containing the pilet root module.',
+          default: apps.validatePiletDefaults.entry,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.validatePiletDefaults.logLevel)
+        .string('app')
+        .describe('app', 'Sets the name of the Piral instance.')
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.validatePilet(args.base as string, {
+        entry: args.entry as string,
+        app: args.app as string,
+        logLevel: args.logLevel as any,
+      });
+    },
+  },
 ];
 
 class Commands {
