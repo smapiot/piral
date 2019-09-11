@@ -1,6 +1,14 @@
-import { join, extname } from 'path';
-import { existsSync } from 'fs';
-import { retrievePiralRoot, retrievePiletsInfo, createFileFromTemplateIfNotExists } from '../common';
+import { join, extname, basename } from 'path';
+import { existsSync, statSync, readdirSync } from 'fs';
+import { retrievePiralRoot, retrievePiletsInfo } from '../common';
+
+function hasSubdirectories(target: string) {
+  if (statSync(target).isDirectory()) {
+    return readdirSync(target).some(name => statSync(join(target, name)).isDirectory());
+  }
+
+  return false;
+}
 
 export interface ValidatPiralOptions {
   entry?: string;
@@ -113,17 +121,8 @@ The scaffolding files in pilets.files are invalid.
 
       return true;
     });
-    const invalidFileRefs = files
-      .filter(file => !invalidFileTypes.includes(file))
-      .map(file => {
-        const { from } = typeof file === 'string' ? { from: file } : file;
-        return {
-          original: file,
-          reference: from,
-          target: join(root, from),
-        };
-      })
-      .filter(file => !existsSync(file.target));
+    const validFileRefs = files.filter(file => !invalidFileTypes.includes(file));
+    const ignoredFiles = ['.gitignore'];
 
     if (invalidFileTypes.length > 0) {
       errors.push(
@@ -135,14 +134,35 @@ The scaffolding files in pilets.files are invalid.
       );
     }
 
-    for (const invalidFileRef of invalidFileRefs) {
-      errors.push(
-        `
-The scaffolding file ${JSON.stringify(invalidFileRef.original)} is listed in pilets.files but cannot be found.
-  Expected: "${invalidFileRef.reference}" exists on disk.
-  Received: File "${invalidFileRef.target}" not found.
+    for (const file of validFileRefs) {
+      const { from, deep } = typeof file === 'string' ? { from: file, deep: undefined } : file;
+      const target = join(root, from);
+
+      if (!existsSync(target)) {
+        errors.push(
+          `
+  The scaffolding file ${JSON.stringify(file)} is listed in pilets.files but cannot be found.
+    Expected: "${from}" exists on disk.
+    Received: File "${target}" not found.
+  `,
+        );
+      } else if (hasSubdirectories(target) && deep === undefined) {
+        warnings.push(
+          `
+The scaffolding directory ${JSON.stringify(file)} listed in pilets.files has sub-directories, but does not explicitly set deep.
+  Expected: <true> | <false>.
+  Received: <undefined>.
 `,
-      );
+        );
+      } else if (ignoredFiles.includes(basename(target))) {
+        errors.push(
+          `
+The scaffolding file ${JSON.stringify(file)} is listed in pilets.files but will be ignored when packaging.
+  Expected: "${from}" has a different name.
+  Received: Ignored name "${from}".
+`,
+        );
+      }
     }
   }
 
