@@ -1,6 +1,6 @@
 import { join, extname, basename } from 'path';
 import { existsSync, statSync, readdirSync } from 'fs';
-import { retrievePiralRoot, retrievePiletsInfo } from '../common';
+import { retrievePiralRoot, retrievePiletsInfo, logWarn, logFail, logInfo } from '../common';
 
 function hasSubdirectories(target: string) {
   if (statSync(target).isDirectory()) {
@@ -201,5 +201,15 @@ The scaffold dev dependency "${invalidDevDepsRef}" refers to any dependency in t
 `,
       );
     }
+  }
+
+  logInfo('');
+  logInfo(`Found ${warnings.length} warning(s) and ${errors.length} error(s).`);
+  logInfo('');
+  warnings.forEach(warning => logWarn(warning));
+  errors.forEach(error => logFail(error));
+
+  if (errors.length > 0) {
+    throw new Error(`Please fix the ${errors.length} error(s).`);
   }
 }
