@@ -413,8 +413,8 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.validatePilet(args.base as string, {
         entry: args.entry as string,
-        app: args.app as string,
         logLevel: args.logLevel as any,
+        app: args.app,
       });
     },
   },

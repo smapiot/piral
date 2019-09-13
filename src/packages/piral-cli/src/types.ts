@@ -33,3 +33,49 @@ export interface CliPluginApi {
 export interface CliPlugin {
   (api: CliPluginApi): void;
 }
+
+export interface RuleContext {
+  error(message: string): void;
+  warning(message: string): void;
+  logLevel?: 1 | 2 | 3;
+  root: string;
+  entry: string;
+  dependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
+  peerDependencies: Record<string, string>;
+}
+
+export interface Rule<T extends RuleContext> {
+  (this: T): void | Promise<void>;
+}
+
+export interface PiralRuleContext extends RuleContext {
+  info: PiletsInfo;
+}
+
+export interface PiletRuleContext extends RuleContext {
+  data: PiralData;
+}
+
+export interface TemplateFileLocation {
+  from: string;
+  to: string;
+  deep?: boolean;
+}
+
+export interface PiletsInfo {
+  files: Array<string | TemplateFileLocation>;
+  externals: Array<string>;
+  devDependencies: Record<string, string | true>;
+  scripts: Record<string, string>;
+  preScaffold: string;
+  postScaffold: string;
+  preUpgrade: string;
+  postUpgrade: string;
+}
+
+export interface PiralData {
+  coreFile: string;
+  appFile: string;
+  appPackage: any;
+}
