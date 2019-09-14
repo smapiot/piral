@@ -1,6 +1,7 @@
 import { join, dirname } from 'path';
-import { ruleSummary, runRules, retrievePiletData } from '../common';
+import { ruleSummary, runRules, retrievePiletData, getPiletsInfo } from '../common';
 import { getPiletRules } from '../rules';
+import { PiletRuleContext } from '../types';
 
 export interface ValidatPiletOptions {
   entry?: string;
@@ -19,10 +20,10 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);
   const { dependencies, peerDependencies, devDependencies, root, ...data } = await retrievePiletData(target, app);
+  const { validators } = getPiletsInfo(data.appPackage);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];
-
-  await runRules(rules, {
+  const context: PiletRuleContext = {
     error(message) {
       errors.push(message);
     },
@@ -36,7 +37,9 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     peerDependencies,
     root,
     data,
-  });
+  };
+
+  await runRules(rules, context, validators);
 
   ruleSummary(errors, warnings);
 }

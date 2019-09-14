@@ -1,6 +1,8 @@
 import { PiralRuleContext } from '../types';
 
-export function piralHasValidScripts(this: PiralRuleContext) {
+export interface Options {}
+
+export default function(this: PiralRuleContext, options: Options = {}) {
   const { scripts } = this.info;
 
   if (typeof scripts !== 'object') {

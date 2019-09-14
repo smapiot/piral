@@ -10,7 +10,9 @@ function hasSubdirectories(target: string) {
   return false;
 }
 
-export function piralHasValidFiles(this: PiralRuleContext) {
+export interface Options {}
+
+export default function(this: PiralRuleContext, options: Options = {}) {
   const { files } = this.info;
 
   if (!Array.isArray(files)) {
@@ -59,7 +61,9 @@ The scaffolding files in pilets.files are invalid.
       } else if (hasSubdirectories(target) && deep === undefined) {
         this.warning(
           `
-The scaffolding directory ${JSON.stringify(file)} listed in pilets.files has sub-directories, but does not explicitly set deep.
+The scaffolding directory ${JSON.stringify(
+            file,
+          )} listed in pilets.files has sub-directories, but does not explicitly set deep.
   Expected: <true> | <false>.
   Received: <undefined>.
 `,

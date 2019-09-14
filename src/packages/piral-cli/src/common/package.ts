@@ -192,6 +192,7 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
     files = [],
     externals = [],
     scripts = {},
+    validators = {},
     devDependencies = {},
     preScaffold = '',
     postScaffold = '',
@@ -202,8 +203,9 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
   return {
     files,
     externals,
-    devDependencies,
     scripts,
+    validators,
+    devDependencies,
     preScaffold,
     postScaffold,
     preUpgrade,

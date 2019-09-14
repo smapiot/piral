@@ -9,7 +9,15 @@ function getRules<T extends RuleContext>(target: 'pilet' | 'piral') {
       if (err) {
         reject(err);
       } else {
-        resolve(files.filter(name => name.startsWith(prefix)).map(name => require(`./${name}`)));
+        resolve(
+          files
+            .filter(name => name.startsWith(prefix))
+            .map(name => {
+              const rule = require(`./${name}`).default;
+              rule.name = name.substr(prefix.length).replace(/\.ts$/, '');
+              return rule;
+            }),
+        );
       }
     });
   });

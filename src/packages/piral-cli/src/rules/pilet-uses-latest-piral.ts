@@ -1,12 +1,22 @@
+import { findLatestVersion } from '../common';
 import { PiletRuleContext } from '../types';
 
-export function piletUsesLatestPiral(this: PiletRuleContext) {
-  const { name, version } = this.data.appPackage;
-  const dependencies = {
-    ...this.peerDependencies,
-    ...this.dependencies,
-    ...this.devDependencies,
-  };
-  const versionSelector = dependencies[name];
+export type Options = 'required' | 'suggest' | 'ignore';
 
+export default async function(this: PiletRuleContext, options: Options = 'suggest') {
+  if (options !== 'ignore') {
+    const { name, version } = this.data.appPackage;
+    const latestVersion = await findLatestVersion(name);
+
+    if (version !== latestVersion) {
+      const notify = options === 'required' ? this.error : this.warning;
+      notify(
+        `
+The used version of "${name}" is outdated.
+  Expected: v${latestVersion}.
+  Received: v${version}.
+`,
+      );
+    }
+  }
 }

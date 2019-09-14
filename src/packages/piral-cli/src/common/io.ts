@@ -219,6 +219,13 @@ export function readBinary(targetDir: string, fileName: string) {
   });
 }
 
+export function readText(targetDir: string, fileName: string) {
+  const targetFile = join(targetDir, fileName);
+  return new Promise<string>(resolve => {
+    readFile(targetFile, 'utf8', (err, c) => (err ? resolve(undefined) : resolve(c)));
+  });
+}
+
 export async function updateExistingJson<T>(targetDir: string, fileName: string, newContent: T) {
   const content = await mergeWithJson(targetDir, fileName, newContent);
   await updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));

@@ -47,6 +47,7 @@ export interface RuleContext {
 
 export interface Rule<T extends RuleContext> {
   (this: T): void | Promise<void>;
+  name: string;
 }
 
 export interface PiralRuleContext extends RuleContext {
@@ -68,6 +69,7 @@ export interface PiletsInfo {
   externals: Array<string>;
   devDependencies: Record<string, string | true>;
   scripts: Record<string, string>;
+  validators: Record<string, any>;
   preScaffold: string;
   postScaffold: string;
   preUpgrade: string;

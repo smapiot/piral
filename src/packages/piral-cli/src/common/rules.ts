@@ -13,8 +13,13 @@ export function ruleSummary(errors: Array<string>, warnings: Array<string>) {
   }
 }
 
-export async function runRules<T extends RuleContext>(rules: Array<Rule<T>>, context: T) {
+export async function runRules<T extends RuleContext>(
+  rules: Array<Rule<T>>,
+  context: T,
+  configurations: Record<string, any> = {},
+) {
   for (const rule of rules) {
-    await rule.call(context);
+    const options = configurations[rule.name];
+    await rule.call(context, options);
   }
 }

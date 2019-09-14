@@ -1,6 +1,8 @@
 import { PiralRuleContext } from '../types';
 
-export function piralHasValidExternals(this: PiralRuleContext) {
+export interface Options {}
+
+export default function(this: PiralRuleContext, options: Options = {}) {
   const { externals } = this.info;
 
   if (!Array.isArray(externals)) {

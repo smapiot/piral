@@ -1,4 +1,5 @@
 import { PiletRuleContext } from '../types';
 
-export function piletHasNoThirdPartyDependency(this: PiletRuleContext) {
-}
+export type Options = 'ignore' | 'active';
+
+export default function(this: PiletRuleContext, options: Options = 'ignore') {}

@@ -1,6 +1,8 @@
 import { PiralRuleContext } from '../types';
 
-export function piralHasValidDevDependencies(this: PiralRuleContext) {
+export interface Options {}
+
+export default function(this: PiralRuleContext, options: Options = {}) {
   const { devDependencies } = this.info;
 
   if (typeof devDependencies !== 'object') {
