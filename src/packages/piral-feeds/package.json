@@ -1,7 +1,7 @@
 {
-  "name": "piral-ext",
+  "name": "piral-feeds",
   "version": "0.7.0",
-  "description": "Useful API extensions and component definitions for extending piral-core.",
+  "description": "Extensions for connecting data feeds in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -10,7 +10,7 @@
     "modules",
     "api",
     "extension",
-    "spa"
+    "feeds"
   ],
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -30,22 +30,13 @@
   },
   "scripts": {
     "build": "tsc",
-    "typedoc": "typedoc --json ../../../docs/types/piral-ext.json src --exclude \"src/**/*.test.*\"",
+    "typedoc": "typedoc --json ../../../docs/types/piral-feeds.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
     "piral-core": "^0.7.0"
   },
   "peerDependencies": {
-    "piral-core": "^0.8.0 || ^0.9.0",
-    "react": ">= 16.8.0",
-    "react-dom": ">= 16.8.0"
-  },
-  "dependencies": {
-    "piral-auth": "^0.7.0",
-    "piral-dashboard": "^0.7.0",
-    "piral-fetch": "^0.7.0",
-    "piral-translate": "^0.7.0",
-    "piral-urql": "^0.7.0"
+    "piral-core": "^0.8.0 || ^0.9.0"
   }
 }

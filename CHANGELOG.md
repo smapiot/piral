@@ -5,7 +5,12 @@
 * Use declaration merging instead of generics (#72)
 * Automatically clear the parcel cache (#59)
 * Support of plugins for extending the Piral CLI (#47)
-* Extracted optional `piral-auth` library
+* Extracted `piral-auth` library
+* Extracted `piral-containers` library
+* Extracted `piral-dashboard` library
+* Extracted `piral-feeds` library
+* Extracted `piral-forms` library
+* Extracted `piral-search` library
 * Added `validate` command for Piral instances (#69)
 * Added `validate` command for pilets (#70)
 
