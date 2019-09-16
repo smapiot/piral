@@ -276,3 +276,22 @@ export async function move(source: string, target: string, forceOverwrite = Forc
   await remove(source);
   return target;
 }
+
+export async function getSourceFiles(entry: string) {
+  const dir = dirname(entry);
+  const files = await matchFiles(dir, '**/*.(j|t)sx?');
+  return files.map(path => {
+    const directory = dirname(path);
+    const name = basename(path);
+
+    return {
+      path,
+      directory,
+      name,
+      read() {
+        //TODO always get js representation and omit type-only references
+        return readText(directory, name);
+      },
+    };
+  });
+}
