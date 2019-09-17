@@ -1,10 +1,25 @@
 declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiralAuthApi {}
+
   interface PiralCustomEventMap {
     'change-user': PiralChangeUserEvent;
   }
 
   interface PiralCustomState {
+    /**
+     * The currently authenticated user, if any.
+     */
     user: UserInfo<any> | undefined;
+  }
+
+  interface PiralCustomActions {
+    /**
+     * Sets the currently logged in user.
+     * @param user The current user or undefined is anonymous.
+     * @param features The features for the current user, if any.
+     * @param permissions The permissions of the current user, if any.
+     */
+    setUser<T>(user: UserInfo<T>, features: UserFeatures, permissions: UserPermissions): void;
   }
 }
 
@@ -28,13 +43,10 @@ export interface PiralChangeUserEvent {
   current: UserInfo<any>;
 }
 
-export interface CustomActions {
+export interface PiralAuthApi {
   /**
-   * Sets the currently logged in user.
-   * @param user The current user or undefined is anonymous.
-   * @param features The features for the current user, if any.
-   * @param permissions The permissions of the current user, if any.
+   * Gets the currently authenticated user, if any.
    */
-  setUser<T>(user: UserInfo<T>, features: UserFeatures, permissions: UserPermissions): void;
+  getUser<T = any>(): UserInfo<T> | undefined;
 }
 

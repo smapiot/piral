@@ -1,8 +1,6 @@
 import * as React from 'react';
-import * as prompt from './prompt';
-import * as globalState from './globalState';
-import * as action from './action';
-import { useForm } from './form';
+import * as piralCore from 'piral-core';
+import { useForm } from './useForm';
 
 jest.mock('react');
 
@@ -14,9 +12,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {
           foo: {
@@ -49,9 +47,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {},
       });
@@ -77,9 +75,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {},
       });
@@ -105,9 +103,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {
           foo: {
@@ -149,9 +147,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {
           foo: {
@@ -190,9 +188,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {},
       });
@@ -239,9 +237,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {},
       });
@@ -287,9 +285,9 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {
           id: {
@@ -349,9 +347,9 @@ describe('Form Hook Module', () => {
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
     const onChange = jest.fn(data => Promise.resolve(data));
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {
           id: {
@@ -388,9 +386,9 @@ describe('Form Hook Module', () => {
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
     const onChange = jest.fn(data => Promise.reject('my error'));
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {},
       });
@@ -413,10 +411,10 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    (prompt as any).usePrompt = promptFake;
-    (action as any).useAction = actionFake;
+    (piralCore as any).usePrompt = promptFake;
+    (piralCore as any).useAction = actionFake;
     (React as any).useEffect = jest.fn(cb => cb()());
-    (globalState as any).useGlobalState = (select: any) =>
+    (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {},
       });

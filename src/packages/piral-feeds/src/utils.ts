@@ -1,5 +1,5 @@
 import { isfunc } from 'react-arbiter';
-import { FeedResolver, FeedConnectorOptions, ConnectorDetails } from '../types';
+import { FeedResolver, FeedConnectorOptions, ConnectorDetails } from './types';
 
 export function createFeedOptions<TData, TItem>(
   id: string,

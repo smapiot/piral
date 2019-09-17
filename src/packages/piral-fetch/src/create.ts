@@ -1,9 +1,9 @@
-import { PiralFetchApi, FetchConfig } from './types';
+import { PiletFetchApi, FetchConfig } from './types';
 
 /**
  * Creates a new Piral Fetch API extension.
  */
-export function createFetchApi(config: FetchConfig = {}): PiralFetchApi {
+export function createFetchApi(config: FetchConfig = {}): PiletFetchApi {
   const baseInit = config.default || {};
   const baseHeaders = baseInit.headers || {};
   const baseUrl = config.base || location.origin;

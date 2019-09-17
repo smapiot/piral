@@ -1,6 +1,6 @@
 import { swap, Atom } from '@dbeining/react-atom';
-import { updateKey, removeIndicator } from '../../utils';
-import { GlobalState, FormDataState } from '../../types';
+import { GlobalState, updateKey, removeIndicator } from 'piral-core';
+import { FormDataState } from './types';
 
 function getNewFormState(newState: FormDataState, patch: Partial<FormDataState>) {
   if (patch.active === false && !newState.submitting) {

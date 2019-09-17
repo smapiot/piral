@@ -1,7 +1,6 @@
 import * as React from 'react';
-import * as action from './action';
-import * as globalState from './globalState';
-import { useFeed } from './feed';
+import * as piralCore from 'piral-core';
+import { useFeed } from './useFeed';
 
 jest.mock('react');
 
@@ -19,8 +18,8 @@ describe('Feed Hook Module', () => {
     };
     const loadAction = jest.fn();
     const usedEffect = jest.fn();
-    (globalState as any).useGlobalState = (select: any) => select(pseudoState);
-    (action as any).useAction = () => loadAction;
+    (piralCore as any).useGlobalState = (select: any) => select(pseudoState);
+    (piralCore as any).useAction = () => loadAction;
     (React as any).useEffect = usedEffect;
     const [loaded, data, error] = useFeed({
       id: 'foo',
@@ -45,8 +44,8 @@ describe('Feed Hook Module', () => {
     };
     const loadAction = jest.fn();
     const usedEffect = jest.fn();
-    (globalState as any).useGlobalState = (select: any) => select(pseudoState);
-    (action as any).useAction = () => loadAction;
+    (piralCore as any).useGlobalState = (select: any) => select(pseudoState);
+    (piralCore as any).useAction = () => loadAction;
     (React as any).useEffect = usedEffect;
     const [loaded, data, error] = useFeed({
       id: 'foo',
@@ -71,8 +70,8 @@ describe('Feed Hook Module', () => {
     };
     const loadAction = jest.fn();
     const usedEffect = jest.fn();
-    (globalState as any).useGlobalState = (select: any) => select(pseudoState);
-    (action as any).useAction = () => loadAction;
+    (piralCore as any).useGlobalState = (select: any) => select(pseudoState);
+    (piralCore as any).useAction = () => loadAction;
     (React as any).useEffect = usedEffect;
     const [loaded, data, error] = useFeed({
       id: 'foo',

@@ -1,8 +1,8 @@
 import { ReactChild } from 'react';
 import { wrapElement } from 'react-arbiter';
 import { swap, Atom, deref } from '@dbeining/react-atom';
-import { appendItems, prependItems } from '../../utils';
-import { GlobalState, Disposable, SearchOptions } from '../../types';
+import { GlobalState, Disposable, appendItems, prependItems } from 'piral-core';
+import { SearchOptions } from './types';
 
 export function setSearchInput(ctx: Atom<GlobalState>, input: string) {
   swap(ctx, state => ({

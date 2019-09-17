@@ -1,5 +1,5 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { updateFormState } from './forms';
+import { updateFormState } from './actions';
 
 describe('Forms Actions Module', () => {
   it('updateFormState works on a fresh forms collection', () => {

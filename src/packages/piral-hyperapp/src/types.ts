@@ -10,7 +10,7 @@ import {
 } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralHyperappApi {}
+  interface PiletCustomApi extends PiletHyperappApi {}
 }
 
 /** The view function describes the application UI as a tree of VNodes.
@@ -43,7 +43,7 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
 /**
  * Defines the provided set of hyperapp Pilet API extensions.
  */
-export interface PiralHyperappApi {
+export interface PiletHyperappApi {
   /**
    * Registers a tile for a hyperapp component.
    * The id parameter has to be unique within the current pilet.

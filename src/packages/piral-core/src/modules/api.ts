@@ -1,6 +1,6 @@
-import { wrapElement, isfunc } from 'react-arbiter';
-import { withFeed, withApi, withForm, withPiletState } from '../components';
-import { createFeedOptions, createDataOptions, getDataExpiration } from '../utils';
+import { wrapElement } from 'react-arbiter';
+import { withApi } from '../components';
+import { createDataOptions, getDataExpiration, buildName } from '../utils';
 import {
   PageComponentProps,
   AnyComponent,
@@ -12,17 +12,9 @@ import {
   TilePreferences,
   PiralContainer,
   GlobalStateContext,
-  SearchProvider,
-  SearchSettings,
   PiletApi,
   PiletMetadata,
 } from '../types';
-
-const noop = () => {};
-
-function buildName(prefix: string, name: string | number) {
-  return `${prefix}://${name}`;
-}
 
 function markReact<T>(arg: React.ComponentType<T>, displayName: string) {
   if (arg && !arg.displayName) {
@@ -91,26 +83,7 @@ function addModal<TOpts>(
   });
 }
 
-function addSearchProvider(
-  context: GlobalStateContext,
-  api: PiletApi,
-  id: string,
-  provider: SearchProvider,
-  settings: SearchSettings,
-) {
-  const { onlyImmediate = false, onCancel, onClear } = settings;
-  context.registerSearchProvider(id, {
-    onlyImmediate,
-    cancel: isfunc(onCancel) ? onCancel : noop,
-    clear: isfunc(onClear) ? onClear : noop,
-    search(q) {
-      return provider(q, api);
-    },
-  });
-}
-
 export function createCoreApi(target: PiletMetadata, { events, context, extendApi }: PiralContainer): PiletApi {
-  let feeds = 0;
   let next = 0;
   const prefix = target.name;
   const api = extendApi(
@@ -130,31 +103,6 @@ export function createCoreApi(target: PiletMetadata, { events, context, extendAp
         const { target = 'memory', expires } = createDataOptions(options);
         const expiration = getDataExpiration(expires);
         return context.tryWriteDataItem(name, value, prefix, target, expiration);
-      },
-      createConnector(resolver) {
-        const id = buildName(prefix, feeds++);
-        const options = createFeedOptions(id, resolver);
-        context.createFeed(options.id);
-
-        if (options.immediately) {
-          context.loadFeed(options);
-        }
-
-        return component => withFeed(component, options) as any;
-      },
-      createState(options) {
-        const actions = {};
-        const id = buildName(prefix, feeds++);
-        const cb = dispatch => context.replaceState(id, dispatch);
-        context.createState(id, options.state);
-        Object.keys(options.actions).forEach(key => {
-          const action = options.actions[key];
-          actions[key] = (...args) => action.call(api, cb, ...args);
-        });
-        return component => withPiletState(component, id, actions) as any;
-      },
-      createForm(options) {
-        return component => withForm(component, options);
       },
       showNotification(content, options = {}) {
         const notification = {
@@ -266,20 +214,6 @@ export function createCoreApi(target: PiletMetadata, { events, context, extendAp
       unregisterModal(name) {
         const id = buildName(prefix, name);
         context.unregisterModal(id);
-      },
-      registerSearchProvider(name, provider, settings?) {
-        if (typeof name !== 'string') {
-          settings = provider;
-          provider = name;
-          name = next++;
-        }
-
-        const id = buildName(prefix, name);
-        addSearchProvider(context, api, id, provider, settings || {});
-      },
-      unregisterSearchProvider(name) {
-        const id = buildName(prefix, name);
-        context.unregisterSearchProvider(id);
       },
     },
     target,

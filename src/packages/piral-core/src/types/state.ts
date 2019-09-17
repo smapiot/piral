@@ -2,15 +2,11 @@ import { History } from 'history';
 import { ComponentType, ReactChild } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
-import { Disposable } from './utils';
 import { MenuSettings } from './menu';
 import { PiletMetadata } from './meta';
-import { SearchHandler } from './search';
 import { TilePreferences } from './tile';
 import { Dict, Without } from './common';
-import { ConnectorDetails } from './feed';
-import { PiralCustomActions, PiralCustomState } from './custom';
-import { StateDispatcher } from './container';
+import { PiralCustomActions, PiralCustomState, PiralCustomComponentsState } from './custom';
 import { NotificationOptions } from './notifications';
 import { LayoutType, LayoutBreakpoints } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
@@ -23,6 +19,10 @@ import {
   MenuComponentProps,
   ExtensionComponentProps,
 } from './api';
+
+export interface StateDispatcher<TState> {
+  (state: TState): Partial<TState>;
+}
 
 export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
 
@@ -62,13 +62,6 @@ export interface ExtensionRegistration {
   component: WrappedComponent<ExtensionComponentProps<any>>;
   reference: any;
   defaults: any;
-}
-
-export interface SearchProviderRegistration {
-  search: SearchHandler;
-  cancel(): void;
-  clear(): void;
-  onlyImmediate: boolean;
 }
 
 export interface GlobalStateOptions extends Partial<AppComponents> {
@@ -179,7 +172,7 @@ export interface AppState {
   trackers: Array<ComponentType<RouteComponentProps>>;
 }
 
-export interface ComponentsState {
+export interface ComponentsState extends PiralCustomComponentsState {
   /**
    * The registered tile components for a dashboard.
    */
@@ -200,88 +193,6 @@ export interface ComponentsState {
    * The registered extension components for extension slots.
    */
   extensions: Dict<Array<ExtensionRegistration>>;
-  /**
-   * The registered search providers for context aware search.
-   */
-  searchProviders: Dict<SearchProviderRegistration>;
-}
-
-export interface FeedDataState {
-  /**
-   * Determines if the feed data is currently loading.
-   */
-  loading: boolean;
-  /**
-   * Indicates if the feed data was already loaded and is active.
-   */
-  loaded: boolean;
-  /**
-   * Stores the potential error when initializing or loading the feed.
-   */
-  error: any;
-  /**
-   * The currently stored feed data.
-   */
-  data: any;
-}
-
-export interface FeedsState {
-  /**
-   * Gets the state of the available data feeds.
-   */
-  [id: string]: FeedDataState;
-}
-
-export interface FormDataState {
-  /**
-   * Gets the usage status of the form - true means
-   * the form is actively being used, false is the
-   * status for forms that are not used any more.
-   */
-  active: boolean;
-  /**
-   * Indicates that the form is currently submitting.
-   */
-  submitting: boolean;
-  /**
-   * Stores the potential error of the form.
-   */
-  error: any;
-  /**
-   * The initial data to use.
-   */
-  initialData: any;
-  /**
-   * The current data that has been submitted.
-   */
-  currentData: any;
-  /**
-   * Gets or sets if th current data is different from
-   * the initial data.
-   */
-  changed: boolean;
-}
-
-export interface FormsState {
-  /**
-   * Gets the state of forms that are currently not actively used.
-   */
-  [id: string]: FormDataState;
-}
-
-export interface SearchState {
-  /**
-   * Gets the current input value.
-   */
-  input: string;
-  /**
-   * Gets weather the search is still loading.
-   */
-  loading: boolean;
-  /**
-   * The results to display for the current search.
-   */
-  results: Array<ReactChild>;
 }
 
 export interface GlobalState extends PiralCustomState {
@@ -293,22 +204,6 @@ export interface GlobalState extends PiralCustomState {
    * The relevant state for the registered components.
    */
   components: ComponentsState;
-  /**
-   * The relevant state for the registered feeds.
-   */
-  feeds: FeedsState;
-  /**
-   * The relevant state for the registered containers.
-   */
-  containers: Record<string, any>;
-  /**
-   * The relevant state for the active forms.
-   */
-  forms: FormsState;
-  /**
-   * The relevant state for the in-site search.
-   */
-  search: SearchState;
   /**
    * Gets the loaded modules.
    */
@@ -343,38 +238,6 @@ export interface PiralActions extends PiralCustomActions {
    * @param selected The selected language.
    */
   selectLanguage(selected: string): void;
-  /**
-   * Creates a new local state.
-   * @param id The id of the state.
-   * @param state The initial state to use.
-   */
-  createState<TState>(id: string, state: TState): void;
-  /**
-   * Destroys an existing local state.
-   * @param id The id of the state.
-   */
-  destroyState(id: string): void;
-  /**
-   * Replaces the local state with the provided state.
-   * @param id The id of the local state.
-   * @param state The new state to use.
-   */
-  replaceState<TState>(id: string, reducer: StateDispatcher<TState>): void;
-  /**
-   * Creates a new (empty) feed.
-   * @param id The id of the feed.
-   */
-  createFeed(id: string): void;
-  /**
-   * Destroys an existing feed.
-   * @param id The id of the feed.
-   */
-  destroyFeed(id: string): void;
-  /**
-   * Loads the feed via the provided details.
-   * @param feed The feed details to use for loading.
-   */
-  loadFeed<TData, TItem>(feed: ConnectorDetails<TData, TItem>): void;
   /**
    * Opens the given notification.
    * @param notification The notification to show.
@@ -451,53 +314,6 @@ export interface PiralActions extends PiralCustomActions {
    * @param name The name of the modal to be removed.
    */
   unregisterModal(name: string): void;
-  /**
-   * Registers a new search provider.
-   * @param name The name of the search provider.
-   * @param value The value representing the provider.
-   */
-  registerSearchProvider(name: string, value: SearchProviderRegistration): void;
-  /**
-   * Unregisters an existing search provider.
-   * @param name The name of the search provider.
-   */
-  unregisterSearchProvider(name: string): void;
-  /**
-   * Sets the current search input.
-   * @param input The input to set.
-   */
-  setSearchInput(input: string): void;
-  /**
-   * Sets the form data from the provided original state and patch data.
-   * @param id The id of the form.
-   * @param original The initial state of the form.
-   * @param patch The provided patch.
-   */
-  updateFormState(id: string, original: FormDataState, patch: Partial<FormDataState>): void;
-  /**
-   * Resets the search results.
-   * @param input The input to set.
-   * @param loading Determines if further results are currently loading.
-   */
-  resetSearchResults(input: string, loading: boolean): void;
-  /**
-   * Appends more results to the existing results.
-   * @param items The items to append.
-   * @param done Determines if more results are pending.
-   */
-  appendSearchResults(items: Array<ReactChild>, done: boolean): void;
-  /**
-   * Prepends more results to the existing results.
-   * @param items The items to prepend.
-   * @param done Determines if more results are pending.
-   */
-  prependSearchResults(items: Array<ReactChild>, done: boolean): void;
-  /**
-   * Triggers the search explicitly.
-   * @param input Optionally sets the query to look for. Otherwise the current input is taken.
-   * @param immediate Optionally, determins if the search was invoked immediately.
-   */
-  triggerSearch(input?: string, immediate?: boolean): Disposable;
   /**
    * Sets the loading state of the application, which can be helpful for indicating loading of
    * required data.

@@ -1,5 +1,5 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { appendSearchResults, prependSearchResults, resetSearchResults, setSearchInput, triggerSearch } from './search';
+import { appendSearchResults, prependSearchResults, resetSearchResults, setSearchInput, triggerSearch } from './actions';
 
 const state = {
   search: {

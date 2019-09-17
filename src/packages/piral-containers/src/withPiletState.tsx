@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useGlobalState } from '../hooks';
-import { StateConnectorProps } from '../types';
+import { useGlobalState } from 'piral-core';
+import { StateConnectorProps } from './types';
 
 export function withPiletState<TState, TAction, TProps>(
   Component: React.ComponentType<TProps & StateConnectorProps<TState, TAction>>,

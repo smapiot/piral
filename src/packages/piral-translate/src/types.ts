@@ -1,7 +1,7 @@
 import {} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralLocaleApi {}
+  interface PiletCustomApi extends PiletLocaleApi {}
 }
 
 export interface Translations {
@@ -22,7 +22,7 @@ export interface TranslationFallback {
   (key: string, language: string): string;
 }
 
-export interface PiralLocaleApi {
+export interface PiletLocaleApi {
   /**
    * Translates the given tag (using the optional variables) into a string using the current language.
    * The used template can contain placeholders in form of `{{variableName}}`.

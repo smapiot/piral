@@ -1,11 +1,12 @@
 import * as React from 'react';
-import * as hooks from '../hooks';
+import * as piralCore from 'piral-core';
+import * as useFeed from './useFeed';
 import { mount } from 'enzyme';
 import { withFeed } from './withFeed';
 
-jest.mock('../hooks');
+jest.mock('piral-core');
 
-(hooks as any).useGlobalState = (select: any) =>
+(piralCore as any).useGlobalState = (select: any) =>
   select({
     app: {
       components: {
@@ -27,7 +28,7 @@ StubComponent.displayName = 'StubComponent';
 describe('withFeed Module', () => {
   it('shows loading without invoking action if already loading', () => {
     const options: any = { id: 'bar' };
-    (hooks as any).useFeed = () => [false, undefined, undefined];
+    (useFeed as any).useFeed = () => [false, undefined, undefined];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
     expect(node.find(StubLoader).length).toBe(1);
@@ -36,7 +37,7 @@ describe('withFeed Module', () => {
 
   it('shows the component if loaded', () => {
     const options: any = { id: 'foo' };
-    (hooks as any).useFeed = () => [true, [1, 2, 3], undefined];
+    (useFeed as any).useFeed = () => [true, [1, 2, 3], undefined];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
     expect(node.find(StubLoader).length).toBe(0);
@@ -50,7 +51,7 @@ describe('withFeed Module', () => {
 
   it('shows the error if the feed errored', () => {
     const options: any = { id: 'errored' };
-    (hooks as any).useFeed = () => [true, undefined, 'my-error'];
+    (useFeed as any).useFeed = () => [true, undefined, 'my-error'];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
     expect(node.find(StubLoader).length).toBe(0);
@@ -72,7 +73,7 @@ describe('withFeed Module', () => {
 
   it('calls the load inside useEffect', () => {
     const options: any = { id: 'fresh' };
-    (hooks as any).useFeed = () => [false, undefined, undefined];
+    (useFeed as any).useFeed = () => [false, undefined, undefined];
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
     expect(node.find(StubLoader).length).toBe(1);

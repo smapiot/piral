@@ -1,12 +1,12 @@
 import { PiletApi } from 'piral-core';
 import { ngTile, ngPage, ngExtension, ngMenu, ngModal } from './register';
-import { PiralNgApi } from './types';
+import { PiletNgApi } from './types';
 
 /**
  * Creates a new set of Piral Angular API extensions.
  * @param api The API to extend.
  */
-export function createNgApi(api: PiletApi): PiralNgApi {
+export function createNgApi(api: PiletApi): PiletNgApi {
   let next = ~~(Math.random() * 10000);
   return {
     registerTileNg(id, component, options?) {

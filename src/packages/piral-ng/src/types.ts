@@ -1,13 +1,13 @@
 import { TilePreferences, MenuSettings } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralNgApi {}
+  interface PiletCustomApi extends PiletNgApi {}
 }
 
 /**
  * Defines the provided set of Angular Pilet API extensions.
  */
-export interface PiralNgApi {
+export interface PiletNgApi {
   /**
    * Registers a tile for an Angular component.
    * The id parameter has to be unique within the current pilet.

@@ -1,7 +1,7 @@
 import {} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralFetchApiFetch {}
+  interface PiletCustomApi extends PiletFetchApiFetch {}
 }
 
 export interface FetchOptions {
@@ -63,15 +63,15 @@ export interface FetchConfig {
   base?: string;
 }
 
-export interface PiralFetchApiFetch {
+export interface PiletFetchApiFetch {
   <T = any>(url: string, options?: FetchOptions): Promise<FetchResponse<T>>;
 }
 
-export interface PiralFetchApi {
+export interface PiletFetchApi {
   /**
    * Performs an HTTP fetch operation against the given URL.
    * @param url The target of the fetch.
    * @param options The options to be used.
    */
-  fetch: PiralFetchApiFetch;
+  fetch: PiletFetchApiFetch;
 }

@@ -1,5 +1,5 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { destroyFeed, createFeed, loadedFeed, updateFeed, loadFeed } from './feeds';
+import { destroyFeed, createFeed, loadedFeed, updateFeed, loadFeed } from './actions';
 
 describe('Feeds Actions Module', () => {
   it('destroyFeed removes the feed with the given id', () => {

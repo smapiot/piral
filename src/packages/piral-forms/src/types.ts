@@ -1,4 +1,65 @@
 import { ComponentType, ChangeEvent } from 'react';
+import {} from 'piral-core';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiletFormsApi {}
+
+  interface PiralCustomState {
+    /**
+     * The relevant state for the active forms.
+     */
+    forms: FormsState;
+  }
+
+  interface PiralCustomActions {
+    /**
+     * Sets the form data from the provided original state and patch data.
+     * @param id The id of the form.
+     * @param original The initial state of the form.
+     * @param patch The provided patch.
+     */
+    updateFormState(id: string, original: FormDataState, patch: Partial<FormDataState>): void;
+  }
+
+  interface PiralCustomComponentsState {}
+}
+
+export interface FormDataState {
+  /**
+   * Gets the usage status of the form - true means
+   * the form is actively being used, false is the
+   * status for forms that are not used any more.
+   */
+  active: boolean;
+  /**
+   * Indicates that the form is currently submitting.
+   */
+  submitting: boolean;
+  /**
+   * Stores the potential error of the form.
+   */
+  error: any;
+  /**
+   * The initial data to use.
+   */
+  initialData: any;
+  /**
+   * The current data that has been submitted.
+   */
+  currentData: any;
+  /**
+   * Gets or sets if th current data is different from
+   * the initial data.
+   */
+  changed: boolean;
+}
+
+export interface FormsState {
+  /**
+   * Gets the state of forms that are currently not actively used.
+   */
+  [id: string]: FormDataState;
+}
 
 export interface FormProps<TFormData> {
   /**
@@ -88,4 +149,12 @@ export interface InputFormOptions<TFormData, TProps> {
    * @param data The currently entered form data.
    */
   onChange?(data: TFormData): Promise<Partial<TFormData>>;
+}
+
+export interface PiletFormsApi {
+  /**
+   * Creates an input form for tracking user input intelligently.
+   * @param options The options for creating the form.
+   */
+  createForm<TFormData, TProps = any>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
 }

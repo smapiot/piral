@@ -1,4 +1,4 @@
-import { createFeedOptions } from './feed';
+import { createFeedOptions } from './utils';
 
 describe('Feed Module', () => {
   it('createFeedOptions works with a function resolver', () => {

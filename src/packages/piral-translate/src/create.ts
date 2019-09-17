@@ -1,5 +1,5 @@
 import { Localizer } from './localize';
-import { PiralLocaleApi, LocalizationMessages, LocaleConfig } from './types';
+import { PiletLocaleApi, LocalizationMessages, LocaleConfig } from './types';
 
 /**
  * Sets up a new localizer by using the given config.
@@ -15,7 +15,7 @@ export function setupLocalizer(config: LocaleConfig = {}) {
  * Creates a new Piral localization API extension.
  * @param config The configuration to use.
  */
-export function createLocaleApi(localizer: Localizer): PiralLocaleApi {
+export function createLocaleApi(localizer: Localizer): PiletLocaleApi {
   let localTranslations: LocalizationMessages = {};
   return {
     setTranslations(messages) {

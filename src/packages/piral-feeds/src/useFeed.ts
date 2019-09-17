@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { useAction } from './action';
-import { useGlobalState } from './globalState';
-import { ConnectorDetails } from '../types';
+import { useGlobalState, useAction } from 'piral-core';
+import { ConnectorDetails } from './types';
 
 /**
  * Hook that returns the connected feed.

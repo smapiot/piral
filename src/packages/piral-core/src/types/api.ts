@@ -9,11 +9,7 @@ import { PiletCustomApi } from './custom';
 import { Disposable, EventEmitter } from './utils';
 import { NotificationOptions } from './notifications';
 import { SharedData, DataStoreOptions } from './data';
-import { InputFormOptions, FormCreator } from './form';
-import { SearchSettings, SearchOptions } from './search';
 import { ForeignComponent, AnyComponent } from './components';
-import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
-import { StateContainerOptions, StateContainer, StateContainerActions, StateContainerReducers } from './container';
 
 export interface BaseComponentProps {
   /**
@@ -59,10 +55,6 @@ export interface ModalComponentProps<TOpts> extends BaseComponentProps {
 
 export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
 
-export interface SearchProvider {
-  (options: SearchOptions, api: PiletApi): Promise<Array<ReactNode | HTMLElement>>;
-}
-
 export type Pilet = ArbiterModule<PiletApi>;
 
 /**
@@ -73,28 +65,6 @@ export interface PiletApi extends PiletCustomApi, EventEmitter {
    * Gets the metadata of the current pilet.
    */
   meta: PiletMetadata;
-  /**
-   * Creates a connector for wrapping components with data relations.
-   * @param resolver The resolver for the initial data set.
-   */
-  createConnector<T>(resolver: FeedResolver<T>): FeedConnector<T>;
-  /**
-   * Creates a connector for wrapping components with data relations.
-   * @param options The options for creating the connector.
-   */
-  createConnector<TData, TItem>(options: FeedConnectorOptions<TData, TItem>): FeedConnector<TData>;
-  /**
-   * Creates a state container for persisting some global state.
-   * @param options The options for creating the state container.
-   */
-  createState<TState, TActions extends StateContainerReducers<TState>>(
-    options: StateContainerOptions<TState, TActions>,
-  ): StateContainer<TState, StateContainerActions<TActions>>;
-  /**
-   * Creates an input form for tracking user input intelligently.
-   * @param options The options for creating the form.
-   */
-  createForm<TFormData, TProps = any>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
   /**
    * Gets a shared data value.
    * @param name The name of the data to retrieve.
@@ -257,24 +227,4 @@ export interface PiletApi extends PiletCustomApi, EventEmitter {
    * @param name The name of the menu item to unregister.
    */
   unregisterMenu(name: string): void;
-  /**
-   * Registers a search provider to respond to search queries.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the search provider.
-   * @param provider The callback to be used for searching.
-   * @param settings The optional settings for the search provider.
-   */
-  registerSearchProvider(name: string, provider: SearchProvider, settings?: SearchSettings): void;
-  /**
-   * Registers a search provider to respond to search queries.
-   * @param provider The callback to be used for searching.
-   * @param settings The optional settings for the search provider.
-   */
-  registerSearchProvider(provider: SearchProvider, settings?: SearchSettings): void;
-  /**
-   * Unregisters a search provider known by the given name.
-   * Only previously registered search providers can be unregistered.
-   * @param name The name of the search provider to unregister.
-   */
-  unregisterSearchProvider(name: string): void;
 }

@@ -11,13 +11,13 @@ import {
 } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralVueApi {}
+  interface PiletCustomApi extends PiletVueApi {}
 }
 
 /**
  * Defines the provided set of Vue Pilet API extensions.
  */
-export interface PiralVueApi {
+export interface PiletVueApi {
   /**
    * Registers a tile for a Vue component.
    * The id parameter has to be unique within the current pilet.

@@ -1,12 +1,12 @@
 import { PiletApi } from 'piral-core';
 import { mount } from './mount';
-import { PiralVueApi } from './types';
+import { PiletVueApi } from './types';
 
 /**
  * Creates a new set of Piral Vue API extensions.
  * @param api The API to extend.
  */
-export function createVueApi(api: PiletApi): PiralVueApi {
+export function createVueApi(api: PiletApi): PiletVueApi {
   return {
     registerTileVue(id, root, options?) {
       if (typeof id === 'string') {

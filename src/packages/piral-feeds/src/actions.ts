@@ -1,6 +1,6 @@
 import { swap, Atom, deref } from '@dbeining/react-atom';
-import { withKey, withoutKey } from '../../utils';
-import { GlobalState, ConnectorDetails, FeedReducer } from '../../types';
+import { GlobalState, withKey, withoutKey } from 'piral-core';
+import { ConnectorDetails, FeedReducer } from './types';
 
 export function createFeed(ctx: Atom<GlobalState>, id: string) {
   swap(ctx, state => ({

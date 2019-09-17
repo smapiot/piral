@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { ComponentError, ComponentLoader } from './helpers';
-import { useForm, usePromise } from '../hooks';
-import { InputFormOptions, FormProps } from '../types';
+import { ComponentError, ComponentLoader, usePromise } from 'piral-core';
+import { useForm } from './useForm';
+import { InputFormOptions, FormProps } from './types';
 
 export function withForm<TFormData, TProps>(
   Component: React.ComponentType<TProps & FormProps<TFormData>>,

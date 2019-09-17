@@ -1,6 +1,5 @@
 import { swap, Atom } from '@dbeining/react-atom';
-import { withKey, withoutKey } from '../../utils';
-import { GlobalState, StateDispatcher } from '../../types';
+import { GlobalState, StateDispatcher, withKey, withoutKey } from 'piral-core';
 
 export function createState<TState>(ctx: Atom<GlobalState>, id: string, data: TState) {
   swap(ctx, state => ({

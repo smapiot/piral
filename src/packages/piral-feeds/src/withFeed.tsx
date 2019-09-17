@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useFeed } from '../hooks';
-import { ConnectorDetails, FeedConnectorProps } from '../types';
-import { ComponentLoader, ComponentError } from './helpers';
+import { ComponentLoader, ComponentError } from 'piral-core';
+import { useFeed } from './useFeed';
+import { ConnectorDetails, FeedConnectorProps } from './types';
 
 export function withFeed<TData, TItem, TProps>(
   Component: React.ComponentType<TProps & FeedConnectorProps<TData>>,

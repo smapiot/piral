@@ -7,3 +7,7 @@ function rand(c: 'x' | 'y') {
 export function generateId() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, rand);
 }
+
+export function buildName(prefix: string, name: string | number) {
+  return `${prefix}://${name}`;
+}
