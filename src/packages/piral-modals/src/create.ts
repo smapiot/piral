@@ -1,11 +1,15 @@
+import * as actions from './actions';
 import { PiletApi, PiletMetadata, GlobalStateContext, withApi, buildName } from 'piral-core';
 import { PiletModalsApi } from './types';
 
 export function createModalsApi(api: PiletApi, target: PiletMetadata, context: GlobalStateContext): PiletModalsApi {
+  const prefix = target.name;
+  context.withActions(actions);
+
   return {
     showModal(name, options) {
       const dialog = {
-        name: buildName(target.name, name),
+        name: buildName(prefix, name),
         options,
         close() {
           context.closeModal(dialog);
@@ -15,14 +19,14 @@ export function createModalsApi(api: PiletApi, target: PiletMetadata, context: G
       return dialog.close;
     },
     registerModal(name, arg, defaults) {
-      const id = buildName(target.name, name);
+      const id = buildName(prefix, name);
       context.registerModal(id, {
-        component: withApi(arg, api, 'modal'),
+        component: withApi(context.converters, arg, api, 'modal'),
         defaults,
       });
     },
     unregisterModal(name) {
-      const id = buildName(target.name, name);
+      const id = buildName(prefix, name);
       context.unregisterModal(id);
     },
   };

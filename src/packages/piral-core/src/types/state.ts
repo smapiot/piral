@@ -125,7 +125,22 @@ export interface GlobalState extends PiralCustomState {
   modules: Array<PiletMetadata>;
 }
 
+export interface PiralAction<T extends (...args: any) => any> {
+  (this: GlobalStateContext, ctx: Atom<GlobalState>, ...args: Parameters<T>): ReturnType<T>;
+}
+
 export interface PiralActions extends PiralCustomActions {
+  /**
+   * Defines a single action for Piral.
+   * @param actionName The name of the action to define.
+   * @param action The action to include.
+   */
+  withAction<T extends keyof PiralActions>(actionName: T, action: PiralAction<PiralActions[T]>): void;
+  /**
+   * Defines a set of actions for Piral.
+   * @param actions The actions to define.
+   */
+  withActions(actions: Partial<{ [P in keyof PiralActions]: PiralAction<PiralActions[P]> }>): void;
   /**
    * Reads the value of a shared data item.
    * @param name The name of the shared item.

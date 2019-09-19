@@ -7,10 +7,7 @@ export function markReact<T>(arg: ComponentType<T>, displayName: string) {
   }
 }
 
-//TODO
-declare const converters: ComponentConverters;
-
-export function convertComponent<T>(component: AnyComponent<T>, displayName: string) {
+export function convertComponent<T>(converters: ComponentConverters, component: AnyComponent<T>, displayName: string) {
   if (typeof component === 'object') {
     const converter = converters[component.type];
 

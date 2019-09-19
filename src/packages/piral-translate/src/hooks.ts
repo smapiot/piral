@@ -32,6 +32,6 @@ export function useDynamicLanguage(
 
 export function useTranslate() {
   const { translate } = useActions();
-  useGlobalState(m => m.app.language.selected);
+  useGlobalState(m => m.language.selected);
   return translate;
 }

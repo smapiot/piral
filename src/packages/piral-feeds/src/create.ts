@@ -1,3 +1,4 @@
+import * as actions from './actions';
 import { buildName, PiletApi, PiletMetadata, GlobalStateContext } from 'piral-core';
 import { withFeed } from './withFeed';
 import { createFeedOptions } from './utils';
@@ -5,6 +6,8 @@ import { PiletFeedsApi } from './types';
 
 export function createFeedsApi(api: PiletApi, target: PiletMetadata, context: GlobalStateContext): PiletFeedsApi {
   let feeds = 0;
+  context.withActions(actions);
+
   return {
     createConnector(resolver) {
       const id = buildName(target.name, feeds++);

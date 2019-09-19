@@ -1,5 +1,5 @@
 import { swap, Atom, deref } from '@dbeining/react-atom';
-import { GlobalState, PiralActionContext } from 'piral-core';
+import { GlobalState, GlobalStateContext } from 'piral-core';
 
 function getLocalizer(ctx: Atom<GlobalState>) {
   return deref(ctx).localizer;
@@ -23,7 +23,7 @@ export function translate(ctx: Atom<GlobalState>, key: string, variables: any) {
   return localizer && localizer.localizeGlobal(key, variables);
 }
 
-export function setTranslations(this: PiralActionContext, ctx: Atom<GlobalState>, language: string, data) {
+export function setTranslations(this: GlobalStateContext, ctx: Atom<GlobalState>, language: string, data) {
   const localizer = getLocalizer(ctx);
 
   if (localizer) {
@@ -41,7 +41,7 @@ export function setTranslations(this: PiralActionContext, ctx: Atom<GlobalState>
   }
 }
 
-export function getTranslations(this: PiralActionContext, ctx: Atom<GlobalState>, language: string) {
+export function getTranslations(this: GlobalStateContext, ctx: Atom<GlobalState>, language: string) {
   const localizer = getLocalizer(ctx);
   return {
     global: localizer.messages[language],

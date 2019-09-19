@@ -2,19 +2,15 @@ import * as React from 'react';
 import { withRecall, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
 import { Portal } from './components';
 import { createGlobalState, createActions, StateContext } from './state';
-import { createCoreApi, getLocalDependencies, createListener, globalDependencies } from './modules';
-import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiralContainer, PiletMetadata } from './types';
+import { getLocalDependencies, createListener, globalDependencies, mergeApis } from './modules';
+import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiletMetadata, GlobalStateContext, Extend } from './types';
 
 function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
   return Promise.resolve([]);
 }
 
-function defaultApiExtender(value: PiletApi) {
-  return value;
-}
-
-function defaultApiCreator(container: PiralContainer): ApiCreator<PiletApi> {
-  return target => createCoreApi(target, container);
+function defaultApiCreator(context: GlobalStateContext, apis: Array<Extend>): ApiCreator<PiletApi> {
+  return target => mergeApis(target, context, apis);
 }
 
 /**
@@ -37,7 +33,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
   const {
     state,
     availablePilets = [],
-    extendApi = defaultApiExtender,
+    extendApi = [],
     requestPilets = defaultModuleRequester,
     getDependencies = getLocalDependencies,
     async = false,
@@ -45,11 +41,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
-  const container = {
-    context: createActions(globalState, events, actions),
-    events,
-    extendApi,
-  };
+  const context = createActions(globalState, events, actions);
 
   if (process.env.DEBUG_PILET) {
     const { setup } = require(process.env.DEBUG_PILET);
@@ -61,7 +53,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
     });
   }
 
-  const createApi = defaultApiCreator(container);
+  const createApi = defaultApiCreator(context, Array.isArray(extendApi) ? extendApi : [extendApi]);
   const RecallPortal = withRecall<PortalProps, PiletApi>(Portal, {
     modules: availablePilets,
     getDependencies,
@@ -87,7 +79,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
   });
 
   const App: React.FC<PortalProps> = props => (
-    <StateContext.Provider value={container.context}>
+    <StateContext.Provider value={context}>
       <RecallPortal {...props} />
     </StateContext.Provider>
   );
@@ -97,7 +89,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
     ...events,
     App,
     createApi,
-    actions: container.context,
+    actions: context,
     root: createApi({
       name: 'root',
       version: process.env.BUILD_PCKG_VERSION || '1.0.0',

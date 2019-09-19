@@ -12,10 +12,10 @@ For details on the provided API check out the [documentation at the Piral websit
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
-For the setup of the library itself you'll need to import `createUserApi` from the `piral-auth` package.
+For the setup of the library itself you'll need to import `createAuthApi` from the `piral-auth` package.
 
 ```tsx
-import { createUserApi } from 'piral-auth';
+import { createAuthApi } from 'piral-auth';
 ```
 
 For the integration this depends on the Piral instance.
@@ -25,7 +25,7 @@ For `piral-core`-based instances this boils down to:
 ```ts
 const PiralInstance = createInstance({
   // important part
-  extendApi: extendApis([createUserApi]),
+  extendApi: extendApis([createAuthApi]),
   // ...
 });
 ```
@@ -35,7 +35,7 @@ For `piral`-based instances the integration looks like:
 ```tsx
 renderInstance({
   // important part
-  extendApi: extendApis([createUserApi]),
+  extendApi: extendApis([createAuthApi]),
   // ...
 });
 ```

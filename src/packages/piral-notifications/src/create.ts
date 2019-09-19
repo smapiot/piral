@@ -1,8 +1,11 @@
+import * as actions from './actions';
 import { wrapElement } from 'react-arbiter';
 import { PiletApi, PiletMetadata, GlobalStateContext } from 'piral-core';
 import { PiletNotificationsApi } from './types';
 
-export function createNotificationsApi(api: PiletApi, target: PiletMetadata, context: GlobalStateContext): PiletNotificationsApi {
+export function createNotificationsApi(_api: PiletApi, _target: PiletMetadata, context: GlobalStateContext): PiletNotificationsApi {
+  context.withActions(actions);
+
   return {
     showNotification(content, options = {}) {
       const notification = {

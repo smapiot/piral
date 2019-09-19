@@ -27,16 +27,15 @@ export interface RouteBaseProps<UrlParams = any, UrlState = any>
 
 export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
 
+/**
+ * Defines the full pilet; metadata and API.
+ */
 export type Pilet = ArbiterModule<PiletApi>;
 
 /**
  * Defines the Pilet API from piral-core.
  */
-export interface PiletApi extends PiletCustomApi, EventEmitter {
-  /**
-   * Gets the metadata of the current pilet.
-   */
-  meta: PiletMetadata;
+export interface PiletCoreApi {
   /**
    * Gets a shared data value.
    * @param name The name of the data to retrieve.
@@ -79,6 +78,16 @@ export interface PiletApi extends PiletCustomApi, EventEmitter {
    * @param Component The registered extension component to unregister.
    */
   unregisterExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>): void;
+}
+
+/**
+ * Defines the API accessible from pilets.
+ */
+export interface PiletApi extends PiletCustomApi, PiletCoreApi, EventEmitter {
+  /**
+   * Gets the metadata of the current pilet.
+   */
+  meta: PiletMetadata;
 }
 
 export interface PiletsBag {

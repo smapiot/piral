@@ -1,3 +1,4 @@
+import * as actions from './actions';
 import { deref } from '@dbeining/react-atom';
 import { PiletApi, PiletMetadata, GlobalStateContext } from 'piral-core';
 import { Localizer } from './localize';
@@ -19,6 +20,8 @@ export function setupLocalizer(config: LocaleConfig = {}) {
 export function createLocaleApi(_api: PiletApi, _target: PiletMetadata, context: GlobalStateContext): PiletLocaleApi {
   let localTranslations: LocalizationMessages = {};
   const localizer = deref(context.state).localizer;
+  context.withActions(actions);
+
   return {
     setTranslations(messages) {
       localTranslations = messages;

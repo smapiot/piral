@@ -1,7 +1,7 @@
 import { swap, Atom } from '@dbeining/react-atom';
-import { LayoutType, GlobalState, EventEmitter } from '../../types';
+import { LayoutType, GlobalState, GlobalStateContext } from '../../types';
 
-export function changeLayout(this: EventEmitter, ctx: Atom<GlobalState>, current: LayoutType) {
+export function changeLayout(this: GlobalStateContext, ctx: Atom<GlobalState>, current: LayoutType) {
   swap(ctx, state => {
     this.emit('change-layout', {
       current,
@@ -20,7 +20,7 @@ export function changeLayout(this: EventEmitter, ctx: Atom<GlobalState>, current
   });
 }
 
-export function setLoading(this: EventEmitter, ctx: Atom<GlobalState>, loading: boolean) {
+export function setLoading(this: GlobalStateContext, ctx: Atom<GlobalState>, loading: boolean) {
   swap(ctx, state => {
     this.emit('loading', {
       loading,
@@ -33,4 +33,15 @@ export function setLoading(this: EventEmitter, ctx: Atom<GlobalState>, loading: 
       },
     };
   });
+}
+
+export function withAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
+  ctx[actionName] = (...args) => action.call(this, ctx, ...args);
+}
+
+export function withActions(this: GlobalStateContext, ctx: Atom<GlobalState>, actions: any) {
+  for (const actionName of Object.keys(actions)) {
+    const action = actions[actionName];
+    withAction.call(this, ctx, actionName, action);
+  }
 }

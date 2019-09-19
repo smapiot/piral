@@ -1,9 +1,9 @@
 import { DependencyGetter } from 'react-arbiter';
+import { Pilet } from './api';
 import { NestedPartial } from './common';
+import { PiralCustomActions } from './custom';
 import { PiletRequester, Extend } from './plugin';
 import { GlobalState } from './state';
-import { Pilet } from './api';
-import { PiralCustomActions } from './custom';
 
 export interface PiralPiletConfiguration {
   /*
@@ -20,7 +20,7 @@ export interface PiralPiletConfiguration {
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  extendApi?: Extend;
+  extendApi?: Extend | Array<Extend>;
 }
 
 export interface PiralStateConfiguration {

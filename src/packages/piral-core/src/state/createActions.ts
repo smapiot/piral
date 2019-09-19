@@ -2,7 +2,7 @@ import * as actions from './actions';
 import { Atom } from '@dbeining/react-atom';
 import { GlobalState, GlobalStateContext, EventEmitter } from '../types';
 
-function convert(ctx: GlobalStateContext, key: string) {
+function convertAction(ctx: GlobalStateContext, key: string) {
   const action: any = actions[key];
   return (...args) => action.call(ctx, ctx.state, ...args);
 }
@@ -20,7 +20,7 @@ export function createActions(state: Atom<GlobalState>, events: EventEmitter, mo
   const actionNames = Object.keys(actions);
 
   for (const actionName of actionNames) {
-    ctx[actionName] = convert(ctx, actionName);
+    ctx[actionName] = convertAction(ctx, actionName);
   }
 
   return ctx;

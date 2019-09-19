@@ -1,3 +1,4 @@
+import * as actions from './actions';
 import { buildName, PiletApi, PiletMetadata, GlobalStateContext, withApi } from 'piral-core';
 import { PiletDashboardApi } from './types';
 
@@ -6,7 +7,10 @@ export function createDashboardApi(
   target: PiletMetadata,
   context: GlobalStateContext,
 ): PiletDashboardApi {
+  const prefix = target.name;
   let next = 0;
+  context.withActions(actions);
+
   return {
     registerTile(name, arg, preferences?) {
       if (typeof name !== 'string') {
@@ -15,14 +19,14 @@ export function createDashboardApi(
         name = next++;
       }
 
-      const id = buildName(target.name, name);
+      const id = buildName(prefix, name);
       context.registerTile(id, {
-        component: withApi(arg, api, 'tile'),
+        component: withApi(context.converters, arg, api, 'tile'),
         preferences,
       });
     },
     unregisterTile(name) {
-      const id = buildName(target.name, name);
+      const id = buildName(prefix, name);
       context.unregisterTile(id);
     },
   };

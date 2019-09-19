@@ -3,7 +3,7 @@ import { createBrowserHistory } from 'history';
 import { globalDependencies, getLocalDependencies } from './modules';
 import { defaultBreakpoints, getCurrentLayout, defaultLayouts } from './utils';
 import { DefaultLoader, DefaultErrorInfo } from './components/default';
-import { Append, Extend, GlobalStateOptions, NestedPartial, GlobalState } from './types';
+import { GlobalStateOptions, NestedPartial, GlobalState } from './types';
 
 /**
  * Creates a dependency getter that sets the shared dependencies explicitly.
@@ -29,25 +29,6 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
     ...additionalDependencies,
   };
   return () => dependencies;
-}
-
-/**
- * Creates an API extender from the given array of API declarations.
- * @param apis The APIs to use as source.
- */
-export function extendApis(apis: Array<Append>): Extend {
-  return (init, target) => ({
-    ...init,
-    ...apis
-      .map(createApi => createApi(init, target))
-      .reduce(
-        (prev, curr) => ({
-          ...curr,
-          ...prev,
-        }),
-        init,
-      ),
-  });
 }
 
 /**

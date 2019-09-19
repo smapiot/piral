@@ -5,13 +5,13 @@ import { OpenNotification } from './types';
 export function openNotification(ctx: Atom<GlobalState>, dialog: OpenNotification) {
   swap(ctx, state => ({
     ...state,
-    notifications: prependItem(state.app.notifications, dialog),
+    notifications: prependItem(state.notifications, dialog),
   }));
 }
 
 export function closeNotification(ctx: Atom<GlobalState>, dialog: OpenNotification) {
   swap(ctx, state => ({
     ...state,
-    notifications: excludeItem(state.app.notifications, dialog),
+    notifications: excludeItem(state.notifications, dialog),
   }));
 }
