@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { isfunc } from 'react-arbiter';
 import { History, Location } from 'history';
-import { PromptMessage } from '../types';
+import { PromptMessage } from './types';
 
 /**
  * Hook to notify the user in case of potential data loss when

@@ -1,8 +1,8 @@
 import { AvailableDependencies } from 'react-arbiter';
 import { createBrowserHistory } from 'history';
 import { globalDependencies, getLocalDependencies } from './modules';
-import { defaultBreakpoints, getUserLocale, getCurrentLayout, defaultLayouts } from './utils';
-import { DefaultDashboard, DefaultLoader, DefaultErrorInfo } from './components/default';
+import { defaultBreakpoints, getCurrentLayout, defaultLayouts } from './utils';
+import { DefaultLoader, DefaultErrorInfo } from './components/default';
 import { Append, Extend, GlobalStateOptions, NestedPartial, GlobalState } from './types';
 
 /**
@@ -61,14 +61,9 @@ export function setupState(
 ): NestedPartial<GlobalState> {
   const {
     components: defaultComponentsState = {
-      Dashboard: undefined,
       Loader: undefined,
       ErrorInfo: undefined,
       history: undefined,
-    },
-    language: defaultLanguageState = {
-      available: undefined,
-      selected: undefined,
     },
     layout: defaultLayoutState = {
       breakpoints: undefined,
@@ -80,29 +75,20 @@ export function setupState(
   const {
     history = defaultComponentsState.history || createBrowserHistory(),
     breakpoints = defaultLayoutState.breakpoints || defaultBreakpoints,
-    language = 'en',
-    languages = defaultLanguageState.available || (language && [language]) || [],
     routes = {},
     trackers = [],
-    Dashboard = defaultComponentsState.Dashboard || DefaultDashboard,
     Loader = defaultComponentsState.Loader || DefaultLoader,
     ErrorInfo = defaultComponentsState.ErrorInfo || DefaultErrorInfo,
   } = options;
-  const [defaultLanguage = language] = languages;
   return {
     ...state,
     app: {
       ...state.app,
-      language: {
-        selected: defaultLanguageState.selected || getUserLocale(languages, defaultLanguage, language),
-        available: languages,
-      },
       layout: {
         current: defaultLayoutState.current || getCurrentLayout(breakpoints, defaultLayouts, 'desktop'),
         breakpoints,
       },
       components: {
-        Dashboard,
         ErrorInfo,
         Loader,
         history,

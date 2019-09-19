@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useActions } from 'piral-core';
-import { LanguageLoader } from '../types';
+import { useActions, useGlobalState } from 'piral-core';
+import { LanguageLoader } from './types';
 
 export function useDynamicLanguage(
   defaultSelected: string,
@@ -28,4 +28,10 @@ export function useDynamicLanguage(
     return () => (active = false);
   }, [selected]);
   return [selected, setSelected];
+}
+
+export function useTranslate() {
+  const { translate } = useActions();
+  useGlobalState(m => m.app.language.selected);
+  return translate;
 }

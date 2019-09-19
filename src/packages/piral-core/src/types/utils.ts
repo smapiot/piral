@@ -63,7 +63,6 @@ export interface PiralLoadingEvent {}
 
 export interface PiralEventMap extends PiralCustomEventMap {
   'store-data': PiralStoreDataEvent;
-  'change-language': PiralChangeLanguageEvent;
   'change-layout': PiralChangeLayoutEvent;
   'load-start': PiralStartLoadEvent;
   'load-end': PiralEndLoadEvent;

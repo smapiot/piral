@@ -3,11 +3,10 @@ import { Route, Switch, RouteComponentProps } from 'react-router-dom';
 import { useGlobalState } from '../hooks';
 
 export interface RoutesProps {
-  Home: React.ComponentType<RouteComponentProps>;
   NotFound: React.ComponentType<RouteComponentProps>;
 }
 
-export const Routes: React.FC<RoutesProps> = ({ Home, NotFound }) => {
+export const Routes: React.FC<RoutesProps> = ({ NotFound }) => {
   const { pages, routes, trackers } = useGlobalState(s => ({
     pages: s.components.pages,
     routes: s.app.routes,
@@ -20,7 +19,6 @@ export const Routes: React.FC<RoutesProps> = ({ Home, NotFound }) => {
         <Route key={i} path="/" component={tracker} />
       ))}
       <Switch>
-        <Route exact path="/" component={Home} />
         {Object.keys(routes).map(url => (
           <Route exact key={url} path={url} component={routes[url]} />
         ))}

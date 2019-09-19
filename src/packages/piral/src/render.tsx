@@ -14,9 +14,8 @@ import {
   gqlMutation,
   gqlSubscription,
 } from 'piral-ext';
-import { createTranslationsActions } from './actions';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
-import { PiralOptions, PiletQueryResult, PiletsBag } from './types';
+import { PiralOptions, PiletQueryResult } from './types';
 
 function defaultExtendApi(api: PiletApi) {
   return api;
@@ -90,7 +89,6 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
       state: explicitState,
       ...forwardOptions
     } = {}) => {
-      const apis: PiletsBag = {};
       const messages = Array.isArray(translations)
         ? translations.reduce((prev, curr) => {
             prev[curr] = {};
@@ -113,10 +111,6 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
         ...forwardOptions,
         availablePilets: getAvailablePilets(),
         requestPilets: getPiletRequester(pilets),
-        actions: {
-          ...actions,
-          ...createTranslationsActions(localizer, apis),
-        },
         extendApi(api, target) {
           const newApi: any = {
             ...createFetchApi(fetchOptions),
@@ -125,7 +119,6 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
             ...createUserApi(),
             ...api,
           };
-          apis[target.name] = newApi;
           return extendApi(newApi, target) as any;
         },
         state,
@@ -134,10 +127,6 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
       if (isfunc(attach)) {
         attach(Piral.root);
       }
-
-      Piral.on('change-language', ev => {
-        localizer.language = ev.selected;
-      });
 
       const App: React.FC = () => (
         <Provider value={client}>

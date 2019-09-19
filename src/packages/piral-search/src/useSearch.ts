@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useDebounce } from './debounce';
-import { useGlobalState } from './globalState';
-import { useActions } from './actions';
-import { Disposable } from '../types';
+import { useGlobalState, useDebounce, useActions, Disposable } from 'piral-core';
 
 /**
  * Hook that yields the possibility of searching in Piral.

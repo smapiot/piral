@@ -1,3 +1,5 @@
+import { deref } from '@dbeining/react-atom';
+import { PiletApi, PiletMetadata, GlobalStateContext } from 'piral-core';
 import { Localizer } from './localize';
 import { PiletLocaleApi, LocalizationMessages, LocaleConfig } from './types';
 
@@ -13,10 +15,10 @@ export function setupLocalizer(config: LocaleConfig = {}) {
 
 /**
  * Creates a new Piral localization API extension.
- * @param config The configuration to use.
  */
-export function createLocaleApi(localizer: Localizer): PiletLocaleApi {
+export function createLocaleApi(_api: PiletApi, _target: PiletMetadata, context: GlobalStateContext): PiletLocaleApi {
   let localTranslations: LocalizationMessages = {};
+  const localizer = deref(context.state).localizer;
   return {
     setTranslations(messages) {
       localTranslations = messages;

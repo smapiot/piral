@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { getExtensionSlot } from '../extension';
-import { useGlobalState } from '../../hooks';
-import { DashboardProps } from '../../types';
+import { useGlobalState, getExtensionSlot } from 'piral-core';
+import { DashboardProps } from './types';
 
 const ExtensionSlot = getExtensionSlot('dashboard');
 

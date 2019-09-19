@@ -1,5 +1,5 @@
-import { cookie, storage } from './storage';
-import { getUserLocale } from './user';
+import { cookie, storage } from 'piral-core';
+import { getUserLocale } from './current';
 
 function mockNavigatorLanguage(value = '') {
   (navigator as any).__defineGetter__('language', () => value);

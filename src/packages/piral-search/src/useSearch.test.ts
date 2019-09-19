@@ -1,8 +1,6 @@
 import * as React from 'react';
-import * as globalState from './globalState';
-import * as debounce from './debounce';
-import * as actions from './actions';
-import { useSearch } from './search';
+import * as piralCore from 'piral-core';
+import { useSearch } from './useSearch';
 
 jest.mock('react');
 
@@ -15,16 +13,16 @@ const state = {
   },
 };
 
-(globalState as any).useGlobalState = (select: any) => select(state);
+(piralCore as any).useGlobalState = (select: any) => select(state);
 
-(debounce as any).useDebounce = value => value;
+(piralCore as any).useDebounce = value => value;
 
 const availableActions = {
   setSearchInput: jest.fn(),
   triggerSearch: jest.fn(),
 };
 
-(actions as any).useActions = () => availableActions;
+(piralCore as any).useActions = () => availableActions;
 
 describe('Search Hook Module', () => {
   it('just returns current input value', () => {

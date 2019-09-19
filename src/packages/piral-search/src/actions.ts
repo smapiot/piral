@@ -1,8 +1,8 @@
 import { ReactChild } from 'react';
 import { wrapElement } from 'react-arbiter';
 import { swap, Atom, deref } from '@dbeining/react-atom';
-import { GlobalState, Disposable, appendItems, prependItems } from 'piral-core';
-import { SearchOptions } from './types';
+import { GlobalState, Disposable, appendItems, prependItems, withKey, withoutKey } from 'piral-core';
+import { SearchOptions, SearchProviderRegistration } from './types';
 
 export function setSearchInput(ctx: Atom<GlobalState>, input: string) {
   swap(ctx, state => ({
@@ -92,6 +92,26 @@ export function prependSearchResults(ctx: Atom<GlobalState>, items: Array<ReactC
       ...state.search,
       loading: !done,
       results: prependItems(state.search.results, items),
+    },
+  }));
+}
+
+export function registerSearchProvider(ctx: Atom<GlobalState>, name: string, value: SearchProviderRegistration) {
+  swap(ctx, state => ({
+    ...state,
+    components: {
+      ...state.components,
+      searchProviders: withKey(state.components.searchProviders, name, value),
+    },
+  }));
+}
+
+export function unregisterSearchProvider(ctx: Atom<GlobalState>, name: string) {
+  swap(ctx, state => ({
+    ...state,
+    components: {
+      ...state.components,
+      searchProviders: withoutKey(state.components.searchProviders, name),
     },
   }));
 }

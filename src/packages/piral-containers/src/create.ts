@@ -1,8 +1,8 @@
-import { PiletApi, buildName, PiletMetadata } from 'piral-core';
+import { PiletApi, buildName, PiletMetadata, GlobalStateContext } from 'piral-core';
 import { withPiletState } from './withPiletState';
 import { PiletContainersApi } from './types';
 
-export function createContainerApi(api: PiletApi, target: PiletMetadata): PiletContainersApi {
+export function createContainerApi(api: PiletApi, target: PiletMetadata, context: GlobalStateContext): PiletContainersApi {
   let containers = 0;
   return {
     createState(options) {

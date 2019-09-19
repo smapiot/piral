@@ -7,7 +7,7 @@ import { useGlobalState } from '../hooks';
 import { PortalProps } from '../types';
 
 export const Portal: React.FC<PortalProps & RecallProps> = ({ children, loaded, error }) => {
-  const { Dashboard, ErrorInfo, Loader, history } = useGlobalState(s => s.app.components);
+  const { ErrorInfo, Loader, history } = useGlobalState(s => s.app.components);
 
   return (
     <Router history={history}>
@@ -16,7 +16,7 @@ export const Portal: React.FC<PortalProps & RecallProps> = ({ children, loaded, 
           error ? (
             <ErrorInfo type="loading" error={error} />
           ) : (
-            children(<Routes Home={Dashboard} NotFound={props => <ErrorInfo type="not_found" {...props} />} />)
+            children(<Routes NotFound={props => <ErrorInfo type="not_found" {...props} />} />)
           )
         ) : (
           <Loader />

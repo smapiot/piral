@@ -1,5 +1,5 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { openNotification, closeNotification } from './notifications';
+import { openNotification, closeNotification } from './actions';
 
 describe('Notifications Actions Module', () => {
   it('openNotification prepends a new notification', () => {

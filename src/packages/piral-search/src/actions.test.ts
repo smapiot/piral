@@ -1,5 +1,13 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { appendSearchResults, prependSearchResults, resetSearchResults, setSearchInput, triggerSearch } from './actions';
+import {
+  appendSearchResults,
+  prependSearchResults,
+  resetSearchResults,
+  setSearchInput,
+  triggerSearch,
+  registerSearchProvider,
+  unregisterSearchProvider,
+} from './actions';
 
 const state = {
   search: {
@@ -285,5 +293,33 @@ describe('Search Action Module', () => {
     triggerSearch(Atom.of(state));
     await (state.components.searchProviders as any).foo.search().catch(m => m);
     expect(console.warn).toHaveBeenCalled();
+  });
+
+  it('registerSearchProvider and unregisterSearchProvider', () => {
+    const state = Atom.of({
+      foo: 5,
+      components: {
+        foo: 5,
+        searchProviders: {},
+      },
+    });
+    registerSearchProvider(state, 'foo', 10);
+    expect(deref(state)).toEqual({
+      foo: 5,
+      components: {
+        foo: 5,
+        searchProviders: {
+          foo: 10,
+        },
+      },
+    });
+    unregisterSearchProvider(state, 'foo');
+    expect(deref(state)).toEqual({
+      foo: 5,
+      components: {
+        foo: 5,
+        searchProviders: {},
+      },
+    });
   });
 });

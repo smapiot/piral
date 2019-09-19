@@ -1,3 +1,5 @@
+import { ComponentType } from 'react';
+
 function rand(c: 'x' | 'y') {
   const r = (Math.random() * 16) | 0;
   const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -10,4 +12,10 @@ export function generateId() {
 
 export function buildName(prefix: string, name: string | number) {
   return `${prefix}://${name}`;
+}
+
+export function markReact<T>(arg: ComponentType<T>, displayName: string) {
+  if (arg && !arg.displayName) {
+    arg.displayName = displayName;
+  }
 }

@@ -1,4 +1,4 @@
-import { storage, cookie } from './storage';
+import { cookie, storage } from 'piral-core';
 
 function getUserLocaleUnchecked(defaultLocale: string, remoteLocale: string) {
   const storedLocale = cookie.getItem('_culture') || storage.getItem('locale');

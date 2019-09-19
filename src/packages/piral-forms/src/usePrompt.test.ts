@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { usePrompt } from './prompt';
+import { usePrompt } from './usePrompt';
 
 jest.mock('react');
 

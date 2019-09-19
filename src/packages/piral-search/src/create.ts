@@ -22,7 +22,7 @@ function addSearchProvider(
   });
 }
 
-export function createSearchApi(api: PiletApi, target: PiletMetadata): PiletSearchApi {
+export function createSearchApi(api: PiletApi, target: PiletMetadata, context: GlobalStateContext): PiletSearchApi {
   let next = 0;
   return {
     registerSearchProvider(name, provider, settings?) {
