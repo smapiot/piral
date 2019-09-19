@@ -22,6 +22,24 @@ declare module 'piral-core/lib/types/custom' {
   }
 
   interface PiralCustomComponentsState {}
+
+  interface PiralCustomErrors {
+    form: FormErrorInfoProps;
+  }
+}
+
+/**
+ * The error used when a form submission resulted in an error.
+ */
+export interface FormErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'form';
+  /**
+   * The provided error details.
+   */
+  error: any;
 }
 
 export interface FormDataState {

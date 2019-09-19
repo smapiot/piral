@@ -5,14 +5,14 @@ import { ModalRegistration, OpenModalDialog } from './types';
 export function openModal(ctx: Atom<GlobalState>, dialog: OpenModalDialog) {
   swap(ctx, state => ({
     ...state,
-    modals: prependItem(state.app.modals, dialog),
+    modals: prependItem(state.modals, dialog),
   }));
 }
 
 export function closeModal(ctx: Atom<GlobalState>, dialog: OpenModalDialog) {
   swap(ctx, state => ({
     ...state,
-    modals: excludeItem(state.app.modals, dialog),
+    modals: excludeItem(state.modals, dialog),
   }));
 }
 

@@ -17,3 +17,5 @@ export type NestedPartial<T> = {
 export type Dict<T> = Record<string, T>;
 
 export type Without<T, K> = Pick<T, Exclude<keyof T, K>>;
+
+export type FirstParameter<T extends (arg: any) => any> = T extends (arg: infer P) => any ? P : never;

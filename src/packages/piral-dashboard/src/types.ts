@@ -1,6 +1,5 @@
-import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Dict, WrappedComponent, ForeignComponent, BaseComponentProps } from 'piral-core';
+import { Dict, WrappedComponent, BaseComponentProps, AnyComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletDashboardApi {}
@@ -27,6 +26,29 @@ declare module 'piral-core/lib/types/custom' {
      */
     tiles: Dict<TileRegistration>;
   }
+
+  interface PiralCustomErrors {
+    tile: TileErrorInfoProps;
+  }
+}
+
+export interface TileErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'tile';
+  /**
+   * The provided error details.
+   */
+  error: any;
+  /**
+   * The currently used number of columns.
+   */
+  columns: number;
+  /**
+   * The currently used number of rows.
+   */
+  rows: number;
 }
 
 export interface TileComponentProps extends BaseComponentProps {
@@ -71,33 +93,19 @@ export interface TileRegistration {
 
 export interface PiletDashboardApi {
   /**
-   * Registers a tile for general components.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the tile.
-   * @param render The function that is being called once rendering begins.
-   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
-   */
-  registerTileX(name: string, render: ForeignComponent<TileComponentProps>, preferences?: TilePreferences): void;
-  /**
-   * Registers a tile for general components.
-   * @param render The function that is being called once rendering begins.
-   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
-   */
-  registerTileX(render: ForeignComponent<TileComponentProps>, preferences?: TilePreferences): void;
-  /**
-   * Registers a tile for React components.
+   * Registers a tile with a predefined tile components.
    * The name has to be unique within the current pilet.
    * @param name The name of the tile.
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(name: string, Component: ComponentType<TileComponentProps>, preferences?: TilePreferences): void;
+  registerTile(name: string, Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): void;
   /**
-   * Registers a tile for React components.
+   * Registers a tile for predefined tile components.
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(Component: ComponentType<TileComponentProps>, preferences?: TilePreferences): void;
+  registerTile(Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): void;
   /**
    * Unregisters a tile known by the given name.
    * Only previously registered tiles can be unregistered.

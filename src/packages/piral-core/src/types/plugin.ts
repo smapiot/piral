@@ -32,11 +32,3 @@ export interface PiralContainer {
   events: EventEmitter;
   extendApi: Extend;
 }
-
-export interface PiletsBag {
-  [name: string]: PiletApi;
-}
-
-export interface PiralActionContext extends EventEmitter {
-  apis: PiletsBag;
-}

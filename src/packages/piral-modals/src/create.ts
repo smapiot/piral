@@ -1,18 +1,5 @@
-import { PiletApi, PiletMetadata, GlobalStateContext, AnyComponent, withApi, buildName, markReact } from 'piral-core';
-import { PiletModalsApi, ModalComponentProps } from './types';
-
-function addModal<TOpts>(
-  context: GlobalStateContext,
-  api: PiletApi,
-  id: string,
-  arg: AnyComponent<ModalComponentProps<TOpts>>,
-  defaults?: TOpts,
-) {
-  context.registerModal(id, {
-    component: withApi(arg, api, 'modal') as any,
-    defaults,
-  });
-}
+import { PiletApi, PiletMetadata, GlobalStateContext, withApi, buildName } from 'piral-core';
+import { PiletModalsApi } from './types';
 
 export function createModalsApi(api: PiletApi, target: PiletMetadata, context: GlobalStateContext): PiletModalsApi {
   return {
@@ -27,14 +14,12 @@ export function createModalsApi(api: PiletApi, target: PiletMetadata, context: G
       context.openModal(dialog);
       return dialog.close;
     },
-    registerModalX(name, arg, defaults) {
-      const id = buildName(target.name, name);
-      addModal(context, api, id, arg, defaults);
-    },
     registerModal(name, arg, defaults) {
       const id = buildName(target.name, name);
-      markReact(arg, `Modal:${name}`);
-      addModal(context, api, id, arg, defaults);
+      context.registerModal(id, {
+        component: withApi(arg, api, 'modal'),
+        defaults,
+      });
     },
     unregisterModal(name) {
       const id = buildName(target.name, name);

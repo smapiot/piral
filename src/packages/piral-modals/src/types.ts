@@ -41,6 +41,28 @@ declare module 'piral-core/lib/types/custom' {
      */
     modals: Dict<ModalRegistration>;
   }
+
+  interface PiralCustomErrors {
+    modal: ModalErrorInfoProps;
+  }
+}
+
+/**
+ * The error used when a registered modal dialog crashed.
+ */
+export interface ModalErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'modal';
+  /**
+   * The provided error details.
+   */
+  error: any;
+  /**
+   * Callback for closing the modal programmatically.
+   */
+  onClose(): void;
 }
 
 export interface OpenModalDialog {
@@ -74,14 +96,6 @@ export interface PiletModalsApi {
    * @returns A callback to trigger closing the modal.
    */
   showModal<TOpts = any>(name: string, options?: TOpts): Disposable;
-  /**
-   * Registers a modal dialog using a generic rendering function.
-   * The name needs to be unique to be used without the pilet's name.
-   * @param name The name of the modal to register.
-   * @param render The function that is being called once rendering begins.
-   * @param defaults Optionally, sets the default values for the inserted options.
-   */
-  registerModalX<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
   /**
    * Registers a modal dialog using a React component.
    * The name needs to be unique to be used without the pilet's name.

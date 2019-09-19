@@ -1,14 +1,28 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { FirstParameter } from './common';
+import { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
 
-export interface ForeignComponent<TProps> {
+export interface ComponentConverters extends PiralCustomComponentConverters {
+  html<TProps>(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
+}
+
+export interface HtmlComponent<TProps> {
   /**
    * Renders a component into the provided element using the given props and context.
    */
+  render: ForeignComponent<TProps>;
+  /**
+   * The type of the HTML component.
+   */
+  type: 'html';
+}
+
+export interface ForeignComponent<TProps> {
   (element: HTMLElement, props: TProps, ctx: any): void;
 }
 
-export type AnyComponent<T> = ComponentType<T> | ForeignComponent<T>;
+export type AnyComponent<T, TKey extends keyof ComponentConverters = 'html'> = ComponentType<T> | FirstParameter<ComponentConverters[TKey]>;
 
 /**
  * The error used when a route cannot be resolved.
@@ -62,12 +76,13 @@ export interface ExtensionErrorInfoProps {
   error: any;
 }
 
-export type ErrorInfoProps =
-  | NotFoundErrorInfoProps
-  | PageErrorInfoProps
-  | ExtensionErrorInfoProps
-  | LoadingErrorInfoProps;
+export interface Errors extends PiralCustomErrors {
+  extension: ExtensionErrorInfoProps;
+  loading: LoadingErrorInfoProps;
+  page: PageErrorInfoProps;
+  not_found: NotFoundErrorInfoProps;
+}
 
-export type ErrorType = ErrorInfoProps['type'];
+export type ErrorInfoProps<T extends keyof Errors> = Errors[T];
 
 export interface LoaderProps {}

@@ -1,4 +1,3 @@
-import { ComponentType } from 'react';
 import { ArbiterModule } from 'react-arbiter';
 import { RouteComponentProps } from 'react-router-dom';
 import { Dict } from './common';
@@ -6,7 +5,7 @@ import { PiletMetadata } from './meta';
 import { PiletCustomApi } from './custom';
 import { EventEmitter } from './utils';
 import { SharedData, DataStoreOptions } from './data';
-import { ForeignComponent, AnyComponent } from './components';
+import { AnyComponent } from './components';
 
 export interface BaseComponentProps {
   /**
@@ -53,47 +52,35 @@ export interface PiletApi extends PiletCustomApi, EventEmitter {
    */
   setData<TKey extends string>(name: TKey, value: SharedData[TKey], options?: DataStoreOptions): boolean;
   /**
-   * Registers a route for general component.
-   * The route needs to be unique and can contain params.
-   * Params are following the path-to-regexp notation, e.g., :id for an id parameter.
-   * @param route The route to register.
-   * @param render The function that is being called once rendering begins.
-   */
-  registerPageX(route: string, render: ForeignComponent<PageComponentProps>): void;
-  /**
-   * Registers a route for React component.
+   * Registers a route for predefined page component.
    * The route needs to be unique and can contain params.
    * Params are following the path-to-regexp notation, e.g., :id for an id parameter.
    * @param route The route to register.
    * @param Component The component to render the page.
    */
-  registerPage(route: string, Component: ComponentType<PageComponentProps>): void;
+  registerPage(route: string, Component: AnyComponent<PageComponentProps>): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
    */
   unregisterPage(route: string): void;
   /**
-   * Registers an extension component with a general components.
-   * The name must refer to the extension slot.
-   * @param name The global name of the extension slot.
-   * @param render The function that is being called once rendering begins.
-   * @param defaults Optionally, sets the default values for the expected data.
-   */
-  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<T>>, defaults?: T): void;
-  /**
-   * Registers an extension component with a React component.
+   * Registers an extension component with a predefined extension component.
    * The name must refer to the extension slot.
    * @param name The global name of the extension slot.
    * @param Component The component to be rendered.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<T>>, defaults?: T): void;
+  registerExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>, defaults?: T): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
-   * @param hook The registered extension component to unregister.
+   * @param Component The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<T>>): void;
+  unregisterExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>): void;
+}
+
+export interface PiletsBag {
+  [name: string]: PiletApi;
 }

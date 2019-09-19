@@ -1,5 +1,4 @@
-import { ComponentType } from 'react';
-import { WrappedComponent, Dict, BaseComponentProps, ForeignComponent } from 'piral-core';
+import { WrappedComponent, Dict, BaseComponentProps, AnyComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletMenuApi {}
@@ -26,6 +25,28 @@ declare module 'piral-core/lib/types/custom' {
      */
     menuItems: Dict<MenuItemRegistration>;
   }
+
+  interface PiralCustomErrors {
+    menu: MenuItemErrorInfoProps;
+  }
+}
+
+/**
+ * The error used when a registered menu item component crashed.
+ */
+export interface MenuItemErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'menu';
+  /**
+   * The provided error details.
+   */
+  error: any;
+  /**
+   * The type of the used menu.
+   */
+  menu: MenuType;
 }
 
 export interface MenuComponentProps extends BaseComponentProps {}
@@ -47,33 +68,19 @@ export interface MenuItemRegistration {
 
 export interface PiletMenuApi {
   /**
-   * Registers a menu item for general components.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the menu item.
-   * @param render The function that is being called once rendering begins.
-   * @param settings The optional configuration for the menu item.
-   */
-  registerMenuX(name: string, render: ForeignComponent<MenuComponentProps>, settings?: MenuSettings): void;
-  /**
-   * Registers a menu item for general components.
-   * @param render The function that is being called once rendering begins.
-   * @param settings The optional configuration for the menu item.
-   */
-  registerMenuX(render: ForeignComponent<MenuComponentProps>, settings?: MenuSettings): void;
-  /**
-   * Registers a menu item for React components.
+   * Registers a menu item for a predefined menu component.
    * The name has to be unique within the current pilet.
    * @param name The name of the menu item.
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(name: string, Component: ComponentType<MenuComponentProps>, settings?: MenuSettings): void;
+  registerMenu(name: string, Component: AnyComponent<MenuComponentProps>, settings?: MenuSettings): void;
   /**
-   * Registers a menu item for React components.
+   * Registers a menu item for a predefined menu component.
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(Component: ComponentType<MenuComponentProps>, settings?: MenuSettings): void;
+  registerMenu(Component: AnyComponent<MenuComponentProps>, settings?: MenuSettings): void;
   /**
    * Unregisters a menu item known by the given name.
    * Only previously registered menu items can be unregistered.

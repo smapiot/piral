@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useGlobalState } from '../hooks';
 import { ErrorInfoProps } from '../types';
 
-export const ComponentError: React.FC<ErrorInfoProps> = props => {
+export const ComponentError: React.FC<ErrorInfoProps<any>> = props => {
   const { ErrorInfo } = useGlobalState(s => s.app.components);
   return <ErrorInfo {...props} />;
 };

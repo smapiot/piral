@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { DefaultErrorInfo } from './errorInfo';
+import { DefaultErrorInfo } from './DefaultErrorInfo';
 
 jest.mock('../../hooks/globalState', () => ({
   useGlobalState(select: any) {
@@ -54,6 +54,7 @@ describe('Default Error Info Component', () => {
   it('renders the switch-case in the page error case', () => {
     const node = mount(
       <DefaultErrorInfo
+        error={undefined}
         type="page"
         history={undefined}
         match={undefined}

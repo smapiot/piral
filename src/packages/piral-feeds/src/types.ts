@@ -28,6 +28,24 @@ declare module 'piral-core/lib/types/custom' {
      */
     loadFeed<TData, TItem>(feed: ConnectorDetails<TData, TItem>): void;
   }
+
+  interface PiralCustomErrors {
+    feed: FeedErrorInfoProps;
+  }
+}
+
+/**
+ * The error used when loading a feed resulted in an error.
+ */
+export interface FeedErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'feed';
+  /**
+   * The provided error details.
+   */
+  error: any;
 }
 
 export interface FeedDataState {

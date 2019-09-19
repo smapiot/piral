@@ -4,7 +4,7 @@ import { ErrorInfoProps } from '../../types';
 
 const ExtensionSlot = getExtensionSlot('error');
 
-export const DefaultErrorInfo: React.FC<ErrorInfoProps> = props => (
+export const DefaultErrorInfo: React.FC<ErrorInfoProps<any>> = props => (
   <ExtensionSlot
     params={props}
     empty={() => {

@@ -3,12 +3,13 @@ import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
 import { PiletMetadata } from './meta';
+import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
-import { PiralCustomActions, PiralCustomState, PiralCustomComponentsState } from './custom';
 import { LayoutType, LayoutBreakpoints } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
-import { ErrorInfoProps, LoaderProps } from './components';
-import { BaseComponentProps, PageComponentProps, ExtensionComponentProps } from './api';
+import { ErrorInfoProps, LoaderProps, ComponentConverters } from './components';
+import { PiralCustomActions, PiralCustomState, PiralCustomComponentsState } from './custom';
+import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag } from './api';
 
 export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
@@ -53,7 +54,7 @@ export interface AppComponents {
   /**
    * The error renderer.
    */
-  ErrorInfo: ComponentType<ErrorInfoProps>;
+  ErrorInfo: ComponentType<ErrorInfoProps<any>>;
   /**
    * The history management instance.
    */
@@ -178,9 +179,17 @@ export interface PiralActions extends PiralCustomActions {
   setLoading(loading: boolean): void;
 }
 
-export interface GlobalStateContext extends PiralActions {
+export interface GlobalStateContext extends PiralActions, EventEmitter {
   /**
    * The global state context atom.
    */
   state: Atom<GlobalState>;
+  /**
+   * The available APIs.
+   */
+  apis: PiletsBag;
+  /**
+   * The available component converters.
+   */
+  converters: ComponentConverters;
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { isfunc } from 'react-arbiter';
 import { History } from 'history';
-import { useAction, usePrompt, useGlobalState, compare, generateId } from 'piral-core';
+import { useAction, useGlobalState, compare, generateId } from 'piral-core';
+import { usePrompt } from './usePrompt';
 import { FormProps, InputFormOptions, FormDataState } from './types';
 
 interface StateUpdater {

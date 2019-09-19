@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DefaultLoader } from './loader';
+import { DefaultLoader } from './DefaultLoader';
 import { mount } from 'enzyme';
 
 describe('Default Loader Component', () => {

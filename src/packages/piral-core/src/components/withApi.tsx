@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { wrapComponent } from 'react-arbiter';
 import { ComponentError, ComponentLoader } from './helpers';
-import { AnyComponent, ErrorType } from '../types';
+import { convertComponent } from '../utils';
+import { AnyComponent, Errors } from '../types';
 
 export interface ApiForward<TApi> {
   piral: TApi;
 }
 
 export function withApi<TApi, TProps>(
-  component: AnyComponent<TProps & ApiForward<TApi>>,
+  Component: AnyComponent<TProps & ApiForward<TApi>>,
   piral: TApi,
-  errorType: ErrorType,
+  errorType: keyof Errors,
 ) {
+  const component = convertComponent(Component, errorType);
   return wrapComponent<TProps, ApiForward<TApi>>(component, {
     forwardProps: { piral },
     onError(error) {
