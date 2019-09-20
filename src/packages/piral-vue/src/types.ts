@@ -4,8 +4,8 @@ import { ForeignComponent, HtmlComponent } from 'piral-core';
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletVueApi {}
 
-  interface PiralCustomComponentConverters {
-    vue<TProps>(component: VueComponent<TProps>): ForeignComponent<TProps>;
+  interface PiralCustomComponentConverters<TProps> {
+    vue(component: VueComponent<TProps>): ForeignComponent<TProps>;
   }
 }
 

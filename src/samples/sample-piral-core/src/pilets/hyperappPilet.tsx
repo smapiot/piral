@@ -1,5 +1,6 @@
-import { TileComponentProps, Pilet } from 'piral-core';
+import { Pilet } from 'piral-core';
 import { Component } from 'piral-hyperapp';
+import { TileComponentProps } from 'piral-dashboard';
 
 // If isolated we could easily also import hyperapp
 // and set up tsconfig.json to use jsxFactory h.
@@ -51,9 +52,17 @@ export const HyperappPilet: Pilet = {
   version: '1.0.0',
   hash: '521',
   setup(piral) {
-    piral.registerTileHyperapp(Tile, state, actions, {
-      initialColumns: 2,
-      initialRows: 2,
-    });
+    piral.registerTile(
+      {
+        root: Tile,
+        state,
+        actions,
+        type: 'hyperapp',
+      },
+      {
+        initialColumns: 2,
+        initialRows: 2,
+      },
+    );
   },
 };

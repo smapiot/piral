@@ -3,8 +3,8 @@ import { ForeignComponent } from 'piral-core';
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletHyperappApi {}
 
-  interface PiralCustomComponentConverters {
-    hyperapp<TProps>(component: HyperappComponent<TProps>): ForeignComponent<TProps>;
+  interface PiralCustomComponentConverters<TProps> {
+    hyperapp(component: HyperappComponent<TProps>): ForeignComponent<TProps>;
   }
 }
 

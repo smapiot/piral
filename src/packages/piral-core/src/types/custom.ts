@@ -10,4 +10,4 @@ export interface PiralCustomEventMap {}
 
 export interface PiralCustomComponentsState {}
 
-export interface PiralCustomComponentConverters {}
+export interface PiralCustomComponentConverters<TProps> {}

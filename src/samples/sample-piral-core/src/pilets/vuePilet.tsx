@@ -10,9 +10,15 @@ export const VuePilet: Pilet = {
   version: '1.0.0',
   hash: '429',
   setup(piral) {
-    piral.registerTileVue(Tile, {
-      initialColumns: 2,
-      initialRows: 2,
-    });
+    piral.registerTile(
+      {
+        root: Tile,
+        type: 'vue',
+      },
+      {
+        initialColumns: 2,
+        initialRows: 2,
+      },
+    );
   },
 };

@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { TileComponentProps, Pilet } from 'piral-core';
+import { Pilet } from 'piral-core';
+import { TileComponentProps } from 'piral-dashboard';
 
 @Component({
   template: `
@@ -14,7 +15,7 @@ import { TileComponentProps, Pilet } from 'piral-core';
 export class TileComponent {
   public counter = 0;
 
-  constructor(@Inject('TileProps') public props: TileComponentProps) {}
+  constructor(@Inject('Props') public props: TileComponentProps) {}
 
   increment() {
     this.counter += 1;
@@ -34,9 +35,15 @@ export const NgPilet: Pilet = {
   version: '1.0.0',
   hash: '430',
   setup(piral) {
-    piral.registerTileNg(TileComponent, {
-      initialColumns: 2,
-      initialRows: 2,
-    });
+    piral.registerTile(
+      {
+        component: TileComponent,
+        type: 'ng',
+      },
+      {
+        initialColumns: 2,
+        initialRows: 2,
+      },
+    );
   },
 };

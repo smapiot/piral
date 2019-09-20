@@ -3,8 +3,8 @@ import { ForeignComponent } from 'piral-core';
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNgApi {}
 
-  interface PiralCustomComponentConverters {
-    ng<TProps>(component: NgComponent<TProps>): ForeignComponent<TProps>;
+  interface PiralCustomComponentConverters<TProps> {
+    ng(component: NgComponent<TProps>): ForeignComponent<TProps>;
   }
 }
 

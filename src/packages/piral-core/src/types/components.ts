@@ -1,10 +1,10 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { FirstParameter } from './common';
+import { FirstParametersOf, UnionOf } from './common';
 import { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
 
-export interface ComponentConverters extends PiralCustomComponentConverters {
-  html<TProps>(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
+export interface ComponentConverters<TProps> extends PiralCustomComponentConverters<TProps> {
+  html(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
 }
 
 export interface HtmlComponent<TProps> {
@@ -22,7 +22,7 @@ export interface ForeignComponent<TProps> {
   (element: HTMLElement, props: TProps, ctx: any): void;
 }
 
-export type AnyComponent<T, TKey extends keyof ComponentConverters = 'html'> = ComponentType<T> | FirstParameter<ComponentConverters[TKey]>;
+export type AnyComponent<T> = ComponentType<T> | FirstParametersOf<ComponentConverters<T>>;
 
 /**
  * The error used when a route cannot be resolved.
@@ -83,6 +83,6 @@ export interface Errors extends PiralCustomErrors {
   not_found: NotFoundErrorInfoProps;
 }
 
-export type ErrorInfoProps<T extends keyof Errors> = Errors[T];
+export type ErrorInfoProps = UnionOf<Errors>;
 
 export interface LoaderProps {}

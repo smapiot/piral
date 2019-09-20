@@ -54,7 +54,7 @@ export interface AppComponents {
   /**
    * The error renderer.
    */
-  ErrorInfo: ComponentType<ErrorInfoProps<any>>;
+  ErrorInfo: ComponentType<ErrorInfoProps>;
   /**
    * The history management instance.
    */
@@ -206,5 +206,5 @@ export interface GlobalStateContext extends PiralActions, EventEmitter {
   /**
    * The available component converters.
    */
-  converters: ComponentConverters;
+  converters: ComponentConverters<any>;
 }

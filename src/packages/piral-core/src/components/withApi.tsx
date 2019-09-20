@@ -9,7 +9,7 @@ export interface ApiForward<TApi> {
 }
 
 export function withApi<TApi, TProps>(
-  converters: ComponentConverters,
+  converters: ComponentConverters<TProps & ApiForward<TApi>>,
   Component: AnyComponent<TProps & ApiForward<TApi>>,
   piral: TApi,
   errorType: keyof Errors,
