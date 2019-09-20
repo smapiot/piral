@@ -135,12 +135,12 @@ export interface PiralActions extends PiralCustomActions {
    * @param actionName The name of the action to define.
    * @param action The action to include.
    */
-  withAction<T extends keyof PiralActions>(actionName: T, action: PiralAction<PiralActions[T]>): void;
+  defineAction<T extends keyof PiralActions>(actionName: T, action: PiralAction<PiralActions[T]>): void;
   /**
    * Defines a set of actions for Piral.
    * @param actions The actions to define.
    */
-  withActions(actions: Partial<{ [P in keyof PiralActions]: PiralAction<PiralActions[P]> }>): void;
+  defineActions(actions: Partial<{ [P in keyof PiralActions]: PiralAction<PiralActions[P]> }>): void;
   /**
    * Reads the value of a shared data item.
    * @param name The name of the shared item.

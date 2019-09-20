@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DashboardProps, getExtensionSlot, useGlobalState } from 'piral-core';
+import { getExtensionSlot, useGlobalState } from 'piral-core';
+import { DashboardProps } from 'piral-ext';
 import { DashboardContainerProps, TileProps } from '../types';
 
 const ExtensionSlot = getExtensionSlot('dashboard');

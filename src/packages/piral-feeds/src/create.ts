@@ -1,24 +1,27 @@
 import * as actions from './actions';
-import { buildName, PiletApi, PiletMetadata, GlobalStateContext } from 'piral-core';
+import { buildName, ApiExtender, GlobalStateContext } from 'piral-core';
 import { withFeed } from './withFeed';
 import { createFeedOptions } from './utils';
 import { PiletFeedsApi } from './types';
 
-export function createFeedsApi(api: PiletApi, target: PiletMetadata, context: GlobalStateContext): PiletFeedsApi {
-  let feeds = 0;
-  context.withActions(actions);
+export function createFeedsApi(context: GlobalStateContext): ApiExtender<PiletFeedsApi> {
+  context.defineActions(actions);
 
-  return {
-    createConnector(resolver) {
-      const id = buildName(target.name, feeds++);
-      const options = createFeedOptions(id, resolver);
-      context.createFeed(options.id);
+  return (_, target) => {
+    let feeds = 0;
 
-      if (options.immediately) {
-        context.loadFeed(options);
-      }
+    return {
+      createConnector(resolver) {
+        const id = buildName(target.name, feeds++);
+        const options = createFeedOptions(id, resolver);
+        context.createFeed(options.id);
 
-      return component => withFeed(component, options) as any;
-    },
-  }
+        if (options.immediately) {
+          context.loadFeed(options);
+        }
+
+        return component => withFeed(component, options) as any;
+      },
+    };
+  };
 }

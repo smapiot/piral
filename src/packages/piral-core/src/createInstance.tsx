@@ -1,16 +1,12 @@
 import * as React from 'react';
-import { withRecall, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
+import { withRecall, createProgressiveStrategy } from 'react-arbiter';
 import { Portal } from './components';
 import { createGlobalState, createActions, StateContext } from './state';
-import { getLocalDependencies, createListener, globalDependencies, mergeApis } from './modules';
-import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiletMetadata, GlobalStateContext, Extend } from './types';
+import { getLocalDependencies, createListener, globalDependencies, defaultApiCreator } from './modules';
+import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiletMetadata } from './types';
 
 function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
   return Promise.resolve([]);
-}
-
-function defaultApiCreator(context: GlobalStateContext, apis: Array<Extend>): ApiCreator<PiletApi> {
-  return target => mergeApis(target, context, apis);
 }
 
 /**
@@ -37,11 +33,10 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
     requestPilets = defaultModuleRequester,
     getDependencies = getLocalDependencies,
     async = false,
-    actions,
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
-  const context = createActions(globalState, events, actions);
+  const context = createActions(globalState, events);
 
   if (process.env.DEBUG_PILET) {
     const { setup } = require(process.env.DEBUG_PILET);

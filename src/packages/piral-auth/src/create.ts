@@ -1,9 +1,9 @@
 import * as actions from './actions';
 import { PiralAuthApi } from './types';
-import { GlobalStateContext, PiletApi, PiletMetadata } from 'piral-core';
+import { GlobalStateContext } from 'piral-core';
 
-export function createAuthApi(_api: PiletApi, _target: PiletMetadata, context: GlobalStateContext): PiralAuthApi {
-  context.withActions(actions);
+export function createAuthApi(context: GlobalStateContext): PiralAuthApi {
+  context.defineActions(actions);
 
   return {
     getUser() {

@@ -1,6 +1,5 @@
-import * as actions from './actions';
-import { deref } from '@dbeining/react-atom';
-import { PiletApi, PiletMetadata, GlobalStateContext } from 'piral-core';
+import { Extend } from 'piral-core';
+import { createActions } from './actions';
 import { Localizer } from './localize';
 import { PiletLocaleApi, LocalizationMessages, LocaleConfig } from './types';
 
@@ -17,20 +16,24 @@ export function setupLocalizer(config: LocaleConfig = {}) {
 /**
  * Creates a new Piral localization API extension.
  */
-export function createLocaleApi(_api: PiletApi, _target: PiletMetadata, context: GlobalStateContext): PiletLocaleApi {
-  let localTranslations: LocalizationMessages = {};
-  const localizer = deref(context.state).localizer;
-  context.withActions(actions);
+export function createLocaleApi(localizer: Localizer = setupLocalizer()): Extend<PiletLocaleApi> {
+  return context => {
+    context.defineActions(createActions(localizer));
 
-  return {
-    setTranslations(messages) {
-      localTranslations = messages;
-    },
-    getTranslations() {
-      return localTranslations;
-    },
-    translate(tag, variables) {
-      return localizer.localizeLocal(localTranslations, tag, variables);
-    },
-  };
+    return () => {
+      let localTranslations: LocalizationMessages = {};
+
+      return {
+        setTranslations(messages) {
+          localTranslations = messages;
+        },
+        getTranslations() {
+          return localTranslations;
+        },
+        translate(tag, variables) {
+          return localizer.localizeLocal(localTranslations, tag, variables);
+        },
+      };
+    };
+  }
 }

@@ -5,10 +5,6 @@ declare module 'piral-core/lib/types/custom' {
 
   interface PiralCustomState {
     /**
-     * Gets the current localizer.
-     */
-    localizer: Localizable;
-    /**
      * Information for the language display.
      */
     language: {

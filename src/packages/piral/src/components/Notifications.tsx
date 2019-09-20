@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useGlobalState, OpenNotification } from 'piral-core';
+import { useGlobalState } from 'piral-core';
+import { OpenNotification } from 'piral-ext';
 import { NotificationsContainerProps } from '../types';
 
 export interface NotificationsCreator {
@@ -9,7 +10,7 @@ export interface NotificationsCreator {
 
 export function createNotifications({ NotificationsContainer, NotificationItem }: NotificationsCreator): React.FC {
   return () => {
-    const notifications = useGlobalState(s => s.app.notifications);
+    const notifications = useGlobalState(s => s.notifications);
 
     return (
       <NotificationsContainer>

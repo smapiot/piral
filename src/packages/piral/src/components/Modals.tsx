@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useGlobalState, OpenModalDialog } from 'piral-core';
+import { useGlobalState } from 'piral-core';
+import { OpenModalDialog } from 'piral-ext';
 import { ModalsContainerProps } from '../types';
 
 function closeAll(modals: Array<OpenModalDialog>) {
@@ -14,7 +15,7 @@ export interface ModalsCreator {
 export function createModals({ ModalsContainer, ModalDialog }: ModalsCreator): React.FC {
   return () => {
     const { dialogs, components } = useGlobalState(s => ({
-      dialogs: s.app.modals,
+      dialogs: s.modals,
       components: s.components.modals,
     }));
     const close = () => closeAll(dialogs);

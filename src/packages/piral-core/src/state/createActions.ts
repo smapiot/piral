@@ -7,16 +7,15 @@ function convertAction(ctx: GlobalStateContext, key: string) {
   return (...args) => action.call(ctx, ctx.state, ...args);
 }
 
-export function createActions(state: Atom<GlobalState>, events: EventEmitter, moreActions: any): GlobalStateContext {
-  const ctx: GlobalStateContext = {
-    ...moreActions,
+export function createActions(state: Atom<GlobalState>, events: EventEmitter): GlobalStateContext {
+  const ctx = {
     ...events,
     apis: {},
     converters: {
       html: component => component.render,
     },
     state,
-  };
+  } as GlobalStateContext;
   const actionNames = Object.keys(actions);
 
   for (const actionName of actionNames) {

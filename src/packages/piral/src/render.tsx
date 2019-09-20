@@ -7,19 +7,24 @@ import {
   createFetchApi,
   createGqlApi,
   createLocaleApi,
-  createUserApi,
+  createAuthApi,
+  createDashboardApi,
+  createMenuApi,
+  createNotificationsApi,
+  createModalsApi,
+  createContainerApi,
+  createFeedsApi,
+  createFormsApi,
+  createSearchApi,
   setupGqlClient,
   setupLocalizer,
+  httpFetch,
   gqlQuery,
   gqlMutation,
   gqlSubscription,
 } from 'piral-ext';
 import { getGateway, getContainer, getAvailablePilets, getPiletRequester, getLoader } from './utils';
 import { PiralOptions, PiletQueryResult } from './types';
-
-function defaultExtendApi(api: PiletApi) {
-  return api;
-}
 
 function defaultLoader(): Promise<undefined> {
   return Promise.resolve(undefined);
@@ -73,7 +78,7 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
   const defaultRequestPilets = () => gqlQuery<PiletQueryResult>(client, piletsQuery).then(({ pilets }) => pilets);
 
   return load({
-    fetch: (url, options) => createFetchApi(uri).fetch(url, options),
+    fetch: (url, options) => httpFetch(uri, url, options),
     query: (query, options) => gqlQuery(client, query, options),
     mutate: (mutation, options) => gqlMutation(client, mutation, options),
     subscribe: (subscription, subscriber, options) => gqlSubscription(client, subscription, subscriber, options),
@@ -81,9 +86,8 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
     ({
       pilets = defaultRequestPilets,
       translations = {},
-      extendApi = defaultExtendApi,
+      extendApi = [],
       attach,
-      actions,
       fetch: fetchOptions = uri,
       locale: localeOptions = config.locale,
       state: explicitState,
@@ -98,29 +102,34 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
       const state = setupState(
         {
           ...initialState,
-          languages: Object.keys(messages),
         },
         explicitState,
       );
       const localizer = setupLocalizer({
-        language: state.app.language.selected,
+        language: state.language.selected,
         messages,
         ...localeOptions,
       });
+      const createApiExtenders = Array.isArray(extendApi) ? extendApi : [extendApi];
       const Piral = createInstance({
         ...forwardOptions,
         availablePilets: getAvailablePilets(),
         requestPilets: getPiletRequester(pilets),
-        extendApi(api, target) {
-          const newApi: any = {
-            ...createFetchApi(fetchOptions),
-            ...createGqlApi(client),
-            ...createLocaleApi(localizer),
-            ...createUserApi(),
-            ...api,
-          };
-          return extendApi(newApi, target) as any;
-        },
+        extendApi: [
+          ...createApiExtenders,
+          createFetchApi(fetchOptions),
+          createGqlApi(client),
+          createLocaleApi(localizer),
+          createAuthApi,
+          createDashboardApi,
+          createMenuApi,
+          createNotificationsApi,
+          createModalsApi,
+          createContainerApi,
+          createFeedsApi,
+          createFormsApi,
+          createSearchApi,
+        ],
         state,
       });
 

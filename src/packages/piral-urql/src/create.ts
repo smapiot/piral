@@ -1,3 +1,4 @@
+import { Extend } from 'piral-core';
 import { Client, defaultExchanges, subscriptionExchange } from 'urql';
 import { SubscriptionClient, OperationOptions } from 'subscriptions-transport-ws';
 import { gqlQuery, gqlMutation, gqlSubscription } from './queries';
@@ -49,8 +50,8 @@ export function setupGqlClient(config: GqlConfig = {}) {
  * Creates a new Piral GraphQL API extension.
  * @param client The urql client to use.
  */
-export function createGqlApi(client: Client): PiletGqlApi {
-  return {
+export function createGqlApi(client: Client): Extend<PiletGqlApi> {
+  return () => ({
     query(q, options) {
       return gqlQuery(client, q, options);
     },
@@ -60,5 +61,5 @@ export function createGqlApi(client: Client): PiletGqlApi {
     subscribe(q, subscriber, options) {
       return gqlSubscription(client, q, subscriber, options);
     },
-  };
+  });
 }

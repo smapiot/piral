@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useGlobalState, useSearch } from 'piral-core';
+import { useGlobalState } from 'piral-core';
+import { useSearch } from 'piral-ext';
 import { SearchContainerProps, SearchInputProps, SearchResultProps } from '../types';
 
 export interface SearchCreator {

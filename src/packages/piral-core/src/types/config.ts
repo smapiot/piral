@@ -1,7 +1,6 @@
 import { DependencyGetter } from 'react-arbiter';
 import { Pilet } from './api';
 import { NestedPartial } from './common';
-import { PiralCustomActions } from './custom';
 import { PiletRequester, Extend } from './plugin';
 import { GlobalState } from './state';
 
@@ -37,10 +36,6 @@ export interface PiralStateConfiguration {
    * Optionally, sets up the initial state of the application.
    */
   state?: NestedPartial<GlobalState>;
-  /**
-   * Optionally, sets additional actions to be included.
-   */
-  actions?: PiralCustomActions;
 }
 
 export type PiralConfiguration = PiralPiletConfiguration & PiralStateConfiguration;

@@ -1,6 +1,7 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { DashboardProps, ErrorInfoProps, LoaderProps } from 'piral-core';
+import { ErrorInfoProps, LoaderProps } from 'piral-core';
+import { DashboardProps } from 'piral-ext';
 import {
   dashboardBuilder,
   errorBuilder,

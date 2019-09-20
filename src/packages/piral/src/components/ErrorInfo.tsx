@@ -4,14 +4,16 @@ import {
   ErrorInfoProps,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
-  TileErrorInfoProps,
-  MenuItemErrorInfoProps,
   LoadingErrorInfoProps,
+  ExtensionErrorInfoProps,
+} from 'piral-core';
+import {
   FeedErrorInfoProps,
   FormErrorInfoProps,
-  ExtensionErrorInfoProps,
+  TileErrorInfoProps,
   ModalErrorInfoProps,
-} from 'piral-core';
+  MenuItemErrorInfoProps,
+} from 'piral-ext';
 import { UnknownErrorInfoProps } from '../types';
 
 const ExtensionSlot = getExtensionSlot('error');

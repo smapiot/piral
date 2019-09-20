@@ -35,13 +35,13 @@ export function setLoading(this: GlobalStateContext, ctx: Atom<GlobalState>, loa
   });
 }
 
-export function withAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
+export function defineAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
   ctx[actionName] = (...args) => action.call(this, ctx, ...args);
 }
 
-export function withActions(this: GlobalStateContext, ctx: Atom<GlobalState>, actions: any) {
+export function defineActions(this: GlobalStateContext, ctx: Atom<GlobalState>, actions: any) {
   for (const actionName of Object.keys(actions)) {
     const action = actions[actionName];
-    withAction.call(this, ctx, actionName, action);
+    defineAction.call(this, ctx, actionName, action);
   }
 }
