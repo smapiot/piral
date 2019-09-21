@@ -2,7 +2,7 @@ import * as React from 'react';
 import { isfunc } from 'react-arbiter';
 import { render } from 'react-dom';
 import { Provider } from 'urql';
-import { createInstance, setupState, EventEmitter, PiletApi } from 'piral-core';
+import { createInstance, setupState, EventEmitter } from 'piral-core';
 import {
   createFetchApi,
   createGqlApi,

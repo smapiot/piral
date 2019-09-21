@@ -15,6 +15,8 @@ export function createMenuApi(context: GlobalStateContext): ApiExtender<PiletMen
           settings = arg;
           arg = name;
           name = next++;
+        } else if (settings === undefined) {
+          settings = {};
         }
 
         const id = buildName(prefix, name);

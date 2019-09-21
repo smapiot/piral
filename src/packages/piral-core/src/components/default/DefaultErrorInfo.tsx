@@ -17,6 +17,8 @@ export const DefaultErrorInfo: React.FC<ErrorInfoProps> = props => (
           return <div key="default_error">Extension crashed: {props.error}.</div>;
         case 'loading':
           return <div key="default_error">App could not be loaded: {props.error}.</div>;
+        default:
+          return <div key="default_error">The component crashed.</div>;
       }
     }}
   />
