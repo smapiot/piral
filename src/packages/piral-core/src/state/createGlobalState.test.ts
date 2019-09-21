@@ -1,6 +1,6 @@
 import { deref } from '@dbeining/react-atom';
 import { createGlobalState } from './createGlobalState';
-import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from '../components/default';
+import { DefaultErrorInfo, DefaultLoader } from '../components/default';
 import { defaultBreakpoints } from '../utils';
 
 describe('Create Global State Module', () => {
@@ -10,45 +10,22 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState();
     expect(deref(globalState)).toEqual({
       app: {
-        language: {
-          selected: '',
-          available: [],
-        },
         layout: {
           current: 'desktop',
           breakpoints: defaultBreakpoints,
         },
         components: {
-          Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
         loading: false,
         data: {},
-        modals: [],
-        notifications: [],
         routes: {},
         trackers: [],
       },
       components: {
         extensions: {},
-        menuItems: {},
-        modals: {},
         pages: {},
-        tiles: {},
-        searchProviders: {},
-      },
-      feeds: {},
-      forms: {},
-      user: {
-        current: undefined,
-        features: {},
-        permissions: {},
-      },
-      search: {
-        input: '',
-        loading: false,
-        results: [],
       },
       modules: [],
     });
@@ -56,54 +33,26 @@ describe('Create Global State Module', () => {
 
   it('global state works with language as empty string', () => {
     const globalState = createGlobalState({
-      app: {
-        language: {
-          selected: '',
-          available: [],
-        },
-      },
+      app: {},
     });
     expect(deref(globalState)).toEqual({
       app: {
-        language: {
-          selected: '',
-          available: [],
-        },
         layout: {
           current: 'desktop',
           breakpoints: defaultBreakpoints,
         },
         components: {
-          Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
         loading: false,
         data: {},
-        modals: [],
-        notifications: [],
         routes: {},
         trackers: [],
       },
       components: {
         extensions: {},
-        menuItems: {},
-        modals: {},
         pages: {},
-        tiles: {},
-        searchProviders: {},
-      },
-      feeds: {},
-      forms: {},
-      user: {
-        current: undefined,
-        features: {},
-        permissions: {},
-      },
-      search: {
-        input: '',
-        loading: false,
-        results: [],
       },
       modules: [],
     });
@@ -111,54 +60,26 @@ describe('Create Global State Module', () => {
 
   it('global state with custom language and translations', () => {
     const globalState = createGlobalState({
-      app: {
-        language: {
-          selected: 'fr',
-          available: ['de', 'fr', 'en'],
-        },
-      },
+      app: {},
     });
     expect(deref(globalState)).toEqual({
       app: {
-        language: {
-          selected: 'fr',
-          available: ['de', 'fr', 'en'],
-        },
         layout: {
           current: 'desktop',
           breakpoints: defaultBreakpoints,
         },
         components: {
-          Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
         loading: false,
         data: {},
-        modals: [],
-        notifications: [],
         routes: {},
         trackers: [],
       },
       components: {
         extensions: {},
-        menuItems: {},
-        modals: {},
         pages: {},
-        tiles: {},
-        searchProviders: {},
-      },
-      feeds: {},
-      forms: {},
-      user: {
-        current: undefined,
-        features: {},
-        permissions: {},
-      },
-      search: {
-        input: '',
-        loading: false,
-        results: [],
       },
       modules: [],
     });
@@ -167,10 +88,6 @@ describe('Create Global State Module', () => {
   it('global state with non-default breakpoints and more routes', () => {
     const globalState = createGlobalState({
       app: {
-        language: {
-          available: ['de', 'en'],
-          selected: 'en',
-        },
         routes: {
           '/': '...' as any,
           '/foo': '...' as any,
@@ -183,23 +100,16 @@ describe('Create Global State Module', () => {
     });
     expect(deref(globalState)).toEqual({
       app: {
-        language: {
-          selected: 'en',
-          available: ['de', 'en'],
-        },
         layout: {
           current: 'desktop',
           breakpoints: ['12px', '24px', '360px'],
         },
         components: {
-          Dashboard: DefaultDashboard,
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
         },
         loading: false,
         data: {},
-        modals: [],
-        notifications: [],
         routes: {
           '/': '...' as any,
           '/foo': '...' as any,
@@ -208,23 +118,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         extensions: {},
-        menuItems: {},
-        modals: {},
         pages: {},
-        tiles: {},
-        searchProviders: {},
-      },
-      feeds: {},
-      forms: {},
-      user: {
-        current: undefined,
-        features: {},
-        permissions: {},
-      },
-      search: {
-        input: '',
-        loading: false,
-        results: [],
       },
       modules: [],
     });

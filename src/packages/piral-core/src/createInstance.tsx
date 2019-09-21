@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { withRecall, createProgressiveStrategy } from 'react-arbiter';
 import { Portal } from './components';
+import { createListener } from './utils';
 import { createGlobalState, createActions, StateContext } from './state';
-import { getLocalDependencies, createListener, globalDependencies, defaultApiCreator } from './modules';
+import { getLocalDependencies, globalDependencies, defaultApiCreator } from './modules';
 import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiletMetadata } from './types';
 
 function defaultModuleRequester(): Promise<Array<PiletMetadata>> {

@@ -1,6 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { changeLayout, selectLanguage } from './app';
-import { createListener } from '../../modules/events';
+import { changeLayout } from './app';
+import { createListener } from '../../utils';
 
 describe('App Actions Module', () => {
   it('changeLayout changes the current layout', () => {
@@ -21,29 +21,6 @@ describe('App Actions Module', () => {
         layout: {
           foo: 10,
           current: 'mobile',
-        },
-      },
-    });
-  });
-
-  it('selectLanguage changes the current language', () => {
-    const state = Atom.of({
-      foo: 5,
-      app: {
-        language: {
-          foo: 10,
-          selected: 'fr',
-        },
-      },
-    });
-    const events = createListener(undefined);
-    selectLanguage.call(events, state, 'de');
-    expect(deref(state)).toEqual({
-      foo: 5,
-      app: {
-        language: {
-          foo: 10,
-          selected: 'de',
         },
       },
     });

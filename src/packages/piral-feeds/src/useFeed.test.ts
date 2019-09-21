@@ -2,8 +2,6 @@ import * as React from 'react';
 import * as piralCore from 'piral-core';
 import { useFeed } from './useFeed';
 
-jest.mock('react');
-
 describe('Feed Hook Module', () => {
   it('Does not load if its already loaded', () => {
     const pseudoState = {

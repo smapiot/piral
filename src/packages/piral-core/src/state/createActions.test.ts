@@ -1,5 +1,5 @@
 import { createActions } from './createActions';
-import { createListener } from '../modules/events';
+import { createListener } from '../utils';
 
 jest.mock('./actions', () => ({
   a(arg) {
@@ -14,7 +14,7 @@ describe('Create Actions Module', () => {
   it('createActions works with all actions', () => {
     const events = createListener(undefined);
     const actions = createActions('abc' as any, events);
-    expect(Object.keys(actions)).toEqual(['state', 'a', 'b']);
+    expect(Object.keys(actions)).toEqual(['on', 'off', 'emit', 'apis', 'converters', 'state', 'a', 'b']);
   });
 
   it('createActions binds against given context', () => {

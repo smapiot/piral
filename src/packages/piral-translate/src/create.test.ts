@@ -1,6 +1,10 @@
 import { createLocaleApi, setupLocalizer } from './create';
 
 describe('Create Localize API', () => {
+  const context: any = {
+    defineActions() {},
+  };
+
   it('createApi can translate from global translations using the current language', () => {
     const config = {
       language: 'fr',
@@ -11,7 +15,7 @@ describe('Create Localize API', () => {
         },
       },
     };
-    const api = createLocaleApi(setupLocalizer(config));
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
     const result = api.translate('foo');
     expect(result).toEqual('bár');
   });
@@ -26,7 +30,7 @@ describe('Create Localize API', () => {
         },
       },
     };
-    const api = createLocaleApi(setupLocalizer(config));
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
     api.setTranslations({
       fr: {
         foo: 'boo',
@@ -46,7 +50,7 @@ describe('Create Localize API', () => {
         },
       },
     };
-    const api = createLocaleApi(setupLocalizer(config));
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
     api.setTranslations({
       fr: {
         foo: 'boo',
@@ -66,7 +70,7 @@ describe('Create Localize API', () => {
         },
       },
     };
-    const api = createLocaleApi(setupLocalizer(config));
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
     const result = api.translate('bar');
     expect(result).toEqual('__en_bar__');
   });
@@ -81,7 +85,7 @@ describe('Create Localize API', () => {
         },
       },
     };
-    const api = createLocaleApi(setupLocalizer(config));
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
     const result = api.translate('qxz');
     expect(result).toEqual('__fr_qxz__');
   });

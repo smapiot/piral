@@ -1,10 +1,12 @@
 import * as React from 'react';
-import * as hooks from '../hooks';
+import * as piralCore from 'piral-core';
+import * as useForm from './useForm';
 import { MemoryRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
 import { withForm } from './withForm';
 
-jest.mock('../hooks');
+jest.mock('piral-core');
+jest.mock('./useForm');
 
 const mountWithRouter = (node, url = '/') =>
   mount(
@@ -22,6 +24,9 @@ LoaderComponent.displayName = 'LoaderComponent';
 const ErrorComponent: React.FC<{ data: any }> = () => <div />;
 ErrorComponent.displayName = 'ErrorComponent';
 
+(piralCore as any).ComponentError = ErrorComponent;
+(piralCore as any).ComponentLoader = LoaderComponent;
+
 describe('withForm Module', () => {
   it('shows error component if nothing is loading and no data is available', () => {
     const options: any = { emptyData: {} };
@@ -33,19 +38,8 @@ describe('withForm Module', () => {
       data: undefined,
       error: undefined,
     }));
-    const useGlobalState = jest.fn(select =>
-      select({
-        app: {
-          components: {
-            Loader: LoaderComponent,
-            ErrorInfo: ErrorComponent,
-          },
-        },
-      }),
-    );
-    (hooks as any).useForm = usedForm;
-    (hooks as any).usePromise = usePromise;
-    (hooks as any).useGlobalState = useGlobalState;
+    (useForm as any).useForm = usedForm;
+    (piralCore as any).usePromise = usePromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
     expect(node.find(ErrorComponent).length).toBe(1);
@@ -61,13 +55,8 @@ describe('withForm Module', () => {
       data: {},
       error: undefined,
     }));
-    const useGlobalState = jest.fn(() => ({
-      Loader: LoaderComponent,
-      ErrorInfo: ErrorComponent,
-    }));
-    (hooks as any).useForm = usedForm;
-    (hooks as any).usePromise = usePromise;
-    (hooks as any).useGlobalState = useGlobalState;
+    (useForm as any).useForm = usedForm;
+    (piralCore as any).usePromise = usePromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
     expect(node.find(StubComponent).length).toBe(1);
@@ -83,13 +72,8 @@ describe('withForm Module', () => {
       data: undefined,
       error: undefined,
     }));
-    const useGlobalState = jest.fn(() => ({
-      Loader: LoaderComponent,
-      ErrorInfo: ErrorComponent,
-    }));
-    (hooks as any).useForm = usedForm;
-    (hooks as any).usePromise = usePromise;
-    (hooks as any).useGlobalState = useGlobalState;
+    (useForm as any).useForm = usedForm;
+    (piralCore as any).usePromise = usePromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
     expect(node.find(LoaderComponent).length).toBe(1);
@@ -108,13 +92,8 @@ describe('withForm Module', () => {
         error: undefined,
       };
     });
-    const useGlobalState = jest.fn(() => ({
-      Loader: LoaderComponent,
-      ErrorInfo: ErrorComponent,
-    }));
-    (hooks as any).useForm = usedForm;
-    (hooks as any).usePromise = usePromise;
-    (hooks as any).useGlobalState = useGlobalState;
+    (useForm as any).useForm = usedForm;
+    (piralCore as any).usePromise = usePromise;
     const options: any = { emptyData: {}, loadData };
     const Component: any = withForm(StubComponent, options);
     mountWithRouter(<Component />);
@@ -135,13 +114,8 @@ describe('withForm Module', () => {
         error: undefined,
       };
     });
-    const useGlobalState = jest.fn(() => ({
-      Loader: LoaderComponent,
-      ErrorInfo: ErrorComponent,
-    }));
-    (hooks as any).useForm = usedForm;
-    (hooks as any).usePromise = usePromise;
-    (hooks as any).useGlobalState = useGlobalState;
+    (useForm as any).useForm = usedForm;
+    (piralCore as any).usePromise = usePromise;
     const options: any = { emptyData: {}, loadData };
     const Component: any = withForm(StubComponent, options);
     mountWithRouter(<Component />);

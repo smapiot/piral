@@ -6,16 +6,6 @@ import { withFeed } from './withFeed';
 
 jest.mock('piral-core');
 
-(piralCore as any).useGlobalState = (select: any) =>
-  select({
-    app: {
-      components: {
-        ErrorInfo: StubErrorInfo,
-        Loader: StubLoader,
-      },
-    },
-  });
-
 const StubLoader: React.FC = () => <div />;
 StubLoader.displayName = 'StubLoader';
 
@@ -24,6 +14,9 @@ StubErrorInfo.displayName = 'StubErrorInfo';
 
 const StubComponent: React.FC<{ data: any }> = () => <div />;
 StubComponent.displayName = 'StubComponent';
+
+(piralCore as any).ComponentLoader = StubLoader;
+(piralCore as any).ComponentError = StubErrorInfo;
 
 describe('withFeed Module', () => {
   it('shows loading without invoking action if already loading', () => {

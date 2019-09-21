@@ -2,8 +2,6 @@ import * as React from 'react';
 import * as piralCore from 'piral-core';
 import { useSearch } from './useSearch';
 
-jest.mock('react');
-
 const state = {
   search: {
     input: 'abc',

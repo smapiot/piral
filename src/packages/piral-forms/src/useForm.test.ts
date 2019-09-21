@@ -2,8 +2,6 @@ import * as React from 'react';
 import * as piralCore from 'piral-core';
 import { useForm } from './useForm';
 
-jest.mock('react');
-
 (React as any).useState = jest.fn(idOrFn => [typeof idOrFn === 'function' ? idOrFn() : idOrFn]);
 (React as any).useEffect = jest.fn(cb => cb());
 

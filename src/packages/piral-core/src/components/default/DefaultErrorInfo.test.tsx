@@ -20,18 +20,6 @@ const StubErrorInfo: React.FC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
 describe('Default Error Info Component', () => {
-  it('renders the switch-case in the feed error case', () => {
-    const node = mount(<DefaultErrorInfo type="feed" error="foo" />);
-    expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
-  });
-
-  it('renders the switch-case in the form error case', () => {
-    const node = mount(<DefaultErrorInfo type="form" error="foo" />);
-    expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
-  });
-
   it('renders the switch-case in the loading error case', () => {
     const node = mount(<DefaultErrorInfo type="loading" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(0);
@@ -71,7 +59,7 @@ describe('Default Error Info Component', () => {
         component: StubErrorInfo,
       },
     ];
-    const node = mount(<DefaultErrorInfo type="feed" error="foo" />);
+    const node = mount(<DefaultErrorInfo type="extension" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(1);
     expect(node.findWhere(n => n.key() === 'default_error').length).toBe(0);
   });
