@@ -61,6 +61,8 @@ piral debug
 
 When the build process is completed, the application shell can be opened locally in a browser. The output of the debug process shows the local address, which is usually http://localhost:1234.
 
+If you need to change the port, on which the instance is exposed, you can select a custom port just by adding the flag `--port <port_number>` to the piral-cli command.
+
 At this point, the application shell shows an empty page, since there is currently no layout defined and no Pilet loaded into the application shell. In the next section, we will create a Pilet and load it the new application shell.
 
 ### Create Package for the Application Shell
@@ -86,11 +88,11 @@ The Piral tooling also supports scaffolding a Pilet to get started. Ensure that 
 
 ```sh
 # Scaffold a new Pilet with the name 'my-pilet' for the app shell 'my-app'
-# For the path to the tgz we assume the following path, make sure to change it
+# For the path to the tgz we assume the following path, make sure to adapt it to your directory structure
 pilet new ./my-app/my-app-1.0.0.tgz --target my-pilet
 ```
 
-With the `pilet new` command, a new Pilet with pre-defined content is created. The first parameter `my-app` specifies the application shell, which the Pilet will be built for. If you navigate into the folder `my-pilet`, you'll find the files for the newly created Pilet.
+With the `pilet new` command, a new Pilet with pre-defined content is created. The first parameter `./my-app/my-app-1.0.0.tgz` specifies the application shell, which the Pilet will be built for. Make sure that you adpat the path to the piral instance located in your local directory structure. If you navigate into the folder `my-pilet`, you'll find the files for the newly created Pilet.
 
 ### The Setup Method for a Pilet
 
