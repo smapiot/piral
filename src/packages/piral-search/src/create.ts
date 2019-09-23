@@ -15,6 +15,10 @@ export function createSearchApi(): Extend<PiletSearchApi> {
 
     swap(context.state, state => ({
       ...state,
+      components: {
+        ...state.components,
+        searchProviders: {},
+      },
       search: {
         input: '',
         loading: false,

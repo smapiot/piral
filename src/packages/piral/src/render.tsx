@@ -106,7 +106,6 @@ export function renderInstance(options: PiralOptions): Promise<EventEmitter> {
         explicitState,
       );
       const localizer = setupLocalizer({
-        language: state.language.selected,
         messages,
         ...localeOptions,
       });

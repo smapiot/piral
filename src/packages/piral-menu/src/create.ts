@@ -28,7 +28,9 @@ export function createMenuApi(): Extend<PiletMenuApi> {
             settings = arg;
             arg = name;
             name = next++;
-          } else if (settings === undefined) {
+          }
+
+          if (settings === undefined) {
             settings = {};
           }
 
