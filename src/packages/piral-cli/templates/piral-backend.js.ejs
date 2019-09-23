@@ -2,7 +2,7 @@ const request = require('request');
 
 function isPiletQuery(content) {
   try {
-    const q = JSON.parse(content).query.replace(/\\s+/g, ' ');
+    const q = JSON.parse(content).query.replace(/\s+/g, ' ');
     return q.indexOf('query initialData { pilets {') !== -1;
   } catch (e) {
     return false;
