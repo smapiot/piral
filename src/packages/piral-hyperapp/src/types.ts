@@ -1,4 +1,4 @@
-import { ForeignComponent } from 'piral-core';
+import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletHyperappApi {}
@@ -27,7 +27,8 @@ export interface HyperappComponent<TProps> {
   type: 'hyperapp';
 }
 
-/** The view function describes the application UI as a tree of VNodes.
+/**
+ * The view function describes the application UI as a tree of VNodes.
  * @returns A VNode tree.
  * @memberOf [App]
  */
@@ -35,8 +36,8 @@ export interface View<State, Actions> {
   (state: State, actions: Actions): VNode<object> | null;
 }
 
-/** The VDOM representation of an Element.
- *
+/**
+ * The VDOM representation of an Element.
  * @memberOf [VDOM]
  */
 export interface VNode<Attributes = {}> {
@@ -46,8 +47,8 @@ export interface VNode<Attributes = {}> {
   key: string | number | null;
 }
 
-/** A Component is a function that returns a custom VNode or View.
- *
+/**
+ * A Component is a function that returns a custom VNode or View.
  * @memberOf [VDOM]
  */
 export interface Component<Attributes = {}, State = {}, Actions = {}> {
@@ -57,4 +58,11 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
 /**
  * Defines the provided set of hyperapp Pilet API extensions.
  */
-export interface PiletHyperappApi {}
+export interface PiletHyperappApi {
+  /**
+   * Gets a Hyperapp component for displaying extensions for the given name.
+   * @param name The name of the extensions to display.
+   * @returns The extension component to be used.
+   */
+  getHyperappExtension<T = any>(name: string): Component<ExtensionSlotProps<T>>;
+}

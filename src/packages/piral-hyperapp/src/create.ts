@@ -1,5 +1,5 @@
 import { Extend } from 'piral-core';
-import { mount } from './mount';
+import { mount, createElement } from './mount';
 import { PiletHyperappApi } from './types';
 
 /**
@@ -9,6 +9,16 @@ export function createHyperappApi(): Extend<PiletHyperappApi> {
   return context => {
     context.converters.hyperapp = component => (el, props, ctx) =>
       mount(el, component.root, props, ctx, component.state, component.actions);
-    return {};
+    return api => ({
+      getHyperappExtension(name) {
+        const render = api.getHtmlExtension(name);
+        return props =>
+          createElement('div', {
+            oncreate(element: HTMLElement) {
+              render(element, props, {});
+            },
+          });
+      },
+    });
   };
 }

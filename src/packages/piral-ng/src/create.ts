@@ -1,4 +1,5 @@
-import { Extend } from 'piral-core';
+import { Extend, ExtensionSlotProps } from 'piral-core';
+import { Component, ElementRef } from '@angular/core';
 import { PiletNgApi } from './types';
 import { enqueue } from './queue';
 import { bootstrap } from './bootstrap';
@@ -19,6 +20,23 @@ export function createNgApi(): Extend<PiletNgApi> {
         enqueue(() => bootstrap(getPlatformProps(ctx, props), component, el, id));
       };
     };
-    return {};
+    return api => ({
+      getNgExtension(name) {
+        const render = api.getHtmlExtension(name);
+        @Component({
+          selector: 'extension-component',
+          template: '<div></div>',
+        })
+        class ExtensionComponent {
+          constructor(private elRef: ElementRef<HTMLElement>, private props: ExtensionSlotProps) {}
+
+          ngAfterContentInit() {
+            render(this.elRef.nativeElement, this.props, {});
+          }
+        }
+
+        return ExtensionComponent;
+      },
+    });
   };
 }

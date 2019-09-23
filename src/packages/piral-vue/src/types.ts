@@ -25,7 +25,7 @@ export interface VueComponent<TProps> {
  */
 export interface PiletVueApi {
   /**
-   * Gets a component for displaying extensions for the given name.
+   * Gets a Vue component for displaying extensions for the given name.
    * @param name The name of the extensions to display.
    * @returns The extension component to be used.
    */

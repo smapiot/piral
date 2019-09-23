@@ -4,11 +4,11 @@ declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNgApi {}
 
   interface PiralCustomComponentConverters<TProps> {
-    ng(component: NgComponent<TProps>): ForeignComponent<TProps>;
+    ng(component: NgComponent): ForeignComponent<TProps>;
   }
 }
 
-export interface NgComponent<TProps> {
+export interface NgComponent {
   /**
    * The component root.
    */
@@ -22,4 +22,11 @@ export interface NgComponent<TProps> {
 /**
  * Defines the provided set of Angular Pilet API extensions.
  */
-export interface PiletNgApi {}
+export interface PiletNgApi {
+  /**
+   * Gets an Angular component for displaying extensions for the given name.
+   * @param name The name of the extensions to display.
+   * @returns The extension component to be used.
+   */
+  getNgExtension<T = any>(name: string): any;
+}
