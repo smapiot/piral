@@ -29,7 +29,7 @@ describe('Create Dashboard API Extensions', () => {
     const container = createMockContainer();
     container.context.registerTile = jest.fn();
     container.context.unregisterTile = jest.fn();
-    const api = createDashboardApi(container.context)(container.api, moduleMetadata);
+    const api = (createDashboardApi()(container.context) as any)(container.api, moduleMetadata);
     api.registerTile('my-tile', StubComponent);
     expect(container.context.registerTile).toHaveBeenCalledTimes(1);
     expect(container.context.unregisterTile).toHaveBeenCalledTimes(0);

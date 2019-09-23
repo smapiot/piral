@@ -168,15 +168,15 @@ const Layout: React.FC = ({ children }) => {
 const Piral = createInstance({
   availablePilets,
   extendApi: [
-    createVueApi,
-    createNgApi,
-    createHyperappApi,
-    createMenuApi,
-    createNotificationsApi,
-    createContainerApi,
-    createDashboardApi,
-    createFeedsApi,
-    createFormsApi,
+    createVueApi(),
+    createNgApi(),
+    createHyperappApi(),
+    createMenuApi(),
+    createNotificationsApi(),
+    createContainerApi(),
+    createDashboardApi(),
+    createFeedsApi(),
+    createFormsApi(),
   ],
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')

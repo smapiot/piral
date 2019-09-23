@@ -29,7 +29,7 @@ describe('Create Menu API Extensions', () => {
     const container = createMockContainer();
     container.context.registerMenuItem = jest.fn();
     container.context.unregisterMenuItem = jest.fn();
-    const api = createMenuApi(container.context)(container.api, moduleMetadata);
+    const api = (createMenuApi()(container.context) as any)(container.api, moduleMetadata);
     api.registerMenu('my-menu', StubComponent);
     expect(container.context.registerMenuItem).toHaveBeenCalledTimes(1);
     expect(container.context.unregisterMenuItem).toHaveBeenCalledTimes(0);

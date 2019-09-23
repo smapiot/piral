@@ -25,7 +25,7 @@ describe('Create Search API Extensions', () => {
     const container = createMockContainer();
     container.context.registerSearchProvider = jest.fn();
     container.context.unregisterSearchProvider = jest.fn();
-    const api = createSearchApi(container.context)(container.api, moduleMetadata);
+    const api = (createSearchApi()(container.context) as any)(container.api, moduleMetadata);
     api.registerSearchProvider('my-sp', () => Promise.resolve([]));
     expect(container.context.registerSearchProvider).toHaveBeenCalledTimes(1);
     expect(container.context.unregisterSearchProvider).toHaveBeenCalledTimes(0);
@@ -40,7 +40,7 @@ describe('Create Search API Extensions', () => {
     const container = createMockContainer();
     container.context.registerSearchProvider = jest.fn();
     container.context.unregisterSearchProvider = jest.fn();
-    const api = createSearchApi(container.context)(container.api, moduleMetadata);
+    const api = (createSearchApi()(container.context) as any)(container.api, moduleMetadata);
     const search = jest.fn();
     api.registerSearchProvider('my-sp', search);
     container.context.registerSearchProvider.mock.calls[0][1].search('foo');

@@ -48,9 +48,9 @@ export function setupGqlClient(config: GqlConfig = {}) {
 
 /**
  * Creates a new Piral GraphQL API extension.
- * @param client The urql client to use.
+ * @param client The specific urql client to be used, if any.
  */
-export function createGqlApi(client: Client): Extend<PiletGqlApi> {
+export function createGqlApi(client = setupGqlClient()): Extend<PiletGqlApi> {
   return () => ({
     query(q, options) {
       return gqlQuery(client, q, options);

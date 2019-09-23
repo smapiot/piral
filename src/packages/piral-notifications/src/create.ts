@@ -1,28 +1,33 @@
 import * as actions from './actions';
 import { wrapElement } from 'react-arbiter';
-import { GlobalStateContext } from 'piral-core';
+import { Extend } from 'piral-core';
 import { PiletNotificationsApi } from './types';
 
-export function createNotificationsApi(context: GlobalStateContext): PiletNotificationsApi {
-  context.defineActions(actions);
+/**
+ * Creates a new set of Piral API extensions for showing notifications.
+ */
+export function createNotificationsApi(): Extend<PiletNotificationsApi> {
+  return context => {
+    context.defineActions(actions);
 
-  return {
-    showNotification(content, options = {}) {
-      const notification = {
-        id: `${~~(Math.random() * 10000)}`,
-        content: wrapElement(content),
-        options,
-        close() {
-          context.closeNotification(notification);
-        },
-      };
-      context.openNotification(notification);
+    return {
+      showNotification(content, options = {}) {
+        const notification = {
+          id: `${~~(Math.random() * 10000)}`,
+          content: wrapElement(content),
+          options,
+          close() {
+            context.closeNotification(notification);
+          },
+        };
+        context.openNotification(notification);
 
-      if (typeof options.autoClose === 'number' && options.autoClose > 0) {
-        setTimeout(notification.close, options.autoClose);
-      }
+        if (typeof options.autoClose === 'number' && options.autoClose > 0) {
+          setTimeout(notification.close, options.autoClose);
+        }
 
-      return notification.close;
-    },
+        return notification.close;
+      },
+    };
   };
 }

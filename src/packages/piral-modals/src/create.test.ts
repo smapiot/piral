@@ -29,7 +29,7 @@ describe('Create Modals API Extensions', () => {
     const container = createMockContainer();
     container.context.registerModal = jest.fn();
     container.context.unregisterModal = jest.fn();
-    const api = createModalsApi(container.context)(container.api, moduleMetadata);
+    const api = (createModalsApi()(container.context) as any)(container.api, moduleMetadata);
     api.registerModal('modal', StubComponent);
     expect(container.context.registerModal).toHaveBeenCalledTimes(1);
     expect(container.context.unregisterModal).toHaveBeenCalledTimes(0);
@@ -42,7 +42,7 @@ describe('Create Modals API Extensions', () => {
     const container = createMockContainer();
     container.context.openModal = jest.fn();
     container.context.closeModal = jest.fn();
-    const api = createModalsApi(container.context)(container.api, moduleMetadata);
+    const api = (createModalsApi()(container.context) as any)(container.api, moduleMetadata);
     const close = api.showModal('my-modal');
     close();
     expect(container.context.openModal).toHaveBeenCalled();

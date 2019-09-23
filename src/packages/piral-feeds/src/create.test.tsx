@@ -29,7 +29,7 @@ describe('Create Feeds API Extensions', () => {
     const container = createMockContainer();
     container.context.createFeed = jest.fn();
     container.context.loadFeed = jest.fn();
-    const api = createFeedsApi(container.context)(container.api, moduleMetadata);
+    const api = (createFeedsApi()(container.context) as any)(container.api, moduleMetadata);
     api.createConnector(() => Promise.resolve(true));
     expect(container.context.createFeed).toHaveBeenCalled();
     expect(container.context.loadFeed).not.toHaveBeenCalled();
@@ -39,7 +39,7 @@ describe('Create Feeds API Extensions', () => {
     const container = createMockContainer();
     container.context.createFeed = jest.fn();
     container.context.loadFeed = jest.fn();
-    const api = createFeedsApi(container.context)(container.api, moduleMetadata);
+    const api = (createFeedsApi()(container.context) as any)(container.api, moduleMetadata);
     api.createConnector({
       initialize: () => Promise.resolve(true),
       connect: () => () => {},
@@ -54,7 +54,7 @@ describe('Create Feeds API Extensions', () => {
     const container = createMockContainer();
     container.context.createFeed = jest.fn();
     container.context.loadFeed = jest.fn();
-    const api = createFeedsApi(container.context)(container.api, moduleMetadata);
+    const api = (createFeedsApi()(container.context) as any)(container.api, moduleMetadata);
     const connect = api.createConnector(() => Promise.resolve(true));
     const NewComponent = connect(StubComponent);
     expect(NewComponent.displayName).toBe('FeedView_my-module://0');

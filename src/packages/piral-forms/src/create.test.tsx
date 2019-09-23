@@ -20,7 +20,7 @@ describe('Create Forms API Extensions', () => {
   it('createCoreApi allows using the created form creator as a HOC', () => {
     const container = createMockContainer();
     container.context.updateFormState = jest.fn();
-    const api = createFormsApi(container.context);
+    const api = createFormsApi()(container.context) as any;
     const create = api.createForm({
       emptyData: {},
       onSubmit() {

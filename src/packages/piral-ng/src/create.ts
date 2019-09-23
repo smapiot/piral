@@ -1,4 +1,4 @@
-import { GlobalStateContext } from 'piral-core';
+import { Extend } from 'piral-core';
 import { PiletNgApi } from './types';
 import { enqueue } from './queue';
 import { bootstrap } from './bootstrap';
@@ -9,15 +9,16 @@ function getPlatformProps(context: any, props: any) {
 
 /**
  * Creates a new set of Piral Angular API extensions.
- * @param api The API to extend.
  */
-export function createNgApi(context: GlobalStateContext): PiletNgApi {
+export function createNgApi(): Extend<PiletNgApi> {
   let next = ~~(Math.random() * 10000);
-  context.converters.ng = component => {
-    const id = `ng-${next++}`;
-    return (el, props, ctx) => {
-      enqueue(() => bootstrap(getPlatformProps(ctx, props), component, el, id));
+  return context => {
+    context.converters.ng = component => {
+      const id = `ng-${next++}`;
+      return (el, props, ctx) => {
+        enqueue(() => bootstrap(getPlatformProps(ctx, props), component, el, id));
+      };
     };
+    return {};
   };
-  return {};
 }

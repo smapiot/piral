@@ -1,14 +1,19 @@
 import * as actions from './actions';
+import { Extend } from 'piral-core';
 import { PiralAuthApi } from './types';
-import { GlobalStateContext } from 'piral-core';
 
-export function createAuthApi(context: GlobalStateContext): PiralAuthApi {
-  context.defineActions(actions);
+/**
+ * Creates a new Piral API extension for enabling authentication support.
+ */
+export function createAuthApi(): Extend<PiralAuthApi> {
+  return context => {
+    context.defineActions(actions);
 
-  return {
-    getUser() {
-      //TODO
-      return undefined;
-    },
+    return {
+      getUser() {
+        //TODO
+        return undefined;
+      },
+    };
   };
 }

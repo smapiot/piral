@@ -1,13 +1,29 @@
 import { createTrackingApi } from './create';
+import { PiletTrackingApi } from './types';
+
+function createMockContainer() {
+  const events = {
+    on: jest.fn(),
+    off: jest.fn(),
+    emit: jest.fn(),
+  };
+  return {
+    context: {
+      ...events,
+      defineActions() {},
+    } as any,
+    api: {
+      ...events,
+    } as any,
+  };
+}
 
 describe('Create Tracking API Module', () => {
   it('createApi trackError fires an event', () => {
-    const originalApi = {
-      emit: jest.fn(),
-    };
-    const api = createTrackingApi(originalApi as any);
+    const container = createMockContainer();
+    const api = (createTrackingApi()(container.context) as any)(container.api) as PiletTrackingApi;
     api.trackError('my error');
-    expect(originalApi.emit).toHaveBeenCalledWith('track-error', {
+    expect(container.api.emit).toHaveBeenCalledWith('track-error', {
       error: 'my error',
       properties: {},
       measurements: {},
@@ -16,12 +32,10 @@ describe('Create Tracking API Module', () => {
   });
 
   it('createApi trackEvent fires an event', () => {
-    const originalApi = {
-      emit: jest.fn(),
-    };
-    const api = createTrackingApi(originalApi as any);
+    const container = createMockContainer();
+    const api = (createTrackingApi()(container.context) as any)(container.api) as PiletTrackingApi;
     api.trackEvent('my event');
-    expect(originalApi.emit).toHaveBeenCalledWith('track-event', {
+    expect(container.api.emit).toHaveBeenCalledWith('track-event', {
       name: 'my event',
       properties: {},
       measurements: {},
@@ -29,16 +43,14 @@ describe('Create Tracking API Module', () => {
   });
 
   it('createApi trackFrame fires an event and leaves back a tracker', () => {
-    const originalApi = {
-      emit: jest.fn(),
-    };
-    const api = createTrackingApi(originalApi as any);
+    const container = createMockContainer();
+    const api = (createTrackingApi()(container.context) as any)(container.api) as PiletTrackingApi;
     const tracker = api.trackFrame('my frame');
-    expect(originalApi.emit).toHaveBeenCalledWith('track-frame-start', {
+    expect(container.api.emit).toHaveBeenCalledWith('track-frame-start', {
       name: 'my frame',
     });
     tracker();
-    expect(originalApi.emit).toHaveBeenLastCalledWith('track-frame-end', {
+    expect(container.api.emit).toHaveBeenLastCalledWith('track-frame-end', {
       name: 'my frame',
       properties: {},
       measurements: {},
