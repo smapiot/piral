@@ -11,6 +11,9 @@
 * Extracted `piral-feeds` library
 * Extracted `piral-forms` library
 * Extracted `piral-search` library
+* Extracted `piral-menu` library
+* Extracted `piral-modals` library
+* Extracted `piral-notifications` library
 * Added `validate` command for Piral instances (#69)
 * Added `validate` command for pilets (#70)
 * Support for extensions in Angular (#54), Hyperapp, Vue
