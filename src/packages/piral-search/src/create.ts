@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import { swap } from '@dbeining/react-atom';
 import { isfunc } from 'react-arbiter';
 import { buildName, Extend } from 'piral-core';
 import { PiletSearchApi } from './types';
@@ -11,6 +12,15 @@ export function createSearchApi(): Extend<PiletSearchApi> {
 
   return context => {
     context.defineActions(actions);
+
+    swap(context.state, state => ({
+      ...state,
+      search: {
+        input: '',
+        loading: false,
+        results: [],
+      },
+    }));
 
     return (api, target) => {
       let next = 0;

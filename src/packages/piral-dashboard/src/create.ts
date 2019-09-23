@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import { swap } from '@dbeining/react-atom';
 import { buildName, withApi, Extend } from 'piral-core';
 import { PiletDashboardApi } from './types';
 
@@ -8,6 +9,14 @@ import { PiletDashboardApi } from './types';
 export function createDashboardApi(): Extend<PiletDashboardApi> {
   return context => {
     context.defineActions(actions);
+
+    swap(context.state, state => ({
+      ...state,
+      components: {
+        ...state.components,
+        tiles: {},
+      },
+    }));
 
     return (api, target) => {
       const prefix = target.name;

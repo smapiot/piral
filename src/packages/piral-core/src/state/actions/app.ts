@@ -36,7 +36,7 @@ export function setLoading(this: GlobalStateContext, ctx: Atom<GlobalState>, loa
 }
 
 export function defineAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
-  ctx[actionName] = (...args) => action.call(this, ctx, ...args);
+  this[actionName] = (...args) => action.call(this, ctx, ...args);
 }
 
 export function defineActions(this: GlobalStateContext, ctx: Atom<GlobalState>, actions: any) {

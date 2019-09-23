@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import { swap } from '@dbeining/react-atom';
 import { Extend } from 'piral-core';
 import { withForm } from './withForm';
 import { PiletFormsApi } from './types';
@@ -9,6 +10,11 @@ import { PiletFormsApi } from './types';
 export function createFormsApi(): Extend<PiletFormsApi> {
   return context => {
     context.defineActions(actions);
+
+    swap(context.state, state => ({
+      ...state,
+      forms: {},
+    }));
 
     return {
       createForm(options) {

@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import { swap } from '@dbeining/react-atom';
 import { withApi, buildName, Extend } from 'piral-core';
 import { PiletModalsApi } from './types';
 
@@ -8,6 +9,15 @@ import { PiletModalsApi } from './types';
 export function createModalsApi(): Extend<PiletModalsApi> {
   return context => {
     context.defineActions(actions);
+
+    swap(context.state, state => ({
+      ...state,
+      components: {
+        ...state.components,
+        modals: {},
+      },
+      modals: [],
+    }));
 
     return (api, target) => {
       const prefix = target.name;

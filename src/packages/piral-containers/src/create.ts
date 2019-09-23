@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import { swap } from '@dbeining/react-atom';
 import { buildName, Extend } from 'piral-core';
 import { withPiletState } from './withPiletState';
 import { PiletContainersApi } from './types';
@@ -9,6 +10,11 @@ import { PiletContainersApi } from './types';
 export function createContainerApi(): Extend<PiletContainersApi> {
   return context => {
     context.defineActions(actions);
+
+    swap(context.state, state => ({
+      ...state,
+      containers: {},
+    }));
 
     return (api, target) => {
       let containers = 0;

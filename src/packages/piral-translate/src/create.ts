@@ -1,3 +1,4 @@
+import { swap } from '@dbeining/react-atom';
 import { Extend } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
@@ -20,6 +21,14 @@ export function setupLocalizer(config: LocaleConfig = {}) {
 export function createLocaleApi(localizer = setupLocalizer()): Extend<PiletLocaleApi> {
   return context => {
     context.defineActions(createActions(localizer));
+
+    swap(context.state, state => ({
+      ...state,
+      language: {
+        available: [localizer.language],
+        selected: localizer.language,
+      },
+    }));
 
     return () => {
       let localTranslations: LocalizationMessages = {};

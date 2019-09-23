@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import { swap } from '@dbeining/react-atom';
 import { wrapElement } from 'react-arbiter';
 import { Extend } from 'piral-core';
 import { PiletNotificationsApi } from './types';
@@ -9,6 +10,11 @@ import { PiletNotificationsApi } from './types';
 export function createNotificationsApi(): Extend<PiletNotificationsApi> {
   return context => {
     context.defineActions(actions);
+
+    swap(context.state, state => ({
+      ...state,
+      notifications: [],
+    }));
 
     return {
       showNotification(content, options = {}) {

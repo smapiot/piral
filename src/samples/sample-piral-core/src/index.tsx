@@ -9,12 +9,12 @@ import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
 import { createNotificationsApi } from 'piral-notifications';
-import { createDashboardApi } from 'piral-dashboard';
+import { createDashboardApi, DefaultDashboard } from 'piral-dashboard';
 import { createContainerApi } from 'piral-containers';
 import { createFeedsApi } from 'piral-feeds';
 import { createFormsApi } from 'piral-forms';
 import { createHyperappApi } from 'piral-hyperapp';
-import { useSearch } from 'piral-search';
+import { createSearchApi, useSearch } from 'piral-search';
 import { availablePilets } from './pilets';
 
 customElements.define(
@@ -177,6 +177,7 @@ const Piral = createInstance({
     createDashboardApi(),
     createFeedsApi(),
     createFormsApi(),
+    createSearchApi(),
   ],
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
@@ -187,6 +188,7 @@ const Piral = createInstance({
   state: setupState({
     Loader,
     routes: {
+      '/': DefaultDashboard,
       '/sitemap': Sitemap,
     },
   }),

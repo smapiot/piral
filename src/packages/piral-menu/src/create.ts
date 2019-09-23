@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import { swap } from '@dbeining/react-atom';
 import { withApi, buildName, Extend } from 'piral-core';
 import { PiletMenuApi } from './types';
 
@@ -8,6 +9,14 @@ import { PiletMenuApi } from './types';
 export function createMenuApi(): Extend<PiletMenuApi> {
   return context => {
     context.defineActions(actions);
+
+    swap(context.state, state => ({
+      ...state,
+      components: {
+        ...state.components,
+        menuItems: {},
+      },
+    }));
 
     return (api, target) => {
       const prefix = target.name;

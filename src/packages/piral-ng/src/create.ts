@@ -14,7 +14,7 @@ function getPlatformProps(context: any, props: any) {
 export function createNgApi(): Extend<PiletNgApi> {
   let next = ~~(Math.random() * 10000);
   return context => {
-    context.converters.ng = component => {
+    context.converters.ng = ({ component }) => {
       const id = `ng-${next++}`;
       return (el, props, ctx) => {
         enqueue(() => bootstrap(getPlatformProps(ctx, props), component, el, id));
