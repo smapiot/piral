@@ -11,11 +11,11 @@ function defaultRender(items: Array<React.ReactNode>) {
  * Hook that returns an extension slot.
  * @param name The name of the extension slot.
  */
-export function useExtension<TData, TItem>(name: string) {
+export function useExtension<T = any>(name: string) {
   const extensions = useGlobalState(s => s.components.extensions[name] || []);
 
   return React.useMemo(() => {
-    const ExtensionView: React.FC<ExtensionSlotProps> = ({ render = defaultRender, empty, params = {} }) =>
+    const ExtensionView: React.FC<ExtensionSlotProps<T>> = ({ render = defaultRender, empty, params = {} }) =>
       render(
         extensions.length === 0 && isfunc(empty)
           ? [<React.Fragment key="empty">{empty()}</React.Fragment>]

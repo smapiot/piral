@@ -1,11 +1,13 @@
+import { ComponentType } from 'react';
 import { ArbiterModule } from 'react-arbiter';
 import { RouteComponentProps } from 'react-router-dom';
 import { Dict } from './common';
 import { PiletMetadata } from './meta';
 import { PiletCustomApi } from './custom';
 import { EventEmitter } from './utils';
+import { AnyComponent, ForeignComponent } from './components';
+import { ExtensionSlotProps } from './extension';
 import { SharedData, DataStoreOptions } from './data';
-import { AnyComponent } from './components';
 
 export interface BaseComponentProps {
   /**
@@ -78,6 +80,18 @@ export interface PiletCoreApi {
    * @param Component The registered extension component to unregister.
    */
   unregisterExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>): void;
+  /**
+   * Gets a React component for displaying extensions for the given name.
+   * @param name The name of the extensions to display.
+   * @returns The extension component to be used.
+   */
+  getExtension<T = any>(name: string): ComponentType<ExtensionSlotProps<T>>;
+  /**
+   * Gets a plain DOM component for displaying extensions for the given name.
+   * @param name The name of the extensions to display.
+   * @returns The extension component to be used.
+   */
+  getHtmlExtension<T = any>(name: string): ForeignComponent<ExtensionSlotProps<T>>;
 }
 
 /**

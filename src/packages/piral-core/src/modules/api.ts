@@ -1,6 +1,9 @@
+import { createElement } from 'react';
+import { createPortal } from 'react-dom';
 import { isfunc, ApiCreator } from 'react-arbiter';
 import { __assign } from 'tslib';
 import { withApi } from '../components';
+import { useExtension } from '../hooks';
 import { createDataOptions, getDataExpiration } from '../utils';
 import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
 
@@ -33,6 +36,13 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
       },
       unregisterExtension(name, arg) {
         context.unregisterExtension(name, arg);
+      },
+      getHtmlExtension(name) {
+        const Component = useExtension(name);
+        return (el, props) => createPortal(createElement(Component, props), el);
+      },
+      getExtension(name) {
+        return useExtension(name);
       },
     };
   };

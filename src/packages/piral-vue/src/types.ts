@@ -1,5 +1,5 @@
 import { FunctionalComponentOptions } from 'vue';
-import { ForeignComponent, HtmlComponent } from 'piral-core';
+import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletVueApi {}
@@ -23,4 +23,11 @@ export interface VueComponent<TProps> {
 /**
  * Defines the provided set of Vue Pilet API extensions.
  */
-export interface PiletVueApi {}
+export interface PiletVueApi {
+  /**
+   * Gets a component for displaying extensions for the given name.
+   * @param name The name of the extensions to display.
+   * @returns The extension component to be used.
+   */
+  getVueExtension<T = any>(name: string): FunctionalComponentOptions<ExtensionSlotProps<T>>;
+}
