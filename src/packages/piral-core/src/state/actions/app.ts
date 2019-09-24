@@ -5,16 +5,13 @@ export function changeLayout(this: GlobalStateContext, ctx: Atom<GlobalState>, c
   swap(ctx, state => {
     this.emit('change-layout', {
       current,
-      previous: state.app.layout.current,
+      previous: state.app.layout,
     });
     return {
       ...state,
       app: {
         ...state.app,
-        layout: {
-          ...state.app.layout,
-          current,
-        },
+        layout: current,
       },
     };
   });

@@ -1,9 +1,11 @@
 import { ApiCreator } from 'react-arbiter';
+import { LayoutBreakpoints } from './layout';
 import { EventEmitter } from './utils';
 import { PiralActions } from './state';
 import { PiletApi } from './api';
 
 export interface PortalProps {
+  breakpoints?: LayoutBreakpoints;
   children(content: React.ReactNode): React.ReactElement<any>;
 }
 

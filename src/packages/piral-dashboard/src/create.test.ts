@@ -1,3 +1,4 @@
+import { Atom } from '@dbeining/react-atom';
 import { createElement, SFC } from 'react';
 import { createDashboardApi } from './create';
 
@@ -11,6 +12,7 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       defineActions() {},
+      state: Atom.of({}),
     } as any,
     api: {} as any,
   };

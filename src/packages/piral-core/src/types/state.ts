@@ -31,19 +31,11 @@ export interface GlobalStateOptions extends Partial<AppComponents> {
   /**
    * Sets the additional / initial routes to register.
    */
-  routes?: Record<string, ComponentType<RouteComponentProps>>;
-  /**
-   * Sets the available trackers to register.
-   */
-  trackers?: Array<ComponentType<RouteComponentProps>>;
+  routes?: Dict<ComponentType<RouteComponentProps<any>>>;
   /**
    * Sets the available layout breakpoints.
    */
   breakpoints?: LayoutBreakpoints;
-  /**
-   * Sets the history to use for the router.
-   */
-  history?: History;
 }
 
 export interface AppComponents {
@@ -65,16 +57,7 @@ export interface AppState {
   /**
    * Information for the layout computation.
    */
-  layout: {
-    /**
-     * The currently active layout.
-     */
-    current: LayoutType;
-    /**
-     * The different layout breakpoints.
-     */
-    breakpoints: LayoutBreakpoints;
-  };
+  layout: LayoutType;
   /**
    * Gets if the application is currently performing a background loading
    * activity, e.g., for loading modules asynchronously or fetching
@@ -92,11 +75,7 @@ export interface AppState {
   /**
    * The used (exact) application routes.
    */
-  routes: Dict<ComponentType<RouteComponentProps>>;
-  /**
-   * The used application trackers.
-   */
-  trackers: Array<ComponentType<RouteComponentProps>>;
+  routes: Dict<ComponentType<RouteComponentProps<any>>>;
 }
 
 export interface ComponentsState extends PiralCustomComponentsState {

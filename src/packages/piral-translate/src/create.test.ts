@@ -1,8 +1,10 @@
+import { Atom } from '@dbeining/react-atom';
 import { createLocaleApi, setupLocalizer } from './create';
 
 describe('Create Localize API', () => {
   const context: any = {
     defineActions() {},
+    state: Atom.of({}),
   };
 
   it('createApi can translate from global translations using the current language', () => {

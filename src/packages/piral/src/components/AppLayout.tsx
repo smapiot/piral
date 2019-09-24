@@ -6,7 +6,7 @@ function selectContent(state: GlobalState) {
   return {
     selectedLanguage: state.language.selected,
     availableLanguages: state.language.available,
-    currentLayout: state.app.layout.current,
+    currentLayout: state.app.layout,
   };
 }
 

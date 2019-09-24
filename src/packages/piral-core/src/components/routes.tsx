@@ -7,27 +7,21 @@ export interface RoutesProps {
 }
 
 export const Routes: React.FC<RoutesProps> = ({ NotFound }) => {
-  const { pages, routes, trackers } = useGlobalState(s => ({
+  const { pages, routes } = useGlobalState(s => ({
     pages: s.components.pages,
     routes: s.app.routes,
-    trackers: s.app.trackers,
   }));
 
   return (
-    <>
-      {trackers.map((tracker, i) => (
-        <Route key={i} path="/" component={tracker} />
+    <Switch>
+      {Object.keys(routes).map(url => (
+        <Route exact key={url} path={url} component={routes[url]} />
       ))}
-      <Switch>
-        {Object.keys(routes).map(url => (
-          <Route exact key={url} path={url} component={routes[url]} />
-        ))}
-        {Object.keys(pages).map(url => (
-          <Route exact key={url} path={url} component={pages[url].component} />
-        ))}
-        <Route component={NotFound} />
-      </Switch>
-    </>
+      {Object.keys(pages).map(url => (
+        <Route exact key={url} path={url} component={pages[url].component} />
+      ))}
+      <Route component={NotFound} />
+    </Switch>
   );
 };
 Routes.displayName = 'Routes';

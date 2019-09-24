@@ -1,3 +1,4 @@
+import { Atom } from '@dbeining/react-atom';
 import { createNotificationsApi } from './create';
 import { PiletNotificationsApi } from './types';
 
@@ -8,6 +9,7 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       defineActions() {},
+      state: Atom.of({}),
     } as any,
     api: {} as any,
   };

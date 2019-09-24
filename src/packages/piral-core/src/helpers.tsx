@@ -1,7 +1,6 @@
 import { AvailableDependencies } from 'react-arbiter';
 import { createBrowserHistory } from 'history';
 import { globalDependencies, getLocalDependencies } from './modules';
-import { defaultBreakpoints, getCurrentLayout, defaultLayouts } from './utils';
 import { DefaultLoader, DefaultErrorInfo } from './components/default';
 import { GlobalStateOptions, NestedPartial, GlobalState } from './types';
 
@@ -46,18 +45,12 @@ export function setupState(
       ErrorInfo: undefined,
       history: undefined,
     },
-    layout: defaultLayoutState = {
-      breakpoints: undefined,
-      current: undefined,
-    },
+    layout: defaultLayoutState = undefined,
     routes: defaultRoutes = {},
-    trackers: defaultTrackers = [],
   } = state.app || {};
   const {
     history = defaultComponentsState.history || createBrowserHistory(),
-    breakpoints = defaultLayoutState.breakpoints || defaultBreakpoints,
     routes = {},
-    trackers = [],
     Loader = defaultComponentsState.Loader || DefaultLoader,
     ErrorInfo = defaultComponentsState.ErrorInfo || DefaultErrorInfo,
   } = options;
@@ -65,10 +58,7 @@ export function setupState(
     ...state,
     app: {
       ...state.app,
-      layout: {
-        current: defaultLayoutState.current || getCurrentLayout(breakpoints, defaultLayouts, 'desktop'),
-        breakpoints,
-      },
+      layout: defaultLayoutState,
       components: {
         ErrorInfo,
         Loader,
@@ -78,7 +68,6 @@ export function setupState(
         ...defaultRoutes,
         ...routes,
       },
-      trackers: [...defaultTrackers, ...trackers],
     },
   };
 }

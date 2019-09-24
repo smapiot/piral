@@ -7,10 +7,7 @@ describe('App Actions Module', () => {
     const state = Atom.of({
       foo: 5,
       app: {
-        layout: {
-          foo: 10,
-          current: 'tablet',
-        },
+        layout: 'tablet',
       },
     });
     const events = createListener(undefined);
@@ -18,10 +15,7 @@ describe('App Actions Module', () => {
     expect(deref(state)).toEqual({
       foo: 5,
       app: {
-        layout: {
-          foo: 10,
-          current: 'mobile',
-        },
+        layout: 'mobile',
       },
     });
   });

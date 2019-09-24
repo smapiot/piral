@@ -149,7 +149,7 @@ const Notifications: React.FC = () => {
 };
 
 const Layout: React.FC = ({ children }) => {
-  const layout = useGlobalState(s => s.app.layout.current);
+  const layout = useGlobalState(s => s.app.layout);
 
   return (
     <div className="app-container">

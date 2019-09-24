@@ -1,3 +1,4 @@
+import { Atom } from '@dbeining/react-atom';
 import { createSearchApi } from './create';
 
 function createMockContainer() {
@@ -7,6 +8,7 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       defineActions() {},
+      state: Atom.of({}),
     } as any,
     api: {} as any,
   };

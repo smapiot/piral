@@ -1,6 +1,5 @@
 import { Atom, addChangeHandler } from '@dbeining/react-atom';
 import { DefaultErrorInfo, DefaultLoader } from '../components/default';
-import { defaultBreakpoints } from '../utils';
 import { GlobalState, NestedPartial } from '../types';
 
 export function createGlobalState<TState extends GlobalState>(state: NestedPartial<TState> = {}) {
@@ -8,16 +7,12 @@ export function createGlobalState<TState extends GlobalState>(state: NestedParti
     modules: [],
     ...state,
     app: {
-      layout: {
-        current: 'desktop',
-        breakpoints: defaultBreakpoints,
-      },
+      layout: 'desktop',
       components: {
         ErrorInfo: DefaultErrorInfo,
         Loader: DefaultLoader,
       },
-      routes: {},
-      trackers: [],
+      routes: [],
       data: {},
       loading: false,
       ...state.app,
