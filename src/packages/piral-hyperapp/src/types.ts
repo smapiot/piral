@@ -52,7 +52,7 @@ export interface VNode<Attributes = {}> {
  * @memberOf [VDOM]
  */
 export interface Component<Attributes = {}, State = {}, Actions = {}> {
-  (attributes: Attributes, children: Array<VNode | string>): VNode<Attributes> | View<State, Actions>;
+  (attributes: Attributes, children?: Array<VNode | string>): VNode<Attributes> | View<State, Actions>;
 }
 
 /**

@@ -19,29 +19,32 @@ const actions = {
   up: value => state => ({ count: state.count + value }),
 };
 
-const Tile: Component<TileComponentProps, typeof state, typeof actions> = props => (state, actions) =>
-  h(
-    'div',
-    {
-      class: 'tile',
-    },
-    h('h3', {}, `Hyperapp: ${state.count}`),
-    h('p', {}, `${props.rows} rows and ${props.columns} columns`),
+const Tile: Component<TileComponentProps, typeof state, typeof actions> = props => {
+  const Smiley = props.piral.getHyperappExtension('smiley');
+  return (state, actions) =>
     h(
-      'button',
+      'div',
       {
-        onclick: () => actions.up(1),
+        class: 'tile',
       },
-      '+',
-    ),
-    h(
-      'button',
-      {
-        onclick: () => actions.down(1),
-      },
-      '-',
-    ),
-  );
+      h('h3', {}, `Hyperapp: ${state.count}`),
+      h('p', {}, `${props.rows} rows and ${props.columns} columns`, Smiley({}, [])),
+      h(
+        'button',
+        {
+          onclick: () => actions.up(1),
+        },
+        '+',
+      ),
+      h(
+        'button',
+        {
+          onclick: () => actions.down(1),
+        },
+        '-',
+      ),
+    );
+};
 
 /**
  * Shows an API extension using hyperapp components.

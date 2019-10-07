@@ -9,11 +9,12 @@ export function createHyperappApi(): Extend<PiletHyperappApi> {
   return context => {
     context.converters.hyperapp = component => (el, props, ctx) =>
       mount(el, component.root, props, ctx, component.state, component.actions);
+
     return api => ({
       getHyperappExtension(name) {
         const render = api.getHtmlExtension(name);
         return props =>
-          createElement('div', {
+          createElement('slot', {
             oncreate(element: HTMLElement) {
               render(element, props, {});
             },

@@ -86,7 +86,7 @@ export const Pilet1: Pilet = {
       </div>
     ));
 
-    piral.registerPage('/example2', () => (
+    piral.registerPage('/example2', ({ piral }) => (
       <div>
         <p>
           This is the second <b>example</b> page
@@ -114,5 +114,7 @@ export const Pilet1: Pilet = {
       }
       return false as any;
     });
+
+    piral.registerExtension('smiley', () => <b>:-)</b>);
   },
 };

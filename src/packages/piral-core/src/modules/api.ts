@@ -1,9 +1,10 @@
+import { deref } from '@dbeining/react-atom';
 import { createElement } from 'react';
-import { createPortal } from 'react-dom';
+import { render } from 'react-dom';
 import { isfunc, ApiCreator } from 'react-arbiter';
 import { __assign } from 'tslib';
 import { withApi } from '../components';
-import { useExtension } from '../hooks';
+import { useExtension, getExtensionView } from '../hooks';
 import { createDataOptions, getDataExpiration } from '../utils';
 import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
 
@@ -38,8 +39,9 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         context.unregisterExtension(name, arg);
       },
       getHtmlExtension(name) {
-        const Component = useExtension(name);
-        return (el, props) => createPortal(createElement(Component, props), el);
+        const extensions = deref(context.state).components.extensions[name] || [];
+        const Component = getExtensionView(name, extensions);
+        return (el, props) => render(createElement(Component, props), el);
       },
       getExtension(name) {
         return useExtension(name);

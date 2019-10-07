@@ -13,7 +13,8 @@ export function createVueApi(): Extend<PiletVueApi> {
       getVueExtension(name) {
         const render = api.getHtmlExtension(name);
         return {
-          functional: true,
+          functional: false,
+          render: createElement => createElement('slot'),
           mounted() {
             const props = {
               empty: this.empty,
