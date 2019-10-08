@@ -12,7 +12,7 @@ export function createGlobalState<TState extends GlobalState>(state: NestedParti
         ErrorInfo: DefaultErrorInfo,
         Loader: DefaultLoader,
       },
-      routes: [],
+      routes: {},
       data: {},
       loading: false,
       ...state.app,

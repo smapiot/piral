@@ -1,7 +1,5 @@
 import { setupState } from './helpers';
-import { defaultBreakpoints } from './utils';
 import { DefaultErrorInfo, DefaultLoader } from './components/default';
-import { LayoutBreakpoints } from './types';
 
 jest.mock('history', () => ({
   createBrowserHistory: () => ({}),
@@ -14,17 +12,13 @@ describe('Helper Module', () => {
     const globalState = setupState({});
     expect(globalState).toEqual({
       app: {
-        layout: {
-          current: 'desktop',
-          breakpoints: defaultBreakpoints,
-        },
+        layout: 'desktop',
         components: {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
           history: {},
         },
         routes: {},
-        trackers: [],
       },
     });
   });
@@ -33,17 +27,13 @@ describe('Helper Module', () => {
     const globalState = setupState({});
     expect(globalState).toEqual({
       app: {
-        layout: {
-          current: 'desktop',
-          breakpoints: defaultBreakpoints,
-        },
+        layout: 'desktop',
         components: {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
           history: {},
         },
         routes: {},
-        trackers: [],
       },
     });
   });
@@ -53,21 +43,16 @@ describe('Helper Module', () => {
       '/': '...' as any,
       '/foo': '...' as any,
     };
-    const breakpoints: LayoutBreakpoints = ['12px', '24px', '360px'];
-    const globalState = setupState({ breakpoints, routes });
+    const globalState = setupState({ routes });
     expect(globalState).toEqual({
       app: {
-        layout: {
-          current: 'desktop',
-          breakpoints,
-        },
+        layout: 'desktop',
         components: {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
           history: {},
         },
         routes,
-        trackers: [],
       },
     });
   });

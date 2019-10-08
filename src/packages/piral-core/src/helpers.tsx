@@ -45,7 +45,7 @@ export function setupState(
       ErrorInfo: undefined,
       history: undefined,
     },
-    layout: defaultLayoutState = undefined,
+    layout: defaultLayoutState = 'desktop',
     routes: defaultRoutes = {},
   } = state.app || {};
   const {

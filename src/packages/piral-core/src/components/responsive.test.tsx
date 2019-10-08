@@ -2,31 +2,27 @@ import * as React from 'react';
 import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { Responsive } from './responsive';
+import { defaultBreakpoints } from '../utils';
 
 jest.mock('../hooks');
 
 (hooks as any).useGlobalState = (select: any) =>
   select({
     app: {
-      layout: {
-        current: 'desktop',
-        breakpoints: ['a', 'b', 'c'],
-      },
+      layout: 'desktop',
     },
   });
 
-(hooks as any).useMedia = () => 'desktop';
-
-const changeTo = jest.fn();
-(hooks as any).useAction = () => changeTo;
-
-const StubComponent: React.FC = props => <div />;
+const StubComponent: React.FC = () => <div />;
 StubComponent.displayName = 'StubComponent';
 
 describe('Responsive Module', () => {
   it('always renders the given children', () => {
+    const changeTo = jest.fn();
+    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useMedia = () => 'desktop';
     const node = mount(
-      <Responsive>
+      <Responsive breakpoints={defaultBreakpoints}>
         <StubComponent />)
       </Responsive>,
     );
@@ -34,24 +30,34 @@ describe('Responsive Module', () => {
   });
 
   it('does not call changeTo when nothing changed', () => {
-    const node = mount(<Responsive />);
+    const changeTo = jest.fn();
+    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useMedia = () => 'desktop';
+    mount(<Responsive breakpoints={defaultBreakpoints} />);
     expect(changeTo).not.toHaveBeenCalled();
   });
 
   it('does not call changeTo when nothing changed', () => {
-    const node = mount(<Responsive />);
+    const changeTo = jest.fn();
+    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useMedia = () => 'desktop';
+    mount(<Responsive breakpoints={defaultBreakpoints} />);
     expect(changeTo).not.toHaveBeenCalled();
   });
 
   it('does calls changeTo when someething changed (desktop -> tablet)', () => {
+    const changeTo = jest.fn();
+    (hooks as any).useAction = () => changeTo;
     (hooks as any).useMedia = () => 'tablet';
-    const node = mount(<Responsive />);
+    mount(<Responsive breakpoints={defaultBreakpoints} />);
     expect(changeTo).toHaveBeenCalledWith('tablet');
   });
 
   it('does calls changeTo when someething changed (desktop -> mobile)', () => {
+    const changeTo = jest.fn();
+    (hooks as any).useAction = () => changeTo;
     (hooks as any).useMedia = () => 'mobile';
-    const node = mount(<Responsive />);
+    mount(<Responsive breakpoints={defaultBreakpoints} />);
     expect(changeTo).toHaveBeenCalledWith('mobile');
   });
 });

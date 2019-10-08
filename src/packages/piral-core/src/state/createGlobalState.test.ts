@@ -1,7 +1,6 @@
 import { deref } from '@dbeining/react-atom';
 import { createGlobalState } from './createGlobalState';
 import { DefaultErrorInfo, DefaultLoader } from '../components/default';
-import { defaultBreakpoints } from '../utils';
 
 describe('Create Global State Module', () => {
   window.matchMedia = jest.fn(q => ({ matches: false })) as any;
@@ -10,10 +9,7 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState();
     expect(deref(globalState)).toEqual({
       app: {
-        layout: {
-          current: 'desktop',
-          breakpoints: defaultBreakpoints,
-        },
+        layout: 'desktop',
         components: {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
@@ -21,7 +17,6 @@ describe('Create Global State Module', () => {
         loading: false,
         data: {},
         routes: {},
-        trackers: [],
       },
       components: {
         extensions: {},
@@ -37,10 +32,7 @@ describe('Create Global State Module', () => {
     });
     expect(deref(globalState)).toEqual({
       app: {
-        layout: {
-          current: 'desktop',
-          breakpoints: defaultBreakpoints,
-        },
+        layout: 'desktop',
         components: {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
@@ -48,7 +40,6 @@ describe('Create Global State Module', () => {
         loading: false,
         data: {},
         routes: {},
-        trackers: [],
       },
       components: {
         extensions: {},
@@ -64,10 +55,7 @@ describe('Create Global State Module', () => {
     });
     expect(deref(globalState)).toEqual({
       app: {
-        layout: {
-          current: 'desktop',
-          breakpoints: defaultBreakpoints,
-        },
+        layout: 'desktop',
         components: {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
@@ -75,7 +63,6 @@ describe('Create Global State Module', () => {
         loading: false,
         data: {},
         routes: {},
-        trackers: [],
       },
       components: {
         extensions: {},
@@ -92,18 +79,12 @@ describe('Create Global State Module', () => {
           '/': '...' as any,
           '/foo': '...' as any,
         },
-        layout: {
-          current: 'desktop',
-          breakpoints: ['12px', '24px', '360px'],
-        },
+        layout: 'desktop',
       },
     });
     expect(deref(globalState)).toEqual({
       app: {
-        layout: {
-          current: 'desktop',
-          breakpoints: ['12px', '24px', '360px'],
-        },
+        layout: 'desktop',
         components: {
           ErrorInfo: DefaultErrorInfo,
           Loader: DefaultLoader,
@@ -114,7 +95,6 @@ describe('Create Global State Module', () => {
           '/': '...' as any,
           '/foo': '...' as any,
         },
-        trackers: [],
       },
       components: {
         extensions: {},

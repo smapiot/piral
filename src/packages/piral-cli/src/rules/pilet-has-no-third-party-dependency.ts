@@ -11,7 +11,7 @@ export default function(this: PiletRuleContext, options: Options = 'ignore') {
         `
 The pilet references third-party dependencies.
   Expected: <none>.
-  Received: "${dependencies.join(", ")}".
+  Received: "${dependencies.join(', ')}".
 `,
       );
     }
