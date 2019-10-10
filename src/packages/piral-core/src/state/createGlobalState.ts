@@ -22,6 +22,7 @@ export function createGlobalState<TState extends GlobalState>(state: NestedParti
       pages: {},
       ...state.components,
     },
+    portals: {},
   });
 
   if (process.env.NODE_ENV === 'development') {

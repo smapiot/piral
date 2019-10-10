@@ -1,10 +1,8 @@
-import { deref } from '@dbeining/react-atom';
 import { createElement } from 'react';
-import { render } from 'react-dom';
+import { createPortal } from 'react-dom';
 import { isfunc, ApiCreator } from 'react-arbiter';
 import { __assign } from 'tslib';
-import { withApi } from '../components';
-import { useExtension, getExtensionView } from '../hooks';
+import { withApi, ExtensionSlot } from '../components';
 import { createDataOptions, getDataExpiration } from '../utils';
 import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
 
@@ -38,14 +36,22 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
       unregisterExtension(name, arg) {
         context.unregisterExtension(name, arg);
       },
-      getHtmlExtension(name) {
-        const extensions = deref(context.state).components.extensions[name] || [];
-        const Component = getExtensionView(name, extensions);
-        return (el, props) => render(createElement(Component, props), el);
+      renderHtmlExtension(element, props) {
+        const portalId = 'data-portal-id';
+        let parent = element.parentElement;
+
+        while (parent) {
+          if (parent.hasAttribute(portalId)) {
+            const portal = createPortal(createElement(ExtensionSlot, props), element);
+            const id = parent.getAttribute(portalId);
+            context.showPortal(id, portal);
+            break;
+          }
+
+          parent = parent.parentElement;
+        }
       },
-      getExtension(name) {
-        return useExtension(name);
-      },
+      Extension: ExtensionSlot,
     };
   };
 }

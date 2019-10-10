@@ -10,20 +10,20 @@ export function createVueApi(): Extend<PiletVueApi> {
     context.converters.vue = ({ root }) => (el, props, ctx) => mount(el, root, props, ctx);
 
     return api => ({
-      getVueExtension(name) {
-        const render = api.getHtmlExtension(name);
-        return {
-          functional: false,
-          render: createElement => createElement('slot'),
-          mounted() {
-            const props = {
-              empty: this.empty,
-              params: this.params,
-              render: this.render,
-            };
-            render(this.$el, props, {});
-          },
-        };
+      VueExtension: {
+        functional: false,
+        props: ['name', 'empty', 'render', 'params'],
+        render(createElement) {
+          return createElement('slot');
+        },
+        mounted() {
+          api.renderHtmlExtension(this.$el, {
+            empty: this.empty,
+            params: this.params,
+            render: this.render,
+            name: this.name,
+          });
+        },
       },
     });
   };

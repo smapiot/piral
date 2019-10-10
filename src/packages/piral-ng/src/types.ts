@@ -24,9 +24,7 @@ export interface NgComponent {
  */
 export interface PiletNgApi {
   /**
-   * Gets an Angular component for displaying extensions for the given name.
-   * @param name The name of the extensions to display.
-   * @returns The extension component to be used.
+   * Angular component for displaying extensions of the given name.
    */
-  getNgExtension<T = any>(name: string): any;
+  NgExtension: any;
 }

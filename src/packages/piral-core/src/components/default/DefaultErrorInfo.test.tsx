@@ -14,8 +14,6 @@ const state = {
   },
 };
 
-(React as any).useMemo = cb => cb();
-
 const StubErrorInfo: React.FC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 

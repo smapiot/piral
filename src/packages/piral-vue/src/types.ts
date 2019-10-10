@@ -1,4 +1,4 @@
-import { FunctionalComponentOptions } from 'vue';
+import { Component } from 'vue';
 import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -13,7 +13,7 @@ export interface VueComponent<TProps> {
   /**
    * The root component of Vue rendering tree.
    */
-  root: FunctionalComponentOptions<TProps>;
+  root: Component<TProps>;
   /**
    * The type of the Vue component.
    */
@@ -25,9 +25,7 @@ export interface VueComponent<TProps> {
  */
 export interface PiletVueApi {
   /**
-   * Gets a Vue component for displaying extensions for the given name.
-   * @param name The name of the extensions to display.
-   * @returns The extension component to be used.
+   * Vue component for displaying extensions of the given name.
    */
-  getVueExtension<T = any>(name: string): FunctionalComponentOptions<ExtensionSlotProps<T>>;
+  VueExtension: Component<ExtensionSlotProps>;
 }

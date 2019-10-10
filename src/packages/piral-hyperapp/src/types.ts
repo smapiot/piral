@@ -60,9 +60,7 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
  */
 export interface PiletHyperappApi {
   /**
-   * Gets a Hyperapp component for displaying extensions for the given name.
-   * @param name The name of the extensions to display.
-   * @returns The extension component to be used.
+   * Hyperapp component for displaying extensions of the given name.
    */
-  getHyperappExtension<T = any>(name: string): Component<ExtensionSlotProps<T>>;
+  HyperappExtension: Component<ExtensionSlotProps>;
 }

@@ -20,23 +20,22 @@ export function createNgApi(): Extend<PiletNgApi> {
         enqueue(() => bootstrap(getPlatformProps(ctx, props), component, el, id));
       };
     };
-    return api => ({
-      getNgExtension(name) {
-        const render = api.getHtmlExtension(name);
-        @Component({
-          selector: 'extension-component',
-          template: '<div></div>',
-        })
-        class ExtensionComponent {
-          constructor(private elRef: ElementRef<HTMLElement>, private props: ExtensionSlotProps) {}
+    return api => {
+      @Component({
+        selector: 'extension-component',
+        template: '<slot></slot>',
+      })
+      class NgExtension {
+        constructor(private elRef: ElementRef<HTMLElement>, private props: ExtensionSlotProps) {}
 
-          ngAfterContentInit() {
-            render(this.elRef.nativeElement, this.props, {});
-          }
+        ngAfterContentInit() {
+          api.renderHtmlExtension(this.elRef.nativeElement, this.props);
         }
+      }
 
-        return ExtensionComponent;
-      },
-    });
+      return {
+        NgExtension,
+      };
+    };
   };
 }

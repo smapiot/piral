@@ -1,7 +1,8 @@
 import Vue from 'vue';
 
-export function mount<T>(el: HTMLElement, root: Vue.FunctionalComponentOptions<T>, props: T, ctx: any) {
-  new Vue({
+export function mount<T>(parent: HTMLElement, root: Vue.Component<T>, props: T, ctx: any) {
+  const el = parent.appendChild(document.createElement('slot'));
+  return new Vue({
     el,
     data: ctx,
     render(h) {

@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { useGlobalState, getExtensionSlot } from 'piral-core';
+import { useGlobalState, ExtensionSlot } from 'piral-core';
 import { DashboardProps } from './types';
-
-const ExtensionSlot = getExtensionSlot('dashboard');
 
 export const DefaultDashboard: React.FC<DashboardProps> = props => {
   const tiles = useGlobalState(s => s.components.tiles);
 
   return (
     <ExtensionSlot
+      name="dashboard"
       params={{ tiles, ...props }}
       empty={() => (
         <React.Fragment key="default_dashboard">

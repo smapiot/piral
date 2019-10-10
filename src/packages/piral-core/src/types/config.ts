@@ -1,5 +1,5 @@
-import { DependencyGetter } from 'react-arbiter';
-import { Pilet } from './api';
+import { DependencyGetter, ArbiterRecallStrategy } from 'react-arbiter';
+import { Pilet, PiletApi } from './api';
 import { NestedPartial } from './common';
 import { PiletRequester, Extend } from './plugin';
 import { GlobalState } from './state';
@@ -31,7 +31,7 @@ export interface PiralStateConfiguration {
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.
    */
-  async?: boolean;
+  async?: boolean | ArbiterRecallStrategy<PiletApi>;
   /**
    * Optionally, sets up the initial state of the application.
    */

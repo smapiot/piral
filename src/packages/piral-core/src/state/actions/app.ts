@@ -1,5 +1,7 @@
+import { ReactPortal } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
 import { LayoutType, GlobalState, GlobalStateContext } from '../../types';
+import { withKey, withoutKey, includeItem, excludeItem } from '../../utils';
 
 export function changeLayout(this: GlobalStateContext, ctx: Atom<GlobalState>, current: LayoutType) {
   swap(ctx, state => {
@@ -41,4 +43,21 @@ export function defineActions(this: GlobalStateContext, ctx: Atom<GlobalState>, 
     const action = actions[actionName];
     defineAction.call(this, ctx, actionName, action);
   }
+}
+
+export function destroyPortal(ctx: Atom<GlobalState>, id: string) {
+  swap(ctx, state => ({
+    ...state,
+    portals: withoutKey(state.portals, id),
+  }));
+}
+
+export function showPortal(ctx: Atom<GlobalState>, id: string, entry: ReactPortal) {
+  swap(ctx, state => ({
+    ...state,
+    portals: {
+      ...state.portals,
+      [id]: includeItem(state.portals[id], entry),
+    },
+  }));
 }

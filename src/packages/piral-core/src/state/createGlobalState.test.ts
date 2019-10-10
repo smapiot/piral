@@ -23,6 +23,7 @@ describe('Create Global State Module', () => {
         pages: {},
       },
       modules: [],
+      portals: {},
     });
   });
 
@@ -46,6 +47,7 @@ describe('Create Global State Module', () => {
         pages: {},
       },
       modules: [],
+      portals: {},
     });
   });
 
@@ -69,6 +71,7 @@ describe('Create Global State Module', () => {
         pages: {},
       },
       modules: [],
+      portals: {},
     });
   });
 
@@ -101,6 +104,7 @@ describe('Create Global State Module', () => {
         pages: {},
       },
       modules: [],
+      portals: {},
     });
   });
 });

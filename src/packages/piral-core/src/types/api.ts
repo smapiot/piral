@@ -5,7 +5,7 @@ import { Dict } from './common';
 import { PiletMetadata } from './meta';
 import { PiletCustomApi } from './custom';
 import { EventEmitter } from './utils';
-import { AnyComponent, ForeignComponent } from './components';
+import { AnyComponent } from './components';
 import { ExtensionSlotProps } from './extension';
 import { SharedData, DataStoreOptions } from './data';
 
@@ -81,17 +81,15 @@ export interface PiletCoreApi {
    */
   unregisterExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>): void;
   /**
-   * Gets a React component for displaying extensions for the given name.
-   * @param name The name of the extensions to display.
-   * @returns The extension component to be used.
+   * React component for displaying extensions for a given name.
    */
-  getExtension<T = any>(name: string): ComponentType<ExtensionSlotProps<T>>;
+  Extension: ComponentType<ExtensionSlotProps>;
   /**
-   * Gets a plain DOM component for displaying extensions for the given name.
-   * @param name The name of the extensions to display.
-   * @returns The extension component to be used.
+   * Renders an extension in a plain DOM component.
+   * @param element The DOM element as a container for rendering the extension.
+   * @param props The extension's rendering props.
    */
-  getHtmlExtension<T = any>(name: string): ForeignComponent<ExtensionSlotProps<T>>;
+  renderHtmlExtension<T = any>(element: HTMLElement, props: ExtensionSlotProps<T>): void;
 }
 
 /**

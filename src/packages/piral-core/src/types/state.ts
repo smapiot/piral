@@ -1,5 +1,5 @@
 import { History } from 'history';
-import { ComponentType } from 'react';
+import { ComponentType, ReactPortal } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
 import { PiletMetadata } from './meta';
@@ -102,6 +102,10 @@ export interface GlobalState extends PiralCustomState {
    * Gets the loaded modules.
    */
   modules: Array<PiletMetadata>;
+  /**
+   * Gets the portals to render.
+   */
+  portals: Record<string, Array<ReactPortal>>;
 }
 
 export interface PiralAction<T extends (...args: any) => any> {
@@ -171,6 +175,17 @@ export interface PiralActions extends PiralCustomActions {
    * @param loading The current loading state.
    */
   setLoading(loading: boolean): void;
+  /**
+   * Destroys (i.e., resets) the given portal instance.
+   * @param id The id of the portal to destroy.
+   */
+  destroyPortal(id: string): void;
+  /**
+   * Includes the provided portal in the rendering pipeline.
+   * @param id The id of the portal to use.
+   * @param entry The child to render.
+   */
+  showPortal(id: string, entry: ReactPortal): void;
 }
 
 export interface GlobalStateContext extends PiralActions, EventEmitter {

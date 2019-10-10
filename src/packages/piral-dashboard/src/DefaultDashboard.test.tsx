@@ -6,22 +6,20 @@ jest.mock('piral-core', () => ({
   useGlobalState(select: any) {
     return select(state);
   },
-  getExtensionSlot() {
-    const StubExtension: React.FC = ({ empty, params }: any) => {
-      const exts: any = state.components.extensions;
+  ExtensionSlot({ empty, params }: any) {
+    const exts: any = state.components.extensions;
 
-      if (exts.dashboard) {
-        return (
-          <div>
-            {exts.dashboard.map(({ component: Component }, i) => <Component {...params} key={i} />)}
-          </div>
-        );
-      }
+    if (exts.dashboard) {
+      return (
+        <div>
+          {exts.dashboard.map(({ component: Component }, i) => (
+            <Component {...params} key={i} />
+          ))}
+        </div>
+      );
+    }
 
-      return empty();
-    };
-    StubExtension.displayName = 'StubExtension';
-    return StubExtension;
+    return empty();
   },
 }));
 

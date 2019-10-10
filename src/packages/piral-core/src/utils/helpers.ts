@@ -23,6 +23,10 @@ export function excludeItem<T>(items: Array<T>, item: T) {
   return (items || []).filter(m => m !== item);
 }
 
+export function includeItem<T>(items: Array<T>, item: T) {
+  return prependItem(excludeItem(items, item), item);
+}
+
 export function excludeOn<T>(items: Array<T>, predicate: (item: T) => boolean) {
   return (items || []).filter(m => !predicate(m));
 }
