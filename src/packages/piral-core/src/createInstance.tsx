@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { withRecall, createProgressiveStrategy } from 'react-arbiter';
+import { withRecall, blazingStrategy, standardStrategy, isfunc } from 'react-arbiter';
 import { Portal } from './components';
 import { createListener } from './utils';
 import { createGlobalState, createActions, StateContext } from './state';
@@ -53,7 +53,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
   const RecallPortal = withRecall<PortalProps, PiletApi>(Portal, {
     modules: availablePilets,
     getDependencies,
-    strategy: createProgressiveStrategy(async),
+    strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
     dependencies: globalDependencies,
     fetchModules() {
       events.emit('load-start', {});
