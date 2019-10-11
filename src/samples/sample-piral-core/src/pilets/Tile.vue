@@ -3,7 +3,7 @@
     <h3>Rendered from Vue</h3>
     <p>
       {{ rows }} rows and {{ columns }} columns
-      <component v-bind:is="extComponent" name="smiley"></component>
+      <extension-component name="smiley"></extension-component>
     </p>
     <button v-on:click="count++">clicked {{ count }} times</button>
   </div>
@@ -14,7 +14,6 @@ export default {
   props: ['rows', 'columns', 'piral'],
   data() {
     return {
-      extComponent: (this as any).piral.VueExtension,
       count: 0,
     };
   },

@@ -115,6 +115,6 @@ export const Pilet1: Pilet = {
       return false as any;
     });
 
-    piral.registerExtension('smiley', () => <b>:-)</b>);
+    piral.registerExtension('smiley', () => <b>:-D</b>);
   },
 };

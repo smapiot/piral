@@ -20,7 +20,8 @@ const actions = {
 };
 
 const Tile: Component<TileComponentProps, typeof state, typeof actions> = props => {
-  const Extension = props.piral.HyperappExtension;
+  const { HyperappExtension } = props.piral;
+
   return (state, actions) =>
     h(
       'div',
@@ -31,8 +32,8 @@ const Tile: Component<TileComponentProps, typeof state, typeof actions> = props 
       h(
         'p',
         {},
-        `${props.rows} rows and ${props.columns} columns`,
-        Extension(
+        `${props.rows} rows and ${props.columns} columns `,
+        HyperappExtension(
           {
             name: 'smiley',
           },
