@@ -66,12 +66,25 @@ export interface ModalErrorInfoProps {
 }
 
 export interface OpenModalDialog {
+  /**
+   * Specifies the fully qualified name of the dialog to show.
+   */
   name: string;
+  /**
+   * Specifies the alternative (original) name of the dialog to show.
+   */
+  alternative?: string;
+  /**
+   * Defines the transported options.
+   */
   options: any;
+  /**
+   * Closes the modal dialog.
+   */
   close(): void;
 }
 
-export interface ModalComponentProps<TOpts> extends BaseComponentProps {
+export interface BareModalComponentProps<TOpts> {
   /**
    * Callback for closing the modal programmatically.
    */
@@ -82,7 +95,10 @@ export interface ModalComponentProps<TOpts> extends BaseComponentProps {
   options?: TOpts;
 }
 
+export type ModalComponentProps<TOpts> = BaseComponentProps & BareModalComponentProps<TOpts>;
+
 export interface ModalRegistration {
+  name: string;
   component: WrappedComponent<ModalComponentProps<any>>;
   defaults: any;
 }

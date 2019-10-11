@@ -2,9 +2,14 @@ import { Extend } from 'piral-core';
 import { PiletTrackingApi, SeverityLevel } from './types';
 
 /**
+ * Available configuration options for the tracking extension.
+ */
+export interface TrackingConfig {}
+
+/**
  * Creates a new set of Piral tracking and telemetry API extensions.
  */
-export function createTrackingApi(): Extend<PiletTrackingApi> {
+export function createTrackingApi(config: TrackingConfig = {}): Extend<PiletTrackingApi> {
   return () => api => ({
     trackEvent(name, properties = {}, measurements = {}) {
       api.emit('track-event', {

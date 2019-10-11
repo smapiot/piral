@@ -51,7 +51,7 @@ export interface TileErrorInfoProps {
   rows: number;
 }
 
-export interface TileComponentProps extends BaseComponentProps {
+export interface BareTileComponentProps {
   /**
    * The currently used number of columns.
    */
@@ -61,6 +61,8 @@ export interface TileComponentProps extends BaseComponentProps {
    */
   rows: number;
 }
+
+export type TileComponentProps = BaseComponentProps & BareTileComponentProps;
 
 export interface TilePreferences {
   /**
