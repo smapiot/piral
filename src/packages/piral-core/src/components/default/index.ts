@@ -1,3 +1,2 @@
-export * from './dashboard';
-export * from './errorInfo';
-export * from './loader';
+export * from './DefaultErrorInfo';
+export * from './DefaultLoader';

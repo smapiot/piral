@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { useMedia, useGlobalState, useAction } from '../hooks';
 import { defaultLayouts } from '../utils';
+import { LayoutBreakpoints } from '../types';
 
-export interface ResponsiveProps {}
+export interface ResponsiveProps {
+  breakpoints: LayoutBreakpoints;
+}
 
-export const Responsive: React.FC<ResponsiveProps> = ({ children }) => {
-  const { breakpoints, current } = useGlobalState(m => m.app.layout);
+export const Responsive: React.FC<ResponsiveProps> = ({ breakpoints, children }) => {
+  const current = useGlobalState(m => m.app.layout) || 'desktop';
   const changeTo = useAction('changeLayout');
   const selected = useMedia(breakpoints, defaultLayouts, current);
 

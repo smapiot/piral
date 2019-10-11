@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useGlobalState, MenuType } from 'piral-core';
+import { useGlobalState } from 'piral-core';
+import { MenuType } from 'piral-ext';
 import { MenuContainerProps, MenuItemProps, MenuProps } from '../types';
 
 export interface MenuCreator {

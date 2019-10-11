@@ -8,7 +8,7 @@ declare module 'piral-core/lib/types/custom' {
     'track-frame-end': PiralTrackEndFrameEvent;
   }
 
-  interface PiletCustomApi extends PiralTrackingApi {}
+  interface PiletCustomApi extends PiletTrackingApi {}
 }
 
 export const enum SeverityLevel {
@@ -67,7 +67,7 @@ export interface PiralTrackEndFrameEvent {
 /**
  * Defines the provided set of tracking and telemetry Pilet API extensions.
  */
-export interface PiralTrackingApi {
+export interface PiletTrackingApi {
   /**
    * Tracks a simple (singular) event at the current point in time.
    * @param name The name of the event to track.

@@ -1,16 +1,18 @@
 import { ComponentType } from 'react';
 import {
-  FeedErrorInfoProps,
-  FormErrorInfoProps,
   LoadingErrorInfoProps,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
-  TileErrorInfoProps,
-  MenuItemErrorInfoProps,
   ErrorInfoProps,
-  ModalErrorInfoProps,
   ExtensionErrorInfoProps,
 } from 'piral-core';
+import {
+  FeedErrorInfoProps,
+  FormErrorInfoProps,
+  TileErrorInfoProps,
+  ModalErrorInfoProps,
+  MenuItemErrorInfoProps,
+} from 'piral-ext';
 import { createBuilder } from './createBuilder';
 import { createErrorInfo } from '../../components';
 import { ErrorBuilder } from '../../types';

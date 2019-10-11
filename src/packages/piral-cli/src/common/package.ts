@@ -1,7 +1,4 @@
 import { resolve, join, extname, basename, dirname, relative } from 'path';
-import { logFail, logWarn } from './log';
-import { cliVersion } from './info';
-import { getDevDependencies, PiletLanguage } from './language';
 import {
   readJson,
   copy,
@@ -13,12 +10,10 @@ import {
   checkIsDirectory,
   matchFiles,
 } from './io';
-
-export interface TemplateFileLocation {
-  from: string;
-  to: string;
-  deep?: boolean;
-}
+import { cliVersion } from './info';
+import { logFail, logWarn } from './log';
+import { getDevDependencies, PiletLanguage } from './language';
+import { PiletsInfo, TemplateFileLocation } from '../types';
 
 export interface FileInfo {
   path: string;
@@ -66,6 +61,43 @@ async function getFilesOf(root: string, name: string, file: string | TemplateFil
       targetPath,
     },
   ];
+}
+
+function findRoot(pck: string, baseDir: string) {
+  try {
+    const path = require.resolve(pck, {
+      paths: [baseDir],
+    });
+
+    return path;
+  } catch (ex) {
+    return undefined;
+  }
+}
+
+function findPackage(pck: string | Array<string>, baseDir: string) {
+  if (Array.isArray(pck)) {
+    for (const item of pck) {
+      const result = findPackage(item, baseDir);
+
+      if (result) {
+        return result;
+      }
+    }
+  } else {
+    try {
+      const path = require.resolve(`${pck}/package.json`, {
+        paths: [baseDir],
+      });
+
+      const appPackage = require(path);
+      const relPath = appPackage && appPackage.app;
+      appPackage.app = relPath && resolve(dirname(path), relPath);
+      return appPackage;
+    } catch (ex) {
+      return undefined;
+    }
+  }
 }
 
 export function readPiralPackage(root: string, name: string) {
@@ -155,22 +187,12 @@ export async function copyPiralFiles(
   }
 }
 
-export interface PiletsInfo {
-  files: Array<string>;
-  externals: Array<string>;
-  devDependencies: Record<string, string>;
-  scripts: Record<string, string>;
-  preScaffold: string;
-  postScaffold: string;
-  preUpgrade: string;
-  postUpgrade: string;
-}
-
 export function getPiletsInfo(piralInfo: any): PiletsInfo {
   const {
     files = [],
     externals = [],
     scripts = {},
+    validators = {},
     devDependencies = {},
     preScaffold = '',
     postScaffold = '',
@@ -181,8 +203,9 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
   return {
     files,
     externals,
-    devDependencies,
     scripts,
+    validators,
+    devDependencies,
     preScaffold,
     postScaffold,
     preUpgrade,
@@ -320,4 +343,48 @@ export async function patchPiletPackage(
     scripts,
   });
   return info.files;
+}
+
+export async function retrievePiletData(target: string, app?: string) {
+  const packageJson = await findFile(target, 'package.json');
+
+  if (!packageJson) {
+    logFail('Cannot find the "%s". You need a valid package.json for your pilet.', 'package.json');
+    throw new Error('Invalid pilet.');
+  }
+
+  const root = dirname(packageJson);
+  const packageContent = require(packageJson);
+
+  const appPackage = findPackage(
+    app || (packageContent.piral && packageContent.piral.name) || Object.keys(packageContent.devDependencies),
+    target,
+  );
+  const appFile: string = appPackage && appPackage.app;
+
+  if (!appFile) {
+    logFail(
+      'Cannot find the Piral instance. Make sure the "%s" of the Piral instance is valid (has an "%s" field).',
+      'package.json',
+      'app',
+    );
+    throw new Error('Invalid Piral instance selected.');
+  }
+
+  const coreFile = findRoot('piral-core', appFile);
+
+  if (!coreFile) {
+    logFail('Cannot find the package "%s". Make sure your dependencies are correctly resolved.', 'piral-core');
+    throw new Error('Invalid dependency structure.');
+  }
+
+  return {
+    coreFile,
+    dependencies: packageContent.dependencies || {},
+    devDependencies: packageContent.devDependencies || {},
+    peerDependencies: packageContent.peerDependencies || {},
+    appFile,
+    appPackage,
+    root,
+  };
 }

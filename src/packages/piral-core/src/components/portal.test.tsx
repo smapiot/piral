@@ -6,13 +6,13 @@ import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Portal } from './portal';
 
-const StubDashboard: React.FC = props => <div />;
+const StubDashboard: React.FC = () => <div />;
 StubDashboard.displayName = 'StubDashboard';
 
-const StubErrorInfo: React.FC = props => <div />;
+const StubErrorInfo: React.FC = () => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
-const StubLoader: React.FC = props => <div />;
+const StubLoader: React.FC = () => <div />;
 StubLoader.displayName = 'StubLoader';
 
 jest.mock('../hooks');
@@ -23,15 +23,15 @@ jest.mock('./responsive');
   select({
     app: {
       components: {
-        Dashboard: StubDashboard,
         ErrorInfo: StubErrorInfo,
         Loader: StubLoader,
         history: createMemoryHistory(),
       },
+      routes: {},
     },
   });
 
-(routes as any).Routes = ({ Home }) => <Home />;
+(routes as any).Routes = ({}) => <StubDashboard />;
 
 (responsive as any).Responsive = ({ children }) => children;
 

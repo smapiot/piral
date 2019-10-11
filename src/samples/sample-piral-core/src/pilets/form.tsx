@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { PageComponentProps, FormProps, Pilet } from 'piral-core';
+import { PageComponentProps, Pilet } from 'piral-core';
+import { FormProps } from 'piral-forms';
 
 interface SampleFormData {
   firstName: string;

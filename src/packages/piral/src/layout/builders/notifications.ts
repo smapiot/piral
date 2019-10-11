@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import { OpenNotification } from 'piral-core';
+import { OpenNotification } from 'piral-ext';
 import { createBuilder } from './createBuilder';
 import { createNotifications } from '../../components';
 import { NotificationsContainerProps, NotificationsBuilder } from '../../types';

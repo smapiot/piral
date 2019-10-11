@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { createReadStream, existsSync } from 'fs';
+import { MemoryStream } from './MemoryStream';
 import { isWindows } from './info';
 import { inspectPackage } from './inspect';
 import { readJson } from './io';
@@ -7,10 +8,10 @@ import { runScript } from './scripts';
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
-function runNpmProcess(args: Array<string>, target: string) {
+function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   const cwd = resolve(process.cwd(), target);
   const cmd = [npmCommand, ...args].join(' ');
-  return runScript(cmd, cwd);
+  return runScript(cmd, cwd, output);
 }
 
 function isLocalPackage(baseDir: string, fullName: string) {
@@ -33,6 +34,12 @@ export function installPackage(packageRef: string, target = '.', ...flags: Array
 
 export function createPackage(target = '.', ...flags: Array<string>) {
   return runNpmProcess(['pack', ...flags], target);
+}
+
+export async function findLatestVersion(packageName: string) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['show', packageName, 'version'], '.', ms);
+  return ms.value;
 }
 
 export type PackageType = 'registry' | 'file' | 'git';

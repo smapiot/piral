@@ -1,5 +1,6 @@
 import { ComponentType } from 'react';
-import { MenuType, LayoutType } from 'piral-core';
+import { LayoutType } from 'piral-core';
+import { MenuType } from 'piral-ext';
 
 export interface MenuProps {
   type?: MenuType;

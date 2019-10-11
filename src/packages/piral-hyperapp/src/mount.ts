@@ -20,3 +20,7 @@ export function mount<T extends Object>(
     el,
   );
 }
+
+export function createElement(name: string, props: any) {
+  return h(name, props, []);
+}

@@ -158,6 +158,32 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'validate-piral',
+    alias: ['verify-piral', 'check-piral'],
+    description: 'Checks the validity of the current project as a Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          default: apps.validatePiralDefaults.entry,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.validatePiralDefaults.logLevel)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.validatePiral(args.base as string, {
+        entry: args.entry as string,
+        logLevel: args.logLevel as any,
+      });
+    },
+  },
+  {
     name: 'debug-pilet',
     alias: ['watch-pilet', 'debug', 'watch'],
     description: 'Starts the debugging process for a pilet using a Piral instance.',
@@ -360,6 +386,35 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         version: args.tag as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+      });
+    },
+  },
+  {
+    name: 'validate-pilet',
+    alias: ['verify-pilet', 'check-pilet', 'lint-pilet', 'assert-pilet'],
+    description: 'Checks the validity of the current pilet according to the rules defined by the Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source file containing the pilet root module.',
+          default: apps.validatePiletDefaults.entry,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.validatePiletDefaults.logLevel)
+        .string('app')
+        .describe('app', 'Sets the name of the Piral instance.')
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.validatePilet(args.base as string, {
+        entry: args.entry as string,
+        logLevel: args.logLevel as any,
+        app: args.app,
       });
     },
   },

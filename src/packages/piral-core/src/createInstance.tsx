@@ -1,20 +1,13 @@
 import * as React from 'react';
-import { withRecall, ApiCreator, createProgressiveStrategy } from 'react-arbiter';
+import { withRecall, blazingStrategy, standardStrategy, isfunc } from 'react-arbiter';
 import { Portal } from './components';
+import { createListener } from './utils';
 import { createGlobalState, createActions, StateContext } from './state';
-import { createCoreApi, getLocalDependencies, createListener, globalDependencies } from './modules';
-import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiralContainer, PiletMetadata } from './types';
+import { getLocalDependencies, globalDependencies, defaultApiCreator } from './modules';
+import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiletMetadata } from './types';
 
 function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
   return Promise.resolve([]);
-}
-
-function defaultApiExtender(value: PiletApi) {
-  return value;
-}
-
-function defaultApiCreator(container: PiralContainer): ApiCreator<PiletApi> {
-  return target => createCoreApi(target, container);
 }
 
 /**
@@ -37,19 +30,14 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
   const {
     state,
     availablePilets = [],
-    extendApi = defaultApiExtender,
+    extendApi = [],
     requestPilets = defaultModuleRequester,
     getDependencies = getLocalDependencies,
     async = false,
-    actions,
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
-  const container = {
-    context: createActions(globalState, events, actions),
-    events,
-    extendApi,
-  };
+  const context = createActions(globalState, events);
 
   if (process.env.DEBUG_PILET) {
     const { setup } = require(process.env.DEBUG_PILET);
@@ -61,11 +49,11 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
     });
   }
 
-  const createApi = defaultApiCreator(container);
+  const createApi = defaultApiCreator(context, Array.isArray(extendApi) ? extendApi : [extendApi]);
   const RecallPortal = withRecall<PortalProps, PiletApi>(Portal, {
     modules: availablePilets,
     getDependencies,
-    strategy: createProgressiveStrategy(async),
+    strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
     dependencies: globalDependencies,
     fetchModules() {
       events.emit('load-start', {});
@@ -87,7 +75,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
   });
 
   const App: React.FC<PortalProps> = props => (
-    <StateContext.Provider value={container.context}>
+    <StateContext.Provider value={context}>
       <RecallPortal {...props} />
     </StateContext.Provider>
   );
@@ -97,7 +85,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
     ...events,
     App,
     createApi,
-    actions: container.context,
+    actions: context,
     root: createApi({
       name: 'root',
       version: process.env.BUILD_PCKG_VERSION || '1.0.0',

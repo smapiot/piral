@@ -1,7 +1,7 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
 import { LocalizationMessages, FetchConfig, GqlConfig, LocaleConfig } from 'piral-ext';
 import { PiralStateConfiguration, PiletRequester, Extend, PiletApi } from 'piral-core';
-import { PiralGqlApiQuery, PiralFetchApiFetch, PiralGqlApiMutate, PiralGqlApiSubscribe } from 'piral-ext';
+import { PiletGqlApiQuery, PiletFetchApiFetch, PiletGqlApiMutate, PiletGqlApiSubscribe } from 'piral-ext';
 import { LayoutBuilder } from './layout';
 
 export interface PiralAttachment {
@@ -33,7 +33,7 @@ export interface PiralConfig extends PiralStateConfiguration {
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  extendApi?: Extend;
+  extendApi?: Extend | Array<Extend>;
   /**
    * Sets up the configuration for fetch.
    */
@@ -45,10 +45,10 @@ export interface PiralConfig extends PiralStateConfiguration {
 }
 
 export interface PiralLoaderOptions {
-  query: PiralGqlApiQuery;
-  fetch: PiralFetchApiFetch;
-  mutate: PiralGqlApiMutate;
-  subscribe: PiralGqlApiSubscribe;
+  query: PiletGqlApiQuery;
+  fetch: PiletFetchApiFetch;
+  mutate: PiletGqlApiMutate;
+  subscribe: PiletGqlApiSubscribe;
 }
 
 export interface PiralLoader {

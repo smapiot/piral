@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import { OpenModalDialog } from 'piral-core';
+import { OpenModalDialog } from 'piral-ext';
 import { createBuilder } from './createBuilder';
 import { createModals } from '../../components';
 import { ModalsContainerProps, ModalsBuilder } from '../../types';

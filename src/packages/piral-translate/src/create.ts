@@ -1,5 +1,8 @@
+import { swap } from '@dbeining/react-atom';
+import { Extend } from 'piral-core';
+import { createActions } from './actions';
 import { Localizer } from './localize';
-import { PiralLocaleApi, LocalizationMessages, LocaleConfig } from './types';
+import { PiletLocaleApi, LocalizationMessages, LocaleConfig } from './types';
 
 /**
  * Sets up a new localizer by using the given config.
@@ -13,19 +16,34 @@ export function setupLocalizer(config: LocaleConfig = {}) {
 
 /**
  * Creates a new Piral localization API extension.
- * @param config The configuration to use.
+ * @param localizer The specific localizer to be used, if any.
  */
-export function createLocaleApi(localizer: Localizer): PiralLocaleApi {
-  let localTranslations: LocalizationMessages = {};
-  return {
-    setTranslations(messages) {
-      localTranslations = messages;
-    },
-    getTranslations() {
-      return localTranslations;
-    },
-    translate(tag, variables) {
-      return localizer.localizeLocal(localTranslations, tag, variables);
-    },
-  };
+export function createLocaleApi(localizer = setupLocalizer()): Extend<PiletLocaleApi> {
+  return context => {
+    context.defineActions(createActions(localizer));
+
+    swap(context.state, state => ({
+      ...state,
+      language: {
+        available: [localizer.language],
+        selected: localizer.language,
+      },
+    }));
+
+    return () => {
+      let localTranslations: LocalizationMessages = {};
+
+      return {
+        setTranslations(messages) {
+          localTranslations = messages;
+        },
+        getTranslations() {
+          return localTranslations;
+        },
+        translate(tag, variables) {
+          return localizer.localizeLocal(localTranslations, tag, variables);
+        },
+      };
+    };
+  }
 }

@@ -4,9 +4,9 @@ import { MenuProps, LayoutProps } from '../types';
 
 function selectContent(state: GlobalState) {
   return {
-    selectedLanguage: state.app.language.selected,
-    availableLanguages: state.app.language.available,
-    currentLayout: state.app.layout.current,
+    selectedLanguage: state.language.selected,
+    availableLanguages: state.language.available,
+    currentLayout: state.app.layout,
   };
 }
 

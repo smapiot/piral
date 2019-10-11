@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { DashboardProps, getExtensionSlot, useGlobalState } from 'piral-core';
+import { ExtensionSlot, useGlobalState } from 'piral-core';
+import { DashboardProps } from 'piral-ext';
 import { DashboardContainerProps, TileProps } from '../types';
-
-const ExtensionSlot = getExtensionSlot('dashboard');
 
 export interface DashboardCreator {
   DashboardContainer: React.ComponentType<DashboardContainerProps>;
@@ -28,7 +27,7 @@ export function createDashboard({ DashboardContainer, Tile }: DashboardCreator):
             );
           })}
         </DashboardContainer>
-        <ExtensionSlot params={{ tiles, ...props }} />
+        <ExtensionSlot name="dashboard" params={{ tiles, ...props }} />
       </>
     );
   };

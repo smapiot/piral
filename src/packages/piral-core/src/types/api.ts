@@ -1,19 +1,13 @@
-import { ReactNode, ComponentType } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { ComponentType } from 'react';
 import { ArbiterModule } from 'react-arbiter';
+import { RouteComponentProps } from 'react-router-dom';
 import { Dict } from './common';
-import { MenuSettings } from './menu';
-import { TilePreferences } from './tile';
 import { PiletMetadata } from './meta';
 import { PiletCustomApi } from './custom';
-import { Disposable, EventEmitter } from './utils';
-import { NotificationOptions } from './notifications';
+import { EventEmitter } from './utils';
+import { AnyComponent } from './components';
+import { ExtensionSlotProps } from './extension';
 import { SharedData, DataStoreOptions } from './data';
-import { InputFormOptions, FormCreator } from './form';
-import { SearchSettings, SearchOptions } from './search';
-import { ForeignComponent, AnyComponent } from './components';
-import { FeedResolver, FeedConnector, FeedConnectorOptions } from './feed';
-import { StateContainerOptions, StateContainer, StateContainerActions, StateContainerReducers } from './container';
 
 export interface BaseComponentProps {
   /**
@@ -29,72 +23,21 @@ export interface ExtensionComponentProps<T = Dict<any>> extends BaseComponentPro
   params: T;
 }
 
-export interface MenuComponentProps extends BaseComponentProps {}
-
-export interface TileComponentProps extends BaseComponentProps {
-  /**
-   * The currently used number of columns.
-   */
-  columns: number;
-  /**
-   * The currently used number of rows.
-   */
-  rows: number;
-}
-
 export interface RouteBaseProps<UrlParams = any, UrlState = any>
   extends RouteComponentProps<UrlParams, {}, UrlState>,
     BaseComponentProps {}
 
-export interface ModalComponentProps<TOpts> extends BaseComponentProps {
-  /**
-   * Callback for closing the modal programmatically.
-   */
-  onClose(): void;
-  /**
-   * Provides the passed in options for this particular modal.
-   */
-  options?: TOpts;
-}
-
 export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
 
-export interface SearchProvider {
-  (options: SearchOptions, api: PiletApi): Promise<Array<ReactNode | HTMLElement>>;
-}
-
+/**
+ * Defines the full pilet; metadata and API.
+ */
 export type Pilet = ArbiterModule<PiletApi>;
 
 /**
  * Defines the Pilet API from piral-core.
  */
-export interface PiletApi extends PiletCustomApi, EventEmitter {
-  /**
-   * Gets the metadata of the current pilet.
-   */
-  meta: PiletMetadata;
-  /**
-   * Creates a connector for wrapping components with data relations.
-   * @param resolver The resolver for the initial data set.
-   */
-  createConnector<T>(resolver: FeedResolver<T>): FeedConnector<T>;
-  /**
-   * Creates a connector for wrapping components with data relations.
-   * @param options The options for creating the connector.
-   */
-  createConnector<TData, TItem>(options: FeedConnectorOptions<TData, TItem>): FeedConnector<TData>;
-  /**
-   * Creates a state container for persisting some global state.
-   * @param options The options for creating the state container.
-   */
-  createState<TState, TActions extends StateContainerReducers<TState>>(
-    options: StateContainerOptions<TState, TActions>,
-  ): StateContainer<TState, StateContainerActions<TActions>>;
-  /**
-   * Creates an input form for tracking user input intelligently.
-   * @param options The options for creating the form.
-   */
-  createForm<TFormData, TProps = any>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
+export interface PiletCoreApi {
   /**
    * Gets a shared data value.
    * @param name The name of the data to retrieve.
@@ -110,171 +53,55 @@ export interface PiletApi extends PiletCustomApi, EventEmitter {
    */
   setData<TKey extends string>(name: TKey, value: SharedData[TKey], options?: DataStoreOptions): boolean;
   /**
-   * Shows a notification in the determined spot using the provided content.
-   * @param content The content to display. Normally, a string would be sufficient.
-   * @param options The options to consider for showing the notification.
-   * @returns A callback to trigger closing the notification.
-   */
-  showNotification(content: ReactNode | HTMLElement, options?: NotificationOptions): Disposable;
-  /**
-   * Shows a modal dialog with the given name.
-   * The modal can be optionally programmatically closed using the returned callback.
-   * @param name The name of the registered modal.
-   * @param options Optional arguments for creating the modal.
-   * @returns A callback to trigger closing the modal.
-   */
-  showModal<TOpts = any>(name: string, options?: TOpts): Disposable;
-  /**
-   * Registers a modal dialog using a generic rendering function.
-   * The name needs to be unique to be used without the pilet's name.
-   * @param name The name of the modal to register.
-   * @param render The function that is being called once rendering begins.
-   * @param defaults Optionally, sets the default values for the inserted options.
-   */
-  registerModalX<TOpts>(name: string, render: ForeignComponent<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
-  /**
-   * Registers a modal dialog using a React component.
-   * The name needs to be unique to be used without the pilet's name.
-   * @param name The name of the modal to register.
-   * @param Component The component to render the page.
-   * @param defaults Optionally, sets the default values for the inserted options.
-   */
-  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
-  /**
-   * Unregisters a modal by its name.
-   * @param name The name that was previously registered.
-   */
-  unregisterModal(name: string): void;
-  /**
-   * Registers a route for general component.
-   * The route needs to be unique and can contain params.
-   * Params are following the path-to-regexp notation, e.g., :id for an id parameter.
-   * @param route The route to register.
-   * @param render The function that is being called once rendering begins.
-   */
-  registerPageX(route: string, render: ForeignComponent<PageComponentProps>): void;
-  /**
-   * Registers a route for React component.
+   * Registers a route for predefined page component.
    * The route needs to be unique and can contain params.
    * Params are following the path-to-regexp notation, e.g., :id for an id parameter.
    * @param route The route to register.
    * @param Component The component to render the page.
    */
-  registerPage(route: string, Component: ComponentType<PageComponentProps>): void;
+  registerPage(route: string, Component: AnyComponent<PageComponentProps>): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
    */
   unregisterPage(route: string): void;
   /**
-   * Registers a tile for general components.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the tile.
-   * @param render The function that is being called once rendering begins.
-   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
-   */
-  registerTileX(name: string, render: ForeignComponent<TileComponentProps>, preferences?: TilePreferences): void;
-  /**
-   * Registers a tile for general components.
-   * @param render The function that is being called once rendering begins.
-   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
-   */
-  registerTileX(render: ForeignComponent<TileComponentProps>, preferences?: TilePreferences): void;
-  /**
-   * Registers a tile for React components.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the tile.
-   * @param Component The component to be rendered within the Dashboard.
-   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
-   */
-  registerTile(name: string, Component: ComponentType<TileComponentProps>, preferences?: TilePreferences): void;
-  /**
-   * Registers a tile for React components.
-   * @param Component The component to be rendered within the Dashboard.
-   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
-   */
-  registerTile(Component: ComponentType<TileComponentProps>, preferences?: TilePreferences): void;
-  /**
-   * Unregisters a tile known by the given name.
-   * Only previously registered tiles can be unregistered.
-   * @param name The name of the tile to unregister.
-   */
-  unregisterTile(name: string): void;
-  /**
-   * Registers an extension component with a general components.
-   * The name must refer to the extension slot.
-   * @param name The global name of the extension slot.
-   * @param render The function that is being called once rendering begins.
-   * @param defaults Optionally, sets the default values for the expected data.
-   */
-  registerExtensionX<T>(name: string, render: ForeignComponent<ExtensionComponentProps<T>>, defaults?: T): void;
-  /**
-   * Registers an extension component with a React component.
+   * Registers an extension component with a predefined extension component.
    * The name must refer to the extension slot.
    * @param name The global name of the extension slot.
    * @param Component The component to be rendered.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T>(name: string, Component: ComponentType<ExtensionComponentProps<T>>, defaults?: T): void;
+  registerExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>, defaults?: T): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
-   * @param hook The registered extension component to unregister.
+   * @param Component The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, hook: AnyComponent<ExtensionComponentProps<T>>): void;
+  unregisterExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>): void;
   /**
-   * Registers a menu item for general components.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the menu item.
-   * @param render The function that is being called once rendering begins.
-   * @param settings The optional configuration for the menu item.
+   * React component for displaying extensions for a given name.
    */
-  registerMenuX(name: string, render: ForeignComponent<MenuComponentProps>, settings?: MenuSettings): void;
+  Extension: ComponentType<ExtensionSlotProps>;
   /**
-   * Registers a menu item for general components.
-   * @param render The function that is being called once rendering begins.
-   * @param settings The optional configuration for the menu item.
+   * Renders an extension in a plain DOM component.
+   * @param element The DOM element as a container for rendering the extension.
+   * @param props The extension's rendering props.
    */
-  registerMenuX(render: ForeignComponent<MenuComponentProps>, settings?: MenuSettings): void;
+  renderHtmlExtension<T = any>(element: HTMLElement, props: ExtensionSlotProps<T>): void;
+}
+
+/**
+ * Defines the API accessible from pilets.
+ */
+export interface PiletApi extends PiletCustomApi, PiletCoreApi, EventEmitter {
   /**
-   * Registers a menu item for React components.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the menu item.
-   * @param Component The component to be rendered within the menu.
-   * @param settings The optional configuration for the menu item.
+   * Gets the metadata of the current pilet.
    */
-  registerMenu(name: string, Component: ComponentType<MenuComponentProps>, settings?: MenuSettings): void;
-  /**
-   * Registers a menu item for React components.
-   * @param Component The component to be rendered within the menu.
-   * @param settings The optional configuration for the menu item.
-   */
-  registerMenu(Component: ComponentType<MenuComponentProps>, settings?: MenuSettings): void;
-  /**
-   * Unregisters a menu item known by the given name.
-   * Only previously registered menu items can be unregistered.
-   * @param name The name of the menu item to unregister.
-   */
-  unregisterMenu(name: string): void;
-  /**
-   * Registers a search provider to respond to search queries.
-   * The name has to be unique within the current pilet.
-   * @param name The name of the search provider.
-   * @param provider The callback to be used for searching.
-   * @param settings The optional settings for the search provider.
-   */
-  registerSearchProvider(name: string, provider: SearchProvider, settings?: SearchSettings): void;
-  /**
-   * Registers a search provider to respond to search queries.
-   * @param provider The callback to be used for searching.
-   * @param settings The optional settings for the search provider.
-   */
-  registerSearchProvider(provider: SearchProvider, settings?: SearchSettings): void;
-  /**
-   * Unregisters a search provider known by the given name.
-   * Only previously registered search providers can be unregistered.
-   * @param name The name of the search provider to unregister.
-   */
-  unregisterSearchProvider(name: string): void;
+  meta: PiletMetadata;
+}
+
+export interface PiletsBag {
+  [name: string]: PiletApi;
 }

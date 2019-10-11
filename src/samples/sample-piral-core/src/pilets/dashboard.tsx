@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Dict, TileRegistration, Pilet } from 'piral-core';
+import { Dict, Pilet } from 'piral-core';
+import { TileRegistration } from 'piral-dashboard';
 
 /**
  * Shows the possibility of extending default functionality (e.g., the dashboard)

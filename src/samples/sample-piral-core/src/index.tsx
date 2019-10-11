@@ -4,10 +4,17 @@ import 'zone.js/dist/zone';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useSearch, useAction, setupState, extendApis } from 'piral-core';
+import { createInstance, useGlobalState, LoaderProps, useAction, setupState } from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
+import { createMenuApi } from 'piral-menu';
+import { createNotificationsApi } from 'piral-notifications';
+import { createDashboardApi, DefaultDashboard } from 'piral-dashboard';
+import { createContainerApi } from 'piral-containers';
+import { createFeedsApi } from 'piral-feeds';
+import { createFormsApi } from 'piral-forms';
 import { createHyperappApi } from 'piral-hyperapp';
+import { createSearchApi, useSearch } from 'piral-search';
 import { availablePilets } from './pilets';
 
 customElements.define(
@@ -122,7 +129,7 @@ const SearchForm: React.FC = () => {
 };
 
 const Notifications: React.FC = () => {
-  const notifications = useGlobalState(s => s.app.notifications);
+  const notifications = useGlobalState(s => s.notifications);
 
   return (
     <div className="app-notifications">
@@ -142,7 +149,7 @@ const Notifications: React.FC = () => {
 };
 
 const Layout: React.FC = ({ children }) => {
-  const layout = useGlobalState(s => s.app.layout.current);
+  const layout = useGlobalState(s => s.app.layout);
 
   return (
     <div className="app-container">
@@ -160,7 +167,18 @@ const Layout: React.FC = ({ children }) => {
 
 const Piral = createInstance({
   availablePilets,
-  extendApi: extendApis([createVueApi, createNgApi, createHyperappApi]),
+  extendApi: [
+    createVueApi(),
+    createNgApi(),
+    createHyperappApi(),
+    createMenuApi(),
+    createNotificationsApi(),
+    createContainerApi(),
+    createDashboardApi(),
+    createFeedsApi(),
+    createFormsApi(),
+    createSearchApi(),
+  ],
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
     //   .then(res => res.json())
@@ -170,6 +188,7 @@ const Piral = createInstance({
   state: setupState({
     Loader,
     routes: {
+      '/': DefaultDashboard,
       '/sitemap': Sitemap,
     },
   }),

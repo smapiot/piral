@@ -1,9 +1,8 @@
-import { DependencyGetter } from 'react-arbiter';
+import { DependencyGetter, ArbiterRecallStrategy } from 'react-arbiter';
+import { Pilet, PiletApi } from './api';
 import { NestedPartial } from './common';
 import { PiletRequester, Extend } from './plugin';
 import { GlobalState } from './state';
-import { Pilet } from './api';
-import { PiralCustomActions } from './custom';
 
 export interface PiralPiletConfiguration {
   /*
@@ -20,7 +19,7 @@ export interface PiralPiletConfiguration {
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  extendApi?: Extend;
+  extendApi?: Extend | Array<Extend>;
 }
 
 export interface PiralStateConfiguration {
@@ -32,15 +31,11 @@ export interface PiralStateConfiguration {
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.
    */
-  async?: boolean;
+  async?: boolean | ArbiterRecallStrategy<PiletApi>;
   /**
    * Optionally, sets up the initial state of the application.
    */
   state?: NestedPartial<GlobalState>;
-  /**
-   * Optionally, sets additional actions to be included.
-   */
-  actions?: PiralCustomActions;
 }
 
 export type PiralConfiguration = PiralPiletConfiguration & PiralStateConfiguration;

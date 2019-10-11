@@ -1,5 +1,6 @@
-import { TileComponentProps, Pilet } from 'piral-core';
+import { Pilet } from 'piral-core';
 import { Component } from 'piral-hyperapp';
+import { TileComponentProps } from 'piral-dashboard';
 
 // If isolated we could easily also import hyperapp
 // and set up tsconfig.json to use jsxFactory h.
@@ -18,29 +19,43 @@ const actions = {
   up: value => state => ({ count: state.count + value }),
 };
 
-const Tile: Component<TileComponentProps, typeof state, typeof actions> = props => (state, actions) =>
-  h(
-    'div',
-    {
-      class: 'tile',
-    },
-    h('h3', {}, `Hyperapp: ${state.count}`),
-    h('p', {}, `${props.rows} rows and ${props.columns} columns`),
+const Tile: Component<TileComponentProps, typeof state, typeof actions> = props => {
+  const { HyperappExtension } = props.piral;
+
+  return (state, actions) =>
     h(
-      'button',
+      'div',
       {
-        onclick: () => actions.up(1),
+        class: 'tile',
       },
-      '+',
-    ),
-    h(
-      'button',
-      {
-        onclick: () => actions.down(1),
-      },
-      '-',
-    ),
-  );
+      h('h3', {}, `Hyperapp: ${state.count}`),
+      h(
+        'p',
+        {},
+        `${props.rows} rows and ${props.columns} columns `,
+        HyperappExtension(
+          {
+            name: 'smiley',
+          },
+          [],
+        ),
+      ),
+      h(
+        'button',
+        {
+          onclick: () => actions.up(1),
+        },
+        '+',
+      ),
+      h(
+        'button',
+        {
+          onclick: () => actions.down(1),
+        },
+        '-',
+      ),
+    );
+};
 
 /**
  * Shows an API extension using hyperapp components.
@@ -51,9 +66,17 @@ export const HyperappPilet: Pilet = {
   version: '1.0.0',
   hash: '521',
   setup(piral) {
-    piral.registerTileHyperapp(Tile, state, actions, {
-      initialColumns: 2,
-      initialRows: 2,
-    });
+    piral.registerTile(
+      {
+        root: Tile,
+        state,
+        actions,
+        type: 'hyperapp',
+      },
+      {
+        initialColumns: 2,
+        initialRows: 2,
+      },
+    );
   },
 };

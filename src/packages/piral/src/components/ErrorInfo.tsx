@@ -1,20 +1,20 @@
 import * as React from 'react';
 import {
-  getExtensionSlot,
+  ExtensionSlot,
   ErrorInfoProps,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
-  TileErrorInfoProps,
-  MenuItemErrorInfoProps,
   LoadingErrorInfoProps,
+  ExtensionErrorInfoProps,
+} from 'piral-core';
+import {
   FeedErrorInfoProps,
   FormErrorInfoProps,
-  ExtensionErrorInfoProps,
+  TileErrorInfoProps,
   ModalErrorInfoProps,
-} from 'piral-core';
+  MenuItemErrorInfoProps,
+} from 'piral-ext';
 import { UnknownErrorInfoProps } from '../types';
-
-const ExtensionSlot = getExtensionSlot('error');
 
 export interface ErrorInfoCreator {
   NotFoundErrorInfo: React.ComponentType<NotFoundErrorInfoProps>;
@@ -69,7 +69,7 @@ export function createErrorInfo({
   return props => (
     <>
       {getErrorInfo(props)}
-      <ExtensionSlot params={props} />
+      <ExtensionSlot name="error" params={props} />
     </>
   );
 }

@@ -219,6 +219,13 @@ export function readBinary(targetDir: string, fileName: string) {
   });
 }
 
+export function readText(targetDir: string, fileName: string) {
+  const targetFile = join(targetDir, fileName);
+  return new Promise<string>(resolve => {
+    readFile(targetFile, 'utf8', (err, c) => (err ? resolve(undefined) : resolve(c)));
+  });
+}
+
 export async function updateExistingJson<T>(targetDir: string, fileName: string, newContent: T) {
   const content = await mergeWithJson(targetDir, fileName, newContent);
   await updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));
@@ -268,4 +275,23 @@ export async function move(source: string, target: string, forceOverwrite = Forc
   await copy(source, target, forceOverwrite);
   await remove(source);
   return target;
+}
+
+export async function getSourceFiles(entry: string) {
+  const dir = dirname(entry);
+  const files = await matchFiles(dir, '**/*.(j|t)sx?');
+  return files.map(path => {
+    const directory = dirname(path);
+    const name = basename(path);
+
+    return {
+      path,
+      directory,
+      name,
+      read() {
+        //TODO always get js representation and omit type-only references
+        return readText(directory, name);
+      },
+    };
+  });
 }

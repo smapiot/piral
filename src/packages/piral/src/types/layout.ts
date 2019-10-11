@@ -2,21 +2,23 @@ import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router';
 import {
   ErrorInfoProps,
-  DashboardProps,
   LoaderProps,
   NotFoundErrorInfoProps,
   PageErrorInfoProps,
-  TileErrorInfoProps,
-  MenuItemErrorInfoProps,
   LoadingErrorInfoProps,
+  GlobalStateOptions,
+  ExtensionErrorInfoProps,
+} from 'piral-core';
+import {
+  DashboardProps,
+  TileErrorInfoProps,
+  ModalErrorInfoProps,
+  MenuItemErrorInfoProps,
   FeedErrorInfoProps,
   FormErrorInfoProps,
   OpenModalDialog,
   OpenNotification,
-  GlobalStateOptions,
-  ModalErrorInfoProps,
-  ExtensionErrorInfoProps,
-} from 'piral-core';
+} from 'piral-ext';
 import {
   MenuProps,
   LayoutProps,

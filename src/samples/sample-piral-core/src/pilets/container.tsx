@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { TileComponentProps, Pilet } from 'piral-core';
+import { Pilet } from 'piral-core';
+import { TileComponentProps } from 'piral-dashboard';
 
 const MyTile: React.FC<{ count: number; increment(): void }> = ({ count, increment }) => (
   <div className="tile">

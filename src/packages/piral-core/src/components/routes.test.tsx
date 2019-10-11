@@ -17,7 +17,7 @@ jest.mock('../hooks');
   select({
     app: {
       routes: {
-        '/': StubComponent,
+        '/': StubHome,
         '/custom': StubCustomPage,
       },
       trackers: [],
@@ -54,7 +54,7 @@ StubBarPage.displayName = 'StubBarPage';
 
 describe('Routes Module', () => {
   it('always goes to the given home on "/"', () => {
-    const node = mountWithRouter(<Routes Home={StubHome} NotFound={StubNotFound} />, '/');
+    const node = mountWithRouter(<Routes NotFound={StubNotFound} />, '/');
     expect(node.find(StubHome).length).toBe(1);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -62,7 +62,7 @@ describe('Routes Module', () => {
   });
 
   it('goes to the not found on an invalid path', () => {
-    const node = mountWithRouter(<Routes Home={StubHome} NotFound={StubNotFound} />, '/qxz');
+    const node = mountWithRouter(<Routes NotFound={StubNotFound} />, '/qxz');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(1);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -70,7 +70,7 @@ describe('Routes Module', () => {
   });
 
   it('goes to the custom page on "/custom"', () => {
-    const node = mountWithRouter(<Routes Home={StubHome} NotFound={StubNotFound} />, '/custom');
+    const node = mountWithRouter(<Routes NotFound={StubNotFound} />, '/custom');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(1);
@@ -78,7 +78,7 @@ describe('Routes Module', () => {
   });
 
   it('goes exactly to the page on "/foo/bar"', () => {
-    const node = mountWithRouter(<Routes Home={StubHome} NotFound={StubNotFound} />, '/foo/bar');
+    const node = mountWithRouter(<Routes NotFound={StubNotFound} />, '/foo/bar');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -86,7 +86,7 @@ describe('Routes Module', () => {
   });
 
   it('goes exactly to the page on "/foo"', () => {
-    const node = mountWithRouter(<Routes Home={StubHome} NotFound={StubNotFound} />, '/foo');
+    const node = mountWithRouter(<Routes NotFound={StubNotFound} />, '/foo');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -95,7 +95,7 @@ describe('Routes Module', () => {
   });
 
   it('goes exactly to the page on "/bar"', () => {
-    const node = mountWithRouter(<Routes Home={StubHome} NotFound={StubNotFound} />, '/bar');
+    const node = mountWithRouter(<Routes NotFound={StubNotFound} />, '/bar');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);

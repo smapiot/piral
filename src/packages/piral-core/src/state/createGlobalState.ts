@@ -1,51 +1,28 @@
 import { Atom, addChangeHandler } from '@dbeining/react-atom';
-import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from '../components/default';
-import { defaultBreakpoints } from '../utils';
+import { DefaultErrorInfo, DefaultLoader } from '../components/default';
 import { GlobalState, NestedPartial } from '../types';
 
 export function createGlobalState<TState extends GlobalState>(state: NestedPartial<TState> = {}) {
   const globalState = Atom.of({
-    feeds: {},
-    forms: {},
     modules: [],
     ...state,
     app: {
-      language: {
-        selected: '',
-        available: [],
-      },
-      layout: {
-        current: 'desktop',
-        breakpoints: defaultBreakpoints,
-      },
+      layout: 'desktop',
       components: {
-        Dashboard: DefaultDashboard,
         ErrorInfo: DefaultErrorInfo,
         Loader: DefaultLoader,
       },
       routes: {},
-      trackers: [],
       data: {},
-      modals: [],
-      notifications: [],
       loading: false,
       ...state.app,
     },
     components: {
       extensions: {},
-      menuItems: {},
-      modals: {},
       pages: {},
-      tiles: {},
-      searchProviders: {},
       ...state.components,
     },
-    search: {
-      input: '',
-      loading: false,
-      results: [],
-      ...state.search,
-    },
+    portals: {},
   });
 
   if (process.env.NODE_ENV === 'development') {

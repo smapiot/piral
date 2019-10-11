@@ -1,45 +1,25 @@
+import { ReactPortal } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
-import { LayoutType, GlobalState, EventEmitter } from '../../types';
+import { LayoutType, GlobalState, GlobalStateContext } from '../../types';
+import { withKey, withoutKey, includeItem, excludeItem } from '../../utils';
 
-export function selectLanguage(this: EventEmitter, ctx: Atom<GlobalState>, selected: string) {
-  swap(ctx, state => {
-    this.emit('change-language', {
-      selected,
-      previous: state.app.language.selected,
-    });
-    return {
-      ...state,
-      app: {
-        ...state.app,
-        language: {
-          ...state.app.language,
-          selected,
-        },
-      },
-    };
-  });
-}
-
-export function changeLayout(this: EventEmitter, ctx: Atom<GlobalState>, current: LayoutType) {
+export function changeLayout(this: GlobalStateContext, ctx: Atom<GlobalState>, current: LayoutType) {
   swap(ctx, state => {
     this.emit('change-layout', {
       current,
-      previous: state.app.layout.current,
+      previous: state.app.layout,
     });
     return {
       ...state,
       app: {
         ...state.app,
-        layout: {
-          ...state.app.layout,
-          current,
-        },
+        layout: current,
       },
     };
   });
 }
 
-export function setLoading(this: EventEmitter, ctx: Atom<GlobalState>, loading: boolean) {
+export function setLoading(this: GlobalStateContext, ctx: Atom<GlobalState>, loading: boolean) {
   swap(ctx, state => {
     this.emit('loading', {
       loading,
@@ -52,4 +32,32 @@ export function setLoading(this: EventEmitter, ctx: Atom<GlobalState>, loading: 
       },
     };
   });
+}
+
+export function defineAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
+  this[actionName] = (...args) => action.call(this, ctx, ...args);
+}
+
+export function defineActions(this: GlobalStateContext, ctx: Atom<GlobalState>, actions: any) {
+  for (const actionName of Object.keys(actions)) {
+    const action = actions[actionName];
+    defineAction.call(this, ctx, actionName, action);
+  }
+}
+
+export function destroyPortal(ctx: Atom<GlobalState>, id: string) {
+  swap(ctx, state => ({
+    ...state,
+    portals: withoutKey(state.portals, id),
+  }));
+}
+
+export function showPortal(ctx: Atom<GlobalState>, id: string, entry: ReactPortal) {
+  swap(ctx, state => ({
+    ...state,
+    portals: {
+      ...state.portals,
+      [id]: includeItem(state.portals[id], entry),
+    },
+  }));
 }

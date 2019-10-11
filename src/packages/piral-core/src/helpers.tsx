@@ -1,9 +1,8 @@
 import { AvailableDependencies } from 'react-arbiter';
 import { createBrowserHistory } from 'history';
 import { globalDependencies, getLocalDependencies } from './modules';
-import { defaultBreakpoints, getUserLocale, getCurrentLayout, defaultLayouts } from './utils';
-import { DefaultDashboard, DefaultLoader, DefaultErrorInfo } from './components/default';
-import { Append, Extend, GlobalStateOptions, NestedPartial, GlobalState } from './types';
+import { DefaultLoader, DefaultErrorInfo } from './components/default';
+import { GlobalStateOptions, NestedPartial, GlobalState } from './types';
 
 /**
  * Creates a dependency getter that sets the shared dependencies explicitly.
@@ -32,25 +31,6 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
 }
 
 /**
- * Creates an API extender from the given array of API declarations.
- * @param apis The APIs to use as source.
- */
-export function extendApis(apis: Array<Append>): Extend {
-  return (init, target) => ({
-    ...init,
-    ...apis
-      .map(createApi => createApi(init, target))
-      .reduce(
-        (prev, curr) => ({
-          ...curr,
-          ...prev,
-        }),
-        init,
-      ),
-  });
-}
-
-/**
  * Sets up the initial state from the given options.
  * @param options The options for setting up the initial state.
  * @param state The optional parent state for deriving the defaults.
@@ -61,48 +41,25 @@ export function setupState(
 ): NestedPartial<GlobalState> {
   const {
     components: defaultComponentsState = {
-      Dashboard: undefined,
       Loader: undefined,
       ErrorInfo: undefined,
       history: undefined,
     },
-    language: defaultLanguageState = {
-      available: undefined,
-      selected: undefined,
-    },
-    layout: defaultLayoutState = {
-      breakpoints: undefined,
-      current: undefined,
-    },
+    layout: defaultLayoutState = 'desktop',
     routes: defaultRoutes = {},
-    trackers: defaultTrackers = [],
   } = state.app || {};
   const {
     history = defaultComponentsState.history || createBrowserHistory(),
-    breakpoints = defaultLayoutState.breakpoints || defaultBreakpoints,
-    language = 'en',
-    languages = defaultLanguageState.available || (language && [language]) || [],
     routes = {},
-    trackers = [],
-    Dashboard = defaultComponentsState.Dashboard || DefaultDashboard,
     Loader = defaultComponentsState.Loader || DefaultLoader,
     ErrorInfo = defaultComponentsState.ErrorInfo || DefaultErrorInfo,
   } = options;
-  const [defaultLanguage = language] = languages;
   return {
     ...state,
     app: {
       ...state.app,
-      language: {
-        selected: defaultLanguageState.selected || getUserLocale(languages, defaultLanguage, language),
-        available: languages,
-      },
-      layout: {
-        current: defaultLayoutState.current || getCurrentLayout(breakpoints, defaultLayouts, 'desktop'),
-        breakpoints,
-      },
+      layout: defaultLayoutState,
       components: {
-        Dashboard,
         ErrorInfo,
         Loader,
         history,
@@ -111,7 +68,6 @@ export function setupState(
         ...defaultRoutes,
         ...routes,
       },
-      trackers: [...defaultTrackers, ...trackers],
     },
   };
 }

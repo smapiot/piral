@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ErrorInfoProps, Pilet } from 'piral-core';
+import { Pilet, ErrorInfoProps } from 'piral-core';
 
 /**
  * Shows the general usage of the `setup` function together
@@ -15,12 +15,15 @@ export const Pilet1: Pilet = {
   setup(piral) {
     console.log(piral);
 
-    piral.registerTileX((element, props) => {
-      element.innerHTML = `
+    piral.registerTile({
+      render: (element, props) => {
+        element.innerHTML = `
         <div class="tile">
           General rendering for a ${props.columns}x${props.rows} tile.
         </div>
       `;
+      },
+      type: 'html',
     });
 
     piral.registerTile('example-react', () => (
@@ -83,7 +86,7 @@ export const Pilet1: Pilet = {
       </div>
     ));
 
-    piral.registerPage('/example2', () => (
+    piral.registerPage('/example2', ({ piral }) => (
       <div>
         <p>
           This is the second <b>example</b> page
@@ -111,5 +114,7 @@ export const Pilet1: Pilet = {
       }
       return false as any;
     });
+
+    piral.registerExtension('smiley', () => <b>:-D</b>);
   },
 };
