@@ -56,3 +56,30 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
+
+## Validators
+
+### `has-externals-as-peers`
+
+Checks that "externals" dependencies have been specified in "peerDependencies".
+
+**Options**: `'ignore' | 'active' | 'only-used'`
+
+### `has-no-self-reference`
+
+Checks if the used Piral instance is not referenced in the code.
+
+**Options**: `'ignore' | 'active'`
+
+### `has-no-third-party-dependency`
+
+Checks that no other (third-party) dependencies are bundled in.
+
+**Options**: `'ignore' | 'active'`
+
+### `uses-latest-piral`
+
+Checks if the used Piral instance is used at its latest version.
+
+**Options**: `'suggest' | 'required' | 'ignore'`
+
