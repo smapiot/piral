@@ -1,4 +1,6 @@
-import { ForceOverwrite, PiletLanguage } from './common';
+import { ForceOverwrite, PiletLanguage, TemplateType } from './common';
+
+export const templateTypeKeys: Array<TemplateType> = ['default', 'empty'];
 
 export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter(m => typeof ForceOverwrite[m] === 'number');
 

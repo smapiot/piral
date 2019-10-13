@@ -1,0 +1,9 @@
+import * as React from 'react';
+import { renderInstance, buildLayout } from 'piral';
+
+renderInstance({
+  layout: buildLayout()
+    .withError(({ type }) => (
+      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
+    )),
+});

@@ -6,6 +6,7 @@ import {
   keyOfPiletLanguage,
   piletLanguageKeys,
   valueOfPiletLanguage,
+  templateTypeKeys,
 } from './helpers';
 import { ToolCommand } from './types';
 
@@ -141,6 +142,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new Piral instance.')
         .default('language', keyOfPiletLanguage(apps.newPiralDefaults.language))
+        .choices('template', templateTypeKeys)
+        .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
+        .default('template', templateTypeKeys[0])
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -154,6 +158,7 @@ const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
         skipInstall: args.skipInstall as boolean,
+        template: args.template,
       });
     },
   },
@@ -346,6 +351,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new pilet.')
         .default('language', keyOfPiletLanguage(apps.newPiletDefaults.language))
+        .choices('template', templateTypeKeys)
+        .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
+        .default('template', templateTypeKeys[0])
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -358,6 +366,7 @@ const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
         skipInstall: args.skipInstall as boolean,
+        template: args.template,
       });
     },
   },
