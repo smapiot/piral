@@ -69,10 +69,6 @@ export interface AppState {
    */
   components: AppComponents;
   /**
-   * The application's shared data.
-   */
-  data: Dict<SharedDataItem>;
-  /**
    * The used (exact) application routes.
    */
   routes: Dict<ComponentType<RouteComponentProps<any>>>;
@@ -103,9 +99,13 @@ export interface GlobalState extends PiralCustomState {
    */
   modules: Array<PiletMetadata>;
   /**
-   * Gets the portals to render.
+   * The foreign component portals to render.
    */
   portals: Record<string, Array<ReactPortal>>;
+  /**
+   * The application's shared data.
+   */
+  data: Dict<SharedDataItem>;
 }
 
 export interface PiralAction<T extends (...args: any) => any> {

@@ -5,15 +5,12 @@ import { GlobalState, SharedDataItem, DataStoreTarget, EventEmitter } from '../.
 export function resetData(ctx: Atom<GlobalState>) {
   swap(ctx, state => ({
     ...state,
-    app: {
-      ...state.app,
-      data: {},
-    },
+    data: {},
   }));
 }
 
 export function readDataItem(ctx: Atom<GlobalState>, key: string) {
-  return deref(ctx).app.data[key];
+  return deref(ctx).data[key];
 }
 
 export function readDataValue(ctx: Atom<GlobalState>, key: string) {
@@ -41,10 +38,7 @@ export function writeDataItem(
       };
   swap(ctx, state => ({
     ...state,
-    app: {
-      ...state.app,
-      data: updateKey<SharedDataItem>(state.app.data, key, data),
-    },
+    data: updateKey<SharedDataItem>(state.data, key, data),
   }));
 
   if (target !== 'memory') {
