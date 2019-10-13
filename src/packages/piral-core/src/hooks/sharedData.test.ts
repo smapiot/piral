@@ -3,11 +3,9 @@ import { useSharedData } from './sharedData';
 
 (globalState as any).useGlobalState = (select: any) =>
   select({
-    app: {
-      data: {
-        a: 'foo',
-        b: 'bar',
-      },
+    data: {
+      a: 'foo',
+      b: 'bar',
     },
   });
 
