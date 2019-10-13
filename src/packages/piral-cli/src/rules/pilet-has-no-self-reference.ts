@@ -3,6 +3,9 @@ import { getSourceFiles } from '../common';
 
 export type Options = 'ignore' | 'active';
 
+/**
+ * Checks if the used Piral instance is not referenced in the code.
+ */
 export default async function(this: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
     const { name } = this.data.appPackage;

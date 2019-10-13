@@ -1,8 +1,11 @@
 import { PiralRuleContext } from '../types';
 
-export interface Options {}
+export type Options = void;
 
-export default function(this: PiralRuleContext, options: Options = {}) {
+/**
+ * Checks that the scripts defined for pilets are valid.
+ */
+export default function(this: PiralRuleContext, options: Options = undefined) {
   const { scripts } = this.info;
 
   if (typeof scripts !== 'object') {

@@ -10,9 +10,12 @@ function hasSubdirectories(target: string) {
   return false;
 }
 
-export interface Options {}
+export type Options = void;
 
-export default function(this: PiralRuleContext, options: Options = {}) {
+/**
+ * Checks that the files defined for pilet scaffolding are valid.
+ */
+export default function(this: PiralRuleContext, options: Options = undefined) {
   const { files } = this.info;
 
   if (!Array.isArray(files)) {

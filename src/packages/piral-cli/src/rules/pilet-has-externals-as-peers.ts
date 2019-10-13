@@ -3,6 +3,9 @@ import { getPiletsInfo, getSourceFiles } from '../common';
 
 export type Options = 'ignore' | 'active' | 'only-used';
 
+/**
+ * Checks that "externals" dependencies have been specified in "peerDependencies".
+ */
 export default async function(this: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
     const { externals } = getPiletsInfo(this.data.appPackage);

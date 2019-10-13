@@ -1,8 +1,11 @@
 import { PiralRuleContext } from '../types';
 
-export interface Options {}
+export type Options = void;
 
-export default function(this: PiralRuleContext, options: Options = {}) {
+/**
+ * Checks that the Piral instance depends either on `piral` or `piral-core`.
+ */
+export default function(this: PiralRuleContext, options: Options = undefined) {
   if (!this.dependencies.piral && !this.dependencies.piralCore) {
     this.warning(`
 The dependencies of the Piral instance should list either piral or piral-core.

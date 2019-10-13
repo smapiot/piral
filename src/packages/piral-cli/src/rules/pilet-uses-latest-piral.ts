@@ -1,8 +1,11 @@
 import { findLatestVersion } from '../common';
 import { PiletRuleContext } from '../types';
 
-export type Options = 'required' | 'suggest' | 'ignore';
+export type Options = 'suggest' | 'required' | 'ignore';
 
+/**
+ * Checks if the used Piral instance is used at its latest version.
+ */
 export default async function(this: PiletRuleContext, options: Options = 'suggest') {
   if (options !== 'ignore') {
     const { name, version } = this.data.appPackage;

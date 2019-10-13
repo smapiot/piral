@@ -1,8 +1,11 @@
 import { PiralRuleContext } from '../types';
 
-export interface Options {}
+export type Options = void;
 
-export default function(this: PiralRuleContext, options: Options = {}) {
+/**
+ * Checks that devDependencies declared for pilet scaffolding are valid.
+ */
+export default function(this: PiralRuleContext, options: Options = undefined) {
   const { devDependencies } = this.info;
 
   if (typeof devDependencies !== 'object') {

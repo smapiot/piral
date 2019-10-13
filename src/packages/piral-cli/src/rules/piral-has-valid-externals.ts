@@ -1,8 +1,11 @@
 import { PiralRuleContext } from '../types';
 
-export interface Options {}
+export type Options = void;
 
-export default function(this: PiralRuleContext, options: Options = {}) {
+/**
+ * Checks that the externals to be used in pilets are valid.
+ */
+export default function(this: PiralRuleContext, options: Options = undefined) {
   const { externals } = this.info;
 
   if (!Array.isArray(externals)) {

@@ -2,6 +2,9 @@ import { PiletRuleContext } from '../types';
 
 export type Options = 'ignore' | 'active';
 
+/**
+ * Checks that no other (third-party) dependencies are bundled in.
+ */
 export default function(this: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
     const dependencies = Object.keys(this.dependencies);
