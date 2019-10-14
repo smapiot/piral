@@ -23,5 +23,3 @@ export const DefaultErrorInfo: React.FC<ErrorInfoProps> = props => (
   />
 );
 DefaultErrorInfo.displayName = 'DefaultErrorInfo';
-
-export default DefaultErrorInfo;

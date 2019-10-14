@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 import { RecallProps } from 'react-arbiter';
 import { Routes } from './routes';
 import { Responsive } from './responsive';
@@ -13,10 +12,10 @@ export const Portal: React.FC<PortalProps & RecallProps> = ({
   loaded,
   error,
 }) => {
-  const { ErrorInfo, Loader, history } = useGlobalState(s => s.app.components);
+  const { ErrorInfo, Loader, Router } = useGlobalState(s => s.app.components);
 
   return (
-    <Router history={history}>
+    <Router>
       <Responsive breakpoints={breakpoints}>
         {loaded ? (
           error ? (

@@ -1,14 +1,13 @@
-import { History } from 'history';
 import { ComponentType, ReactPortal } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
 import { PiletMetadata } from './meta';
 import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
-import { LayoutType, LayoutBreakpoints } from './layout';
+import { LayoutType } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
-import { ErrorInfoProps, LoaderProps, ComponentConverters } from './components';
-import { PiralCustomActions, PiralCustomState, PiralCustomComponentsState } from './custom';
+import { ComponentConverters, LoaderProps, ErrorInfoProps } from './components';
+import { PiralCustomActions, PiralCustomState, PiralCustomComponentsState, PiralCustomAppComponents } from './custom';
 import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag } from './api';
 
 export interface StateDispatcher<TState> {
@@ -27,18 +26,7 @@ export interface ExtensionRegistration {
   defaults: any;
 }
 
-export interface GlobalStateOptions extends Partial<AppComponents> {
-  /**
-   * Sets the additional / initial routes to register.
-   */
-  routes?: Dict<ComponentType<RouteComponentProps<any>>>;
-  /**
-   * Sets the available layout breakpoints.
-   */
-  breakpoints?: LayoutBreakpoints;
-}
-
-export interface AppComponents {
+export interface AppComponents extends PiralCustomAppComponents {
   /**
    * The progress indicator renderer.
    */
@@ -48,9 +36,9 @@ export interface AppComponents {
    */
   ErrorInfo: ComponentType<ErrorInfoProps>;
   /**
-   * The history management instance.
+   * The router context.
    */
-  history: History;
+  Router: ComponentType;
 }
 
 export interface AppState {
