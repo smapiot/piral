@@ -23,7 +23,6 @@ interface LayoutBuilderState {
   Dashboard: ComponentType<DashboardProps>;
   Error: ComponentType<ErrorInfoProps>;
   routes: Record<string, ComponentType<RouteComponentProps>>;
-  trackers: Array<ComponentType<RouteComponentProps>>;
 }
 
 function layoutBuilder(state: LayoutBuilderState): LayoutBuilder {
@@ -70,9 +69,6 @@ function layoutBuilder(state: LayoutBuilderState): LayoutBuilder {
     withRoute(route, Component) {
       return layoutBuilder({ ...state, routes: { ...state.routes, [route]: Component } });
     },
-    withTracker(Component) {
-      return layoutBuilder({ ...state, trackers: [...state.trackers, Component] });
-    },
     withLayout(Layout) {
       return layoutBuilder({ ...state, Layout });
     },
@@ -84,7 +80,6 @@ function layoutBuilder(state: LayoutBuilderState): LayoutBuilder {
           ErrorInfo: state.Error,
           Loader: state.Loader,
           routes: state.routes,
-          trackers: state.trackers,
         },
       ];
     },
@@ -102,6 +97,5 @@ export function buildLayout(): LayoutBuilder {
     Notifications: undefined,
     Search: undefined,
     routes: {},
-    trackers: [],
   });
 }

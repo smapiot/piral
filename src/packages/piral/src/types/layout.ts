@@ -98,7 +98,6 @@ export interface LayoutBuilder {
   createSearch(builder: CallbackBuilder<SearchBuilder>): LayoutBuilder;
   withSearch(Component: ComponentType): LayoutBuilder;
   withRoute(route: string, Component: ComponentType<RouteComponentProps>): LayoutBuilder;
-  withTracker(Component: ComponentType<RouteComponentProps>): LayoutBuilder;
   withLayout(Component: ComponentType<LayoutProps>): LayoutBuilder;
   build(): [ComponentType, GlobalStateOptions];
 }
