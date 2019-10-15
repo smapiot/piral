@@ -1,6 +1,6 @@
-import { ReactPortal, ComponentType } from 'react';
+import { ComponentType } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
-import { withoutKey, includeItem } from '../../utils';
+import { RouteComponentProps } from 'react-router-dom';
 import { LayoutType, GlobalState, GlobalStateContext, Pilet, ComponentsState } from '../../types';
 
 export function changeLayout(this: GlobalStateContext, ctx: Atom<GlobalState>, current: LayoutType) {
@@ -54,15 +54,16 @@ export function setComponent<TKey extends keyof ComponentsState>(
   }));
 }
 
-export function setLoading(this: GlobalStateContext, ctx: Atom<GlobalState>, loading: boolean) {
-  // this.emit('loading', {
-  //   loading,
-  // });
+export function setRoute<T = {}>(
+  ctx: Atom<GlobalState>,
+  path: string,
+  component: ComponentType<RouteComponentProps<T>>,
+) {
   swap(ctx, state => ({
     ...state,
-    app: {
-      ...state.app,
-      loading,
+    routes: {
+      ...state.routes,
+      [path]: component,
     },
   }));
 }
@@ -76,21 +77,4 @@ export function defineActions(this: GlobalStateContext, ctx: Atom<GlobalState>, 
     const action = actions[actionName];
     defineAction.call(this, ctx, actionName, action);
   }
-}
-
-export function destroyPortal(ctx: Atom<GlobalState>, id: string) {
-  swap(ctx, state => ({
-    ...state,
-    portals: withoutKey(state.portals, id),
-  }));
-}
-
-export function showPortal(ctx: Atom<GlobalState>, id: string, entry: ReactPortal) {
-  swap(ctx, state => ({
-    ...state,
-    portals: {
-      ...state.portals,
-      [id]: includeItem(state.portals[id], entry),
-    },
-  }));
 }

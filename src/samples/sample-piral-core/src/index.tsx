@@ -4,7 +4,7 @@ import 'zone.js/dist/zone';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useAction, Piral, Define } from 'piral-core';
+import { createInstance, useGlobalState, LoaderProps, useAction, Piral, SetComponent, SetRoute } from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
@@ -185,17 +185,13 @@ const instance = createInstance({
     //   .then(res => res.items);
     return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
-  state: {
-    routes: {
-      '/sitemap': Sitemap,
-    },
-  },
 });
 
 const app = (
   <Piral instance={instance}>
-    <Define name="Loader" component={Loader} />
-    <Define name="Layout" component={Layout} />
+    <SetComponent name="Loader" component={Loader} />
+    <SetComponent name="Layout" component={Layout} />
+    <SetRoute path="/sitemap" component={Sitemap} />
   </Piral>
 );
 render(app, document.querySelector('#app'));

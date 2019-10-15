@@ -173,17 +173,17 @@ export interface PiralActions extends PiralCustomActions {
    */
   unregisterExtension(name: string, reference: any): void;
   /**
-   * Sets the loading state of the application, which can be helpful for indicating loading of
-   * required data.
-   * @param loading The current loading state.
-   */
-  setLoading(loading: boolean): void;
-  /**
    * Sets the common component to render.
    * @param name The name of the component.
    * @param component The component to use for rendering.
    */
   setComponent<TKey extends keyof ComponentsState>(name: TKey, component: ComponentType<ComponentsState[TKey]>): void;
+  /**
+   * Sets the common routes to render.
+   * @param path The name of the component.
+   * @param component The component to use for rendering.
+   */
+  setRoute<T = {}>(path: string, component: ComponentType<RouteComponentProps<T>>): void;
   /**
    * Destroys (i.e., resets) the given portal instance.
    * @param id The id of the portal to destroy.
