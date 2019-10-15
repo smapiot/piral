@@ -4,12 +4,12 @@ import 'zone.js/dist/zone';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useAction, setupState } from 'piral-core';
+import { createInstance, useGlobalState, LoaderProps, useAction, Piral, Define } from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
 import { createNotificationsApi } from 'piral-notifications';
-import { createDashboardApi, DefaultDashboard } from 'piral-dashboard';
+import { createDashboardApi } from 'piral-dashboard';
 import { createContainerApi } from 'piral-containers';
 import { createFeedsApi } from 'piral-feeds';
 import { createFormsApi } from 'piral-forms';
@@ -37,7 +37,7 @@ const Loader: React.FC<LoaderProps> = () => (
 );
 
 const Sitemap: React.FC<RouteComponentProps> = () => {
-  const pages = useGlobalState(s => s.components.pages);
+  const pages = useGlobalState(s => s.registry.pages);
 
   return (
     <ul>
@@ -62,7 +62,7 @@ const Sitemap: React.FC<RouteComponentProps> = () => {
 };
 
 const Menu: React.FC = () => {
-  const menuItems = useGlobalState(s => s.components.menuItems);
+  const menuItems = useGlobalState(s => s.registry.menuItems);
 
   return (
     <ul className="app-nav">
@@ -165,7 +165,7 @@ const Layout: React.FC = ({ children }) => {
   );
 };
 
-const Piral = createInstance({
+const instance = createInstance({
   availablePilets,
   extendApi: [
     createVueApi(),
@@ -185,14 +185,17 @@ const Piral = createInstance({
     //   .then(res => res.items);
     return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
-  state: setupState({
-    Loader,
+  state: {
     routes: {
-      '/': DefaultDashboard,
       '/sitemap': Sitemap,
     },
-  }),
+  },
 });
 
-const app = <Piral.App>{content => <Layout>{content}</Layout>}</Piral.App>;
+const app = (
+  <Piral instance={instance}>
+    <Define name="Loader" component={Loader} />
+    <Define name="Layout" component={Layout} />
+  </Piral>
+);
 render(app, document.querySelector('#app'));

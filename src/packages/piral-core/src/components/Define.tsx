@@ -7,8 +7,12 @@ export interface DefineComponentProps<TKey extends keyof ComponentsState> {
   component: React.ComponentType<ComponentsState[TKey]>;
 }
 
-export function Define<TKey extends keyof ComponentsState>({ name, component }: DefineComponentProps<TKey>) {
+export function Define<TKey extends keyof ComponentsState>({
+  name,
+  component,
+}: DefineComponentProps<TKey>): React.ReactElement {
   const setComponent = useAction('setComponent');
   React.useEffect(() => setComponent(name, component), []);
-  return false;
+  // tslint:disable-next-line:no-null-keyword
+  return null;
 }
