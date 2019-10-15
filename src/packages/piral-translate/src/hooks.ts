@@ -7,24 +7,21 @@ export function useDynamicLanguage(
   load: LanguageLoader,
 ): [string, (language: string) => void] {
   const [selected, setSelected] = useState(defaultSelected);
-  const { selectLanguage, setLoading, setTranslations, getTranslations } = useActions();
+  const { selectLanguage, setTranslations, getTranslations } = useActions();
 
   useEffect(() => {
     let active = true;
     const current = getTranslations(selected);
     selectLanguage(undefined);
-    setLoading(true);
-    load(selected, current)
-      .then(
-        result => {
-          if (active) {
-            setTranslations(selected, result);
-            selectLanguage(selected);
-          }
-        },
-        err => console.error(err),
-      )
-      .then(() => setLoading(false));
+    load(selected, current).then(
+      result => {
+        if (active) {
+          setTranslations(selected, result);
+          selectLanguage(selected);
+        }
+      },
+      err => console.error(err),
+    );
     return () => (active = false);
   }, [selected]);
   return [selected, setSelected];

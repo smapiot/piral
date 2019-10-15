@@ -1,34 +1,19 @@
 import { ComponentType } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
 import { RouteComponentProps } from 'react-router-dom';
-import { LayoutType, GlobalState, GlobalStateContext, Pilet, ComponentsState } from '../../types';
+import { LayoutType, GlobalState, Pilet, ComponentsState } from '../../types';
 
-export function changeLayout(this: GlobalStateContext, ctx: Atom<GlobalState>, current: LayoutType) {
-  swap(ctx, state => {
-    this.emit('change-layout', {
-      current,
-      previous: state.app.layout,
-    });
-    return {
-      ...state,
-      app: {
-        ...state.app,
-        layout: current,
-      },
-    };
-  });
+export function changeLayout(ctx: Atom<GlobalState>, current: LayoutType) {
+  swap(ctx, state => ({
+    ...state,
+    app: {
+      ...state.app,
+      layout: current,
+    },
+  }));
 }
 
-export function initialize(
-  this: GlobalStateContext,
-  ctx: Atom<GlobalState>,
-  loading: boolean,
-  error: Error | undefined,
-  modules: Array<Pilet>,
-) {
-  // this.emit('loading', {
-  //   loading,
-  // });
+export function initialize(ctx: Atom<GlobalState>, loading: boolean, error: Error | undefined, modules: Array<Pilet>) {
   swap(ctx, state => ({
     ...state,
     app: {
@@ -66,15 +51,4 @@ export function setRoute<T = {}>(
       [path]: component,
     },
   }));
-}
-
-export function defineAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
-  this[actionName] = (...args) => action.call(this, ctx, ...args);
-}
-
-export function defineActions(this: GlobalStateContext, ctx: Atom<GlobalState>, actions: any) {
-  for (const actionName of Object.keys(actions)) {
-    const action = actions[actionName];
-    defineAction.call(this, ctx, actionName, action);
-  }
 }
