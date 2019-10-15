@@ -1,5 +1,6 @@
 import { RouteComponentProps } from 'react-router-dom';
 import { Dict, WrappedComponent, BaseComponentProps, AnyComponent } from 'piral-core';
+import { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletDashboardApi {}
@@ -20,7 +21,7 @@ declare module 'piral-core/lib/types/custom' {
     unregisterTile(name: string): void;
   }
 
-  interface PiralCustomComponentsState {
+  interface PiralCustomRegistryState {
     /**
      * The registered tile components for a dashboard.
      */
@@ -29,6 +30,13 @@ declare module 'piral-core/lib/types/custom' {
 
   interface PiralCustomErrors {
     tile: TileErrorInfoProps;
+  }
+
+  interface PiralCustomComponentsState {
+    /**
+     * The dashboard component.
+     */
+    Dashboard: ComponentType<DashboardProps>;
   }
 }
 

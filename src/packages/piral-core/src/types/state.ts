@@ -6,9 +6,9 @@ import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
 import { LayoutType } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
-import { ComponentConverters, LoaderProps, ErrorInfoProps } from './components';
-import { PiralCustomActions, PiralCustomState, PiralCustomComponentsState, PiralCustomAppComponents } from './custom';
-import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag } from './api';
+import { ComponentConverters, LoaderProps, ErrorInfoProps, RouterProps, LayoutProps } from './components';
+import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
+import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag, Pilet } from './api';
 
 export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
@@ -26,7 +26,7 @@ export interface ExtensionRegistration {
   defaults: any;
 }
 
-export interface AppComponents extends PiralCustomAppComponents {
+export interface ComponentsState extends PiralCustomComponentsState {
   /**
    * The progress indicator renderer.
    */
@@ -38,7 +38,11 @@ export interface AppComponents extends PiralCustomAppComponents {
   /**
    * The router context.
    */
-  Router: ComponentType;
+  Router: ComponentType<RouterProps>;
+  /**
+   * The layout used for pages.
+   */
+  Layout: ComponentType<LayoutProps>;
 }
 
 export interface AppState {
@@ -53,16 +57,12 @@ export interface AppState {
    */
   loading: boolean;
   /**
-   * Components relevant for rendering parts of the app.
+   * Gets an unrecoverable application error, if any.
    */
-  components: AppComponents;
-  /**
-   * The used (exact) application routes.
-   */
-  routes: Dict<ComponentType<RouteComponentProps<any>>>;
+  error: Error | undefined;
 }
 
-export interface ComponentsState extends PiralCustomComponentsState {
+export interface RegistryState extends PiralCustomRegistryState {
   /**
    * The registered page components for the router.
    */
@@ -79,9 +79,13 @@ export interface GlobalState extends PiralCustomState {
    */
   app: AppState;
   /**
-   * The relevant state for the registered components.
+   * The relevant state for rendering parts of the app.
    */
   components: ComponentsState;
+  /**
+   * The relevant state for the registered components.
+   */
+  registry: RegistryState;
   /**
    * Gets the loaded modules.
    */
@@ -94,6 +98,10 @@ export interface GlobalState extends PiralCustomState {
    * The application's shared data.
    */
   data: Dict<SharedDataItem>;
+  /**
+   * The used (exact) application routes.
+   */
+  routes: Dict<ComponentType<RouteComponentProps<any>>>;
 }
 
 export interface PiralAction<T extends (...args: any) => any> {
@@ -101,6 +109,13 @@ export interface PiralAction<T extends (...args: any) => any> {
 }
 
 export interface PiralActions extends PiralCustomActions {
+  /**
+   * Initializes the application shell.
+   * @param loading The current loading state.
+   * @param error The application error, if any.
+   * @param modules The loaded pilets.
+   */
+  initialize(loading: boolean, error: Error | undefined, modules: Array<Pilet>): void;
   /**
    * Defines a single action for Piral.
    * @param actionName The name of the action to define.
@@ -163,6 +178,12 @@ export interface PiralActions extends PiralCustomActions {
    * @param loading The current loading state.
    */
   setLoading(loading: boolean): void;
+  /**
+   * Sets the common component to render.
+   * @param name The name of the component.
+   * @param component The component to use for rendering.
+   */
+  setComponent<TKey extends keyof ComponentsState>(name: TKey, component: ComponentType<ComponentsState[TKey]>): void;
   /**
    * Destroys (i.e., resets) the given portal instance.
    * @param id The id of the portal to destroy.

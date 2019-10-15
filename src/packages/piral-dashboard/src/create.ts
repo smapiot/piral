@@ -2,6 +2,7 @@ import * as actions from './actions';
 import { ComponentType } from 'react';
 import { swap } from '@dbeining/react-atom';
 import { buildName, withApi, Extend, Dict } from 'piral-core';
+import { Dashboard } from './Dashboard';
 import { PiletDashboardApi, TilePreferences, BareTileComponentProps, TileRegistration } from './types';
 
 export interface InitialTile {
@@ -29,6 +30,11 @@ export interface DashboardConfig {
    * @default {}
    */
   defaultPreferences?: TilePreferences;
+  /**
+   * The route of the dashboard.
+   * @default '/'
+   */
+  route?: string;
 }
 
 function getPreferences(defaultPreferences: TilePreferences, customPreferences: TilePreferences = {}) {
@@ -56,7 +62,7 @@ function getTiles(items: Array<InitialTile>, defaultPreferences: TilePreferences
  * Creates a new Piral API extension for activating dashboard support.
  */
 export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDashboardApi> {
-  const { tiles = [], defaultPreferences = {} } = config;
+  const { tiles = [], defaultPreferences = {}, route = '/' } = config;
 
   return context => {
     context.defineActions(actions);
@@ -66,6 +72,10 @@ export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDa
       components: {
         ...state.components,
         tiles: getTiles(tiles, defaultPreferences),
+      },
+      routes: {
+        ...state.routes,
+        [route]: Dashboard,
       },
     }));
 

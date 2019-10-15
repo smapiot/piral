@@ -5,7 +5,7 @@ describe('Dashboard Actions Module', () => {
   it('registerTile and unregisterTile', () => {
     const state = Atom.of({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         tiles: {},
       },
@@ -13,7 +13,7 @@ describe('Dashboard Actions Module', () => {
     registerTile(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         tiles: {
           foo: 10,
@@ -23,7 +23,7 @@ describe('Dashboard Actions Module', () => {
     unregisterTile(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         tiles: {},
       },

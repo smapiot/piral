@@ -5,7 +5,7 @@ describe('Modals Actions Module', () => {
   it('registerModal and unregisterModal', () => {
     const state = Atom.of({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         modals: {},
       },
@@ -13,7 +13,7 @@ describe('Modals Actions Module', () => {
     registerModal(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         modals: {
           foo: 10,
@@ -23,7 +23,7 @@ describe('Modals Actions Module', () => {
     unregisterModal(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         modals: {},
       },

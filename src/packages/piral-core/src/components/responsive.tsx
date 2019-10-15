@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useMedia, useGlobalState, useAction } from '../hooks';
-import { defaultLayouts } from '../utils';
+import { defaultLayouts, defaultRender, defaultBreakpoints } from '../utils';
 import { LayoutBreakpoints } from '../types';
 
 export interface ResponsiveProps {
-  breakpoints: LayoutBreakpoints;
+  breakpoints?: LayoutBreakpoints;
 }
 
-export const Responsive: React.FC<ResponsiveProps> = ({ breakpoints, children }) => {
+export const Responsive: React.FC<ResponsiveProps> = ({ breakpoints = defaultBreakpoints, children }) => {
   const current = useGlobalState(m => m.app.layout) || 'desktop';
   const changeTo = useAction('changeLayout');
   const selected = useMedia(breakpoints, defaultLayouts, current);
@@ -16,8 +16,6 @@ export const Responsive: React.FC<ResponsiveProps> = ({ breakpoints, children })
     changeTo(selected);
   }
 
-  return <>{children}</>;
+  return defaultRender(children);
 };
 Responsive.displayName = 'Responsive';
-
-export default Responsive;

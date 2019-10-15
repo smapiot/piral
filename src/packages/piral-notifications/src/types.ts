@@ -24,7 +24,7 @@ declare module 'piral-core/lib/types/custom' {
     closeNotification(notification: OpenNotification): void;
   }
 
-  interface PiralCustomComponentsState {}
+  interface PiralCustomRegistryState {}
 }
 
 export interface NotificationOptions {

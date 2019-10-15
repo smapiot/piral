@@ -19,9 +19,9 @@ export function closeModal(ctx: Atom<GlobalState>, dialog: OpenModalDialog) {
 export function registerModal(ctx: Atom<GlobalState>, name: string, value: ModalRegistration) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      modals: withKey(state.components.modals, name, value),
+    registry: {
+      ...state.registry,
+      modals: withKey(state.registry.modals, name, value),
     },
   }));
 }
@@ -29,9 +29,9 @@ export function registerModal(ctx: Atom<GlobalState>, name: string, value: Modal
 export function unregisterModal(ctx: Atom<GlobalState>, name: string) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      modals: withoutKey(state.components.modals, name),
+    registry: {
+      ...state.registry,
+      modals: withoutKey(state.registry.modals, name),
     },
   }));
 }

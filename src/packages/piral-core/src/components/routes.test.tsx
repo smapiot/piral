@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as hooks from '../hooks';
 import { MemoryRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
-import { Routes } from './routes';
+import { Routes } from './Routes';
 
 const mountWithRouter = (node, url = '/') =>
   mount(
@@ -15,14 +15,12 @@ jest.mock('../hooks');
 
 (hooks as any).useGlobalState = (select: any) =>
   select({
-    app: {
-      routes: {
-        '/': StubHome,
-        '/custom': StubCustomPage,
-      },
-      trackers: [],
+    app: {},
+    routes: {
+      '/': StubHome,
+      '/custom': StubCustomPage,
     },
-    components: {
+    registry: {
       pages: {
         '/foo': { component: StubFooPage },
         '/foo/bar': { component: StubFooBarPage },

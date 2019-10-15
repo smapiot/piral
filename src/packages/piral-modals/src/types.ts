@@ -35,7 +35,7 @@ declare module 'piral-core/lib/types/custom' {
     unregisterModal(name: string): void;
   }
 
-  interface PiralCustomComponentsState {
+  interface PiralCustomRegistryState {
     /**
      * The registered modal dialog components.
      */

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { ExtensionSlot } from './extension';
+import { ExtensionSlot } from './ExtensionSlot';
 
 jest.mock('../hooks/globalState', () => ({
   useGlobalState(select: any) {
@@ -15,7 +15,7 @@ const StubComponent2: React.FC = props => <div children={props.children} />;
 StubComponent2.displayName = 'StubComponent2';
 
 const state = {
-  components: {
+  registry: {
     extensions: {
       foo: [],
       bar: [

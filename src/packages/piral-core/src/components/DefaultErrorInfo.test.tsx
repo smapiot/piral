@@ -2,14 +2,14 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import { DefaultErrorInfo } from './DefaultErrorInfo';
 
-jest.mock('../../hooks/globalState', () => ({
+jest.mock('../hooks/globalState', () => ({
   useGlobalState(select: any) {
     return select(state);
   },
 }));
 
 const state = {
-  components: {
+  registry: {
     extensions: {},
   },
 };
@@ -52,7 +52,7 @@ describe('Default Error Info Component', () => {
   });
 
   it('renders the react fragment in the default case', () => {
-    (state.components.extensions as any).error = [
+    (state.registry.extensions as any).error = [
       {
         component: StubErrorInfo,
       },

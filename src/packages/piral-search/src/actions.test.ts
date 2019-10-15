@@ -13,7 +13,7 @@ const state = {
   search: {
     input: 'abc',
   },
-  components: {
+  registry: {
     searchProviders: {},
   },
 };
@@ -168,7 +168,7 @@ describe('Search Action Module', () => {
 
   it('immediately resets with loading true if some value is given and a provider is found', () => {
     state.search.input = 'foo';
-    state.components.searchProviders['example' as any] = {
+    state.registry.searchProviders['example' as any] = {
       search() {
         return Promise.resolve([]);
       },
@@ -203,7 +203,7 @@ describe('Search Action Module', () => {
 
   it('resets with loading true if no value is given explicitly', () => {
     state.search.input = '';
-    state.components.searchProviders['example' as any] = {
+    state.registry.searchProviders['example' as any] = {
       search() {
         return Promise.resolve([]);
       },
@@ -220,7 +220,7 @@ describe('Search Action Module', () => {
     const clear = jest.fn();
     const cancel = jest.fn();
     state.search.input = 'test';
-    state.components.searchProviders = {
+    state.registry.searchProviders = {
       foo: { search, clear, cancel },
       bar: { search, clear, cancel },
     };
@@ -230,7 +230,7 @@ describe('Search Action Module', () => {
 
   it('wraps results', async () => {
     state.search.input = 'test';
-    state.components.searchProviders = {
+    state.registry.searchProviders = {
       foo: {
         search() {
           return Promise.resolve(['Hello', 'World']);
@@ -240,13 +240,13 @@ describe('Search Action Module', () => {
       },
     };
     triggerSearch(Atom.of(state));
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch(m => m);
   });
 
   it('stops existing search', async () => {
     const cancel = jest.fn();
     state.search.input = 'test';
-    state.components.searchProviders = {
+    state.registry.searchProviders = {
       foo: {
         search() {
           return Promise.resolve(['Hello', 'World']);
@@ -256,14 +256,14 @@ describe('Search Action Module', () => {
       },
     };
     triggerSearch(Atom.of(state));
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch(m => m);
     expect(cancel).toHaveBeenCalledTimes(0);
   });
 
   it('cancels existing search', async () => {
     const cancel = jest.fn();
     state.search.input = 'test';
-    state.components.searchProviders = {
+    state.registry.searchProviders = {
       foo: {
         search() {
           return Promise.resolve(['Hello', 'World']);
@@ -274,14 +274,14 @@ describe('Search Action Module', () => {
     };
     const dispose = triggerSearch(Atom.of(state));
     dispose();
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch(m => m);
     expect(cancel).toHaveBeenCalledTimes(1);
   });
 
   it('catches any emitted exceptions', async () => {
     console.warn = jest.fn();
     state.search.input = 'test';
-    state.components.searchProviders = {
+    state.registry.searchProviders = {
       foo: {
         search() {
           return Promise.reject('ouch!');
@@ -291,14 +291,14 @@ describe('Search Action Module', () => {
       },
     };
     triggerSearch(Atom.of(state));
-    await (state.components.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch(m => m);
     expect(console.warn).toHaveBeenCalled();
   });
 
   it('registerSearchProvider and unregisterSearchProvider', () => {
     const state = Atom.of({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         searchProviders: {},
       },
@@ -306,7 +306,7 @@ describe('Search Action Module', () => {
     registerSearchProvider(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         searchProviders: {
           foo: 10,
@@ -316,7 +316,7 @@ describe('Search Action Module', () => {
     unregisterSearchProvider(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         searchProviders: {},
       },

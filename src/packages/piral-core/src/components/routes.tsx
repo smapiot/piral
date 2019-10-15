@@ -7,10 +7,8 @@ export interface RoutesProps {
 }
 
 export const Routes: React.FC<RoutesProps> = ({ NotFound }) => {
-  const { pages, routes } = useGlobalState(s => ({
-    pages: s.components.pages,
-    routes: s.app.routes,
-  }));
+  const routes = useGlobalState(s => s.routes);
+  const pages = useGlobalState(s => s.registry.pages);
 
   return (
     <Switch>
@@ -25,5 +23,3 @@ export const Routes: React.FC<RoutesProps> = ({ NotFound }) => {
   );
 };
 Routes.displayName = 'Routes';
-
-export default Routes;

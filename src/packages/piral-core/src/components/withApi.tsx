@@ -7,10 +7,10 @@ import {
   StasisOptions,
   WrapComponentOptions,
 } from 'react-arbiter';
-import { ComponentError, ComponentLoader } from './helpers';
-import { convertComponent } from '../utils';
-import { AnyComponent, Errors, ComponentConverters } from '../types';
 import { useGlobalState, useActions } from '../hooks';
+import { ComponentError, ComponentLoader } from './helpers';
+import { convertComponent, defaultRender } from '../utils';
+import { AnyComponent, Errors, ComponentConverters } from '../types';
 
 let portalIdBase = 123456;
 
@@ -19,8 +19,8 @@ interface PortalRendererProps {
 }
 
 const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
-  const portals = useGlobalState(m => m.portals[id] || []);
-  return <>{portals}</>;
+  const children = useGlobalState(m => m.portals[id] || []);
+  return defaultRender(children);
 };
 
 function createForeignComponentContainer<T>(contextTypes = ['router']) {

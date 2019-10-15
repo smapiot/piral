@@ -5,9 +5,9 @@ import { TileRegistration } from './types';
 export function registerTile(ctx: Atom<GlobalState>, name: string, value: TileRegistration) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      tiles: withKey(state.components.tiles, name, value),
+    registry: {
+      ...state.registry,
+      tiles: withKey(state.registry.tiles, name, value),
     },
   }));
 }
@@ -15,9 +15,9 @@ export function registerTile(ctx: Atom<GlobalState>, name: string, value: TileRe
 export function unregisterTile(ctx: Atom<GlobalState>, name: string) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      tiles: withoutKey(state.components.tiles, name),
+    registry: {
+      ...state.registry,
+      tiles: withoutKey(state.registry.tiles, name),
     },
   }));
 }

@@ -54,7 +54,7 @@ declare module 'piral-core/lib/types/custom' {
     triggerSearch(input?: string, immediate?: boolean): Disposable;
   }
 
-  interface PiralCustomComponentsState {
+  interface PiralCustomRegistryState {
     /**
      * The registered search providers for context aware search.
      */

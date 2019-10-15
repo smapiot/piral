@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
 import { mount } from 'enzyme';
-import { Responsive } from './responsive';
+import { Responsive } from './Responsive';
 import { defaultBreakpoints } from '../utils';
 
 jest.mock('../hooks');

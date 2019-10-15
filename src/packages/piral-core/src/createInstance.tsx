@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { withRecall, blazingStrategy, standardStrategy, isfunc } from 'react-arbiter';
-import { Portal } from './components';
-import { createListener } from './utils';
+import { getLocalDependencies, globalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, StateContext } from './state';
-import { getLocalDependencies, globalDependencies, defaultApiCreator } from './modules';
-import { PiletApi, PiralConfiguration, PortalProps, PiralInstance, PiletMetadata } from './types';
-
-function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
-  return Promise.resolve([]);
-}
+import { PortalView, Mediator, MediatorProps, Responsive } from './components';
+import { createListener } from './utils';
+import { PiletApi, PiralConfiguration, PortalProps, PiralInstance } from './types';
 
 /**
  * Creates a new PiralInstance component, which can be used for
@@ -16,17 +12,21 @@ function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
  *
  * @example
 ```tsx
-const Piral = createInstance({
+const instance = createInstance({
   requestPilets() {
     return fetch(...);
   },
 });
 
-const App: React.FC = () => <Piral>{content => <Layout>{content}</Layout>}</Piral>;
-render(<App />, document.querySelector('#app'));
+const app = (
+  <Piral instance={instance}>
+    <Define name="Layout" component={MyLayout} />
+  </Piral>
+);
+render(app, document.querySelector('#app'));
 ```
  */
-export function createInstance(config: PiralConfiguration): PiralInstance {
+export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   const {
     state,
     availablePilets = [],
@@ -50,7 +50,7 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
   }
 
   const createApi = defaultApiCreator(context, Array.isArray(extendApi) ? extendApi : [extendApi]);
-  const RecallPortal = withRecall<PortalProps, PiletApi>(Portal, {
+  const options = {
     modules: availablePilets,
     getDependencies,
     strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
@@ -72,20 +72,13 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
       return promise;
     },
     createApi,
-  });
-
-  const App: React.FC<PortalProps> = props => (
-    <StateContext.Provider value={context}>
-      <RecallPortal {...props} />
-    </StateContext.Provider>
-  );
-  App.displayName = 'Piral';
+  };
 
   return {
     ...events,
-    App,
     createApi,
-    actions: context,
+    options,
+    context,
     root: createApi({
       name: 'root',
       version: process.env.BUILD_PCKG_VERSION || '1.0.0',
@@ -93,3 +86,16 @@ export function createInstance(config: PiralConfiguration): PiralInstance {
     }),
   };
 }
+
+export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => {
+  const [RecallMediator] = React.useState(() => withRecall<MediatorProps, PiletApi>(Mediator, instance.options));
+
+  return (
+    <StateContext.Provider value={instance.context}>
+      <RecallMediator />
+      <Responsive breakpoints={breakpoints} />
+      <PortalView>{children}</PortalView>
+    </StateContext.Provider>
+  );
+};
+Piral.displayName = 'Piral';

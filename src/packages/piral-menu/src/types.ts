@@ -19,7 +19,7 @@ declare module 'piral-core/lib/types/custom' {
     unregisterMenuItem(name: string): void;
   }
 
-  interface PiralCustomComponentsState {
+  interface PiralCustomRegistryState {
     /**
      * The registered menu items for global display.
      */

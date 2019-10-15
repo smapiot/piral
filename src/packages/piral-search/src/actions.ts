@@ -16,7 +16,7 @@ export function setSearchInput(ctx: Atom<GlobalState>, input: string) {
 
 export function triggerSearch(ctx: Atom<GlobalState>, query?: string, immediate = false): Disposable {
   const state = deref(ctx);
-  const providers = state.components.searchProviders;
+  const providers = state.registry.searchProviders;
   const { input, loading } = state.search;
 
   if (query === undefined) {
@@ -99,9 +99,9 @@ export function prependSearchResults(ctx: Atom<GlobalState>, items: Array<ReactC
 export function registerSearchProvider(ctx: Atom<GlobalState>, name: string, value: SearchProviderRegistration) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      searchProviders: withKey(state.components.searchProviders, name, value),
+    registry: {
+      ...state.registry,
+      searchProviders: withKey(state.registry.searchProviders, name, value),
     },
   }));
 }
@@ -109,9 +109,9 @@ export function registerSearchProvider(ctx: Atom<GlobalState>, name: string, val
 export function unregisterSearchProvider(ctx: Atom<GlobalState>, name: string) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      searchProviders: withoutKey(state.components.searchProviders, name),
+    registry: {
+      ...state.registry,
+      searchProviders: withoutKey(state.registry.searchProviders, name),
     },
   }));
 }
