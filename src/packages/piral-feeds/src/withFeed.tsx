@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ComponentLoader, ComponentError } from 'piral-core';
+import { PiralLoadingIndicator, PiralError } from 'piral-core';
 import { useFeed } from './useFeed';
 import { ConnectorDetails, FeedConnectorProps } from './types';
 
@@ -11,11 +11,11 @@ export function withFeed<TData, TItem, TProps>(
     const [loaded, data, error] = useFeed(options);
 
     if (!loaded) {
-      return <ComponentLoader />;
+      return <PiralLoadingIndicator />;
     } else if (data) {
       return <Component data={data} {...props} />;
     } else {
-      return <ComponentError type="feed" error={error} />;
+      return <PiralError type="feed" error={error} />;
     }
   };
   FeedView.displayName = `FeedView_${options.id}`;

@@ -1,5 +1,6 @@
+import * as React from 'react';
 import { Extend } from 'piral-core';
-import { Client, defaultExchanges, subscriptionExchange } from 'urql';
+import { Client, Provider, defaultExchanges, subscriptionExchange } from 'urql';
 import { SubscriptionClient, OperationOptions } from 'subscriptions-transport-ws';
 import { gqlQuery, gqlMutation, gqlSubscription } from './queries';
 import { PiletGqlApi, GqlConfig } from './types';
@@ -51,15 +52,19 @@ export function setupGqlClient(config: GqlConfig = {}) {
  * @param client The specific urql client to be used, if any.
  */
 export function createGqlApi(client = setupGqlClient()): Extend<PiletGqlApi> {
-  return () => ({
-    query(q, options) {
-      return gqlQuery(client, q, options);
-    },
-    mutate(q, options) {
-      return gqlMutation(client, q, options);
-    },
-    subscribe(q, subscriber, options) {
-      return gqlSubscription(client, q, subscriber, options);
-    },
-  });
+  return context => {
+    context.includeProvider(<Provider value={client} />);
+
+    return {
+      query(q, options) {
+        return gqlQuery(client, q, options);
+      },
+      mutate(q, options) {
+        return gqlMutation(client, q, options);
+      },
+      subscribe(q, subscriber, options) {
+        return gqlSubscription(client, q, subscriber, options);
+      },
+    };
+  };
 }

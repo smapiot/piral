@@ -2,6 +2,7 @@ import * as actions from './actions';
 import { ComponentType } from 'react';
 import { swap } from '@dbeining/react-atom';
 import { withApi, buildName, Extend, Dict } from 'piral-core';
+import { DefaultModals, DefaultDialog } from './default';
 import { PiletModalsApi, ModalRegistration, BareModalComponentProps } from './types';
 
 export interface InitialModalDialog {
@@ -56,6 +57,11 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
       ...state,
       components: {
         ...state.components,
+        Dialog: DefaultDialog,
+        Modals: DefaultModals,
+      },
+      registry: {
+        ...state.registry,
         modals: getModalDialogs(dialogs),
       },
       modals: [],

@@ -17,7 +17,8 @@ export function setSearchInput(ctx: Atom<GlobalState>, input: string) {
 export function triggerSearch(ctx: Atom<GlobalState>, query?: string, immediate = false): Disposable {
   const state = deref(ctx);
   const providers = state.registry.searchProviders;
-  const { input, loading } = state.search;
+  const { input, results } = state.search;
+  const { loading } = results;
 
   if (query === undefined) {
     query = input;
@@ -66,10 +67,11 @@ export function resetSearchResults(ctx: Atom<GlobalState>, input: string, loadin
   swap(ctx, state => ({
     ...state,
     search: {
-      ...state.search,
-      loading,
       input,
-      results: [],
+      results: {
+        loading,
+        items: [],
+      },
     },
   }));
 }
@@ -79,8 +81,10 @@ export function appendSearchResults(ctx: Atom<GlobalState>, items: Array<ReactCh
     ...state,
     search: {
       ...state.search,
-      loading: !done,
-      results: appendItems(state.search.results, items),
+      results: {
+        loading: !done,
+        items: prependItems(state.search.results.items, items),
+      },
     },
   }));
 }
@@ -90,8 +94,10 @@ export function prependSearchResults(ctx: Atom<GlobalState>, items: Array<ReactC
     ...state,
     search: {
       ...state.search,
-      loading: !done,
-      results: prependItems(state.search.results, items),
+      results: {
+        loading: !done,
+        items: prependItems(state.search.results.items, items),
+      },
     },
   }));
 }

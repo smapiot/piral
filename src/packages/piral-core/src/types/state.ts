@@ -102,6 +102,10 @@ export interface GlobalState extends PiralCustomState {
    * The used (exact) application routes.
    */
   routes: Dict<ComponentType<RouteComponentProps<any>>>;
+  /**
+   * The current provider.
+   */
+  provider?: JSX.Element;
 }
 
 export interface PiralAction<T extends (...args: any) => any> {
@@ -177,13 +181,18 @@ export interface PiralActions extends PiralCustomActions {
    * @param name The name of the component.
    * @param component The component to use for rendering.
    */
-  setComponent<TKey extends keyof ComponentsState>(name: TKey, component: ComponentType<ComponentsState[TKey]>): void;
+  setComponent<TKey extends keyof ComponentsState>(name: TKey, component: ComponentsState[TKey]): void;
   /**
    * Sets the common routes to render.
    * @param path The name of the component.
    * @param component The component to use for rendering.
    */
   setRoute<T = {}>(path: string, component: ComponentType<RouteComponentProps<T>>): void;
+  /**
+   * Includes a new provider as a sub-provider to the current provider.
+   * @param provider The provider to include.
+   */
+  includeProvider(provider: JSX.Element): void;
   /**
    * Destroys (i.e., resets) the given portal instance.
    * @param id The id of the portal to destroy.

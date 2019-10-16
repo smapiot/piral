@@ -1,4 +1,5 @@
 import { WrappedComponent, Dict, BaseComponentProps, AnyComponent } from 'piral-core';
+import { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletMenuApi {}
@@ -29,6 +30,31 @@ declare module 'piral-core/lib/types/custom' {
   interface PiralCustomErrors {
     menu: MenuItemErrorInfoProps;
   }
+
+  interface PiralCustomComponentsState {
+    /**
+     * The menu container component.
+     */
+    Menu: ComponentType<MenuProps>;
+    /**
+     * The menu item component.
+     */
+    MenuItem: ComponentType<MenuItemProps>;
+  }
+}
+
+export interface MenuProps {
+  /**
+   * The type of the menu.
+   */
+  type: MenuType;
+}
+
+export interface MenuItemProps {
+  /**
+   * The type of the menu.
+   */
+  type: MenuType;
 }
 
 /**

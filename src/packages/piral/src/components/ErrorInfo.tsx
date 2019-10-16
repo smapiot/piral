@@ -14,7 +14,6 @@ import {
   ModalErrorInfoProps,
   MenuItemErrorInfoProps,
 } from 'piral-ext';
-import { UnknownErrorInfoProps } from '../types';
 
 export interface ErrorInfoCreator {
   NotFoundErrorInfo: React.ComponentType<NotFoundErrorInfoProps>;
@@ -26,7 +25,7 @@ export interface ErrorInfoCreator {
   ModalErrorInfo?: React.ComponentType<ModalErrorInfoProps>;
   ExtensionErrorInfo?: React.ComponentType<ExtensionErrorInfoProps>;
   MenuErrorInfo?: React.ComponentType<MenuItemErrorInfoProps>;
-  UnknownErrorInfo: React.ComponentType<UnknownErrorInfoProps>;
+  UnknownErrorInfo: React.ComponentType;
 }
 
 export function createErrorInfo({

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withRecall, blazingStrategy, standardStrategy, isfunc } from 'react-arbiter';
 import { getLocalDependencies, globalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, StateContext } from './state';
-import { PortalView, Mediator, MediatorProps, Responsive } from './components';
+import { PiralView, Mediator, MediatorProps, Responsive } from './components';
 import { createListener } from './utils';
 import { PiletApi, PiralConfiguration, PortalProps, PiralInstance } from './types';
 
@@ -88,13 +88,13 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
 }
 
 export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => {
-  const [RecallMediator] = React.useState(() => withRecall<MediatorProps, PiletApi>(Mediator, instance.options));
+  const [PiralRecallMediator] = React.useState(() => withRecall<MediatorProps, PiletApi>(Mediator, instance.options));
 
   return (
     <StateContext.Provider value={instance.context}>
-      <RecallMediator />
       <Responsive breakpoints={breakpoints} />
-      <PortalView>{children}</PortalView>
+      <PiralRecallMediator />
+      <PiralView>{children}</PiralView>
     </StateContext.Provider>
   );
 };

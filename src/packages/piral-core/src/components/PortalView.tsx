@@ -2,30 +2,37 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Routes } from './Routes';
 import { useGlobalState } from '../hooks';
-import { ComponentError, ComponentRouter, ComponentLoader, ComponentLayout } from './helpers';
+import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout } from './helpers';
 
-const NotFound: React.FC<RouteComponentProps> = props => <ComponentError type="not_found" {...props} />;
+const NotFound: React.FC<RouteComponentProps> = props => <PiralError type="not_found" {...props} />;
 
-const PortalContent: React.FC = () => {
-  const { error, loading } = useGlobalState(m => m.app);
+const PiralContent: React.FC = () => {
+  const { error, loading, layout } = useGlobalState(m => m.app);
 
   return error ? (
-    <ComponentError type="loading" error={error} />
+    <PiralError type="loading" error={error} />
   ) : loading ? (
-    <ComponentLoader />
+    <PiralLoadingIndicator />
   ) : (
-    <ComponentLayout>
+    <PiralLayout currentLayout={layout}>
       <Routes NotFound={NotFound} />
-    </ComponentLayout>
+    </PiralLayout>
   );
 };
 
-export interface PortalViewProps {}
+const PiralProvider: React.FC = ({ children }) => {
+  const provider = useGlobalState(m => m.provider) || <React.Fragment />;
+  return React.cloneElement(provider, undefined, children);
+};
 
-export const PortalView: React.FC<PortalViewProps> = ({ children }) => (
-  <ComponentRouter>
-    <PortalContent />
-    {children}
-  </ComponentRouter>
+export interface PiralViewProps {}
+
+export const PiralView: React.FC<PiralViewProps> = ({ children }) => (
+  <PiralProvider>
+    <PiralRouter>
+      <PiralContent />
+      {children}
+    </PiralRouter>
+  </PiralProvider>
 );
-PortalView.displayName = 'PortalView';
+PiralView.displayName = 'PiralView';

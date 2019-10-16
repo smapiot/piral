@@ -1,94 +1,85 @@
-import { ArbiterModuleMetadata } from 'react-arbiter';
-import { LocalizationMessages, FetchConfig, GqlConfig, LocaleConfig } from 'piral-ext';
-import { PiralStateConfiguration, PiletRequester, Extend, PiletApi } from 'piral-core';
-import { PiletGqlApiQuery, PiletFetchApiFetch, PiletGqlApiMutate, PiletGqlApiSubscribe } from 'piral-ext';
-import { LayoutBuilder } from './layout';
+import { PiralConfiguration, ComponentsState } from 'piral-core';
+import {
+  FetchConfig,
+  GqlConfig,
+  LocaleConfig,
+  AuthConfig,
+  DashboardConfig,
+  MenuConfig,
+  NotificationsConfig,
+  ModalsConfig,
+  ContainerConfig,
+  FeedsConfig,
+  FormsConfig,
+  SearchConfig,
+} from 'piral-ext';
 
-export interface PiralAttachment {
-  (api: PiletApi): void;
-}
-
-export type PiletsMetadata = Array<ArbiterModuleMetadata>;
-
-export interface PiletQueryResult {
-  pilets: PiletsMetadata;
-}
-
-export interface PiralConfig extends PiralStateConfiguration {
+export interface PiralExtSettings {
   /**
-   * Sets the default translations to be available. Alternatively,
-   * sets the available languages.
-   * @default {}
-   */
-  translations?: LocalizationMessages | Array<string>;
-  /**
-   * Attaches a single static module to the application.
-   */
-  attach?: PiralAttachment;
-  /**
-   * Sets the function for loading the pilets or the loaded pilet (metadata) itself.
-   */
-  pilets?: PiletRequester | PiletsMetadata;
-  /**
-   * Optionally provides a function to extend the API creator with some additional
-   * functionality.
-   */
-  extendApi?: Extend | Array<Extend>;
-  /**
-   * Sets up the configuration for fetch.
+   * Customizes the fetch config.
    */
   fetch?: FetchConfig;
   /**
-   * Sets up the configuration for localization.
+   * Customizes the gql config.
+   */
+  gql?: GqlConfig;
+  /**
+   * Customizes the locale config.
    */
   locale?: LocaleConfig;
-}
-
-export interface PiralLoaderOptions {
-  query: PiletGqlApiQuery;
-  fetch: PiletFetchApiFetch;
-  mutate: PiletGqlApiMutate;
-  subscribe: PiletGqlApiSubscribe;
-}
-
-export interface PiralLoader {
-  (options: PiralLoaderOptions): Promise<PiralConfig | undefined>;
+  /**
+   * Customizes the auth config.
+   */
+  auth?: AuthConfig;
+  /**
+   * Customizes the dashboard config.
+   */
+  dashboard?: DashboardConfig;
+  /**
+   * Customizes the menu config.
+   */
+  menu?: MenuConfig;
+  /**
+   * Customizes the notifications config.
+   */
+  notifications?: NotificationsConfig;
+  /**
+   * Customizes the modals config.
+   */
+  modals?: ModalsConfig;
+  /**
+   * Customizes the container config.
+   */
+  container?: ContainerConfig;
+  /**
+   * Customizes the feeds config.
+   */
+  feeds?: FeedsConfig;
+  /**
+   * Customizes the forms config.
+   */
+  forms?: FormsConfig;
+  /**
+   * Customizes the search config.
+   */
+  search?: SearchConfig;
 }
 
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions {
+export interface PiralOptions extends PiralConfiguration {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
    */
   selector?: string | Element;
   /**
-   * Sets the URL of the portal gateway to the backend.
-   * @default document.location.origin,
+   * Customizes the extension settings.
    */
-  gatewayUrl?: string;
+  settings?: PiralExtSettings;
   /**
-   * Sets the URL of the GraphQL subscription or prevents
-   * creating a subscription.
-   * @default gatewayUrl,
+   * Defines how the layout looks like.
    */
-  subscriptionUrl?: false | string;
-  /**
-   * Gets the optional initial configuration.
-   */
-  config?: PiralConfig;
-  /**
-   * Defines some optional initial configuration loading.
-   */
-  loader?: PiralLoader;
-  /**
-   * Gets the layout builder to construct the design to display.
-   */
-  layout: LayoutBuilder;
-  /**
-   * Sets up the configuration for GraphQL.
-   */
-  gql?: GqlConfig;
+  layout?: Partial<ComponentsState>;
 }

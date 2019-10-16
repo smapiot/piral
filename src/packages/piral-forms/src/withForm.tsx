@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { ComponentError, ComponentLoader, usePromise } from 'piral-core';
+import { PiralLoadingIndicator, PiralError, usePromise } from 'piral-core';
 import { useForm } from './useForm';
 import { InputFormOptions, FormProps } from './types';
 
@@ -23,11 +23,11 @@ export function withForm<TFormData, TProps>(
     );
 
     if (loading) {
-      return <ComponentLoader />;
+      return <PiralLoadingIndicator />;
     } else if (data) {
       return <FormView {...props} initialData={data} />;
     } else {
-      return <ComponentError type="form" error={error} />;
+      return <PiralError type="form" error={error} />;
     }
   };
 

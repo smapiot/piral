@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { DefaultDashboard } from './DefaultDashboard';
+import { DefaultDashboard } from './default';
 
 jest.mock('piral-core', () => ({
   useGlobalState(select: any) {

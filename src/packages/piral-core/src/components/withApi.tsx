@@ -8,7 +8,7 @@ import {
   WrapComponentOptions,
 } from 'react-arbiter';
 import { useGlobalState, useActions } from '../hooks';
-import { ComponentError, ComponentLoader } from './helpers';
+import { PiralError, PiralLoadingIndicator } from './helpers';
 import { convertComponent, defaultRender } from '../utils';
 import { AnyComponent, Errors, ComponentConverters } from '../types';
 
@@ -130,10 +130,10 @@ export function withApi<TApi, TProps>(
       console.error(piral, error);
     },
     renderChild(child) {
-      return <React.Suspense fallback={<ComponentLoader />}>{child}</React.Suspense>;
+      return <React.Suspense fallback={<PiralLoadingIndicator />}>{child}</React.Suspense>;
     },
     renderError(error, props) {
-      return <ComponentError type={errorType} error={error} {...props} />;
+      return <PiralError type={errorType} error={error} {...props} />;
     },
   });
 }

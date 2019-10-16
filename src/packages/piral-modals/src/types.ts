@@ -45,7 +45,31 @@ declare module 'piral-core/lib/types/custom' {
   interface PiralCustomErrors {
     modal: ModalErrorInfoProps;
   }
+
+  interface PiralCustomComponentsState {
+    /**
+     * The host component for modal dialogs.
+     */
+    Modals: ComponentType<ModalsProps>;
+    /**
+     * The modal dialog component.
+     */
+    Dialog: ComponentType<DialogProps>;
+  }
 }
+
+export interface ModalsProps {
+  /**
+   * Gets if the modal is currently open or closed.
+   */
+  open: boolean;
+  /**
+   * Callback to invoke closing the modal dialog.
+   */
+  close(): void;
+}
+
+export interface DialogProps extends OpenModalDialog {}
 
 /**
  * The error used when a registered modal dialog crashed.

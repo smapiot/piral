@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, cloneElement } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
 import { RouteComponentProps } from 'react-router-dom';
 import { LayoutType, GlobalState, Pilet, ComponentsState } from '../../types';
@@ -28,7 +28,7 @@ export function initialize(ctx: Atom<GlobalState>, loading: boolean, error: Erro
 export function setComponent<TKey extends keyof ComponentsState>(
   ctx: Atom<GlobalState>,
   name: TKey,
-  component: ComponentType<ComponentsState[TKey]>,
+  component: ComponentsState[TKey],
 ) {
   swap(ctx, state => ({
     ...state,
@@ -50,5 +50,12 @@ export function setRoute<T = {}>(
       ...state.routes,
       [path]: component,
     },
+  }));
+}
+
+export function includeProvider(ctx: Atom<GlobalState>, provider: JSX.Element) {
+  swap(ctx, state => ({
+    ...state,
+    provider: !state.provider ? provider : cloneElement(provider, undefined, state.provider),
   }));
 }

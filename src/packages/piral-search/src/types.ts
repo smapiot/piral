@@ -1,4 +1,4 @@
-import { ReactNode, ReactChild } from 'react';
+import { ReactNode, ReactChild, ComponentType } from 'react';
 import { Dict, Disposable, PiletApi } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -60,7 +60,36 @@ declare module 'piral-core/lib/types/custom' {
      */
     searchProviders: Dict<SearchProviderRegistration>;
   }
+
+  interface PiralCustomComponentsState {
+    /**
+     * The component for showing the results of the search.
+     */
+    SearchResult: ComponentType<SearchResultProps>;
+    /**
+     * The container for showing search.
+     */
+    SearchContainer: ComponentType<SearchContainerProps>;
+    /**
+     * The input component for search capability.
+     */
+    SearchInput: ComponentType<SearchInputProps>;
+  }
 }
+
+export interface SearchContainerProps {
+  /**
+   * Gets if the results are still gathered.
+   */
+  loading: boolean;
+}
+
+export interface SearchInputProps {
+  setValue(value: string): void;
+  value: string;
+}
+
+export interface SearchResultProps {}
 
 export interface SearchProvider {
   (options: SearchOptions, api: PiletApi): Promise<Array<ReactNode | HTMLElement>>;
@@ -72,13 +101,18 @@ export interface SearchState {
    */
   input: string;
   /**
-   * Gets weather the search is still loading.
+   * Gets the current result state.
    */
-  loading: boolean;
-  /**
-   * The results to display for the current search.
-   */
-  results: Array<ReactChild>;
+  results: {
+    /**
+     * Gets weather the search is still loading.
+     */
+    loading: boolean;
+    /**
+     * The results to display for the current search.
+     */
+    items: Array<ReactChild>;
+  };
 }
 
 export interface SearchOptions {

@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { swap } from '@dbeining/react-atom';
 import { wrapElement } from 'react-arbiter';
 import { Extend, GlobalStateContext } from 'piral-core';
+import { DefaultNotifications, DefaultToast } from './default';
 import { PiletNotificationsApi, NotificationOptions, OpenNotification } from './types';
 
 export interface InitialNotification {
@@ -91,6 +92,11 @@ export function createNotificationsApi(config: NotificationsConfig = {}): Extend
 
     swap(context.state, state => ({
       ...state,
+      components: {
+        ...state.components,
+        Notifications: DefaultNotifications,
+        Toast: DefaultToast,
+      },
       notifications: getNotifications(context, messages, defaultOptions),
     }));
 

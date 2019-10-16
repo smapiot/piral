@@ -4,7 +4,7 @@ import { ComponentsState } from '../types';
 
 export interface SetComponentProps<TKey extends keyof ComponentsState> {
   name: TKey;
-  component: React.ComponentType<ComponentsState[TKey]>;
+  component: ComponentsState[TKey];
 }
 
 export function SetComponent<TKey extends keyof ComponentsState>({
@@ -12,7 +12,7 @@ export function SetComponent<TKey extends keyof ComponentsState>({
   component,
 }: SetComponentProps<TKey>): React.ReactElement {
   const setComponent = useAction('setComponent');
-  React.useEffect(() => setComponent(name, component), []);
+  React.useEffect(() => component && setComponent(name, component), []);
   // tslint:disable-next-line:no-null-keyword
   return null;
 }

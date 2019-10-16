@@ -1,4 +1,4 @@
-import { ReactChild, ReactNode } from 'react';
+import { ReactChild, ReactNode, ComponentType } from 'react';
 import { Disposable } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -24,8 +24,23 @@ declare module 'piral-core/lib/types/custom' {
     closeNotification(notification: OpenNotification): void;
   }
 
+  interface PiralCustomComponentsState {
+    /**
+     * The host component for notifications.
+     */
+    Notifications: ComponentType<NotificationsProps>;
+    /**
+     * The notification toast component.
+     */
+    Toast: ComponentType<ToastProps>;
+  }
+
   interface PiralCustomRegistryState {}
 }
+
+export interface NotificationsProps {}
+
+export interface ToastProps extends OpenNotification {}
 
 export interface NotificationOptions {
   /**

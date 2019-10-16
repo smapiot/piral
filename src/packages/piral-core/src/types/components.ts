@@ -2,6 +2,7 @@ import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { FirstParametersOf, UnionOf } from './common';
 import { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
+import { LayoutType } from './layout';
 
 export interface ComponentConverters<TProps> extends PiralCustomComponentConverters<TProps> {
   html(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
@@ -87,6 +88,8 @@ export type ErrorInfoProps = UnionOf<Errors>;
 
 export interface LoaderProps {}
 
-export interface LayoutProps {}
+export interface LayoutProps {
+  currentLayout: LayoutType;
+}
 
 export interface RouterProps {}

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ExtensionSlot } from 'piral-core';
-import { DashboardProps } from './types';
+import { ExtensionSlot, defaultRender } from 'piral-core';
+import { DashboardProps, TileProps } from './types';
 
 export const DefaultDashboard: React.FC<DashboardProps> = props => (
   <ExtensionSlot
@@ -9,4 +9,5 @@ export const DefaultDashboard: React.FC<DashboardProps> = props => (
     empty={() => <React.Fragment key="default_dashboard">{props.children}</React.Fragment>}
   />
 );
-DefaultDashboard.displayName = 'DefaultDashboard';
+
+export const DefaultTile: React.FC<TileProps> = props => defaultRender(props.children);

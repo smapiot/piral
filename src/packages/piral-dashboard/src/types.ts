@@ -34,10 +34,29 @@ declare module 'piral-core/lib/types/custom' {
 
   interface PiralCustomComponentsState {
     /**
-     * The dashboard component.
+     * The dashboard container component.
      */
     Dashboard: ComponentType<DashboardProps>;
+    /**
+     * The dashboard tile component.
+     */
+    Tile: ComponentType<TileProps>;
   }
+}
+
+export interface TileProps {
+  /**
+   * The currently used number of columns.
+   */
+  columns: number;
+  /**
+   * The currently used number of rows.
+   */
+  rows: number;
+  /**
+   * The resizable status.
+   */
+  resizable: boolean;
 }
 
 export interface TileErrorInfoProps {

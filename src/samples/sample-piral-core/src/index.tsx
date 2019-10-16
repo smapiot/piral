@@ -9,7 +9,7 @@ import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
 import { createNotificationsApi } from 'piral-notifications';
-import { createDashboardApi } from 'piral-dashboard';
+import { createDashboardApi, Dashboard } from 'piral-dashboard';
 import { createContainerApi } from 'piral-containers';
 import { createFeedsApi } from 'piral-feeds';
 import { createFormsApi } from 'piral-forms';
@@ -91,10 +91,7 @@ const Menu: React.FC = () => {
 };
 
 const SearchResults: React.FC = () => {
-  const { loading, items } = useGlobalState(m => ({
-    loading: m.search.loading,
-    items: m.search.results,
-  }));
+  const { loading, items } = useGlobalState(m => m.search.results);
   return (
     <div className="search-results">
       {items.map((item, i) => (
@@ -191,6 +188,7 @@ const app = (
   <Piral instance={instance}>
     <SetComponent name="Loader" component={Loader} />
     <SetComponent name="Layout" component={Layout} />
+    <SetRoute path="/" component={Dashboard} />
     <SetRoute path="/sitemap" component={Sitemap} />
   </Piral>
 );
