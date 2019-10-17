@@ -101,9 +101,9 @@ There is a single function, which controls the configuration of a Pilet - it is 
 ```jsx
 export function setup(app: PiletApi) {
   app.showNotification('Hello from Piral!');
-  app.registerMenu('sample-entry', () =>
+  app.registerMenu(() =>
     <a href="https://docs.piral.io" target="_blank">Documentation</a>);
-  app.registerTile('sample-tile', () => <div>Welcome to Piral!</div>, {
+  app.registerTile(() => <div>Welcome to Piral!</div>, {
     initialColumns: 2,
     initialRows: 1,
   });
