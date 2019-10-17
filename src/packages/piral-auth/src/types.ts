@@ -48,4 +48,3 @@ export interface PiralAuthApi {
    */
   getUser(): UserInfo | undefined;
 }
-
