@@ -21,9 +21,34 @@ import { createNotificationsApi } from 'piral-notifications';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createNotificationsApi]),
+  extendApi: [createNotificationsApi()],
+  // ...
+});
+```
+
+Via the options the initially displayed `messages` can be defined. Additionally, the `defaultOptions` can be set up.
+
+For example:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createNotificationsApi({
+    defaultOptions: {
+      type: 'warning',
+    },
+    messages: [
+      {
+        content: 'Welcome to the future of digital services!',
+        options: {
+          title: 'Hello!',
+          type: 'success',
+        },
+      },
+    ],
+  })],
   // ...
 });
 ```

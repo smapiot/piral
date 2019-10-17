@@ -21,9 +21,30 @@ import { createMenuApi } from 'piral-menu';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createMenuApi]),
+  extendApi: [createMenuApi()],
+  // ...
+});
+```
+
+Via the options the `defaultSettings` and the global / initially available menu `items` can be defined.
+
+For example:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createMenuApi({
+    defaultSettings: {
+      type: 'admin',
+    },
+    items: [
+      {
+        component: HomeMenuItem,
+      },
+    ],
+  })],
   // ...
 });
 ```

@@ -18,24 +18,28 @@ For the setup of the library itself you'll need to import `createAuthApi` from t
 import { createAuthApi } from 'piral-auth';
 ```
 
-For the integration this depends on the Piral instance.
+The integration looks like:
 
-For `piral-core`-based instances this boils down to:
-
-```ts
-const PiralInstance = createInstance({
+```tsx
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createAuthApi]),
+  extendApi: [createAuthApi()],
   // ...
 });
 ```
 
-For `piral`-based instances the integration looks like:
+The options include defining an existing user (e.g., obtained by a redirect).
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createAuthApi]),
+  extendApi: [createAuthApi({
+    user: {
+      firstName: 'Hans',
+      lastName: 'Zimmermann',
+      // ...
+    },
+  })],
   // ...
 });
 ```

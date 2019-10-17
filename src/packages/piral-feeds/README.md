@@ -21,12 +21,14 @@ import { createFeedsApi } from 'piral-feeds';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createFeedsApi]),
+  extendApi: [createFeedsApi()],
   // ...
 });
 ```
+
+There are no options available.
 
 ## License
 

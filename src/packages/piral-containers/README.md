@@ -21,12 +21,14 @@ import { createContainerApi } from 'piral-containers';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createContainerApi]),
+  extendApi: [createContainerApi()],
   // ...
 });
 ```
+
+There are no options available.
 
 ## License
 

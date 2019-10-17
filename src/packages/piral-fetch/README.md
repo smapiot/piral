@@ -8,6 +8,45 @@ This is an extension library that only has a peer dependency to `piral-core`. Wh
 
 For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
 
+## Setup and Bootstrapping
+
+The provided library only brings API extensions for pilets to a Piral instance.
+
+For the setup of the library itself you'll need to import `createFeedsApi` from the `piral-feeds` package.
+
+```tsx
+import { createFetchApi } from 'piral-fetch';
+```
+
+The integration looks like:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createFetchApi()],
+  // ...
+});
+```
+
+Via the options the `default` settings and the `base` URL can be defined.
+
+For example:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createFetchApi({
+    base: 'https://example.com/api/v1',
+    default: {
+      headers: {
+        authorization: 'Bearer ...',
+      },
+    },
+  })],
+  // ...
+});
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

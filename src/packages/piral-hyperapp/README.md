@@ -17,24 +17,12 @@ import 'hyperapp';
 import { createHyperappApi } from 'piral-hyperapp';
 ```
 
-This is pretty much everything that needs to be done for the setup. For the integration this depends on the Piral instance.
-
-For `piral-core`-based instances this boils down to:
+The integration looks like:
 
 ```ts
-const PiralInstance = createInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createHyperappApi]),
-  // ...
-});
-```
-
-For `piral`-based instances the integration looks like:
-
-```tsx
-renderInstance({
-  // important part
-  extendApi: extendApis([createHyperappApi]),
+  extendApi: [createHyperappApi()],
   // ...
 });
 ```

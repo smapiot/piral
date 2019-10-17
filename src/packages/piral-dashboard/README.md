@@ -21,9 +21,36 @@ import { createDashboardApi } from 'piral-dashboard';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createDashboardApi]),
+  extendApi: [createDashboardApi()],
+  // ...
+});
+```
+
+Via the options the `defaultPreferences` and the global / initially available `tiles` can be defined.
+
+Consider for example:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createDashboardApi({
+    defaultPreferences: {
+      initialColumns: 2,
+      initialRows: 2,
+      resizable: true,
+    },
+    tiles: [
+      {
+        component: MyTeaserTile,
+        preferences: {
+          initialColumns: 2,
+          initialRows: 4,
+        },
+      },
+    ],
+  })],
   // ...
 });
 ```

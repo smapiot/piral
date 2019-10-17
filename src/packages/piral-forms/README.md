@@ -21,12 +21,14 @@ import { createFormsApi } from 'piral-forms';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createFormsApi]),
+  extendApi: [createFormsApi()],
   // ...
 });
 ```
+
+There are no options available.
 
 ## License
 

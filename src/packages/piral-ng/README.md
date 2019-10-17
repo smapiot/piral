@@ -40,24 +40,12 @@ For the setup itself you'll need to import `createNgApi` from the `piral-ng` pac
 import { createNgApi } from 'piral-ng';
 ```
 
-For the integration this depends on the Piral instance.
-
-For `piral-core`-based instances this boils down to:
+The integration looks like:
 
 ```ts
-const PiralInstance = createInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createNgApi]),
-  // ...
-});
-```
-
-For `piral`-based instances the integration looks like:
-
-```tsx
-renderInstance({
-  // important part
-  extendApi: extendApis([createNgApi]),
+  extendApi: [createNgApi()],
   // ...
 });
 ```

@@ -21,9 +21,28 @@ import { createModalsApi } from 'piral-modals';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createModalsApi]),
+  extendApi: [createModalsApi()],
+  // ...
+});
+```
+
+Via the options the globally available `dialogs` can be defined.
+
+For example:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createModalsApi({
+    dialogs: [
+      {
+        name: 'userinfo',
+        component: UserInfoModal,
+      },
+    ],
+  })],
   // ...
 });
 ```

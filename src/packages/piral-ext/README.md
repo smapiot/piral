@@ -6,18 +6,16 @@ This is an extension library that only has a peer dependency to `piral-core`. Wh
 
 ## Included Extension Libraries
 
-- `piral-auth`: User authentication
-- `piral-containers`: Pilet state management
 - `piral-dashboard`: Dashboard presentation
 - `piral-feeds`: Data feed connectivity
 - `piral-fetch`: Fetch configuration
-- `piral-forms`: Resiliant forms
 - `piral-menu`: Menu integration
 - `piral-modals`: Modal dialogs
 - `piral-notifications`: Notification support
-- `piral-search`: Search provider registration
 - `piral-translate`: Simple localization
 - `piral-urql`: GraphQL integration
+
+For more details on the individual libraries please visit their own dedicated README.
 
 ## Documentation
 

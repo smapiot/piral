@@ -21,9 +21,28 @@ import { createSearchApi } from 'piral-search';
 The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createSearchApi]),
+  extendApi: [createSearchApi()],
+  // ...
+});
+```
+
+Via the options the initially displayed `results` can be defined. The current `query` can also be set.
+
+For example:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createSearchApi({
+    query: '!help',
+    results: [
+      <div>
+        Help was found!
+      </div>,
+    ],
+  })],
   // ...
 });
 ```
