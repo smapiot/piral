@@ -58,17 +58,10 @@ export function renderInstance(options: PiralOptions = {}) {
 
   const App: React.FC = () => (
     <Piral instance={instance}>
-      <SetComponent name="LoadingIndicator" component={layout.LoadingIndicator} />
-      <SetComponent name="DashboardContainer" component={layout.DashboardContainer} />
-      <SetComponent name="DashboardTile" component={layout.DashboardTile} />
-      <SetComponent name="ErrorInfo" component={layout.ErrorInfo || SwitchErrorInfo} />
-      <SetComponent name="Layout" component={layout.Layout} />
-      <SetComponent name="Router" component={layout.Router} />
-      <SetComponent name="SearchContainer" component={layout.SearchContainer} />
-      <SetComponent name="SearchInput" component={layout.SearchInput} />
-      <SetComponent name="SearchResult" component={layout.SearchResult} />
-      <SetComponent name="ModalsHost" component={layout.ModalsHost} />
-      <SetComponent name="ModalsDialog" component={layout.ModalsDialog} />
+      <SetComponent name="ErrorInfo" component={SwitchErrorInfo} />
+      {Object.keys(layout).map((key: any) => (
+        <SetComponent name={key} component={layout[key]} key={key} />
+      ))}
       <SetRoute path="/" component={Dashboard} />
     </Piral>
   );

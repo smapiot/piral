@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useTranslate, ComponentsState, SearchInput } from 'piral';
-import { Layout } from './components';
+import { Layout, LanguagePicker } from './components';
 import { getTileClass } from './utils';
 
 export const layout: Partial<ComponentsState> = {
   Layout,
+  LanguagesPicker: LanguagePicker,
   LoadingIndicator: () => (
     <div className="pi-center">
       <div className="pi-spinner">Loading</div>

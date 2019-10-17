@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { LayoutProps, Search, Menu, Notifications, Modals } from 'piral';
+import { LayoutProps, Search, Menu, Notifications, Modals, Languages } from 'piral';
 import { MenuToggle } from './MenuToggle';
 import { User } from './User';
-import { LanguagePicker } from './LanguagePicker';
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => (
   <div className="app-container">
@@ -21,7 +20,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => (
       </div>
       <Search />
       <Menu type="header" />
-      <LanguagePicker />
+      <Languages />
       <User />
     </div>
     <div className="app-content">{children}</div>

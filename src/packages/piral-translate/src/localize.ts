@@ -23,7 +23,12 @@ export class Localizer implements Localizable {
   /**
    * Creates a new instance of a localizer.
    */
-  constructor(public messages: LocalizationMessages, public language: string, private fallback = defaultFallback) {}
+  constructor(
+    public messages: LocalizationMessages,
+    public language: string,
+    public languages: Array<string>,
+    private fallback = defaultFallback,
+  ) {}
 
   /**
    * Localizes the given key via the global translations.

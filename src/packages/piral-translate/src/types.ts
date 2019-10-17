@@ -1,4 +1,5 @@
-import {} from 'piral-core';
+import 'piral-core';
+import { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletLocaleApi {}
@@ -8,6 +9,10 @@ declare module 'piral-core/lib/types/custom' {
      * Information for the language display.
      */
     language: {
+      /**
+       * Gets if languages are currently loading.
+       */
+      loading: boolean;
       /**
        * The selected, i.e., active, language.
        */
@@ -45,6 +50,24 @@ declare module 'piral-core/lib/types/custom' {
      */
     getTranslations(language: string): LanguageData;
   }
+
+  interface PiralCustomComponentsState {
+    /**
+     * Represents the component for rendering a language selection.
+     */
+    LanguagesPicker: ComponentType<LanguagesPickerProps>;
+  }
+}
+
+export interface LanguagesPickerProps {
+  /**
+   * The currently selected language.
+   */
+  selected: string;
+  /**
+   * The languages available for selection.
+   */
+  available: Array<string>;
 }
 
 export interface LanguageLoader {
@@ -62,6 +85,7 @@ export interface LanguageData {
 export interface Localizable {
   messages: LocalizationMessages;
   language: string;
+  languages: Array<string>;
   localizeGlobal<T>(key: string, variables?: T): string;
   localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T): string;
 }
@@ -104,6 +128,13 @@ export interface PiletLocaleApi {
   getTranslations(): LocalizationMessages;
 }
 
+export interface RetrieveCurrentLanguage {
+  /**
+   * A function to identify the current language.
+   */
+  (languages: Array<string>, defaultLanguage: string, fallbackLanguage?: string): string;
+}
+
 export interface LocaleConfig {
   /**
    * Sets the default (global) localization messages.
@@ -113,7 +144,7 @@ export interface LocaleConfig {
   /**
    * Sets the default language to use.
    */
-  language?: string;
+  language?: string | RetrieveCurrentLanguage;
   /**
    * Sets the optional fallback to use.
    */

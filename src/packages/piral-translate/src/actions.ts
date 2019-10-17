@@ -5,30 +5,17 @@ import { Localizable } from './types';
 export function createActions(localizer: Localizable) {
   return {
     selectLanguage(ctx: Atom<GlobalState>, selected: string) {
-      if (selected) {
-        swap(ctx, state => {
-          localizer.language = selected;
-          return {
-            ...state,
-            app: {
-              ...state.app,
-              loading: false,
-            },
-            language: {
-              ...state.language,
-              selected,
-            },
-          };
-        });
-      } else {
-        swap(ctx, state => ({
+      swap(ctx, state => {
+        localizer.language = selected;
+        return {
           ...state,
-          app: {
-            ...state.app,
-            loading: true,
+          language: {
+            ...state.language,
+            loading: selected === undefined,
+            selected,
           },
-        }));
-      }
+        };
+      });
     },
     translate(_: Atom<GlobalState>, key: string, variables: any) {
       return localizer && localizer.localizeGlobal(key, variables);
