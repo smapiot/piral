@@ -3,15 +3,11 @@ import {
   FetchConfig,
   GqlConfig,
   LocaleConfig,
-  AuthConfig,
   DashboardConfig,
   MenuConfig,
   NotificationsConfig,
   ModalsConfig,
-  ContainerConfig,
   FeedsConfig,
-  FormsConfig,
-  SearchConfig,
 } from 'piral-ext';
 
 export interface PiralExtSettings {
@@ -27,10 +23,6 @@ export interface PiralExtSettings {
    * Customizes the locale config.
    */
   locale?: LocaleConfig;
-  /**
-   * Customizes the auth config.
-   */
-  auth?: AuthConfig;
   /**
    * Customizes the dashboard config.
    */
@@ -48,21 +40,9 @@ export interface PiralExtSettings {
    */
   modals?: ModalsConfig;
   /**
-   * Customizes the container config.
-   */
-  container?: ContainerConfig;
-  /**
    * Customizes the feeds config.
    */
   feeds?: FeedsConfig;
-  /**
-   * Customizes the forms config.
-   */
-  forms?: FormsConfig;
-  /**
-   * Customizes the search config.
-   */
-  search?: SearchConfig;
 }
 
 /**

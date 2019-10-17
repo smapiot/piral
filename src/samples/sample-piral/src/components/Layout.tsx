@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { LayoutProps, Search, Menu, Notifications, Modals, Languages } from 'piral';
+import { LayoutProps, Menu, Notifications, Modals, Languages } from 'piral';
+import { Search } from 'piral-search';
 import { MenuToggle } from './MenuToggle';
 import { User } from './User';
 

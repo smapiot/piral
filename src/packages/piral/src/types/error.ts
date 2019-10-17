@@ -6,13 +6,7 @@ import {
   LoadingErrorInfoProps,
   ErrorInfoProps,
 } from 'piral-core';
-import {
-  TileErrorInfoProps,
-  MenuItemErrorInfoProps,
-  ModalErrorInfoProps,
-  FeedErrorInfoProps,
-  FormErrorInfoProps,
-} from 'piral-ext';
+import { TileErrorInfoProps, MenuItemErrorInfoProps, ModalErrorInfoProps, FeedErrorInfoProps } from 'piral-ext';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiralCustomComponentsState {
@@ -24,7 +18,6 @@ declare module 'piral-core/lib/types/custom' {
     ModalErrorInfo: ComponentType<ModalErrorInfoProps>;
     LoadingErrorInfo: ComponentType<LoadingErrorInfoProps>;
     FeedErrorInfo: ComponentType<FeedErrorInfoProps>;
-    FormErrorInfo: ComponentType<FormErrorInfoProps>;
     UnknownErrorInfo: ComponentType<ErrorInfoProps>;
   }
 }

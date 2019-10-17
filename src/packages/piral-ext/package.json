@@ -42,16 +42,12 @@
     "react-dom": ">= 16.8.0"
   },
   "dependencies": {
-    "piral-auth": "^0.7.0",
-    "piral-containers": "^0.7.0",
     "piral-dashboard": "^0.7.0",
     "piral-feeds": "^0.7.0",
     "piral-fetch": "^0.7.0",
-    "piral-forms": "^0.7.0",
     "piral-menu": "^0.7.0",
     "piral-modals": "^0.7.0",
     "piral-notifications": "^0.7.0",
-    "piral-search": "^0.7.0",
     "piral-translate": "^0.7.0",
     "piral-urql": "^0.7.0"
   }

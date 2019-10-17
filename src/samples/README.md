@@ -4,8 +4,8 @@ Piral is developed as a monorepo.
 
 ## Available Samples
 
-- [piral](./piral/README.md) is an example based on the full Piral framework
-- [piral-core](./piral-core/README.md) is an example based on the `piral-core` library
+- [sample-piral](./sample-piral/README.md) is an example based on the full Piral framework
+- [sample-piral-core](./sample-piral-core/README.md) is an example based on the `piral-core` library
 
 ## Development of Piral Samples
 

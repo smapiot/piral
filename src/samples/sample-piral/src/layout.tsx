@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useTranslate, ComponentsState, SearchInput } from 'piral';
+import { useTranslate, ComponentsState } from 'piral';
+import { SearchInput } from 'piral-search';
 import { Layout, LanguagePicker } from './components';
 import { getTileClass } from './utils';
 
@@ -31,13 +32,6 @@ export const layout: Partial<ComponentsState> = {
         The demanded data has not been found. Please contact support to resolve this issue.
       </div>
       <div className="pi-details">{error}</div>
-    </div>
-  ),
-  FormErrorInfo: () => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Submission Failed</div>
-      <div className="pi-description">The form could not be submitted.</div>
     </div>
   ),
   LoadingErrorInfo: () => (

@@ -37,8 +37,6 @@ const ErrorInfo: React.FC<ErrorInfoProps> = props => {
       return renderComponent(components, 'LoadingErrorInfo', props);
     case 'feed':
       return renderComponent(components, 'FeedErrorInfo', props);
-    case 'form':
-      return renderComponent(components, 'FormErrorInfo', props);
     default:
       return renderComponent(components, 'UnknownErrorInfo', props);
   }
