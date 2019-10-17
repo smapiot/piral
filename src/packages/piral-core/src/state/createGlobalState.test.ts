@@ -1,6 +1,6 @@
 import { deref } from '@dbeining/react-atom';
 import { createGlobalState } from './createGlobalState';
-import { DefaultErrorInfo, DefaultLoader, DefaultRouter, DefaultLayout } from '../components';
+import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultRouter, DefaultLayout } from '../components';
 
 describe('Create Global State Module', () => {
   window.matchMedia = jest.fn(q => ({ matches: false })) as any;
@@ -15,7 +15,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
+        LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
       },
@@ -40,7 +40,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
+        LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
       },
@@ -69,7 +69,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
+        LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
       },
@@ -94,7 +94,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
+        LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
       },
@@ -121,7 +121,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
+        LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
       },
@@ -148,7 +148,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
+        LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
       },
@@ -181,7 +181,7 @@ describe('Create Global State Module', () => {
       },
       components: {
         ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
+        LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
       },

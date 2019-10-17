@@ -12,6 +12,7 @@ import {
 const state = {
   search: {
     input: 'abc',
+    results: {},
   },
   registry: {
     searchProviders: {},
@@ -24,8 +25,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'yo',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
     appendSearchResults(state, ['a', 'b'], false);
@@ -33,8 +36,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'yo',
-        loading: true,
-        results: ['c', 'a', 'b'],
+        results: {
+          loading: true,
+          items: ['c', 'a', 'b'],
+        },
       },
     });
   });
@@ -44,8 +49,10 @@ describe('Search Action Module', () => {
       foo: [1, 2],
       search: {
         input: 'yo',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
     appendSearchResults(state, ['a'], true);
@@ -53,8 +60,10 @@ describe('Search Action Module', () => {
       foo: [1, 2],
       search: {
         input: 'yo',
-        loading: false,
-        results: ['c', 'a'],
+        results: {
+          loading: false,
+          items: ['c', 'a'],
+        },
       },
     });
   });
@@ -64,8 +73,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'yo',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
     prependSearchResults(state, ['a', 'b'], false);
@@ -73,8 +84,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'yo',
-        loading: true,
-        results: ['a', 'b', 'c'],
+        results: {
+          loading: true,
+          items: ['a', 'b', 'c'],
+        },
       },
     });
   });
@@ -84,8 +97,10 @@ describe('Search Action Module', () => {
       foo: [1, 2],
       search: {
         input: 'yo',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
     prependSearchResults(state, ['a'], true);
@@ -93,8 +108,10 @@ describe('Search Action Module', () => {
       foo: [1, 2],
       search: {
         input: 'yo',
-        loading: false,
-        results: ['a', 'c'],
+        results: {
+          loading: false,
+          items: ['a', 'c'],
+        },
       },
     });
   });
@@ -104,8 +121,10 @@ describe('Search Action Module', () => {
       foo: [1, 2],
       search: {
         input: 'yo',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
     resetSearchResults(state, 'yo', true);
@@ -113,8 +132,10 @@ describe('Search Action Module', () => {
       foo: [1, 2],
       search: {
         input: 'yo',
-        loading: true,
-        results: [],
+        results: {
+          loading: true,
+          items: [],
+        },
       },
     });
   });
@@ -124,8 +145,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'yo y',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
     resetSearchResults(state, 'yo y', false);
@@ -133,8 +156,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'yo y',
-        loading: false,
-        results: [],
+        results: {
+          loading: false,
+          items: [],
+        },
       },
     });
   });
@@ -144,8 +169,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'yo y',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
     setSearchInput(state, 'test input');
@@ -153,8 +180,10 @@ describe('Search Action Module', () => {
       foo: 5,
       search: {
         input: 'test input',
-        loading: true,
-        results: ['c'],
+        results: {
+          loading: true,
+          items: ['c'],
+        },
       },
     });
   });
@@ -163,7 +192,7 @@ describe('Search Action Module', () => {
     state.search.input = 'foo';
     const ctx = Atom.of(state as any);
     triggerSearch(ctx);
-    expect(deref(ctx).search.loading).toBe(false);
+    expect(deref(ctx).search.results.loading).toBe(false);
   });
 
   it('immediately resets with loading true if some value is given and a provider is found', () => {
@@ -177,28 +206,28 @@ describe('Search Action Module', () => {
     };
     const ctx = Atom.of(state as any);
     triggerSearch(ctx);
-    expect(deref(ctx).search.loading).toBe(true);
+    expect(deref(ctx).search.results.loading).toBe(true);
   });
 
   it('immediately resets with loading false if no value is given implicitly', () => {
     state.search.input = '';
     const ctx = Atom.of(state as any);
     triggerSearch(ctx);
-    expect(deref(ctx).search.loading).toBe(false);
+    expect(deref(ctx).search.results.loading).toBe(false);
   });
 
   it('immediately resets with loading false if no value is given explicitly', () => {
     const ctx = Atom.of(state as any);
     const dispose = triggerSearch(ctx, '');
     dispose();
-    expect(deref(ctx).search.loading).toBe(false);
+    expect(deref(ctx).search.results.loading).toBe(false);
   });
 
   it('immediately resets with loading false if no value is given explicitly though immediate', () => {
     const ctx = Atom.of(state as any);
     const dispose = triggerSearch(ctx, '', true);
     dispose();
-    expect(deref(ctx).search.loading).toBe(false);
+    expect(deref(ctx).search.results.loading).toBe(false);
   });
 
   it('resets with loading true if no value is given explicitly', () => {
@@ -212,7 +241,7 @@ describe('Search Action Module', () => {
     };
     const ctx = Atom.of(state as any);
     triggerSearch(ctx, 'foo');
-    expect(deref(ctx).search.loading).toBe(true);
+    expect(deref(ctx).search.results.loading).toBe(true);
   });
 
   it('walks over all search providers', () => {

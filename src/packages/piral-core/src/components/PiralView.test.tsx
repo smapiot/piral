@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as hooks from '../hooks';
 import * as routes from './Routes';
 import { mount } from 'enzyme';
-import { PortalView } from './PortalView';
+import { PiralView } from './PiralView';
 
 const StubDashboard: React.FC = () => <div />;
 StubDashboard.displayName = 'StubDashboard';
@@ -29,7 +29,7 @@ const state = {
   },
   components: {
     ErrorInfo: StubErrorInfo,
-    Loader: StubLoader,
+    LoadingIndicator: StubLoader,
     Router: StubRouter,
     Layout: StubLayout,
   },
@@ -38,6 +38,7 @@ const state = {
     extensions: {},
   },
   routes: {},
+  provider: undefined,
 };
 
 (hooks as any).useGlobalState = (select: any) => select(state);
@@ -48,7 +49,7 @@ describe('Portal Module', () => {
   it('renders the dashboard / content in layout if loaded without error', () => {
     state.app.loading = false;
     state.app.error = undefined;
-    const node = mount(<PortalView />);
+    const node = mount(<PiralView />);
     expect(node.find(StubLoader).length).toBe(0);
     expect(node.find(StubErrorInfo).length).toBe(0);
     expect(node.find(StubDashboard).length).toBe(1);
@@ -57,7 +58,7 @@ describe('Portal Module', () => {
   it('just renders the loader if not loaded yet', () => {
     state.app.loading = true;
     state.app.error = undefined;
-    const node = mount(<PortalView />);
+    const node = mount(<PiralView />);
     expect(node.find(StubLoader).length).toBe(1);
     expect(node.find(StubErrorInfo).length).toBe(0);
     expect(node.find(StubDashboard).length).toBe(0);
@@ -66,7 +67,7 @@ describe('Portal Module', () => {
   it('renders the error outside layout if errored when loading', () => {
     state.app.loading = false;
     state.app.error = new Error('Test');
-    const node = mount(<PortalView />);
+    const node = mount(<PiralView />);
     expect(node.find(StubLoader).length).toBe(0);
     expect(node.find(StubErrorInfo).length).toBe(1);
     expect(node.find(StubErrorInfo).prop('type')).toBe('loading');
@@ -77,7 +78,7 @@ describe('Portal Module', () => {
     state.app.loading = false;
     state.app.error = undefined;
     (routes as any).Routes = ({ NotFound }) => <NotFound />;
-    const node = mount(<PortalView />);
+    const node = mount(<PiralView />);
     expect(node.find(StubLoader).length).toBe(0);
     expect(node.find(StubErrorInfo).length).toBe(1);
     expect(node.find(StubErrorInfo).prop('type')).toBe('not_found');

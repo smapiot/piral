@@ -83,7 +83,7 @@ export function appendSearchResults(ctx: Atom<GlobalState>, items: Array<ReactCh
       ...state.search,
       results: {
         loading: !done,
-        items: prependItems(state.search.results.items, items),
+        items: appendItems(state.search.results.items, items),
       },
     },
   }));

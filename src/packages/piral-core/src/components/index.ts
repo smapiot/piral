@@ -5,7 +5,7 @@ export * from './DefaultRouter';
 export * from './ExtensionSlot';
 export * from './helpers';
 export * from './Mediator';
-export * from './PortalView';
+export * from './PiralView';
 export * from './Responsive';
 export * from './Routes';
 export * from './SetComponent';

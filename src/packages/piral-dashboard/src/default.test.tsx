@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { DefaultDashboard } from './default';
+import { DefaultContainer } from './default';
 
 jest.mock('piral-core', () => ({
   useGlobalState(select: any) {
@@ -45,9 +45,9 @@ describe('Default Dashboard Component', () => {
       preferences: {},
     };
     const node = mount(
-      <DefaultDashboard history={undefined} location={undefined} match={undefined}>
+      <DefaultContainer history={undefined} location={undefined} match={undefined}>
         <StubTile />
-      </DefaultDashboard>,
+      </DefaultContainer>,
     );
     expect(node.find(StubDashboard).length).toBe(0);
     expect(node.find(StubTile).length).toBe(1);
@@ -60,9 +60,9 @@ describe('Default Dashboard Component', () => {
       },
     ];
     const node = mount(
-      <DefaultDashboard history={undefined} location={undefined} match={undefined}>
+      <DefaultContainer history={undefined} location={undefined} match={undefined}>
         <StubTile />
-      </DefaultDashboard>,
+      </DefaultContainer>,
     );
     expect(node.find(StubTile).length).toBe(0);
     expect(node.find(StubDashboard).length).toBe(1);
