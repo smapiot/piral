@@ -36,15 +36,17 @@ declare module 'piral-core/lib/types/custom' {
     /**
      * The dashboard container component.
      */
-    Dashboard: ComponentType<DashboardProps>;
+    DashboardContainer: ComponentType<DashboardContainerProps>;
     /**
      * The dashboard tile component.
      */
-    Tile: ComponentType<TileProps>;
+    DashboardTile: ComponentType<DashboardTileProps>;
   }
 }
 
-export interface TileProps {
+export interface DashboardContainerProps extends RouteComponentProps {}
+
+export interface DashboardTileProps {
   /**
    * The currently used number of columns.
    */
@@ -112,8 +114,6 @@ export interface TilePreferences {
    */
   customProperties?: Array<string>;
 }
-
-export interface DashboardProps extends RouteComponentProps {}
 
 export interface TileRegistration {
   component: WrappedComponent<TileComponentProps>;

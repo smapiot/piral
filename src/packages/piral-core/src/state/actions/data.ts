@@ -65,9 +65,7 @@ export function tryWriteDataItem(
 
   if (item && item.owner !== owner) {
     console.error(
-      `Invalid data write to '${key}'. This item currently belongs to '${
-        item.owner
-      }' (write attempted from '${owner}'). The action has been ignored.`,
+      `Invalid data write to '${key}'. This item currently belongs to '${item.owner}' (write attempted from '${owner}'). The action has been ignored.`,
     );
     return false;
   }

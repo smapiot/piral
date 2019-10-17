@@ -86,7 +86,7 @@ export interface Errors extends PiralCustomErrors {
 
 export type ErrorInfoProps = UnionOf<Errors>;
 
-export interface LoaderProps {}
+export interface LoadingIndicatorProps {}
 
 export interface LayoutProps {
   currentLayout: LayoutType;

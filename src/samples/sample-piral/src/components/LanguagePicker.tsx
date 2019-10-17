@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { useOnClickOutside, useDynamicLanguage, useTranslate } from 'piral';
+import { useOnClickOutside, useDynamicLanguage, useTranslate, useGlobalState } from 'piral';
 import { LanguageIcon } from './LanguageIcon';
 import { loadLanguage } from '../language';
 
-export interface LanguagePickerProps {
+interface LanguagePickerViewProps {
   selected: string;
   available: Array<string>;
 }
 
-export const LanguagePicker: React.FC<LanguagePickerProps> = ({ selected, available }) => {
+const LanguagePickerView: React.FC<LanguagePickerViewProps> = ({ selected, available }) => {
   const [open, setOpen] = React.useState(false);
   const [language, setLanguage] = useDynamicLanguage(selected, loadLanguage);
   const container = React.useRef<HTMLDivElement>();
@@ -29,4 +29,9 @@ export const LanguagePicker: React.FC<LanguagePickerProps> = ({ selected, availa
       </ul>
     </div>
   );
+};
+
+export const LanguagePicker: React.FC = () => {
+  const { available, selected } = useGlobalState(m => m.language);
+  return <LanguagePickerView selected={selected} available={available} />;
 };

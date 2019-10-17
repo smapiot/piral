@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { defaultRender, ExtensionSlot } from 'piral-core';
-import { MenuProps, MenuItemProps } from './types';
+import { MenuContainerProps, MenuItemProps } from './types';
 
-export const DefaultMenu: React.FC<MenuProps> = props => (
+export const DefaultContainer: React.FC<MenuContainerProps> = props => (
   <ExtensionSlot
     name={`menu_${props.type}`}
     params={props}
@@ -10,4 +10,4 @@ export const DefaultMenu: React.FC<MenuProps> = props => (
   />
 );
 
-export const DefaultMenuItem: React.FC<MenuItemProps> = props => defaultRender(props.children);
+export const DefaultItem: React.FC<MenuItemProps> = props => defaultRender(props.children);

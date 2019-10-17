@@ -1,33 +1,31 @@
 import * as React from 'react';
-import { PiletApi } from 'piral';
+import { InitialMenuItem } from 'piral';
 
-function attachFooter() {
-  let count = 0;
-
-  return (api: PiletApi, element: React.ReactElement) => {
-    api.registerMenu(`footer_${count++}`, () => element, { type: 'footer' });
+function attach(element: React.ReactElement): InitialMenuItem {
+  return {
+    settings: {
+      type: 'footer',
+    },
+    component: () => element,
   };
 }
 
-const attach = attachFooter();
-
-export function setupFooter(api: PiletApi) {
-  attach(
-    api,
-    <a href="https://smapiot.com/legal/imprint/" target="_blank">
-      Imprint
-    </a>,
-  );
-  attach(
-    api,
-    <a href="https://smapiot.com/legal/privacy/" target="_blank">
-      Data Privacy
-    </a>,
-  );
-  attach(
-    api,
-    <a href="https://smapiot.com/legal/disclaimer/" target="_blank">
-      Legal Disclaimer
-    </a>,
-  );
+export function setupFooter() {
+  return [
+    attach(
+      <a href="https://smapiot.com/legal/imprint/" target="_blank">
+        Imprint
+      </a>,
+    ),
+    attach(
+      <a href="https://smapiot.com/legal/privacy/" target="_blank">
+        Data Privacy
+      </a>,
+    ),
+    attach(
+      <a href="https://smapiot.com/legal/disclaimer/" target="_blank">
+        Legal Disclaimer
+      </a>,
+    ),
+  ];
 }

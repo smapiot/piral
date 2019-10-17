@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGlobalState } from '../hooks';
-import { ComponentsState, ErrorInfoProps, LoaderProps, RouterProps, LayoutProps } from '../types';
+import { ComponentsState, ErrorInfoProps, LoadingIndicatorProps, RouterProps, LayoutProps } from '../types';
 
 export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey): ComponentsState[TKey] {
   return props => {
@@ -10,6 +10,6 @@ export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey
 }
 
 export const PiralError: React.ComponentType<ErrorInfoProps> = getPiralComponent('ErrorInfo');
-export const PiralLoadingIndicator: React.ComponentType<LoaderProps> = getPiralComponent('Loader');
+export const PiralLoadingIndicator: React.ComponentType<LoadingIndicatorProps> = getPiralComponent('LoadingIndicator');
 export const PiralRouter: React.ComponentType<RouterProps> = getPiralComponent('Router');
 export const PiralLayout: React.ComponentType<LayoutProps> = getPiralComponent('Layout');

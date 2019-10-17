@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LoaderProps } from '../types';
+import { LoadingIndicatorProps } from '../types';
 
-export const DefaultLoader: React.FC<LoaderProps> = () => <div>Loading</div>;
-DefaultLoader.displayName = 'DefaultLoader';
+export const DefaultLoadingIndicator: React.FC<LoadingIndicatorProps> = () => <div>Loading</div>;
+DefaultLoadingIndicator.displayName = 'DefaultLoadingIndicator';

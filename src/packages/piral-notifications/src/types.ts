@@ -28,19 +28,19 @@ declare module 'piral-core/lib/types/custom' {
     /**
      * The host component for notifications.
      */
-    Notifications: ComponentType<NotificationsProps>;
+    NotificationsHost: ComponentType<NotificationsHostProps>;
     /**
      * The notification toast component.
      */
-    Toast: ComponentType<ToastProps>;
+    NotificationsToast: ComponentType<NotificationsToastProps>;
   }
 
   interface PiralCustomRegistryState {}
 }
 
-export interface NotificationsProps {}
+export interface NotificationsHostProps {}
 
-export interface ToastProps extends OpenNotification {}
+export interface NotificationsToastProps extends OpenNotification {}
 
 export interface NotificationOptions {
   /**

@@ -3,7 +3,7 @@ import { ReactChild } from 'react';
 import { swap } from '@dbeining/react-atom';
 import { isfunc } from 'react-arbiter';
 import { buildName, Extend, Dict } from 'piral-core';
-import { DefaultSearchContainer, DefaultSearchInput, DefaultSearchResult } from './default';
+import { DefaultContainer, DefaultInput, DefaultResult } from './default';
 import { PiletSearchApi, SearchSettings, SearchHandler, SearchProviderRegistration } from './types';
 
 export interface InitialSearchProvider {
@@ -74,9 +74,9 @@ export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchAp
       ...state,
       components: {
         ...state.components,
-        SearchContainer: DefaultSearchContainer,
-        SearchInput: DefaultSearchInput,
-        SearchResult: DefaultSearchResult,
+        SearchContainer: DefaultContainer,
+        SearchInput: DefaultInput,
+        SearchResult: DefaultResult,
       },
       registry: {
         ...state.registry,

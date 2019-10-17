@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { getPiralComponent } from 'piral-core';
-import { NotificationsProps, ToastProps } from './types';
+import { NotificationsHostProps, NotificationsToastProps } from './types';
 
-export const PiralNotificationsHost: React.ComponentType<NotificationsProps> = getPiralComponent('Notifications');
-export const PiralNotificationToast: React.ComponentType<ToastProps> = getPiralComponent('Toast');
+export const PiralNotificationsHost: React.ComponentType<NotificationsHostProps> = getPiralComponent(
+  'NotificationsHost',
+);
+export const PiralNotificationsToast: React.ComponentType<NotificationsToastProps> = getPiralComponent(
+  'NotificationsToast',
+);

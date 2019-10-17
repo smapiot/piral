@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGlobalState } from 'piral-core';
-import { PiralNotificationToast, PiralNotificationsHost } from './components';
+import { PiralNotificationsToast, PiralNotificationsHost } from './components';
 
 export const Notifications: React.FC = () => {
   const notifications = useGlobalState(s => s.notifications);
@@ -8,7 +8,7 @@ export const Notifications: React.FC = () => {
   return (
     <PiralNotificationsHost>
       {notifications.map(n => (
-        <PiralNotificationToast {...n} key={n.id} />
+        <PiralNotificationsToast {...n} key={n.id} />
       ))}
     </PiralNotificationsHost>
   );

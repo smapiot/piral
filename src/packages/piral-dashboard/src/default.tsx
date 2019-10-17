@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ExtensionSlot, defaultRender } from 'piral-core';
-import { DashboardProps, TileProps } from './types';
+import { DashboardContainerProps, DashboardTileProps } from './types';
 
-export const DefaultDashboard: React.FC<DashboardProps> = props => (
+export const DefaultContainer: React.FC<DashboardContainerProps> = props => (
   <ExtensionSlot
     name="dashboard"
     params={props}
@@ -10,4 +10,4 @@ export const DefaultDashboard: React.FC<DashboardProps> = props => (
   />
 );
 
-export const DefaultTile: React.FC<TileProps> = props => defaultRender(props.children);
+export const DefaultTile: React.FC<DashboardTileProps> = props => defaultRender(props.children);

@@ -4,19 +4,26 @@ import { setupFooter, setupMenu } from './parts';
 import { layout } from './layout';
 
 renderInstance({
-  subscriptionUrl: false,
-  layout,
-  config: {
-    translations: ['en', 'de'],
-    attach(api) {
-      setupFooter(api);
-      setupMenu(api);
+  settings: {
+    gql: {
+      subscriptionUrl: false,
     },
-    pilets: () =>
-      fetch('https://feed.piral.io/api/v1/pilet/sample')
-        .then(res => res.json())
-        .then(res => res.items),
+    locale: {
+      messages: {
+        de: {},
+        en: {},
+      },
+    },
+    menu: {
+      items: [...setupMenu(), ...setupFooter()],
+    },
   },
+  requestPilets() {
+    return fetch('https://feed.piral.io/api/v1/pilet/sample')
+      .then(res => res.json())
+      .then(res => res.items);
+  },
+  layout,
 });
 
 export * from 'piral';

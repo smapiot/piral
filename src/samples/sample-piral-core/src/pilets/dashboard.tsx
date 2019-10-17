@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Dict, Pilet } from 'piral-core';
-import { TileRegistration } from 'piral-dashboard';
+import { Pilet } from 'piral-core';
 
 /**
  * Shows the possibility of extending default functionality (e.g., the dashboard)
@@ -12,13 +11,8 @@ export const DashboardPilet: Pilet = {
   version: '1.0.0',
   hash: '3',
   setup(piral) {
-    piral.registerExtension<{ tiles: Dict<TileRegistration> }>('dashboard', ({ params: { tiles } }) => (
-      <div className="tiles">
-        {Object.keys(tiles).map(tile => {
-          const Component = tiles[tile].component;
-          return <Component key={tile} columns={1} rows={1} />;
-        })}
-      </div>
+    piral.registerExtension<{ children: React.ReactChild }>('dashboard', ({ params: { children } }) => (
+      <div className="tiles">{children}</div>
     ));
   },
 };

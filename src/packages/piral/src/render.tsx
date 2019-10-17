@@ -18,6 +18,7 @@ import {
   setupLocalizer,
   Dashboard,
 } from 'piral-ext';
+import { SwitchErrorInfo } from './components';
 import { getContainer } from './utils';
 import { PiralOptions } from './types';
 
@@ -39,6 +40,7 @@ export function renderInstance(options: PiralOptions = {}) {
   const instance = createInstance({
     ...config,
     extendApi: [
+      ...extenders,
       createFetchApi(settings.fetch),
       createGqlApi(setupGqlClient(settings.gql)),
       createLocaleApi(setupLocalizer(settings.locale)),
@@ -51,23 +53,22 @@ export function renderInstance(options: PiralOptions = {}) {
       createFeedsApi(settings.feeds),
       createFormsApi(settings.forms),
       createSearchApi(settings.search),
-      ...extenders,
     ],
   });
 
   const App: React.FC = () => (
     <Piral instance={instance}>
-      <SetComponent name="Loader" component={layout.Loader} />
-      <SetComponent name="Dashboard" component={layout.Dashboard} />
-      <SetComponent name="Tile" component={layout.Tile} />
-      <SetComponent name="ErrorInfo" component={layout.ErrorInfo} />
+      <SetComponent name="LoadingIndicator" component={layout.LoadingIndicator} />
+      <SetComponent name="DashboardContainer" component={layout.DashboardContainer} />
+      <SetComponent name="DashboardTile" component={layout.DashboardTile} />
+      <SetComponent name="ErrorInfo" component={layout.ErrorInfo || SwitchErrorInfo} />
       <SetComponent name="Layout" component={layout.Layout} />
       <SetComponent name="Router" component={layout.Router} />
       <SetComponent name="SearchContainer" component={layout.SearchContainer} />
       <SetComponent name="SearchInput" component={layout.SearchInput} />
       <SetComponent name="SearchResult" component={layout.SearchResult} />
-      <SetComponent name="Modals" component={layout.Modals} />
-      <SetComponent name="Dialog" component={layout.Dialog} />
+      <SetComponent name="ModalsHost" component={layout.ModalsHost} />
+      <SetComponent name="ModalsDialog" component={layout.ModalsDialog} />
       <SetRoute path="/" component={Dashboard} />
     </Piral>
   );

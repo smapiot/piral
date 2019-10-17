@@ -5,7 +5,7 @@ import { withClass } from './utils';
 export const User: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const currentUser = useGlobalState(m => m.user);
-  const menuItems = useGlobalState(m => m.components.menuItems);
+  const menuItems = useGlobalState(m => m.registry.menuItems);
   const itemNames = Object.keys(menuItems).filter(m => menuItems[m].settings.type === 'user');
   const container = React.useRef<HTMLDivElement>(undefined);
   const image = currentUser ? require('../images/male.png') : require('../images/female.png');

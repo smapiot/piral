@@ -35,7 +35,7 @@ declare module 'piral-core/lib/types/custom' {
     /**
      * The menu container component.
      */
-    Menu: ComponentType<MenuProps>;
+    MenuContainer: ComponentType<MenuContainerProps>;
     /**
      * The menu item component.
      */
@@ -44,6 +44,13 @@ declare module 'piral-core/lib/types/custom' {
 }
 
 export interface MenuProps {
+  /**
+   * The type of the menu.
+   */
+  type: MenuType;
+}
+
+export interface MenuContainerProps {
   /**
    * The type of the menu.
    */

@@ -6,7 +6,7 @@ import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
 import { LayoutType } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
-import { ComponentConverters, LoaderProps, ErrorInfoProps, RouterProps, LayoutProps } from './components';
+import { ComponentConverters, LoadingIndicatorProps, ErrorInfoProps, RouterProps, LayoutProps } from './components';
 import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
 import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag, Pilet } from './api';
 
@@ -28,9 +28,9 @@ export interface ExtensionRegistration {
 
 export interface ComponentsState extends PiralCustomComponentsState {
   /**
-   * The progress indicator renderer.
+   * The loading indicator renderer.
    */
-  Loader: ComponentType<LoaderProps>;
+  LoadingIndicator: ComponentType<LoadingIndicatorProps>;
   /**
    * The error renderer.
    */

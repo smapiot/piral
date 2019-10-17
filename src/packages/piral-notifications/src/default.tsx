@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { defaultRender } from 'piral-core';
-import { NotificationsProps, ToastProps } from './types';
+import { NotificationsHostProps, NotificationsToastProps } from './types';
 
-export const DefaultNotifications: React.FC<NotificationsProps> = props => (
+export const DefaultHost: React.FC<NotificationsHostProps> = props => (
   <div className="piral-notifications-host" key="default_notifications">
     {props.children}
   </div>
 );
 
-export const DefaultToast: React.FC<ToastProps> = props => defaultRender(props.content);
+export const DefaultToast: React.FC<NotificationsToastProps> = props => defaultRender(props.content);

@@ -4,7 +4,15 @@ import 'zone.js/dist/zone';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useAction, Piral, SetComponent, SetRoute } from 'piral-core';
+import {
+  createInstance,
+  useGlobalState,
+  LoadingIndicatorProps,
+  useAction,
+  Piral,
+  SetComponent,
+  SetRoute,
+} from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
@@ -30,7 +38,7 @@ customElements.define(
   },
 );
 
-const Loader: React.FC<LoaderProps> = () => (
+const Loader: React.FC<LoadingIndicatorProps> = () => (
   <div className="app-center">
     <pi-spinner>Loading ...</pi-spinner>
   </div>
@@ -186,7 +194,7 @@ const instance = createInstance({
 
 const app = (
   <Piral instance={instance}>
-    <SetComponent name="Loader" component={Loader} />
+    <SetComponent name="LoadingIndicator" component={Loader} />
     <SetComponent name="Layout" component={Layout} />
     <SetRoute path="/" component={Dashboard} />
     <SetRoute path="/sitemap" component={Sitemap} />

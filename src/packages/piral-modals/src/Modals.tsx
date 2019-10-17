@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGlobalState } from 'piral-core';
-import { PiralModalDialog, PiralModalsHost } from './components';
+import { PiralModalsDialog, PiralModalsHost } from './components';
 import { OpenModalDialog } from './types';
 
 function closeAll(modals: Array<OpenModalDialog>) {
@@ -18,7 +18,7 @@ export const Modals: React.FC = () => {
       const defaults = reg && reg.defaults;
       return (
         Component && (
-          <PiralModalDialog {...n} key={n.name}>
+          <PiralModalsDialog {...n} key={n.name}>
             <Component
               onClose={n.close}
               options={{
@@ -26,7 +26,7 @@ export const Modals: React.FC = () => {
                 ...n.options,
               }}
             />
-          </PiralModalDialog>
+          </PiralModalsDialog>
         )
       );
     })

@@ -50,15 +50,15 @@ declare module 'piral-core/lib/types/custom' {
     /**
      * The host component for modal dialogs.
      */
-    Modals: ComponentType<ModalsProps>;
+    ModalsHost: ComponentType<ModalsHostProps>;
     /**
      * The modal dialog component.
      */
-    Dialog: ComponentType<DialogProps>;
+    ModalsDialog: ComponentType<ModalsDialogProps>;
   }
 }
 
-export interface ModalsProps {
+export interface ModalsHostProps {
   /**
    * Gets if the modal is currently open or closed.
    */
@@ -69,7 +69,7 @@ export interface ModalsProps {
   close(): void;
 }
 
-export interface DialogProps extends OpenModalDialog {}
+export interface ModalsDialogProps extends OpenModalDialog {}
 
 /**
  * The error used when a registered modal dialog crashed.
