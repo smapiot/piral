@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
 import { mount } from 'enzyme';
-import { Responsive } from './Responsive';
+import { ResponsiveLayout } from './ResponsiveLayout';
 import { defaultBreakpoints } from '../utils';
 
 jest.mock('../hooks');
@@ -22,9 +22,9 @@ describe('Responsive Module', () => {
     (hooks as any).useAction = () => changeTo;
     (hooks as any).useMedia = () => 'desktop';
     const node = mount(
-      <Responsive breakpoints={defaultBreakpoints}>
+      <ResponsiveLayout breakpoints={defaultBreakpoints}>
         <StubComponent />)
-      </Responsive>,
+      </ResponsiveLayout>,
     );
     expect(node.find(StubComponent).length).toBe(1);
   });
@@ -33,7 +33,7 @@ describe('Responsive Module', () => {
     const changeTo = jest.fn();
     (hooks as any).useAction = () => changeTo;
     (hooks as any).useMedia = () => 'desktop';
-    mount(<Responsive breakpoints={defaultBreakpoints} />);
+    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).not.toHaveBeenCalled();
   });
 
@@ -41,7 +41,7 @@ describe('Responsive Module', () => {
     const changeTo = jest.fn();
     (hooks as any).useAction = () => changeTo;
     (hooks as any).useMedia = () => 'desktop';
-    mount(<Responsive breakpoints={defaultBreakpoints} />);
+    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).not.toHaveBeenCalled();
   });
 
@@ -49,7 +49,7 @@ describe('Responsive Module', () => {
     const changeTo = jest.fn();
     (hooks as any).useAction = () => changeTo;
     (hooks as any).useMedia = () => 'tablet';
-    mount(<Responsive breakpoints={defaultBreakpoints} />);
+    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).toHaveBeenCalledWith('tablet');
   });
 
@@ -57,7 +57,7 @@ describe('Responsive Module', () => {
     const changeTo = jest.fn();
     (hooks as any).useAction = () => changeTo;
     (hooks as any).useMedia = () => 'mobile';
-    mount(<Responsive breakpoints={defaultBreakpoints} />);
+    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).toHaveBeenCalledWith('mobile');
   });
 });

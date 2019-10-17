@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
-import * as routes from './Routes';
+import * as routes from './PiralRoutes';
 import { mount } from 'enzyme';
 import { PiralView } from './PiralView';
 
@@ -20,7 +20,7 @@ const StubLayout: React.FC = ({ children }) => <div>{children}</div>;
 StubLayout.displayName = 'StubLayout';
 
 jest.mock('../hooks');
-jest.mock('./Routes');
+jest.mock('./PiralRoutes');
 
 const state = {
   app: {
@@ -43,7 +43,7 @@ const state = {
 
 (hooks as any).useGlobalState = (select: any) => select(state);
 
-(routes as any).Routes = ({}) => <StubDashboard />;
+(routes as any).PiralRoutes = ({}) => <StubDashboard />;
 
 describe('Portal Module', () => {
   it('renders the dashboard / content in layout if loaded without error', () => {
@@ -77,7 +77,7 @@ describe('Portal Module', () => {
   it('renders the not found error in layout', () => {
     state.app.loading = false;
     state.app.error = undefined;
-    (routes as any).Routes = ({ NotFound }) => <NotFound />;
+    (routes as any).PiralRoutes = ({ NotFound }) => <NotFound />;
     const node = mount(<PiralView />);
     expect(node.find(StubLoader).length).toBe(0);
     expect(node.find(StubErrorInfo).length).toBe(1);

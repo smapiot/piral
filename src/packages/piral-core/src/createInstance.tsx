@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withRecall, blazingStrategy, standardStrategy, isfunc } from 'react-arbiter';
 import { getLocalDependencies, globalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, StateContext } from './state';
-import { PiralView, Mediator, MediatorProps, Responsive } from './components';
+import { PiralView, Mediator, MediatorProps, ResponsiveLayout } from './components';
 import { createListener } from './utils';
 import { PiletApi, PiralConfiguration, PortalProps, PiralInstance } from './types';
 
@@ -92,7 +92,7 @@ export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), brea
 
   return (
     <StateContext.Provider value={instance.context}>
-      <Responsive breakpoints={breakpoints} />
+      <ResponsiveLayout breakpoints={breakpoints} />
       <PiralRecallMediator />
       <PiralView>{children}</PiralView>
     </StateContext.Provider>

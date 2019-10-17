@@ -6,7 +6,7 @@ export interface RoutesProps {
   NotFound: React.ComponentType<RouteComponentProps>;
 }
 
-export const Routes: React.FC<RoutesProps> = ({ NotFound }) => {
+export const PiralRoutes: React.FC<RoutesProps> = ({ NotFound }) => {
   const routes = useGlobalState(s => s.routes);
   const pages = useGlobalState(s => s.registry.pages);
 
@@ -22,4 +22,4 @@ export const Routes: React.FC<RoutesProps> = ({ NotFound }) => {
     </Switch>
   );
 };
-Routes.displayName = 'Routes';
+PiralRoutes.displayName = 'Routes';

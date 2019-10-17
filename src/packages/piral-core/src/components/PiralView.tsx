@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Routes } from './Routes';
+import { PiralRoutes } from './PiralRoutes';
 import { useGlobalState } from '../hooks';
 import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout } from './helpers';
 
@@ -15,7 +15,7 @@ const PiralContent: React.FC = () => {
     <PiralLoadingIndicator />
   ) : (
     <PiralLayout currentLayout={layout}>
-      <Routes NotFound={NotFound} />
+      <PiralRoutes NotFound={NotFound} />
     </PiralLayout>
   );
 };
