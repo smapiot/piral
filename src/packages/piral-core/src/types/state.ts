@@ -1,15 +1,14 @@
-import { History } from 'history';
 import { ComponentType, ReactPortal } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
 import { PiletMetadata } from './meta';
 import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
-import { LayoutType, LayoutBreakpoints } from './layout';
+import { LayoutType } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
-import { ErrorInfoProps, LoaderProps, ComponentConverters } from './components';
-import { PiralCustomActions, PiralCustomState, PiralCustomComponentsState } from './custom';
-import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag } from './api';
+import { ComponentConverters, LoadingIndicatorProps, ErrorInfoProps, RouterProps, LayoutProps } from './components';
+import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
+import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag, Pilet } from './api';
 
 export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
@@ -27,30 +26,23 @@ export interface ExtensionRegistration {
   defaults: any;
 }
 
-export interface GlobalStateOptions extends Partial<AppComponents> {
+export interface ComponentsState extends PiralCustomComponentsState {
   /**
-   * Sets the additional / initial routes to register.
+   * The loading indicator renderer.
    */
-  routes?: Dict<ComponentType<RouteComponentProps<any>>>;
-  /**
-   * Sets the available layout breakpoints.
-   */
-  breakpoints?: LayoutBreakpoints;
-}
-
-export interface AppComponents {
-  /**
-   * The progress indicator renderer.
-   */
-  Loader: ComponentType<LoaderProps>;
+  LoadingIndicator: ComponentType<LoadingIndicatorProps>;
   /**
    * The error renderer.
    */
   ErrorInfo: ComponentType<ErrorInfoProps>;
   /**
-   * The history management instance.
+   * The router context.
    */
-  history: History;
+  Router: ComponentType<RouterProps>;
+  /**
+   * The layout used for pages.
+   */
+  Layout: ComponentType<LayoutProps>;
 }
 
 export interface AppState {
@@ -65,16 +57,12 @@ export interface AppState {
    */
   loading: boolean;
   /**
-   * Components relevant for rendering parts of the app.
+   * Gets an unrecoverable application error, if any.
    */
-  components: AppComponents;
-  /**
-   * The used (exact) application routes.
-   */
-  routes: Dict<ComponentType<RouteComponentProps<any>>>;
+  error: Error | undefined;
 }
 
-export interface ComponentsState extends PiralCustomComponentsState {
+export interface RegistryState extends PiralCustomRegistryState {
   /**
    * The registered page components for the router.
    */
@@ -91,9 +79,13 @@ export interface GlobalState extends PiralCustomState {
    */
   app: AppState;
   /**
-   * The relevant state for the registered components.
+   * The relevant state for rendering parts of the app.
    */
   components: ComponentsState;
+  /**
+   * The relevant state for the registered components.
+   */
+  registry: RegistryState;
   /**
    * Gets the loaded modules.
    */
@@ -106,6 +98,14 @@ export interface GlobalState extends PiralCustomState {
    * The application's shared data.
    */
   data: Dict<SharedDataItem>;
+  /**
+   * The used (exact) application routes.
+   */
+  routes: Dict<ComponentType<RouteComponentProps<any>>>;
+  /**
+   * The current provider.
+   */
+  provider?: JSX.Element;
 }
 
 export interface PiralAction<T extends (...args: any) => any> {
@@ -113,6 +113,13 @@ export interface PiralAction<T extends (...args: any) => any> {
 }
 
 export interface PiralActions extends PiralCustomActions {
+  /**
+   * Initializes the application shell.
+   * @param loading The current loading state.
+   * @param error The application error, if any.
+   * @param modules The loaded pilets.
+   */
+  initialize(loading: boolean, error: Error | undefined, modules: Array<Pilet>): void;
   /**
    * Defines a single action for Piral.
    * @param actionName The name of the action to define.
@@ -170,11 +177,22 @@ export interface PiralActions extends PiralCustomActions {
    */
   unregisterExtension(name: string, reference: any): void;
   /**
-   * Sets the loading state of the application, which can be helpful for indicating loading of
-   * required data.
-   * @param loading The current loading state.
+   * Sets the common component to render.
+   * @param name The name of the component.
+   * @param component The component to use for rendering.
    */
-  setLoading(loading: boolean): void;
+  setComponent<TKey extends keyof ComponentsState>(name: TKey, component: ComponentsState[TKey]): void;
+  /**
+   * Sets the common routes to render.
+   * @param path The name of the component.
+   * @param component The component to use for rendering.
+   */
+  setRoute<T = {}>(path: string, component: ComponentType<RouteComponentProps<T>>): void;
+  /**
+   * Includes a new provider as a sub-provider to the current provider.
+   * @param provider The provider to include.
+   */
+  includeProvider(provider: JSX.Element): void;
   /**
    * Destroys (i.e., resets) the given portal instance.
    * @param id The id of the portal to destroy.

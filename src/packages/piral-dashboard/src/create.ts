@@ -2,6 +2,7 @@ import * as actions from './actions';
 import { ComponentType } from 'react';
 import { swap } from '@dbeining/react-atom';
 import { buildName, withApi, Extend, Dict } from 'piral-core';
+import { DefaultTile, DefaultContainer } from './default';
 import { PiletDashboardApi, TilePreferences, BareTileComponentProps, TileRegistration } from './types';
 
 export interface InitialTile {
@@ -65,6 +66,11 @@ export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDa
       ...state,
       components: {
         ...state.components,
+        DashboardTile: DefaultTile,
+        DashboardContainer: DefaultContainer,
+      },
+      registry: {
+        ...state.registry,
         tiles: getTiles(tiles, defaultPreferences),
       },
     }));

@@ -1,12 +1,12 @@
-import { ApiCreator } from 'react-arbiter';
-import { LayoutBreakpoints } from './layout';
+import { ApiCreator, ArbiterOptions } from 'react-arbiter';
 import { EventEmitter } from './utils';
-import { PiralActions } from './state';
+import { GlobalStateContext } from './state';
 import { PiletApi } from './api';
+import { LayoutBreakpoints } from './layout';
 
 export interface PortalProps {
+  instance?: PiralInstance;
   breakpoints?: LayoutBreakpoints;
-  children(content: React.ReactNode): React.ReactElement<any>;
 }
 
 /**
@@ -14,8 +14,8 @@ export interface PortalProps {
  * functional component as well as some other utilities and helpers.
  */
 export interface PiralInstance extends EventEmitter {
-  App: React.FC<PortalProps>;
-  actions: PiralActions;
+  context: GlobalStateContext;
   createApi: ApiCreator<PiletApi>;
+  options: ArbiterOptions<PiletApi>;
   root: PiletApi;
 }

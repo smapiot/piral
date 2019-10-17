@@ -5,9 +5,9 @@ import { PageRegistration, ExtensionRegistration, GlobalState } from '../../type
 export function registerPage(ctx: Atom<GlobalState>, name: string, value: PageRegistration) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      pages: withKey(state.components.pages, name, value),
+    registry: {
+      ...state.registry,
+      pages: withKey(state.registry.pages, name, value),
     },
   }));
 }
@@ -15,9 +15,9 @@ export function registerPage(ctx: Atom<GlobalState>, name: string, value: PageRe
 export function unregisterPage(ctx: Atom<GlobalState>, name: string) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      pages: withoutKey(state.components.pages, name),
+    registry: {
+      ...state.registry,
+      pages: withoutKey(state.registry.pages, name),
     },
   }));
 }
@@ -25,9 +25,9 @@ export function unregisterPage(ctx: Atom<GlobalState>, name: string) {
 export function registerExtension(ctx: Atom<GlobalState>, name: string, value: ExtensionRegistration) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      extensions: withKey(state.components.extensions, name, appendItem(state.components.extensions[name], value)),
+    registry: {
+      ...state.registry,
+      extensions: withKey(state.registry.extensions, name, appendItem(state.registry.extensions[name], value)),
     },
   }));
 }
@@ -35,12 +35,12 @@ export function registerExtension(ctx: Atom<GlobalState>, name: string, value: E
 export function unregisterExtension(ctx: Atom<GlobalState>, name: string, reference: any) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
+    registry: {
+      ...state.registry,
       extensions: withKey(
-        state.components.extensions,
+        state.registry.extensions,
         name,
-        excludeOn(state.components.extensions[name], m => m.reference === reference),
+        excludeOn(state.registry.extensions[name], m => m.reference === reference),
       ),
     },
   }));

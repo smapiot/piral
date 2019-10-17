@@ -5,7 +5,7 @@ describe('Components Actions Module', () => {
   it('registerExtension and unregisterExtension', () => {
     const state = Atom.of({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         extensions: {},
       },
@@ -13,7 +13,7 @@ describe('Components Actions Module', () => {
     registerExtension(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         extensions: {
           foo: [10],
@@ -23,7 +23,7 @@ describe('Components Actions Module', () => {
     unregisterExtension(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         extensions: {
           foo: [],
@@ -35,7 +35,7 @@ describe('Components Actions Module', () => {
   it('registerPage and unregisterPage', () => {
     const state = Atom.of({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         pages: {},
       },
@@ -43,7 +43,7 @@ describe('Components Actions Module', () => {
     registerPage(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         pages: {
           foo: 10,
@@ -53,7 +53,7 @@ describe('Components Actions Module', () => {
     unregisterPage(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         pages: {},
       },

@@ -1,6 +1,4 @@
-import { PiletRequester } from 'piral-core';
-import { isfunc, ArbiterModule, ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralConfig, PiralLoader } from '../types';
+import { ArbiterModule } from 'react-arbiter';
 
 export function getContainer(selector?: string | Element) {
   if (typeof selector === 'string') {
@@ -18,14 +16,6 @@ export function getGateway(url?: string) {
   } else {
     return document.location.origin;
   }
-}
-
-export function getLoader(loader: PiralLoader, oldConfig: PiralConfig): PiralLoader {
-  return opts => loader(opts).then(newConfig => ({ ...oldConfig, ...newConfig }));
-}
-
-export function getPiletRequester(pilets: PiletRequester | Array<ArbiterModuleMetadata>) {
-  return isfunc(pilets) ? pilets : () => Promise.resolve(pilets);
 }
 
 export function getAvailablePilets<TApi>() {

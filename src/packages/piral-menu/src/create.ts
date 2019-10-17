@@ -2,6 +2,7 @@ import * as actions from './actions';
 import { ComponentType } from 'react';
 import { swap } from '@dbeining/react-atom';
 import { withApi, buildName, Extend, Dict } from 'piral-core';
+import { DefaultContainer, DefaultItem } from './default';
 import { PiletMenuApi, MenuSettings, MenuItemRegistration } from './types';
 
 export interface InitialMenuItem {
@@ -66,6 +67,11 @@ export function createMenuApi(config: MenuConfig = {}): Extend<PiletMenuApi> {
       ...state,
       components: {
         ...state.components,
+        MenuContainer: DefaultContainer,
+        MenuItem: DefaultItem,
+      },
+      registry: {
+        ...state.registry,
         menuItems: getMenuItems(items, defaultSettings),
       },
     }));

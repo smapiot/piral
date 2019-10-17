@@ -35,7 +35,7 @@ declare module 'piral-core/lib/types/custom' {
     unregisterModal(name: string): void;
   }
 
-  interface PiralCustomComponentsState {
+  interface PiralCustomRegistryState {
     /**
      * The registered modal dialog components.
      */
@@ -45,7 +45,31 @@ declare module 'piral-core/lib/types/custom' {
   interface PiralCustomErrors {
     modal: ModalErrorInfoProps;
   }
+
+  interface PiralCustomComponentsState {
+    /**
+     * The host component for modal dialogs.
+     */
+    ModalsHost: ComponentType<ModalsHostProps>;
+    /**
+     * The modal dialog component.
+     */
+    ModalsDialog: ComponentType<ModalsDialogProps>;
+  }
 }
+
+export interface ModalsHostProps {
+  /**
+   * Gets if the modal is currently open or closed.
+   */
+  open: boolean;
+  /**
+   * Callback to invoke closing the modal dialog.
+   */
+  close(): void;
+}
+
+export interface ModalsDialogProps extends OpenModalDialog {}
 
 /**
  * The error used when a registered modal dialog crashed.

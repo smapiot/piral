@@ -5,7 +5,7 @@ describe('Menu Actions Module', () => {
   it('registerMenuItem and unregisterMenuItem', () => {
     const state = Atom.of({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         menuItems: {},
       },
@@ -13,7 +13,7 @@ describe('Menu Actions Module', () => {
     registerMenuItem(state, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         menuItems: {
           foo: 10,
@@ -23,7 +23,7 @@ describe('Menu Actions Module', () => {
     unregisterMenuItem(state, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
-      components: {
+      registry: {
         foo: 5,
         menuItems: {},
       },

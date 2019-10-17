@@ -7,10 +7,8 @@ jest.mock('../hooks');
 
 (hooks as any).useGlobalState = (select: any) =>
   select({
-    app: {
-      components: {
-        ErrorInfo: StubErrorInfo,
-      },
+    components: {
+      ErrorInfo: StubErrorInfo,
     },
   });
 

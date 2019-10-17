@@ -21,7 +21,7 @@ declare module 'piral-core/lib/types/custom' {
     updateFormState(id: string, original: FormDataState, patch: Partial<FormDataState>): void;
   }
 
-  interface PiralCustomComponentsState {}
+  interface PiralCustomRegistryState {}
 
   interface PiralCustomErrors {
     form: FormErrorInfoProps;

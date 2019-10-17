@@ -11,6 +11,7 @@ export function createActions(localizer: Localizable) {
           ...state,
           language: {
             ...state.language,
+            loading: selected === undefined,
             selected,
           },
         };

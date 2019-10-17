@@ -7,11 +7,13 @@ describe('Translation Action Module', () => {
       foo: 5,
       language: {
         foo: 10,
+        loading: false,
         selected: 'fr',
       },
     });
     const localizer = {
       language: 'en',
+      languages: ['en'],
       messages: {},
       localizeGlobal() {
         return '';
@@ -26,6 +28,7 @@ describe('Translation Action Module', () => {
       foo: 5,
       language: {
         foo: 10,
+        loading: false,
         selected: 'de',
       },
     });

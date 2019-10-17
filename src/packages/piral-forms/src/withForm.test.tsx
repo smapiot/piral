@@ -24,8 +24,8 @@ LoaderComponent.displayName = 'LoaderComponent';
 const ErrorComponent: React.FC<{ data: any }> = () => <div />;
 ErrorComponent.displayName = 'ErrorComponent';
 
-(piralCore as any).ComponentError = ErrorComponent;
-(piralCore as any).ComponentLoader = LoaderComponent;
+(piralCore as any).PiralError = ErrorComponent;
+(piralCore as any).PiralLoadingIndicator = LoaderComponent;
 
 describe('withForm Module', () => {
   it('shows error component if nothing is loading and no data is available', () => {

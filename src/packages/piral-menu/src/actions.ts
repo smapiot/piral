@@ -5,9 +5,9 @@ import { MenuItemRegistration } from './types';
 export function registerMenuItem(ctx: Atom<GlobalState>, name: string, value: MenuItemRegistration) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      menuItems: withKey(state.components.menuItems, name, value),
+    registry: {
+      ...state.registry,
+      menuItems: withKey(state.registry.menuItems, name, value),
     },
   }));
 }
@@ -15,9 +15,9 @@ export function registerMenuItem(ctx: Atom<GlobalState>, name: string, value: Me
 export function unregisterMenuItem(ctx: Atom<GlobalState>, name: string) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      menuItems: withoutKey(state.components.menuItems, name),
+    registry: {
+      ...state.registry,
+      menuItems: withoutKey(state.registry.menuItems, name),
     },
   }));
 }

@@ -8,12 +8,12 @@ import { PiletFeedsApi } from './types';
 /**
  * Available configuration options for the feed extension.
  */
-export interface FeedConfig {}
+export interface FeedsConfig {}
 
 /**
  * Creates a new Piral API extension for supporting simplified data feed connections.
  */
-export function createFeedsApi(config: FeedConfig = {}): Extend<PiletFeedsApi> {
+export function createFeedsApi(config: FeedsConfig = {}): Extend<PiletFeedsApi> {
   return context => {
     context.defineActions(actions);
 

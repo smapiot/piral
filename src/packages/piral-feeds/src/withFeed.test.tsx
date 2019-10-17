@@ -15,8 +15,8 @@ StubErrorInfo.displayName = 'StubErrorInfo';
 const StubComponent: React.FC<{ data: any }> = () => <div />;
 StubComponent.displayName = 'StubComponent';
 
-(piralCore as any).ComponentLoader = StubLoader;
-(piralCore as any).ComponentError = StubErrorInfo;
+(piralCore as any).PiralLoadingIndicator = StubLoader;
+(piralCore as any).PiralError = StubErrorInfo;
 
 describe('withFeed Module', () => {
   it('shows loading without invoking action if already loading', () => {
