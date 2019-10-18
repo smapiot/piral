@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { PiralRoutes } from './PiralRoutes';
 import { useGlobalState } from '../hooks';
-import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout } from './helpers';
+import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout } from './components';
 
 const NotFound: React.FC<RouteComponentProps> = props => <PiralError type="not_found" {...props} />;
 

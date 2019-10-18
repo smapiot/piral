@@ -3,7 +3,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useAction } from '../hooks';
 
 export interface SetRoute<T = {}> {
+  /**
+   * The path to the route.
+   */
   path: string;
+  /**
+   * The component to render.
+   */
   component: React.ComponentType<RouteComponentProps<T>>;
 }
 

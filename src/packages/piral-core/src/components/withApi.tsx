@@ -8,7 +8,7 @@ import {
   WrapComponentOptions,
 } from 'react-arbiter';
 import { useGlobalState, useActions } from '../hooks';
-import { PiralError, PiralLoadingIndicator } from './helpers';
+import { PiralError, PiralLoadingIndicator } from './components';
 import { convertComponent, defaultRender } from '../utils';
 import { AnyComponent, Errors, ComponentConverters } from '../types';
 

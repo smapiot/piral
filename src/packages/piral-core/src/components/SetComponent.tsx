@@ -3,7 +3,13 @@ import { useAction } from '../hooks';
 import { ComponentsState } from '../types';
 
 export interface SetComponentProps<TKey extends keyof ComponentsState> {
+  /**
+   * The name of the shared component to set.
+   */
   name: TKey;
+  /**
+   * The shared component to define.
+   */
   component: ComponentsState[TKey];
 }
 
