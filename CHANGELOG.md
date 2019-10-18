@@ -17,6 +17,7 @@
 * Added `validate` command for Piral instances (#69)
 * Added `validate` command for pilets (#70)
 * Support for extensions in Angular (#54), Hyperapp, Vue
+* Upgraded Parcel to avoid NPM warning (#64)
 
 ## 0.7.0 (September 6, 2019)
 
