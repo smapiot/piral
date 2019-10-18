@@ -74,6 +74,14 @@ Determines the programming language for the new pilet.
 - Choices: `"ts"`, `"js"`
 - Default: `"ts"`
 
+### `--template`
+
+Sets the boilerplate template to be used when scaffolding.
+
+- Type: `string`
+- Choices: `"default"`, `"empty"`
+- Default: `"default"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

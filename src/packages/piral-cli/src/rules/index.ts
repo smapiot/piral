@@ -32,7 +32,7 @@ export function addPiralRule(rule: Rule<PiralRuleContext>) {
 
 export async function getPiralRules() {
   const rules = await getRules<PiralRuleContext>('piral');
-  return [...rules, piralRules];
+  return [...rules, ...piralRules];
 }
 
 export function addPiletRule(rule: Rule<PiletRuleContext>) {
@@ -41,5 +41,5 @@ export function addPiletRule(rule: Rule<PiletRuleContext>) {
 
 export async function getPiletRules() {
   const rules = await getRules<PiletRuleContext>('pilet');
-  return [...rules, piletRules];
+  return [...rules, ...piletRules];
 }
