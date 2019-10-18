@@ -28,6 +28,8 @@ export interface CliPluginApi {
   wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<U>): CliPluginApi;
   beforeCommand<U>(commandName: string, before: ToolCommandRunner<U>): CliPluginApi;
   afterCommand<U>(commandName: string, after: ToolCommandRunner<U>): CliPluginApi;
+  withPiralRule(rule: Rule<PiralRuleContext>): CliPluginApi;
+  withPiletRule(rule: Rule<PiletRuleContext>): CliPluginApi;
 }
 
 export interface CliPlugin {

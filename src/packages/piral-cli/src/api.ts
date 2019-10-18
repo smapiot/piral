@@ -1,5 +1,14 @@
 import { commands } from './commands';
-import { ToolCommand, ToolCommandRunner, ToolCommandWrapper, ToolCommandFlagsSetter } from './types';
+import { addPiletRule, addPiralRule } from './rules';
+import {
+  ToolCommand,
+  ToolCommandRunner,
+  ToolCommandWrapper,
+  ToolCommandFlagsSetter,
+  Rule,
+  PiralRuleContext,
+  PiletRuleContext,
+} from './types';
 
 function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index: number) => void) {
   for (let i = commands.all.length; i--; ) {
@@ -50,5 +59,15 @@ export function afterCommand<U>(commandName: string, after: ToolCommandRunner<U>
     await current(args);
     await after(args);
   });
+  return this;
+}
+
+export function withPiralRule(rule: Rule<PiralRuleContext>) {
+  addPiralRule(rule);
+  return this;
+}
+
+export function withPiletRule(rule: Rule<PiletRuleContext>) {
+  addPiletRule(rule);
   return this;
 }
