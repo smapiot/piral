@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ExtensionSlot, ErrorInfoProps, useGlobalState, ComponentsState, defaultRender } from 'piral-core';
+import { ErrorInfoProps, useGlobalState, ComponentsState, defaultRender } from 'piral-core';
 
 type ComponentsProps<T> = T extends React.ComponentType<infer U> ? U : never;
 
@@ -17,7 +17,7 @@ function renderComponent<TKey extends keyof ComponentsState>(
   return <Component {...(props as any)} />;
 }
 
-const ErrorInfo: React.FC<ErrorInfoProps> = props => {
+export const SwitchErrorInfo: React.FC<ErrorInfoProps> = props => {
   const components = useGlobalState(m => m.components);
 
   switch (props.type) {
@@ -41,10 +41,3 @@ const ErrorInfo: React.FC<ErrorInfoProps> = props => {
       return renderComponent(components, 'UnknownErrorInfo', props);
   }
 };
-
-export const SwitchErrorInfo: React.FC<ErrorInfoProps> = props => (
-  <>
-    <ErrorInfo {...props} />
-    <ExtensionSlot name={`error_${props.type}`} params={props} />
-  </>
-);

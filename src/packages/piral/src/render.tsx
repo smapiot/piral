@@ -14,7 +14,7 @@ import {
   setupLocalizer,
   Dashboard,
 } from 'piral-ext';
-import { SwitchErrorInfo } from './components';
+import { DefaultErrorInfo } from './components';
 import { getContainer } from './utils';
 import { PiralOptions } from './types';
 
@@ -50,7 +50,7 @@ export function renderInstance(options: PiralOptions = {}) {
 
   const App: React.FC = () => (
     <Piral instance={instance}>
-      <SetComponent name="ErrorInfo" component={SwitchErrorInfo} />
+      <SetComponent name="ErrorInfo" component={DefaultErrorInfo} />
       {Object.keys(layout).map((key: any) => (
         <SetComponent name={key} component={layout[key]} key={key} />
       ))}
