@@ -41,15 +41,13 @@ export function writeDataItem(
     data: updateKey<SharedDataItem>(state.data, key, data),
   }));
 
-  if (target !== 'memory') {
-    this.emit('store-data', {
-      name,
-      target,
-      value,
-      owner,
-      expires,
-    });
-  }
+  this.emit('store-data', {
+    name,
+    target,
+    value,
+    owner,
+    expires,
+  });
 }
 
 export function tryWriteDataItem(

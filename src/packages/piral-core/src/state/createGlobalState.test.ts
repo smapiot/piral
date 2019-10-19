@@ -1,6 +1,7 @@
 import { deref } from '@dbeining/react-atom';
+import { BrowserRouter as DefaultRouter } from 'react-router-dom';
 import { createGlobalState } from './createGlobalState';
-import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultRouter, DefaultLayout } from '../components';
+import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout } from '../components';
 
 describe('Create Global State Module', () => {
   window.matchMedia = jest.fn(q => ({ matches: false })) as any;

@@ -56,18 +56,11 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
     dependencies: globalDependencies,
     fetchModules() {
-      events.emit('load-start', {});
-      let promise = requestPilets();
+      const promise = requestPilets();
 
       if (process.env.DEBUG_PILET) {
-        promise = promise.catch(() => []);
+        return promise.catch(() => []);
       }
-
-      promise.then(modules =>
-        events.emit('load-end', {
-          modules,
-        }),
-      );
 
       return promise;
     },
