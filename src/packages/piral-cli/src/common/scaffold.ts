@@ -19,18 +19,21 @@ export async function scaffoldPiralSourceFiles(
 
   await createFileIfNotExists(root, app, appTemplate, forceOverwrite);
   await createFileFromTemplateIfNotExists(type, 'piral', mocks, 'backend.js', forceOverwrite);
+  await createFileFromTemplateIfNotExists(type, 'piral', src, 'style.scss', forceOverwrite);
 
   switch (language) {
     case PiletLanguage.ts:
       await createFileFromTemplateIfNotExists(type, 'piral', root, 'tsconfig.json', forceOverwrite, {
         src: relative(root, src),
       });
-      await createFileFromTemplateIfNotExists(type, packageName, src, 'index.tsx', forceOverwrite, {
+      await createFileFromTemplateIfNotExists(type, 'piral', src, 'layout.tsx', forceOverwrite);
+      await createFileFromTemplateIfNotExists(type, 'piral', src, 'index.tsx', forceOverwrite, {
         packageName,
       });
       break;
     case PiletLanguage.js:
-      await createFileFromTemplateIfNotExists(type, packageName, src, 'index.jsx', forceOverwrite, {
+      await createFileFromTemplateIfNotExists(type, 'piral', src, 'layout.jsx', forceOverwrite);
+      await createFileFromTemplateIfNotExists(type, 'piral', src, 'index.jsx', forceOverwrite, {
         packageName,
       });
       break;

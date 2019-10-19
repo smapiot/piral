@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { renderInstance, requestPiletsFromGraphQL, setupGqlClient } from 'piral';
+import { layout } from './layout';
 
 const client = setupGqlClient();
 
@@ -7,11 +8,7 @@ renderInstance({
   settings: {
     gql: client,
   },
-  layout: {
-    ErrorInfo: ({ type }) => (
-      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
-    ),
-  },
+  layout,
   requestPilets() {
     return requestPiletsFromGraphQL(client);
   },
