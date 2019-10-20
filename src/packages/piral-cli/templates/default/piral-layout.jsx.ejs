@@ -50,14 +50,8 @@ const defaultMenuItems = (
   </>
 );
 
-export const layout = {
-  ErrorInfo: props => (
-    <div>
-      <h1>Error</h1>
-      <SwitchErrorInfo {...props} />
-    </div>
-  ),
-  NotFoundErrorInfo: () => (
+export const errors = {
+  not_found: () => (
     <div>
       <p className="error">
         Could not find the requested page. Are you sure it exists?
@@ -65,6 +59,15 @@ export const layout = {
       <p>
         Go back <Link to="/">to the dashboard</Link>.
       </p>
+    </div>
+  ),
+};
+
+export const layout = {
+  ErrorInfo: props => (
+    <div>
+      <h1>Error</h1>
+      <SwitchErrorInfo {...props} />
     </div>
   ),
   DashboardContainer: ({ children }) => (

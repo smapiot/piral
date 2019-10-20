@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ComponentsState, Menu, Notifications, SwitchErrorInfo } from 'piral';
+import { ComponentsState, ErrorComponentsState, Menu, Notifications, SwitchErrorInfo } from 'piral';
 import { Link } from 'react-router-dom';
 
 const defaultTiles = (
@@ -49,6 +49,19 @@ const defaultMenuItems = (
     </Link>
   </>
 );
+
+export const errors: Partial<ErrorComponentsState> = {
+  not_found: () => (
+    <div>
+      <p className="error">
+        Could not find the requested page. Are you sure it exists?
+      </p>
+      <p>
+        Go back <Link to="/">to the dashboard</Link>.
+      </p>
+    </div>
+  ),
+};
 
 export const layout: Partial<ComponentsState> = {
   ErrorInfo: props => (

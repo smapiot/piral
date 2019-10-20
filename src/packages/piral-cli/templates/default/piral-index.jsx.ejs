@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderInstance, requestPiletsFromGraphQL, setupGqlClient } from 'piral';
-import { layout } from './layout';
+import { layout, errors } from './layout';
 
 const client = setupGqlClient();
 
@@ -9,6 +9,7 @@ renderInstance({
     gql: client,
   },
   layout,
+  errors,
   requestPilets() {
     return requestPiletsFromGraphQL(client);
   },
