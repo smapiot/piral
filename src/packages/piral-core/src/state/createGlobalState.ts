@@ -27,6 +27,7 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
       Router: BrowserRouter,
       Layout: DefaultLayout,
     },
+    errorComponents: {},
     registry: {
       extensions: {},
       pages: {},

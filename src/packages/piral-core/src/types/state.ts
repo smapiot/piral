@@ -6,7 +6,14 @@ import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
 import { LayoutType } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
-import { ComponentConverters, LoadingIndicatorProps, ErrorInfoProps, RouterProps, LayoutProps } from './components';
+import {
+  ComponentConverters,
+  LoadingIndicatorProps,
+  ErrorInfoProps,
+  RouterProps,
+  LayoutProps,
+  Errors,
+} from './components';
 import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
 import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag, Pilet } from './api';
 
@@ -73,11 +80,19 @@ export interface RegistryState extends PiralCustomRegistryState {
   extensions: Dict<Array<ExtensionRegistration>>;
 }
 
+export type ErrorComponentsState = {
+  [P in keyof Errors]?: ComponentType<Errors[P]>;
+};
+
 export interface GlobalState extends PiralCustomState {
   /**
    * The relevant state for the app itself.
    */
   app: AppState;
+  /**
+   * The relevant state for rendering errors of the app.
+   */
+  errorComponents: ErrorComponentsState;
   /**
    * The relevant state for rendering parts of the app.
    */
@@ -182,6 +197,12 @@ export interface PiralActions extends PiralCustomActions {
    * @param component The component to use for rendering.
    */
   setComponent<TKey extends keyof ComponentsState>(name: TKey, component: ComponentsState[TKey]): void;
+  /**
+   * Sets the error component to render.
+   * @param type The type of the error.
+   * @param component The component to use for rendering.
+   */
+  setErrorComponent<TKey extends keyof ErrorComponentsState>(type: TKey, component: ErrorComponentsState[TKey]): void;
   /**
    * Sets the common routes to render.
    * @param path The name of the component.

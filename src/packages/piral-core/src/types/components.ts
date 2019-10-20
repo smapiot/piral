@@ -77,11 +77,26 @@ export interface ExtensionErrorInfoProps {
   error: any;
 }
 
+/**
+ * The error used when the exact type is unknown.
+ */
+export interface UnknownErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'unknown';
+  /**
+   * The provided error details.
+   */
+  error: any;
+}
+
 export interface Errors extends PiralCustomErrors {
   extension: ExtensionErrorInfoProps;
   loading: LoadingErrorInfoProps;
   page: PageErrorInfoProps;
   not_found: NotFoundErrorInfoProps;
+  unknown: UnknownErrorInfoProps;
 }
 
 export type ErrorInfoProps = UnionOf<Errors>;

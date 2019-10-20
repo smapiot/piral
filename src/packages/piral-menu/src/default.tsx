@@ -6,7 +6,7 @@ export const DefaultContainer: React.FC<MenuContainerProps> = props => (
   <ExtensionSlot
     name={`menu_${props.type}`}
     params={props}
-    empty={() => <React.Fragment key="default_menu">{props.children}</React.Fragment>}
+    empty={() => defaultRender(props.children, 'default_menu')}
   />
 );
 

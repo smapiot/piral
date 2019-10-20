@@ -1,15 +1,13 @@
 import { ComponentType, cloneElement } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
 import { RouteComponentProps } from 'react-router-dom';
-import { LayoutType, GlobalState, Pilet, ComponentsState } from '../../types';
+import { withKey } from '../../utils';
+import { LayoutType, GlobalState, Pilet, ComponentsState, ErrorComponentsState } from '../../types';
 
 export function changeLayout(ctx: Atom<GlobalState>, current: LayoutType) {
   swap(ctx, state => ({
     ...state,
-    app: {
-      ...state.app,
-      layout: current,
-    },
+    app: withKey(state.app, 'layout', current),
   }));
 }
 
@@ -32,10 +30,18 @@ export function setComponent<TKey extends keyof ComponentsState>(
 ) {
   swap(ctx, state => ({
     ...state,
-    components: {
-      ...state.components,
-      [name]: component,
-    },
+    components: withKey(state.components, name, component),
+  }));
+}
+
+export function setErrorComponent<TKey extends keyof ErrorComponentsState>(
+  ctx: Atom<GlobalState>,
+  type: TKey,
+  component: ErrorComponentsState[TKey],
+) {
+  swap(ctx, state => ({
+    ...state,
+    errorComponents: withKey(state.errorComponents, type, component),
   }));
 }
 
@@ -46,10 +52,7 @@ export function setRoute<T = {}>(
 ) {
   swap(ctx, state => ({
     ...state,
-    routes: {
-      ...state.routes,
-      [path]: component,
-    },
+    routes: withKey(state.routes, path, component),
   }));
 }
 

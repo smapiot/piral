@@ -8,7 +8,7 @@ export function ExtensionSlot<T = any>({ name, render = defaultRender, empty, pa
   const extensions = useGlobalState(s => s.registry.extensions[name] || []);
   return render(
     extensions.length === 0 && isfunc(empty)
-      ? [<React.Fragment key="empty">{empty()}</React.Fragment>]
+      ? [defaultRender(empty(), 'empty')]
       : extensions.map(({ component: Component, defaults = {} }, i) => (
           <Component
             key={`${Component.displayName || '_'}${i}`}

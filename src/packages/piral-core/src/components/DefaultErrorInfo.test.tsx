@@ -12,6 +12,7 @@ const state = {
   registry: {
     extensions: {},
   },
+  errorComponents: {},
 };
 
 const StubErrorInfo: React.FC = props => <div />;

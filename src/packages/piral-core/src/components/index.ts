@@ -8,6 +8,8 @@ export * from './PiralRoutes';
 export * from './PiralView';
 export * from './ResponsiveLayout';
 export * from './SetComponent';
+export * from './SetError';
 export * from './SetProvider';
 export * from './SetRoute';
+export * from './SwitchErrorInfo';
 export * from './withApi';

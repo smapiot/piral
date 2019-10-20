@@ -1,8 +1,75 @@
 import * as React from 'react';
-import { useTranslate, ComponentsState } from 'piral';
+import { useTranslate, ComponentsState, ErrorComponentsState } from 'piral';
 import { SearchInput } from 'piral-search';
 import { Layout, LanguagePicker } from './components';
 import { getTileClass } from './utils';
+
+export const errors: Partial<ErrorComponentsState> = {
+  menu: () => <span />,
+  extension: () => <div />,
+  feed: ({ error }) => (
+    <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error" />
+      <div className="pi-title">Data Unavailable</div>
+      <div className="pi-description">
+        The demanded data has not been found. Please contact support to resolve this issue.
+      </div>
+      <div className="pi-details">{error}</div>
+    </div>
+  ),
+  loading: () => (
+    <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error" />
+      <div className="pi-title">Something Went Wrong</div>
+      <div className="pi-description">
+        An error occured during the loading process. Try refreshing or come back later.
+      </div>
+    </div>
+  ),
+  not_found: () => (
+    <div className="pi-error">
+      <img src={require('./images/not-found.svg')} alt="Not Found" />
+      <div className="pi-title">Page Not Found</div>
+      <div className="pi-description">
+        The provided URL does not map to a page. Please contact support to resolve this issue.
+      </div>
+    </div>
+  ),
+  page: () => (
+    <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error" />
+      <div className="pi-title">Page Crashed</div>
+      <div className="pi-description">
+        Sorry for the inconvenience. We try to resolve the issue as soon as possible.
+      </div>
+    </div>
+  ),
+  modal: ({ onClose }) => (
+    <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error" />
+      <div className="pi-title">Dialog Crashed</div>
+      <div className="pi-description">
+        <p>Sorry for the inconvenience. We try to resolve the issue as soon as possible.</p>
+        <button className="btn btn-primary" onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </div>
+  ),
+  tile: () => (
+    <div className="pi-error">
+      <div className="pi-title">Tile Crashed</div>
+      <div className="pi-description">Sorry for the inconvenience.</div>
+    </div>
+  ),
+  unknown: () => (
+    <div className="pi-error">
+      <img src={require('./images/error.svg')} alt="Error" />
+      <div className="pi-title">Unknown Error</div>
+      <div className="pi-description">An unknown error occured.</div>
+    </div>
+  ),
+}
 
 export const layout: Partial<ComponentsState> = {
   Layout,
@@ -22,70 +89,6 @@ export const layout: Partial<ComponentsState> = {
     );
   },
   DashboardTile: ({ children, rows, columns }) => <div className={getTileClass(columns, rows)}>{children}</div>,
-  MenuErrorInfo: () => <span />,
-  ExtensionErrorInfo: () => <div />,
-  FeedErrorInfo: ({ error }) => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Data Unavailable</div>
-      <div className="pi-description">
-        The demanded data has not been found. Please contact support to resolve this issue.
-      </div>
-      <div className="pi-details">{error}</div>
-    </div>
-  ),
-  LoadingErrorInfo: () => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Something Went Wrong</div>
-      <div className="pi-description">
-        An error occured during the loading process. Try refreshing or come back later.
-      </div>
-    </div>
-  ),
-  NotFoundErrorInfo: () => (
-    <div className="pi-error">
-      <img src={require('./images/not-found.svg')} alt="Not Found" />
-      <div className="pi-title">Page Not Found</div>
-      <div className="pi-description">
-        The provided URL does not map to a page. Please contact support to resolve this issue.
-      </div>
-    </div>
-  ),
-  PageErrorInfo: () => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Page Crashed</div>
-      <div className="pi-description">
-        Sorry for the inconvenience. We try to resolve the issue as soon as possible.
-      </div>
-    </div>
-  ),
-  ModalErrorInfo: ({ onClose }) => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Dialog Crashed</div>
-      <div className="pi-description">
-        <p>Sorry for the inconvenience. We try to resolve the issue as soon as possible.</p>
-        <button className="btn btn-primary" onClick={onClose}>
-          Close
-        </button>
-      </div>
-    </div>
-  ),
-  TileErrorInfo: () => (
-    <div className="pi-error">
-      <div className="pi-title">Tile Crashed</div>
-      <div className="pi-description">Sorry for the inconvenience.</div>
-    </div>
-  ),
-  UnknownErrorInfo: () => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Unknown Error</div>
-      <div className="pi-description">An unknown error occured.</div>
-    </div>
-  ),
   MenuContainer: ({ children }) => <div className="pi-menu">{children}</div>,
   MenuItem: ({ children }) => <div className="pi-item">{children}</div>,
   SearchContainer: ({ loading, children }) => (

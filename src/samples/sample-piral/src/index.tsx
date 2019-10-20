@@ -3,7 +3,7 @@ import { renderInstance, getUserLocale } from 'piral';
 import { createAuthApi } from 'piral-auth';
 import { createSearchApi } from 'piral-search';
 import { setupFooter, setupMenu } from './parts';
-import { layout } from './layout';
+import { layout, errors } from './layout';
 
 renderInstance({
   settings: {
@@ -28,6 +28,7 @@ renderInstance({
       .then(res => res.items);
   },
   layout,
+  errors,
 });
 
 export * from 'piral';

@@ -1,4 +1,4 @@
-import { PiralConfiguration, ComponentsState } from 'piral-core';
+import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral-core';
 import {
   FetchConfig,
   GqlConfig,
@@ -48,7 +48,7 @@ export interface PiralExtSettings {
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions extends PiralConfiguration {
+export interface PiralRenderOptions extends PiralConfiguration {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
@@ -62,4 +62,8 @@ export interface PiralOptions extends PiralConfiguration {
    * Defines how the layout looks like.
    */
   layout?: Partial<ComponentsState>;
+  /**
+   * Defines how the errors looks like.
+   */
+  errors?: Partial<ErrorComponentsState>;
 }

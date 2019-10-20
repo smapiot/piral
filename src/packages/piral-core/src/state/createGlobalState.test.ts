@@ -14,6 +14,7 @@ describe('Create Global State Module', () => {
         loading: false,
         error: undefined,
       },
+      errorComponents: {},
       components: {
         ErrorInfo: DefaultErrorInfo,
         LoadingIndicator: DefaultLoadingIndicator,
@@ -39,6 +40,7 @@ describe('Create Global State Module', () => {
         loading: false,
         error: undefined,
       },
+      errorComponents: {},
       components: {
         ErrorInfo: DefaultErrorInfo,
         LoadingIndicator: DefaultLoadingIndicator,
@@ -68,6 +70,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: false,
       },
+      errorComponents: {},
       components: {
         ErrorInfo: DefaultErrorInfo,
         LoadingIndicator: DefaultLoadingIndicator,
@@ -93,6 +96,7 @@ describe('Create Global State Module', () => {
         loading: false,
         error: undefined,
       },
+      errorComponents: {},
       components: {
         ErrorInfo: DefaultErrorInfo,
         LoadingIndicator: DefaultLoadingIndicator,
@@ -120,6 +124,7 @@ describe('Create Global State Module', () => {
         loading: false,
         error: undefined,
       },
+      errorComponents: {},
       components: {
         ErrorInfo: DefaultErrorInfo,
         LoadingIndicator: DefaultLoadingIndicator,
@@ -147,6 +152,7 @@ describe('Create Global State Module', () => {
         loading: false,
         error: undefined,
       },
+      errorComponents: {},
       components: {
         ErrorInfo: DefaultErrorInfo,
         LoadingIndicator: DefaultLoadingIndicator,
@@ -180,6 +186,7 @@ describe('Create Global State Module', () => {
         loading: false,
         error: undefined,
       },
+      errorComponents: {},
       components: {
         ErrorInfo: DefaultErrorInfo,
         LoadingIndicator: DefaultLoadingIndicator,

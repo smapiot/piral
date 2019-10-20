@@ -1,7 +1,7 @@
 import { ReactPortal } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
+import { withoutKey, includeItem, withKey } from '../../utils';
 import { GlobalState } from '../../types';
-import { withoutKey, includeItem } from '../../utils';
 
 export function destroyPortal(ctx: Atom<GlobalState>, id: string) {
   swap(ctx, state => ({
@@ -13,9 +13,6 @@ export function destroyPortal(ctx: Atom<GlobalState>, id: string) {
 export function showPortal(ctx: Atom<GlobalState>, id: string, entry: ReactPortal) {
   swap(ctx, state => ({
     ...state,
-    portals: {
-      ...state.portals,
-      [id]: includeItem(state.portals[id], entry),
-    },
+    portals: withKey(state.portals, id, includeItem(state.portals[id], entry)),
   }));
 }

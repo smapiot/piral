@@ -1,22 +1,10 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { createInstance, Piral, SetComponent, SetRoute } from 'piral-core';
-import {
-  createFetchApi,
-  createGqlApi,
-  createLocaleApi,
-  createDashboardApi,
-  createMenuApi,
-  createNotificationsApi,
-  createModalsApi,
-  createFeedsApi,
-  setupGqlClient,
-  setupLocalizer,
-  Dashboard,
-} from 'piral-ext';
-import { DefaultErrorInfo } from './components';
+import { Piral, SetComponent, SetError, SetRoute } from 'piral-core';
+import { Dashboard } from 'piral-ext';
+import { createPiral } from './api';
 import { getContainer } from './utils';
-import { PiralOptions } from './types';
+import { PiralRenderOptions } from './types';
 
 /**
  * Sets up a new Piral instance and renders it using the provided options.
@@ -30,33 +18,21 @@ renderInstance();
 export * from 'piral';
 ```
  */
-export function renderInstance(options: PiralOptions = {}) {
-  const { selector = '#app', extendApi = [], settings = {}, layout = {}, ...config } = options;
-  const extenders = Array.isArray(extendApi) ? extendApi : [extendApi];
-  const instance = createInstance({
-    ...config,
-    extendApi: [
-      ...extenders,
-      createFetchApi(settings.fetch),
-      createGqlApi(setupGqlClient(settings.gql)),
-      createLocaleApi(setupLocalizer(settings.locale)),
-      createDashboardApi(settings.dashboard),
-      createMenuApi(settings.menu),
-      createNotificationsApi(settings.notifications),
-      createModalsApi(settings.modals),
-      createFeedsApi(settings.feeds),
-    ],
-  });
-
-  const App: React.FC = () => (
+export function renderInstance(options: PiralRenderOptions = {}) {
+  const { selector = '#app', extendApi, settings, layout = {}, errors = {}, ...config } = options;
+  const instance = createPiral(config, settings, extendApi);
+  const app = (
     <Piral instance={instance}>
-      <SetComponent name="ErrorInfo" component={DefaultErrorInfo} />
       {Object.keys(layout).map((key: any) => (
         <SetComponent name={key} component={layout[key]} key={key} />
+      ))}
+      {Object.keys(errors).map((key: any) => (
+        <SetError type={key} component={errors[key]} key={key} />
       ))}
       <SetRoute path="/" component={Dashboard} />
     </Piral>
   );
-  render(<App />, getContainer(selector));
+
+  render(app, getContainer(selector));
   return instance;
 }

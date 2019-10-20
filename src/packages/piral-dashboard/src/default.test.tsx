@@ -21,6 +21,9 @@ jest.mock('piral-core', () => ({
 
     return empty();
   },
+  defaultRender(child: any, key?: string) {
+    return <React.Fragment key={key}>{child}</React.Fragment>;
+  }
 }));
 
 const state = {

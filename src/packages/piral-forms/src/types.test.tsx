@@ -4,8 +4,13 @@ import { mount } from 'enzyme';
 import './types';
 
 jest.mock('piral-core/lib/hooks/globalState', () => ({
-  useGlobalState() {
-    return [];
+  useGlobalState(s) {
+    return s({
+      registry: {
+        extensions: {},
+      },
+      errorComponents: {},
+    });
   },
 }));
 
