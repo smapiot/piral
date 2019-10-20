@@ -69,7 +69,7 @@ export const errors: Partial<ErrorComponentsState> = {
       <div className="pi-description">An unknown error occured.</div>
     </div>
   ),
-}
+};
 
 export const layout: Partial<ComponentsState> = {
   Layout,
