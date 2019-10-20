@@ -1,5 +1,6 @@
 import * as glob from 'glob';
 import * as rimraf from 'rimraf';
+import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
 import {
   writeFile,
@@ -279,7 +280,7 @@ export async function move(source: string, target: string, forceOverwrite = Forc
 
 export async function getSourceFiles(entry: string) {
   const dir = dirname(entry);
-  const files = await matchFiles(dir, '**/*.(j|t)sx?');
+  const files = await matchFiles(dir, '**/*.?(jsx|tsx|js|ts)');
   return files.map(path => {
     const directory = dirname(path);
     const name = basename(path);
@@ -288,9 +289,28 @@ export async function getSourceFiles(entry: string) {
       path,
       directory,
       name,
-      read() {
-        //TODO always get js representation and omit type-only references
-        return readText(directory, name);
+      async read() {
+        const content = await readText(directory, name);
+
+        if (name.endsWith('.ts') || name.endsWith('.tsx')) {
+          return transpileModule(content, {
+            fileName: path,
+            moduleName: name,
+            compilerOptions: {
+              allowJs: true,
+              skipLibCheck: true,
+              declaration: false,
+              sourceMap: false,
+              checkJs: false,
+              jsx: JsxEmit.React,
+              module: ModuleKind.ESNext,
+              moduleResolution: ModuleResolutionKind.NodeJs,
+              target: ScriptTarget.ESNext,
+            },
+          }).outputText;
+        }
+
+        return content;
       },
     };
   });

@@ -37,7 +37,7 @@ The scaffolding files in pilets.files are invalid.
       return true;
     });
     const validFileRefs = files.filter(file => !invalidFileTypes.includes(file));
-    const ignoredFiles = ['.gitignore'];
+    const ignoredFiles = ['.gitignore', '.npmignore'];
 
     if (invalidFileTypes.length > 0) {
       this.error(

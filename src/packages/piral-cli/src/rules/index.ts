@@ -14,10 +14,13 @@ function getRules<T extends RuleContext>(target: 'pilet' | 'piral') {
       } else {
         resolve(
           files
-            .filter(name => name.startsWith(prefix))
+            .filter(name => name.startsWith(prefix) && name.endsWith('.js'))
             .map(name => {
               const rule = require(`./${name}`).default;
-              rule.name = name.substr(prefix.length).replace(/\.ts$/, '');
+              Object.defineProperty(rule, 'name', {
+                value: name.substr(prefix.length).replace(/\.js$/, ''),
+                writable: false
+              });
               return rule;
             }),
         );
