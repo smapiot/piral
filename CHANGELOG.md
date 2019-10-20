@@ -18,6 +18,8 @@
 * Added `validate` command for pilets (#70)
 * Support for extensions in Angular (#54), Hyperapp, Vue
 * Upgraded Parcel to avoid NPM warning (#64)
+* Added ability to select template (`default` or `empty`) when scaffolding
+* Improved the `default` template for scaffolding
 
 ## 0.7.0 (September 6, 2019)
 
