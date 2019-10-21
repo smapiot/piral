@@ -1,21 +1,8 @@
-$color-green: #56AA1C;
-$color-primary: #00FFAD;
-$color-secondary: #192440;
-$color-heart: #ea5395;
-$color-text: #000;
-$color-warning: #FFC007;
-$color-danger: #d61c1c;
-$color-purple: #a321a3;
-
-$desktopBrk: 1024px;
-$tabletBrk: 768px;
-$mobileBrk: 576px;
-
-$fontFamily: 'Lato', sans-serif;
-
+@import "../../../common/styles/variables";
 @import "fonts";
 @import "body";
 @import "layout";
+@import "../../../common/styles/footer";
 @import "docs";
 @import "loader";
 @import "sidebar";
