@@ -1,6 +1,6 @@
 {
   "name": "piral-translate",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Introduces the translate API extension for extending piral-core.",
   "keywords": [
     "piral",
@@ -37,7 +37,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.7.0"
+    "piral-core": "^0.8.0"
   },
   "peerDependencies": {
     "piral-core": "^0.8.0 || ^0.9.0",

@@ -1,6 +1,6 @@
 {
   "name": "piral-feeds",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Extensions for connecting data feeds in Piral.",
   "keywords": [
     "piral",
@@ -34,7 +34,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.7.0"
+    "piral-core": "^0.8.0"
   },
   "peerDependencies": {
     "piral-core": "^0.8.0 || ^0.9.0"
