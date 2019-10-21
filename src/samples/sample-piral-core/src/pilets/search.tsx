@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { ArbiterModule } from 'react-arbiter';
-import { SampleApi } from '../types';
+import { Pilet } from 'piral-core';
 
 /**
  * Shows a custom search registration.
  */
-export const SearchPilet: ArbiterModule<SampleApi> = {
+export const SearchPilet: Pilet = {
   content: '',
   name: 'Search Module',
   version: '1.0.0',

@@ -19,6 +19,7 @@ import {
   readPiralPackage,
   getPiletsInfo,
   runScript,
+  TemplateType,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -28,6 +29,7 @@ export interface NewPiletOptions {
   forceOverwrite?: ForceOverwrite;
   language?: PiletLanguage;
   skipInstall?: boolean;
+  template?: TemplateType;
 }
 
 export const newPiletDefaults = {
@@ -37,6 +39,7 @@ export const newPiletDefaults = {
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
   skipInstall: false,
+  template: 'default' as const,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -47,6 +50,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     forceOverwrite = newPiletDefaults.forceOverwrite,
     language = newPiletDefaults.language,
     skipInstall = newPiletDefaults.skipInstall,
+    template = newPiletDefaults.template,
   } = options;
   const root = resolve(baseDir, target);
   const [sourceName, sourceVersion, hadVersion, type] = dissectPackageName(baseDir, source);
@@ -105,7 +109,7 @@ always-auth=true`,
 
     logInfo(`Taking care of templating ...`);
 
-    await scaffoldPiletSourceFiles(language, root, packageName, forceOverwrite);
+    await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
 
     const files = await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
     await copyPiralFiles(root, packageName, files, ForceOverwrite.yes);

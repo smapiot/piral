@@ -1,60 +1,29 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Dict } from './common';
-import { MenuType } from './menu';
+import { FirstParametersOf, UnionOf } from './common';
+import { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
+import { LayoutType } from './layout';
 
-export interface BaseComponentProps<TApi> {
-  /**
-   * The currently used piral API.
-   */
-  piral: TApi;
+export interface ComponentConverters<TProps> extends PiralCustomComponentConverters<TProps> {
+  html(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
 }
 
-export interface ExtensionComponentProps<TApi, T = Dict<any>> extends BaseComponentProps<TApi> {
-  /**
-   * The provided parameters for showing the extension.
-   */
-  params: T;
-}
-
-export interface MenuComponentProps<TApi> extends BaseComponentProps<TApi> {}
-
-export interface TileComponentProps<TApi> extends BaseComponentProps<TApi> {
-  /**
-   * The currently used number of columns.
-   */
-  columns: number;
-  /**
-   * The currently used number of rows.
-   */
-  rows: number;
-}
-
-export interface RouteBaseProps<TApi, UrlParams = any, UrlState = any>
-  extends RouteComponentProps<UrlParams, {}, UrlState>,
-    BaseComponentProps<TApi> {}
-
-export interface ModalComponentProps<TApi, TOpts> extends BaseComponentProps<TApi> {
-  /**
-   * Callback for closing the modal programmatically.
-   */
-  onClose(): void;
-  /**
-   * Provides the passed in options for this particular modal.
-   */
-  options?: TOpts;
-}
-
-export interface PageComponentProps<TApi, T = any, S = any> extends RouteBaseProps<TApi, T, S> {}
-
-export interface ForeignComponent<TProps> {
+export interface HtmlComponent<TProps> {
   /**
    * Renders a component into the provided element using the given props and context.
    */
+  render: ForeignComponent<TProps>;
+  /**
+   * The type of the HTML component.
+   */
+  type: 'html';
+}
+
+export interface ForeignComponent<TProps> {
   (element: HTMLElement, props: TProps, ctx: any): void;
 }
 
-export type AnyComponent<T> = ComponentType<T> | ForeignComponent<T>;
+export type AnyComponent<T> = ComponentType<T> | FirstParametersOf<ComponentConverters<T>>;
 
 /**
  * The error used when a route cannot be resolved.
@@ -81,34 +50,6 @@ export interface PageErrorInfoProps extends RouteComponentProps {
 }
 
 /**
- * The error used when loading a feed resulted in an error.
- */
-export interface FeedErrorInfoProps {
-  /**
-   * The type of the error.
-   */
-  type: 'feed';
-  /**
-   * The provided error details.
-   */
-  error: any;
-}
-
-/**
- * The error used when a form submission resulted in an error.
- */
-export interface FormErrorInfoProps {
-  /**
-   * The type of the error.
-   */
-  type: 'form';
-  /**
-   * The provided error details.
-   */
-  error: any;
-}
-
-/**
  * The error used when the app could not be loaded.
  */
 export interface LoadingErrorInfoProps {
@@ -120,64 +61,6 @@ export interface LoadingErrorInfoProps {
    * The provided error details.
    */
   error: any;
-}
-
-/**
- * The error used when a registered tile component crashed.
- */
-export interface TileErrorInfoProps {
-  /**
-   * The type of the error.
-   */
-  type: 'tile';
-  /**
-   * The provided error details.
-   */
-  error: any;
-  /**
-   * The currently used number of columns.
-   */
-  columns: number;
-  /**
-   * The currently used number of rows.
-   */
-  rows: number;
-}
-
-/**
- * The error used when a registered menu item component crashed.
- */
-export interface MenuItemErrorInfoProps {
-  /**
-   * The type of the error.
-   */
-  type: 'menu';
-  /**
-   * The provided error details.
-   */
-  error: any;
-  /**
-   * The type of the used menu.
-   */
-  menu: MenuType;
-}
-
-/**
- * The error used when a registered modal dialog crashed.
- */
-export interface ModalErrorInfoProps {
-  /**
-   * The type of the error.
-   */
-  type: 'modal';
-  /**
-   * The provided error details.
-   */
-  error: any;
-  /**
-   * Callback for closing the modal programmatically.
-   */
-  onClose(): void;
 }
 
 /**
@@ -194,19 +77,34 @@ export interface ExtensionErrorInfoProps {
   error: any;
 }
 
-export type ErrorInfoProps =
-  | NotFoundErrorInfoProps
-  | PageErrorInfoProps
-  | TileErrorInfoProps
-  | MenuItemErrorInfoProps
-  | ExtensionErrorInfoProps
-  | ModalErrorInfoProps
-  | FeedErrorInfoProps
-  | LoadingErrorInfoProps
-  | FormErrorInfoProps;
+/**
+ * The error used when the exact type is unknown.
+ */
+export interface UnknownErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'unknown';
+  /**
+   * The provided error details.
+   */
+  error: any;
+}
 
-export type ErrorType = ErrorInfoProps['type'];
+export interface Errors extends PiralCustomErrors {
+  extension: ExtensionErrorInfoProps;
+  loading: LoadingErrorInfoProps;
+  page: PageErrorInfoProps;
+  not_found: NotFoundErrorInfoProps;
+  unknown: UnknownErrorInfoProps;
+}
 
-export interface LoaderProps {}
+export type ErrorInfoProps = UnionOf<Errors>;
 
-export interface DashboardProps extends RouteComponentProps {}
+export interface LoadingIndicatorProps {}
+
+export interface LayoutProps {
+  currentLayout: LayoutType;
+}
+
+export interface RouterProps {}

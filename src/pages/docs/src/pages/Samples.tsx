@@ -82,8 +82,8 @@ const CoreDemo: React.FC = () => (
 export default () => (
   <section className="container">
     <p>
-      The following samples are available to see what Piral can bring to the table. The main focus of the samples is
-      to teach the different concepts and introduce some common practices.
+      The following samples are available to see what Piral can bring to the table. The main focus of the samples is to
+      teach the different concepts and introduce some common practices.
     </p>
     <p>
       The provided examples are not properly designed (as in styled). Styling can be fully customized for your needs

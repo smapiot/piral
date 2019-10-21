@@ -1,36 +1,68 @@
-import { PiralCoreApi } from 'piral-core';
-import { ngTile, ngPage, ngExtension, ngMenu, ngModal } from './register';
-import { PiralNgApi } from './types';
+import { Extend } from 'piral-core';
+import { Component, ElementRef, Input } from '@angular/core';
+import { enqueue } from './queue';
+import { bootstrap } from './bootstrap';
+import { PiletNgApi } from './types';
+
+/**
+ * Available configuration options for the Angular extension.
+ */
+export interface NgConfig {
+  /**
+   * Defines the name of the extension component.
+   * @default extension-component
+   */
+  selector?: string;
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+  /**
+   * Defines how the next ID for mounting is selected.
+   * By default a random number is used in conjunction with a `ng-` prefix.
+   */
+  selectId?(): string;
+}
 
 /**
  * Creates a new set of Piral Angular API extensions.
- * @param api The API to extend.
  */
-export function createNgApi<T extends PiralCoreApi<any>>(api: T): PiralNgApi {
+export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
   let next = ~~(Math.random() * 10000);
-  return {
-    registerTileNg(id, component, options?) {
-      if (typeof id === 'string') {
-        ngTile(api, id, component, options);
-      } else {
-        ngTile(api, `ng-${next++}`, id, component);
+  const { rootName = 'slot', selectId = () => `ng-${next++}`, selector = 'extension-component' } = config;
+  const template = `<${rootName}></${rootName}>`;
+
+  return context => {
+    context.converters.ng = ({ component }) => {
+      const id = selectId();
+      return (el, props, ctx) => {
+        enqueue(() => bootstrap(ctx, props, component, el, id));
+      };
+    };
+
+    return api => {
+      @Component({
+        selector,
+        template,
+      })
+      class NgExtension {
+        @Input('name') public name: string;
+        @Input('params') public params: object;
+
+        constructor(private elRef: ElementRef<HTMLElement>) {}
+
+        ngAfterContentInit() {
+          api.renderHtmlExtension(this.elRef.nativeElement, {
+            name: this.name,
+            params: this.params,
+          });
+        }
       }
-    },
-    registerPageNg(route, component) {
-      ngPage(api, route, component);
-    },
-    registerExtensionNg(slot, component, defaults) {
-      ngExtension(api, slot, component, defaults);
-    },
-    registerMenuNg(id, component, settings?) {
-      if (typeof id === 'string') {
-        ngMenu(api, id, component, settings);
-      } else {
-        ngMenu(api, `ng-${next++}`, id, component);
-      }
-    },
-    registerModalNg(id, component, defaults) {
-      ngModal(api, id, component, defaults);
-    },
+
+      return {
+        NgExtension,
+      };
+    };
   };
 }

@@ -1,5 +1,5 @@
 import { prompt } from 'inquirer';
-import { allCommands } from './commands';
+import { commands } from './commands';
 
 type FlagType = 'string' | 'number' | 'boolean';
 
@@ -113,23 +113,26 @@ function getType(flag: Flag) {
 }
 
 export function runQuestionnaire(commandName: string, ignoredInstructions = ['base']) {
-  const [command] = allCommands.filter(m => m.name === commandName);
+  const [command] = commands.all.filter(m => m.name === commandName);
   const instructions = getCommandData(command.flags);
-  const questions = instructions.filter(instruction => !ignoredInstructions.includes(instruction.name)).map(instruction => ({
-    name: instruction.name,
-    default: instruction.values ? instruction.values.indexOf(instruction.default) : instruction.default,
-    message: instruction.describe,
-    type: getType(instruction),
-    choices: instruction.values,
-    validate: instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true,
-  }));
+  const questions = instructions
+    .filter(instruction => !ignoredInstructions.includes(instruction.name))
+    .map(instruction => ({
+      name: instruction.name,
+      default: instruction.values ? instruction.values.indexOf(instruction.default) : instruction.default,
+      message: instruction.describe,
+      type: getType(instruction),
+      choices: instruction.values,
+      validate: instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true,
+    }));
 
   return prompt(questions).then(answers => {
     const parameters: any = {};
 
     for (const instruction of instructions) {
       const value = answers[instruction.name];
-      parameters[instruction.name] = value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
+      parameters[instruction.name] =
+        value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
     }
 
     return command.run(parameters);

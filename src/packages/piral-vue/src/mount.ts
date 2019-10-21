@@ -1,7 +1,11 @@
 import Vue from 'vue';
 
-export function mount<T>(el: HTMLElement, root: Vue.FunctionalComponentOptions<T>, props: T, ctx: any) {
-  new Vue({
+export function register<T extends Vue>(name: string, component: Vue.VueConstructor<T>) {
+  Vue.component(name, component);
+}
+
+export function mount<T>(el: HTMLElement, root: Vue.Component<T>, props: T, ctx: any) {
+  const vue = new Vue({
     el,
     data: ctx,
     render(h) {
@@ -10,4 +14,6 @@ export function mount<T>(el: HTMLElement, root: Vue.FunctionalComponentOptions<T
       });
     },
   });
+
+  return vue;
 }

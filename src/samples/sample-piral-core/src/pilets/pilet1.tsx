@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { ArbiterModule } from 'react-arbiter';
-import { ErrorInfoProps } from 'piral-core';
-import { SampleApi } from '../types';
+import { Pilet, ErrorInfoProps } from 'piral-core';
 
 /**
  * Shows the general usage of the `setup` function together
@@ -9,7 +7,7 @@ import { SampleApi } from '../types';
  * Also registeres some custom error page handlers. For details
  * on this, see DashboardModule.
  */
-export const Pilet1: ArbiterModule<SampleApi> = {
+export const Pilet1: Pilet = {
   content: '',
   name: 'Example Module',
   version: '1.0.0',
@@ -17,12 +15,15 @@ export const Pilet1: ArbiterModule<SampleApi> = {
   setup(piral) {
     console.log(piral);
 
-    piral.registerTileX((element, props) => {
-      element.innerHTML = `
+    piral.registerTile({
+      render: (element, props) => {
+        element.innerHTML = `
         <div class="tile">
           General rendering for a ${props.columns}x${props.rows} tile.
         </div>
       `;
+      },
+      type: 'html',
     });
 
     piral.registerTile('example-react', () => (
@@ -85,7 +86,7 @@ export const Pilet1: ArbiterModule<SampleApi> = {
       </div>
     ));
 
-    piral.registerPage('/example2', () => (
+    piral.registerPage('/example2', ({ piral }) => (
       <div>
         <p>
           This is the second <b>example</b> page
@@ -113,5 +114,7 @@ export const Pilet1: ArbiterModule<SampleApi> = {
       }
       return false as any;
     });
+
+    piral.registerExtension('smiley', () => <b>:-D</b>);
   },
 };

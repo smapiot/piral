@@ -17,13 +17,14 @@ The code that has been generated in the getting started section was similar to t
 
 ```jsx
 import * as React from 'react';
-import { renderInstance, buildLayout } from 'piral';
+import { renderInstance } from 'piral';
 
 renderInstance({
-  layout: buildLayout()
-    .withError(({ type }) => (
+  layout: {
+    ErrorInfo: ({ type }) => (
       <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
     )),
+  },
 });
 
 export * from 'piral/lib/types';
@@ -35,49 +36,79 @@ We can also modify it to the following:
 
 ```jsx
 import * as React from 'react';
-import { renderInstance, buildLayout, extendApis } from 'piral';
+import { renderInstance } from 'piral';
 
 renderInstance({
-  config: {
-    extendApi: extendApis([]),
-  },
-  layout: buildLayout()
-    .withError(({ type }) => (
+  extendApi: [],
+  layout: {
+    ErrorInfo: ({ type }) => (
       <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
     )),
+  },
 });
 
 export * from 'piral/lib/types';
 ```
 
-In this case we added a configuration that determines how to extend the provided (Pilet) API. There are multiple helpers to support us here, but in the case above we choose the `extendApis` function, which should be the right one in most cases.
+In this case we added a configuration that determines how to extend the provided (Pilet) API. The different APIs are usually given by API creator methods, which accept none or one parameter for an optional configuration. In any case we can pass in an array with such plugins or just a single plugin if we want to.
 
 ## Extending Existing APIs
 
-The `extendApis` function accepts an array that contains all the API creator functions. An API creator function has the following signature:
+An API creator function (or plugin) has the following signature:
 
 ```ts
-interface ApiCreatorSignature<TApi> {
-  (api: PiletApi, target: PiletModule): TApi;
+interface ApiExtender<T> {
+  /**
+   * Extends the base API of a module with new functionality.
+   * @param api The API created by the base layer.
+   * @param target The target the API is created for.
+   * @returns The extended API.
+   */
+  (api: PiletApi, target: PiletMetadata): T;
+}
+
+interface Extend<T = Partial<PiletApi>> {
+  /**
+   * Extends the base API with a custom set of functionality to be used by modules.
+   * @param context The global state context to be used.
+   * @returns The extended API or a function to create the extended API for a specific target.
+   */
+  (context: GlobalStateContext): T | ApiExtender<T>;
 }
 ```
 
 An example for such a function may be the following:
 
 ```ts
-function createTrackingApi(api: PiletApi) {
-  return {
+interface TrackingConfig {}
+
+function createTrackingApi(config: TrackingConfig = {}) {
+  return context => (api, target) => ({
     trackEvent(name) {
       // ...
     },
-  };
+  });
 }
 ```
+
+The function above can be simplified. If we are not dependent on the `api` or `target` parameter, we could just return the extended API.
+
+```ts
+function createTrackingApi() {
+  return () => ({
+    trackEvent(name) {
+      // ...
+    },
+  });
+}
+```
+
+The configuration has been left out for brevity, but we recommend to always have an `config` predefined, even though no options are available (yet).
 
 It could be used in the configuration by referencing the function in the array:
 
 ```ts
-extendApis([createTrackingApi])
+[createTrackingApi()]
 ```
 
 There are many plugins for Piral that extend the Pilet API.
@@ -98,61 +129,21 @@ Now we can use `piral-vue`:
 
 ```jsx
 import * as React from 'react';
-import { renderInstance, buildLayout, extendApis } from 'piral';
+import { renderInstance } from 'piral';
 import { createVueApi } from 'piral-vue';
 
 renderInstance({
-  config: {
-    extendApi: extendApis([createVueApi]),
-  },
-  layout: buildLayout()
-    .withError(({ type }) => (
+  extendApi: [createVueApi()],
+  layout: {
+    ErrorInfo: ({ type }) => (
       <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
-    )),
+    ),
+  },
 });
 
 export * from 'piral/lib/types';
 ```
 
 The list of all plugins is available via [NPM](https://www.npmjs.com/search?q=keywords:piral).
-
-## Removing Existing APIs
-
-In most cases we only want to bring in additional APIs, however, in rare scenarios we are also interested in removing existing functionality from the Pilet API. Here the default signature for the `extendApi` property gets helpful. It provides the full flexibility.
-
-```jsx
-import * as React from 'react';
-import { renderInstance } from 'piral';
-
-renderInstance({
-  config: {
-    extendApi(api) {
-      // removes all APIs - just returns an empty object
-      return {};
-    },
-  },
-  layout: // ...
-});
-```
-
-Emptying the full API is quite simple - we just return an empty object. We may also use the JavaScript spread operator to remove selected parts:
-
-```jsx
-import * as React from 'react';
-import { renderInstance } from 'piral';
-
-renderInstance({
-  config: {
-    extendApi(api) {
-      // remove registerTile and registerSearch
-      const { registerTile: _0, registerSearch: _1, ...newApi } = api;
-      return newApi;
-    },
-  },
-  layout: // ...
-});
-```
-
-Obviously, using this approach we can still add (or re-declare) functionality.
 
 Next we will see how we can define the user experience by setting up the whole look and feel of Piral.

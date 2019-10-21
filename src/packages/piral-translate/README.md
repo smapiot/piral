@@ -8,6 +8,68 @@ This is an extension library that only has a peer dependency to `piral-core`. Wh
 
 For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
 
+## Setup and Bootstrapping
+
+The provided library only brings API extensions for pilets to a Piral instance.
+
+For the setup of the library itself you'll need to import `createLocaleApi` from the `piral-translate` package.
+
+```tsx
+import { createLocaleApi } from 'piral-translate';
+```
+
+The integration looks like:
+
+```tsx
+const instance = createInstance({
+  // important part
+  extendApi: [createLocaleApi()],
+  // ...
+});
+```
+
+Via the options the available languages, translations, as well as the currently selected language can be chosen.
+
+For example:
+
+```tsx
+const localizer = setupLocalizer({
+  language: 'en',
+  messages: {
+    en: {
+      'greeting': 'Hello',
+    },
+    de: {
+      'greeting': 'Hallo',
+    },
+  },
+});
+
+const instance = createInstance({
+  // important part
+  extendApi: [createLocaleApi(localizer)],
+  // ...
+});
+```
+
+Alternatively, the current language can also be inferred via a function.
+
+```tsx
+const localizer = setupLocalizer({
+  language: getUserLocale,
+  messages: {
+    en: {
+      'greeting': 'Hello',
+    },
+    de: {
+      'greeting': 'Hallo',
+    },
+  },
+});
+```
+
+The function `getUserLocale` retrieves either the cookie with name `_culture` or local storage value for key `locale`. In any case either the first found language or ultimately `en` is used as a fallback.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

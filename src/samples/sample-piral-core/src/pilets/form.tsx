@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { ArbiterModule } from 'react-arbiter';
-import { PageComponentProps, FormProps, PiralCoreApi } from 'piral-core';
-import { SampleApi } from '../types';
+import { PageComponentProps, Pilet } from 'piral-core';
+import { FormProps } from 'piral-forms';
 
 interface SampleFormData {
   firstName: string;
@@ -11,13 +10,13 @@ interface SampleFormData {
 /**
  * Shows a form.
  */
-export const FormPilet: ArbiterModule<SampleApi> = {
+export const FormPilet: Pilet = {
   content: '',
   name: 'Form Module',
   version: '1.0.0',
   hash: '429',
   setup(piral) {
-    class MyForm extends React.Component<PageComponentProps<PiralCoreApi<{}>> & FormProps<SampleFormData>> {
+    class MyForm extends React.Component<PageComponentProps & FormProps<SampleFormData>> {
       render() {
         const { formData, changeForm, changed, submitting, reset, error } = this.props;
         const { firstName, lastName } = formData;
@@ -89,7 +88,7 @@ export const FormPilet: ArbiterModule<SampleApi> = {
           }, 5000),
         );
       },
-      loadData(props: PageComponentProps<PiralCoreApi<{}>>) {
+      loadData(props: PageComponentProps) {
         return new Promise<SampleFormData>(resolve =>
           setTimeout(
             () =>

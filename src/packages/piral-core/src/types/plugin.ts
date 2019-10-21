@@ -1,43 +1,26 @@
-import { ArbiterModuleMetadata } from 'react-arbiter';
-import { PiralCoreApi } from './api';
-import { EventEmitter } from './utils';
-import { GlobalStateContext, GlobalState } from './state';
+import { PiletApi } from './api';
+import { PiletMetadata } from './meta';
+import { GlobalStateContext } from './state';
 
-export interface Setup<TState extends GlobalState, TUser = {}> {
+export interface ApiExtender<T> {
   /**
-   * Initializes the given global state, potentially extending it.
-   * @param state The global state created by the base layer.
-   * @returns The initialized state.
-   */
-  (state: GlobalState<TUser>): TState;
-}
-
-export interface Extend<TApi> {
-  /**
-   * Extends the base API with a custom set of functionality to be used by modules.
+   * Extends the base API of a module with new functionality.
    * @param api The API created by the base layer.
    * @param target The target the API is created for.
    * @returns The extended API.
    */
-  (api: PiralCoreApi<TApi>, target: ArbiterModuleMetadata): TApi;
+  (api: PiletApi, target: PiletMetadata): T;
 }
 
-export interface Append {
+export interface Extend<T = Partial<PiletApi>> {
   /**
-   * Appends a custom set of functionality to be used by modules.
-   * @param api The API created by the base layer.
-   * @param target The target the API is created for.
-   * @returns The API to append.
+   * Extends the base API with a custom set of functionality to be used by modules.
+   * @param context The global state context to be used.
+   * @returns The extended API or a function to create the extended API for a specific target.
    */
-  (api: PiralCoreApi<any>, target: ArbiterModuleMetadata): any;
+  (context: GlobalStateContext): T | ApiExtender<T>;
 }
 
 export interface PiletRequester {
-  (): Promise<Array<ArbiterModuleMetadata>>;
-}
-
-export interface PiralContainer<TApi> {
-  context: GlobalStateContext;
-  events: EventEmitter;
-  extendApi: Extend<TApi>;
+  (): Promise<Array<PiletMetadata>>;
 }

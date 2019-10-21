@@ -4,6 +4,19 @@
 
 This is an extension library that only has a peer dependency to `piral-core`. What `piral-ext` brings to the table is a set of API extensions that is used by `piral`. The set includes things like GraphQL integration, a fully configured `fetch` command, or a simple translation system.
 
+## Included Extension Libraries
+
+- `piral-dashboard`: Dashboard presentation
+- `piral-feeds`: Data feed connectivity
+- `piral-fetch`: Fetch configuration
+- `piral-menu`: Menu integration
+- `piral-modals`: Modal dialogs
+- `piral-notifications`: Notification support
+- `piral-translate`: Simple localization
+- `piral-urql`: GraphQL integration
+
+For more details on the individual libraries please visit their own dedicated README.
+
 ## Documentation
 
 For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).

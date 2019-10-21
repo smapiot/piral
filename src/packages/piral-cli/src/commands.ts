@@ -1,5 +1,4 @@
 import * as apps from './apps';
-import { Argv, Arguments } from 'yargs';
 import {
   forceOverwriteKeys,
   keyOfForceOverwrite,
@@ -7,30 +6,33 @@ import {
   keyOfPiletLanguage,
   piletLanguageKeys,
   valueOfPiletLanguage,
+  templateTypeKeys,
 } from './helpers';
+import { ToolCommand } from './types';
 
-function specializeCommands(suffix: string) {
-  return allCommands
-    .filter(m => m.name.endsWith(suffix))
-    .map(m => ({
-      ...m,
-      name: m.name.replace(suffix, ''),
-      alias: m.alias.filter(n => n.endsWith(suffix)).map(n => n.replace(suffix, '')),
-    }));
+function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
+  if (command.name.endsWith(suffix)) {
+    commands.push({
+      ...command,
+      name: command.name.replace(suffix, ''),
+      alias: command.alias.filter(n => n.endsWith(suffix)).map(n => n.replace(suffix, '')),
+    });
+  }
 }
 
-export interface ToolCommand<T> {
-  name: string;
-  description: string;
-  arguments: Array<string>;
-  flags?(argv: Argv<T>): Argv<T>;
-  alias: Array<string>;
-  run<U>(args: Arguments<U>): void | Promise<void>;
+function specializeCommands(suffix: string) {
+  const commands: Array<ToolCommand<any>> = [];
+
+  for (const command of allCommands) {
+    specializeCommand(commands, command, suffix);
+  }
+
+  return commands;
 }
 
 export { apps };
 
-export const allCommands: Array<ToolCommand<any>> = [
+const allCommands: Array<ToolCommand<any>> = [
   {
     name: 'debug-piral',
     alias: ['watch-piral', 'debug-portal', 'watch-portal'],
@@ -51,7 +53,10 @@ export const allCommands: Array<ToolCommand<any>> = [
         .default('public-url', apps.debugPiralDefaults.publicUrl)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
-        .default('log-level', apps.buildPiralDefaults.logLevel)
+        .default('log-level', apps.debugPiralDefaults.logLevel)
+        .boolean('fresh')
+        .describe('fresh', 'Resets the cache before starting the debug mode.')
+        .default('fresh', apps.debugPiralDefaults.fresh)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -62,6 +67,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         publicUrl: args.publicUrl as string,
         logLevel: args.logLevel as any,
+        fresh: args.fresh as boolean,
       });
     },
   },
@@ -136,6 +142,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new Piral instance.')
         .default('language', keyOfPiletLanguage(apps.newPiralDefaults.language))
+        .choices('template', templateTypeKeys)
+        .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
+        .default('template', templateTypeKeys[0])
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -149,6 +158,33 @@ export const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
         skipInstall: args.skipInstall as boolean,
+        template: args.template,
+      });
+    },
+  },
+  {
+    name: 'validate-piral',
+    alias: ['verify-piral', 'check-piral'],
+    description: 'Checks the validity of the current project as a Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          default: apps.validatePiralDefaults.entry,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.validatePiralDefaults.logLevel)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.validatePiral(args.base as string, {
+        entry: args.entry as string,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -169,7 +205,10 @@ export const allCommands: Array<ToolCommand<any>> = [
         .default('port', apps.debugPiletDefaults.port)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
-        .default('log-level', apps.buildPiralDefaults.logLevel)
+        .default('log-level', apps.debugPiletDefaults.logLevel)
+        .boolean('fresh')
+        .describe('fresh', 'Resets the cache before starting the debug mode.')
+        .default('fresh', apps.debugPiletDefaults.fresh)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -182,6 +221,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         app: args.app as string,
         logLevel: args.logLevel as any,
+        fresh: args.fresh as boolean,
       });
     },
   },
@@ -311,6 +351,9 @@ export const allCommands: Array<ToolCommand<any>> = [
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new pilet.')
         .default('language', keyOfPiletLanguage(apps.newPiletDefaults.language))
+        .choices('template', templateTypeKeys)
+        .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
+        .default('template', templateTypeKeys[0])
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -323,6 +366,7 @@ export const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
         skipInstall: args.skipInstall as boolean,
+        template: args.template,
       });
     },
   },
@@ -354,8 +398,47 @@ export const allCommands: Array<ToolCommand<any>> = [
       });
     },
   },
+  {
+    name: 'validate-pilet',
+    alias: ['verify-pilet', 'check-pilet', 'lint-pilet', 'assert-pilet'],
+    description: 'Checks the validity of the current pilet according to the rules defined by the Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source file containing the pilet root module.',
+          default: apps.validatePiletDefaults.entry,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.validatePiletDefaults.logLevel)
+        .string('app')
+        .describe('app', 'Sets the name of the Piral instance.')
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.validatePilet(args.base as string, {
+        entry: args.entry as string,
+        logLevel: args.logLevel as any,
+        app: args.app,
+      });
+    },
+  },
 ];
 
-export const piletCommands = specializeCommands('-pilet');
+class Commands {
+  public all = allCommands;
 
-export const piralCommands = specializeCommands('-piral');
+  public get pilet() {
+    return specializeCommands('-pilet');
+  }
+
+  public get piral() {
+    return specializeCommands('-piral');
+  }
+}
+
+export const commands = new Commands();

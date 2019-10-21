@@ -1,7 +1,20 @@
 import * as glob from 'glob';
 import * as rimraf from 'rimraf';
-import { writeFile, readFile, copyFile, constants, exists, mkdir, lstat, unlink, mkdirSync, existsSync, statSync } from 'fs';
+import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
+import {
+  writeFile,
+  readFile,
+  copyFile,
+  constants,
+  exists,
+  mkdir,
+  lstat,
+  unlink,
+  mkdirSync,
+  existsSync,
+  statSync,
+} from 'fs';
 import { deepMerge } from './merge';
 import { promptConfirm } from './interactive';
 import { nodeVersion } from './info';
@@ -56,7 +69,7 @@ function isLegacy() {
 }
 
 export function removeDirectory(targetDir: string) {
-  return new Promise((resolve, reject) => rimraf(targetDir, err => (err ? reject(err) : resolve())));
+  return new Promise<void>((resolve, reject) => rimraf(targetDir, err => (err ? reject(err) : resolve())));
 }
 
 export async function createDirectory(targetDir: string) {
@@ -207,6 +220,13 @@ export function readBinary(targetDir: string, fileName: string) {
   });
 }
 
+export function readText(targetDir: string, fileName: string) {
+  const targetFile = join(targetDir, fileName);
+  return new Promise<string>(resolve => {
+    readFile(targetFile, 'utf8', (err, c) => (err ? resolve(undefined) : resolve(c)));
+  });
+}
+
 export async function updateExistingJson<T>(targetDir: string, fileName: string, newContent: T) {
   const content = await mergeWithJson(targetDir, fileName, newContent);
   await updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));
@@ -256,4 +276,42 @@ export async function move(source: string, target: string, forceOverwrite = Forc
   await copy(source, target, forceOverwrite);
   await remove(source);
   return target;
+}
+
+export async function getSourceFiles(entry: string) {
+  const dir = dirname(entry);
+  const files = await matchFiles(dir, '**/*.?(jsx|tsx|js|ts)');
+  return files.map(path => {
+    const directory = dirname(path);
+    const name = basename(path);
+
+    return {
+      path,
+      directory,
+      name,
+      async read() {
+        const content = await readText(directory, name);
+
+        if (name.endsWith('.ts') || name.endsWith('.tsx')) {
+          return transpileModule(content, {
+            fileName: path,
+            moduleName: name,
+            compilerOptions: {
+              allowJs: true,
+              skipLibCheck: true,
+              declaration: false,
+              sourceMap: false,
+              checkJs: false,
+              jsx: JsxEmit.React,
+              module: ModuleKind.ESNext,
+              moduleResolution: ModuleResolutionKind.NodeJs,
+              target: ScriptTarget.ESNext,
+            },
+          }).outputText;
+        }
+
+        return content;
+      },
+    };
+  });
 }

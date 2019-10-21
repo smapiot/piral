@@ -4,7 +4,7 @@ import { dirname, join } from 'path';
 import { buildKrasWithCli, readKrasConfig, krasrc } from 'kras';
 import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
 import { setStandardEnvs, StandardEnvProps } from './envs';
-import { extendBundlerWithPlugins } from './bundler';
+import { extendBundlerWithPlugins, clearCache } from './bundler';
 import { liveIcon, settingsIcon } from './emoji';
 import { extendConfig } from './settings';
 import { startServer } from './server';
@@ -15,13 +15,15 @@ export interface DebugOptions {
   publicUrl?: string;
   options: StandardEnvProps;
   source?: string;
+  fresh?: boolean;
+  root?: string;
   logLevel: 1 | 2 | 3;
 }
 
 export async function runDebug(
   port: number,
   entry: string,
-  { publicUrl, options, source = entry, logLevel }: DebugOptions,
+  { publicUrl, options, source = entry, logLevel, fresh, root }: DebugOptions,
 ) {
   const krasConfig = readKrasConfig({ port }, krasrc);
 
@@ -42,6 +44,10 @@ export async function runDebug(
   }
 
   const buildServerPort = await getFreePort(defaultDevServerPort);
+
+  if (fresh) {
+    await clearCache(root);
+  }
 
   await setStandardEnvs(options);
 

@@ -17,47 +17,31 @@ Let's recap how the layout was done in the scaffolding process:
 
 ```jsx
 import * as React from 'react';
-import { renderInstance, buildLayout } from 'piral';
+import { renderInstance } from 'piral';
 
 renderInstance({
-  layout: buildLayout()
-    .withError(({ type }) => (
+  layout: {
+    ErrorInfo: ({ type }) => (
       <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
-    )),
+    ),
+    DashboardContainer: MyDashboardContainer,
+    DashboardTile: MyDashboardTile,
+  },
 });
 
 export * from 'piral/lib/types';
 ```
 
-We use a single property called `layout`, which expects a layout builder instance. A layout builder has the following signature:
+We use a single property called `layout`, which expects an object with components that are used to represent various building blocks.
 
-```ts
-interface LayoutBuilder {
-  build(): [React.ComponentType, GlobalStateOptions];
-}
-```
+The components allow to define the different parts of the application for visualization. For a dashboard we have a container (exposing the potential grid or any other mean of exposing the different tiles) and its tiles. If no special styling or definition should be considered the part does not need to be defined.
 
-The `GlobalStateOptions` could be just an empty object. Luckily, we don't need to implement anything ourselves. Instead, we can use the `buildLayout` function to obtain a layout builder instance, which provides a fluent interface.
-
-The fluent interface of the default layout builder contains functions such as `withLayout`, `withError`, or `withDashboard`. Since all of these functions are fluent they return the layout builder instance again. Besides the `with...` functions the default layout builder also exposed `create...` functions. These functions accept a callback as parameter, which allows using another (mini or sub) layout builder inside.
-
-An example would be using the `createDashboard` function:
-
-```ts
-const layout = buildLayout()
-  .createDashboard(dashboard => dashboard
-    .container(MyDashboardContainer)
-    .tile(MyDashboardTile));
-```
-
-The inner parts allow to define the different parts of the component to create. For a dashboard we have a container (exposing the potential grid or any other mean of exposing the different tiles) and its tiles. If no special styling or definition should be considered the part does not need to be defined.
-
-So what are the `MyDashboardContainer` and `MyDashboardTile` variables? We need to define these somewhere. At the end they are just React components.
+So what are the `MyDashboardContainer` and `MyDashboardTile` references? We need to define these somewhere. At the end they are just React components.
 
 For instance, the following definitions would be totally legit:
 
 ```jsx
-import { DashboardContainerProps, TileProps } from 'piral';
+import { DashboardContainerProps, DashboardTileProps } from 'piral';
 
 const MyDashboardContainer: React.FC<DashboardContainerProps> = ({ children }) => (
   <div className="dashboard">
@@ -68,7 +52,7 @@ const MyDashboardContainer: React.FC<DashboardContainerProps> = ({ children }) =
   </div>
 );
 
-const MyDashboardTile: React.FC<TileProps> = ({ columns, rows, resizable, children }) => (
+const MyDashboardTile: React.FC<DashboardTileProps> = ({ columns, rows, resizable, children }) => (
   <div className="tile" data-rows={rows} data-columns={columns}>
     {children}
     {resizable && <div className="tile-resizer" />}
@@ -90,21 +74,25 @@ We start with the necessary imports
 
 ```jsx
 import * as React from 'react';
-import { buildLayout } from 'piral';
 ```
 
-then we use the default layout builder
+then we use the default layout object to define everything that we care, e.g.,
 
 ```jsx
-const layout = buildLayout()
-  .withLayout(Layout)
-  .withLoader(Loader)
-  .createDashboard(dashboardBuilder)
-  .createError(errorBuilder)
-  .createMenu(menuBuilder)
-  .createSearch(searchBuilder)
-  .createNotifications(notificationsBuilder)
-  .createModals(modalsBuilder);
+const layout = {
+  Layout,
+  LoadingIndicator,
+  DashboardContainer,
+  DashboardTile,
+  ErrorInfo,
+  MenuContainer,
+  MenuItem,
+  SearchResult,
+  SearchInput,
+  SearchContainer,
+  NotificationsHost,
+  NotificationsToast,
+};
 ```
 
 At this point the used sub-builders and components need to be resolved.
@@ -112,7 +100,7 @@ At this point the used sub-builders and components need to be resolved.
 There are some really simple components in there, e.g., the `Loader` may look like
 
 ```jsx
-const Loader = () => (
+const LoadingIndicator = () => (
   <div className="v-center h-center">
     <div className="loading-spinner">
       Loading ...
@@ -124,14 +112,10 @@ const Loader = () => (
 and more complicated ones such as the full `Layout` itself.
 
 ```jsx
-const Layout = ({
-  Menu,
-  Notifications,
-  Search,
-  Modals,
-  selectedLanguage,
-  children,
-}) => (
+import { Menu, Notifications, Modals } from 'piral';
+import { Search } from 'piral-search';
+
+const Layout = ({ children }) => (
   <div className="app-container">
     <div className="app-menu">
       <div className="app-menu-content">
@@ -143,7 +127,7 @@ const Layout = ({
     <Modals />
     <div className="app-header">
       <div className="app-title">
-        <h1>Sample Layout ({selectedLanguage})</h1>
+        <h1>Sample Layout</h1>
       </div>
       <Search />
       <Menu type="header" />
@@ -158,24 +142,7 @@ const Layout = ({
 );
 ```
 
-Here some of the given props are standard values such as the chosen language (which changes when the currently selected language changes) or the currently displayed content (`children`). Other props refer to Piral internal components that may consist of user-defined components, such as the `Menu` or `Search`.
-
-The sub-builders work like the dashboard example above. In case of the `menuBuilder` we can define it like:
-
-```jsx
-const menuBuilder = menu =>
-  menu
-    .container(({ children }) => (
-      <div className="menu">
-        {children}
-      </div>
-    ))
-    .item(({ children }) => (
-      <div className="menu-item">
-        {children}
-      </div>
-    ));
-```
+Note that only the `children` are transported as props. For the layout the children represent the page's content. All the rest, e.g., the `Menu` we use from `piral`, which uses internally the parts we defined (e.g., the `MenuContainer`).
 
 For the full example look at the [sample Piral instance layout definition](https://github.com/smapiot/piral/blob/master/src/samples/sample-piral/src/layout.tsx).
 

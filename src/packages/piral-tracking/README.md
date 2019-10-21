@@ -18,27 +18,17 @@ For the setup of the library itself you'll need to import `createTrackingApi` fr
 import { createTrackingApi } from 'piral-tracking';
 ```
 
-For the integration this depends on the Piral instance.
-
-For `piral-core`-based instances this boils down to:
-
-```ts
-const PiralInstance = createInstance({
-  // important part
-  extendApi: extendApis([createTrackingApi]),
-  // ...
-});
-```
-
-For `piral`-based instances the integration looks like:
+The integration looks like:
 
 ```tsx
-renderInstance({
+const instance = createInstance({
   // important part
-  extendApi: extendApis([createTrackingApi]),
+  extendApi: [createTrackingApi()],
   // ...
 });
 ```
+
+There are no options available.
 
 ## Events
 

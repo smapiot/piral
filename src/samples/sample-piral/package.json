@@ -32,6 +32,8 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "piral": "^0.7.0",
+    "piral-auth": "^0.7.0",
+    "piral-search": "^0.7.0",
     "reactstrap": "^8.0.1"
   },
   "pilets": {

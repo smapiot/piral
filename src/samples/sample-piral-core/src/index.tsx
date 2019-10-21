@@ -4,10 +4,25 @@ import 'zone.js/dist/zone';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoaderProps, useSearch, useAction, setupState, extendApis } from 'piral-core';
+import {
+  createInstance,
+  useGlobalState,
+  LoadingIndicatorProps,
+  useAction,
+  Piral,
+  SetComponent,
+  SetRoute,
+} from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createVueApi } from 'piral-vue';
+import { createMenuApi } from 'piral-menu';
+import { createNotificationsApi } from 'piral-notifications';
+import { createDashboardApi, Dashboard } from 'piral-dashboard';
+import { createContainerApi } from 'piral-containers';
+import { createFeedsApi } from 'piral-feeds';
+import { createFormsApi } from 'piral-forms';
 import { createHyperappApi } from 'piral-hyperapp';
+import { createSearchApi, useSearch } from 'piral-search';
 import { availablePilets } from './pilets';
 
 customElements.define(
@@ -23,14 +38,14 @@ customElements.define(
   },
 );
 
-const Loader: React.FC<LoaderProps> = () => (
+const Loader: React.FC<LoadingIndicatorProps> = () => (
   <div className="app-center">
     <pi-spinner>Loading ...</pi-spinner>
   </div>
 );
 
 const Sitemap: React.FC<RouteComponentProps> = () => {
-  const pages = useGlobalState(s => s.components.pages);
+  const pages = useGlobalState(s => s.registry.pages);
 
   return (
     <ul>
@@ -55,7 +70,7 @@ const Sitemap: React.FC<RouteComponentProps> = () => {
 };
 
 const Menu: React.FC = () => {
-  const menuItems = useGlobalState(s => s.components.menuItems);
+  const menuItems = useGlobalState(s => s.registry.menuItems);
 
   return (
     <ul className="app-nav">
@@ -84,10 +99,7 @@ const Menu: React.FC = () => {
 };
 
 const SearchResults: React.FC = () => {
-  const { loading, items } = useGlobalState(m => ({
-    loading: m.search.loading,
-    items: m.search.results,
-  }));
+  const { loading, items } = useGlobalState(m => m.search.results);
   return (
     <div className="search-results">
       {items.map((item, i) => (
@@ -122,7 +134,7 @@ const SearchForm: React.FC = () => {
 };
 
 const Notifications: React.FC = () => {
-  const notifications = useGlobalState(s => s.app.notifications);
+  const notifications = useGlobalState(s => s.notifications);
 
   return (
     <div className="app-notifications">
@@ -142,7 +154,7 @@ const Notifications: React.FC = () => {
 };
 
 const Layout: React.FC = ({ children }) => {
-  const layout = useGlobalState(s => s.app.layout.current);
+  const layout = useGlobalState(s => s.app.layout);
 
   return (
     <div className="app-container">
@@ -158,22 +170,34 @@ const Layout: React.FC = ({ children }) => {
   );
 };
 
-const Piral = createInstance({
+const instance = createInstance({
   availablePilets,
-  extendApi: extendApis([createVueApi, createNgApi, createHyperappApi]),
+  extendApi: [
+    createVueApi(),
+    createNgApi(),
+    createHyperappApi(),
+    createMenuApi(),
+    createNotificationsApi(),
+    createContainerApi(),
+    createDashboardApi(),
+    createFeedsApi(),
+    createFormsApi(),
+    createSearchApi(),
+  ],
   requestPilets() {
     // return fetch('http://localhost:9000/api/pilet')
     //   .then(res => res.json())
     //   .then(res => res.items);
     return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
-  state: setupState({
-    Loader,
-    routes: {
-      '/sitemap': Sitemap,
-    },
-  }),
 });
 
-const app = <Piral.App>{content => <Layout>{content}</Layout>}</Piral.App>;
+const app = (
+  <Piral instance={instance}>
+    <SetComponent name="LoadingIndicator" component={Loader} />
+    <SetComponent name="Layout" component={Layout} />
+    <SetRoute path="/" component={Dashboard} />
+    <SetRoute path="/sitemap" component={Sitemap} />
+  </Piral>
+);
 render(app, document.querySelector('#app'));

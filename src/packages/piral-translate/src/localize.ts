@@ -1,4 +1,4 @@
-import { LocalizationMessages } from './types';
+import { LocalizationMessages, Localizable } from './types';
 
 function defaultFallback(key: string, language: string): string {
   if (process.env.NODE_ENV === 'production') {
@@ -19,11 +19,16 @@ function formatMessage<T>(message: string, variables: T): string {
   });
 }
 
-export class Localizer {
+export class Localizer implements Localizable {
   /**
    * Creates a new instance of a localizer.
    */
-  constructor(public messages: LocalizationMessages, public language: string, private fallback = defaultFallback) {}
+  constructor(
+    public messages: LocalizationMessages,
+    public language: string,
+    public languages: Array<string>,
+    private fallback = defaultFallback,
+  ) {}
 
   /**
    * Localizes the given key via the global translations.

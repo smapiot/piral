@@ -1,18 +1,10 @@
 import * as React from 'react';
-import { LayoutProps } from 'piral';
+import { LayoutProps, Menu, Notifications, Modals, Languages } from 'piral';
+import { Search } from 'piral-search';
 import { MenuToggle } from './MenuToggle';
 import { User } from './User';
-import { LanguagePicker } from './LanguagePicker';
 
-export const Layout: React.FC<LayoutProps> = ({
-  Menu,
-  Notifications,
-  Search,
-  children,
-  Modals,
-  selectedLanguage,
-  availableLanguages,
-}) => (
+export const Layout: React.FC<LayoutProps> = ({ children }) => (
   <div className="app-container">
     <div className="app-menu">
       <div className="app-menu-content">
@@ -29,7 +21,7 @@ export const Layout: React.FC<LayoutProps> = ({
       </div>
       <Search />
       <Menu type="header" />
-      <LanguagePicker selected={selectedLanguage} available={availableLanguages} />
+      <Languages />
       <User />
     </div>
     <div className="app-content">{children}</div>

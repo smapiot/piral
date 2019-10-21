@@ -1,5 +1,3 @@
-import { Dict } from '../types';
-
 // tslint:disable-next-line
 export const removeIndicator = null;
 
@@ -23,22 +21,26 @@ export function excludeItem<T>(items: Array<T>, item: T) {
   return (items || []).filter(m => m !== item);
 }
 
+export function includeItem<T>(items: Array<T>, item: T) {
+  return prependItem(excludeItem(items, item), item);
+}
+
 export function excludeOn<T>(items: Array<T>, predicate: (item: T) => boolean) {
   return (items || []).filter(m => !predicate(m));
 }
 
-export function updateKey<T>(obj: Dict<T>, key: string, value: T): Dict<T> {
+export function updateKey<T, TKey extends keyof T>(obj: T, key: TKey, value: T[TKey]): T {
   return value === removeIndicator ? withoutKey(obj, key) : withKey(obj, key, value);
 }
 
-export function withKey<T>(obj: Dict<T>, key: string, value: T): Dict<T> {
+export function withKey<T, TKey extends keyof T>(obj: T, key: TKey, value: T[TKey]): T {
   return {
     ...obj,
     [key]: value,
   };
 }
 
-export function withoutKey<T>(obj: Dict<T>, key: string): Dict<T> {
+export function withoutKey<T, TKey extends keyof T>(obj: T, key: TKey): T {
   const { [key]: _, ...newObj } = obj || {};
-  return newObj;
+  return newObj as any;
 }

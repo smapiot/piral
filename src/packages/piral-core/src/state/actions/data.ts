@@ -1,19 +1,16 @@
-import { swap, Atom, deref, DeepImmutableObject } from '@dbeining/react-atom';
+import { swap, Atom, deref } from '@dbeining/react-atom';
 import { updateKey } from '../../utils';
-import { GlobalState, SharedDataItem, DataStoreTarget, EventEmitter } from '../../types';
+import { GlobalState, DataStoreTarget, EventEmitter } from '../../types';
 
 export function resetData(ctx: Atom<GlobalState>) {
   swap(ctx, state => ({
     ...state,
-    app: {
-      ...state.app,
-      data: {},
-    },
+    data: {},
   }));
 }
 
 export function readDataItem(ctx: Atom<GlobalState>, key: string) {
-  return deref(ctx).app.data[key];
+  return deref(ctx).data[key];
 }
 
 export function readDataValue(ctx: Atom<GlobalState>, key: string) {
@@ -41,21 +38,16 @@ export function writeDataItem(
       };
   swap(ctx, state => ({
     ...state,
-    app: {
-      ...state.app,
-      data: updateKey<SharedDataItem>(state.app.data, key, data),
-    },
+    data: updateKey(state.data, key, data),
   }));
 
-  if (target !== 'memory') {
-    this.emit('store-data', {
-      name,
-      target,
-      value,
-      owner,
-      expires,
-    });
-  }
+  this.emit('store-data', {
+    name,
+    target,
+    value,
+    owner,
+    expires,
+  });
 }
 
 export function tryWriteDataItem(
@@ -67,13 +59,11 @@ export function tryWriteDataItem(
   target: DataStoreTarget,
   expires: number,
 ) {
-  const item: DeepImmutableObject<SharedDataItem> = readDataItem(ctx, key);
+  const item = readDataItem(ctx, key);
 
   if (item && item.owner !== owner) {
     console.error(
-      `Invalid data write to '${key}'. This item currently belongs to '${
-        item.owner
-      }' (write attempted from '${owner}'). The action has been ignored.`,
+      `Invalid data write to '${key}'. This item currently belongs to '${item.owner}' (write attempted from '${owner}'). The action has been ignored.`,
     );
     return false;
   }

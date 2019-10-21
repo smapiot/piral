@@ -1,3 +1,95 @@
+import 'piral-core';
+import { ComponentType } from 'react';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiletLocaleApi {}
+
+  interface PiralCustomState {
+    /**
+     * Information for the language display.
+     */
+    language: {
+      /**
+       * Gets if languages are currently loading.
+       */
+      loading: boolean;
+      /**
+       * The selected, i.e., active, language.
+       */
+      selected: string;
+      /**
+       * The available languages.
+       */
+      available: Array<string>;
+    };
+  }
+
+  interface PiralCustomActions {
+    /**
+     * Changes the selected language.
+     * @param selected The selected language.
+     */
+    selectLanguage(selected: string): void;
+    /**
+     * Gets the translation for the given key at the current
+     * language.
+     */
+    translate(tag: string, variables?: Record<string, string>): string;
+    /**
+     * Sets the translations (both global and local) for
+     * the given language.
+     * @param language The language to set the translations for.
+     * @param data The global and local translations.
+     */
+    setTranslations(language: string, data: LanguageData): void;
+    /**
+     * Gets the translations (both global and local) for
+     * the given language.
+     * @param language The language to get the translations for.
+     * @result The global and local translations.
+     */
+    getTranslations(language: string): LanguageData;
+  }
+
+  interface PiralCustomComponentsState {
+    /**
+     * Represents the component for rendering a language selection.
+     */
+    LanguagesPicker: ComponentType<LanguagesPickerProps>;
+  }
+}
+
+export interface LanguagesPickerProps {
+  /**
+   * The currently selected language.
+   */
+  selected: string;
+  /**
+   * The languages available for selection.
+   */
+  available: Array<string>;
+}
+
+export interface LanguageLoader {
+  (language: string, current: LanguageData): Promise<LanguageData>;
+}
+
+export interface LanguageData {
+  global: Translations;
+  locals: Array<{
+    name: string;
+    value: Translations;
+  }>;
+}
+
+export interface Localizable {
+  messages: LocalizationMessages;
+  language: string;
+  languages: Array<string>;
+  localizeGlobal<T>(key: string, variables?: T): string;
+  localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T): string;
+}
+
 export interface Translations {
   /**
    * The available wordings (tag to translation).
@@ -16,7 +108,7 @@ export interface TranslationFallback {
   (key: string, language: string): string;
 }
 
-export interface PiralLocaleApi {
+export interface PiletLocaleApi {
   /**
    * Translates the given tag (using the optional variables) into a string using the current language.
    * The used template can contain placeholders in form of `{{variableName}}`.
@@ -36,6 +128,13 @@ export interface PiralLocaleApi {
   getTranslations(): LocalizationMessages;
 }
 
+export interface RetrieveCurrentLanguage {
+  /**
+   * A function to identify the current language.
+   */
+  (languages: Array<string>, defaultLanguage: string, fallbackLanguage?: string): string;
+}
+
 export interface LocaleConfig {
   /**
    * Sets the default (global) localization messages.
@@ -45,7 +144,7 @@ export interface LocaleConfig {
   /**
    * Sets the default language to use.
    */
-  language?: string;
+  language?: string | RetrieveCurrentLanguage;
   /**
    * Sets the optional fallback to use.
    */

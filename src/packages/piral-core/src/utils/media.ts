@@ -1,6 +1,6 @@
-import { LayoutType, LayoutBreakpoints } from '../types';
+import { LayoutTypes, LayoutBreakpoints } from '../types';
 
-export const defaultLayouts: Array<LayoutType> = ['desktop', 'tablet', 'mobile'];
+export const defaultLayouts: LayoutTypes = ['desktop', 'tablet', 'mobile'];
 
 export const defaultBreakpoints: LayoutBreakpoints = ['(min-width: 991px)', '(min-width: 481px)', '(max-width: 480px)'];
 

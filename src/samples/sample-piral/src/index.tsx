@@ -1,22 +1,34 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { renderInstance } from 'piral';
+import { renderInstance, getUserLocale } from 'piral';
+import { createAuthApi } from 'piral-auth';
+import { createSearchApi } from 'piral-search';
 import { setupFooter, setupMenu } from './parts';
-import { layout } from './layout';
+import { layout, errors } from './layout';
 
 renderInstance({
-  subscriptionUrl: false,
-  layout,
-  config: {
-    translations: ['en', 'de'],
-    attach(api) {
-      setupFooter(api);
-      setupMenu(api);
+  settings: {
+    gql: {
+      subscriptionUrl: false,
     },
-    pilets: () =>
-      fetch('https://feed.piral.io/api/v1/pilet/sample')
-        .then(res => res.json())
-        .then(res => res.items),
+    locale: {
+      language: getUserLocale,
+      messages: {
+        de: {},
+        en: {},
+      },
+    },
+    menu: {
+      items: [...setupMenu(), ...setupFooter()],
+    },
   },
+  extendApi: [createAuthApi(), createSearchApi()],
+  requestPilets() {
+    return fetch('https://feed.piral.io/api/v1/pilet/sample')
+      .then(res => res.json())
+      .then(res => res.items);
+  },
+  layout,
+  errors,
 });
 
 export * from 'piral';

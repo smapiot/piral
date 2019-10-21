@@ -104,7 +104,7 @@ Additionally, its easier to use existing code or share this component with exist
 
 But normally our components (e.g., pages) will not stay so simple, right?
 
-## What about Data?
+## What about Data
 
 Modern web applications are a combination of static assets (text, images, ...) with dynamic data (usually coming from an API). These are not your daddy's websites anymore - they are live and closer to normal applications in every metric.
 

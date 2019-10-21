@@ -2,14 +2,19 @@ import { exec } from 'child_process';
 import { resolve } from 'path';
 import { isWindows } from './info';
 
-export function runScript(script: string, cwd = process.cwd()) {
+export function runScript(
+  script: string,
+  cwd = process.cwd(),
+  output: NodeJS.WritableStream = process.stdout,
+  input: NodeJS.ReadableStream = process.stdin,
+) {
   const bin = resolve('./node_modules/.bin');
   const sep = isWindows ? ';' : ':';
   const env = Object.assign({}, process.env);
 
   env.PATH = `${bin}${sep}${env.PATH}`;
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const opt = { end: false };
     const cp = exec(script, {
       cwd,
@@ -17,12 +22,12 @@ export function runScript(script: string, cwd = process.cwd()) {
     });
 
     cp.stdout.pipe(
-      process.stdout,
+      output,
       opt,
     );
 
-    cp.stdin.pipe(
-      process.stdin,
+    input.pipe(
+      cp.stdin,
       opt,
     );
 

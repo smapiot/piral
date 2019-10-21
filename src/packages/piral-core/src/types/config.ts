@@ -1,9 +1,10 @@
-import { ArbiterModule, DependencyGetter } from 'react-arbiter';
+import { DependencyGetter, ArbiterRecallStrategy } from 'react-arbiter';
+import { Pilet, PiletApi } from './api';
 import { NestedPartial } from './common';
 import { PiletRequester, Extend } from './plugin';
 import { GlobalState } from './state';
 
-export interface PiralPiletConfiguration<TApi> {
+export interface PiralPiletConfiguration {
   /*
    * Function to load the modules asynchronously, e.g., from a server 🚚.
    */
@@ -13,15 +14,15 @@ export interface PiralPiletConfiguration<TApi> {
    * The given modules are all already evaluated.
    * This can be used for customization or for debugging purposes.
    */
-  availablePilets?: Array<ArbiterModule<TApi>>;
+  availablePilets?: Array<Pilet>;
   /**
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  extendApi?: Extend<TApi>;
+  extendApi?: Extend | Array<Extend>;
 }
 
-export interface PiralStateConfiguration<TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+export interface PiralStateConfiguration {
   /**
    * Function to get the dependencies for a given module.
    */
@@ -30,19 +31,11 @@ export interface PiralStateConfiguration<TState extends GlobalState = GlobalStat
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.
    */
-  async?: boolean;
+  async?: boolean | ArbiterRecallStrategy<PiletApi>;
   /**
    * Optionally, sets up the initial state of the application.
    */
-  state?: NestedPartial<TState>;
-  /**
-   * Optionally, sets additional actions to be included.
-   */
-  actions?: TActions;
+  state?: NestedPartial<GlobalState>;
 }
 
-export type PiralConfiguration<
-  TApi,
-  TState extends GlobalState = GlobalState,
-  TActions extends {} = {}
-> = PiralPiletConfiguration<TApi> & PiralStateConfiguration<TState, TActions>;
+export type PiralConfiguration = PiralPiletConfiguration & PiralStateConfiguration;

@@ -1,35 +1,59 @@
-import { PiralCoreApi } from 'piral-core';
-import { mount } from './mount';
-import { PiralVueApi } from './types';
+import { Extend } from 'piral-core';
+import { mount, register } from './mount';
+import { PiletVueApi } from './types';
+
+/**
+ * Available configuration options for the Vue extension.
+ */
+export interface VueConfig {
+  /**
+   * Defines the name of the extension component.
+   * @default extension-component
+   */
+  selector?: string;
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
 
 /**
  * Creates a new set of Piral Vue API extensions.
- * @param api The API to extend.
  */
-export function createVueApi<T extends PiralCoreApi<any>>(api: T): PiralVueApi<T> {
-  return {
-    registerTileVue(id, root, options?) {
-      if (typeof id === 'string') {
-        api.registerTileX(id, (el, props, ctx) => mount(el, root, props, ctx), options);
-      } else {
-        api.registerTileX((el, props, ctx) => mount(el, id, props, ctx), root);
-      }
-    },
-    registerPageVue(route, root) {
-      api.registerPageX(route, (el, props, ctx) => mount(el, root, props, ctx));
-    },
-    registerExtensionVue<TOpt>(slot, root, defaults) {
-      api.registerExtensionX<TOpt>(slot, (el, props, ctx) => mount(el, root, props, ctx), defaults);
-    },
-    registerMenuVue(id, root, settings?) {
-      if (typeof id === 'string') {
-        api.registerMenuX(id, (el, props, ctx) => mount(el, root, props, ctx), settings);
-      } else {
-        api.registerMenuX((el, props, ctx) => mount(el, id, props, ctx), root);
-      }
-    },
-    registerModalVue<TOpt>(id, root, defaults) {
-      api.registerModalX<TOpt>(id, (el, props, ctx) => mount(el, root, props, ctx), defaults);
-    },
+export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
+  const { rootName = 'slot', selector = 'extension-component' } = config;
+
+  return context => {
+    context.converters.vue = ({ root }) => {
+      return (parent, props, ctx) => {
+        const el = parent.appendChild(document.createElement(rootName));
+        const piral = props && props.piral;
+
+        if (piral) {
+          register(selector, piral.VueExtension);
+        }
+
+        return mount(el, root, props, ctx);
+      };
+    };
+
+    return api => ({
+      VueExtension: {
+        functional: false,
+        props: ['name', 'empty', 'render', 'params'],
+        render(createElement) {
+          return createElement(rootName);
+        },
+        mounted() {
+          api.renderHtmlExtension(this.$el, {
+            empty: this.empty,
+            params: this.params,
+            render: this.render,
+            name: this.name,
+          });
+        },
+      },
+    });
   };
 }

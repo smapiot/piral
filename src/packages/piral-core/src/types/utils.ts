@@ -1,5 +1,4 @@
-import { ArbiterModuleMetadata } from 'react-arbiter';
-import { UserInfo } from './user';
+import { PiralCustomEventMap } from './custom';
 
 export interface PiralStorage {
   /**
@@ -36,44 +35,30 @@ export interface Listener<T> {
 }
 
 export interface PiralStoreDataEvent {
+  /**
+   * The name of the item that was stored.
+   */
   name: string;
+  /**
+   * The storage target of the item.
+   */
   target: string;
+  /**
+   * The value that was stored.
+   */
   value: any;
+  /**
+   * The owner of the item.
+   */
   owner: string;
+  /**
+   * The expiration of the item.
+   */
   expires: number;
 }
 
-export interface PiralChangeLanguageEvent {
-  previous: string;
-  selected: string;
-}
-
-export interface PiralChangeLayoutEvent {
-  previous: string;
-  current: string;
-}
-
-export interface PiralChangeUserEvent {
-  previous: UserInfo;
-  current: UserInfo;
-}
-
-export interface PiralStartLoadEvent {}
-
-export interface PiralEndLoadEvent {
-  modules: Array<ArbiterModuleMetadata>;
-}
-
-export interface PiralLoadingEvent {}
-
-export interface PiralEventMap {
+export interface PiralEventMap extends PiralCustomEventMap {
   'store-data': PiralStoreDataEvent;
-  'change-language': PiralChangeLanguageEvent;
-  'change-layout': PiralChangeLayoutEvent;
-  'change-user': PiralChangeUserEvent;
-  'load-start': PiralStartLoadEvent;
-  'load-end': PiralEndLoadEvent;
-  loading: PiralLoadingEvent;
   [custom: string]: any;
 }
 

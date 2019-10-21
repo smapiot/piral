@@ -1,13 +1,15 @@
 import { Component, Inject } from '@angular/core';
-import { ArbiterModule } from 'react-arbiter';
-import { TileComponentProps } from 'piral-core';
-import { SampleApi } from '../types';
+import { Pilet } from 'piral-core';
+import { TileComponentProps } from 'piral-dashboard';
 
 @Component({
   template: `
     <div class="tile">
       <h3>Angular: {{ counter }}</h3>
-      <p>{{ props.rows }} rows and {{ props.columns }} columns</p>
+      <p>
+        {{ props.rows }} rows and {{ props.columns }} columns
+        <extension-component name="smiley"></extension-component>
+      </p>
       <button (click)="increment()">Increment</button>
       <button (click)="decrement()">Decrement</button>
     </div>
@@ -16,7 +18,7 @@ import { SampleApi } from '../types';
 export class TileComponent {
   public counter = 0;
 
-  constructor(@Inject('TileProps') public props: TileComponentProps<any>) {}
+  constructor(@Inject('Props') public props: TileComponentProps) {}
 
   increment() {
     this.counter += 1;
@@ -30,15 +32,21 @@ export class TileComponent {
 /**
  * Shows an API extension using Angular components.
  */
-export const NgPilet: ArbiterModule<SampleApi> = {
+export const NgPilet: Pilet = {
   content: '',
   name: 'Angular Module',
   version: '1.0.0',
   hash: '430',
   setup(piral) {
-    piral.registerTileNg(TileComponent, {
-      initialColumns: 2,
-      initialRows: 2,
-    });
+    piral.registerTile(
+      {
+        component: TileComponent,
+        type: 'ng',
+      },
+      {
+        initialColumns: 2,
+        initialRows: 2,
+      },
+    );
   },
 };

@@ -11,6 +11,7 @@ import {
   logFail,
   removeDirectory,
   extendBundlerWithPlugins,
+  clearCache,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -46,6 +47,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     throw new Error('Invalid pilet.');
   }
 
+  const root = dirname(packageJson);
   const externals = Object.keys(require(packageJson).peerDependencies);
 
   await setStandardEnvs({
@@ -59,6 +61,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   };
 
   if (fresh) {
+    await clearCache(root);
     await removeDirectory(dest.outDir);
   }
 

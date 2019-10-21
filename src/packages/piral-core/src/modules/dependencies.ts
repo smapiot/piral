@@ -1,4 +1,5 @@
 import { AvailableDependencies, isfunc } from 'react-arbiter';
+import { PiletMetadata } from '../types';
 
 const sharedDependencies: AvailableDependencies = {};
 
@@ -27,4 +28,8 @@ export function getLocalDependencies(): AvailableDependencies {
     ...globalDependencies,
     ...sharedDependencies,
   };
+}
+
+export function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
+  return Promise.resolve([]);
 }

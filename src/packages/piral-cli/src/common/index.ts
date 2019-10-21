@@ -16,6 +16,7 @@ export * from './package';
 export * from './piral';
 export * from './pilet';
 export * from './port';
+export * from './rules';
 export * from './scaffold';
 export * from './scripts';
 export * from './server';

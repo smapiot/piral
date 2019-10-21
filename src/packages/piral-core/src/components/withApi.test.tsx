@@ -7,10 +7,8 @@ jest.mock('../hooks');
 
 (hooks as any).useGlobalState = (select: any) =>
   select({
-    app: {
-      components: {
-        ErrorInfo: StubErrorInfo,
-      },
+    components: {
+      ErrorInfo: StubErrorInfo,
     },
   });
 
@@ -28,7 +26,7 @@ StubComponent.displayName = 'StubComponent';
 describe('withApi Module', () => {
   it('wraps a component and forwards the API as piral', () => {
     const api: any = {};
-    const Component = withApi(StubComponent, api, 'feed');
+    const Component = withApi({}, StubComponent, api, 'feed');
     const node = mount(<Component />);
     expect(
       node
@@ -41,7 +39,7 @@ describe('withApi Module', () => {
   it('is protected against a component crash', () => {
     console.error = jest.fn();
     const api: any = {};
-    const Component = withApi(StubComponent, api, 'feed');
+    const Component = withApi({}, StubComponent, api, 'feed');
     const node = mount(<Component shouldCrash />);
     expect(
       node
@@ -58,7 +56,7 @@ describe('withApi Module', () => {
         name: 'my pilet',
       },
     };
-    const Component = withApi(StubComponent, api, 'feed');
+    const Component = withApi({}, StubComponent, api, 'feed');
     mount(<Component shouldCrash />);
     expect(console.error).toHaveBeenCalled();
   });

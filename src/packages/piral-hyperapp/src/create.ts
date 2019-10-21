@@ -1,35 +1,42 @@
-import { PiralCoreApi } from 'piral-core';
-import { mount } from './mount';
-import { PiralHyperappApi } from './types';
+import { Extend } from 'piral-core';
+import { mount, createElement } from './mount';
+import { PiletHyperappApi } from './types';
+
+/**
+ * Available configuration options for the Hyperapp extension.
+ */
+export interface HyperappConfig {
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
 
 /**
  * Creates a new set of Piral hyperapp API extensions.
- * @param api The API to extend.
  */
-export function createHyperappApi<T extends PiralCoreApi<any>>(api: T): PiralHyperappApi<T> {
-  return {
-    registerTileHyperapp(id, root, state, actions, options?) {
-      if (typeof id === 'string') {
-        api.registerTileX(id, (el, props, ctx) => mount(el, root, props, ctx, state, actions), options);
-      } else {
-        api.registerTileX((el, props, ctx) => mount(el, id, props, ctx, root, state), actions);
-      }
-    },
-    registerPageHyperapp(route, root, state, actions) {
-      api.registerPageX(route, (el, props, ctx) => mount(el, root, props, ctx, state, actions));
-    },
-    registerExtensionHyperapp(slot, root, state, actions, defaults) {
-      api.registerExtensionX(slot, (el, props, ctx) => mount(el, root, props as any, ctx, state, actions), defaults);
-    },
-    registerMenuHyperapp(id, root, state, actions, settings?) {
-      if (typeof id === 'string') {
-        api.registerMenuX(id, (el, props, ctx) => mount(el, root, props, ctx, state, actions), settings);
-      } else {
-        api.registerMenuX((el, props, ctx) => mount(el, id, props, ctx, root, state), actions);
-      }
-    },
-    registerModalHyperapp(id, root, state, actions, defaults) {
-      api.registerModalX(id, (el, props, ctx) => mount(el, root, props as any, ctx, state, actions), defaults);
-    },
+export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHyperappApi> {
+  const { rootName = 'slot' } = config;
+
+  return context => {
+    context.converters.hyperapp = component => {
+      return (el, props, ctx) => {
+        return mount(el, component.root, props, ctx, component.state, component.actions);
+      };
+    };
+
+    return api => {
+      const HyperappExtension = props =>
+        createElement(rootName, {
+          oncreate(element: HTMLElement) {
+            api.renderHtmlExtension(element, props);
+          },
+        });
+
+      return {
+        HyperappExtension,
+      };
+    };
   };
 }

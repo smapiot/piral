@@ -1,95 +1,69 @@
-import { ArbiterModuleMetadata } from 'react-arbiter';
-import { LocalizationMessages, FetchConfig, GqlConfig, LocaleConfig } from 'piral-ext';
-import { PiralStateConfiguration, GlobalState, PiletRequester, Extend } from 'piral-core';
-import { PiralGqlApiQuery, PiralFetchApiFetch, PiralGqlApiMutate, PiralGqlApiSubscribe } from 'piral-ext';
-import { LayoutBuilder } from './layout';
+import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral-core';
+import {
+  FetchConfig,
+  GqlConfig,
+  LocaleConfig,
+  DashboardConfig,
+  MenuConfig,
+  NotificationsConfig,
+  ModalsConfig,
+  FeedsConfig,
+} from 'piral-ext';
 
-export interface PiralAttachment<TApi> {
-  (api: TApi): void;
-}
-
-export type PiletsMetadata = Array<ArbiterModuleMetadata>;
-
-export interface PiletQueryResult {
-  pilets: PiletsMetadata;
-}
-
-export interface PiralConfig<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}>
-  extends PiralStateConfiguration<TState, TActions> {
+export interface PiralExtSettings {
   /**
-   * Sets the default translations to be available. Alternatively,
-   * sets the available languages.
-   * @default {}
-   */
-  translations?: LocalizationMessages | Array<string>;
-  /**
-   * Attaches a single static module to the application.
-   */
-  attach?: PiralAttachment<TApi>;
-  /**
-   * Sets the function for loading the pilets or the loaded pilet (metadata) itself.
-   */
-  pilets?: PiletRequester | PiletsMetadata;
-  /**
-   * Optionally provides a function to extend the API creator with some additional
-   * functionality.
-   */
-  extendApi?: Extend<TApi>;
-  /**
-   * Sets up the configuration for fetch.
+   * Customizes the fetch config.
    */
   fetch?: FetchConfig;
   /**
-   * Sets up the configuration for localization.
+   * Customizes the gql config.
+   */
+  gql?: GqlConfig;
+  /**
+   * Customizes the locale config.
    */
   locale?: LocaleConfig;
-}
-
-export interface PiralLoaderOptions {
-  query: PiralGqlApiQuery;
-  fetch: PiralFetchApiFetch;
-  mutate: PiralGqlApiMutate;
-  subscribe: PiralGqlApiSubscribe;
-}
-
-export interface PiralLoader<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
-  (options: PiralLoaderOptions): Promise<PiralConfig<TApi, TState, TActions> | undefined>;
+  /**
+   * Customizes the dashboard config.
+   */
+  dashboard?: DashboardConfig;
+  /**
+   * Customizes the menu config.
+   */
+  menu?: MenuConfig;
+  /**
+   * Customizes the notifications config.
+   */
+  notifications?: NotificationsConfig;
+  /**
+   * Customizes the modals config.
+   */
+  modals?: ModalsConfig;
+  /**
+   * Customizes the feeds config.
+   */
+  feeds?: FeedsConfig;
 }
 
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralOptions<TApi, TState extends GlobalState = GlobalState, TActions extends {} = {}> {
+export interface PiralRenderOptions extends PiralConfiguration {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
    */
   selector?: string | Element;
   /**
-   * Sets the URL of the portal gateway to the backend.
-   * @default document.location.origin,
+   * Customizes the extension settings.
    */
-  gatewayUrl?: string;
+  settings?: PiralExtSettings;
   /**
-   * Sets the URL of the GraphQL subscription or prevents
-   * creating a subscription.
-   * @default gatewayUrl,
+   * Defines how the layout looks like.
    */
-  subscriptionUrl?: false | string;
+  layout?: Partial<ComponentsState>;
   /**
-   * Gets the optional initial configuration.
+   * Defines how the errors looks like.
    */
-  config?: PiralConfig<TApi, TState, TActions>;
-  /**
-   * Defines some optional initial configuration loading.
-   */
-  loader?: PiralLoader<TApi, TState, TActions>;
-  /**
-   * Gets the layout builder to construct the design to display.
-   */
-  layout: LayoutBuilder;
-  /**
-   * Sets up the configuration for GraphQL.
-   */
-  gql?: GqlConfig;
+  errors?: Partial<ErrorComponentsState>;
 }

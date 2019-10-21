@@ -1,58 +1,44 @@
 import { Atom, addChangeHandler } from '@dbeining/react-atom';
-import { DefaultDashboard, DefaultErrorInfo, DefaultLoader } from '../components/default';
-import { defaultBreakpoints } from '../utils';
+import { BrowserRouter } from 'react-router-dom';
+import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout } from '../components';
 import { GlobalState, NestedPartial } from '../types';
 
-export function createGlobalState<TState extends GlobalState>(state: NestedPartial<TState> = {}) {
-  const globalState = Atom.of({
-    feeds: {},
-    forms: {},
-    modules: [],
-    ...state,
+function extend<T>(defaultState: T, customState: NestedPartial<T>) {
+  for (const key of Object.keys(customState)) {
+    const value = customState[key];
+    const original = defaultState[key];
+    const nested = typeof original === 'object' && typeof value === 'object';
+    defaultState[key] = nested ? extend(original, value) : value;
+  }
+
+  return defaultState;
+}
+
+export function createGlobalState(customState: NestedPartial<GlobalState> = {}) {
+  const defaultState: GlobalState = {
     app: {
-      language: {
-        selected: '',
-        available: [],
-      },
-      layout: {
-        current: 'desktop',
-        breakpoints: defaultBreakpoints,
-      },
-      components: {
-        Dashboard: DefaultDashboard,
-        ErrorInfo: DefaultErrorInfo,
-        Loader: DefaultLoader,
-      },
-      routes: {},
-      trackers: [],
-      data: {},
-      modals: [],
-      notifications: [],
+      error: undefined,
       loading: false,
-      ...state.app,
+      layout: 'desktop',
     },
     components: {
+      ErrorInfo: DefaultErrorInfo,
+      LoadingIndicator: DefaultLoadingIndicator,
+      Router: BrowserRouter,
+      Layout: DefaultLayout,
+    },
+    errorComponents: {},
+    registry: {
       extensions: {},
-      menuItems: {},
-      modals: {},
       pages: {},
-      tiles: {},
-      searchProviders: {},
-      ...state.components,
     },
-    user: {
-      current: undefined,
-      features: {},
-      permissions: {},
-      ...state.user,
-    },
-    search: {
-      input: '',
-      loading: false,
-      results: [],
-      ...state.search,
-    },
-  });
+    routes: {},
+    data: {},
+    portals: {},
+    modules: [],
+  };
+
+  const globalState = Atom.of(extend(defaultState, customState));
 
   if (process.env.NODE_ENV === 'development') {
     addChangeHandler(globalState, 'debugging', ({ current, previous }) => {

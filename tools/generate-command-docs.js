@@ -1,11 +1,14 @@
 const { join, resolve } = require('path');
-const { writeFileSync } = require('fs');
-const { allCommands } = require('../src/packages/piral-cli/lib/commands');
-const nl = '\n';
+const { writeFileSync, readFileSync, readdirSync } = require('fs');
 
 const rootFolder = resolve(__dirname, '..', 'docs', 'commands');
+const commandFolder = '../src/packages/piral-cli/lib/commands';
+const validationFolder = '../src/packages/piral-cli/src/rules';
+const nl = '\n';
 
-function generateNewContent(command) {
+const { commands } = require(commandFolder);
+
+function generateHead(command) {
   return `# \`${command}\``;
 }
 
@@ -38,6 +41,63 @@ function printValue(value) {
   } else {
     return JSON.stringify(value);
   }
+}
+
+function readValidatorOptions(content) {
+  const head = 'export type Options = ';
+  const lines = content.split('\n');
+  const [line] = lines.filter(m => m.startsWith(head));
+  const value = line.substr(head.length);
+  const options = value.substr(0, value.indexOf(';'));
+
+  if (options === 'void') {
+    return '<none>';
+  }
+
+  return options;
+}
+
+function readValidatorDescription(content) {
+  const head = 'export default ';
+  const lines = content.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith(head)) {
+      const [start] = lines
+        .map((m, j) => ({
+          index: j,
+          found: j < i && m.startsWith('/**'),
+        }))
+        .filter(m => m.found)
+        .map(m => m.index)
+        .reverse();
+      const end = i - 1;
+      return lines.filter((_, j) => j > start && j < end).map(m => m.substr(2)).join('').trim();
+    }
+  }
+
+  return '';
+}
+
+function readValidators() {
+  const baseDir = resolve(__dirname, validationFolder);
+
+  return readdirSync(baseDir)
+    .filter(file => file.endsWith('.ts') && (file.startsWith('pilet-') || file.startsWith('piral-')))
+    .map(file => {
+      const path = resolve(baseDir, file);
+      const content = readFileSync(path, 'utf8');
+      return {
+        target: file.split('.')[0].split('-')[0],
+        name: file
+          .split('.')[0]
+          .split('-')
+          .filter((_, i) => i > 0)
+          .join('-'),
+        description: readValidatorDescription(content),
+        options: readValidatorOptions(content),
+      };
+    });
 }
 
 function getCommandData(retrieve) {
@@ -107,7 +167,7 @@ function getCommandData(retrieve) {
         ...flag,
         required: true,
       }));
-    }
+    },
   };
 
   if (typeof retrieve === 'function') {
@@ -122,19 +182,32 @@ function details(args) {
     return 'Not applicable.';
   }
 
-  return args.map(arg => `### \`${arg.name}\`
+  return args
+    .map(
+      arg => `### \`${arg.name}\`
 
 ${arg.describe || 'No description available.'}
 
-- Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('\`, \`')}\`` : ''}
-- Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}`).join(nl + nl);
+- Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('`, `')}\`` : ''}
+- Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}`,
+    )
+    .join(nl + nl);
 }
 
-function generateFrom(command) {
+function generateValidator(validator) {
+  return `### \`${validator.name}\`
+
+${validator.description}
+
+**Options**: \`${validator.options}\`
+`;
+}
+
+function generateBody(command, validators) {
   const { positionals, flags } = getCommandData(command.flags);
   const hasAlt = command.name.endsWith('-piral') || command.name.endsWith('-pilet');
   const parts = command.name.split('-');
-  return `
+  const content = `
 ${command.description || 'No description available.'}
 
 ## Syntax
@@ -142,11 +215,15 @@ ${command.description || 'No description available.'}
 From the command line:
 
 ${shell(`pb ${command.name} ${command.arguments.join(' ')}`)}
-${hasAlt ? `
+${
+  hasAlt
+    ? `
 Alternative:
 
 ${shell(`${parts.pop()} ${parts.join('-')} ${command.arguments.join(' ')}`)}
-` : ''}
+`
+    : ''
+}
 ## Aliases
 
 Instead of \`${command.name}\` you can also use:
@@ -161,18 +238,32 @@ ${details(positionals)}
 
 ${details(flags.map(flag => ({ ...flag, name: `--${flag.name}` })))}
 `;
+
+  if (['validate-piral', 'validate-pilet'].includes(command.name)) {
+    const [target] = command.name.split('-').reverse();
+    const currentValidators = validators.filter(m => m.target === target);
+    return `${content}
+## Validators
+
+${currentValidators.map(generateValidator).join('\n')}
+`;
+  }
+
+  return content;
 }
 
-function replaceBody(content, body) {
+function generateContent(content, body) {
   return content + nl + body;
 }
 
 function generateCommandDocs() {
-  for (const command of allCommands) {
-    const oldContent = generateNewContent(command.name);
-    const body = generateFrom(command);
-    const newContent = replaceBody(oldContent, body);
-    writeCommandContent(command.name, newContent);
+  const validators = readValidators();
+
+  for (const command of commands.all) {
+    const head = generateHead(command.name);
+    const body = generateBody(command, validators);
+    const content = generateContent(head, body);
+    writeCommandContent(command.name, content);
   }
 }
 

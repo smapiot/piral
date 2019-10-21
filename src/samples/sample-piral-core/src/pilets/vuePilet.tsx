@@ -1,19 +1,24 @@
 import Tile from './Tile.vue';
-import { ArbiterModule } from 'react-arbiter';
-import { SampleApi } from '../types';
+import { Pilet } from 'piral-core';
 
 /**
  * Shows an API extension using Vue components.
  */
-export const VuePilet: ArbiterModule<SampleApi> = {
+export const VuePilet: Pilet = {
   content: '',
   name: 'Vue Module',
   version: '1.0.0',
   hash: '429',
   setup(piral) {
-    piral.registerTileVue(Tile, {
-      initialColumns: 2,
-      initialRows: 2,
-    });
+    piral.registerTile(
+      {
+        root: Tile,
+        type: 'vue',
+      },
+      {
+        initialColumns: 2,
+        initialRows: 2,
+      },
+    );
   },
 };

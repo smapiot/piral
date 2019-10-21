@@ -1,3 +1,9 @@
+import {} from 'piral-core';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiletGqlApi {}
+}
+
 export interface GqlUnsubscriber {
   /**
    * Removes (i.e., unsubscribes from) the created subscription.
@@ -73,36 +79,36 @@ export interface GqlConfig {
   onDisconnected?(err: Array<Error>): void;
 }
 
-export interface PiralGqlApiQuery {
+export interface PiletGqlApiQuery {
   <T = any>(query: string, options?: GqlQueryOptions): Promise<T>;
 }
 
-export interface PiralGqlApiMutate {
+export interface PiletGqlApiMutate {
   <T = any>(mutation: string, options?: GqlMutationOptions): Promise<T>;
 }
 
-export interface PiralGqlApiSubscribe {
+export interface PiletGqlApiSubscribe {
   <T = any>(subscription: string, subscriber: GqlSubscriber<T>, options?: GqlSubscriptionOptions): GqlUnsubscriber;
 }
 
-export interface PiralGqlApi {
+export interface PiletGqlApi {
   /**
    * Executes the given GraphQL query.
    * @param query The GraphQL query.
    * @param options Options for the query.
    */
-  query: PiralGqlApiQuery;
+  query: PiletGqlApiQuery;
   /**
    * Executes the given GraphQL mutation.
    * @param mutation The GraphQL mutation query.
    * @param options Options for the mutation.
    */
-  mutate: PiralGqlApiMutate;
+  mutate: PiletGqlApiMutate;
   /**
    * Establishes the given GraphQL subscription.
    * @param subscription The GraphQL subscription query.
    * @param subscriber The callback to use when data is received.
    * @param options Options for the subscription.
    */
-  subscribe: PiralGqlApiSubscribe;
+  subscribe: PiletGqlApiSubscribe;
 }

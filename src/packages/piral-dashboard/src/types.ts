@@ -1,0 +1,144 @@
+import { RouteComponentProps } from 'react-router-dom';
+import { Dict, WrappedComponent, BaseComponentProps, AnyComponent } from 'piral-core';
+import { ComponentType } from 'react';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiletDashboardApi {}
+
+  interface PiralCustomState {}
+
+  interface PiralCustomActions {
+    /**
+     * Registers a new tile.
+     * @param name The name of the tile.
+     * @param value The tile registration.
+     */
+    registerTile(name: string, value: TileRegistration): void;
+    /**
+     * Unregisters an existing tile.
+     * @param name The name of the tile to be removed.
+     */
+    unregisterTile(name: string): void;
+  }
+
+  interface PiralCustomRegistryState {
+    /**
+     * The registered tile components for a dashboard.
+     */
+    tiles: Dict<TileRegistration>;
+  }
+
+  interface PiralCustomErrors {
+    tile: TileErrorInfoProps;
+  }
+
+  interface PiralCustomComponentsState {
+    /**
+     * The dashboard container component.
+     */
+    DashboardContainer: ComponentType<DashboardContainerProps>;
+    /**
+     * The dashboard tile component.
+     */
+    DashboardTile: ComponentType<DashboardTileProps>;
+  }
+}
+
+export interface DashboardContainerProps extends RouteComponentProps {}
+
+export interface DashboardTileProps {
+  /**
+   * The currently used number of columns.
+   */
+  columns: number;
+  /**
+   * The currently used number of rows.
+   */
+  rows: number;
+  /**
+   * The resizable status.
+   */
+  resizable: boolean;
+}
+
+export interface TileErrorInfoProps {
+  /**
+   * The type of the error.
+   */
+  type: 'tile';
+  /**
+   * The provided error details.
+   */
+  error: any;
+  /**
+   * The currently used number of columns.
+   */
+  columns: number;
+  /**
+   * The currently used number of rows.
+   */
+  rows: number;
+}
+
+export interface BareTileComponentProps {
+  /**
+   * The currently used number of columns.
+   */
+  columns: number;
+  /**
+   * The currently used number of rows.
+   */
+  rows: number;
+}
+
+export type TileComponentProps = BaseComponentProps & BareTileComponentProps;
+
+export interface TilePreferences {
+  /**
+   * Sets the desired initial number of columns.
+   * This may be overriden either by the user (if resizable true), or by the dashboard.
+   */
+  initialColumns?: number;
+  /**
+   * Sets the desired initial number of rows.
+   * This may be overriden either by the user (if resizable true), or by the dashboard.
+   */
+  initialRows?: number;
+  /**
+   * Determines if the tile can be resized by the user.
+   * By default the size of the tile is fixed.
+   */
+  resizable?: boolean;
+  /**
+   * Declares a set of custom properties to be used with user-specified values.
+   */
+  customProperties?: Array<string>;
+}
+
+export interface TileRegistration {
+  component: WrappedComponent<TileComponentProps>;
+  preferences: TilePreferences;
+}
+
+export interface PiletDashboardApi {
+  /**
+   * Registers a tile with a predefined tile components.
+   * The name has to be unique within the current pilet.
+   * @param name The name of the tile.
+   * @param Component The component to be rendered within the Dashboard.
+   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
+   */
+  registerTile(name: string, Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): void;
+  /**
+   * Registers a tile for predefined tile components.
+   * @param Component The component to be rendered within the Dashboard.
+   * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
+   */
+  registerTile(Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): void;
+  /**
+   * Unregisters a tile known by the given name.
+   * Only previously registered tiles can be unregistered.
+   * @param name The name of the tile to unregister.
+   */
+  unregisterTile(name: string): void;
+}
