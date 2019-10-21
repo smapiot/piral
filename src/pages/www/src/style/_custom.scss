@@ -1,12 +1,7 @@
-body {
-  font-family: 'Lato', arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 h2 {
   font-size: 2.8rem !important;
   font-weight: 700;
+  text-align: center;
 }
 
 img {
@@ -27,10 +22,6 @@ img {
 a,
 button {
   cursor: pointer;
-}
-
-.jumbotron {
-  margin-bottom: 0 !important;
 }
 
 .atlas-cta {
@@ -78,9 +69,60 @@ button {
   }
 }
 
+body {
+  line-height: 1.5;
+}
+
+img {
+  vertical-align: middle;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+  flex-direction: row;
+
+  .cell {
+    box-sizing: border-box;
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+
+    @media (max-width: $tabletBrk) {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    img {
+      margin: auto;
+    }
+
+    h4 {
+      font-size: 1.5rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
 .banner {
+  padding: 4rem 0;
+  border-radius: 0;
+  margin-bottom: 0;
   background-size: cover;
   background-image: url(../assets/banner.jpg);
+  text-align: left;
 
   header {
     overflow: hidden;
@@ -90,11 +132,41 @@ button {
     }
   }
 
-  @media (max-width: 575px) {
+  h1 {
+    color: white;
+    font-weight: 700;
+    margin: 3rem 0;
+    line-height: 1.2;
+    font-size: 4.5rem;
+  }
+
+  p {
+    color: white;
+    margin: 1.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 300;
+  }
+
+  .btn {
+    margin: 1.5rem 0;
+  }
+
+  @media (max-width: $mobileBrk) {
+    padding: 4rem 2rem;
+  }
+
+  @media (max-width: $mobileBrk) {
     h1 {
         font-size: 3.6rem;
     }
   }
+}
+
+.container-section {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .features {

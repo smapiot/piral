@@ -6,8 +6,8 @@ export interface CapabilityProps {
 }
 
 export const Capability: React.FC<CapabilityProps> = ({ image, title, children }) => (
-  <div className="col-md-4 text-center">
-    <img src={image} alt={title} className="mx-auto" />
+  <div className="cell">
+    <img src={image} alt={title} />
     <h4>{title}</h4>
     <p>{children}</p>
   </div>

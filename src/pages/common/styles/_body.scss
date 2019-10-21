@@ -21,6 +21,8 @@ button {
 
 body {
   display: flex;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
@@ -131,4 +133,12 @@ section {
     content: '';
     display: table;
   }
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  height: 100%;
+  width: 100%;
 }

@@ -1,20 +1,7 @@
-#app {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-  height: 100%;
-  width: 100%;
-}
-
 div.content {
   display: flex;
   flex: 1 0 auto;
   width: 100%;
-}
-
-header {
-  padding: 1em;
-  background: $color-secondary;
 }
 
 .version-info {
@@ -27,70 +14,3 @@ header {
     margin-left: 0.5rem;
   }
 }
-
-header .header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  .logo {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    color: white;
-
-    img {
-      max-height: 2em;
-      margin-right: 0.5em;
-    }
-
-    > span {
-      font-size: 1.2em;
-    }
-
-    .brand-name {
-      font-weight: bold;
-    }
-  }
-
-  ul {
-    list-style: none;
-    display: flex;
-    flex-direction: row;
-    padding: 0;
-    flex: 1 0 auto;
-    justify-content: flex-end;
-
-    > li {
-      padding: 0 0.5em;
-
-      a {
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-
-        &:hover {
-          color: $color-primary;
-        }
-
-        &.active {
-          color: $color-primary;
-        }
-      }
-    }
-  }
-
-  @media (max-width: $mobileBrk) {
-    flex-direction: column;
-    align-items: flex-start;
-
-    ul {
-      flex-direction: column;
-
-      > li {
-        padding: 0.5em 0;
-      }
-    }
-  }
-}
-

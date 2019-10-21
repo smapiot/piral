@@ -1,8 +1,9 @@
 @import "../../../common/styles/variables";
-@import "fonts";
-@import "body";
-@import "layout";
+@import "../../../common/styles/fonts";
+@import "../../../common/styles/body";
 @import "../../../common/styles/footer";
+@import "layout";
+@import "header";
 @import "docs";
 @import "loader";
 @import "sidebar";
