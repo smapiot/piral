@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.8.0 (tbd)
+## 0.8.0 (October 21, 2019)
 
 * Use declaration merging instead of generics (#72)
 * Automatically clear the parcel cache (#59)
