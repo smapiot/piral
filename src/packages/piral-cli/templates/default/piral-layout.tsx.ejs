@@ -70,16 +70,6 @@ export const layout: Partial<ComponentsState> = {
       <SwitchErrorInfo {...props} />
     </div>
   ),
-  NotFoundErrorInfo: () => (
-    <div>
-      <p className="error">
-        Could not find the requested page. Are you sure it exists?
-      </p>
-      <p>
-        Go back <Link to="/">to the dashboard</Link>.
-      </p>
-    </div>
-  ),
   DashboardContainer: ({ children }) => (
     <div>
       <h1>Hello, world!</h1>
