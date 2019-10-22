@@ -3,6 +3,8 @@
 ## 0.8.1 (tbd)
 
 * Improved default template
+* Fixed misidentified React class components (#82)
+* Added `piral-axios` library
 
 ## 0.8.0 (October 21, 2019)
 
