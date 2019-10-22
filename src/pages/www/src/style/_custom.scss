@@ -1,7 +1,6 @@
 h2 {
   font-size: 2.8rem !important;
   font-weight: 700;
-  text-align: center;
 }
 
 img {
@@ -35,10 +34,6 @@ button {
   }
 }
 
-.atlas-cta-wide {
-  width: 100%;
-}
-
 .cta-green {
   background: $color-primary;
   color: $color-secondary;
@@ -50,6 +45,7 @@ button {
 }
 
 .cta-blue {
+  margin: 1.5rem 0;
   background: $color-secondary;
   color: #fff;
 
@@ -69,7 +65,8 @@ button {
   }
 }
 
-body {
+p {
+  font-weight: 400;
   line-height: 1.5;
 }
 
@@ -80,7 +77,6 @@ img {
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -15px;
   flex-direction: row;
 
   .cell {
@@ -172,11 +168,54 @@ img {
 .features {
   background: $color-primary;
   background: linear-gradient(168deg, #fff 40%, $color-primary 0);
-  padding-top: 0;
-  padding-bottom: 0;
+  padding: 0;
 
-  & > div {
-    padding: 2rem;
+  .container {
+    padding: 2rem 1rem;
+    justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+
+    p {
+      margin: 1.5rem 0;
+    }
+
+    .child {
+      flex: 0 0 50%;
+      max-width: 50%;
+      box-sizing: border-box;
+      align-self: center;
+      position: relative;
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+
+      @media (max-width: $tabletBrk) {
+        flex: 1;
+        max-width: 100%;
+      }
+    }
+  }
+
+  .container-right {
+    text-align: right;
+    flex-direction: row-reverse;
+
+    @media (max-width: $tabletBrk) {
+      text-align: center;
+      flex-direction: column-reverse;
+    }
+  }
+
+  .container-left {
+    text-align: left;
+    flex-direction: row;
+
+    @media (max-width: $tabletBrk) {
+      text-align: center;
+      flex-direction: column;
+    }
   }
 
   img {

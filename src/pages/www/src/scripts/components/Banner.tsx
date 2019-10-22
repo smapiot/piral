@@ -14,7 +14,7 @@ export const Banner: React.FC = () => (
         Build highly modular applications fully flexible for large scale portal solutions.
         <br /> Adjusted to your development needs, not the other way around.
       </p>
-      <a href="https://docs.piral.io" className="btn my-4 font-weight-bold atlas-cta cta-green">
+      <a href="https://docs.piral.io" className="btn atlas-cta cta-green">
         Get Started
       </a>
     </div>

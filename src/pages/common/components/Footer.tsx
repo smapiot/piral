@@ -6,7 +6,7 @@ export const Footer: React.FC = () => (
     <div className="container footer">
       <div className="row footer-columns">
         <div>
-          <a href="https://smapiot.com" target="_blank">
+          <a href="https://smapiot.com" target="_blank" className="flex">
             <img src={require('../assets/smapiot_logos_white.svg')} className="logo" alt="smapiot Logo" />
           </a>
         </div>

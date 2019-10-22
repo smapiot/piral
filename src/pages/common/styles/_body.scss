@@ -25,6 +25,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.flex {
+  display: flex;
+}
+
 .container {
   width: 100%;
   padding-right: 1rem;
@@ -42,7 +46,11 @@ body {
   }
 
   @media (min-width: $desktopBrk) {
-    max-width: 900px;
+    max-width: 960px;
+  }
+
+  @media (min-width: $screenBrk) {
+    max-width: 1140px;
   }
 }
 

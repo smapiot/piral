@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Capability } from './Capability';
 
 export const Capabilities: React.FC = () => (
-  <div className="container container-section">
+  <div className="container container-section text-center">
     <h2>Breaking the Frontend Monolith!</h2>
-    <div className="text-center">
+    <p>
       Piral is a framework for next generation portal applications. It allows you to build web apps that follow the
       microfrontends architecture in basically no time. Piral lets you use your standard tooling to be as efficient as
       possible.
-    </div>
+    </p>
     <div className="row">
       <Capability image={require('../../assets/capability-cloud.png')} title="Cloud Ready">
         Perfect for distributed systems running in the cloud.
