@@ -23,6 +23,7 @@ Piral is developed as a monorepo.
 ## Available Opt-In Extension Packages
 
 - [piral-auth](./piral-auth/README.md) provides the `getUser` API
+- [piral-axios](./piral-axios/README.md) provides the `axios` API for making HTTP requests
 - [piral-containers](./piral-containers/README.md) allows individual pilets to use their own global state
 - [piral-forms](./piral-forms/README.md) allows construction of reusable forms
 - [piral-search](./piral-search/README.md) provides enhanced search capability
