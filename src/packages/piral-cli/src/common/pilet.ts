@@ -50,30 +50,9 @@ function resolveModule(name: string, targetDir: string) {
   }
 }
 
-function modifyRawAsset(proto: any) {
-  const g = proto.generate;
-  proto.generate = function() {
-    const result = g.call(this);
-
-    if (Array.isArray(result) && result.length === 1) {
-      const item = result[0];
-      const match = /^module\.exports=(.*);$/.exec(item.value);
-
-      if (match) {
-        const path = JSON.stringify(JSON.parse(match[1]).substr(1));
-        item.value = `module.exports=${bundleUrlRef}+${path};`;
-      }
-    }
-
-    return result;
-  };
-}
-
 export function extendBundlerForPilet(bundler: any) {
-  const RawAsset = bundler.parser.findParser('sample.png');
   bundler.parser.registerExtension('vm', require.resolve('./VirtualAsset'));
   bundler.packagers.add('vm', VirtualPackager);
-  modifyRawAsset(RawAsset.prototype);
 }
 
 export function modifyBundlerForPilet(proto: any, externalNames: Array<string>, targetDir: string) {
@@ -104,7 +83,9 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
           return reject(err);
         }
 
-        let result = data;
+        let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) =>
+          str.replace(value, `${bundleUrlRef}+"${value}"`),
+        );
 
         if (/js/.test(bundle.type)) {
           /**
