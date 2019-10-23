@@ -4,7 +4,6 @@ export * from './Capability';
 export * from './Companies';
 export * from './Feature';
 export * from './Features';
-export * from './Footer';
 export * from './GitHubCat';
 export * from './Status';
 export * from './Technologies';

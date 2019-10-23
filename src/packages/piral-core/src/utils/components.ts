@@ -1,5 +1,9 @@
-import { ComponentType } from 'react';
+import { ComponentType, ExoticComponent } from 'react';
 import { AnyComponent, ComponentConverters } from '../types';
+
+function isNotExotic(component: any): component is object {
+  return !(component as ExoticComponent).$$typeof;
+}
 
 export function markReact<T>(arg: ComponentType<T>, displayName: string) {
   if (arg && !arg.displayName) {
@@ -12,7 +16,7 @@ export function convertComponent<T>(
   component: AnyComponent<T>,
   displayName: string,
 ) {
-  if (typeof component === 'object') {
+  if (typeof component === 'object' && isNotExotic(component)) {
     const converter = converters[component.type];
 
     if (typeof converter !== 'function') {

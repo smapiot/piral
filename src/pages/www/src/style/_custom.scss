@@ -1,9 +1,3 @@
-body {
-  font-family: 'Lato', arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 h2 {
   font-size: 2.8rem !important;
   font-weight: 700;
@@ -29,10 +23,6 @@ button {
   cursor: pointer;
 }
 
-.jumbotron {
-  margin-bottom: 0 !important;
-}
-
 .atlas-cta {
   border-radius: 22px !important;
   padding: 12px 30px !important;
@@ -42,10 +32,6 @@ button {
   &:hover {
     text-decoration: none;
   }
-}
-
-.atlas-cta-wide {
-  width: 100%;
 }
 
 .cta-green {
@@ -59,6 +45,7 @@ button {
 }
 
 .cta-blue {
+  margin: 1.5rem 0;
   background: $color-secondary;
   color: #fff;
 
@@ -78,9 +65,60 @@ button {
   }
 }
 
+p {
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+img {
+  vertical-align: middle;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+  .cell {
+    box-sizing: border-box;
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+
+    @media (max-width: $tabletBrk) {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    img {
+      margin: auto;
+    }
+
+    h4 {
+      font-size: 1.5rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
 .banner {
+  padding: 4rem 0;
+  border-radius: 0;
+  margin-bottom: 0;
   background-size: cover;
   background-image: url(../assets/banner.jpg);
+  text-align: left;
 
   header {
     overflow: hidden;
@@ -90,21 +128,94 @@ button {
     }
   }
 
-  @media (max-width: 575px) {
+  h1 {
+    color: white;
+    font-weight: 700;
+    margin: 3rem 0;
+    line-height: 1.2;
+    font-size: 4.5rem;
+  }
+
+  p {
+    color: white;
+    margin: 1.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 300;
+  }
+
+  .btn {
+    margin: 1.5rem 0;
+  }
+
+  @media (max-width: $mobileBrk) {
+    padding: 4rem 2rem;
+  }
+
+  @media (max-width: $mobileBrk) {
     h1 {
         font-size: 3.6rem;
     }
   }
 }
 
+.container-section {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 .features {
   background: $color-primary;
   background: linear-gradient(168deg, #fff 40%, $color-primary 0);
-  padding-top: 0;
-  padding-bottom: 0;
+  padding: 0;
 
-  & > div {
-    padding: 2rem;
+  .container {
+    padding: 2rem 1rem;
+    justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+
+    p {
+      margin: 1.5rem 0;
+    }
+
+    .child {
+      flex: 0 0 50%;
+      max-width: 50%;
+      box-sizing: border-box;
+      align-self: center;
+      position: relative;
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+
+      @media (max-width: $tabletBrk) {
+        flex: 1;
+        max-width: 100%;
+      }
+    }
+  }
+
+  .container-right {
+    text-align: right;
+    flex-direction: row-reverse;
+
+    @media (max-width: $tabletBrk) {
+      text-align: center;
+      flex-direction: column-reverse;
+    }
+  }
+
+  .container-left {
+    text-align: left;
+    flex-direction: row;
+
+    @media (max-width: $tabletBrk) {
+      text-align: center;
+      flex-direction: column;
+    }
   }
 
   img {
@@ -147,7 +258,7 @@ button {
   }
 
   .fa-heart {
-    color: $heart-color;
+    color: $color-heart;
   }
 }
 

@@ -12,7 +12,7 @@ For details on the provided API check out the [documentation at the Piral websit
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
-For the setup of the library itself you'll need to import `createFeedsApi` from the `piral-feeds` package.
+For the setup of the library itself you'll need to import `createFetchApi` from the `piral-fetch` package.
 
 ```tsx
 import { createFetchApi } from 'piral-fetch';

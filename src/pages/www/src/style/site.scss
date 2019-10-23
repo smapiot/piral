@@ -1,7 +1,5 @@
-@import "../../../../../node_modules/bootstrap/scss/bootstrap";
-
-$color-primary: #00FFAD;
-$color-secondary: #192440;
-$heart-color: #ea5395;
-
+@import "../../../common/styles/variables";
+@import "../../../common/styles/fonts";
+@import "../../../common/styles/body";
+@import "../../../common/styles/footer";
 @import "custom";

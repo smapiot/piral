@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Capability } from './Capability';
 
 export const Technologies: React.FC = () => (
-  <div className="container my-5 py-2">
-    <h2 className="text-center font-weight-bold my-5">Providing a Robust Fundament!</h2>
-    <div className="text-center">
+  <div className="container container-section text-center">
+    <h2>Providing a Robust Fundament!</h2>
+    <p>
       We know that stability is one of your top requirements for choosing the right basis. We also know that you care
       about developer experience and efficiency. Piral ships with everything to make your life simpler - so that you can
       focus on what's important for <i>your app</i>.
-    </div>
+    </p>
     <div className="row">
       <Capability image={require('../../assets/tech-guides.png')} title="Great Documentation">
         Our goal is to have an <b>outstanding documentation</b> experience.

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Banner, Capabilities, Features, Footer, GitHubCat, Technologies } from './components';
+import { Banner, Capabilities, Features, GitHubCat, Technologies } from './components';
+import { Footer } from '../../../common/components/Footer';
 
 export const App: React.FC = () => (
   <>

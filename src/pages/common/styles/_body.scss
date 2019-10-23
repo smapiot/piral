@@ -21,6 +21,12 @@ button {
 
 body {
   display: flex;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.flex {
+  display: flex;
 }
 
 .container {
@@ -40,7 +46,11 @@ body {
   }
 
   @media (min-width: $desktopBrk) {
-    max-width: 900px;
+    max-width: 960px;
+  }
+
+  @media (min-width: $screenBrk) {
+    max-width: 1140px;
   }
 }
 
@@ -131,4 +141,12 @@ section {
     content: '';
     display: table;
   }
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  height: 100%;
+  width: 100%;
 }
