@@ -32,11 +32,9 @@ describe('Pilet Build Module', () => {
       };
     };
     const bundler = new Bundler();
-    expect(Parser.prototype.generate).toBeUndefined();
     extendBundlerForPilet(bundler);
     expect(bundler.parser.registerExtension).toHaveBeenCalled();
     expect(bundler.packagers.add).toHaveBeenCalled();
-    expect(Parser.prototype.generate).not.toBeUndefined();
   });
 
   it('modifyBundler should create getLoadedAsset prototype function', () => {
