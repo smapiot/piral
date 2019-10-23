@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.8.1 (tbd)
+## 0.8.1 (October 23, 2019)
 
 * Improved default template
 * Fixed misidentified React class components (#82)
