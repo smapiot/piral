@@ -19,8 +19,8 @@ export * from 'piral';
 ```
  */
 export function renderInstance(options: PiralRenderOptions = {}) {
-  const { selector = '#app', extendApi, settings, layout = {}, errors = {}, ...config } = options;
-  const instance = createPiral(config, settings, extendApi);
+  const { selector = '#app', settings, layout = {}, errors = {}, ...config } = options;
+  const instance = createPiral(config, settings);
   const app = (
     <Piral instance={instance}>
       {Object.keys(layout).map((key: any) => (
