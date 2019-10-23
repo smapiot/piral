@@ -5,6 +5,7 @@
 * Fixed bug in Piral CLI preventing to reference external resources
 * Fixed bug in Piral CLI that prevented immediate exit
 * Improved the `createPiral` function signature / behavior
+* Added `SetRedirect` component for declaring redirects
 
 ## 0.8.1 (October 23, 2019)
 
