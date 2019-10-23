@@ -1,6 +1,6 @@
 {
   "name": "piral-fetch",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Introduces the fetch API extensions for extending piral-core.",
   "keywords": [
     "piral",
@@ -35,7 +35,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.8.0"
+    "piral-core": "^0.8.1"
   },
   "peerDependencies": {
     "piral-core": "^0.8.0 || ^0.9.0",
