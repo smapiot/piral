@@ -18,5 +18,5 @@ export async function select(from: (commands: any) => any) {
   const { commands } = require(join(path, 'commands'));
   const { setupCli } = require(join(path, 'cli'));
   await loadPlugins();
-  setupCli(from(commands));
+  await setupCli(from(commands));
 }

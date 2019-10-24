@@ -14,7 +14,7 @@ Piral is a **framework**. As such it comes with everything *included*, e.g., Rea
 
 With `piral-core` you get a **library** that sits on top of other libraries. While some - very specialized - libraries are standard dependencies (i.e., installed for you), more generic ones such as React are peer dependencies. You need to install them. The advantage is that you are in charge what versions of these libraries to use (as long as they are compatible).
 
-The technical differences aside `piral` is fully opinionated about the design of your backend. If you have already a backend or don't want to follow the official backend specification then `piral-core` would be the one to install.
+Bottom line: The technical differences aside `piral` comes with key dependencies integrated.
 
 ---------------------------------------
 
@@ -22,8 +22,8 @@ The technical differences aside `piral` is fully opinionated about the design of
 
 A Piral instance requires the following things:
 
-1. A React SPA that uses `piral-core` or `piral` (recommended, sample [available](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral))
-2. A backend service to provision the pilets (a sample using Node.js Express is [available](https://github.com/smapiot/sample-pilet-service))
+1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral))
+2. A backend service to provision the pilets (you can use our available [feed service](https://feed.piral.io))
 3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) NPM feed or a Git repository
 
 The SPA can be hosted on a static storage, while the backend service may be run anyway - serverless may be an option here, too.

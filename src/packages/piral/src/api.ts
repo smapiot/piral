@@ -14,14 +14,11 @@ import {
 import { PiralExtSettings } from './types';
 
 /**
- * Extends the standard Piral API with custom API and settings.
+ * Creates an array including all standard APIs from piral-ext.
  * @param settings Customizes the standard extension settings.
- * @param customApis The custom APIs to add.
  */
-export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Extend | Array<Extend> = []) {
-  const extenders = Array.isArray(customApis) ? customApis : [customApis];
+export function createStandardApi(settings: PiralExtSettings = {}) {
   return [
-    ...extenders,
     createFetchApi(settings.fetch),
     createGqlApi(setupGqlClient(settings.gql)),
     createLocaleApi(setupLocalizer(settings.locale)),
@@ -34,18 +31,23 @@ export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Exte
 }
 
 /**
- * Creates a standard Piral instance.
- * @param config The config for creating the piral state.
+ * Extends the standard Piral API with custom API and settings.
  * @param settings Customizes the standard extension settings.
  * @param customApis The custom APIs to add.
  */
-export function createPiral(
-  config: PiralConfiguration = {},
-  settings?: PiralExtSettings,
-  customApis?: Extend | Array<Extend>,
-) {
+export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Extend | Array<Extend> = []) {
+  const extenders = Array.isArray(customApis) ? customApis : [customApis];
+  return [...extenders, ...createStandardApi(settings)];
+}
+
+/**
+ * Creates a standard Piral instance.
+ * @param config The config for creating the piral state.
+ * @param settings Customizes the standard extension settings.
+ */
+export function createPiral(config: PiralConfiguration = {}, settings?: PiralExtSettings) {
   return createInstance({
     ...config,
-    extendApi: extendPiralApi(settings, customApis),
+    extendApi: extendPiralApi(settings, config.extendApi),
   });
 }

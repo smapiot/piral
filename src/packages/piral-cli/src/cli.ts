@@ -22,7 +22,7 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
         }
         return argv;
       },
-      args => Promise.resolve(command.run(args)).catch(() => process.exit(1)),
+      args => Promise.resolve(command.run(args)).then(() => process.exit(0), () => process.exit(1)),
     );
   }
 

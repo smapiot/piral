@@ -10,6 +10,7 @@ export * from './ResponsiveLayout';
 export * from './SetComponent';
 export * from './SetError';
 export * from './SetProvider';
+export * from './SetRedirect';
 export * from './SetRoute';
 export * from './SwitchErrorInfo';
 export * from './withApi';
