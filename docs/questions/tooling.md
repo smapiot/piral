@@ -14,9 +14,9 @@ We strongly believe that our tooling should hit the sweep spot for almost everyo
 
 We've debated a lot if (unit or end-to-end) testing are good targets for the CLI to be covered. In the end we've decided to leave this to the development team of a particular Piral instance.
 
-While the Piral CLI is certainly opinionated we tried to make it not overly restrictive. There are many testing frameworks and configurations out there and all of them have some direct influence on how development is done. We cannot cover all these flows without making compromises and imposing restrictions on the developers. Thus we decided to leave testing out.
+While the Piral CLI is certainly opinionated we tried to make it not overly restrictive. There are many testing frameworks and configurations out there and all of them have some direct influence on how development is done. We cannot cover all these flows without making compromises and imposing restrictions on the developers. Thus we decided to leave testing out - by default.
 
-Needless to say we think about integrating an extension mechanism in the CLI which would allow integrating a pre-made testing module that can be freely chosen (or developed).
+Via extensions you can install `piral-cli` plugins that make testing very easy and (optionally) part of the validation process.
 
 ---------------------------------------
 
@@ -44,6 +44,8 @@ This is a feature of, e.g., the feed service. Out of the box no such feature is 
 
 ## Can the CLI be extended?
 
-Not yet, but we are thinking about it.
+Yes it can. The `piral-cli` looks for globally and locally installed packages that are prefixed with `piral-cli-`, e.g., `piral-cli-feed`. A CLI plugin can hook into the established commands (e.g., builds, debug, ...), add validation rules, add commands, or extend existing commands (e.g., with flags).
+
+More information can be found in the [package information](https://npmjs.com/package/piral-cli).
 
 ---------------------------------------

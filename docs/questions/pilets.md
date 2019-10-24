@@ -44,7 +44,7 @@ import './foo.css';
 const imagePath = require('./images/bar.png');
 ```
 
-Note that larger assets (e.g., videos) should be embedded via CDNs or specialized services. A pilet has a maximum file limit of 16 MB (which may be larger in your implemention, however, we do not recommend it).
+Note that larger assets (e.g., videos) should be embedded via CDNs or specialized services. A pilet has a maximum file limit of 16 MB (which may be larger in your implementation, however, we do not recommend it).
 
 Our recommendation is to only include development-relevant resources (e.g., CSS files) or fast changing assets (e.g., icons only made for the current UX and very specific to the currently offered functionality) in the pilet. Everything else should be referenced from global resources.
 
