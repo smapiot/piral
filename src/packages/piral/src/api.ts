@@ -8,8 +8,6 @@ import {
   createNotificationsApi,
   createModalsApi,
   createFeedsApi,
-  setupGqlClient,
-  setupLocalizer,
 } from 'piral-ext';
 import { PiralExtSettings } from './types';
 
@@ -20,8 +18,8 @@ import { PiralExtSettings } from './types';
 export function createStandardApi(settings: PiralExtSettings = {}) {
   return [
     createFetchApi(settings.fetch),
-    createGqlApi(setupGqlClient(settings.gql)),
-    createLocaleApi(setupLocalizer(settings.locale)),
+    createGqlApi(settings.gql),
+    createLocaleApi(settings.locale),
     createDashboardApi(settings.dashboard),
     createMenuApi(settings.menu),
     createNotificationsApi(settings.notifications),

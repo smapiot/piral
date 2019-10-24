@@ -3,13 +3,13 @@ import { Extend } from 'piral-core';
 import { Client, Provider, defaultExchanges, subscriptionExchange } from 'urql';
 import { SubscriptionClient, OperationOptions } from 'subscriptions-transport-ws';
 import { gqlQuery, gqlMutation, gqlSubscription } from './queries';
-import { PiletGqlApi, GqlConfig } from './types';
+import { PiletGqlApi, GqlConfig, UrqlClient } from './types';
 
 /**
  * Sets up an urql client by using the given config.
  * @param config The configuration for the new urql client.
  */
-export function setupGqlClient(config: GqlConfig = {}) {
+export function setupGqlClient(config: GqlConfig = {}): UrqlClient {
   const url = config.url || location.origin;
   const subscriptionUrl = (config.subscriptionUrl || url).replace(/^http/i, 'ws');
   const subscriptionClient =
@@ -51,7 +51,7 @@ export function setupGqlClient(config: GqlConfig = {}) {
  * Creates a new Piral GraphQL API extension.
  * @param client The specific urql client to be used, if any.
  */
-export function createGqlApi(client = setupGqlClient()): Extend<PiletGqlApi> {
+export function createGqlApi(client: UrqlClient = setupGqlClient()): Extend<PiletGqlApi> {
   return context => {
     context.includeProvider(<Provider value={client} />);
 
