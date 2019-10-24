@@ -1,4 +1,4 @@
-# Pilet Specification
+# Pilet Package Specification
 
 ## Abstract
 

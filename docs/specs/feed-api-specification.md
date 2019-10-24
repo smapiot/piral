@@ -1,14 +1,14 @@
-# Piral API Specification
+# Piral Feed Service API Specification
 
 ## Abstract
 
-The Piral API represents a RESTful API that is used for publishing pilets and retrieving pilets.
+The Piral Feed Service API represents a RESTful API that is used for publishing pilets and retrieving pilets.
 
 ## Introduction
 
-The Piral API is usually represented in terms of a pilet feed service, which is used to allow publishing a pilet or retrieving pilets. To allow the Piral CLI (or any other "standard" application) to publish pilets a certain format needs to be specified. Likewise, a standard Piral instance should be capable of retrieving pilets for the user from a backend.
+The Piral Feed Service API is usually represented in terms of a pilet feed service, which is used to allow publishing a pilet or retrieving pilets. To allow the Piral CLI (or any other "standard" application) to publish pilets a certain format needs to be specified. Likewise, a standard Piral instance should be capable of retrieving pilets for the user from a backend.
 
-Besides the core functionality of publishing and retrieving pilets the Piral API may also include an extended API conformance, which is used to provide alignment with some standard pilets such as "feature management" or "user information".
+Besides the core functionality of publishing and retrieving pilets the Piral Feed Service API may also include an extended API conformance, which is used to provide alignment with some standard pilets such as "feature management" or "user information".
 
 ## Conformance
 
@@ -52,7 +52,32 @@ The exact response may be defined by the implementation (e.g., could be a JSON m
 
 #### User Facing
 
-The pilet feed service needs to provide the following resources to be consumed by end users:
+Required exposure with plain **REST**.
+
+The Piral feed service needs to provide the following API interface:
+
+```ts
+interface PiletApiResponse {
+  items: Array<{
+  name: string;
+  version: string;
+  author: {
+    name?: string;
+    email?: string;
+  };
+  hash: string;
+  content?: string;
+  link?: string;
+  custom?: any;
+  }>;
+}
+```
+
+The schema is written and defined using a TypeScript interface (see references).
+
+Optional exposure with **GraphQL**.
+
+The Piral feed service needs to provide the following resources to be consumed by end users:
 
 ```graphql
 type PiletMetadata {
@@ -101,5 +126,6 @@ The schema is written as defined by the GraphQL specification (see references).
 ## References
 
 * [RFC2119](https://tools.ietf.org/html/rfc2119)
-* [Pilet Specification](https://docs.piral.io/specifications/pilet)
+* [Pilet Specification](https://docs.piral.io/reference/specifications/pilet)
 * [GraphQL Specification](https://graphql.github.io/graphql-spec/)
+* [TypeScript Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)

@@ -4,5 +4,5 @@ For maximum reusability Piral tries to be fully specified. As a consequence, it 
 
 The available specifications:
 
-- [Piral API specification](./piral-api-specification.md)
-- [Pilet specification](./pilet-specification.md)
+- [Piral Feed Service API Specification](./feed-api-specification.md)
+- [Pilet Package Specification](./pilet-specification.md)

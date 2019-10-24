@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.8.3 (tbd)
+
+* Fixed bug in Piral CLI regarding plugins
+* Improved the documentation
+* Exported minimal set of types for the `PiletApi`
+
 ## 0.8.2 (October 24, 2019)
 
 * Fixed bug in Piral CLI preventing to reference external resources
