@@ -21,6 +21,12 @@ export interface ToolCommand<T = any, U = any> {
   run: ToolCommandRunner<U>;
 }
 
+export interface ListCommands {
+  all: Array<ToolCommand<any>>;
+  pilet: Array<ToolCommand<any>>;
+  piral: Array<ToolCommand<any>>;
+}
+
 export interface CliPluginApi {
   withCommand<T, U>(command: ToolCommand<T, U>): CliPluginApi;
   withoutCommand(commandName: string): CliPluginApi;
