@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.8.2 (tbd)
+## 0.8.2 (October 24, 2019)
 
 * Fixed bug in Piral CLI preventing to reference external resources
 * Fixed bug in Piral CLI that prevented immediate exit

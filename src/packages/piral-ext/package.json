@@ -1,6 +1,6 @@
 {
   "name": "piral-ext",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Useful API extensions and component definitions for extending piral-core.",
   "keywords": [
     "piral",
@@ -35,7 +35,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.8.1"
+    "piral-core": "^0.8.2"
   },
   "peerDependencies": {
     "piral-core": "^0.8.0 || ^0.9.0",
@@ -43,13 +43,13 @@
     "react-dom": ">= 16.8.0"
   },
   "dependencies": {
-    "piral-dashboard": "^0.8.1",
-    "piral-feeds": "^0.8.1",
-    "piral-fetch": "^0.8.1",
-    "piral-menu": "^0.8.1",
-    "piral-modals": "^0.8.1",
-    "piral-notifications": "^0.8.1",
-    "piral-translate": "^0.8.1",
-    "piral-urql": "^0.8.1"
+    "piral-dashboard": "^0.8.2",
+    "piral-feeds": "^0.8.2",
+    "piral-fetch": "^0.8.2",
+    "piral-menu": "^0.8.2",
+    "piral-modals": "^0.8.2",
+    "piral-notifications": "^0.8.2",
+    "piral-translate": "^0.8.2",
+    "piral-urql": "^0.8.2"
   }
 }

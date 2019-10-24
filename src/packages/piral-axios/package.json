@@ -1,6 +1,6 @@
 {
   "name": "piral-axios",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Introduces the axios API extensions for extending piral-core.",
   "keywords": [
     "piral",
@@ -41,7 +41,7 @@
     "axios": "^0.19.0"
   },
   "devDependencies": {
-    "piral-core": "^0.8.1"
+    "piral-core": "^0.8.2"
   },
   "peerDependencies": {
     "piral-core": "^0.8.0 || ^0.9.0",
