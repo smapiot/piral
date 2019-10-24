@@ -1,4 +1,5 @@
-import { FetchOptions, FetchResponse, FetchConfig } from './types';
+import { FetchConfig } from './config';
+import { FetchOptions, FetchResponse } from './types';
 
 export function httpFetch<T>(config: FetchConfig, path: string, options: FetchOptions = {}): Promise<FetchResponse<T>> {
   const baseInit = config.default || {};

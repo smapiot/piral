@@ -34,13 +34,6 @@ export interface GqlQueryOptions {
 
 export interface GqlMutationOptions {
   /**
-   * The variables to be used in the mutation.
-   */
-  variables?: Record<string, any>;
-}
-
-export interface GqlMutationOptions {
-  /**
    * The variables to be used in the query.
    */
   variables?: Record<string, any>;
@@ -51,35 +44,6 @@ export interface GqlSubscriptionOptions {
    * The variables to be used in the subscription.
    */
   variables?: Record<string, any>;
-}
-
-export interface GqlConfig {
-  /**
-   * Sets the default request init settings.
-   */
-  default?: RequestInit;
-  /**
-   * Sets the URL of the GraphQL endpoint.
-   * @default location.origin
-   */
-  url?: string;
-  /**
-   * Sets the URL for the GraphQL subscription endpoint.
-   */
-  subscriptionUrl?: false | string;
-  /**
-   * Sets if the subscription should be lazy initialized.
-   */
-  lazy?: boolean;
-  /**
-   * Optional callback to the be used in case of a connection.
-   */
-  onConnected?(): void;
-  /**
-   * Optional callbsack to be used in case of a disconnect.
-   * @param err The connection error.
-   */
-  onDisconnected?(err: Array<Error>): void;
 }
 
 export interface PiletGqlApiQuery {

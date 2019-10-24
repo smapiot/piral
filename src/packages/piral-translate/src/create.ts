@@ -3,7 +3,34 @@ import { Extend } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
 import { DefaultPicker } from './default';
-import { PiletLocaleApi, LocalizationMessages, LocaleConfig, Localizable } from './types';
+import { PiletLocaleApi, LocalizationMessages, Localizable } from './types';
+
+export interface TranslationFallback {
+  (key: string, language: string): string;
+}
+
+export interface RetrieveCurrentLanguage {
+  /**
+   * A function to identify the current language.
+   */
+  (languages: Array<string>, defaultLanguage: string, fallbackLanguage?: string): string;
+}
+
+export interface LocaleConfig {
+  /**
+   * Sets the default (global) localization messages.
+   * @default {}
+   */
+  messages?: LocalizationMessages;
+  /**
+   * Sets the default language to use.
+   */
+  language?: string | RetrieveCurrentLanguage;
+  /**
+   * Sets the optional fallback to use.
+   */
+  fallback?: TranslationFallback;
+}
 
 /**
  * Sets up a new localizer by using the given config.

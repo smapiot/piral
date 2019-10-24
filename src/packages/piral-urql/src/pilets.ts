@@ -1,6 +1,6 @@
 import { ArbiterModuleMetadata } from 'react-arbiter';
-import { Client } from 'urql';
 import { gqlQuery } from './queries';
+import { UrqlClient } from './types';
 
 export interface PiletQueryResult {
   pilets: Array<ArbiterModuleMetadata>;
@@ -15,6 +15,6 @@ const piletsQuery = `query initialData {
   }
 }`;
 
-export function requestPiletsFromGraphQL(client: Client) {
+export function requestPiletsFromGraphQL(client: UrqlClient) {
   return gqlQuery<PiletQueryResult>(client, piletsQuery).then(({ pilets }) => pilets);
 }

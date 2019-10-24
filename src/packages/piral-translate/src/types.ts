@@ -70,16 +70,23 @@ export interface LanguagesPickerProps {
   available: Array<string>;
 }
 
-export interface LanguageLoader {
-  (language: string, current: LanguageData): Promise<LanguageData>;
-}
-
 export interface LanguageData {
   global: Translations;
   locals: Array<{
     name: string;
     value: Translations;
   }>;
+}
+
+export interface Translations {
+  /**
+   * The available wordings (tag to translation).
+   */
+  [tag: string]: string;
+}
+
+export interface LanguageLoader {
+  (language: string, current: LanguageData): Promise<LanguageData>;
 }
 
 export interface Localizable {
@@ -90,22 +97,11 @@ export interface Localizable {
   localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T): string;
 }
 
-export interface Translations {
-  /**
-   * The available wordings (tag to translation).
-   */
-  [tag: string]: string;
-}
-
 export interface LocalizationMessages {
   /**
    * The available languages (lang to wordings).
    */
   [lang: string]: Translations;
-}
-
-export interface TranslationFallback {
-  (key: string, language: string): string;
 }
 
 export interface PiletLocaleApi {
@@ -126,27 +122,4 @@ export interface PiletLocaleApi {
    * Gets the currently provided translations by the pilet.
    */
   getTranslations(): LocalizationMessages;
-}
-
-export interface RetrieveCurrentLanguage {
-  /**
-   * A function to identify the current language.
-   */
-  (languages: Array<string>, defaultLanguage: string, fallbackLanguage?: string): string;
-}
-
-export interface LocaleConfig {
-  /**
-   * Sets the default (global) localization messages.
-   * @default {}
-   */
-  messages?: LocalizationMessages;
-  /**
-   * Sets the default language to use.
-   */
-  language?: string | RetrieveCurrentLanguage;
-  /**
-   * Sets the optional fallback to use.
-   */
-  fallback?: TranslationFallback;
 }
