@@ -84,7 +84,7 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
         }
 
         let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) =>
-          str.replace(value, `${bundleUrlRef}+"${value}"`),
+          str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`),
         );
 
         if (/js/.test(bundle.type)) {

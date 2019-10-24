@@ -80,5 +80,6 @@ export async function runDebug(
     startServer(buildServerPort, (bundler as any).middleware());
   });
 
-  krasServer.start();
+  await krasServer.start();
+  await new Promise(() => {});
 }
