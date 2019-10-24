@@ -44,7 +44,7 @@ This is a feature of, e.g., the feed service. Out of the box no such feature is 
 
 ## Can the CLI be extended?
 
-Yes it can. The `piral-cli` looks for globally and locally installed packages that are prefixed with `piral-cli-`, e.g., `piral-cli-feed`. A CLI plugin can hook into the established commands (e.g., builds, debug, ...), add validation rules, add commands, or extend existing commands (e.g., with flags).
+Yes it can. The `piral-cli` looks for globally and locally installed packages that are prefixed with `piral-cli-`, e.g., `piral-cli-local-feed` (documentation [available here](https://www.npmjs.com/package/piral-cli-local-feed)). A CLI plugin can hook into the established commands (e.g., builds, debug, ...), add validation rules, add commands, or extend existing commands (e.g., with flags).
 
 More information can be found in the [package information](https://npmjs.com/package/piral-cli).
 
