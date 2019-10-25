@@ -5,11 +5,11 @@ export type Options = void;
 /**
  * Checks that devDependencies declared for pilet scaffolding are valid.
  */
-export default function(this: PiralRuleContext, options: Options = undefined) {
-  const { devDependencies } = this.info;
+export default function(context: PiralRuleContext, options: Options = undefined) {
+  const { devDependencies } = context.info;
 
   if (typeof devDependencies !== 'object') {
-    this.error(
+    context.error(
       `
 The scripts in pilets.devDependencies are invalid.
   Expected: <object>.
@@ -18,8 +18,8 @@ The scripts in pilets.devDependencies are invalid.
     );
   } else {
     const allDependencies = {
-      ...this.dependencies,
-      ...this.devDependencies,
+      ...context.dependencies,
+      ...context.devDependencies,
     };
     const invalidDevDepsTypes = Object.keys(devDependencies)
       .map(m => devDependencies[m])
@@ -29,7 +29,7 @@ The scripts in pilets.devDependencies are invalid.
     );
 
     if (invalidDevDepsTypes.length > 0) {
-      this.error(
+      context.error(
         `
 The scaffold dev dependencies in pilets.devDependencies are invalid.
   Expected: Only names (<string>) in the array.
@@ -39,7 +39,7 @@ The scaffold dev dependencies in pilets.devDependencies are invalid.
     }
 
     for (const invalidDevDepsRef of invalidDevDepsRefs) {
-      this.warning(
+      context.warning(
         `
 The scaffold dev dependency "${invalidDevDepsRef}" refers to any dependency in the app, but none found.
   Expected: A dependency named "${invalidDevDepsRef}" in dependencies or devDependencies.

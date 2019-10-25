@@ -20,6 +20,6 @@ export async function runRules<T extends RuleContext>(
 ) {
   for (const rule of rules) {
     const options = configurations[rule.name];
-    await rule.call(context, options);
+    await rule.run(context, options);
   }
 }

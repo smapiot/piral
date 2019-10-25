@@ -34,8 +34,8 @@ export interface CliPluginApi {
   wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<U>): CliPluginApi;
   beforeCommand<U>(commandName: string, before: ToolCommandRunner<U>): CliPluginApi;
   afterCommand<U>(commandName: string, after: ToolCommandRunner<U>): CliPluginApi;
-  withPiralRule(rule: Rule<PiralRuleContext>): CliPluginApi;
-  withPiletRule(rule: Rule<PiletRuleContext>): CliPluginApi;
+  withPiralRule(ruleName: string, runner: RuleRunner<PiralRuleContext>): CliPluginApi;
+  withPiletRule(ruleName: string, runner: RuleRunner<PiletRuleContext>): CliPluginApi;
 }
 
 export interface CliPlugin {
@@ -53,8 +53,12 @@ export interface RuleContext {
   peerDependencies: Record<string, string>;
 }
 
+export interface RuleRunner<T extends RuleContext> {
+  (context: T, options: any): void | Promise<void>;
+}
+
 export interface Rule<T extends RuleContext> {
-  (this: T): void | Promise<void>;
+  run: RuleRunner<T>;
   name: string;
 }
 

@@ -5,11 +5,11 @@ export type Options = void;
 /**
  * Checks that the scripts defined for pilets are valid.
  */
-export default function(this: PiralRuleContext, options: Options = undefined) {
-  const { scripts } = this.info;
+export default function(context: PiralRuleContext, options: Options = undefined) {
+  const { scripts } = context.info;
 
   if (typeof scripts !== 'object') {
-    this.error(
+    context.error(
       `
 The scripts in pilets.scripts are invalid.
   Expected: <object>.
@@ -20,7 +20,7 @@ The scripts in pilets.scripts are invalid.
     const invalidScripts = Object.keys(scripts).filter(key => typeof scripts[key] !== 'string');
 
     if (invalidScripts.length > 0) {
-      this.error(
+      context.error(
         `
 The scripts in pilets.scripts are invalid.
   Expected: Only commands (<string>) in the array.

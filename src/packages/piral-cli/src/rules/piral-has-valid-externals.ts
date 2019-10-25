@@ -5,11 +5,11 @@ export type Options = void;
 /**
  * Checks that the externals to be used in pilets are valid.
  */
-export default function(this: PiralRuleContext, options: Options = undefined) {
-  const { externals } = this.info;
+export default function(context: PiralRuleContext, options: Options = undefined) {
+  const { externals } = context.info;
 
   if (!Array.isArray(externals)) {
-    this.error(
+    context.error(
       `
 The shared dependencies in pilets.external are invalid.
   Expected: <Array>.
@@ -18,10 +18,10 @@ The shared dependencies in pilets.external are invalid.
     );
   } else {
     const invalidDepTypes = externals.filter(ext => typeof ext !== 'string');
-    const invalidDepRefs = externals.filter(ext => typeof ext === 'string' && !this.dependencies[ext]);
+    const invalidDepRefs = externals.filter(ext => typeof ext === 'string' && !context.dependencies[ext]);
 
     if (invalidDepTypes.length > 0) {
-      this.error(
+      context.error(
         `
 The shared dependencies in pilets.external are invalid.
   Expected: Only names (<string>) in the array.
@@ -31,7 +31,7 @@ The shared dependencies in pilets.external are invalid.
     }
 
     for (const invalidDepRef of invalidDepRefs) {
-      this.warning(
+      context.warning(
         `
 The shared dependency "${invalidDepRef}" is listed in pilets.external, but not in dependencies.
   Expected: "${invalidDepRef}" in dependencies.
