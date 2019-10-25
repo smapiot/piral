@@ -4,6 +4,7 @@
 
 * Fixed bug in Piral CLI regarding plugins
 * Improved the documentation
+* Improved the Piral CLI validation rules API
 * Exported minimal set of types for the `PiletApi`
 
 ## 0.8.2 (October 24, 2019)
