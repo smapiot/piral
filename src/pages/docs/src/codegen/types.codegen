@@ -1,11 +1,11 @@
 const { readFileSync } = require('fs');
-const { getTypes } = require('./paths');
+const { getCoreTypes } = require('./paths');
 
 module.exports = function() {
   const titles = [];
   const children = [];
 
-  getTypes().forEach(file => {
+  getCoreTypes().forEach(file => {
     const content = readFileSync(file, 'utf8');
     const title = file
       .split('/')

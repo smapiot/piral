@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-const List = require('../codegen/home.codegen');
+const TutorialsList = require('../codegen/tutorials-list.codegen');
 
 export default () => (
   <section className="container">
-    <List />
+    <TutorialsList />
   </section>
 );

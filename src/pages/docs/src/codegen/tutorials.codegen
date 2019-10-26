@@ -1,4 +1,4 @@
-const { getTutorials, getName, generateFile, generated } = require('./paths');
+const { getTutorials, getName, generateFile, generated, generatedName } = require('./paths');
 const { render } = require('./markdown');
 const { docRef } = require('./utils');
 
@@ -38,7 +38,7 @@ export default () => (
 {
   id: '${name}',
   route: '${getRoute(name)}',
-  page: lazy(() => import('./__generated__/${name}')),
+  page: lazy(() => import('./${generatedName}/${name}')),
 }`,
     );
 

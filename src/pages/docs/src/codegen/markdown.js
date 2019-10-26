@@ -15,7 +15,7 @@ const markdownItVideo = require('markdown-it-video');
 const { readFileSync } = require('fs');
 const { extname, basename, relative } = require('path');
 const { createHash } = require('crypto');
-const { docRef, imgRef } = require('./utils');
+const { docRef, imgRef, rootPath } = require('./utils');
 
 function computeHash(content) {
   return createHash('sha1')
@@ -45,7 +45,9 @@ function render(file, baseDir = __dirname) {
   };
   const md = new MarkdownIt({
     replaceLink(link) {
-      if (/\.md$/.test(link)) {
+      if (link.startsWith('http://') || link.startsWith('https://')) {
+        return link;
+      } else if (/\.md$/.test(link)) {
         return docRef(link, file);
       } else if (/\.(png|jpg|jpeg|gif|svg)$/.test(link)) {
         const ext = extname(link);
@@ -56,6 +58,8 @@ function render(file, baseDir = __dirname) {
         const id = `${name}_${hash}${ext}`;
         result.images[id] = relative(baseDir, target);
         return id;
+      } else if (/LICENSE$/.test(link)) {
+        return docRef(link, rootPath);
       }
 
       return link;

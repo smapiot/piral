@@ -1,0 +1,67 @@
+const { resolve } = require('path');
+const { readFileSync } = require('fs');
+const { getExtensionTypes, getName, generateFile, generated, generatedName, getExtensionImage } = require('./paths');
+const { render } = require('./markdown');
+const { docRef } = require('./utils');
+
+function getRoute(name) {
+  return (name && `/reference/extensions/${name}`) || '';
+}
+
+module.exports = function() {
+  const files = getExtensionTypes();
+
+  const imports = files
+    .map(file => {
+      const type = readFileSync(file, 'utf8');
+      const name = getName(file);
+      const image = getExtensionImage(name);
+      const readme = resolve(__dirname, '..', '..', '..', '..', 'packages', name, 'README.md');
+      const { mdValue } = render(readme, generated);
+      const content = [
+        '`',
+        '<h2 id="installation">Installation</h2>',
+        '<p>Add the extension to your Piral instance by running:</p>',
+        `<pre><code>npm i ${name}</code></pre>`,
+        '<h2 id="description">Description</h2>',
+        mdValue.substr(mdValue.indexOf('</h1>') + 5),
+      ].join('');
+      this.addDependency(readme, { includedInParent: true });
+      generateFile(
+        name,
+        `
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { TypeInfo, Tabs, Markdown } from '../../scripts/components';
+
+export default () => (
+  <section className="container">
+    <Link to="/reference/extensions" className="nav-link">Extensions</Link> /
+    <div className="extension-info">
+      <img src={require('../../assets/${image}')} />
+      <h1>${name}</h1>
+    </div>
+    <Tabs titles={["Overview", "Types"]}>
+      <Markdown content={${content}} link="${docRef(readme)}" />
+      <TypeInfo>{${type}}</TypeInfo>
+    </Tabs>
+  </section>
+);`,
+        'jsx',
+      );
+      return name;
+    })
+    .map(
+      name => `
+{
+  id: '${name}',
+  route: '${getRoute(name)}',
+  page: lazy(() => import('./${generatedName}/${name}')),
+}`,
+    );
+
+  return `
+    const { lazy } = require('react');
+    module.exports = [${imports.join(', ')}];
+  `;
+};
