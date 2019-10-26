@@ -3,9 +3,8 @@
     margin-bottom: 0.5rem;
     display: block;
     padding: 0.5em 1em;
-    color: $color-secondary;
     border-left: 3px solid transparent;
-    text-decoration: none;
+    color: $color-secondary;
 
     &:hover, &:focus {
       color: black;
