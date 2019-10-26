@@ -1,7 +1,7 @@
 {
   "name": "piral-translate",
   "version": "0.8.2",
-  "description": "Introduces the translate API extension for extending piral-core.",
+  "description": "Extensions for providing translated messages in Piral.",
   "keywords": [
     "piral",
     "pilet-api",

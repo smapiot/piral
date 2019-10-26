@@ -1,7 +1,7 @@
 {
   "name": "piral-fetch",
   "version": "0.8.2",
-  "description": "Introduces the fetch API extensions for extending piral-core.",
+  "description": "Extensions for standardizing fetch in Piral.",
   "keywords": [
     "piral",
     "pilet-api",

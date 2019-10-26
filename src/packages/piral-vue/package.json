@@ -1,7 +1,7 @@
 {
   "name": "piral-vue",
   "version": "0.8.2",
-  "description": "Extensions for Vue to the piral-core pilet API.",
+  "description": "Extensions for integrating Vue components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
