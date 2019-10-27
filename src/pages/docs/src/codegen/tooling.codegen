@@ -3,15 +3,33 @@ const { docRef } = require('./utils');
 const { render } = require('./markdown');
 
 module.exports = function() {
-  const commands = getCommands().map(file => {
+  const commands = {
+    piral: [],
+    pilet: [],
+  };
+  getCommands().forEach(file => {
     const { mdValue } = render(file);
     this.addDependency(file, { includedInParent: true });
-    return `<Markdown content={${mdValue}} link="${docRef(file)}" />`;
-  }).join('');
+    const content = `<Markdown content={${mdValue}} link="${docRef(file)}" />`;
+
+    if (file.endsWith('-piral.md')) {
+      commands.piral.push(content);
+    } else if (file.endsWith('-pilet.md')) {
+      commands.pilet.push(content);
+    }
+  });
 
   return `
     const React = require('react');
-    const { Markdown, ContentPage } = require('../scripts/components');
-    module.exports = () => (<ContentPage>${commands}</ContentPage>);
+    const { Markdown, ContentPage, Tabs } = require('../scripts/components');
+    module.exports = () => (
+      <Tabs titles={${JSON.stringify(Object.keys(commands))}}>
+        ${Object.keys(commands).map(command => `
+          <ContentPage>
+            ${commands[command].join('')}
+          </ContentPage>
+        `).join('')}
+      </Tabs>
+    );
   `;
 };

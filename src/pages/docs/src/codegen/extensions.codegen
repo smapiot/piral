@@ -5,7 +5,7 @@ const { render } = require('./markdown');
 const { docRef } = require('./utils');
 
 function getRoute(name) {
-  return (name && `/reference/extensions/${name}`) || '';
+  return (name && `/reference/extensions/${name}/:tab?`) || '';
 }
 
 module.exports = function() {

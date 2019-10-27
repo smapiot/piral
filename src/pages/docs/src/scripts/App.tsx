@@ -27,9 +27,9 @@ export const App = () => (
         ))}
         <Route exact path="/reference" component={ReferencePage} />
         <Route exact path="/reference/documentation" component={DocumentationReferencePage} />
-        <Route exact path="/reference/types" component={TypeReferencePage} />
-        <Route exact path="/reference/specifications" component={SpecificationReferencePage} />
-        <Route exact path="/reference/tooling" component={ToolingReferencePage} />
+        <Route exact path="/reference/types/:tab?" component={TypeReferencePage} />
+        <Route exact path="/reference/specifications/:tab?" component={SpecificationReferencePage} />
+        <Route exact path="/reference/tooling/:tab?" component={ToolingReferencePage} />
         <Route exact path="/reference/extensions" component={ExtensionsReferencePage} />
         {extensions.map(extension => (
           <Route key={extension.id} exact path={extension.route} component={extension.page} />

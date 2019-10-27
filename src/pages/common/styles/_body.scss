@@ -105,6 +105,12 @@ section {
   }
 }
 
+.responsive-table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
 .btn, a.btn {
   font-weight: 600;
   font-size: 1rem;

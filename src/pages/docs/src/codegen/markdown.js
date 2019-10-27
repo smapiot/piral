@@ -26,7 +26,9 @@ function computeHash(content) {
 function getMdValue(result) {
   let content = result.content
     .split('`').join('\\`')
-    .split('$').join('\\$');
+    .split('$').join('\\$')
+    .split('<table>').join('<div class="responsive-table"><table>')
+    .split('</table>').join('</table></div>');
   Object.keys(result.images).forEach(id => {
     const path = result.images[id];
     content = content
