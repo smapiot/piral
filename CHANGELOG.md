@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.8.3 (tbd)
+## 0.8.3 (October 28, 2019)
 
 * Fixed bug in Piral CLI regarding plugins
 * Improved the documentation
