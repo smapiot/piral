@@ -3,6 +3,8 @@ import { ImageCard } from '../scripts/components';
 
 export default () => (
   <section className="container">
+    <h1>References</h1>
+    <p>Further topics and detailed documentation on the whole Piral ecosystem.</p>
     <div className="boxes">
       <ImageCard
         link="/reference/documentation"
@@ -27,6 +29,12 @@ export default () => (
         image={require('../assets/top-tools.png')}
         description="The full command line reference."
         title="Tooling"
+      />
+      <ImageCard
+        link="/reference/extensions"
+        image={require('../assets/top-extensions.png')}
+        description="List of official extensions."
+        title="Extensions"
       />
     </div>
   </section>

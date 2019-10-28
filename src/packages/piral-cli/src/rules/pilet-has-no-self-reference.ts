@@ -6,11 +6,11 @@ export type Options = 'ignore' | 'active';
 /**
  * Checks if the used Piral instance is not referenced in the code.
  */
-export default async function(this: PiletRuleContext, options: Options = 'ignore') {
+export default async function(context: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
-    const { name } = this.data.appPackage;
+    const { name } = context.data.appPackage;
     const names = ['piral', 'piral-core', name];
-    const files = await getSourceFiles(this.entry);
+    const files = await getSourceFiles(context.entry);
     const testers: Array<RegExp> = [];
 
     for (const packageName of names) {
@@ -22,7 +22,7 @@ export default async function(this: PiletRuleContext, options: Options = 'ignore
 
       for (const tester of testers) {
         if (tester.test(fileContent)) {
-          this.error(
+          context.error(
             `
 The Piral instance is referenced in "${file.path}".
   Expected: No import of "${name}" or Piral itself.

@@ -1,13 +1,13 @@
 import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral-core';
 import {
   FetchConfig,
-  GqlConfig,
-  LocaleConfig,
   DashboardConfig,
   MenuConfig,
   NotificationsConfig,
   ModalsConfig,
   FeedsConfig,
+  Localizable,
+  UrqlClient,
 } from 'piral-ext';
 
 export interface PiralExtSettings {
@@ -18,11 +18,11 @@ export interface PiralExtSettings {
   /**
    * Customizes the gql config.
    */
-  gql?: GqlConfig;
+  gql?: UrqlClient;
   /**
    * Customizes the locale config.
    */
-  locale?: LocaleConfig;
+  locale?: Localizable;
   /**
    * Customizes the dashboard config.
    */

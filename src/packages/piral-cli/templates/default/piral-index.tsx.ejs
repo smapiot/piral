@@ -2,17 +2,17 @@ import * as React from 'react';
 import { renderInstance, requestPiletsFromGraphQL, setupGqlClient } from 'piral';
 import { layout, errors } from './layout';
 
-const client = setupGqlClient();
+const gql = setupGqlClient();
 
 renderInstance({
   settings: {
-    gql: client,
+    gql,
   },
   layout,
   errors,
   requestPilets() {
-    return requestPiletsFromGraphQL(client);
+    return requestPiletsFromGraphQL(gql);
   },
 });
 
-export * from '<%- packageName %>/lib/types';
+export * from '<%- packageName %>/api';

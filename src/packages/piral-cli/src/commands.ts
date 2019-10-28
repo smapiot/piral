@@ -8,7 +8,7 @@ import {
   valueOfPiletLanguage,
   templateTypeKeys,
 } from './helpers';
-import { ToolCommand } from './types';
+import { ToolCommand, ListCommands } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
   if (command.name.endsWith(suffix)) {
@@ -429,7 +429,7 @@ const allCommands: Array<ToolCommand<any>> = [
   },
 ];
 
-class Commands {
+class Commands implements ListCommands {
   public all = allCommands;
 
   public get pilet() {

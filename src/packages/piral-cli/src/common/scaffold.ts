@@ -47,7 +47,6 @@ export async function scaffoldPiletSourceFiles(
   sourceName: string,
   forceOverwrite: ForceOverwrite,
 ) {
-  const apiName = 'PiletApi';
   const src = join(root, 'src');
 
   await createDirectory(src);
@@ -58,13 +57,11 @@ export async function scaffoldPiletSourceFiles(
         src: relative(root, src),
       });
       await createFileFromTemplateIfNotExists(type, 'pilet', src, 'index.tsx', forceOverwrite, {
-        apiName,
         sourceName,
       });
       break;
     case PiletLanguage.js:
       await createFileFromTemplateIfNotExists(type, 'pilet', src, 'index.jsx', forceOverwrite, {
-        apiName,
         sourceName,
       });
       break;

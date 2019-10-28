@@ -1,6 +1,7 @@
 import { Extend } from 'piral-core';
+import { FetchConfig } from './config';
 import { httpFetch } from './fetch';
-import { PiletFetchApi, FetchConfig } from './types';
+import { PiletFetchApi } from './types';
 
 /**
  * Creates a new Piral Fetch API extension.

@@ -1,10 +1,11 @@
-const { basename, extname } = require('path');
+const { basename, extname, resolve } = require('path');
 const { getRelativePath, getAbsolutePath } = require('./paths');
 
 const branch = 'documentation';
 const repo = 'smapiot/piral';
 const docsFolder = 'docs';
 const docBaseUrl = `https://github.com/${repo}/tree/${branch}/${docsFolder}`;
+const rootPath = resolve(__dirname, '../../../../../package.json');
 
 function imgRef(path, basePath) {
   return getAbsolutePath(path, basePath);
@@ -40,4 +41,5 @@ module.exports = {
   docRef,
   niceName,
   getTitle,
+  rootPath,
 };

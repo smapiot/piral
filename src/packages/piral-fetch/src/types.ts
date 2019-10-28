@@ -1,4 +1,4 @@
-import {} from 'piral-core';
+import 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletFetchApi {}
@@ -48,19 +48,6 @@ export interface FetchResponse<T> {
    * The status text of the response.
    */
   text: string;
-}
-
-export interface FetchConfig {
-  /**
-   * Sets the default request init settings.
-   * @default {}
-   */
-  default?: RequestInit;
-  /**
-   * Sets the base URL to use for requests.
-   * @default location.origin
-   */
-  base?: string;
 }
 
 export interface PiletFetchApiFetch {

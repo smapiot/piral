@@ -15,11 +15,11 @@ export type Options = void;
 /**
  * Checks that the files defined for pilet scaffolding are valid.
  */
-export default function(this: PiralRuleContext, options: Options = undefined) {
-  const { files } = this.info;
+export default function(context: PiralRuleContext, options: Options = undefined) {
+  const { files } = context.info;
 
   if (!Array.isArray(files)) {
-    this.error(
+    context.error(
       `
 The scaffolding files in pilets.files are invalid.
   Expected: <Array>.
@@ -40,7 +40,7 @@ The scaffolding files in pilets.files are invalid.
     const ignoredFiles = ['.gitignore', '.npmignore'];
 
     if (invalidFileTypes.length > 0) {
-      this.error(
+      context.error(
         `
 The scaffolding files in pilets.files are invalid.
   Expected: Only names (<string>) and explicit location mappings (<{ from: string, to: string }>) in the array.
@@ -51,10 +51,10 @@ The scaffolding files in pilets.files are invalid.
 
     for (const file of validFileRefs) {
       const { from, deep } = typeof file === 'string' ? { from: file, deep: undefined } : file;
-      const target = join(this.root, from);
+      const target = join(context.root, from);
 
       if (!existsSync(target)) {
-        this.error(
+        context.error(
           `
   The scaffolding file ${JSON.stringify(file)} is listed in pilets.files but cannot be found.
     Expected: "${from}" exists on disk.
@@ -62,7 +62,7 @@ The scaffolding files in pilets.files are invalid.
   `,
         );
       } else if (hasSubdirectories(target) && deep === undefined) {
-        this.warning(
+        context.warning(
           `
 The scaffolding directory ${JSON.stringify(
             file,
@@ -72,7 +72,7 @@ The scaffolding directory ${JSON.stringify(
 `,
         );
       } else if (ignoredFiles.includes(basename(target))) {
-        this.error(
+        context.error(
           `
 The scaffolding file ${JSON.stringify(file)} is listed in pilets.files but will be ignored when packaging.
   Expected: "${from}" has a different name.

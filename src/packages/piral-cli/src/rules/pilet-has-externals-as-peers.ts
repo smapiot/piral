@@ -6,10 +6,10 @@ export type Options = 'ignore' | 'active' | 'only-used';
 /**
  * Checks that "externals" dependencies have been specified in "peerDependencies".
  */
-export default async function(this: PiletRuleContext, options: Options = 'ignore') {
+export default async function(context: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
-    const { externals } = getPiletsInfo(this.data.appPackage);
-    const markedExternals = Object.keys(this.peerDependencies);
+    const { externals } = getPiletsInfo(context.data.appPackage);
+    const markedExternals = Object.keys(context.peerDependencies);
     const missingExternals = externals.filter(ext => !markedExternals.includes(ext));
 
     if (options === 'only-used' && missingExternals.length > 0) {
@@ -17,7 +17,7 @@ export default async function(this: PiletRuleContext, options: Options = 'ignore
         run: new RegExp(`(import\\s+(.*\\s+from\\s+)?["'\`]${ext}["'\`]|require\\(["'\`]${ext}["'\`]\\));`),
         count: 0,
       }));
-      const files = await getSourceFiles(this.entry);
+      const files = await getSourceFiles(context.entry);
 
       for (const file of files) {
         const fileContent = await file.read();
@@ -37,7 +37,7 @@ export default async function(this: PiletRuleContext, options: Options = 'ignore
     }
 
     if (missingExternals.length > 0) {
-      this.error(
+      context.error(
         `
 The peerDependencies miss some of the shared dependencies.
   Expected: <none>.

@@ -1,11 +1,9 @@
 import 'piral-core';
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { AxiosInstance } from 'axios';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletAxiosApi {}
 }
-
-export type AxiosConfig = AxiosRequestConfig;
 
 export interface PiletAxiosApi {
   /**

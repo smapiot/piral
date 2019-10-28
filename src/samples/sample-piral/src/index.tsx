@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { renderInstance, getUserLocale } from 'piral';
+import { renderInstance, getUserLocale, setupLocalizer, setupGqlClient } from 'piral';
 import { createAuthApi } from 'piral-auth';
 import { createSearchApi } from 'piral-search';
 import { setupFooter, setupMenu } from './parts';
@@ -7,16 +7,16 @@ import { layout, errors } from './layout';
 
 renderInstance({
   settings: {
-    gql: {
+    gql: setupGqlClient({
       subscriptionUrl: false,
-    },
-    locale: {
+    }),
+    locale: setupLocalizer({
       language: getUserLocale,
       messages: {
         de: {},
         en: {},
       },
-    },
+    }),
     menu: {
       items: [...setupMenu(), ...setupFooter()],
     },

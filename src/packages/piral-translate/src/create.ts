@@ -3,13 +3,40 @@ import { Extend } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
 import { DefaultPicker } from './default';
-import { PiletLocaleApi, LocalizationMessages, LocaleConfig } from './types';
+import { PiletLocaleApi, LocalizationMessages, Localizable } from './types';
+
+export interface TranslationFallback {
+  (key: string, language: string): string;
+}
+
+export interface RetrieveCurrentLanguage {
+  /**
+   * A function to identify the current language.
+   */
+  (languages: Array<string>, defaultLanguage: string, fallbackLanguage?: string): string;
+}
+
+export interface LocaleConfig {
+  /**
+   * Sets the default (global) localization messages.
+   * @default {}
+   */
+  messages?: LocalizationMessages;
+  /**
+   * Sets the default language to use.
+   */
+  language?: string | RetrieveCurrentLanguage;
+  /**
+   * Sets the optional fallback to use.
+   */
+  fallback?: TranslationFallback;
+}
 
 /**
  * Sets up a new localizer by using the given config.
  * @param config The configuration for the new localizer.
  */
-export function setupLocalizer(config: LocaleConfig = {}) {
+export function setupLocalizer(config: LocaleConfig = {}): Localizable {
   const msgs = config.messages || {};
   const languages = Object.keys(msgs);
   const defaultLang = languages[0] || 'en';
@@ -23,7 +50,7 @@ export function setupLocalizer(config: LocaleConfig = {}) {
  * Creates a new Piral localization API extension.
  * @param localizer The specific localizer to be used, if any.
  */
-export function createLocaleApi(localizer = setupLocalizer()): Extend<PiletLocaleApi> {
+export function createLocaleApi(localizer: Localizable = setupLocalizer()): Extend<PiletLocaleApi> {
   return context => {
     context.defineActions(createActions(localizer));
 

@@ -1,8 +1,8 @@
 ---
 title: Development Workflow
 description: How development of a microfrontend with Piral will look in most cases.
-audience: Everyone
-level: Elementary
+audience: Developers
+level: Intermediate
 ---
 
 # Common Development Workflow
@@ -10,6 +10,12 @@ level: Elementary
 Piral was created by following a SPA-first, serverless-first, and developer-first philosophy. As such developer convenience was a very high-priority for us.
 
 A high developer convenience can be achieved by providing a seamless debugging experience together was an easy setup and pleasant tools. Ideally, all standard tools just work.
+
+The essential development workflow is displayed below. We start with the app shell, which should be implemented up to a degree where first pilets may be integrated. At some point a "pilet factory" mode is started.
+
+![Full Development Life Cycle](../diagrams/piral-dev-life-cycle.png)
+
+The important aspect of the diagram above is the deployment independence of each layer. Teams responsible for the different pilets can deploy independently of other teams. Obviously, in real life some feature constraints and other business values may impact the deployment independence, but technically there are no such constraints if well set up.
 
 ## Setup Phase
 
@@ -67,4 +73,4 @@ Once the maintenance phase is reached only fixes to the pilets or the Piral inst
 
 A bug fix may be necessary due to a bug, legal requirements, or a security update to a third-party dependency. Shared dependencies require only a central update (with  subsequent deployment) of the Piral instance. Dependencies contained in pilets require an update of the particular pilets.
 
-In the next part we will look at managing the used (or usable) dependencies.
+In the next part we will look in more detail at the secret sauce for development - the Piral CLI.

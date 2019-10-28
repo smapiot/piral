@@ -1,6 +1,9 @@
 import Axios from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { Extend } from 'piral-core';
-import { PiletAxiosApi, AxiosConfig } from './types';
+import { PiletAxiosApi } from './types';
+
+export type AxiosConfig = AxiosRequestConfig;
 
 /**
  * Creates a new Piral axios API extension.

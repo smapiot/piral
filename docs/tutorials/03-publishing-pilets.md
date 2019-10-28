@@ -46,7 +46,7 @@ We assume that a Piral instance and a pilet is available as prerequisite for thi
 
 ## Creating a Feed in the Piral Feed Service
 
-For publishing (or retrieving) pilets you will need a feed. A feed is like a container or folder, which contains a set of pilets. This section describes how to setup a feed for serving Pilets.
+For publishing (or retrieving) pilets you will need a feed. A feed is like a container or folder, which contains a set of pilets. This section describes how to setup a feed for serving pilets.
 
 ### Access to the Feed Service
 
@@ -68,7 +68,7 @@ When you are done, just press `CREATE` and wait for the operation to complete. Y
 
 ![Feed Overview](../diagrams/feed-overview.png)
 
-In our case we will see at least the feed, which we just have created. 
+In our case we will see at least the feed, which we just have created.
 
 ## Obtain an API Key
 

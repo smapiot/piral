@@ -166,9 +166,17 @@ img {
 }
 
 .features {
-  background: $color-primary;
-  background: linear-gradient(168deg, #fff 40%, $color-primary 0);
   padding: 0;
+
+  &.intro {
+    background: $color-primary;
+    background: linear-gradient(168deg, #fff 40%, $color-primary 0);
+  }
+
+  &.outro {
+    background: #fff;
+    background: linear-gradient(168deg, $color-primary 60%, #fff 0);
+  }
 
   .container {
     padding: 2rem 1rem;
@@ -214,13 +222,17 @@ img {
 
     @media (max-width: $tabletBrk) {
       text-align: center;
-      flex-direction: column;
+      flex-direction: column-reverse;
     }
   }
 
-  img {
-    width: 100%;
+  .image {
     max-width: 480px;
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
   }
 }
 

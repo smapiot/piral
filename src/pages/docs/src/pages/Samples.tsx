@@ -60,7 +60,7 @@ const CoreDemo: React.FC = () => (
       An example app based on <code>piral-core</code>.
     </p>
     <blockquote>
-      <p>Pilets are integrated for simplicity. The core pilet API is demonstrated.</p>
+      <p>Pilets are integrated for simplicity. The core pilet API and converters are demonstrated.</p>
     </blockquote>
     <p>
       The sample shows the essential use of piral-core with a very simple layout and a variety of (integrated) pilets

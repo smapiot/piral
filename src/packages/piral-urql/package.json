@@ -1,7 +1,7 @@
 {
   "name": "piral-urql",
   "version": "0.8.2",
-  "description": "Introduces the query, mutate, and subscribe API extensions for extending piral-core.",
+  "description": "Extensions for providing a GraphQL client in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -23,6 +23,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
+    "api.d.ts",
     "lib",
     "src"
   ],

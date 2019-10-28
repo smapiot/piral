@@ -1,0 +1,30 @@
+const { readFileSync, existsSync } = require('fs');
+const { basename, resolve } = require('path');
+const { getExtensionTypes, getExtensionImage } = require('./paths');
+
+module.exports = function() {
+  const children = getExtensionTypes().map(file => {
+    const name = basename(file).replace('.json', '');
+    const image = getExtensionImage(name);
+    const dest = resolve(__dirname, '..', '..', '..', '..', 'packages', name, 'package.json');
+    const data = JSON.parse(readFileSync(dest, 'utf8'));
+    this.addDependency(dest, { includedInParent: true });
+    return `
+    <ImageCard
+      link="/reference/extensions/${name}"
+      image={require('../assets/${image}')}
+      description="${data.description}"
+      title="${data.name}"
+    />`;
+  });
+
+  return `
+    const React = require('react');
+    const { ImageCard } = require('../scripts/components');
+    module.exports = () => (
+      <>
+        ${children.join('')}
+      </>
+    );
+  `;
+};

@@ -1,7 +1,7 @@
 {
   "name": "piral-hyperapp",
   "version": "0.8.2",
-  "description": "Extensions for hyperapp to the piral-core pilet API.",
+  "description": "Extensions for integrating hyperapp components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -18,6 +18,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
+    "api.d.ts",
     "lib",
     "src"
   ],

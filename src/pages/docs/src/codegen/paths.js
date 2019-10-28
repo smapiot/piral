@@ -1,20 +1,28 @@
 const { readdirSync, writeFileSync, mkdirSync, existsSync, readFileSync } = require('fs');
-const { resolve, basename, relative, dirname } = require('path');
+const { resolve, basename, relative, dirname, extname } = require('path');
 
 const readme = 'README.md';
+const generatedName = '__generated__';
 const docs = resolve(__dirname, '../../../../../docs');
-const generated = resolve(__dirname, '__generated__');
+const generated = resolve(__dirname, generatedName);
 const tutorials = resolve(docs, 'tutorials');
 const questions = resolve(docs, 'questions');
 const commands = resolve(docs, 'commands');
 const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
 
+const coreNames = ['piral', 'piral-core', 'piral-cli', 'piral-ext'];
+const coreTypes = coreNames.map(name => `${name}.json`);
+
 function getDocsFrom(dir, tester = /\.md$/) {
   return readdirSync(dir)
     .sort()
     .filter(name => tester.test(name) && name !== readme)
     .map(name => resolve(dir, name));
+}
+
+function isCoreType(fileName) {
+  return coreTypes.some(type => fileName.endsWith(type));
 }
 
 function getTutorials() {
@@ -33,8 +41,20 @@ function getSpecs() {
   return getDocsFrom(specs);
 }
 
-function getTypes() {
-  return getDocsFrom(types,  /\.json$/);
+function getCoreTypes() {
+  return getDocsFrom(types, /\.json$/)
+    .filter(file => isCoreType(file));
+}
+
+function getExtensionTypes() {
+  return getDocsFrom(types, /\.json$/)
+    .filter(file => !isCoreType(file));
+}
+
+function getExtensionImage(name) {
+  const rest = name.replace('piral-', '');
+  const hasImage = existsSync(resolve(__dirname, '..', 'assets', 'extensions', `${rest}.png`));
+  return hasImage ? `extensions/${rest}.png` : 'top-extensions.png';
 }
 
 function getDocs() {
@@ -56,7 +76,7 @@ function getDocs() {
 }
 
 function getName(file) {
-  return (file && basename(file).replace(/\.md$/, '')) || '';
+  return (file && basename(file).replace(extname(file), '')) || '';
 }
 
 function generateFile(name, content, type = 'codegen') {
@@ -77,11 +97,14 @@ function getRelativePath(path, basePath = docs) {
 
 module.exports = {
   generated,
+  generatedName,
   getTutorials,
   getQuestions,
   getCommands,
+  getExtensionTypes,
+  getExtensionImage,
   getSpecs,
-  getTypes,
+  getCoreTypes,
   getDocs,
   getName,
   getRelativePath,

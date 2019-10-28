@@ -1,4 +1,5 @@
 import { dirname, join } from 'path';
+import { ListCommands, ToolCommand } from './types';
 
 function getPath() {
   try {
@@ -12,7 +13,7 @@ function getPath() {
   }
 }
 
-export async function select(from: (commands: any) => any) {
+export async function select(from: (commands: ListCommands) => Array<ToolCommand<any>>) {
   const path = getPath();
   const { loadPlugins } = require(join(path, 'plugin'));
   const { commands } = require(join(path, 'commands'));

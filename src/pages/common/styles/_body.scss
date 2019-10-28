@@ -18,7 +18,6 @@ button {
   color: $color-text;
 }
 
-
 body {
   display: flex;
   -webkit-font-smoothing: antialiased;
@@ -95,6 +94,21 @@ section {
   .btn {
     margin: 1em;
   }
+}
+
+.nav-link {
+  color: $color-green;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-secondary;
+  }
+}
+
+.responsive-table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .btn, a.btn {

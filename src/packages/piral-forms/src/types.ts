@@ -1,5 +1,5 @@
+import 'piral-core';
 import { ComponentType, ChangeEvent } from 'react';
-import {} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletFormsApi {}

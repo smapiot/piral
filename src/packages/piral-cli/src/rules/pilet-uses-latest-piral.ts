@@ -6,13 +6,13 @@ export type Options = 'suggest' | 'required' | 'ignore';
 /**
  * Checks if the used Piral instance is used at its latest version.
  */
-export default async function(this: PiletRuleContext, options: Options = 'suggest') {
+export default async function(context: PiletRuleContext, options: Options = 'suggest') {
   if (options !== 'ignore') {
-    const { name, version } = this.data.appPackage;
+    const { name, version } = context.data.appPackage;
     const latestVersion = await findLatestVersion(name);
 
     if (version !== latestVersion) {
-      const notify = options === 'required' ? this.error : this.warning;
+      const notify = options === 'required' ? context.error : context.warning;
       notify(
         `
 The used version of "${name}" is outdated.
