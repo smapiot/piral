@@ -1,5 +1,5 @@
 import { ReactNode, ReactChild, ComponentType } from 'react';
-import { Dict, Disposable, PiletApi } from 'piral-core';
+import { Dict, Disposable, PiletApi, BaseRegistration } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletSearchApi {}
@@ -147,7 +147,7 @@ export interface SearchHandler {
   (options: SearchOptions): Promise<Array<ReactNode | HTMLElement>>;
 }
 
-export interface SearchProviderRegistration {
+export interface SearchProviderRegistration extends BaseRegistration {
   search: SearchHandler;
   cancel(): void;
   clear(): void;

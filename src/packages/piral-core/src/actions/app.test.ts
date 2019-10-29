@@ -1,6 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { changeLayout } from './app';
-import { createListener } from '../../utils';
+import { createListener } from '../utils';
 
 describe('App Actions Module', () => {
   it('changeLayout changes the current layout', () => {

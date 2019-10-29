@@ -8,7 +8,7 @@ import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, Extend, ApiE
 
 export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCoreApi> {
   return (api, target) => {
-    const prefix = target.name;
+    const pilet = target.name;
     return {
       getData(name) {
         return context.readDataValue(name);
@@ -16,10 +16,11 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
       setData(name, value, options) {
         const { target = 'memory', expires } = createDataOptions(options);
         const expiration = getDataExpiration(expires);
-        return context.tryWriteDataItem(name, value, prefix, target, expiration);
+        return context.tryWriteDataItem(name, value, pilet, target, expiration);
       },
       registerPage(route, arg) {
         context.registerPage(route, {
+          pilet,
           component: withApi(context.converters, arg, api, 'page'),
         });
       },
@@ -28,6 +29,7 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
       },
       registerExtension(name, arg, defaults) {
         context.registerExtension(name, {
+          pilet,
           component: withApi(context.converters, arg, api, 'extension'),
           reference: arg,
           defaults,

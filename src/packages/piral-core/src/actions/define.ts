@@ -1,5 +1,5 @@
 import { Atom } from '@dbeining/react-atom';
-import { GlobalState, GlobalStateContext } from '../../types';
+import { GlobalState, GlobalStateContext } from '../types';
 
 export function defineAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
   this[actionName] = (...args) => action.call(this, ctx, ...args);

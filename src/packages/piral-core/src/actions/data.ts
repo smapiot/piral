@@ -1,6 +1,6 @@
 import { swap, Atom, deref } from '@dbeining/react-atom';
-import { updateKey } from '../../utils';
-import { GlobalState, DataStoreTarget, EventEmitter } from '../../types';
+import { updateKey } from '../utils';
+import { GlobalState, DataStoreTarget, EventEmitter } from '../types';
 
 export function resetData(ctx: Atom<GlobalState>) {
   swap(ctx, state => ({

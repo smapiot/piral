@@ -45,6 +45,7 @@ function getTiles(items: Array<InitialTile>, defaultPreferences: TilePreferences
 
   for (const { component, preferences } of items) {
     tiles[`global-${i++}`] = {
+      pilet: undefined,
       component,
       preferences: getPreferences(defaultPreferences, preferences),
     };
@@ -76,7 +77,7 @@ export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDa
     }));
 
     return (api, target) => {
-      const prefix = target.name;
+      const pilet = target.name;
       let next = 0;
 
       return {
@@ -87,14 +88,15 @@ export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDa
             name = next++;
           }
 
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.registerTile(id, {
+            pilet,
             component: withApi(context.converters, arg, api, 'tile'),
             preferences: getPreferences(defaultPreferences, preferences),
           });
         },
         unregisterTile(name) {
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.unregisterTile(id);
         },
       };

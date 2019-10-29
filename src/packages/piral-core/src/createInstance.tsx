@@ -39,16 +39,6 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   const events = createListener(globalState);
   const context = createActions(globalState, events);
 
-  if (process.env.DEBUG_PILET) {
-    const { setup } = require(process.env.DEBUG_PILET);
-    availablePilets.push({
-      name: process.env.BUILD_PCKG_NAME || 'dbg',
-      version: process.env.BUILD_PCKG_VERSION || '1.0.0',
-      hash: '',
-      setup,
-    });
-  }
-
   const createApi = defaultApiCreator(context, Array.isArray(extendApi) ? extendApi : [extendApi]);
   const options = {
     modules: availablePilets,
@@ -59,6 +49,17 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
       const promise = requestPilets();
 
       if (process.env.DEBUG_PILET) {
+        //createApi
+        //context.injectPilet
+
+        // const { setup } = require(process.env.DEBUG_PILET);
+        // availablePilets.push({
+        //   name: process.env.BUILD_PCKG_NAME || 'dbg',
+        //   version: process.env.BUILD_PCKG_VERSION || '1.0.0',
+        //   hash: '',
+        //   setup,
+        // });
+
         return promise.catch(() => []);
       }
 

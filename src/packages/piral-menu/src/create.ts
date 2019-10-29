@@ -46,6 +46,7 @@ function getMenuItems(items: Array<InitialMenuItem>, defaultSettings: MenuSettin
 
   for (const { component, settings } of items) {
     menuItems[`global-${i++}`] = {
+      pilet: undefined,
       component,
       settings: getSettings(defaultSettings, settings),
     };
@@ -77,7 +78,7 @@ export function createMenuApi(config: MenuConfig = {}): Extend<PiletMenuApi> {
     }));
 
     return (api, target) => {
-      const prefix = target.name;
+      const pilet = target.name;
       let next = 0;
 
       return {
@@ -88,14 +89,15 @@ export function createMenuApi(config: MenuConfig = {}): Extend<PiletMenuApi> {
             name = next++;
           }
 
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.registerMenuItem(id, {
+            pilet,
             component: withApi(context.converters, arg, api, 'menu'),
             settings: getSettings(defaultSettings, settings),
           });
         },
         unregisterMenu(name) {
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.unregisterMenuItem(id);
         },
       };

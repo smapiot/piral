@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import { Dict, WrappedComponent, BaseComponentProps, ForeignComponent, Disposable } from 'piral-core';
+import { Dict, WrappedComponent, BaseComponentProps, BaseRegistration, Disposable } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletModalsApi {}
@@ -121,7 +121,7 @@ export interface BareModalComponentProps<TOpts> {
 
 export type ModalComponentProps<TOpts> = BaseComponentProps & BareModalComponentProps<TOpts>;
 
-export interface ModalRegistration {
+export interface ModalRegistration extends BaseRegistration {
   name: string;
   component: WrappedComponent<ModalComponentProps<any>>;
   defaults: any;

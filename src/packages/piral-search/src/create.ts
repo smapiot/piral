@@ -40,9 +40,10 @@ export interface SearchConfig {
 
 function noop() {}
 
-function createSearchRegistration(search: SearchHandler, settings: SearchSettings = {}): SearchProviderRegistration {
+function createSearchRegistration(pilet: string, search: SearchHandler, settings: SearchSettings = {}): SearchProviderRegistration {
   const { onlyImmediate = false, onCancel = noop, onClear = noop } = settings;
   return {
+    pilet,
     onlyImmediate,
     cancel: isfunc(onCancel) ? onCancel : noop,
     clear: isfunc(onClear) ? onClear : noop,
@@ -55,7 +56,7 @@ function getSearchProviders(providers: Array<InitialSearchProvider>) {
   let i = 0;
 
   for (const { search, settings } of providers) {
-    searchProviders[`global-${i++}`] = createSearchRegistration(search, settings);
+    searchProviders[`global-${i++}`] = createSearchRegistration(undefined, search, settings);
   }
 
   return searchProviders;
@@ -92,6 +93,7 @@ export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchAp
     }));
 
     return (api, target) => {
+      const pilet = target.name;
       let next = 0;
 
       return {
@@ -102,11 +104,11 @@ export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchAp
             name = next++;
           }
 
-          const id = buildName(target.name, name);
-          context.registerSearchProvider(id, createSearchRegistration(q => provider(q, api), settings));
+          const id = buildName(pilet, name);
+          context.registerSearchProvider(id, createSearchRegistration(pilet, q => provider(q, api), settings));
         },
         unregisterSearchProvider(name) {
-          const id = buildName(target.name, name);
+          const id = buildName(pilet, name);
           context.unregisterSearchProvider(id);
         },
       };

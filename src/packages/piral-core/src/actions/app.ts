@@ -1,8 +1,16 @@
 import { ComponentType, cloneElement } from 'react';
 import { swap, Atom } from '@dbeining/react-atom';
 import { RouteComponentProps } from 'react-router-dom';
-import { withKey } from '../../utils';
-import { LayoutType, GlobalState, Pilet, ComponentsState, ErrorComponentsState } from '../../types';
+import { withKey, replaceOrAddItem, removeNested } from '../utils';
+import {
+  LayoutType,
+  GlobalState,
+  Pilet,
+  ComponentsState,
+  ErrorComponentsState,
+  BaseRegistration,
+  RegistryState,
+} from '../types';
 
 export function changeLayout(ctx: Atom<GlobalState>, current: LayoutType) {
   swap(ctx, state => ({
@@ -20,6 +28,14 @@ export function initialize(ctx: Atom<GlobalState>, loading: boolean, error: Erro
       loading,
     },
     modules,
+  }));
+}
+
+export function injectPilet(ctx: Atom<GlobalState>, pilet: Pilet) {
+  swap(ctx, state => ({
+    ...state,
+    modules: replaceOrAddItem(state.modules, pilet, m => m.name === pilet.name),
+    registry: removeNested<RegistryState, BaseRegistration>(state.registry, m => m.pilet === pilet.name),
   }));
 }
 

@@ -1,6 +1,6 @@
 import { swap, Atom } from '@dbeining/react-atom';
-import { appendItem, excludeOn, withKey, withoutKey } from '../../utils';
-import { PageRegistration, ExtensionRegistration, GlobalState } from '../../types';
+import { appendItem, excludeOn, withKey, withoutKey } from '../utils';
+import { PageRegistration, ExtensionRegistration, GlobalState } from '../types';
 
 export function registerPage(ctx: Atom<GlobalState>, name: string, value: PageRegistration) {
   swap(ctx, state => ({

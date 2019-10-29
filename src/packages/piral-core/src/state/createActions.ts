@@ -1,4 +1,4 @@
-import * as actions from './actions';
+import * as actions from '../actions';
 import { Atom } from '@dbeining/react-atom';
 import { GlobalState, GlobalStateContext, EventEmitter } from '../types';
 

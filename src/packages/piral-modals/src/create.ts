@@ -35,6 +35,7 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
 
   for (const { name, component, defaults } of dialogs) {
     modals[`global-${name}`] = {
+      pilet: undefined,
       name,
       component,
       defaults,
@@ -68,12 +69,12 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
     }));
 
     return (api, target) => {
-      const prefix = target.name;
+      const pilet = target.name;
 
       return {
         showModal(name, options) {
           const dialog = {
-            name: buildName(prefix, name),
+            name: buildName(pilet, name),
             alternative: name,
             options,
             close() {
@@ -84,15 +85,16 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
           return dialog.close;
         },
         registerModal(name, arg, defaults) {
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.registerModal(id, {
+            pilet,
             name,
             component: withApi(context.converters, arg, api, 'modal'),
             defaults,
           });
         },
         unregisterModal(name) {
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.unregisterModal(id);
         },
       };

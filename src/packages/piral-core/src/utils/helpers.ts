@@ -25,6 +25,37 @@ export function includeItem<T>(items: Array<T>, item: T) {
   return prependItem(excludeItem(items, item), item);
 }
 
+export function replaceOrAddItem<T>(items: Array<T>, item: T, predicate: (item: T) => boolean) {
+  const newItems = [...(items || [])];
+
+  for (let i = 0; i < newItems.length; i++) {
+    if (predicate(newItems[i])) {
+      newItems[i] = item;
+      return newItems;
+    }
+  }
+
+  newItems.push(item);
+  return newItems;
+}
+
+export function removeNested<T, U = any>(obj: T, predicate: (item: U) => boolean): T {
+  return Object.keys(obj).reduce(
+    (all, key) => {
+      const value = all[key];
+
+      if (Array.isArray(value)) {
+        all[key] = excludeOn(value, predicate);
+      } else if (!value || !predicate(value)) {
+        all[key] = value;
+      }
+
+      return all;
+    },
+    {} as T,
+  );
+}
+
 export function excludeOn<T>(items: Array<T>, predicate: (item: T) => boolean) {
   return (items || []).filter(m => !predicate(m));
 }
