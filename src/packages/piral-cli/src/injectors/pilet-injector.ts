@@ -27,7 +27,7 @@ export default class PiletInjector implements KrasInjector {
 
   setOptions() {}
 
-  sendContent(content: string, type: string, url: string) {
+  sendContent(content: Buffer | string, type: string, url: string) {
     return {
       injector: { name: this.name },
       headers: {
@@ -40,12 +40,32 @@ export default class PiletInjector implements KrasInjector {
   }
 
   sendFile(target: string, url: string) {
-    const content = readFileSync(target, 'utf8');
+    const content = readFileSync(target);
     return this.sendContent(content, getType(target), url);
   }
 
+  sendResponse(path: string, target: string, dir: string, url: string) {
+    const { bundler, root, port, api } = this.options;
+
+    if (!path) {
+      const def = JSON.parse(readFileSync(root + '/package.json', 'utf8'));
+      const link = bundler.mainBundle.name.substr(dir.length);
+      const content = JSON.stringify({
+        name: def.name,
+        version: def.version,
+        link: `http://localhost:${port}${api}/${link}`,
+        hash: bundler.mainBundle.entryAsset.hash,
+        noCache: true,
+        custom: def.custom,
+      });
+      return this.sendContent(content, 'application/json', url);
+    } else if (existsSync(target)) {
+      return this.sendFile(target, url);
+    }
+  }
+
   handle(req: KrasRequest): KrasResponse {
-    const { port, bundler, root, app, api } = this.options;
+    const { bundler, app, api } = this.options;
 
     if (!req.url.startsWith(api)) {
       const path = req.url.substr(1);
@@ -58,31 +78,19 @@ export default class PiletInjector implements KrasInjector {
           ...req,
           url: '/index.html',
         });
-      };
+      }
     } else if (req.url === api || req.url[api.length] === '/') {
-      const path = req.url.substr(api.length + 1);
+      const path = req.url.substr(api.length + 1).split('?')[0];
       const dir = bundler.options.outDir;
       const target = join(dir, path);
 
       if (bundler.pending) {
         return new Promise(resolve => {
-          bundler.once('bundled', () => resolve(this.handle(req)));
+          bundler.once('bundled', () => resolve(this.sendResponse(path, target, dir, req.url)));
         });
-      } else if (path === '') {
-        const def = JSON.parse(readFileSync(root + '/package.json', 'utf8'));
-        const link = bundler.mainBundle.name.substr(dir.length);
-        const content = JSON.stringify({
-          name: def.name,
-          version: def.version,
-          link: `http://localhost:${port}${api}/${link}`,
-          hash: bundler.mainBundle.entryAsset.hash,
-          noCache: true,
-          custom: def.custom,
-        });
-        return this.sendContent(content, 'application/json', req.url);
-      } else if (existsSync(target)) {
-        return this.sendFile(target, req.url);
       }
+
+      return this.sendResponse(path, target, dir, req.url);
     }
   }
 }

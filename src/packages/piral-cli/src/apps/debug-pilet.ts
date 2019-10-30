@@ -1,7 +1,7 @@
 import * as Bundler from 'parcel-bundler';
 import chalk from 'chalk';
 import { join, dirname, relative, resolve } from 'path';
-import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
+import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
   retrievePiletData,
   clearCache,
@@ -61,6 +61,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     krasConfig.api = '/manage-mock-server';
   }
 
+  if (krasConfig.injectors === undefined) {
+    krasConfig.injectors = defaultConfig.injectors;
+  }
+
   if (fresh) {
     await clearCache(root);
   }
@@ -100,10 +104,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
     console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
     console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
+    bundler.bundle();
   });
 
   //TODO post process via postProcess(bundle) ?
 
-  await Promise.all([bundler.bundle(), krasServer.start()]);
+  await krasServer.start();
   await new Promise(resolve => krasServer.on('close', resolve));
 }

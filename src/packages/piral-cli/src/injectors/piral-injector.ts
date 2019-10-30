@@ -27,33 +27,36 @@ export default class PiralInjector implements KrasInjector {
 
   setOptions() {}
 
+  sendResponse(path: string, target: string, dir: string, url: string) {
+    if (!path || !existsSync(target)) {
+      const { bundler } = this.options;
+      const newTarget = bundler.mainBundle.name;
+      return this.sendResponse(newTarget.substr(dir.length), newTarget, dir, url);
+    }
+
+    return {
+      injector: { name: this.name },
+      headers: {
+        'content-type': getType(target),
+      },
+      status: { code: 200 },
+      url,
+      content: readFileSync(target),
+    };
+  }
+
   handle(req: KrasRequest): KrasResponse {
     const { bundler } = this.options;
     const path = req.url.substr(1);
     const dir = bundler.options.outDir;
-    const target = join(dir, req.url);
+    const target = join(dir, path.split('?')[0]);
 
     if (bundler.pending) {
       return new Promise(resolve => {
-        bundler.once('bundled', () => resolve(this.handle(req)));
+        bundler.once('bundled', () => resolve(this.sendResponse(path, target, dir, req.url)));
       });
-    } else if (path === '') {
-      const url = bundler.mainBundle.name.substr(dir.length);
-      return this.handle({
-        ...req,
-        url,
-      });
-    } else if (existsSync(target)) {
-      const content = readFileSync(target, 'utf8');
-      return {
-        injector: { name: this.name },
-        headers: {
-          'content-type': getType(target),
-        },
-        status: { code: 200 },
-        url: req.url,
-        content,
-      };
     }
+
+    return this.sendResponse(path, target, dir, req.url);
   }
 }
