@@ -18,11 +18,13 @@ export const errors: Partial<ErrorComponentsState> = {
     </div>
   ),
   loading: () => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Something Went Wrong</div>
-      <div className="pi-description">
-        An error occured during the loading process. Try refreshing or come back later.
+    <div className="pi-center">
+      <div className="pi-error">
+        <img src={require('./images/error.svg')} alt="Error" />
+        <div className="pi-title">Something Went Wrong</div>
+        <div className="pi-description">
+          An error occured during the loading process. Try refreshing or come back later.
+        </div>
       </div>
     </div>
   ),
