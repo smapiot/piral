@@ -1,5 +1,18 @@
-import { join, dirname, relative } from 'path';
-import { runDebug, retrievePiletData } from '../common';
+import * as Bundler from 'parcel-bundler';
+import chalk from 'chalk';
+import { join, dirname, relative, resolve } from 'path';
+import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
+import {
+  retrievePiletData,
+  clearCache,
+  setStandardEnvs,
+  extendConfig,
+  extendBundlerWithPlugins,
+  liveIcon,
+  settingsIcon,
+  extendBundlerForPilet,
+  modifyBundlerForPilet,
+} from '../common';
 
 export interface DebugPiletOptions {
   entry?: string;
@@ -16,6 +29,8 @@ export const debugPiletDefaults = {
   fresh: false,
 };
 
+const injectorName = resolve(__dirname, '../injectors/pilet');
+
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
   const {
     entry = debugPiletDefaults.entry,
@@ -26,19 +41,69 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);
-  const { peerDependencies, root, coreFile, appFile, appPackage } = await retrievePiletData(target, app);
+  const { peerDependencies, root, coreFile, appPackage, appFile } = await retrievePiletData(target, app);
   const externals = Object.keys(peerDependencies);
+  const krasConfig = readKrasConfig({ port }, krasrc);
 
-  await runDebug(port, appFile, {
-    source: entryFile,
-    logLevel,
-    fresh,
-    root,
-    options: {
-      target,
-      pilet: relative(dirname(coreFile), entryFile),
-      piral: appPackage.name,
-      dependencies: externals,
-    },
+  if (krasConfig.directory === undefined) {
+    krasConfig.directory = join(dirname(entryFile), 'mocks');
+  }
+
+  if (krasConfig.ssl === undefined) {
+    krasConfig.ssl = undefined;
+  }
+
+  if (krasConfig.map === undefined) {
+    krasConfig.map = {};
+  }
+
+  if (krasConfig.api === undefined) {
+    krasConfig.api = '/manage-mock-server';
+  }
+
+  if (fresh) {
+    await clearCache(root);
+  }
+
+  await setStandardEnvs({
+    target,
+    pilet: relative(dirname(coreFile), entryFile),
+    piral: appPackage.name,
+    dependencies: externals,
   });
+
+  modifyBundlerForPilet(Bundler.prototype, externals, target);
+
+  const bundler = new Bundler(entryFile, extendConfig({ logLevel }));
+
+  extendBundlerForPilet(bundler);
+  extendBundlerWithPlugins(bundler);
+
+  krasConfig.map['/'] = '';
+
+  krasConfig.injectors = {
+    [injectorName]: {
+      active: true,
+      bundler,
+      port,
+      root,
+      app: dirname(appFile),
+      api: '/$pilet-api',
+    } as any,
+    ...krasConfig.injectors,
+  };
+
+  const krasServer = buildKrasWithCli(krasConfig);
+  krasServer.removeAllListeners('open');
+
+  krasServer.on('open', svc => {
+    const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
+    console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
+    console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
+  });
+
+  //TODO post process via postProcess(bundle) ?
+
+  await Promise.all([bundler.bundle(), krasServer.start()]);
+  await new Promise(resolve => krasServer.on('close', resolve));
 }
