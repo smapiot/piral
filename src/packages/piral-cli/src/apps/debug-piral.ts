@@ -81,6 +81,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const bundler = new Bundler(entryFiles, extendConfig({ publicUrl, logLevel }));
   const injectorConfig = {
     active: true,
+    handle: ['/'],
     bundler,
   };
 

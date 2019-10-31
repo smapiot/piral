@@ -79,19 +79,22 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   modifyBundlerForPilet(Bundler.prototype, externals, target);
 
   const bundler = new Bundler(entryFile, extendConfig({ logLevel }));
+  const api = '/$pilet-api';
   const injectorConfig = {
     active: true,
     bundler,
     port,
     root,
     app: dirname(appFile),
-    api: '/$pilet-api',
+    handle: ['/', api],
+    api,
   };
 
   extendBundlerForPilet(bundler);
   extendBundlerWithPlugins(bundler);
 
   krasConfig.map['/'] = '';
+  krasConfig.map[api] = '';
 
   krasConfig.injectors = {
     script: krasConfig.injectors.script || {
