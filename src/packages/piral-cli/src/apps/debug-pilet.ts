@@ -12,6 +12,8 @@ import {
   settingsIcon,
   extendBundlerForPilet,
   modifyBundlerForPilet,
+  postProcess,
+  debugPiletApi,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -71,7 +73,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await setStandardEnvs({
     target,
-    pilet: relative(dirname(coreFile), entryFile),
     piral: appPackage.name,
     dependencies: externals,
   });
@@ -79,7 +80,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   modifyBundlerForPilet(Bundler.prototype, externals, target);
 
   const bundler = new Bundler(entryFile, extendConfig({ logLevel }));
-  const api = '/$pilet-api';
+  const api = debugPiletApi;
   const injectorConfig = {
     active: true,
     bundler,
@@ -92,6 +93,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   extendBundlerForPilet(bundler);
   extendBundlerWithPlugins(bundler);
+
+  bundler.on('bundled', bundle => postProcess(bundle));
 
   krasConfig.map['/'] = '';
   krasConfig.map[api] = '';
@@ -113,8 +116,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
     bundler.bundle();
   });
-
-  //TODO post process via postProcess(bundle) ?
 
   await krasServer.start();
   await new Promise(resolve => krasServer.on('close', resolve));

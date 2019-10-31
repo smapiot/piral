@@ -1,9 +1,10 @@
 import { findFile } from './io';
+import { debugPiletApi } from './info';
 
 export interface StandardEnvProps {
   production?: boolean;
+  develop?: boolean;
   target?: string;
-  pilet?: string;
   piral?: string;
   dependencies?: Array<string>;
 }
@@ -23,21 +24,21 @@ async function readNextPackageJson(dir: string) {
 }
 
 export async function setStandardEnvs(options: StandardEnvProps = {}) {
-  const packageJson = await readNextPackageJson(options.pilet || options.target || process.cwd());
+  const packageJson = await readNextPackageJson(options.target || process.cwd());
 
   process.env.BUILD_TIME = new Date().toDateString();
   process.env.BUILD_TIME_FULL = new Date().toISOString();
   process.env.BUILD_PCKG_VERSION = packageJson.version;
   process.env.BUILD_PCKG_NAME = packageJson.name;
 
+  if (options.develop) {
+    process.env.DEBUG_PILET = debugPiletApi;
+  }
+
   if (options.production) {
     process.env.NODE_ENV = 'production';
   } else if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'development';
-  }
-
-  if (options.pilet) {
-    process.env.DEBUG_PILET = options.pilet;
   }
 
   if (options.dependencies && options.dependencies.length) {
