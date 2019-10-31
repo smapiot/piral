@@ -1,20 +1,24 @@
 import { join } from 'path';
 import { getType } from 'mime';
 import { readFileSync, existsSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest } from 'kras';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+
+export interface PiralInjectorConfig extends KrasInjectorConfig {
+  bundler: any;
+}
 
 export default class PiralInjector implements KrasInjector {
-  private options: any;
+  public config: PiralInjectorConfig;
 
-  constructor(options: any = {}) {
-    this.options = options;
+  constructor(options: PiralInjectorConfig) {
+    this.config = options;
   }
 
   get active() {
-    return this.options.active;
+    return this.config.active;
   }
   set active(value) {
-    this.options.active = value;
+    this.config.active = value;
   }
 
   get name() {
@@ -29,7 +33,7 @@ export default class PiralInjector implements KrasInjector {
 
   sendResponse(path: string, target: string, dir: string, url: string) {
     if (!path || !existsSync(target)) {
-      const { bundler } = this.options;
+      const { bundler } = this.config;
       const newTarget = bundler.mainBundle.name;
       return this.sendResponse(newTarget.substr(dir.length), newTarget, dir, url);
     }
@@ -46,7 +50,7 @@ export default class PiralInjector implements KrasInjector {
   }
 
   handle(req: KrasRequest): KrasResponse {
-    const { bundler } = this.options;
+    const { bundler } = this.config;
     const path = req.url.substr(1);
     const dir = bundler.options.outDir;
     const target = join(dir, path.split('?')[0]);

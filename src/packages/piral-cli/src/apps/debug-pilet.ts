@@ -29,7 +29,7 @@ export const debugPiletDefaults = {
   fresh: false,
 };
 
-const injectorName = resolve(__dirname, '../injectors/pilet');
+const injectorName = resolve(__dirname, '../injectors/pilet.js');
 
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
   const {
@@ -79,6 +79,14 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   modifyBundlerForPilet(Bundler.prototype, externals, target);
 
   const bundler = new Bundler(entryFile, extendConfig({ logLevel }));
+  const injectorConfig = {
+    active: true,
+    bundler,
+    port,
+    root,
+    app: dirname(appFile),
+    api: '/$pilet-api',
+  };
 
   extendBundlerForPilet(bundler);
   extendBundlerWithPlugins(bundler);
@@ -86,14 +94,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   krasConfig.map['/'] = '';
 
   krasConfig.injectors = {
-    [injectorName]: {
+    script: krasConfig.injectors.script || {
       active: true,
-      bundler,
-      port,
-      root,
-      app: dirname(appFile),
-      api: '/$pilet-api',
-    } as any,
+    },
+    [injectorName]: injectorConfig,
     ...krasConfig.injectors,
   };
 

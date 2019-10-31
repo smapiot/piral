@@ -31,7 +31,7 @@ export const debugPiralDefaults = {
   fresh: false,
 };
 
-const injectorName = resolve(__dirname, '../injectors/piral');
+const injectorName = resolve(__dirname, '../injectors/piral.js');
 
 export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions = {}) {
   const {
@@ -78,13 +78,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   modifyBundlerForPiral(Bundler.prototype, dirname(entryFiles));
 
-  const bundler = new Bundler(
-    entryFiles,
-    extendConfig({
-      publicUrl,
-      logLevel,
-    }),
-  );
+  const bundler = new Bundler(entryFiles, extendConfig({ publicUrl, logLevel }));
+  const injectorConfig = {
+    active: true,
+    bundler,
+  };
 
   extendBundlerForPiral(bundler);
   extendBundlerWithPlugins(bundler);
@@ -92,10 +90,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   krasConfig.map['/'] = '';
 
   krasConfig.injectors = {
-    [injectorName]: {
+    script: krasConfig.injectors.script || {
       active: true,
-      bundler,
-    } as any,
+    },
+    [injectorName]: injectorConfig,
     ...krasConfig.injectors,
   };
 

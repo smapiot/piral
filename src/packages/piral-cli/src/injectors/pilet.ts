@@ -1,20 +1,28 @@
 import { join } from 'path';
 import { getType } from 'mime';
 import { readFileSync, existsSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest } from 'kras';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+
+export interface PiletInjectorConfig extends KrasInjectorConfig {
+  bundler: any;
+  root: string;
+  port: number;
+  api: string;
+  app: string;
+}
 
 export default class PiletInjector implements KrasInjector {
-  private options: any;
+  public config: PiletInjectorConfig;
 
-  constructor(options: any = {}) {
-    this.options = options;
+  constructor(options: PiletInjectorConfig) {
+    this.config = options;
   }
 
   get active() {
-    return this.options.active;
+    return this.config.active;
   }
   set active(value) {
-    this.options.active = value;
+    this.config.active = value;
   }
 
   get name() {
@@ -45,7 +53,7 @@ export default class PiletInjector implements KrasInjector {
   }
 
   sendResponse(path: string, target: string, dir: string, url: string) {
-    const { bundler, root, port, api } = this.options;
+    const { bundler, root, port, api } = this.config;
 
     if (!path) {
       const def = JSON.parse(readFileSync(root + '/package.json', 'utf8'));
@@ -65,7 +73,7 @@ export default class PiletInjector implements KrasInjector {
   }
 
   handle(req: KrasRequest): KrasResponse {
-    const { bundler, app, api } = this.options;
+    const { bundler, app, api } = this.config;
 
     if (!req.url.startsWith(api)) {
       const path = req.url.substr(1);

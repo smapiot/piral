@@ -2724,7 +2724,7 @@ cheerio@^1.0.0-rc.2:
   optionalDependencies:
     fsevents "^2.0.6"
 
-chokidar@^2.1.5, chokidar@^2.1.6:
+chokidar@^2.1.5, chokidar@^2.1.8:
   version "2.1.8"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.1.8.tgz#804b3a7b6a99358c3c5c61e71d8728f041cff917"
   dependencies:
@@ -5623,20 +5623,21 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
 
-kras@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.8.2.tgz#20ec36d9bdac7d73bea7488bf9ce60b1f313ed54"
+kras@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.9.0.tgz#79fc2242c706a221903b1a8ec2ed4fc61fec8094"
+  integrity sha512-v+03Y6tQuOH9nVSidnKBRGg34VbwzOeoKXjlYn1Wov3y9F2w89QA1sKosJDVKCfW7Xz0jo2gTzENknjf7A1iQA==
   dependencies:
     body-parser "^1.19.0"
     chalk "^2.4.2"
-    chokidar "^2.1.6"
+    chokidar "^2.1.8"
     express "^4.17.1"
     express-ws "^4.0.0"
     request "^2.88.0"
     send "^0.16.2"
-    uuid "^3.3.2"
+    uuid "^3.3.3"
     ws "^6.2.1"
-    yargs "^13.2.4"
+    yargs "^13.3.0"
 
 lcid@^2.0.0:
   version "2.0.0"
@@ -9254,7 +9255,7 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@^3.0.1, uuid@^3.3.2:
+uuid@^3.0.1, uuid@^3.3.2, uuid@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
 
@@ -9571,7 +9572,7 @@ yargs@^12.0.1:
     y18n "^3.2.1 || ^4.0.0"
     yargs-parser "^11.1.1"
 
-yargs@^13.1.0, yargs@^13.2.4, yargs@^13.3.0:
+yargs@^13.1.0, yargs@^13.3.0:
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-13.3.0.tgz#4c657a55e07e5f2cf947f8a366567c04a0dedc83"
   dependencies:

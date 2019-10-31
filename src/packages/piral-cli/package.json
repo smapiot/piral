@@ -58,7 +58,7 @@
     "get-port": "^5.0.0",
     "glob": "^7.1.3",
     "inquirer": "^6.2.2",
-    "kras": "^0.8.2",
+    "kras": "^0.9.0",
     "mime": "2.4.4",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-codegen": "^0.4.0",
