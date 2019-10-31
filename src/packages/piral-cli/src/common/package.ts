@@ -276,7 +276,7 @@ export async function patchPiletPackage(
     ...piralDependencies,
     ...piralDevDependencies,
   };
-  const typeDependencies = language ? getDevDependencies(language) : {};
+  const typeDependencies = language !== undefined ? getDevDependencies(language) : {};
   const { externals, ...info } = getPiletsInfo(piralInfo);
   const piral = {
     comment: 'Keep this section to allow running `piral upgrade`.',
