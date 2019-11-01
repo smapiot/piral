@@ -40,7 +40,7 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
 
   const globalState = Atom.of(extend(defaultState, customState));
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PILET !== undefined) {
     addChangeHandler(globalState, 'debugging', ({ current, previous }) => {
       const action = new Error().stack.split('\n')[6].replace(/^\s+at\s+Atom\./, '');
       console.group(
