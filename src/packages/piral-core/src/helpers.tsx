@@ -61,8 +61,8 @@ export function createArbiterOptions({
     fetchModules() {
       const promise = requestPilets();
 
-      if (process.env.DEBUG_PILET) {
-        const initialTarget = `${location.origin}/${process.env.DEBUG_PILET}`;
+      if (process.env.DEBUG_PILET !== undefined) {
+        const initialTarget = `${location.origin}${process.env.DEBUG_PILET}`;
         const updateTarget = initialTarget.replace('http', 'ws');
         const appendix = fetch(initialTarget).then(res => res.json());
         const ws = new WebSocket(updateTarget);
@@ -80,12 +80,11 @@ export function createArbiterOptions({
               context.injectPilet(pilet);
               pilet.setup(newApi);
             } catch (error) {
-              console.info('The pilet crashed.');
               console.error(error);
             }
           });
         };
-        return promise.catch(() => []).then(pilets => appendix.then(pilet => [pilet, ...pilets]));
+        return promise.catch(() => []).then(pilets => appendix.then(pilet => [...pilets, pilet]));
       }
 
       return promise;
