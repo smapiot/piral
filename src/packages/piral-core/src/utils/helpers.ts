@@ -41,16 +41,24 @@ export function replaceOrAddItem<T>(items: Array<T>, item: T, predicate: (item: 
 
 export function removeNested<T, U = any>(obj: T, predicate: (item: U) => boolean): T {
   return Object.keys(obj).reduce(
-    (all, key) => {
-      const value = all[key];
+    (entries, key) => {
+      const item = obj[key];
+      entries[key] = Object.keys(item).reduce(
+        (all, key) => {
+          const value = item[key];
 
-      if (Array.isArray(value)) {
-        all[key] = excludeOn(value, predicate);
-      } else if (!value || !predicate(value)) {
-        all[key] = value;
-      }
+          if (Array.isArray(value)) {
+            all[key] = excludeOn(value, predicate);
+          } else if (!value || !predicate(value)) {
+            all[key] = value;
+          }
 
-      return all;
+          return all;
+        },
+        {} as any,
+      );
+
+      return entries;
     },
     {} as T,
   );
