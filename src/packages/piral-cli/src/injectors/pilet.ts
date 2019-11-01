@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { getType } from 'mime';
-import { readFileSync, existsSync } from 'fs';
+import { EventEmitter } from 'events';
+import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
@@ -14,8 +15,28 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
 
-  constructor(options: PiletInjectorConfig) {
+  constructor(options: PiletInjectorConfig, _: any, core: EventEmitter) {
     this.config = options;
+    const { bundler, api } = options;
+    const cbs = {};
+
+    core.on('user-connected', e => {
+      if (e.target === '*' && e.url === api.substr(1)) {
+        cbs[e.id] = (msg: string) => e.ws.send(msg);
+      }
+    });
+
+    core.on('user-disconnected', e => {
+      delete cbs[e.id];
+    });
+
+    bundler.on('bundle-ready', () => {
+      const meta = this.getMeta();
+
+      for (const id of Object.keys(cbs)) {
+        cbs[id](meta);
+      }
+    });
   }
 
   get active() {
@@ -35,6 +56,21 @@ export default class PiletInjector implements KrasInjector {
 
   setOptions() {}
 
+  getMeta() {
+    const { bundler, root, port, api } = this.config;
+    const dir = bundler.options.outDir;
+    const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+    const link = bundler.mainBundle.name.substr(dir.length + 1);
+    return JSON.stringify({
+      name: def.name,
+      version: def.version,
+      link: `http://localhost:${port}${api}/${link}`,
+      hash: bundler.mainBundle.entryAsset.hash,
+      noCache: true,
+      custom: def.custom,
+    });
+  }
+
   sendContent(content: Buffer | string, type: string, url: string) {
     return {
       injector: { name: this.name },
@@ -52,22 +88,11 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, getType(target), url);
   }
 
-  sendResponse(path: string, target: string, dir: string, url: string) {
-    const { bundler, root, port, api } = this.config;
-
+  sendResponse(path: string, target: string, url: string) {
     if (!path) {
-      const def = JSON.parse(readFileSync(root + '/package.json', 'utf8'));
-      const link = bundler.mainBundle.name.substr(dir.length);
-      const content = JSON.stringify({
-        name: def.name,
-        version: def.version,
-        link: `http://localhost:${port}${api}/${link}`,
-        hash: bundler.mainBundle.entryAsset.hash,
-        noCache: true,
-        custom: def.custom,
-      });
+      const content = this.getMeta();
       return this.sendContent(content, 'application/json', url);
-    } else if (existsSync(target)) {
+    } else if (existsSync(target) && statSync(target).isFile()) {
       return this.sendFile(target, url);
     }
   }
@@ -75,11 +100,11 @@ export default class PiletInjector implements KrasInjector {
   handle(req: KrasRequest): KrasResponse {
     const { bundler, app, api } = this.config;
 
-    if (!req.url.startsWith(api)) {
+    if (req.target !== api) {
       const path = req.url.substr(1);
       const target = join(app, path);
 
-      if (existsSync(target)) {
+      if (existsSync(target) && statSync(target).isFile()) {
         return this.sendFile(target, req.url);
       } else {
         return this.handle({
@@ -87,18 +112,17 @@ export default class PiletInjector implements KrasInjector {
           url: '/index.html',
         });
       }
-    } else if (req.url === api || req.url[api.length] === '/') {
-      const path = req.url.substr(api.length + 1).split('?')[0];
-      const dir = bundler.options.outDir;
-      const target = join(dir, path);
+    } else {
+      const path = req.url.substr(1).split('?')[0];
+      const target = join(bundler.options.outDir, path);
 
       if (bundler.pending) {
         return new Promise(resolve => {
-          bundler.once('bundled', () => resolve(this.sendResponse(path, target, dir, req.url)));
+          bundler.once('bundled', () => resolve(this.sendResponse(path, target, req.url)));
         });
       }
 
-      return this.sendResponse(path, target, dir, req.url);
+      return this.sendResponse(path, target, req.url);
     }
   }
 }

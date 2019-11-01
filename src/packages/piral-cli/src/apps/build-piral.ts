@@ -10,7 +10,7 @@ import {
   removeDirectory,
   extendBundlerWithPlugins,
   clearCache,
-  mergeWithJson,
+  updateExistingJson,
   createFileIfNotExists,
   logDone,
   createPackage,
@@ -156,7 +156,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
           },
     );
     await createFileIfNotExists(rootDir, 'package.json', '{}');
-    await mergeWithJson(rootDir, 'package.json', {
+    await updateExistingJson(rootDir, 'package.json', {
       name,
       version,
       pilets: {
@@ -173,13 +173,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     });
     await createDirectory(filesDir);
     await copyScaffoldingFiles(rootDir, filesDir, pilets.files);
+    await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
+    await createFileIfNotExists(outDir, 'index.d.ts', 'export * from "piral/api";');
     await createPackage(rootDir);
-    await Promise.all([
-      removeDirectory(outDir),
-      removeDirectory(filesDir),
-      remove(resolve(rootDir, 'package.json')),
-    ]);
-    logDone(`Development package available in "${rootDir}".`);
+    await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
+    logDone(`Development package available in "${rootDir}".\n`);
   }
 
   // everything except develop -> build release
@@ -196,6 +194,6 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       dest,
       'release',
     );
-    logDone(`Files for publication available in "${outDir}".`);
+    logDone(`Files for publication available in "${outDir}".\n`);
   }
 }

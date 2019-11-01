@@ -1,6 +1,7 @@
 import * as Bundler from 'parcel-bundler';
 import chalk from 'chalk';
-import { join, dirname, relative, resolve } from 'path';
+import { readdirSync } from 'fs';
+import { join, dirname, resolve, basename, extname } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
   retrievePiletData,
@@ -15,6 +16,21 @@ import {
   postProcess,
   debugPiletApi,
 } from '../common';
+
+function findEntryModule(entryFile: string, target: string) {
+  const entry = basename(entryFile);
+  const files = readdirSync(target);
+
+  for (const file of files) {
+    const ext = extname(file);
+
+    if (file === entry || file.replace(ext, '') === entry) {
+      return join(target, file);
+    }
+  }
+
+  return entryFile;
+}
 
 export interface DebugPiletOptions {
   entry?: string;
@@ -43,12 +59,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);
-  const { peerDependencies, root, coreFile, appPackage, appFile } = await retrievePiletData(target, app);
+  const entryModule = findEntryModule(entryFile, target);
+  const { peerDependencies, root, appPackage, appFile } = await retrievePiletData(target, app);
   const externals = Object.keys(peerDependencies);
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
-    krasConfig.directory = join(dirname(entryFile), 'mocks');
+    krasConfig.directory = join(target, 'mocks');
   }
 
   if (krasConfig.ssl === undefined) {
@@ -79,7 +96,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   modifyBundlerForPilet(Bundler.prototype, externals, target);
 
-  const bundler = new Bundler(entryFile, extendConfig({ logLevel }));
+  const bundler = new Bundler(entryModule, extendConfig({ logLevel, hmr: false }));
   const api = debugPiletApi;
   const injectorConfig = {
     active: true,
@@ -94,7 +111,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   extendBundlerForPilet(bundler);
   extendBundlerWithPlugins(bundler);
 
-  bundler.on('bundled', bundle => postProcess(bundle));
+  bundler.on('bundled', async bundle => {
+    await postProcess(bundle);
+    (bundler as any).emit('bundle-ready');
+  });
 
   krasConfig.map['/'] = '';
   krasConfig.map[api] = '';

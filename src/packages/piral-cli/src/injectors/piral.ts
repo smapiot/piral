@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { getType } from 'mime';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
 
 export interface PiralInjectorConfig extends KrasInjectorConfig {
@@ -32,7 +32,7 @@ export default class PiralInjector implements KrasInjector {
   setOptions() {}
 
   sendResponse(path: string, target: string, dir: string, url: string) {
-    if (!path || !existsSync(target)) {
+    if (!path || !existsSync(target) || !statSync(target).isFile()) {
       const { bundler } = this.config;
       const newTarget = bundler.mainBundle.name;
       return this.sendResponse(newTarget.substr(dir.length), newTarget, dir, url);

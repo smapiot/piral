@@ -403,15 +403,7 @@ export async function retrievePiletData(target: string, app?: string) {
     throw new Error('Invalid Piral instance selected.');
   }
 
-  const coreFile = findRoot('piral-core', appFile);
-
-  if (!coreFile) {
-    logFail('Cannot find the package "%s". Make sure your dependencies are correctly resolved.', 'piral-core');
-    throw new Error('Invalid dependency structure.');
-  }
-
   return {
-    coreFile,
     dependencies: packageContent.dependencies || {},
     devDependencies: packageContent.devDependencies || {},
     peerDependencies: packageContent.peerDependencies || {},
