@@ -42,7 +42,7 @@ export function writeDataItem(
   }));
 
   this.emit('store-data', {
-    name,
+    name: key,
     target,
     value,
     owner,
