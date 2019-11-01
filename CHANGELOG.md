@@ -4,6 +4,9 @@
 
 * Bundle for emulation (#68)
 * Added `piral-pwa` library
+* Provide ability for develop builds of Piral (#68)
+* Fixed bug concerning the `store-data` event
+* Fixed bug in Piral CLI regarding Pilet scaffolding
 
 ## 0.8.3 (October 28, 2019)
 

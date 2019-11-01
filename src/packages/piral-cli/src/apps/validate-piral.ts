@@ -1,4 +1,3 @@
-import { join } from 'path';
 import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules } from '../common';
 import { getPiralRules } from '../rules';
 
@@ -16,8 +15,7 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
   const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
   const rules = await getPiralRules();
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { root, ...info } = await retrievePiletsInfo(entryFiles);
-  const { dependencies = {}, devDependencies = {}, peerDependencies = {} } = require(join(root, 'package.json'));
+  const { root, dependencies, ...info } = await retrievePiletsInfo(entryFiles);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];
 
@@ -30,9 +28,9 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
     },
     logLevel,
     entry: entryFiles,
-    dependencies,
-    devDependencies,
-    peerDependencies,
+    dependencies: dependencies.std,
+    devDependencies: dependencies.dev,
+    peerDependencies: dependencies.peer,
     root,
     info,
   });

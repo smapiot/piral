@@ -40,10 +40,19 @@ function getDependencyVersion(
   return selected || 'latest';
 }
 
-async function getFilesOf(root: string, name: string, file: string | TemplateFileLocation) {
+interface FileDescriptor {
+  sourcePath: string;
+  targetPath: string;
+}
+
+async function getMatchingFiles(
+  source: string,
+  target: string,
+  file: string | TemplateFileLocation,
+): Promise<Array<FileDescriptor>> {
   const { from, to, deep = false } = typeof file === 'string' ? { from: file, to: file, deep: false } : file;
-  const sourcePath = join(getPiralPath(root, name), from);
-  const targetPath = resolve(root, to);
+  const sourcePath = resolve(source, from);
+  const targetPath = resolve(target, to);
   const isDirectory = await checkIsDirectory(sourcePath);
 
   if (isDirectory) {
@@ -61,6 +70,11 @@ async function getFilesOf(root: string, name: string, file: string | TemplateFil
       targetPath,
     },
   ];
+}
+
+function getFilesOf(root: string, name: string, file: string | TemplateFileLocation) {
+  const source = getPiralPath(root, name);
+  return getMatchingFiles(source, root, file);
 }
 
 function findRoot(pck: string, baseDir: string) {
@@ -168,6 +182,30 @@ export async function getFileStats(root: string, name: string, files: Array<stri
   return results;
 }
 
+async function copyFiles(
+  subfiles: Array<FileDescriptor>,
+  forceOverwrite: ForceOverwrite,
+  originalFiles: Array<FileInfo>,
+) {
+  for (const subfile of subfiles) {
+    const { sourcePath, targetPath } = subfile;
+    const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
+    const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
+    await copy(sourcePath, targetPath, force);
+  }
+}
+
+export async function copyScaffoldingFiles(
+  source: string,
+  target: string,
+  files: Array<string | TemplateFileLocation>,
+) {
+  for (const file of files) {
+    const subfiles = await getMatchingFiles(source, target, file);
+    await copyFiles(subfiles, ForceOverwrite.yes, []);
+  }
+}
+
 export async function copyPiralFiles(
   root: string,
   name: string,
@@ -177,13 +215,7 @@ export async function copyPiralFiles(
 ) {
   for (const file of files) {
     const subfiles = await getFilesOf(root, name, file);
-
-    for (const subfile of subfiles) {
-      const { sourcePath, targetPath } = subfile;
-      const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
-      const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
-      await copy(sourcePath, targetPath, force);
-    }
+    await copyFiles(subfiles, forceOverwrite, originalFiles);
   }
 }
 
@@ -259,6 +291,11 @@ export async function retrievePiletsInfo(entryFile: string) {
     ...getPiletsInfo(packageInfo),
     name: packageInfo.name,
     version: packageInfo.version,
+    dependencies: {
+      std: packageInfo.dependencies || {},
+      dev: packageInfo.devDependencies || {},
+      peer: packageInfo.peerDependencies || {},
+    },
     root: dirname(packageJson),
   };
 }
@@ -270,12 +307,7 @@ export async function patchPiletPackage(
   piralInfo: any,
   language?: PiletLanguage,
 ) {
-  const piralDependencies = piralInfo.dependencies || {};
-  const piralDevDependencies = piralInfo.devDependencies || {};
-  const allDependencies = {
-    ...piralDependencies,
-    ...piralDevDependencies,
-  };
+  const piralDependencies = piralInfo.devDependencies || {};
   const typeDependencies = language !== undefined ? getDevDependencies(language) : {};
   const { externals, ...info } = getPiletsInfo(piralInfo);
   const piral = {
@@ -314,14 +346,14 @@ export async function patchPiletPackage(
   const devDependencies = {
     ...Object.keys(typeDependencies).reduce(
       (deps, name) => {
-        deps[name] = allDependencies[name] || typeDependencies[name];
+        deps[name] = piralDependencies[name] || typeDependencies[name];
         return deps;
       },
       {} as Record<string, string>,
     ),
     ...Object.keys(info.devDependencies).reduce(
       (deps, name) => {
-        deps[name] = getDependencyVersion(name, info.devDependencies, allDependencies);
+        deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
         return deps;
       },
       {} as Record<string, string>,

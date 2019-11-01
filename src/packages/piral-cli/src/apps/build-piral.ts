@@ -1,5 +1,5 @@
 import * as Bundler from 'parcel-bundler';
-import { dirname, basename, extname, join } from 'path';
+import { dirname, basename, extname, join, resolve } from 'path';
 import {
   extendConfig,
   setStandardEnvs,
@@ -10,6 +10,13 @@ import {
   removeDirectory,
   extendBundlerWithPlugins,
   clearCache,
+  mergeWithJson,
+  createFileIfNotExists,
+  logDone,
+  createPackage,
+  copyScaffoldingFiles,
+  createDirectory,
+  remove,
 } from '../common';
 
 interface Destination {
@@ -45,6 +52,8 @@ async function build(
   dest: Destination,
   subdir: string,
 ) {
+  const outDir = join(dest.outDir, subdir);
+
   await setStandardEnvs({
     production: true,
     target,
@@ -58,7 +67,7 @@ async function build(
   const bundler = new Bundler(
     entryFiles,
     extendConfig({
-      outDir: join(dest.outDir, subdir),
+      outDir,
       outFile: dest.outFile,
       watch: false,
       minify: true,
@@ -74,6 +83,7 @@ async function build(
   extendBundlerWithPlugins(bundler);
 
   await bundler.bundle();
+  return outDir;
 }
 
 export type PiralBuildType = 'all' | 'release' | 'develop';
@@ -110,7 +120,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const targetDir = dirname(entryFiles);
-  const { externals, name, root } = await retrievePiletsInfo(entryFiles);
+  const { name, version, root, dependencies, ...pilets } = await retrievePiletsInfo(entryFiles);
+  const { externals } = pilets;
   const dest = getDestination(entryFiles, target);
 
   if (fresh) {
@@ -121,11 +132,70 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   // everything except release -> build develop
   if (type !== 'release') {
-    await build(name, true, targetDir, externals, entryFiles, detailedReport, publicUrl, logLevel, dest, 'develop');
+    const appDir = 'app';
+    const outDir = await build(
+      name,
+      true,
+      targetDir,
+      externals,
+      entryFiles,
+      detailedReport,
+      publicUrl,
+      logLevel,
+      dest,
+      join('develop', appDir),
+    );
+    const rootDir = resolve(outDir, '..');
+    const filesDir = resolve(rootDir, 'files');
+    const files = pilets.files.map(file =>
+      typeof file === 'string'
+        ? join('files', file)
+        : {
+            ...file,
+            from: join('files', file.from),
+          },
+    );
+    await createFileIfNotExists(rootDir, 'package.json', '{}');
+    await mergeWithJson(rootDir, 'package.json', {
+      name,
+      version,
+      pilets: {
+        ...pilets,
+        files,
+      },
+      main: `${appDir}/index.js`,
+      typings: `${appDir}/index.d.ts`,
+      app: `${appDir}/index.html`,
+      devDependencies: {
+        ...dependencies.dev,
+        ...dependencies.std,
+      },
+    });
+    await createDirectory(filesDir);
+    await copyScaffoldingFiles(rootDir, filesDir, pilets.files);
+    await createPackage(rootDir);
+    await Promise.all([
+      removeDirectory(outDir),
+      removeDirectory(filesDir),
+      remove(resolve(rootDir, 'package.json')),
+    ]);
+    logDone(`Development package available in "${rootDir}".`);
   }
 
   // everything except develop -> build release
   if (type !== 'develop') {
-    await build(name, false, targetDir, externals, entryFiles, detailedReport, publicUrl, logLevel, dest, 'release');
+    const outDir = await build(
+      name,
+      false,
+      targetDir,
+      externals,
+      entryFiles,
+      detailedReport,
+      publicUrl,
+      logLevel,
+      dest,
+      'release',
+    );
+    logDone(`Files for publication available in "${outDir}".`);
   }
 }
