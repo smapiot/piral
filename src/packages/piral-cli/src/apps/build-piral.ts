@@ -166,6 +166,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       main: `${appDir}/index.js`,
       typings: `${appDir}/index.d.ts`,
       app: `${appDir}/index.html`,
+      peerDependencies: {
+        ...dependencies.std,
+      },
       devDependencies: {
         ...dependencies.dev,
         ...dependencies.std,
