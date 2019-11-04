@@ -10,7 +10,7 @@ import {
   checkIsDirectory,
   matchFiles,
 } from './io';
-import { cliVersion } from './info';
+import { cliVersion, coreExternals } from './info';
 import { logFail, logWarn } from './log';
 import { getDevDependencies, PiletLanguage } from './language';
 import { PiletsInfo, TemplateFileLocation } from '../types';
@@ -270,6 +270,19 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
   return rootDir;
 }
 
+export async function findPackageVersion(rootPath: string, packageName: string) {
+  try {
+    const moduleName = require.resolve(packageName, {
+      paths: [rootPath],
+    });
+    const packageJson = await findFile(moduleName, 'package.json');
+    require(packageJson).version;
+  } catch (e) {
+    logWarn(`Could not resolve "${packageName}" from "${rootPath}". Taking "latest" version.`);
+    return 'latest';
+  }
+}
+
 export async function retrievePiletsInfo(entryFile: string) {
   const exists = await checkExists(entryFile);
 
@@ -318,6 +331,10 @@ export async function patchPiletPackage(
     externals,
     ...info,
   };
+  const allExternals = [
+    ...externals,
+    ...coreExternals,
+  ];
   const scripts = {
     'debug-pilet': 'pilet debug',
     'build-pilet': 'pilet build',
@@ -325,22 +342,13 @@ export async function patchPiletPackage(
     ...info.scripts,
   };
   const peerDependencies = {
-    ...externals.reduce(
+    ...allExternals.reduce(
       (deps, name) => {
         deps[name] = '*';
         return deps;
       },
       {} as Record<string, string>,
     ),
-    '@dbeining/react-atom': '*',
-    '@libre/atom': '*',
-    history: '*',
-    react: '*',
-    'react-dom': '*',
-    'react-router': '*',
-    'react-router-dom': '*',
-    tslib: '*',
-    'path-to-regexp': '*',
     [name]: `*`,
   };
   const devDependencies = {
@@ -358,7 +366,7 @@ export async function patchPiletPackage(
       },
       {} as Record<string, string>,
     ),
-    ...externals.reduce(
+    ...allExternals.reduce(
       (deps, name) => {
         deps[name] = piralDependencies[name] || 'latest';
         return deps;

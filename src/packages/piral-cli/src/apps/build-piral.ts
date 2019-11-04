@@ -17,6 +17,8 @@ import {
   copyScaffoldingFiles,
   createDirectory,
   remove,
+  findPackageVersion,
+  coreExternals,
 } from '../common';
 
 interface Destination {
@@ -145,6 +147,20 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       dest,
       join('develop', appDir),
     );
+    const allExternals = [...externals, ...coreExternals];
+    const externalPackages = await Promise.all(
+      allExternals.map(async name => ({
+        name,
+        version: await findPackageVersion(targetDir, name),
+      })),
+    );
+    const externalDependencies = externalPackages.reduce(
+      (deps, foo) => {
+        deps[foo.name] = foo.version;
+        return deps;
+      },
+      {} as Record<string, string>,
+    );
     const rootDir = resolve(outDir, '..');
     const filesDir = resolve(rootDir, 'files');
     const files = pilets.files.map(file =>
@@ -166,12 +182,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       main: `${appDir}/index.js`,
       typings: `${appDir}/index.d.ts`,
       app: `${appDir}/index.html`,
-      peerDependencies: {
-        ...dependencies.std,
-      },
+      peerDependencies: {},
       devDependencies: {
         ...dependencies.dev,
         ...dependencies.std,
+        ...externalDependencies,
       },
     });
     await createDirectory(filesDir);
