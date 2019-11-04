@@ -155,8 +155,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       })),
     );
     const externalDependencies = externalPackages.reduce(
-      (deps, foo) => {
-        deps[foo.name] = foo.version;
+      (deps, dep) => {
+        deps[dep.name] = dep.version;
         return deps;
       },
       {} as Record<string, string>,

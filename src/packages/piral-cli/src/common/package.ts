@@ -276,7 +276,7 @@ export async function findPackageVersion(rootPath: string, packageName: string) 
       paths: [rootPath],
     });
     const packageJson = await findFile(moduleName, 'package.json');
-    require(packageJson).version;
+    return require(packageJson).version;
   } catch (e) {
     logWarn(`Could not resolve "${packageName}" from "${rootPath}". Taking "latest" version.`);
     return 'latest';
