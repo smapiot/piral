@@ -88,6 +88,11 @@ async function build(
   return outDir;
 }
 
+function generateDeclaration(entry: string) {
+  //TODO
+  return '';
+}
+
 export type PiralBuildType = 'all' | 'release' | 'develop';
 
 export interface BuildPiralOptions {
@@ -192,7 +197,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await createDirectory(filesDir);
     await copyScaffoldingFiles(rootDir, filesDir, pilets.files);
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
-    await createFileIfNotExists(outDir, 'index.d.ts', 'export * from "piral/api";');
+    await createFileIfNotExists(outDir, 'index.d.ts', generateDeclaration(entryFiles));
     await createPackage(rootDir);
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
     logDone(`Development package available in "${rootDir}".\n`);
