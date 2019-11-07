@@ -60,6 +60,14 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
  */
 export interface PiletHyperappApi {
   /**
+   * Wraps a Hyperapp component for use in Piral.
+   * @param component The component root.
+   * @param state The local state of the component.
+   * @param actions The actions available to the component.
+   * @returns The Piral Hyperapp component.
+   */
+  fromHyperapp<TProps>(component: Component<TProps>, state?: any, actions?: any): HyperappComponent<TProps>;
+  /**
    * Hyperapp component for displaying extensions of the given name.
    */
   HyperappExtension: Component<ExtensionSlotProps>;

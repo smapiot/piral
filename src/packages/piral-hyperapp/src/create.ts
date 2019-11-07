@@ -35,6 +35,14 @@ export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHype
         });
 
       return {
+        fromHyperapp(root, state, actions) {
+          return {
+            type: 'hyperapp',
+            root,
+            state,
+            actions,
+          };
+        },
         HyperappExtension,
       };
     };

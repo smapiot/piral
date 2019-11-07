@@ -39,6 +39,12 @@ export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
     };
 
     return api => ({
+      fromVue(root) {
+        return {
+          type: 'vue',
+          root,
+        };
+      },
       VueExtension: {
         functional: false,
         props: ['name', 'empty', 'render', 'params'],

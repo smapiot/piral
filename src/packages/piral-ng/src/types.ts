@@ -24,6 +24,12 @@ export interface NgComponent {
  */
 export interface PiletNgApi {
   /**
+   * Wraps an Angular component for use in Piral.
+   * @param component The component root.
+   * @returns The Piral Ng component.
+   */
+  fromNg(component: any): NgComponent;
+  /**
    * Angular component for displaying extensions of the given name.
    */
   NgExtension: any;

@@ -62,6 +62,12 @@ export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
 
       return {
         NgExtension,
+        fromNg(component) {
+          return {
+            type: 'ng',
+            component,
+          };
+        },
       };
     };
   };
