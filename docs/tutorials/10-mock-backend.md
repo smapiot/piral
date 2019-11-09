@@ -41,9 +41,33 @@ Offline-first means that we will potentially not proxy from a local request to a
 
 The advantage of using the HAR injector lies in the capability of doing a real browser recording - then using this source as input for the backend mocking. Alternatively, the advantage of the JSON injector is the simplicity of this format.
 
-Let's use this as an example.
+Let's use this as an example. We can create a file in the *mocks* folder of a pilet (or the app shell, since kras is also integrated there).
 
-(tbd)
+```json
+[
+  {
+    "request": {
+      "url": "/posts",
+      "target": "",
+      "query": {},
+      "method": "GET",
+      "headers": {},
+      "content": ""
+    },
+    "response": {
+      "headers": {},
+      "status": {
+        "code": 200,
+        "text": "OK"
+      },
+      "url": "/posts",
+      "content": "[{\"userId\":1,\"id\":1,\"title\":\"T1\",\"body\":\"B1\"},{\"userId\":1,\"id\":2,\"title\":\"T2\",\"body\":\"B2\"},{\"userId\":1,\"id\":3,\"title\":\"T3\",\"body\":\"T3\"}]"
+    }
+  }
+]
+```
+
+The file above could be called "sample.json". It will be picked up automatically; handling every GET request to `/posts` with the provided response.
 
 ## Dynamic Request Mocking
 
@@ -51,7 +75,25 @@ The most powerful injector is the so-called "script injector". The script inject
 
 Using the script injector it is possible to dynamically react to requests, e.g., to provide a full emulation of real backend logic.
 
-(tbd)
+The example below responds to *every* request with a "hello world"-kind of response.
+
+```js
+module.exports = function (ctx, req, res) {
+  return res({
+    content: `Hello World coming from ${req.url}!`,
+  });
+};
+```
+
+The three parts of the function signature are:
+
+- `ctx` is a global object referring to context settings and allows transporting state
+- `req` is the incoming request
+- `res` is a helper for building the outgoing response
+
+The function's result needs to be either `undefined` (representing not handled), a response object, or a `Promise` yielding `undefined` or a response object.
+
+The logic of a script injector can be as complex as required - even Node.js modules (either built-in, e.g., `fs` or retrieved via npm, e.g., `request`) can be used.
 
 ## Next Steps
 
