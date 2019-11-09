@@ -17,8 +17,10 @@ import {
   copyScaffoldingFiles,
   createDirectory,
   remove,
+  declarationFlatting,
   findPackageVersion,
   coreExternals,
+  combineApiDeclarations,
 } from '../common';
 
 interface Destination {
@@ -42,7 +44,7 @@ function getDestination(entryFiles: string, target: string): Destination {
   }
 }
 
-async function build(
+async function bundleFiles(
   piral: string,
   develop: boolean,
   target: string,
@@ -88,9 +90,10 @@ async function build(
   return outDir;
 }
 
-function generateDeclaration(entry: string) {
-  //TODO
-  return '';
+async function generateDeclaration(outDir: string, root: string, name: string, dependencies: Record<string, string>) {
+  const declaration = combineApiDeclarations(root, Object.keys(dependencies));
+  await createFileIfNotExists(outDir, 'index.d.ts', declaration);
+  await declarationFlatting(outDir, 'index.d.ts', name);
 }
 
 export type PiralBuildType = 'all' | 'release' | 'develop';
@@ -140,7 +143,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   // everything except release -> build develop
   if (type !== 'release') {
     const appDir = 'app';
-    const outDir = await build(
+    const outDir = await bundleFiles(
       name,
       true,
       targetDir,
@@ -197,15 +200,15 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await createDirectory(filesDir);
     await copyScaffoldingFiles(rootDir, filesDir, pilets.files);
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
-    await createFileIfNotExists(outDir, 'index.d.ts', generateDeclaration(entryFiles));
+    await generateDeclaration(outDir, root, name, dependencies.std);
     await createPackage(rootDir);
-    await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
+    //await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
     logDone(`Development package available in "${rootDir}".\n`);
   }
 
   // everything except develop -> build release
   if (type !== 'develop') {
-    const outDir = await build(
+    const outDir = await bundleFiles(
       name,
       false,
       targetDir,
