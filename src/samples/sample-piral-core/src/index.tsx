@@ -18,7 +18,7 @@ import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
 import { createNotificationsApi } from 'piral-notifications';
 import { createDashboardApi, Dashboard } from 'piral-dashboard';
-import { createContainerApi } from 'piral-containers';
+import { createContainersApi } from 'piral-containers';
 import { createFeedsApi } from 'piral-feeds';
 import { createFormsApi } from 'piral-forms';
 import { createHyperappApi } from 'piral-hyperapp';
@@ -178,7 +178,7 @@ const instance = createInstance({
     createHyperappApi(),
     createMenuApi(),
     createNotificationsApi(),
-    createContainerApi(),
+    createContainersApi(),
     createDashboardApi(),
     createFeedsApi(),
     createFormsApi(),
