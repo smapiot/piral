@@ -187,6 +187,43 @@ export default () => (
 
 Again, things that would always be shown (e.g., menu items) should not be lazy loaded. Here, the overhead would be too much. On the contrary, items should as tiles, pages, modals, ... could all be candidates of bundle splitting.
 
+## Testing Extensions
+
+Sometimes a core part of a pilet (potentially the only part) is the delivery of an extension for usage in other pilets. Testing this extension in isolation is not straight forward; after all how do you test something that is not in use right now?
+
+Consequently, we need to set up a proper development infrastructure without impacting any (production) deployments. The way we can easily solve this within a pilet is to use the `process.env.NODE_ENV` variable.
+
+Consider the following code for a pilet:
+
+```tsx
+export function setup(app: PiletApi) {
+  app.registerExtension('example', () => <div>No hands!</div>);
+}
+```
+
+We could, e.g., introduce a dedicated page where this extension is used. Furthermore, tiles, modal dialogs and other components may be introduced to only test this extension. In the following we go for a page, but this approach works for anything.
+
+```tsx
+// root module: index.tsx
+export function setup(app: PiletApi) {
+  if (process.env.NODE_ENV === 'development') {
+    app.registerPage('/playground', React.lazy(() => import('./PlaygroundPage')));
+  }
+
+  app.registerExtension('example', () => <b>No hands!</b>);
+}
+
+// playground page module: PlaygroundPage.tsx
+export default ({ piral }) => (
+  <div>
+    <h1>Playground</h1>
+    <piral.Extension name="example" />
+  </div>
+);
+```
+
+The crucial part is that we do not only place the registration of our testing components (in the example above the page) inside the environment-switch, but also the dependent modules. Above we only bundle the `PlaygroundPage` if we are indeed in the development environment. Production builds will never include this code.
+
 ## Next Steps
 
 In this tutorial we reviewed a couple of strategies to develop pilets that provide a robust and flexible basis.
