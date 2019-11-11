@@ -1,4 +1,4 @@
-import { resolve, dirname, basename, isAbsolute } from 'path';
+import { resolve, dirname, basename, isAbsolute, relative, join } from 'path';
 import { existsSync, statSync } from 'fs';
 import { readText } from './io';
 import { findPackageRoot } from './package';
@@ -46,7 +46,7 @@ function isContainedPackage(name: string) {
   return name.startsWith('piral-') || ['piral', 'react-arbiter'].includes(name);
 }
 
-function declPath(path: string) {
+function declarationPath(path: string) {
   const extPath = path + '.d.ts';
   const indexPath = resolve(path, 'index.d.ts');
 
@@ -61,44 +61,83 @@ function declPath(path: string) {
   return undefined;
 }
 
-function pckPath(baseDir: string, path: string) {
-  const [pck, ...rest] = path.split('/');
+function modularize(path: string) {
+  if (path.endsWith('.d.ts')) {
+    path = path.substr(0, path.length - 5);
+  }
+
+  if (path.endsWith('/index')) {
+    path = path.substr(0, path.length - 6);
+  }
+
+  return path;
+}
+
+function packagePath(baseDir: string, moduleName: string, absolute = false) {
+  const [pck, ...rest] = moduleName.split('/');
 
   if (isContainedPackage(pck)) {
     const relPath = rest.join('/');
     const targetJsonPath = findPackageRoot(pck, baseDir);
     const targetJsonData = require(targetJsonPath);
     const pckDirName = dirname(targetJsonPath);
-    const relTypings = relPath || targetJsonData.typings || targetJsonData.main.replace('.js', '.d.ts');
+    const relTypings = relPath || absolute || targetJsonData.typings || targetJsonData.main.replace('.js', '.d.ts');
+
+    if (relTypings === true) {
+      return pckDirName;
+    }
+
     const absPath = resolve(pckDirName, relTypings);
-    return declPath(absPath);
+    const resPath = declarationPath(absPath);
+
+    if (absolute && resPath) {
+      return dirname(resPath);
+    }
+
+    return resPath;
   }
 
   return undefined;
 }
 
-function normalize(baseDir: string, path: string) {
-  if (isAbsolute(path)) {
-    return declPath(path);
-  } else if (path.startsWith('.')) {
-    return declPath(resolve(baseDir, path));
-  } else if (!path.startsWith('@')) {
-    return pckPath(baseDir, path);
+interface ReferenceData {
+  path: string;
+  name: string;
+}
+
+function normalizePath(baseDir: string, parentModule: string, name: string): ReferenceData {
+  if (isAbsolute(name)) {
+    const path = declarationPath(name);
+
+    return (
+      path && {
+        name: modularize(name),
+        path,
+      }
+    );
+  } else if (name.startsWith('.')) {
+    const root = packagePath(baseDir, parentModule, true);
+    const path = root && declarationPath(resolve(baseDir, name));
+    const child = path && join(parentModule, relative(root, path));
+
+    return (
+      child && {
+        name: modularize(child),
+        path,
+      }
+    );
+  } else if (!name.startsWith('@')) {
+    const path = packagePath(baseDir, name);
+
+    return (
+      path && {
+        name,
+        path,
+      }
+    );
   }
 
   return undefined;
-}
-
-function combine(parentName: string, childPath: string, childName: string) {
-  const index = childPath.lastIndexOf(parentName + '/');
-
-  if (index !== -1) {
-    const relPath = childPath.substr(index);
-    const name = relPath.replace('.d.ts', '');
-    return name.endsWith('/index') ? name.substr(0, name.length - 6) : name;
-  }
-
-  return childName;
 }
 
 function getReferences(rx: RegExp, parentModule: string, baseDir: string, content: string) {
@@ -110,18 +149,17 @@ function getReferences(rx: RegExp, parentModule: string, baseDir: string, conten
 
     if (match) {
       const relName = match[3];
-      const path = normalize(baseDir, relName);
+      const data = normalizePath(baseDir, parentModule, relName);
 
-      if (path !== undefined) {
+      if (data !== undefined) {
         const original = match[0];
-        const name = combine(parentModule, path, relName);
+        const modified = data.name === relName ? original : original.replace(relName, data.name);
 
         references.push({
-          name,
-          path,
+          ...data,
           fields: match[2],
           original,
-          modified: name === relName ? original : original.replace(relName, name),
+          modified,
         });
       }
     }
@@ -191,7 +229,7 @@ declare module '${moduleName}' {
   await Promise.all(childFiles.map(ref => traverseFiles(files, ref)));
 }
 
-export async function declarationFlatting(baseDir: string, appName: string, content: string) {
+export async function declarationFlattening(baseDir: string, appName: string, content: string) {
   const allFiles: Array<DeclarationFile> = [];
 
   await traverseFiles(allFiles, {

@@ -17,7 +17,7 @@ import {
   copyScaffoldingFiles,
   createDirectory,
   remove,
-  declarationFlatting,
+  declarationFlattening,
   findPackageVersion,
   coreExternals,
   combineApiDeclarations,
@@ -92,7 +92,7 @@ async function bundleFiles(
 
 async function generateDeclaration(outDir: string, root: string, name: string, dependencies: Record<string, string>) {
   const declaration = combineApiDeclarations(root, Object.keys(dependencies));
-  const result = await declarationFlatting(outDir, name, declaration);
+  const result = await declarationFlattening(outDir, name, declaration);
   await createFileIfNotExists(outDir, 'index.d.ts', result);
 }
 
@@ -200,11 +200,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await createDirectory(filesDir);
     await copyScaffoldingFiles(rootDir, filesDir, pilets.files);
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
-    try {
     await generateDeclaration(outDir, root, name, dependencies.std);
-    } catch (ex) {
-      console.error(ex);
-    }
     await createPackage(rootDir);
     //await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
     logDone(`Development package available in "${rootDir}".\n`);
