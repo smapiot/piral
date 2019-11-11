@@ -1,7 +1,33 @@
-import { resolve, dirname, basename, isAbsolute, relative, join } from 'path';
+import { resolve, dirname, basename, isAbsolute, relative, join, sep } from 'path';
 import { existsSync, statSync } from 'fs';
 import { readText } from './io';
 import { findPackageRoot } from './package';
+
+const importDeclRx = /import\s+((.*?)\s+from\s*)?['"`](.*?)['"`]\s*;?/g;
+const exportDeclRx = /export\s+((.*?)\s+from\s*){1}['"`](.*?)['"`]\s*;?/g;
+const allowedPackages = ['piral', 'react-arbiter', 'react-atom', '@dbeining/react-atom'];
+
+interface ReferenceDeclaration {
+  name: string;
+  path: string;
+  fields: string;
+  original: string;
+  modified: string;
+}
+
+interface DeclarationFile {
+  imports: Array<ReferenceDeclaration>;
+  exports: Array<ReferenceDeclaration>;
+  content: string;
+  path: string;
+}
+
+interface TraverseRoot {
+  baseDir: string;
+  fileName: string;
+  moduleName: string;
+  content: string;
+}
 
 export function combineApiDeclarations(root: string, dependencyNames: Array<string>) {
   const names = [root, ...dependencyNames];
@@ -21,29 +47,11 @@ export function combineApiDeclarations(root: string, dependencyNames: Array<stri
   const imports = paths.map(path => `import '${path}';`).join('\n');
   return `${imports}
 
-export { PiletApi } from 'piral-core';`;
+export * from 'piral-core/api';`;
 }
-
-interface ReferenceDeclaration {
-  name: string;
-  path: string;
-  fields: string;
-  original: string;
-  modified: string;
-}
-
-interface DeclarationFile {
-  imports: Array<ReferenceDeclaration>;
-  exports: Array<ReferenceDeclaration>;
-  content: string;
-  path: string;
-}
-
-const importDeclRx = /import\s+((.*?)\s+from\s*)?['"`](.*?)['"`]\s*;?/g;
-const exportDeclRx = /export\s+((.*?)\s+from\s*){1}['"`](.*?)['"`]\s*;?/g;
 
 function isContainedPackage(name: string) {
-  return name.startsWith('piral-') || ['piral', 'react-arbiter'].includes(name);
+  return name.startsWith('piral-') || allowedPackages.includes(name);
 }
 
 function declarationPath(path: string) {
@@ -61,86 +69,59 @@ function declarationPath(path: string) {
   return undefined;
 }
 
+function splitPackageName(moduleName: string) {
+  if (moduleName.startsWith('@')) {
+    const [scope, name, ...rest] = moduleName.split('/');
+    return [`${scope}/${name}`, rest.join('/')];
+  } else {
+    const [name, ...rest] = moduleName.split('/');
+    return [name, rest.join('/')];
+  }
+}
+
+function packagePath(baseDir: string, moduleName: string) {
+  const [name, relPath] = splitPackageName(moduleName);
+
+  if (isContainedPackage(name)) {
+    const targetJsonPath = findPackageRoot(name, baseDir);
+    const targetJsonData = require(targetJsonPath);
+    const root = dirname(targetJsonPath);
+    const relTypings = relPath || targetJsonData.typings || targetJsonData.main.replace('.js', '.d.ts');
+    return declarationPath(resolve(root, relTypings));
+  }
+
+  return undefined;
+}
+
+function normalizePath(baseDir: string, name: string) {
+  if (isAbsolute(name)) {
+    return declarationPath(name);
+  } else if (name.startsWith('.')) {
+    return declarationPath(resolve(baseDir, name));
+  } else {
+    return packagePath(baseDir, name);
+  }
+}
+
 function modularize(path: string) {
   if (path.endsWith('.d.ts')) {
     path = path.substr(0, path.length - 5);
   }
 
-  if (path.endsWith('/index')) {
+  if (path.endsWith(`${sep}index`)) {
     path = path.substr(0, path.length - 6);
   }
 
-  return path;
-}
+  const fullPath = path;
 
-function packagePath(baseDir: string, moduleName: string, absolute = false) {
-  const [pck, ...rest] = moduleName.split('/');
-
-  if (isContainedPackage(pck)) {
-    const relPath = rest.join('/');
-    const targetJsonPath = findPackageRoot(pck, baseDir);
-    const targetJsonData = require(targetJsonPath);
-    const pckDirName = dirname(targetJsonPath);
-    const relTypings = relPath || absolute || targetJsonData.typings || targetJsonData.main.replace('.js', '.d.ts');
-
-    if (relTypings === true) {
-      return pckDirName;
-    }
-
-    const absPath = resolve(pckDirName, relTypings);
-    const resPath = declarationPath(absPath);
-
-    if (absolute && resPath) {
-      return dirname(resPath);
-    }
-
-    return resPath;
+  while (!existsSync(join(path, 'package.json'))) {
+    path = join(path, '..');
   }
 
-  return undefined;
+  return relative(join(path, '..'), fullPath);
 }
 
-interface ReferenceData {
-  path: string;
-  name: string;
-}
-
-function normalizePath(baseDir: string, parentModule: string, name: string): ReferenceData {
-  if (isAbsolute(name)) {
-    const path = declarationPath(name);
-
-    return (
-      path && {
-        name: modularize(name),
-        path,
-      }
-    );
-  } else if (name.startsWith('.')) {
-    const root = packagePath(baseDir, parentModule, true);
-    const path = root && declarationPath(resolve(baseDir, name));
-    const child = path && join(parentModule, relative(root, path));
-
-    return (
-      child && {
-        name: modularize(child),
-        path,
-      }
-    );
-  } else if (!name.startsWith('@')) {
-    const path = packagePath(baseDir, name);
-
-    return (
-      path && {
-        name,
-        path,
-      }
-    );
-  }
-
-  return undefined;
-}
-
-function getReferences(rx: RegExp, parentModule: string, baseDir: string, content: string) {
+function getReferences(rx: RegExp, baseDir: string, content: string) {
   const references: Array<ReferenceDeclaration> = [];
   let match: boolean | RegExpExecArray = true;
 
@@ -149,14 +130,16 @@ function getReferences(rx: RegExp, parentModule: string, baseDir: string, conten
 
     if (match) {
       const relName = match[3];
-      const data = normalizePath(baseDir, parentModule, relName);
+      const path = normalizePath(baseDir, relName);
 
-      if (data !== undefined) {
+      if (path !== undefined) {
+        const name = modularize(path);
         const original = match[0];
-        const modified = data.name === relName ? original : original.replace(relName, data.name);
+        const modified = name === relName ? original : original.replace(relName, name);
 
         references.push({
-          ...data,
+          name,
+          path,
           fields: match[2],
           original,
           modified,
@@ -174,8 +157,7 @@ function format(content: string, references: Array<ReferenceDeclaration>) {
   }
 
   return content
-    .replace(/declare module/g, 'module')
-    .replace(/declare type/g, 'type')
+    .replace(/declare (module|type|const|function|class)/g, '$1')
     .split('\n')
     .join('\n  ');
 }
@@ -198,25 +180,15 @@ function unique<T extends { path: string }>(ref: T, index: number, self: Array<T
   return self.findIndex(m => m.path === ref.path) === index;
 }
 
-interface TraverseRoot {
-  baseDir: string;
-  fileName: string;
-  moduleName: string;
-  content: string;
-}
-
 async function traverseFiles(files: Array<DeclarationFile>, { baseDir, content, fileName, moduleName }: TraverseRoot) {
-  const exportRefs = getReferences(exportDeclRx, moduleName, baseDir, content);
-  const importRefs = getReferences(importDeclRx, moduleName, baseDir, content);
+  const exportRefs = getReferences(exportDeclRx, baseDir, content);
+  const importRefs = getReferences(importDeclRx, baseDir, content);
   const references = [...importRefs, ...exportRefs];
 
   files.push({
-    content: `
-// from: ${baseDir}/${fileName}
-declare module '${moduleName}' {
+    content: `declare module '${moduleName}' {
   ${format(content, references)}
-}
-`,
+}`,
     path: resolve(baseDir, fileName),
     exports: exportRefs,
     imports: importRefs,
@@ -242,5 +214,5 @@ export async function declarationFlattening(baseDir: string, appName: string, co
   return allFiles
     .filter(unique)
     .map(file => file.content)
-    .join('');
+    .join('\n\n');
 }

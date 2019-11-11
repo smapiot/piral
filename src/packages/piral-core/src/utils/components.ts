@@ -1,5 +1,5 @@
 import { ComponentType, ExoticComponent } from 'react';
-import { AnyComponent, ComponentConverters } from '../types';
+import { AnyComponent, ComponentConverters, ForeignComponent } from '../types';
 
 function isNotExotic(component: any): component is object {
   return !(component as ExoticComponent).$$typeof;
@@ -15,7 +15,7 @@ export function convertComponent<T>(
   converters: ComponentConverters<T>,
   component: AnyComponent<T>,
   displayName: string,
-) {
+): ComponentType<T> | ForeignComponent<T> {
   if (typeof component === 'object' && isNotExotic(component)) {
     const converter = converters[component.type];
 

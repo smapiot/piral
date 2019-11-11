@@ -5,6 +5,7 @@
 * Bundle for emulation (#68)
 * Added `piral-pwa` library
 * Provide ability for develop builds of Piral (#68)
+* Generate the declaration dynamically (#89)
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
 
