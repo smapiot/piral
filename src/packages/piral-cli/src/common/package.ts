@@ -77,13 +77,11 @@ function getFilesOf(root: string, name: string, file: string | TemplateFileLocat
   return getMatchingFiles(source, root, file);
 }
 
-function findRoot(pck: string, baseDir: string) {
+export function findPackageRoot(pck: string, baseDir: string) {
   try {
-    const path = require.resolve(pck, {
+    return require.resolve(`${pck}/package.json`, {
       paths: [baseDir],
     });
-
-    return path;
   } catch (ex) {
     return undefined;
   }
@@ -99,19 +97,17 @@ function findPackage(pck: string | Array<string>, baseDir: string) {
       }
     }
   } else {
-    try {
-      const path = require.resolve(`${pck}/package.json`, {
-        paths: [baseDir],
-      });
+    const path = findPackageRoot(pck, baseDir);
 
+    if (path) {
       const appPackage = require(path);
       const relPath = appPackage && appPackage.app;
       appPackage.app = relPath && resolve(dirname(path), relPath);
       return appPackage;
-    } catch (ex) {
-      return undefined;
     }
   }
+
+  return undefined;
 }
 
 export function readPiralPackage(root: string, name: string) {
