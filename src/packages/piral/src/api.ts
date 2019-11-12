@@ -1,32 +1,5 @@
 import { Extend, createInstance, PiralConfiguration } from 'piral-core';
-import {
-  createFetchApi,
-  createGqlApi,
-  createLocaleApi,
-  createDashboardApi,
-  createMenuApi,
-  createNotificationsApi,
-  createModalsApi,
-  createFeedsApi,
-} from 'piral-ext';
-import { PiralExtSettings } from './types';
-
-/**
- * Creates an array including all standard APIs from piral-ext.
- * @param settings Customizes the standard extension settings.
- */
-export function createStandardApi(settings: PiralExtSettings = {}) {
-  return [
-    createFetchApi(settings.fetch),
-    createGqlApi(settings.gql),
-    createLocaleApi(settings.locale),
-    createDashboardApi(settings.dashboard),
-    createMenuApi(settings.menu),
-    createNotificationsApi(settings.notifications),
-    createModalsApi(settings.modals),
-    createFeedsApi(settings.feeds),
-  ];
-}
+import { createStandardApi, PiralExtSettings } from 'piral-ext';
 
 /**
  * Extends the standard Piral API with custom API and settings.
