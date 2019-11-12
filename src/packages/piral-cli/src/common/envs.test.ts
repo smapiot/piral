@@ -29,8 +29,8 @@ describe('Environment Module', () => {
   });
 
   it('setStandardEnvs respects a given pilet by setting the right env', async () => {
-    await setStandardEnvs({ pilet: 'foo' });
-    expect(process.env.DEBUG_PILET).toBe('foo');
+    await setStandardEnvs({ develop: true });
+    expect(process.env.DEBUG_PILET).toBe('/$pilet-api');
     expect(process.env.SHARED_DEPENDENCIES).toBeUndefined();
   });
 
