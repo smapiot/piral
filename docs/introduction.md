@@ -86,12 +86,7 @@ The following table compares the two from a feature perspective.
 | Translation API     | ❌        | ✔️    |
 | Fetch API           | ❌        | ✔️    |
 | GraphQL API         | ❌        | ✔️    |
-| Form API            | ️️️❌        | ❌    |
-| Tracking API        | ️️️❌        | ❌    |
-| Angular support     | ️️️❌        | ❌    |
-| Vue support         | ️️️❌        | ❌    |
-| Hyperapp support    | ️️️❌        | ❌    |
 
 Both libraries are purely functional and do not provide any design. Thus the look and feel can be fully customized and designed from every aspect.
 
-Where both have an ❌ the installation of an available plugin is possible. Otherwise, a missing feature in `piral-core` can be also re-integrated by installing the respective plugin.
+A missing feature in `piral-core` can be also re-integrated by installing the respective plugin.

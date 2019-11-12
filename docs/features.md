@@ -95,6 +95,5 @@ There are further reads on the topic of microfrontends.
 - [Micro frontends—a microservice approach to front-end web development](https://medium.com/@tomsoderlund/micro-frontends-a-microservice-approach-to-front-end-web-development-f325ebdadc16)
 - [Micro Front-Ends: Available Solutions](https://medium.embengineering.com/micro-front-ends-whats-the-best-solution-3bc31218eae4)
 - [Exploring micro-frontends](https://medium.com/@benjamin.d.johnson/exploring-micro-frontends-87a120b3f71c)
-- [Taming the front-end monolith](https://blog.logrocket.com/taming-the-front-end-monolith-dbaede402c39)
 - [Micro Frontends - extending the microservice idea to frontend development](https://micro-frontends.org)
 - [6 micro-front-end types in direct comparison: These are the pros and cons (translated)](https://bit.ly/2K1zbu2)

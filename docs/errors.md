@@ -12,6 +12,9 @@ We distinguish between a variety of errors. Currently, the following types of er
 - Feed
 - Tile
 - Menu
+
+More types of errors may be added my plugins. As an example, the `piral-forms` plugin also adds the following error:
+
 - Form
 
 ## Loading
@@ -74,4 +77,4 @@ It will always be shown as the respective component containing the form, which m
 
 ## Others
 
-Obviously, in future versions more types of errors could be added. Thus we recommend to always handle the "default" (or anything else) case.
+More types of errors could be added to the core, or by including a plugin. Thus we recommend to always handle the "default" (or anything else) case.
