@@ -12,4 +12,6 @@ declare module 'piral-core/lib/types/custom' {
   interface PiralCustomRegistryState {}
 }
 
-export interface PiletPwaApi {}
+export interface PiletPwaApi {
+  showAppNotification(title: string, options?: NotificationOptions): Promise<void>;
+}

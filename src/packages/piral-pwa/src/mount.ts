@@ -1,7 +1,11 @@
 export function mount() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js');
-    });
-  }
+  return new Promise<ServiceWorkerRegistration>(resolve => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        resolve(navigator.serviceWorker.register('/service-worker.js'));
+      });
+    } else {
+      resolve();
+    }
+  });
 }
