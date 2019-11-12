@@ -6,7 +6,9 @@ This is an extension library that only has a peer dependency to `piral-core`. Wh
 
 ## Documentation
 
-For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
+The following functions are brought to the Pilet API.
+
+(tbd)
 
 ## Setup and Bootstrapping
 

@@ -19,7 +19,7 @@ For more details on the individual libraries please visit their own dedicated RE
 
 ## Documentation
 
-For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
+For details on the provided API check out the [documentation of the individual extensions at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
 
 ## License
 
