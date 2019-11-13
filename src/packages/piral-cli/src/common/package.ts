@@ -116,9 +116,12 @@ export function readPiralPackage(root: string, name: string) {
 }
 
 export function getPiralPackage(app: string, language: PiletLanguage) {
-  const baseData = {
+  return {
     app,
-    main: 'lib/index.js',
+    scripts: {
+      start: 'piral debug',
+      build: 'piral build',
+    },
     pilets: {
       ...getPiletsInfo({}),
       scripts: {
@@ -131,30 +134,6 @@ export function getPiralPackage(app: string, language: PiletLanguage) {
       'piral-cli': 'latest',
     },
   };
-
-  switch (language) {
-    case PiletLanguage.ts:
-      return {
-        ...baseData,
-        typings: 'lib/index.d.ts',
-        scripts: {
-          start: 'piral debug',
-          build: 'npm run build:deploy && npm run build:pilets',
-          'build:deploy': 'piral build',
-          'build:pilets': 'tsc',
-        },
-      };
-    case PiletLanguage.js:
-      return {
-        ...baseData,
-        scripts: {
-          start: 'piral debug',
-          build: 'piral build',
-        },
-      };
-  }
-
-  return baseData;
 }
 
 export async function getFileStats(root: string, name: string, files: Array<string | TemplateFileLocation> = []) {
@@ -327,10 +306,7 @@ export async function patchPiletPackage(
     externals,
     ...info,
   };
-  const allExternals = [
-    ...externals,
-    ...coreExternals,
-  ];
+  const allExternals = [...externals, ...coreExternals];
   const scripts = {
     'debug-pilet': 'pilet debug',
     'build-pilet': 'pilet build',
