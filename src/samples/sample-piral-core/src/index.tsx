@@ -23,6 +23,7 @@ import { createFeedsApi } from 'piral-feeds';
 import { createFormsApi } from 'piral-forms';
 import { createInfernoApi } from 'piral-inferno';
 import { createHyperappApi } from 'piral-hyperapp';
+import { createPreactApi } from 'piral-preact';
 import { createSearchApi, useSearch } from 'piral-search';
 import { availablePilets } from './pilets';
 
@@ -178,6 +179,7 @@ const instance = createInstance({
     createNgApi(),
     createInfernoApi(),
     createHyperappApi(),
+    createPreactApi(),
     createMenuApi(),
     createNotificationsApi(),
     createContainersApi(),

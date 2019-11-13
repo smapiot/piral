@@ -45,6 +45,7 @@
     "piral-notifications": "^0.8.3",
     "piral-search": "^0.8.3",
     "piral-vue": "^0.8.3",
+    "preact": "10.0.5",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router": ">=5.0.0",
