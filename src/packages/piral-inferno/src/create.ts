@@ -30,11 +30,16 @@ export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfern
 
     return api => {
       class InfernoExtension extends Component<ExtensionSlotProps> {
+        private onRefChange = (element: HTMLElement) => {
+          if (element) {
+            element.innerHTML = '';
+            api.renderHtmlExtension(element, this.props);
+          }
+        };
+
         render() {
           return createElement(rootName, {
-            ref(element: HTMLElement) {
-              element && api.renderHtmlExtension(element, this.props);
-            },
+            ref: this.onRefChange,
           });
         }
       }
