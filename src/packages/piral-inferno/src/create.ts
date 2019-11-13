@@ -1,4 +1,4 @@
-import { Extend, ExtensionSlotProps } from 'piral-core';
+import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { Component } from 'inferno';
 import { createElement } from 'inferno-create-element';
 import { mount } from './mount';
@@ -29,7 +29,7 @@ export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfern
     };
 
     return api => {
-      class InfernoExtension extends Component<ExtensionSlotProps> {
+      const InfernoExtension: any = class extends Component<ExtensionSlotProps> {
         private onRefChange = (element: HTMLElement) => {
           if (element) {
             element.innerHTML = '';
@@ -37,12 +37,16 @@ export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfern
           }
         };
 
+        shouldComponentUpdate(nextProps: ExtensionSlotProps) {
+          return !compare(this.props, nextProps);
+        }
+
         render() {
           return createElement(rootName, {
             ref: this.onRefChange,
           });
         }
-      }
+      };
 
       return {
         fromInferno(root) {
@@ -51,7 +55,7 @@ export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfern
             root,
           };
         },
-        InfernoExtension: InfernoExtension as any,
+        InfernoExtension,
       };
     };
   };

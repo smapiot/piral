@@ -15,7 +15,7 @@ export interface InfernoComponent<TProps> {
    */
   root: ComponentType<TProps>;
   /**
-   * The type of the Hyperapp component.
+   * The type of the Inferno component.
    */
   type: 'inferno';
 }
