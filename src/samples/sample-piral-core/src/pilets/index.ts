@@ -8,6 +8,7 @@ import { VuePilet } from './vuePilet';
 import { NgPilet } from './ngPilet';
 import { HyperappPilet } from './hyperappPilet';
 import { ContainerPilet } from './container';
+import { InfernoPilet } from './infernoPilet';
 
 /**
  * Normally all these pilets would come from some API and
@@ -29,4 +30,5 @@ export const availablePilets = [
   NgPilet,
   HyperappPilet,
   ContainerPilet,
+  InfernoPilet,
 ];

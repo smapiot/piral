@@ -4,7 +4,7 @@
 
 This is an extension library that only has a peer dependency to `piral-core`. What `piral-ng` brings to the table is a set of API extensions that can be used with `piral` or `piral-core`.
 
-By default, these extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes an `register...Ng` method for each `register...X` method of the standard API surface.
+By default, these extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes an Angular converter for any component registration, as well as a `fromNg` shortcut and a `NgExtension` component.
 
 ## Documentation
 

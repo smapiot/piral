@@ -21,6 +21,7 @@ import { createDashboardApi, Dashboard } from 'piral-dashboard';
 import { createContainersApi } from 'piral-containers';
 import { createFeedsApi } from 'piral-feeds';
 import { createFormsApi } from 'piral-forms';
+import { createInfernoApi } from 'piral-inferno';
 import { createHyperappApi } from 'piral-hyperapp';
 import { createSearchApi, useSearch } from 'piral-search';
 import { availablePilets } from './pilets';
@@ -175,6 +176,7 @@ const instance = createInstance({
   extendApi: [
     createVueApi(),
     createNgApi(),
+    createInfernoApi(),
     createHyperappApi(),
     createMenuApi(),
     createNotificationsApi(),
