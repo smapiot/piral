@@ -2,14 +2,9 @@ import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral
 import { PiralExtSettings } from 'piral-ext';
 
 /**
- * Defines the options for rendering a Piral instance.
+ * Defines the base options for rendering a Piral instance.
  */
-export interface PiralRenderOptions extends PiralConfiguration {
-  /**
-   * Sets the selector of the element to render into.
-   * @default '#app'
-   */
-  selector?: string | Element;
+export interface PiralRenderBaseOptions extends PiralConfiguration {
   /**
    * Customizes the extension settings.
    */
@@ -22,4 +17,15 @@ export interface PiralRenderOptions extends PiralConfiguration {
    * Defines how the errors looks like.
    */
   errors?: Partial<ErrorComponentsState>;
+}
+
+/**
+ * Defines the options for rendering a Piral instance.
+ */
+export interface PiralRenderOptions extends PiralRenderBaseOptions {
+  /**
+   * Sets the selector of the element to render into.
+   * @default '#app'
+   */
+  selector?: string | Element;
 }
