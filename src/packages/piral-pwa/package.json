@@ -1,6 +1,6 @@
 {
   "name": "piral-pwa",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Extensions for creating the Piral instance as a PWA shell.",
   "keywords": [
     "piral",

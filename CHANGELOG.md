@@ -11,6 +11,12 @@
 * Added new optional libraries `piral-inferno` and `piral-preact` (#86)
 * Improved the CI/CD pipelines for the `sample-piral` app
 
+## 0.8.4 (November 15, 2019)
+
+* Fixed the export in the templates (#91)
+* Forward props to the error boundary
+* Inserted sanity check before replacing exports
+
 ## 0.8.3 (October 28, 2019)
 
 * Fixed bug in Piral CLI regarding plugins
