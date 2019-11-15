@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.8.4 (tbd)
+## 0.8.4 (November 15, 2019)
 
 * Fixed the export in the templates (#91)
 * Forward props to the error boundary
