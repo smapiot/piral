@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.8.4 (tbd)
+
+* Fixed the export in the templates (#91)
+* Forward props to the error boundary
+* Inserted sanity check before replacing exports
+
 ## 0.8.3 (October 28, 2019)
 
 * Fixed bug in Piral CLI regarding plugins
