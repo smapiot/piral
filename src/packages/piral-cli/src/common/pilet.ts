@@ -1,9 +1,14 @@
 import * as Bundler from 'parcel-bundler';
-import { writeFile, readFile } from 'fs';
+import { writeFile, readFile, existsSync, statSync } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { VirtualPackager } from './VirtualPackager';
 
 const bundleUrlRef = '__bundleUrl__';
+
+function isFile(bundleDir: string, name: string) {
+  const path = resolve(bundleDir, name);
+  return existsSync(path) && statSync(path).isFile();
+}
 
 function resolveModule(name: string, targetDir: string) {
   try {
@@ -78,14 +83,20 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
 
   const promise = new Promise<void>((resolve, reject) => {
     if (/js|css/.test(bundle.type)) {
+      const bundleDir = dirname(bundle.name);
+
       readFile(bundle.name, 'utf8', (err, data) => {
         if (err) {
           return reject(err);
         }
 
-        let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) =>
-          str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`),
-        );
+        let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
+          if (isFile(bundleDir, value)) {
+            return str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`);
+          }
+
+          return str;
+        });
 
         if (/js/.test(bundle.type)) {
           /**
