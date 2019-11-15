@@ -9,6 +9,7 @@
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
 * Added new optional libraries `piral-inferno` and `piral-preact` (#86)
+* Improved the CI/CD pipelines for the `sample-piral` app
 
 ## 0.8.3 (October 28, 2019)
 
