@@ -39,7 +39,7 @@ const FullDemo: React.FC = () => (
       functional components. The idea behind this example is to illustrate how little needs to be done to create a
       microfrontend shell. A virtual pilet is brought in via the attach API.
     </p>
-    <img className="responsive-image" src={require('../assets/piral-full-demo.png')} alt="Piral Full Demo" />
+    <img className="responsive-image" src={require('../assets/demo-full.png')} alt="Piral Full Demo" />
     <p>
       No backend interactions are mocked. However, there is no sample gateway. Instead, pilets are going directly
       through different backend services such as the OpenWeather API. Pilets are retrieved from the sample feed.
@@ -67,7 +67,7 @@ const CoreDemo: React.FC = () => (
       that use most of the core pilet API functions. Additionally, some of the available (opt-in) extension packages are
       shown, such as piral-ng (Angular API) and piral-vue (Vue API).
     </p>
-    <img className="responsive-image" src={require('../assets/piral-core-demo.png')} alt="Piral Core Demo" />
+    <img className="responsive-image" src={require('../assets/demo-core.png')} alt="Piral Core Demo" />
     <p>
       All backend interactions are mocked (e.g., via a setTimeout) to indicate only what Piral can do to sustain a good
       UX, for example by providing loading spinners.
@@ -75,6 +75,29 @@ const CoreDemo: React.FC = () => (
     <p>
       The shown connectors display how simple an interactive data feed can be connected. Furthermore, the form examples
       illustrate the ease of making robust form handling with Piral.
+    </p>
+  </Demo>
+);
+
+const MifeDemo: React.FC = () => (
+  <Demo
+    title="Microfrontends Webshop"
+    appLink="https://mife-demo.florian-rappl.de"
+    codeLink="https://github.com/FlorianRappl/piral-microfrontend-demo">
+    <p>
+      An example app based on <code>piral</code>.
+    </p>
+    <blockquote>
+      <p>A rebuild of the famous webshop example - all integrated in one repository.</p>
+    </blockquote>
+    <p>
+      The sample shows how simple a microfrontend app can be set up and created; especially if the app shell does not
+      give any design. Pilets exchange components via extensions and everything just works.
+    </p>
+    <img className="responsive-image" src={require('../assets/demo-mife.png')} alt="Microfrontends Demo" />
+    <p>
+      The styling of the given application was all inspired from the original demo. The code was written from scratch in
+      React to illustrate how much simpler the code could look like.
     </p>
   </Demo>
 );
@@ -93,6 +116,7 @@ export default () => (
     <div className="demos">
       <CoreDemo />
       <FullDemo />
+      <MifeDemo />
     </div>
   </section>
 );

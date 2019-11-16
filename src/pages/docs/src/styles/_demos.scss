@@ -5,9 +5,14 @@
   width: 100%;
 
   .demo {
-    flex: 1 0 300px;
+    flex: 1 0 500px;
     padding: 1em;
     max-width: 100%;
+  }
+
+  .responsive-image {
+    margin: 0 auto;
+    display: block;
   }
 
   blockquote {
