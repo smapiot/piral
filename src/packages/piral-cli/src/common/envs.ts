@@ -32,7 +32,9 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
   process.env.BUILD_PCKG_NAME = packageJson.name;
 
   if (options.develop) {
-    process.env.DEBUG_PILET = debugPiletApi;
+    process.env.DEBUG_PILET = options.develop ? debugPiletApi : '';
+  } else {
+    process.env.DEBUG_PILET = '';
   }
 
   if (options.production) {
@@ -45,5 +47,7 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
     const excludedDependencies = ['piral', 'piral-core', options.piral];
     const dependencies = options.dependencies.filter(m => !excludedDependencies.includes(m));
     process.env.SHARED_DEPENDENCIES = dependencies.join(',');
+  } else {
+    process.env.SHARED_DEPENDENCIES = '';
   }
 }
