@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Layout } from './layout';
 
+const HomePage = React.lazy(() => import('../pages/Home'));
 const TutorialsPage = React.lazy(() => import('../pages/Tutorials'));
 const ReferencePage = React.lazy(() => import('../pages/References'));
 const DocumentationReferencePage = React.lazy(() => import('../pages/Documentation'));
@@ -20,7 +21,8 @@ export const App = () => (
   <BrowserRouter>
     <Layout>
       <Switch>
-        <Redirect exact from="/" to="/tutorials" />
+        {/*<Redirect exact from="/" to="/tutorials" />*/}
+        <Route exact path="/" component={HomePage} />
         <Route exact path="/tutorials" component={TutorialsPage} />
         {tutorials.map(tutorial => (
           <Route key={tutorial.id} exact path={tutorial.route} component={tutorial.page} />

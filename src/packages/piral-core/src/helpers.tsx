@@ -53,7 +53,7 @@ export function createArbiterOptions({
   strategy,
   requestPilets,
 }: PiralArbiterConfig): ArbiterOptions<PiletApi> {
-  if (process.env.DEBUG_PILET !== undefined) {
+  if (process.env.DEBUG_PILET) {
     const loadPilets = sessionStorage.getItem('dbg:loadPilets') === 'on';
     const noPilets = () => Promise.resolve([]);
     requestPilets = loadPilets ? requestPilets : noPilets;
@@ -67,7 +67,7 @@ export function createArbiterOptions({
     fetchModules() {
       const promise = requestPilets();
 
-      if (process.env.DEBUG_PILET !== undefined) {
+      if (process.env.DEBUG_PILET) {
         const initialTarget = `${location.origin}${process.env.DEBUG_PILET}`;
         const updateTarget = initialTarget.replace('http', 'ws');
         const appendix = fetch(initialTarget).then(res => res.json());

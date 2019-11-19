@@ -26,11 +26,14 @@ Piral is developed as a monorepo.
 - [piral-axios](./piral-axios/README.md) provides the `axios` API for making HTTP requests
 - [piral-containers](./piral-containers/README.md) allows individual pilets to use their own global state
 - [piral-forms](./piral-forms/README.md) allows construction of reusable forms
+- [piral-pwa](./piral-pwa/README.md) enables out-of-the-box PWA support with benefits
 - [piral-search](./piral-search/README.md) provides enhanced search capability
 - [piral-tracking](./piral-tracking/README.md) provides the tracking API
 
 ## Available Opt-In Converter Packages
 
 - [piral-hyperapp](./piral-hyperapp/README.md) provides integration for *hyperapp*
+- [piral-inferno](./piral-inferno/README.md) provides integration for *Inferno*
 - [piral-ng](./piral-ng/README.md) provides integration for *Angular*
+- [piral-preact](./piral-preact/README.md) provides integration for *Preact*
 - [piral-vue](./piral-vue/README.md) provides integration for *Vue*
