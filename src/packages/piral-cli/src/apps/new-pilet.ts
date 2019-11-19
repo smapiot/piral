@@ -20,6 +20,7 @@ import {
   getPiletsInfo,
   runScript,
   TemplateType,
+  checkExists,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -54,6 +55,15 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   } = options;
   const root = resolve(baseDir, target);
   const [sourceName, sourceVersion, hadVersion, type] = dissectPackageName(baseDir, source);
+
+  if (type === 'file') {
+    const exists = await checkExists(sourceName);
+
+    if (!exists) {
+      throw new Error(`Could not find "${sourceName}" for scaffolding. Aborting.`);
+    }
+  }
+
   const success = await createDirectory(root);
 
   if (success) {

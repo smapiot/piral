@@ -14,7 +14,7 @@ function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.Writ
   return runScript(cmd, cwd, output);
 }
 
-function isLocalPackage(baseDir: string, fullName: string) {
+export function isLocalPackage(baseDir: string, fullName: string) {
   if (/^[\.\/\~]/.test(fullName)) {
     return true;
   } else if (fullName.endsWith('.tgz')) {

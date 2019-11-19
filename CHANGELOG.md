@@ -3,12 +3,13 @@
 ## 0.9.0 (tbd)
 
 * Bundle for emulation (#68)
-* Added `piral-pwa` library
+* Added `piral-pwa` library (#26)
 * Provide ability for develop builds of Piral (#68)
 * Generate the declaration dynamically (#89)
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
 * Added new optional libraries `piral-inferno` and `piral-preact` (#86)
+* Improved and added better error messages in the Piral CLI (#92)
 
 ## 0.8.3 (October 28, 2019)
 

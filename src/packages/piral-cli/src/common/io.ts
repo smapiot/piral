@@ -100,6 +100,14 @@ export function checkExists(target: string) {
   });
 }
 
+export async function checkExistingDirectory(target: string) {
+  if (await checkExists(target)) {
+    return await checkIsDirectory(target);
+  }
+
+  return false;
+}
+
 export function checkIsDirectory(target: string) {
   return new Promise<boolean>(resolve => {
     lstat(target, (err, stats) => {

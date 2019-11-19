@@ -10,12 +10,14 @@ function createTempDir() {
 describe('Build Pilet Command', () => {
   it('missing package.json should result in an error', async () => {
     const dir = createTempDir();
-    console.error = jest.fn();
+    let failed = false;
 
     try {
       await buildPilet(dir);
-    } catch {}
+    } catch {
+      failed = true;
+    }
 
-    expect(console.error).toHaveBeenCalled();
+    expect(failed).toBeTruthy();
   });
 });

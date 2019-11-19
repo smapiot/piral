@@ -1,6 +1,6 @@
 import { relative, join } from 'path';
 import { buildPilet } from './build-pilet';
-import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, logFail } from '../common';
+import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone } from '../common';
 
 export interface PublishPiletOptions {
   source?: string;
@@ -40,12 +40,11 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   const files = await getFiles(baseDir, source, fresh);
 
   if (!url) {
-    logWarn(`Missing URL of the pilet feed!`);
-    throw new Error('Incomplete configuration.');
+    throw new Error('Incomplete configuration. Missing URL of the pilet feed!');
   }
 
   if (files.length === 0) {
-    return logFail(`No files found at '%s'.`, source);
+    throw new Error(`No files found at '${source}'.`);
   }
 
   for (const file of files) {

@@ -2,12 +2,12 @@ import { resolve } from 'path';
 import {
   readJson,
   installPackage,
+  checkExistingDirectory,
   patchPiletPackage,
   copyPiralFiles,
   ForceOverwrite,
   logInfo,
   logDone,
-  logFail,
   combinePackageRef,
   logWarn,
   getFileStats,
@@ -16,6 +16,8 @@ import {
   runScript,
   installDependencies,
   clearCache,
+  checkExists,
+  isLocalPackage,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -34,16 +36,17 @@ function getCurrentPackageDetails(
   sourceName: string,
   currentVersion: string,
   version: string,
+  isFile: boolean,
 ): [string, undefined | string] {
-  const wantsFile = version.startsWith('file:');
+  const wantsFile = currentVersion && currentVersion.startsWith('file:');
 
-  if (currentVersion && currentVersion.startsWith('file:') && !wantsFile) {
+  if (!isFile && wantsFile) {
     logWarn('The Piral instance is currently resolved locally, but no local file for the upgrade has been specified.');
     logInfo('Trying to obtain the pilet from NPM instead.');
   }
 
   if (wantsFile) {
-    return [combinePackageRef(version.replace('file:', ''), currentVersion, 'file'), version];
+    return [combinePackageRef(version, currentVersion, 'file'), version];
   }
 
   return [combinePackageRef(sourceName, version, 'registry'), undefined];
@@ -56,13 +59,29 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     forceOverwrite = upgradePiletDefaults.forceOverwrite,
   } = options;
   const root = resolve(baseDir, target);
+  const valid = await checkExistingDirectory(root);
+
+  if (!valid) {
+    throw new Error('The provided target is not a valid. It must be a directory containing a package.json.');
+  }
+
   const pckg = await readJson(root, 'package.json');
   const { devDependencies = {}, piral } = pckg;
 
   if (piral) {
     const sourceName = piral.name;
     const currentVersion = devDependencies[sourceName];
-    const [packageRef, packageVersion] = getCurrentPackageDetails(sourceName, currentVersion, version);
+    const isFile = isLocalPackage(root, version);
+    const [packageRef, packageVersion] = getCurrentPackageDetails(sourceName, currentVersion, version, isFile);
+
+    if (isFile) {
+      const exists = await checkExists(packageRef);
+
+      if (!exists) {
+        throw new Error(`Could not find "${packageRef}" for upgrading. Aborting.`);
+      }
+    }
+
     const originalFiles = await getFileStats(root, sourceName, piral.files);
     const piralInfo = await readPiralPackage(root, sourceName);
     const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
@@ -91,7 +110,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     await clearCache(root);
     logDone(`All done!`);
   } else {
-    logFail('Could not find a "%s" section in the "%s" file. Aborting.', 'piral', 'package.json');
-    throw new Error('Invalid pilet.');
+    throw new Error(`Could not find a "piral" section in the "package.json" file. Aborting.`);
   }
 }

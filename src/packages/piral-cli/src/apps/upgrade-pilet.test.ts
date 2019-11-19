@@ -10,12 +10,14 @@ function createTempDir() {
 describe('Upgrade Pilet Command', () => {
   it('cannot upgrade in a directory without a package.json', async () => {
     const dir = createTempDir();
-    console.error = jest.fn();
+    let failed = false;
 
     try {
       await upgradePilet(dir);
-    } catch {}
+    } catch {
+      failed = true;
+    }
 
-    expect(console.error).toHaveBeenCalled();
+    expect(failed).toBeTruthy();
   });
 });
