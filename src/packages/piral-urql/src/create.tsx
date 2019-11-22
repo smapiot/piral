@@ -1,78 +1,38 @@
 import * as React from 'react';
-import { Extend } from 'piral-core';
-import { Client, Provider, defaultExchanges, subscriptionExchange } from 'urql';
-import { SubscriptionClient, OperationOptions } from 'subscriptions-transport-ws';
+import { Provider } from 'urql';
+import { Extend, GlobalStateContext } from 'piral-core';
 import { gqlQuery, gqlMutation, gqlSubscription } from './queries';
-import { PiletGqlApi, UrqlClient } from './types';
+import { setupGqlClient } from './setup';
+import { PiletGqlApi, UrqlClient, GqlOperationOptions } from './types';
 
-export interface GqlConfig {
-  /**
-   * Sets the default request init settings.
-   */
-  default?: RequestInit;
-  /**
-   * Sets the URL of the GraphQL endpoint.
-   * @default location.origin
-   */
-  url?: string;
-  /**
-   * Sets the URL for the GraphQL subscription endpoint.
-   */
-  subscriptionUrl?: false | string;
-  /**
-   * Sets if the subscription should be lazy initialized.
-   */
-  lazy?: boolean;
-  /**
-   * Optional callback to the be used in case of a connection.
-   */
-  onConnected?(): void;
-  /**
-   * Optional callbsack to be used in case of a disconnect.
-   * @param err The connection error.
-   */
-  onDisconnected?(err: Array<Error>): void;
-}
+function extendOptions<T extends GqlOperationOptions>(context: GlobalStateContext, options: T): Promise<T> {
+  const originalHeaders = options.headers || {};
+  const headerPromises: Array<Promise<any>> = [];
+  context.emit('before-fetch', {
+    headers: originalHeaders,
+    setHeaders(headers: Promise<any> | any) {
+      if (headers) {
+        headerPromises.push(headers);
+      }
+    },
+  });
 
-/**
- * Sets up an urql client by using the given config.
- * @param config The configuration for the new urql client.
- */
-export function setupGqlClient(config: GqlConfig = {}): UrqlClient {
-  const url = config.url || location.origin;
-  const subscriptionUrl = (config.subscriptionUrl || url).replace(/^http/i, 'ws');
-  const subscriptionClient =
-    config.subscriptionUrl !== false &&
-    new SubscriptionClient(subscriptionUrl, {
-      reconnect: true,
-      lazy: config.lazy || false,
-      inactivityTimeout: 0,
-      connectionCallback(err) {
-        const { onConnected, onDisconnected } = config;
-        const errors = err && (Array.isArray(err) ? err : [err]);
+  return Promise.all(headerPromises).then(newHeaders => {
+    const headers = newHeaders.reduce((obj, header) => {
+      if (typeof header === 'object' && header) {
+        return {
+          ...obj,
+          ...header,
+        };
+      }
 
-        if (errors && errors.length > 0) {
-          typeof onDisconnected === 'function' && onDisconnected(errors);
-        } else {
-          typeof onConnected === 'function' && onConnected();
-        }
-      },
-    });
-  const forwardSubscription = (operation: OperationOptions) => subscriptionClient.request(operation);
-  const exchanges = [...defaultExchanges];
+      return obj;
+    }, originalHeaders);
 
-  if (subscriptionClient) {
-    exchanges.push(
-      subscriptionExchange({
-        forwardSubscription,
-      }),
-    );
-  }
-
-  return new Client({
-    url,
-    fetchOptions: config.default || {},
-    exchanges,
+    return {
+      ...options,
+      headers,
+    };
   });
 }
 
@@ -85,14 +45,15 @@ export function createGqlApi(client: UrqlClient = setupGqlClient()): Extend<Pile
     context.includeProvider(<Provider value={client} />);
 
     return {
-      query(q, options) {
-        return gqlQuery(client, q, options);
+      query(q, o) {
+        return extendOptions(context, o).then(options => gqlQuery(client, q, options));
       },
-      mutate(q, options) {
-        return gqlMutation(client, q, options);
+      mutate(q, o) {
+        return extendOptions(context, o).then(options => gqlMutation(client, q, options));
       },
-      subscribe(q, subscriber, options) {
-        return gqlSubscription(client, q, subscriber, options);
+      subscribe(q, subscriber, o) {
+        const unsubscribe = extendOptions(context, o).then(options => gqlSubscription(client, q, subscriber, options));
+        return () => unsubscribe.then(cb => cb());
       },
     };
   };
