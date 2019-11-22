@@ -7,17 +7,7 @@ import { PiralAdalApi } from './types';
  */
 export function createAdalApi(client: AdalClient): Extend<PiralAdalApi> {
   return context => {
-    context.on('before-fetch', e => {
-      e.setHeaders(
-        client.token().then(
-          token =>
-            token && {
-              Authorization: `Bearer ${token}`,
-            },
-          () => undefined,
-        ),
-      );
-    });
+    context.on('before-fetch', client.extendHeaders);
 
     return {
       getAccessToken() {

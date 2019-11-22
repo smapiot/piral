@@ -1,4 +1,25 @@
-import { UserAgentApplication, Account } from 'msal';
+import { UserAgentApplication, Account, AuthenticationParameters } from 'msal';
+
+function retrieveToken(msalInstance: UserAgentApplication, auth: AuthenticationParameters) {
+  if (msalInstance.getAccount()) {
+    return msalInstance
+      .acquireTokenSilent(auth)
+      .then(response => response.accessToken)
+      .catch(err => {
+        if (err.name === 'InteractionRequiredAuthError') {
+          return msalInstance
+            .acquireTokenPopup(auth)
+            .then(response => response.accessToken)
+            .catch(err => Promise.reject(err && err.message));
+        }
+
+        console.error(err);
+        return Promise.reject('Could not fetch token');
+      });
+  }
+
+  return Promise.reject('Not logged in');
+}
 
 /**
  * Available configuration options for the ADAL extension.
@@ -13,6 +34,20 @@ export interface AdalConfig {
    * is used.
    */
   redirectUri?: string;
+  /**
+   * Restricts token sharing such that other integrations, e.g., with
+   * fetch would need to be done manually.
+   * Otherwise, the client is responsive to the `before-fetch` event.
+   */
+  restrict?: boolean;
+}
+
+export interface AdalRequest {
+  /**
+   * Sets the headers of the request.
+   * @param headers Headers or a promise to headers.
+   */
+  setHeaders(headers: any): void;
 }
 
 export interface AdalClient {
@@ -32,10 +67,18 @@ export interface AdalClient {
    * Gets a token.
    */
   token(): Promise<string>;
+  /**
+   * Extends the headers of the provided request.
+   */
+  extendHeaders(req: AdalRequest): void;
 }
 
+/**
+ * Sets up a new client wrapping the MSAL API.
+ * @param config The configuration for the client.
+ */
 export function setupAdalClient(config: AdalConfig): AdalClient {
-  const { clientId, redirectUri = `${location.origin}/auth` } = config;
+  const { clientId, redirectUri = `${location.origin}/auth`, restrict = false } = config;
   const msalInstance = new UserAgentApplication({
     auth: {
       clientId,
@@ -56,25 +99,21 @@ export function setupAdalClient(config: AdalConfig): AdalClient {
     account() {
       return msalInstance.getAccount();
     },
-    token() {
-      if (msalInstance.getAccount()) {
-        return msalInstance
-          .acquireTokenSilent(tokenRequest)
-          .then(response => response.accessToken)
-          .catch(err => {
-            if (err.name === 'InteractionRequiredAuthError') {
-              return msalInstance
-                .acquireTokenPopup(tokenRequest)
-                .then(response => response.accessToken)
-                .catch(err => Promise.reject(err && err.message));
-            }
-
-            console.error(err);
-            return Promise.reject('Could not fetch token');
-          });
+    extendHeaders(req) {
+      if (!restrict) {
+        req.setHeaders(
+          retrieveToken(msalInstance, tokenRequest).then(
+            token =>
+              token && {
+                Authorization: `Bearer ${token}`,
+              },
+            () => undefined,
+          ),
+        );
       }
-
-      return Promise.reject('Not logged in');
+    },
+    token() {
+      return retrieveToken(msalInstance, tokenRequest);
     },
   };
 }
