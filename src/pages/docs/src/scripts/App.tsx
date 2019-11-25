@@ -21,7 +21,6 @@ export const App = () => (
   <BrowserRouter>
     <Layout>
       <Switch>
-        {/*<Redirect exact from="/" to="/tutorials" />*/}
         <Route exact path="/" component={HomePage} />
         <Route exact path="/tutorials" component={TutorialsPage} />
         {tutorials.map(tutorial => (
