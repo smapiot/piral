@@ -30,10 +30,19 @@ export interface AdalConfig {
    */
   clientId: string;
   /**
+   * The isser of the token. Should be an URL containing the tenant.
+   * By default set to Microsoft's default tenant.
+   */
+  authority?: string;
+  /**
    * The redirect Uri to use. By default the origin with /auth
    * is used.
    */
   redirectUri?: string;
+  /**
+   * The scopes to be used. By default uses only the 'User.Read' scope.
+   */
+  scopes?: Array<string>;
   /**
    * Restricts token sharing such that other integrations, e.g., with
    * fetch would need to be done manually.
@@ -78,16 +87,21 @@ export interface AdalClient {
  * @param config The configuration for the client.
  */
 export function setupAdalClient(config: AdalConfig): AdalClient {
-  const { clientId, redirectUri = `${location.origin}/auth`, restrict = false } = config;
+  const {
+    clientId,
+    authority,
+    redirectUri = `${location.origin}/auth`,
+    restrict = false,
+    scopes = ['User.Read'],
+  } = config;
   const msalInstance = new UserAgentApplication({
     auth: {
       clientId,
       redirectUri,
+      authority,
     },
   });
-  const tokenRequest = {
-    scopes: [`api://${clientId}/Profile.Read`],
-  };
+  const tokenRequest = { scopes };
   msalInstance.handleRedirectCallback(() => {});
   return {
     login() {
