@@ -3,8 +3,9 @@ import { createReadStream, existsSync } from 'fs';
 import { MemoryStream } from './MemoryStream';
 import { isWindows } from './info';
 import { inspectPackage } from './inspect';
-import { readJson } from './io';
+import { readJson, checkExists } from './io';
 import { runScript } from './scripts';
+import { logWarn, logInfo } from './log';
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
@@ -22,6 +23,11 @@ export function isLocalPackage(baseDir: string, fullName: string) {
   }
 
   return false;
+}
+
+export function isGitPackage(fullName: string) {
+  const gitted = fullName.startsWith(gitPrefix);
+  return gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName);
 }
 
 export function installDependencies(target = '.', ...flags: Array<string>) {
@@ -42,6 +48,11 @@ export async function findLatestVersion(packageName: string) {
   return ms.value;
 }
 
+export function makeGitUrl(fullName: string) {
+  const gitted = fullName.startsWith(gitPrefix);
+  return gitted ? fullName : `${gitPrefix}${fullName}`;
+}
+
 export type PackageType = 'registry' | 'file' | 'git';
 
 const gitPrefix = 'git+';
@@ -53,18 +64,27 @@ const filePrefix = 'file:';
  * [
  *   normalized / real package name,
  *   found package version / version identifier,
- *   indicator if an explicit version was used
+ *   indicator if an explicit version was used,
+ *   the used package type
  * ]
+ * @param baseDir The base directory of the current operation.
  * @param fullName The provided package name.
  */
-export function dissectPackageName(baseDir: string, fullName: string): [string, string, boolean, PackageType] {
-  const gitted = fullName.startsWith(gitPrefix);
-
-  if (gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName)) {
-    const gitUrl = gitted ? fullName : `${gitPrefix}${fullName}`;
+export async function dissectPackageName(
+  baseDir: string,
+  fullName: string,
+): Promise<[string, string, boolean, PackageType]> {
+  if (isGitPackage(fullName)) {
+    const gitUrl = makeGitUrl(fullName);
     return [gitUrl, 'latest', false, 'git'];
   } else if (isLocalPackage(baseDir, fullName)) {
     const fullPath = resolve(baseDir, fullName);
+    const exists = await checkExists(fullPath);
+
+    if (!exists) {
+      throw new Error(`Could not find "${fullPath}" for scaffolding. Aborting.`);
+    }
+
     return [fullPath, 'latest', false, 'file'];
   } else {
     const index = fullName.indexOf('@', 1);
@@ -76,6 +96,52 @@ export function dissectPackageName(baseDir: string, fullName: string): [string, 
 
     return [fullName, 'latest', false, type];
   }
+}
+
+/**
+ * Looks at the current package name / version and
+ * normalizes it resulting in the following tuple:
+ * [
+ *   normalized / real package name,
+ *   found package version / version identifier,
+ * ]
+ * @param baseDir The base directory of the current operation.
+ * @param sourceName The used package name.
+ * @param sourceVersion The used package version.
+ * @param desired The desired package version.
+ */
+export async function getCurrentPackageDetails(
+  baseDir: string,
+  sourceName: string,
+  sourceVersion: string,
+  desired: string,
+): Promise<[string, undefined | string]> {
+  if (isLocalPackage(baseDir, desired)) {
+    const fullPath = resolve(baseDir, desired);
+    const exists = await checkExists(fullPath);
+
+    if (!exists) {
+      throw new Error(`Could not find "${fullPath}" for upgrading. Aborting.`);
+    }
+
+    return [fullPath, getFilePackageVersion(fullPath)];
+  } else if (isGitPackage(desired)) {
+    const gitUrl = makeGitUrl(desired);
+    return [gitUrl, getGitPackageVersion(gitUrl)];
+  } else if (sourceVersion && sourceVersion.startsWith('file:')) {
+    logWarn('The Piral instance is currently resolved locally, but no local file for the upgrade has been specified.');
+    logInfo('Trying to obtain the pilet from NPM instead.');
+  } else if (sourceVersion && sourceVersion.startsWith('git+')) {
+    if (desired === 'latest') {
+      const gitUrl = desired;
+      return [gitUrl, getGitPackageVersion(gitUrl)];
+    } else {
+      logWarn('The Piral instance is currently resolved via Git, but latest was not used to try a direct update.');
+      logInfo('Trying to obtain the pilet from NPM instead.');
+    }
+  }
+
+  return [combinePackageRef(sourceName, desired, 'registry'), desired];
 }
 
 export function combinePackageRef(name: string, version: string, type: PackageType) {
@@ -102,13 +168,21 @@ export async function getPackageName(root: string, name: string, type: PackageTy
   }
 }
 
+export function getFilePackageVersion(sourceName: string) {
+  return `${filePrefix}${sourceName}`;
+}
+
+export function getGitPackageVersion(sourceName: string) {
+  return `${sourceName}`;
+}
+
 export function getPackageVersion(hadVersion: boolean, sourceName: string, sourceVersion: string, type: PackageType) {
   switch (type) {
     case 'registry':
       return hadVersion && sourceVersion;
     case 'file':
-      return `${filePrefix}${sourceName}`;
+      return getFilePackageVersion(sourceName);
     case 'git':
-      return `${sourceName}`;
+      return getGitPackageVersion(sourceName);
   }
 }

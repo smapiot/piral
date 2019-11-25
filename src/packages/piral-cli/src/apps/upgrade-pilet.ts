@@ -8,16 +8,13 @@ import {
   ForceOverwrite,
   logInfo,
   logDone,
-  combinePackageRef,
-  logWarn,
   getFileStats,
   readPiralPackage,
   getPiletsInfo,
   runScript,
   installDependencies,
   clearCache,
-  checkExists,
-  isLocalPackage,
+  getCurrentPackageDetails,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -31,26 +28,6 @@ export const upgradePiletDefaults = {
   target: '.',
   forceOverwrite: ForceOverwrite.no,
 };
-
-function getCurrentPackageDetails(
-  sourceName: string,
-  currentVersion: string,
-  version: string,
-  isFile: boolean,
-): [string, undefined | string] {
-  const wantsFile = currentVersion && currentVersion.startsWith('file:');
-
-  if (!isFile && wantsFile) {
-    logWarn('The Piral instance is currently resolved locally, but no local file for the upgrade has been specified.');
-    logInfo('Trying to obtain the pilet from NPM instead.');
-  }
-
-  if (wantsFile) {
-    return [combinePackageRef(version, currentVersion, 'file'), version];
-  }
-
-  return [combinePackageRef(sourceName, version, 'registry'), undefined];
-}
 
 export async function upgradePilet(baseDir = process.cwd(), options: UpgradePiletOptions = {}) {
   const {
@@ -71,17 +48,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   if (piral) {
     const sourceName = piral.name;
     const currentVersion = devDependencies[sourceName];
-    const isFile = isLocalPackage(root, version);
-    const [packageRef, packageVersion] = getCurrentPackageDetails(sourceName, currentVersion, version, isFile);
-
-    if (isFile) {
-      const exists = await checkExists(packageRef);
-
-      if (!exists) {
-        throw new Error(`Could not find "${packageRef}" for upgrading. Aborting.`);
-      }
-    }
-
+    const [packageRef, packageVersion] = await getCurrentPackageDetails(baseDir, sourceName, currentVersion, version);
     const originalFiles = await getFileStats(root, sourceName, piral.files);
     const piralInfo = await readPiralPackage(root, sourceName);
     const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
