@@ -40,21 +40,28 @@ export function modifyUrlReferences(content: string, link?: string) {
 /**
  * Loads all pilets described in the given metadata.
  * @param metadata The metadata containing references to different pilets.
- * @param getPilet Describes how pilets should be requested.
+ * @param getPilet Describes how pilets should be requested. By default, pilets are still remotely included.
  * @returns A promise leading to an array of (embedded, i.e., pre-loaded) pilets.
  */
-export function loadPilets(metadata: Array<PiletMetadata>, getPilet: (url: string) => MaybeAsync<string>) {
+export function loadPilets(
+  metadata: Array<PiletMetadata>,
+  getPilet: (url: string) => MaybeAsync<string | false> = () => false,
+) {
   return Promise.all(
     metadata.map(async pilet => {
       const originalContent = pilet.content || (await getPilet(pilet.link));
-      const content = modifyUrlReferences(originalContent, pilet.link);
-      return {
-        custom: pilet.custom,
-        hash: pilet.hash,
-        name: pilet.name,
-        version: pilet.version,
-        content,
-      };
+
+      if (typeof originalContent === 'string') {
+        return {
+          custom: pilet.custom,
+          hash: pilet.hash,
+          name: pilet.name,
+          version: pilet.version,
+          content: modifyUrlReferences(originalContent, pilet.link),
+        };
+      }
+
+      return pilet;
     }),
   );
 }
