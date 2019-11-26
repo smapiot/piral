@@ -19,6 +19,10 @@ export interface PiletMetadata {
    */
   link?: string;
   /**
+   * Optionally, the content of the pilet.
+   */
+  content?: string;
+  /**
    * The custom data supplied by the pilet.
    */
   custom?: any;
