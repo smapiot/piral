@@ -36,11 +36,19 @@ function extendOptions<T extends GqlOperationOptions>(context: GlobalStateContex
   });
 }
 
+function defaultGqlClient() {
+  if (typeof window !== 'undefined') {
+    return setupGqlClient();
+  } else {
+    return undefined;
+  }
+}
+
 /**
  * Creates a new Piral GraphQL API extension.
  * @param client The specific urql client to be used, if any.
  */
-export function createGqlApi(client: UrqlClient = setupGqlClient()): Extend<PiletGqlApi> {
+export function createGqlApi(client: UrqlClient = defaultGqlClient()): Extend<PiletGqlApi> {
   return context => {
     context.includeProvider(<Provider value={client} />);
 
