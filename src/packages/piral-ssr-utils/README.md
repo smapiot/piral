@@ -13,6 +13,8 @@ The utilities should be used as follows.
 On the server use `renderFromServer`:
 
 ```ts
+import { renderFromServer } from 'piral-ssr-utils';
+
 async function sendIndex(_: express.Request, res: express.Response) {
   const content = await renderFromServer(<App />, {
     getPilet(url) {
@@ -31,7 +33,7 @@ async function sendIndex(_: express.Request, res: express.Response) {
         </body>
       `;
     },
-  })
+  });
   res.send(content);
 }
 ```
@@ -45,6 +47,8 @@ The given component `App` can be as simple as `<Piral />`, however, for a full a
 In any case (e.g., for the client hydration) use `configForServerRendering` when configuring your Piral instance:
 
 ```ts
+import { configForServerRendering } from 'piral-ssr-utils/runtime';
+
 const instance = createInstance(configForServerRendering({
   // ... put your normal configuration here
 }));

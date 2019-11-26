@@ -9,6 +9,10 @@ Piral is developed as a monorepo.
 - [piral-core](./piral-core/README.md) represents the base library
 - [piral-ext](./piral-ext/README.md) bundles some useful standard extensions for use in `piral`
 
+## Available Utility Packages
+
+- [piral-ssr-utils](./piral-ssr-utils/README.md) provides utilities for enabling server-side rendering
+
 ## Available Opt-Out Extension Packages
 
 - [piral-dashboard](./piral-dashboard/README.md) offers the ability to show tiles registered by different pilets
@@ -23,6 +27,7 @@ Piral is developed as a monorepo.
 ## Available Opt-In Extension Packages
 
 - [piral-auth](./piral-auth/README.md) provides the `getUser` API
+- [piral-adal](./piral-adal/README.md) integrates MSAL for authentication with a fetch middleware
 - [piral-axios](./piral-axios/README.md) provides the `axios` API for making HTTP requests
 - [piral-containers](./piral-containers/README.md) allows individual pilets to use their own global state
 - [piral-forms](./piral-forms/README.md) allows construction of reusable forms
