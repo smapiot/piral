@@ -131,7 +131,7 @@ export function getPiralPackage(app: string, language: PiletLanguage) {
     },
     devDependencies: {
       ...getDevDependencies(language),
-      'piral-cli': 'latest',
+      'piral-cli': `${cliVersion}`,
     },
   };
 }
