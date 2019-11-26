@@ -1,0 +1,45 @@
+module.exports = function() {
+  // alternativ: 'cache-first' -> how to determine? (from manifest.json?)
+  const strategy = 'network-first';
+  return `
+const files = [];
+
+self.addEventListener('install', async e => {
+  const cache = await caches.open('files');
+  cache.addAll(files);
+});
+
+function fromNetwork(req) {
+  return true;
+}
+
+async function getFromCache(req) {
+  const res = await caches.match(req);
+  return res || fetch(req);
+}
+
+async function getFallback(req) {
+  const path = req.url;
+  //TODO get fallback
+}
+
+async function getFromNetwork(req) {
+  const cache = await caches.open('data');
+
+  try {
+    const res = await fetch(req);
+    cache.put(req, res.clone());
+    return res;
+  } catch (e) {
+    const res = await cache.match(req);
+    return res || getFallback(req);
+  }
+}
+
+self.addEventListener('fetch', async e => {
+  const req = e.request;
+  const res = fromNetwork(req) ? getFromNetwork(req) : getFromCache(req);
+  await e.respondWith(res);
+});
+`;
+};

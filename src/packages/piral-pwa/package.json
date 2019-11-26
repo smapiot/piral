@@ -21,6 +21,7 @@
   "typings": "lib/index.d.ts",
   "files": [
     "api.d.ts",
+    "generators",
     "lib",
     "src"
   ],
