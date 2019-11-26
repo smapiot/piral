@@ -1,7 +1,9 @@
 import { PiletMetadata } from 'piral-core';
 import { MaybeAsync } from './types';
 
-const bundleUrlHead = 'var __bundleUrl__=';
+const bundleUrl = '__bundleUrl__';
+const getBundleUrlExport = 'exports.getBundleURL=';
+const bundleUrlDecl = `var ${bundleUrl}=`;
 
 /**
  * Transforms the URL leading to a file to an URL leading to a directory.
@@ -25,7 +27,11 @@ export function baseUrl(url: string) {
 export function modifyUrlReferences(content: string, link?: string) {
   if (typeof link === 'string') {
     const url = baseUrl(link);
-    return content.split(bundleUrlHead).join(`${bundleUrlHead}${JSON.stringify(url)}||`);
+    return content
+      .split(bundleUrlDecl)
+      .join(`${bundleUrlDecl}${JSON.stringify(url)}||`)
+      .split(getBundleUrlExport)
+      .join(`${getBundleUrlExport}function(){return ${bundleUrl}}||`);
   }
 
   return content;
