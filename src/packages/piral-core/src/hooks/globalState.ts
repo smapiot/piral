@@ -1,7 +1,16 @@
 import { useContext } from 'react';
-import { useAtom } from '@dbeining/react-atom';
+import { isfunc } from 'react-arbiter';
+import { useAtom as useLayoutAtom, deref } from '@dbeining/react-atom';
 import { StateContext } from '../state/stateContext';
 import { GlobalState } from '../types';
+
+const useAtom = typeof window !== 'undefined' ? useLayoutAtom : useDirectAtom;
+
+function useDirectAtom(atom: any, opts: any) {
+  const state = deref(atom);
+  const select = opts && opts.select;
+  return isfunc(select) ? select(state) : state;
+}
 
 /**
  * Hook that yields the full global state.
