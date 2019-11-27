@@ -4,12 +4,18 @@
 
 * Bundle for emulation (#68)
 * Added `piral-pwa` library (#26)
+* Added `piral-pwa` library (#81)
+* Introduced enhanced support for server-side rendering (#35)
+* Added utility library `piral-ssr-utils` (#35)
 * Provide ability for develop builds of Piral (#68)
 * Generate the declaration dynamically (#89)
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
-* Added new optional libraries `piral-inferno` and `piral-preact` (#86)
+* Added new optional library `piral-inferno` (#86)
+* Added new optional library `piral-preact` (#86)
+* Added new optional library `piral-ngjs` (#87)
 * Improved and added better error messages in the Piral CLI (#92)
+* Improved the pilet upgrade flows (#92)
 * Improved the CI/CD pipelines for the `sample-piral` app
 
 ## 0.8.4 (November 15, 2019)
