@@ -19,53 +19,61 @@ export interface NgjsConfig {
 export function createNgjsApi(config: NgjsConfig = {}): Extend<PiletNgjsApi> {
   const { rootName = 'slot' } = config;
 
+  const NgjsExtension = angular.module(`piralExtension`, []);
+  NgjsExtension.component('extensionComponent', {
+    template: `<${rootName}></${rootName}>`,
+    bindings: {
+      empty: '<',
+      params: '<',
+      render: '<',
+      name: '@',
+    },
+    controller: [
+      '$element',
+      'piral',
+      function($element, piral) {
+        this.$onInit = () => {
+          const container = $element[0].querySelector(rootName);
+          piral.renderHtmlExtension(container, {
+            empty: this.empty,
+            params: this.params,
+            render: this.render,
+            name: this.name,
+          });
+        };
+      },
+    ],
+  });
+
   return context => {
     context.converters.ngjs = ({ name, root }) => {
-      return (element, props) => {
-        //const rootScope = angular.injector(['ng', root.name]).get('$rootScope');
-        element.appendChild(document.createElement(name));
-        root.value('props', props);
-        angular.bootstrap(element, [[root.name]]);
-        //this.$rootScope.$destroy();
+      let injector: any = undefined;
+
+      return {
+        mount(el, props, ctx) {
+          el.appendChild(document.createElement(name));
+          root.value('props', props);
+          root.value('piral', props.piral);
+          root.value('ctx', ctx);
+          injector = angular.bootstrap(el, [root.name]);
+        },
+        unmount(el) {
+          const rootScope = injector.get('$rootScope');
+          rootScope.$destroy();
+          injector = undefined;
+        },
       };
     };
 
-    return (api, meta) => {
-      const ngjsModule = angular.module(`${meta.name}:extension`, []);
-      ngjsModule.component('extension-component', {
-        template: `<${rootName}></${rootName}>`,
-        bindings: {
-          empty: '<',
-          params: '<',
-          render: '<',
-          name: '@',
-        },
-        controller: [
-          '$element',
-          function($element) {
-            this.$onInit = () => {
-              const container = $element[0].querySelector(rootName);
-              api.renderHtmlExtension(container, {
-                empty: this.empty,
-                params: this.params,
-                render: this.render,
-                name: this.name,
-              });
-            };
-          },
-        ],
-      });
-
-      return {
-        NgjsExtension: ngjsModule,
-        fromNgjs(name, root) {
-          return {
-            type: 'ngjs',
-            name,
-            root,
-          };
-        },
-      };
+    return {
+      NgjsExtension,
+      fromNgjs(name, root) {
+        return {
+          type: 'ngjs',
+          name,
+          root,
+        };
+      },
     };
   };
 }

@@ -1,5 +1,6 @@
-import { Extend } from 'piral-core';
-import { mount, register } from './mount';
+import { Extend, ExtensionSlotProps } from 'piral-core';
+import { Component } from 'vue';
+import { mountVue, register } from './mount';
 import { PiletVueApi } from './types';
 
 /**
@@ -24,42 +25,55 @@ export interface VueConfig {
 export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
   const { rootName = 'slot', selector = 'extension-component' } = config;
 
+  const VueExtension: Component<ExtensionSlotProps> = {
+    functional: false,
+    props: ['name', 'empty', 'render', 'params'],
+    inject: ['piral'],
+    render(createElement) {
+      return createElement(rootName);
+    },
+    mounted() {
+      this.piral.renderHtmlExtension(this.$el, {
+        empty: this.empty,
+        params: this.params,
+        render: this.render,
+        name: this.name,
+      });
+    },
+  };
+
+  register(selector, VueExtension);
+
   return context => {
     context.converters.vue = ({ root }) => {
-      return (parent, props, ctx) => {
-        const el = parent.appendChild(document.createElement(rootName));
-        const piral = props && props.piral;
+      let instance: any = undefined;
 
-        if (piral) {
-          register(selector, piral.VueExtension);
-        }
-
-        return mount(el, root, props, ctx);
+      return {
+        mount(parent, data, ctx) {
+          const el = parent.appendChild(document.createElement(rootName));
+          instance = mountVue(el, root, data, ctx);
+        },
+        update(_, data) {
+          for (const prop in data) {
+            instance[prop] = data[prop];
+          }
+        },
+        unmount(el) {
+          instance.$destroy();
+          el.innerHTML = '';
+          instance = undefined;
+        },
       };
     };
 
-    return api => ({
+    return {
       fromVue(root) {
         return {
           type: 'vue',
           root,
         };
       },
-      VueExtension: {
-        functional: false,
-        props: ['name', 'empty', 'render', 'params'],
-        render(createElement) {
-          return createElement(rootName);
-        },
-        mounted() {
-          api.renderHtmlExtension(this.$el, {
-            empty: this.empty,
-            params: this.params,
-            render: this.render,
-            name: this.name,
-          });
-        },
-      },
-    });
+      VueExtension,
+    };
   };
 }

@@ -1,7 +1,7 @@
 import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { Component } from 'inferno';
 import { createElement } from 'inferno-create-element';
-import { mount } from './mount';
+import { mountInferno, unmountInferno, anyPropType } from './mount';
 import { PiletInfernoApi } from './types';
 
 /**
@@ -21,42 +21,51 @@ export interface InfernoConfig {
 export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfernoApi> {
   const { rootName = 'slot' } = config;
 
-  return context => {
-    context.converters.inferno = component => {
-      return (el, props, ctx) => {
-        return mount(el, component.root, props, ctx);
-      };
+  const InfernoExtension: any = class extends Component<ExtensionSlotProps> {
+    static contextTypes = {
+      piral: anyPropType,
     };
 
-    return api => {
-      const InfernoExtension: any = class extends Component<ExtensionSlotProps> {
-        private onRefChange = (element: HTMLElement) => {
-          if (element) {
-            element.innerHTML = '';
-            api.renderHtmlExtension(element, this.props);
-          }
+    private onRefChange = (element: HTMLElement) => {
+      if (element) {
+        const { piral } = this.context;
+        element.innerHTML = '';
+        piral.renderHtmlExtension(element, this.props);
+      }
+    };
+
+    shouldComponentUpdate(nextProps: ExtensionSlotProps) {
+      return !compare(this.props, nextProps);
+    }
+
+    render() {
+      return createElement(rootName, {
+        ref: this.onRefChange,
+      });
+    }
+  };
+
+  return context => {
+    context.converters.inferno = component => ({
+      mount(el, props, ctx) {
+        mountInferno(el, component.root, props, ctx);
+      },
+      update(el, props, ctx) {
+        mountInferno(el, component.root, props, ctx);
+      },
+      unmount(el) {
+        unmountInferno(el);
+      },
+    });
+
+    return {
+      fromInferno(root) {
+        return {
+          type: 'inferno',
+          root,
         };
-
-        shouldComponentUpdate(nextProps: ExtensionSlotProps) {
-          return !compare(this.props, nextProps);
-        }
-
-        render() {
-          return createElement(rootName, {
-            ref: this.onRefChange,
-          });
-        }
-      };
-
-      return {
-        fromInferno(root) {
-          return {
-            type: 'inferno',
-            root,
-          };
-        },
-        InfernoExtension,
-      };
+      },
+      InfernoExtension,
     };
   };
 }

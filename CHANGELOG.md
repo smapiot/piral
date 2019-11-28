@@ -4,7 +4,7 @@
 
 * Bundle for emulation (#68)
 * Added `piral-pwa` library (#26)
-* Added `piral-pwa` library (#81)
+* Added `piral-adal` library (#81)
 * Introduced enhanced support for server-side rendering (#35)
 * Added utility library `piral-ssr-utils` (#35)
 * Provide ability for develop builds of Piral (#68)
@@ -17,6 +17,7 @@
 * Improved and added better error messages in the Piral CLI (#92)
 * Improved the pilet upgrade flows (#92)
 * Improved the CI/CD pipelines for the `sample-piral` app
+* Rewrote the converter API to support full lifecycles
 
 ## 0.8.4 (November 15, 2019)
 

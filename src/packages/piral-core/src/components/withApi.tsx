@@ -1,16 +1,9 @@
 import * as React from 'react';
-import {
-  ArbiterStasis,
-  isfunc,
-  RenderCallback,
-  ComponentDefinition,
-  StasisOptions,
-  WrapComponentOptions,
-} from 'react-arbiter';
+import { ArbiterStasis, isfunc, StasisOptions, WrapComponentOptions } from 'react-arbiter';
 import { useGlobalState, useActions } from '../hooks';
 import { PiralError, PiralLoadingIndicator } from './components';
-import { convertComponent, defaultRender } from '../utils';
-import { AnyComponent, Errors, ComponentConverters } from '../types';
+import { defaultRender } from '../utils';
+import { AnyComponent, Errors, ComponentConverters, ForeignComponent } from '../types';
 
 let portalIdBase = 123456;
 
@@ -23,9 +16,16 @@ const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
   return defaultRender(children);
 };
 
+interface ForeignComponentContainerProps<T> {
+  $portalId: string;
+  $component: ForeignComponent<T>;
+  innerProps: T;
+}
+
 function createForeignComponentContainer<T>(contextTypes = ['router']) {
-  return class ForeignComponentContainer extends React.Component<Partial<T> & { $portalId: string }> {
-    private container: HTMLElement | null;
+  return class ForeignComponentContainer extends React.Component<ForeignComponentContainerProps<T>> {
+    private current?: HTMLElement;
+    private previous?: HTMLElement;
     static contextTypes = contextTypes.reduce((ct, key) => {
       // tslint:disable-next-line
       ct[key] = () => null;
@@ -33,13 +33,40 @@ function createForeignComponentContainer<T>(contextTypes = ['router']) {
     }, {});
 
     componentDidMount() {
-      const node = this.container;
-      const ctx = this.context;
+      const node = this.current;
+      const { $component, innerProps } = this.props;
+      const { mount } = $component;
 
-      if (node) {
-        const { render, $portalId: _0, ...rest } = this.props as any;
-        render(node, rest, ctx);
+      if (node && isfunc(mount)) {
+        mount(node, innerProps, this.context);
       }
+
+      this.previous = node;
+    }
+
+    componentDidUpdate() {
+      const { current, previous } = this;
+      const { $component, innerProps } = this.props;
+      const { update } = $component;
+
+      if (current !== previous) {
+        this.componentWillUnmount();
+        this.componentDidMount();
+      } else if (isfunc(update)) {
+        update(current, innerProps, this.context);
+      }
+    }
+
+    componentWillUnmount() {
+      const node = this.previous;
+      const { $component } = this.props;
+      const { unmount } = $component;
+
+      if (node && isfunc(unmount)) {
+        unmount(node);
+      }
+
+      this.previous = undefined;
     }
 
     render() {
@@ -49,7 +76,7 @@ function createForeignComponentContainer<T>(contextTypes = ['router']) {
         <div
           data-portal-id={$portalId}
           ref={node => {
-            this.container = node;
+            this.current = node;
           }}
         />
       );
@@ -70,7 +97,7 @@ function wrapReactComponent<T, U>(
 }
 
 function wrapForeignComponent<T, U>(
-  render: RenderCallback<T & U>,
+  component: ForeignComponent<T & U>,
   stasisOptions: StasisOptions,
   componentOptions: U | undefined,
   contextTypes?: Array<string>,
@@ -88,29 +115,41 @@ function wrapForeignComponent<T, U>(
     return (
       <ArbiterStasis {...stasisOptions} renderProps={props}>
         <PortalRenderer id={id} />
-        <Component {...props} {...(componentOptions || ({} as any))} $portalId={id} render={render} />
+        <Component innerProps={{ ...props, ...componentOptions }} $portalId={id} $component={component} />
       </ArbiterStasis>
     );
   };
 }
 
-function wrapComponent<T, U>(value: ComponentDefinition<T & U>, options: WrapComponentOptions<U> = {}) {
+function isNotExotic(component: any): component is object {
+  return !(component as React.ExoticComponent).$$typeof;
+}
+
+function wrapComponent<T, U>(
+  converters: ComponentConverters<T & U>,
+  Component: AnyComponent<T & U>,
+  options: WrapComponentOptions<U> = {},
+) {
   const { forwardProps, contextTypes = [], ...stasisOptions } = options;
 
-  if (!value) {
+  if (!Component) {
     console.error('The given value is not a valid component.');
-    value = () => {};
+    // tslint:disable-next-line:no-null-keyword
+    Component = () => null;
   }
 
-  const argAsReact = value as React.ComponentType<T & U>;
-  const argAsRender = value as RenderCallback<T & U>;
-  const argRender = argAsReact.prototype && argAsReact.prototype.render;
+  if (typeof Component === 'object' && isNotExotic(Component)) {
+    const converter = converters[Component.type];
 
-  if (isfunc(argRender) || argAsReact.displayName) {
-    return wrapReactComponent<T, U>(argAsReact, stasisOptions, forwardProps);
+    if (typeof converter !== 'function') {
+      throw new Error(`No converter for component of type "${Component.type}" registered.`);
+    }
+
+    const result = converter(Component);
+    return wrapForeignComponent<T, U>(result, stasisOptions, forwardProps, contextTypes);
   }
 
-  return wrapForeignComponent<T, U>(argAsRender, stasisOptions, forwardProps, contextTypes);
+  return wrapReactComponent<T, U>(Component, stasisOptions, forwardProps);
 }
 
 export interface ApiForward<TApi> {
@@ -123,8 +162,7 @@ export function withApi<TApi, TProps>(
   piral: TApi,
   errorType: keyof Errors,
 ) {
-  const component = convertComponent(converters, Component, errorType);
-  return wrapComponent<TProps, ApiForward<TApi>>(component, {
+  return wrapComponent<TProps, ApiForward<TApi>>(converters, Component, {
     forwardProps: { piral },
     onError(error) {
       console.error(piral, error);

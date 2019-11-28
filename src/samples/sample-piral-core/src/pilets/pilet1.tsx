@@ -16,12 +16,14 @@ export const Pilet1: Pilet = {
     console.log(piral);
 
     piral.registerTile({
-      render: (element, props) => {
-        element.innerHTML = `
-        <div class="tile">
-          General rendering for a ${props.columns}x${props.rows} tile.
-        </div>
-      `;
+      component: {
+        mount(element, props) {
+          element.innerHTML = `
+            <div class="tile">
+              General rendering for a ${props.columns}x${props.rows} tile.
+            </div>
+          `;
+        },
       },
       type: 'html',
     });

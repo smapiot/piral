@@ -1,6 +1,6 @@
 import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { Component, createElement } from 'preact';
-import { mount } from './mount';
+import { mountPreact, unmountPreact, anyPropType } from './mount';
 import { PiletPreactApi } from './types';
 
 /**
@@ -20,43 +20,52 @@ export interface PreactConfig {
 export function createPreactApi(config: PreactConfig = {}): Extend<PiletPreactApi> {
   const { rootName = 'slot' } = config;
 
-  return context => {
-    context.converters.preact = component => {
-      return (el, props, ctx) => {
-        return mount(el, component.root, props, ctx);
-      };
+  class PreactExtension extends Component<ExtensionSlotProps> {
+    static contextTypes = {
+      piral: anyPropType,
     };
 
-    return api => {
-      class PreactExtension extends Component<ExtensionSlotProps> {
-        private onRefChange = (element: any) =>
-          setTimeout(() => {
-            if (element) {
-              element.innerHTML = '';
-              api.renderHtmlExtension(element, this.props);
-            }
-          }, 0);
-
-        shouldComponentUpdate(nextProps: ExtensionSlotProps) {
-          return !compare(this.props, nextProps);
+    private onRefChange = (element: any) =>
+      setTimeout(() => {
+        if (element) {
+          const { piral } = this.context;
+          element.innerHTML = '';
+          piral.renderHtmlExtension(element, this.props);
         }
+      }, 0);
 
-        render() {
-          return createElement(rootName, {
-            ref: this.onRefChange,
-          });
-        }
-      }
+    shouldComponentUpdate(nextProps: ExtensionSlotProps) {
+      return !compare(this.props, nextProps);
+    }
 
-      return {
-        fromPreact(root) {
-          return {
-            type: 'preact',
-            root,
-          };
-        },
-        PreactExtension,
-      };
+    render() {
+      return createElement(rootName, {
+        ref: this.onRefChange,
+      });
+    }
+  }
+
+  return context => {
+    context.converters.preact = component => ({
+      mount(el, props, ctx) {
+        mountPreact(el, component.root, props, ctx);
+      },
+      update(el, props, ctx) {
+        mountPreact(el, component.root, props, ctx);
+      },
+      unmount(el) {
+        unmountPreact(el);
+      },
+    });
+
+    return {
+      fromPreact(root) {
+        return {
+          type: 'preact',
+          root,
+        };
+      },
+      PreactExtension,
     };
   };
 }
