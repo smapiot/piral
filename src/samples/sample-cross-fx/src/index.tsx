@@ -6,6 +6,7 @@ import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { createInstance, useGlobalState, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
 import { createNgApi } from 'piral-ng';
+import { createNgjsApi } from 'piral-ngjs';
 import { createVueApi } from 'piral-vue';
 import { createDashboardApi, Dashboard } from 'piral-dashboard';
 import { createInfernoApi } from 'piral-inferno';
@@ -61,6 +62,7 @@ const instance = createInstance({
   extendApi: [
     createVueApi(),
     createNgApi(),
+    createNgjsApi(),
     createInfernoApi(),
     createHyperappApi(),
     createPreactApi(),

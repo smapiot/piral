@@ -66,17 +66,9 @@ export const HyperappPilet: Pilet = {
   version: '1.0.0',
   hash: '521',
   setup(piral) {
-    piral.registerTile(
-      {
-        root: Tile,
-        state,
-        actions,
-        type: 'hyperapp',
-      },
-      {
-        initialColumns: 2,
-        initialRows: 2,
-      },
-    );
+    piral.registerTile(piral.fromHyperapp(Tile, state, actions), {
+      initialColumns: 2,
+      initialRows: 2,
+    });
   },
 };

@@ -38,15 +38,9 @@ export const NgPilet: Pilet = {
   version: '1.0.0',
   hash: '430',
   setup(piral) {
-    piral.registerTile(
-      {
-        component: TileComponent,
-        type: 'ng',
-      },
-      {
-        initialColumns: 2,
-        initialRows: 2,
-      },
-    );
+    piral.registerTile(piral.fromNg(TileComponent), {
+      initialColumns: 2,
+      initialRows: 2,
+    });
   },
 };

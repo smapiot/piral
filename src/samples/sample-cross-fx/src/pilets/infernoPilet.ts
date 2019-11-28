@@ -1,8 +1,9 @@
 import { Pilet } from 'piral-core';
-import { Component, createElement } from 'preact';
+import { Component, ComponentType } from 'inferno';
+import { createElement } from 'inferno-create-element';
 import { TileComponentProps } from 'piral-dashboard';
 
-class Tile extends Component<TileComponentProps> {
+const Tile = (class extends Component<TileComponentProps> {
   state = {
     count: 0,
   };
@@ -14,19 +15,19 @@ class Tile extends Component<TileComponentProps> {
   render() {
     const { piral, rows, columns } = this.props;
     const { count } = this.state;
-    const { PreactExtension } = piral;
+    const { InfernoExtension } = piral;
 
     return createElement(
       'div',
       {
         class: 'tile',
       },
-      createElement('h3', {}, `Preact: ${count}`),
+      createElement('h3', {}, `Inferno: ${count}`),
       createElement(
         'p',
         {},
         `${rows} rows and ${columns} columns `,
-        createElement(PreactExtension, {
+        createElement(InfernoExtension as any, {
           name: 'smiley',
         }),
       ),
@@ -46,26 +47,20 @@ class Tile extends Component<TileComponentProps> {
       ),
     );
   }
-}
+} as any) as ComponentType<TileComponentProps>;
 
 /**
- * Shows an API extension using Preact components.
+ * Shows an API extension using Inferno components.
  */
-export const PreactPilet: Pilet = {
+export const InfernoPilet: Pilet = {
   content: '',
-  name: 'Preact Module',
+  name: 'Inferno Module',
   version: '1.0.0',
-  hash: '732',
+  hash: '731',
   setup(piral) {
-    piral.registerTile(
-      {
-        root: Tile,
-        type: 'preact',
-      },
-      {
-        initialColumns: 2,
-        initialRows: 2,
-      },
-    );
+    piral.registerTile(piral.fromInferno(Tile), {
+      initialColumns: 2,
+      initialRows: 2,
+    });
   },
 };
