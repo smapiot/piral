@@ -1,3 +1,4 @@
+import { IModule } from 'angular';
 import { ForeignComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -10,9 +11,13 @@ declare module 'piral-core/lib/types/custom' {
 
 export interface NgjsComponent {
   /**
-   * The component root.
+   * The module root.
    */
-  component: any;
+  root: IModule;
+  /**
+   * The name of the component.
+   */
+  name: string;
   /**
    * The type of the Angular.js component.
    */
@@ -24,13 +29,14 @@ export interface NgjsComponent {
  */
 export interface PiletNgjsApi {
   /**
-   * Wraps an Angular.js component for use in Piral.
-   * @param component The component root.
+   * Wraps an Angular.js module for use in Piral.
+   * @param name The name of the component.
+   * @param root The module root.
    * @returns The Piral Ngjs component.
    */
-  fromNgjs(component: any): NgjsComponent;
+  fromNgjs(name: string, root: IModule): NgjsComponent;
   /**
    * Angular.js component for displaying extensions of the given name.
    */
-  NgjsExtension: any;
+  NgjsExtension: IModule;
 }
