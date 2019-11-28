@@ -1,6 +1,3 @@
-import 'core-js/es7/reflect';
-import 'zone.js/dist/zone';
-
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -13,17 +10,12 @@ import {
   SetComponent,
   SetRoute,
 } from 'piral-core';
-import { createNgApi } from 'piral-ng';
-import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
+import { createFeedsApi } from 'piral-feeds';
+import { createFormsApi } from 'piral-forms';
 import { createNotificationsApi } from 'piral-notifications';
 import { createDashboardApi, Dashboard } from 'piral-dashboard';
 import { createContainersApi } from 'piral-containers';
-import { createFeedsApi } from 'piral-feeds';
-import { createFormsApi } from 'piral-forms';
-import { createInfernoApi } from 'piral-inferno';
-import { createHyperappApi } from 'piral-hyperapp';
-import { createPreactApi } from 'piral-preact';
 import { createSearchApi, useSearch } from 'piral-search';
 import { availablePilets } from './pilets';
 
@@ -175,11 +167,6 @@ const Layout: React.FC = ({ children }) => {
 const instance = createInstance({
   availablePilets,
   extendApi: [
-    createVueApi(),
-    createNgApi(),
-    createInfernoApi(),
-    createHyperappApi(),
-    createPreactApi(),
     createMenuApi(),
     createNotificationsApi(),
     createContainersApi(),

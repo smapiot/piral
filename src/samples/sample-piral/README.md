@@ -24,7 +24,7 @@ You can also build the sample Piral instance to see what the outcome ("produced 
 yarn build:demo-full
 ```
 
-will produce the assets in the *dist/demo-full* directory.
+will produce the assets in the *dist/demo-full/release* directory. Additionally, the tarball for distribution via NPM will be placed in the *dist/demo-full/develop* directory.
 
 ## Using
 

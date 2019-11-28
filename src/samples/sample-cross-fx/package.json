@@ -1,0 +1,69 @@
+{
+  "name": "sample-cross-fx",
+  "private": true,
+  "version": "0.8.4",
+  "description": "Example project illustrating the mixing of different (opt-in) frameworks via extensions.",
+  "keywords": [
+    "portal",
+    "smapiot",
+    "modules",
+    "spa"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "src/index.html",
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "dependencies": {
+    "@angular/common": "^8.0.0",
+    "@angular/compiler": "^8.0.0",
+    "@angular/core": "^8.0.0",
+    "@angular/platform-browser": "^8.0.0",
+    "@angular/platform-browser-dynamic": "^8.0.0",
+    "angular": "^1.7.9",
+    "core-js": "^2.5.7",
+    "inferno": "7.3.2",
+    "inferno-create-element": "7.3.2",
+    "hyperapp": "^1.2.10",
+    "piral-inferno": "^0.8.4",
+    "piral-core": "^0.8.4",
+    "piral-hyperapp": "^0.8.4",
+    "piral-ng": "^0.8.4",
+    "piral-ngjs": "^0.8.4",
+    "piral-preact": "^0.8.4",
+    "piral-vue": "^0.8.4",
+    "preact": "10.0.5",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "react-router": ">=5.0.0",
+    "react-router-dom": ">=5.0.0",
+    "rxjs": "^6.3.3",
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3",
+    "zone.js": "^0.9.1"
+  },
+  "devDependencies": {
+    "@types/angular": "^1.6.45",
+    "@types/react": "^16.8.2",
+    "@types/react-dom": "^16.8.0",
+    "@types/react-router": "^5.0.0",
+    "@types/react-router-dom": "latest",
+    "@vue/component-compiler-utils": "^3.0.0",
+    "piral-cli": "^0.8.4",
+    "sass": "^1.17.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}

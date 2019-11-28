@@ -24,7 +24,7 @@ You can also build the sample web app built on top of `piral-core` to see what t
 yarn build:demo-core
 ```
 
-will produce the assets in the *dist/demo-core* directory.
+will produce the assets in the *dist/demo-core/release* directory.
 
 ## License
 
