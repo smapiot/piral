@@ -1,15 +1,14 @@
 import { useContext } from 'react';
-import { isfunc } from 'react-arbiter';
-import { useAtom as useLayoutAtom, deref } from '@dbeining/react-atom';
+import { useAtom, deref } from '@dbeining/react-atom';
 import { StateContext } from '../state/stateContext';
 import { GlobalState } from '../types';
 
-const useAtom = typeof window !== 'undefined' ? useLayoutAtom : useDirectAtom;
+const useGlobalAtom = typeof window !== 'undefined' ? useAtom : useDirectAtom;
 
 function useDirectAtom(atom: any, opts: any) {
   const state = deref(atom);
   const select = opts && opts.select;
-  return isfunc(select) ? select(state) : state;
+  return typeof select === 'function' ? select(state) : state;
 }
 
 /**
@@ -27,5 +26,5 @@ export function useGlobalState<R>(select: (state: GlobalState) => R): R;
 
 export function useGlobalState<R>(select?: (state: GlobalState) => R) {
   const { state } = useContext(StateContext);
-  return useAtom(state, select && { select });
+  return useGlobalAtom(state, select && { select });
 }
