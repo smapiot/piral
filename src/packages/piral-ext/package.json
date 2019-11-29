@@ -45,11 +45,9 @@
   "dependencies": {
     "piral-dashboard": "^0.8.4",
     "piral-feeds": "^0.8.4",
-    "piral-fetch": "^0.8.4",
     "piral-menu": "^0.8.4",
     "piral-modals": "^0.8.4",
     "piral-notifications": "^0.8.4",
-    "piral-translate": "^0.8.4",
-    "piral-urql": "^0.8.4"
+    "piral-translate": "^0.8.4"
   }
 }

@@ -18,6 +18,7 @@
 * Improved the pilet upgrade flows (#92)
 * Improved the CI/CD pipelines for the `sample-piral` app
 * Rewrote the converter API to support full lifecycles
+* Removed `piral-fetch` and `piral-urql` from `piral-ext`
 
 ## 0.8.4 (November 15, 2019)
 

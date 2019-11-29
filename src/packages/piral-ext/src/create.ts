@@ -1,5 +1,3 @@
-import { createFetchApi } from 'piral-fetch';
-import { createGqlApi } from 'piral-urql';
 import { createLocaleApi } from 'piral-translate';
 import { createDashboardApi } from 'piral-dashboard';
 import { createMenuApi } from 'piral-menu';
@@ -14,8 +12,6 @@ import { PiralExtSettings } from './types';
  */
 export function createStandardApi(settings: PiralExtSettings = {}) {
   return [
-    createFetchApi(settings.fetch),
-    createGqlApi(settings.gql),
     createLocaleApi(settings.locale),
     createDashboardApi(settings.dashboard),
     createMenuApi(settings.menu),

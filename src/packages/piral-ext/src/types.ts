@@ -1,5 +1,3 @@
-import { FetchConfig } from 'piral-fetch';
-import { UrqlClient } from 'piral-urql';
 import { Localizable } from 'piral-translate';
 import { DashboardConfig } from 'piral-dashboard';
 import { MenuConfig } from 'piral-menu';
@@ -8,14 +6,6 @@ import { ModalsConfig } from 'piral-modals';
 import { FeedsConfig } from 'piral-feeds';
 
 export interface PiralExtSettings {
-  /**
-   * Customizes the fetch config.
-   */
-  fetch?: FetchConfig;
-  /**
-   * Customizes the gql config.
-   */
-  gql?: UrqlClient;
   /**
    * Customizes the locale config.
    */
