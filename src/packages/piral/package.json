@@ -17,6 +17,7 @@
   "typings": "lib/index.d.ts",
   "files": [
     "api.d.ts",
+    "polyfills.js",
     "lib",
     "src"
   ],
