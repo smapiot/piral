@@ -5,6 +5,16 @@ import { PwaClient } from './types';
  */
 export interface PwaConfig {
   /**
+   * Determines if notifications permissions should be requested immediately.
+   * Otherwise, the permissions will be requested when used the first time.
+   */
+  notifications?: boolean;
+  /**
+   * Determines if the prompt for PWA installation should be shown automatically.
+   * Otherwise, the installation request needs to be handled separately.
+   */
+  install?: boolean;
+  /**
    * The scope of the service worker.
    */
   scope?: string;
@@ -26,14 +36,39 @@ export interface PwaConfig {
  * @param config
  */
 export function setupPwaClient(config: PwaConfig = {}) {
-  const { onUpdate = apply => apply(), onUpdated = () => window.location.reload(), scope } = config;
+  const {
+    onUpdate = apply => apply(),
+    onUpdated = () => window.location.reload(),
+    scope,
+    notifications,
+    install,
+  } = config;
+
+  if (notifications) {
+    Notification.requestPermission();
+  }
 
   const sw = new Promise<ServiceWorkerRegistration>(resolve => {
     if ('serviceWorker' in navigator) {
-      window.addEventListener('beforeinstallprompt', ev => ev.preventDefault());
+      let shouldInstall = install;
+
+      window.addEventListener('beforeinstallprompt', ev => {
+        ev.preventDefault();
+
+        if (shouldInstall) {
+          shouldInstall = false;
+
+          const listener = () => {
+            document.removeEventListener('click', listener);
+            (ev as any).prompt();
+          };
+          document.addEventListener('click', listener);
+        }
+      });
+
       window.addEventListener('load', () => {
         resolve(
-          navigator.serviceWorker.register('../generators/worker.codegen', {
+          require('../generators/worker.codegen')({
             scope,
           }),
         );

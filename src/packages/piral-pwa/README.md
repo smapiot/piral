@@ -14,6 +14,37 @@ The following functions are brought to the Pilet API.
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
+In order to get your Progressive Web App correctly running you'll also need a `manifest.webmanifest` file. You can locate it next to your `index.html` file.
+
+The content of `manifest.webmanifest` can be as simple as:
+
+```json
+{
+  "name": "Example App",
+  "short_name": "ExApp",
+  "theme_color": "#2196f3",
+  "background_color": "#2196f3",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "images/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}
+```
+
+**Note**: You'll need at least a 144x144 pixels sized icon. This is not a requirement of `piral-pwa`, but rather of how PWAs work.
+
+The `manifest.webmanifest` needs to be referenced by your `index.html` file. If both files are adjacent this can be done with the following code:
+
+```html
+<link rel="manifest" href="./manifest.webmanifest">
+```
+
 For the setup of the library itself you'll need to import `createPwaApi` from the `piral-pwa` package.
 
 ```tsx
@@ -29,6 +60,20 @@ const instance = createInstance({
   // ...
 });
 ```
+
+## Customizing the Service Worker
+
+By default, a service worker is generated for you. This behavior can be overridden if you place a file called `sw.js` in your `src` folder.
+
+The server worker file is automatically enhanced with the following template variables:
+
+- `__PARAMS__`, defines general parameters such as the `responseStrategy` or the URLs from `externals` to consider
+- `__HELPERS__`, defines the `cacheMaps` for setting up the caching strategy and the `navigationPreload` property
+- `__DEBUG__`, which is either `true` or `false` depending on the runtime mode
+
+You don't need to use them, but they can be quite helpful. For instance, on `__PARAMS__`, you'll find the fields for `name` and `version` of your app.
+
+**Remark**: How the parameters and helpers can be influenced (i.e., configured) is currently work in progress and should be figured out until v1.
 
 ## License
 

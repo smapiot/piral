@@ -1,5 +1,6 @@
 import { Extend } from 'piral-core';
 import { setupPwaClient } from './setup';
+import { useNotification } from './utils';
 import { PiletPwaApi } from './types';
 
 /**
@@ -9,7 +10,7 @@ export function createPwaApi(client = setupPwaClient()): Extend<PiletPwaApi> {
   return () => {
     return {
       showAppNotification(title, options) {
-        return client.use(m => m && m.showNotification(title, options));
+        return client.use(m => useNotification(m, () => m.showNotification(title, options)));
       },
     };
   };

@@ -1,45 +1,60 @@
+const { readFileSync, writeFileSync, existsSync } = require('fs');
+const { resolve } = require('path');
+
+const fileName = 'sw.js';
+
+function readDefaultSync() {
+  return readFileSync(resolve(__dirname, fileName), 'utf8');
+}
+
+function fillTemplate(content, values) {
+  Object.keys(values).forEach(key => {
+    const value = JSON.stringify(values[key]);
+    content = content.split(key).join(value);
+  });
+
+  return content;
+}
+
 module.exports = function() {
-  // alternativ: 'cache-first' -> how to determine? (from manifest.json?)
-  const strategy = 'network-first';
-  return `
-const files = [];
+  const target = resolve(this.options.outDir, fileName);
+  const source = resolve(this.options.rootDir, fileName);
+  const template = existsSync(source) ? readFileSync(source, 'utf8') : readDefaultSync();
 
-self.addEventListener('install', async e => {
-  const cache = await caches.open('files');
-  cache.addAll(files);
-});
+  //TODO need to load assets, maybe load on bundle-end?
+  const content = fillTemplate(template, {
+    __DEBUG__: process.env.NODE_ENV !== 'production',
+    __PARAMS__: {
+      responseStrategy: 'cache-first',
+      strategy: 'changed',
+      hashesMap: {},
+      externals: [],
+      prefetchRequest: undefined,
+      name: process.env.BUILD_PCKG_NAME,
+      version: process.env.BUILD_PCKG_VERSION,
+      assets: {
+        main: [],
+        additional: [],
+        optional: [],
+      },
+    },
+    __HELPERS__: {
+      cacheMaps: [
+        {
+          sameHost: true,
+          exclusions: ['/robots.txt'],
+          fallback: '/',
+          requestTypes: ['navigate'],
+        },
+      ],
+      navigationPreload: true,
+    },
+  });
 
-function fromNetwork(req) {
-  return true;
-}
+  writeFileSync(target, content, 'utf8');
 
-async function getFromCache(req) {
-  const res = await caches.match(req);
-  return res || fetch(req);
-}
-
-async function getFallback(req) {
-  const path = req.url;
-  //TODO get fallback
-}
-
-async function getFromNetwork(req) {
-  const cache = await caches.open('data');
-
-  try {
-    const res = await fetch(req);
-    cache.put(req, res.clone());
-    return res;
-  } catch (e) {
-    const res = await cache.match(req);
-    return res || getFallback(req);
-  }
-}
-
-self.addEventListener('fetch', async e => {
-  const req = e.request;
-  const res = fromNetwork(req) ? getFromNetwork(req) : getFromCache(req);
-  await e.respondWith(res);
-});
-`;
+  return `module.exports = function(opts) {
+    const path = '${fileName}';
+    return navigator.serviceWorker.register(path, opts);
+  };`;
 };
