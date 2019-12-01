@@ -1,5 +1,5 @@
 import { renderToString } from 'react-dom/server';
-import { loadPilets } from './utils';
+import { loadPilets, createExternalScript } from './utils';
 import { PiralSsrOptions } from './types';
 
 /**
@@ -9,10 +9,11 @@ import { PiralSsrOptions } from './types';
  * @returns A string that should be returned to the request caller.
  */
 export async function renderFromServer(app: React.ReactElement, options: PiralSsrOptions) {
-  const { getPilet, getPiletsMetadata, fillTemplate } = options;
+  const { getPilet, getPiletsMetadata, fillTemplate, asExternal } = options;
   const metadata = await getPiletsMetadata();
   const pilets = await loadPilets(metadata, getPilet);
-  const embedded = `<script>window.__pilets__ = ${JSON.stringify(pilets)};</script>`;
+  const embedded = `window.__pilets__ = ${JSON.stringify(pilets)};`;
+  const external = createExternalScript(embedded, asExternal);
   const body = renderToString(app);
-  return await fillTemplate(body, embedded);
+  return await fillTemplate(body, external);
 }

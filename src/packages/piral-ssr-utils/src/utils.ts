@@ -1,9 +1,16 @@
+import { createHash } from 'crypto';
 import { PiletMetadata } from 'piral-core';
-import { MaybeAsync } from './types';
+import { MaybeAsync, PiralSsrExternalScript } from './types';
 
 const bundleUrl = '__bundleUrl__';
 const getBundleUrlExport = 'exports.getBundleURL=';
 const bundleUrlDecl = `var ${bundleUrl}=`;
+
+function sha256(x: string) {
+  return createHash('sha256')
+    .update(x, 'utf8')
+    .digest('hex');
+}
 
 /**
  * Transforms the URL leading to a file to an URL leading to a directory.
@@ -72,4 +79,24 @@ export function loadPilets(
 export function requestEmbeddedPilets(): Promise<Array<PiletMetadata>> {
   const pilets = window.__pilets__;
   return Promise.resolve(pilets || []);
+}
+
+/**
+ * Creates a script reference from the given embedded content.
+ * @param embedded The embedded content to externalize.
+ * @param asExternal The external script generator.
+ */
+export function createExternalScript(embedded: string, asExternal?: PiralSsrExternalScript) {
+  if (typeof asExternal === 'function') {
+    const hash = sha256(embedded);
+    const externalPath = asExternal(hash, embedded);
+
+    if (typeof externalPath === 'string') {
+      return `<script src="${externalPath}"></script>`;
+    }
+
+    console.error('Expected "asExternal" to return a "string".');
+  }
+
+  return `<script>${embedded}</script>`;
 }

@@ -11,6 +11,16 @@ declare global {
 
 export type MaybeAsync<T> = T | Promise<T>;
 
+export interface PiralSsrExternalScript {
+  /**
+   * Creates an external script reference.
+   * @param hash The hash of the content. Will be unique.
+   * @param content The content to return.
+   * @returns The path to the (virtual) script, which should be embedded.
+   */
+  (hash: string, content: string): string;
+}
+
 export interface PiralSsrOptions {
   /**
    * Gets a pilet by its URL. Either via a request, or from some cache.
@@ -37,4 +47,10 @@ export interface PiralSsrOptions {
    * @param dataScript The script containing the pilets.
    */
   fillTemplate(body: string, dataScript: string): MaybeAsync<string>;
+  /**
+   * Optionally, does not inline the script with the static data.
+   * Instead, creates another external script, which will be requested
+   * from the same server.
+   */
+  asExternal?: PiralSsrExternalScript;
 }
