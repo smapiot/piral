@@ -2,6 +2,7 @@ const { readFileSync, writeFileSync, existsSync } = require('fs');
 const { resolve } = require('path');
 
 const fileName = 'sw.js';
+const rcFile = '.pwarc';
 
 function readDefaultSync() {
   return readFileSync(resolve(__dirname, fileName), 'utf8');
@@ -16,13 +17,35 @@ function fillTemplate(content, values) {
   return content;
 }
 
-module.exports = function() {
-  const target = resolve(this.options.outDir, fileName);
-  const source = resolve(this.options.rootDir, fileName);
-  const template = existsSync(source) ? readFileSync(source, 'utf8') : readDefaultSync();
+function loadPwaRc(dir) {
+  const target = resolve(dir, rcFile);
 
-  //TODO need to load assets, maybe load on bundle-end?
-  const content = fillTemplate(template, {
+  if (existsSync(target)) {
+    try {
+      const content = readFileSync(target, 'utf8');
+      const rcFunc = new Function(`return ${content}`);
+      return rcFunc();
+    } catch (ex) {
+      console.warn(`Failed to read "${rcFile}" in "${dir}": ${ex}`);
+    }
+  } else {
+    const packageJson = resolve(dir, 'package.json');
+
+    if (!existsSync(packageJson)) {
+      const newDir = resolve(dir, '..');
+
+      if (newDir !== dir) {
+        return loadPwaRc(newDir);
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function setProperties(config) {
+  const excludes = (config && config.excludes) || [];
+  const defaultProperties = {
     __DEBUG__: process.env.NODE_ENV !== 'production',
     __PARAMS__: {
       responseStrategy: 'cache-first',
@@ -33,6 +56,7 @@ module.exports = function() {
       name: process.env.BUILD_PCKG_NAME,
       version: process.env.BUILD_PCKG_VERSION,
       assets: {
+        //TODO fill with generated assets; using excludes if given
         main: [],
         additional: [],
         optional: [],
@@ -49,7 +73,54 @@ module.exports = function() {
       ],
       navigationPreload: true,
     },
-  });
+  };
+
+  if (config) {
+    if (['cache-first', 'network-first'].includes(config.responseStrategy)) {
+      defaultProperties.__PARAMS__.responseStrategy = config.responseStrategy;
+    }
+
+    if (typeof config.navigationPreload === 'boolean') {
+      defaultProperties.__HELPERS__.navigationPreload = config.navigationPreload;
+    }
+
+    if (['changed', 'all'].includes(config.updateStrategy)) {
+      defaultProperties.__PARAMS__.strategy = config.updateStrategy;
+    }
+
+    if (Array.isArray(config.externals)) {
+      defaultProperties.__PARAMS__.externals = config.externals;
+    }
+
+    if (Array.isArray(config.cacheMaps)) {
+      defaultProperties.__HELPERS__.cacheMaps = config.cacheMaps;
+    }
+
+    if (typeof config.caches === 'object') {
+      defaultProperties.__PARAMS__.assets = config.caches;
+    }
+
+    if (config.caches === 'none') {
+      defaultProperties.__PARAMS__.assets = {
+        main: [],
+        additional: [],
+        optional: [],
+      };
+    }
+  }
+
+  return defaultProperties;
+}
+
+module.exports = function() {
+  const target = resolve(this.options.outDir, fileName);
+  const source = resolve(this.options.rootDir, fileName);
+  const template = existsSync(source) ? readFileSync(source, 'utf8') : readDefaultSync();
+
+  //TODO need to load assets, maybe load on bundle-end?
+  const config = loadPwaRc(this.options.rootDir);
+  const properties = setProperties(config)
+  const content = fillTemplate(template, properties);
 
   writeFileSync(target, content, 'utf8');
 

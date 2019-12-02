@@ -75,6 +75,26 @@ You don't need to use them, but they can be quite helpful. For instance, on `__P
 
 **Remark**: How the parameters and helpers can be influenced (i.e., configured) is currently work in progress and should be figured out until v1.
 
+## Configuration of the Provided Options
+
+The parameters for the generated service worker can be configured, too. All in all this follows the options known from Webpack's [offline-plugin](https://github.com/NekR/offline-plugin), see [options](https://github.com/NekR/offline-plugin/blob/master/docs/options.md) for explanations.
+
+In a nutshell, in order to use the options you'll need a file called `.pwarc` in the root directory of your application (i.e., next to your `package.json`).
+
+The `.pwarc` may look as follows:
+
+```js
+{
+  updateStrategy: 'all',
+  responseStrategy: 'network-first',
+  externals: ['https://api.myhost.com/logo.png', '/static/image.jpg'],
+  excludes: ['**/.*', '**/*.map', '**/*.gz'],
+  cacheMaps: [],
+  navigationPreload: false,
+  caches: 'all',
+}
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

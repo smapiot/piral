@@ -65,7 +65,6 @@ function run(params, helpers, debug = false) {
   const CACHE_PREFIX = params.name;
   const CACHE_TAG = params.version;
   const CACHE_NAME = CACHE_PREFIX + ':' + CACHE_TAG;
-
   const PRELOAD_CACHE_NAME = CACHE_PREFIX + '$preload';
   const STORED_DATA_KEY = '__offline_webpack__data';
 
