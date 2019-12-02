@@ -16,7 +16,7 @@ We've debated a lot if (unit or end-to-end) testing are good targets for the CLI
 
 While the Piral CLI is certainly opinionated we tried to make it not overly restrictive. There are many testing frameworks and configurations out there and all of them have some direct influence on how development is done. We cannot cover all these flows without making compromises and imposing restrictions on the developers. Thus we decided to leave testing out - by default.
 
-Via extensions you can install `piral-cli` plugins that make testing very easy and (optionally) part of the validation process.
+You can install `piral-cli` plugins that make testing very easy and (optionally) part of the validation process.
 
 ---------------------------------------
 

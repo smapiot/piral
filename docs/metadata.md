@@ -2,7 +2,7 @@
 
 The Piral CLI uses the *package.json* file for retrieving useful information. This includes - in case of a pilet - the specific Piral instance to use, or (from a Piral instance) the shared dependencies to be used in pilets.
 
-## Piral Instance - Package Extensions
+## Piral Instance - Package Definition
 
 The additional fields for a Piral instance package are as follows:
 
@@ -64,7 +64,7 @@ The determined `scripts` provide an easy way to extend the scripts section of th
 
 In addition to the standard specification using a string for the version, the dependencies listed in the `devDependencies` can also be marked as `true`. Such a `devDependencies` entry will then use the version of the dependency as specified in either the `dependencies` or `devDependencies` of the Piral instance. If no such entry can be found, it will fall back to `"latest"`.
 
-## Pilets - Package Extensions
+## Pilets - Package Definition
 
 The additional fields for a pilet package are as follows:
 

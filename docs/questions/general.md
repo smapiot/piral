@@ -65,3 +65,48 @@ Yes and no. No, only the pilets applicable to the current user are loaded. Yes, 
 All components that are larger or not immediately needed should be lazy loaded.
 
 ---------------------------------------
+
+## How can the layout of the app shell be separated?
+
+There are essentially two ways:
+
+1. Shallow by providing generic layout components that still require "wrapping" with Piral components obtaining their data from the state container running in your Piral instance.
+2. Deep by having a peer dependency on the `piral` package (and potential plugins relevant for your layout).
+
+In both cases the layout is externalized in form of a package.
+
+For the first method your layout is then embedded such as:
+
+```jsx
+import { LoadingIndicator, DashboardContainer, DashboardTile, Layout } from 'my-layout-packge';
+import { Menu, Notifications, Modals } from 'piral';
+
+const layout = {
+  LoadingIndicator,
+  DashboardContainer,
+  DashboardTile,
+  Layout: ({ children }) => (
+    <Layout Menu={Menu} Notifications={Notifications} Modals={Modals}>
+      {children}
+    </Layout>
+  ),
+};
+```
+
+For the second method your definition can already come fully established:
+
+```jsx
+import { layout } from 'my-layout-packge';
+```
+
+Each version has its own pros and cons.
+
+---------------------------------------
+
+## Why are components from other frameworks just contained in boxes?
+
+Potentially, you are just looking at the "cross-framework demo" that we set up. In order to illustrate Piral's cross-framework's abilities best we placed all components on a dashboard in form of single tiles. These tiles are represented in form of these "boxes".
+
+Note that components provided by pilets (independent of their use, e.g., as pages, tiles, modal dialogs, ...) can always be written in any framework supported by the app shell. Non-React components are not constraint to tiles and can also still participant in the extension mechanism, having a simple way of sharing (i.e., using) components between frameworks.
+
+---------------------------------------
