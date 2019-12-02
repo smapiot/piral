@@ -1,5 +1,19 @@
-const { readFileSync, writeFileSync, existsSync } = require('fs');
+const Bundler = require('parcel-bundler');
+const minimatch = require('minimatch');
+const { readFileSync, writeFileSync, existsSync, readdirSync } = require('fs');
 const { resolve } = require('path');
+
+const notifiers = [];
+const originalEmit = Bundler.prototype.emit;
+
+// sorry for this evil hack, but we need to know when bundling finished
+Bundler.prototype.emit = function(...args) {
+  originalEmit.apply(this, args);
+
+  if (args[0] === 'buildEnd') {
+    notifiers.forEach(notify => notify());
+  }
+};
 
 const fileName = 'sw.js';
 const rcFile = '.pwarc';
@@ -15,6 +29,14 @@ function fillTemplate(content, values) {
   });
 
   return content;
+}
+
+function getArray(items, defaultItems) {
+  if (Array.isArray(items)) {
+    return items;
+  }
+
+  return defaultItems;
 }
 
 function loadPwaRc(dir) {
@@ -43,8 +65,10 @@ function loadPwaRc(dir) {
   return undefined;
 }
 
-function setProperties(config) {
-  const excludes = (config && config.excludes) || [];
+function setProperties(config, files) {
+  const excludes = getArray(config && config.excludes, ['**/.*', '**/*.map', '**/*.gz']);
+  excludes.push('*.html', 'sw.js');
+
   const defaultProperties = {
     __DEBUG__: process.env.NODE_ENV !== 'production',
     __PARAMS__: {
@@ -56,8 +80,7 @@ function setProperties(config) {
       name: process.env.BUILD_PCKG_NAME,
       version: process.env.BUILD_PCKG_VERSION,
       assets: {
-        //TODO fill with generated assets; using excludes if given
-        main: [],
+        main: files.filter(asset => !excludes.some(exclude => minimatch(asset, exclude))),
         additional: [],
         optional: [],
       },
@@ -113,16 +136,19 @@ function setProperties(config) {
 }
 
 module.exports = function() {
-  const target = resolve(this.options.outDir, fileName);
-  const source = resolve(this.options.rootDir, fileName);
+  const { outDir, rootDir } = this.options;
+  const target = resolve(outDir, fileName);
+  const source = resolve(rootDir, fileName);
   const template = existsSync(source) ? readFileSync(source, 'utf8') : readDefaultSync();
 
-  //TODO need to load assets, maybe load on bundle-end?
-  const config = loadPwaRc(this.options.rootDir);
-  const properties = setProperties(config)
-  const content = fillTemplate(template, properties);
+  notifiers.splice(0, notifiers.length, () => {
+    const files = readdirSync(outDir);
+    const config = loadPwaRc(rootDir);
+    const properties = setProperties(config, files);
+    const content = fillTemplate(template, properties);
 
-  writeFileSync(target, content, 'utf8');
+    writeFileSync(target, content, 'utf8');
+  });
 
   return `module.exports = function(opts) {
     const path = '${fileName}';

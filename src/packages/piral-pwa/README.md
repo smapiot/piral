@@ -8,7 +8,7 @@ This is an extension library that only has a peer dependency to `piral-core`. Wh
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+The `showAppNotification` API allows pilets to present a "native" notification. The exact looks of this are platform dependent, e.g., on Chrome for Windows 10 an item as added to the notification bar. On Chrome for MacOSX a quick notification appears.
 
 ## Setup and Bootstrapping
 
@@ -94,6 +94,8 @@ The `.pwarc` may look as follows:
   caches: 'all',
 }
 ```
+
+More details on the configuration will follow. Further options will be integrated soon, too.
 
 ## License
 
