@@ -17,7 +17,7 @@ Piral wants to help you to separate your data handling from your actual views. U
 
 Before a clean separation:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   app.registerPage('/my-page', Page);
@@ -36,7 +36,7 @@ export const Page: React.FC = () => {
 
 After using the `createConnector` HOC with a separate module:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   const connect = createConnector(fetchData);
@@ -64,7 +64,7 @@ Quite often, a simple data fetcher is not enough. In this case we may want to wo
 
 The transformed code now looks as follows:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   const connect = createConnector(dataConnector);
@@ -108,7 +108,7 @@ Using components provided from other pilets is done via "extensions". The proble
 
 Directly, code may look like this:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   app.registerPage('/my-page', Page);
@@ -127,7 +127,7 @@ Using the wrapper approach we may simply demand and forward the right component 
 
 Consequently, code may be rewritten to looks as follows:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   const Example = () => <Extension name="example" />;
@@ -149,9 +149,13 @@ This approach not only decouples Piral from the components defined in the pilet,
 
 Pilets should remain rather small, however, when combined with dependencies, heavy UIs, and other features larger bundle sizes may occur. To avoid degrading user-experience code that is not immediately required should be split in different bundles.
 
+This could result in the following setup:
+
+![Bundle splitting with lazy loaded pages](../diagrams/bundle-splitting.png)
+
 The process is rather straight-forward. We use the `import` function and `React.lazy` (or another mechanism from your favorite framework) to trigger the lazy loading of a module. This way the following code,
 
-```tsx
+```jsx
 // root module: index.tsx
 import Page from './Page';
 
@@ -169,7 +173,7 @@ export default () => (
 
 actually becomes:
 
-```tsx
+```jsx
 // root module: index.tsx
 const Page = React.lazy(() => import('./Page'));
 
@@ -195,7 +199,7 @@ Consequently, we need to set up a proper development infrastructure without impa
 
 Consider the following code for a pilet:
 
-```tsx
+```jsx
 export function setup(app: PiletApi) {
   app.registerExtension('example', () => <div>No hands!</div>);
 }
@@ -203,7 +207,11 @@ export function setup(app: PiletApi) {
 
 We could, e.g., introduce a dedicated page where this extension is used. Furthermore, tiles, modal dialogs and other components may be introduced to only test this extension. In the following we go for a page, but this approach works for anything.
 
-```tsx
+![Testing extensions with temporary pages](../diagrams/extensions-debug.png)
+
+The diagram above illustrates this idea. In code it looks as follows:
+
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   if (process.env.NODE_ENV === 'development') {

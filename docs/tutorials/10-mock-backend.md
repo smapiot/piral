@@ -17,6 +17,10 @@ What kras brings to the table:
 
 All these capabilities can be used by routing through the development server (usually running at *http://localhost:1234*).
 
+![Middleware at the development server](../diagrams/kras-middleware.png)
+
+The diagram above illustrates the relationship between the development server, the build server, and the different injectors.
+
 ## Mock Server Management
 
 When you start a debugging session you'll end up seeing a message about the mock server management address, usually [http://localhost:1234/manage-mock-server](http://localhost:1234/manage-mock-server). This URL can be used to see what kras has recorded so far and how kras is configured.

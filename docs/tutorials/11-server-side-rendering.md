@@ -7,11 +7,27 @@ level: Proficient
 
 # Server-Side Rendering
 
-Piral makes the development of highly interactive distributed frontend applications quite easy. To enable this Piral uses an approach that focuses on developer experience by allowing using a serverless-first approach. As a consequence, the pilets are retrieves at runtime from a feed service.
+Piral makes the development of highly interactive distributed frontend applications quite easy. To enable this Piral uses an approach that focuses on developer experience by allowing using a serverless-first approach. As a consequence, the pilets are retrieves at runtime from a feed service. This approach is also known as client-side rendering (CSR).
 
 Naturally, performance implications apply. While pilets should be cached indefinitely (i.e., they will only require a download if never downloaded or if they have been updated), the responsive from the feed service can never be cached. The additional round-trip time (RTT) to retrieve the pilet feed will add to the JavaScript evaluation and execution time.
 
 For server-side rendering (SSR) the `piral-ssr-utils` package can be quite helpful. It is a small library that comes with two parts. First, it will reduce the RTT by embedding the responsive from the public feed. Second, it can also include (all) the pilets for a request. Consequently, while the page request grows, subsequent requests are essentially eliminated.
+
+## CSR vs SSR
+
+In CSR the client needs to do the work of requesting the info from the feed service, then getting the pilets. All *after* the website with the script has been fully loaded and evaluated.
+
+The diagram below shows this sequence.
+
+![Sequence of CSR](../diagrams/csr-sequence.png)
+
+In SSR this changes a bit. Now its up to the webserver to do this aggregation. As a side effect we cannot just expose the app shell via some static storage, we actually need a webserver handling the logic.
+
+The diagram below shows this sequence.
+
+![Sequence of SSR](../diagrams/ssr-sequence.png)
+
+**Remark**: The sequence above can be simplified if the feed service is on the same server as the webserver. Likewise, we do not have to provide the full chain, i.e., we could go for a hybrid between the full CSR and the full SSR, e.g., by only including the response from the feed service in the SSR part thus still leaving the pilets for retrieval on the client-side.
 
 ## General SSR Setup
 
@@ -21,7 +37,7 @@ While you can separate the client and the server parts in different repositories
 
 The client part contains the `index.html` and the referenced root module, which could look as follows:
 
-```tsx
+```jsx
 import { hydrate } from 'react-dom';
 import { createApp } from '../common/app';
 
@@ -31,7 +47,7 @@ hydrate(app, document.querySelector('#app'));
 
 The `common/app` module just exports the application as a whole without rendering it. It could be as simple as follows:
 
-```tsx
+```jsx
 import * as React from 'react';
 import { Piral } from 'piral';
 import { createAppInstance } from './instance';
@@ -44,7 +60,7 @@ export function createApp() {
 
 Everything that deals with the setup of the Piral instance is done in the `createAppInstance` function, which is exported from `common/instance`.
 
-```tsx
+```jsx
 import { createInstance } from 'piral-core';
 import { configForServerRendering } from 'piral-ssr-utils/runtime';
 
@@ -61,7 +77,7 @@ We use the `configForServerRendering` helper from `piral-ssr-utils/runtime` to w
 
 Now we only need to define the server part. We start with the following code.
 
-```tsx
+```jsx
 import * as express from 'express';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -151,7 +167,11 @@ Filling the template is the most crucial part. Here, we assumed that the `index.
 </body>
 ```
 
-The important parts being the `<div id="app"></div>` for the main entry point, and the `<noscript id="data"></noscript>` as a replacement for the embedded data.
+The important parts being the `<div id="app"></div>` for the main entry point, and the `<noscript id="data"></noscript>` as a replacement for the embedded data. At this point we have the hybrid that we introduced in the CSR vs SSR section.
+
+The diagram below shows this sequence.
+
+![Sequence of a CSR-SSR hybrid solution](../diagrams/hybrid-sequence.png)
 
 **Remark**: The replacement for the embedded data needs to be placed *before* the root module (in the example above `<script src="index.tsx"></script>`) is referenced.
 
