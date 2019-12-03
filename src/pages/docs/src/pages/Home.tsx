@@ -121,7 +121,9 @@ export default () => (
       <pre>
         <code className="hljs language-sh">npm start</code>
       </pre>
-      <p>Again, we can access this at <a href="http://localhost:1234">localhost:1234</a>.</p>
+      <p>
+        Again, we can access this at <a href="http://localhost:1234">localhost:1234</a>.
+      </p>
       <p>
         Ideally, this should look as before, however, with the difference that the application now contains an
         additional tile, a notification, and a menu link.

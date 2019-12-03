@@ -14,7 +14,9 @@ export default async function(context: PiletRuleContext, options: Options = 'ign
     const testers: Array<RegExp> = [];
 
     for (const packageName of names) {
-      testers.push(new RegExp(`(import\\s+.*\\s+from\\s+["'\`]${packageName}["'\`]|require\\(["'\`]${packageName}["'\`]\\));`));
+      testers.push(
+        new RegExp(`(import\\s+.*\\s+from\\s+["'\`]${packageName}["'\`]|require\\(["'\`]${packageName}["'\`]\\));`),
+      );
     }
 
     for (const file of files) {
