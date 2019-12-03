@@ -2,7 +2,7 @@
 
 # [Piral Menu](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-menu.svg?style=flat)](https://www.npmjs.com/package/piral-menu) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-menu` brings to the table is a set of API extensions that can be used with `piral` or `piral-core` to bring a simplified menu integration from your pilets to your Piral instance.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-menu` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core` to bring a simplified menu integration from your pilets to your Piral instance.
 
 ## Documentation
 

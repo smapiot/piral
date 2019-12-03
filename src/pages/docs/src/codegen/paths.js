@@ -45,11 +45,11 @@ function getCoreTypes() {
   return getDocsFrom(types, /\.json$/).filter(file => isCoreType(file));
 }
 
-function getExtensionTypes() {
+function getPluginTypes() {
   return getDocsFrom(types, /\.json$/).filter(file => !isCoreType(file));
 }
 
-function getExtensionImage(name) {
+function getPluginImage(name) {
   const rest = name.replace('piral-', '');
   const hasImage = existsSync(resolve(__dirname, '..', 'assets', 'extensions', `${rest}.png`));
   return hasImage ? `extensions/${rest}.png` : 'top-extensions.png';
@@ -99,8 +99,8 @@ module.exports = {
   getTutorials,
   getQuestions,
   getCommands,
-  getExtensionTypes,
-  getExtensionImage,
+  getPluginTypes,
+  getPluginImage,
   getSpecs,
   getCoreTypes,
   getDocs,

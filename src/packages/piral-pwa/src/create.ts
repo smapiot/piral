@@ -4,7 +4,7 @@ import { useNotification } from './utils';
 import { PiletPwaApi } from './types';
 
 /**
- * Creates a new set of Piral API extensions for PWA support.
+ * Creates new Pilet API extensions for PWA support.
  */
 export function createPwaApi(client = setupPwaClient()): Extend<PiletPwaApi> {
   return () => {

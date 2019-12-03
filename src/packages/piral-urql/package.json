@@ -1,7 +1,7 @@
 {
   "name": "piral-urql",
   "version": "0.8.4",
-  "description": "Extensions for providing a GraphQL client in Piral.",
+  "description": "Plugin for providing a GraphQL client in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -14,7 +14,7 @@
     "query",
     "mutate",
     "subscribe",
-    "extension",
+    "plugin",
     "spa"
   ],
   "author": "smapiot",

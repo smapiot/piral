@@ -22,7 +22,7 @@ function retrieveToken(msalInstance: UserAgentApplication, auth: AuthenticationP
 }
 
 /**
- * Available configuration options for the ADAL extension.
+ * Available configuration options for the ADAL plugin.
  */
 export interface AdalConfig {
   /**

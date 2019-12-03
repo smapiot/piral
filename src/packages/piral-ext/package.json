@@ -1,7 +1,7 @@
 {
   "name": "piral-ext",
   "version": "0.8.4",
-  "description": "Useful API extensions and component definitions for extending piral-core.",
+  "description": "Set of standard plugins with component definitions for extending piral-core.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "spa"
   ],
   "author": "smapiot",

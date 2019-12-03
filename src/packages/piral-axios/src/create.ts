@@ -6,7 +6,7 @@ import { PiletAxiosApi } from './types';
 export type AxiosConfig = AxiosRequestConfig;
 
 /**
- * Creates a new Piral axios API extension.
+ * Creates new Pilet API extensions for axios.
  * @param config The custom axios configuration, if any.
  */
 export function createAxiosApi(config: AxiosConfig = {}): Extend<PiletAxiosApi> {

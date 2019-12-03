@@ -36,10 +36,10 @@ export const Features: React.FC = () => (
       <Feature title="Batteries included" image={require('../../assets/feature-4.png')} reverse>
         <p>
           Extensibility is built-in to give you the freedom to choose what you need.
-          <br /> We provide already a rich set of extensions to help you get started.
+          <br /> We provide already a rich set of plugins to help you get started.
         </p>
-        <a href="https://docs.piral.io/reference/extensions" className="btn atlas-cta cta-blue">
-          Available Extensions
+        <a href="https://docs.piral.io/reference/plugins" className="btn atlas-cta cta-blue">
+          Available Plugins
         </a>
       </Feature>
     </div>

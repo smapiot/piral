@@ -47,7 +47,7 @@ export function setupLocalizer(config: LocaleConfig = {}): Localizable {
 }
 
 /**
- * Creates a new Piral localization API extension.
+ * Creates new Pilet API extensions for localization.
  * @param localizer The specific localizer to be used, if any.
  */
 export function createLocaleApi(localizer: Localizable = setupLocalizer()): Extend<PiletLocaleApi> {

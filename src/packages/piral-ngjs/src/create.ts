@@ -3,7 +3,7 @@ import { Extend } from 'piral-core';
 import { PiletNgjsApi } from './types';
 
 /**
- * Available configuration options for the Angular.js extension.
+ * Available configuration options for the Angular.js plugin.
  */
 export interface NgjsConfig {
   /**
@@ -14,7 +14,7 @@ export interface NgjsConfig {
 }
 
 /**
- * Creates a new set of Piral Angular.js API extensions.
+ * Creates the Pilet API extensions for Angular.js.
  */
 export function createNgjsApi(config: NgjsConfig = {}): Extend<PiletNgjsApi> {
   const { rootName = 'slot' } = config;

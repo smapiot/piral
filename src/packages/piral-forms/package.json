@@ -1,7 +1,7 @@
 {
   "name": "piral-forms",
   "version": "0.8.4",
-  "description": "Extensions for advanced form support in Piral.",
+  "description": "Plugin for providing advanced form support in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "forms"
   ],
   "author": "smapiot",

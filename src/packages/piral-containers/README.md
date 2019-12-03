@@ -2,9 +2,9 @@
 
 # [Piral Containers](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-containers.svg?style=flat)](https://www.npmjs.com/package/piral-containers) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-containers` brings to the table is a set of API extensions that can be used with `piral` or `piral-core`.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-containers` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 

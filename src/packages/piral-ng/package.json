@@ -1,14 +1,14 @@
 {
   "name": "piral-ng",
   "version": "0.8.4",
-  "description": "Extensions for integrating Angular components in Piral.",
+  "description": "Plugin for integrating Angular components in Piral.",
   "keywords": [
     "piral",
     "smapiot",
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "angular",
     "ng"
   ],

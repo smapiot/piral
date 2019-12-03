@@ -21,7 +21,7 @@ export interface InitialModalDialog {
 }
 
 /**
- * Available configuration options for the modals extension.
+ * Available configuration options for the modals plugin.
  */
 export interface ModalsConfig {
   /**
@@ -46,7 +46,7 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
 }
 
 /**
- * Creates a new set of Piral API extensions for support modal dialogs.
+ * Creates new Pilet API extensions for support modal dialogs.
  */
 export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsApi> {
   const { dialogs = [] } = config;

@@ -8,7 +8,7 @@ import { PiralExtSettings } from './types';
 
 /**
  * Creates an array including all standard APIs from piral-ext.
- * @param settings Customizes the standard extension settings.
+ * @param settings Customizes the standard plugin settings.
  */
 export function createStandardApi(settings: PiralExtSettings = {}) {
   return [

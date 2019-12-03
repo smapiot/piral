@@ -1,7 +1,7 @@
 import { PwaClient } from './types';
 
 /**
- * Available configuration options for the PWA extension.
+ * Available configuration options for the PWA plugin.
  */
 export interface PwaConfig {
   /**

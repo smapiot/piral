@@ -1,7 +1,7 @@
 {
   "name": "piral-auth",
   "version": "0.8.4",
-  "description": "Extensions for handling authentication in Piral.",
+  "description": "Plugin for handling authentication in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "user",
     "authentication"
   ],

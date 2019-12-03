@@ -1,7 +1,7 @@
 {
   "name": "piral-pwa",
   "version": "0.8.4",
-  "description": "Extensions for creating the Piral instance as a PWA shell.",
+  "description": "Plugin for creating the Piral instance as a PWA shell.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "pwa",
     "progressive",
     "app"

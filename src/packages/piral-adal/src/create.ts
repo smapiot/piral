@@ -3,7 +3,7 @@ import { AdalClient } from './setup';
 import { PiralAdalApi } from './types';
 
 /**
- * Creates a new Piral API extension for the integration of MSAL.
+ * Creates new Pilet API extensions for the integration of MSAL.
  */
 export function createAdalApi(client: AdalClient): Extend<PiralAdalApi> {
   return context => {

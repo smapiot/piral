@@ -1,7 +1,7 @@
 {
   "name": "piral-containers",
   "version": "0.8.4",
-  "description": "Extensions for pilet-global state in Piral.",
+  "description": "Plugin for creating a pilet state container in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "state",
     "containers"
   ],

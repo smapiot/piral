@@ -18,7 +18,7 @@ export interface InitialNotification {
 }
 
 /**
- * Available configuration options for the notifications extension.
+ * Available configuration options for the notifications plugin.
  */
 export interface NotificationsConfig {
   /**
@@ -82,7 +82,7 @@ function getNotifications(
 }
 
 /**
- * Creates a new set of Piral API extensions for showing notifications.
+ * Creates new Pilet API extensions for showing notifications.
  */
 export function createNotificationsApi(config: NotificationsConfig = {}): Extend<PiletNotificationsApi> {
   const { defaultOptions = {}, selectId = () => `${~~(Math.random() * 10000)}`, messages = [] } = config;

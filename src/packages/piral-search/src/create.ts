@@ -18,7 +18,7 @@ export interface InitialSearchProvider {
 }
 
 /**
- * Available configuration options for the search extension.
+ * Available configuration options for the search plugin.
  */
 export interface SearchConfig {
   /**
@@ -40,7 +40,11 @@ export interface SearchConfig {
 
 function noop() {}
 
-function createSearchRegistration(pilet: string, search: SearchHandler, settings: SearchSettings = {}): SearchProviderRegistration {
+function createSearchRegistration(
+  pilet: string,
+  search: SearchHandler,
+  settings: SearchSettings = {},
+): SearchProviderRegistration {
   const { onlyImmediate = false, onCancel = noop, onClear = noop } = settings;
   return {
     pilet,
@@ -63,7 +67,7 @@ function getSearchProviders(providers: Array<InitialSearchProvider>) {
 }
 
 /**
- * Creates a new set of Piral API extensions for search and filtering.
+ * Creates new Pilet API extensions for search and filtering.
  */
 export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchApi> {
   const { providers = [], results = [], query = '' } = config;

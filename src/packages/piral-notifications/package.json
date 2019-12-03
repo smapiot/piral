@@ -1,7 +1,7 @@
 {
   "name": "piral-notifications",
   "version": "0.8.4",
-  "description": "Extensions for triggering notifications in Piral.",
+  "description": "Plugin for triggering notifications in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "notification",
     "toast",
     "alert"

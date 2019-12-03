@@ -7,13 +7,13 @@ Piral is developed as a monorepo.
 - [piral](./piral/README.md) is the standard library
 - [piral-cli](./piral-cli/README.md) provides some command line tooling
 - [piral-core](./piral-core/README.md) represents the base library
-- [piral-ext](./piral-ext/README.md) bundles some useful standard extensions for use in `piral`
+- [piral-ext](./piral-ext/README.md) bundles some useful standard plugins for use in `piral`
 
 ## Available Utility Packages
 
 - [piral-ssr-utils](./piral-ssr-utils/README.md) provides utilities for enabling server-side rendering
 
-## Available Opt-Out Extension Packages
+## Available Opt-Out Pilet API Plugins
 
 - [piral-dashboard](./piral-dashboard/README.md) offers the ability to show tiles registered by different pilets
 - [piral-feeds](./piral-feeds/README.md) establishes an easy way to connect to a remote data source
@@ -24,7 +24,7 @@ Piral is developed as a monorepo.
 - [piral-translate](./piral-translate/README.md) provides the translation API
 - [piral-urql](./piral-urql/README.md) provides the `query`, `mutate`, and `subscribe` API
 
-## Available Opt-In Extension Packages
+## Available Opt-In Pilet API Plugins
 
 - [piral-auth](./piral-auth/README.md) provides the `getUser` API
 - [piral-adal](./piral-adal/README.md) integrates MSAL for authentication with a fetch middleware
@@ -37,8 +37,9 @@ Piral is developed as a monorepo.
 
 ## Available Opt-In Converter Packages
 
-- [piral-hyperapp](./piral-hyperapp/README.md) provides integration for *hyperapp*
+- [piral-hyperapp](./piral-hyperapp/README.md) provides integration for *Hyperapp*
 - [piral-inferno](./piral-inferno/README.md) provides integration for *Inferno*
 - [piral-ng](./piral-ng/README.md) provides integration for *Angular*
+- [piral-ngjs](./piral-ngjs/README.md) provides integration for *Angular.js*
 - [piral-preact](./piral-preact/README.md) provides integration for *Preact*
 - [piral-vue](./piral-vue/README.md) provides integration for *Vue*

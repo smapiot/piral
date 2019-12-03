@@ -2,8 +2,8 @@ import { Extend, createInstance, PiralConfiguration } from 'piral-core';
 import { createStandardApi, PiralExtSettings } from 'piral-ext';
 
 /**
- * Extends the standard Piral API with custom API and settings.
- * @param settings Customizes the standard extension settings.
+ * Extends the standard Pilet API with custom API and settings.
+ * @param settings Customizes the standard plugin settings.
  * @param customApis The custom APIs to add.
  */
 export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Extend | Array<Extend> = []) {
@@ -14,7 +14,7 @@ export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Exte
 /**
  * Creates a standard Piral instance.
  * @param config The config for creating the piral state.
- * @param settings Customizes the standard extension settings.
+ * @param settings Customizes the standard plugin settings.
  */
 export function createPiral(config: PiralConfiguration = {}, settings?: PiralExtSettings) {
   return createInstance({

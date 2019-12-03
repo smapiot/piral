@@ -2,7 +2,7 @@
   "name": "sample-cross-fx",
   "private": true,
   "version": "0.8.4",
-  "description": "Example project illustrating the mixing of different (opt-in) frameworks via extensions.",
+  "description": "Example project illustrating the mixing of different (opt-in) frameworks via plugins.",
   "keywords": [
     "portal",
     "smapiot",

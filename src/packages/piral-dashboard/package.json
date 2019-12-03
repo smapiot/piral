@@ -1,7 +1,7 @@
 {
   "name": "piral-dashboard",
   "version": "0.8.4",
-  "description": "Extensions for a centralized dashboard in Piral.",
+  "description": "Plugin for creating a centralized dashboard in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "dashboard",
     "tiles"
   ],

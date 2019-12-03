@@ -4,7 +4,7 @@ import { httpFetch } from './fetch';
 import { PiletFetchApi } from './types';
 
 /**
- * Creates a new Piral Fetch API extension.
+ * Creates new Pilet API extensions for fetch.
  * @param config The custom fetch configuration, if any.
  */
 export function createFetchApi(config: FetchConfig = {}): Extend<PiletFetchApi> {

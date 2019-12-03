@@ -1,7 +1,7 @@
 {
   "name": "piral-search",
   "version": "0.8.4",
-  "description": "Extensions for centralizing search in Piral.",
+  "description": "Plugin for centralizing search in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "search",
     "filter"
   ],
