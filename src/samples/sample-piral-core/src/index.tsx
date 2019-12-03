@@ -132,13 +132,15 @@ const Notifications: React.FC = () => {
 
   return (
     <div className="app-notifications">
-      {notifications.map(n => (
-        <div className={`notification ${n.options.type || 'info'}`} key={n.id}>
+      {notifications.map(({ id, close, options, component: Component }) => (
+        <div className={`notification ${options.type || 'info'}`} key={id}>
           <div className="notification-content">
-            {n.options.title && <div className="notification-title">{n.options.title}</div>}
-            <div className="notification-message">{n.content}</div>
+            {options.title && <div className="notification-title">{options.title}</div>}
+            <div className="notification-message">
+              <Component onClose={close} options={options} />
+            </div>
           </div>
-          <div className="notification-close" onClick={n.close}>
+          <div className="notification-close" onClick={close}>
             <img src={require('./close.svg')} />
           </div>
         </div>
