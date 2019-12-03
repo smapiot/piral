@@ -1,5 +1,5 @@
-import { ReactNode, ReactChild, ComponentType } from 'react';
-import { Dict, Disposable, PiletApi, BaseRegistration } from 'piral-core';
+import { ReactChild, ComponentType, ReactElement } from 'react';
+import { Dict, Disposable, PiletApi, BaseRegistration, AnyComponent, BaseComponentProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletSearchApi {}
@@ -89,10 +89,14 @@ export interface SearchInputProps {
   value: string;
 }
 
+export interface SearchResultComponentProps extends BaseComponentProps {}
+
 export interface SearchResultProps {}
 
+export type SearchResultType = string | ReactElement<any> | AnyComponent<SearchResultComponentProps>;
+
 export interface SearchProvider {
-  (options: SearchOptions, api: PiletApi): Promise<Array<ReactNode | HTMLElement>>;
+  (options: SearchOptions, api: PiletApi): Promise<SearchResultType | Array<SearchResultType>>;
 }
 
 export interface SearchState {
@@ -144,7 +148,11 @@ export interface SearchSettings {
 }
 
 export interface SearchHandler {
-  (options: SearchOptions): Promise<Array<ReactNode | HTMLElement>>;
+  (options: SearchOptions): Promise<Array<ReactChild>>;
+}
+
+export interface SearchWrapper {
+  (component: AnyComponent<SearchResultComponentProps>): ComponentType;
 }
 
 export interface SearchProviderRegistration extends BaseRegistration {

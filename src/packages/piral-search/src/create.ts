@@ -1,10 +1,10 @@
 import * as actions from './actions';
-import { ReactChild } from 'react';
+import { ReactChild, isValidElement, createElement } from 'react';
 import { swap } from '@dbeining/react-atom';
 import { isfunc } from 'react-arbiter';
-import { buildName, Extend, Dict } from 'piral-core';
+import { buildName, Extend, Dict, withApi, PiletApi, GlobalStateContext } from 'piral-core';
 import { DefaultContainer, DefaultInput, DefaultResult } from './default';
-import { PiletSearchApi, SearchSettings, SearchHandler, SearchProviderRegistration } from './types';
+import { PiletSearchApi, SearchSettings, SearchHandler, SearchProviderRegistration, SearchResultType } from './types';
 
 export interface InitialSearchProvider {
   /**
@@ -66,6 +66,24 @@ function getSearchProviders(providers: Array<InitialSearchProvider>) {
   return searchProviders;
 }
 
+function toChild(content: SearchResultType, api: PiletApi, context: GlobalStateContext): ReactChild {
+  if (typeof content === 'string' || isValidElement(content)) {
+    return content;
+  } else {
+    const component = withApi(context.converters, content, api, 'extension');
+    return createElement(component);
+  }
+}
+
+function wrapResults(
+  result: SearchResultType | Array<SearchResultType>,
+  api: PiletApi,
+  context: GlobalStateContext,
+): Array<ReactChild> {
+  const results = Array.isArray(result) ? result : [result];
+  return results.map(item => toChild(item, api, context));
+}
+
 /**
  * Creates new Pilet API extensions for search and filtering.
  */
@@ -109,7 +127,14 @@ export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchAp
           }
 
           const id = buildName(pilet, name);
-          context.registerSearchProvider(id, createSearchRegistration(pilet, q => provider(q, api), settings));
+          context.registerSearchProvider(
+            id,
+            createSearchRegistration(
+              pilet,
+              q => Promise.resolve(provider(q, api)).then(results => wrapResults(results, api, context), () => []),
+              settings,
+            ),
+          );
         },
         unregisterSearchProvider(name) {
           const id = buildName(pilet, name);
