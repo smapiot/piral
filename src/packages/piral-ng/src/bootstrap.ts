@@ -1,6 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NgModuleRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BaseComponentProps } from 'piral-core';
 
 function sanatize(id: string) {
   return id.replace(/\W/g, '_');
@@ -10,7 +11,14 @@ function getPlatformProps(context: any, props: any) {
   return [{ provide: 'Props', useValue: props }, { provide: 'Context', useValue: context }];
 }
 
-export function bootstrap(context: any, props: any, component: any, node: HTMLElement, id: string) {
+export function bootstrap<T extends BaseComponentProps>(
+  context: any,
+  props: T,
+  component: any,
+  node: HTMLElement,
+  id: string,
+): Promise<void | NgModuleRef<any>> {
+  const { piral } = props;
   const values = getPlatformProps(context, props);
   const platform = platformBrowserDynamic(values);
   const annotations = component && component.__annotations__;
@@ -22,12 +30,16 @@ export function bootstrap(context: any, props: any, component: any, node: HTMLEl
     annotation.selector = `#${node.id}`;
   }
 
-  if (props.piral) {
-    declarations.push(props.piral.NgExtension);
-  }
+  declarations.push(piral.NgExtension);
 
   @NgModule({
     imports: [BrowserModule],
+    providers: [
+      {
+        provide: 'piral',
+        useValue: piral,
+      },
+    ],
     declarations,
     bootstrap: [component],
   })
@@ -36,5 +48,8 @@ export function bootstrap(context: any, props: any, component: any, node: HTMLEl
   return platform
     .bootstrapModule(BootstrapModule)
     .catch(err => console.log(err))
-    .then(() => node.removeAttribute('id'));
+    .then(bootstrapModule => {
+      node.removeAttribute('id');
+      return bootstrapModule;
+    });
 }

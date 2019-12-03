@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAction } from '../hooks';
+import { useAction, useSetter } from '../hooks';
 import { ComponentsState } from '../types';
 
 export interface SetComponentProps<TKey extends keyof ComponentsState> {
@@ -18,7 +18,7 @@ export function SetComponent<TKey extends keyof ComponentsState>({
   component,
 }: SetComponentProps<TKey>): React.ReactElement {
   const setComponent = useAction('setComponent');
-  React.useEffect(() => component && setComponent(name, component), []);
+  useSetter(() => component && setComponent(name, component));
   // tslint:disable-next-line:no-null-keyword
   return null;
 }

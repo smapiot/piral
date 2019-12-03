@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { withRecall, blazingStrategy, standardStrategy, isfunc } from 'react-arbiter';
-import { getLocalDependencies, globalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
+import { getLocalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, StateContext } from './state';
 import { PiralView, Mediator, MediatorProps, ResponsiveLayout } from './components';
+import { createArbiterOptions } from './helpers';
 import { createListener } from './utils';
 import { PiletApi, PiralConfiguration, PortalProps, PiralInstance } from './types';
 
@@ -38,45 +39,27 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
   const context = createActions(globalState, events);
-
-  if (process.env.DEBUG_PILET) {
-    const { setup } = require(process.env.DEBUG_PILET);
-    availablePilets.push({
-      name: process.env.BUILD_PCKG_NAME || 'dbg',
-      version: process.env.BUILD_PCKG_VERSION || '1.0.0',
-      hash: '',
-      setup,
-    });
-  }
-
   const createApi = defaultApiCreator(context, Array.isArray(extendApi) ? extendApi : [extendApi]);
-  const options = {
-    modules: availablePilets,
+  const root = createApi({
+    name: 'root',
+    version: process.env.BUILD_PCKG_VERSION || '1.0.0',
+    hash: '',
+  });
+  const options = createArbiterOptions({
+    context,
+    createApi,
+    availablePilets,
     getDependencies,
     strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
-    dependencies: globalDependencies,
-    fetchModules() {
-      const promise = requestPilets();
-
-      if (process.env.DEBUG_PILET) {
-        return promise.catch(() => []);
-      }
-
-      return promise;
-    },
-    createApi,
-  };
+    requestPilets,
+  });
 
   return {
     ...events,
     createApi,
-    options,
     context,
-    root: createApi({
-      name: 'root',
-      version: process.env.BUILD_PCKG_VERSION || '1.0.0',
-      hash: '',
-    }),
+    root,
+    options,
   };
 }
 

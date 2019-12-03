@@ -21,7 +21,7 @@ export interface InitialModalDialog {
 }
 
 /**
- * Available configuration options for the modals extension.
+ * Available configuration options for the modals plugin.
  */
 export interface ModalsConfig {
   /**
@@ -35,6 +35,7 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
 
   for (const { name, component, defaults } of dialogs) {
     modals[`global-${name}`] = {
+      pilet: undefined,
       name,
       component,
       defaults,
@@ -45,7 +46,7 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
 }
 
 /**
- * Creates a new set of Piral API extensions for support modal dialogs.
+ * Creates new Pilet API extensions for support modal dialogs.
  */
 export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsApi> {
   const { dialogs = [] } = config;
@@ -68,12 +69,12 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
     }));
 
     return (api, target) => {
-      const prefix = target.name;
+      const pilet = target.name;
 
       return {
         showModal(name, options) {
           const dialog = {
-            name: buildName(prefix, name),
+            name: buildName(pilet, name),
             alternative: name,
             options,
             close() {
@@ -84,15 +85,16 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
           return dialog.close;
         },
         registerModal(name, arg, defaults) {
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.registerModal(id, {
+            pilet,
             name,
             component: withApi(context.converters, arg, api, 'modal'),
             defaults,
           });
         },
         unregisterModal(name) {
-          const id = buildName(prefix, name);
+          const id = buildName(pilet, name);
           context.unregisterModal(id);
         },
       };

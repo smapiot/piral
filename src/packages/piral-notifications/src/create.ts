@@ -1,16 +1,17 @@
 import * as actions from './actions';
-import { ReactNode } from 'react';
 import { swap } from '@dbeining/react-atom';
-import { wrapElement } from 'react-arbiter';
-import { Extend, GlobalStateContext } from 'piral-core';
+import { ComponentType, isValidElement, ReactElement } from 'react';
+import { Extend, GlobalStateContext, withApi, defaultRender } from 'piral-core';
 import { DefaultHost, DefaultToast } from './default';
-import { PiletNotificationsApi, NotificationOptions, OpenNotification } from './types';
+import { PiletNotificationsApi, NotificationOptions, OpenNotification, BareNotificationProps } from './types';
+
+export type NotificationContent = string | ReactElement<any> | ComponentType<BareNotificationProps>;
 
 export interface InitialNotification {
   /**
    * The content of the notification.
    */
-  content: ReactNode | HTMLElement;
+  content: NotificationContent;
   /**
    * The optional options for the notification.
    */
@@ -18,7 +19,7 @@ export interface InitialNotification {
 }
 
 /**
- * Available configuration options for the notifications extension.
+ * Available configuration options for the notifications plugin.
  */
 export interface NotificationsConfig {
   /**
@@ -38,10 +39,22 @@ export interface NotificationsConfig {
   messages?: Array<InitialNotification>;
 }
 
+function toComponent(component: NotificationContent) {
+  if (typeof component === 'string') {
+    const text = component;
+    return () => defaultRender(text);
+  } else if (isValidElement(component)) {
+    const element = component;
+    return () => element;
+  }
+
+  return component;
+}
+
 function createNotification(
   context: GlobalStateContext,
   id: string,
-  content: ReactNode | HTMLElement,
+  content: NotificationContent,
   defaultOptions: NotificationOptions,
   customOptions: NotificationOptions = {},
 ) {
@@ -50,9 +63,9 @@ function createNotification(
     ...customOptions,
   };
 
-  const notification = {
+  const notification: OpenNotification = {
     id,
-    content: wrapElement(content),
+    component: toComponent(content),
     options,
     close() {
       context.closeNotification(notification);
@@ -82,7 +95,7 @@ function getNotifications(
 }
 
 /**
- * Creates a new set of Piral API extensions for showing notifications.
+ * Creates new Pilet API extensions for showing notifications.
  */
 export function createNotificationsApi(config: NotificationsConfig = {}): Extend<PiletNotificationsApi> {
   const { defaultOptions = {}, selectId = () => `${~~(Math.random() * 10000)}`, messages = [] } = config;
@@ -100,12 +113,18 @@ export function createNotificationsApi(config: NotificationsConfig = {}): Extend
       notifications: getNotifications(context, messages, defaultOptions),
     }));
 
-    return {
+    return api => ({
       showNotification(content, customOptions) {
-        const notification = createNotification(context, selectId(), content, defaultOptions, customOptions);
+        const component =
+          typeof content === 'string'
+            ? content
+            : isValidElement(content)
+            ? content
+            : withApi(context.converters, content, api, 'extension');
+        const notification = createNotification(context, selectId(), component, defaultOptions, customOptions);
         context.openNotification(notification);
         return notification.close;
       },
-    };
+    });
   };
 }

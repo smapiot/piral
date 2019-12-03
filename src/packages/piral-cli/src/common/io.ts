@@ -74,7 +74,13 @@ export function removeDirectory(targetDir: string) {
 
 export async function createDirectory(targetDir: string) {
   if (isLegacy()) {
-    return createDirectoryLegacy(targetDir);
+    try {
+      createDirectoryLegacy(targetDir);
+      return true;
+    } catch (e) {
+      console.error(`Error while creating ${targetDir}: `, e);
+      return false;
+    }
   }
 
   try {
@@ -92,6 +98,14 @@ export function checkExists(target: string) {
   return new Promise<boolean>(resolve => {
     exists(target, resolve);
   });
+}
+
+export async function checkExistingDirectory(target: string) {
+  if (await checkExists(target)) {
+    return await checkIsDirectory(target);
+  }
+
+  return false;
 }
 
 export function checkIsDirectory(target: string) {

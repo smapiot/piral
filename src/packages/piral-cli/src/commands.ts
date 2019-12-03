@@ -98,6 +98,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build by removing the target directory first.')
         .default('fresh', apps.buildPiralDefaults.fresh)
+        .choices('type', ['all', 'release', 'develop'])
+        .describe('type', 'Selects the target type of the build. "all" builds all target types.')
+        .default('type', apps.buildPiralDefaults.type)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -109,6 +112,7 @@ const allCommands: Array<ToolCommand<any>> = [
         publicUrl: args.publicUrl as string,
         detailedReport: args.detailedReport as boolean,
         logLevel: args.logLevel as any,
+        type: args.type as any,
       });
     },
   },

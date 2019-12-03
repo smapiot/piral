@@ -1,5 +1,7 @@
 let queue = Promise.resolve();
 
-export function enqueue(callback: () => void) {
-  queue = queue.then(callback);
+export function enqueue<T>(callback: () => Promise<T>) {
+  const next = queue.then(callback);
+  queue = next.then(() => {});
+  return next;
 }

@@ -1,5 +1,5 @@
 import { RouteComponentProps } from 'react-router-dom';
-import { Dict, WrappedComponent, BaseComponentProps, AnyComponent } from 'piral-core';
+import { Dict, WrappedComponent, BaseComponentProps, AnyComponent, BaseRegistration } from 'piral-core';
 import { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
@@ -115,7 +115,7 @@ export interface TilePreferences {
   customProperties?: Array<string>;
 }
 
-export interface TileRegistration {
+export interface TileRegistration extends BaseRegistration {
   component: WrappedComponent<TileComponentProps>;
   preferences: TilePreferences;
 }

@@ -21,7 +21,14 @@ export interface GqlSubscriber<T> {
   (data: T, error?: Error): void;
 }
 
-export interface GqlQueryOptions {
+export interface GqlOperationOptions {
+  /**
+   * Defines the additional headers to use.
+   */
+  headers?: any;
+}
+
+export interface GqlQueryOptions extends GqlOperationOptions {
   /**
    * The variables to be used in the query.
    */
@@ -32,14 +39,14 @@ export interface GqlQueryOptions {
   cache?: 'cache-first' | 'cache-only' | 'network-only' | 'cache-and-network';
 }
 
-export interface GqlMutationOptions {
+export interface GqlMutationOptions extends GqlOperationOptions {
   /**
    * The variables to be used in the query.
    */
   variables?: Record<string, any>;
 }
 
-export interface GqlSubscriptionOptions {
+export interface GqlSubscriptionOptions extends GqlOperationOptions {
   /**
    * The variables to be used in the subscription.
    */

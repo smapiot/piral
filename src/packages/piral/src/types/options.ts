@@ -1,61 +1,12 @@
 import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral-core';
-import {
-  FetchConfig,
-  DashboardConfig,
-  MenuConfig,
-  NotificationsConfig,
-  ModalsConfig,
-  FeedsConfig,
-  Localizable,
-  UrqlClient,
-} from 'piral-ext';
-
-export interface PiralExtSettings {
-  /**
-   * Customizes the fetch config.
-   */
-  fetch?: FetchConfig;
-  /**
-   * Customizes the gql config.
-   */
-  gql?: UrqlClient;
-  /**
-   * Customizes the locale config.
-   */
-  locale?: Localizable;
-  /**
-   * Customizes the dashboard config.
-   */
-  dashboard?: DashboardConfig;
-  /**
-   * Customizes the menu config.
-   */
-  menu?: MenuConfig;
-  /**
-   * Customizes the notifications config.
-   */
-  notifications?: NotificationsConfig;
-  /**
-   * Customizes the modals config.
-   */
-  modals?: ModalsConfig;
-  /**
-   * Customizes the feeds config.
-   */
-  feeds?: FeedsConfig;
-}
+import { PiralExtSettings } from 'piral-ext';
 
 /**
- * Defines the options for rendering a Piral instance.
+ * Defines the base options for rendering a Piral instance.
  */
-export interface PiralRenderOptions extends PiralConfiguration {
+export interface PiralRenderBaseOptions extends PiralConfiguration {
   /**
-   * Sets the selector of the element to render into.
-   * @default '#app'
-   */
-  selector?: string | Element;
-  /**
-   * Customizes the extension settings.
+   * Customizes the plugin settings.
    */
   settings?: PiralExtSettings;
   /**
@@ -66,4 +17,15 @@ export interface PiralRenderOptions extends PiralConfiguration {
    * Defines how the errors looks like.
    */
   errors?: Partial<ErrorComponentsState>;
+}
+
+/**
+ * Defines the options for rendering a Piral instance.
+ */
+export interface PiralRenderOptions extends PiralRenderBaseOptions {
+  /**
+   * Sets the selector of the element to render into.
+   * @default '#app'
+   */
+  selector?: string | Element;
 }

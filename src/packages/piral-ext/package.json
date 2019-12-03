@@ -1,7 +1,7 @@
 {
   "name": "piral-ext",
   "version": "0.8.4",
-  "description": "Useful API extensions and component definitions for extending piral-core.",
+  "description": "Set of standard plugins with component definitions for extending piral-core.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "spa"
   ],
   "author": "smapiot",
@@ -38,18 +38,16 @@
     "piral-core": "^0.8.4"
   },
   "peerDependencies": {
-    "piral-core": "^0.8.0 || ^0.9.0",
+    "piral-core": "^0.9.0",
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0"
   },
   "dependencies": {
     "piral-dashboard": "^0.8.4",
     "piral-feeds": "^0.8.4",
-    "piral-fetch": "^0.8.4",
     "piral-menu": "^0.8.4",
     "piral-modals": "^0.8.4",
     "piral-notifications": "^0.8.4",
-    "piral-translate": "^0.8.4",
-    "piral-urql": "^0.8.4"
+    "piral-translate": "^0.8.4"
   }
 }

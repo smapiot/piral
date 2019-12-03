@@ -53,7 +53,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     template = newPiletDefaults.template,
   } = options;
   const root = resolve(baseDir, target);
-  const [sourceName, sourceVersion, hadVersion, type] = dissectPackageName(baseDir, source);
+  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, source);
   const success = await createDirectory(root);
 
   if (success) {

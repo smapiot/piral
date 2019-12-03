@@ -18,7 +18,7 @@ Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to r
 
 ![Building blocks of Piral](./diagrams/blocks.svg)
 
-As far as `piral` is concerned we take `piral-core` (main library without any backend or specialized API) and `piral-ext` (useful API extensions and backend connection) into account to become a single package. `piral` can be thought of as a framework, while the other building blocks are just ordinary libraries.
+As far as `piral` is concerned we take `piral-core` (main library without any backend or specialized API) and `piral-ext` (useful plugins for extending the pilet API) into account to become a single package. `piral` can be thought of as a framework, while the other building blocks are just ordinary libraries.
 
 To give any development another boost the Piral ecosystem also contains pre-made layouts and plugins. Any kind of layout plus any number of plugins may be used when creating your own Piral instance.
 

@@ -89,7 +89,6 @@ export interface PiletsInfo {
 }
 
 export interface PiralData {
-  coreFile: string;
   appFile: string;
   appPackage: any;
 }

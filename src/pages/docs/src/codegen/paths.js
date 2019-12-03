@@ -11,7 +11,7 @@ const commands = resolve(docs, 'commands');
 const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
 
-const coreNames = ['piral', 'piral-core', 'piral-cli', 'piral-ext'];
+const coreNames = ['piral', 'piral-core', 'piral-cli', 'piral-ext', 'piral-ssr-utils'];
 const coreTypes = coreNames.map(name => `${name}.json`);
 
 function getDocsFrom(dir, tester = /\.md$/) {
@@ -42,16 +42,14 @@ function getSpecs() {
 }
 
 function getCoreTypes() {
-  return getDocsFrom(types, /\.json$/)
-    .filter(file => isCoreType(file));
+  return getDocsFrom(types, /\.json$/).filter(file => isCoreType(file));
 }
 
-function getExtensionTypes() {
-  return getDocsFrom(types, /\.json$/)
-    .filter(file => !isCoreType(file));
+function getPluginTypes() {
+  return getDocsFrom(types, /\.json$/).filter(file => !isCoreType(file));
 }
 
-function getExtensionImage(name) {
+function getPluginImage(name) {
   const rest = name.replace('piral-', '');
   const hasImage = existsSync(resolve(__dirname, '..', 'assets', 'extensions', `${rest}.png`));
   return hasImage ? `extensions/${rest}.png` : 'top-extensions.png';
@@ -101,8 +99,8 @@ module.exports = {
   getTutorials,
   getQuestions,
   getCommands,
-  getExtensionTypes,
-  getExtensionImage,
+  getPluginTypes,
+  getPluginImage,
   getSpecs,
   getCoreTypes,
   getDocs,

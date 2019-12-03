@@ -1,7 +1,7 @@
 import { createActions } from './createActions';
 import { createListener } from '../utils';
 
-jest.mock('./actions', () => ({
+jest.mock('../actions', () => ({
   a(arg) {
     return arg;
   },

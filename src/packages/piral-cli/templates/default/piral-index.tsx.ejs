@@ -1,18 +1,16 @@
-import * as React from 'react';
-import { renderInstance, requestPiletsFromGraphQL, setupGqlClient } from 'piral';
+import 'piral/polyfills';
+import { renderInstance } from 'piral';
 import { layout, errors } from './layout';
 
-const gql = setupGqlClient();
+// change to your feed URL here (either using feed.piral.io or your own service)
+const feedUrl = 'https://feed.piral.io/api/v1/pilet/sample';
 
 renderInstance({
-  settings: {
-    gql,
-  },
   layout,
   errors,
   requestPilets() {
-    return requestPiletsFromGraphQL(gql);
+    return fetch(feedUrl)
+      .then(res => res.json())
+      .then(res => res.items);
   },
 });
-
-export * from '<%- packageName %>';

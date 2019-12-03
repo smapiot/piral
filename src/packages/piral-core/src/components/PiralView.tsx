@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, StaticRouter } from 'react-router-dom';
 import { PiralRoutes } from './PiralRoutes';
-import { useGlobalState } from '../hooks';
 import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout } from './components';
+import { useGlobalState } from '../hooks';
 
 const NotFound: React.FC<RouteComponentProps> = props => <PiralError type="not_found" {...props} />;
 
@@ -20,6 +20,8 @@ const PiralContent: React.FC = () => {
   );
 };
 
+const Router = typeof window === 'undefined' ? props => <StaticRouter location="/" {...props} /> : PiralRouter;
+
 const PiralProvider: React.FC = ({ children }) => {
   const provider = useGlobalState(m => m.provider) || <React.Fragment />;
   return React.cloneElement(provider, undefined, children);
@@ -29,10 +31,10 @@ export interface PiralViewProps {}
 
 export const PiralView: React.FC<PiralViewProps> = ({ children }) => (
   <PiralProvider>
-    <PiralRouter>
+    <Router>
       <PiralContent />
       {children}
-    </PiralRouter>
+    </Router>
   </PiralProvider>
 );
 PiralView.displayName = 'PiralView';

@@ -24,9 +24,9 @@ function pipeToPromise<T>(source: Source<OperationResult<T>>) {
  * @param options The options for the query.
  */
 export function gqlQuery<TResult = any>(client: Client, q: string, options: GqlQueryOptions = {}) {
-  const { variables, cache } = options;
+  const { variables, cache, headers = {} } = options;
   const request = createRequest(q, variables);
-  const response = client.executeQuery(request, { requestPolicy: cache });
+  const response = client.executeQuery(request, { requestPolicy: cache, fetchOptions: { headers } });
   return pipeToPromise<TResult>(response);
 }
 
@@ -37,9 +37,9 @@ export function gqlQuery<TResult = any>(client: Client, q: string, options: GqlQ
  * @param options The options for the mutation.
  */
 export function gqlMutation<TResult = any>(client: Client, q: string, options: GqlMutationOptions = {}) {
-  const { variables } = options;
+  const { variables, headers = {} } = options;
   const request = createRequest(q, variables);
-  const response = client.executeMutation(request);
+  const response = client.executeMutation(request, { fetchOptions: { headers } });
   return pipeToPromise<TResult>(response);
 }
 
@@ -56,9 +56,9 @@ export function gqlSubscription<TResult = any>(
   subscriber: GqlSubscriber<TResult>,
   options: GqlSubscriptionOptions = {},
 ) {
-  const { variables } = options;
+  const { variables, headers = {} } = options;
   const request = createRequest(q, variables);
-  const response = client.executeSubscription(request);
+  const response = client.executeSubscription(request, { fetchOptions: { headers } });
   const [teardown] = pipe(
     response,
     subscribe(({ data, error }) => {

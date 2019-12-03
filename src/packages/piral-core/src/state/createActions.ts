@@ -1,4 +1,4 @@
-import * as actions from './actions';
+import * as actions from '../actions';
 import { Atom } from '@dbeining/react-atom';
 import { GlobalState, GlobalStateContext, EventEmitter } from '../types';
 
@@ -12,7 +12,7 @@ export function createActions(state: Atom<GlobalState>, events: EventEmitter): G
     ...events,
     apis: {},
     converters: {
-      html: component => component.render,
+      html: ({ component }) => component,
     },
     state,
   } as GlobalStateContext;

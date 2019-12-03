@@ -1,6 +1,3 @@
-import 'core-js/es7/reflect';
-import 'zone.js/dist/zone';
-
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -13,15 +10,12 @@ import {
   SetComponent,
   SetRoute,
 } from 'piral-core';
-import { createNgApi } from 'piral-ng';
-import { createVueApi } from 'piral-vue';
 import { createMenuApi } from 'piral-menu';
-import { createNotificationsApi } from 'piral-notifications';
-import { createDashboardApi, Dashboard } from 'piral-dashboard';
-import { createContainerApi } from 'piral-containers';
 import { createFeedsApi } from 'piral-feeds';
 import { createFormsApi } from 'piral-forms';
-import { createHyperappApi } from 'piral-hyperapp';
+import { createNotificationsApi } from 'piral-notifications';
+import { createDashboardApi, Dashboard } from 'piral-dashboard';
+import { createContainersApi } from 'piral-containers';
 import { createSearchApi, useSearch } from 'piral-search';
 import { availablePilets } from './pilets';
 
@@ -138,13 +132,15 @@ const Notifications: React.FC = () => {
 
   return (
     <div className="app-notifications">
-      {notifications.map(n => (
-        <div className={`notification ${n.options.type || 'info'}`} key={n.id}>
+      {notifications.map(({ id, close, options, component: Component }) => (
+        <div className={`notification ${options.type || 'info'}`} key={id}>
           <div className="notification-content">
-            {n.options.title && <div className="notification-title">{n.options.title}</div>}
-            <div className="notification-message">{n.content}</div>
+            {options.title && <div className="notification-title">{options.title}</div>}
+            <div className="notification-message">
+              <Component onClose={close} options={options} />
+            </div>
           </div>
-          <div className="notification-close" onClick={n.close}>
+          <div className="notification-close" onClick={close}>
             <img src={require('./close.svg')} />
           </div>
         </div>
@@ -158,7 +154,6 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <div className="app-container">
-      <Notifications />
       <div className="app-header">
         <h1>Sample Portal ({layout})</h1>
         <SearchForm />
@@ -166,6 +161,7 @@ const Layout: React.FC = ({ children }) => {
       </div>
       <div className="app-content">{children}</div>
       <div className="app-footer">For more information or the source code check out our GitHub repository.</div>
+      <Notifications />
     </div>
   );
 };
@@ -173,12 +169,9 @@ const Layout: React.FC = ({ children }) => {
 const instance = createInstance({
   availablePilets,
   extendApi: [
-    createVueApi(),
-    createNgApi(),
-    createHyperappApi(),
     createMenuApi(),
     createNotificationsApi(),
-    createContainerApi(),
+    createContainersApi(),
     createDashboardApi(),
     createFeedsApi(),
     createFormsApi(),

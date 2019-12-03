@@ -1,5 +1,6 @@
 {
   "name": "sample-piral",
+  "private": true,
   "version": "0.8.4",
   "description": "Example project illustrating the use of the piral and piral-cli packages.",
   "keywords": [
@@ -36,6 +37,14 @@
     "piral-search": "^0.8.4",
     "reactstrap": "^8.0.1"
   },
+  "devDependencies": {
+    "@types/react": "^16.8.2",
+    "@types/react-dom": "^16.8.0",
+    "@types/react-router": "^5.0.0",
+    "@types/react-router-dom": "latest",
+    "piral-cli": "^0.8.4",
+    "sass": "^1.17.0"
+  },
   "pilets": {
     "externals": [
       "reactstrap"
@@ -45,14 +54,6 @@
       "start": "pilet debug",
       "upgrade-pilet": "pilet upgrade --force-overwrite yes"
     }
-  },
-  "devDependencies": {
-    "@types/react": "^16.8.2",
-    "@types/react-dom": "^16.8.0",
-    "@types/react-router": "^5.0.0",
-    "@types/react-router-dom": "latest",
-    "piral-cli": "^0.8.4",
-    "sass": "^1.17.0"
   },
   "scripts": {
     "build": "tsc",

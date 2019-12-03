@@ -12,7 +12,7 @@ export interface HtmlComponent<TProps> {
   /**
    * Renders a component into the provided element using the given props and context.
    */
-  render: ForeignComponent<TProps>;
+  component: ForeignComponent<TProps>;
   /**
    * The type of the HTML component.
    */
@@ -20,7 +20,25 @@ export interface HtmlComponent<TProps> {
 }
 
 export interface ForeignComponent<TProps> {
-  (element: HTMLElement, props: TProps, ctx: any): void;
+  /**
+   * Called when the component is mounted.
+   * @param element The container hosting the element.
+   * @param props The props to transport.
+   * @param ctx The associated context.
+   */
+  mount(element: HTMLElement, props: TProps, ctx: any): void;
+  /**
+   * Called when the component should be updated.
+   * @param element The container hosting the element.
+   * @param props The props to transport.
+   * @param ctx The associated context.
+   */
+  update?(element: HTMLElement, props: TProps, ctx: any): void;
+  /**
+   * Called when a component is unmounted.
+   * @param element The container that was hosting the element.
+   */
+  unmount?(element: HTMLElement): void;
 }
 
 export type AnyComponent<T> = ComponentType<T> | FirstParametersOf<ComponentConverters<T>>;

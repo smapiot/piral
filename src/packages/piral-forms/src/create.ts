@@ -5,12 +5,12 @@ import { withForm } from './withForm';
 import { PiletFormsApi } from './types';
 
 /**
- * Available configuration options for the forms extension.
+ * Available configuration options for the forms plugin.
  */
 export interface FormsConfig {}
 
 /**
- * Creates a new set of Piral API extensions for enhancing forms.
+ * Creates new Pilet API extensions for enhancing forms.
  */
 export function createFormsApi(config: FormsConfig = {}): Extend<PiletFormsApi> {
   return context => {

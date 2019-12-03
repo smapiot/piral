@@ -23,11 +23,15 @@ export interface StateDispatcher<TState> {
 
 export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
 
-export interface PageRegistration {
+export interface BaseRegistration {
+  pilet: string;
+}
+
+export interface PageRegistration extends BaseRegistration {
   component: WrappedComponent<PageComponentProps>;
 }
 
-export interface ExtensionRegistration {
+export interface ExtensionRegistration extends BaseRegistration {
   component: WrappedComponent<ExtensionComponentProps<any>>;
   reference: any;
   defaults: any;
@@ -135,6 +139,11 @@ export interface PiralActions extends PiralCustomActions {
    * @param modules The loaded pilets.
    */
   initialize(loading: boolean, error: Error | undefined, modules: Array<Pilet>): void;
+  /**
+   * Injects a pilet at runtime - removes the pilet from registry first if available.
+   * @param pilet The pilet to be injected.
+   */
+  injectPilet(pilet: Pilet): void;
   /**
    * Defines a single action for Piral.
    * @param actionName The name of the action to define.

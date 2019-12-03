@@ -199,6 +199,6 @@ The incoming option value should be checked. In case of an unknown value a warni
 
 ## Next Steps
 
-In this tutorial we looked athe Piral CLI in more detail. Now that we know the areas where the Piral CLI helps us greatly we can make use of it more efficiently.
+In this tutorial we looked at the Piral CLI in more detail. Now that we know the areas where the Piral CLI helps us greatly we can make use of it more efficiently.
 
 The next part of our tutorial series deals with best practices for writing pilets.

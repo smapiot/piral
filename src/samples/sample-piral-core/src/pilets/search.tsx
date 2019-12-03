@@ -10,9 +10,6 @@ export const SearchPilet: Pilet = {
   version: '1.0.0',
   hash: '428',
   setup(piral) {
-    const htmlResult = document.createElement('div');
-    htmlResult.innerHTML = '<span style="color: red;">I AM HTML</span>';
-
     piral.registerSearchProvider(
       q =>
         new Promise(resolve =>
@@ -24,7 +21,14 @@ export const SearchPilet: Pilet = {
                 <span>Third result</span>,
                 <div>4th result</div>,
                 <div>{q.immediate ? 'IMMEDIATE' : 'chill'}</div>,
-                htmlResult,
+                {
+                  component: {
+                    mount(element) {
+                      element.innerHTML = '<span style="color: red;">I AM HTML</span>';
+                    },
+                  },
+                  type: 'html',
+                },
               ]),
             1000,
           ),

@@ -6,11 +6,11 @@ The requirements and essential feature set of these apps was always the same (as
 
 - React as core layer
 - Extensibility from the ground up
-- Rich common API for these extensions
+- Rich common API for these modules
 - Support for multiple languages
 - Enhanced developer experience
 
-This kind of "grand scale web app" is labeled by us as a "portal application". The reason is simple: The individual extension modules, which we call "pilets" are nothing more than a window to see / interact with part of the backend. Like a portal Piral itself just connects all these different modules.
+This kind of "grand scale web app" is labeled by us as a "portal application". The reason is simple: The individual feature modules, which we call "pilets" are nothing more than a window to see / interact with part of the backend. Like a portal Piral itself just connects all these different modules.
 
 After developing (or refining) the same solution over and over again the need for a generic (FOSS) solution became obvious. With Piral we want to reach that goal to provide a layer that boosts development of such applications. Our goal is to reduce the development need to only require setting up the domain specific parts and needed customizations (e.g., having a custom design, wording, ...).
 

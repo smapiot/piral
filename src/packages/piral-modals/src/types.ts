@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import { Dict, WrappedComponent, BaseComponentProps, ForeignComponent, Disposable } from 'piral-core';
+import { Dict, WrappedComponent, BaseComponentProps, BaseRegistration, Disposable, AnyComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletModalsApi {}
@@ -121,7 +121,7 @@ export interface BareModalComponentProps<TOpts> {
 
 export type ModalComponentProps<TOpts> = BaseComponentProps & BareModalComponentProps<TOpts>;
 
-export interface ModalRegistration {
+export interface ModalRegistration extends BaseRegistration {
   name: string;
   component: WrappedComponent<ModalComponentProps<any>>;
   defaults: any;
@@ -143,7 +143,7 @@ export interface PiletModalsApi {
    * @param Component The component to render the page.
    * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModal<TOpts>(name: string, Component: ComponentType<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
+  registerModal<TOpts>(name: string, Component: AnyComponent<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
   /**
    * Unregisters a modal by its name.
    * @param name The name that was previously registered.

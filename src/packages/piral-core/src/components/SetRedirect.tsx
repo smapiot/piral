@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Redirect } from 'react-router-dom';
-import { useAction } from '../hooks';
+import { useAction, useSetter } from '../hooks';
 
 export interface SetRedirectProps {
   /**
@@ -15,7 +15,7 @@ export interface SetRedirectProps {
 
 export function SetRedirect({ from, to }: SetRedirectProps): React.ReactElement {
   const setRoute = useAction('setRoute');
-  React.useEffect(() => setRoute(from, () => <Redirect to={to} />), []);
+  useSetter(() => setRoute(from, () => <Redirect to={to} />));
   // tslint:disable-next-line:no-null-keyword
   return null;
 }

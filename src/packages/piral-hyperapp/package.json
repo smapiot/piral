@@ -1,7 +1,7 @@
 {
   "name": "piral-hyperapp",
   "version": "0.8.4",
-  "description": "Extensions for integrating hyperapp components in Piral.",
+  "description": "Plugin for integrating hyperapp components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "hyperapp"
   ],
   "author": "smapiot",
@@ -40,6 +40,6 @@
   },
   "peerDependencies": {
     "hyperapp": "^1.0.0",
-    "piral-core": "^0.8.0 || ^0.9.0"
+    "piral-core": "^0.9.0"
   }
 }

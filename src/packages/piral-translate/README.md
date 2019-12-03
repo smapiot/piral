@@ -2,11 +2,25 @@
 
 # [Piral Translate](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-translate.svg?style=flat)](https://www.npmjs.com/package/piral-translate) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-translate` brings to the table is a set of API extensions that is used by `piral`. The set features a simple yet sufficient translation system.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-translate` brings to the table is a set of Pilet API extensions that is used by `piral`. The set features a simple yet sufficient translation system.
 
 ## Documentation
 
-For details on the provided API check out the [documentation at the Piral website](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs).
+The following functions are brought to the Pilet API.
+
+### `translate()`
+
+Returns the translation (i.e., a string defined for the currently selected language) of a provided language key.
+
+Variables can also be provided using an object as the second argument. The variable replacement looks for occurrences of double curly braces, e.g., `{{foo}}`.
+
+### `setTranslations()`
+
+Sets the translations (custom language to key to string mapping) for the pilet.
+
+### `getTranslations()`
+
+Gets the translations defined in the pilet.
 
 ## Setup and Bootstrapping
 

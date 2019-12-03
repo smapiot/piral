@@ -25,6 +25,12 @@ export interface VueComponent<TProps> {
  */
 export interface PiletVueApi {
   /**
+   * Wraps a Vue component for use in Piral.
+   * @param component The root component.
+   * @returns The Piral Vue component.
+   */
+  fromVue<TProps>(component: Component<TProps>): VueComponent<TProps>;
+  /**
    * Vue component for displaying extensions of the given name.
    */
   VueExtension: Component<ExtensionSlotProps>;

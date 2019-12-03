@@ -1,5 +1,6 @@
 import * as yargs from 'yargs';
 import { ToolCommand } from './types';
+import { logFail } from './common';
 
 let argv = yargs;
 
@@ -22,7 +23,14 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
         }
         return argv;
       },
-      args => Promise.resolve(command.run(args)).then(() => process.exit(0), () => process.exit(1)),
+      args =>
+        Promise.resolve(command.run(args)).then(
+          () => process.exit(0),
+          err => {
+            err && logFail(err.message);
+            process.exit(1);
+          },
+        ),
     );
   }
 

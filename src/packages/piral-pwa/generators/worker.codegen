@@ -1,0 +1,157 @@
+const Bundler = require('parcel-bundler');
+const minimatch = require('minimatch');
+const { readFileSync, writeFileSync, existsSync, readdirSync } = require('fs');
+const { resolve } = require('path');
+
+const notifiers = [];
+const originalEmit = Bundler.prototype.emit;
+
+// sorry for this evil hack, but we need to know when bundling finished
+Bundler.prototype.emit = function(...args) {
+  originalEmit.apply(this, args);
+
+  if (args[0] === 'buildEnd') {
+    notifiers.forEach(notify => notify());
+  }
+};
+
+const fileName = 'sw.js';
+const rcFile = '.pwarc';
+
+function readDefaultSync() {
+  return readFileSync(resolve(__dirname, fileName), 'utf8');
+}
+
+function fillTemplate(content, values) {
+  Object.keys(values).forEach(key => {
+    const value = JSON.stringify(values[key]);
+    content = content.split(key).join(value);
+  });
+
+  return content;
+}
+
+function getArray(items, defaultItems) {
+  if (Array.isArray(items)) {
+    return items;
+  }
+
+  return defaultItems;
+}
+
+function loadPwaRc(dir) {
+  const target = resolve(dir, rcFile);
+
+  if (existsSync(target)) {
+    try {
+      const content = readFileSync(target, 'utf8');
+      const rcFunc = new Function(`return ${content}`);
+      return rcFunc();
+    } catch (ex) {
+      console.warn(`Failed to read "${rcFile}" in "${dir}": ${ex}`);
+    }
+  } else {
+    const packageJson = resolve(dir, 'package.json');
+
+    if (!existsSync(packageJson)) {
+      const newDir = resolve(dir, '..');
+
+      if (newDir !== dir) {
+        return loadPwaRc(newDir);
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function setProperties(config, files) {
+  const excludes = getArray(config && config.excludes, ['**/.*', '**/*.map', '**/*.gz']);
+  excludes.push('*.html', 'sw.js');
+
+  const defaultProperties = {
+    __DEBUG__: process.env.NODE_ENV !== 'production',
+    __PARAMS__: {
+      responseStrategy: 'cache-first',
+      strategy: 'changed',
+      hashesMap: {},
+      externals: [],
+      prefetchRequest: undefined,
+      name: process.env.BUILD_PCKG_NAME,
+      version: process.env.BUILD_PCKG_VERSION,
+      assets: {
+        main: files.filter(asset => !excludes.some(exclude => minimatch(asset, exclude))),
+        additional: [],
+        optional: [],
+      },
+    },
+    __HELPERS__: {
+      cacheMaps: [
+        {
+          sameHost: true,
+          exclusions: ['/robots.txt'],
+          fallback: '/',
+          requestTypes: ['navigate'],
+        },
+      ],
+      navigationPreload: true,
+    },
+  };
+
+  if (config) {
+    if (['cache-first', 'network-first'].includes(config.responseStrategy)) {
+      defaultProperties.__PARAMS__.responseStrategy = config.responseStrategy;
+    }
+
+    if (typeof config.navigationPreload === 'boolean') {
+      defaultProperties.__HELPERS__.navigationPreload = config.navigationPreload;
+    }
+
+    if (['changed', 'all'].includes(config.updateStrategy)) {
+      defaultProperties.__PARAMS__.strategy = config.updateStrategy;
+    }
+
+    if (Array.isArray(config.externals)) {
+      defaultProperties.__PARAMS__.externals = config.externals;
+    }
+
+    if (Array.isArray(config.cacheMaps)) {
+      defaultProperties.__HELPERS__.cacheMaps = config.cacheMaps;
+    }
+
+    if (typeof config.caches === 'object') {
+      defaultProperties.__PARAMS__.assets = config.caches;
+    }
+
+    if (config.caches === 'none') {
+      defaultProperties.__PARAMS__.assets = {
+        main: [],
+        additional: [],
+        optional: [],
+      };
+    }
+  }
+
+  return defaultProperties;
+}
+
+module.exports = function() {
+  const { outDir, rootDir } = this.options;
+  const target = resolve(outDir, fileName);
+  const source = resolve(rootDir, fileName);
+  const template = existsSync(source) ? readFileSync(source, 'utf8') : readDefaultSync();
+
+  notifiers.splice(0, notifiers.length, () => {
+    const files = readdirSync(outDir);
+    const config = loadPwaRc(rootDir);
+    const properties = setProperties(config, files);
+    const content = fillTemplate(template, properties);
+
+    writeFileSync(target, content, 'utf8');
+  });
+
+  return `module.exports = function(opts) {
+    const path = '${fileName}';
+    return navigator.serviceWorker.register(path, opts);
+  };`;
+};

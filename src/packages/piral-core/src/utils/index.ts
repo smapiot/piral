@@ -1,5 +1,4 @@
 export * from './compare';
-export * from './components';
 export * from './data';
 export * from './dom';
 export * from './events';

@@ -18,11 +18,13 @@ export const errors: Partial<ErrorComponentsState> = {
     </div>
   ),
   loading: () => (
-    <div className="pi-error">
-      <img src={require('./images/error.svg')} alt="Error" />
-      <div className="pi-title">Something Went Wrong</div>
-      <div className="pi-description">
-        An error occured during the loading process. Try refreshing or come back later.
+    <div className="pi-center">
+      <div className="pi-error">
+        <img src={require('./images/error.svg')} alt="Error" />
+        <div className="pi-title">Something Went Wrong</div>
+        <div className="pi-description">
+          An error occured during the loading process. Try refreshing or come back later.
+        </div>
       </div>
     </div>
   ),
@@ -118,13 +120,13 @@ export const layout: Partial<ComponentsState> = {
   },
   SearchResult: ({ children }) => <div className="pi-item">{children}</div>,
   NotificationsHost: ({ children }) => <div className="pi-notifications">{children}</div>,
-  NotificationsToast: ({ options, close, content }) => (
+  NotificationsToast: ({ options, onClose, children }) => (
     <div className={`pi-item ${options.type}`}>
       <div className="pi-details">
         {options.title && <div className="pi-title">{options.title}</div>}
-        <div className="pi-description">{content}</div>
+        <div className="pi-description">{children}</div>
       </div>
-      <div className="pi-close" onClick={close} />
+      <div className="pi-close" onClick={onClose} />
     </div>
   ),
   ModalsHost: ({ children, open }) => {

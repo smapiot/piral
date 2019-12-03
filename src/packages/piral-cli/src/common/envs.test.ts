@@ -18,25 +18,25 @@ describe('Environment Module', () => {
     expect(process.env.BUILD_PCKG_VERSION).toBe(rootPackageJson.version);
     expect(process.env.BUILD_PCKG_NAME).toBe(rootPackageJson.name);
     expect(process.env.NODE_ENV).toBe('development');
-    expect(process.env.DEBUG_PILET).toBeUndefined();
+    expect(process.env.DEBUG_PILET).toBe('');
   });
 
   it('setStandardEnvs for a production build sets env to production', async () => {
     await setStandardEnvs({ production: true });
     expect(process.env.NODE_ENV).toBe('production');
-    expect(process.env.DEBUG_PILET).toBeUndefined();
-    expect(process.env.SHARED_DEPENDENCIES).toBeUndefined();
+    expect(process.env.DEBUG_PILET).toBe('');
+    expect(process.env.SHARED_DEPENDENCIES).toBe('');
   });
 
   it('setStandardEnvs respects a given pilet by setting the right env', async () => {
-    await setStandardEnvs({ pilet: 'foo' });
-    expect(process.env.DEBUG_PILET).toBe('foo');
-    expect(process.env.SHARED_DEPENDENCIES).toBeUndefined();
+    await setStandardEnvs({ develop: true });
+    expect(process.env.DEBUG_PILET).toBe('/$pilet-api');
+    expect(process.env.SHARED_DEPENDENCIES).toBe('');
   });
 
   it('setStandardEnvs concats the given dependencies', async () => {
     await setStandardEnvs({ dependencies: ['foo', 'bar'] });
-    expect(process.env.DEBUG_PILET).toBeUndefined();
+    expect(process.env.DEBUG_PILET).toBe('');
     expect(process.env.SHARED_DEPENDENCIES).toBe('foo,bar');
   });
 });

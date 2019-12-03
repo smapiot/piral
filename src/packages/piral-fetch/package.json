@@ -1,7 +1,7 @@
 {
   "name": "piral-fetch",
   "version": "0.8.4",
-  "description": "Extensions for standardizing fetch in Piral.",
+  "description": "Plugin for standardizing fetch in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -10,7 +10,7 @@
     "modules",
     "api",
     "fetch",
-    "extension",
+    "plugin",
     "spa"
   ],
   "author": "smapiot",
@@ -39,7 +39,7 @@
     "piral-core": "^0.8.4"
   },
   "peerDependencies": {
-    "piral-core": "^0.8.0 || ^0.9.0",
+    "piral-core": "^0.9.0",
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0"
   }

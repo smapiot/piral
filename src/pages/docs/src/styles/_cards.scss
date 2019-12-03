@@ -15,7 +15,14 @@
   }
 }
 
-.extension-info {
+.title-card {
+  flex: 0 0 500px;
+  max-width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.plugin-info {
   display: flex;
   flex-direction: row;
   align-items: center;

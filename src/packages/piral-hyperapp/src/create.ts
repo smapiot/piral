@@ -1,9 +1,9 @@
 import { Extend } from 'piral-core';
-import { mount, createElement } from './mount';
+import { mountHyperapp, createHyperappElement } from './mount';
 import { PiletHyperappApi } from './types';
 
 /**
- * Available configuration options for the Hyperapp extension.
+ * Available configuration options for the Hyperapp plugin.
  */
 export interface HyperappConfig {
   /**
@@ -14,27 +14,41 @@ export interface HyperappConfig {
 }
 
 /**
- * Creates a new set of Piral hyperapp API extensions.
+ * Creates new Pilet API extensions for the Hyperapp integration.
  */
 export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHyperappApi> {
   const { rootName = 'slot' } = config;
 
   return context => {
-    context.converters.hyperapp = component => {
-      return (el, props, ctx) => {
-        return mount(el, component.root, props, ctx, component.state, component.actions);
-      };
-    };
+    context.converters.hyperapp = component => ({
+      mount(el, props, ctx) {
+        mountHyperapp(el, component.root, props, ctx, component.state, component.actions);
+      },
+      update(el, props, ctx) {
+        mountHyperapp(el, component.root, props, ctx, component.state, component.actions);
+      },
+      unmount(el) {
+        el.innerHTML = '';
+      },
+    });
 
     return api => {
       const HyperappExtension = props =>
-        createElement(rootName, {
+        createHyperappElement(rootName, {
           oncreate(element: HTMLElement) {
             api.renderHtmlExtension(element, props);
           },
         });
 
       return {
+        fromHyperapp(root, state, actions) {
+          return {
+            type: 'hyperapp',
+            root,
+            state,
+            actions,
+          };
+        },
         HyperappExtension,
       };
     };

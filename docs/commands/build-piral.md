@@ -70,6 +70,14 @@ Performs a fresh build by removing the target directory first.
 - Type: `boolean`
 - Default: `false`
 
+### `--type`
+
+Selects the target type of the build. "all" builds all target types.
+
+- Type: `string`
+- Choices: `"all"`, `"release"`, `"develop"`
+- Default: `"all"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

@@ -7,4 +7,5 @@ export * from './media';
 export * from './onClickOutside';
 export * from './onScreenVisible';
 export * from './promise';
+export * from './setter';
 export * from './sharedData';

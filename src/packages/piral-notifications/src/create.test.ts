@@ -1,6 +1,5 @@
 import { Atom } from '@dbeining/react-atom';
 import { createNotificationsApi } from './create';
-import { PiletNotificationsApi } from './types';
 
 function createMockContainer() {
   return {
@@ -20,7 +19,7 @@ describe('Create Notifications API Extensions', () => {
     const container = createMockContainer();
     container.context.openNotification = jest.fn();
     container.context.closeNotification = jest.fn();
-    const api = createNotificationsApi()(container.context) as PiletNotificationsApi;
+    const api = (createNotificationsApi()(container.context) as any)(container.api);
     const close = api.showNotification('my notification');
     close();
     expect(container.context.openNotification).toHaveBeenCalled();
@@ -32,7 +31,7 @@ describe('Create Notifications API Extensions', () => {
     const container = createMockContainer();
     container.context.openNotification = jest.fn();
     container.context.closeNotification = jest.fn();
-    const api = createNotificationsApi()(container.context) as PiletNotificationsApi;
+    const api = (createNotificationsApi()(container.context) as any)(container.api);
     api.showNotification('my notification', {
       autoClose: 100,
     });

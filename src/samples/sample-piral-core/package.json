@@ -24,42 +24,26 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
-    "@angular/common": "^8.0.0",
-    "@angular/compiler": "^8.0.0",
-    "@angular/core": "^8.0.0",
-    "@angular/platform-browser": "^8.0.0",
-    "@angular/platform-browser-dynamic": "^8.0.0",
-    "core-js": "^2.5.7",
-    "hyperapp": "^1.2.10",
     "piral-containers": "^0.8.4",
     "piral-core": "^0.8.4",
     "piral-dashboard": "^0.8.4",
     "piral-feeds": "^0.8.4",
     "piral-forms": "^0.8.4",
-    "piral-hyperapp": "^0.8.4",
     "piral-menu": "^0.8.4",
-    "piral-ng": "^0.8.4",
     "piral-notifications": "^0.8.4",
     "piral-search": "^0.8.4",
-    "piral-vue": "^0.8.4",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router": ">=5.0.0",
-    "react-router-dom": ">=5.0.0",
-    "rxjs": "^6.3.3",
-    "vue": "^2.6.10",
-    "vue-hot-reload-api": "^2.3.3",
-    "zone.js": "^0.9.1"
+    "react-router-dom": ">=5.0.0"
   },
   "devDependencies": {
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "latest",
-    "@vue/component-compiler-utils": "^3.0.0",
     "piral-cli": "^0.8.4",
-    "sass": "^1.17.0",
-    "vue-template-compiler": "^2.6.10"
+    "sass": "^1.17.0"
   },
   "scripts": {
     "build": "tsc",

@@ -1,4 +1,4 @@
-import { WrappedComponent, Dict, BaseComponentProps, AnyComponent } from 'piral-core';
+import { WrappedComponent, Dict, BaseComponentProps, AnyComponent, BaseRegistration } from 'piral-core';
 import { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
@@ -94,7 +94,7 @@ export interface MenuSettings {
 
 export type MenuType = 'general' | 'admin' | 'user' | 'header' | 'footer';
 
-export interface MenuItemRegistration {
+export interface MenuItemRegistration extends BaseRegistration {
   component: WrappedComponent<MenuComponentProps>;
   settings: MenuSettings;
 }

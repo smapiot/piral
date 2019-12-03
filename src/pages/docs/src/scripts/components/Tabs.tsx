@@ -27,9 +27,7 @@ export const Tabs = withRouter<TabsProps, React.FC<TabsProps>>(({ titles, childr
         <ul>
           {titles.map((title, i) => (
             <li key={i}>
-              <Link
-                to={match.path.replace(':tab?', keys[i])}
-                className={i === active ? 'active' : ''}>
+              <Link replace to={match.path.replace(':tab?', keys[i])} className={i === active ? 'active' : ''}>
                 {title}
               </Link>
             </li>

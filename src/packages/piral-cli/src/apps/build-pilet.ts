@@ -8,7 +8,6 @@ import {
   extendBundlerForPilet,
   postProcess,
   getFileWithExtension,
-  logFail,
   removeDirectory,
   extendBundlerWithPlugins,
   clearCache,
@@ -43,8 +42,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const packageJson = await findFile(targetDir, 'package.json');
 
   if (!packageJson) {
-    logFail('Cannot find the "%s". You need a valid package.json for your pilet.', 'package.json');
-    throw new Error('Invalid pilet.');
+    throw new Error(`Cannot find the "package.json". You need a valid package.json for your pilet.`);
   }
 
   const root = dirname(packageJson);

@@ -1,36 +1,9 @@
 import { Extend, createInstance, PiralConfiguration } from 'piral-core';
-import {
-  createFetchApi,
-  createGqlApi,
-  createLocaleApi,
-  createDashboardApi,
-  createMenuApi,
-  createNotificationsApi,
-  createModalsApi,
-  createFeedsApi,
-} from 'piral-ext';
-import { PiralExtSettings } from './types';
+import { createStandardApi, PiralExtSettings } from 'piral-ext';
 
 /**
- * Creates an array including all standard APIs from piral-ext.
- * @param settings Customizes the standard extension settings.
- */
-export function createStandardApi(settings: PiralExtSettings = {}) {
-  return [
-    createFetchApi(settings.fetch),
-    createGqlApi(settings.gql),
-    createLocaleApi(settings.locale),
-    createDashboardApi(settings.dashboard),
-    createMenuApi(settings.menu),
-    createNotificationsApi(settings.notifications),
-    createModalsApi(settings.modals),
-    createFeedsApi(settings.feeds),
-  ];
-}
-
-/**
- * Extends the standard Piral API with custom API and settings.
- * @param settings Customizes the standard extension settings.
+ * Extends the standard Pilet API with custom API and settings.
+ * @param settings Customizes the standard plugin settings.
  * @param customApis The custom APIs to add.
  */
 export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Extend | Array<Extend> = []) {
@@ -41,7 +14,7 @@ export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Exte
 /**
  * Creates a standard Piral instance.
  * @param config The config for creating the piral state.
- * @param settings Customizes the standard extension settings.
+ * @param settings Customizes the standard plugin settings.
  */
 export function createPiral(config: PiralConfiguration = {}, settings?: PiralExtSettings) {
   return createInstance({

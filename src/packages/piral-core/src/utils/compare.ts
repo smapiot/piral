@@ -1,48 +1,29 @@
-function compareObjects(a: Object, b: Object) {
-  const keysOfA = Object.keys(a);
-  const keysOfB = Object.keys(b);
-
-  if (keysOfA.length === keysOfB.length) {
-    for (const key of keysOfA) {
-      if (keysOfB.indexOf(key) === -1) {
-        return false;
-      } else if (!compare(a[key], b[key])) {
-        return false;
-      }
+function compareObjects(a: any, b: any) {
+  for (const i in a) {
+    if (!(i in b)) {
+      return false;
     }
-
-    return true;
   }
 
-  return false;
-}
-
-function compareArrays(a: Array<any>, b: Array<any>) {
-  if (a.length === b.length) {
-    for (let i = 0; i < a.length; i++) {
-      const ai = a[i];
-      const bi = b[i];
-
-      if (!compare(ai, bi)) {
-        return false;
-      }
+  for (const i in b) {
+    if (!compare(a[i], b[i])) {
+      return false;
     }
-
-    return true;
   }
 
-  return false;
+  return true;
 }
 
 export function compare<T>(a: T, b: T) {
   if (a !== b) {
-    if (Array.isArray(a) && Array.isArray(b)) {
-      return compareArrays(a, b);
-    } else if (typeof a === 'object' && typeof b === 'object') {
+    const ta = typeof a;
+    const tb = typeof b;
+
+    if (ta === tb && ta === 'object' && a && b) {
       return compareObjects(a, b);
-    } else {
-      return false;
     }
+
+    return false;
   }
 
   return true;

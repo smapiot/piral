@@ -1,7 +1,7 @@
 {
   "name": "piral-menu",
   "version": "0.8.4",
-  "description": "Extensions for the integration of menu items in Piral.",
+  "description": "Plugin for the integration of menu items in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "menu"
   ],
   "author": "smapiot",
@@ -38,6 +38,6 @@
     "piral-core": "^0.8.4"
   },
   "peerDependencies": {
-    "piral-core": "^0.8.0 || ^0.9.0"
+    "piral-core": "^0.9.0"
   }
 }

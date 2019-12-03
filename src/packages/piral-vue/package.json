@@ -1,7 +1,7 @@
 {
   "name": "piral-vue",
   "version": "0.8.4",
-  "description": "Extensions for integrating Vue components in Piral.",
+  "description": "Plugin for integrating Vue components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,7 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
     "vue",
     "vuex"
   ],
@@ -40,7 +40,7 @@
     "vue": "^2.6.10"
   },
   "peerDependencies": {
-    "piral-core": "^0.8.0 || ^0.9.0",
+    "piral-core": "^0.9.0",
     "vue": "^2.0.0"
   }
 }

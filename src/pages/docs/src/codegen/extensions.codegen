@@ -1,27 +1,27 @@
 const { resolve } = require('path');
 const { readFileSync } = require('fs');
-const { getExtensionTypes, getName, generateFile, generated, generatedName, getExtensionImage } = require('./paths');
+const { getPluginTypes, getName, generateFile, generated, generatedName, getPluginImage } = require('./paths');
 const { render } = require('./markdown');
 const { docRef } = require('./utils');
 
 function getRoute(name) {
-  return (name && `/reference/extensions/${name}/:tab?`) || '';
+  return (name && `/reference/plugins/${name}/:tab?`) || '';
 }
 
 module.exports = function() {
-  const files = getExtensionTypes();
+  const files = getPluginTypes();
 
   const imports = files
     .map(file => {
       const type = readFileSync(file, 'utf8');
       const name = getName(file);
-      const image = getExtensionImage(name);
+      const image = getPluginImage(name);
       const readme = resolve(__dirname, '..', '..', '..', '..', 'packages', name, 'README.md');
       const { mdValue } = render(readme, generated);
       const content = [
         '`',
         '<h2 id="installation">Installation</h2>',
-        '<p>Add the extension to your Piral instance by running:</p>',
+        '<p>Add the plugin to your Piral instance by running:</p>',
         `<pre><code>npm i ${name}</code></pre>`,
         '<h2 id="description">Description</h2>',
         mdValue.substr(mdValue.indexOf('</h1>') + 5),
@@ -36,8 +36,8 @@ import { TypeInfo, Tabs, Markdown } from '../../scripts/components';
 
 export default () => (
   <section className="container">
-    <Link to="/reference/extensions" className="nav-link">Extensions</Link> /
-    <div className="extension-info">
+    <Link to="/reference/plugins" className="nav-link">Plugins</Link> /
+    <div className="plugin-info">
       <img src={require('../../assets/${image}')} />
       <h1>${name}</h1>
     </div>
