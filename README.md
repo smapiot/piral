@@ -2,15 +2,17 @@
 
 # [Piral](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![Lerna](https://img.shields.io/badge/monorepo-lerna-cc00ff.svg)](https://lernajs.io/) [![Build Status](https://smapiot.visualstudio.com/piral/_apis/build/status/piral-CI?branchName=develop)](https://smapiot.visualstudio.com/piral/_build/latest?definitionId=10) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
 
-Easily build a next generation portal application using microfrontends. Piral enables you to create a modular frontend application that is extended at runtime with decoupled modules called *pilets* leveraging a microfrontend architecture. A pilet can be developed independently and ships with the necessary code, as well as all other relevant assets.
+Easily build a next generation portal application using microfrontends. Piral enables you to create a modular frontend application that is extended at runtime with decoupled modules called *pilets* leveraging a **microfrontend architecture**. A pilet can be **developed independently** and ships with the necessary code, as well as all other relevant assets.
 
-:zap: A pilet is capable of dynamically extending other pilets or using such extension slots itself.
+This makes Piral an ideal foundation for a mid-sized to large-scale applications developed by **distributed teams**.
 
-:zap: A pilet is isolated (developed and handled) and will never destroy your application.
+:zap: A pilet is capable of dynamically **extending other pilets** or using such extension slots itself.
 
-:zap: A pilet can be developed with any technology using a standard IDE.
+:zap: A pilet is **isolated** (developed and handled) and will never destroy your application.
 
-:zap: A pilet can be updated and published within seconds.
+:zap: A pilet can be developed with **any technology** using a **standard IDE**.
+
+:zap: A pilet can be updated and **published within seconds**.
 
 ## Getting Started
 
