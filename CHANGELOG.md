@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.10.0 (tbd)
+
+* Introduce compatibility check for the Piral CLI (#94)
+* Added new optional plugin `piral-litel` for Lit-Element (#85)
+
 ## 0.9.0 (December 3, 2019)
 
 * Bundle for emulation (#68)

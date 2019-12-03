@@ -41,6 +41,6 @@
   },
   "peerDependencies": {
     "angular": "^1.7.0",
-    "piral-core": "^0.9.0"
+    "piral-core": "^0.9.0 || ^0.10.0"
   }
 }
