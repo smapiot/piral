@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.0 (tbd)
+## 0.9.0 (December 3, 2019)
 
 * Bundle for emulation (#68)
 * Added `piral-pwa` plugin (#26)
