@@ -4,13 +4,25 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-tracking` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes the `track...` APIs to be used in pilets for using a set of analytics, telemetry, and tracking tools from your Piral instance.
+The set includes the `track...` APIs to be used in pilets for using a set of analytics, telemetry, and tracking tools from your Piral instance.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `trackEvent()`
+
+Tracks a custom event incl. properties and other standard metrics.
+
+### `trackError()`
+
+Tracks an error or exceptional behavior incl. properties.
+
+### `trackFrame()`
+
+Starts a tracking frame. The frame can be ended via the returned callback.
 
 ## Setup and Bootstrapping
 

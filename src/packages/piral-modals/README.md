@@ -8,7 +8,19 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-mo
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `registerModal()`
+
+Adds a modal dialog definition to the app shell. Can be called from *any* pilet using the specified name.
+
+### `unregisterModal()`
+
+Removes a modal dialog definition from the app shell.
+
+### `showModal()`
+
+Shows the modal dialog registered with the provided name.
+
+Does not open in case no modal dialog using the provided name is available (i.e., registered in the app shell).
 
 ## Setup and Bootstrapping
 

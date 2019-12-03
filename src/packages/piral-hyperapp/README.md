@@ -4,13 +4,21 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-hyperapp` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes an Hyperapp converter for any component registration, as well as a `fromHyperapp` shortcut and a `HyperappExtension` component.
+The set includes an Hyperapp converter for any component registration, as well as a `fromHyperapp` shortcut and a `HyperappExtension` component.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `fromHyperapp()`
+
+Transforms a standard Hyperapp app into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+
+### `HyperappExtension`
+
+The extension slot component to be used in Hyperapp apps.
 
 ## Setup and Bootstrapping
 

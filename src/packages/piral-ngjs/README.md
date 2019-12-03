@@ -4,13 +4,21 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-ngjs` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes an Angular.js converter for any component registration, as well as a `fromNgjs` shortcut and a `NgjsExtension` component.
+The set includes an Angular.js converter for any component registration, as well as a `fromNgjs` shortcut and a `NgjsExtension` component.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `fromNgjs()`
+
+Transforms a standard Angular.js module with a named component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+
+### `NgjsExtension`
+
+The extension slot module to be referenced in Angular.js module definitions. Allows using `extension-component` elements.
 
 ## Setup and Bootstrapping
 

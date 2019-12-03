@@ -10,7 +10,9 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `createState()`
+
+Creates a new pilet global state container. The state container will essentially couple to the app shell global state container. It is, however, only available for use inside the pilet.
 
 ## Setup and Bootstrapping
 

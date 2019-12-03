@@ -8,7 +8,9 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-no
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `showNotification()`
+
+Shows a notification inside the app shell. The notification can be permanent (to be closed by the user) or temporary (closes after a specified time).
 
 ## Setup and Bootstrapping
 

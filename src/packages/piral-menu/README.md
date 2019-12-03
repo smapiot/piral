@@ -8,7 +8,15 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-me
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `registerMenu()`
+
+Adds the definition of a menu item to the app shell. Optionally specifies the type of menu where the item should be shown.
+
+If the first argument is a string a named menu item is registered. A named menu item can also be removed.
+
+### `unregisterMenu()`
+
+Removes a menu item from the app shell. This requires a named menu item.
 
 ## Setup and Bootstrapping
 

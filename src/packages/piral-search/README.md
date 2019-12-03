@@ -10,7 +10,15 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `registerSearchProvider`
+
+Adds a search provider to be used in the app shell. The search provider will always be invoked when the global search is triggered.
+
+If the first argument is a string a named search provider is registered. A named search provider can also be removed.
+
+### `unregisterSearchProvider`
+
+Removes a search provider from the app shell. This requires a named search provider.
 
 ## Setup and Bootstrapping
 

@@ -4,7 +4,9 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-adal` brings to the table is a direct integration with Azure Active Directory on basis of the MSAL library that can be used with `piral` or `piral-core`.
 
-By default, these Pilet API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes the `getAccessToken` API to retrieve the current user's access token.
+The set includes the `getAccessToken` API to retrieve the current user's access token.
+
+By default, these Pilet API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 

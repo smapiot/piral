@@ -4,11 +4,15 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-pwa` brings to the table is a simple way to expose your application as a PWA with the capability to use offline storage for pilets, too.
 
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-The `showAppNotification` API allows pilets to present a "native" notification. The exact looks of this are platform dependent, e.g., on Chrome for Windows 10 an item as added to the notification bar. On Chrome for MacOSX a quick notification appears.
+### `showAppNotification()`
+
+Allows pilets to present a "native" notification. The exact looks of this are platform dependent, e.g., on Chrome for Windows 10 an item as added to the notification bar. On Chrome for MacOS X a quick notification appears.
 
 ## Setup and Bootstrapping
 

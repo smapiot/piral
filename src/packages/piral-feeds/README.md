@@ -10,7 +10,11 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `createConnector`
+
+Creates a new feed connector, which is an abstraction over a state container driven by the typical lifecycle of a data feed connection.
+
+Returns a higher-order component for providing a `data` prop that reflects the current feed data.
 
 ## Setup and Bootstrapping
 

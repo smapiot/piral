@@ -4,7 +4,9 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-auth` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes the `getUser` API to retrieve the user, login / logout functionality and user state management incl. features and permissions.
+The set includes the `getUser` API to retrieve the user, login / logout functionality and user state management incl. features and permissions.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 

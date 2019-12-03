@@ -8,7 +8,19 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-tr
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `translate()`
+
+Returns the translation (i.e., a string defined for the currently selected language) of a provided language key.
+
+Variables can also be provided using an object as the second argument. The variable replacement looks for occurrences of double curly braces, e.g., `{{foo}}`.
+
+### `setTranslations()`
+
+Sets the translations (custom language to key to string mapping) for the pilet.
+
+### `getTranslations()`
+
+Gets the translations defined in the pilet.
 
 ## Setup and Bootstrapping
 

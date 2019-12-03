@@ -4,13 +4,19 @@
 
 This is plugin that only has a peer dependency to `piral-core`. What `piral-dashboard` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
-
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `registerTile()`
+
+Adds the definition of a tile to the app shell. Optionally specifies display characteristics like the initial rows, initial columns, or if the tile can be resized by the user.
+
+If the first argument is a string a named tile is registered. A named tile can also be removed.
+
+### `unregisterTile()`
+
+Removes a tile from the app shell. This requires a named tile.
 
 ## Setup and Bootstrapping
 

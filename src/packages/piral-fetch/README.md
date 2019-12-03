@@ -4,11 +4,15 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-fetch` brings to the table is a single Pilet API extension called `fetch` that is used by `piral`.
 
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-`fetch` is a simpler version of the standard `fetch` from the browser.
+### `fetch()`
+
+This is a simpler version of the standard `fetch` from the browser.
 
 ## Setup and Bootstrapping
 
@@ -48,6 +52,8 @@ const instance = createInstance({
   // ...
 });
 ```
+
+**Note**: `piral-fetch` plays nicely together with authentication providers such as `piral-adal`. As such authentication tokens are automatically inserted on requests to the base URL.
 
 ## License
 

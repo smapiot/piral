@@ -4,13 +4,21 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-ng` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes an Angular converter for any component registration, as well as a `fromNg` shortcut and a `NgExtension` component.
+The set includes an Angular converter for any component registration, as well as a `fromNg` shortcut and a `NgExtension` component.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `fromNg()`
+
+Transforms a standard Angular component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+
+### `NgExtension`
+
+The extension slot module to be used in Angular components. Automatically added to allow using `extension-component` elements.
 
 ## Setup and Bootstrapping
 

@@ -4,19 +4,21 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-vue` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes a Vue converter for any component registration, as well as a `fromVue` shortcut and a `VueExtension` component.
+The set includes a Vue converter for any component registration, as well as a `fromVue` shortcut and a `VueExtension` component.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-### `fromVue(root)`
+### `fromVue()`
 
-Prepares a Vue root component to be used as a component in Piral. Simply wraps the component in an object with a `type` property set to `vue`.
+Transforms a standard Vue component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
 
 ### `VueExtension`
 
-Represents a Vue component that allows using extensions from Piral.
+The extension slot component to be used in Vue components.
 
 ## Setup and Bootstrapping
 
