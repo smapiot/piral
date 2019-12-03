@@ -1,6 +1,6 @@
 {
   "name": "piral-pwa",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "description": "Plugin for creating the Piral instance as a PWA shell.",
   "keywords": [
     "piral",
@@ -37,9 +37,8 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-pwa.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {},
   "devDependencies": {
-    "piral-core": "^0.8.3"
+    "piral-core": "^0.9.0"
   },
   "peerDependencies": {
     "minimatch": "^3.0.0",
