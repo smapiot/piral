@@ -154,7 +154,6 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <div className="app-container">
-      <Notifications />
       <div className="app-header">
         <h1>Sample Portal ({layout})</h1>
         <SearchForm />
@@ -162,6 +161,7 @@ const Layout: React.FC = ({ children }) => {
       </div>
       <div className="app-content">{children}</div>
       <div className="app-footer">For more information or the source code check out our GitHub repository.</div>
+      <Notifications />
     </div>
   );
 };
