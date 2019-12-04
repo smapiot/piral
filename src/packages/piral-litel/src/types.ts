@@ -1,37 +1,32 @@
-import { Component } from 'lit-element';
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import { ForeignComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletLitElApi {}
 
   interface PiralCustomComponentConverters<TProps> {
-    litel(component: LitElComponent<TProps>): ForeignComponent<TProps>;
+    litel(component: LitElComponent): ForeignComponent<TProps>;
   }
 }
 
-export interface LitElComponent<TProps> {
+export interface LitElComponent {
   /**
-   * The Lit Element root component to render.
+   * The name of the LitElement root component to render.
    */
-  component: Component<TProps>;
+  elementName: string;
   /**
-   * The type of the Lit Element component.
+   * The type of the LitElement component.
    */
   type: 'litel';
 }
 
 /**
- * Defines the provided set of Lit Element Pilet API extensions.
+ * Defines the provided set of LitElement Pilet API extensions.
  */
 export interface PiletLitElApi {
   /**
-   * Wraps a Lit Element component for use in Piral.
-   * @param component The root component.
-   * @returns The Piral Lit Element component.
+   * Wraps a LitElement component for use in Piral.
+   * @param component The name of the root component.
+   * @returns The Piral LitElement component.
    */
-  fromLitEl<TProps>(component: Component<TProps>): LitElComponent<TProps>;
-  /**
-   * Lit Element component for displaying extensions of the given name.
-   */
-  LitElExtension: Component<ExtensionSlotProps>;
+  fromLitEl(elementName: string): LitElComponent;
 }

@@ -1,5 +1,8 @@
 import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
+import '@webcomponents/webcomponentsjs/webcomponents-loader';
+import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 
 import * as React from 'react';
 import { render } from 'react-dom';
@@ -7,6 +10,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { createInstance, useGlobalState, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
 import { createNgApi } from 'piral-ng';
 import { createNgjsApi } from 'piral-ngjs';
+import { createLitElApi } from 'piral-litel';
 import { createVueApi } from 'piral-vue';
 import { createDashboardApi, Dashboard } from 'piral-dashboard';
 import { createInfernoApi } from 'piral-inferno';
@@ -63,6 +67,7 @@ const instance = createInstance({
     createVueApi(),
     createNgApi(),
     createNgjsApi(),
+    createLitElApi(),
     createInfernoApi(),
     createHyperappApi(),
     createPreactApi(),

@@ -1,9 +1,9 @@
-import { Extend, ExtensionSlotProps } from 'piral-core';
-import { Component } from 'lit-element';
+import { Extend, BaseComponentProps } from 'piral-core';
+import { LitElement, property, customElement } from 'lit-element';
 import { PiletLitElApi } from './types';
 
 /**
- * Available configuration options for the Lit Element plugin.
+ * Available configuration options for the LitElement plugin.
  */
 export interface LitElConfig {
   /**
@@ -11,66 +11,73 @@ export interface LitElConfig {
    * @default extension-component
    */
   selector?: string;
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
 }
 
 /**
- * Creates new Pilet API extensions for integration of Lit Element.
+ * Creates new Pilet API extensions for integration of LitElement.
  */
 export function createLitElApi(config: LitElConfig = {}): Extend<PiletLitElApi> {
-  const { rootName = 'slot', selector = 'extension-component' } = config;
+  const { selector = 'extension-component' } = config;
 
-  const LitElExtension: Component<ExtensionSlotProps> = {
-    functional: false,
-    props: ['name', 'empty', 'render', 'params'],
-    inject: ['piral'],
-    render(createElement) {
-      return createElement(rootName);
-    },
-    mounted() {
-      this.piral.renderHtmlExtension(this.$el, {
-        empty: this.empty,
-        params: this.params,
-        render: this.render,
-        name: this.name,
-      });
-    },
-  };
+  @customElement(selector)
+  class LitElExtension extends LitElement {
+    @property() name: string;
+    @property() params: any;
+    @property() onEmpty: () => any;
+    @property() onRender: () => any;
+
+    render() {
+      return undefined;
+    }
+
+    updated() {
+      this.dispatchEvent(
+        new CustomEvent('render-html', {
+          bubbles: true,
+          detail: {
+            target: this.shadowRoot,
+            props: {
+              empty: this.onEmpty,
+              render: this.onRender,
+              params: this.params,
+              name: this.name,
+            },
+          },
+        }),
+      );
+    }
+  }
 
   return context => {
-    context.converters.litel = ({ root }) => {
-      let instance: any = undefined;
-
+    context.converters.litel = ({ elementName }) => {
       return {
         mount(parent, data, ctx) {
-          const el = parent.appendChild(document.createElement(rootName));
-          instance = mountVue(el, root, data, ctx);
-        },
-        update(_, data) {
-          for (const prop in data) {
-            instance[prop] = data[prop];
-          }
+          const { piral } = data as BaseComponentProps;
+          const el = parent.appendChild(document.createElement(elementName));
+          el.setAttribute('name', elementName);
+          el.setAttribute('props', data);
+          el.setAttribute('ctx', ctx);
+          el.addEventListener(
+            'render-html',
+            (ev: CustomEvent) => {
+              piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+            },
+            false,
+          );
         },
         unmount(el) {
-          instance.$destroy();
           el.innerHTML = '';
-          instance = undefined;
         },
       };
     };
 
     return {
-      fromLitEl(component) {
+      fromLitEl(elementName) {
         return {
           type: 'litel',
-          component,
+          elementName,
         };
       },
-      LitElExtension,
     };
   };
 }

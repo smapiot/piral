@@ -2,6 +2,7 @@ import { ReactPilet } from './reactPilet';
 import { VuePilet } from './vuePilet';
 import { NgPilet } from './ngPilet';
 import { NgjsPilet } from './ngjsPilet';
+import { LitElPilet } from './litelPilet';
 import { HyperappPilet } from './hyperappPilet';
 import { InfernoPilet } from './infernoPilet';
 import { PreactPilet } from './preactPilet';
@@ -15,4 +16,13 @@ import { PreactPilet } from './preactPilet';
  * repository (or at least in its own folder / structure in a
  * monorepo).
  */
-export const availablePilets = [ReactPilet, VuePilet, NgPilet, HyperappPilet, InfernoPilet, PreactPilet, NgjsPilet];
+export const availablePilets = [
+  ReactPilet,
+  VuePilet,
+  NgPilet,
+  HyperappPilet,
+  InfernoPilet,
+  PreactPilet,
+  NgjsPilet,
+  LitElPilet,
+];
