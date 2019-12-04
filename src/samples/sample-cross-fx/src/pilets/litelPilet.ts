@@ -4,16 +4,21 @@ import { Pilet } from 'piral-core';
 @customElement('my-tile')
 class MyTile extends LitElement {
   @property() counter = 0;
-  @property() props: any;
+  @property({ type: Object }) props: any;
 
   firstUpdated() {
-    Array.prototype.forEach.call(document.querySelectorAll('link[rel=stylesheet]'), sheet => {
-      const link = document.createElement('link');
-      link.href = sheet.href;
-      link.rel = sheet.rel;
-      link.type = 'text/css';
-      this.shadowRoot.prepend(link);
-    });
+    const style = this.shadowRoot.ownerDocument.createElement('style');
+    style.appendChild(
+      document.createTextNode(
+        Array.prototype.map
+          .call(
+            document.querySelectorAll('link[rel=stylesheet]'),
+            sheet => `@import url(${JSON.stringify(sheet.href)});`,
+          )
+          .join('\n'),
+      ),
+    );
+    this.shadowRoot.prepend(style);
   }
 
   render() {
@@ -22,7 +27,7 @@ class MyTile extends LitElement {
         <h3>LitElement: ${this.counter}</h3>
         <p>
           ${this.props.rows} rows and ${this.props.columns} columns
-          <extension-component name="smiley"></extension-component>
+          <piral-extension name="smiley"></piral-extension>
         </p>
         <button @click="${() => this.counter++}">Increment</button>
         <button @click="${() => this.counter--}">Decrement</button>

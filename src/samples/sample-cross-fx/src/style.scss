@@ -150,15 +150,15 @@ ul.app-nav {
   flex-wrap: wrap;
   align-content: flex-start;
   margin: -1em;
+}
 
-  .tile {
-    width: 200px;
-    height: 150px;
-    border: 1px solid #ccc;
-    background: #fdfdfd;
-    margin: 1em;
-    padding: 1em;
-    display: flex;
-    flex-direction: column;
-  }
+.tile {
+  width: 200px;
+  height: 150px;
+  border: 1px solid #ccc;
+  background: #fdfdfd;
+  margin: 1em;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
 }

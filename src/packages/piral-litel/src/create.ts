@@ -8,7 +8,7 @@ import { PiletLitElApi } from './types';
 export interface LitElConfig {
   /**
    * Defines the name of the extension component.
-   * @default extension-component
+   * @default piral-extension
    */
   selector?: string;
 }
@@ -17,7 +17,7 @@ export interface LitElConfig {
  * Creates new Pilet API extensions for integration of LitElement.
  */
 export function createLitElApi(config: LitElConfig = {}): Extend<PiletLitElApi> {
-  const { selector = 'extension-component' } = config;
+  const { selector = 'piral-extension' } = config;
 
   @customElement(selector)
   class LitElExtension extends LitElement {
@@ -55,9 +55,9 @@ export function createLitElApi(config: LitElConfig = {}): Extend<PiletLitElApi> 
           const { piral } = data as BaseComponentProps;
           const el = parent.appendChild(document.createElement(elementName));
           el.setAttribute('name', elementName);
-          el.setAttribute('props', data);
+          el.setAttribute('props', JSON.stringify(data));
           el.setAttribute('ctx', ctx);
-          el.addEventListener(
+          el.shadowRoot.addEventListener(
             'render-html',
             (ev: CustomEvent) => {
               piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
