@@ -98,7 +98,7 @@ The Piral tooling also supports scaffolding a pilet to get started. Ensure that 
 pilet new ./my-app/my-app-1.0.0.tgz --target my-pilet
 ```
 
-With the `pilet new` command, a new pilet with pre-defined content is created. The first parameter `./my-app/my-app-1.0.0.tgz` specifies the application shell, which the pilet will be built for. Make sure that you adpat the path to the piral instance located in your local directory structure. If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
+With the `pilet new` command, a new pilet with pre-defined content is created. The first parameter `./my-app/my-app-1.0.0.tgz` specifies the application shell, which the pilet will be built for. Make sure that you adjust the path to the Piral instance located in your local directory structure. If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 
 ### The Setup Method for a Pilet
 
