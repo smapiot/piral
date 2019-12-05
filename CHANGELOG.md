@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.9.1 (tbd)
+
+* Fixed source maps for debugging pilet (#103)
+* Fixed bundle splitting in pilets (#102)
+
 ## 0.9.0 (December 3, 2019)
 
 * Bundle for emulation (#68)

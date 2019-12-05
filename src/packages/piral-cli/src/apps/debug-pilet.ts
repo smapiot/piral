@@ -33,18 +33,18 @@ function findEntryModule(entryFile: string, target: string) {
 }
 
 export interface DebugPiletOptions {
+  logLevel?: 1 | 2 | 3;
+  fresh?: boolean;
   entry?: string;
   port?: number;
   app?: string;
-  logLevel?: 1 | 2 | 3;
-  fresh?: boolean;
 }
 
 export const debugPiletDefaults = {
-  entry: './src/index',
-  port: 1234,
   logLevel: 3 as const,
+  entry: './src/index',
   fresh: false,
+  port: 1234,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -96,7 +96,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   modifyBundlerForPilet(Bundler.prototype, externals, target);
 
-  const bundler = new Bundler(entryModule, extendConfig({ logLevel, hmr: false, scopeHoist: false, publicUrl: './' }));
+  const bundler = new Bundler(
+    entryModule,
+    extendConfig({ logLevel, hmr: false, minify: true, scopeHoist: false, publicUrl: './' }),
+  );
   const api = debugPiletApi;
   const injectorConfig = {
     active: true,
