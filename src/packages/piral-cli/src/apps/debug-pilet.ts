@@ -96,7 +96,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   modifyBundlerForPilet(Bundler.prototype, externals, target);
 
-  const bundler = new Bundler(entryModule, extendConfig({ logLevel, hmr: false }));
+  const bundler = new Bundler(entryModule, extendConfig({ logLevel, hmr: false, scopeHoist: false, publicUrl: './' }));
   const api = debugPiletApi;
   const injectorConfig = {
     active: true,
