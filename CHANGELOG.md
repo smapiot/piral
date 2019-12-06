@@ -4,6 +4,8 @@
 
 * Introduce compatibility check for the Piral CLI (#94)
 * Added new optional plugin `piral-litel` for Lit-Element (#85)
+* Added new optional plugin `piral-aurelia` for Aurelia (#84)
+* Added new optional plugin `piral-mithril` for Mithril.js (#88)
 
 ## 0.9.1 (tbd)
 
@@ -21,7 +23,7 @@
 * Generate the declaration dynamically (#89)
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
-* Added new optional plugin `piral-inferno` (#86)
+* Added new optional plugin `piral-inferno` (#ƒ)
 * Added new optional plugin `piral-preact` (#86)
 * Added new optional plugin `piral-ngjs` (#87)
 * Improved and added better error messages in the Piral CLI (#92)
