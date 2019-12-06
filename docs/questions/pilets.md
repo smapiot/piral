@@ -77,3 +77,13 @@ Coming up with some mechanism on, e.g., events, or the shared data, will be both
 All that's needed is a common name and understanding of the data and the rest will be done by Piral with the help of React.
 
 ---------------------------------------
+
+## How can I provide navigation?
+
+Piral is based on React and uses standard components known from the React ecosystem. We use `react-router-dom` for performing navigation tasks.
+
+For (internal) links we recommend using `Link`, e.g., `<Link to="/">Home/<Link>`.
+
+For other (programmatic) navigation we recommend using the `useHistory()` hook to retrieve the `history` object. With this object you can easily navigate, e.g., using `history.push('/my-page')`.
+
+---------------------------------------

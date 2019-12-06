@@ -3,11 +3,13 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  margin: -1em;
 
   .demo {
     flex: 1 0 500px;
     padding: 1em;
     max-width: 100%;
+    box-sizing: border-box;
   }
 
   .responsive-image {
