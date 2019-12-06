@@ -179,3 +179,5 @@ Importantly, the sharing will always be indirect, i.e., the name of the owning p
 ## Conclusion
 
 Sharing fragments between pilets is a fundamental part of what makes Piral different. In Piral authors of pilets should never think "then I get this particular piece of functionality from *that* pilet", but instead "then I use a piece of functionality provided *if* available".
+
+In the next tutorial we look at how functionality and data can be provided from the Piral instance to the pilets.

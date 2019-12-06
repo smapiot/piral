@@ -11,6 +11,7 @@
 
 * Fixed source maps for debugging pilet (#103)
 * Fixed bundle splitting in pilets (#102)
+* Improved documentation w.r.t. sharing data (#104)
 
 ## 0.9.0 (December 3, 2019)
 

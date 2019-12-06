@@ -15,11 +15,25 @@
   }
 }
 
+.boxes.title-cards {
+  margin: -1em;
+  justify-content: normal;
+}
+
 .title-card {
   flex: 0 0 500px;
   max-width: 100%;
   padding: 1rem;
   box-sizing: border-box;
+
+  .btn {
+    width: 150px;
+    text-align: left;
+  }
+
+  &.small {
+    flex: 0 0 200px;
+  }
 }
 
 .plugin-info {

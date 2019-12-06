@@ -10,13 +10,12 @@ const version = process.env.BUILD_PCKG_VERSION;
 
 export const Layout: React.FC = ({ children }) => {
   const [open, setOpen] = React.useState(false);
+  const [active, setActive] = React.useState(false);
   const openSearch = (e: React.SyntheticEvent) => {
     e.preventDefault();
     setOpen(true);
   };
-  const closeSearch = () => {
-    setOpen(false);
-  };
+  const closeSearch = () => setOpen(false);
 
   return (
     <>
@@ -30,7 +29,12 @@ export const Layout: React.FC = ({ children }) => {
             <span className="brand-name">Piral</span>
             <span className="brand-suffix">Docs</span>
           </div>
-          <ul>
+          <div className="hamburger">
+            <a href="#" onClick={() => setActive(!active)}>
+              <i className="fas fa-bars" />
+            </a>
+          </div>
+          <ul className={active ? 'menu active' : 'menu'}>
             <li>
               <NavLink to="/tutorials">Guideline</NavLink>
             </li>
@@ -39,6 +43,11 @@ export const Layout: React.FC = ({ children }) => {
             </li>
             <li>
               <NavLink to="/samples">Samples</NavLink>
+            </li>
+            <li>
+              <a href="https://dev.to/t/piral" target="_blank">
+                Blog
+              </a>
             </li>
             <li>
               <NavLink to="/faq">FAQ</NavLink>
