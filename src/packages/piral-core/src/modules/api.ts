@@ -40,17 +40,17 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
       },
       renderHtmlExtension(element, props) {
         const portalId = 'data-portal-id';
-        let parent = element.parentElement;
+        let parent = element.parentNode || (element as ShadowRoot).host;
 
         while (parent) {
-          if (parent.hasAttribute(portalId)) {
-            const portal = createPortal(createElement(ExtensionSlot, props), element);
+          if (parent instanceof Element && parent.hasAttribute(portalId)) {
+            const portal = createPortal(createElement(ExtensionSlot, props), element as HTMLElement);
             const id = parent.getAttribute(portalId);
             context.showPortal(id, portal);
             break;
           }
 
-          parent = parent.parentElement;
+          parent = parent.parentNode || (parent as ShadowRoot).host;
         }
       },
       Extension: ExtensionSlot,

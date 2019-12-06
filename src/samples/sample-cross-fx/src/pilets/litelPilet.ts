@@ -1,10 +1,11 @@
 import { LitElement, customElement, html, property } from 'lit-element';
 import { Pilet } from 'piral-core';
+import { TileComponentProps } from 'piral-dashboard';
 
 @customElement('my-tile')
 class MyTile extends LitElement {
   @property() counter = 0;
-  @property({ type: Object }) props: any;
+  @property({ type: Object }) props: TileComponentProps;
 
   firstUpdated() {
     const style = this.shadowRoot.ownerDocument.createElement('style');
@@ -27,7 +28,7 @@ class MyTile extends LitElement {
         <h3>LitElement: ${this.counter}</h3>
         <p>
           ${this.props.rows} rows and ${this.props.columns} columns
-          <piral-extension name="smiley"></piral-extension>
+          <litel-extension name="smiley"></litel-extension>
         </p>
         <button @click="${() => this.counter++}">Increment</button>
         <button @click="${() => this.counter--}">Decrement</button>

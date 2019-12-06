@@ -86,10 +86,10 @@ export interface PiletCoreApi {
   Extension: ComponentType<ExtensionSlotProps>;
   /**
    * Renders an extension in a plain DOM component.
-   * @param element The DOM element as a container for rendering the extension.
+   * @param element The DOM element or shadow root as a container for rendering the extension.
    * @param props The extension's rendering props.
    */
-  renderHtmlExtension<T = any>(element: HTMLElement, props: ExtensionSlotProps<T>): void;
+  renderHtmlExtension<T = any>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<T>): void;
 }
 
 /**
