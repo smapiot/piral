@@ -4,10 +4,10 @@
 
 * Introduce compatibility check for the Piral CLI (#94)
 * Added new optional plugin `piral-litel` for Lit-Element (#85)
-* Added new optional plugin `piral-aurelia` for Aurelia (#84)
-* Added new optional plugin `piral-mithril` for Mithril.js (#88)
+* Added new optional plugin `piral-aurelia` for Aurelia (#80)
+* Added new optional plugin `piral-mithril` for Mithril.js (#79)
 
-## 0.9.1 (tbd)
+## 0.9.1 (December 6, 2019)
 
 * Fixed source maps for debugging pilet (#103)
 * Fixed bundle splitting in pilets (#102)
