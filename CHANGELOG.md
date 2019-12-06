@@ -7,6 +7,10 @@
 * Added new optional plugin `piral-aurelia` for Aurelia (#80)
 * Added new optional plugin `piral-mithril` for Mithril.js (#79)
 
+## 0.9.2 (tbd)
+
+* Fixed not found error when copying files for scaffold (#106)
+
 ## 0.9.1 (December 6, 2019)
 
 * Fixed source maps for debugging pilet (#103)
