@@ -132,7 +132,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const targetDir = dirname(entryFiles);
   const { name, version, root, dependencies, ...pilets } = await retrievePiletsInfo(entryFiles);
   const { externals } = pilets;
-  const dest = getDestination(entryFiles, target);
+  const dest = getDestination(entryFiles, resolve(baseDir, target));
 
   if (fresh) {
     await clearCache(root);
@@ -198,7 +198,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       },
     });
     await createDirectory(filesDir);
-    await copyScaffoldingFiles(rootDir, filesDir, pilets.files);
+    await copyScaffoldingFiles(root, filesDir, pilets.files);
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
     await generateDeclaration(outDir, root, name, dependencies.std);
     await createPackage(rootDir);
