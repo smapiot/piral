@@ -7,6 +7,8 @@ header .header {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 
   .logo {
     display: flex;
@@ -55,11 +57,27 @@ header .header {
     }
   }
 
-  @media (max-width: $mobileBrk) {
-    flex-direction: column;
-    align-items: flex-start;
+  .hamburger {
+    display: none;
 
-    ul {
+    a {
+      color: white;
+    }
+  }
+
+  @media (max-width: $mobileBrk) {
+    .hamburger {
+      display: block;
+    }
+
+    .menu {
+      display: none;
+      flex: 1 100%;
+
+      &.active {
+        display: block;
+      }
+
       flex-direction: column;
 
       > li {

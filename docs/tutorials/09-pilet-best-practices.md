@@ -115,10 +115,10 @@ export function setup(app: PiletApi) {
 }
 
 // page module: Page.tsx
-export const Page: React.FC<PiralPageComponent> = ({ piral }) => (
+export const Page: React.FC<PageComponentProps> = ({ piral }) => (
   <div>
     Sample display
-    <Extension name="example" />
+    <piral.Extension name="example" />
   </div>
 );
 ```
@@ -130,7 +130,7 @@ Consequently, code may be rewritten to looks as follows:
 ```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
-  const Example = () => <Extension name="example" />;
+  const Example = () => <app.Extension name="example" />;
   app.registerPage('/my-page', () => <Page Example={Example} />);
 }
 
@@ -144,6 +144,96 @@ export const Page: React.FC<{ Example: React.ComponentType }> = ({ Example }) =>
 ```
 
 This approach not only decouples Piral from the components defined in the pilet, but also improves the testability of the given code.
+
+## Reducing the App Shell Dependency
+
+As part of the convenience coming with Piral, every component (e.g., a tile, a page, ...) retrieves the `PiletApi` object for the current pilet in form of a prop called `piral`. While using this prop may be super important and convenient (e.g., just use `piral.translate` to obtain a localized string), it also couples your component to the provided app shell.
+
+We recommend keeping the dependency on the Piral instance as minimal as possible. This has the usual advantages:
+
+1. Your components are easier to test
+2. Your components are easier to share
+3. Your components communicate what they need
+4. Your pilet should be more resiliant against some API changes
+5. Your pilet may transfer to another technology more easily in the future
+
+In the best case the only file mentioning an import from your Piral instance is the `index.tsx` / root module of the pilet.
+
+We've seen this approach already in the section above.
+
+Let's look at an example code. We assume that our initial code looks as follows:
+
+```jsx
+// root module: index.tsx
+export function setup(app: PiletApi) {
+  app.registerPage('/my-page', Page);
+  app.registerTile(Tile);
+  app.registerMenu(Menu);
+}
+
+// page module: Page.tsx
+export const Page: React.FC<PageComponentProps> = ({ piral }) => (
+  <div>
+    <h1>{piral.translate('pageHeading')}</h1>
+  </div>
+);
+
+// page module: Tile.tsx
+export const Tile: React.FC<TileComponentProps> = ({ piral }) => (
+  <div>
+    <a href="#" onClick={() => piral.showModal('open-settings')}>Open Settings</a>
+  </div>
+);
+
+// page module: Menu.tsx
+export const Menu: React.FC<MenuComponentProps> = ({ piral }) => (
+  <div>
+    <Link to="/my-page">{piral.translate('menuTitle')}</Link>
+  </div>
+);
+```
+
+As we can see every component uses other part(s) of the provided `PiletApi`. Wrapping these components in the root module leads to less coupling in the modules / components.
+
+After the refactoring the code looks as follows:
+
+```jsx
+// root module: index.tsx
+export function setup(app: PiletApi) {
+  app.registerPage('/my-page', ({ piral }) => (
+    <Page labels={{ heading: piral.translate('pageHeading') }} />
+  ));
+  app.registerTile(({ piral }) => (
+    <Tile openSettings={() => piral.showModal('open-settings')} />
+  ));
+  app.registerMenu(({ piral }) => (
+    <Menu labels={{ title: piral.translate('menuTitle') }} />
+  ));
+}
+
+// page module: Page.tsx
+export const Page: React.FC<{ labels: { heading: string } }> = ({ labels }) => (
+  <div>
+    <h1>{labels.heading}</h1>
+  </div>
+);
+
+// page module: Tile.tsx
+export const Tile: React.FC<{ openSettings(): void }> = ({ openSettings }) => (
+  <div>
+    <a href="#" onClick={openSettings}>Open Settings</a>
+  </div>
+);
+
+// page module: Menu.tsx
+export const Menu: React.FC<{ labels: { title: string } }> = ({ labels }) => (
+  <div>
+    <Link to="/my-page">{labels.title}</Link>
+  </div>
+);
+```
+
+Using this approach our components are quite flexible. For instance, when unit testing these components we directly see what dependencies are used without needing to wrap the whole Pilet API.
 
 ## Bundle Splitting
 
