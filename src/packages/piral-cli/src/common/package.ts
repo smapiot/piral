@@ -49,10 +49,11 @@ async function getMatchingFiles(
   source: string,
   target: string,
   file: string | TemplateFileLocation,
+  mirror = false,
 ): Promise<Array<FileDescriptor>> {
   const { from, to, deep = false } = typeof file === 'string' ? { from: file, to: file, deep: false } : file;
   const sourcePath = resolve(source, from);
-  const targetPath = resolve(target, to);
+  const targetPath = resolve(target, mirror ? from : to);
   const isDirectory = await checkIsDirectory(sourcePath);
 
   if (isDirectory) {
@@ -176,7 +177,7 @@ export async function copyScaffoldingFiles(
   files: Array<string | TemplateFileLocation>,
 ) {
   for (const file of files) {
-    const subfiles = await getMatchingFiles(source, target, file);
+    const subfiles = await getMatchingFiles(source, target, file, true);
     await copyFiles(subfiles, ForceOverwrite.yes, []);
   }
 }
