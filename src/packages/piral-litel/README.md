@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-litel` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes a Lit Element converter for any component registration, as well as a `fromLitEl` shortcut and a `LitElExtension` component.
+The set includes a LitElement converter for any component registration, as well as a `fromLitEl` shortcut and a `LitElExtension` component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -14,15 +14,15 @@ The following functions are brought to the Pilet API.
 
 ### `fromLitEl()`
 
-Transforms a standard Lit Element component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+Transforms a standard LitElement component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
 
 ### `LitElExtension`
 
-The extension slot component to be used in Lit Element components.
+The name of the extension slot component to be used in LitElement components.
 
 ## Setup and Bootstrapping
 
-Using Lit Element with Piral is as simple as installing `piral-litel` and `lit-element`.
+Using LitElement with Piral is as simple as installing `piral-litel` and `lit-element`.
 
 ```tsx
 import 'lit-element';

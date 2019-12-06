@@ -29,4 +29,8 @@ export interface PiletLitElApi {
    * @returns The Piral LitElement component.
    */
   fromLitEl(elementName: string): LitElComponent;
+  /**
+   * Gets the name of the LitElement extension.
+   */
+  LitElExtension: string;
 }

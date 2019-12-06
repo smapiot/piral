@@ -85,6 +85,7 @@ export function createLitElApi(config: LitElConfig = {}): Extend<PiletLitElApi> 
           elementName,
         };
       },
+      LitElExtension: selector,
     };
   };
 }
