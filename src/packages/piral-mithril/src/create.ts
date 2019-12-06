@@ -1,11 +1,11 @@
 import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { Component, createElement } from 'preact';
-import { PiletAureliaApi } from './types';
+import { PiletMithrilApi } from './types';
 
 /**
- * Available configuration options for the Aurelia plugin.
+ * Available configuration options for the Mithril.js plugin.
  */
-export interface AureliaConfig {
+export interface MithrilConfig {
   /**
    * Defines the name of the root element.
    * @default slot
@@ -14,26 +14,26 @@ export interface AureliaConfig {
 }
 
 /**
- * Creates new Pilet API extensions for integrating Aurelia.
+ * Creates new Pilet API extensions for integrating Mithril.js.
  */
-export function createAureliaApi(config: AureliaConfig = {}): Extend<PiletAureliaApi> {
+export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithrilApi> {
   const { rootName = 'slot' } = config;
 
   return context => {
-    context.converters.aurelia = component => ({
+    context.converters.mithril = component => ({
       mount(el, props, ctx) {},
       update(el, props, ctx) {},
       unmount(el) {},
     });
 
     return {
-      fromAurelia(root) {
+      fromMithril(root) {
         return {
-          type: 'aurelia',
+          type: 'mithril',
           root,
         };
       },
-      AureliaExtension: undefined,
+      MithrilExtension: undefined,
     };
   };
 }
