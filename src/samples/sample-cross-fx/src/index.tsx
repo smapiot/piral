@@ -8,14 +8,15 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { createInstance, useGlobalState, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
+import { createVueApi } from 'piral-vue';
 import { createNgApi } from 'piral-ng';
 import { createNgjsApi } from 'piral-ngjs';
-import { createLitElApi } from 'piral-litel';
-import { createVueApi } from 'piral-vue';
-import { createDashboardApi, Dashboard } from 'piral-dashboard';
-import { createInfernoApi } from 'piral-inferno';
 import { createHyperappApi } from 'piral-hyperapp';
+import { createInfernoApi } from 'piral-inferno';
 import { createPreactApi } from 'piral-preact';
+import { createLitElApi } from 'piral-litel';
+import { createMithrilApi } from 'piral-mithril';
+import { createDashboardApi, Dashboard } from 'piral-dashboard';
 import { availablePilets } from './pilets';
 
 const Loader: React.FC<LoadingIndicatorProps> = () => (
@@ -67,10 +68,11 @@ const instance = createInstance({
     createVueApi(),
     createNgApi(),
     createNgjsApi(),
-    createLitElApi(),
-    createInfernoApi(),
     createHyperappApi(),
+    createInfernoApi(),
     createPreactApi(),
+    createLitElApi(),
+    createMithrilApi(),
     createDashboardApi(),
   ],
   requestPilets() {

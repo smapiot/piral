@@ -2,10 +2,11 @@ import { ReactPilet } from './reactPilet';
 import { VuePilet } from './vuePilet';
 import { NgPilet } from './ngPilet';
 import { NgjsPilet } from './ngjsPilet';
-import { LitElPilet } from './litelPilet';
 import { HyperappPilet } from './hyperappPilet';
 import { InfernoPilet } from './infernoPilet';
 import { PreactPilet } from './preactPilet';
+import { LitElPilet } from './litelPilet';
+import { MithrilPilet } from './mithrilPilet';
 
 /**
  * Normally all these pilets would come from some API and
@@ -20,9 +21,10 @@ export const availablePilets = [
   ReactPilet,
   VuePilet,
   NgPilet,
+  NgjsPilet,
   HyperappPilet,
   InfernoPilet,
   PreactPilet,
-  NgjsPilet,
   LitElPilet,
+  MithrilPilet,
 ];

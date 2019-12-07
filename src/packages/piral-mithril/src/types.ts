@@ -8,13 +8,19 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
-export type MithrilModule<TProps> = any;
+export interface ComponentProps<TProps> {
+  attrs: TProps;
+}
+
+export interface Component<TProps> {
+  view(vnode: ComponentProps<TProps>): any;
+}
 
 export interface MithrilComponent<TProps> {
   /**
-   * The component root.
+   * The component.
    */
-  root: MithrilModule<TProps>;
+  component: Component<TProps>;
   /**
    * The type of the Mithril.js component.
    */
@@ -30,9 +36,9 @@ export interface PiletMithrilApi {
    * @param component The component root.
    * @returns The Piral Mithril.js component.
    */
-  fromMithril<TProps>(component: MithrilModule<TProps>): MithrilComponent<TProps>;
+  fromMithril<TProps>(component: Component<TProps>): MithrilComponent<TProps>;
   /**
    * Mithril.js component for displaying extensions of the given name.
    */
-  MithrilExtension: MithrilModule<ExtensionSlotProps>;
+  MithrilExtension: Component<ExtensionSlotProps>;
 }

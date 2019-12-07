@@ -1,5 +1,5 @@
-import { Extend, ExtensionSlotProps, compare } from 'piral-core';
-import { Component, createElement } from 'preact';
+import * as m from 'mithril';
+import { Extend } from 'piral-core';
 import { PiletMithrilApi } from './types';
 
 /**
@@ -21,19 +21,32 @@ export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithri
 
   return context => {
     context.converters.mithril = component => ({
-      mount(el, props, ctx) {},
-      update(el, props, ctx) {},
-      unmount(el) {},
+      mount(el, props) {
+        m.mount(el, { view: () => m(component, props) });
+      },
+      update(el, props) {
+        m.mount(el, { view: () => m(component, props) });
+      },
+      unmount(el) {
+        m.mount(el, null);
+      },
     });
 
-    return {
-      fromMithril(root) {
+    return api => ({
+      fromMithril(component) {
         return {
           type: 'mithril',
-          root,
+          component,
         };
       },
-      MithrilExtension: undefined,
-    };
+      MithrilExtension: {
+        oncreate(vnode) {
+          api.renderHtmlExtension(vnode.dom, vnode.attrs);
+        },
+        view() {
+          return m(rootName);
+        },
+      },
+    });
   };
 }
