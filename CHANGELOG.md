@@ -3,6 +3,7 @@
 ## 0.9.2 (tbd)
 
 * Fixed not found error when copying files for scaffold (#106)
+* Fixed upgrading a pilet using outdated information (#108)
 
 ## 0.9.1 (December 6, 2019)
 
