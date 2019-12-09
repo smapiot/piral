@@ -54,7 +54,7 @@ function getCoreTypes() {
 function getPluginCategories() {
   return readdirSync(packages)
     .map(pckg => resolve(packages, pckg, 'package.json'))
-    .map(packageJson => getCategory(require(packageJson).keywords))
+    .map(packageJson => existsSync(packageJson) && getCategory(require(packageJson).keywords))
     .filter((item, index, self) => item && self.indexOf(item) === index);
 }
 
