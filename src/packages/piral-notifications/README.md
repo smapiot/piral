@@ -18,13 +18,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createNotificationsApi` from the `piral-notifications` package.
 
-```tsx
+```ts
 import { createNotificationsApi } from 'piral-notifications';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createNotificationsApi()],
@@ -36,7 +36,7 @@ Via the options the initially displayed `messages` can be defined. Additionally,
 
 For example:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createNotificationsApi({

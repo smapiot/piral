@@ -18,13 +18,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createAxiosApi` from the `piral-axios` package.
 
-```tsx
+```ts
 import { createAxiosApi } from 'piral-axios';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createAxiosApi()],
@@ -36,7 +36,7 @@ Via the options the default settings such as the `baseURL` can be defined. These
 
 For example:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createAxiosApi({

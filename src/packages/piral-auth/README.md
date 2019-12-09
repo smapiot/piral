@@ -22,13 +22,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createAuthApi` from the `piral-auth` package.
 
-```tsx
+```ts
 import { createAuthApi } from 'piral-auth';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createAuthApi()],
@@ -38,7 +38,7 @@ const instance = createInstance({
 
 The options include defining an existing user (e.g., obtained by a redirect).
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createAuthApi({

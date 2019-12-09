@@ -24,7 +24,7 @@ The extension slot component to be used in Preact component.
 
 Using Preact with Piral is as simple as installing `piral-preact` and `preact`.
 
-```tsx
+```ts
 import 'preact';
 import { createPreactApi } from 'piral-preact';
 ```

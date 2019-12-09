@@ -30,13 +30,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createTrackingApi` from the `piral-tracking` package.
 
-```tsx
+```ts
 import { createTrackingApi } from 'piral-tracking';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createTrackingApi()],
