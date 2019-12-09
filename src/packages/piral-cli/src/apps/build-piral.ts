@@ -171,14 +171,12 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     );
     const rootDir = resolve(outDir, '..');
     const filesDir = resolve(rootDir, 'files');
-    const files = pilets.files.map(file =>
-      typeof file === 'string'
-        ? join('files', file)
-        : {
-            ...file,
-            from: join('files', file.from),
-          },
-    );
+    const files = pilets.files
+      .map(file => (typeof file === 'string' ? { from: file, to: file } : file))
+      .map(file => ({
+        ...file,
+        from: join('files', file.from),
+      }));
     await createFileIfNotExists(rootDir, 'package.json', '{}');
     await updateExistingJson(rootDir, 'package.json', {
       name,

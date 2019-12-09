@@ -104,6 +104,7 @@ always-auth=true`,
     const { preScaffold, postScaffold } = getPiletsInfo(piralInfo);
 
     if (preScaffold) {
+      logInfo(`Running preScaffold script ...`);
       await runScript(preScaffold, root);
     }
 
@@ -116,11 +117,11 @@ always-auth=true`,
 
     if (!skipInstall) {
       logInfo(`Installing dependencies ...`);
-
       await installDependencies(root, '--no-package-lock');
     }
 
     if (postScaffold) {
+      logInfo(`Running postScaffold script ...`);
       await runScript(postScaffold, root);
     }
 
