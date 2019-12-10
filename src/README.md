@@ -46,13 +46,7 @@ lerna run build
 If you want to run the sample application you can already do it with our CLI tool (which should be available after building, otherwise use `lerna bootstrap` again):
 
 ```sh
-node node_modules/.bin/piral debug packages/piral-sample/src/index.html
-```
-
-The command is also available as a shorthand (script) by just calling
-
-```sh
-yarn demo
+yarn watch:demo-full
 ```
 
 in the workspace.
