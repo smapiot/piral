@@ -88,7 +88,7 @@ The latter will represent the biggest hurdle for the producers.
 
 So how is an extension registered?
 
-```tsx
+```jsx
 export function setup(piral: PiletApi) {
   piral.registerExtension('sample-ext-name', params => {
     if (typeof params.value !== 'number') {
@@ -107,7 +107,7 @@ This registers a component in the `sample-ext-name` extension container.
 
 The example above already provides some parameter checking. Let's see how to use these parameters in a consumer.
 
-```tsx
+```jsx
 export function setup(piral: PiletApi) {
   piral.registerPage('/my-page', () => (
     <div>
@@ -128,7 +128,7 @@ At the end the `piral.Extension` component marks the extension slot, i.e., the p
 
 As already mentioned there may be `0`, `1`, or multiple components in the extension container. This can also change over time - the extension slot would then re-render. In the special case of `0` components we can define a fallback that should render. Otherwise, nothing will be shown.
 
-```tsx
+```jsx
 export function setup(piral: PiletApi) {
   piral.registerPage('/my-page', () => (
     <div>
@@ -146,7 +146,7 @@ export function setup(piral: PiletApi) {
 
 In other cases we may want a special rendering (e.g., only the display the first child). The `render` prop would allow us to do that.
 
-```tsx
+```jsx
 export function setup(piral: PiletApi) {
   piral.registerPage('/my-page', () => (
     <div>
@@ -162,6 +162,22 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Without these extensions pilets could only share components with the app shell. As a consequence, only page transitions would be possible (among specialized things such as dashboards, modal dialogs, ...).
+
+The following diagram illustrates this.
+
+![Page transitions without registered extensions](../diagrams/page-transitions-no-ext.png)
+
+Using extensions we can finally also share components from pilets to pilets. The mechanism allows to specify what components you want to see displayed. This enables many scenarios, e.g., to render a specific extension always when certain data is available, or to avoid using a link determined by another pilet for linking.
+
+Instead, we can loosely couple to an extension that determines where to link to. The following diagram shows some of these possibilities.
+
+![Page transitions with registered extensions](../diagrams/page-transitions-with-ext.png)
+
+Importantly, the sharing will always be indirect, i.e., the name of the owning pilets will never be mentioned. The name of the extension can be chosen using different principles. In general, it is not possible to make one recommendation - as every naming scheme has its pros and cons. Our only recommendation is to come up with conventions that are related to the problem domain they extension solves.
+
 ## Conclusion
 
 Sharing fragments between pilets is a fundamental part of what makes Piral different. In Piral authors of pilets should never think "then I get this particular piece of functionality from *that* pilet", but instead "then I use a piece of functionality provided *if* available".
+
+In the next tutorial we look at how functionality and data can be provided from the Piral instance to the pilets.

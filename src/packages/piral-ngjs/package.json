@@ -1,14 +1,15 @@
 {
   "name": "piral-ngjs",
-  "version": "0.8.4",
-  "description": "Extensions for integrating Angular.js components in Piral.",
+  "version": "0.9.1",
+  "description": "Plugin for integrating Angular.js components in Piral.",
   "keywords": [
     "piral",
     "smapiot",
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
+    "plugin-converter",
     "angular.js",
     "ngjs"
   ],
@@ -37,7 +38,7 @@
   "devDependencies": {
     "@types/angular": "^1.6.45",
     "angular": "^1.7.9",
-    "piral-core": "^0.8.4"
+    "piral-core": "^0.9.1"
   },
   "peerDependencies": {
     "angular": "^1.7.0",

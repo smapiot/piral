@@ -15,14 +15,28 @@
   }
 }
 
+.boxes.title-cards {
+  margin: -1em;
+  justify-content: normal;
+}
+
 .title-card {
   flex: 0 0 500px;
   max-width: 100%;
   padding: 1rem;
   box-sizing: border-box;
+
+  .btn {
+    width: 150px;
+    text-align: left;
+  }
+
+  &.small {
+    flex: 0 0 200px;
+  }
 }
 
-.extension-info {
+.plugin-info {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -37,6 +51,11 @@
     font-size: 2em;
     margin-left: 0.5em;
   }
+}
+
+h2.plugin {
+  font-size: 1.4em;
+  color: #555;
 }
 
 .image-card {

@@ -4,7 +4,7 @@ import { mountVue, register } from './mount';
 import { PiletVueApi } from './types';
 
 /**
- * Available configuration options for the Vue extension.
+ * Available configuration options for the Vue plugin.
  */
 export interface VueConfig {
   /**
@@ -20,7 +20,7 @@ export interface VueConfig {
 }
 
 /**
- * Creates a new set of Piral Vue API extensions.
+ * Creates new Pilet API extensions for integration of Vue.
  */
 export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
   const { rootName = 'slot', selector = 'extension-component' } = config;

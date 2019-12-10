@@ -15,6 +15,8 @@ export default () => (
       that you know the content.
     </p>
     <TutorialsList />
-    <p>If you look for more information the <Link to="/reference">references</Link> should be helpful.</p>
+    <p>
+      If you look for more information the <Link to="/reference">references</Link> should be helpful.
+    </p>
   </section>
 );

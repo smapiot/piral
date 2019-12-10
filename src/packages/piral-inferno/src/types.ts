@@ -21,7 +21,7 @@ export interface InfernoComponent<TProps> {
 }
 
 /**
- * Defines the provided set of Inferno Pilet API extensions.
+ * Defines the provided set of Pilet API extensions from the Inferno plugin.
  */
 export interface PiletInfernoApi {
   /**

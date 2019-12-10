@@ -1,7 +1,7 @@
 {
   "name": "piral-auth",
-  "version": "0.8.4",
-  "description": "Extensions for handling authentication in Piral.",
+  "version": "0.9.1",
+  "description": "Plugin for handling authentication in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,8 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin-user",
+    "plugin",
     "user",
     "authentication"
   ],
@@ -36,7 +37,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.8.4"
+    "piral-core": "^0.9.1"
   },
   "peerDependencies": {
     "piral-core": "^0.9.0"

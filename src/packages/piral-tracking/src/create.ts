@@ -2,12 +2,12 @@ import { Extend } from 'piral-core';
 import { PiletTrackingApi, SeverityLevel } from './types';
 
 /**
- * Available configuration options for the tracking extension.
+ * Available configuration options for the tracking plugin.
  */
 export interface TrackingConfig {}
 
 /**
- * Creates a new set of Piral tracking and telemetry API extensions.
+ * Creates the Pilet API extensions for tracking and telemetry.
  */
 export function createTrackingApi(config: TrackingConfig = {}): Extend<PiletTrackingApi> {
   return () => api => ({

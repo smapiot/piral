@@ -31,10 +31,10 @@ export default () => (
         title="Tooling"
       />
       <ImageCard
-        link="/reference/extensions"
+        link="/reference/plugins"
         image={require('../assets/top-extensions.png')}
-        description="List of official extensions."
-        title="Extensions"
+        description="List of official plugins."
+        title="Plugins"
       />
     </div>
   </section>

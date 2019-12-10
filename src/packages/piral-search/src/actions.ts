@@ -1,6 +1,5 @@
-import { ReactChild } from 'react';
-import { wrapElement } from 'react-arbiter';
 import { swap, Atom, deref } from '@dbeining/react-atom';
+import { ReactChild } from 'react';
 import { GlobalState, Disposable, appendItems, prependItems, withKey, withoutKey } from 'piral-core';
 import { SearchOptions, SearchProviderRegistration } from './types';
 
@@ -38,17 +37,18 @@ export function triggerSearch(ctx: Atom<GlobalState>, query?: string, immediate 
         immediate,
       };
 
-      providerKeys.forEach(key =>
-        providers[key].search(opts).then(
+      providerKeys.forEach(key => {
+        const provider = providers[key];
+        provider.search(opts).then(
           results => {
-            active && appendSearchResults(ctx, results.map(m => wrapElement(m)), --searchCount === 0);
+            active && appendSearchResults(ctx, results, --searchCount === 0);
           },
           ex => {
             console.warn(ex);
             active && --searchCount === 0 && appendSearchResults(ctx, [], true);
           },
-        ),
-      );
+        );
+      });
 
       return () => {
         active = false;

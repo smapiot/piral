@@ -7,8 +7,10 @@ export const Notifications: React.FC = () => {
 
   return (
     <PiralNotificationsHost>
-      {notifications.map(n => (
-        <PiralNotificationsToast {...n} key={n.id} />
+      {notifications.map(({ component: Component, close, options, id }) => (
+        <PiralNotificationsToast onClose={close} options={options} key={id}>
+          <Component onClose={close} options={options} />
+        </PiralNotificationsToast>
       ))}
     </PiralNotificationsHost>
   );

@@ -1,7 +1,7 @@
 {
   "name": "piral-translate",
-  "version": "0.8.4",
-  "description": "Extensions for providing translated messages in Piral.",
+  "version": "0.9.1",
+  "description": "Plugin for providing translated messages in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,8 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
+    "plugin-content",
     "translate",
     "locale",
     "localization",
@@ -38,7 +39,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.8.4"
+    "piral-core": "^0.9.1"
   },
   "peerDependencies": {
     "piral-core": "^0.9.0",

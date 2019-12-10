@@ -1,7 +1,7 @@
 {
   "name": "piral-preact",
-  "version": "0.8.4",
-  "description": "Extensions for integrating Preact components in Piral.",
+  "version": "0.9.1",
+  "description": "Plugin for integrating Preact components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,8 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
+    "plugin-converter",
     "preact"
   ],
   "author": "smapiot",
@@ -35,11 +36,11 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "preact": "10.0.5",
-    "piral-core": "^0.8.3"
+    "piral-core": "^0.9.1",
+    "preact": "10.0.5"
   },
   "peerDependencies": {
-    "preact": "^10.0.0",
-    "piral-core": "^0.9.0"
+    "piral-core": "^0.9.0",
+    "preact": "^10.0.0"
   }
 }

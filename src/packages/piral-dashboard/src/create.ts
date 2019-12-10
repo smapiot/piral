@@ -17,7 +17,7 @@ export interface InitialTile {
 }
 
 /**
- * Available configuration options for the dashboard extension.
+ * Available configuration options for the dashboard plugin.
  */
 export interface DashboardConfig {
   /**
@@ -55,7 +55,7 @@ function getTiles(items: Array<InitialTile>, defaultPreferences: TilePreferences
 }
 
 /**
- * Creates a new Piral API extension for activating dashboard support.
+ * Creates the Pilet API extension for activating dashboard support.
  */
 export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDashboardApi> {
   const { tiles = [], defaultPreferences = {} } = config;

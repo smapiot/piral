@@ -17,7 +17,7 @@ Piral wants to help you to separate your data handling from your actual views. U
 
 Before a clean separation:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   app.registerPage('/my-page', Page);
@@ -36,7 +36,7 @@ export const Page: React.FC = () => {
 
 After using the `createConnector` HOC with a separate module:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   const connect = createConnector(fetchData);
@@ -64,7 +64,7 @@ Quite often, a simple data fetcher is not enough. In this case we may want to wo
 
 The transformed code now looks as follows:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   const connect = createConnector(dataConnector);
@@ -108,17 +108,17 @@ Using components provided from other pilets is done via "extensions". The proble
 
 Directly, code may look like this:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   app.registerPage('/my-page', Page);
 }
 
 // page module: Page.tsx
-export const Page: React.FC<PiralPageComponent> = ({ piral }) => (
+export const Page: React.FC<PageComponentProps> = ({ piral }) => (
   <div>
     Sample display
-    <Extension name="example" />
+    <piral.Extension name="example" />
   </div>
 );
 ```
@@ -127,10 +127,10 @@ Using the wrapper approach we may simply demand and forward the right component 
 
 Consequently, code may be rewritten to looks as follows:
 
-```tsx
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
-  const Example = () => <Extension name="example" />;
+  const Example = () => <app.Extension name="example" />;
   app.registerPage('/my-page', () => <Page Example={Example} />);
 }
 
@@ -145,13 +145,107 @@ export const Page: React.FC<{ Example: React.ComponentType }> = ({ Example }) =>
 
 This approach not only decouples Piral from the components defined in the pilet, but also improves the testability of the given code.
 
+## Reducing the App Shell Dependency
+
+As part of the convenience coming with Piral, every component (e.g., a tile, a page, ...) retrieves the `PiletApi` object for the current pilet in form of a prop called `piral`. While using this prop may be super important and convenient (e.g., just use `piral.translate` to obtain a localized string), it also couples your component to the provided app shell.
+
+We recommend keeping the dependency on the Piral instance as minimal as possible. This has the usual advantages:
+
+1. Your components are easier to test
+2. Your components are easier to share
+3. Your components communicate what they need
+4. Your pilet should be more resiliant against some API changes
+5. Your pilet may transfer to another technology more easily in the future
+
+In the best case the only file mentioning an import from your Piral instance is the `index.tsx` / root module of the pilet.
+
+We've seen this approach already in the section above.
+
+Let's look at an example code. We assume that our initial code looks as follows:
+
+```jsx
+// root module: index.tsx
+export function setup(app: PiletApi) {
+  app.registerPage('/my-page', Page);
+  app.registerTile(Tile);
+  app.registerMenu(Menu);
+}
+
+// page module: Page.tsx
+export const Page: React.FC<PageComponentProps> = ({ piral }) => (
+  <div>
+    <h1>{piral.translate('pageHeading')}</h1>
+  </div>
+);
+
+// page module: Tile.tsx
+export const Tile: React.FC<TileComponentProps> = ({ piral }) => (
+  <div>
+    <a href="#" onClick={() => piral.showModal('open-settings')}>Open Settings</a>
+  </div>
+);
+
+// page module: Menu.tsx
+export const Menu: React.FC<MenuComponentProps> = ({ piral }) => (
+  <div>
+    <Link to="/my-page">{piral.translate('menuTitle')}</Link>
+  </div>
+);
+```
+
+As we can see every component uses other part(s) of the provided `PiletApi`. Wrapping these components in the root module leads to less coupling in the modules / components.
+
+After the refactoring the code looks as follows:
+
+```jsx
+// root module: index.tsx
+export function setup(app: PiletApi) {
+  app.registerPage('/my-page', ({ piral }) => (
+    <Page labels={{ heading: piral.translate('pageHeading') }} />
+  ));
+  app.registerTile(({ piral }) => (
+    <Tile openSettings={() => piral.showModal('open-settings')} />
+  ));
+  app.registerMenu(({ piral }) => (
+    <Menu labels={{ title: piral.translate('menuTitle') }} />
+  ));
+}
+
+// page module: Page.tsx
+export const Page: React.FC<{ labels: { heading: string } }> = ({ labels }) => (
+  <div>
+    <h1>{labels.heading}</h1>
+  </div>
+);
+
+// page module: Tile.tsx
+export const Tile: React.FC<{ openSettings(): void }> = ({ openSettings }) => (
+  <div>
+    <a href="#" onClick={openSettings}>Open Settings</a>
+  </div>
+);
+
+// page module: Menu.tsx
+export const Menu: React.FC<{ labels: { title: string } }> = ({ labels }) => (
+  <div>
+    <Link to="/my-page">{labels.title}</Link>
+  </div>
+);
+```
+
+Using this approach our components are quite flexible. For instance, when unit testing these components we directly see what dependencies are used without needing to wrap the whole Pilet API.
+
 ## Bundle Splitting
 
 Pilets should remain rather small, however, when combined with dependencies, heavy UIs, and other features larger bundle sizes may occur. To avoid degrading user-experience code that is not immediately required should be split in different bundles.
 
+This could result in the following setup:
+
+![Bundle splitting with lazy loaded pages](../diagrams/bundle-splitting.png)
+
 The process is rather straight-forward. We use the `import` function and `React.lazy` (or another mechanism from your favorite framework) to trigger the lazy loading of a module. This way the following code,
 
-```tsx
+```jsx
 // root module: index.tsx
 import Page from './Page';
 
@@ -169,7 +263,7 @@ export default () => (
 
 actually becomes:
 
-```tsx
+```jsx
 // root module: index.tsx
 const Page = React.lazy(() => import('./Page'));
 
@@ -195,7 +289,7 @@ Consequently, we need to set up a proper development infrastructure without impa
 
 Consider the following code for a pilet:
 
-```tsx
+```jsx
 export function setup(app: PiletApi) {
   app.registerExtension('example', () => <div>No hands!</div>);
 }
@@ -203,7 +297,11 @@ export function setup(app: PiletApi) {
 
 We could, e.g., introduce a dedicated page where this extension is used. Furthermore, tiles, modal dialogs and other components may be introduced to only test this extension. In the following we go for a page, but this approach works for anything.
 
-```tsx
+![Testing extensions with temporary pages](../diagrams/extensions-debug.png)
+
+The diagram above illustrates this idea. In code it looks as follows:
+
+```jsx
 // root module: index.tsx
 export function setup(app: PiletApi) {
   if (process.env.NODE_ENV === 'development') {

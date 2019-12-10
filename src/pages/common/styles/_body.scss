@@ -36,10 +36,6 @@ body {
   margin-left: auto;
   box-sizing: border-box;
 
-  @media (min-width: $mobileBrk) {
-    max-width: 540px;
-  }
-
   @media (min-width: $tabletBrk) {
     max-width: 720px;
   }

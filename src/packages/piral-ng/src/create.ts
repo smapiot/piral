@@ -5,7 +5,7 @@ import { bootstrap } from './bootstrap';
 import { PiletNgApi } from './types';
 
 /**
- * Available configuration options for the Angular extension.
+ * Available configuration options for the Angular plugin.
  */
 export interface NgConfig {
   /**
@@ -26,7 +26,7 @@ export interface NgConfig {
 }
 
 /**
- * Creates a new set of Piral Angular API extensions.
+ * Creates the Pilet API extensions for Angular.
  */
 export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
   let next = ~~(Math.random() * 10000);

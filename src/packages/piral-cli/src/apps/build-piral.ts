@@ -92,7 +92,7 @@ async function bundleFiles(
 
 async function generateDeclaration(outDir: string, root: string, name: string, dependencies: Record<string, string>) {
   const declaration = combineApiDeclarations(root, Object.keys(dependencies));
-  const result = await declarationFlattening(outDir, name, declaration);
+  const result = await declarationFlattening(root, name, declaration);
   await createFileIfNotExists(outDir, 'index.d.ts', result);
 }
 
@@ -132,7 +132,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const targetDir = dirname(entryFiles);
   const { name, version, root, dependencies, ...pilets } = await retrievePiletsInfo(entryFiles);
   const { externals } = pilets;
-  const dest = getDestination(entryFiles, target);
+  const dest = getDestination(entryFiles, resolve(baseDir, target));
 
   if (fresh) {
     await clearCache(root);
@@ -171,14 +171,12 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     );
     const rootDir = resolve(outDir, '..');
     const filesDir = resolve(rootDir, 'files');
-    const files = pilets.files.map(file =>
-      typeof file === 'string'
-        ? join('files', file)
-        : {
-            ...file,
-            from: join('files', file.from),
-          },
-    );
+    const files = pilets.files
+      .map(file => (typeof file === 'string' ? { from: file, to: file } : file))
+      .map(file => ({
+        ...file,
+        from: join('files', file.from),
+      }));
     await createFileIfNotExists(rootDir, 'package.json', '{}');
     await updateExistingJson(rootDir, 'package.json', {
       name,
@@ -198,7 +196,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       },
     });
     await createDirectory(filesDir);
-    await copyScaffoldingFiles(rootDir, filesDir, pilets.files);
+    await copyScaffoldingFiles(root, filesDir, pilets.files);
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
     await generateDeclaration(outDir, root, name, dependencies.std);
     await createPackage(rootDir);

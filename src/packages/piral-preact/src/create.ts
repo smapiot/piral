@@ -4,7 +4,7 @@ import { mountPreact, unmountPreact, anyPropType } from './mount';
 import { PiletPreactApi } from './types';
 
 /**
- * Available configuration options for the Preact extension.
+ * Available configuration options for the Preact plugin.
  */
 export interface PreactConfig {
   /**
@@ -15,7 +15,7 @@ export interface PreactConfig {
 }
 
 /**
- * Creates a new set of Piral Preact API extensions.
+ * Creates new Pilet API extensions for integrating Preact.
  */
 export function createPreactApi(config: PreactConfig = {}): Extend<PiletPreactApi> {
   const { rootName = 'slot' } = config;

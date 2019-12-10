@@ -5,7 +5,7 @@ import { mountInferno, unmountInferno, anyPropType } from './mount';
 import { PiletInfernoApi } from './types';
 
 /**
- * Available configuration options for the Inferno extension.
+ * Available configuration options for the Inferno plugin.
  */
 export interface InfernoConfig {
   /**
@@ -16,7 +16,7 @@ export interface InfernoConfig {
 }
 
 /**
- * Creates a new set of Piral Inferno API extensions.
+ * Creates Pilet API extensions for integrating Inferno.
  */
 export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfernoApi> {
   const { rootName = 'slot' } = config;

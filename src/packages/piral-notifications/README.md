@@ -2,13 +2,15 @@
 
 # [Piral Notifications](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-notifications.svg?style=flat)](https://www.npmjs.com/package/piral-notifications) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-notifications` brings to the table is a set of API extensions that can be used with `piral` or `piral-core` to show notifications triggered by pilets in your Piral instance.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-notifications` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core` to show notifications triggered by pilets in your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `showNotification()`
+
+Shows a notification inside the app shell. The notification can be permanent (to be closed by the user) or temporary (closes after a specified time).
 
 ## Setup and Bootstrapping
 
@@ -16,13 +18,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createNotificationsApi` from the `piral-notifications` package.
 
-```tsx
+```ts
 import { createNotificationsApi } from 'piral-notifications';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createNotificationsApi()],
@@ -34,7 +36,7 @@ Via the options the initially displayed `messages` can be defined. Additionally,
 
 For example:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createNotificationsApi({

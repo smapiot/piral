@@ -64,8 +64,8 @@ const CoreDemo: React.FC = () => (
     </blockquote>
     <p>
       The sample shows the essential use of piral-core with a very simple layout and a variety of (integrated) pilets
-      that use most of the core pilet API functions. Additionally, some of the available (opt-in) extension packages are
-      shown, such as piral-ng (Angular API) and piral-vue (Vue API).
+      that use most of the core pilet API functions. Additionally, some of the available (opt-in) plugins are shown,
+      such as piral-ng (Angular API) and piral-vue (Vue API).
     </p>
     <img className="responsive-image" src={require('../assets/demo-core.png')} alt="Piral Core Demo" />
     <p>

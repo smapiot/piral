@@ -2,9 +2,11 @@
 
 # [Piral Authentication](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-auth.svg?style=flat)](https://www.npmjs.com/package/piral-auth) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-auth` brings to the table is a set of API extensions that can be used with `piral` or `piral-core`.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-auth` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes the `getUser` API to retrieve the user, login / logout functionality and user state management incl. features and permissions.
+The set includes the `getUser` API to retrieve the user, login / logout functionality and user state management incl. features and permissions.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
@@ -20,13 +22,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createAuthApi` from the `piral-auth` package.
 
-```tsx
+```ts
 import { createAuthApi } from 'piral-auth';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createAuthApi()],
@@ -36,7 +38,7 @@ const instance = createInstance({
 
 The options include defining an existing user (e.g., obtained by a redirect).
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createAuthApi({

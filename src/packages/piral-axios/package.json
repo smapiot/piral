@@ -1,7 +1,7 @@
 {
   "name": "piral-axios",
-  "version": "0.8.4",
-  "description": "Introduces the axios API extensions for extending piral-core.",
+  "version": "0.9.1",
+  "description": "Plugin for the integration of axios in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -12,7 +12,8 @@
     "axios",
     "http",
     "requester",
-    "extension",
+    "plugin",
+    "plugin-network",
     "spa"
   ],
   "author": "smapiot",
@@ -41,7 +42,7 @@
     "axios": "^0.19.0"
   },
   "devDependencies": {
-    "piral-core": "^0.8.4"
+    "piral-core": "^0.9.1"
   },
   "peerDependencies": {
     "piral-core": "^0.9.0",

@@ -8,4 +8,4 @@ export const DefaultHost: React.FC<NotificationsHostProps> = props => (
   </div>
 );
 
-export const DefaultToast: React.FC<NotificationsToastProps> = props => defaultRender(props.content);
+export const DefaultToast: React.FC<NotificationsToastProps> = ({ children }) => defaultRender(children);

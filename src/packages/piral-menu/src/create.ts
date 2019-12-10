@@ -17,7 +17,7 @@ export interface InitialMenuItem {
 }
 
 /**
- * Available configuration options for the menu extension.
+ * Available configuration options for the menu plugin.
  */
 export interface MenuConfig {
   /**
@@ -56,7 +56,7 @@ function getMenuItems(items: Array<InitialMenuItem>, defaultSettings: MenuSettin
 }
 
 /**
- * Creates a new set of Piral API extensions for integration of menu items.
+ * Creates new Pilet API extensions for integration of menu items.
  */
 export function createMenuApi(config: MenuConfig = {}): Extend<PiletMenuApi> {
   const { items = [], defaultSettings = {} } = config;

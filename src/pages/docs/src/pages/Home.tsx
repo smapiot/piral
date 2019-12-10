@@ -13,7 +13,7 @@ export default () => (
         A Piral application will be extended at runtime with features coming from independent modules, which we call{' '}
         <i>pilets</i>.
       </p>
-      <div className="boxes">
+      <div className="boxes title-cards">
         <div className="title-card">
           <div className="embed-responsive embed-responsive-16by9">
             <iframe
@@ -26,7 +26,37 @@ export default () => (
             />
           </div>
         </div>
-        <div className="title-card">
+        <div className="title-card small">
+          <p>
+            <b>All Activities</b>
+          </p>
+          <p>
+            <a href="https://dev.to/t/piral" target="_blank" className="btn primary">
+              <i className="fas fa-blog" /> Blog
+            </a>
+          </p>
+          <p>
+            <a href="https://github.com/smapiot/piral/issues/" target="_blank">
+              <img src="https://img.shields.io/github/issues/smapiot/piral.svg" alt="Piral GitHub Issues"/>
+            </a>
+          </p>
+          <p>
+            <a href="https://github.com/smapiot/piral/pull/" target="_blank">
+              <img src="https://img.shields.io/github/issues-pr/smapiot/piral.svg" alt="Piral GitHub Pull Requests"/>
+            </a>
+          </p>
+          <p>
+            <a href="https://github.com/smapiot/piral/releases/" target="_blank">
+              <img src="https://img.shields.io/github/tag/smapiot/piral.svg" alt="Piral GitHub Releases"/>
+            </a>
+          </p>
+          <p>
+            <a href="https://gitter.im/piral-io/community" target="_blank">
+              <img src="https://badges.gitter.im/gitterHQ/gitter.png" alt="Piral Gitter Chat"/>
+            </a>
+          </p>
+        </div>
+        <div className="title-card small">
           <p>
             <b>Quick Links</b>
           </p>
@@ -51,6 +81,7 @@ export default () => (
             </Link>
           </p>
         </div>
+
       </div>
       <p>
         Learn more in <Link to="/tutorials/01-introduction">the introduction tutorial</Link>.
@@ -121,7 +152,9 @@ export default () => (
       <pre>
         <code className="hljs language-sh">npm start</code>
       </pre>
-      <p>Again, we can access this at <a href="http://localhost:1234">localhost:1234</a>.</p>
+      <p>
+        Again, we can access this at <a href="http://localhost:1234">localhost:1234</a>.
+      </p>
       <p>
         Ideally, this should look as before, however, with the difference that the application now contains an
         additional tile, a notification, and a menu link.

@@ -2,15 +2,21 @@
 
 # [Piral Dashboard](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-dashboard.svg?style=flat)](https://www.npmjs.com/package/piral-dashboard) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-dashboard` brings to the table is a set of API extensions that can be used with `piral` or `piral-core`.
-
-By default, these extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
+This is plugin that only has a peer dependency to `piral-core`. What `piral-dashboard` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `registerTile()`
+
+Adds the definition of a tile to the app shell. Optionally specifies display characteristics like the initial rows, initial columns, or if the tile can be resized by the user.
+
+If the first argument is a string a named tile is registered. A named tile can also be removed.
+
+### `unregisterTile()`
+
+Removes a tile from the app shell. This requires a named tile.
 
 ## Setup and Bootstrapping
 
@@ -18,13 +24,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createDashboardApi` from the `piral-dashboard` package.
 
-```tsx
+```ts
 import { createDashboardApi } from 'piral-dashboard';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createDashboardApi()],
@@ -36,7 +42,7 @@ Via the options the `defaultPreferences` and the global / initially available `t
 
 Consider for example:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createDashboardApi({

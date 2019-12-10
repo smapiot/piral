@@ -92,7 +92,12 @@ export function createArbiterOptions({
           });
         };
 
-        return promise.catch(() => []).then(pilets => appendix.then(pilet => [...pilets, pilet]));
+        return promise
+          .catch(err => {
+            console.error(`Requesting the pilets failed. We'll continue loading without pilets (DEBUG only).`, err);
+            return [];
+          })
+          .then(pilets => appendix.then(pilet => [...pilets, pilet]));
       }
 
       return promise;

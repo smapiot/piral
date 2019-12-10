@@ -1,5 +1,5 @@
-import { ReactChild, ReactNode, ComponentType } from 'react';
-import { Disposable } from 'piral-core';
+import { ReactElement, ComponentType } from 'react';
+import { Disposable, BaseComponentProps, AnyComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNotificationsApi {}
@@ -40,7 +40,7 @@ declare module 'piral-core/lib/types/custom' {
 
 export interface NotificationsHostProps {}
 
-export interface NotificationsToastProps extends OpenNotification {}
+export interface NotificationsToastProps extends BareNotificationProps {}
 
 export interface NotificationOptions {
   /**
@@ -59,9 +59,22 @@ export interface NotificationOptions {
   type?: 'info' | 'success' | 'warning' | 'error';
 }
 
+export interface BareNotificationProps {
+  /**
+   * Callback for closing the notification programmatically.
+   */
+  onClose(): void;
+  /**
+   * Provides the passed in options for this particular notification.
+   */
+  options: NotificationOptions;
+}
+
+export type NotificationComponentProps = BaseComponentProps & BareNotificationProps;
+
 export interface OpenNotification {
   id: string;
-  content: ReactChild;
+  component: ComponentType<BareNotificationProps>;
   options: NotificationOptions;
   close(): void;
 }
@@ -73,5 +86,8 @@ export interface PiletNotificationsApi {
    * @param options The options to consider for showing the notification.
    * @returns A callback to trigger closing the notification.
    */
-  showNotification(content: ReactNode | HTMLElement, options?: NotificationOptions): Disposable;
+  showNotification(
+    content: string | ReactElement<any> | AnyComponent<NotificationComponentProps>,
+    options?: NotificationOptions,
+  ): Disposable;
 }

@@ -1,14 +1,15 @@
 {
   "name": "piral-ng",
-  "version": "0.8.4",
-  "description": "Extensions for integrating Angular components in Piral.",
+  "version": "0.9.1",
+  "description": "Plugin for integrating Angular components in Piral.",
   "keywords": [
     "piral",
     "smapiot",
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
+    "plugin-converter",
     "angular",
     "ng"
   ],
@@ -40,7 +41,7 @@
     "@angular/core": "^8.0.0",
     "@angular/platform-browser": "^8.0.0",
     "@angular/platform-browser-dynamic": "^8.0.0",
-    "piral-core": "^0.8.4"
+    "piral-core": "^0.9.1"
   },
   "peerDependencies": {
     "@angular/core": "^6.0.0 || ^7.0.0 || ^8.0.0",

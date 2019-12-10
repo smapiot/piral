@@ -1,7 +1,7 @@
 {
   "name": "piral-pwa",
-  "version": "0.8.4",
-  "description": "Extensions for creating the Piral instance as a PWA shell.",
+  "version": "0.9.1",
+  "description": "Plugin for creating the Piral instance as a PWA shell.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,8 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
+    "plugin-content",
     "pwa",
     "progressive",
     "app"
@@ -38,9 +39,10 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.8.3"
+    "piral-core": "^0.9.1"
   },
   "peerDependencies": {
+    "minimatch": "^3.0.0",
     "piral-core": "^0.9.0"
   }
 }

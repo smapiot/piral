@@ -1,7 +1,7 @@
 {
   "name": "piral-inferno",
-  "version": "0.8.4",
-  "description": "Extensions for integrating Inferno components in Piral.",
+  "version": "0.9.1",
+  "description": "Plugin for integrating Inferno components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -9,7 +9,8 @@
     "portal",
     "modules",
     "api",
-    "extension",
+    "plugin",
+    "plugin-converter",
     "inferno"
   ],
   "author": "smapiot",
@@ -37,7 +38,7 @@
   "devDependencies": {
     "inferno": "^7.3.2",
     "inferno-create-element": "^7.3.2",
-    "piral-core": "^0.8.3"
+    "piral-core": "^0.9.1"
   },
   "peerDependencies": {
     "inferno": "^7.0.0",

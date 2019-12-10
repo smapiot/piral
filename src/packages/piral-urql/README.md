@@ -2,13 +2,27 @@
 
 # [Piral URQL](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-urql.svg?style=flat)](https://www.npmjs.com/package/piral-urql) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-urql` brings to the table is a set of API extensions that is used by `piral`. The set represents a powerful GraphQL integration using the open-source library URQL.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-urql` brings to the table is a set of Pilet API extensions that is used by `piral`.
+
+The set represents a powerful GraphQL integration using the open-source library URQL.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `query()`
+
+Executes a GraphQL query against the server specified in the app shell.
+
+### `mutate()`
+
+Runs a GraphQL mutation against the server specified in the app shell.
+
+### `subscribe()`
+
+Establishes a GraphQL subscription via the subscription host defined in the app shell.
 
 ## Setup and Bootstrapping
 
@@ -16,13 +30,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createGqlApi` from the `piral-urql` package.
 
-```tsx
+```ts
 import { createGqlApi } from 'piral-urql';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createGqlApi()],
@@ -34,7 +48,7 @@ Via the options the correct client can be set up. Setting the `subscriptionUrl` 
 
 For example:
 
-```tsx
+```ts
 const client = setupGqlClient({
   url: 'https://example.com/graphql',
   subscriptionUrl: false,
@@ -47,6 +61,8 @@ const instance = createInstance({
   // ...
 });
 ```
+
+**Note**: `piral-urql` plays nicely together with authentication providers such as `piral-adal`. As such authentication tokens are automatically inserted on queries, mutations, and when establishing subscriptions.
 
 ## License
 

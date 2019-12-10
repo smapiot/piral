@@ -6,7 +6,7 @@ import { PiralExtSettings } from 'piral-ext';
  */
 export interface PiralRenderBaseOptions extends PiralConfiguration {
   /**
-   * Customizes the extension settings.
+   * Customizes the plugin settings.
    */
   settings?: PiralExtSettings;
   /**

@@ -56,7 +56,7 @@ export interface Component<Attributes = {}, State = {}, Actions = {}> {
 }
 
 /**
- * Defines the provided set of hyperapp Pilet API extensions.
+ * Defines the provided set of the Hyperapp plugin.
  */
 export interface PiletHyperappApi {
   /**

@@ -2,13 +2,17 @@
 
 # [Piral PWA](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-pwa.svg?style=flat)](https://www.npmjs.com/package/piral-pwa) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-pwa` brings to the table is a simple way to expose your application as a PWA with the capability to use offline storage for pilets, too.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-pwa` brings to the table is a simple way to expose your application as a PWA with the capability to use offline storage for pilets, too.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `showAppNotification()`
+
+Allows pilets to present a "native" notification. The exact looks of this are platform dependent, e.g., on Chrome for Windows 10 an item as added to the notification bar. On Chrome for MacOS X a quick notification appears.
 
 ## Setup and Bootstrapping
 
@@ -47,13 +51,13 @@ The `manifest.webmanifest` needs to be referenced by your `index.html` file. If 
 
 For the setup of the library itself you'll need to import `createPwaApi` from the `piral-pwa` package.
 
-```tsx
+```ts
 import { createPwaApi } from 'piral-pwa';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createPwaApi()],
@@ -94,6 +98,8 @@ The `.pwarc` may look as follows:
   caches: 'all',
 }
 ```
+
+More details on the configuration will follow. Further options will be integrated soon, too.
 
 ## License
 

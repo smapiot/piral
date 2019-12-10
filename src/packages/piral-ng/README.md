@@ -2,15 +2,23 @@
 
 # [Piral Ng](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-ng.svg?style=flat)](https://www.npmjs.com/package/piral-ng) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is an extension library that only has a peer dependency to `piral-core`. What `piral-ng` brings to the table is a set of API extensions that can be used with `piral` or `piral-core`.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-ng` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-By default, these extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. The set includes an Angular converter for any component registration, as well as a `fromNg` shortcut and a `NgExtension` component.
+The set includes an Angular converter for any component registration, as well as a `fromNg` shortcut and a `NgExtension` component.
+
+By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
 
-(tbd)
+### `fromNg()`
+
+Transforms a standard Angular component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+
+### `NgExtension`
+
+The extension slot module to be used in Angular components. Automatically added to allow using `extension-component` elements.
 
 ## Setup and Bootstrapping
 
@@ -40,7 +48,7 @@ if (process.env.NODE_ENV === 'production') {
 
 For the setup itself you'll need to import `createNgApi` from the `piral-ng` package.
 
-```tsx
+```ts
 import { createNgApi } from 'piral-ng';
 ```
 

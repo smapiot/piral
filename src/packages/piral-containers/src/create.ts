@@ -5,12 +5,12 @@ import { withPiletState } from './withPiletState';
 import { PiletContainersApi } from './types';
 
 /**
- * Available configuration options for the container extension.
+ * Available configuration options for the container plugin.
  */
 export interface ContainersConfig {}
 
 /**
- * Creates a new Piral API extension for supporting Pilet global state containers.
+ * Creates new Pilet API extensions for supporting pilet global state containers.
  */
 export function createContainersApi(config: ContainersConfig = {}): Extend<PiletContainersApi> {
   return context => {

@@ -45,7 +45,7 @@ function defaultGqlClient() {
 }
 
 /**
- * Creates a new Piral GraphQL API extension.
+ * Creates new Pilet API extensions for GraphQL.
  * @param client The specific urql client to be used, if any.
  */
 export function createGqlApi(client: UrqlClient = defaultGqlClient()): Extend<PiletGqlApi> {

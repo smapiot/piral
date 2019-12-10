@@ -2,17 +2,29 @@
 
 # [Piral](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![Lerna](https://img.shields.io/badge/monorepo-lerna-cc00ff.svg)](https://lernajs.io/) [![Build Status](https://smapiot.visualstudio.com/piral/_apis/build/status/piral-CI?branchName=develop)](https://smapiot.visualstudio.com/piral/_build/latest?definitionId=10) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
 
-Easily build a next generation portal application using microfrontends. Piral enables you to create a modular frontend application that is extended at runtime with decoupled modules called *pilets* leveraging a microfrontend architecture. A pilet can be developed independently and ships with the necessary JavaScript and bundled assets.
+Easily build a next generation portal application using microfrontends. Piral enables you to create a modular frontend application that is extended at runtime with decoupled modules called *pilets* leveraging a **microfrontend architecture**. A pilet can be **developed independently** and ships with the necessary code, as well as all other relevant assets.
 
-:zap: A pilet is capable of dynamically extending other pilets or using such extension slots itself. Otherwise, a pilet is quite isolated (developed and handled) and will never destroy your application.
+This makes Piral an ideal foundation for a mid-sized to large-scale applications developed by **distributed teams**.
+
+:zap: A pilet is capable of dynamically **extending other pilets** or using such extension slots itself.
+
+:zap: A pilet is **isolated** (developed and handled) and will never destroy your application.
+
+:zap: A pilet can be developed with **any technology** using a **standard IDE**.
+
+:zap: A pilet can be updated and **published within seconds**.
 
 ## Getting Started
 
-Piral is developed as a monorepo. As such this repository may contain an overwhelming amount of information. Our recommendation is to start at the documentation available at [docs.piral.io](https://docs.piral.io). Working through the available guidelines will give you the necessary information in the best possible order.
+Piral is developed as a monorepo. As such this repository may contain an overwhelming amount of information.
+
+Our recommendation is to start at the documentation available at [docs.piral.io](https://docs.piral.io). Working through the available [tutorials](https://docs.piral.io/tutorials) will give you the necessary information in the best possible order.
 
 ## Contributing
 
-The main purpose of this repository is to continue to evolve Piral core, making it faster, more powerful, and easier to use. Development of Piral happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving Piral.
+The main purpose of this repository is to continue to evolve Piral and its core ecosystem, making it faster, more powerful, and easier to use. Development of Piral happens in the open on [GitHub](https://github.com/smapiot/piral), and we are grateful to the community for contributing bugfixes, ideas, and improvements.
+
+Read below to learn how you can take part in improving Piral.
 
 ### Repository Structure
 

@@ -1,24 +1,38 @@
 # Piral Changelog
 
-## 0.9.0 (tbd)
+## 0.9.2 (tbd)
+
+* Fixed not found error when copying files for scaffold (#106)
+* Fixed upgrading a pilet using outdated information (#108)
+* Fixed a bug when building to a non-project folder
+
+## 0.9.1 (December 6, 2019)
+
+* Fixed source maps for debugging pilet (#103)
+* Fixed bundle splitting in pilets (#102)
+* Improved documentation w.r.t. sharing data (#104)
+
+## 0.9.0 (December 3, 2019)
 
 * Bundle for emulation (#68)
-* Added `piral-pwa` library (#26)
-* Added `piral-adal` library (#81)
+* Added `piral-pwa` plugin (#26)
+* Added `piral-adal` plugin (#81)
 * Introduced enhanced support for server-side rendering (#35)
 * Added utility library `piral-ssr-utils` (#35)
 * Provide ability for develop builds of Piral (#68)
 * Generate the declaration dynamically (#89)
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
-* Added new optional library `piral-inferno` (#86)
-* Added new optional library `piral-preact` (#86)
-* Added new optional library `piral-ngjs` (#87)
+* Added new optional plugin `piral-inferno` (#86)
+* Added new optional plugin `piral-preact` (#86)
+* Added new optional plugin `piral-ngjs` (#87)
 * Improved and added better error messages in the Piral CLI (#92)
 * Improved the pilet upgrade flows (#92)
 * Improved the CI/CD pipelines for the `sample-piral` app
 * Rewrote the converter API to support full lifecycles
 * Removed `piral-fetch` and `piral-urql` from `piral-ext`
+* Changed `showNotification` API to allow components
+* Changed the search handler to allow returning components
 
 ## 0.8.4 (November 15, 2019)
 
@@ -44,22 +58,22 @@
 
 * Improved default template
 * Fixed misidentified React class components (#82)
-* Added `piral-axios` library
+* Added `piral-axios` plugin
 
 ## 0.8.0 (October 21, 2019)
 
 * Use declaration merging instead of generics (#72)
 * Automatically clear the parcel cache (#59)
 * Support of plugins for extending the Piral CLI (#47)
-* Extracted `piral-auth` library
-* Extracted `piral-containers` library
-* Extracted `piral-dashboard` library
-* Extracted `piral-feeds` library
-* Extracted `piral-forms` library
-* Extracted `piral-search` library
-* Extracted `piral-menu` library
-* Extracted `piral-modals` library
-* Extracted `piral-notifications` library
+* Extracted `piral-auth` plugin
+* Extracted `piral-containers` plugin
+* Extracted `piral-dashboard` plugin
+* Extracted `piral-feeds` plugin
+* Extracted `piral-forms` plugin
+* Extracted `piral-search` plugin
+* Extracted `piral-menu` plugin
+* Extracted `piral-modals` plugin
+* Extracted `piral-notifications` plugin
 * Added `validate` command for Piral instances (#69)
 * Added `validate` command for pilets (#70)
 * Support for extensions in Angular (#54), Hyperapp, Vue
@@ -122,8 +136,8 @@
 * Enable lazy loading of pilets (#2)
 * Introduced explicit local pilet state management
 * Added `--fresh` flag to the `pilet-publish` command
-* Added new optional library `piral-hyperapp`
-* Moved `track...` API to optional library `piral-tracking`
+* Added new optional plugin `piral-hyperapp`
+* Moved `track...` API to optional plugin `piral-tracking`
 * Aliases are now also available for shorthand CLI commands
 * Refactored and improved `piral install` to be `piral new`
 * Fixed indirect use of shared dependencies (#30)
@@ -131,7 +145,7 @@
 
 ## 0.5.2 (June 23, 2019)
 
-* Added new optional library `piral-vue`
+* Added new optional plugin `piral-vue`
 * Improved API of `piral-ng`
 * Added `piral install` command to Piral CLI
 * Support local CLI installation over global one
@@ -139,7 +153,7 @@
 
 ## 0.5.1 (June 18, 2019)
 
-* Added new optional library `piral-ng`
+* Added new optional plugin `piral-ng`
 * Extended APIs for `registerExtension` and `registerModal`
 * Improved documentation
 * Added more flexibility to `piral build` and `piral debug` commands

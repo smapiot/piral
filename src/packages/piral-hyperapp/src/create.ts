@@ -3,7 +3,7 @@ import { mountHyperapp, createHyperappElement } from './mount';
 import { PiletHyperappApi } from './types';
 
 /**
- * Available configuration options for the Hyperapp extension.
+ * Available configuration options for the Hyperapp plugin.
  */
 export interface HyperappConfig {
   /**
@@ -14,7 +14,7 @@ export interface HyperappConfig {
 }
 
 /**
- * Creates a new set of Piral hyperapp API extensions.
+ * Creates new Pilet API extensions for the Hyperapp integration.
  */
 export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHyperappApi> {
   const { rootName = 'slot' } = config;
