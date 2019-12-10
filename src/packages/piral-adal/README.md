@@ -22,13 +22,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createAdalApi` from the `piral-adal` package.
 
-```tsx
+```ts
 import { createAdalApi } from 'piral-adal';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createAdalApi({ clientId })],

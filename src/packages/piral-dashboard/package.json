@@ -10,6 +10,7 @@
     "modules",
     "api",
     "plugin",
+    "plugin-component",
     "dashboard",
     "tiles"
   ],

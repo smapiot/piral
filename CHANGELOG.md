@@ -11,6 +11,7 @@
 
 * Fixed not found error when copying files for scaffold (#106)
 * Fixed upgrading a pilet using outdated information (#108)
+* Fixed a bug when building to a non-project folder
 
 ## 0.9.1 (December 6, 2019)
 

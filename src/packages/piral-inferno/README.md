@@ -24,7 +24,7 @@ The extension slot component to be used in Inferno components.
 
 Using Inferno with Piral is as simple as installing `piral-inferno` and `inferno`.
 
-```tsx
+```ts
 import 'inferno';
 import { createInfernoApi } from 'piral-inferno';
 ```

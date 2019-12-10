@@ -9,6 +9,7 @@
     "portal",
     "modules",
     "api",
+    "plugin-user",
     "plugin",
     "user",
     "authentication"

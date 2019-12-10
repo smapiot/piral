@@ -24,7 +24,7 @@ The extension slot component to be used in Hyperapp apps.
 
 Using Hyperapp with Piral is as simple as installing `piral-hyperapp` and `hyperapp`.
 
-```tsx
+```ts
 import 'hyperapp';
 import { createHyperappApi } from 'piral-hyperapp';
 ```

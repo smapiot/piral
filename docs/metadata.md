@@ -100,3 +100,23 @@ The additional fields for a pilet package are as follows:
 The `preScaffold`, `postScaffold`, `preUpgrade`, `postUpgrade`, `externals`, `scripts`, `devDependencies`, and `files` are added to simplify diffing during an upgrade of the Piral app. Likewise, the `tooling` (version of the used Piral CLI) and `version` (version of the used Piral instance) are informative only. The name of the Piral instance is used to find the right entry point for debugging.
 
 **Remark**: The `piral` field is exclusively used by the Piral CLI. For information regarding what might be picked up by a feed service implementation see the specification of a pilet, which discusses all fields in depth.
+
+The `preScaffold` and `postScaffold` installation scripts are run during scaffold (`pilet new`) in the following order:
+
+1. The package from the Piral instance is installed
+2. The `preScaffold` script is run, if available
+3. Scaffolding tasks, such as updating of *package.json* or copying of the files are performed
+4. All dependencies are resolved and installed (if wanted)
+5. The `postScaffold` script is run, if available
+
+Thus for `preScaffold` and `postScaffold` either scripts via `npx`, general scripts such as Bash scripts, or running Node.js files make sense.
+
+The `preUpgrade` and `postUpgrade` upgrade scripts are run during upgrade (`pilet upgrade`) in the following order:
+
+1. The package from the Piral instance is (re-)installed
+2. The `preUpgrade` script is run, if available
+3. Scaffolding tasks, such as updating of *package.json* or copying of the files are performed
+4. All dependencies are resolved and (re-)installed
+5. The `postUpgrade` script is run, if available
+
+Thus for `preUpgrade` and `postUpgrade` either scripts via `npx`, general scripts such as Bash scripts, or running Node.js files make sense.

@@ -1,29 +1,57 @@
-const { readFileSync, existsSync } = require('fs');
+const { readFileSync } = require('fs');
 const { basename, resolve } = require('path');
-const { getPluginTypes, getPluginImage } = require('./paths');
+const { getPluginTypes, getPluginCategory, getPluginImage } = require('./paths');
+
+function transformUpper(str) {
+  return str[0].toUpperCase() + str.substr(1);
+}
 
 module.exports = function() {
+  const categories = [];
+  const fragments = [];
   const children = getPluginTypes().map(file => {
     const name = basename(file).replace('.json', '');
     const image = getPluginImage(name);
     const dest = resolve(__dirname, '..', '..', '..', '..', 'packages', name, 'package.json');
     const data = JSON.parse(readFileSync(dest, 'utf8'));
+    const category = getPluginCategory(data);
     this.addDependency(dest, { includedInParent: true });
-    return `
-    <ImageCard
-      link="/reference/plugins/${name}"
-      image={require('../assets/${image}')}
-      description="${data.description}"
-      title="${data.name}"
-    />`;
+    return {
+      category,
+      content: `
+        <ImageCard
+          link="/reference/plugins/${name}"
+          image={require('../assets/${image}')}
+          description="${data.description}"
+          title="${data.name}"
+        />`,
+    };
   });
+
+  for (const child of children) {
+    const index = categories.indexOf(child.category);
+
+    if (index === -1) {
+      categories.push(child.category);
+      fragments.push([child.content]);
+    } else {
+      fragments[index].push(child.content);
+    }
+  }
 
   return `
     const React = require('react');
     const { ImageCard } = require('../scripts/components');
     module.exports = () => (
       <>
-        ${children.join('')}
+        ${fragments
+          .map(
+            (frags, index) => `
+            <h2 className="plugin">${transformUpper(categories[index])}</h2>
+            <div className="boxes title-cards">${frags.join('')}</div>
+          `,
+          )
+          .join('')}
       </>
     );
   `;

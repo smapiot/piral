@@ -1,7 +1,7 @@
 {
   "name": "piral-adal",
   "version": "0.9.1",
-  "description": "Plugin for the integration of Microsoft Azure Active Directory authentication in Piral.",
+  "description": "Plugin to integrate AAD authentication in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -10,6 +10,7 @@
     "modules",
     "api",
     "plugin",
+    "plugin-user",
     "azure",
     "active",
     "directory",
