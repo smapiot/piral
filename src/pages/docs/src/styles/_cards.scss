@@ -36,28 +36,6 @@
   }
 }
 
-.plugin-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  img {
-    width: 64px;
-    height: 64px;
-  }
-
-  h1 {
-    flex: 1;
-    font-size: 2em;
-    margin-left: 0.5em;
-  }
-}
-
-h2.plugin {
-  font-size: 1.4em;
-  color: #555;
-}
-
 .image-card {
   flex: 0 0 200px;
   text-decoration: none;
