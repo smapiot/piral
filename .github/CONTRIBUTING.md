@@ -12,6 +12,10 @@ This project and everyone participating in it is governed by the [Code of Conduc
 
 ## How Can I Contribute?
 
+### Development Instructions
+
+Please find more information about how to setup your machine for developing Piral in [the source documentation](../src/README.md).
+
 ### Reporting Bugs
 
 Before creating bug report, please make sure that you first check the [existing issues](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Abug), as you might find that the issue is already reported. Fill out [the required template](https://github.com/smapiot/piral/issues/new?template=bug_report.md), the information it asks for helps us resolve issues faster.
