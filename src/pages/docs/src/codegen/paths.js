@@ -9,6 +9,7 @@ const packages = resolve(__dirname, '../../../../packages');
 const generated = resolve(__dirname, generatedName);
 const tutorials = resolve(docs, 'tutorials');
 const questions = resolve(docs, 'questions');
+const reference = resolve(docs, 'reference');
 const commands = resolve(docs, 'commands');
 const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
@@ -18,6 +19,24 @@ const coreTypes = coreNames.map(name => `${name}.json`);
 
 function getCategory(keywords) {
   return keywords.filter(keyword => keyword.startsWith(categoryPrefix)).map(keyword => keyword.substr(categoryPrefix.length))[0];
+}
+
+function readReadme(dir) {
+  const refFormat = /\- \[(.*)\]\((.*)\)/g;
+  const readme = readFileSync(resolve(dir, 'README.md'));
+  const results = [];
+
+  do {
+    const result = refFormat.exec(readme);
+
+    if (!result) {
+      break;
+    }
+
+    results.push(resolve(dir, result[2]));
+  } while (true);
+
+  return results;
 }
 
 function getDocsFrom(dir, tester = /\.md$/) {
@@ -37,6 +56,10 @@ function getTutorials() {
 
 function getQuestions() {
   return getDocsFrom(questions);
+}
+
+function getReferences() {
+  return readReadme(reference);
 }
 
 function getCommands() {
@@ -73,21 +96,7 @@ function getPluginImage(name) {
 }
 
 function getDocs() {
-  const refFormat = /\- \[(.*)\]\((.*)\)/g;
-  const readme = readFileSync(resolve(docs, 'README.md'));
-  const results = [];
-
-  do {
-    const result = refFormat.exec(readme);
-
-    if (!result) {
-      break;
-    }
-
-    results.push(resolve(docs, result[2]));
-  } while (true);
-
-  return results;
+  return readReadme(docs);
 }
 
 function getName(file) {
@@ -115,6 +124,7 @@ module.exports = {
   generatedName,
   getTutorials,
   getQuestions,
+  getReferences,
   getCommands,
   getPluginCategory,
   getPluginCategories,

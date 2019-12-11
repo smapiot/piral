@@ -27,39 +27,42 @@ export default () => (
           </div>
         </div>
         <div className="title-card small">
-          <p>
-            <b>All Activities</b>
-          </p>
-          <p>
-            <a href="https://dev.to/t/piral" target="_blank" className="btn primary">
-              <i className="fas fa-blog" /> Blog
-            </a>
-          </p>
-          <p>
-            <a href="https://github.com/smapiot/piral/issues/" target="_blank">
-              <img src="https://img.shields.io/github/issues/smapiot/piral.svg" alt="Piral GitHub Issues"/>
-            </a>
-          </p>
-          <p>
-            <a href="https://github.com/smapiot/piral/pull/" target="_blank">
-              <img src="https://img.shields.io/github/issues-pr/smapiot/piral.svg" alt="Piral GitHub Pull Requests"/>
-            </a>
-          </p>
-          <p>
-            <a href="https://github.com/smapiot/piral/releases/" target="_blank">
-              <img src="https://img.shields.io/github/tag/smapiot/piral.svg" alt="Piral GitHub Releases"/>
-            </a>
-          </p>
-          <p>
-            <a href="https://gitter.im/piral-io/community" target="_blank">
-              <img src="https://badges.gitter.im/gitterHQ/gitter.png" alt="Piral Gitter Chat"/>
-            </a>
-          </p>
+          <h4>All Activities</h4>
+          <ul className="badges">
+            <li>
+              <a href="https://dev.to/t/piral" target="_blank">
+                <img src="https://img.shields.io/badge/piral-blog-brightgreen" alt="Blog Posts" />
+              </a>
+            </li>
+            <li>
+              <a href="https://www.npmjs.com/package/piral-cli" target="_blank">
+                <img src="https://img.shields.io/npm/dm/piral-cli" alt="NPM Monthly Downloads" />
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/smapiot/piral/issues/" target="_blank">
+                <img src="https://img.shields.io/github/issues/smapiot/piral.svg" alt="Piral GitHub Issues" />
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/smapiot/piral/pull/" target="_blank">
+                <img src="https://img.shields.io/github/issues-pr/smapiot/piral.svg" alt="Piral GitHub Pull Requests" />
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/smapiot/piral/releases/" target="_blank">
+                <img src="https://img.shields.io/github/tag/smapiot/piral.svg" alt="Piral GitHub Releases" />
+              </a>
+            </li>
+            <li>
+              <a href="https://gitter.im/piral-io/community" target="_blank">
+                <img src="https://badges.gitter.im/gitterHQ/gitter.png" alt="Piral Gitter Chat" />
+              </a>
+            </li>
+          </ul>
         </div>
         <div className="title-card small">
-          <p>
-            <b>Quick Links</b>
-          </p>
+          <h4>Quick Links</h4>
           <p>
             <Link to="/tutorials" className="btn primary">
               <i className="fas fa-book" /> Tutorials
@@ -81,7 +84,6 @@ export default () => (
             </Link>
           </p>
         </div>
-
       </div>
       <p>
         Learn more in <Link to="/tutorials/01-introduction">the introduction tutorial</Link>.

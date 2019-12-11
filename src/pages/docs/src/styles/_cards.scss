@@ -26,6 +26,11 @@
   padding: 1rem;
   box-sizing: border-box;
 
+  &.small > h4 {
+    margin-top: 0;
+    font-size: 1rem;
+  }
+
   .btn {
     width: 150px;
     text-align: left;
@@ -33,6 +38,16 @@
 
   &.small {
     flex: 0 0 200px;
+  }
+
+  .badges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin: 0.8em 0;
+    }
   }
 }
 

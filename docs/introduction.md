@@ -4,7 +4,7 @@ Piral is a solution for frontend modularization, where the different modules can
 
 While the idea of smaller (independent) modules is not new the provided approach has some advantages (and - depending on the use-case - disadvantages) over, e.g., bundle splitting as its done in modern build systems. Actually, the given approach is not exclusive and can be used together with bundle splitting.
 
-A pilet is not only independent of the main application (a "piral instance"), but also independently developed. This means we can give an independent development team the task to build a module in our application without requiring the same repository or infrastructure.
+A pilet is not only independent of the main application (a "Piral instance"), but also independently developed. This means we can give an independent development team the task to build a module in our application without requiring the same repository or infrastructure.
 
 @[youtube](SkKvpBHy_5I)
 
@@ -58,18 +58,18 @@ To help us see the commands in action we can also use a *global* version of the 
 
 ### A Piral-Core Based Application
 
-Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-arbiter` are straight dependencies, common dependencies such as `react` are only peer referenced. This leaves many of the open choices up to the developer providing greater freedom.
+Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-atom` are straight dependencies, common dependencies such as `react` are only peer referenced. This leaves many of the open choices up to the developer providing greater freedom.
 
 ## Piral Core vs Piral
 
 The decision between `piral-core` and `piral` as the base package may not be simple. Our recommendation is to use `piral` when you are in doubt (or don't know what to do). If you have a very specific use case and want to customize the API for the pilets, as well as the communication with the backend as much as possible - then `piral-core` may be the right choice.
 
-The following table compares the two from a feature perspective.
+The following table compares the two from a out-of-the-box feature perspective.
 
 | Feature             | Piral Core | Piral |
 |---------------------|------------|-------|
 | Breakpoints         | ️️️✔️        | ✔️    |
-| Errors              | ️️️✔️        | ✔️    |
+| Error Handling      | ️️️✔️        | ✔️    |
 | Global State        | ️️️✔️        | ✔️    |
 | Pages / Routing     | ️️️✔️        | ✔️    |
 | Extension API       | ️️️✔️        | ✔️    |
@@ -79,14 +79,11 @@ The following table compares the two from a feature perspective.
 | Language            | ️️️❌        | ✔️    |
 | Connector API       | ️️️❌        | ✔️    |
 | Notification API    | ️️️❌        | ✔️    |
-| Modal API           | ️️️❌        | ✔️    |
+| Modal Dialog API    | ️️️❌        | ✔️    |
 | Menu API            | ️️️❌        | ✔️    |
-| Search Provider API | ️️️❌        | ✔️    |
 | Polyfills           | ❌        | ✔️    |
 | Translation API     | ❌        | ✔️    |
-| Fetch API           | ❌        | ✔️    |
-| GraphQL API         | ❌        | ✔️    |
 
-Both libraries are purely functional and do not provide any design. Thus the look and feel can be fully customized and designed from every aspect.
+Both libraries are purely functional and do not provide any design. Thus the look and feel can be fully customized and designed in every aspect.
 
-A missing feature in `piral-core` can be also re-integrated by installing the respective plugin.
+A missing feature in `piral-core` can be also re-integrated by installing the respective plugin, e.g., `piral-dashboard` for providing dashboard capabilities.
