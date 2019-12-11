@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.2 (tbd)
+## 0.9.2 (December 11, 2019)
 
 * Fixed not found error when copying files for scaffold (#106)
 * Fixed upgrading a pilet using outdated information (#108)
