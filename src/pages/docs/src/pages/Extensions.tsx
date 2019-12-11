@@ -6,8 +6,6 @@ export default () => (
   <section className="container">
     <h1>Official Plugins</h1>
     <p>These plugins are officially developed by us to help you get things done quickly.</p>
-    <div className="boxes">
-      <PluginsList />
-    </div>
+    <PluginsList />
   </section>
 );

@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.9.2 (tbd)
+
+* Fixed not found error when copying files for scaffold (#106)
+* Fixed upgrading a pilet using outdated information (#108)
+* Fixed a bug when building to a non-project folder
+* Support invalidation of a `piral-feeds` connector (#93)
+
 ## 0.9.1 (December 6, 2019)
 
 * Fixed source maps for debugging pilet (#103)

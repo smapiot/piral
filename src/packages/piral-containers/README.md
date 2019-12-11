@@ -20,13 +20,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createContainersApi` from the `piral-containers` package.
 
-```tsx
+```ts
 import { createContainersApi } from 'piral-containers';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createContainersApi()],

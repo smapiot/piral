@@ -22,13 +22,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createFormsApi` from the `piral-forms` package.
 
-```tsx
+```ts
 import { createFormsApi } from 'piral-forms';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createFormsApi()],

@@ -28,13 +28,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createModalsApi` from the `piral-modals` package.
 
-```tsx
+```ts
 import { createModalsApi } from 'piral-modals';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createModalsApi()],
@@ -46,7 +46,7 @@ Via the options the globally available `dialogs` can be defined.
 
 For example:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createModalsApi({

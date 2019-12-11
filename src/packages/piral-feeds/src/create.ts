@@ -3,7 +3,7 @@ import { swap } from '@dbeining/react-atom';
 import { buildName, Extend } from 'piral-core';
 import { withFeed } from './withFeed';
 import { createFeedOptions } from './utils';
-import { PiletFeedsApi } from './types';
+import { PiletFeedsApi, FeedConnector } from './types';
 
 /**
  * Available configuration options for the feed plugin.
@@ -29,13 +29,17 @@ export function createFeedsApi(config: FeedsConfig = {}): Extend<PiletFeedsApi> 
         createConnector(resolver) {
           const id = buildName(target.name, feeds++);
           const options = createFeedOptions(id, resolver);
-          context.createFeed(options.id);
+          const invalidate = () => context.createFeed(options.id);
 
           if (options.immediately) {
             context.loadFeed(options);
+          } else {
+            invalidate();
           }
 
-          return component => withFeed(component, options) as any;
+          const connect = (component => withFeed(component, options) as any) as FeedConnector<any>;
+          connect.invalidate = invalidate;
+          return connect;
         },
       };
     };

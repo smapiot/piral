@@ -24,7 +24,7 @@ The extension slot component to be used in Vue components.
 
 Using Vue with Piral is as simple as installing `piral-vue` and `vue`.
 
-```tsx
+```ts
 import 'vue';
 import { createVueApi } from 'piral-vue';
 ```

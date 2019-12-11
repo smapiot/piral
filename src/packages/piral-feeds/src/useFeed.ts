@@ -14,7 +14,7 @@ export function useFeed<TData, TItem>(options: ConnectorDetails<TData, TItem>): 
     if (!loaded && !loading) {
       load(options);
     }
-  }, []);
+  }, [loaded]);
 
   return [loaded, data, error];
 }

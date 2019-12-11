@@ -15,6 +15,7 @@
     "mutate",
     "subscribe",
     "plugin",
+    "plugin-network",
     "spa"
   ],
   "author": "smapiot",

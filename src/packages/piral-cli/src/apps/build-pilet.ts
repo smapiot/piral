@@ -1,5 +1,5 @@
 import * as Bundler from 'parcel-bundler';
-import { join, dirname, basename } from 'path';
+import { join, dirname, basename, resolve } from 'path';
 import {
   extendConfig,
   setStandardEnvs,
@@ -54,7 +54,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   });
 
   const dest = {
-    outDir: dirname(target),
+    outDir: dirname(resolve(baseDir, target)),
     outFile: basename(target),
   };
 

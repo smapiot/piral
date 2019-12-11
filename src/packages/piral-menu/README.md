@@ -24,13 +24,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createMenuApi` from the `piral-menu` package.
 
-```tsx
+```ts
 import { createMenuApi } from 'piral-menu';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createMenuApi()],
@@ -42,7 +42,7 @@ Via the options the `defaultSettings` and the global / initially available menu 
 
 For example:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createMenuApi({

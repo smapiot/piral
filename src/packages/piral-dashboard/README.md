@@ -24,13 +24,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createDashboardApi` from the `piral-dashboard` package.
 
-```tsx
+```ts
 import { createDashboardApi } from 'piral-dashboard';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createDashboardApi()],
@@ -42,7 +42,7 @@ Via the options the `defaultPreferences` and the global / initially available `t
 
 Consider for example:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createDashboardApi({

@@ -48,6 +48,22 @@ describe('Create Feeds API Extensions', () => {
       update: () => Promise.resolve({}),
       immediately: true,
     });
+    expect(container.context.createFeed).not.toHaveBeenCalled();
+    expect(container.context.loadFeed).toHaveBeenCalled();
+  });
+
+  it('createCoreApi can invalidate the loaded feed', () => {
+    const container = createMockContainer();
+    container.context.createFeed = jest.fn();
+    container.context.loadFeed = jest.fn();
+    const api = (createFeedsApi()(container.context) as any)(container.api, moduleMetadata);
+    const connect = api.createConnector({
+      initialize: () => Promise.resolve(true),
+      connect: () => () => {},
+      update: () => Promise.resolve({}),
+      immediately: true,
+    });
+    connect.invalidate();
     expect(container.context.createFeed).toHaveBeenCalled();
     expect(container.context.loadFeed).toHaveBeenCalled();
   });

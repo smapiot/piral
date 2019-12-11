@@ -28,13 +28,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createLocaleApi` from the `piral-translate` package.
 
-```tsx
+```ts
 import { createLocaleApi } from 'piral-translate';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createLocaleApi()],
@@ -46,7 +46,7 @@ Via the options the available languages, translations, as well as the currently 
 
 For example:
 
-```tsx
+```ts
 const localizer = setupLocalizer({
   language: 'en',
   messages: {
@@ -68,7 +68,7 @@ const instance = createInstance({
 
 Alternatively, the current language can also be inferred via a function.
 
-```tsx
+```ts
 const localizer = setupLocalizer({
   language: getUserLocale,
   messages: {

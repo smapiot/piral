@@ -100,6 +100,11 @@ export interface FeedConnector<TData> {
    * @param component The component to connect by providing a data prop.
    */
   <TProps>(component: ComponentType<TProps & FeedConnectorProps<TData>>): ComponentType<TProps>;
+  /**
+   * Invalidates the underlying feed connector.
+   * Forces a reload on next use.
+   */
+  invalidate(): void;
 }
 
 export interface FeedResolver<TData> {

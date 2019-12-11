@@ -45,21 +45,33 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   const pckg = await readJson(root, 'package.json');
   const { devDependencies = {}, piral } = pckg;
 
-  if (piral) {
+  if (piral && typeof piral === 'object') {
     const sourceName = piral.name;
+
+    if (!sourceName || typeof sourceName !== 'string') {
+      throw new Error(`Missing "name" <string> in the "piral" section of the "package.json" file. Aborting.`);
+    }
+
     const currentVersion = devDependencies[sourceName];
+
+    if (!currentVersion || typeof currentVersion !== 'string') {
+      throw new Error(`Invalid reference to the Piral instance in the "package.json" file. Aborting.`);
+    }
+
     const [packageRef, packageVersion] = await getCurrentPackageDetails(baseDir, sourceName, currentVersion, version);
     const originalFiles = await getFileStats(root, sourceName, piral.files);
-    const piralInfo = await readPiralPackage(root, sourceName);
-    const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
-
-    if (preUpgrade) {
-      await runScript(preUpgrade, root);
-    }
 
     logInfo(`Updating NPM package to %s ...`, packageRef);
 
     await installPackage(packageRef, root, '--no-save', '--no-package-lock');
+
+    const piralInfo = await readPiralPackage(root, sourceName);
+    const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
+
+    if (preUpgrade) {
+      logInfo(`Running preUpgrade script ...`);
+      await runScript(preUpgrade, root);
+    }
 
     logInfo(`Taking care of templating ...`);
 
@@ -71,6 +83,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     await installDependencies(root, '--no-package-lock');
 
     if (postUpgrade) {
+      logInfo(`Running postUpgrade script ...`);
       await runScript(postUpgrade, root);
     }
 
