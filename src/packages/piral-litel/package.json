@@ -10,6 +10,7 @@
     "modules",
     "api",
     "plugin",
+    "plugin-converter",
     "lit",
     "element"
   ],

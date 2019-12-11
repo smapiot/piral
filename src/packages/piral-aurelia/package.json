@@ -10,6 +10,7 @@
     "modules",
     "api",
     "plugin",
+    "plugin-converter",
     "aurelia"
   ],
   "author": "smapiot",
