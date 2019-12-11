@@ -4,25 +4,43 @@ const { getPluginTypes, getName, generateFile, generated, generatedName, getPlug
 const { render } = require('./markdown');
 const { docRef } = require('./utils');
 
+const packages = resolve(__dirname, '..', '..', '..', '..', 'packages');
+
 function getRoute(name) {
   return (name && `/reference/plugins/${name}/:tab?`) || '';
 }
 
 module.exports = function() {
   const files = getPluginTypes();
+  const standardPeerDeps = ['piral-core', 'react', 'react-dom', 'react-router', 'react-router-dom'];
 
   const imports = files
     .map(file => {
       const type = readFileSync(file, 'utf8');
       const name = getName(file);
       const image = getPluginImage(name);
-      const readme = resolve(__dirname, '..', '..', '..', '..', 'packages', name, 'README.md');
+      const readme = resolve(packages, name, 'README.md');
+      const packageJson = resolve(packages, name, 'package.json');
+      const plugin = require(packageJson);
+      const peerDepNames = Object.keys(plugin.peerDependencies || {}).filter(m => !standardPeerDeps.includes(m));
+      const peerDependencies =
+        peerDepNames.length > 0
+          ? `
+            <h3>Peer Dependencies</h3>
+            <p>The plugin has some peer dependencies that need to be installed.</p>
+            <p>Install the following packages to resolve the peer dependencies correctly - if not yet available on your project.</p>
+            ${peerDepNames
+              .map(peerDep => `<p>Install ${peerDep}:</p><pre><code>npm i ${peerDep}</code></pre>`)
+              .join('')}
+          `
+          : '';
       const { mdValue } = render(readme, generated);
       const content = [
         '`',
         '<h2 id="installation">Installation</h2>',
         '<p>Add the plugin to your Piral instance by running:</p>',
         `<pre><code>npm i ${name}</code></pre>`,
+        peerDependencies,
         '<h2 id="description">Description</h2>',
         mdValue.substr(mdValue.indexOf('</h1>') + 5),
       ].join('');
@@ -32,7 +50,7 @@ module.exports = function() {
         `
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { TypeInfo, Tabs, Markdown } from '../../scripts/components';
+import { TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
 
 export default () => (
   <section className="container">
@@ -41,9 +59,10 @@ export default () => (
       <img src={require('../../assets/${image}')} />
       <h1>${name}</h1>
     </div>
-    <Tabs titles={["Overview", "Types"]}>
+    <Tabs titles={["Overview", "Types", "Info"]}>
       <Markdown content={${content}} link="${docRef(readme)}" />
       <TypeInfo>{${type}}</TypeInfo>
+      <PluginMeta {...${JSON.stringify(plugin)}} />
     </Tabs>
   </section>
 );`,

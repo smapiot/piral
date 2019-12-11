@@ -26,7 +26,7 @@ The provided library only brings API extensions for pilets to a Piral instance. 
 
 For the setup itself you'll need to import `createNgjsApi` from the `piral-ngjs` package.
 
-```tsx
+```ts
 import { createNgjsApi } from 'piral-ngjs';
 ```
 

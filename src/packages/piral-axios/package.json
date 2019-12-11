@@ -13,6 +13,7 @@
     "http",
     "requester",
     "plugin",
+    "plugin-network",
     "spa"
   ],
   "author": "smapiot",

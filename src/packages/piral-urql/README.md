@@ -30,13 +30,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createGqlApi` from the `piral-urql` package.
 
-```tsx
+```ts
 import { createGqlApi } from 'piral-urql';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createGqlApi()],
@@ -48,7 +48,7 @@ Via the options the correct client can be set up. Setting the `subscriptionUrl` 
 
 For example:
 
-```tsx
+```ts
 const client = setupGqlClient({
   url: 'https://example.com/graphql',
   subscriptionUrl: false,

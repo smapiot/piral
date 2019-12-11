@@ -5,8 +5,6 @@ export function createFeedOptions<TData, TItem>(
   id: string,
   resolver: FeedResolver<TData> | FeedConnectorOptions<TData, TItem>,
 ): ConnectorDetails<TData, TItem> {
-  let initialized: Promise<TData>;
-
   if (isfunc(resolver)) {
     return {
       id,
@@ -14,7 +12,7 @@ export function createFeedOptions<TData, TItem>(
         return () => {};
       },
       initialize() {
-        return initialized || (initialized = resolver());
+        return resolver();
       },
       update(data) {
         return Promise.resolve(data);
@@ -28,7 +26,7 @@ export function createFeedOptions<TData, TItem>(
         return resolver.connect(cb);
       },
       initialize() {
-        return initialized || (initialized = resolver.initialize());
+        return resolver.initialize();
       },
       update(data, item) {
         return resolver.update(data, item);

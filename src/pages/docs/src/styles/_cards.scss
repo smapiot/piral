@@ -26,6 +26,11 @@
   padding: 1rem;
   box-sizing: border-box;
 
+  &.small > h4 {
+    margin-top: 0;
+    font-size: 1rem;
+  }
+
   .btn {
     width: 150px;
     text-align: left;
@@ -34,22 +39,15 @@
   &.small {
     flex: 0 0 200px;
   }
-}
 
-.plugin-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  .badges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
-  img {
-    width: 64px;
-    height: 64px;
-  }
-
-  h1 {
-    flex: 1;
-    font-size: 2em;
-    margin-left: 0.5em;
+    li {
+      margin: 0.8em 0;
+    }
   }
 }
 

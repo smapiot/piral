@@ -21,7 +21,6 @@ export const Search: React.FC<SearchProps> = ({ open, close }) => {
       if (input) {
         const tokens = input.toLowerCase().split(/[\s]+/);
         import('../../codegen/search.codegen').then(pages => {
-          console.log(pages);
           const maxResults = 5;
           const results = pages
             .map(page => {

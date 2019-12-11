@@ -26,13 +26,13 @@ The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createSearchApi` from the `piral-search` package.
 
-```tsx
+```ts
 import { createSearchApi } from 'piral-search';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createSearchApi()],
@@ -44,7 +44,7 @@ Via the options the initially displayed `results` can be defined. The current `q
 
 For example:
 
-```tsx
+```jsx
 const instance = createInstance({
   // important part
   extendApi: [createSearchApi({

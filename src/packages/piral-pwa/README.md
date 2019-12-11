@@ -51,13 +51,13 @@ The `manifest.webmanifest` needs to be referenced by your `index.html` file. If 
 
 For the setup of the library itself you'll need to import `createPwaApi` from the `piral-pwa` package.
 
-```tsx
+```ts
 import { createPwaApi } from 'piral-pwa';
 ```
 
 The integration looks like:
 
-```tsx
+```ts
 const instance = createInstance({
   // important part
   extendApi: [createPwaApi()],

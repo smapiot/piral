@@ -1,9 +1,14 @@
 import * as React from 'react';
+import { Tabs } from '../scripts/components';
 
-const List = require('../codegen/documentation.codegen');
+const Introduction = require('../codegen/documentation.codegen');
+const Reference = require('../codegen/reference.codegen');
 
-export default () => (
+export default ({  }) => (
   <section className="container">
-    <List />
+    <Tabs titles={['Introduction', 'Reference']}>
+      <Introduction />
+      <Reference />
+    </Tabs>
   </section>
 );

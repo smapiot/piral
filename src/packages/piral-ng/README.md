@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === 'production') {
 
 For the setup itself you'll need to import `createNgApi` from the `piral-ng` package.
 
-```tsx
+```ts
 import { createNgApi } from 'piral-ng';
 ```
 

@@ -9,6 +9,7 @@
     "modules",
     "api",
     "plugin",
+    "plugin-converter",
     "angular.js",
     "ngjs"
   ],

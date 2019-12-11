@@ -11,6 +11,7 @@
     "api",
     "fetch",
     "plugin",
+    "plugin-network",
     "spa"
   ],
   "author": "smapiot",
