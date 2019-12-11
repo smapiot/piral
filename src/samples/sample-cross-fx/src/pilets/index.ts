@@ -7,6 +7,7 @@ import { InfernoPilet } from './infernoPilet';
 import { PreactPilet } from './preactPilet';
 import { LitElPilet } from './litelPilet';
 import { MithrilPilet } from './mithrilPilet';
+import { AureliaPilet } from './aureliaPilet';
 
 /**
  * Normally all these pilets would come from some API and
@@ -27,4 +28,5 @@ export const availablePilets = [
   PreactPilet,
   LitElPilet,
   MithrilPilet,
+  AureliaPilet,
 ];

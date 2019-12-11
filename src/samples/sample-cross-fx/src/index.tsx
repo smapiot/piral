@@ -16,6 +16,7 @@ import { createInfernoApi } from 'piral-inferno';
 import { createPreactApi } from 'piral-preact';
 import { createLitElApi } from 'piral-litel';
 import { createMithrilApi } from 'piral-mithril';
+import { createAureliaApi } from 'piral-aurelia';
 import { createDashboardApi, Dashboard } from 'piral-dashboard';
 import { availablePilets } from './pilets';
 
@@ -73,6 +74,7 @@ const instance = createInstance({
     createPreactApi(),
     createLitElApi(),
     createMithrilApi(),
+    createAureliaApi(),
     createDashboardApi(),
   ],
   requestPilets() {

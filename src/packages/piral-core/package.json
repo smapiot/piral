@@ -8,7 +8,7 @@
     "modules",
     "microfrontend",
     "spa",
-    "base",
+    "core",
     "functional"
   ],
   "author": "smapiot",
@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
-    "react-arbiter": "^0.9.2",
-    "tslib": "^1.10.0"
+    "piral-base": "^0.9.1"
   }
 }

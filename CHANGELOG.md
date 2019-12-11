@@ -6,6 +6,7 @@
 * Added new optional plugin `piral-litel` for Lit-Element (#85)
 * Added new optional plugin `piral-aurelia` for Aurelia (#80)
 * Added new optional plugin `piral-mithril` for Mithril.js (#79)
+* Replaced `react-arbiter` with `piral-base` (#109)
 
 ## 0.9.2 (tbd)
 

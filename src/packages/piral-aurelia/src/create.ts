@@ -1,5 +1,6 @@
 import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { Component, createElement } from 'preact';
+import { newInstance, Aurelia } from 'aurelia-framework';
 import { PiletAureliaApi } from './types';
 
 /**
@@ -20,8 +21,12 @@ export function createAureliaApi(config: AureliaConfig = {}): Extend<PiletAureli
   const { rootName = 'slot' } = config;
 
   return context => {
-    context.converters.aurelia = component => ({
-      mount(el, props, ctx) {},
+    context.converters.aurelia = ({ root }) => ({
+      mount(el, props, ctx) {
+        const aurelia = new Aurelia();
+        aurelia.setRoot(root, el);
+        aurelia.start();
+      },
       update(el, props, ctx) {},
       unmount(el) {},
     });
