@@ -1,7 +1,7 @@
-import { ApiCreator, ArbiterOptions } from 'react-arbiter';
+import { GenericPiletApiCreator, LoadPiletsOptions } from 'piral-base';
+import { PiletApi } from './api';
 import { EventEmitter } from './utils';
 import { GlobalStateContext } from './state';
-import { PiletApi } from './api';
 import { LayoutBreakpoints } from './layout';
 
 export interface PortalProps {
@@ -15,7 +15,7 @@ export interface PortalProps {
  */
 export interface PiralInstance extends EventEmitter {
   context: GlobalStateContext;
-  createApi: ApiCreator<PiletApi>;
-  options: ArbiterOptions<PiletApi>;
+  createApi: GenericPiletApiCreator<PiletApi>;
+  options: LoadPiletsOptions<PiletApi>;
   root: PiletApi;
 }

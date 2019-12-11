@@ -1,5 +1,6 @@
+import { getDependencyResolver } from './utils';
 import { loadPilet, loadPilets, loadMetadata } from './load';
-import { createPilets, getDependencyResolver, createPilet } from './aggregate';
+import { createPilets, createPilet } from './aggregate';
 import { LoadPiletsOptions, PiletsLoaded, GenericPilet, GenericPiletApiCreator, PiletLoadingStrategy } from './types';
 
 function evalAll<TApi>(

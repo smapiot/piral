@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { ArbiterStasis, isfunc, StasisOptions, WrapComponentOptions } from 'react-arbiter';
-import { useGlobalState, useActions } from '../hooks';
+import { isfunc } from 'piral-base';
 import { PiralError, PiralLoadingIndicator } from './components';
+import { ErrorBoundary, ErrorBoundaryOptions } from './ErrorBoundary';
+import { useGlobalState, useActions } from '../hooks';
 import { defaultRender } from '../utils';
-import { AnyComponent, Errors, ComponentConverters, ForeignComponent } from '../types';
+import { AnyComponent, Errors, ComponentConverters, ForeignComponent, PiletApi, BaseComponentProps } from '../types';
 
 let portalIdBase = 123456;
 
@@ -19,7 +20,7 @@ const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
 interface ForeignComponentContainerProps<T> {
   $portalId: string;
   $component: ForeignComponent<T>;
-  innerProps: T;
+  innerProps: T & BaseComponentProps;
 }
 
 function createForeignComponentContainer<T>(contextTypes = ['router']) {
@@ -84,25 +85,24 @@ function createForeignComponentContainer<T>(contextTypes = ['router']) {
   };
 }
 
-function wrapReactComponent<T, U>(
-  Component: React.ComponentType<T & U>,
-  stasisOptions: StasisOptions,
-  componentOptions: U | undefined,
+function wrapReactComponent<T>(
+  Component: React.ComponentType<T & BaseComponentProps>,
+  stasisOptions: ErrorBoundaryOptions<T>,
+  piral: PiletApi,
 ): React.ComponentType<T> {
   return (props: T) => (
-    <ArbiterStasis {...stasisOptions} renderProps={props}>
-      <Component {...props} {...(componentOptions || ({} as any))} />
-    </ArbiterStasis>
+    <ErrorBoundary {...stasisOptions} renderProps={props}>
+      <Component {...props} piral={piral} />
+    </ErrorBoundary>
   );
 }
 
-function wrapForeignComponent<T, U>(
-  component: ForeignComponent<T & U>,
-  stasisOptions: StasisOptions,
-  componentOptions: U | undefined,
-  contextTypes?: Array<string>,
+function wrapForeignComponent<T>(
+  component: ForeignComponent<T & BaseComponentProps>,
+  stasisOptions: ErrorBoundaryOptions<T>,
+  piral: PiletApi,
 ): React.ComponentType<T> {
-  const Component = createForeignComponentContainer<T>(contextTypes);
+  const Component = createForeignComponentContainer<T>();
 
   return (props: T) => {
     const { destroyPortal } = useActions();
@@ -113,10 +113,10 @@ function wrapForeignComponent<T, U>(
     }, []);
 
     return (
-      <ArbiterStasis {...stasisOptions} renderProps={props}>
+      <ErrorBoundary {...stasisOptions} renderProps={props}>
         <PortalRenderer id={id} />
-        <Component innerProps={{ ...props, ...componentOptions }} $portalId={id} $component={component} />
-      </ArbiterStasis>
+        <Component innerProps={{ ...props, piral }} $portalId={id} $component={component} />
+      </ErrorBoundary>
     );
   };
 }
@@ -125,13 +125,12 @@ function isNotExotic(component: any): component is object {
   return !(component as React.ExoticComponent).$$typeof;
 }
 
-function wrapComponent<T, U>(
-  converters: ComponentConverters<T & U>,
-  Component: AnyComponent<T & U>,
-  options: WrapComponentOptions<U> = {},
+function wrapComponent<T>(
+  converters: ComponentConverters<T & BaseComponentProps>,
+  Component: AnyComponent<T & BaseComponentProps>,
+  piral: PiletApi,
+  stasisOptions: ErrorBoundaryOptions<T>,
 ) {
-  const { forwardProps, contextTypes = [], ...stasisOptions } = options;
-
   if (!Component) {
     console.error('The given value is not a valid component.');
     // tslint:disable-next-line:no-null-keyword
@@ -146,31 +145,26 @@ function wrapComponent<T, U>(
     }
 
     const result = converter(Component);
-    return wrapForeignComponent<T, U>(result, stasisOptions, forwardProps, contextTypes);
+    return wrapForeignComponent<T>(result, stasisOptions, piral);
   }
 
-  return wrapReactComponent<T, U>(Component, stasisOptions, forwardProps);
+  return wrapReactComponent<T>(Component, stasisOptions, piral);
 }
 
-export interface ApiForward<TApi> {
-  piral: TApi;
-}
-
-export function withApi<TApi, TProps>(
-  converters: ComponentConverters<TProps & ApiForward<TApi>>,
-  Component: AnyComponent<TProps & ApiForward<TApi>>,
-  piral: TApi,
+export function withApi<TProps>(
+  converters: ComponentConverters<TProps & BaseComponentProps>,
+  Component: AnyComponent<TProps & BaseComponentProps>,
+  piral: PiletApi,
   errorType: keyof Errors,
 ) {
-  return wrapComponent<TProps, ApiForward<TApi>>(converters, Component, {
-    forwardProps: { piral },
+  return wrapComponent<TProps>(converters, Component, piral, {
     onError(error) {
       console.error(piral, error);
     },
     renderChild(child) {
       return <React.Suspense fallback={<PiralLoadingIndicator />}>{child}</React.Suspense>;
     },
-    renderError(error, props) {
+    renderError(error, props: any) {
       return <PiralError type={errorType} error={error} {...props} />;
     },
   });

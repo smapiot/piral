@@ -7772,10 +7772,6 @@ rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-arbiter@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/react-arbiter/-/react-arbiter-0.9.2.tgz#c41cc96633d785e2f149d574e0c125a54207a778"
-
 react-dom@^16.8.1:
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.9.0.tgz#5e65527a5e26f22ae3701131bcccaee9fb0d3962"

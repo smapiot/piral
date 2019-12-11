@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { isfunc } from 'react-arbiter';
+import { isfunc } from 'piral-base';
 import { History } from 'history';
 import { useAction, useGlobalState, compare, generateId } from 'piral-core';
 import { usePrompt } from './usePrompt';

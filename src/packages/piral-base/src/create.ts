@@ -1,4 +1,4 @@
-import { asyncStrategy, standardStrategy } from './strategies';
+import { standardStrategy } from './strategies';
 import { LoadPiletsOptions, GenericPilet, PiletsLoading } from './types';
 
 export function startLoadingPilets<TApi>(options: LoadPiletsOptions<TApi>) {
@@ -18,7 +18,7 @@ export function startLoadingPilets<TApi>(options: LoadPiletsOptions<TApi>) {
     this.loaded = true;
     notify();
   };
-  const { async, strategy = async ? asyncStrategy : standardStrategy } = options;
+  const { strategy = standardStrategy } = options;
   strategy(options, setPilets).then(setLoaded, setLoaded);
   return {
     connect(notifier: PiletsLoading<TApi>) {

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { withRecall, blazingStrategy, standardStrategy, isfunc } from 'react-arbiter';
+import { blazingStrategy, standardStrategy, isfunc } from 'piral-base';
 import { getLocalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, StateContext } from './state';
-import { PiralView, Mediator, MediatorProps, ResponsiveLayout } from './components';
+import { PiralView, Mediator, ResponsiveLayout } from './components';
 import { createArbiterOptions } from './helpers';
 import { createListener } from './utils';
-import { PiletApi, PiralConfiguration, PortalProps, PiralInstance } from './types';
+import { PiralConfiguration, PortalProps, PiralInstance } from './types';
 
 /**
  * Creates a new PiralInstance component, which can be used for
@@ -63,15 +63,11 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   };
 }
 
-export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => {
-  const [PiralRecallMediator] = React.useState(() => withRecall<MediatorProps, PiletApi>(Mediator, instance.options));
-
-  return (
-    <StateContext.Provider value={instance.context}>
-      <ResponsiveLayout breakpoints={breakpoints} />
-      <PiralRecallMediator />
-      <PiralView>{children}</PiralView>
-    </StateContext.Provider>
-  );
-};
+export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => (
+  <StateContext.Provider value={instance.context}>
+    <ResponsiveLayout breakpoints={breakpoints} />
+    <Mediator options={instance.options} />
+    <PiralView>{children}</PiralView>
+  </StateContext.Provider>
+);
 Piral.displayName = 'Piral';

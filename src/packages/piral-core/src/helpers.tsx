@@ -1,12 +1,12 @@
 import {
   AvailableDependencies,
-  ApiCreator,
-  DependencyGetter,
-  ArbiterRecallStrategy,
-  ArbiterOptions,
+  GenericPiletApiCreator,
+  PiletDependencyGetter,
+  PiletLoadingStrategy,
+  LoadPiletsOptions,
   getDependencyResolver,
-  loadModule,
-} from 'react-arbiter';
+  loadPilet,
+} from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
 import { Pilet, PiletApi, PiletRequester, GlobalStateContext } from './types';
 
@@ -38,9 +38,9 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
 
 interface PiralArbiterConfig {
   availablePilets: Array<Pilet>;
-  createApi: ApiCreator<PiletApi>;
-  getDependencies: DependencyGetter;
-  strategy: ArbiterRecallStrategy<PiletApi>;
+  createApi: GenericPiletApiCreator<PiletApi>;
+  getDependencies: PiletDependencyGetter;
+  strategy: PiletLoadingStrategy<PiletApi>;
   requestPilets: PiletRequester;
   context: GlobalStateContext;
 }
@@ -52,7 +52,7 @@ export function createArbiterOptions({
   getDependencies,
   strategy,
   requestPilets,
-}: PiralArbiterConfig): ArbiterOptions<PiletApi> {
+}: PiralArbiterConfig): LoadPiletsOptions<PiletApi> {
   if (process.env.DEBUG_PILET) {
     const loadPilets = sessionStorage.getItem('dbg:loadPilets') === 'on';
     const noPilets = () => Promise.resolve([]);
@@ -60,11 +60,11 @@ export function createArbiterOptions({
   }
 
   return {
-    modules: availablePilets,
+    pilets: availablePilets,
     getDependencies,
     strategy,
     dependencies: globalDependencies,
-    fetchModules() {
+    fetchPilets() {
       const promise = requestPilets();
 
       if (process.env.DEBUG_PILET) {
@@ -81,7 +81,7 @@ export function createArbiterOptions({
               method: 'GET',
               cache: 'reload',
             }).then(m => m.text());
-          loadModule(meta, getter, fetcher).then(pilet => {
+          loadPilet(meta, getter, fetcher).then(pilet => {
             try {
               const newApi = createApi(pilet);
               context.injectPilet(pilet);

@@ -5,7 +5,7 @@ import { findPackageRoot } from './package';
 
 const importDeclRx = /import\s+((.*?)\s+from\s*)?['"`](.*?)['"`]\s*;?/g;
 const exportDeclRx = /export\s+((.*?)\s+from\s*){1}['"`](.*?)['"`]\s*;?/g;
-const allowedPackages = ['piral', 'react-arbiter', 'react-atom', '@dbeining/react-atom'];
+const allowedPackages = ['piral', 'react-atom', '@dbeining/react-atom'];
 
 interface ReferenceDeclaration {
   name: string;

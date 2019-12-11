@@ -1,7 +1,7 @@
 import * as actions from './actions';
+import { isfunc } from 'piral-base';
 import { ReactChild, isValidElement, createElement } from 'react';
 import { swap } from '@dbeining/react-atom';
-import { isfunc } from 'react-arbiter';
 import { buildName, Extend, Dict, withApi, PiletApi, GlobalStateContext } from 'piral-core';
 import { DefaultContainer, DefaultInput, DefaultResult } from './default';
 import { PiletSearchApi, SearchSettings, SearchHandler, SearchProviderRegistration, SearchResultType } from './types';

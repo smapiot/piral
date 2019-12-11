@@ -1,5 +1,5 @@
+import { PiletMetadata } from 'piral-base';
 import { PiletApi } from './api';
-import { PiletMetadata } from './meta';
 import { GlobalStateContext } from './state';
 
 export interface ApiExtender<T> {

@@ -1,7 +1,7 @@
 import { ComponentType, ReactPortal } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
-import { PiletMetadata } from './meta';
+import { PiletMetadata } from 'piral-base';
 import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
 import { LayoutType } from './layout';

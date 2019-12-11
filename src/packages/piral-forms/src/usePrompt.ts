@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { isfunc } from 'react-arbiter';
+import { isfunc } from 'piral-base';
 import { History, Location } from 'history';
 import { PromptMessage } from './types';
 

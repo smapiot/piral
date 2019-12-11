@@ -1,5 +1,4 @@
-import { AvailableDependencies, isfunc } from 'react-arbiter';
-import { PiletMetadata } from '../types';
+import { PiletMetadata, AvailableDependencies, isfunc } from 'piral-base';
 
 const sharedDependencies: AvailableDependencies = {};
 

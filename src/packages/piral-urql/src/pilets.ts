@@ -1,9 +1,9 @@
-import { ArbiterModuleMetadata } from 'react-arbiter';
+import { PiletMetadata } from 'piral-base';
 import { gqlQuery } from './queries';
 import { UrqlClient } from './types';
 
 export interface PiletQueryResult {
-  pilets: Array<ArbiterModuleMetadata>;
+  pilets: Array<PiletMetadata>;
 }
 
 const piletsQuery = `query initialData {

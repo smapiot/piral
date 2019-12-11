@@ -1,7 +1,6 @@
-import { isfunc } from './isfunc';
+import { isfunc, createEmptyModule, getDependencyResolver } from './utils';
 import { defaultFetchDependency } from './fetch';
 import { compileDependency } from './dependency';
-import { getDependencyResolver } from './aggregate';
 import {
   PiletMetadata,
   GenericPilet,
@@ -10,13 +9,6 @@ import {
   PiletDependencyFetcher,
   AvailableDependencies,
 } from './types';
-
-function createEmptyModule(meta: PiletMetadata) {
-  return {
-    ...meta,
-    setup() {},
-  };
-}
 
 function loadFromContent<TApi>(
   meta: PiletMetadata,

@@ -1,4 +1,4 @@
-import { PiletMetadata } from 'piral-core';
+import { PiletMetadata } from 'piral-base';
 
 declare global {
   interface Window {

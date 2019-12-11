@@ -130,14 +130,7 @@ export interface LoadPiletsOptions<TApi> {
    */
   dependencies?: AvailableDependencies;
   /**
-   * Optionally, sets the loading scheme to be asynchronous and
-   * thus skipping the "loading" state.
-   */
-  async?: boolean;
-  /**
-   * Optionally, defines the recall strategy. This could override
-   * the async option, as async is just a shorthand for the async
-   * loading strategy.
+   * Optionally, defines the loading strategy to use.
    */
   strategy?: PiletLoadingStrategy<TApi>;
 }

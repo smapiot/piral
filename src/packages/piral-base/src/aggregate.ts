@@ -1,9 +1,6 @@
+import { isfunc } from './utils';
 import { setupPilet } from './setup';
-import { isfunc } from './isfunc';
-import { AvailableDependencies, GenericPilet, PiletDependencyGetter, GenericPiletApiCreator } from './types';
-
-const defaultGlobalDependencies: AvailableDependencies = {};
-const defaultGetDependencies: PiletDependencyGetter = () => false;
+import { GenericPilet, GenericPiletApiCreator } from './types';
 
 function checkCreateApi<TApi>(createApi: GenericPiletApiCreator<TApi>) {
   if (!isfunc(createApi)) {
@@ -12,15 +9,6 @@ function checkCreateApi<TApi>(createApi: GenericPiletApiCreator<TApi>) {
   }
 
   return true;
-}
-
-export function getDependencyResolver(
-  globalDependencies = defaultGlobalDependencies,
-  getLocalDependencies = defaultGetDependencies,
-): PiletDependencyGetter {
-  return target => {
-    return getLocalDependencies(target) || globalDependencies;
-  };
 }
 
 /**

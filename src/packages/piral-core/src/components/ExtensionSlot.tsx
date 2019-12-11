@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isfunc } from 'react-arbiter';
+import { isfunc } from 'piral-base';
 import { useGlobalState } from '../hooks';
 import { defaultRender } from '../utils';
 import { ExtensionSlotProps } from '../types';
