@@ -18,7 +18,7 @@ Transforms a standard LitElement component into a component that can be used in 
 
 ### `LitElExtension`
 
-The name of the extension slot component to be used in LitElement components.
+The name of the extension slot component to be used in LitElement components. This is usually not needed, as it is made available via a custom element named `litel-extension`. For safety measure `LitElExtension.name` could be used to find the name of the custom element.
 
 ## Setup and Bootstrapping
 

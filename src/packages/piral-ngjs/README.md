@@ -18,7 +18,7 @@ Transforms a standard Angular.js module with a named component into a component 
 
 ### `NgjsExtension`
 
-The extension slot module to be referenced in Angular.js module definitions. Allows using `extension-component` elements.
+The extension slot module to be referenced in Angular.js module definitions. Allows using an Angular.js custom element named `extension-component`.
 
 ## Setup and Bootstrapping
 

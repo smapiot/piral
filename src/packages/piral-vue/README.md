@@ -18,7 +18,7 @@ Transforms a standard Vue component into a component that can be used in Piral, 
 
 ### `VueExtension`
 
-The extension slot component to be used in Vue components.
+The extension slot component to be used in Vue components. This is not really needed, as it is made available automatically via a Vue custom element named `extension-component`.
 
 ## Setup and Bootstrapping
 

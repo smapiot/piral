@@ -18,7 +18,7 @@ Transforms a standard Angular component into a component that can be used in Pir
 
 ### `NgExtension`
 
-The extension slot module to be used in Angular components. Automatically added to allow using `extension-component` elements.
+The extension slot module to be used in Angular components. This is not really needed, as it is made available automatically via an Angular custom element named `extension-component`.
 
 ## Setup and Bootstrapping
 

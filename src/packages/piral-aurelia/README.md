@@ -14,11 +14,11 @@ The following functions are brought to the Pilet API.
 
 ### `fromAurelia()`
 
-Transforms a standard Aurelia component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+Transforms a standard Aurelia component (View Model) into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
 
 ### `AureliaExtension`
 
-The extension slot component to be used in Aurelia component.
+The extension slot component to be used in Aurelia component. This is not really needed, as it is made available automatically via an Aurelia custom element named `extension-component`.
 
 ## Setup and Bootstrapping
 
@@ -26,7 +26,7 @@ Using Aurelia with Piral is as simple as installing `piral-aurelia` and `aurelia
 
 ```tsx
 import 'aurelia-framework';
-import { createPreactApi } from 'piral-preact';
+import { createAureliaApi } from 'piral-aurelia';
 ```
 
 The integration looks like:
