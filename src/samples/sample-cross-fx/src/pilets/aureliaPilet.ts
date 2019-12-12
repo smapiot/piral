@@ -1,6 +1,6 @@
 import { Pilet } from 'piral-core';
 import { TileComponentProps } from 'piral-dashboard';
-import { inlineView } from 'aurelia-framework';
+import { inlineView, inject } from 'aurelia-framework';
 
 @inlineView(`
 <template>
@@ -8,6 +8,7 @@ import { inlineView } from 'aurelia-framework';
     <h3>Aurelia: \${counter}</h3>
     <p>
       \${props.rows} rows and \${props.columns} columns
+      <extension-component name="smiley"></extension-component>
     </p>
     <button click.trigger="increment()">Increment</button>
     <button click.trigger="decrement()">Decrement</button>
@@ -16,7 +17,7 @@ import { inlineView } from 'aurelia-framework';
 class Tile {
   private counter = 0;
 
-  constructor(public props: TileComponentProps = { rows: 0, columns: 0, piral: undefined }) {}
+  constructor(@inject('props') public props: TileComponentProps) {}
 
   increment() {
     this.counter = this.counter + 1;

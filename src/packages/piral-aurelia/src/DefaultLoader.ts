@@ -22,9 +22,7 @@ export class DefaultLoader extends Loader {
    * @param relativeTo What the module id should be normalized relative to.
    * @return The normalized module id.
    */
-  normalizeSync(moduleId, relativeTo) {
-    console.log('normalizing', moduleId, relativeTo);
-    //return `./${relativeTo}/${moduleId}`;
+  normalizeSync(moduleId, _relativeTo) {
     return moduleId;
   }
 
@@ -70,7 +68,7 @@ export class DefaultLoader extends Loader {
    * @param url The url of the text file to load.
    * @return A Promise for text content.
    */
-  loadText(url: string) {
+  loadText(url) {
     return fetch(url).then(res => res.text());
   }
 
@@ -89,5 +87,5 @@ export class DefaultLoader extends Loader {
    * @param pluginName The name of the plugin.
    * @param implementation The plugin implementation.
    */
-  addPlugin(pluginName, implementation) {}
+  addPlugin(_pluginName, _implementation) {}
 }
