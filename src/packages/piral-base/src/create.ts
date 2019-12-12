@@ -15,7 +15,7 @@ export function startLoadingPilets<TApi>(options: LoadPiletsOptions<TApi>) {
     notify();
   };
   const setLoaded = () => {
-    this.loaded = true;
+    state.loaded = true;
     notify();
   };
   const { strategy = standardStrategy } = options;

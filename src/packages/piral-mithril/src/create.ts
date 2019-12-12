@@ -20,7 +20,7 @@ export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithri
   const { rootName = 'slot' } = config;
 
   return context => {
-    context.converters.mithril = component => ({
+    context.converters.mithril = ({ component }) => ({
       mount(el, props) {
         m.mount(el, { view: () => m(component, props) });
       },
@@ -28,6 +28,7 @@ export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithri
         m.mount(el, { view: () => m(component, props) });
       },
       unmount(el) {
+        // tslint:disable-next-line:no-null-keyword
         m.mount(el, null);
       },
     });
