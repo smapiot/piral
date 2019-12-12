@@ -1,7 +1,7 @@
-import { Extend, ExtensionSlotProps, compare } from 'piral-core';
-import { Component, createElement } from 'preact';
-import { newInstance, Aurelia } from 'aurelia-framework';
+import { Extend, ExtensionSlotProps } from 'piral-core';
+import { Aurelia } from 'aurelia-framework';
 import { PiletAureliaApi } from './types';
+import { DefaultLoader } from './DefaultLoader';
 
 /**
  * Available configuration options for the Aurelia plugin.
@@ -23,9 +23,12 @@ export function createAureliaApi(config: AureliaConfig = {}): Extend<PiletAureli
   return context => {
     context.converters.aurelia = ({ root }) => ({
       mount(el, props, ctx) {
-        const aurelia = new Aurelia();
-        aurelia.setRoot(root, el);
-        aurelia.start();
+        const aurelia = new Aurelia(new DefaultLoader());
+        aurelia.use
+          .standardConfiguration()
+          .defaultBindingLanguage()
+          .defaultResources();
+        aurelia.start().then(() => aurelia.setRoot(root, el));
       },
       update(el, props, ctx) {},
       unmount(el) {},
