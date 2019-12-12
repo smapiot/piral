@@ -1,5 +1,7 @@
 import 'aurelia-templating-binding';
 import 'aurelia-templating-resources';
+import 'aurelia-event-aggregator';
+import 'aurelia-history-browser';
 import { Loader } from 'aurelia-framework';
 
 export class DefaultLoader extends Loader {

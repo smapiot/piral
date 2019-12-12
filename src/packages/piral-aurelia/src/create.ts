@@ -1,5 +1,6 @@
 import { Extend, ExtensionSlotProps } from 'piral-core';
 import { Aurelia } from 'aurelia-framework';
+import { initialize } from 'aurelia-pal-browser';
 import { PiletAureliaApi } from './types';
 import { DefaultLoader } from './DefaultLoader';
 
@@ -23,9 +24,11 @@ export function createAureliaApi(config: AureliaConfig = {}): Extend<PiletAureli
   return context => {
     context.converters.aurelia = ({ root }) => ({
       mount(el, props, ctx) {
+        initialize();
         const aurelia = new Aurelia(new DefaultLoader());
         aurelia.use
-          .standardConfiguration()
+          .eventAggregator()
+          .history()
           .defaultBindingLanguage()
           .defaultResources();
         aurelia.start().then(() => aurelia.setRoot(root, el));

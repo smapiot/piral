@@ -3,6 +3,7 @@ import { TileComponentProps } from 'piral-dashboard';
 import { inlineView } from 'aurelia-framework';
 
 @inlineView(`
+<template>
   <div class="tile">
     <h3>Aurelia: \${counter}</h3>
     <p>
@@ -11,7 +12,7 @@ import { inlineView } from 'aurelia-framework';
     <button click.trigger="increment()">Increment</button>
     <button click.trigger="decrement()">Decrement</button>
   </div>
-`)
+<template>`)
 class Tile {
   private counter = 0;
 
