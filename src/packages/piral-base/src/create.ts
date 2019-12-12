@@ -1,3 +1,4 @@
+import { isfunc } from './utils';
 import { standardStrategy } from './strategies';
 import { LoadPiletsOptions, GenericPilet, PiletsLoading } from './types';
 
@@ -8,7 +9,8 @@ export function startLoadingPilets<TApi>(options: LoadPiletsOptions<TApi>) {
     error: undefined,
   };
   const notifiers: Array<PiletsLoading<TApi>> = [];
-  const notify = () => notifiers.forEach(notifier => notifier(state.error, state.pilets, state.loaded));
+  const call = (notifier: PiletsLoading<TApi>) => notifier(state.error, state.pilets, state.loaded);
+  const notify = () => notifiers.forEach(call);
   const setPilets = (error: Error, pilets: Array<GenericPilet<TApi>>) => {
     state.error = error;
     state.pilets = pilets;
@@ -22,7 +24,10 @@ export function startLoadingPilets<TApi>(options: LoadPiletsOptions<TApi>) {
   strategy(options, setPilets).then(setLoaded, setLoaded);
   return {
     connect(notifier: PiletsLoading<TApi>) {
-      notifiers.push(notifier);
+      if (isfunc(notifier)) {
+        notifiers.push(notifier);
+        call(notifier);
+      }
     },
     disconnect(notifier: PiletsLoading<TApi>) {
       const index = notifiers.indexOf(notifier);

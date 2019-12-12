@@ -97,7 +97,7 @@ export interface PiletsLoading<TApi> {
 }
 
 export interface PiletLoadingStrategy<TApi> {
-  (options: LoadPiletsOptions<TApi>, pilets: PiletsLoaded<TApi>): Promise<void>;
+  (options: LoadPiletsOptions<TApi>, pilets: PiletsLoaded<TApi>): PromiseLike<void>;
 }
 
 export interface LoadPiletsOptions<TApi> {

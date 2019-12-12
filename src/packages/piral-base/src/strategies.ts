@@ -65,7 +65,7 @@ export function createProgressiveStrategy<TApi>(async: boolean): PiletLoadingStr
  * Evaluates the pilets once available without waiting for all pilets to be
  * available.
  */
-export function blazingStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): Promise<void> {
+export function blazingStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
   const strategy = createProgressiveStrategy<TApi>(true);
   return strategy(options, cb);
 }
@@ -75,7 +75,7 @@ export function blazingStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: Pile
  * true. Directly renders, but waits for all pilets to be available before
  * evaluating them.
  */
-export function asyncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): Promise<void> {
+export function asyncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
   standardStrategy(options, cb);
   return Promise.resolve();
 }
@@ -84,10 +84,26 @@ export function asyncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: Pilets
  * The standard strategy that is used if no strategy is declared and async is
  * false. Loads and evaluates all pilets before rendering.
  */
-export function standardStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): Promise<void> {
+export function standardStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
   const { fetchPilets, fetchDependency, dependencies, getDependencies, createApi, pilets = [] } = options;
   return loadPilets(fetchPilets, fetchDependency, dependencies, getDependencies).then(
     newModules => cb(undefined, evalAll(createApi, pilets, newModules)),
     error => cb(error, []),
   );
+}
+
+/**
+ * The strategy that could be used for special purposes, e.g., SSR or specific
+ * builds of the Piral instance. This strategy ignores the fetcher and only
+ * considers the already given pilets.
+ */
+export function syncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
+  const { createApi, pilets = [] } = options;
+  cb(undefined, evalAll(createApi, pilets, []));
+  return {
+    then(done) {
+      done();
+      return undefined;
+    },
+  };
 }
