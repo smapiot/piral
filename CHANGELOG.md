@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.9.3 (tbd)
+
+* Fixed a bug in `piral-urql` when options are not set
+* Introduced a sanity check for debugging pilets (#115)
+
 ## 0.9.2 (December 11, 2019)
 
 * Fixed not found error when copying files for scaffold (#106)

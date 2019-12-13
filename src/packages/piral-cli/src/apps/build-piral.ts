@@ -21,6 +21,7 @@ import {
   findPackageVersion,
   coreExternals,
   combineApiDeclarations,
+  cliVersion,
 } from '../common';
 
 interface Destination {
@@ -184,6 +185,10 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       pilets: {
         ...pilets,
         files,
+      },
+      piralCLI: {
+        version: cliVersion,
+        generated: true,
       },
       main: `${appDir}/index.js`,
       typings: `${appDir}/index.d.ts`,
