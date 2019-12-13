@@ -42,6 +42,9 @@ export default class PiralInjector implements KrasInjector {
       injector: { name: this.name },
       headers: {
         'content-type': getType(target),
+        'cache-control': 'no-cache, no-store, must-revalidate',
+        pragma: 'no-cache',
+        expires: 0,
       },
       status: { code: 200 },
       url,
