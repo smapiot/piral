@@ -5,6 +5,8 @@
 * Fixed a bug in `piral-urql` when options are not set
 * Introduced a sanity check for debugging pilets (#115)
 * Removed potential caching from `pilet debug` (#117)
+* Copy the files as specified when creating the dev package
+* Added final bundle transformation according to the specified preset (#114)
 
 ## 0.9.2 (December 11, 2019)
 

@@ -22,6 +22,7 @@ import {
   coreExternals,
   combineApiDeclarations,
   cliVersion,
+  postTransform,
 } from '../common';
 
 interface Destination {
@@ -56,6 +57,7 @@ async function bundleFiles(
   logLevel: 1 | 2 | 3,
   dest: Destination,
   subdir: string,
+  transformRoot?: string,
 ) {
   const outDir = join(dest.outDir, subdir);
 
@@ -87,7 +89,12 @@ async function bundleFiles(
   extendBundlerForPiral(bundler);
   extendBundlerWithPlugins(bundler);
 
-  await bundler.bundle();
+  const bundle = await bundler.bundle();
+
+  if (transformRoot) {
+    await postTransform(bundle, transformRoot);
+  }
+
   return outDir;
 }
 
@@ -222,6 +229,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       logLevel,
       dest,
       'release',
+      root,
     );
     logDone(`Files for publication available in "${outDir}".\n`);
   }

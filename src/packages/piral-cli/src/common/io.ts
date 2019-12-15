@@ -227,10 +227,21 @@ export async function readJson<T = any>(targetDir: string, fileName: string) {
   return JSON.parse(content || '{}') as T;
 }
 
+export function writeJson<T = any>(targetDir: string, fileName: string, data: T) {
+  return writeText(targetDir, fileName, JSON.stringify(data));
+}
+
 export function readBinary(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
   return new Promise<Buffer>(resolve => {
     readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(c)));
+  });
+}
+
+export function writeText(targetDir: string, fileName: string, data: string) {
+  const targetFile = join(targetDir, fileName);
+  return new Promise<void>((resolve, reject) => {
+    writeFile(targetFile, data, 'utf8', err => (err ? reject() : resolve()));
   });
 }
 

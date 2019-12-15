@@ -11,6 +11,7 @@ import {
   removeDirectory,
   extendBundlerWithPlugins,
   clearCache,
+  postTransform,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -85,4 +86,5 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const bundle = await bundler.bundle();
 
   await postProcess(bundle);
+  await postTransform(bundle, root);
 }
