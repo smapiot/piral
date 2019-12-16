@@ -31,7 +31,7 @@ export default class PiralInjector implements KrasInjector {
 
   setOptions() {}
 
-  sendResponse(path: string, target: string, dir: string, url: string) {
+  sendResponse(path: string, target: string, dir: string, url: string): KrasResponse {
     if (!path || !existsSync(target) || !statSync(target).isFile()) {
       const { bundler } = this.config;
       const newTarget = bundler.mainBundle.name;
@@ -44,7 +44,7 @@ export default class PiralInjector implements KrasInjector {
         'content-type': getType(target),
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',
-        expires: 0,
+        expires: '0',
       },
       status: { code: 200 },
       url,
