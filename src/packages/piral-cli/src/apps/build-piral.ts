@@ -229,7 +229,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   if (type === 'all') {
     // Just have some space between the two builds
-    logInfo('\n\n\n\n');
+    logInfo('\n\n\n\n\n\n');
   }
 
   // everything except develop -> build release
