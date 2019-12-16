@@ -23,6 +23,7 @@ import {
   combineApiDeclarations,
   cliVersion,
   postTransform,
+  logInfo,
 } from '../common';
 
 interface Destination {
@@ -150,6 +151,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   // everything except release -> build develop
   if (type !== 'release') {
+    logInfo('Starting build ...');
+
     const appDir = 'app';
     const outDir = await bundleFiles(
       name,
@@ -213,11 +216,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await generateDeclaration(outDir, root, name, dependencies.std);
     await createPackage(rootDir);
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
-    logDone(`Development package available in "${rootDir}".\n`);
+
+    logDone(`Development package available in "${rootDir}".`);
   }
 
   // everything except develop -> build release
   if (type !== 'develop') {
+    logInfo('Starting build ...');
+
     const outDir = await bundleFiles(
       name,
       false,
@@ -231,6 +237,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       'release',
       root,
     );
-    logDone(`Files for publication available in "${outDir}".\n`);
+
+    logDone(`Files for publication available in "${outDir}".`);
   }
 }
