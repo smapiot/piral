@@ -66,6 +66,7 @@ export function postTransform(mainBundle: ParcelBundle, rootDir: string) {
         sourceMaps: true,
         minified: true,
         inputSourceMap,
+        sourceType: 'script',
         cwd: rootDir,
       });
 
