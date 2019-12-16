@@ -17,17 +17,27 @@ import {
 export interface BuildPiletOptions {
   entry?: string;
   target?: string;
+  cacheDir?: string;
+  noMinify?: boolean;
   detailedReport?: boolean;
   logLevel?: 1 | 2 | 3;
   fresh?: boolean;
+  noSourceMaps?: boolean;
+  noContentHash?: boolean;
+  scopeHoist?: boolean;
 }
 
 export const buildPiletDefaults = {
   entry: './src/index',
   target: './dist/index.js',
+  cacheDir: '.cache',
   detailedReport: false,
+  noMinify: false,
   logLevel: 3 as const,
   fresh: false,
+  noSourceMaps: false,
+  noContentHash: false,
+  scopeHoist: false,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -35,6 +45,11 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     entry = buildPiletDefaults.entry,
     target = buildPiletDefaults.target,
     detailedReport = buildPiletDefaults.detailedReport,
+    cacheDir = buildPiletDefaults.cacheDir,
+    noMinify = buildPiletDefaults.noMinify,
+    noSourceMaps = buildPiletDefaults.noSourceMaps,
+    noContentHash = buildPiletDefaults.noContentHash,
+    scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
   } = options;
@@ -60,7 +75,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   };
 
   if (fresh) {
-    await clearCache(root);
+    await clearCache(root, cacheDir);
     await removeDirectory(dest.outDir);
   }
 
@@ -70,10 +85,12 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     entryFiles,
     extendConfig({
       ...dest,
+      cacheDir,
       watch: false,
-      minify: true,
-      scopeHoist: false,
-      contentHash: true,
+      sourceMaps: !noSourceMaps,
+      minify: !noMinify,
+      scopeHoist,
+      contentHash: !noContentHash,
       publicUrl: './',
       detailedReport,
       logLevel,
@@ -86,5 +103,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const bundle = await bundler.bundle();
 
   await postProcess(bundle);
-  await postTransform(bundle, root);
+
+  if (!noMinify) {
+    await postTransform(bundle, root);
+  }
 }

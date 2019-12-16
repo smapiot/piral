@@ -24,6 +24,7 @@ import {
   cliVersion,
   postTransform,
   logInfo,
+  ParcelConfig,
 } from '../common';
 
 interface Destination {
@@ -53,11 +54,9 @@ async function bundleFiles(
   target: string,
   dependencies: Array<string>,
   entryFiles: string,
-  detailedReport: boolean,
-  publicUrl: string,
-  logLevel: 1 | 2 | 3,
   dest: Destination,
   subdir: string,
+  config: ParcelConfig,
   transformRoot?: string,
 ) {
   const outDir = join(dest.outDir, subdir);
@@ -75,15 +74,9 @@ async function bundleFiles(
   const bundler = new Bundler(
     entryFiles,
     extendConfig({
+      ...config,
       outDir,
       outFile: dest.outFile,
-      watch: false,
-      minify: true,
-      scopeHoist: false,
-      contentHash: true,
-      detailedReport,
-      publicUrl,
-      logLevel,
     }),
   );
 
@@ -92,7 +85,7 @@ async function bundleFiles(
 
   const bundle = await bundler.bundle();
 
-  if (transformRoot) {
+  if (transformRoot && config.minify) {
     await postTransform(bundle, transformRoot);
   }
 
@@ -110,21 +103,31 @@ export type PiralBuildType = 'all' | 'release' | 'develop';
 export interface BuildPiralOptions {
   entry?: string;
   target?: string;
+  cacheDir?: string;
   publicUrl?: string;
+  noMinify?: boolean;
   detailedReport?: boolean;
   logLevel?: 1 | 2 | 3;
   fresh?: boolean;
   type?: PiralBuildType;
+  noSourceMaps?: boolean;
+  noContentHash?: boolean;
+  scopeHoist?: boolean;
 }
 
 export const buildPiralDefaults = {
   entry: './',
   target: './dist',
   publicUrl: '/',
+  cacheDir: '.cache',
   detailedReport: false,
   logLevel: 3 as const,
   fresh: false,
+  noMinify: false,
   type: 'all' as const,
+  noSourceMaps: false,
+  noContentHash: false,
+  scopeHoist: false,
 };
 
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
@@ -134,6 +137,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     publicUrl = buildPiralDefaults.publicUrl,
     detailedReport = buildPiralDefaults.detailedReport,
     logLevel = buildPiralDefaults.logLevel,
+    cacheDir = buildPiralDefaults.cacheDir,
+    noMinify = buildPiralDefaults.noMinify,
+    noSourceMaps = buildPiralDefaults.noSourceMaps,
+    noContentHash = buildPiralDefaults.noContentHash,
+    scopeHoist = buildPiralDefaults.scopeHoist,
     fresh = buildPiralDefaults.fresh,
     type = buildPiralDefaults.type,
   } = options;
@@ -144,7 +152,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
   if (fresh) {
-    await clearCache(root);
+    await clearCache(root, cacheDir);
   }
 
   await removeDirectory(dest.outDir);
@@ -157,18 +165,17 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const originalPackageJson = resolve(root, 'package.json');
     const { files: originalFiles = [] } = require(originalPackageJson);
     const appDir = 'app';
-    const outDir = await bundleFiles(
-      name,
-      true,
-      targetDir,
-      externals,
-      entryFiles,
+    const outDir = await bundleFiles(name, true, targetDir, externals, entryFiles, dest, join('develop', appDir), {
+      cacheDir,
+      watch: false,
+      sourceMaps: !noSourceMaps,
+      contentHash: !noContentHash,
+      minify: !noMinify,
+      scopeHoist,
       detailedReport,
       publicUrl,
       logLevel,
-      dest,
-      join('develop', appDir),
-    );
+    });
     const allExternals = [...externals, ...coreExternals];
     const externalPackages = await Promise.all(
       allExternals.map(async name => ({
@@ -242,11 +249,19 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       targetDir,
       externals,
       entryFiles,
-      detailedReport,
-      publicUrl,
-      logLevel,
       dest,
       'release',
+      {
+        cacheDir,
+        watch: false,
+        sourceMaps: !noSourceMaps,
+        contentHash: !noContentHash,
+        minify: !noMinify,
+        scopeHoist,
+        detailedReport,
+        publicUrl,
+        logLevel,
+      },
       root,
     );
 

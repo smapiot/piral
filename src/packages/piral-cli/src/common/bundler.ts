@@ -2,16 +2,27 @@ import { ParcelBundle } from 'parcel-bundler';
 import { transformFileAsync } from '@babel/core';
 import { resolve, dirname, basename } from 'path';
 import { removeDirectory, checkExists, readJson, writeText, writeJson } from './io';
-import { logInfo } from './log';
+import { logInfo, logFail } from './log';
 
 const bundleWithCodegen = require('parcel-plugin-codegen');
+
+export async function openBrowser(shouldOpen: boolean, port: number) {
+  if (shouldOpen) {
+    try {
+      const open = require('open');
+      await open(`http://localhost:${port}`, undefined);
+    } catch (err) {
+      logFail(`Unexpected error while opening in browser: ${err}`);
+    }
+  }
+}
 
 export function extendBundlerWithPlugins(bundler: any) {
   bundleWithCodegen(bundler);
 }
 
-export async function clearCache(root: string) {
-  const cacheDir = resolve(root, '.cache');
+export async function clearCache(root: string, dir = '.cache') {
+  const cacheDir = resolve(root, dir);
   const exists = await checkExists(cacheDir);
 
   if (exists) {

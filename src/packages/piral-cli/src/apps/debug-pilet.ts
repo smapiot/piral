@@ -15,6 +15,7 @@ import {
   modifyBundlerForPilet,
   postProcess,
   debugPiletApi,
+  openBrowser,
 } from '../common';
 
 function findEntryModule(entryFile: string, target: string) {
@@ -34,17 +35,27 @@ function findEntryModule(entryFile: string, target: string) {
 
 export interface DebugPiletOptions {
   logLevel?: 1 | 2 | 3;
-  fresh?: boolean;
+  cacheDir?: string;
   entry?: string;
-  port?: number;
   app?: string;
+  fresh?: boolean;
+  open?: boolean;
+  port?: number;
+  scopeHoist?: boolean;
+  noHmr?: boolean;
+  noAutoinstall?: boolean;
 }
 
 export const debugPiletDefaults = {
   logLevel: 3 as const,
+  cacheDir: '.cache',
   entry: './src/index',
   fresh: false,
+  open: false,
   port: 1234,
+  scopeHoist: false,
+  noHmr: false,
+  noAutoinstall: false,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -53,6 +64,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const {
     entry = debugPiletDefaults.entry,
     port = debugPiletDefaults.port,
+    cacheDir = debugPiletDefaults.cacheDir,
+    open = debugPiletDefaults.open,
+    scopeHoist = debugPiletDefaults.scopeHoist,
+    noHmr = debugPiletDefaults.noHmr,
+    noAutoinstall = debugPiletDefaults.noAutoinstall,
     logLevel = debugPiletDefaults.logLevel,
     fresh = debugPiletDefaults.fresh,
     app,
@@ -85,7 +101,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   if (fresh) {
-    await clearCache(root);
+    await clearCache(root, cacheDir);
   }
 
   await setStandardEnvs({
@@ -98,8 +114,17 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   const bundler = new Bundler(
     entryModule,
-    extendConfig({ logLevel, hmr: false, minify: true, scopeHoist: false, publicUrl: './' }),
+    extendConfig({
+      logLevel,
+      hmr: false,
+      minify: true,
+      scopeHoist,
+      publicUrl: './',
+      cacheDir,
+      autoInstall: !noAutoinstall,
+    }),
   );
+
   const api = debugPiletApi;
   const injectorConfig = {
     active: true,
@@ -116,7 +141,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   bundler.on('bundled', async bundle => {
     await postProcess(bundle);
-    (bundler as any).emit('bundle-ready');
+
+    if (!noHmr) {
+      (bundler as any).emit('bundle-ready');
+    }
   });
 
   krasConfig.map['/'] = '';
@@ -141,5 +169,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   });
 
   await krasServer.start();
+  openBrowser(open, port);
   await new Promise(resolve => krasServer.on('close', resolve));
 }
