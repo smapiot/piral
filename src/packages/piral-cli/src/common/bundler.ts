@@ -2,6 +2,7 @@ import { ParcelBundle } from 'parcel-bundler';
 import { transformFileAsync } from '@babel/core';
 import { resolve, dirname, basename } from 'path';
 import { removeDirectory, checkExists, readJson, writeText, writeJson } from './io';
+import { logInfo } from './log';
 
 const bundleWithCodegen = require('parcel-plugin-codegen');
 
@@ -56,6 +57,8 @@ function gatherJsBundles(bundle: ParcelBundle, gatheredBundles: Array<BundleSour
  */
 export function postTransform(mainBundle: ParcelBundle, rootDir: string) {
   const bundles = gatherJsBundles(mainBundle);
+
+  logInfo('Post-transforming the emitted bundle(s) ...');
 
   return Promise.all(
     bundles.map(async bundle => {

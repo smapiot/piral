@@ -227,6 +227,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logDone(`Development package available in "${rootDir}".`);
   }
 
+  if (type === 'all') {
+    // Just have some space between the two builds
+    logInfo('\n\n\n\n');
+  }
+
   // everything except develop -> build release
   if (type !== 'develop') {
     logInfo('Starting build ...');
