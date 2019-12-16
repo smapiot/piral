@@ -8,6 +8,7 @@
 * Copy the files as specified when creating the dev package
 * Added final bundle transformation according to the specified preset (#114)
 * Provided ability to set initial custom actions
+* Exposed the full Parcel CLI spectrum in the `piral-cli` (#119)
 
 ## 0.9.2 (December 11, 2019)
 
