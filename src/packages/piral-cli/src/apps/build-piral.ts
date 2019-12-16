@@ -153,6 +153,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   if (type !== 'release') {
     logInfo('Starting build ...');
 
+    // we'll need this info for later
+    const originalPackageJson = resolve(root, 'package.json');
+    const { files: originalFiles = [] } = require(originalPackageJson);
     const appDir = 'app';
     const outDir = await bundleFiles(
       name,
@@ -211,7 +214,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       },
     });
     await createDirectory(filesDir);
+    // for scaffolding we need to keep the files also available in the new package
     await copyScaffoldingFiles(root, filesDir, pilets.files);
+    // we just want to make sure that "files" mentioned in the original package.json are respected in the package
+    await copyScaffoldingFiles(root, rootDir, originalFiles);
+    // actually including this one hints that the app shell should have been included - which is forbidden
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
     await generateDeclaration(outDir, root, name, dependencies.std);
     await createPackage(rootDir);
