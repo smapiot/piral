@@ -7,6 +7,7 @@
 * Removed potential caching from `pilet debug` (#117)
 * Copy the files as specified when creating the dev package
 * Added final bundle transformation according to the specified preset (#114)
+* Provided ability to set initial custom actions
 
 ## 0.9.2 (December 11, 2019)
 
