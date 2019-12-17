@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.3 (tbd)
+## 0.9.3 (December 17, 2019)
 
 * Fixed a bug in `piral-urql` when options are not set
 * Introduced a sanity check for debugging pilets (#115)
