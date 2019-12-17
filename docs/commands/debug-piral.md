@@ -42,6 +42,13 @@ Sets the port of the local development server.
 - Type: `number`
 - Default: `1234`
 
+### `--cache-dir`
+
+Sets the cache directory for bundling.
+
+- Type: `string`
+- Default: `".cache"`
+
 ### `--public-url`
 
 Sets the public URL (path) of the bundle.
@@ -59,6 +66,74 @@ Sets the log level to use (1-5).
 ### `--fresh`
 
 Resets the cache before starting the debug mode.
+
+- Type: `boolean`
+- Default: `false`
+
+### `--no-fresh`
+
+Opposite of:
+Resets the cache before starting the debug mode.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--open`
+
+Opens the Piral instance directly in the browser.
+
+- Type: `boolean`
+- Default: `false`
+
+### `--no-open`
+
+Opposite of:
+Opens the Piral instance directly in the browser.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--scope-hoist`
+
+Tries to reduce bundle size by introducing tree shaking.
+
+- Type: `boolean`
+- Default: `false`
+
+### `--no-scope-hoist`
+
+Opposite of:
+Tries to reduce bundle size by introducing tree shaking.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--hmr`
+
+Activates Hot Module Reloading (HMR).
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-hmr`
+
+Opposite of:
+Activates Hot Module Reloading (HMR).
+
+- Type: `boolean`
+- Default: `false`
+
+### `--autoinstall`
+
+Automatically installs missing Node.js packages.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-autoinstall`
+
+Opposite of:
+Automatically installs missing Node.js packages.
 
 - Type: `boolean`
 - Default: `false`

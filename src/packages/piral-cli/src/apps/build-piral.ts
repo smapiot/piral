@@ -105,13 +105,13 @@ export interface BuildPiralOptions {
   target?: string;
   cacheDir?: string;
   publicUrl?: string;
-  noMinify?: boolean;
+  minify?: boolean;
   detailedReport?: boolean;
   logLevel?: 1 | 2 | 3;
   fresh?: boolean;
   type?: PiralBuildType;
-  noSourceMaps?: boolean;
-  noContentHash?: boolean;
+  sourceMaps?: boolean;
+  contentHash?: boolean;
   scopeHoist?: boolean;
 }
 
@@ -123,10 +123,10 @@ export const buildPiralDefaults = {
   detailedReport: false,
   logLevel: 3 as const,
   fresh: false,
-  noMinify: false,
+  minify: true,
   type: 'all' as const,
-  noSourceMaps: false,
-  noContentHash: false,
+  sourceMaps: true,
+  contentHash: true,
   scopeHoist: false,
 };
 
@@ -138,9 +138,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     detailedReport = buildPiralDefaults.detailedReport,
     logLevel = buildPiralDefaults.logLevel,
     cacheDir = buildPiralDefaults.cacheDir,
-    noMinify = buildPiralDefaults.noMinify,
-    noSourceMaps = buildPiralDefaults.noSourceMaps,
-    noContentHash = buildPiralDefaults.noContentHash,
+    minify = buildPiralDefaults.minify,
+    sourceMaps = buildPiralDefaults.sourceMaps,
+    contentHash = buildPiralDefaults.contentHash,
     scopeHoist = buildPiralDefaults.scopeHoist,
     fresh = buildPiralDefaults.fresh,
     type = buildPiralDefaults.type,
@@ -168,9 +168,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const outDir = await bundleFiles(name, true, targetDir, externals, entryFiles, dest, join('develop', appDir), {
       cacheDir,
       watch: false,
-      sourceMaps: !noSourceMaps,
-      contentHash: !noContentHash,
-      minify: !noMinify,
+      sourceMaps,
+      contentHash,
+      minify,
       scopeHoist,
       detailedReport,
       publicUrl,
@@ -254,9 +254,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       {
         cacheDir,
         watch: false,
-        sourceMaps: !noSourceMaps,
-        contentHash: !noContentHash,
-        minify: !noMinify,
+        sourceMaps,
+        contentHash,
+        minify,
         scopeHoist,
         detailedReport,
         publicUrl,

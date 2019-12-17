@@ -42,8 +42,8 @@ export interface DebugPiletOptions {
   open?: boolean;
   port?: number;
   scopeHoist?: boolean;
-  noHmr?: boolean;
-  noAutoinstall?: boolean;
+  hmr?: boolean;
+  autoInstall?: boolean;
 }
 
 export const debugPiletDefaults = {
@@ -54,8 +54,8 @@ export const debugPiletDefaults = {
   open: false,
   port: 1234,
   scopeHoist: false,
-  noHmr: false,
-  noAutoinstall: false,
+  hmr: true,
+  autoInstall: true,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -67,8 +67,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     cacheDir = debugPiletDefaults.cacheDir,
     open = debugPiletDefaults.open,
     scopeHoist = debugPiletDefaults.scopeHoist,
-    noHmr = debugPiletDefaults.noHmr,
-    noAutoinstall = debugPiletDefaults.noAutoinstall,
+    hmr = debugPiletDefaults.hmr,
+    autoInstall = debugPiletDefaults.autoInstall,
     logLevel = debugPiletDefaults.logLevel,
     fresh = debugPiletDefaults.fresh,
     app,
@@ -121,7 +121,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       scopeHoist,
       publicUrl: './',
       cacheDir,
-      autoInstall: !noAutoinstall,
+      autoInstall,
     }),
   );
 
@@ -142,7 +142,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   bundler.on('bundled', async bundle => {
     await postProcess(bundle);
 
-    if (!noHmr) {
+    if (hmr) {
       (bundler as any).emit('bundle-ready');
     }
   });

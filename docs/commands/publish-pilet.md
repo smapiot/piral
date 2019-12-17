@@ -56,6 +56,14 @@ Performs a fresh build, then packages and finally publishes the pilet.
 - Type: `boolean`
 - Default: `false`
 
+### `--no-fresh`
+
+Opposite of:
+Performs a fresh build, then packages and finally publishes the pilet.
+
+- Type: `boolean`
+- Default: `true`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

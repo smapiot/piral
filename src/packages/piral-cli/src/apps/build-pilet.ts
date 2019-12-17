@@ -18,12 +18,12 @@ export interface BuildPiletOptions {
   entry?: string;
   target?: string;
   cacheDir?: string;
-  noMinify?: boolean;
+  minify?: boolean;
   detailedReport?: boolean;
   logLevel?: 1 | 2 | 3;
   fresh?: boolean;
-  noSourceMaps?: boolean;
-  noContentHash?: boolean;
+  sourceMaps?: boolean;
+  contentHash?: boolean;
   scopeHoist?: boolean;
 }
 
@@ -32,11 +32,11 @@ export const buildPiletDefaults = {
   target: './dist/index.js',
   cacheDir: '.cache',
   detailedReport: false,
-  noMinify: false,
+  minify: true,
   logLevel: 3 as const,
   fresh: false,
-  noSourceMaps: false,
-  noContentHash: false,
+  sourceMaps: true,
+  contentHash: true,
   scopeHoist: false,
 };
 
@@ -46,9 +46,9 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     target = buildPiletDefaults.target,
     detailedReport = buildPiletDefaults.detailedReport,
     cacheDir = buildPiletDefaults.cacheDir,
-    noMinify = buildPiletDefaults.noMinify,
-    noSourceMaps = buildPiletDefaults.noSourceMaps,
-    noContentHash = buildPiletDefaults.noContentHash,
+    minify = buildPiletDefaults.minify,
+    sourceMaps = buildPiletDefaults.sourceMaps,
+    contentHash = buildPiletDefaults.contentHash,
     scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
@@ -87,10 +87,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       ...dest,
       cacheDir,
       watch: false,
-      sourceMaps: !noSourceMaps,
-      minify: !noMinify,
+      sourceMaps,
+      minify,
       scopeHoist,
-      contentHash: !noContentHash,
+      contentHash,
       publicUrl: './',
       detailedReport,
       logLevel,
@@ -104,7 +104,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   await postProcess(bundle);
 
-  if (!noMinify) {
+  if (minify) {
     await postTransform(bundle, root);
   }
 }

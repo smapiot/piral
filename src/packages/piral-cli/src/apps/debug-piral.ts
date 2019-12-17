@@ -25,8 +25,8 @@ export interface DebugPiralOptions {
   fresh?: boolean;
   open?: boolean;
   scopeHoist?: boolean;
-  noHmr?: boolean;
-  noAutoinstall?: boolean;
+  hmr?: boolean;
+  autoInstall?: boolean;
 }
 
 export const debugPiralDefaults = {
@@ -38,8 +38,8 @@ export const debugPiralDefaults = {
   fresh: false,
   open: false,
   scopeHoist: false,
-  noHmr: false,
-  noAutoinstall: false,
+  hmr: true,
+  autoInstall: true,
 };
 
 const injectorName = resolve(__dirname, '../injectors/piral.js');
@@ -51,8 +51,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     cacheDir = debugPiralDefaults.cacheDir,
     open = debugPiralDefaults.open,
     scopeHoist = debugPiralDefaults.scopeHoist,
-    noHmr = debugPiralDefaults.noHmr,
-    noAutoinstall = debugPiralDefaults.noAutoinstall,
+    hmr = debugPiralDefaults.hmr,
+    autoInstall = debugPiralDefaults.autoInstall,
     publicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     fresh = debugPiralDefaults.fresh,
@@ -96,7 +96,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   const bundler = new Bundler(
     entryFiles,
-    extendConfig({ publicUrl, logLevel, cacheDir, scopeHoist, hmr: !noHmr, autoInstall: !noAutoinstall }),
+    extendConfig({ publicUrl, logLevel, cacheDir, scopeHoist, hmr, autoInstall }),
   );
 
   const injectorConfig = {

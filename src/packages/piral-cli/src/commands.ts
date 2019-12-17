@@ -67,12 +67,12 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.debugPiralDefaults.scopeHoist)
-        .boolean('no-hmr')
-        .describe('no-hmr', 'Does not activate Hot Module Reloading (HMR).')
-        .default('no-hmr', apps.debugPiralDefaults.noHmr)
-        .boolean('no-autoinstall')
-        .describe('no-autoinstall', 'Does not automatically install missing Node.js packages.')
-        .default('no-autoinstall', apps.debugPiralDefaults.noAutoinstall)
+        .boolean('hmr')
+        .describe('hmr', 'Activates Hot Module Reloading (HMR).')
+        .default('hmr', apps.debugPiralDefaults.hmr)
+        .boolean('autoinstall')
+        .describe('autoinstall', 'Automatically installs missing Node.js packages.')
+        .default('autoinstall', apps.debugPiralDefaults.autoInstall)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -82,8 +82,8 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         cacheDir: args.cacheDir as string,
         port: args.port as number,
-        noHmr: args.noHmr as boolean,
-        noAutoinstall: args.noAutoinstall as boolean,
+        hmr: args.hmr as boolean,
+        autoInstall: args.autoinstall as boolean,
         scopeHoist: args.scopeHoist as boolean,
         publicUrl: args.publicUrl as string,
         logLevel: args.logLevel as any,
@@ -123,15 +123,15 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build by removing the target directory first.')
         .default('fresh', apps.buildPiralDefaults.fresh)
-        .boolean('no-minify')
-        .describe('no-minify', 'Does not perform minification or other post-bundle transformations.')
-        .default('no-minify', apps.buildPiralDefaults.noMinify)
-        .boolean('no-source-maps')
-        .describe('no-source-maps', 'Does not create source maps for the bundles.')
-        .default('no-source-maps', apps.buildPiralDefaults.noSourceMaps)
-        .boolean('no-content-hash')
-        .describe('no-content-hash', 'Does not append the hash to the side-bundle files.')
-        .default('no-content-hash', apps.buildPiralDefaults.noContentHash)
+        .boolean('minify')
+        .describe('minify', 'Performs minification or other post-bundle transformations.')
+        .default('minify', apps.buildPiralDefaults.minify)
+        .boolean('source-maps')
+        .describe('source-maps', 'Create associated source maps for the bundles.')
+        .default('source-maps', apps.buildPiralDefaults.sourceMaps)
+        .boolean('content-hash')
+        .describe('content-hash', 'Appends the hash to the side-bundle files.')
+        .default('content-hash', apps.buildPiralDefaults.contentHash)
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.buildPiralDefaults.scopeHoist)
@@ -148,10 +148,10 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         cacheDir: args.cacheDir as string,
         publicUrl: args.publicUrl as string,
-        noMinify: args.noMinify as boolean,
+        minify: args.minify as boolean,
         scopeHoist: args.scopeHoist as boolean,
-        noContentHash: args.noContentHash as boolean,
-        noSourceMaps: args.noSourceMaps as boolean,
+        contentHash: args.contentHash as boolean,
+        sourceMaps: args.sourceMaps as boolean,
         detailedReport: args.detailedReport as boolean,
         logLevel: args.logLevel as any,
         type: args.type as any,
@@ -265,12 +265,12 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.debugPiletDefaults.scopeHoist)
-        .boolean('no-hmr')
-        .describe('no-hmr', 'Does not activate Hot Module Reloading (HMR).')
-        .default('no-hmr', apps.debugPiletDefaults.noHmr)
-        .boolean('no-autoinstall')
-        .describe('no-autoinstall', 'Does not automatically install missing Node.js packages.')
-        .default('no-autoinstall', apps.debugPiletDefaults.noAutoinstall)
+        .boolean('hmr')
+        .describe('hmr', 'Activates Hot Module Reloading (HMR).')
+        .default('hmr', apps.debugPiletDefaults.hmr)
+        .boolean('autoinstall')
+        .describe('autoinstall', 'Automatically installs missing Node.js packages.')
+        .default('autoinstall', apps.debugPiletDefaults.autoInstall)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -283,8 +283,8 @@ const allCommands: Array<ToolCommand<any>> = [
         cacheDir: args.cacheDir as string,
         port: args.port as number,
         scopeHoist: args.scopeHoist as boolean,
-        noHmr: args.noHmr as boolean,
-        noAutoinstall: args.noAutoinstall as boolean,
+        hmr: args.hmr as boolean,
+        autoInstall: args.autoinstall as boolean,
         app: args.app as string,
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
@@ -320,15 +320,15 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build by removing the target directory first.')
         .default('fresh', apps.buildPiletDefaults.fresh)
-        .boolean('no-minify')
-        .describe('no-minify', 'Does not perform minification or other post-bundle transformations.')
-        .default('no-minify', apps.buildPiletDefaults.noMinify)
-        .boolean('no-source-maps')
-        .describe('no-source-maps', 'Does not create source maps for the bundles.')
-        .default('no-source-maps', apps.buildPiletDefaults.noSourceMaps)
-        .boolean('no-content-hash')
-        .describe('no-content-hash', 'Does not append the hash to the side-bundle files.')
-        .default('no-content-hash', apps.buildPiletDefaults.noContentHash)
+        .boolean('minify')
+        .describe('minify', 'Performs minification or other post-bundle transformations.')
+        .default('minify', apps.buildPiletDefaults.minify)
+        .boolean('source-maps')
+        .describe('source-maps', 'Creates source maps for the bundles.')
+        .default('source-maps', apps.buildPiletDefaults.sourceMaps)
+        .boolean('content-hash')
+        .describe('content-hash', 'Appends the hash to the side-bundle files.')
+        .default('content-hash', apps.buildPiletDefaults.contentHash)
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.buildPiletDefaults.scopeHoist)
@@ -341,9 +341,9 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         cacheDir: args.cacheDir as string,
-        noMinify: args.noMinify as boolean,
-        noContentHash: args.noContentHash as boolean,
-        noSourceMaps: args.noSourceMaps as boolean,
+        minify: args.minify as boolean,
+        contentHash: args.contentHash as boolean,
+        sourceMaps: args.sourceMaps as boolean,
         scopeHoist: args.scopeHoist as boolean,
         detailedReport: args.detailedReport as boolean,
         fresh: args.fresh as boolean,
