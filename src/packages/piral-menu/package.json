@@ -1,6 +1,6 @@
 {
   "name": "piral-menu",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Plugin for the integration of menu items in Piral.",
   "keywords": [
     "piral",
@@ -36,7 +36,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.9.2"
+    "piral-core": "^0.9.3"
   },
   "peerDependencies": {
     "piral-core": "^0.9.0"
