@@ -131,6 +131,8 @@ export interface PiralAction<T extends (...args: any) => any> {
   (this: GlobalStateContext, ctx: Atom<GlobalState>, ...args: Parameters<T>): ReturnType<T>;
 }
 
+export type PiralDefineActions = Partial<{ [P in keyof PiralActions]: PiralAction<PiralActions[P]> }>;
+
 export interface PiralActions extends PiralCustomActions {
   /**
    * Initializes the application shell.
@@ -154,7 +156,7 @@ export interface PiralActions extends PiralCustomActions {
    * Defines a set of actions for Piral.
    * @param actions The actions to define.
    */
-  defineActions(actions: Partial<{ [P in keyof PiralActions]: PiralAction<PiralActions[P]> }>): void;
+  defineActions(actions: PiralDefineActions): void;
   /**
    * Reads the value of a shared data item.
    * @param name The name of the shared item.

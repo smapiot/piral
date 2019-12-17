@@ -2,7 +2,7 @@ import { PiletDependencyGetter, PiletLoadingStrategy } from 'piral-base';
 import { Pilet, PiletApi } from './api';
 import { NestedPartial } from './common';
 import { PiletRequester, Extend } from './plugin';
-import { GlobalState } from './state';
+import { GlobalState, PiralDefineActions } from './state';
 
 export interface PiralPiletConfiguration {
   /*
@@ -33,9 +33,13 @@ export interface PiralStateConfiguration {
    */
   async?: boolean | PiletLoadingStrategy<PiletApi>;
   /**
-   * Optionally, sets up the initial state of the application.
+   * Optionally, sets up the initial state of the application 📦.
    */
   state?: NestedPartial<GlobalState>;
+  /**
+   * Optionally, sets up some initial custom actions ⚡️.
+   */
+  actions?: PiralDefineActions;
 }
 
 export type PiralConfiguration = PiralPiletConfiguration & PiralStateConfiguration;

@@ -7,7 +7,8 @@ import { PiletGqlApi, UrqlClient, GqlOperationOptions } from './types';
 
 function extendOptions<T extends GqlOperationOptions>(context: GlobalStateContext, options: T): Promise<T> {
   const originalHeaders = options.headers || {};
-  const headerPromises: Array<Promise<any>> = [];
+  const headerPromises: Array<Promise<Record<string, string>>> = [];
+
   context.emit('before-fetch', {
     headers: originalHeaders,
     setHeaders(headers: Promise<any> | any) {
@@ -53,13 +54,13 @@ export function createGqlApi(client: UrqlClient = defaultGqlClient()): Extend<Pi
     context.includeProvider(<Provider value={client} />);
 
     return {
-      query(q, o) {
+      query(q, o = {}) {
         return extendOptions(context, o).then(options => gqlQuery(client, q, options));
       },
-      mutate(q, o) {
+      mutate(q, o = {}) {
         return extendOptions(context, o).then(options => gqlMutation(client, q, options));
       },
-      subscribe(q, subscriber, o) {
+      subscribe(q, subscriber, o = {}) {
         const unsubscribe = extendOptions(context, o).then(options => gqlSubscription(client, q, subscriber, options));
         return () => unsubscribe.then(cb => cb());
       },

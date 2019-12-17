@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { blazingStrategy, standardStrategy, isfunc } from 'piral-base';
 import { getLocalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
-import { createGlobalState, createActions, StateContext } from './state';
+import { createGlobalState, createActions, StateContext, includeActions } from './state';
 import { PiralView, Mediator, ResponsiveLayout } from './components';
 import { createArbiterOptions } from './helpers';
 import { createListener } from './utils';
@@ -30,6 +30,7 @@ render(app, document.querySelector('#app'));
 export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   const {
     state,
+    actions,
     availablePilets = [],
     extendApi = [],
     requestPilets = defaultModuleRequester,
@@ -53,6 +54,10 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
     requestPilets,
   });
+
+  if (actions) {
+    includeActions(context, actions);
+  }
 
   return {
     ...events,

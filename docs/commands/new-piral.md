@@ -49,12 +49,28 @@ Sets if "piral-core" should be used. Otherwise, "piral" is used.
 - Type: `boolean`
 - Default: `false`
 
+### `--no-only-core`
+
+Opposite of:
+Sets if "piral-core" should be used. Otherwise, "piral" is used.
+
+- Type: `boolean`
+- Default: `true`
+
 ### `--skip-install`
 
 Skips the installation of the dependencies using NPM.
 
 - Type: `boolean`
 - Default: `false`
+
+### `--no-skip-install`
+
+Opposite of:
+Skips the installation of the dependencies using NPM.
+
+- Type: `boolean`
+- Default: `true`
 
 ### `--tag`
 

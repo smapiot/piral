@@ -71,11 +71,14 @@ export default class PiletInjector implements KrasInjector {
     });
   }
 
-  sendContent(content: Buffer | string, type: string, url: string) {
+  sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
     return {
       injector: { name: this.name },
       headers: {
         'content-type': type,
+        'cache-control': 'no-cache, no-store, must-revalidate',
+        pragma: 'no-cache',
+        expires: '0',
       },
       status: { code: 200 },
       url,
@@ -83,12 +86,12 @@ export default class PiletInjector implements KrasInjector {
     };
   }
 
-  sendFile(target: string, url: string) {
+  sendFile(target: string, url: string): KrasResponse {
     const content = readFileSync(target);
     return this.sendContent(content, getType(target), url);
   }
 
-  sendResponse(path: string, target: string, url: string) {
+  sendResponse(path: string, target: string, url: string): KrasResponse {
     if (!path) {
       const content = this.getMeta();
       return this.sendContent(content, 'application/json', url);

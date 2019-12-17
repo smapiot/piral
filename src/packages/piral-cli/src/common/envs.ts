@@ -34,7 +34,7 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
   if (options.develop) {
     process.env.DEBUG_PILET = options.develop ? debugPiletApi : '';
   } else {
-    process.env.DEBUG_PILET = '';
+    delete process.env.DEBUG_PILET;
   }
 
   if (options.production) {
