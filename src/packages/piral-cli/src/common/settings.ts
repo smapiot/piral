@@ -2,6 +2,7 @@ import { ParcelOptions } from 'parcel-bundler';
 
 export interface ParcelConfig extends ParcelOptions {
   global?: string;
+  autoInstall?: boolean;
 }
 
 export function extendConfig(options: ParcelConfig): ParcelConfig {

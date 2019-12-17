@@ -72,7 +72,11 @@ function readValidatorDescription(content) {
         .map(m => m.index)
         .reverse();
       const end = i - 1;
-      return lines.filter((_, j) => j > start && j < end).map(m => m.substr(2)).join('').trim();
+      return lines
+        .filter((_, j) => j > start && j < end)
+        .map(m => m.substr(2))
+        .join('')
+        .trim();
     }
   }
 
@@ -205,6 +209,19 @@ ${validator.description}
 
 function generateBody(command, validators) {
   const { positionals, flags } = getCommandData(command.flags);
+
+  for (let i = 0; i < flags.length; i++) {
+    const flag = flags[i];
+    if (flag.type === 'boolean' && !flag.name.startsWith('no-')) {
+      flags.splice(i + 1, 0, {
+        ...flag,
+        name: `no-${flag.name}`,
+        describe: `Opposite of:\n${flag.describe}`,
+        default: printValue(!JSON.parse(flag.default)),
+      });
+    }
+  }
+
   const hasAlt = command.name.endsWith('-piral') || command.name.endsWith('-pilet');
   const parts = command.name.split('-');
   const content = `

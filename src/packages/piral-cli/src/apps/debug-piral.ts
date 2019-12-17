@@ -13,22 +13,33 @@ import {
   extendConfig,
   liveIcon,
   settingsIcon,
+  openBrowser,
 } from '../common';
 
 export interface DebugPiralOptions {
   entry?: string;
+  cacheDir?: string;
   port?: number;
   publicUrl?: string;
   logLevel?: 1 | 2 | 3;
   fresh?: boolean;
+  open?: boolean;
+  scopeHoist?: boolean;
+  hmr?: boolean;
+  autoInstall?: boolean;
 }
 
 export const debugPiralDefaults = {
   entry: './',
+  cacheDir: '.cache',
   port: 1234,
   publicUrl: '/',
   logLevel: 3 as const,
   fresh: false,
+  open: false,
+  scopeHoist: false,
+  hmr: true,
+  autoInstall: true,
 };
 
 const injectorName = resolve(__dirname, '../injectors/piral.js');
@@ -37,6 +48,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const {
     entry = debugPiralDefaults.entry,
     port = debugPiralDefaults.port,
+    cacheDir = debugPiralDefaults.cacheDir,
+    open = debugPiralDefaults.open,
+    scopeHoist = debugPiralDefaults.scopeHoist,
+    hmr = debugPiralDefaults.hmr,
+    autoInstall = debugPiralDefaults.autoInstall,
     publicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     fresh = debugPiralDefaults.fresh,
@@ -67,7 +83,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   }
 
   if (fresh) {
-    await clearCache(root);
+    await clearCache(root, cacheDir);
   }
 
   await setStandardEnvs({
@@ -78,7 +94,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   modifyBundlerForPiral(Bundler.prototype, dirname(entryFiles));
 
-  const bundler = new Bundler(entryFiles, extendConfig({ publicUrl, logLevel }));
+  const bundler = new Bundler(
+    entryFiles,
+    extendConfig({ publicUrl, logLevel, cacheDir, scopeHoist, hmr, autoInstall }),
+  );
+
   const injectorConfig = {
     active: true,
     handle: ['/'],
@@ -109,5 +129,6 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   });
 
   await krasServer.start();
+  openBrowser(open, port);
   await new Promise(resolve => krasServer.on('close', resolve));
 }

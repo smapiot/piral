@@ -58,6 +58,14 @@ Skips the installation of the dependencies using NPM.
 - Type: `boolean`
 - Default: `false`
 
+### `--no-skip-install`
+
+Opposite of:
+Skips the installation of the dependencies using NPM.
+
+- Type: `boolean`
+- Default: `true`
+
 ### `--force-overwrite`
 
 Determines if files should be overwritten by the scaffolding.

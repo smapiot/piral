@@ -11,22 +11,33 @@ import {
   removeDirectory,
   extendBundlerWithPlugins,
   clearCache,
+  postTransform,
 } from '../common';
 
 export interface BuildPiletOptions {
   entry?: string;
   target?: string;
+  cacheDir?: string;
+  minify?: boolean;
   detailedReport?: boolean;
   logLevel?: 1 | 2 | 3;
   fresh?: boolean;
+  sourceMaps?: boolean;
+  contentHash?: boolean;
+  scopeHoist?: boolean;
 }
 
 export const buildPiletDefaults = {
   entry: './src/index',
   target: './dist/index.js',
+  cacheDir: '.cache',
   detailedReport: false,
+  minify: true,
   logLevel: 3 as const,
   fresh: false,
+  sourceMaps: true,
+  contentHash: true,
+  scopeHoist: false,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -34,6 +45,11 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     entry = buildPiletDefaults.entry,
     target = buildPiletDefaults.target,
     detailedReport = buildPiletDefaults.detailedReport,
+    cacheDir = buildPiletDefaults.cacheDir,
+    minify = buildPiletDefaults.minify,
+    sourceMaps = buildPiletDefaults.sourceMaps,
+    contentHash = buildPiletDefaults.contentHash,
+    scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
   } = options;
@@ -59,7 +75,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   };
 
   if (fresh) {
-    await clearCache(root);
+    await clearCache(root, cacheDir);
     await removeDirectory(dest.outDir);
   }
 
@@ -69,10 +85,12 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     entryFiles,
     extendConfig({
       ...dest,
+      cacheDir,
       watch: false,
-      minify: true,
-      scopeHoist: false,
-      contentHash: true,
+      sourceMaps,
+      minify,
+      scopeHoist,
+      contentHash,
       publicUrl: './',
       detailedReport,
       logLevel,
@@ -85,4 +103,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const bundle = await bundler.bundle();
 
   await postProcess(bundle);
+
+  if (minify) {
+    await postTransform(bundle, root);
+  }
 }

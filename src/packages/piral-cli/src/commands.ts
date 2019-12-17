@@ -38,7 +38,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['watch-piral', 'debug-portal', 'watch-portal'],
     description: 'Starts the debugging process for a Piral instance.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',
@@ -48,6 +49,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiralDefaults.port)
+        .string('cache-dir')
+        .describe('cache-dir', 'Sets the cache directory for bundling.')
+        .default('cache-dir', apps.debugPiralDefaults.cacheDir)
         .string('public-url')
         .describe('public-url', 'Sets the public URL (path) of the bundle.')
         .default('public-url', apps.debugPiralDefaults.publicUrl)
@@ -57,6 +61,18 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Resets the cache before starting the debug mode.')
         .default('fresh', apps.debugPiralDefaults.fresh)
+        .boolean('open')
+        .describe('open', 'Opens the Piral instance directly in the browser.')
+        .default('open', apps.debugPiralDefaults.open)
+        .boolean('scope-hoist')
+        .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
+        .default('scope-hoist', apps.debugPiralDefaults.scopeHoist)
+        .boolean('hmr')
+        .describe('hmr', 'Activates Hot Module Reloading (HMR).')
+        .default('hmr', apps.debugPiralDefaults.hmr)
+        .boolean('autoinstall')
+        .describe('autoinstall', 'Automatically installs missing Node.js packages.')
+        .default('autoinstall', apps.debugPiralDefaults.autoInstall)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -64,10 +80,15 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.debugPiral(args.base as string, {
         entry: args.source as string,
+        cacheDir: args.cacheDir as string,
         port: args.port as number,
+        hmr: args.hmr as boolean,
+        autoInstall: args.autoinstall as boolean,
+        scopeHoist: args.scopeHoist as boolean,
         publicUrl: args.publicUrl as string,
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
+        open: args.open as boolean,
       });
     },
   },
@@ -76,7 +97,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['bundle-piral', 'build-portal', 'bundle-portal'],
     description: 'Creates a production build for a Piral instance.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',
@@ -86,6 +108,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory or file of bundling.')
         .default('target', apps.buildPiralDefaults.target)
+        .string('cache-dir')
+        .describe('cache-dir', 'Sets the cache directory for bundling.')
+        .default('cache-dir', apps.buildPiralDefaults.cacheDir)
         .string('public-url')
         .describe('public-url', 'Sets the public URL (path) of the bundle.')
         .default('public-url', apps.buildPiralDefaults.publicUrl)
@@ -98,6 +123,18 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build by removing the target directory first.')
         .default('fresh', apps.buildPiralDefaults.fresh)
+        .boolean('minify')
+        .describe('minify', 'Performs minification or other post-bundle transformations.')
+        .default('minify', apps.buildPiralDefaults.minify)
+        .boolean('source-maps')
+        .describe('source-maps', 'Create associated source maps for the bundles.')
+        .default('source-maps', apps.buildPiralDefaults.sourceMaps)
+        .boolean('content-hash')
+        .describe('content-hash', 'Appends the hash to the side-bundle files.')
+        .default('content-hash', apps.buildPiralDefaults.contentHash)
+        .boolean('scope-hoist')
+        .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
+        .default('scope-hoist', apps.buildPiralDefaults.scopeHoist)
         .choices('type', ['all', 'release', 'develop'])
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', apps.buildPiralDefaults.type)
@@ -109,7 +146,12 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.buildPiral(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
+        cacheDir: args.cacheDir as string,
         publicUrl: args.publicUrl as string,
+        minify: args.minify as boolean,
+        scopeHoist: args.scopeHoist as boolean,
+        contentHash: args.contentHash as boolean,
+        sourceMaps: args.sourceMaps as boolean,
         detailedReport: args.detailedReport as boolean,
         logLevel: args.logLevel as any,
         type: args.type as any,
@@ -197,7 +239,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['watch-pilet', 'debug', 'watch'],
     description: 'Starts the debugging process for a pilet using a Piral instance.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',
@@ -207,12 +250,27 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiletDefaults.port)
+        .string('cache-dir')
+        .describe('cache-dir', 'Sets the cache directory for bundling.')
+        .default('cache-dir', apps.debugPiletDefaults.cacheDir)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.debugPiletDefaults.logLevel)
         .boolean('fresh')
         .describe('fresh', 'Resets the cache before starting the debug mode.')
         .default('fresh', apps.debugPiletDefaults.fresh)
+        .boolean('open')
+        .describe('open', 'Opens the pilet directly in the browser.')
+        .default('open', apps.debugPiletDefaults.open)
+        .boolean('scope-hoist')
+        .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
+        .default('scope-hoist', apps.debugPiletDefaults.scopeHoist)
+        .boolean('hmr')
+        .describe('hmr', 'Activates Hot Module Reloading (HMR).')
+        .default('hmr', apps.debugPiletDefaults.hmr)
+        .boolean('autoinstall')
+        .describe('autoinstall', 'Automatically installs missing Node.js packages.')
+        .default('autoinstall', apps.debugPiletDefaults.autoInstall)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -222,10 +280,15 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.debugPilet(args.base as string, {
         entry: args.source as string,
+        cacheDir: args.cacheDir as string,
         port: args.port as number,
+        scopeHoist: args.scopeHoist as boolean,
+        hmr: args.hmr as boolean,
+        autoInstall: args.autoinstall as boolean,
         app: args.app as string,
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
+        open: args.open as boolean,
       });
     },
   },
@@ -234,7 +297,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['bundle-pilet', 'build', 'bundle'],
     description: 'Creates a production build for a pilet.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',
@@ -244,6 +308,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target file of bundling.')
         .default('target', apps.buildPiletDefaults.target)
+        .string('cache-dir')
+        .describe('cache-dir', 'Sets the cache directory for bundling.')
+        .default('cache-dir', apps.buildPiletDefaults.cacheDir)
         .boolean('detailed-report')
         .describe('detailed-report', 'Sets if a detailed report should be created.')
         .default('detailed-report', apps.buildPiletDefaults.detailedReport)
@@ -253,6 +320,18 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build by removing the target directory first.')
         .default('fresh', apps.buildPiletDefaults.fresh)
+        .boolean('minify')
+        .describe('minify', 'Performs minification or other post-bundle transformations.')
+        .default('minify', apps.buildPiletDefaults.minify)
+        .boolean('source-maps')
+        .describe('source-maps', 'Creates source maps for the bundles.')
+        .default('source-maps', apps.buildPiletDefaults.sourceMaps)
+        .boolean('content-hash')
+        .describe('content-hash', 'Appends the hash to the side-bundle files.')
+        .default('content-hash', apps.buildPiletDefaults.contentHash)
+        .boolean('scope-hoist')
+        .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
+        .default('scope-hoist', apps.buildPiletDefaults.scopeHoist)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -261,6 +340,11 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.buildPilet(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
+        cacheDir: args.cacheDir as string,
+        minify: args.minify as boolean,
+        contentHash: args.contentHash as boolean,
+        sourceMaps: args.sourceMaps as boolean,
+        scopeHoist: args.scopeHoist as boolean,
         detailedReport: args.detailedReport as boolean,
         fresh: args.fresh as boolean,
         logLevel: args.logLevel as any,

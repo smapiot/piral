@@ -15,6 +15,7 @@ import {
   installDependencies,
   clearCache,
   getCurrentPackageDetails,
+  logWarn,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -66,6 +67,13 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     await installPackage(packageRef, root, '--no-save', '--no-package-lock');
 
     const piralInfo = await readPiralPackage(root, sourceName);
+    const { piralCLI = { generated: false } } = piralInfo;
+
+    if (!piralCLI.generated) {
+      logWarn(`The used Piral instance does not seem to be a proper development package.
+Please make sure to build your development package with the Piral CLI using "piral build".`);
+    }
+
     const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
 
     if (preUpgrade) {

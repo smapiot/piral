@@ -368,7 +368,6 @@ export async function retrievePiletData(target: string, app?: string) {
 
   const root = dirname(packageJson);
   const packageContent = require(packageJson);
-
   const appPackage = findPackage(
     app || (packageContent.piral && packageContent.piral.name) || Object.keys(packageContent.devDependencies),
     target,
@@ -382,6 +381,13 @@ export async function retrievePiletData(target: string, app?: string) {
       'app',
     );
     throw new Error('Invalid Piral instance selected.');
+  }
+
+  const { piralCLI = { generated: false } } = appPackage;
+
+  if (!piralCLI.generated) {
+    logWarn(`The used Piral instance does not seem to be a proper development package.
+Please make sure to build your development package with the Piral CLI using "piral build".`);
   }
 
   return {
