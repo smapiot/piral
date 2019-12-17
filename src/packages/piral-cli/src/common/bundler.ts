@@ -9,7 +9,7 @@ const bundleWithCodegen = require('parcel-plugin-codegen');
 export async function openBrowser(shouldOpen: boolean, port: number) {
   if (shouldOpen) {
     try {
-      const open = require('open');
+      const open = require('opn');
       await open(`http://localhost:${port}`, undefined);
     } catch (err) {
       logFail(`Unexpected error while opening in browser: ${err}`);
