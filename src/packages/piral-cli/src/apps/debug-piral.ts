@@ -14,6 +14,7 @@ import {
   liveIcon,
   settingsIcon,
   openBrowser,
+  checkCliCompatibility,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -59,6 +60,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals, name, root } = await retrievePiletsInfo(entryFiles);
+
+  await checkCliCompatibility(root);
 
   const krasConfig = readKrasConfig({ port }, krasrc);
 

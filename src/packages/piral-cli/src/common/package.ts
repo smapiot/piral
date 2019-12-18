@@ -9,9 +9,11 @@ import {
   getHash,
   checkIsDirectory,
   matchFiles,
+  getFileNames,
 } from './io';
 import { cliVersion, coreExternals } from './info';
 import { logFail, logWarn } from './log';
+import { checkAppShellCompatibility } from './compatibility';
 import { getDevDependencies, PiletLanguage } from './language';
 import { PiletsInfo, TemplateFileLocation } from '../types';
 
@@ -116,7 +118,7 @@ export function readPiralPackage(root: string, name: string) {
   return readJson(path, 'package.json');
 }
 
-export function getPiralPackage(app: string, language: PiletLanguage) {
+export function getPiralPackage(app: string, language: PiletLanguage, version: string) {
   return {
     app,
     scripts: {
@@ -132,7 +134,7 @@ export function getPiralPackage(app: string, language: PiletLanguage) {
     },
     devDependencies: {
       ...getDevDependencies(language),
-      'piral-cli': `${cliVersion}`,
+      'piral-cli': `${version}`,
     },
   };
 }
@@ -315,37 +317,25 @@ export async function patchPiletPackage(
     ...info.scripts,
   };
   const peerDependencies = {
-    ...allExternals.reduce(
-      (deps, name) => {
-        deps[name] = '*';
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
+    ...allExternals.reduce((deps, name) => {
+      deps[name] = '*';
+      return deps;
+    }, {}),
     [name]: `*`,
   };
   const devDependencies = {
-    ...Object.keys(typeDependencies).reduce(
-      (deps, name) => {
-        deps[name] = piralDependencies[name] || typeDependencies[name];
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
-    ...Object.keys(info.devDependencies).reduce(
-      (deps, name) => {
-        deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
-    ...allExternals.reduce(
-      (deps, name) => {
-        deps[name] = piralDependencies[name] || 'latest';
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
+    ...Object.keys(typeDependencies).reduce((deps, name) => {
+      deps[name] = piralDependencies[name] || typeDependencies[name];
+      return deps;
+    }, {}),
+    ...Object.keys(info.devDependencies).reduce((deps, name) => {
+      deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
+      return deps;
+    }, {}),
+    ...allExternals.reduce((deps, name) => {
+      deps[name] = piralDependencies[name] || 'latest';
+      return deps;
+    }, {}),
     [name]: `${version || piralInfo.version}`,
     'piral-cli': `^${cliVersion}`,
   };
@@ -356,6 +346,17 @@ export async function patchPiletPackage(
     scripts,
   });
   return info.files;
+}
+
+export function checkAppShellPackage(appPackage: any) {
+  const { piralCLI = { generated: false, version: cliVersion } } = appPackage;
+
+  if (!piralCLI.generated) {
+    logWarn(`The used Piral instance does not seem to be a proper development package.
+Please make sure to build your development package with the Piral CLI using "piral build".`);
+  } else {
+    checkAppShellCompatibility(piralCLI.version);
+  }
 }
 
 export async function retrievePiletData(target: string, app?: string) {
@@ -383,12 +384,7 @@ export async function retrievePiletData(target: string, app?: string) {
     throw new Error('Invalid Piral instance selected.');
   }
 
-  const { piralCLI = { generated: false } } = appPackage;
-
-  if (!piralCLI.generated) {
-    logWarn(`The used Piral instance does not seem to be a proper development package.
-Please make sure to build your development package with the Piral CLI using "piral build".`);
-  }
+  checkAppShellPackage(appPackage);
 
   return {
     dependencies: packageContent.dependencies || {},
@@ -398,4 +394,19 @@ Please make sure to build your development package with the Piral CLI using "pir
     appPackage,
     root,
   };
+}
+
+export async function findEntryModule(entryFile: string, target: string) {
+  const entry = basename(entryFile);
+  const files = await getFileNames(target);
+
+  for (const file of files) {
+    const ext = extname(file);
+
+    if (file === entry || file.replace(ext, '') === entry) {
+      return join(target, file);
+    }
+  }
+
+  return entryFile;
 }

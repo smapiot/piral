@@ -5,6 +5,7 @@ import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path
 import {
   writeFile,
   readFile,
+  readdir,
   copyFile,
   constants,
   exists,
@@ -120,20 +121,10 @@ export function checkIsDirectory(target: string) {
   });
 }
 
-export function getFileWithExtension(fileName: string): string {
-  if (!extname(fileName)) {
-    const extensions = ['.tsx', '.ts', '.jsx', '.js'];
-
-    for (const extension of extensions) {
-      const file = fileName + extension;
-
-      if (existsSync(file)) {
-        return file;
-      }
-    }
-  }
-
-  return fileName;
+export function getFileNames(target: string) {
+  return new Promise<Array<string>>((resolve, reject) => {
+    readdir(target, (err, files) => (err ? reject(err) : resolve(files)));
+  });
 }
 
 export async function findFile(topDir: string, fileName: string): Promise<string> {

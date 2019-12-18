@@ -25,6 +25,7 @@ import {
   postTransform,
   logInfo,
   ParcelConfig,
+  checkCliCompatibility,
 } from '../common';
 
 interface Destination {
@@ -150,6 +151,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const { name, version, root, dependencies, ...pilets } = await retrievePiletsInfo(entryFiles);
   const { externals } = pilets;
   const dest = getDestination(entryFiles, resolve(baseDir, target));
+
+  await checkCliCompatibility(root);
 
   if (fresh) {
     await clearCache(root, cacheDir);

@@ -3,18 +3,19 @@ import { join, dirname, basename, resolve } from 'path';
 import {
   extendConfig,
   setStandardEnvs,
-  findFile,
   modifyBundlerForPilet,
   extendBundlerForPilet,
   postProcess,
-  getFileWithExtension,
   removeDirectory,
   extendBundlerWithPlugins,
   clearCache,
   postTransform,
+  findEntryModule,
+  retrievePiletData,
 } from '../common';
 
 export interface BuildPiletOptions {
+  app?: string;
   entry?: string;
   target?: string;
   cacheDir?: string;
@@ -52,20 +53,17 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
+    app,
   } = options;
-  const entryFiles = getFileWithExtension(join(baseDir, entry));
-  const targetDir = dirname(entryFiles);
-  const packageJson = await findFile(targetDir, 'package.json');
-
-  if (!packageJson) {
-    throw new Error(`Cannot find the "package.json". You need a valid package.json for your pilet.`);
-  }
-
-  const root = dirname(packageJson);
-  const externals = Object.keys(require(packageJson).peerDependencies);
+  const entryFile = join(baseDir, entry);
+  const targetDir = dirname(entryFile);
+  const entryModule = await findEntryModule(entryFile, targetDir);
+  const { peerDependencies, root, appPackage } = await retrievePiletData(targetDir, app);
+  const externals = Object.keys(peerDependencies);
 
   await setStandardEnvs({
     production: true,
+    piral: appPackage.name,
     target: targetDir,
   });
 
@@ -82,7 +80,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
 
   const bundler = new Bundler(
-    entryFiles,
+    entryModule,
     extendConfig({
       ...dest,
       cacheDir,

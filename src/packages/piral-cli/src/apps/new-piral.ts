@@ -74,7 +74,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       ),
     );
 
-    await updateExistingJson(root, 'package.json', getPiralPackage(app, language));
+    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version));
 
     logInfo(`Installing NPM package ${packageRef} ...`);
 

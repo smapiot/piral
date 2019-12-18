@@ -1,4 +1,4 @@
-import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules } from '../common';
+import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules, checkCliCompatibility } from '../common';
 import { getPiralRules } from '../rules';
 
 export interface ValidatPiralOptions {
@@ -16,6 +16,7 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
   const rules = await getPiralRules();
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { root, dependencies, ...info } = await retrievePiletsInfo(entryFiles);
+  await checkCliCompatibility(root);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];
 

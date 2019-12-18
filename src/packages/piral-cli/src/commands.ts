@@ -332,6 +332,8 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.buildPiletDefaults.scopeHoist)
+        .string('app')
+        .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -348,6 +350,7 @@ const allCommands: Array<ToolCommand<any>> = [
         detailedReport: args.detailedReport as boolean,
         fresh: args.fresh as boolean,
         logLevel: args.logLevel as any,
+        app: args.app as string,
       });
     },
   },

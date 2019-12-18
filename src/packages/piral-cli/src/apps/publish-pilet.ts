@@ -21,7 +21,7 @@ async function getFiles(baseDir: string, source: string, fresh: boolean) {
     const details = require(join(baseDir, 'package.json'));
     await buildPilet(baseDir, {
       target: details.main,
-      fresh: true,
+      fresh,
     });
     const file = await createPiletPackage(baseDir, '.', '.');
     return [file];

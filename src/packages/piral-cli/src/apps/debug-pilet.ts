@@ -1,7 +1,6 @@
 import * as Bundler from 'parcel-bundler';
 import chalk from 'chalk';
-import { readdirSync } from 'fs';
-import { join, dirname, resolve, basename, extname } from 'path';
+import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
   retrievePiletData,
@@ -16,22 +15,8 @@ import {
   postProcess,
   debugPiletApi,
   openBrowser,
+  findEntryModule,
 } from '../common';
-
-function findEntryModule(entryFile: string, target: string) {
-  const entry = basename(entryFile);
-  const files = readdirSync(target);
-
-  for (const file of files) {
-    const ext = extname(file);
-
-    if (file === entry || file.replace(ext, '') === entry) {
-      return join(target, file);
-    }
-  }
-
-  return entryFile;
-}
 
 export interface DebugPiletOptions {
   logLevel?: 1 | 2 | 3;
@@ -74,14 +59,14 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     app,
   } = options;
   const entryFile = join(baseDir, entry);
-  const target = dirname(entryFile);
-  const entryModule = findEntryModule(entryFile, target);
-  const { peerDependencies, root, appPackage, appFile } = await retrievePiletData(target, app);
+  const targetDir = dirname(entryFile);
+  const entryModule = await findEntryModule(entryFile, targetDir);
+  const { peerDependencies, root, appPackage, appFile } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
-    krasConfig.directory = join(target, 'mocks');
+    krasConfig.directory = join(targetDir, 'mocks');
   }
 
   if (krasConfig.ssl === undefined) {
@@ -105,12 +90,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   await setStandardEnvs({
-    target,
+    target: targetDir,
     piral: appPackage.name,
     dependencies: externals,
   });
 
-  modifyBundlerForPilet(Bundler.prototype, externals, target);
+  modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
 
   const bundler = new Bundler(
     entryModule,
