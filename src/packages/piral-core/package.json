@@ -49,6 +49,6 @@
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
-    "piral-base": "^0.9.2"
+    "piral-base": "^0.9.3"
   }
 }
