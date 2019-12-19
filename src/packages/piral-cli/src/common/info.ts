@@ -1,8 +1,15 @@
 const info = require('../../package.json');
 
 export function findCompatVersion(version: string) {
-  const [significant] = version.split('.').filter(m => m !== '0');
-  return significant;
+  // we only care about major and minor
+  const [major, minor] = version.split('.');
+
+  if (major === '0') {
+    // we keep the leading zero to avoid confusing, e.g., 0.2 with 2.0
+    return `${major}.${minor}`;
+  }
+
+  return major;
 }
 
 export const nodeVersion = process.version.substr(1);

@@ -32,7 +32,7 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
   process.env.BUILD_PCKG_NAME = packageJson.name;
 
   if (options.develop) {
-    process.env.DEBUG_PILET = options.develop ? debugPiletApi : '';
+    process.env.DEBUG_PILET = debugPiletApi;
   } else {
     delete process.env.DEBUG_PILET;
   }

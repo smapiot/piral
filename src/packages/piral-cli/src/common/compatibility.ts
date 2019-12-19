@@ -17,7 +17,10 @@ export function checkAppShellCompatibility(piralVersion: string) {
 
   Alternatively, you can also try to update the Piral instance.
 `);
+    return false;
   }
+
+  return true;
 }
 
 export async function checkCliCompatibility(root: string) {
@@ -36,5 +39,8 @@ export async function checkCliCompatibility(root: string) {
 
   Alternatively, you can also change the used version of Piral.
 `);
+    return false;
   }
+
+  return true;
 }
