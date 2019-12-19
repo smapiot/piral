@@ -18,11 +18,6 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "app": "src/index.html",
-  "files": [
-    "src",
-    "lib",
-    "tsconfig.json"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smapiot/piral.git"

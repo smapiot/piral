@@ -13,9 +13,6 @@
   "homepage": "https://piral.io",
   "license": "MIT",
   "main": "src/index.html",
-  "files": [
-    "src"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smapiot/piral.git"

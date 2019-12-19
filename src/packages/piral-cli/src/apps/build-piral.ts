@@ -70,8 +70,6 @@ async function bundleFiles(
     dependencies,
   });
 
-  modifyBundlerForPiral(Bundler.prototype, target);
-
   const bundler = new Bundler(
     entryFiles,
     extendConfig({
@@ -159,6 +157,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   }
 
   await removeDirectory(dest.outDir);
+
+  modifyBundlerForPiral(Bundler.prototype, targetDir);
 
   // everything except release -> build develop
   if (type !== 'release') {
