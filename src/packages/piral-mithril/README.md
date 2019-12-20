@@ -22,10 +22,10 @@ The extension slot component to be used in Mithril.js component.
 
 ## Setup and Bootstrapping
 
-Using Mithril.js with Piral is as simple as installing `piral-mithril` and `aurelia-framework`.
+Using Mithril.js with Piral is as simple as installing `piral-mithril` and `mithril`.
 
-```tsx
-import 'aurelia-framework';
+```ts
+import 'mithril';
 import { createMithrilApi } from 'piral-mithril';
 ```
 

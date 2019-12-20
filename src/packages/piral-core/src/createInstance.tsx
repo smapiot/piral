@@ -12,7 +12,7 @@ import { PiralConfiguration, PortalProps, PiralInstance } from './types';
  * bootstrapping the application easily.
  *
  * @example
-```tsx
+```jsx
 const instance = createInstance({
   requestPilets() {
     return fetch(...);

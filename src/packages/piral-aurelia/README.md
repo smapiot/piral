@@ -24,7 +24,7 @@ The extension slot component to be used in Aurelia component. This is not really
 
 Using Aurelia with Piral is as simple as installing `piral-aurelia` and `aurelia-framework`.
 
-```tsx
+```ts
 import 'aurelia-framework';
 import { createAureliaApi } from 'piral-aurelia';
 ```

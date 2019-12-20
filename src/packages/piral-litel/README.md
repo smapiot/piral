@@ -24,7 +24,7 @@ The name of the extension slot component to be used in LitElement components. Th
 
 Using LitElement with Piral is as simple as installing `piral-litel` and `lit-element`.
 
-```tsx
+```ts
 import 'lit-element';
 import { createLitElApi } from 'piral-litel';
 ```

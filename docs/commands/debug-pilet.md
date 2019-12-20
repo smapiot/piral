@@ -106,7 +106,7 @@ Tries to reduce bundle size by introducing tree shaking.
 Activates Hot Module Reloading (HMR).
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--no-hmr`
 
@@ -114,14 +114,14 @@ Opposite of:
 Activates Hot Module Reloading (HMR).
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--autoinstall`
 
 Automatically installs missing Node.js packages.
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--no-autoinstall`
 
@@ -129,7 +129,7 @@ Opposite of:
 Automatically installs missing Node.js packages.
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--app`
 

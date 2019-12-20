@@ -9,7 +9,7 @@ import { PiralRenderOptions } from './types';
  * arguments.
  * @param options The options to use when setting up the Piral instance.
  * @example
-```tsx
+```ts
 import { hydrateInstance } from 'piral';
 hydrateInstance();
 ```
