@@ -18,25 +18,27 @@ export interface ElmConfig {
 export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
   const { selector = 'elm-extension' } = config;
 
-  class ElmExtension extends Element {
-    connectedCallback() {
-      if (this.isConnected) {
-        this.dispatchEvent(
-          new CustomEvent('render-html', {
-            bubbles: true,
-            detail: {
-              target: this,
-              props: {
-                name: this.getAttribute('name'),
+  if ('customElements' in window) {
+    class ElmExtension extends Element {
+      connectedCallback() {
+        if (this.isConnected) {
+          this.dispatchEvent(
+            new CustomEvent('render-html', {
+              bubbles: true,
+              detail: {
+                target: this,
+                props: {
+                  name: this.getAttribute('name'),
+                },
               },
-            },
-          }),
-        );
+            }),
+          );
+        }
       }
     }
-  }
 
-  customElements.define(selector, ElmExtension);
+    customElements.define(selector, ElmExtension);
+  }
 
   return context => {
     context.converters.elm = ({ main }) => {

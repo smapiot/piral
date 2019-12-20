@@ -18,25 +18,27 @@ export interface SvelteConfig {
 export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteApi> {
   const { selector = 'svelte-extension' } = config;
 
-  class SvelteExtension extends Element {
-    connectedCallback() {
-      if (this.isConnected) {
-        this.dispatchEvent(
-          new CustomEvent('render-html', {
-            bubbles: true,
-            detail: {
-              target: this,
-              props: {
-                name: this.getAttribute('name'),
+  if ('customElements' in window) {
+    class SvelteExtension extends Element {
+      connectedCallback() {
+        if (this.isConnected) {
+          this.dispatchEvent(
+            new CustomEvent('render-html', {
+              bubbles: true,
+              detail: {
+                target: this,
+                props: {
+                  name: this.getAttribute('name'),
+                },
               },
-            },
-          }),
-        );
+            }),
+          );
+        }
       }
     }
-  }
 
-  customElements.define(selector, SvelteExtension);
+    customElements.define(selector, SvelteExtension);
+  }
 
   return context => {
     context.converters.svelte = ({ Component }) => {
