@@ -29,7 +29,7 @@ export interface ElmComponent<TProps> {
 export interface PiletElmApi {
   /**
    * Wraps a Elm module for use in Piral.
-   * @param component The name of the root component.
+   * @param main The name of the root component.
    * @returns The Piral Elm component.
    */
   fromElm<TProps>(main: ElmModule<TProps>): ElmComponent<TProps>;

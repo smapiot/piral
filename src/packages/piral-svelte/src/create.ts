@@ -1,24 +1,24 @@
 import { Extend } from 'piral-core';
-import { PiletElmApi } from './types';
+import { PiletSvelteApi, SvelteComponentInstance } from './types';
 
 /**
- * Available configuration options for the Elm plugin.
+ * Available configuration options for the Svelte plugin.
  */
-export interface ElmConfig {
+export interface SvelteConfig {
   /**
    * Defines the name of the extension component.
-   * @default elm-extension
+   * @default svelte-extension
    */
   selector?: string;
 }
 
 /**
- * Creates new Pilet API extensions for integration of Elm.
+ * Creates new Pilet API extensions for integration of Svelte.
  */
-export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
-  const { selector = 'elm-extension' } = config;
+export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteApi> {
+  const { selector = 'svelte-extension' } = config;
 
-  class ElmExtension extends Element {
+  class SvelteExtension extends Element {
     connectedCallback() {
       if (this.isConnected) {
         this.dispatchEvent(
@@ -36,15 +36,16 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
     }
   }
 
-  customElements.define(selector, ElmExtension);
+  customElements.define(selector, SvelteExtension);
 
   return context => {
-    context.converters.elm = ({ main }) => {
+    context.converters.svelte = ({ Component }) => {
+      let instance: SvelteComponentInstance<any> = undefined;
       return {
         mount(parent, data, ctx) {
-          main.init({
-            node: parent,
-            flags: {
+          instance = new Component({
+            target: parent,
+            props: {
               ...ctx,
               ...data,
             },
@@ -58,20 +59,26 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
             false,
           );
         },
+        update(_, data) {
+          Object.keys(data).forEach(key => {
+            instance[key] = data[key];
+          });
+        },
         unmount(el) {
+          instance.$destroy();
           el.innerHTML = '';
         },
       };
     };
 
     return {
-      fromElm(main) {
+      fromSvelte(Component) {
         return {
-          type: 'elm',
-          main,
+          type: 'svelte',
+          Component,
         };
       },
-      ElmExtension: selector,
+      SvelteExtension: selector,
     };
   };
 }

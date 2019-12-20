@@ -34,6 +34,89 @@ const instance = createInstance({
 });
 ```
 
+## Pilet Usage
+
+The essential registration can be simplified like (e.g., for a tile):
+
+```ts
+import { PiletApi } from "sample-piral";
+import { Elm } from './Tile.elm';
+
+export function setup(app: PiletApi) {
+  app.registerTile(app.fromElm(Elm.Tile), {
+    initialColumns: 2,
+    initialRows: 2
+  });
+}
+```
+
+For the associated Elm code the following (standard) form applies:
+
+```elm
+module Tile exposing (main)
+
+import Browser
+import Html exposing (div, h1, text, Html)
+import Html.Attributes exposing (property)
+import Json.Encode as E
+
+type Msg = Increment | Decrement
+
+type alias Props =
+  { columns : Int
+  , rows : Int
+  }
+
+view model =
+    div[] [
+        h1 [] [ text "Hello, Elm! ", text (String.fromInt model.columns), text " x ", text (String.fromInt model.rows) ],
+        Html.node "elm-extension" [ property "name" (E.string "smiley") ] []
+    ]
+
+main : Program Props Props Msg
+main =
+    Browser.element
+        { init = init
+        , view = view
+        , update = \msg model -> ( model, Cmd.none )
+        , subscriptions = always Sub.none
+        }
+
+init : Props -> (Props, Cmd Msg)
+init flag =
+    (flag, Cmd.none)
+```
+
+Either way an *elm.json* will be created in the pilet root folder. It will look similar to the following file:
+
+```json
+{
+    "type": "application",
+    "source-directories": [
+        "src"
+    ],
+    "elm-version": "0.19.1",
+    "dependencies": {
+        "direct": {
+            "elm/browser": "1.0.2",
+            "elm/core": "1.0.4",
+            "elm/html": "1.0.0"
+        },
+        "indirect": {
+            "elm/json": "1.1.3",
+            "elm/time": "1.0.0",
+            "elm/url": "1.0.0",
+            "elm/virtual-dom": "1.0.2"
+        }
+    },
+    "test-dependencies": {
+        "direct": {},
+        "indirect": {}
+    }
+}
+
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
