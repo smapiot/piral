@@ -1,3 +1,4 @@
+require('./highlight');
 const YAML = require('yaml');
 const MarkdownIt = require('markdown-it');
 const markdownItAbbr = require('markdown-it-abbr');

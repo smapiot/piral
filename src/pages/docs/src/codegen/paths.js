@@ -14,7 +14,7 @@ const commands = resolve(docs, 'commands');
 const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
 
-const coreNames = ['piral', 'piral-core', 'piral-cli', 'piral-ext', 'piral-ssr-utils'];
+const coreNames = ['piral', 'piral-base', 'piral-core', 'piral-cli', 'piral-ext', 'piral-ssr-utils'];
 const coreTypes = coreNames.map(name => `${name}.json`);
 
 function getCategory(keywords) {
