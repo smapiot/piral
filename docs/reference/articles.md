@@ -13,6 +13,7 @@
 ## What's new in Piral
 
 - [What's new in Piral #1](https://dev.to/florianrappl/what-s-new-in-piral-1-5a32)
+- [What's new in Piral #2](https://dev.to/florianrappl/what-s-new-in-piral-2-2baf)
 
 ## Talks at Conferences
 
