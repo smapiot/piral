@@ -21,4 +21,4 @@
 
 ## Talks at Meetups
 
-- [Microsoft Developer Meetup Regensburg, 11/2019](https://dotnetregensburg.github.io)
+- [Microsoft Developer Meetup Regensburg (German), 11/2019](https://www.youtube.com/watch?v=YlDwwxDTGxY)
