@@ -39,8 +39,8 @@ const instance = createInstance({
 The essential registration can be simplified like (e.g., for a tile):
 
 ```ts
-import { PiletApi } from "sample-piral";
-import Tile from "./Tile.svelte";
+import { PiletApi } from 'sample-piral';
+import Tile from './Tile.svelte';
 
 export function setup(app: PiletApi) {
   app.registerTile(app.fromSvelte(Tile), {

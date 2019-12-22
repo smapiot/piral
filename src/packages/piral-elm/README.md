@@ -39,7 +39,7 @@ const instance = createInstance({
 The essential registration can be simplified like (e.g., for a tile):
 
 ```ts
-import { PiletApi } from "sample-piral";
+import { PiletApi } from 'sample-piral';
 import { Elm } from './Tile.elm';
 
 export function setup(app: PiletApi) {
@@ -57,8 +57,7 @@ module Tile exposing (main)
 
 import Browser
 import Html exposing (div, h1, text, Html)
-import Html.Attributes exposing (property)
-import Json.Encode as E
+import Html.Attributes exposing (attribute)
 
 type Msg = Increment | Decrement
 
@@ -70,7 +69,7 @@ type alias Props =
 view model =
     div[] [
         h1 [] [ text "Hello, Elm! ", text (String.fromInt model.columns), text " x ", text (String.fromInt model.rows) ],
-        Html.node "elm-extension" [ property "name" (E.string "smiley") ] []
+        Html.node "elm-extension" [ attribute "name" "smiley" ] []
     ]
 
 main : Program Props Props Msg
@@ -114,7 +113,6 @@ Either way an *elm.json* will be created in the pilet root folder. It will look 
         "indirect": {}
     }
 }
-
 ```
 
 ## License

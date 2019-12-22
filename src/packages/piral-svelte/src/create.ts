@@ -19,7 +19,7 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
   const { selector = 'svelte-extension' } = config;
 
   if ('customElements' in window) {
-    class SvelteExtension extends Element {
+    class SvelteExtension extends HTMLElement {
       connectedCallback() {
         if (this.isConnected) {
           this.dispatchEvent(
@@ -45,13 +45,6 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
       let instance: SvelteComponentInstance<any> = undefined;
       return {
         mount(parent, data, ctx) {
-          instance = new Component({
-            target: parent,
-            props: {
-              ...ctx,
-              ...data,
-            },
-          });
           parent.addEventListener(
             'render-html',
             (ev: CustomEvent) => {
@@ -60,6 +53,13 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
             },
             false,
           );
+          instance = new Component({
+            target: parent,
+            props: {
+              ...ctx,
+              ...data,
+            },
+          });
         },
         update(_, data) {
           Object.keys(data).forEach(key => {

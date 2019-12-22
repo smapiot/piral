@@ -19,7 +19,7 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
   const { selector = 'elm-extension' } = config;
 
   if ('customElements' in window) {
-    class ElmExtension extends Element {
+    class ElmExtension extends HTMLElement {
       connectedCallback() {
         if (this.isConnected) {
           this.dispatchEvent(
@@ -44,13 +44,7 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
     context.converters.elm = ({ main }) => {
       return {
         mount(parent, data, ctx) {
-          main.init({
-            node: parent,
-            flags: {
-              ...ctx,
-              ...data,
-            },
-          });
+          const node = parent.appendChild(document.createElement('div'));
           parent.addEventListener(
             'render-html',
             (ev: CustomEvent) => {
@@ -59,6 +53,13 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
             },
             false,
           );
+          main.init({
+            node,
+            flags: {
+              ...ctx,
+              ...data,
+            },
+          });
         },
         unmount(el) {
           el.innerHTML = '';

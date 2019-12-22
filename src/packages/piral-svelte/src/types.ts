@@ -15,10 +15,10 @@ export interface SvelteOptions<TProps> {
 
 export type SvelteComponentInstance<TProps> = TProps & {
   $destroy(): void;
-}
+};
 
 export interface SvelteModule<TProps> {
-  new(opts: SvelteOptions<TProps>): SvelteComponentInstance<TProps>;
+  new (opts: SvelteOptions<TProps>): SvelteComponentInstance<TProps>;
 }
 
 export interface SvelteComponent<TProps> {
