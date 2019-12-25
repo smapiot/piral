@@ -26,8 +26,6 @@ renderInstance({
     )),
   },
 });
-
-export * from 'piral/api';
 ```
 
 This starts rendering a full Piral instance in the `#app` element of the DOM constructed by the *index.html*. While the scaffolding only starts with a *minimal* layout, it does not change anything regarding the Pilet API.
@@ -46,8 +44,6 @@ renderInstance({
     )),
   },
 });
-
-export * from 'piral/api';
 ```
 
 In this case we added a configuration that determines how to extend the provided (Pilet) API. The different APIs are usually given by API creator methods, which accept none or one parameter for an optional configuration. In any case we can pass in an array with such plugins or just a single plugin if we want to.
@@ -82,12 +78,24 @@ An example for such a function may be the following:
 ```ts
 interface TrackingConfig {}
 
-function createTrackingApi(config: TrackingConfig = {}) {
+interface PiletTrackingApi {
+  trackEvent(name: string): void;
+}
+
+function createTrackingApi(config: TrackingConfig = {}): Extend<PiletTrackingApi> {
   return context => (api, target) => ({
     trackEvent(name) {
       // ...
     },
   });
+}
+```
+
+Importantly, to bring the typed API into the Pilet API declaration merging needs to be performed.
+
+```ts
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends PiletTrackingApi {}
 }
 ```
 
@@ -140,8 +148,6 @@ renderInstance({
     ),
   },
 });
-
-export * from 'piral/api';
 ```
 
 The list of all plugins is available via [NPM](https://www.npmjs.com/search?q=keywords:piral).
