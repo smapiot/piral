@@ -26,6 +26,7 @@ export interface BuildPiletOptions {
   sourceMaps?: boolean;
   contentHash?: boolean;
   scopeHoist?: boolean;
+  shouldPostTransform?: boolean;
 }
 
 export const buildPiletDefaults = {
@@ -39,6 +40,7 @@ export const buildPiletDefaults = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
+  shouldPostTransform: true,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -53,6 +55,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
+    shouldPostTransform = buildPiletDefaults.shouldPostTransform,
     app,
   } = options;
   const entryFile = join(baseDir, entry);
@@ -102,7 +105,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   await postProcess(bundle);
 
-  if (minify) {
+  if (minify && shouldPostTransform) {
     await postTransform(bundle, root);
   }
 }

@@ -112,6 +112,7 @@ export interface BuildPiralOptions {
   sourceMaps?: boolean;
   contentHash?: boolean;
   scopeHoist?: boolean;
+  shouldPostTransform?: boolean;
 }
 
 export const buildPiralDefaults = {
@@ -127,6 +128,7 @@ export const buildPiralDefaults = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
+  shouldPostTransform: true,
 };
 
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
@@ -143,6 +145,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     scopeHoist = buildPiralDefaults.scopeHoist,
     fresh = buildPiralDefaults.fresh,
     type = buildPiralDefaults.type,
+    shouldPostTransform = buildPiralDefaults.shouldPostTransform,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const targetDir = dirname(entryFiles);
@@ -186,13 +189,10 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         version: await findPackageVersion(targetDir, name),
       })),
     );
-    const externalDependencies = externalPackages.reduce(
-      (deps, dep) => {
-        deps[dep.name] = dep.version;
-        return deps;
-      },
-      {} as Record<string, string>,
-    );
+    const externalDependencies = externalPackages.reduce((deps, dep) => {
+      deps[dep.name] = dep.version;
+      return deps;
+    }, {} as Record<string, string>);
     const rootDir = resolve(outDir, '..');
     const filesDir = resolve(rootDir, 'files');
     const files = pilets.files
@@ -265,7 +265,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         publicUrl,
         logLevel,
       },
-      root,
+      shouldPostTransform ? root : undefined,
     );
 
     logDone(`Files for publication available in "${outDir}".`);

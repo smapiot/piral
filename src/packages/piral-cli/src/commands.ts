@@ -135,6 +135,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.buildPiralDefaults.scopeHoist)
+        .boolean('post-transform')
+        .describe('post-transform', 'Post-transforms the bundle using enhanced ES transpilation and minification.')
+        .default('post-transform', apps.buildPiralDefaults.shouldPostTransform)
         .choices('type', ['all', 'release', 'develop'])
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', apps.buildPiralDefaults.type)
@@ -153,6 +156,7 @@ const allCommands: Array<ToolCommand<any>> = [
         contentHash: args.contentHash as boolean,
         sourceMaps: args.sourceMaps as boolean,
         detailedReport: args.detailedReport as boolean,
+        shouldPostTransform: args.postTransform as boolean,
         logLevel: args.logLevel as any,
         type: args.type as any,
       });
@@ -332,6 +336,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.buildPiletDefaults.scopeHoist)
+        .boolean('post-transform')
+        .describe('post-transform', 'Post-transforms the bundle using enhanced ES transpilation and minification.')
+        .default('post-transform', apps.buildPiletDefaults.shouldPostTransform)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -348,6 +355,7 @@ const allCommands: Array<ToolCommand<any>> = [
         sourceMaps: args.sourceMaps as boolean,
         scopeHoist: args.scopeHoist as boolean,
         detailedReport: args.detailedReport as boolean,
+        shouldPostTransform: args.postTransform as boolean,
         fresh: args.fresh as boolean,
         logLevel: args.logLevel as any,
         app: args.app as string,
