@@ -153,6 +153,21 @@ Tries to reduce bundle size by introducing tree shaking.
 - Type: `boolean`
 - Default: `true`
 
+### `--post-transform`
+
+Post-transforms the bundle using enhanced ES transpilation and minification.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-post-transform`
+
+Opposite of:
+Post-transforms the bundle using enhanced ES transpilation and minification.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--type`
 
 Selects the target type of the build. "all" builds all target types.

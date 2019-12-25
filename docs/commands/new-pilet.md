@@ -30,7 +30,7 @@ Instead of `new-pilet` you can also use:
 
 ### `source`
 
-Sets the source package containing a Piral instance for templating the scaffold process.
+Sets the source package (potentially incl. its tag/version) containing a Piral instance for templating the scaffold process.
 
 - Type: `string`
 - Default: `piral`
@@ -51,20 +51,20 @@ Sets the package registry to use for resolving the specified Piral app.
 - Type: `string`
 - Default: `"https://registry.npmjs.org/"`
 
-### `--skip-install`
+### `--install`
 
-Skips the installation of the dependencies using NPM.
-
-- Type: `boolean`
-- Default: `false`
-
-### `--no-skip-install`
-
-Opposite of:
-Skips the installation of the dependencies using NPM.
+Already performs the installation of its NPM dependencies.
 
 - Type: `boolean`
 - Default: `true`
+
+### `--no-install`
+
+Opposite of:
+Already performs the installation of its NPM dependencies.
+
+- Type: `boolean`
+- Default: `false`
 
 ### `--force-overwrite`
 
