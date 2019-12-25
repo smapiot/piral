@@ -22,7 +22,7 @@ export interface NewPiralOptions {
   version?: string;
   forceOverwrite?: ForceOverwrite;
   language?: PiletLanguage;
-  skipInstall?: boolean;
+  install?: boolean;
   template?: TemplateType;
 }
 
@@ -33,7 +33,7 @@ export const newPiralDefaults = {
   version: 'latest',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
-  skipInstall: false,
+  install: true,
   template: 'default' as const,
 };
 
@@ -45,7 +45,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     version = newPiralDefaults.version,
     forceOverwrite = newPiralDefaults.forceOverwrite,
     language = newPiralDefaults.language,
-    skipInstall = newPiralDefaults.skipInstall,
+    install = newPiralDefaults.install,
     template = newPiralDefaults.template,
   } = options;
   const root = resolve(baseDir, target);
@@ -84,7 +84,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     await scaffoldPiralSourceFiles(template, language, root, app, packageName, forceOverwrite);
 
-    if (!skipInstall) {
+    if (install) {
       logInfo(`Installing dependencies ...`);
 
       await installDependencies(root, '--no-package-lock');

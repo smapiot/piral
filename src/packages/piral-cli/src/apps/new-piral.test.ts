@@ -12,7 +12,7 @@ describe('New Piral Command', () => {
   it('scaffolding in an empty directory works', async () => {
     jest.setTimeout(60000);
     const dir = createTempDir();
-    await newPiral(dir, { skipInstall: true });
+    await newPiral(dir, { install: false });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
@@ -27,7 +27,7 @@ describe('New Piral Command', () => {
     const dir = createTempDir();
     await newPiral(dir, {
       language: PiletLanguage.js,
-      skipInstall: true,
+      install: false,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
@@ -43,7 +43,7 @@ describe('New Piral Command', () => {
     const dir = createTempDir();
     await newPiral(dir, {
       onlyCore: true,
-      skipInstall: true,
+      install: false,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'node_modules/piral-core/package.json'))).toBeTruthy();

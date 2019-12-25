@@ -11,6 +11,7 @@
 * Added new optional plugin `piral-elm` for Elm (#118)
 * Replaced `react-arbiter` with `piral-base` (#109)
 * Allow disabling the post transform during build (#121)
+* Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
 * Switched to the new Piral logo (#27)
 
 ## 0.9.3 (December 17, 2019)

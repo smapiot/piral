@@ -180,9 +180,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('only-core')
         .describe('only-core', 'Sets if "piral-core" should be used. Otherwise, "piral" is used.')
         .default('only-core', apps.newPiralDefaults.onlyCore)
-        .boolean('skip-install')
-        .describe('skip-install', 'Skips the installation of the dependencies using NPM.')
-        .default('skip-install', apps.newPiralDefaults.skipInstall)
+        .boolean('install')
+        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .default('install', apps.newPiralDefaults.install)
         .string('tag')
         .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
         .default('tag', apps.newPiralDefaults.version)
@@ -207,7 +207,7 @@ const allCommands: Array<ToolCommand<any>> = [
         version: args.tag as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
-        skipInstall: args.skipInstall as boolean,
+        install: args.install as boolean,
         template: args.template,
       });
     },
@@ -432,7 +432,8 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source package containing a Piral instance for templating the scaffold process.',
+          describe:
+            'Sets the source package (potentially incl. its tag/version) containing a Piral instance for templating the scaffold process.',
           default: apps.newPiletDefaults.source,
         })
         .string('target')
@@ -441,9 +442,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
         .default('registry', apps.newPiletDefaults.registry)
-        .boolean('skip-install')
-        .describe('skip-install', 'Skips the installation of the dependencies using NPM.')
-        .default('skip-install', apps.newPiletDefaults.skipInstall)
+        .boolean('install')
+        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .default('install', apps.newPiletDefaults.install)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiletDefaults.forceOverwrite))
@@ -464,7 +465,7 @@ const allCommands: Array<ToolCommand<any>> = [
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
-        skipInstall: args.skipInstall as boolean,
+        install: args.install as boolean,
         template: args.template,
       });
     },
