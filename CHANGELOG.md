@@ -6,9 +6,11 @@
 * Added new optional plugin `piral-mithril` for Mithril.js (#79)
 * Added new optional plugin `piral-aurelia` for Aurelia (#80)
 * Added new optional plugin `piral-litel` for Lit-Element (#85)
+* Added new optional plugin `piral-ember` for Ember (#96)
 * Added new optional plugin `piral-svelte` for Svelte (#97)
 * Added new optional plugin `piral-elm` for Elm (#118)
 * Replaced `react-arbiter` with `piral-base` (#109)
+* Allow disabling the post transform during build (#121)
 * Switched to the new Piral logo (#27)
 
 ## 0.9.3 (December 17, 2019)
