@@ -1,0 +1,47 @@
+{
+  "name": "piral-ember",
+  "version": "0.9.3",
+  "description": "Plugin for integrating Ember.js components in Piral.",
+  "keywords": [
+    "piral",
+    "pilet-api",
+    "smapiot",
+    "portal",
+    "modules",
+    "api",
+    "plugin",
+    "plugin-converter",
+    "ember"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "api.d.ts",
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typedoc": "typedoc --json ../../../docs/types/piral-ember.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/ember": "^3.1.1",
+    "ember-source": "3.15.0",
+    "piral-core": "^0.9.3"
+  },
+  "peerDependencies": {
+    "ember-source": "^3.0.0",
+    "piral-core": "^0.9.0 || ^0.10.0"
+  }
+}
