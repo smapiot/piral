@@ -24,7 +24,7 @@ Transforms a standard Ember.js component into a component that can be used in Pi
 
 Using Ember.js with Piral is as simple as installing `piral-ember` and `ember-source`.
 
-```tsx
+```ts
 import { createEmberApi } from 'piral-ember';
 ```
 
