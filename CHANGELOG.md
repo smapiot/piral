@@ -5,10 +5,11 @@
 * Introduce compatibility check for the Piral CLI (#94)
 * Added new optional plugin `piral-mithril` for Mithril.js (#79)
 * Added new optional plugin `piral-aurelia` for Aurelia (#80)
-* Added new optional plugin `piral-litel` for Lit-Element (#85)
-* Added new optional plugin `piral-ember` for Ember (#96)
+* Added new optional plugin `piral-litel` for LitElement (#85)
+* Added new optional plugin `piral-ember` for Ember.js (#96)
 * Added new optional plugin `piral-svelte` for Svelte (#97)
 * Added new optional plugin `piral-elm` for Elm (#118)
+* Added new optional plugin `piral-riot` for Riot.js
 * Replaced `react-arbiter` with `piral-base` (#109)
 * Allow disabling the post transform during build (#121)
 * Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
