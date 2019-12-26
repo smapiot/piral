@@ -13,7 +13,6 @@ import {
   lstat,
   unlink,
   mkdirSync,
-  existsSync,
   statSync,
 } from 'fs';
 import { deepMerge } from './merge';

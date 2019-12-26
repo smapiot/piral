@@ -4,6 +4,7 @@ export * from './config';
 export * from './decl';
 export * from './emoji';
 export * from './envs';
+export * from './framework';
 export * from './hash';
 export * from './http';
 export * from './info';

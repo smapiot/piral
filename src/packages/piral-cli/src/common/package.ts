@@ -11,8 +11,9 @@ import {
   matchFiles,
   getFileNames,
 } from './io';
-import { cliVersion, coreExternals } from './info';
+import { Framework } from './framework';
 import { logFail, logWarn } from './log';
+import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
 import { getDevDependencies, PiletLanguage } from './language';
 import { PiletsInfo, TemplateFileLocation } from '../types';
@@ -118,7 +119,8 @@ export function readPiralPackage(root: string, name: string) {
   return readJson(path, 'package.json');
 }
 
-export function getPiralPackage(app: string, language: PiletLanguage, version: string) {
+export function getPiralPackage(app: string, language: PiletLanguage, version: string, framework: Framework) {
+  const typings = framework === 'piral-base' ? {} : undefined;
   return {
     app,
     scripts: {
@@ -133,7 +135,7 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
       },
     },
     devDependencies: {
-      ...getDevDependencies(language),
+      ...getDevDependencies(language, typings),
       'piral-cli': `${version}`,
     },
   };

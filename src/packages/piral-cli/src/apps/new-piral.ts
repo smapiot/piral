@@ -13,11 +13,12 @@ import {
   installDependencies,
   combinePackageRef,
   TemplateType,
+  Framework,
 } from '../common';
 
 export interface NewPiralOptions {
   app?: string;
-  onlyCore?: boolean;
+  framework?: Framework;
   target?: string;
   version?: string;
   forceOverwrite?: ForceOverwrite;
@@ -28,7 +29,7 @@ export interface NewPiralOptions {
 
 export const newPiralDefaults = {
   app: './src/index.html',
-  onlyCore: false,
+  framework: 'piral' as const,
   target: '.',
   version: 'latest',
   forceOverwrite: ForceOverwrite.no,
@@ -40,7 +41,7 @@ export const newPiralDefaults = {
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
   const {
     app = newPiralDefaults.app,
-    onlyCore = newPiralDefaults.onlyCore,
+    framework = newPiralDefaults.framework,
     target = newPiralDefaults.target,
     version = newPiralDefaults.version,
     forceOverwrite = newPiralDefaults.forceOverwrite,
@@ -49,11 +50,10 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     template = newPiralDefaults.template,
   } = options;
   const root = resolve(baseDir, target);
-  const packageName = onlyCore ? 'piral-core' : 'piral';
   const success = await createDirectory(root);
 
   if (success) {
-    const packageRef = combinePackageRef(packageName, version, 'registry');
+    const packageRef = combinePackageRef(framework, version, 'registry');
 
     logInfo(`Creating a new Piral instance in %s ...`, root);
 
@@ -74,7 +74,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       ),
     );
 
-    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version));
+    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework));
 
     logInfo(`Installing NPM package ${packageRef} ...`);
 
@@ -82,7 +82,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     logInfo(`Taking care of templating ...`);
 
-    await scaffoldPiralSourceFiles(template, language, root, app, packageName, forceOverwrite);
+    await scaffoldPiralSourceFiles(template, language, root, app, framework, forceOverwrite);
 
     if (install) {
       logInfo(`Installing dependencies ...`);

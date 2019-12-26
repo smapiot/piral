@@ -7,6 +7,7 @@ import {
   piletLanguageKeys,
   valueOfPiletLanguage,
   templateTypeKeys,
+  frameworkKeys,
 } from './helpers';
 import { ToolCommand, ListCommands } from './types';
 
@@ -177,9 +178,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('app')
         .describe('app', "Sets the path to the app's source HTML file.")
         .default('app', apps.newPiralDefaults.app)
-        .boolean('only-core')
-        .describe('only-core', 'Sets if "piral-core" should be used. Otherwise, "piral" is used.')
-        .default('only-core', apps.newPiralDefaults.onlyCore)
+        .choices('framework', frameworkKeys)
+        .describe('framework', 'Sets the framework/library level to use.')
+        .default('framework', apps.newPiralDefaults.framework)
         .boolean('install')
         .describe('install', 'Already performs the installation of its NPM dependencies.')
         .default('install', apps.newPiralDefaults.install)
@@ -194,7 +195,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('language', keyOfPiletLanguage(apps.newPiralDefaults.language))
         .choices('template', templateTypeKeys)
         .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
-        .default('template', templateTypeKeys[0])
+        .default('template', apps.newPiralDefaults.template)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -203,7 +204,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.newPiral(args.base as string, {
         app: args.app as string,
         target: args.target as string,
-        onlyCore: args.onlyCore as boolean,
+        framework: args.framework,
         version: args.tag as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
