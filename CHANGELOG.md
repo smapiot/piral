@@ -13,6 +13,7 @@
 * Replaced `react-arbiter` with `piral-base` (#109)
 * Allow disabling the post transform during build (#121)
 * Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
+* Changed `--only-core` to `framework` (supporting `piral-base`)
 * Switched to the new Piral logo (#27)
 
 ## 0.9.3 (December 17, 2019)
