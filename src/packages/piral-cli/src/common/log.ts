@@ -17,7 +17,7 @@ export function logDone(message: string, ...args: Array<string | number | boolea
 }
 
 export function logWarn(message: string, ...args: Array<string | number | boolean>) {
-  console.warn(chalk.red(message), ...args.map(arg => chalk.bold(arg.toString())));
+  console.warn(chalk.yellow(message), ...args.map(arg => chalk.bold(arg.toString())));
 }
 
 export function logFail(message: string, ...args: Array<string | number | boolean>) {
