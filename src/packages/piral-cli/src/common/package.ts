@@ -313,9 +313,9 @@ export async function patchPiletPackage(
   };
   const allExternals = [...externals, ...coreExternals];
   const scripts = {
-    'debug-pilet': 'pilet debug',
-    'build-pilet': 'pilet build',
-    'upgrade-pilet': 'pilet upgrade',
+    start: 'pilet debug',
+    build: 'pilet build',
+    upgrade: 'pilet upgrade',
     ...info.scripts,
   };
   const peerDependencies = {
