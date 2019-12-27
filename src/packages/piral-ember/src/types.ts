@@ -42,6 +42,14 @@ export interface PiralEmberComponent<TProps> {
  */
 export interface PiletEmberApi {
   /**
+   * Loads an ember application via it's URLs.
+   * @param appName The name of the ember application.
+   * @param appUrl The URL of the main ember application.
+   * @param vendorUrl The optional URL of the (shared) ember vendor bundle.
+   * @returns The promise resolving to the loaded ember application.
+   */
+  loadEmberApp<T = any>(appName: string, appUrl: string, vendorUrl?: string): Promise<T>;
+  /**
    * Wraps an Emberjs component for use in Piral.
    * @param App The component root.
    * @param opts The component options.
@@ -49,7 +57,7 @@ export interface PiletEmberApi {
    */
   fromEmber<TProps>(App: EmberModule<TProps>, opts: any): PiralEmberComponent<TProps>;
   /**
-   * Ember.js component for displaying extensions of the given name.
+   * Gets the name of the Ember.js extension.
    */
-  EmberExtension: any;
+  EmberExtension: string;
 }
