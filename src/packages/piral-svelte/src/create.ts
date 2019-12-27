@@ -43,6 +43,7 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
   return context => {
     context.converters.svelte = ({ Component }) => {
       let instance: SvelteComponentInstance<any> = undefined;
+
       return {
         mount(parent, data, ctx) {
           parent.addEventListener(
@@ -68,6 +69,7 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
         },
         unmount(el) {
           instance.$destroy();
+          instance = undefined;
           el.innerHTML = '';
         },
       };

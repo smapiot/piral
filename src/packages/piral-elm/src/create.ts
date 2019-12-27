@@ -41,31 +41,29 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
   }
 
   return context => {
-    context.converters.elm = ({ main }) => {
-      return {
-        mount(parent, data, ctx) {
-          const node = parent.appendChild(document.createElement('div'));
-          parent.addEventListener(
-            'render-html',
-            (ev: CustomEvent) => {
-              const { piral } = data;
-              piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-            },
-            false,
-          );
-          main.init({
-            node,
-            flags: {
-              ...ctx,
-              ...data,
-            },
-          });
-        },
-        unmount(el) {
-          el.innerHTML = '';
-        },
-      };
-    };
+    context.converters.elm = ({ main }) => ({
+      mount(parent, data, ctx) {
+        const node = parent.appendChild(document.createElement('div'));
+        parent.addEventListener(
+          'render-html',
+          (ev: CustomEvent) => {
+            const { piral } = data;
+            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+          },
+          false,
+        );
+        main.init({
+          node,
+          flags: {
+            ...ctx,
+            ...data,
+          },
+        });
+      },
+      unmount(el) {
+        el.innerHTML = '';
+      },
+    });
 
     return {
       fromElm(main) {
