@@ -18,14 +18,16 @@ function checkCreateApi<TApi>(createApi: GenericPiletApiCreator<TApi>) {
  * @returns The integrated pilets.
  */
 export function createPilets<TApi>(createApi: GenericPiletApiCreator<TApi>, pilets: Array<GenericPilet<TApi>>) {
+  const promises = [];
+
   if (checkCreateApi(createApi)) {
     for (const pilet of pilets) {
       const api = createApi(pilet);
-      setupPilet(pilet, api);
+      promises.push(setupPilet(pilet, api));
     }
   }
 
-  return pilets;
+  return Promise.all(promises).then(() => pilets);
 }
 
 /**
@@ -35,10 +37,12 @@ export function createPilets<TApi>(createApi: GenericPiletApiCreator<TApi>, pile
  * @returns The integrated pilet.
  */
 export function createPilet<TApi>(createApi: GenericPiletApiCreator<TApi>, pilet: GenericPilet<TApi>) {
+  const promises = [];
+
   if (checkCreateApi(createApi)) {
     const api = createApi(pilet);
-    setupPilet(pilet, api);
+    promises.push(setupPilet(pilet, api));
   }
 
-  return pilet;
+  return Promise.all(promises).then(() => pilet);
 }

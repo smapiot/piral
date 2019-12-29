@@ -39,7 +39,12 @@ export interface GenericPiletApp<TApi> {
    * Integrates the evaluated pilet into the application.
    * @param api The API to access the application.
    */
-  setup(api: TApi): void;
+  setup(api: TApi): void | Promise<void>;
+  /**
+   * Optional function for cleanup.
+   * @param api The API to access the application.
+   */
+  teardown?(api: TApi): void;
 }
 
 export interface GenericPiletExports<TApi> {

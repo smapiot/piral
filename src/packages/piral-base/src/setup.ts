@@ -8,7 +8,7 @@ import { GenericPilet } from './types';
  */
 export function setupPilet<TApi>(app: GenericPilet<TApi>, api: TApi) {
   try {
-    app.setup(api);
+    return app.setup(api);
   } catch (e) {
     console.error(`Error while setting up ${app && app.name}.`, e);
   }

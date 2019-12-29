@@ -29,34 +29,38 @@ export function createProgressiveStrategy<TApi>(async: boolean): PiletLoadingStr
     const { fetchPilets, fetchDependency, dependencies, getDependencies, createApi, pilets = [] } = options;
     const getDep = getDependencyResolver(dependencies, getDependencies);
     const loader = loadMetadata(fetchPilets);
-    const allModules = createPilets(createApi, pilets);
 
-    if (async && allModules.length > 0) {
-      cb(undefined, allModules);
-    }
+    return createPilets(createApi, pilets).then(allModules => {
+      if (async && allModules.length > 0) {
+        cb(undefined, allModules);
+      }
 
-    const followUp = loader.then(metadata =>
-      metadata.map(m =>
-        loadPilet<TApi>(m, getDep, fetchDependency).then(mod => {
-          const available = pilets.filter(m => m.name === mod.name).length === 0;
-          metadata.pop();
+      const followUp = loader.then(metadata => {
+        const promises = metadata.map(m =>
+          loadPilet<TApi>(m, getDep, fetchDependency).then(mod => {
+            const available = pilets.filter(m => m.name === mod.name).length === 0;
 
-          if (available) {
-            allModules.push(createPilet(createApi, mod));
+            if (available) {
+              return createPilet(createApi, mod).then(newModule => {
+                allModules.push(newModule);
 
-            if (async) {
-              cb(undefined, allModules);
+                if (async) {
+                  cb(undefined, allModules);
+                }
+              });
             }
-          }
+          }),
+        );
 
-          if (!async && metadata.length === 0) {
+        return Promise.all(promises).then(() => {
+          if (!async) {
             cb(undefined, allModules);
           }
-        }),
-      ),
-    );
+        });
+      });
 
-    return async ? loader.then() : followUp.then();
+      return async ? loader.then() : followUp.then();
+    });
   };
 }
 
@@ -86,10 +90,10 @@ export function asyncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: Pilets
  */
 export function standardStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
   const { fetchPilets, fetchDependency, dependencies, getDependencies, createApi, pilets = [] } = options;
-  return loadPilets(fetchPilets, fetchDependency, dependencies, getDependencies).then(
-    newModules => cb(undefined, evalAll(createApi, pilets, newModules)),
-    error => cb(error, []),
-  );
+  return loadPilets(fetchPilets, fetchDependency, dependencies, getDependencies)
+    .then(newModules => evalAll(createApi, pilets, newModules))
+    .then(modules => cb(undefined, modules))
+    .catch(error => cb(error, []));
 }
 
 /**
@@ -99,11 +103,8 @@ export function standardStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: Pil
  */
 export function syncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
   const { createApi, pilets = [] } = options;
-  cb(undefined, evalAll(createApi, pilets, []));
-  return {
-    then(done) {
-      done();
-      return undefined;
-    },
-  };
+  return evalAll(createApi, pilets, []).then(
+    modules => cb(undefined, modules),
+    err => cb(err, []),
+  );
 }
