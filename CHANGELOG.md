@@ -15,6 +15,8 @@
 * Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
 * Changed `--only-core` to `framework` (supporting `piral-base`)
 * Allow async `setup` in pilets
+* Support for `teardown` function in pilets
+* Allow async pilet module evaluation
 * Switched to the new Piral logo (#27)
 
 ## 0.9.3 (December 17, 2019)

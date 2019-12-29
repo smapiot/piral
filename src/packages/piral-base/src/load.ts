@@ -15,15 +15,14 @@ function loadFromContent<TApi>(
   content: string,
   getDependencies: PiletDependencyGetter,
   link?: string,
-): GenericPilet<TApi> {
+): Promise<GenericPilet<TApi>> {
   const dependencies = {
     ...(getDependencies(meta) || {}),
   };
-  const app = compileDependency<TApi>(meta.name, content, link, dependencies);
-  return {
+  return compileDependency<TApi>(meta.name, content, link, dependencies).then(app => ({
     ...app,
     ...meta,
-  };
+  }));
 }
 
 function checkFetchPilets(fetchPilets: PiletFetcher) {

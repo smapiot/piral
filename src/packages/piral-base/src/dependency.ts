@@ -12,6 +12,20 @@ function requireModule(name: string, dependencies: AvailableDependencies) {
   return dependency;
 }
 
+function checkPiletApp<TApi>(app?: GenericPiletApp<TApi>): GenericPiletApp<TApi> {
+  if (!app) {
+    console.error('Invalid module found.', name);
+  } else if (typeof app.setup !== 'function') {
+    console.warn('Setup function is missing.', name);
+  } else {
+    return app;
+  }
+
+  return {
+    setup() {},
+  };
+}
+
 /**
  * Compiles the given content from a generic dependency.
  * @param name The name of the dependency to compile.
@@ -55,18 +69,7 @@ export function compileDependency<TApi>(
   content: string,
   link = '',
   dependencies: AvailableDependencies = {},
-): GenericPiletApp<TApi> {
+): Promise<GenericPiletApp<TApi>> {
   const app = evalDependency<TApi>(name, content, link, dependencies);
-
-  if (!app) {
-    console.error('Invalid module found.', name);
-  } else if (typeof app.setup !== 'function') {
-    console.warn('Setup function is missing.', name);
-  } else {
-    return app;
-  }
-
-  return {
-    setup() {},
-  };
+  return Promise.resolve(app).then(checkPiletApp);
 }

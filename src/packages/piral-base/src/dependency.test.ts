@@ -57,19 +57,19 @@ describe('Handling Dependencies', () => {
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
-  it('compile does not like a module without a setup method', () => {
+  it('compile does not like a module without a setup method', async () => {
     console.error = jest.fn();
     console.warn = jest.fn();
-    const result = compileDependency('my-dependency', 'module.exports = {  }', undefined, {});
+    const result = await compileDependency('my-dependency', 'module.exports = {  }', undefined, {});
     expect(result.setup).not.toBeUndefined();
     expect(console.warn).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
-  it('compile does not like an empty module', () => {
+  it('compile does not like an empty module', async () => {
     console.error = jest.fn();
     console.warn = jest.fn();
-    const result = compileDependency('my-dependency', 'module.exports = undefined;', undefined, {});
+    const result = await compileDependency('my-dependency', 'module.exports = undefined;', undefined, {});
     expect(result.setup).not.toBeUndefined();
     expect(console.warn).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
