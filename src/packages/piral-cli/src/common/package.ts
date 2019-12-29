@@ -127,13 +127,7 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
       start: 'piral debug',
       build: 'piral build',
     },
-    pilets: {
-      ...getPiletsInfo({}),
-      scripts: {
-        build: 'npm run build-pilet',
-        start: 'npm run debug-pilet',
-      },
-    },
+    pilets: getPiletsInfo({}),
     devDependencies: {
       ...getDevDependencies(language, typings),
       'piral-cli': `${version}`,
