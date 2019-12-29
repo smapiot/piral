@@ -1,10 +1,20 @@
 import * as React from 'react';
 import { isfunc } from 'piral-base';
+import { __RouterContext } from 'react-router';
 import { PiralError, PiralLoadingIndicator } from './components';
 import { ErrorBoundary, ErrorBoundaryOptions } from './ErrorBoundary';
 import { useGlobalState, useActions } from '../hooks';
 import { defaultRender } from '../utils';
-import { AnyComponent, Errors, ComponentConverters, ForeignComponent, PiletApi, BaseComponentProps } from '../types';
+import { StateContext } from '../state/stateContext';
+import {
+  AnyComponent,
+  Errors,
+  ComponentConverters,
+  ForeignComponent,
+  PiletApi,
+  BaseComponentProps,
+  ComponentContext,
+} from '../types';
 
 let portalIdBase = 123456;
 
@@ -20,69 +30,63 @@ const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
 interface ForeignComponentContainerProps<T> {
   $portalId: string;
   $component: ForeignComponent<T>;
+  $context: ComponentContext;
   innerProps: T & BaseComponentProps;
 }
 
-function createForeignComponentContainer<T>(contextTypes = ['router']) {
-  return class ForeignComponentContainer extends React.Component<ForeignComponentContainerProps<T>> {
-    private current?: HTMLElement;
-    private previous?: HTMLElement;
-    static contextTypes = contextTypes.reduce((ct, key) => {
-      // tslint:disable-next-line
-      ct[key] = () => null;
-      return ct;
-    }, {});
+class ForeignComponentContainer<T> extends React.Component<ForeignComponentContainerProps<T>> {
+  private current?: HTMLElement;
+  private previous?: HTMLElement;
 
-    componentDidMount() {
-      const node = this.current;
-      const { $component, innerProps } = this.props;
-      const { mount } = $component;
+  componentDidMount() {
+    const node = this.current;
+    const { $component, $context, innerProps } = this.props;
+    const { mount } = $component;
 
-      if (node && isfunc(mount)) {
-        mount(node, innerProps, this.context);
-      }
-
-      this.previous = node;
+    if (node && isfunc(mount)) {
+      mount(node, innerProps, $context);
     }
 
-    componentDidUpdate() {
-      const { current, previous } = this;
-      const { $component, innerProps } = this.props;
-      const { update } = $component;
+    this.previous = node;
+  }
 
-      if (current !== previous) {
-        this.componentWillUnmount();
-        this.componentDidMount();
-      } else if (isfunc(update)) {
-        update(current, innerProps, this.context);
-      }
+  componentDidUpdate() {
+    const { current, previous } = this;
+    const { $component, $context, innerProps } = this.props;
+    const { update } = $component;
+
+    if (current !== previous) {
+      this.componentWillUnmount();
+      this.componentDidMount();
+    } else if (isfunc(update)) {
+      update(current, innerProps, $context);
+    }
+  }
+
+  componentWillUnmount() {
+    const node = this.previous;
+    const { $component } = this.props;
+    const { unmount } = $component;
+
+    if (node && isfunc(unmount)) {
+      unmount(node);
     }
 
-    componentWillUnmount() {
-      const node = this.previous;
-      const { $component } = this.props;
-      const { unmount } = $component;
+    this.previous = undefined;
+  }
 
-      if (node && isfunc(unmount)) {
-        unmount(node);
-      }
+  render() {
+    const { $portalId } = this.props;
 
-      this.previous = undefined;
-    }
-
-    render() {
-      const { $portalId } = this.props;
-
-      return (
-        <div
-          data-portal-id={$portalId}
-          ref={node => {
-            this.current = node;
-          }}
-        />
-      );
-    }
-  };
+    return (
+      <div
+        data-portal-id={$portalId}
+        ref={node => {
+          this.current = node;
+        }}
+      />
+    );
+  }
 }
 
 function wrapReactComponent<T>(
@@ -102,11 +106,11 @@ function wrapForeignComponent<T>(
   stasisOptions: ErrorBoundaryOptions<T>,
   piral: PiletApi,
 ): React.ComponentType<T> {
-  const Component = createForeignComponentContainer<T>();
-
   return (props: T) => {
     const { destroyPortal } = useActions();
     const [id] = React.useState(() => (portalIdBase++).toString(26));
+    const router = React.useContext(__RouterContext);
+    const { state } = React.useContext(StateContext);
 
     React.useEffect(() => {
       return () => destroyPortal(id);
@@ -115,7 +119,12 @@ function wrapForeignComponent<T>(
     return (
       <ErrorBoundary {...stasisOptions} renderProps={props}>
         <PortalRenderer id={id} />
-        <Component innerProps={{ ...props, piral }} $portalId={id} $component={component} />
+        <ForeignComponentContainer
+          innerProps={{ ...props, piral }}
+          $portalId={id}
+          $component={component}
+          $context={{ router, state }}
+        />
       </ErrorBoundary>
     );
   };

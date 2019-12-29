@@ -21,6 +21,12 @@ export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
 }
 
+declare module './components' {
+  interface ComponentContext {
+    state: Atom<GlobalState>;
+  }
+}
+
 export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
 
 export interface BaseRegistration {
