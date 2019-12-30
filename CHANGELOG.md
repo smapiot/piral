@@ -18,6 +18,7 @@
 * Support for `teardown` function in pilets
 * Allow async pilet module evaluation
 * Integrated `state` and `router` in foreign context
+* Support lazy loading of dependencies in converters
 * Switched to the new Piral logo (#27)
 
 ## 0.9.3 (December 17, 2019)

@@ -25,6 +25,14 @@ export interface ComponentContext {
 
 export interface ForeignComponent<TProps> {
   /**
+   * Called when the underlying framework should be loaded.
+   * Can be called multiple times, so the converter has to make sure
+   * it only loads at most once.
+   * @returns Nothing (already loaded) or a promise resolved when all
+   * dependencies are properly loaded.
+   */
+  load?(): void | Promise<void>;
+  /**
    * Called when the component is mounted.
    * @param element The container hosting the element.
    * @param props The props to transport.

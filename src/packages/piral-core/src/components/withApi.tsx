@@ -34,57 +34,125 @@ interface ForeignComponentContainerProps<T> {
   innerProps: T & BaseComponentProps;
 }
 
-class ForeignComponentContainer<T> extends React.Component<ForeignComponentContainerProps<T>> {
+interface ForeignComponentContainerState {
+  loading: boolean;
+  error: any;
+}
+
+class ForeignComponentContainer<T> extends React.Component<
+  ForeignComponentContainerProps<T>,
+  ForeignComponentContainerState
+> {
   private current?: HTMLElement;
   private previous?: HTMLElement;
+  private mounted = false;
 
-  componentDidMount() {
-    const node = this.current;
-    const { $component, $context, innerProps } = this.props;
-    const { mount } = $component;
+  constructor(props: ForeignComponentContainerProps<T>) {
+    super(props);
+    const { load } = props.$component;
+    let loading = false;
 
-    if (node && isfunc(mount)) {
-      mount(node, innerProps, $context);
+    if (isfunc(load)) {
+      const result = load();
+
+      if (result instanceof Promise) {
+        loading = true;
+        result.then(this.setLoaded, this.setError);
+      }
     }
 
-    this.previous = node;
+    this.state = {
+      loading,
+      error: undefined,
+    };
+  }
+
+  private setLoaded = () => {
+    if (this.mounted) {
+      this.setState({
+        loading: false,
+      });
+    }
+  };
+
+  private setError = (error: any) => {
+    if (this.mounted) {
+      this.setState({
+        error,
+      });
+    }
+  };
+
+  componentDidMount() {
+    const { loading } = this.state;
+
+    if (!loading) {
+      const node = this.current;
+      const { $component, $context, innerProps } = this.props;
+      const { mount } = $component;
+
+      if (node && isfunc(mount)) {
+        mount(node, innerProps, $context);
+      }
+
+      this.previous = node;
+    }
+
+    this.mounted = true;
   }
 
   componentDidUpdate() {
-    const { current, previous } = this;
-    const { $component, $context, innerProps } = this.props;
-    const { update } = $component;
+    const { loading } = this.state;
 
-    if (current !== previous) {
-      this.componentWillUnmount();
-      this.componentDidMount();
-    } else if (isfunc(update)) {
-      update(current, innerProps, $context);
+    if (!loading) {
+      const { current, previous } = this;
+      const { $component, $context, innerProps } = this.props;
+      const { update } = $component;
+
+      if (current !== previous) {
+        previous && this.componentWillUnmount();
+        current && this.componentDidMount();
+      } else if (isfunc(update)) {
+        update(current, innerProps, $context);
+      }
     }
   }
 
   componentWillUnmount() {
-    const node = this.previous;
-    const { $component } = this.props;
-    const { unmount } = $component;
+    const { loading } = this.state;
 
-    if (node && isfunc(unmount)) {
-      unmount(node);
+    if (!loading) {
+      const node = this.previous;
+      const { $component } = this.props;
+      const { unmount } = $component;
+
+      if (node && isfunc(unmount)) {
+        unmount(node);
+      }
     }
 
+    this.mounted = false;
     this.previous = undefined;
   }
 
   render() {
     const { $portalId } = this.props;
+    const { error, loading } = this.state;
+
+    if (error) {
+      throw error;
+    }
 
     return (
-      <div
-        data-portal-id={$portalId}
-        ref={node => {
-          this.current = node;
-        }}
-      />
+      <>
+        <div
+          data-portal-id={$portalId}
+          ref={node => {
+            this.current = node;
+          }}
+        />
+        {loading && <PiralLoadingIndicator />}
+      </>
     );
   }
 }
