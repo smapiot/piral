@@ -49,8 +49,7 @@ export function createAureliaApi(config: AureliaConfig = {}): Extend<PiletAureli
           aurelia.container.registerInstance('props', props);
           aurelia.container.registerInstance('ctx', ctx);
         },
-        unmount(el) {
-          aurelia.setRoot(undefined, el);
+        unmount() {
           aurelia = undefined;
         },
       };
