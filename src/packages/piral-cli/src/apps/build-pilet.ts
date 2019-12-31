@@ -9,9 +9,10 @@ import {
   removeDirectory,
   extendBundlerWithPlugins,
   clearCache,
-  postTransform,
   findEntryModule,
   retrievePiletData,
+  logInfo,
+  patchModules,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -26,7 +27,7 @@ export interface BuildPiletOptions {
   sourceMaps?: boolean;
   contentHash?: boolean;
   scopeHoist?: boolean;
-  shouldPostTransform?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const buildPiletDefaults = {
@@ -40,7 +41,7 @@ export const buildPiletDefaults = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
-  shouldPostTransform: true,
+  optimizeModules: true,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -55,7 +56,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
-    shouldPostTransform = buildPiletDefaults.shouldPostTransform,
+    optimizeModules = buildPiletDefaults.optimizeModules,
     app,
   } = options;
   const entryFile = join(baseDir, entry);
@@ -78,6 +79,11 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   if (fresh) {
     await clearCache(root, cacheDir);
     await removeDirectory(dest.outDir);
+  }
+
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root);
   }
 
   modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
@@ -104,8 +110,4 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const bundle = await bundler.bundle();
 
   await postProcess(bundle);
-
-  if (minify && shouldPostTransform) {
-    await postTransform(bundle, root);
-  }
 }

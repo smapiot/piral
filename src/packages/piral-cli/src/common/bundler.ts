@@ -1,7 +1,7 @@
 import { ParcelBundle } from 'parcel-bundler';
 import { transformFileAsync } from '@babel/core';
 import { resolve, dirname, basename } from 'path';
-import { removeDirectory, checkExists, readJson, writeText, writeJson } from './io';
+import { removeDirectory, checkExists, readJson, writeText, writeJson, checkIsDirectory, getFileNames } from './io';
 import { logInfo, logFail } from './log';
 
 const bundleWithCodegen = require('parcel-plugin-codegen');
@@ -91,4 +91,44 @@ export function postTransform(mainBundle: ParcelBundle, rootDir: string) {
       }
     }),
   );
+}
+
+/**
+ * The motivation for this method came from:
+ * https://github.com/parcel-bundler/parcel/issues/1655#issuecomment-568175592
+ * General idea:
+ * Treat all modules as non-optimized for the current output target.
+ * This makes sense in general as only the application should determine the target.
+ */
+async function patch(staticPath: string) {
+  const folderNames = await getFileNames(staticPath);
+  return Promise.all(folderNames.map(async folderName => {
+    const rootName = resolve(staticPath, folderName);
+    const isDirectory = await checkIsDirectory(rootName);
+
+    if (isDirectory) {
+      try {
+        const packageFileData = await readJson(rootName, 'package.json');
+
+        if (packageFileData._piralOptimized === undefined) {
+          delete packageFileData['browserslist'];
+          packageFileData._piralOptimized = true;
+
+          await writeJson(rootName, 'package.json', packageFileData);
+          await writeText(rootName, '.browserslistrc', 'node 10.11');
+        }
+
+        await patchModules(rootName);
+      } catch (e) {}
+    }
+  }));
+}
+
+export async function patchModules(rootDir: string) {
+  const modulesDir = resolve(rootDir, 'node_modules');
+  const exists = await checkExists(modulesDir);
+
+  if (exists) {
+    await patch(modulesDir);
+  }
 }

@@ -11,7 +11,8 @@
 * Added new optional plugin `piral-elm` for Elm (#118)
 * Added new optional plugin `piral-riot` for Riot.js
 * Replaced `react-arbiter` with `piral-base` (#109)
-* Allow disabling the post transform during build (#121)
+* Allow disabling the modules patching during build (#121)
+* Fixed out of memory problem with large bundles (#121)
 * Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
 * Changed `--only-core` to `framework` (supporting `piral-base`)
 * Allow async `setup` in pilets

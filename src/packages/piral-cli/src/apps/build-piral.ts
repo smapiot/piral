@@ -22,10 +22,10 @@ import {
   coreExternals,
   combineApiDeclarations,
   cliVersion,
-  postTransform,
   logInfo,
   ParcelConfig,
   checkCliCompatibility,
+  patchModules,
 } from '../common';
 
 interface Destination {
@@ -58,7 +58,6 @@ async function bundleFiles(
   dest: Destination,
   subdir: string,
   config: ParcelConfig,
-  transformRoot?: string,
 ) {
   const outDir = join(dest.outDir, subdir);
 
@@ -82,11 +81,7 @@ async function bundleFiles(
   extendBundlerForPiral(bundler);
   extendBundlerWithPlugins(bundler);
 
-  const bundle = await bundler.bundle();
-
-  if (transformRoot && config.minify) {
-    await postTransform(bundle, transformRoot);
-  }
+  await bundler.bundle();
 
   return outDir;
 }
@@ -112,7 +107,7 @@ export interface BuildPiralOptions {
   sourceMaps?: boolean;
   contentHash?: boolean;
   scopeHoist?: boolean;
-  shouldPostTransform?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const buildPiralDefaults = {
@@ -128,7 +123,7 @@ export const buildPiralDefaults = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
-  shouldPostTransform: true,
+  optimizeModules: true,
 };
 
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
@@ -145,7 +140,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     scopeHoist = buildPiralDefaults.scopeHoist,
     fresh = buildPiralDefaults.fresh,
     type = buildPiralDefaults.type,
-    shouldPostTransform = buildPiralDefaults.shouldPostTransform,
+    optimizeModules = buildPiralDefaults.optimizeModules,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const targetDir = dirname(entryFiles);
@@ -160,6 +155,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   }
 
   await removeDirectory(dest.outDir);
+
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root);
+  }
 
   modifyBundlerForPiral(Bundler.prototype, targetDir);
 
@@ -265,7 +265,6 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         publicUrl,
         logLevel,
       },
-      shouldPostTransform ? root : undefined,
     );
 
     logDone(`Files for publication available in "${outDir}".`);
