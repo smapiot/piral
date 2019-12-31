@@ -6,6 +6,7 @@ import { LayoutType } from './layout';
 
 export interface ComponentConverters<TProps> extends PiralCustomComponentConverters<TProps> {
   html(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
+  lazy(component: LazyComponent<TProps>): ForeignComponent<TProps>;
 }
 
 export interface HtmlComponent<TProps> {
@@ -19,19 +20,22 @@ export interface HtmlComponent<TProps> {
   type: 'html';
 }
 
+export interface LazyComponent<TProps> {
+  /**
+   * Triggers the async loading process of the component.
+   */
+  load(): Promise<AnyComponent<TProps>>;
+  /**
+   * The type of the lazy component.
+   */
+  type: 'lazy';
+}
+
 export interface ComponentContext {
   router: RouteComponentProps;
 }
 
 export interface ForeignComponent<TProps> {
-  /**
-   * Called when the underlying framework should be loaded.
-   * Can be called multiple times, so the converter has to make sure
-   * it only loads at most once.
-   * @returns Nothing (already loaded) or a promise resolved when all
-   * dependencies are properly loaded.
-   */
-  load?(): void | Promise<void>;
   /**
    * Called when the component is mounted.
    * @param element The container hosting the element.

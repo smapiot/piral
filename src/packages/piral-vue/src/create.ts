@@ -8,10 +8,6 @@ import { PiletVueApi } from './types';
  */
 export interface VueConfig {
   /**
-   * Optional function to trigger a lazy loading of Vue.
-   */
-  lazy?(): Promise<void>;
-  /**
    * Defines the name of the extension component.
    * @default extension-component
    */
@@ -27,7 +23,7 @@ export interface VueConfig {
  * Creates new Pilet API extensions for integration of Vue.
  */
 export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
-  const { rootName = 'slot', selector = 'extension-component', lazy } = config;
+  const { rootName = 'slot', selector = 'extension-component' } = config;
 
   const VueExtension: Component<ExtensionSlotProps> = {
     functional: false,
@@ -51,12 +47,8 @@ export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
   return context => {
     context.converters.vue = ({ root }) => {
       let instance: any = undefined;
-      let promise: Promise<void> = undefined;
 
       return {
-        load() {
-          return promise || (promise = lazy && lazy());
-        },
         mount(parent, data, ctx) {
           const el = parent.appendChild(document.createElement(rootName));
           instance = mountVue(el, root, data, ctx);
