@@ -3,9 +3,8 @@ import { isfunc } from 'piral-base';
 import { __RouterContext } from 'react-router';
 import { StateContext } from './stateContext';
 import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions } from '../components';
-import {  } from '../components/ErrorBoundary';
 import { useGlobalState, useActions } from '../hooks';
-import { defaultRender } from '../utils';
+import { defaultRender, convertComponent } from '../utils';
 import {
   AnyComponent,
   Errors,
@@ -132,17 +131,6 @@ function wrapForeignComponent<T>(
 
 function isNotExotic(component: any): component is object {
   return !(component as React.ExoticComponent).$$typeof;
-}
-
-function convertComponent<T extends { type: string }, U>(
-  converter: (component: T) => ForeignComponent<U>,
-  component: T,
-): ForeignComponent<U> {
-  if (typeof converter !== 'function') {
-    throw new Error(`No converter for component of type "${component.type}" registered.`);
-  }
-
-  return converter(component);
 }
 
 function wrapComponent<T>(

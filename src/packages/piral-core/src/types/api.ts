@@ -4,7 +4,7 @@ import { PiletMetadata, GenericPilet } from 'piral-base';
 import { Dict } from './common';
 import { PiletCustomApi } from './custom';
 import { EventEmitter } from './utils';
-import { AnyComponent } from './components';
+import { AnyComponent, LazyComponentLoader, LazyComponent } from './components';
 import { ExtensionSlotProps } from './extension';
 import { SharedData, DataStoreOptions } from './data';
 
@@ -89,6 +89,12 @@ export interface PiletCoreApi {
    * @param props The extension's rendering props.
    */
   renderHtmlExtension<T = any>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<T>): void;
+  /**
+   * Properly introduces a lazy loaded foreign component.
+   * @param cb The callback to trigger when the component should be loaded.
+   * @returns The lazy loading component.
+   */
+  fromLazy<T>(cb: LazyComponentLoader<T>): LazyComponent<T>;
 }
 
 /**

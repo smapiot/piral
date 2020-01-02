@@ -1,7 +1,7 @@
 import * as actions from '../actions';
 import { Atom } from '@dbeining/react-atom';
 import { PiralLoadingIndicator } from '../components';
-import { renderInDom } from '../utils';
+import { renderInDom, convertComponent } from '../utils';
 import {
   GlobalState,
   GlobalStateContext,
@@ -11,19 +11,7 @@ import {
   ComponentContext,
 } from '../types';
 
-function convertAction(ctx: GlobalStateContext, action: any) {
-  return (...args) => action.call(ctx, ctx.state, ...args);
-}
-
-export function includeActions(ctx: GlobalStateContext, actions: PiralDefineActions) {
-  const actionNames = Object.keys(actions);
-
-  for (const actionName of actionNames) {
-    ctx[actionName] = convertAction(ctx, actions[actionName]);
-  }
-}
-
-export function createActions(state: Atom<GlobalState>, events: EventEmitter): GlobalStateContext {
+function createContext(state: Atom<GlobalState>, events: EventEmitter) {
   const ctx = {
     ...events,
     apis: {},
@@ -32,7 +20,7 @@ export function createActions(state: Atom<GlobalState>, events: EventEmitter): G
       lazy: ({ load }) => {
         let present: [HTMLElement, any, ComponentContext] = undefined;
         let portalId: string = undefined;
-        const promise = load.current || (load.current = load());
+        const promise = load.current || (load.current = load().then(c => convertComponent(ctx.converters[c.type], c)));
         const component: ForeignComponent<any> = {
           mount(...args) {
             portalId = renderInDom(ctx, args[0], PiralLoadingIndicator, {});
@@ -58,6 +46,23 @@ export function createActions(state: Atom<GlobalState>, events: EventEmitter): G
     },
     state,
   } as GlobalStateContext;
-  includeActions(ctx, actions);
   return ctx;
+}
+
+function convertAction(ctx: GlobalStateContext, action: any) {
+  return (...args) => action.call(ctx, ctx.state, ...args);
+}
+
+export function includeActions(ctx: GlobalStateContext, actions: PiralDefineActions) {
+  const actionNames = Object.keys(actions);
+
+  for (const actionName of actionNames) {
+    ctx[actionName] = convertAction(ctx, actions[actionName]);
+  }
+}
+
+export function createActions(state: Atom<GlobalState>, events: EventEmitter): GlobalStateContext {
+  const context = createContext(state, events);
+  includeActions(context, actions);
+  return context;
 }

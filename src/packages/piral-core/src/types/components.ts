@@ -21,7 +21,7 @@ export interface HtmlComponent<TProps> {
 }
 
 export interface LazyComponentLoader<TProps> {
-  (): Promise<ForeignComponent<TProps>>;
+  (): Promise<FirstParametersOf<ComponentConverters<TProps>>>;
   current?: Promise<ForeignComponent<TProps>>;
 }
 
