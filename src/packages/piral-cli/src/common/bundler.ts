@@ -31,11 +31,12 @@ export async function clearCache(root: string, dir = '.cache') {
 }
 
 interface BundleSource {
+  children: Set<ParcelBundle>;
   src: string;
   map: string;
 }
 
-function gatherJsBundles(bundle: ParcelBundle, gatheredBundles: Array<BundleSource> = []) {
+export function gatherJsBundles(bundle: ParcelBundle, gatheredBundles: Array<BundleSource> = []) {
   if (bundle.type === 'js') {
     let map = undefined;
 
@@ -47,6 +48,7 @@ function gatherJsBundles(bundle: ParcelBundle, gatheredBundles: Array<BundleSour
     }
 
     gatheredBundles.push({
+      children: bundle.childBundles,
       src: bundle.name,
       map,
     });

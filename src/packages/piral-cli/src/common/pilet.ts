@@ -2,6 +2,7 @@ import * as Bundler from 'parcel-bundler';
 import { writeFile, readFile, existsSync, statSync } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { VirtualPackager } from './VirtualPackager';
+import { gatherJsBundles } from './bundler';
 
 const bundleUrlRef = '__bundleUrl__';
 
@@ -81,77 +82,73 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
     prName = `pr_${(bundle as any).getHash()}`;
   }
 
-  const promise = new Promise<void>((resolve, reject) => {
-    if (/js|css/.test(bundle.type)) {
-      const bundleDir = dirname(bundle.name);
+  const bundles = gatherJsBundles(bundle);
 
-      readFile(bundle.name, 'utf8', (err, data) => {
-        if (err) {
-          return reject(err);
-        }
+  return Promise.all(
+    bundles.map(
+      ({ src, children }) =>
+        new Promise<void>((resolve, reject) => {
+          const bundleDir = dirname(src);
 
-        let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
-          if (isFile(bundleDir, value)) {
-            return str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`);
-          }
+          readFile(src, 'utf8', (err, data) => {
+            if (err) {
+              return reject(err);
+            }
 
-          return str;
-        });
+            let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
+              if (isFile(bundleDir, value)) {
+                return str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`);
+              }
 
-        if (/js/.test(bundle.type)) {
-          /**
-           * In pure JS bundles (i.e., we are not starting with an HTML file) Parcel
-           * just omits the included CSS... This is bad (to say the least).
-           * Here, we search for any sibling CSS bundles (there should be at most 1)
-           * and include it asap using a standard approach.
-           * Note: In the future we may llow users to disable this behavior (via a Piral
-           * setting to disallow CSS inject).
-           */
-          const [cssBundle] = [...bundle.childBundles].filter(m => /\.css$/.test(m.name));
+              return str;
+            });
 
-          if (cssBundle) {
-            const cssName = basename(cssBundle.name);
-            const stylesheet = [
-              `var d=document`,
-              `var e=d.createElement("link")`,
-              `e.type="text/css"`,
-              `e.rel="stylesheet"`,
-              `e.href=${bundleUrlRef}+${JSON.stringify(cssName)}`,
-              `d.head.appendChild(e)`,
-            ].join(';');
-            result = `(function(){${stylesheet}})();${result}`;
-          }
+            /**
+             * In pure JS bundles (i.e., we are not starting with an HTML file) Parcel
+             * just omits the included CSS... This is bad (to say the least).
+             * Here, we search for any sibling CSS bundles (there should be at most 1)
+             * and include it asap using a standard approach.
+             * Note: In the future we may allow users to disable this behavior (via a Piral
+             * setting to disallow CSS inject).
+             */
+            const [cssBundle] = [...children].filter(m => /\.css$/.test(m.name));
 
-          /*
-           * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
-           * `parcelRequire` declaration problems, and preventing `parcelRequire`
-           * from leaking into global (window).
-           * @see https://github.com/parcel-bundler/parcel/issues/1401
-           */
-          result = [
-            `!(function(global,parcelRequire){'use strict';${bundleUrl}`,
-            result
-              .split('"function"==typeof parcelRequire&&parcelRequire')
-              .join(`"function"==typeof global.${prName}&&global.${prName}`),
-            `;global.${prName}=parcelRequire}(window, window.${prName}));`,
-          ].join('\n');
-        }
+            if (cssBundle) {
+              const cssName = basename(cssBundle.name);
+              const stylesheet = [
+                `var d=document`,
+                `var e=d.createElement("link")`,
+                `e.type="text/css"`,
+                `e.rel="stylesheet"`,
+                `e.href=${bundleUrlRef}+${JSON.stringify(cssName)}`,
+                `d.head.appendChild(e)`,
+              ].join(';');
+              result = `(function(){${stylesheet}})();${result}`;
+            }
 
-        writeFile(bundle.name, result, 'utf8', err => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        });
-      });
-    } else {
-      resolve();
-    }
-  });
-  const promises = [promise];
+            /**
+             * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
+             * `parcelRequire` declaration problems, and preventing `parcelRequire`
+             * from leaking into global (window).
+             * @see https://github.com/parcel-bundler/parcel/issues/1401
+             */
+            result = [
+              `!(function(global,parcelRequire){'use strict';${bundleUrl}`,
+              result
+                .split('"function"==typeof parcelRequire&&parcelRequire')
+                .join(`"function"==typeof global.${prName}&&global.${prName}`),
+              `;global.${prName}=parcelRequire}(window, window.${prName}));`,
+            ].join('\n');
 
-  (bundle as any).childBundles.forEach(child => promises.push(postProcess(child, prName)));
-
-  return Promise.all(promises).then(() => {});
+            writeFile(bundle.name, result, 'utf8', err => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+          });
+        }),
+    ),
+  );
 }

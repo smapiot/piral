@@ -57,7 +57,7 @@ describe('Pilet Build Module', () => {
     expect(writeContent).toBeUndefined();
   });
 
-  it('postProcess should write out the content if CSS', async () => {
+  it('postProcess should not change the content if CSS', async () => {
     readContent = 'no-js';
     await postProcess({
       getHash() {
@@ -67,7 +67,7 @@ describe('Pilet Build Module', () => {
       name: '',
       childBundles: [],
     } as any);
-    expect(writeContent).toBe('no-js');
+    expect(writeContent).toBeUndefined();
   });
 
   it('postProcess should change the content if JS', async () => {
