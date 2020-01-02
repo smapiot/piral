@@ -1,5 +1,4 @@
 import * as Bundler from 'parcel-bundler';
-import chalk from 'chalk';
 import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
@@ -8,14 +7,14 @@ import {
   setStandardEnvs,
   extendConfig,
   extendBundlerWithPlugins,
-  liveIcon,
-  settingsIcon,
   extendBundlerForPilet,
   modifyBundlerForPilet,
   postProcess,
   debugPiletApi,
   openBrowser,
   findEntryModule,
+  reorderInjectors,
+  notifyServerOnline,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -134,24 +133,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   krasConfig.map['/'] = '';
   krasConfig.map[api] = '';
-
-  krasConfig.injectors = {
-    script: krasConfig.injectors.script || {
-      active: true,
-    },
-    [injectorName]: injectorConfig,
-    ...krasConfig.injectors,
-  };
+  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
-
-  krasServer.on('open', svc => {
-    const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
-    console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
-    console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
-    bundler.bundle();
-  });
+  krasServer.on('open', notifyServerOnline(bundler, krasConfig.api));
 
   await krasServer.start();
   openBrowser(open, port);
