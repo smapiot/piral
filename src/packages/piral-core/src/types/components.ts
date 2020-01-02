@@ -20,11 +20,16 @@ export interface HtmlComponent<TProps> {
   type: 'html';
 }
 
+export interface LazyComponentLoader<TProps> {
+  (): Promise<ForeignComponent<TProps>>;
+  current?: Promise<ForeignComponent<TProps>>;
+}
+
 export interface LazyComponent<TProps> {
   /**
    * Triggers the async loading process of the component.
    */
-  load(): Promise<AnyComponent<TProps>>;
+  load: LazyComponentLoader<TProps>;
   /**
    * The type of the lazy component.
    */

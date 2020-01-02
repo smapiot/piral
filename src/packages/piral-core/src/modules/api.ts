@@ -1,9 +1,8 @@
-import { createElement } from 'react';
-import { createPortal } from 'react-dom';
 import { isfunc, GenericPiletApiCreator, PiletMetadata } from 'piral-base';
 import { __assign } from 'tslib';
-import { withApi, ExtensionSlot } from '../components';
-import { createDataOptions, getDataExpiration } from '../utils';
+import { withApi } from '../state';
+import { ExtensionSlot } from '../components';
+import { createDataOptions, getDataExpiration, renderInDom } from '../utils';
 import { PiletApi, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
 
 export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCoreApi> {
@@ -39,19 +38,7 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         context.unregisterExtension(name, arg);
       },
       renderHtmlExtension(element, props) {
-        const portalId = 'data-portal-id';
-        let parent = element.parentNode || (element as ShadowRoot).host;
-
-        while (parent) {
-          if (parent instanceof Element && parent.hasAttribute(portalId)) {
-            const portal = createPortal(createElement(ExtensionSlot, props), element as HTMLElement);
-            const id = parent.getAttribute(portalId);
-            context.showPortal(id, portal);
-            break;
-          }
-
-          parent = parent.parentNode || (parent as ShadowRoot).host;
-        }
+        renderInDom(context, element, ExtensionSlot, props);
       },
       Extension: ExtensionSlot,
     };

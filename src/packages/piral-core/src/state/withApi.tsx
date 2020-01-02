@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { __RouterContext } from 'react-router';
-import { PiralError, PiralLoadingIndicator } from './components';
-import { ErrorBoundary, ErrorBoundaryOptions } from './ErrorBoundary';
+import { StateContext } from './stateContext';
+import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions } from '../components';
+import {  } from '../components/ErrorBoundary';
 import { useGlobalState, useActions } from '../hooks';
 import { defaultRender } from '../utils';
-import { StateContext } from '../state/stateContext';
 import {
   AnyComponent,
   Errors,

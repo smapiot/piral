@@ -1,6 +1,7 @@
 export * from './compare';
 export * from './data';
 export * from './events';
+export * from './foreign';
 export * from './guid';
 export * from './helpers';
 export * from './media';
