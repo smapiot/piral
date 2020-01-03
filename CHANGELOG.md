@@ -10,6 +10,7 @@
 * Added new optional plugin `piral-svelte` for Svelte (#97)
 * Added new optional plugin `piral-elm` for Elm (#118)
 * Added new optional plugin `piral-riot` for Riot.js
+* Added new optional plugin `piral-lazy` for generic lazy loading
 * Replaced `react-arbiter` with `piral-base` (#109)
 * Allow disabling the modules patching during build (#121)
 * Fixed out of memory problem with large bundles (#121)
@@ -20,7 +21,6 @@
 * Allow async pilet module evaluation
 * Fixed kras injector precedence (#122)
 * Integrated `state` and `router` in foreign context
-* Support lazy loading of dependencies in converters
 * Switched to the new Piral logo (#27)
 
 ## 0.9.3 (December 17, 2019)

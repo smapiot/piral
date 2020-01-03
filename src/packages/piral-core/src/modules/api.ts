@@ -41,12 +41,6 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         renderInDom(context, element, ExtensionSlot, props);
       },
       Extension: ExtensionSlot,
-      fromLazy(load) {
-        return {
-          type: 'lazy',
-          load,
-        };
-      },
     };
   };
 }

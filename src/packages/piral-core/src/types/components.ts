@@ -6,7 +6,6 @@ import { LayoutType } from './layout';
 
 export interface ComponentConverters<TProps> extends PiralCustomComponentConverters<TProps> {
   html(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
-  lazy(component: LazyComponent<TProps>): ForeignComponent<TProps>;
 }
 
 export interface HtmlComponent<TProps> {
@@ -18,22 +17,6 @@ export interface HtmlComponent<TProps> {
    * The type of the HTML component.
    */
   type: 'html';
-}
-
-export interface LazyComponentLoader<TProps> {
-  (): Promise<FirstParametersOf<ComponentConverters<TProps>>>;
-  current?: Promise<ForeignComponent<TProps>>;
-}
-
-export interface LazyComponent<TProps> {
-  /**
-   * Triggers the async loading process of the component.
-   */
-  load: LazyComponentLoader<TProps>;
-  /**
-   * The type of the lazy component.
-   */
-  type: 'lazy';
 }
 
 export interface ComponentContext {
