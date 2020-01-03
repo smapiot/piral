@@ -8,6 +8,12 @@ export function reorderInjectors(injectorName: string, injectorConfig: any, inje
     script: injectors.script || {
       active: true,
     },
+    har: injectors.har || {
+      active: true,
+    },
+    json: injectors.json || {
+      active: true,
+    },
     [injectorName]: injectorConfig,
     ...injectors,
   };

@@ -18,6 +18,7 @@
 * Allow async `setup` in pilets
 * Support for `teardown` function in pilets
 * Allow async pilet module evaluation
+* Fixed kras injector precedence (#122)
 * Integrated `state` and `router` in foreign context
 * Support lazy loading of dependencies in converters
 * Switched to the new Piral logo (#27)
