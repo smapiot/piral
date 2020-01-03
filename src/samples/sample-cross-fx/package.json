@@ -52,6 +52,7 @@
     "piral-core": "^0.9.3",
     "piral-hyperapp": "^0.9.3",
     "piral-inferno": "^0.9.3",
+    "piral-lazy": "^0.9.3",
     "piral-ng": "^0.9.3",
     "piral-ngjs": "^0.9.3",
     "piral-preact": "^0.9.3",

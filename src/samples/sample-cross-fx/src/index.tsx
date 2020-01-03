@@ -14,6 +14,7 @@ import { createNgjsApi } from 'piral-ngjs';
 import { createHyperappApi } from 'piral-hyperapp';
 import { createInfernoApi } from 'piral-inferno';
 import { createPreactApi } from 'piral-preact';
+import { createLazyApi } from 'piral-lazy';
 import { createLitElApi } from 'piral-litel';
 import { createMithrilApi } from 'piral-mithril';
 import { createAureliaApi } from 'piral-aurelia';
@@ -67,6 +68,7 @@ const Layout: React.FC = ({ children }) => (
 const instance = createInstance({
   availablePilets,
   extendApi: [
+    createLazyApi(),
     createVueApi(),
     createNgApi(),
     createNgjsApi(),
