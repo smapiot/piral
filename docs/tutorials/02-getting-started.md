@@ -33,7 +33,7 @@ npm i piral-cli -g
 piral --version
 ```
 
-For executing this tutorial, the `piral-cli` in version 0.6.3 is required. To get help for the available commands, run `piral --help`.
+For executing this tutorial, the `piral-cli` in version 0.9.0 or later is required. To get help for the available commands, run `piral --help`.
 
 ## Create an Application Shell (Piral Instance)
 
@@ -77,10 +77,12 @@ To use the newly created Piral instance as application shell (or simply "app she
 
 ```sh
 # Create an NPM package for the app shell
-npm pack
+piral build
 ```
 
-The result will be a tar ball containing the application shell, in our case `my-app-1.0.0.tgz`. Usually the application shell will be published to a (private) NPM feed, so that all development teams will be able reference and use the same Piral instance for developing their pilets.
+This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `develop` and `release`. The latter contains the files for publishing the app shell to some host later on, the former contains a development package.
+
+The development package is a tarball containing the application shell, in our case it will be named `my-app-1.0.0.tgz`. Usually the tarball will be published to a (private) NPM feed, so that all development teams will be able reference and use the same Piral instance for developing their pilets.
 
 For local development (or this tutorial) we can refer to the Piral instance locally.
 
@@ -95,10 +97,12 @@ The Piral tooling also supports scaffolding a pilet to get started. Ensure that 
 ```sh
 # Scaffold a new pilet with the name 'my-pilet' for the app shell 'my-app'
 # For the path to the tgz we assume the following path, make sure to adapt it to your directory structure
-pilet new ./my-app/my-app-1.0.0.tgz --target my-pilet
+pilet new ./my-app/dist/develop/my-app-1.0.0.tgz --target my-pilet
 ```
 
-With the `pilet new` command, a new pilet with pre-defined content is created. The first parameter `./my-app/my-app-1.0.0.tgz` specifies the application shell, which the pilet will be built for. Make sure that you adjust the path to the Piral instance located in your local directory structure. If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
+With the `pilet new` command, a new pilet with pre-defined content is created. The first parameter `./my-app/dist/develop/my-app-1.0.0.tgz` specifies the application shell, which the pilet will be built for. Make sure that you adjust the path to the Piral instance located in your local directory structure.
+
+If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 
 ### The Setup Method for a Pilet
 
