@@ -144,7 +144,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const targetDir = dirname(entryFiles);
-  const { name, version, root, dependencies, ...pilets } = await retrievePiletsInfo(entryFiles);
+  const { name, version, root, dependencies, ignored, ...pilets } = await retrievePiletsInfo(entryFiles);
   const { externals } = pilets;
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
@@ -158,7 +158,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root);
+    await patchModules(root, ignored);
   }
 
   modifyBundlerForPiral(Bundler.prototype, targetDir);

@@ -283,6 +283,7 @@ export async function retrievePiletsInfo(entryFile: string) {
       dev: packageInfo.devDependencies || {},
       peer: packageInfo.peerDependencies || {},
     },
+    ignored: packageInfo.preservedDependencies,
     root: dirname(packageJson),
   };
 }
@@ -386,6 +387,7 @@ export async function retrievePiletData(target: string, app?: string) {
     dependencies: packageContent.dependencies || {},
     devDependencies: packageContent.devDependencies || {},
     peerDependencies: packageContent.peerDependencies || {},
+    ignored: packageContent.preservedDependencies,
     appFile,
     appPackage,
     root,

@@ -15,7 +15,7 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
   const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
   const rules = await getPiralRules();
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { root, dependencies, ...info } = await retrievePiletsInfo(entryFiles);
+  const { root, dependencies, ignored: _, ...info } = await retrievePiletsInfo(entryFiles);
   await checkCliCompatibility(root);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];

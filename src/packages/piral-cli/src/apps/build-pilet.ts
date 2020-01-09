@@ -62,7 +62,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
-  const { peerDependencies, root, appPackage } = await retrievePiletData(targetDir, app);
+  const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
 
   await setStandardEnvs({
@@ -83,7 +83,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root);
+    await patchModules(root, ignored);
   }
 
   modifyBundlerForPilet(Bundler.prototype, externals, targetDir);

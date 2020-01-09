@@ -95,6 +95,9 @@ export function postTransform(mainBundle: ParcelBundle, rootDir: string) {
   );
 }
 
+// See https://github.com/smapiot/piral/issues/121#issuecomment-572055594
+const defaultIgnoredPackages = ['core-js'];
+
 /**
  * The motivation for this method came from:
  * https://github.com/parcel-bundler/parcel/issues/1655#issuecomment-568175592
@@ -102,35 +105,39 @@ export function postTransform(mainBundle: ParcelBundle, rootDir: string) {
  * Treat all modules as non-optimized for the current output target.
  * This makes sense in general as only the application should determine the target.
  */
-async function patch(staticPath: string) {
+async function patch(staticPath: string, ignoredPackages: Array<string>) {
   const folderNames = await getFileNames(staticPath);
-  return Promise.all(folderNames.map(async folderName => {
-    const rootName = resolve(staticPath, folderName);
-    const isDirectory = await checkIsDirectory(rootName);
+  return Promise.all(
+    folderNames.map(async folderName => {
+      if (!ignoredPackages.includes(folderName)) {
+        const rootName = resolve(staticPath, folderName);
+        const isDirectory = await checkIsDirectory(rootName);
 
-    if (isDirectory) {
-      try {
-        const packageFileData = await readJson(rootName, 'package.json');
+        if (isDirectory) {
+          try {
+            const packageFileData = await readJson(rootName, 'package.json');
 
-        if (packageFileData._piralOptimized === undefined) {
-          delete packageFileData['browserslist'];
-          packageFileData._piralOptimized = true;
+            if (packageFileData._piralOptimized === undefined) {
+              delete packageFileData['browserslist'];
+              packageFileData._piralOptimized = true;
 
-          await writeJson(rootName, 'package.json', packageFileData);
-          await writeText(rootName, '.browserslistrc', 'node 10.11');
+              await writeJson(rootName, 'package.json', packageFileData);
+              await writeText(rootName, '.browserslistrc', 'node 10.11');
+            }
+
+            await patchModules(rootName, ignoredPackages);
+          } catch (e) {}
         }
-
-        await patchModules(rootName);
-      } catch (e) {}
-    }
-  }));
+      }
+    }),
+  );
 }
 
-export async function patchModules(rootDir: string) {
+export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
   const modulesDir = resolve(rootDir, 'node_modules');
   const exists = await checkExists(modulesDir);
 
   if (exists) {
-    await patch(modulesDir);
+    await patch(modulesDir, ignoredPackages);
   }
 }
