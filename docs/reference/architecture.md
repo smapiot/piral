@@ -14,15 +14,15 @@ To make creating instances of Piral that effective the architecture of Piral nee
 
 Piral does not start from zero. The stack that is used by Piral is React-based. Nevertheless, the API supports any kind of framework, as long as it can work with an arbitrary element to render into.
 
-Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to render on a website), **React Router** (for routing), **React Atom** (global state management using `React.Context`) and **React Arbiter** (recalling modules at runtime).
+Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to render on a website), **React Router** (for routing), **React Atom** (global state management using `React.Context`) and an React independent building block **Piral Base** (which allows loading modules at runtime).
 
 ![Building blocks of Piral](../diagrams/blocks.svg)
 
-As far as `piral` is concerned we take `piral-core` (main library without any backend or specialized API) and `piral-ext` (useful plugins for extending the pilet API) into account to become a single package. `piral` can be thought of as a framework, while the other building blocks are just ordinary libraries.
+As far as `piral` is concerned we take `piral-core` (main library without any backend or specialized API) and a set of standard plugins aggregated in `piral-ext` into account to become a single package. `piral` can be thought of as a framework, while the other building blocks are just ordinary libraries.
 
 To give any development another boost the Piral ecosystem also contains pre-made layouts and plugins. Any kind of layout plus any number of plugins may be used when creating your own Piral instance.
 
-An (technically speaking: inaccurate) analogy to illustrate what this means is that `piral-core` is like the Linux kernel. A certain distribution like Ubuntu would be `piral`. Additionally to the kernel there can be some special programs ("drivers"), which would be the Piral plugins. An application running in user space would then be a pilet.
+An (technically speaking: inaccurate) analogy to illustrate what this means is that `piral-core` is like the Linux kernel. A certain distribution like Ubuntu would be `piral`. Additionally to the kernel there can be some special programs ("drivers"), which would be the Piral plugins. An application running in user space would then be a pilet. In this analogy the role of `piral-base` would be a specific kernel driver, e.g., the TCP/IP driver.
 
 A pilet is just an NPM package containing a library. The library (JS file) is consumed by Piral, while the package is inspected and unpacked by a service (pilet feed service). The package contains some meta data, one or more JS files and potentially some other assets.
 
@@ -40,7 +40,9 @@ Note that while pilets can be loaded from cache as well, we usually require at l
 
 ## State Management
 
-Piral comes with integrated state management focused around a created Piral instance. The state management involves
+Piral comes with integrated state management focused around a created Piral instance.
+
+The state management involves:
 
 - book keeping of internally used components
 - coordination / book keeping of components coming from pilets
@@ -49,6 +51,8 @@ Piral comes with integrated state management focused around a created Piral inst
 - keeping track of connected data feeds
 - keeping track of input forms
 - managing the current user (data)
+
+You can extend and use the state management in your Piral instance.
 
 ## Pilet API
 
