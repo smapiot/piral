@@ -84,6 +84,8 @@ This will trigger the build of a Piral instance. By default, this command will c
 
 The development package is a tarball containing the application shell, in our case it will be named `my-app-1.0.0.tgz`. Usually the tarball will be published to a (private) NPM feed, so that all development teams will be able reference and use the same Piral instance for developing their pilets.
 
+![Folder structure of the application shell](../diagrams/my-app-structure.png)
+
 For local development (or this tutorial) we can refer to the Piral instance locally.
 
 ## Create Pilet using the Piral CLI
@@ -102,9 +104,11 @@ pilet new ./my-app/dist/develop/my-app-1.0.0.tgz --target my-pilet
 
 With the `pilet new` command, a new pilet with pre-defined content is created. The first parameter `./my-app/dist/develop/my-app-1.0.0.tgz` specifies the application shell, which the pilet will be built for. Make sure that you adjust the path to the Piral instance located in your local directory structure.
 
+![Folder structure of the pilet](../diagrams/my-pilet-structure.png)
+
 If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 
-### The Setup Method for a Pilet
+### Pilet Setup Function
 
 There is a single function, which controls the configuration of a pilet - it is the `setup` method in the file `./src/index.tsx`. The scaffolding process will add the setup function with some configurations:
 
