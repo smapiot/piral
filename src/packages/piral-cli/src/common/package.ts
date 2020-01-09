@@ -244,6 +244,18 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
   return rootDir;
 }
 
+function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
+  const items = obj[key];
+
+  if (Array.isArray(items)) {
+    return items;
+  } else if (items !== undefined) {
+    logWarn(`The value of "${key}" should be an array. Found "${typeof items}".`);
+  }
+
+  return undefined;
+}
+
 export async function findPackageVersion(rootPath: string, packageName: string) {
   try {
     const moduleName = require.resolve(packageName, {
@@ -283,7 +295,7 @@ export async function retrievePiletsInfo(entryFile: string) {
       dev: packageInfo.devDependencies || {},
       peer: packageInfo.peerDependencies || {},
     },
-    ignored: packageInfo.preservedDependencies,
+    ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root: dirname(packageJson),
   };
 }
@@ -387,7 +399,7 @@ export async function retrievePiletData(target: string, app?: string) {
     dependencies: packageContent.dependencies || {},
     devDependencies: packageContent.devDependencies || {},
     peerDependencies: packageContent.peerDependencies || {},
-    ignored: packageContent.preservedDependencies,
+    ignored: checkArrayOrUndefined(packageContent, 'preservedDependencies'),
     appFile,
     appPackage,
     root,
