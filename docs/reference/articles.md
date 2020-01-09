@@ -10,6 +10,7 @@
 - [InfoQ (Chinese), 01/2020](https://www.infoq.cn/article/YH5mO2bVjmwLNYmXJeEP)
 - [Bits and Pieces, 11/2019](https://blog.bitsrc.io/building-react-microfrontends-using-piral-c26eb206310e)
 - [dev.to, 11/2019](https://dev.to/florianrappl/microfrontends-based-on-react-4oo9)
+- [Morioh, 10/2019](https://morioh.com/p/33aa986d8d3e)
 - [Logrocket, 02/2019](https://blog.logrocket.com/taming-the-front-end-monolith-dbaede402c39/)
 
 ## What's new in Piral

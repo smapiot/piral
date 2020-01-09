@@ -97,3 +97,4 @@ There are further reads on the topic of microfrontends.
 - [Exploring micro-frontends](https://medium.com/@benjamin.d.johnson/exploring-micro-frontends-87a120b3f71c)
 - [Micro Frontends - extending the microservice idea to frontend development](https://micro-frontends.org)
 - [6 micro-front-end types in direct comparison: These are the pros and cons (translated)](https://bit.ly/2K1zbu2)
+- [Micro-frontends decisions framework](https://lucamezzalira.com/2019/12/22/micro-frontends-decisions-framework/)
