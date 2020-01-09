@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { FooterMenu } from './FooterMenu';
 
+const year = new Date().getFullYear();
+
 export const Footer: React.FC = () => (
   <footer>
     <div className="container footer">
@@ -82,7 +84,7 @@ export const Footer: React.FC = () => (
         </div>
       </div>
       <p className="copy-rights h3">
-        Copyright &copy; 2019 smapiot GmbH.
+        Copyright &copy; {year} smapiot GmbH.
         <br />
         Made with <i className="fa fa-heart" aria-hidden="true" /> in Munich.
       </p>
