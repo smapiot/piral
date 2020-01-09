@@ -14,7 +14,17 @@ Piral is a **framework**. As such it comes with everything *included*, e.g., Rea
 
 With `piral-core` you get a **library** that sits on top of other libraries. While some - very specialized - libraries are standard dependencies (i.e., installed for you), more generic ones such as React are peer dependencies. You need to install them. The advantage is that you are in charge what versions of these libraries to use (as long as they are compatible).
 
+All plugins (e.g., `piral-vue`) work with `piral-core`.
+
 Bottom line: The technical differences aside `piral` comes with key dependencies integrated.
+
+---------------------------------------
+
+## What is Piral Base?
+
+While `piral` is build on top of `piral-core`, `piral-core` is itself build on top of `piral-base`. `piral-base` is framework agnostic and only brings all the logic, algorithms, and patterns to deal with pilets. As such you could also "build your on Piral" by using `piral-base`.
+
+`piral-base` may be the right thing if you like the architecture of Piral, but don't want to use React or our application design. This still allows you to use the same format for pilets, the Piral CLI, and the feed service. Plugins will not work.
 
 ---------------------------------------
 
@@ -78,7 +88,7 @@ In both cases the layout is externalized in form of a package.
 For the first method your layout is then embedded such as:
 
 ```jsx
-import { LoadingIndicator, DashboardContainer, DashboardTile, Layout } from 'my-layout-packge';
+import { LoadingIndicator, DashboardContainer, DashboardTile, Layout } from 'my-layout-package';
 import { Menu, Notifications, Modals } from 'piral';
 
 const layout = {
@@ -96,7 +106,7 @@ const layout = {
 For the second method your definition can already come fully established:
 
 ```jsx
-import { layout } from 'my-layout-packge';
+import { layout } from 'my-layout-package';
 ```
 
 Each version has its own pros and cons.
