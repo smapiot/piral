@@ -153,17 +153,17 @@ Tries to reduce bundle size by introducing tree shaking.
 - Type: `boolean`
 - Default: `true`
 
-### `--post-transform`
+### `--optimize-modules`
 
-Post-transforms the bundle using enhanced ES transpilation and minification.
+Also includes the node modules for target transpilation.
 
 - Type: `boolean`
 - Default: `true`
 
-### `--no-post-transform`
+### `--no-optimize-modules`
 
 Opposite of:
-Post-transforms the bundle using enhanced ES transpilation and minification.
+Also includes the node modules for target transpilation.
 
 - Type: `boolean`
 - Default: `false`
