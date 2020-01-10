@@ -18,6 +18,7 @@
 * Changed `--only-core` to `framework` (supporting `piral-base`)
 * Allow async `setup` in pilets
 * Support for `teardown` function in pilets
+* Added `dispatch` and `readState` actions
 * Allow async pilet module evaluation
 * Fixed kras injector precedence (#122)
 * Integrated `state` and `router` in foreign context
