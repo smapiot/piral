@@ -1,5 +1,7 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { registerExtension, registerPage, unregisterExtension, unregisterPage } from './components';
+import { createActions } from '../state';
+import { createListener } from '../utils';
 
 describe('Components Actions Module', () => {
   it('registerExtension and unregisterExtension', () => {
@@ -10,7 +12,8 @@ describe('Components Actions Module', () => {
         extensions: {},
       },
     });
-    registerExtension(state, 'foo', 10);
+    const ctx = createActions(state, createListener({}));
+    registerExtension(ctx, 'foo', 10 as any);
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {
@@ -20,7 +23,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterExtension(state, 'foo');
+    unregisterExtension(ctx, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {
@@ -40,7 +43,8 @@ describe('Components Actions Module', () => {
         pages: {},
       },
     });
-    registerPage(state, 'foo', 10);
+    const ctx = createActions(state, createListener({}));
+    registerPage(ctx, 'foo', 10 as any);
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {
@@ -50,7 +54,7 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterPage(state, 'foo');
+    unregisterPage(ctx, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {

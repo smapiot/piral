@@ -1,5 +1,4 @@
 import * as actions from './actions';
-import { swap } from '@dbeining/react-atom';
 import { ComponentType, isValidElement, ReactElement } from 'react';
 import { Extend, GlobalStateContext, withApi, defaultRender } from 'piral-core';
 import { DefaultHost, DefaultToast } from './default';
@@ -103,7 +102,7 @@ export function createNotificationsApi(config: NotificationsConfig = {}): Extend
   return context => {
     context.defineActions(actions);
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       components: {
         ...state.components,

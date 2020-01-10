@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { registerTile, unregisterTile } from './actions';
+import { createActions, createListener } from 'piral-core';
 
 describe('Dashboard Actions Module', () => {
   it('registerTile and unregisterTile', () => {
@@ -10,7 +11,8 @@ describe('Dashboard Actions Module', () => {
         tiles: {},
       },
     });
-    registerTile(state, 'foo', 10);
+    const ctx = createActions(state, createListener({}));
+    registerTile(ctx, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {
@@ -20,7 +22,7 @@ describe('Dashboard Actions Module', () => {
         },
       },
     });
-    unregisterTile(state, 'foo');
+    unregisterTile(ctx, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {

@@ -1,6 +1,5 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { swap } from '@dbeining/react-atom';
 import { withApi, buildName, Extend, Dict } from 'piral-core';
 import { DefaultContainer, DefaultItem } from './default';
 import { PiletMenuApi, MenuSettings, MenuItemRegistration } from './types';
@@ -64,7 +63,7 @@ export function createMenuApi(config: MenuConfig = {}): Extend<PiletMenuApi> {
   return context => {
     context.defineActions(actions);
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       components: {
         ...state.components,

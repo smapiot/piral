@@ -1,9 +1,8 @@
-import { Atom, swap } from '@dbeining/react-atom';
-import { GlobalState, withKey, withoutKey } from 'piral-core';
+import { withKey, withoutKey, GlobalStateContext } from 'piral-core';
 import { MenuItemRegistration } from './types';
 
-export function registerMenuItem(ctx: Atom<GlobalState>, name: string, value: MenuItemRegistration) {
-  swap(ctx, state => ({
+export function registerMenuItem(ctx: GlobalStateContext, name: string, value: MenuItemRegistration) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,
@@ -12,8 +11,8 @@ export function registerMenuItem(ctx: Atom<GlobalState>, name: string, value: Me
   }));
 }
 
-export function unregisterMenuItem(ctx: Atom<GlobalState>, name: string) {
-  swap(ctx, state => ({
+export function unregisterMenuItem(ctx: GlobalStateContext, name: string) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,

@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { openNotification, closeNotification } from './actions';
+import { createActions, createListener } from 'piral-core';
 
 describe('Notifications Actions Module', () => {
   it('openNotification prepends a new notification', () => {
@@ -7,7 +8,8 @@ describe('Notifications Actions Module', () => {
       foo: 5,
       notifications: ['b'],
     });
-    openNotification(state, 'a');
+    const ctx = createActions(state, createListener({}));
+    openNotification(ctx, 'a');
     expect(deref(state)).toEqual({
       foo: 5,
       notifications: ['a', 'b'],
@@ -19,7 +21,8 @@ describe('Notifications Actions Module', () => {
       foo: 5,
       notifications: ['a', 'b', 'c'],
     });
-    closeNotification(state, 'b');
+    const ctx = createActions(state, createListener({}));
+    closeNotification(ctx, 'b');
     expect(deref(state)).toEqual({
       foo: 5,
       notifications: ['a', 'c'],

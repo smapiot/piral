@@ -1,5 +1,4 @@
 import * as actions from './actions';
-import { swap } from '@dbeining/react-atom';
 import { buildName, Extend } from 'piral-core';
 import { withFeed } from './withFeed';
 import { createFeedOptions } from './utils';
@@ -17,7 +16,7 @@ export function createFeedsApi(config: FeedsConfig = {}): Extend<PiletFeedsApi> 
   return context => {
     context.defineActions(actions);
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       feeds: {},
     }));

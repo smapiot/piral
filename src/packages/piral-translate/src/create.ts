@@ -1,4 +1,3 @@
-import { swap } from '@dbeining/react-atom';
 import { Extend } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
@@ -54,7 +53,7 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Exte
   return context => {
     context.defineActions(createActions(localizer));
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       components: {
         ...state.components,

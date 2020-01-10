@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { createActions } from './actions';
+import { createActions as ca, createListener } from 'piral-core';
 
 describe('Translation Action Module', () => {
   it('selectLanguage changes the current language', () => {
@@ -23,7 +24,8 @@ describe('Translation Action Module', () => {
       },
     };
     const actions = createActions(localizer);
-    actions.selectLanguage(state, 'de');
+    const ctx = ca(state, createListener({}));
+    actions.selectLanguage(ctx, 'de');
     expect(deref(state)).toEqual({
       foo: 5,
       language: {

@@ -1,10 +1,9 @@
-import { swap, Atom, deref } from '@dbeining/react-atom';
 import { ReactChild } from 'react';
-import { GlobalState, Disposable, appendItems, prependItems, withKey, withoutKey } from 'piral-core';
+import { Disposable, appendItems, prependItems, withKey, withoutKey, GlobalStateContext } from 'piral-core';
 import { SearchOptions, SearchProviderRegistration } from './types';
 
-export function setSearchInput(ctx: Atom<GlobalState>, input: string) {
-  swap(ctx, state => ({
+export function setSearchInput(ctx: GlobalStateContext, input: string) {
+  ctx.dispatch(state => ({
     ...state,
     search: {
       ...state.search,
@@ -13,10 +12,9 @@ export function setSearchInput(ctx: Atom<GlobalState>, input: string) {
   }));
 }
 
-export function triggerSearch(ctx: Atom<GlobalState>, query?: string, immediate = false): Disposable {
-  const state = deref(ctx);
-  const providers = state.registry.searchProviders;
-  const { input, results } = state.search;
+export function triggerSearch(ctx: GlobalStateContext, query?: string, immediate = false): Disposable {
+  const providers = ctx.readState(state => state.registry.searchProviders);
+  const { input, results } = ctx.readState(state => state.search);
   const { loading } = results;
 
   if (query === undefined) {
@@ -63,8 +61,8 @@ export function triggerSearch(ctx: Atom<GlobalState>, query?: string, immediate 
   return () => {};
 }
 
-export function resetSearchResults(ctx: Atom<GlobalState>, input: string, loading: boolean) {
-  swap(ctx, state => ({
+export function resetSearchResults(ctx: GlobalStateContext, input: string, loading: boolean) {
+  ctx.dispatch(state => ({
     ...state,
     search: {
       input,
@@ -76,8 +74,8 @@ export function resetSearchResults(ctx: Atom<GlobalState>, input: string, loadin
   }));
 }
 
-export function appendSearchResults(ctx: Atom<GlobalState>, items: Array<ReactChild>, done: boolean) {
-  swap(ctx, state => ({
+export function appendSearchResults(ctx: GlobalStateContext, items: Array<ReactChild>, done: boolean) {
+  ctx.dispatch(state => ({
     ...state,
     search: {
       ...state.search,
@@ -89,8 +87,8 @@ export function appendSearchResults(ctx: Atom<GlobalState>, items: Array<ReactCh
   }));
 }
 
-export function prependSearchResults(ctx: Atom<GlobalState>, items: Array<ReactChild>, done: boolean) {
-  swap(ctx, state => ({
+export function prependSearchResults(ctx: GlobalStateContext, items: Array<ReactChild>, done: boolean) {
+  ctx.dispatch(state => ({
     ...state,
     search: {
       ...state.search,
@@ -102,8 +100,8 @@ export function prependSearchResults(ctx: Atom<GlobalState>, items: Array<ReactC
   }));
 }
 
-export function registerSearchProvider(ctx: Atom<GlobalState>, name: string, value: SearchProviderRegistration) {
-  swap(ctx, state => ({
+export function registerSearchProvider(ctx: GlobalStateContext, name: string, value: SearchProviderRegistration) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,
@@ -112,8 +110,8 @@ export function registerSearchProvider(ctx: Atom<GlobalState>, name: string, val
   }));
 }
 
-export function unregisterSearchProvider(ctx: Atom<GlobalState>, name: string) {
-  swap(ctx, state => ({
+export function unregisterSearchProvider(ctx: GlobalStateContext, name: string) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,

@@ -1,22 +1,21 @@
-import { swap, Atom } from '@dbeining/react-atom';
-import { GlobalState, StateDispatcher, withKey, withoutKey } from 'piral-core';
+import { StateDispatcher, withKey, withoutKey, GlobalStateContext } from 'piral-core';
 
-export function createState<TState>(ctx: Atom<GlobalState>, id: string, data: TState) {
-  swap(ctx, state => ({
+export function createState<TState>(ctx: GlobalStateContext, id: string, data: TState) {
+  ctx.dispatch(state => ({
     ...state,
     containers: withKey(state.containers, id, data),
   }));
 }
 
-export function destroyState(ctx: Atom<GlobalState>, id: string) {
-  swap(ctx, state => ({
+export function destroyState(ctx: GlobalStateContext, id: string) {
+  ctx.dispatch(state => ({
     ...state,
     containers: withoutKey(state.containers, id),
   }));
 }
 
-export function replaceState<TState>(ctx: Atom<GlobalState>, id: string, dispatch: StateDispatcher<TState>) {
-  swap(ctx, state => {
+export function replaceState<TState>(ctx: GlobalStateContext, id: string, dispatch: StateDispatcher<TState>) {
+  ctx.dispatch(state => {
     const oldState = state.containers[id];
     const newState = dispatch(oldState);
     return {

@@ -1,6 +1,5 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { swap } from '@dbeining/react-atom';
 import { withApi, buildName, Extend, Dict } from 'piral-core';
 import { DefaultHost, DefaultDialog } from './default';
 import { PiletModalsApi, ModalRegistration, BareModalComponentProps } from './types';
@@ -54,7 +53,7 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
   return context => {
     context.defineActions(actions);
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       components: {
         ...state.components,

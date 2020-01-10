@@ -3,7 +3,7 @@ import { createListener } from '../utils';
 
 jest.mock('../actions', () => ({
   a(arg) {
-    return arg;
+    return arg.state;
   },
   b() {
     return 'foo';
@@ -36,8 +36,12 @@ describe('Create Actions Module', () => {
     const events = createListener(undefined);
     const actions = createActions('abc' as any, events);
     includeActions(actions, {
-      c(arg) { return arg; },
-      d() { return 'bar'; },
+      c(arg) {
+        return arg.state;
+      },
+      d() {
+        return 'bar';
+      },
     } as any);
     expect((actions as any).a()).toEqual('abc');
     expect((actions as any).b()).toEqual('foo');
