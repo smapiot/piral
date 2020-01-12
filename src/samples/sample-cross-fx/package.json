@@ -26,6 +26,38 @@
   "browserslist": [
     "last 1 chrome versions"
   ],
+  "pilets": {
+    "externals": [
+      "@angular/common",
+      "@angular/compiler",
+      "@angular/core",
+      "@angular/platform-browser",
+      "@angular/platform-browser-dynamic",
+      "@webcomponents/webcomponentsjs",
+      "angular",
+      "aurelia-framework",
+      "aurelia-templating-binding",
+      "aurelia-templating-resources",
+      "aurelia-pal-browser",
+      "aurelia-event-aggregator",
+      "aurelia-history-browser",
+      "core-js",
+      "hyperapp",
+      "inferno",
+      "inferno-create-element",
+      "mithril",
+      "lit-element",
+      "preact",
+      "riot",
+      "rxjs",
+      "vue",
+      "zone.js"
+    ],
+    "files": [],
+    "scripts": {
+      "upgrade-pilet": "pilet upgrade --force-overwrite yes"
+    }
+  },
   "dependencies": {
     "@angular/common": "^8.0.0",
     "@angular/compiler": "^8.0.0",
