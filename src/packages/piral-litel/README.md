@@ -39,6 +39,22 @@ const instance = createInstance({
 });
 ```
 
+## Preparing Pilets
+
+Unfortunately, LitElement is quite sensitive regarding how its transpiled. Right now the only way to be sure that classes are indeed transpiled as they should (from perspective of LitElement) is to place the following snippet in the *package.json* of each pilet using `piral-litel`:
+
+```json
+{
+  // ...
+  "browserslist": [
+    "last 1 chrome versions"
+  ],
+  // ...
+}
+```
+
+This will make sure that ES6 classes are used, which is required for web components to work properly.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
