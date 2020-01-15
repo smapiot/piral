@@ -1,5 +1,5 @@
 import { Extend } from 'piral-core';
-import { Component, ElementRef, Input, NgModuleRef, Inject } from '@angular/core';
+import { Component, ElementRef, Input, NgModuleRef, Inject, enableProdMode } from '@angular/core';
 import { enqueue } from './queue';
 import { bootstrap } from './bootstrap';
 import { PiletNgApi } from './types';
@@ -49,6 +49,10 @@ export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
         params: this.params,
       });
     }
+  }
+
+  if (process.env.DEBUG_PILET !== undefined) {
+    enableProdMode();
   }
 
   return context => {
