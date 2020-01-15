@@ -54,9 +54,9 @@ function isBaseLib(path: string) {
   return false;
 }
 
-function getTypeParameters(checker: TypeChecker, type: Type, refs: TypeRefs) {
+function getTypeParameters(checker: TypeChecker, type: Type, refs: TypeRefs, imports: Array<string>) {
   const typeRef = type as TypeReference;
-  return typeRef.typeArguments?.map(t => includeType(checker, t, refs)) ?? [];
+  return typeRef.typeArguments?.map(t => includeType(checker, t, refs, imports)) ?? [];
 }
 
 function getComment(checker: TypeChecker, symbol: Symbol) {
@@ -69,16 +69,26 @@ function getComment(checker: TypeChecker, symbol: Symbol) {
   return undefined;
 }
 
-export function includeType(checker: TypeChecker, type: Type, refs: TypeRefs): TypeModel {
+export function includeType(checker: TypeChecker, type: Type, refs: TypeRefs, imports: Array<string>): TypeModel {
   const name = type.symbol?.name;
   const fn = type.symbol?.declarations?.[0]?.parent?.getSourceFile()?.fileName;
 
   if (name) {
+    const parent = type.symbol.parent?.valueDeclaration?.parent;
+    const fileName = parent?.getSourceFile()?.fileName;
+
     if (isBaseLib(fn)) {
       return {
         kind: 'ref',
-        types: getTypeParameters(checker, type, refs),
+        types: getTypeParameters(checker, type, refs, imports),
         refName: name,
+      };
+    } else if (fileName && imports.some(fn => fileName.startsWith(fn))) {
+      const lib = 'React';
+      return {
+        kind: 'ref',
+        types: [], //getTypeParameters(checker, type, refs),
+        refName: `${lib}.${name}`,
       };
     } else if (isTypeParameter(type)) {
       return {
@@ -87,7 +97,8 @@ export function includeType(checker: TypeChecker, type: Type, refs: TypeRefs): T
         refName: name,
       };
     } else if (!isAnonymousObject(type)) {
-      const n = name === '__type' ? `Anonymous_${type.id}` : name;
+      const id = (<any>type).id;
+      const n = name === '__type' ? `Anonymous_${id}` : name;
 
       if (!(n in refs)) {
         refs[n] = {
@@ -97,31 +108,32 @@ export function includeType(checker: TypeChecker, type: Type, refs: TypeRefs): T
         };
 
         if (isObjectType(type) && isReferenceType(type)) {
-          refs[n] = typeVisitor(checker, type.target, refs);
+          refs[n] = typeVisitor(checker, type.target, refs, imports);
         } else {
-          refs[n] = typeVisitor(checker, type, refs);
+          refs[n] = typeVisitor(checker, type, refs, imports);
         }
       }
 
       return {
         kind: 'ref',
-        types: getTypeParameters(checker, type, refs),
+        types: getTypeParameters(checker, type, refs, imports),
         refName: n,
       };
     }
   }
 
-  return typeVisitor(checker, type, refs);
+  return typeVisitor(checker, type, refs, imports);
 }
 
-export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): TypeModel {
+export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs, imports: Array<string>): TypeModel {
   // We're not handling things SomethingLike cause there're unions of flags
-  // and would be handled anyway into more specific types:
-  // - VoidLike is Undefined or Void
-  // - StringLike is String or StringLiteral
-  // - NumberLike is Number or NumberLiteral or Enum
-  // - BigIntLike is BigInt or BigIntLiteral
-  // - ESSymbolLike is ESSymbol or ESUniqueSymbol
+  // and would be handled anyway into more specific types
+  // VoidLike is Undefined or Void,
+  // StringLike is String or StringLiteral
+  // NumberLike is Number or NumberLiteral or Enum
+  // BigIntLike is BigInt or BigIntLiteral
+  // ESSymbolLike is ESSymbol or ESUniqueSymbol
+  // Don't take those ^ definitions too seriously, they're subject to change
 
   if (type.flags & TypeFlags.Any) {
     return {
@@ -160,7 +172,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
   if (type.flags & TypeFlags.EnumLiteral && type.isUnion()) {
     return {
       kind: 'enumLiteral',
-      values: type.types.map(t => includeType(checker, t, refs)),
+      values: type.types.map(t => includeType(checker, t, refs, imports)),
     };
   }
 
@@ -192,7 +204,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
   if (type.flags & TypeFlags.Enum && type.isUnion()) {
     return {
       kind: 'enum',
-      values: type.types.map(t => includeType(checker, t, refs)),
+      values: type.types.map(t => includeType(checker, t, refs, imports)),
     };
   }
 
@@ -243,7 +255,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
     return {
       kind: 'typeParameter',
       typeName: type.getSymbol().name,
-      constraint: constraint && includeType(checker, constraint, refs),
+      constraint: constraint && includeType(checker, constraint, refs, imports),
     };
   }
 
@@ -257,7 +269,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
   ) {
     return {
       kind: 'tuple',
-      types: type.typeArguments.map(t => includeType(checker, t, refs)),
+      types: type.typeArguments.map(t => includeType(checker, t, refs, imports)),
     };
   }
 
@@ -271,7 +283,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
         name: prop.name,
         optional: !!(prop.flags & SymbolFlags.Optional),
         comment: getComment(checker, prop),
-        valueType: includeType(checker, propType, refs),
+        valueType: includeType(checker, propType, refs, imports),
       };
     });
 
@@ -285,7 +297,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
         kind: 'index',
         keyType: { kind: 'number' },
         keyName: getKeyName((<InterfaceTypeWithDeclaredMembers>type).declaredNumberIndexInfo),
-        valueType: includeType(checker, numberIndexType, refs),
+        valueType: includeType(checker, numberIndexType, refs, imports),
       });
     }
 
@@ -294,7 +306,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
         kind: 'index',
         keyType: { kind: 'string' },
         keyName: getKeyName((<InterfaceTypeWithDeclaredMembers>type).declaredStringIndexInfo),
-        valueType: includeType(checker, stringIndexType, refs),
+        valueType: includeType(checker, stringIndexType, refs, imports),
       });
     }
 
@@ -302,16 +314,16 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
     const callsDescriptor: Array<TypeModelFunction> =
       callSignatures?.map(sign => ({
         kind: 'function',
-        types: sign.typeParameters?.map(t => typeVisitor(checker, t, refs)) ?? [],
+        types: sign.typeParameters?.map(t => typeVisitor(checker, t, refs, imports)) ?? [],
         parameters: sign.getParameters().map(param => {
           const type = checker.getTypeAtLocation(param.valueDeclaration);
           return {
             kind: 'parameter',
             param: param.name,
-            type: includeType(checker, type, refs),
+            type: includeType(checker, type, refs, imports),
           };
         }),
-        returnType: includeType(checker, sign.getReturnType(), refs),
+        returnType: includeType(checker, sign.getReturnType(), refs, imports),
       })) ?? [];
 
     return {
@@ -319,7 +331,7 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
       comment: getComment(checker, type.symbol),
       props: propsDescriptor,
       calls: callsDescriptor,
-      types: getTypeParameters(checker, type, refs),
+      types: getTypeParameters(checker, type, refs, imports),
       indices: indicesDescriptor,
     };
   }
@@ -327,22 +339,22 @@ export function typeVisitor(checker: TypeChecker, type: Type, refs: TypeRefs): T
   if (type.isUnion()) {
     return {
       kind: 'union',
-      types: type.types.map(t => includeType(checker, t, refs)),
+      types: type.types.map(t => includeType(checker, t, refs, imports)),
     };
   }
 
   if (type.isIntersection()) {
     return {
       kind: 'intersection',
-      types: type.types.map(t => includeType(checker, t, refs)),
+      types: type.types.map(t => includeType(checker, t, refs, imports)),
     };
   }
 
   if (isIndexType(type)) {
     return {
       kind: 'indexedAccess',
-      index: includeType(checker, type.indexType, refs),
-      object: includeType(checker, type.objectType, refs),
+      index: includeType(checker, type.indexType, refs, imports),
+      object: includeType(checker, type.objectType, refs, imports),
     };
   }
 

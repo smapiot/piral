@@ -1,5 +1,6 @@
 import * as Bundler from 'parcel-bundler';
 import { dirname, basename, extname, join, resolve } from 'path';
+import { generateDeclaration } from '../declaration';
 import {
   extendConfig,
   setStandardEnvs,
@@ -17,15 +18,15 @@ import {
   copyScaffoldingFiles,
   createDirectory,
   remove,
-  declarationFlattening,
   findPackageVersion,
   coreExternals,
-  combineApiDeclarations,
   cliVersion,
   logInfo,
   ParcelConfig,
   checkCliCompatibility,
   patchModules,
+  readText,
+  getEntryFiles,
 } from '../common';
 
 interface Destination {
@@ -86,9 +87,11 @@ async function bundleFiles(
   return outDir;
 }
 
-async function generateDeclaration(outDir: string, root: string, name: string, dependencies: Record<string, string>) {
-  const declaration = combineApiDeclarations(root, Object.keys(dependencies));
-  const result = await declarationFlattening(root, name, declaration);
+async function createDeclarationFile(outDir: string, root: string, app: string, dependencies: Record<string, string>) {
+  const allowedImports = Object.keys(dependencies);
+  const appFile = await readText(dirname(app), basename(app));
+  const entryFiles = await getEntryFiles(appFile, dirname(app));
+  const result = generateDeclaration(root, entryFiles, allowedImports);
   await createFileIfNotExists(outDir, 'index.d.ts', result);
 }
 
@@ -230,7 +233,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await copyScaffoldingFiles(root, rootDir, originalFiles);
     // actually including this one hints that the app shell should have been included - which is forbidden
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
-    await generateDeclaration(outDir, root, name, dependencies.std);
+    await createDeclarationFile(outDir, root, entryFiles, dependencies.std);
     await createPackage(rootDir);
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 

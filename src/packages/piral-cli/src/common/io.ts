@@ -94,6 +94,24 @@ export async function createDirectory(targetDir: string) {
   }
 }
 
+export async function getEntryFiles(content: string, basePath: string) {
+  const matcher = /<script\s.*?src=(?:"(.*?)"|'(.*?)'|([^\s>]*)).*?>/gi;
+  const results: Array<string> = [];
+  let result: RegExpExecArray = undefined;
+
+  while ((result = matcher.exec(content))) {
+    const src = result[1] || result[2] || result[3];
+    const filePath = resolve(basePath, src);
+    const exists = await checkExists(filePath);
+
+    if (exists) {
+      results.push(filePath);
+    }
+  }
+
+  return results;
+}
+
 export function checkExists(target: string) {
   return new Promise<boolean>(resolve => {
     exists(target, resolve);

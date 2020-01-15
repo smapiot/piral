@@ -1,7 +1,6 @@
 export * from './bundler';
 export * from './compatibility';
 export * from './config';
-export * from './decl';
 export * from './emoji';
 export * from './envs';
 export * from './framework';
