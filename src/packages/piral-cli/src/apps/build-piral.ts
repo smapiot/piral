@@ -155,13 +155,12 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   if (fresh) {
     await clearCache(root, cacheDir);
+    await removeDirectory(dest.outDir);
   }
-
-  await removeDirectory(dest.outDir);
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, ignored);
+    await patchModules(root, cacheDir, ignored);
   }
 
   modifyBundlerForPiral(Bundler.prototype, targetDir);

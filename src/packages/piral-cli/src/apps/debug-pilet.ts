@@ -15,6 +15,8 @@ import {
   findEntryModule,
   reorderInjectors,
   notifyServerOnline,
+  logInfo,
+  patchModules,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -28,6 +30,7 @@ export interface DebugPiletOptions {
   scopeHoist?: boolean;
   hmr?: boolean;
   autoInstall?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const debugPiletDefaults = {
@@ -40,6 +43,7 @@ export const debugPiletDefaults = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
+  optimizeModules: true,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -55,12 +59,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     autoInstall = debugPiletDefaults.autoInstall,
     logLevel = debugPiletDefaults.logLevel,
     fresh = debugPiletDefaults.fresh,
+    optimizeModules = debugPiletDefaults.optimizeModules,
     app,
   } = options;
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
-  const { peerDependencies, root, appPackage, appFile } = await retrievePiletData(targetDir, app);
+  const { peerDependencies, root, appPackage, appFile, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const krasConfig = readKrasConfig({ port }, krasrc);
 
@@ -86,6 +91,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   if (fresh) {
     await clearCache(root, cacheDir);
+  }
+
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root, cacheDir, ignored);
   }
 
   await setStandardEnvs({

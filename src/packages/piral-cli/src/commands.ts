@@ -74,6 +74,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('autoinstall')
         .describe('autoinstall', 'Automatically installs missing Node.js packages.')
         .default('autoinstall', apps.debugPiralDefaults.autoInstall)
+        .boolean('optimize-modules')
+        .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
+        .default('optimize-modules', apps.debugPiralDefaults.optimizeModules)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -85,6 +88,7 @@ const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         hmr: args.hmr as boolean,
         autoInstall: args.autoinstall as boolean,
+        optimizeModules: args.optimizeModules as boolean,
         scopeHoist: args.scopeHoist as boolean,
         publicUrl: args.publicUrl as string,
         logLevel: args.logLevel as any,
@@ -276,6 +280,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('autoinstall')
         .describe('autoinstall', 'Automatically installs missing Node.js packages.')
         .default('autoinstall', apps.debugPiletDefaults.autoInstall)
+        .boolean('optimize-modules')
+        .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
+        .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -290,6 +297,7 @@ const allCommands: Array<ToolCommand<any>> = [
         scopeHoist: args.scopeHoist as boolean,
         hmr: args.hmr as boolean,
         autoInstall: args.autoinstall as boolean,
+        optimizeModules: args.optimizeModules as boolean,
         app: args.app as string,
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,

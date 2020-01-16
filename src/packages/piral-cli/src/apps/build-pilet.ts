@@ -83,7 +83,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, ignored);
+    await patchModules(root, cacheDir, ignored);
   }
 
   modifyBundlerForPilet(Bundler.prototype, externals, targetDir);

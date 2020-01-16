@@ -14,6 +14,8 @@ import {
   checkCliCompatibility,
   reorderInjectors,
   notifyServerOnline,
+  logInfo,
+  patchModules,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -27,6 +29,7 @@ export interface DebugPiralOptions {
   scopeHoist?: boolean;
   hmr?: boolean;
   autoInstall?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const debugPiralDefaults = {
@@ -40,6 +43,7 @@ export const debugPiralDefaults = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
+  optimizeModules: true,
 };
 
 const injectorName = resolve(__dirname, '../injectors/piral.js');
@@ -56,9 +60,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     publicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     fresh = debugPiralDefaults.fresh,
+    optimizeModules = debugPiralDefaults.optimizeModules,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { externals, name, root } = await retrievePiletsInfo(entryFiles);
+  const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
 
   await checkCliCompatibility(root);
 
@@ -86,6 +91,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   if (fresh) {
     await clearCache(root, cacheDir);
+  }
+
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root, cacheDir, ignored);
   }
 
   await setStandardEnvs({

@@ -1,8 +1,18 @@
 import { ParcelBundle } from 'parcel-bundler';
 import { transformFileAsync } from '@babel/core';
 import { resolve, dirname, basename } from 'path';
-import { removeDirectory, checkExists, readJson, writeText, writeJson, checkIsDirectory, getFileNames } from './io';
 import { logInfo, logFail } from './log';
+import { computeHash } from './hash';
+import {
+  removeDirectory,
+  checkExists,
+  readJson,
+  writeText,
+  writeJson,
+  checkIsDirectory,
+  getFileNames,
+  readText,
+} from './io';
 
 const bundleWithCodegen = require('parcel-plugin-codegen');
 
@@ -125,7 +135,7 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
               await writeText(rootName, '.browserslistrc', 'node 10.11');
             }
 
-            await patchModules(rootName, ignoredPackages);
+            await patchFolder(rootName, ignoredPackages);
           } catch (e) {}
         }
       }
@@ -133,11 +143,24 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
   );
 }
 
-export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
+async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
   const modulesDir = resolve(rootDir, 'node_modules');
   const exists = await checkExists(modulesDir);
 
   if (exists) {
     await patch(modulesDir, ignoredPackages);
+  }
+}
+
+export async function patchModules(rootDir: string, cacheDir: string, ignoredPackages = defaultIgnoredPackages) {
+  const target = resolve(rootDir, cacheDir);
+  const file = '.patched';
+  const prevHash = await readText(target, file);
+  const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
+  const currHash = computeHash(lockContent);
+
+  if (prevHash !== currHash) {
+    await patchFolder(rootDir, ignoredPackages);
+    await writeText(target, file, currHash);
   }
 }
