@@ -133,3 +133,5 @@ This way is our recommendation for dynamic data and functions that require prote
 ## Conclusion
 
 Sharing information from the Piral instance can be done in multiple ways. Depending on the needs of the application and its pilets one way or another may be the best. Usually, an app shell uses all these ways to build an outstanding experience for both - users and developers.
+
+In the next tutorial an advanced concept of Piral will be explained: converters. Converters are the secret sauce to allow cross framework presentation of components.
