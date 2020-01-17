@@ -21,6 +21,7 @@
 * Added `dispatch` and `readState` actions
 * Allow async pilet module evaluation
 * Fixed kras injector precedence (#122)
+* Improved debugging experience for legacy browsers (#128)
 * Integrated `state` and `router` in foreign context
 * Switched to the new Piral logo (#27)
 

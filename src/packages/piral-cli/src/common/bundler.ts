@@ -9,9 +9,11 @@ import {
   readJson,
   writeText,
   writeJson,
+  createFileIfNotExists,
   checkIsDirectory,
   getFileNames,
   readText,
+  ForceOverwrite,
 } from './io';
 
 const bundleWithCodegen = require('parcel-plugin-codegen');
@@ -161,6 +163,6 @@ export async function patchModules(rootDir: string, cacheDir: string, ignoredPac
 
   if (prevHash !== currHash) {
     await patchFolder(rootDir, ignoredPackages);
-    await writeText(target, file, currHash);
+    await createFileIfNotExists(target, file, currHash, ForceOverwrite.yes);
   }
 }

@@ -5,6 +5,7 @@ import { TypeRefs } from './types';
 import { stringify } from './stringify';
 
 export function generateDeclaration(root: string, entryFiles: Array<string>, allowedImports: Array<string> = []) {
+  return '';
   const program = ts.createProgram(entryFiles, {});
   const checker = program.getTypeChecker();
   const refs: TypeRefs = {};
