@@ -10,6 +10,10 @@ if (process.env.SHARED_DEPENDENCIES) {
   }
 }
 
+/**
+ * The global dependencies, which represent the dependencies
+ * already used by piral-core itself.
+ */
 export const globalDependencies: AvailableDependencies = {
   react: require('react'),
   'react-dom': require('react-dom'),
@@ -22,6 +26,11 @@ export const globalDependencies: AvailableDependencies = {
   '@dbeining/react-atom': require('@dbeining/react-atom'),
 };
 
+/**
+ * Gets the local dependencies for the app shell, which
+ * are the global dependencies and the implicitly shared
+ * dependencies.
+ */
 export function getLocalDependencies(): AvailableDependencies {
   return {
     ...globalDependencies,
@@ -29,6 +38,17 @@ export function getLocalDependencies(): AvailableDependencies {
   };
 }
 
+/**
+ * The default pilet requester, which just returns an empty array.
+ * Use your own code to connect to the feed service.
+ *
+ * @example
+```js
+return fetch('https://feed.piral.io/api/v1/pilet/sample')
+  .then(res => res.json())
+  .then(res => res.items);
+```
+ */
 export function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
   return Promise.resolve([]);
 }

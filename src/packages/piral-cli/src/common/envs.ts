@@ -44,7 +44,7 @@ export async function setStandardEnvs(options: StandardEnvProps = {}) {
   }
 
   if (options.dependencies && options.dependencies.length) {
-    const excludedDependencies = ['piral', 'piral-core', options.piral];
+    const excludedDependencies = ['piral', 'piral-core', 'piral-base', options.piral];
     const dependencies = options.dependencies.filter(m => !excludedDependencies.includes(m));
     process.env.SHARED_DEPENDENCIES = dependencies.join(',');
   } else {

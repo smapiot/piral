@@ -101,7 +101,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   await setStandardEnvs({
     target: targetDir,
     piral: appPackage.name,
-    dependencies: externals,
   });
 
   modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
