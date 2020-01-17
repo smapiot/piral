@@ -87,11 +87,11 @@ async function bundleFiles(
   return outDir;
 }
 
-async function createDeclarationFile(outDir: string, root: string, app: string, dependencies: Record<string, string>) {
+async function createDeclarationFile(outDir: string, name: string, root: string, app: string, dependencies: Record<string, string>) {
   const allowedImports = Object.keys(dependencies);
   const appFile = await readText(dirname(app), basename(app));
   const entryFiles = await getEntryFiles(appFile, dirname(app));
-  const result = generateDeclaration(root, entryFiles, allowedImports);
+  const result = generateDeclaration(name, root, entryFiles, allowedImports);
   await createFileIfNotExists(outDir, 'index.d.ts', result);
 }
 
@@ -232,7 +232,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await copyScaffoldingFiles(root, rootDir, originalFiles);
     // actually including this one hints that the app shell should have been included - which is forbidden
     await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
-    await createDeclarationFile(outDir, root, entryFiles, dependencies.std);
+    await createDeclarationFile(outDir, name, root, entryFiles, dependencies.std);
     await createPackage(rootDir);
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 

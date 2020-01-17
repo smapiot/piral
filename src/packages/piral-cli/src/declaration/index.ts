@@ -4,8 +4,13 @@ import { includeType } from './visit';
 import { TypeRefs } from './types';
 import { stringify } from './stringify';
 
-export function generateDeclaration(root: string, entryFiles: Array<string>, allowedImports: Array<string> = []) {
-  return '';
+export function generateDeclaration(
+  name: string,
+  root: string,
+  entryFiles: Array<string>,
+  allowedImports: Array<string> = [],
+) {
+  return `declare module ${JSON.stringify(name)} { export type PiletApi = any; }`;
   const program = ts.createProgram(entryFiles, {});
   const checker = program.getTypeChecker();
   const refs: TypeRefs = {};
