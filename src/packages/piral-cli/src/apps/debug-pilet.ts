@@ -1,14 +1,9 @@
-import * as Bundler from 'parcel-bundler';
 import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
   retrievePiletData,
   clearCache,
   setStandardEnvs,
-  extendConfig,
-  extendBundlerWithPlugins,
-  extendBundlerForPilet,
-  modifyBundlerForPilet,
   postProcess,
   debugPiletApi,
   openBrowser,
@@ -17,6 +12,7 @@ import {
   notifyServerOnline,
   logInfo,
   patchModules,
+  setupBundler,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -98,16 +94,17 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     await patchModules(root, cacheDir, ignored);
   }
 
-  await setStandardEnvs({
-    target: targetDir,
+  setStandardEnvs({
+    root,
     piral: appPackage.name,
   });
 
-  modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
-
-  const bundler = new Bundler(
+  const bundler = setupBundler({
+    type: 'pilet',
+    externals,
+    targetDir,
     entryModule,
-    extendConfig({
+    config: {
       logLevel,
       hmr: false,
       minify: true,
@@ -115,8 +112,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       publicUrl: './',
       cacheDir,
       autoInstall,
-    }),
-  );
+    },
+  });
 
   const api = debugPiletApi;
   const injectorConfig = {
@@ -128,9 +125,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     handle: ['/', api],
     api,
   };
-
-  extendBundlerForPilet(bundler);
-  extendBundlerWithPlugins(bundler);
 
   bundler.on('bundled', async bundle => {
     await postProcess(bundle);

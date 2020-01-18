@@ -1,4 +1,3 @@
-import * as Bundler from 'parcel-bundler';
 import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
@@ -6,16 +5,13 @@ import {
   retrievePiralRoot,
   clearCache,
   setStandardEnvs,
-  modifyBundlerForPiral,
-  extendBundlerForPiral,
-  extendBundlerWithPlugins,
-  extendConfig,
   openBrowser,
   checkCliCompatibility,
   reorderInjectors,
   notifyServerOnline,
   logInfo,
   patchModules,
+  setupBundler,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -98,27 +94,30 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     await patchModules(root, cacheDir, ignored);
   }
 
-  await setStandardEnvs({
-    target: dirname(entryFiles),
+  setStandardEnvs({
+    root,
     dependencies: externals,
     piral: name,
   });
 
-  modifyBundlerForPiral(Bundler.prototype, dirname(entryFiles));
-
-  const bundler = new Bundler(
+  const bundler = setupBundler({
+    type: 'piral',
     entryFiles,
-    extendConfig({ publicUrl, logLevel, cacheDir, scopeHoist, hmr, autoInstall }),
-  );
+    config: {
+      publicUrl,
+      logLevel,
+      cacheDir,
+      scopeHoist,
+      hmr,
+      autoInstall,
+    },
+  });
 
   const injectorConfig = {
     active: true,
     handle: ['/'],
     bundler,
   };
-
-  extendBundlerForPiral(bundler);
-  extendBundlerWithPlugins(bundler);
 
   krasConfig.map['/'] = '';
   krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);

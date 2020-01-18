@@ -1,4 +1,7 @@
+import { resolve } from 'path';
 import { setStandardEnvs } from './envs';
+
+const root = resolve(__dirname, '../../../../..');
 
 describe('Environment Module', () => {
   const oldEnv = process.env;
@@ -12,30 +15,30 @@ describe('Environment Module', () => {
     process.env = oldEnv;
   });
 
-  it('setStandardEnvs reads and sets the current package.json', async () => {
+  it('setStandardEnvs reads and sets the current package.json', () => {
     const rootPackageJson = require('../../../../../package.json');
-    await setStandardEnvs();
+    setStandardEnvs({ root });
     expect(process.env.BUILD_PCKG_VERSION).toBe(rootPackageJson.version);
     expect(process.env.BUILD_PCKG_NAME).toBe(rootPackageJson.name);
     expect(process.env.NODE_ENV).toBe('development');
     expect(process.env.DEBUG_PILET).toBe(undefined);
   });
 
-  it('setStandardEnvs for a production build sets env to production', async () => {
-    await setStandardEnvs({ production: true });
+  it('setStandardEnvs for a production build sets env to production', () => {
+    setStandardEnvs({ production: true, root });
     expect(process.env.NODE_ENV).toBe('production');
     expect(process.env.DEBUG_PILET).toBe(undefined);
     expect(process.env.SHARED_DEPENDENCIES).toBe('');
   });
 
-  it('setStandardEnvs respects a given pilet by setting the right env', async () => {
-    await setStandardEnvs({ develop: true });
+  it('setStandardEnvs respects a given pilet by setting the right env', () => {
+    setStandardEnvs({ develop: true, root });
     expect(process.env.DEBUG_PILET).toBe('/$pilet-api');
     expect(process.env.SHARED_DEPENDENCIES).toBe('');
   });
 
-  it('setStandardEnvs concats the given dependencies', async () => {
-    await setStandardEnvs({ dependencies: ['foo', 'bar'] });
+  it('setStandardEnvs concats the given dependencies', () => {
+    setStandardEnvs({ dependencies: ['foo', 'bar'], root });
     expect(process.env.DEBUG_PILET).toBe(undefined);
     expect(process.env.SHARED_DEPENDENCIES).toBe('foo,bar');
   });

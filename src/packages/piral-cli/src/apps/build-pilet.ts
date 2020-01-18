@@ -1,18 +1,14 @@
-import * as Bundler from 'parcel-bundler';
 import { join, dirname, basename, resolve } from 'path';
 import {
-  extendConfig,
   setStandardEnvs,
-  modifyBundlerForPilet,
-  extendBundlerForPilet,
   postProcess,
   removeDirectory,
-  extendBundlerWithPlugins,
   clearCache,
   findEntryModule,
   retrievePiletData,
   logInfo,
   patchModules,
+  setupBundler,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -65,12 +61,6 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
 
-  await setStandardEnvs({
-    production: true,
-    piral: appPackage.name,
-    target: targetDir,
-  });
-
   const dest = {
     outDir: dirname(resolve(baseDir, target)),
     outFile: basename(target),
@@ -86,11 +76,18 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await patchModules(root, cacheDir, ignored);
   }
 
-  modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
+  setStandardEnvs({
+    production: true,
+    piral: appPackage.name,
+    root,
+  });
 
-  const bundler = new Bundler(
+  const bundler = setupBundler({
+    type: 'pilet',
+    externals,
+    targetDir,
     entryModule,
-    extendConfig({
+    config: {
       ...dest,
       cacheDir,
       watch: false,
@@ -101,11 +98,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       publicUrl: './',
       detailedReport,
       logLevel,
-    }),
-  );
-
-  extendBundlerForPilet(bundler);
-  extendBundlerWithPlugins(bundler);
+    },
+  });
 
   const bundle = await bundler.bundle();
 
