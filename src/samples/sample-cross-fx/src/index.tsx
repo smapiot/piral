@@ -18,6 +18,8 @@ import { createLitElApi } from 'piral-litel';
 import { createMithrilApi } from 'piral-mithril';
 import { createAureliaApi } from 'piral-aurelia';
 import { createRiotApi } from 'piral-riot';
+import { createElmApi } from 'piral-elm';
+import { createSvelteApi } from 'piral-svelte';
 import { createDashboardApi, Dashboard } from 'piral-dashboard';
 
 const Loader: React.FC<LoadingIndicatorProps> = () => (
@@ -34,7 +36,10 @@ const Layout: React.FC = ({ children }) => (
       <h1>Cross Framework Sample</h1>
     </div>
     <div className="app-content">{children}</div>
-    <div className="app-footer">For more information or the source code check out our GitHub repository.</div>
+    <div className="app-footer">
+      For more information or the source code check out our{' '}
+      <a href="https://github.com/smapiot/piral">GitHub repository</a>.
+    </div>
   </div>
 );
 
@@ -51,6 +56,8 @@ const instance = createInstance({
     createMithrilApi(),
     createAureliaApi(),
     createRiotApi(),
+    createElmApi(),
+    createSvelteApi(),
     createDashboardApi(),
   ],
   requestPilets() {
