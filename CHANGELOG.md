@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.4 (tbd)
+## 0.9.4 (January 20, 2020)
 
 * Switched to the new Piral logo (#27)
 * Allow disabling the modules patching during build (#121)
