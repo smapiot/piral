@@ -153,6 +153,21 @@ Tries to reduce bundle size by introducing tree shaking.
 - Type: `boolean`
 - Default: `true`
 
+### `--optimize-modules`
+
+Also includes the node modules for target transpilation.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-optimize-modules`
+
+Opposite of:
+Also includes the node modules for target transpilation.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--type`
 
 Selects the target type of the build. "all" builds all target types.

@@ -91,7 +91,7 @@ Performs a fresh build by removing the target directory first.
 Performs minification or other post-bundle transformations.
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--no-minify`
 
@@ -99,14 +99,14 @@ Opposite of:
 Performs minification or other post-bundle transformations.
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--source-maps`
 
 Creates source maps for the bundles.
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--no-source-maps`
 
@@ -114,14 +114,14 @@ Opposite of:
 Creates source maps for the bundles.
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--content-hash`
 
 Appends the hash to the side-bundle files.
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--no-content-hash`
 
@@ -129,7 +129,7 @@ Opposite of:
 Appends the hash to the side-bundle files.
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--scope-hoist`
 
@@ -145,6 +145,28 @@ Tries to reduce bundle size by introducing tree shaking.
 
 - Type: `boolean`
 - Default: `true`
+
+### `--optimize-modules`
+
+Also includes the node modules for target transpilation.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-optimize-modules`
+
+Opposite of:
+Also includes the node modules for target transpilation.
+
+- Type: `boolean`
+- Default: `false`
+
+### `--app`
+
+Sets the name of the Piral instance.
+
+- Type: `string`
+- Default: `undefined`
 
 ### `--base`
 

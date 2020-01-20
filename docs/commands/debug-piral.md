@@ -138,6 +138,21 @@ Automatically installs missing Node.js packages.
 - Type: `boolean`
 - Default: `false`
 
+### `--optimize-modules`
+
+Also includes the node modules for target transpilation.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-optimize-modules`
+
+Opposite of:
+Also includes the node modules for target transpilation.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
