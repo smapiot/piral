@@ -5,6 +5,7 @@ import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path
 import {
   writeFile,
   readFile,
+  readdir,
   copyFile,
   constants,
   exists,
@@ -12,7 +13,6 @@ import {
   lstat,
   unlink,
   mkdirSync,
-  existsSync,
   statSync,
 } from 'fs';
 import { deepMerge } from './merge';
@@ -94,6 +94,24 @@ export async function createDirectory(targetDir: string) {
   }
 }
 
+export async function getEntryFiles(content: string, basePath: string) {
+  const matcher = /<script\s.*?src=(?:"(.*?)"|'(.*?)'|([^\s>]*)).*?>/gi;
+  const results: Array<string> = [];
+  let result: RegExpExecArray = undefined;
+
+  while ((result = matcher.exec(content))) {
+    const src = result[1] || result[2] || result[3];
+    const filePath = resolve(basePath, src);
+    const exists = await checkExists(filePath);
+
+    if (exists) {
+      results.push(filePath);
+    }
+  }
+
+  return results;
+}
+
 export function checkExists(target: string) {
   return new Promise<boolean>(resolve => {
     exists(target, resolve);
@@ -120,20 +138,10 @@ export function checkIsDirectory(target: string) {
   });
 }
 
-export function getFileWithExtension(fileName: string): string {
-  if (!extname(fileName)) {
-    const extensions = ['.tsx', '.ts', '.jsx', '.js'];
-
-    for (const extension of extensions) {
-      const file = fileName + extension;
-
-      if (existsSync(file)) {
-        return file;
-      }
-    }
-  }
-
-  return fileName;
+export function getFileNames(target: string) {
+  return new Promise<Array<string>>((resolve, reject) => {
+    readdir(target, (err, files) => (err ? reject(err) : resolve(files)));
+  });
 }
 
 export async function findFile(topDir: string, fileName: string): Promise<string> {

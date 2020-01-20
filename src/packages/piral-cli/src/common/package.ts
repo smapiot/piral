@@ -9,6 +9,7 @@ import {
   getHash,
   checkIsDirectory,
   matchFiles,
+  getFileNames,
 } from './io';
 import { cliVersion, coreExternals } from './info';
 import { logFail, logWarn } from './log';
@@ -246,6 +247,18 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
   return rootDir;
 }
 
+function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
+  const items = obj[key];
+
+  if (Array.isArray(items)) {
+    return items;
+  } else if (items !== undefined) {
+    logWarn(`The value of "${key}" should be an array. Found "${typeof items}".`);
+  }
+
+  return undefined;
+}
+
 export async function findPackageVersion(rootPath: string, packageName: string) {
   try {
     const moduleName = require.resolve(packageName, {
@@ -285,6 +298,7 @@ export async function retrievePiletsInfo(entryFile: string) {
       dev: packageInfo.devDependencies || {},
       peer: packageInfo.peerDependencies || {},
     },
+    ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root: dirname(packageJson),
   };
 }
@@ -315,37 +329,25 @@ export async function patchPiletPackage(
     ...info.scripts,
   };
   const peerDependencies = {
-    ...allExternals.reduce(
-      (deps, name) => {
-        deps[name] = '*';
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
+    ...allExternals.reduce((deps, name) => {
+      deps[name] = '*';
+      return deps;
+    }, {} as Record<string, string>),
     [name]: `*`,
   };
   const devDependencies = {
-    ...Object.keys(typeDependencies).reduce(
-      (deps, name) => {
-        deps[name] = piralDependencies[name] || typeDependencies[name];
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
-    ...Object.keys(info.devDependencies).reduce(
-      (deps, name) => {
-        deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
-    ...allExternals.reduce(
-      (deps, name) => {
-        deps[name] = piralDependencies[name] || 'latest';
-        return deps;
-      },
-      {} as Record<string, string>,
-    ),
+    ...Object.keys(typeDependencies).reduce((deps, name) => {
+      deps[name] = piralDependencies[name] || typeDependencies[name];
+      return deps;
+    }, {} as Record<string, string>),
+    ...Object.keys(info.devDependencies).reduce((deps, name) => {
+      deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
+      return deps;
+    }, {} as Record<string, string>),
+    ...allExternals.reduce((deps, name) => {
+      deps[name] = piralDependencies[name] || 'latest';
+      return deps;
+    }, {} as Record<string, string>),
     [name]: `${version || piralInfo.version}`,
     'piral-cli': `^${cliVersion}`,
   };
@@ -383,19 +385,28 @@ export async function retrievePiletData(target: string, app?: string) {
     throw new Error('Invalid Piral instance selected.');
   }
 
-  const { piralCLI = { generated: false } } = appPackage;
-
-  if (!piralCLI.generated) {
-    logWarn(`The used Piral instance does not seem to be a proper development package.
-Please make sure to build your development package with the Piral CLI using "piral build".`);
-  }
-
   return {
     dependencies: packageContent.dependencies || {},
     devDependencies: packageContent.devDependencies || {},
     peerDependencies: packageContent.peerDependencies || {},
+    ignored: checkArrayOrUndefined(packageContent, 'preservedDependencies'),
     appFile,
     appPackage,
     root,
   };
+}
+
+export async function findEntryModule(entryFile: string, target: string) {
+  const entry = basename(entryFile);
+  const files = await getFileNames(target);
+
+  for (const file of files) {
+    const ext = extname(file);
+
+    if (file === entry || file.replace(ext, '') === entry) {
+      return join(target, file);
+    }
+  }
+
+  return entryFile;
 }

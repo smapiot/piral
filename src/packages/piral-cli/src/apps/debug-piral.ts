@@ -1,4 +1,3 @@
-import * as Bundler from 'parcel-bundler';
 import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
@@ -6,13 +5,12 @@ import {
   retrievePiralRoot,
   clearCache,
   setStandardEnvs,
-  modifyBundlerForPiral,
-  extendBundlerForPiral,
-  extendBundlerWithPlugins,
-  extendConfig,
   openBrowser,
   reorderInjectors,
   notifyServerOnline,
+  logInfo,
+  patchModules,
+  setupBundler,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -26,6 +24,7 @@ export interface DebugPiralOptions {
   scopeHoist?: boolean;
   hmr?: boolean;
   autoInstall?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const debugPiralDefaults = {
@@ -39,6 +38,7 @@ export const debugPiralDefaults = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
+  optimizeModules: true,
 };
 
 const injectorName = resolve(__dirname, '../injectors/piral.js');
@@ -55,9 +55,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     publicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     fresh = debugPiralDefaults.fresh,
+    optimizeModules = debugPiralDefaults.optimizeModules,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { externals, name, root } = await retrievePiletsInfo(entryFiles);
+  const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
 
   const krasConfig = readKrasConfig({ port }, krasrc);
 
@@ -85,27 +86,35 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     await clearCache(root, cacheDir);
   }
 
-  await setStandardEnvs({
-    target: dirname(entryFiles),
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root, cacheDir, ignored);
+  }
+
+  setStandardEnvs({
+    root,
     dependencies: externals,
     piral: name,
   });
 
-  modifyBundlerForPiral(Bundler.prototype, dirname(entryFiles));
-
-  const bundler = new Bundler(
+  const bundler = setupBundler({
+    type: 'piral',
     entryFiles,
-    extendConfig({ publicUrl, logLevel, cacheDir, scopeHoist, hmr, autoInstall }),
-  );
+    config: {
+      publicUrl,
+      logLevel,
+      cacheDir,
+      scopeHoist,
+      hmr,
+      autoInstall,
+    },
+  });
 
   const injectorConfig = {
     active: true,
     handle: ['/'],
     bundler,
   };
-
-  extendBundlerForPiral(bundler);
-  extendBundlerWithPlugins(bundler);
 
   krasConfig.map['/'] = '';
   krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);

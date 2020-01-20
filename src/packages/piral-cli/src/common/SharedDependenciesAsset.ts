@@ -7,8 +7,9 @@ class SharedDependenciesAsset extends (Bundler as any).Asset {
 
   constructor(name, options) {
     super(name, options);
+    const appName = process.env.BUILD_PCKG_NAME || '';
     const externals = (process.env.SHARED_DEPENDENCIES || '').split(',');
-    const deps = externals.map(name => `deps['${name}']=require('${name}')`);
+    const deps = [`deps['${appName}']={}`, ...externals.map(name => `deps['${name}']=require('${name}')`)];
     const code = deps.join(';');
     this.type = 'js';
     this.content = `module.exports = function(deps){${code}}`;

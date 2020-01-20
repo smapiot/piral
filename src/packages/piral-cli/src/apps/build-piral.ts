@@ -1,14 +1,9 @@
-import * as Bundler from 'parcel-bundler';
 import { dirname, basename, extname, join, resolve } from 'path';
 import {
-  extendConfig,
   setStandardEnvs,
   retrievePiletsInfo,
   retrievePiralRoot,
-  extendBundlerForPiral,
-  modifyBundlerForPiral,
   removeDirectory,
-  extendBundlerWithPlugins,
   clearCache,
   updateExistingJson,
   createFileIfNotExists,
@@ -22,9 +17,10 @@ import {
   coreExternals,
   combineApiDeclarations,
   cliVersion,
-  postTransform,
   logInfo,
   ParcelConfig,
+  patchModules,
+  setupBundler,
 } from '../common';
 
 interface Destination {
@@ -51,44 +47,34 @@ function getDestination(entryFiles: string, target: string): Destination {
 async function bundleFiles(
   piral: string,
   develop: boolean,
-  target: string,
+  root: string,
   dependencies: Array<string>,
   entryFiles: string,
   dest: Destination,
   subdir: string,
   config: ParcelConfig,
-  transformRoot?: string,
 ) {
   const outDir = join(dest.outDir, subdir);
 
-  await setStandardEnvs({
+  setStandardEnvs({
     production: true,
-    target,
+    root,
     develop,
     piral,
     dependencies,
   });
 
-  modifyBundlerForPiral(Bundler.prototype, target);
-
-  const bundler = new Bundler(
+  const bundler = setupBundler({
+    type: 'piral',
     entryFiles,
-    extendConfig({
+    config: {
       ...config,
       outDir,
       outFile: dest.outFile,
-    }),
-  );
+    },
+  });
 
-  extendBundlerForPiral(bundler);
-  extendBundlerWithPlugins(bundler);
-
-  const bundle = await bundler.bundle();
-
-  if (transformRoot && config.minify) {
-    await postTransform(bundle, transformRoot);
-  }
-
+  await bundler.bundle();
   return outDir;
 }
 
@@ -113,6 +99,7 @@ export interface BuildPiralOptions {
   sourceMaps?: boolean;
   contentHash?: boolean;
   scopeHoist?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const buildPiralDefaults = {
@@ -128,6 +115,7 @@ export const buildPiralDefaults = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
+  optimizeModules: true,
 };
 
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
@@ -144,18 +132,22 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     scopeHoist = buildPiralDefaults.scopeHoist,
     fresh = buildPiralDefaults.fresh,
     type = buildPiralDefaults.type,
+    optimizeModules = buildPiralDefaults.optimizeModules,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const targetDir = dirname(entryFiles);
-  const { name, version, root, dependencies, ...pilets } = await retrievePiletsInfo(entryFiles);
+  const { name, version, root, dependencies, ignored, ...pilets } = await retrievePiletsInfo(entryFiles);
   const { externals } = pilets;
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
   if (fresh) {
     await clearCache(root, cacheDir);
+    await removeDirectory(dest.outDir);
   }
 
-  await removeDirectory(dest.outDir);
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root, cacheDir, ignored);
+  }
 
   // everything except release -> build develop
   if (type !== 'release') {
@@ -165,7 +157,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const originalPackageJson = resolve(root, 'package.json');
     const { files: originalFiles = [] } = require(originalPackageJson);
     const appDir = 'app';
-    const outDir = await bundleFiles(name, true, targetDir, externals, entryFiles, dest, join('develop', appDir), {
+    const outDir = await bundleFiles(name, true, root, externals, entryFiles, dest, join('develop', appDir), {
       cacheDir,
       watch: false,
       sourceMaps,
@@ -180,16 +172,13 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const externalPackages = await Promise.all(
       allExternals.map(async name => ({
         name,
-        version: await findPackageVersion(targetDir, name),
+        version: await findPackageVersion(dirname(entryFiles), name),
       })),
     );
-    const externalDependencies = externalPackages.reduce(
-      (deps, dep) => {
-        deps[dep.name] = dep.version;
-        return deps;
-      },
-      {} as Record<string, string>,
-    );
+    const externalDependencies = externalPackages.reduce((deps, dep) => {
+      deps[dep.name] = dep.version;
+      return deps;
+    }, {} as Record<string, string>);
     const rootDir = resolve(outDir, '..');
     const filesDir = resolve(rootDir, 'files');
     const files = pilets.files
@@ -243,27 +232,17 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   if (type !== 'develop') {
     logInfo('Starting build ...');
 
-    const outDir = await bundleFiles(
-      name,
-      false,
-      targetDir,
-      externals,
-      entryFiles,
-      dest,
-      'release',
-      {
-        cacheDir,
-        watch: false,
-        sourceMaps,
-        contentHash,
-        minify,
-        scopeHoist,
-        detailedReport,
-        publicUrl,
-        logLevel,
-      },
-      root,
-    );
+    const outDir = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', {
+      cacheDir,
+      watch: false,
+      sourceMaps,
+      contentHash,
+      minify,
+      scopeHoist,
+      detailedReport,
+      publicUrl,
+      logLevel,
+    });
 
     logDone(`Files for publication available in "${outDir}".`);
   }

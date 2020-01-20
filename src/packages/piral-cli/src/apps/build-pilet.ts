@@ -1,20 +1,18 @@
-import * as Bundler from 'parcel-bundler';
 import { join, dirname, basename, resolve } from 'path';
 import {
-  extendConfig,
   setStandardEnvs,
-  findFile,
-  modifyBundlerForPilet,
-  extendBundlerForPilet,
   postProcess,
-  getFileWithExtension,
   removeDirectory,
-  extendBundlerWithPlugins,
   clearCache,
-  postTransform,
+  findEntryModule,
+  retrievePiletData,
+  logInfo,
+  patchModules,
+  setupBundler,
 } from '../common';
 
 export interface BuildPiletOptions {
+  app?: string;
   entry?: string;
   target?: string;
   cacheDir?: string;
@@ -25,6 +23,7 @@ export interface BuildPiletOptions {
   sourceMaps?: boolean;
   contentHash?: boolean;
   scopeHoist?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const buildPiletDefaults = {
@@ -38,6 +37,7 @@ export const buildPiletDefaults = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
+  optimizeModules: true,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -52,22 +52,14 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
+    optimizeModules = buildPiletDefaults.optimizeModules,
+    app,
   } = options;
-  const entryFiles = getFileWithExtension(join(baseDir, entry));
-  const targetDir = dirname(entryFiles);
-  const packageJson = await findFile(targetDir, 'package.json');
-
-  if (!packageJson) {
-    throw new Error(`Cannot find the "package.json". You need a valid package.json for your pilet.`);
-  }
-
-  const root = dirname(packageJson);
-  const externals = Object.keys(require(packageJson).peerDependencies);
-
-  await setStandardEnvs({
-    production: true,
-    target: targetDir,
-  });
+  const entryFile = join(baseDir, entry);
+  const targetDir = dirname(entryFile);
+  const entryModule = await findEntryModule(entryFile, targetDir);
+  const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
+  const externals = Object.keys(peerDependencies);
 
   const dest = {
     outDir: dirname(resolve(baseDir, target)),
@@ -79,11 +71,23 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await removeDirectory(dest.outDir);
   }
 
-  modifyBundlerForPilet(Bundler.prototype, externals, targetDir);
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root, cacheDir, ignored);
+  }
 
-  const bundler = new Bundler(
-    entryFiles,
-    extendConfig({
+  setStandardEnvs({
+    production: true,
+    piral: appPackage.name,
+    root,
+  });
+
+  const bundler = setupBundler({
+    type: 'pilet',
+    externals,
+    targetDir,
+    entryModule,
+    config: {
       ...dest,
       cacheDir,
       watch: false,
@@ -94,17 +98,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       publicUrl: './',
       detailedReport,
       logLevel,
-    }),
-  );
-
-  extendBundlerForPilet(bundler);
-  extendBundlerWithPlugins(bundler);
+    },
+  });
 
   const bundle = await bundler.bundle();
 
   await postProcess(bundle);
-
-  if (minify) {
-    await postTransform(bundle, root);
-  }
 }

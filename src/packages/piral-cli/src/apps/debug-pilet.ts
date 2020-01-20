@@ -1,4 +1,3 @@
-import * as Bundler from 'parcel-bundler';
 import { readdirSync } from 'fs';
 import { join, dirname, resolve, basename, extname } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
@@ -6,15 +5,14 @@ import {
   retrievePiletData,
   clearCache,
   setStandardEnvs,
-  extendConfig,
-  extendBundlerWithPlugins,
-  extendBundlerForPilet,
-  modifyBundlerForPilet,
   postProcess,
   debugPiletApi,
   openBrowser,
   reorderInjectors,
   notifyServerOnline,
+  logInfo,
+  patchModules,
+  setupBundler,
 } from '../common';
 
 function findEntryModule(entryFile: string, target: string) {
@@ -43,6 +41,7 @@ export interface DebugPiletOptions {
   scopeHoist?: boolean;
   hmr?: boolean;
   autoInstall?: boolean;
+  optimizeModules?: boolean;
 }
 
 export const debugPiletDefaults = {
@@ -55,6 +54,7 @@ export const debugPiletDefaults = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
+  optimizeModules: true,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -70,17 +70,18 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     autoInstall = debugPiletDefaults.autoInstall,
     logLevel = debugPiletDefaults.logLevel,
     fresh = debugPiletDefaults.fresh,
+    optimizeModules = debugPiletDefaults.optimizeModules,
     app,
   } = options;
   const entryFile = join(baseDir, entry);
-  const target = dirname(entryFile);
-  const entryModule = findEntryModule(entryFile, target);
-  const { peerDependencies, root, appPackage, appFile } = await retrievePiletData(target, app);
+  const targetDir = dirname(entryFile);
+  const entryModule = findEntryModule(entryFile, targetDir);
+  const { peerDependencies, root, appPackage, appFile, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
-    krasConfig.directory = join(target, 'mocks');
+    krasConfig.directory = join(targetDir, 'mocks');
   }
 
   if (krasConfig.ssl === undefined) {
@@ -103,17 +104,22 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     await clearCache(root, cacheDir);
   }
 
-  await setStandardEnvs({
-    target,
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root, cacheDir, ignored);
+  }
+
+  setStandardEnvs({
+    root,
     piral: appPackage.name,
-    dependencies: externals,
   });
 
-  modifyBundlerForPilet(Bundler.prototype, externals, target);
-
-  const bundler = new Bundler(
+  const bundler = setupBundler({
+    type: 'pilet',
+    externals,
+    targetDir,
     entryModule,
-    extendConfig({
+    config: {
       logLevel,
       hmr: false,
       minify: true,
@@ -121,8 +127,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       publicUrl: './',
       cacheDir,
       autoInstall,
-    }),
-  );
+    },
+  });
 
   const api = debugPiletApi;
   const injectorConfig = {
@@ -134,9 +140,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     handle: ['/', api],
     api,
   };
-
-  extendBundlerForPilet(bundler);
-  extendBundlerWithPlugins(bundler);
 
   bundler.on('bundled', async bundle => {
     await postProcess(bundle);
