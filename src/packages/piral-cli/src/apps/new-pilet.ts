@@ -29,7 +29,7 @@ export interface NewPiletOptions {
   source?: string;
   forceOverwrite?: ForceOverwrite;
   language?: PiletLanguage;
-  skipInstall?: boolean;
+  install?: boolean;
   template?: TemplateType;
 }
 
@@ -39,7 +39,7 @@ export const newPiletDefaults = {
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
-  skipInstall: false,
+  install: true,
   template: 'default' as const,
 };
 
@@ -50,7 +50,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     source = newPiletDefaults.source,
     forceOverwrite = newPiletDefaults.forceOverwrite,
     language = newPiletDefaults.language,
-    skipInstall = newPiletDefaults.skipInstall,
+    install = newPiletDefaults.install,
     template = newPiletDefaults.template,
   } = options;
   const root = resolve(baseDir, target);
@@ -123,7 +123,7 @@ Please make sure to build your development package with the Piral CLI using "pir
     const files = await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
     await copyPiralFiles(root, packageName, files, ForceOverwrite.yes);
 
-    if (!skipInstall) {
+    if (install) {
       logInfo(`Installing dependencies ...`);
       await installDependencies(root, '--no-package-lock');
     }

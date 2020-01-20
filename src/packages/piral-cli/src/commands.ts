@@ -73,6 +73,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('autoinstall')
         .describe('autoinstall', 'Automatically installs missing Node.js packages.')
         .default('autoinstall', apps.debugPiralDefaults.autoInstall)
+        .boolean('optimize-modules')
+        .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
+        .default('optimize-modules', apps.debugPiralDefaults.optimizeModules)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -84,6 +87,7 @@ const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         hmr: args.hmr as boolean,
         autoInstall: args.autoinstall as boolean,
+        optimizeModules: args.optimizeModules as boolean,
         scopeHoist: args.scopeHoist as boolean,
         publicUrl: args.publicUrl as string,
         logLevel: args.logLevel as any,
@@ -135,6 +139,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.buildPiralDefaults.scopeHoist)
+        .boolean('optimize-modules')
+        .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
+        .default('optimize-modules', apps.buildPiralDefaults.optimizeModules)
         .choices('type', ['all', 'release', 'develop'])
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', apps.buildPiralDefaults.type)
@@ -153,6 +160,7 @@ const allCommands: Array<ToolCommand<any>> = [
         contentHash: args.contentHash as boolean,
         sourceMaps: args.sourceMaps as boolean,
         detailedReport: args.detailedReport as boolean,
+        optimizeModules: args.optimizeModules as boolean,
         logLevel: args.logLevel as any,
         type: args.type as any,
       });
@@ -176,9 +184,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('only-core')
         .describe('only-core', 'Sets if "piral-core" should be used. Otherwise, "piral" is used.')
         .default('only-core', apps.newPiralDefaults.onlyCore)
-        .boolean('skip-install')
-        .describe('skip-install', 'Skips the installation of the dependencies using NPM.')
-        .default('skip-install', apps.newPiralDefaults.skipInstall)
+        .boolean('install')
+        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .default('install', apps.newPiralDefaults.install)
         .string('tag')
         .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
         .default('tag', apps.newPiralDefaults.version)
@@ -190,7 +198,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('language', keyOfPiletLanguage(apps.newPiralDefaults.language))
         .choices('template', templateTypeKeys)
         .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
-        .default('template', templateTypeKeys[0])
+        .default('template', apps.newPiralDefaults.template)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -203,7 +211,7 @@ const allCommands: Array<ToolCommand<any>> = [
         version: args.tag as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
-        skipInstall: args.skipInstall as boolean,
+        install: args.install as boolean,
         template: args.template,
       });
     },
@@ -271,6 +279,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('autoinstall')
         .describe('autoinstall', 'Automatically installs missing Node.js packages.')
         .default('autoinstall', apps.debugPiletDefaults.autoInstall)
+        .boolean('optimize-modules')
+        .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
+        .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -285,6 +296,7 @@ const allCommands: Array<ToolCommand<any>> = [
         scopeHoist: args.scopeHoist as boolean,
         hmr: args.hmr as boolean,
         autoInstall: args.autoinstall as boolean,
+        optimizeModules: args.optimizeModules as boolean,
         app: args.app as string,
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
@@ -332,6 +344,11 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('scope-hoist')
         .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
         .default('scope-hoist', apps.buildPiletDefaults.scopeHoist)
+        .boolean('optimize-modules')
+        .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
+        .default('optimize-modules', apps.buildPiletDefaults.optimizeModules)
+        .string('app')
+        .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -346,8 +363,10 @@ const allCommands: Array<ToolCommand<any>> = [
         sourceMaps: args.sourceMaps as boolean,
         scopeHoist: args.scopeHoist as boolean,
         detailedReport: args.detailedReport as boolean,
+        optimizeModules: args.optimizeModules as boolean,
         fresh: args.fresh as boolean,
         logLevel: args.logLevel as any,
+        app: args.app as string,
       });
     },
   },
@@ -421,7 +440,8 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source package containing a Piral instance for templating the scaffold process.',
+          describe:
+            'Sets the source package (potentially incl. its tag/version) containing a Piral instance for templating the scaffold process.',
           default: apps.newPiletDefaults.source,
         })
         .string('target')
@@ -430,9 +450,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
         .default('registry', apps.newPiletDefaults.registry)
-        .boolean('skip-install')
-        .describe('skip-install', 'Skips the installation of the dependencies using NPM.')
-        .default('skip-install', apps.newPiletDefaults.skipInstall)
+        .boolean('install')
+        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .default('install', apps.newPiletDefaults.install)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiletDefaults.forceOverwrite))
@@ -453,7 +473,7 @@ const allCommands: Array<ToolCommand<any>> = [
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
-        skipInstall: args.skipInstall as boolean,
+        install: args.install as boolean,
         template: args.template,
       });
     },

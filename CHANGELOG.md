@@ -2,6 +2,7 @@
 
 ## 0.9.4 (tbd)
 
+* Switched to the new Piral logo (#27)
 * Allow disabling the modules patching during build (#121)
 * Fixed out of memory problem with large bundles (#121)
 * Fixed kras injector precedence (#122)
