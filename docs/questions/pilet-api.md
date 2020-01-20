@@ -57,6 +57,6 @@ const connect = createConnector({
 });
 ```
 
-The HOC is unaffected by this. Once the data updates the view is rerendered.
+The HOC is unaffected by this. Once the data updates the view is re-rendered.
 
 ---------------------------------------

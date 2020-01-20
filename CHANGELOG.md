@@ -12,18 +12,22 @@
 * Added new optional plugin `piral-riot` for Riot.js
 * Added new optional plugin `piral-lazy` for generic lazy loading
 * Replaced `react-arbiter` with `piral-base` (#109)
-* Allow disabling the modules patching during build (#121)
-* Fixed out of memory problem with large bundles (#121)
 * Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
 * Changed `--only-core` to `framework` (supporting `piral-base`)
 * Allow async `setup` in pilets
 * Support for `teardown` function in pilets
 * Added `dispatch` and `readState` actions
 * Allow async pilet module evaluation
-* Fixed kras injector precedence (#122)
-* Improved debugging experience for legacy browsers (#128)
 * Integrated `state` and `router` in foreign context
+
+## 0.9.4 (January 20, 2020)
+
 * Switched to the new Piral logo (#27)
+* Allow disabling the modules patching during build (#121)
+* Fixed out of memory problem with large bundles (#121)
+* Fixed kras injector precedence (#122)
+* Export all imported module declarations during build (#127)
+* Improved debugging experience for legacy browsers (#128)
 
 ## 0.9.3 (December 17, 2019)
 

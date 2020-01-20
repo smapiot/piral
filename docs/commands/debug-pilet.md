@@ -131,6 +131,14 @@ Automatically installs missing Node.js packages.
 - Type: `boolean`
 - Default: `false`
 
+### `--no-optimize-modules`
+
+Opposite of:
+Also includes the node modules for target transpilation.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--app`
 
 Sets the name of the Piral instance.

@@ -1,6 +1,6 @@
 {
   "name": "piral-lazy",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Plugin for lazy loading third-party framework components in Piral.",
   "keywords": [
     "piral",

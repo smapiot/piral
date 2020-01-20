@@ -1,10 +1,9 @@
 import * as Bundler from 'parcel-bundler';
 import extendBundlerWithPlugins = require('parcel-plugin-codegen');
-import { transformFileAsync } from '@babel/core';
-import { computeHash } from './hash';
-import { logInfo, logFail } from './log';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
+import { computeHash } from './hash';
+import { logFail } from './log';
 import { ParcelConfig, extendConfig } from './settings';
 import { modifyBundlerForPilet, extendBundlerForPilet } from './pilet';
 import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
@@ -116,40 +115,6 @@ export function gatherJsBundles(bundle: Bundler.ParcelBundle, gatheredBundles: A
   return gatheredBundles;
 }
 
-/**
- * Changes the files from the generated bundle to *really*
- * follow the desired preset environment - which includes also
- * packages coming from node_modules.
- * @param mainBundle The main bundle coming from Parcel.
- * @param rootDir The project's root dir.
- */
-export function postTransform(mainBundle: Bundler.ParcelBundle, rootDir: string) {
-  const bundles = gatherJsBundles(mainBundle);
-
-  logInfo('Post-transforming the emitted bundle(s) ...');
-
-  return Promise.all(
-    bundles.map(async bundle => {
-      const inputSourceMap = bundle.map && (await readJson(dirname(bundle.map), basename(bundle.map)));
-
-      const { code, map } = await transformFileAsync(bundle.src, {
-        presets: [['@babel/preset-env']],
-        sourceMaps: true,
-        minified: true,
-        inputSourceMap,
-        sourceType: 'script',
-        cwd: rootDir,
-      });
-
-      await writeText(dirname(bundle.src), basename(bundle.src), code);
-
-      if (bundle.map) {
-        await writeJson(dirname(bundle.map), basename(bundle.map), map);
-      }
-    }),
-  );
-}
-
 // See https://github.com/smapiot/piral/issues/121#issuecomment-572055594
 const defaultIgnoredPackages = ['core-js'];
 
@@ -173,7 +138,7 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
             const packageFileData = await readJson(rootName, 'package.json');
 
             if (packageFileData._piralOptimized === undefined) {
-              delete packageFileData['browserslist'];
+              delete packageFileData.browserslist;
               packageFileData._piralOptimized = true;
 
               await writeJson(rootName, 'package.json', packageFileData);

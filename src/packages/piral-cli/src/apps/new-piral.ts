@@ -86,7 +86,6 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     if (install) {
       logInfo(`Installing dependencies ...`);
-
       await installDependencies(root, '--no-package-lock');
     }
 

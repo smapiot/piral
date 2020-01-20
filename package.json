@@ -16,7 +16,7 @@
     "build:page": "piral build src/pages/www/src/index.html --target dist/www/index.html --type release",
     "watch:page": "piral debug src/pages/www/src/index.html",
     "watch:demo-cross": "piral debug src/samples/sample-cross-fx/src/index.html",
-    "build:demo-cross": "piral build src/samples/sample-cross-fx/src/index.html --target dist/demo-cross/index.html --type release",
+    "build:demo-cross": "piral build src/samples/sample-cross-fx/src/index.html --target dist/demo-cross/index.html",
     "watch:demo-core": "piral debug src/samples/sample-piral-core/src/index.html",
     "build:demo-core": "piral build src/samples/sample-piral-core/src/index.html --target dist/demo-core/index.html --type release",
     "watch:demo-full": "piral debug src/samples/sample-piral/src/index.html",

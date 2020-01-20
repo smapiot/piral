@@ -77,7 +77,6 @@ async function bundleFiles(
   });
 
   await bundler.bundle();
-
   return outDir;
 }
 
