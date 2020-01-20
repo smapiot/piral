@@ -19,9 +19,10 @@ export function usePromise<T>(promise: () => Promise<T>) {
   useEffect(() => {
     let cancelled = false;
 
-    promise()
-      .then(data => !cancelled && setResult({ data, error: undefined, loading: false }))
-      .catch(error => !cancelled && setResult({ data: undefined, error, loading: false }));
+    promise().then(
+      data => !cancelled && setResult({ data, error: undefined, loading: false }),
+      error => !cancelled && setResult({ data: undefined, error, loading: false }),
+    );
 
     return () => {
       cancelled = true;

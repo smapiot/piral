@@ -59,11 +59,11 @@ export function gqlSubscription<TResult = any>(
   const { variables, headers = {} } = options;
   const request = createRequest(q, variables);
   const response = client.executeSubscription(request, { fetchOptions: { headers } });
-  const [teardown] = pipe(
+  const { unsubscribe } = pipe(
     response,
     subscribe(({ data, error }) => {
       subscriber(data, error);
     }),
   );
-  return teardown;
+  return unsubscribe;
 }
