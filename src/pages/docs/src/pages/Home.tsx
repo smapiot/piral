@@ -123,7 +123,7 @@ export default () => (
       </p>
       <p>If everything looks great it's time to build the application:</p>
       <pre>
-        <code className="hljs language-sh">npm build</code>
+        <code className="hljs language-sh">npm run build</code>
       </pre>
       <p>This gives us two folders:</p>
       <ul>
