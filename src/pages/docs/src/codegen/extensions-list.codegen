@@ -33,11 +33,16 @@ module.exports = function() {
 
     if (index === -1) {
       categories.push(child.category);
-      fragments.push([child.content]);
+      fragments.push({
+        category: transformUpper(child.category),
+        children: [child.content],
+      });
     } else {
-      fragments[index].push(child.content);
+      fragments[index].children.push(child.content);
     }
   }
+
+  fragments.sort((a, b) => a.category > b.category ? 1 : -1);
 
   return `
     const React = require('react');
@@ -46,9 +51,9 @@ module.exports = function() {
       <>
         ${fragments
           .map(
-            (frags, index) => `
-            <h2 className="plugin">${transformUpper(categories[index])}</h2>
-            <div className="boxes title-cards">${frags.join('')}</div>
+            fragment => `
+            <h2 className="plugin">${fragment.category} Plugins</h2>
+            <div className="boxes title-cards">${fragment.children.join('')}</div>
           `,
           )
           .join('')}

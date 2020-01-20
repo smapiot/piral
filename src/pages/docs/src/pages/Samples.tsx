@@ -60,21 +60,49 @@ const CoreDemo: React.FC = () => (
       An example app based on <code>piral-core</code>.
     </p>
     <blockquote>
-      <p>Pilets are integrated for simplicity. The core pilet API and converters are demonstrated.</p>
+      <p>Pilets are integrated for simplicity. The core pilet API is demonstrated.</p>
+    </blockquote>
+    <p>
+      The sample shows the essential use of piral-core with a very simple layout and a variety of (integrated) pilets
+      that use most of the core pilet API functions. Some parts of the layout are fully customized by taking advantage
+      of the available state container.
+    </p>
+    <img className="responsive-image" src={require('../assets/demo-core.png')} alt="Piral Core Demo" />
+    <p>
+      All backend interactions are mocked (e.g., via a <code>setTimeout</code>) to indicate only what Piral can do to
+      sustain a good UX, for example by providing loading spinners.
+    </p>
+    <p>
+      The shown connectors display how simple an interactive data feed can be connected. Furthermore, the form examples
+      illustrate the ease of making robust form handling with Piral.
+    </p>
+  </Demo>
+);
+
+const CrossDemo: React.FC = () => (
+  <Demo
+    title="Cross Framework Application"
+    appLink="https://demo-cross.piral.io"
+    codeLink="https://github.com/smapiot/piral/tree/master/src/samples/sample-cross-fx">
+    <p>
+      An example app based on <code>piral-core</code>.
+    </p>
+    <blockquote>
+      <p>Pilets are fetched dynamically. The available converters are demonstrated.</p>
     </blockquote>
     <p>
       The sample shows the essential use of piral-core with a very simple layout and a variety of (integrated) pilets
       that use most of the core pilet API functions. Additionally, some of the available (opt-in) plugins are shown,
       such as piral-ng (Angular API) and piral-vue (Vue API).
     </p>
-    <img className="responsive-image" src={require('../assets/demo-core.png')} alt="Piral Core Demo" />
+    <img className="responsive-image" src={require('../assets/demo-cross.png')} alt="Cross Framework Demo" />
     <p>
-      All backend interactions are mocked (e.g., via a setTimeout) to indicate only what Piral can do to sustain a good
-      UX, for example by providing loading spinners.
+      There are no backend connections, however, to demonstrate lazy loading and other covenience factors effectively a
+      bit of artificial delay here and there may have been added.
     </p>
     <p>
-      The shown connectors display how simple an interactive data feed can be connected. Furthermore, the form examples
-      illustrate the ease of making robust form handling with Piral.
+      To show interaction between different frameworks extensions are used. Some links and simple interactivity are
+      there to show the concepts.
     </p>
   </Demo>
 );
@@ -116,6 +144,7 @@ export default () => (
     <div className="demos">
       <CoreDemo />
       <FullDemo />
+      <CrossDemo />
       <MifeDemo />
     </div>
   </section>
