@@ -1,5 +1,4 @@
 import * as Bundler from 'parcel-bundler';
-import chalk from 'chalk';
 import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
@@ -11,9 +10,9 @@ import {
   extendBundlerForPiral,
   extendBundlerWithPlugins,
   extendConfig,
-  liveIcon,
-  settingsIcon,
   openBrowser,
+  reorderInjectors,
+  notifyServerOnline,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -109,24 +108,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   extendBundlerWithPlugins(bundler);
 
   krasConfig.map['/'] = '';
-
-  krasConfig.injectors = {
-    script: krasConfig.injectors.script || {
-      active: true,
-    },
-    [injectorName]: injectorConfig,
-    ...krasConfig.injectors,
-  };
+  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
-
-  krasServer.on('open', svc => {
-    const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
-    console.log(`${liveIcon}  Running at ${chalk.bold(address)}.`);
-    console.log(`${settingsIcon}  Manage via ${chalk.bold(address + krasConfig.api)}.`);
-    bundler.bundle();
-  });
+  krasServer.on('open', notifyServerOnline(bundler, krasConfig.api));
 
   await krasServer.start();
   openBrowser(open, port);

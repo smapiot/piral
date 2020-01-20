@@ -6,6 +6,7 @@ export * from './envs';
 export * from './hash';
 export * from './http';
 export * from './info';
+export * from './injectors';
 export * from './io';
 export * from './language';
 export * from './log';

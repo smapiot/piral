@@ -103,7 +103,7 @@ export default class PiletInjector implements KrasInjector {
   handle(req: KrasRequest): KrasResponse {
     const { bundler, app, api } = this.config;
 
-    if (req.target !== api) {
+    if (!req.target) {
       const path = req.url.substr(1);
       const target = join(app, path);
 
@@ -115,7 +115,7 @@ export default class PiletInjector implements KrasInjector {
           url: '/index.html',
         });
       }
-    } else {
+    } else if (req.target === api) {
       const path = req.url.substr(1).split('?')[0];
       const target = join(bundler.options.outDir, path);
 
