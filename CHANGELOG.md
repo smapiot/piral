@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 0.9.4 (tbd)
+
+* Allow disabling the modules patching during build (#121)
+* Fixed out of memory problem with large bundles (#121)
+* Fixed kras injector precedence (#122)
+* Export all imported module declarations during build (#127)
+* Improved debugging experience for legacy browsers (#128)
+
 ## 0.9.3 (December 17, 2019)
 
 * Fixed a bug in `piral-urql` when options are not set

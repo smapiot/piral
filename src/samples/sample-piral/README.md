@@ -38,6 +38,18 @@ pilet new sample-piral --target my-first-pilet
 
 This will create a new pilet called `my-first-pilet` in the *./my-first-pilet* folder. Afterwards run `npm install` in the directory to resolve all dependencies followed by `npm start` to start the instance locally.
 
+## Pilets
+
+The pilets all come from the [public sample feed](https://feed.piral.io/api/v1/pilet/sample).
+
+Their sources are scattered:
+
+- [Mario 5](https://github.com/FlorianRappl/mario5-sample-pilet)
+- [SpaceShoot](https://github.com/FlorianRappl/spaceshoot-sample-pilet)
+- [Ultimate Volley](https://github.com/FlorianRappl/volley-sample-pilet)
+
+The other pilets are currently closed source, but should be open sourced soon. They've been developed during smaller internal demonstrations and presentations.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

@@ -44,10 +44,11 @@ export function combineApiDeclarations(root: string, dependencyNames: Array<stri
     }
   }
 
-  const imports = paths.map(path => `import '${path}';`).join('\n');
-  return `${imports}
+  const importDecls = paths.map(path => `import '${path}';`).join('\n');
+  const exportDecls = paths.map(path => `export * from '${path}';`).join('\n');
+  return `${importDecls}
 
-export * from 'piral-core/api';`;
+${exportDecls}`;
 }
 
 function isContainedPackage(name: string) {
