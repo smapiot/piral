@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.5 (tbd)
+## 0.9.5 (January 21, 2020)
 
 * Fixed regression in the `pilet debug` command
 * Fixed documentation issue
