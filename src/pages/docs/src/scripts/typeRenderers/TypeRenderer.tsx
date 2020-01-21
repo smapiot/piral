@@ -37,7 +37,14 @@ function convertParamToArg(param: TiNode): TiType {
 
 export const TypeArgumentRenderer: React.FC<TypeArgumentRendererProps> = ({ args, render }) =>
   (args && (
-    <span>&lt;{withSep(args.map(ta => <TypeRenderer key={keyOf(ta)} render={render} node={ta} />), ', ')}&gt;</span>
+    <span>
+      &lt;
+      {withSep(
+        args.map(ta => <TypeRenderer key={keyOf(ta)} render={render} node={ta} />),
+        ', ',
+      )}
+      &gt;
+    </span>
   )) ||
   defaultResult;
 
@@ -46,11 +53,25 @@ export const TypeParameterRenderer: React.FC<TypeParameterRendererProps> = ({ ar
 );
 
 export const TypeRenderer: React.FC<TypeRendererProps> = ({ node, render }) => {
-  switch (node.type) {
+  switch (node && node.type) {
     case 'intersection':
-      return <>{withSep(node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ' & ')}</>;
+      return (
+        <>
+          {withSep(
+            node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
+            ' & ',
+          )}
+        </>
+      );
     case 'union':
-      return <>{withSep(node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ' | ')}</>;
+      return (
+        <>
+          {withSep(
+            node.types.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
+            ' | ',
+          )}
+        </>
+      );
     case 'stringLiteral':
       return <span>"{node.value}"</span>;
     case 'reference':
@@ -70,7 +91,14 @@ export const TypeRenderer: React.FC<TypeRendererProps> = ({ node, render }) => {
       return <span>{node.name}</span>;
     case 'tuple':
       return (
-        <span>[{withSep(node.elements.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />), ', ')}]</span>
+        <span>
+          [
+          {withSep(
+            node.elements.map(t => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
+            ', ',
+          )}
+          ]
+        </span>
       );
     default:
       return (

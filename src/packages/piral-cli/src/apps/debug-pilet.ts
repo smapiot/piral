@@ -13,6 +13,7 @@ import {
   logInfo,
   patchModules,
   setupBundler,
+  findEntryModule,
 } from '../common';
 
 export interface DebugPiletOptions {

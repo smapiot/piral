@@ -157,6 +157,7 @@ const allCommands: Array<ToolCommand<any>> = [
         cacheDir: args.cacheDir as string,
         publicUrl: args.publicUrl as string,
         minify: args.minify as boolean,
+        fresh: args.fresh as boolean,
         scopeHoist: args.scopeHoist as boolean,
         contentHash: args.contentHash as boolean,
         sourceMaps: args.sourceMaps as boolean,

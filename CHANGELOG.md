@@ -20,6 +20,13 @@
 * Allow async pilet module evaluation
 * Integrated `state` and `router` in foreign context
 
+## 0.9.5 (January 21, 2020)
+
+* Fixed regression in the `pilet debug` command
+* Fixed documentation issue
+* Optimized usage of Parcel cache
+* Support for submodule dependency sharing
+
 ## 0.9.4 (January 20, 2020)
 
 * Switched to the new Piral logo (#27)

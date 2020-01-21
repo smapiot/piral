@@ -58,6 +58,12 @@ async function bundleFiles(
 ) {
   const outDir = join(dest.outDir, subdir);
 
+  // since we create this anyway let's just pretend we want to have it clean!
+  await removeDirectory(outDir);
+
+  // using different environment variables requires clearing the cache
+  await clearCache(root, config.cacheDir);
+
   setStandardEnvs({
     production: true,
     root,
@@ -152,7 +158,6 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   await checkCliCompatibility(root);
 
   if (fresh) {
-    await clearCache(root, cacheDir);
     await removeDirectory(dest.outDir);
   }
 
