@@ -20,7 +20,24 @@ Transforms a standard React 15.x component into a component that can be used in 
 
 The extension slot component to be used in React 15.x components.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromReact15` function from the Pilet API to convert your React v15 components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using React v15 with Piral is as simple as installing `piral-react-15` and `react-15`.
 

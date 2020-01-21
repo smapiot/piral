@@ -24,7 +24,24 @@ Tracks an error or exceptional behavior incl. properties.
 
 Starts a tracking frame. The frame can be ended via the returned callback.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `trackEvent` function from the Pilet API to track a custom event with an arbitrary definition.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

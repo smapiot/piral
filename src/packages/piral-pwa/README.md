@@ -14,7 +14,24 @@ The following functions are brought to the Pilet API.
 
 Allows pilets to present a "native" notification. The exact looks of this are platform dependent, e.g., on Chrome for Windows 10 an item as added to the notification bar. On Chrome for MacOS X a quick notification appears.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `showAppNotification` function from the Pilet API to show a native notification in the host browser or operating system from the Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

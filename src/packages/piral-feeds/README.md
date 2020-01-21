@@ -16,7 +16,24 @@ Creates a new feed connector, which is an abstraction over a state container dri
 
 Returns a higher-order component for providing a `data` prop that reflects the current feed data.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `createConnector` function from the Pilet API to create a global container managed data feed inside the Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

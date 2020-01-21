@@ -16,7 +16,24 @@ Creates a new form container, which is an abstraction over a state container dri
 
 Returns a higher-order component for providing the form-related props such as `error`, `submitting`, `changed`, `formData`, `setFormData()`, `submit()`, `reset()`, or `changeForm()`.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `createForm` function from the Pilet API to create a global state container managed form inside the Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

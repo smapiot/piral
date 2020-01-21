@@ -20,7 +20,24 @@ Transforms a standard Riot.js component into a component that can be used in Pir
 
 The extension slot component to be used in Riot.js component.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromRiot` function from the Pilet API to convert your Riot.js components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Riot.js with Piral is as simple as installing `piral-riot` and `riot`.
 

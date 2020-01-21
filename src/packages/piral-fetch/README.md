@@ -14,7 +14,13 @@ The following functions are brought to the Pilet API.
 
 This is a simpler version of the standard `fetch` from the browser.
 
+## Usage
+
+> For authors of pilets
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

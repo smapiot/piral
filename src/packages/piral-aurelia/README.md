@@ -20,7 +20,24 @@ Transforms a standard Aurelia component (View Model) into a component that can b
 
 The extension slot component to be used in Aurelia component. This is not really needed, as it is made available automatically via an Aurelia custom element named `extension-component`.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromAurelia` function from the Pilet API to convert your Aurelia components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Aurelia with Piral is as simple as installing `piral-aurelia` and `aurelia-framework`.
 

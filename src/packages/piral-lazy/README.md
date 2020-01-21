@@ -16,7 +16,24 @@ The following functions are brought to the Pilet API.
 
 Transforms the result of a promise derived from a callback (i.e., lazy loading) to a proper component. This is thought for non-React lazy loading. For React you'll need to use the known way of applying `React.lazy` to your component initialization.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromLazy` function from the Pilet API to convert your lazy loaded components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using lazy loading with Piral is as simple as installing `piral-lazy`.
 

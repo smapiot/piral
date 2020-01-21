@@ -20,7 +20,24 @@ Transforms a standard Mithril.js component into a component that can be used in 
 
 The extension slot component to be used in Mithril.js component.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromMithril` function from the Pilet API to convert your Mithril.js components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Mithril.js with Piral is as simple as installing `piral-mithril` and `mithril`.
 

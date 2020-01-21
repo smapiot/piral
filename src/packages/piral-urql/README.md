@@ -24,7 +24,24 @@ Runs a GraphQL mutation against the server specified in the app shell.
 
 Establishes a GraphQL subscription via the subscription host defined in the app shell.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `query` function from the Pilet API to execute a GraphQL query against the defined GraphQL server.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

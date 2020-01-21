@@ -16,7 +16,24 @@ The following functions are brought to the Pilet API.
 
 Gets the currently authenticated user or `undefined` if no user is authenticated.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `getUser` function from the Pilet API to obtain information about the currently logged in user.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

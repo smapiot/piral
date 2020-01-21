@@ -20,7 +20,24 @@ Transforms a standard Angular.js module with a named component into a component 
 
 The extension slot module to be referenced in Angular.js module definitions. Allows using an Angular.js custom element named `extension-component`.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromNgjs` function from the Pilet API to convert your Angular.js modules to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular.js 1.x.
 

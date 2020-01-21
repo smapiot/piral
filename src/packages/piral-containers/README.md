@@ -14,7 +14,24 @@ The following functions are brought to the Pilet API.
 
 Creates a new pilet global state container. The state container will essentially couple to the app shell global state container. It is, however, only available for use inside the pilet.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `createState` function from the Pilet API to create your own sub states in the global state container of the Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

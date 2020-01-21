@@ -16,7 +16,24 @@ The following functions are brought to the Pilet API.
 
 Transforms a standard Elm component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromElm` function from the Pilet API to convert your Elm components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Elm with Piral is as simple as installing `piral-elm`.
 

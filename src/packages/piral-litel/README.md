@@ -20,7 +20,24 @@ Transforms a standard LitElement component into a component that can be used in 
 
 The name of the extension slot component to be used in LitElement components. This is usually not needed, as it is made available via a custom element named `litel-extension`. For safety measure `LitElExtension.name` could be used to find the name of the custom element.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromLitEl` function from the Pilet API to convert your LitElement components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using LitElement with Piral is as simple as installing `piral-litel` and `lit-element`.
 

@@ -20,7 +20,24 @@ Transforms a standard Vue component into a component that can be used in Piral, 
 
 The extension slot component to be used in Vue components. This is not really needed, as it is made available automatically via a Vue custom element named `extension-component`.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromVue` function from the Pilet API to convert your Vue components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Vue with Piral is as simple as installing `piral-vue` and `vue`.
 

@@ -20,7 +20,24 @@ Transforms a standard Inferno component into a component that can be used in Pir
 
 The extension slot component to be used in Inferno components.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromInferno` function from the Pilet API to convert your Inferno components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Inferno with Piral is as simple as installing `piral-inferno` and `inferno`.
 

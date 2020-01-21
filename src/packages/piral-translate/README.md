@@ -22,7 +22,24 @@ Sets the translations (custom language to key to string mapping) for the pilet.
 
 Gets the translations defined in the pilet.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `setTranslations` function from the Pilet API to set predefined translation snippets.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
