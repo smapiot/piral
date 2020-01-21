@@ -33,11 +33,7 @@ export async function openBrowser(shouldOpen: boolean, port: number) {
 
 export async function clearCache(root: string, dir = '.cache') {
   const cacheDir = resolve(root, dir);
-  const exists = await checkExists(cacheDir);
-
-  if (exists) {
-    await removeDirectory(cacheDir);
-  }
+  await removeDirectory(cacheDir);
 }
 
 export interface PiralBundlerSetup {
@@ -134,19 +130,24 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
         const isDirectory = await checkIsDirectory(rootName);
 
         if (isDirectory) {
-          try {
-            const packageFileData = await readJson(rootName, 'package.json');
+          if (folderName.startsWith('@')) {
+            // if we are scoped, just go down
+            await patch(rootName, ignoredPackages);
+          } else {
+            try {
+              const packageFileData = await readJson(rootName, 'package.json');
 
-            if (packageFileData._piralOptimized === undefined) {
-              delete packageFileData.browserslist;
-              packageFileData._piralOptimized = true;
+              if (packageFileData.name && packageFileData._piralOptimized === undefined) {
+                delete packageFileData.browserslist;
+                packageFileData._piralOptimized = true;
 
-              await writeJson(rootName, 'package.json', packageFileData);
-              await writeText(rootName, '.browserslistrc', 'node 10.11');
-            }
+                await writeJson(rootName, 'package.json', packageFileData);
+                await writeText(rootName, '.browserslistrc', 'node 10.11');
+              }
 
-            await patchFolder(rootName, ignoredPackages);
-          } catch (e) {}
+              await patchFolder(rootName, ignoredPackages);
+            } catch (e) {}
+          }
         }
       }
     }),

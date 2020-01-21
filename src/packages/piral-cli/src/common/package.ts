@@ -303,6 +303,12 @@ export async function retrievePiletsInfo(entryFile: string) {
   };
 }
 
+function isValidDependency(name: string) {
+  // super simple check at the moment
+  // just to filter out things like "redux-saga/effects"
+  return name.indexOf('/') === -1 || name.indexOf('@') === 0;
+}
+
 export async function patchPiletPackage(
   root: string,
   name: string,
@@ -344,7 +350,7 @@ export async function patchPiletPackage(
       deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
       return deps;
     }, {} as Record<string, string>),
-    ...allExternals.reduce((deps, name) => {
+    ...allExternals.filter(isValidDependency).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || 'latest';
       return deps;
     }, {} as Record<string, string>),
