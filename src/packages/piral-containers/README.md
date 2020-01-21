@@ -22,10 +22,32 @@ You can use the `createState` function from the Pilet API to create your own sub
 
 Example use:
 
-```ts
+```jsx
 import { PiletApi } from '<name-of-piral-instance>';
+import { MyPage } from './MyPage';
 
 export function setup(piral: PiletApi) {
+  const connect = piral.createState({
+    state: {
+      count: 0,
+    },
+    actions: {
+      increment(dispatch) {
+        dispatch(state => ({
+          count: state.count + 1,
+        }));
+      },
+      decrement(dispatch) {
+        dispatch(state => ({
+          count: state.count - 1,
+        }));
+      },
+    },
+  });
+  piral.registerPage(
+    '/sample',
+    connect(({ state, actions }) => <MyPage count={state.count} {...actions} />),
+  );
 }
 ```
 

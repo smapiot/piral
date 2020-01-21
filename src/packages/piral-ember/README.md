@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { Page } from './Page';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromEmber(Page));
 }
+```
+
+Within Ember.js components the Piral Ember.js extension component can be used by referring to `EmberExtension`, e.g.,
+
+```html
+<ember-extension name="name-of-extension"></ember-extension>
 ```
 
 ## Setup and Bootstrapping

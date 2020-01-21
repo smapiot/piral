@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { AureliaPage } from './AureliaPage';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromAurelia(AureliaPage));
 }
+```
+
+Within Aurelia components the Piral Aurelia extension component can be used by referring to `extension-component`, e.g.,
+
+```html
+<extension-component name="name-of-extension"></extension-component>
 ```
 
 ## Setup and Bootstrapping

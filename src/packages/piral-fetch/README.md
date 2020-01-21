@@ -18,6 +18,20 @@ This is a simpler version of the standard `fetch` from the browser.
 
 > For authors of pilets
 
+You can use the `fetch` function from the Pilet API to communicate with your backend. This instance has advantages over using the plain `fetch` function.
+
+For instance, it is already wired up with the authentication system and communicating to the right backend. As such relative URLs can be used when doing requests.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const promise = piral.fetch('/foo');
+}
+```
+
 ## Setup and Bootstrapping
 
 > For Piral instance developers

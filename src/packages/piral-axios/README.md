@@ -18,7 +18,7 @@ Represents an Axios instance already configured for use in the app shell.
 
 You can use the `axios` object from the Pilet API to communicate with your backend. This instance has advantages over creating a fresh instance from Axios.
 
-For instance, it is already wired up with the authentication system and communicating with the right backend. As such relative URLs can be used when doing requests.
+For instance, it is already wired up with the authentication system and communicating to the right backend. As such relative URLs can be used when doing requests.
 
 Example use:
 
@@ -26,8 +26,11 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
+  const promise = piral.axios.get('/foo');
 }
 ```
+
+For details on using Axios, see the [Axios documentation]().
 
 ## Setup and Bootstrapping
 

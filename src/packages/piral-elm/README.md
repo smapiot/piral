@@ -26,9 +26,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import Elm from './Page.elm';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromElm(Elm.Page));
 }
+```
+
+Within Elm components the Piral Elm extension component can be used by referring to `elm-extension`, e.g.,
+
+```html
+<elm-extension name="name-of-extension"></elm-extension>
 ```
 
 ## Setup and Bootstrapping

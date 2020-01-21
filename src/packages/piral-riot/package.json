@@ -1,6 +1,6 @@
 {
   "name": "piral-riot",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Plugin for integrating Riot.js components in Piral.",
   "keywords": [
     "piral",

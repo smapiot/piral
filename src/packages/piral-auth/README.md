@@ -28,8 +28,11 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
+  const currentUser = piral.geUser();
 }
 ```
+
+Note that the retrieved user data may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
 
 ## Setup and Bootstrapping
 

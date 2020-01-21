@@ -20,7 +20,7 @@ Gets the currently authenticated user's token or `undefined` if no user is authe
 
 > For authors of pilets
 
-You can use the `getAccessToken` function from the Pilet API. Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
+You can use the `getAccessToken` function from the Pilet API.
 
 Example use:
 
@@ -32,6 +32,8 @@ export function setup(piral: PiletApi) {
   // do something with userToken
 }
 ```
+
+Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
 
 ## Setup and Bootstrapping
 
