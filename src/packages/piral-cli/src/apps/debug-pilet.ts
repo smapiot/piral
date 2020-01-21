@@ -1,5 +1,4 @@
-import { readdirSync } from 'fs';
-import { join, dirname, resolve, basename, extname } from 'path';
+import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
   retrievePiletData,
@@ -13,22 +12,8 @@ import {
   logInfo,
   patchModules,
   setupBundler,
+  findEntryModule,
 } from '../common';
-
-function findEntryModule(entryFile: string, target: string) {
-  const entry = basename(entryFile);
-  const files = readdirSync(target);
-
-  for (const file of files) {
-    const ext = extname(file);
-
-    if (file === entry || file.replace(ext, '') === entry) {
-      return join(target, file);
-    }
-  }
-
-  return entryFile;
-}
 
 export interface DebugPiletOptions {
   logLevel?: 1 | 2 | 3;
@@ -75,7 +60,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
-  const entryModule = findEntryModule(entryFile, targetDir);
+  const entryModule = await findEntryModule(entryFile, targetDir);
   const { peerDependencies, root, appPackage, appFile, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const krasConfig = readKrasConfig({ port }, krasrc);
