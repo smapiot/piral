@@ -6,7 +6,6 @@ import {
   postProcess,
   debugPiletApi,
   openBrowser,
-  findEntryModule,
   reorderInjectors,
   notifyServerOnline,
   logInfo,
