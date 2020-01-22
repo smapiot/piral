@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.6 (tbd)
+## 0.9.6 (January 22, 2020)
 
 * Resolve cache directory according to Parcel
 * Support globs and deep structure in *package.json* `files`
