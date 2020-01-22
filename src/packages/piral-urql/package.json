@@ -1,6 +1,6 @@
 {
   "name": "piral-urql",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Plugin for providing a GraphQL client in Piral.",
   "keywords": [
     "piral",
@@ -39,7 +39,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.9.5"
+    "piral-core": "^0.9.6"
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
