@@ -16,13 +16,8 @@
   "homepage": "https://piral.io",
   "license": "MIT",
   "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
   "app": "src/index.html",
-  "files": [
-    "src",
-    "lib",
-    "tsconfig.json"
-  ],
+  "files": [],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smapiot/piral.git"
