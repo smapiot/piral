@@ -3,6 +3,7 @@
 ## 0.9.6 (tbd)
 
 * Resolve cache directory according to Parcel
+* Support globs and deep structure in *package.json* `files`
 
 ## 0.9.5 (January 21, 2020)
 
