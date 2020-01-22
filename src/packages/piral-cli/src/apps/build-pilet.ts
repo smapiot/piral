@@ -3,12 +3,12 @@ import {
   setStandardEnvs,
   postProcess,
   removeDirectory,
-  clearCache,
   findEntryModule,
   retrievePiletData,
   logInfo,
   patchModules,
   setupBundler,
+  defaultCacheDir,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -29,7 +29,7 @@ export interface BuildPiletOptions {
 export const buildPiletDefaults = {
   entry: './src/index',
   target: './dist/index.js',
-  cacheDir: '.cache',
+  cacheDir: defaultCacheDir,
   detailedReport: false,
   minify: true,
   logLevel: 3 as const,
@@ -60,6 +60,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const entryModule = await findEntryModule(entryFile, targetDir);
   const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
+  const cache = resolve(root, cacheDir);
 
   const dest = {
     outDir: dirname(resolve(baseDir, target)),
@@ -70,11 +71,11 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await removeDirectory(dest.outDir);
   }
 
-  await clearCache(root, cacheDir);
+  await removeDirectory(cache);
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cacheDir, ignored);
+    await patchModules(root, cache, ignored);
   }
 
   setStandardEnvs({
@@ -90,7 +91,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     entryModule,
     config: {
       ...dest,
-      cacheDir,
+      cacheDir: cache,
       watch: false,
       sourceMaps,
       minify,

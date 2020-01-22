@@ -20,6 +20,11 @@
 * Allow async pilet module evaluation
 * Integrated `state` and `router` in foreign context
 
+## 0.9.6 (tbd)
+
+* Resolve cache directory according to Parcel
+* Support globs and deep structure in *package.json* `files`
+
 ## 0.9.5 (January 21, 2020)
 
 * Fixed regression in the `pilet debug` command
@@ -32,7 +37,7 @@
 * Switched to the new Piral logo (#27)
 * Allow disabling the modules patching during build (#121)
 * Fixed out of memory problem with large bundles (#121)
-* Fixed kras injector precedence (#122)
+* Fixed *kras* injector precedence (#122)
 * Export all imported module declarations during build (#127)
 * Improved debugging experience for legacy browsers (#128)
 

@@ -48,13 +48,15 @@ interface FileDescriptor {
   targetPath: string;
 }
 
+const globPatternStartIndicators = ['*', '?', '[', '!(', '?(', '+(', '@('];
+
 async function getMatchingFiles(
   source: string,
   target: string,
   file: string | TemplateFileLocation,
   mirror = false,
 ): Promise<Array<FileDescriptor>> {
-  const { from, to, deep = false } = typeof file === 'string' ? { from: file, to: file, deep: false } : file;
+  const { from, to, deep = true } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
   const sourcePath = resolve(source, from);
   const targetPath = resolve(target, mirror ? from : to);
   const isDirectory = await checkIsDirectory(sourcePath);
@@ -65,6 +67,26 @@ async function getMatchingFiles(
     return files.map(file => ({
       sourcePath: file,
       targetPath: resolve(targetPath, relative(sourcePath, file)),
+    }));
+  } else if (globPatternStartIndicators.some(m => from.indexOf(m) !== -1)) {
+    const files = await matchFiles(source, from);
+    const parts = sourcePath.split('/');
+
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+
+      if (globPatternStartIndicators.some(m => part.indexOf(m) !== -1)) {
+        parts.splice(i, parts.length - i);
+        break;
+      }
+    }
+
+    const relRoot = parts.join('/');
+    const tarRoot = resolve(target, mirror ? relRoot : to);
+
+    return files.map(file => ({
+      sourcePath: file,
+      targetPath: resolve(tarRoot, relative(relRoot, file)),
     }));
   }
 

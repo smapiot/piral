@@ -17,6 +17,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "app": "src/index.html",
+  "files": [],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smapiot/piral.git"
