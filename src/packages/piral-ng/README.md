@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { AngularPage } from './AngularPage';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromNg(AngularPage));
 }
+```
+
+Within Angular components the Piral Angular extension component can be used by referring to `extension-component`, e.g.,
+
+```html
+<extension-component name="name-of-extension"></extension-component>
 ```
 
 ## Setup and Bootstrapping

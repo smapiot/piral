@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { MithrilPage } from './MithrilPage';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromMithril(MithrilPage));
 }
+```
+
+Within Mithril.js components the Piral Mithril.js extension component can be used by referring to `MithrilExtension`, e.g.,
+
+```jsx
+<MithrilExtension name="name-of-extension" />
 ```
 
 ## Setup and Bootstrapping

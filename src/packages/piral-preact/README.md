@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { PreactPage } from './PreactPage';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromPreact(PreactPage));
 }
+```
+
+Within Preact components the Piral Preact extension component can be used by referring to `PreactExtension`, e.g.,
+
+```jsx
+<PreactExtension name="name-of-extension" />
 ```
 
 ## Setup and Bootstrapping

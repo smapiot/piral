@@ -28,9 +28,11 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
-  const promise = piral.fetch('/foo');
+  const promise = piral.fetch('/foo').then(res => res.body);
 }
 ```
+
+Note that the response is slightly different to the `fetch` function from the browser.
 
 ## Setup and Bootstrapping
 

@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { HyperappPage } from './HyperappPage';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromHyperapp(HyperappPage));
 }
+```
+
+Within Hyperapp components the Piral Hyperapp extension component can be used by referring to `HyperappExtension`, e.g.,
+
+```jsx
+<HyperappExtension name="name-of-extension" />
 ```
 
 ## Setup and Bootstrapping

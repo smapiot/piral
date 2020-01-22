@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { InfernoPage } from './InfernoPage';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromInferno(InfernoPage));
 }
+```
+
+Within Inferno components the Piral Inferno extension component can be used by referring to `InfernoExtension`, e.g.,
+
+```jsx
+<InfernoExtension name="name-of-extension" />
 ```
 
 ## Setup and Bootstrapping

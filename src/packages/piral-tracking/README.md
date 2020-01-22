@@ -36,6 +36,39 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
+  piral.trackEvent('sample-pilet-ready');
+}
+```
+
+You can use the `trackError` function from the Pilet API to track an error from the pilet.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  try {
+    throw new Error('Ouch!');
+  } catch (e) {
+    piral.trackError(e);
+  }
+}
+```
+
+You can use the `trackFrame` function from the Pilet API to track a custom event with integrated running time measurement.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const frame = piral.trackFrame('sample-pilet-computation');
+
+  setTimeout(() => {
+    frame();
+  }, 4000);
 }
 ```
 

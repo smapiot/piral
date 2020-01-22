@@ -36,6 +36,52 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
+  const gql = `query {
+    myResource(id: "example") {
+      name
+      age
+      whatever
+    }
+  }`;
+  const promise = piral.query(gql).then(({ name, age, whatever }) => {});
+}
+```
+
+You can use the `mutate` function from the Pilet API to run a GraphQL mutation against the defined GraphQL server.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const gql = `mutation {
+    changeMyResource(id: "example", name: "foo") {
+      name
+      age
+      whatever
+    }
+  }`;
+  const promise = piral.mutate(gql).then(({ name, age, whatever }) => {});
+}
+```
+
+You can use the `subscribe` function from the Pilet API to create a GraphQL subscription to the defined GraphQL server.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const gql = `subscription {
+    onMyResourceChange(id: "example") {
+      name
+      age
+      whatever
+    }
+  }`;
+  const unsubscribe = piral.subscribe(gql, ({ name, age, whatever }) => {});
 }
 ```
 

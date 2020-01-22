@@ -30,9 +30,18 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { createRiotPage } from './page';
 
 export function setup(piral: PiletApi) {
+  const RiotPage = createRiotPage(piral.RiotExtension);
+  piral.registerPage('/sample', piral.fromRiot(RiotPage));
 }
+```
+
+Within Riot components the Piral Riot extension component can be used by referring to `RiotExtension`, e.g.,
+
+```html
+<riot-extension name="name-of-extension"></riot-extension>
 ```
 
 ## Setup and Bootstrapping

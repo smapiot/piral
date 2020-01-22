@@ -26,10 +26,24 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { MyPage } from './MyPage';
 
 export function setup(piral: PiletApi) {
+  const withSimpleForm = piral.createForm({
+    message: `Really lose the data?`,
+    emptyData: {
+      firstName: '',
+      lastName: '',
+    },
+    onSubmit(data) {
+      // return promise with data
+    },
+  });
+  piral.registerPage('/sample-form', withSimpleForm(MyPage));
 }
 ```
+
+Calling `createForm` returns a higher-order component that injects new props from the `FormProps<TFormData>` interface into the component. These props contain among others a `formData` record and a `submit` function.
 
 ## Setup and Bootstrapping
 

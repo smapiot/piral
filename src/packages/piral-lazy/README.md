@@ -28,8 +28,12 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
+  const LazyPage = piral.fromLazy(() => import('./MyPage'));
+  piral.registerPage('/sample', LazyPage);
 }
 ```
+
+**Remark**: For React components `React.lazy` should be preferred. The provided lazy loading wrapper should only be used for third-party components that require a converter.
 
 ## Setup and Bootstrapping
 

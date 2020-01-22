@@ -34,6 +34,9 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
+  piral.showModal('my-modal', {
+    someValue: 42,
+  });
 }
 ```
 
@@ -43,10 +46,10 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { MyTile } from './MyTile';
+import { MyModal } from './MyModal';
 
 export function setup(piral: PiletApi) {
-  piral.registerModal(MyTile);
+  piral.registerModal('my-modal', MyModal);
 }
 ```
 
@@ -56,13 +59,9 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { MyTile } from './MyTile';
 
 export function setup(piral: PiletApi) {
-  // register with a name
-  piral.registerModal('first', MyTile);
-  // and unregister; maybe some time later?
-  piral.unregisterModal('first');
+  piral.unregisterModal('my-modal');
 }
 ```
 

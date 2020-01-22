@@ -24,6 +24,9 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
+  piral.showNotification('Hello from my sample pilet!', {
+    type: 'info',
+  });
 }
 ```
 

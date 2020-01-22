@@ -26,9 +26,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import SveltePage from './Page.svelte';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromSvelte(SveltePage));
 }
+```
+
+Within Svelte components the Piral Svelte extension component can be used by referring to `svelte-extension`, e.g.,
+
+```html
+<svelte-extension name="name-of-extension"></svelte-extension>
 ```
 
 ## Setup and Bootstrapping

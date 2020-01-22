@@ -1,6 +1,6 @@
 {
   "name": "piral-elm",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Plugin for integrating Elm components in Piral.",
   "keywords": [
     "piral",

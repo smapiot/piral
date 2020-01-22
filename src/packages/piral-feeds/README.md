@@ -66,6 +66,8 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Calling `createConnector` returns a higher-order component that injects a new prop called `data` into the component.
+
 ## Setup and Bootstrapping
 
 > For Piral instance developers

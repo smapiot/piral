@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { React15Page } from './React15Page';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromReact15(React15Page));
 }
+```
+
+Within React v15 components the Piral React v15 extension component can be used by referring to `React15Extension`, e.g.,
+
+```jsx
+<React15Extension name="name-of-extension" />
 ```
 
 ## Setup and Bootstrapping

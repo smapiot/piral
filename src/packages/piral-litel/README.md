@@ -30,9 +30,17 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import './LitElPage';
 
 export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromLitel('my-page'));
 }
+```
+
+Within LitElement components the Piral LitElement extension component can be used by referring to `litel-extension`, e.g.,
+
+```html
+<litel-extension name="name-of-extension"></litel-extension>
 ```
 
 ## Setup and Bootstrapping
