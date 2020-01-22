@@ -1,4 +1,5 @@
 import { ParcelOptions } from 'parcel-bundler';
+import { defaultCacheDir } from './info';
 
 export interface ParcelConfig extends ParcelOptions {
   global?: string;
@@ -8,7 +9,7 @@ export interface ParcelConfig extends ParcelOptions {
 export function extendConfig(options: ParcelConfig): ParcelConfig {
   return {
     cache: true,
-    cacheDir: '.cache',
+    cacheDir: defaultCacheDir,
     contentHash: false,
     scopeHoist: false,
     target: 'browser',

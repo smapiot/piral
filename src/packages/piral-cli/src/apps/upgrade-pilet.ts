@@ -13,9 +13,10 @@ import {
   getPiletsInfo,
   runScript,
   installDependencies,
-  clearCache,
   getCurrentPackageDetails,
   logWarn,
+  defaultCacheDir,
+  removeDirectory,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -37,6 +38,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     forceOverwrite = upgradePiletDefaults.forceOverwrite,
   } = options;
   const root = resolve(baseDir, target);
+  const cache = resolve(root, defaultCacheDir);
   const valid = await checkExistingDirectory(root);
 
   if (!valid) {
@@ -95,7 +97,7 @@ Please make sure to build your development package with the Piral CLI using "pir
       await runScript(postUpgrade, root);
     }
 
-    await clearCache();
+    await removeDirectory(cache);
     logDone(`All done!`);
   } else {
     throw new Error(`Could not find a "piral" section in the "package.json" file. Aborting.`);

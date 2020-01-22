@@ -4,7 +4,6 @@ import {
   retrievePiletsInfo,
   retrievePiralRoot,
   removeDirectory,
-  clearCache,
   updateExistingJson,
   createFileIfNotExists,
   logDone,
@@ -21,6 +20,7 @@ import {
   ParcelConfig,
   patchModules,
   setupBundler,
+  defaultCacheDir,
 } from '../common';
 
 interface Destination {
@@ -60,7 +60,7 @@ async function bundleFiles(
   await removeDirectory(outDir);
 
   // using different environment variables requires clearing the cache
-  await clearCache(config.cacheDir);
+  await removeDirectory(config.cacheDir);
 
   setStandardEnvs({
     production: true,
@@ -112,7 +112,7 @@ export const buildPiralDefaults = {
   entry: './',
   target: './dist',
   publicUrl: '/',
-  cacheDir: '.cache',
+  cacheDir: defaultCacheDir,
   detailedReport: false,
   logLevel: 3 as const,
   fresh: false,
@@ -143,6 +143,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, version, root, dependencies, ignored, ...pilets } = await retrievePiletsInfo(entryFiles);
   const { externals } = pilets;
+  const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
   if (fresh) {
@@ -151,7 +152,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cacheDir, ignored);
+    await patchModules(root, cache, ignored);
   }
 
   // everything except release -> build develop
@@ -163,7 +164,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const { files: originalFiles = [] } = require(originalPackageJson);
     const appDir = 'app';
     const outDir = await bundleFiles(name, true, root, externals, entryFiles, dest, join('develop', appDir), {
-      cacheDir,
+      cacheDir: cache,
       watch: false,
       sourceMaps,
       contentHash,
@@ -238,7 +239,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logInfo('Starting build ...');
 
     const outDir = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', {
-      cacheDir,
+      cacheDir: cache,
       watch: false,
       sourceMaps,
       contentHash,

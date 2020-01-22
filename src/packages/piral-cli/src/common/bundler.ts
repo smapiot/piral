@@ -8,7 +8,6 @@ import { ParcelConfig, extendConfig } from './settings';
 import { modifyBundlerForPilet, extendBundlerForPilet } from './pilet';
 import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
 import {
-  removeDirectory,
   checkExists,
   readJson,
   writeText,
@@ -29,11 +28,6 @@ export async function openBrowser(shouldOpen: boolean, port: number) {
       logFail(`Unexpected error while opening in browser: ${err}`);
     }
   }
-}
-
-export async function clearCache(dir = '.cache') {
-  const cacheDir = resolve(process.cwd(), dir);
-  await removeDirectory(cacheDir);
 }
 
 export interface PiralBundlerSetup {
@@ -164,15 +158,14 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
 }
 
 export async function patchModules(rootDir: string, cacheDir: string, ignoredPackages = defaultIgnoredPackages) {
-  const target = resolve(rootDir, cacheDir);
   const file = '.patched';
-  const prevHash = await readText(target, file);
+  const prevHash = await readText(cacheDir, file);
   const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
   const currHash = computeHash(lockContent);
 
   if (prevHash !== currHash) {
     await patchFolder(rootDir, ignoredPackages);
-    await createFileIfNotExists(target, file, currHash, ForceOverwrite.yes);
+    await createFileIfNotExists(cacheDir, file, currHash, ForceOverwrite.yes);
   }
 }
 

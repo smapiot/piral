@@ -3,7 +3,6 @@ import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
   retrievePiletsInfo,
   retrievePiralRoot,
-  clearCache,
   setStandardEnvs,
   openBrowser,
   reorderInjectors,
@@ -11,6 +10,7 @@ import {
   logInfo,
   patchModules,
   setupBundler,
+  removeDirectory,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -59,6 +59,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
+  const cache = resolve(root, cacheDir);
 
   const krasConfig = readKrasConfig({ port }, krasrc);
 
@@ -83,12 +84,12 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   }
 
   if (fresh) {
-    await clearCache(cacheDir);
+    await removeDirectory(cache);
   }
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cacheDir, ignored);
+    await patchModules(root, cache, ignored);
   }
 
   setStandardEnvs({
@@ -103,7 +104,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     config: {
       publicUrl,
       logLevel,
-      cacheDir,
+      cacheDir: cache,
       scopeHoist,
       hmr,
       autoInstall,

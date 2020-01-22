@@ -2,7 +2,6 @@ import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import {
   retrievePiletData,
-  clearCache,
   setStandardEnvs,
   postProcess,
   debugPiletApi,
@@ -13,6 +12,8 @@ import {
   patchModules,
   setupBundler,
   findEntryModule,
+  defaultCacheDir,
+  removeDirectory,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -31,7 +32,7 @@ export interface DebugPiletOptions {
 
 export const debugPiletDefaults = {
   logLevel: 3 as const,
-  cacheDir: '.cache',
+  cacheDir: defaultCacheDir,
   entry: './src/index',
   fresh: false,
   open: false,
@@ -64,6 +65,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const { peerDependencies, root, appPackage, appFile, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const krasConfig = readKrasConfig({ port }, krasrc);
+  const cache = resolve(root, cacheDir);
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(targetDir, 'mocks');
@@ -86,12 +88,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   if (fresh) {
-    await clearCache(cacheDir);
+    await removeDirectory(cache);
   }
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cacheDir, ignored);
+    await patchModules(root, cache, ignored);
   }
 
   setStandardEnvs({
@@ -110,7 +112,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       minify: true,
       scopeHoist,
       publicUrl: './',
-      cacheDir,
+      cacheDir: cache,
       autoInstall,
     },
   });
