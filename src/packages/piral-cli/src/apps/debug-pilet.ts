@@ -86,7 +86,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   if (fresh) {
-    await clearCache(root, cacheDir);
+    await clearCache(cacheDir);
   }
 
   if (optimizeModules) {

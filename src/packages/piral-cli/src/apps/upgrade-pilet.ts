@@ -95,7 +95,7 @@ Please make sure to build your development package with the Piral CLI using "pir
       await runScript(postUpgrade, root);
     }
 
-    await clearCache(root);
+    await clearCache();
     logDone(`All done!`);
   } else {
     throw new Error(`Could not find a "piral" section in the "package.json" file. Aborting.`);

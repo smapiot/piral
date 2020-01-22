@@ -60,7 +60,7 @@ async function bundleFiles(
   await removeDirectory(outDir);
 
   // using different environment variables requires clearing the cache
-  await clearCache(root, config.cacheDir);
+  await clearCache(config.cacheDir);
 
   setStandardEnvs({
     production: true,

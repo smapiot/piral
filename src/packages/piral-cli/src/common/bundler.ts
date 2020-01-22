@@ -31,8 +31,8 @@ export async function openBrowser(shouldOpen: boolean, port: number) {
   }
 }
 
-export async function clearCache(root: string, dir = '.cache') {
-  const cacheDir = resolve(root, dir);
+export async function clearCache(dir = '.cache') {
+  const cacheDir = resolve(process.cwd(), dir);
   await removeDirectory(cacheDir);
 }
 

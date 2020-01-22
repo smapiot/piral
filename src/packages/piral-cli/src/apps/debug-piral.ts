@@ -83,7 +83,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   }
 
   if (fresh) {
-    await clearCache(root, cacheDir);
+    await clearCache(cacheDir);
   }
 
   if (optimizeModules) {

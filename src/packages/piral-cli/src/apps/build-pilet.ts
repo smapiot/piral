@@ -70,7 +70,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await removeDirectory(dest.outDir);
   }
 
-  await clearCache(root, cacheDir);
+  await clearCache(cacheDir);
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
