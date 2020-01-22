@@ -51,13 +51,15 @@ async function bundleFiles(
   dependencies: Array<string>,
   entryFiles: string,
   dest: Destination,
-  subdir: string,
+  category: string,
+  dir: string,
   config: ParcelConfig,
 ) {
-  const outDir = join(dest.outDir, subdir);
+  const subDir = join(dest.outDir, category);
+  const outDir = join(subDir, dir);
 
   // since we create this anyway let's just pretend we want to have it clean!
-  await removeDirectory(outDir);
+  await removeDirectory(subDir);
 
   // using different environment variables requires clearing the cache
   await removeDirectory(config.cacheDir);
@@ -163,7 +165,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const originalPackageJson = resolve(root, 'package.json');
     const { files: originalFiles = [] } = require(originalPackageJson);
     const appDir = 'app';
-    const outDir = await bundleFiles(name, true, root, externals, entryFiles, dest, join('develop', appDir), {
+    const outDir = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', appDir, {
       cacheDir: cache,
       watch: false,
       sourceMaps,
@@ -238,7 +240,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   if (type !== 'develop') {
     logInfo('Starting build ...');
 
-    const outDir = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', {
+    const outDir = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
       cacheDir: cache,
       watch: false,
       sourceMaps,
