@@ -36,7 +36,7 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
   return () => dependencies;
 }
 
-interface PiralArbiterConfig {
+interface PiletOptionsConfig {
   availablePilets: Array<Pilet>;
   createApi: GenericPiletApiCreator<PiletApi>;
   getDependencies: PiletDependencyGetter;
@@ -45,16 +45,38 @@ interface PiralArbiterConfig {
   context: GlobalStateContext;
 }
 
-export function createArbiterOptions({
+export function createPiletOptions({
   context,
   createApi,
   availablePilets,
   getDependencies,
   strategy,
   requestPilets,
-}: PiralArbiterConfig): LoadPiletsOptions<PiletApi> {
-  if (process.env.DEBUG_PILET !== undefined) {
-    const loadPilets = sessionStorage.getItem('dbg:loadPilets') === 'on';
+}: PiletOptionsConfig): LoadPiletsOptions<PiletApi> {
+  // if we build the debug version of piral (debug and emulator build)
+  if (process.env.DEBUG_PIRAL !== undefined) {
+    // the DEBUG_PIRAL env should contain the Piral CLI compatibility version
+    window['dbg:piral'] = {
+      debug: 'v0',
+      instance: {
+        name: process.env.BUILD_PCKG_NAME,
+        version: process.env.BUILD_PCKG_VERSION,
+        dependencies: process.env.SHARED_DEPENDENCIES,
+        context,
+      },
+      build: {
+        date: process.env.BUILD_TIME_FULL,
+        cli: process.env.PIRAL_CLI_VERSION,
+        compat: process.env.DEBUG_PIRAL,
+      },
+      pilets: {
+        createApi,
+        getDependencies,
+        requestPilets,
+      },
+    };
+    // check if pilets should be loaded
+    const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
     const noPilets = () => Promise.resolve([]);
     requestPilets = loadPilets ? requestPilets : noPilets;
   }
@@ -67,7 +89,9 @@ export function createArbiterOptions({
     fetchPilets() {
       const promise = requestPilets();
 
+      // if we run against the debug pilet API (emulator build only)
       if (process.env.DEBUG_PILET !== undefined) {
+        // the DEBUG_PILET env should point to an API address used as a proxy
         const initialTarget = `${location.origin}${process.env.DEBUG_PILET}`;
         const updateTarget = initialTarget.replace('http', 'ws');
         const appendix = fetch(initialTarget).then(res => res.json());

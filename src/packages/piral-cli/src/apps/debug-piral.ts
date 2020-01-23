@@ -97,6 +97,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   setStandardEnvs({
     root,
+    debugPiral: true,
     dependencies: externals,
     piral: name,
   });

@@ -1,11 +1,9 @@
-import * as React from 'react';
 import { blazingStrategy, standardStrategy, isfunc } from 'piral-base';
 import { getLocalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
-import { createGlobalState, createActions, StateContext, includeActions } from './state';
-import { PiralView, Mediator, ResponsiveLayout } from './components';
-import { createArbiterOptions } from './helpers';
+import { createGlobalState, createActions, includeActions } from './state';
+import { createPiletOptions } from './helpers';
 import { createListener } from './utils';
-import { PiralConfiguration, PortalProps, PiralInstance } from './types';
+import { PiralConfiguration, PiralInstance } from './types';
 
 /**
  * Creates a new PiralInstance component, which can be used for
@@ -46,7 +44,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     version: process.env.BUILD_PCKG_VERSION || '1.0.0',
     hash: '',
   });
-  const options = createArbiterOptions({
+  const options = createPiletOptions({
     context,
     createApi,
     availablePilets,
@@ -67,12 +65,3 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     options,
   };
 }
-
-export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => (
-  <StateContext.Provider value={instance.context}>
-    <ResponsiveLayout breakpoints={breakpoints} />
-    <Mediator options={instance.options} />
-    <PiralView>{children}</PiralView>
-  </StateContext.Provider>
-);
-Piral.displayName = 'Piral';

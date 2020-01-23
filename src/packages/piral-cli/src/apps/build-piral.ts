@@ -69,7 +69,8 @@ async function bundleFiles(
   setStandardEnvs({
     production: true,
     root,
-    develop,
+    debugPiral: develop,
+    debugPilet: develop,
     piral,
     dependencies,
   });

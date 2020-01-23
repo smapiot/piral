@@ -1,9 +1,10 @@
 import { join } from 'path';
-import { debugPiletApi, pathSeparator } from './info';
+import { debugPiletApi, pathSeparator, cliVersion, compatVersion } from './info';
 
 export interface StandardEnvProps {
   production?: boolean;
-  develop?: boolean;
+  debugPiral?: boolean;
+  debugPilet?: boolean;
   root: string;
   piral?: string;
   dependencies?: Array<string>;
@@ -22,13 +23,20 @@ export function setStandardEnvs(options: StandardEnvProps) {
   process.env.BUILD_TIME_FULL = new Date().toISOString();
   process.env.BUILD_PCKG_VERSION = packageJson.version;
   process.env.BUILD_PCKG_NAME = packageJson.name;
+  process.env.PIRAL_CLI_VERSION = cliVersion;
 
   if (!hasPath(binDir)) {
     const existing = process.env.PATH || '';
     process.env.PATH = `${existing}${pathSeparator}${binDir}`;
   }
 
-  if (options.develop) {
+  if (options.debugPiral) {
+    process.env.DEBUG_PIRAL = compatVersion;
+  } else {
+    delete process.env.DEBUG_PIRAL;
+  }
+
+  if (options.debugPilet) {
     process.env.DEBUG_PILET = debugPiletApi;
   } else {
     delete process.env.DEBUG_PILET;
