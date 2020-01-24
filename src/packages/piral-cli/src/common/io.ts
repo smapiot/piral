@@ -19,6 +19,7 @@ import { deepMerge } from './merge';
 import { promptConfirm } from './interactive';
 import { nodeVersion } from './info';
 import { computeHash } from './hash';
+import { logFail, logWarn } from './log';
 
 export enum ForceOverwrite {
   no,
@@ -78,7 +79,7 @@ export async function createDirectory(targetDir: string) {
       createDirectoryLegacy(targetDir);
       return true;
     } catch (e) {
-      console.error(`Error while creating ${targetDir}: `, e);
+      logFail(`Error while creating ${targetDir}: `, e);
       return false;
     }
   }
@@ -89,7 +90,7 @@ export async function createDirectory(targetDir: string) {
     });
     return true;
   } catch (e) {
-    console.error(`Error while creating ${targetDir}: `, e);
+    logFail(`Error while creating ${targetDir}: `, e);
     return false;
   }
 }
@@ -281,7 +282,7 @@ export async function copy(source: string, target: string, forceOverwrite = Forc
         await copy(source, target, ForceOverwrite.yes);
       }
     } else {
-      console.warn(e.message || `Did not overwrite: File ${target} already exists.`);
+      logWarn(e.message || `Did not overwrite: File ${target} already exists.`);
     }
   }
 }

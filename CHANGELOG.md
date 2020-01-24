@@ -19,6 +19,7 @@
 * Added `dispatch` and `readState` actions
 * Allow async pilet module evaluation
 * Integrated `state` and `router` in foreign context
+* Introduced additional checks for missing files (#129)
 
 ## 0.9.6 (January 22, 2020)
 

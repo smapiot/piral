@@ -183,12 +183,23 @@ async function copyFiles(
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo>,
 ) {
+  let result = true;
+
   for (const subfile of subfiles) {
     const { sourcePath, targetPath } = subfile;
-    const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
-    const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
-    await copy(sourcePath, targetPath, force);
+    const exists = await checkExists(sourcePath);
+
+    if (exists) {
+      const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
+      const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
+      await copy(sourcePath, targetPath, force);
+    } else {
+      logFail(`The file "%s" does not exist!`, sourcePath);
+      result = false;
+    }
   }
+
+  return result;
 }
 
 export async function copyScaffoldingFiles(
@@ -196,10 +207,15 @@ export async function copyScaffoldingFiles(
   target: string,
   files: Array<string | TemplateFileLocation>,
 ) {
+  let result = true;
+
   for (const file of files) {
     const subfiles = await getMatchingFiles(source, target, file, true);
-    await copyFiles(subfiles, ForceOverwrite.yes, []);
+    const success = await copyFiles(subfiles, ForceOverwrite.yes, []);
+    result = success && result;
   }
+
+  return result;
 }
 
 export async function copyPiralFiles(
@@ -209,10 +225,15 @@ export async function copyPiralFiles(
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo> = [],
 ) {
+  let result = true;
+
   for (const file of files) {
     const subfiles = await getFilesOf(root, name, file);
-    await copyFiles(subfiles, forceOverwrite, originalFiles);
+    const success = await copyFiles(subfiles, forceOverwrite, originalFiles);
+    result = success && result;
   }
+
+  return result;
 }
 
 export function getPiletsInfo(piralInfo: any): PiletsInfo {
