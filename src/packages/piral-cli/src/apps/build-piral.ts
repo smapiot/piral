@@ -1,4 +1,4 @@
-import { dirname, basename, extname, join, resolve } from 'path';
+import { dirname, basename, extname, join, resolve, relative } from 'path';
 import { generateDeclaration } from '../declaration';
 import {
   setStandardEnvs,
@@ -23,6 +23,9 @@ import {
   getEntryFiles,
   setupBundler,
   defaultCacheDir,
+  createFileFromTemplateIfNotExists,
+  ForceOverwrite,
+  gatherJsBundles,
 } from '../common';
 
 interface Destination {
@@ -85,8 +88,12 @@ async function bundleFiles(
     },
   });
 
-  await bundler.bundle();
-  return outDir;
+  const bundle = await bundler.bundle();
+  const [file] = gatherJsBundles(bundle);
+  return {
+    outDir,
+    outFile: relative(outDir, (file && file.src) || outDir),
+  };
 }
 
 async function createDeclarationFile(
@@ -179,7 +186,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const originalPackageJson = resolve(root, 'package.json');
     const { files: originalFiles = [] } = require(originalPackageJson);
     const appDir = 'app';
-    const outDir = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', appDir, {
+    const { outDir, outFile } = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', appDir, {
       cacheDir: cache,
       watch: false,
       sourceMaps,
@@ -237,10 +244,13 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     // we just want to make sure that "files" mentioned in the original package.json are respected in the package
     const prs2 = await copyScaffoldingFiles(root, rootDir, originalFiles);
     // actually including this one hints that the app shell should have been included - which is forbidden
-    await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
+    await createFileFromTemplateIfNotExists('other', 'piral', outDir, 'index.js', ForceOverwrite.yes, {
+      name,
+      outFile,
+    });
     await createDeclarationFile(outDir, name, root, entryFiles, dependencies.std);
     await createPackage(rootDir);
-    await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
+    //await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 
     logDone(`Development package available in "${rootDir}".`);
     success = prs1 && prs2;
@@ -255,7 +265,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   if (type !== 'develop') {
     logInfo('Starting build ...');
 
-    const outDir = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
+    const { outDir } = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
       cacheDir: cache,
       watch: false,
       sourceMaps,

@@ -75,6 +75,9 @@ export function createPiletOptions({
         requestPilets,
       },
     };
+  }
+
+  if (process.env.DEBUG_PILET !== undefined) {
     // check if pilets should be loaded
     const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
     const noPilets = () => Promise.resolve([]);
@@ -98,22 +101,29 @@ export function createPiletOptions({
         const ws = new WebSocket(updateTarget);
 
         ws.onmessage = ({ data }) => {
-          const meta = JSON.parse(data);
-          const getter = getDependencyResolver(globalDependencies, getDependencies);
-          const fetcher = (url: string) =>
-            fetch(url, {
-              method: 'GET',
-              cache: 'reload',
-            }).then(m => m.text());
-          loadPilet(meta, getter, fetcher).then(pilet => {
-            try {
-              const newApi = createApi(pilet);
-              context.injectPilet(pilet);
-              pilet.setup(newApi);
-            } catch (error) {
-              console.error(error);
-            }
-          });
+          const hardRefresh = sessionStorage.getItem('dbg:hard-refresh') === 'on';
+
+          // standard setting is to just perform an inject
+          if (!hardRefresh) {
+            const meta = JSON.parse(data);
+            const getter = getDependencyResolver(globalDependencies, getDependencies);
+            const fetcher = (url: string) =>
+              fetch(url, {
+                method: 'GET',
+                cache: 'reload',
+              }).then(m => m.text());
+            loadPilet(meta, getter, fetcher).then(pilet => {
+              try {
+                const newApi = createApi(pilet);
+                context.injectPilet(pilet);
+                pilet.setup(newApi);
+              } catch (error) {
+                console.error(error);
+              }
+            });
+          } else {
+            location.reload();
+          }
         };
 
         return promise
