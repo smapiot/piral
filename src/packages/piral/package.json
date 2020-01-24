@@ -17,7 +17,8 @@
   "typings": "lib/index.d.ts",
   "files": [
     "polyfills.js",
-    "lib"
+    "lib",
+    "src"
   ],
   "repository": {
     "type": "git",

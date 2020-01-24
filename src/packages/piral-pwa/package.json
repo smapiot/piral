@@ -22,7 +22,8 @@
   "typings": "lib/index.d.ts",
   "files": [
     "generators",
-    "lib"
+    "lib",
+    "src"
   ],
   "repository": {
     "type": "git",

@@ -250,7 +250,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     });
     await createDeclarationFile(outDir, name, root, entryFiles, dependencies.std);
     await createPackage(rootDir);
-    //await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
+    await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 
     logDone(`Development package available in "${rootDir}".`);
     success = prs1 && prs2;
