@@ -87,7 +87,7 @@ async function bundleFiles(
 }
 
 async function generateDeclaration(outDir: string, root: string, name: string, dependencies: Record<string, string>) {
-  const declaration = combineApiDeclarations(root, Object.keys(dependencies));
+  const declaration = combineApiDeclarations(root, name, Object.keys(dependencies));
   const result = await declarationFlattening(root, name, declaration);
   await createFileIfNotExists(outDir, 'index.d.ts', result);
 }

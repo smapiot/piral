@@ -29,11 +29,14 @@ interface TraverseRoot {
   content: string;
 }
 
-export function combineApiDeclarations(root: string, dependencyNames: Array<string>) {
-  const names = [root, ...dependencyNames];
+export function combineApiDeclarations(root: string, name: string, dependencyNames: Array<string>) {
   const paths: Array<string> = [];
 
-  for (const name of names) {
+  if (existsSync(resolve(root, 'api.d.ts'))) {
+    paths.push(`${name}/api`);
+  }
+
+  for (const name of dependencyNames) {
     try {
       const moduleName = `${name}/api`;
       const target = `${moduleName}.d.ts`;
@@ -44,11 +47,7 @@ export function combineApiDeclarations(root: string, dependencyNames: Array<stri
     }
   }
 
-  const importDecls = paths.map(path => `import '${path}';`).join('\n');
-  const exportDecls = paths.map(path => `export * from '${path}';`).join('\n');
-  return `${importDecls}
-
-${exportDecls}`;
+  return paths.map(path => `export * from '${path}';`).join('\n');
 }
 
 function isContainedPackage(name: string) {
@@ -80,10 +79,12 @@ function splitPackageName(moduleName: string) {
   }
 }
 
-function packagePath(baseDir: string, moduleName: string) {
+function packagePath(baseDir: string, moduleName: string, appName: string) {
   const [name, relPath] = splitPackageName(moduleName);
 
-  if (isContainedPackage(name)) {
+  if (name === appName) {
+    return declarationPath(resolve(baseDir, relPath));
+  } else if (isContainedPackage(name)) {
     const targetJsonPath = findPackageRoot(name, baseDir);
     const targetJsonData = require(targetJsonPath);
     const root = dirname(targetJsonPath);
@@ -94,13 +95,13 @@ function packagePath(baseDir: string, moduleName: string) {
   return undefined;
 }
 
-function normalizePath(baseDir: string, name: string) {
+function normalizePath(baseDir: string, name: string, appName: string) {
   if (isAbsolute(name)) {
     return declarationPath(name);
   } else if (name.startsWith('.')) {
     return declarationPath(resolve(baseDir, name));
   } else {
-    return packagePath(baseDir, name);
+    return packagePath(baseDir, name, appName);
   }
 }
 
@@ -122,7 +123,7 @@ function modularize(path: string) {
   return relative(join(path, '..'), fullPath);
 }
 
-function getReferences(rx: RegExp, baseDir: string, content: string) {
+function getReferences(rx: RegExp, baseDir: string, content: string, appName: string) {
   const references: Array<ReferenceDeclaration> = [];
   let match: boolean | RegExpExecArray = true;
 
@@ -131,7 +132,7 @@ function getReferences(rx: RegExp, baseDir: string, content: string) {
 
     if (match) {
       const relName = match[3];
-      const path = normalizePath(baseDir, relName);
+      const path = normalizePath(baseDir, relName, appName);
 
       if (path !== undefined) {
         const name = modularize(path);
@@ -181,9 +182,13 @@ function unique<T extends { path: string }>(ref: T, index: number, self: Array<T
   return self.findIndex(m => m.path === ref.path) === index;
 }
 
-async function traverseFiles(files: Array<DeclarationFile>, { baseDir, content, fileName, moduleName }: TraverseRoot) {
-  const exportRefs = getReferences(exportDeclRx, baseDir, content);
-  const importRefs = getReferences(importDeclRx, baseDir, content);
+async function traverseFiles(
+  files: Array<DeclarationFile>,
+  appName: string,
+  { baseDir, content, fileName, moduleName }: TraverseRoot,
+) {
+  const exportRefs = getReferences(exportDeclRx, baseDir, content, appName);
+  const importRefs = getReferences(importDeclRx, baseDir, content, appName);
   const references = [...importRefs, ...exportRefs];
 
   files.push({
@@ -199,13 +204,13 @@ async function traverseFiles(files: Array<DeclarationFile>, { baseDir, content, 
 
   const resolvedRefs = await Promise.all(nextRefs);
   const childFiles = resolvedRefs.filter(ref => !!ref);
-  await Promise.all(childFiles.map(ref => traverseFiles(files, ref)));
+  await Promise.all(childFiles.map(ref => traverseFiles(files, appName, ref)));
 }
 
 export async function declarationFlattening(baseDir: string, appName: string, content: string) {
   const allFiles: Array<DeclarationFile> = [];
 
-  await traverseFiles(allFiles, {
+  await traverseFiles(allFiles, appName, {
     baseDir,
     fileName: 'index.d.ts',
     moduleName: appName,

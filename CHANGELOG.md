@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.9.7 (tbd)
+
+* Improved name of imported module declarations during build
+* Fix version of the Piral instance
+
 ## 0.9.6 (January 22, 2020)
 
 * Resolve cache directory according to Parcel
