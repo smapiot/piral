@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.7 (tbd)
+## 0.9.7 (January 25, 2020)
 
 * Improved name of imported module declarations during build
 * Fix version of the Piral instance
