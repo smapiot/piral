@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -42,8 +42,8 @@
   },
   "dependencies": {
     "graphql": "^14.3.0",
-    "piral-core": "^0.9.6",
-    "piral-ext": "^0.9.6",
+    "piral-core": "^0.9.7",
+    "piral-ext": "^0.9.7",
     "promise-polyfill": "^8.1.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",

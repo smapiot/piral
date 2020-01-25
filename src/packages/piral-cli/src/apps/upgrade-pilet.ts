@@ -26,7 +26,7 @@ export interface UpgradePiletOptions {
 }
 
 export const upgradePiletDefaults = {
-  version: 'latest',
+  version: undefined,
   target: '.',
   forceOverwrite: ForceOverwrite.no,
 };

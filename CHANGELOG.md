@@ -21,6 +21,11 @@
 * Integrated `state` and `router` in foreign context
 * Introduced additional checks for missing files (#129)
 
+## 0.9.7 (January 25, 2020)
+
+* Improved name of imported module declarations during build
+* Fix version of the Piral instance
+
 ## 0.9.6 (January 22, 2020)
 
 * Resolve cache directory according to Parcel

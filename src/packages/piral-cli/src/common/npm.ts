@@ -16,18 +16,24 @@ function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.Writ
 }
 
 export function isLocalPackage(baseDir: string, fullName: string) {
-  if (/^[\.\/\~]/.test(fullName)) {
-    return true;
-  } else if (fullName.endsWith('.tgz')) {
-    return existsSync(resolve(baseDir, fullName));
+  if (fullName) {
+    if (/^[\.\/\~]/.test(fullName)) {
+      return true;
+    } else if (fullName.endsWith('.tgz')) {
+      return existsSync(resolve(baseDir, fullName));
+    }
   }
 
   return false;
 }
 
 export function isGitPackage(fullName: string) {
-  const gitted = fullName.startsWith(gitPrefix);
-  return gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName);
+  if (fullName) {
+    const gitted = fullName.startsWith(gitPrefix);
+    return gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName);
+  }
+
+  return false;
 }
 
 export function installDependencies(target = '.', ...flags: Array<string>) {
@@ -146,7 +152,7 @@ export async function getCurrentPackageDetails(
 
 export function combinePackageRef(name: string, version: string, type: PackageType) {
   if (type === 'registry') {
-    return `${name}@${version}`;
+    return `${name}@${version || 'latest'}`;
   }
 
   return name;
