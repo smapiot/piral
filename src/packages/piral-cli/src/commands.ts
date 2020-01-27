@@ -169,7 +169,7 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
-    name: 'declaratation-piral',
+    name: 'declaration-piral',
     alias: ['declare-piral', 'declaration-portal', 'declare-portal'],
     description: 'Creates the declaration file for a Piral instance.',
     arguments: ['[source]'],
