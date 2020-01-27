@@ -105,7 +105,7 @@ function normalizePath(baseDir: string, name: string, appName: string) {
   }
 }
 
-function modularize(path: string) {
+function modularize(path: string, rootDirName: string, appName: string) {
   if (path.endsWith('.d.ts')) {
     path = path.substr(0, path.length - 5);
   }
@@ -120,10 +120,15 @@ function modularize(path: string) {
     path = join(path, '..');
   }
 
-  return relative(join(path, '..'), fullPath);
+  path = relative(join(path, '..'), fullPath);
+
+  if (path.startsWith(`${rootDirName}/`)) {
+    path = appName + path.substr(rootDirName.length);
+  }
+  return path;
 }
 
-function getReferences(rx: RegExp, baseDir: string, content: string, appName: string) {
+function getReferences(rx: RegExp, baseDir: string, content: string, rootDirName: string, appName: string) {
   const references: Array<ReferenceDeclaration> = [];
   let match: boolean | RegExpExecArray = true;
 
@@ -135,7 +140,7 @@ function getReferences(rx: RegExp, baseDir: string, content: string, appName: st
       const path = normalizePath(baseDir, relName, appName);
 
       if (path !== undefined) {
-        const name = modularize(path);
+        const name = modularize(path, rootDirName, appName);
         const original = match[0];
         const modified = name === relName ? original : original.replace(relName, name);
 
@@ -184,11 +189,12 @@ function unique<T extends { path: string }>(ref: T, index: number, self: Array<T
 
 async function traverseFiles(
   files: Array<DeclarationFile>,
+  rootDirName: string,
   appName: string,
   { baseDir, content, fileName, moduleName }: TraverseRoot,
 ) {
-  const exportRefs = getReferences(exportDeclRx, baseDir, content, appName);
-  const importRefs = getReferences(importDeclRx, baseDir, content, appName);
+  const exportRefs = getReferences(exportDeclRx, baseDir, content, rootDirName, appName);
+  const importRefs = getReferences(importDeclRx, baseDir, content, rootDirName, appName);
   const references = [...importRefs, ...exportRefs];
 
   files.push({
@@ -204,13 +210,13 @@ async function traverseFiles(
 
   const resolvedRefs = await Promise.all(nextRefs);
   const childFiles = resolvedRefs.filter(ref => !!ref);
-  await Promise.all(childFiles.map(ref => traverseFiles(files, appName, ref)));
+  await Promise.all(childFiles.map(ref => traverseFiles(files, rootDirName, appName, ref)));
 }
 
 export async function declarationFlattening(baseDir: string, appName: string, content: string) {
   const allFiles: Array<DeclarationFile> = [];
 
-  await traverseFiles(allFiles, appName, {
+  await traverseFiles(allFiles, basename(baseDir), appName, {
     baseDir,
     fileName: 'index.d.ts',
     moduleName: appName,

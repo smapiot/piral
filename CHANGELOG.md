@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.9.8 (tbd)
+
+* Fixed the declaration generation for the app instance name (#130)
+* Fixed showing modals from other pilets (#131)
+
 ## 0.9.7 (January 25, 2020)
 
 * Improved name of imported module declarations during build

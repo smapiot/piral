@@ -57,6 +57,23 @@ const instance = createInstance({
 });
 ```
 
+In order to host the toast notifications you'll need to embed the `Notifications` component somewhere in your layout.
+
+As an example:
+
+```jsx
+import { Notifications } from 'piral-notifications';
+
+const MyLayout = ({ children }) => {
+  <div>
+    <Notifications />
+    {children}
+  </div>
+};
+```
+
+If you want to customize the styling (which you should) make sure to register components such as `NotificationsHost` (shell for the notifications) or `NotificationsToast` (wrapper for an individual notification) via, e.g., `<SetComponent name="NotificationsHost" component={MyNotificationsHost} />`.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
