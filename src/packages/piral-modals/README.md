@@ -61,6 +61,23 @@ const instance = createInstance({
 });
 ```
 
+In order to host the modal dialogs you'll need to embed the `Modals` component somewhere in your layout.
+
+As an example:
+
+```jsx
+import { Modals } from 'piral-modals';
+
+const MyLayout = ({ children }) => {
+  <div>
+    <Modals />
+    {children}
+  </div>
+};
+```
+
+If you want to customize the styling (which you should) make sure to register components such as `ModalsHost` (shell for the modals) or `ModalsDialog` (wrapper for an individual dialog) via, e.g., `<SetComponent name="ModalsHost" component={MyModalsHost} />`.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
