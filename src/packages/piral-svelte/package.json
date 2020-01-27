@@ -1,6 +1,6 @@
 {
   "name": "piral-svelte",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Plugin for integrating Svelte components in Piral.",
   "keywords": [
     "piral",

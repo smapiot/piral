@@ -1,6 +1,6 @@
 {
   "name": "piral-aurelia",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Plugin for integrating Aurelia components in Piral.",
   "keywords": [
     "piral",

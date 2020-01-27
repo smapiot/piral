@@ -21,6 +21,11 @@
 * Integrated `state` and `router` in foreign context
 * Introduced additional checks for missing files (#129)
 
+## 0.9.8 (January 27, 2020)
+
+* Fixed the declaration generation for the app instance name (#130)
+* Fixed showing modals from other pilets (#131)
+
 ## 0.9.7 (January 25, 2020)
 
 * Improved name of imported module declarations during build
