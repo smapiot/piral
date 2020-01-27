@@ -183,6 +183,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory for the generated .d.ts file.')
         .default('target', apps.declarationPiralDefaults.target)
+        .choices('force-overwrite', forceOverwriteKeys)
+        .describe('force-overwrite', 'Determines if files should be overwritten by the declaration.')
+        .default('force-overwrite', keyOfForceOverwrite(apps.declarationPiralDefaults.forceOverwrite))
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -191,6 +194,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.declarationPiral(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
+        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
       });
     },
   },

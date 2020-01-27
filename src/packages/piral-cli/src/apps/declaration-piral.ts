@@ -1,34 +1,38 @@
 import { dirname, basename } from 'path';
 import { generateDeclaration } from '../declaration';
-import { retrievePiletsInfo, retrievePiralRoot, createFileIfNotExists, readText, getEntryFiles } from '../common';
-
-async function createDeclarationFile(
-  outDir: string,
-  name: string,
-  root: string,
-  app: string,
-  dependencies: Record<string, string>,
-) {
-  const allowedImports = Object.keys(dependencies);
-  const appFile = await readText(dirname(app), basename(app));
-  const entryFiles = await getEntryFiles(appFile, dirname(app));
-  const result = generateDeclaration(name, root, entryFiles, allowedImports);
-  await createFileIfNotExists(outDir, 'index.d.ts', result);
-}
+import {
+  retrievePiletsInfo,
+  retrievePiralRoot,
+  createFileIfNotExists,
+  readText,
+  getEntryFiles,
+  coreExternals,
+  ForceOverwrite,
+} from '../common';
 
 export interface DeclarationPiralOptions {
   entry?: string;
   target?: string;
+  forceOverwrite?: ForceOverwrite;
 }
 
 export const declarationPiralDefaults = {
   entry: './',
   target: './dist',
+  forceOverwrite: ForceOverwrite.yes,
 };
 
 export async function declarationPiral(baseDir = process.cwd(), options: DeclarationPiralOptions = {}) {
-  const { entry = declarationPiralDefaults.entry, target = declarationPiralDefaults.target } = options;
+  const {
+    entry = declarationPiralDefaults.entry,
+    target = declarationPiralDefaults.target,
+    forceOverwrite = declarationPiralDefaults.forceOverwrite,
+  } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, dependencies } = await retrievePiletsInfo(entryFiles);
-  await createDeclarationFile(target, name, root, entryFiles, dependencies.std);
+  const allowedImports = [...Object.keys(dependencies.std), ...coreExternals];
+  const appFile = await readText(dirname(entryFiles), basename(entryFiles));
+  const entryModules = await getEntryFiles(appFile, dirname(entryFiles));
+  const result = generateDeclaration(name, root, entryModules, allowedImports);
+  await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
 }
