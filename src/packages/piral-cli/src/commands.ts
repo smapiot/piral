@@ -169,6 +169,32 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'declaratation-piral',
+    alias: ['declare-piral', 'declaration-portal', 'declare-portal'],
+    description: 'Creates the declaration file for a Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          default: apps.declarationPiralDefaults.entry,
+        })
+        .string('target')
+        .describe('target', 'Sets the target directory for the generated .d.ts file.')
+        .default('target', apps.declarationPiralDefaults.target)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.declarationPiral(args.base as string, {
+        entry: args.source as string,
+        target: args.target as string,
+      });
+    },
+  },
+  {
     name: 'new-piral',
     alias: ['create-piral', 'scaffold-piral', 'setup-piral'],
     description: 'Creates a new Piral instance by adding all files and changes to the current project.',

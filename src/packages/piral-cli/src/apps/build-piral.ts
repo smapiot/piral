@@ -1,5 +1,5 @@
 import { dirname, basename, extname, join, resolve, relative } from 'path';
-import { generateDeclaration } from '../declaration';
+import { declarationPiral } from './declaration-piral';
 import {
   setStandardEnvs,
   retrievePiletsInfo,
@@ -19,8 +19,6 @@ import {
   ParcelConfig,
   checkCliCompatibility,
   patchModules,
-  readText,
-  getEntryFiles,
   setupBundler,
   defaultCacheDir,
   createFileFromTemplateIfNotExists,
@@ -94,20 +92,6 @@ async function bundleFiles(
     outDir,
     outFile: relative(outDir, (file && file.src) || outDir),
   };
-}
-
-async function createDeclarationFile(
-  outDir: string,
-  name: string,
-  root: string,
-  app: string,
-  dependencies: Record<string, string>,
-) {
-  const allowedImports = Object.keys(dependencies);
-  const appFile = await readText(dirname(app), basename(app));
-  const entryFiles = await getEntryFiles(appFile, dirname(app));
-  const result = generateDeclaration(name, root, entryFiles, allowedImports);
-  await createFileIfNotExists(outDir, 'index.d.ts', result);
 }
 
 export type PiralBuildType = 'all' | 'release' | 'develop';
@@ -248,7 +232,10 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       name,
       outFile,
     });
-    await createDeclarationFile(outDir, name, root, entryFiles, dependencies.std);
+    await declarationPiral(baseDir, {
+      entry,
+      target: outDir,
+    });
     await createPackage(rootDir);
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 
