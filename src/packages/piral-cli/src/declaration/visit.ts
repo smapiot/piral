@@ -3,56 +3,24 @@ import {
   Type,
   TypeFlags,
   SymbolFlags,
-  BigIntLiteralType,
-  ObjectType,
   ObjectFlags,
   TypeReference,
   Symbol,
-  IndexedAccessType,
   InterfaceTypeWithDeclaredMembers,
-  Identifier,
-  IndexInfo,
 } from 'typescript';
+import {
+  getLib,
+  getRefName,
+  isBaseLib,
+  isTypeParameter,
+  isAnonymousObject,
+  isObjectType,
+  isReferenceType,
+  isBigIntLiteral,
+  getKeyName,
+  isIndexType,
+} from './helpers';
 import { TypeModel, TypeRefs, TypeModelIndex, TypeModelProp, TypeModelFunction } from './types';
-
-function getKeyName(info: IndexInfo) {
-  return (<Identifier>info?.declaration?.parameters?.[0].name)?.text ?? 'index';
-}
-
-function isBigIntLiteral(type: Type): type is BigIntLiteralType {
-  return !!(type.flags & TypeFlags.BigIntLiteral);
-}
-
-function isObjectType(type: Type): type is ObjectType {
-  return !!(type.flags & TypeFlags.Object);
-}
-
-function isAnonymousObject(type: Type) {
-  return isObjectType(type) && !!(type.objectFlags & ObjectFlags.Anonymous);
-}
-
-function isReferenceType(type: ObjectType): type is TypeReference {
-  return !!(type.objectFlags & ObjectFlags.Reference);
-}
-
-function isTypeParameter(type: Type) {
-  return !!(type.flags & TypeFlags.TypeParameter);
-}
-
-function isIndexType(type: Type): type is IndexedAccessType {
-  return !!(type.flags & TypeFlags.IndexedAccess);
-}
-
-function isBaseLib(path: string) {
-  if (path) {
-    const parts = path.split('/');
-    parts.pop();
-    const newPath = parts.join('/');
-    return newPath.endsWith('/node_modules/typescript/lib');
-  }
-
-  return false;
-}
 
 function getTypeParameters(checker: TypeChecker, type: Type, refs: TypeRefs, imports: Array<string>) {
   const typeRef = type as TypeReference;
@@ -83,12 +51,16 @@ export function includeType(checker: TypeChecker, type: Type, refs: TypeRefs, im
         types: getTypeParameters(checker, type, refs, imports),
         refName: name,
       };
-    } else if (fileName && imports.some(fn => fileName.startsWith(fn))) {
-      const lib = 'React';
+    }
+
+    const lib = getLib(fileName, imports);
+
+    if (lib) {
+      const refName = getRefName(lib);
       return {
         kind: 'ref',
         types: [], //getTypeParameters(checker, type, refs),
-        refName: `${lib}.${name}`,
+        refName: `${refName}.${name}`,
       };
     } else if (isTypeParameter(type)) {
       return {

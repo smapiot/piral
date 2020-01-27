@@ -26,6 +26,8 @@ function stringifyComment(type: TypeModelObject | TypeModelProp) {
 function stringifyProp(type: TypeModelProp) {
   const target = type.valueType;
   const comment = stringifyComment(type);
+  const isOpt = type.optional ? '?' : '';
+  const name = JSON.stringify(type.name);
 
   if (
     target.kind === 'object' &&
@@ -33,11 +35,9 @@ function stringifyProp(type: TypeModelProp) {
     target.indices.length === 0 &&
     target.props.length === 0
   ) {
-    const content = stringifySignatures(target.calls[0], type.optional);
-    return `${comment}${type.name}${content}`;
+    return `${comment}${name}${isOpt}${stringifySignatures(target.calls[0])}`;
   } else {
-    const isOpt = type.optional ? '?' : '';
-    return `${comment}${type.name}${isOpt}: ${stringifyNode(type.valueType)}`;
+    return `${comment}${name}${isOpt}: ${stringifyNode(type.valueType)}`;
   }
 }
 
@@ -45,12 +45,11 @@ function stringifyParameter(param: TypeModelFunctionParameter) {
   return `${param.param}: ${stringifyNode(param.type)}`;
 }
 
-function stringifySignatures(type: TypeModelFunction, optional = false) {
-  const isOpt = optional ? '?' : '';
+function stringifySignatures(type: TypeModelFunction) {
   const parameters = type.parameters.map(stringifyParameter).join(', ');
   const ta = stringifyTypeArgs(type);
   const rt = stringifyNode(type.returnType);
-  return `${ta}(${parameters})${isOpt}: ${rt}`;
+  return `${ta}(${parameters}): ${rt}`;
 }
 
 function stringifyIndex(type: TypeModelIndex) {
