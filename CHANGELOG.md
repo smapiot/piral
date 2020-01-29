@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.9.9 (tbd)
+## 0.9.9 (January 29, 2020)
 
 * Fixed declaration generation on Windows
 * Fixed bundle splitting for pilets
