@@ -60,7 +60,7 @@ function stringifyIndex(type: TypeModelIndex) {
 function stringifyIndexedAccess(type: TypeModelIndexedAccess) {
   const front = stringifyNode(type.index);
   const back = stringifyNode(type.object);
-  return `${front} extends keyof ${back}`;
+  return `${back}[${front}]`;
 }
 
 function stringifyInterface(type: TypeModelObject) {

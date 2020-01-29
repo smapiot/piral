@@ -19,6 +19,12 @@ declare module 'typescript' {
   }
 }
 
+export interface DeclVisitorContext {
+  checker: ts.TypeChecker;
+  refs: TypeRefs;
+  imports: Array<string>;
+}
+
 export type TypeRefs = Record<string, TypeModel>;
 
 export interface WithTypeArgs {
