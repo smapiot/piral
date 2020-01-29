@@ -1,7 +1,7 @@
 import { resolve, dirname, basename, isAbsolute, relative, join, sep } from 'path';
 import { existsSync, statSync } from 'fs';
-import { readText } from './io';
 import { findPackageRoot } from './package';
+import { readText } from './io';
 
 const importDeclRx = /import\s+((.*?)\s+from\s*)?['"`](.*?)['"`]\s*;?/g;
 const exportDeclRx = /export\s+((.*?)\s+from\s*){1}['"`](.*?)['"`]\s*;?/g;
@@ -128,6 +128,10 @@ function modularize(path: string, rootDirName: string, appName: string) {
   return path;
 }
 
+function sanatize(path: string) {
+  return path.replace(/\\/g, '/');
+}
+
 function getReferences(rx: RegExp, baseDir: string, content: string, rootDirName: string, appName: string) {
   const references: Array<ReferenceDeclaration> = [];
   let match: boolean | RegExpExecArray = true;
@@ -142,7 +146,7 @@ function getReferences(rx: RegExp, baseDir: string, content: string, rootDirName
       if (path !== undefined) {
         const name = modularize(path, rootDirName, appName);
         const original = match[0];
-        const modified = name === relName ? original : original.replace(relName, name);
+        const modified = sanatize(name === relName ? original : original.replace(relName, name));
 
         references.push({
           name,
@@ -198,7 +202,7 @@ async function traverseFiles(
   const references = [...importRefs, ...exportRefs];
 
   files.push({
-    content: `declare module '${moduleName}' {
+    content: `declare module '${sanatize(moduleName)}' {
   ${format(content, references)}
 }`,
     path: resolve(baseDir, fileName),
