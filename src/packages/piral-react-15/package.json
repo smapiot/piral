@@ -1,6 +1,6 @@
 {
   "name": "piral-react-15",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "Plugin for integrating React v15 components in Piral.",
   "keywords": [
     "piral",

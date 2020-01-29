@@ -21,6 +21,11 @@
 * Integrated `state` and `router` in foreign context
 * Introduced additional checks for missing files (#129)
 
+## 0.9.9 (January 29, 2020)
+
+* Fixed declaration generation on Windows
+* Fixed bundle splitting for pilets
+
 ## 0.9.8 (January 27, 2020)
 
 * Fixed the declaration generation for the app instance name (#130)

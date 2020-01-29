@@ -241,7 +241,7 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
               `;global.${prName}=parcelRequire}(window, window.${prName}));`,
             ].join('\n');
 
-            writeFile(bundle.name, result, 'utf8', err => {
+            writeFile(src, result, 'utf8', err => {
               if (err) {
                 reject(err);
               } else {

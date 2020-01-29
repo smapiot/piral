@@ -1,6 +1,6 @@
 {
   "name": "piral-ssr-utils",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "Utilities for server-side rendering of a Piral instance.",
   "keywords": [
     "piral",
@@ -35,7 +35,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.9.8"
+    "piral-core": "^0.9.9"
   },
   "peerDependencies": {
     "piral-core": "^0.9.0 || ^0.10.0"
