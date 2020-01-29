@@ -3,6 +3,7 @@
 ## 0.9.9 (tbd)
 
 * Fixed declaration generation on Windows
+* Fixed bundle splitting for pilets
 
 ## 0.9.8 (January 27, 2020)
 
