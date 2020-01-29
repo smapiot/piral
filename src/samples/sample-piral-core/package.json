@@ -1,7 +1,7 @@
 {
   "name": "sample-piral-core",
   "private": true,
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "Example project illustrating the use of the piral-core and piral-cli packages.",
   "keywords": [
     "portal",
@@ -22,14 +22,14 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
-    "piral-containers": "^0.9.8",
-    "piral-core": "^0.9.8",
-    "piral-dashboard": "^0.9.8",
-    "piral-feeds": "^0.9.8",
-    "piral-forms": "^0.9.8",
-    "piral-menu": "^0.9.8",
-    "piral-notifications": "^0.9.8",
-    "piral-search": "^0.9.8",
+    "piral-containers": "^0.9.9",
+    "piral-core": "^0.9.9",
+    "piral-dashboard": "^0.9.9",
+    "piral-feeds": "^0.9.9",
+    "piral-forms": "^0.9.9",
+    "piral-menu": "^0.9.9",
+    "piral-notifications": "^0.9.9",
+    "piral-search": "^0.9.9",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router": ">=5.0.0",
@@ -40,7 +40,7 @@
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "latest",
-    "piral-cli": "^0.9.8",
+    "piral-cli": "^0.9.9",
     "sass": "^1.17.0"
   },
   "scripts": {

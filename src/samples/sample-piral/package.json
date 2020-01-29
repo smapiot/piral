@@ -1,7 +1,7 @@
 {
   "name": "sample-piral",
   "private": true,
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "Example project illustrating the use of the piral and piral-cli packages.",
   "keywords": [
     "portal",
@@ -27,9 +27,9 @@
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
-    "piral": "^0.9.8",
-    "piral-auth": "^0.9.8",
-    "piral-search": "^0.9.8",
+    "piral": "^0.9.9",
+    "piral-auth": "^0.9.9",
+    "piral-search": "^0.9.9",
     "reactstrap": "^8.0.1"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "latest",
-    "piral-cli": "^0.9.8",
+    "piral-cli": "^0.9.9",
     "sass": "^1.17.0"
   },
   "pilets": {

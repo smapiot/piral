@@ -1,6 +1,6 @@
 {
   "name": "piral-cli",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "The standard CLI for creating and building a Piral instance or a Pilet.",
   "keywords": [
     "portal",
