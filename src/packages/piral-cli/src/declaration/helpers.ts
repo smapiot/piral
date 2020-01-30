@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import {
   Node,
   Declaration,
@@ -18,12 +19,34 @@ import {
 const modulesRoot = '/node_modules/';
 const typesRoot = '/node_modules/@types/';
 const tslibRoot = '/node_modules/typescript/lib';
+const piralCoreRoot = 'piral-core/lib/types/api';
 
 export function isNodeExported(node: Node, alsoTopLevel = false): boolean {
   return (
     (getCombinedModifierFlags(node as Declaration) & ModifierFlags.Export) !== 0 ||
     (alsoTopLevel && !!node.parent && node.parent.kind === SyntaxKind.SourceFile)
   );
+}
+
+export function findDeclaredTypings(root: string) {
+  try {
+    const { typings } = require(resolve(root, 'package.json'));
+    return typings && resolve(root, typings);
+  } catch {
+    return undefined;
+  }
+}
+
+export function findPiralCoreApi(root: string) {
+  try {
+    return require
+      .resolve(piralCoreRoot, {
+        paths: [root],
+      })
+      ?.replace(/\.js$/, '.d.ts');
+  } catch {
+    return undefined;
+  }
 }
 
 export function getLibName(fileName: string) {

@@ -1,22 +1,15 @@
 import * as ts from 'typescript';
-import { resolve } from 'path';
 import { logWarn } from '../common';
-import { isNodeExported } from './helpers';
+import { isNodeExported, findPiralCoreApi, findDeclaredTypings } from './helpers';
 import { includeExportedType } from './visit';
 import { stringifyDeclaration } from './stringify';
 import { DeclVisitorContext } from './types';
 
-export function generateDeclaration(
-  name: string,
-  root: string,
-  entryFiles: Array<string>,
-  imports: Array<string> = [],
-) {
-  const { typings } = require(resolve(root, 'package.json'));
-  const typingsPath = typings && resolve(root, typings);
-  const apiPath = resolve(root, 'node_modules/piral-core/lib/types/api.d.ts');
-  const files = [...entryFiles, typingsPath].filter(m => !!m);
-  const program = ts.createProgram(files, {});
+export function generateDeclaration(name: string, root: string, files: Array<string>, imports: Array<string> = []) {
+  const typingsPath = findDeclaredTypings(root);
+  const apiPath = findPiralCoreApi(root);
+  const rootNames = [...files, typingsPath].filter(m => !!m);
+  const program = ts.createProgram(rootNames, {});
   const checker = program.getTypeChecker();
   const context: DeclVisitorContext = {
     modules: {},
