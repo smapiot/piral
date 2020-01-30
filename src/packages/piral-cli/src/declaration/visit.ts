@@ -111,7 +111,11 @@ function includeType(context: DeclVisitorContext, type: Type): TypeModel {
   const alias = type.aliasSymbol?.name;
 
   if (alias) {
-    return makeAliasRef(context, type, alias);
+    // special case: enums are also "alias" types, but we do
+    // actually want only the alias if its a "real" alias!
+    if (!type.symbol || type.aliasSymbol.id !== type.symbol.id) {
+      return makeAliasRef(context, type, alias);
+    }
   }
 
   const name = type.symbol?.name;
