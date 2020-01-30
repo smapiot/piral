@@ -459,6 +459,7 @@ function includeObject(context: DeclVisitorContext, type: Type): TypeModel {
         parameters: sign.getParameters().map(param => ({
           kind: 'parameter',
           param: param.name,
+          optional: param.valueDeclaration.questionToken !== undefined,
           type: includeType(context, context.checker.getTypeAtLocation(param.valueDeclaration)),
         })),
         returnType: includeType(context, sign.getReturnType()),

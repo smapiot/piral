@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 
 /**
- * Expose the internal TypeScript APIs that are used by TypeDoc
+ * Expose some internal TypeScript APIs
  */
 declare module 'typescript' {
   interface Symbol {
@@ -17,6 +17,10 @@ declare module 'typescript' {
   interface Node {
     symbol?: ts.Symbol;
     localSymbol?: ts.Symbol;
+  }
+
+  interface Declaration {
+    questionToken?: ts.Token<ts.SyntaxKind.QuestionToken>;
   }
 }
 
@@ -121,6 +125,7 @@ export interface TypeModelFunctionParameter {
   readonly kind: 'parameter';
   readonly param: string;
   readonly type: TypeModel;
+  readonly optional: boolean;
 }
 
 export interface TypeModelEnum extends WithTypeComments {

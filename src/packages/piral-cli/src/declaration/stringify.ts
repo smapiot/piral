@@ -45,7 +45,8 @@ function stringifyProp(type: TypeModelProp) {
 }
 
 function stringifyParameter(param: TypeModelFunctionParameter) {
-  return `${param.param}: ${stringifyNode(param.type)}`;
+  const isOpt = param.optional ? '?' : '';
+  return `${param.param}${isOpt}: ${stringifyNode(param.type)}`;
 }
 
 function stringifySignatures(type: TypeModelFunction) {
