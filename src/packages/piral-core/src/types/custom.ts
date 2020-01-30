@@ -19,7 +19,7 @@ export interface PiralCustomErrors {}
 export interface PiralCustomActions {}
 
 /**
- * Custom ecvents defined outside of piral-core.
+ * Custom events defined outside of piral-core.
  */
 export interface PiralCustomEventMap {}
 
