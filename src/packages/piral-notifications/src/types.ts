@@ -87,7 +87,7 @@ export interface PiletNotificationsApi {
    * @returns A callback to trigger closing the notification.
    */
   showNotification(
-    content: string | ReactElement<any> | AnyComponent<NotificationComponentProps>,
+    content: string | ReactElement<any, any> | AnyComponent<NotificationComponentProps>,
     options?: NotificationOptions,
   ): Disposable;
 }

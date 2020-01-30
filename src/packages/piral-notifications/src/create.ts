@@ -119,7 +119,7 @@ export function createNotificationsApi(config: NotificationsConfig = {}): Extend
             ? content
             : isValidElement(content)
             ? content
-            : withApi(context.converters, content, api, 'extension');
+            : withApi(context.converters, content as any, api, 'extension');
         const notification = createNotification(context, selectId(), component, defaultOptions, customOptions);
         context.openNotification(notification);
         return notification.close;
