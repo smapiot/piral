@@ -14,12 +14,46 @@ import {
   TypeFlags,
   ObjectFlags,
   TypeReference,
+  Symbol,
 } from 'typescript';
 
+const globalIndicator = '__global';
 const modulesRoot = '/node_modules/';
 const typesRoot = '/node_modules/@types/';
 const tslibRoot = '/node_modules/typescript/lib';
 const piralCoreRoot = 'piral-core/lib/types/api';
+
+// note that a valid identifier is more complicated than this,
+// but let's keep it simple, which should be sufficient for most cases
+const isIdentifier = /^[a-zA-Z\_\$][a-zA-Z0-9\_\$]*$/;
+
+export function makeIdentifier(identifier: string) {
+  return isIdentifier.test(identifier) ? identifier : JSON.stringify(identifier);
+}
+
+export function isGlobal(symbol: Symbol) {
+  const parent = symbol?.parent;
+
+  if (parent) {
+    if (parent.name === globalIndicator) {
+      return true;
+    }
+
+    return isGlobal(parent);
+  }
+
+  return false;
+}
+
+export function getGlobalName(symbol: Symbol) {
+  const { parent, name } = symbol;
+
+  if (parent.name !== globalIndicator) {
+    return `${getGlobalName(parent)}.${name}`;
+  }
+
+  return name;
+}
 
 export function isNodeExported(node: Node, alsoTopLevel = false): boolean {
   return (

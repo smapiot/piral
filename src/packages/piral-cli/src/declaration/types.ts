@@ -25,7 +25,8 @@ export interface DeclVisitorContext {
   checker: ts.TypeChecker;
   refs: TypeRefs;
   ids: Array<number>;
-  imports: Array<string>;
+  usedImports: Array<string>;
+  availableImports: Array<string>;
 }
 
 export type TypeRefs = Record<string, TypeModel>;

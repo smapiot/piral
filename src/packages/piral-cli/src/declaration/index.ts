@@ -5,7 +5,12 @@ import { includeExportedType } from './visit';
 import { stringifyDeclaration } from './stringify';
 import { DeclVisitorContext } from './types';
 
-export function generateDeclaration(name: string, root: string, files: Array<string>, imports: Array<string> = []) {
+export function generateDeclaration(
+  name: string,
+  root: string,
+  files: Array<string>,
+  availableImports: Array<string> = [],
+) {
   const typingsPath = findDeclaredTypings(root);
   const apiPath = findPiralCoreApi(root);
   const rootNames = [...files, typingsPath].filter(m => !!m);
@@ -14,7 +19,8 @@ export function generateDeclaration(name: string, root: string, files: Array<str
   const context: DeclVisitorContext = {
     modules: {},
     refs: {},
-    imports,
+    availableImports,
+    usedImports: [],
     checker,
     ids: [],
   };

@@ -19,6 +19,8 @@ import {
   isBigIntLiteral,
   getKeyName,
   isIndexType,
+  isGlobal,
+  getGlobalName,
 } from './helpers';
 import {
   TypeModel,
@@ -47,18 +49,51 @@ function getComment(checker: TypeChecker, symbol: Symbol) {
 
 function includeExternal(context: DeclVisitorContext, type: Type) {
   const name = type.symbol.name;
+
+  if (isGlobal(type.symbol)) {
+    const name = getGlobalName(type.symbol);
+    return includeRef(context, type, name);
+  }
+
   const fn = type.symbol.declarations?.[0]?.parent?.getSourceFile()?.fileName;
 
   if (isBaseLib(fn)) {
-    const typeName = name;
-    return includeRef(context, type, typeName, type);
+    // Include items from the ts core lib (no need to ref. them)
+    return includeRef(context, type, name, type);
   }
 
-  const lib = getLib(fn, context.imports);
+  const lib = getLib(fn, context.availableImports);
 
   if (lib) {
-    const typeName = `${getRefName(lib)}.${name}`;
-    return includeRef(context, type, typeName, type);
+    // if we did not use the given lib yet, add it to the used libs
+    if (!context.usedImports.includes(lib)) {
+      context.usedImports.push(lib);
+    }
+
+    if (name === '__type') {
+      // Right now this catches the JSXElementConstructor; but
+      // I guess this code should be made "more robust" and also
+      // more generic.
+      const parent: any = type.symbol?.declarations?.[0]?.parent;
+      const hiddenType = parent?.type?.parent?.parent?.parent;
+      const hiddenTypeName = hiddenType?.symbol?.name;
+
+      if (hiddenTypeName) {
+        return includeRef(
+          context,
+          {
+            ...hiddenType,
+            typeArguments:
+              hiddenType.typeParameters?.map(() => ({
+                flags: TypeFlags.Any,
+              })) || [],
+          },
+          `${getRefName(lib)}.${hiddenTypeName}`,
+        );
+      }
+    }
+
+    return includeRef(context, type, `${getRefName(lib)}.${name}`, type);
   }
 }
 
@@ -66,12 +101,19 @@ export function includeExportedType(context: DeclVisitorContext, type: Type) {
   const name = type.symbol.name;
   const node = includeType(context, type);
 
+  // okay we got a non-ref back, hence it was not yet added to the refs
   if (node.kind !== 'ref') {
     context.refs[name] = node;
   }
 }
 
 function includeType(context: DeclVisitorContext, type: Type): TypeModel {
+  const alias = type.aliasSymbol?.name;
+
+  if (alias) {
+    return makeAliasRef(context, type, alias);
+  }
+
   const name = type.symbol?.name;
 
   if (name) {
@@ -79,23 +121,9 @@ function includeType(context: DeclVisitorContext, type: Type): TypeModel {
 
     if (ext) {
       return ext;
-    } else if (name === '__type') {
-      return {
-        kind: 'ref',
-        types: [],
-        refName: 'any',
-      };
-    } else if (!isAnonymousObject(type)) {
+    } else if (name !== '__type' && !isAnonymousObject(type)) {
       return makeRef(context, type, name, includeNamed);
     }
-
-    return includeObject(context, type);
-  }
-
-  const alias = type.aliasSymbol?.name;
-
-  if (alias) {
-    return makeAliasRef(context, type, alias);
   }
 
   return includeAnonymous(context, type);
@@ -194,14 +222,14 @@ function includeBasic(context: DeclVisitorContext, type: Type): TypeModel {
     };
   }
 
-  if (type.isStringLiteral()) {
+  if (typeof type.isStringLiteral === 'function' && type.isStringLiteral()) {
     return {
       kind: 'stringLiteral',
       value: type.value,
     };
   }
 
-  if (type.isNumberLiteral()) {
+  if (typeof type.isNumberLiteral === 'function' && type.isNumberLiteral()) {
     return {
       kind: 'numberLiteral',
       value: type.value,
@@ -321,7 +349,7 @@ function includeBasic(context: DeclVisitorContext, type: Type): TypeModel {
 
 function includeInheritedTypes(context: DeclVisitorContext, type: Type) {
   const decl: any = type?.symbol?.declarations?.[0];
-  const types = decl.heritageClauses?.[0]?.types || [];
+  const types = decl?.heritageClauses?.[0]?.types || [];
   return types.map(t => {
     const type = context.checker.getTypeAtLocation(t);
     return includeType(context, type);

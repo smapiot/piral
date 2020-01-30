@@ -1,4 +1,4 @@
-import { getRefName } from './helpers';
+import { getRefName, makeIdentifier } from './helpers';
 import {
   TypeRefs,
   TypeModel,
@@ -30,7 +30,7 @@ function stringifyProp(type: TypeModelProp) {
   const target = type.valueType;
   const comment = stringifyComment(type);
   const isOpt = type.optional ? '?' : '';
-  const name = JSON.stringify(type.name);
+  const name = makeIdentifier(type.name);
 
   if (
     target.kind === 'object' &&
@@ -186,6 +186,6 @@ export function stringifyDeclaration(context: DeclVisitorContext) {
     .map(moduleName => stringifyModule(moduleName, context.modules[moduleName]))
     .join('\n\n');
 
-  const preamble = context.imports.map(lib => `import * as ${getRefName(lib)} from '${lib}';`).join('\n');
+  const preamble = context.usedImports.map(lib => `import * as ${getRefName(lib)} from '${lib}';`).join('\n');
   return `${preamble}\n\n${modules}`;
 }
