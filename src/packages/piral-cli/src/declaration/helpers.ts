@@ -15,6 +15,10 @@ import {
   TypeReference,
 } from 'typescript';
 
+const modulesRoot = '/node_modules/';
+const typesRoot = '/node_modules/@types/';
+const tslibRoot = '/node_modules/typescript/lib';
+
 export function isNodeExported(node: Node, alsoTopLevel = false): boolean {
   return (
     (getCombinedModifierFlags(node as Declaration) & ModifierFlags.Export) !== 0 ||
@@ -24,9 +28,8 @@ export function isNodeExported(node: Node, alsoTopLevel = false): boolean {
 
 export function getLibName(fileName: string) {
   if (fileName) {
-    if (fileName.indexOf('/node_modules/@types/') !== -1) {
-      const sub = '/node_modules/@types/';
-      const start = fileName.lastIndexOf(sub) + sub.length;
+    if (fileName.indexOf(typesRoot) !== -1) {
+      const start = fileName.lastIndexOf(typesRoot) + typesRoot.length;
       const name = fileName
         .substr(start)
         .split('/')
@@ -38,9 +41,8 @@ export function getLibName(fileName: string) {
       }
 
       return name;
-    } else if (fileName.indexOf('/node_modules/') !== -1) {
-      const sub = '/node_modules/';
-      const start = fileName.lastIndexOf(sub) + sub.length;
+    } else if (fileName.indexOf(modulesRoot) !== -1) {
+      const start = fileName.lastIndexOf(modulesRoot) + modulesRoot.length;
       const [scope, lib] = fileName.substr(start).split('/');
 
       if (scope.indexOf('@') === 0) {
@@ -106,7 +108,7 @@ export function isBaseLib(path: string) {
     const parts = path.split('/');
     parts.pop();
     const newPath = parts.join('/');
-    return newPath.endsWith('/node_modules/typescript/lib');
+    return newPath.endsWith(tslibRoot);
   }
 
   return false;

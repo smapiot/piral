@@ -1,3 +1,4 @@
+import { getRefName } from './helpers';
 import {
   TypeRefs,
   TypeModel,
@@ -9,9 +10,11 @@ import {
   WithTypeArgs,
   TypeModelIndexedAccess,
   TypeModelTypeParameter,
+  WithTypeComments,
+  DeclVisitorContext,
 } from './types';
 
-function stringifyComment(type: TypeModelObject | TypeModelProp) {
+function stringifyComment(type: WithTypeComments) {
   if (type.comment) {
     const lines = type.comment
       .split('\n')
@@ -63,23 +66,31 @@ function stringifyIndexedAccess(type: TypeModelIndexedAccess) {
   return `${back}[${front}]`;
 }
 
+function toContent(lines: Array<string>, terminator: string) {
+  return lines
+    .map(line => `${line}${terminator}`)
+    .join('\n')
+    .split('\n')
+    .map(line => `  ${line}\n`)
+    .join('');
+}
+
+function toBlock(lines: Array<string>, terminator: string) {
+  return `{\n${toContent(lines, terminator)}}`;
+}
+
 function stringifyInterface(type: TypeModelObject) {
   const lines: Array<string> = [
     ...type.props.map(p => stringifyProp(p)),
     ...type.calls.map(c => stringifySignatures(c)),
     ...type.indices.map(i => stringifyIndex(i)),
   ];
+  return toBlock(lines, ';');
+}
 
-  const content = lines
-    .map(line => `${line};`)
-    .join('\n')
-    .split('\n')
-    .map(line => `  ${line}`)
-    .join('\n');
-
-  return `{
-${content}
-}`;
+function stringifyEnum(values: Array<TypeModel>) {
+  const lines: Array<string> = values.map(p => stringifyNode(p));
+  return toBlock(lines, ',');
 }
 
 function stringifyTypeArgs(type: WithTypeArgs) {
@@ -109,6 +120,8 @@ function stringifyNode(type: TypeModel) {
       return type.types.map(stringifyNode).join(' | ');
     case 'intersection':
       return type.types.map(stringifyNode).join(' & ');
+    case 'member':
+      return `${stringifyComment(type)}${type.name} = ${stringifyNode(type.value)}`;
     case 'any':
     case 'null':
     case 'void':
@@ -135,17 +148,44 @@ function stringifyNode(type: TypeModel) {
   return '';
 }
 
-function stringifyTopNode(name: string, type: TypeModel) {
-  switch (type.kind) {
+export function stringifyExport(name: string, type: TypeModel) {
+  switch (type?.kind) {
     case 'object':
-      return `${stringifyComment(type)}export interface ${name}${stringifyTypeArgs(type)} ${stringifyInterface(type)}`;
+      const x = type.extends.length > 0 ? ` extends ${type.extends.map(stringifyNode).join(', ')}` : '';
+      return `${stringifyComment(type)}export interface ${name}${stringifyTypeArgs(type)}${x} ${stringifyInterface(
+        type,
+      )}`;
+    case 'alias':
+      return `${stringifyComment(type)}export type ${name}${stringifyTypeArgs(type)} = ${stringifyNode(type.child)};`;
+    case 'enumLiteral':
+      const e = type.const ? 'const enum' : 'enum';
+      return `${stringifyComment(type)}export ${e} ${name} ${stringifyEnum(type.values)}`;
   }
 
   return '';
 }
 
-export function stringify(refs: TypeRefs) {
+export function stringifyExports(refs: TypeRefs) {
   return Object.keys(refs)
-    .map(r => stringifyTopNode(r, refs[r]))
+    .map(r => stringifyExport(r, refs[r]))
+    .filter(m => !!m)
     .join('\n\n');
+}
+
+export function stringifyModule(name: string, refs: TypeRefs) {
+  const content = stringifyExports(refs);
+  const formattedContent = content
+    .split('\n')
+    .map(line => `  ${line}\n`)
+    .join('');
+  return `declare module "${name}" {\n${formattedContent}}`;
+}
+
+export function stringifyDeclaration(context: DeclVisitorContext) {
+  const modules = Object.keys(context.modules)
+    .map(moduleName => stringifyModule(moduleName, context.modules[moduleName]))
+    .join('\n\n');
+
+  const preamble = context.imports.map(lib => `import * as ${getRefName(lib)} from '${lib}';`).join('\n');
+  return `${preamble}\n\n${modules}`;
 }

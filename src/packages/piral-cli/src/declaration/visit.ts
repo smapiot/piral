@@ -20,7 +20,15 @@ import {
   getKeyName,
   isIndexType,
 } from './helpers';
-import { TypeModel, TypeModelIndex, TypeModelProp, TypeModelFunction, DeclVisitorContext } from './types';
+import {
+  TypeModel,
+  TypeModelIndex,
+  TypeModelProp,
+  TypeModelFunction,
+  DeclVisitorContext,
+  TypeModelRef,
+  TypeMemberModel,
+} from './types';
 
 function getTypeParameters(context: DeclVisitorContext, type: Type) {
   const typeRef = type as TypeReference;
@@ -37,70 +45,134 @@ function getComment(checker: TypeChecker, symbol: Symbol) {
   return undefined;
 }
 
-export function includeType(context: DeclVisitorContext, type: Type): TypeModel {
+function includeExternal(context: DeclVisitorContext, type: Type) {
+  const name = type.symbol.name;
+  const fn = type.symbol.declarations?.[0]?.parent?.getSourceFile()?.fileName;
+
+  if (isBaseLib(fn)) {
+    const typeName = name;
+    return includeRef(context, type, typeName, type);
+  }
+
+  const lib = getLib(fn, context.imports);
+
+  if (lib) {
+    const typeName = `${getRefName(lib)}.${name}`;
+    return includeRef(context, type, typeName, type);
+  }
+}
+
+export function includeExportedType(context: DeclVisitorContext, type: Type) {
+  const name = type.symbol.name;
+  const node = includeType(context, type);
+
+  if (node.kind !== 'ref') {
+    context.refs[name] = node;
+  }
+}
+
+function includeType(context: DeclVisitorContext, type: Type): TypeModel {
   const name = type.symbol?.name;
 
   if (name) {
-    const fn = type.symbol?.declarations?.[0]?.parent?.getSourceFile()?.fileName;
+    const ext = includeExternal(context, type);
 
-    if (!isBaseLib(fn)) {
-      const parent = type.symbol.parent?.valueDeclaration?.parent;
-      const fileName = parent?.getSourceFile()?.fileName;
-      const lib = getLib(fileName, context.imports);
-
-      if (lib) {
-        return includeRef(context, type, `${getRefName(lib)}.${name}`);
-      } else if (isTypeParameter(type)) {
-        return {
-          kind: 'ref',
-          types: [],
-          refName: name,
-        };
-      } else if (!isAnonymousObject(type)) {
-        const id = (<any>type).id;
-        const n = name === '__type' ? `Anonymous_${id}` : name;
-
-        if (!(n in context.refs)) {
-          context.refs[n] = {
-            kind: 'ref',
-            types: [],
-            refName: n,
-          };
-
-          if (isObjectType(type) && isReferenceType(type)) {
-            type = type.target;
-          }
-
-          context.refs[n] = includeAnonymous(context, type);
-        }
-
-        return includeRef(context, type, n);
-      } else if (name === '__type') {
-        return {
-          kind: 'ref',
-          types: [],
-          refName: 'any',
-        };
-      }
-
-      return includeAnonymous(context, type);
+    if (ext) {
+      return ext;
+    } else if (name === '__type') {
+      return {
+        kind: 'ref',
+        types: [],
+        refName: 'any',
+      };
+    } else if (!isAnonymousObject(type)) {
+      return makeRef(context, type, name, includeNamed);
     }
 
-    return includeRef(context, type, name);
+    return includeObject(context, type);
+  }
+
+  const alias = type.aliasSymbol?.name;
+
+  if (alias) {
+    return makeAliasRef(context, type, alias);
   }
 
   return includeAnonymous(context, type);
 }
 
-function includeRef(context: DeclVisitorContext, type: Type, refName: string): TypeModel {
+function makeAliasRef(context: DeclVisitorContext, type: Type, name: string): TypeModel {
+  const decl: any = type.aliasSymbol.declarations[0];
+  const ext = includeExternal(context, decl);
+
+  if (ext && ext.kind === 'ref') {
+    name = ext.refName;
+  } else if (!(name in context.refs)) {
+    context.refs[name] = {
+      kind: 'ref',
+      types: [],
+      refName: name,
+    };
+
+    context.refs[name] = {
+      kind: 'alias',
+      comment: getComment(context.checker, decl.symbol),
+      types: decl.typeParameters?.map(t => includeType(context, t)) ?? [],
+      child: includeAnonymous(context, context.checker.getTypeAtLocation(decl)),
+    };
+  }
+
+  return {
+    kind: 'ref',
+    types: type.aliasTypeArguments?.map(t => includeType(context, t)) ?? [],
+    refName: name,
+  };
+}
+
+function makeRef(
+  context: DeclVisitorContext,
+  type: Type,
+  name: string,
+  cb: (context: DeclVisitorContext, type: Type) => TypeModel,
+) {
+  const refType = type;
+
+  if (!(name in context.refs)) {
+    context.refs[name] = {
+      kind: 'ref',
+      types: [],
+      refName: name,
+    };
+
+    if (isObjectType(type) && isReferenceType(type)) {
+      type = type.target;
+    }
+
+    context.refs[name] = cb(context, type);
+  }
+
+  return includeRef(context, refType, name);
+}
+
+function includeRef(context: DeclVisitorContext, type: Type, refName: string, external?: Type): TypeModel {
   return {
     kind: 'ref',
     types: getTypeParameters(context, type),
     refName,
+    external,
   };
 }
 
-function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
+function includeMember(context: DeclVisitorContext, type: Type): TypeMemberModel {
+  return {
+    kind: 'member',
+    name: type.symbol.name,
+    value: includeAnonymous(context, type),
+    comment: getComment(context.checker, type.symbol),
+  };
+}
+
+function includeBasic(context: DeclVisitorContext, type: Type): TypeModel {
   // We're not handling things SomethingLike cause there're unions of flags
   // and would be handled anyway into more specific types
   // VoidLike is Undefined or Void,
@@ -147,7 +219,17 @@ function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
   if (type.flags & TypeFlags.EnumLiteral && type.isUnion()) {
     return {
       kind: 'enumLiteral',
-      values: type.types.map(t => includeType(context, t)),
+      const: type.symbol.flags === SymbolFlags.ConstEnum,
+      comment: getComment(context.checker, type.symbol),
+      values: type.types.map(t => includeMember(context, t)),
+    };
+  }
+
+  if (type.flags & TypeFlags.Enum && type.isUnion()) {
+    return {
+      kind: 'enum',
+      comment: getComment(context.checker, type.symbol),
+      values: type.types.map(t => includeMember(context, t)),
     };
   }
 
@@ -173,13 +255,6 @@ function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
   if (type.flags & TypeFlags.Number) {
     return {
       kind: 'number',
-    };
-  }
-
-  if (type.flags & TypeFlags.Enum && type.isUnion()) {
-    return {
-      kind: 'enum',
-      values: type.types.map(t => includeType(context, t)),
     };
   }
 
@@ -225,6 +300,35 @@ function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
     };
   }
 
+  if (type.flags & TypeFlags.Conditional) {
+    return {
+      kind: 'conditional',
+    };
+  }
+
+  if (type.flags & TypeFlags.Substitution) {
+    return {
+      kind: 'substitution',
+    };
+  }
+
+  if (type.flags & TypeFlags.NonPrimitive) {
+    return {
+      kind: 'nonPrimitive',
+    };
+  }
+}
+
+function includeInheritedTypes(context: DeclVisitorContext, type: Type) {
+  const decl: any = type?.symbol?.declarations?.[0];
+  const types = decl.heritageClauses?.[0]?.types || [];
+  return types.map(t => {
+    const type = context.checker.getTypeAtLocation(t);
+    return includeType(context, type);
+  });
+}
+
+function includeTypeParameter(context: DeclVisitorContext, type: Type): TypeModel {
   if (isTypeParameter(type)) {
     const symbol = type.getSymbol();
     const decl: any = symbol.declarations?.[0];
@@ -242,7 +346,105 @@ function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
         : constraint && includeType(context, constraint),
     };
   }
+}
 
+function getAllPropIds(context: DeclVisitorContext, types: Array<TypeModelRef>) {
+  const propIds: Array<number> = [];
+
+  for (const type of types) {
+    const baseType = context.refs[type.refName];
+
+    if (baseType && baseType.kind === 'object') {
+      for (const prop of baseType.props) {
+        if (prop.id) {
+          propIds.push(prop.id);
+        }
+      }
+
+      propIds.push(...getAllPropIds(context, baseType.extends));
+    } else if (type.external) {
+      const props = type.external.getProperties() || [];
+
+      for (const prop of props) {
+        propIds.push(prop.id || prop.target?.id);
+      }
+    }
+  }
+
+  return propIds;
+}
+
+function includeObject(context: DeclVisitorContext, type: Type): TypeModel {
+  if (isObjectType(type)) {
+    const inherited = includeInheritedTypes(context, type);
+    const targets = getAllPropIds(context, inherited);
+    const props = type.getProperties();
+    const propsDescriptor: Array<TypeModelProp> = props
+      .filter(prop => !targets.includes(prop.id || prop.target?.id))
+      .map(prop => {
+        const propType = context.checker.getTypeOfSymbolAtLocation(prop, prop.valueDeclaration);
+
+        return {
+          kind: 'prop',
+          name: prop.name,
+          id: prop.id || prop.target?.id,
+          optional: !!(prop.flags & SymbolFlags.Optional),
+          comment: getComment(context.checker, prop),
+          valueType: includeType(context, propType),
+        };
+      });
+
+    // index types
+    const stringIndexType = type.getStringIndexType();
+    const numberIndexType = type.getNumberIndexType();
+    const indicesDescriptor: Array<TypeModelIndex> = [];
+
+    if (numberIndexType) {
+      const info = (<InterfaceTypeWithDeclaredMembers>type).declaredNumberIndexInfo;
+      indicesDescriptor.push({
+        kind: 'index',
+        keyType: { kind: 'number' },
+        keyName: getKeyName(info),
+        valueType: includeType(context, numberIndexType),
+      });
+    }
+
+    if (stringIndexType) {
+      const info = (<InterfaceTypeWithDeclaredMembers>type).declaredStringIndexInfo;
+      indicesDescriptor.push({
+        kind: 'index',
+        keyType: { kind: 'string' },
+        keyName: getKeyName(info),
+        valueType: includeType(context, stringIndexType),
+      });
+    }
+
+    const callSignatures = type.getCallSignatures();
+    const callsDescriptor: Array<TypeModelFunction> =
+      callSignatures?.map(sign => ({
+        kind: 'function',
+        types: sign.typeParameters?.map(t => includeTypeParameter(context, t)) ?? [],
+        parameters: sign.getParameters().map(param => ({
+          kind: 'parameter',
+          param: param.name,
+          type: includeType(context, context.checker.getTypeAtLocation(param.valueDeclaration)),
+        })),
+        returnType: includeType(context, sign.getReturnType()),
+      })) ?? [];
+
+    return {
+      kind: 'object',
+      extends: inherited,
+      comment: getComment(context.checker, type.symbol),
+      props: propsDescriptor,
+      calls: callsDescriptor,
+      types: getTypeParameters(context, type),
+      indices: indicesDescriptor,
+    };
+  }
+}
+
+function includeCombinator(context: DeclVisitorContext, type: Type): TypeModel {
   // Tuple special handling
   if (
     isObjectType(type) &&
@@ -254,72 +456,6 @@ function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
     return {
       kind: 'tuple',
       types: type.typeArguments.map(t => includeType(context, t)),
-    };
-  }
-
-  if (isObjectType(type)) {
-    const props = type.getProperties();
-    const propsDescriptor: Array<TypeModelProp> = props.map(prop => {
-      const propType = context.checker.getTypeOfSymbolAtLocation(prop, prop.valueDeclaration);
-
-      return {
-        kind: 'prop',
-        name: prop.name,
-        optional: !!(prop.flags & SymbolFlags.Optional),
-        comment: getComment(context.checker, prop),
-        valueType: includeType(context, propType),
-      };
-    });
-
-    // index types
-    const stringIndexType = type.getStringIndexType();
-    const numberIndexType = type.getNumberIndexType();
-    const indicesDescriptor: Array<TypeModelIndex> = [];
-
-    if (numberIndexType) {
-      indicesDescriptor.push({
-        kind: 'index',
-        keyType: { kind: 'number' },
-        keyName: getKeyName((<InterfaceTypeWithDeclaredMembers>type).declaredNumberIndexInfo),
-        valueType: includeType(context, numberIndexType),
-      });
-    }
-
-    if (stringIndexType) {
-      indicesDescriptor.push({
-        kind: 'index',
-        keyType: { kind: 'string' },
-        keyName: getKeyName((<InterfaceTypeWithDeclaredMembers>type).declaredStringIndexInfo),
-        valueType: includeType(context, stringIndexType),
-      });
-    }
-
-    const callSignatures = type.getCallSignatures();
-    const callsDescriptor: Array<TypeModelFunction> =
-      callSignatures?.map(sign => ({
-        kind: 'function',
-        types:
-          sign.typeParameters?.map(t => {
-            return includeAnonymous(context, t);
-          }) ?? [],
-        parameters: sign.getParameters().map(param => {
-          const type = context.checker.getTypeAtLocation(param.valueDeclaration);
-          return {
-            kind: 'parameter',
-            param: param.name,
-            type: includeType(context, type),
-          };
-        }),
-        returnType: includeType(context, sign.getReturnType()),
-      })) ?? [];
-
-    return {
-      kind: 'object',
-      comment: getComment(context.checker, type.symbol),
-      props: propsDescriptor,
-      calls: callsDescriptor,
-      types: getTypeParameters(context, type),
-      indices: indicesDescriptor,
     };
   }
 
@@ -344,26 +480,18 @@ function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
       object: includeType(context, type.objectType),
     };
   }
+}
 
-  if (type.flags & TypeFlags.Conditional) {
-    return {
-      kind: 'conditional',
-    };
-  }
+function includeNamed(context: DeclVisitorContext, type: Type): TypeModel {
+  return includeObject(context, type) ?? includeBasic(context, type);
+}
 
-  if (type.flags & TypeFlags.Substitution) {
-    return {
-      kind: 'substitution',
-    };
-  }
-
-  if (type.flags & TypeFlags.NonPrimitive) {
-    return {
-      kind: 'nonPrimitive',
-    };
-  }
-
-  return {
-    kind: 'unidentified',
-  };
+function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {
+  return (
+    includeNamed(context, type) ??
+    includeTypeParameter(context, type) ??
+    includeCombinator(context, type) ?? {
+      kind: 'unidentified',
+    }
+  );
 }
