@@ -10,6 +10,7 @@
 * Added new optional plugin `piral-svelte` for Svelte (#97)
 * Added new optional plugin `piral-elm` for Elm (#118)
 * Added new optional plugin `piral-riot` for Riot.js
+* Added new optional plugin `piral-react-15` for React v15
 * Added new optional plugin `piral-lazy` for generic lazy loading
 * Replaced `react-arbiter` with `piral-base` (#109)
 * Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
@@ -20,6 +21,7 @@
 * Allow async pilet module evaluation
 * Integrated `state` and `router` in foreign context
 * Introduced additional checks for missing files (#129)
+* Changed generation of the Piral instance declaration (#116)
 
 ## 0.9.9 (January 29, 2020)
 

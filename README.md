@@ -16,7 +16,7 @@ This makes Piral an ideal foundation for a mid-sized to large-scale applications
 
 ## Getting Started
 
-Piral is developed as a monorepo. As such this repository may contain an overwhelming amount of information.
+Piral itself is developed as a monorepo. As such this repository may contain an overwhelming amount of information.
 
 Our recommendation is to start at the documentation available at [docs.piral.io](https://docs.piral.io). Working through the available [tutorials](https://docs.piral.io/tutorials) will give you the necessary information in the best possible order.
 
