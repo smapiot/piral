@@ -22,6 +22,14 @@ declare module 'typescript' {
   interface Declaration {
     questionToken?: ts.Token<ts.SyntaxKind.QuestionToken>;
   }
+
+  interface Expression {
+    text?: string;
+  }
+
+  interface SourceFile {
+    resolvedModules: Map<ts.ResolvedModule>;
+  }
 }
 
 export interface DeclVisitorContext {
