@@ -89,7 +89,7 @@ While the explicit way is great for flexibility it comes with one caveat: For th
 
 By specifying the `typings` field in the *package.json* of the Piral instance we can tell Piral where the *.d.ts* files describing our app shell exports are placed.
 
-For referencing a file called *api.d.ts* adjacent to the *package.json* we would thus use the following snippet:
+As an example, for referencing a file called *api.d.ts*, which is adjacent to the *package.json* we would thus use the following snippet:
 
 ```json
 {
