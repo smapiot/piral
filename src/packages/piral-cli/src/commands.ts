@@ -517,12 +517,14 @@ const allCommands: Array<ToolCommand<any>> = [
     arguments: [],
     flags(argv) {
       return argv
+        .positional('target-version', {
+          type: 'string',
+          describe: 'Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".',
+          default: apps.upgradePiletDefaults.version,
+        })
         .string('target')
         .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
         .default('target', apps.upgradePiletDefaults.target)
-        .string('tag')
-        .describe('tag', 'Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".')
-        .default('tag', apps.upgradePiletDefaults.version)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
@@ -533,7 +535,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.upgradePilet(args.base as string, {
         target: args.target as string,
-        version: args.tag as string,
+        version: args.targetVersion as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
       });
     },

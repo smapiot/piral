@@ -14,7 +14,8 @@
 * Added new optional plugin `piral-lazy` for generic lazy loading
 * Replaced `react-arbiter` with `piral-base` (#109)
 * Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
-* Changed `--only-core` to `framework` (supporting `piral-base`)
+* Changed `--only-core` to `--framework` (supporting `piral-base`)
+* Changed `--tag` to be a positional argument (for `pilet upgrade`)
 * Allow async `setup` in pilets
 * Support for `teardown` function in pilets
 * Added `dispatch` and `readState` actions
