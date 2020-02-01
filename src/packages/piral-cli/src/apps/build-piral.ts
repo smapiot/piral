@@ -198,7 +198,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       .map(file => (typeof file === 'string' ? { from: file, to: file } : file))
       .map(file => ({
         ...file,
-        from: join('files', file.from),
+        to: file.to.replace(/\\/g, '/'),
+        from: join('files', file.from).replace(/\\/g, '/'),
       }));
     await createFileIfNotExists(rootDir, 'package.json', '{}');
     await updateExistingJson(rootDir, 'package.json', {
