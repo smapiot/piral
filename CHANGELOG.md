@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.10.0 (tbd)
+## 0.10.0 (February 2, 2020)
 
 * Introduce compatibility check for the Piral CLI (#94)
 * Added new optional plugin `piral-mithril` for Mithril.js (#79)
