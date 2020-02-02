@@ -3,29 +3,29 @@ import { defaultFetchDependency } from './fetch';
 import { compileDependency } from './dependency';
 import {
   PiletMetadata,
-  GenericPilet,
+  Pilet,
   PiletDependencyGetter,
-  PiletFetcher,
+  PiletRequester,
   PiletDependencyFetcher,
   AvailableDependencies,
 } from './types';
 
-function loadFromContent<TApi>(
+function loadFromContent(
   meta: PiletMetadata,
   content: string,
   getDependencies: PiletDependencyGetter,
   link?: string,
-): Promise<GenericPilet<TApi>> {
+): Promise<Pilet> {
   const dependencies = {
     ...(getDependencies(meta) || {}),
   };
-  return compileDependency<TApi>(meta.name, content, link, dependencies).then(app => ({
+  return compileDependency(meta.name, content, link, dependencies).then(app => ({
     ...app,
     ...meta,
   }));
 }
 
-function checkFetchPilets(fetchPilets: PiletFetcher) {
+function checkFetchPilets(fetchPilets: PiletRequester) {
   if (!isfunc(fetchPilets)) {
     console.error('Could not get the pilets. Provide a valid `fetchPilets` function.');
     return false;
@@ -42,16 +42,16 @@ function checkFetchPilets(fetchPilets: PiletFetcher) {
  * @param dependencies The already evaluated global dependencies.
  * @returns A promise leading to the pilet content which has the metadata and a `setup` function.
  */
-export function loadPilet<TApi>(
+export function loadPilet(
   meta: PiletMetadata,
   getDependencies: PiletDependencyGetter,
   fetchDependency = defaultFetchDependency,
-): Promise<GenericPilet<TApi>> {
+): Promise<Pilet> {
   const { link, content } = meta;
   const retrieve = link ? fetchDependency(link) : content ? Promise.resolve(content) : undefined;
 
   if (retrieve) {
-    return retrieve.then(content => loadFromContent<TApi>(meta, content, getDependencies, link));
+    return retrieve.then(content => loadFromContent(meta, content, getDependencies, link));
   } else {
     console.warn('Empty pilet found!', meta.name);
   }
@@ -64,7 +64,7 @@ export function loadPilet<TApi>(
  * @param fetchPilets The function to resolve the pilets.
  * @param cache The optional cache to use initially and update later.
  */
-export function loadMetadata(fetchPilets: PiletFetcher) {
+export function loadMetadata(fetchPilets: PiletRequester) {
   if (checkFetchPilets(fetchPilets)) {
     return fetchPilets();
   }
@@ -79,15 +79,15 @@ export function loadMetadata(fetchPilets: PiletFetcher) {
  * @param dependencies The availablly global dependencies, if any.
  * @returns A promise leading to the evaluated pilets.
  */
-export function loadPilets<TApi>(
-  fetchPilets: PiletFetcher,
+export function loadPilets(
+  fetchPilets: PiletRequester,
   fetchDependency?: PiletDependencyFetcher,
   globalDependencies?: AvailableDependencies,
   getLocalDependencies?: PiletDependencyGetter,
-): Promise<Array<GenericPilet<TApi>>> {
+): Promise<Array<Pilet>> {
   const getDependencies = getDependencyResolver(globalDependencies, getLocalDependencies);
 
   return loadMetadata(fetchPilets).then(pilets =>
-    Promise.all(pilets.map(m => loadPilet<TApi>(m, getDependencies, fetchDependency))),
+    Promise.all(pilets.map(m => loadPilet(m, getDependencies, fetchDependency))),
   );
 }

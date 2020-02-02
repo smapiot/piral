@@ -1,6 +1,6 @@
-import { PiletMetadata } from 'piral-base';
 import { PiletApi } from './api';
 import { GlobalStateContext } from './state';
+import { PiletMetadata } from '../types';
 
 export interface ApiExtender<T> {
   /**
@@ -19,8 +19,4 @@ export interface Extend<T = Partial<PiletApi>> {
    * @returns The extended API or a function to create the extended API for a specific target.
    */
   (context: GlobalStateContext): T | ApiExtender<T>;
-}
-
-export interface PiletRequester {
-  (): Promise<Array<PiletMetadata>>;
 }

@@ -1,14 +1,13 @@
+import { PiletApiCreator, LoadPiletsOptions, getDependencyResolver, loadPilet } from 'piral-base';
+import { globalDependencies, getLocalDependencies } from './modules';
 import {
   AvailableDependencies,
-  GenericPiletApiCreator,
+  Pilet,
+  PiletRequester,
+  GlobalStateContext,
   PiletDependencyGetter,
   PiletLoadingStrategy,
-  LoadPiletsOptions,
-  getDependencyResolver,
-  loadPilet,
-} from 'piral-base';
-import { globalDependencies, getLocalDependencies } from './modules';
-import { Pilet, PiletApi, PiletRequester, GlobalStateContext } from './types';
+} from './types';
 
 /**
  * Creates a dependency getter that sets the shared dependencies explicitly.
@@ -38,9 +37,9 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
 
 interface PiletOptionsConfig {
   availablePilets: Array<Pilet>;
-  createApi: GenericPiletApiCreator<PiletApi>;
+  createApi: PiletApiCreator;
   getDependencies: PiletDependencyGetter;
-  strategy: PiletLoadingStrategy<PiletApi>;
+  strategy: PiletLoadingStrategy;
   requestPilets: PiletRequester;
   context: GlobalStateContext;
 }
@@ -52,7 +51,7 @@ export function createPiletOptions({
   getDependencies,
   strategy,
   requestPilets,
-}: PiletOptionsConfig): LoadPiletsOptions<PiletApi> {
+}: PiletOptionsConfig): LoadPiletsOptions {
   // if we build the debug version of piral (debug and emulator build)
   if (process.env.DEBUG_PIRAL !== undefined) {
     // the DEBUG_PIRAL env should contain the Piral CLI compatibility version

@@ -21,7 +21,7 @@ const globalIndicator = '__global';
 const modulesRoot = '/node_modules/';
 const typesRoot = '/node_modules/@types/';
 const tslibRoot = '/node_modules/typescript/lib';
-const piralCoreRoot = 'piral-core/lib/types/api';
+const piralBaseRoot = 'piral-base/lib/types';
 
 // note that a valid identifier is more complicated than this,
 // but let's keep it simple, which should be sufficient for most cases
@@ -71,10 +71,10 @@ export function findDeclaredTypings(root: string) {
   }
 }
 
-export function findPiralCoreApi(root: string) {
+export function findPiralBaseApi(root: string) {
   try {
     return require
-      .resolve(piralCoreRoot, {
+      .resolve(piralBaseRoot, {
         paths: [root],
       })
       ?.replace(/\.js$/, '.d.ts');

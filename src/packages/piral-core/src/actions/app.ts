@@ -3,12 +3,12 @@ import { RouteComponentProps } from 'react-router-dom';
 import { withKey, replaceOrAddItem, removeNested } from '../utils';
 import {
   LayoutType,
-  Pilet,
   ComponentsState,
   ErrorComponentsState,
   BaseRegistration,
   RegistryState,
   GlobalStateContext,
+  Pilet,
 } from '../types';
 
 export function changeLayout(ctx: GlobalStateContext, current: LayoutType) {

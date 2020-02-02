@@ -1,12 +1,13 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { PiletMetadata, GenericPilet } from 'piral-base';
+import { PiletApi, Pilet, PiletMetadata, EventEmitter } from 'piral-base';
 import { Dict } from './common';
 import { PiletCustomApi } from './custom';
-import { EventEmitter } from './utils';
 import { AnyComponent } from './components';
 import { ExtensionSlotProps } from './extension';
 import { SharedData, DataStoreOptions } from './data';
+
+export { PiletApi, Pilet, PiletMetadata, EventEmitter };
 
 export interface BaseComponentProps {
   /**
@@ -27,11 +28,6 @@ export interface RouteBaseProps<UrlParams = any, UrlState = any>
     BaseComponentProps {}
 
 export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
-
-/**
- * Defines the full pilet; metadata and API.
- */
-export type Pilet = GenericPilet<PiletApi>;
 
 /**
  * Defines the Pilet API from piral-core.
@@ -91,14 +87,8 @@ export interface PiletCoreApi {
   renderHtmlExtension<T = any>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<T>): void;
 }
 
-/**
- * Defines the API accessible from pilets.
- */
-export interface PiletApi extends PiletCustomApi, PiletCoreApi, EventEmitter {
-  /**
-   * Gets the metadata of the current pilet.
-   */
-  meta: PiletMetadata;
+declare module 'piral-base/lib/types' {
+  interface PiletApi extends PiletCustomApi, PiletCoreApi {}
 }
 
 export interface PiletsBag {

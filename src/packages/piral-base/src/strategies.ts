@@ -1,13 +1,9 @@
 import { getDependencyResolver } from './utils';
 import { loadPilet, loadPilets, loadMetadata } from './load';
 import { createPilets, createPilet } from './aggregate';
-import { LoadPiletsOptions, PiletsLoaded, GenericPilet, GenericPiletApiCreator, PiletLoadingStrategy } from './types';
+import { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
 
-function evalAll<TApi>(
-  createApi: GenericPiletApiCreator<TApi>,
-  oldModules: Array<GenericPilet<TApi>>,
-  newModules: Array<GenericPilet<TApi>>,
-) {
+function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModules: Array<Pilet>) {
   for (const oldModule of oldModules) {
     const [newModule] = newModules.filter(m => m.name === oldModule.name);
 
@@ -24,7 +20,7 @@ function evalAll<TApi>(
  * everything has been received, otherwise it will start rendering when the metadata has been
  * received. In any case it will evaluate pilets as fast as possible.
  */
-export function createProgressiveStrategy<TApi>(async: boolean): PiletLoadingStrategy<TApi> {
+export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy {
   return (options, cb) => {
     const { fetchPilets, fetchDependency, dependencies, getDependencies, createApi, pilets = [] } = options;
     const getDep = getDependencyResolver(dependencies, getDependencies);
@@ -37,7 +33,7 @@ export function createProgressiveStrategy<TApi>(async: boolean): PiletLoadingStr
 
       const followUp = loader.then(metadata => {
         const promises = metadata.map(m =>
-          loadPilet<TApi>(m, getDep, fetchDependency).then(mod => {
+          loadPilet(m, getDep, fetchDependency).then(mod => {
             const available = pilets.filter(m => m.name === mod.name).length === 0;
 
             if (available) {
@@ -69,8 +65,8 @@ export function createProgressiveStrategy<TApi>(async: boolean): PiletLoadingStr
  * Evaluates the pilets once available without waiting for all pilets to be
  * available.
  */
-export function blazingStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
-  const strategy = createProgressiveStrategy<TApi>(true);
+export function blazingStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
+  const strategy = createProgressiveStrategy(true);
   return strategy(options, cb);
 }
 
@@ -79,7 +75,7 @@ export function blazingStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: Pile
  * true. Directly renders, but waits for all pilets to be available before
  * evaluating them.
  */
-export function asyncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
+export function asyncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   standardStrategy(options, cb);
   return Promise.resolve();
 }
@@ -88,7 +84,7 @@ export function asyncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: Pilets
  * The standard strategy that is used if no strategy is declared and async is
  * false. Loads and evaluates all pilets before rendering.
  */
-export function standardStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
+export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   const { fetchPilets, fetchDependency, dependencies, getDependencies, createApi, pilets = [] } = options;
   return loadPilets(fetchPilets, fetchDependency, dependencies, getDependencies)
     .then(newModules => evalAll(createApi, pilets, newModules))
@@ -101,7 +97,7 @@ export function standardStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: Pil
  * builds of the Piral instance. This strategy ignores the fetcher and only
  * considers the already given pilets.
  */
-export function syncStrategy<TApi>(options: LoadPiletsOptions<TApi>, cb: PiletsLoaded<TApi>): PromiseLike<void> {
+export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   const { createApi, pilets = [] } = options;
   return evalAll(createApi, pilets, []).then(
     modules => cb(undefined, modules),

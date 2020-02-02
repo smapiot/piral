@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import { logWarn } from '../common';
-import { isNodeExported, findPiralCoreApi, findDeclaredTypings } from './helpers';
+import { isNodeExported, findPiralBaseApi, findDeclaredTypings } from './helpers';
 import { includeExportedType } from './visit';
 import { stringifyDeclaration } from './stringify';
 import { DeclVisitorContext } from './types';
@@ -12,7 +12,7 @@ export function generateDeclaration(
   availableImports: Array<string> = [],
 ) {
   const typingsPath = findDeclaredTypings(root);
-  const apiPath = findPiralCoreApi(root);
+  const apiPath = findPiralBaseApi(root);
   const rootNames = [...files, typingsPath].filter(m => !!m);
   const program = ts.createProgram(rootNames, {
     allowJs: true,
@@ -83,7 +83,7 @@ export function generateDeclaration(
     }
   } else {
     throw new Error(
-      'Cannot find the "piral-core" module. Are you sure it exists? Please run "npm i" to install missing modules.',
+      'Cannot find the "piral-base" module. Are you sure it exists? Please run "npm i" to install missing modules.',
     );
   }
 

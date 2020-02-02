@@ -1,4 +1,4 @@
-import { GenericPiletApp, AvailableDependencies, GenericPiletExports } from './types';
+import { PiletApp, AvailableDependencies, PiletExports } from './types';
 
 function requireModule(name: string, dependencies: AvailableDependencies) {
   const dependency = dependencies[name];
@@ -12,7 +12,7 @@ function requireModule(name: string, dependencies: AvailableDependencies) {
   return dependency;
 }
 
-function checkPiletApp<TApi>(app?: GenericPiletApp<TApi>): GenericPiletApp<TApi> {
+function checkPiletApp(app?: PiletApp): PiletApp {
   if (!app) {
     console.error('Invalid module found.', name);
   } else if (typeof app.setup !== 'function') {
@@ -34,15 +34,10 @@ function checkPiletApp<TApi>(app?: GenericPiletApp<TApi>): GenericPiletApp<TApi>
  * @param dependencies The globally available dependencies.
  * @returns The evaluated dependency.
  */
-export function evalDependency<TApi>(
-  name: string,
-  content: string,
-  link = '',
-  dependencies: AvailableDependencies = {},
-) {
+export function evalDependency(name: string, content: string, link = '', dependencies: AvailableDependencies = {}) {
   const mod = {
     exports: {},
-  } as GenericPiletExports<TApi>;
+  } as PiletExports;
   const require = (moduleName: string) => requireModule(moduleName, dependencies);
 
   try {
@@ -64,12 +59,12 @@ export function evalDependency<TApi>(
  * @param dependencies The globally available dependencies.
  * @returns The evaluated module.
  */
-export function compileDependency<TApi>(
+export function compileDependency(
   name: string,
   content: string,
   link = '',
   dependencies: AvailableDependencies = {},
-): Promise<GenericPiletApp<TApi>> {
-  const app = evalDependency<TApi>(name, content, link, dependencies);
+): Promise<PiletApp> {
+  const app = evalDependency(name, content, link, dependencies);
   return Promise.resolve(app).then(checkPiletApp);
 }

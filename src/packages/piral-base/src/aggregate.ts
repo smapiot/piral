@@ -1,8 +1,8 @@
 import { isfunc } from './utils';
 import { setupPilet } from './setup';
-import { GenericPilet, GenericPiletApiCreator } from './types';
+import { Pilet, PiletApiCreator } from './types';
 
-function checkCreateApi<TApi>(createApi: GenericPiletApiCreator<TApi>) {
+function checkCreateApi(createApi: PiletApiCreator) {
   if (!isfunc(createApi)) {
     console.warn('Invalid `createApi` function. Skipping pilet installation.');
     return false;
@@ -17,7 +17,7 @@ function checkCreateApi<TApi>(createApi: GenericPiletApiCreator<TApi>) {
  * @param pilets The available evaluated app pilets.
  * @returns The integrated pilets.
  */
-export function createPilets<TApi>(createApi: GenericPiletApiCreator<TApi>, pilets: Array<GenericPilet<TApi>>) {
+export function createPilets(createApi: PiletApiCreator, pilets: Array<Pilet>) {
   const promises = [];
 
   if (checkCreateApi(createApi)) {
@@ -36,7 +36,7 @@ export function createPilets<TApi>(createApi: GenericPiletApiCreator<TApi>, pile
  * @param pilet The available evaluated pilet.
  * @returns The integrated pilet.
  */
-export function createPilet<TApi>(createApi: GenericPiletApiCreator<TApi>, pilet: GenericPilet<TApi>) {
+export function createPilet(createApi: PiletApiCreator, pilet: Pilet) {
   const promises = [];
 
   if (checkCreateApi(createApi)) {

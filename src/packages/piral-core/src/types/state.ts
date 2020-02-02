@@ -1,13 +1,19 @@
 import { ComponentType, ReactPortal } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
-import { PiletMetadata } from 'piral-base';
-import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
 import { LayoutType } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
 import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
-import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag, Pilet } from './api';
+import {
+  PiletMetadata,
+  EventEmitter,
+  Pilet,
+  BaseComponentProps,
+  PageComponentProps,
+  ExtensionComponentProps,
+  PiletsBag,
+} from './api';
 import {
   ComponentConverters,
   LoadingIndicatorProps,

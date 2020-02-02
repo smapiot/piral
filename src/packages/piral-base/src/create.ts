@@ -1,17 +1,17 @@
 import { isfunc } from './utils';
 import { standardStrategy } from './strategies';
-import { LoadPiletsOptions, GenericPilet, PiletsLoading } from './types';
+import { LoadPiletsOptions, Pilet, PiletsLoading } from './types';
 
-export function startLoadingPilets<TApi>(options: LoadPiletsOptions<TApi>) {
+export function startLoadingPilets(options: LoadPiletsOptions) {
   const state = {
     loaded: false,
     pilets: [],
     error: undefined,
   };
-  const notifiers: Array<PiletsLoading<TApi>> = [];
-  const call = (notifier: PiletsLoading<TApi>) => notifier(state.error, state.pilets, state.loaded);
+  const notifiers: Array<PiletsLoading> = [];
+  const call = (notifier: PiletsLoading) => notifier(state.error, state.pilets, state.loaded);
   const notify = () => notifiers.forEach(call);
-  const setPilets = (error: Error, pilets: Array<GenericPilet<TApi>>) => {
+  const setPilets = (error: Error, pilets: Array<Pilet>) => {
     state.error = error;
     state.pilets = pilets;
     notify();
@@ -23,13 +23,13 @@ export function startLoadingPilets<TApi>(options: LoadPiletsOptions<TApi>) {
   const { strategy = standardStrategy } = options;
   strategy(options, setPilets).then(setLoaded, setLoaded);
   return {
-    connect(notifier: PiletsLoading<TApi>) {
+    connect(notifier: PiletsLoading) {
       if (isfunc(notifier)) {
         notifiers.push(notifier);
         call(notifier);
       }
     },
-    disconnect(notifier: PiletsLoading<TApi>) {
+    disconnect(notifier: PiletsLoading) {
       const index = notifiers.indexOf(notifier);
       index !== -1 && notifiers.splice(index, 1);
     },
