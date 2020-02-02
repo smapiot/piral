@@ -319,5 +319,6 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 ## References
 
 * [RFC2119](https://tools.ietf.org/html/rfc2119)
+* [CLI Specification](https://docs.piral.io/reference/specifications/cli)
 * [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
 * [UMD: Patterns and Examples](https://github.com/umdjs/umd)
