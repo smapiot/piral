@@ -12,7 +12,20 @@ For details on the available commands check out the [documentation at Piral](htt
 
 ## Plugins
 
-The Piral CLI can be extended with plugins. A plugin has to be an NPM module with a name that starts with `piral-cli-`, e.g., `piral-cli-local-feed`.
+The Piral CLI can be extended with plugins.
+
+### Available Plugins
+
+Right now the following plugins exist:
+
+- [**piral-cli-local-feed**](https://github.com/FlorianRappl/piral-cli-local-feed), provides the ability to start a local feed service
+- [**piral-cli-dotenv**](https://github.com/FlorianRappl/piral-cli-dotenv), provides the ability to easily integrate environment variables
+
+You'll find an updated list [on NPM](https://www.npmjs.com/search?q=keywords%3Apiral-cli) using the keyword **piral-cli**.
+
+### Building a Plugin
+
+A plugin has to be an NPM module with a name that starts with `piral-cli-`, e.g., `piral-cli-local-feed`.
 
 **Recommendation:** If your CLI plugin adds a new command, name your plugin accordingly, e.g., for a new command named `foo-piral` create an NPM package called `piral-cli-foo-piral`. The `foo-piral` command can be invoked by the user in the command line via `piral foo` or `pb foo-piral`.
 

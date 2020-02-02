@@ -1,49 +1,32 @@
 import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
+import '@webcomponents/webcomponentsjs/webcomponents-loader';
+import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 
 import * as React from 'react';
 import { render } from 'react-dom';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { createInstance, useGlobalState, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
+import { createInstance, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
+import { createVueApi } from 'piral-vue';
 import { createNgApi } from 'piral-ng';
 import { createNgjsApi } from 'piral-ngjs';
-import { createVueApi } from 'piral-vue';
-import { createDashboardApi, Dashboard } from 'piral-dashboard';
-import { createInfernoApi } from 'piral-inferno';
 import { createHyperappApi } from 'piral-hyperapp';
+import { createInfernoApi } from 'piral-inferno';
 import { createPreactApi } from 'piral-preact';
-import { availablePilets } from './pilets';
+import { createLazyApi } from 'piral-lazy';
+import { createLitElApi } from 'piral-litel';
+import { createMithrilApi } from 'piral-mithril';
+import { createAureliaApi } from 'piral-aurelia';
+import { createRiotApi } from 'piral-riot';
+import { createElmApi } from 'piral-elm';
+import { createSvelteApi } from 'piral-svelte';
+import { createDashboardApi, Dashboard } from 'piral-dashboard';
 
 const Loader: React.FC<LoadingIndicatorProps> = () => (
   <div className="app-center">
     <div className="spinner circles">Loading ...</div>
   </div>
 );
-
-const Sitemap: React.FC<RouteComponentProps> = () => {
-  const pages = useGlobalState(s => s.registry.pages);
-
-  return (
-    <ul>
-      <li>
-        <Link to="/">Go to /</Link>
-      </li>
-      {Object.keys(pages)
-        .map(url => url.replace(':id', `${~~(Math.random() * 1000)}`))
-        .map(url => (
-          <li key={url}>
-            <Link to={url}>Go to {url}</Link>
-          </li>
-        ))}
-      <li>
-        <Link to="/sitemap">Go to /sitemap</Link>
-      </li>
-      <li>
-        <Link to="/not-found">Go to /not-found</Link>
-      </li>
-    </ul>
-  );
-};
 
 const DashboardContainer: React.FC = ({ children }) => <div className="tiles">{children}</div>;
 
@@ -53,23 +36,34 @@ const Layout: React.FC = ({ children }) => (
       <h1>Cross Framework Sample</h1>
     </div>
     <div className="app-content">{children}</div>
-    <div className="app-footer">For more information or the source code check out our GitHub repository.</div>
+    <div className="app-footer">
+      For more information or the source code check out our{' '}
+      <a href="https://github.com/smapiot/piral">GitHub repository</a>.
+    </div>
   </div>
 );
 
 const instance = createInstance({
-  availablePilets,
   extendApi: [
+    createLazyApi(),
     createVueApi(),
     createNgApi(),
     createNgjsApi(),
-    createInfernoApi(),
     createHyperappApi(),
+    createInfernoApi(),
     createPreactApi(),
+    createLitElApi(),
+    createMithrilApi(),
+    createAureliaApi(),
+    createRiotApi(),
+    createElmApi(),
+    createSvelteApi(),
     createDashboardApi(),
   ],
   requestPilets() {
-    return Promise.resolve([]);
+    return fetch('https://feed.piral.io/api/v1/pilet/cross-fx')
+      .then(res => res.json())
+      .then(res => res.items);
   },
 });
 
@@ -79,7 +73,7 @@ const app = (
     <SetComponent name="Layout" component={Layout} />
     <SetComponent name="DashboardContainer" component={DashboardContainer} />
     <SetRoute path="/" component={Dashboard} />
-    <SetRoute path="/sitemap" component={Sitemap} />
   </Piral>
 );
+
 render(app, document.querySelector('#app'));

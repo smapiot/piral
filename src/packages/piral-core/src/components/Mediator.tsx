@@ -1,12 +1,22 @@
 import * as React from 'react';
-import { RecallProps } from 'react-arbiter';
+import { LoadPiletsOptions, startLoadingPilets, PiletsLoading } from 'piral-base';
 import { useAction } from '../hooks';
-import { defaultRender } from '../utils';
+import { PiletApi } from '../types';
 
-export interface MediatorProps extends RecallProps {}
+export interface MediatorProps {
+  options: LoadPiletsOptions<PiletApi>;
+}
 
-export const Mediator: React.FC<MediatorProps> = ({ loaded, modules, error, children }) => {
+export const Mediator: React.FC<MediatorProps> = ({ options }) => {
   const initialize = useAction('initialize');
-  React.useEffect(() => initialize(!loaded, error, modules), [loaded, modules, error]);
-  return defaultRender(children);
+  React.useEffect(() => {
+    const { connect, disconnect } = startLoadingPilets(options);
+    const notifier: PiletsLoading<PiletApi> = (error, pilets, loaded) => {
+      initialize(!loaded, error, pilets);
+    };
+    connect(notifier);
+    return () => disconnect(notifier);
+  }, []);
+  // tslint:disable-next-line:no-null-keyword
+  return null;
 };

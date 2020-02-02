@@ -1,7 +1,6 @@
 import * as actions from './actions';
+import { isfunc } from 'piral-base';
 import { ReactChild, isValidElement, createElement } from 'react';
-import { swap } from '@dbeining/react-atom';
-import { isfunc } from 'react-arbiter';
 import { buildName, Extend, Dict, withApi, PiletApi, GlobalStateContext } from 'piral-core';
 import { DefaultContainer, DefaultInput, DefaultResult } from './default';
 import { PiletSearchApi, SearchSettings, SearchHandler, SearchProviderRegistration, SearchResultType } from './types';
@@ -93,7 +92,7 @@ export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchAp
   return context => {
     context.defineActions(actions);
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       components: {
         ...state.components,
@@ -131,7 +130,11 @@ export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchAp
             id,
             createSearchRegistration(
               pilet,
-              q => Promise.resolve(provider(q, api)).then(results => wrapResults(results, api, context), () => []),
+              q =>
+                Promise.resolve(provider(q, api)).then(
+                  results => wrapResults(results, api, context),
+                  () => [],
+                ),
               settings,
             ),
           );

@@ -1,9 +1,8 @@
-import { swap, Atom, deref } from '@dbeining/react-atom';
-import { GlobalState, withKey, withoutKey } from 'piral-core';
+import { withKey, withoutKey, GlobalStateContext } from 'piral-core';
 import { ConnectorDetails, FeedReducer } from './types';
 
-export function createFeed(ctx: Atom<GlobalState>, id: string) {
-  swap(ctx, state => ({
+export function createFeed(ctx: GlobalStateContext, id: string) {
+  ctx.dispatch(state => ({
     ...state,
     feeds: withKey(state.feeds, id, {
       data: undefined,
@@ -14,17 +13,17 @@ export function createFeed(ctx: Atom<GlobalState>, id: string) {
   }));
 }
 
-export function destroyFeed(ctx: Atom<GlobalState>, id: string) {
-  swap(ctx, state => ({
+export function destroyFeed(ctx: GlobalStateContext, id: string) {
+  ctx.dispatch(state => ({
     ...state,
     feeds: withoutKey(state.feeds, id),
   }));
 }
 
-export function loadFeed<TData, TItem>(ctx: Atom<GlobalState>, options: ConnectorDetails<TData, TItem>) {
+export function loadFeed<TData, TItem>(ctx: GlobalStateContext, options: ConnectorDetails<TData, TItem>) {
   const { id } = options;
 
-  swap(ctx, state => ({
+  ctx.dispatch(state => ({
     ...state,
     feeds: withKey(state.feeds, id, {
       data: undefined,
@@ -46,8 +45,8 @@ export function loadFeed<TData, TItem>(ctx: Atom<GlobalState>, options: Connecto
   );
 }
 
-export function loadedFeed(ctx: Atom<GlobalState>, id: string, data: any, error: any) {
-  swap(ctx, state => ({
+export function loadedFeed(ctx: GlobalStateContext, id: string, data: any, error: any) {
+  ctx.dispatch(state => ({
     ...state,
     feeds: withKey(state.feeds, id, {
       loading: false,
@@ -59,12 +58,12 @@ export function loadedFeed(ctx: Atom<GlobalState>, id: string, data: any, error:
 }
 
 export function updateFeed<TData, TItem>(
-  ctx: Atom<GlobalState>,
+  ctx: GlobalStateContext,
   id: string,
   item: TItem,
   reducer: FeedReducer<TData, TItem>,
 ) {
-  const feed = deref(ctx).feeds[id];
+  const feed = ctx.readState(state => state.feeds[id]);
   const result = reducer(feed.data, item);
 
   if (result instanceof Promise) {

@@ -1,11 +1,10 @@
-import { swap, Atom } from '@dbeining/react-atom';
-import { GlobalState, GlobalStateContext } from 'piral-core';
+import { GlobalStateContext } from 'piral-core';
 import { Localizable } from './types';
 
 export function createActions(localizer: Localizable) {
   return {
-    selectLanguage(ctx: Atom<GlobalState>, selected: string) {
-      swap(ctx, state => {
+    selectLanguage(ctx: GlobalStateContext, selected: string) {
+      ctx.dispatch(state => {
         localizer.language = selected;
         return {
           ...state,
@@ -17,14 +16,14 @@ export function createActions(localizer: Localizable) {
         };
       });
     },
-    translate(_: Atom<GlobalState>, key: string, variables: any) {
+    translate(_: GlobalStateContext, key: string, variables: any) {
       return localizer && localizer.localizeGlobal(key, variables);
     },
-    setTranslations(this: GlobalStateContext, _: Atom<GlobalState>, language: string, data) {
+    setTranslations(ctx: GlobalStateContext, language: string, data) {
       localizer.messages[language] = data.global;
 
       for (const item of data.locals) {
-        const api = this.apis[item.name];
+        const api = ctx.apis[item.name];
 
         if (api) {
           const translations = api.getTranslations();
@@ -33,12 +32,12 @@ export function createActions(localizer: Localizable) {
         }
       }
     },
-    getTranslations(this: GlobalStateContext, _: Atom<GlobalState>, language: string) {
+    getTranslations(ctx: GlobalStateContext, language: string) {
       return {
         global: localizer.messages[language],
-        locals: Object.keys(this.apis).map(name => ({
+        locals: Object.keys(ctx.apis).map(name => ({
           name,
-          value: this.apis[name].getTranslations()[language],
+          value: ctx.apis[name].getTranslations()[language],
         })),
       };
     },

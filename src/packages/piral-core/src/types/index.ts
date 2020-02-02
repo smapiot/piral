@@ -7,7 +7,6 @@ export * from './data';
 export * from './extension';
 export * from './instance';
 export * from './layout';
-export * from './meta';
 export * from './plugin';
 export * from './state';
 export * from './utils';

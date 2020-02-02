@@ -11,8 +11,10 @@ import {
   matchFiles,
   getFileNames,
 } from './io';
-import { cliVersion, coreExternals } from './info';
+import { Framework } from './framework';
 import { logFail, logWarn } from './log';
+import { cliVersion, coreExternals } from './info';
+import { checkAppShellCompatibility } from './compatibility';
 import { getDevDependencies, PiletLanguage } from './language';
 import { PiletsInfo, TemplateFileLocation } from '../types';
 
@@ -139,23 +141,18 @@ export function readPiralPackage(root: string, name: string) {
   return readJson(path, 'package.json');
 }
 
-export function getPiralPackage(app: string, language: PiletLanguage) {
+export function getPiralPackage(app: string, language: PiletLanguage, version: string, framework: Framework) {
+  const typings = framework === 'piral-base' ? {} : undefined;
   return {
     app,
     scripts: {
       start: 'piral debug',
       build: 'piral build',
     },
-    pilets: {
-      ...getPiletsInfo({}),
-      scripts: {
-        build: 'npm run build-pilet',
-        start: 'npm run debug-pilet',
-      },
-    },
+    pilets: getPiletsInfo({}),
     devDependencies: {
-      ...getDevDependencies(language),
-      'piral-cli': `${cliVersion}`,
+      ...getDevDependencies(language, typings),
+      'piral-cli': `${version}`,
     },
   };
 }
@@ -186,12 +183,23 @@ async function copyFiles(
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo>,
 ) {
+  let result = true;
+
   for (const subfile of subfiles) {
     const { sourcePath, targetPath } = subfile;
-    const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
-    const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
-    await copy(sourcePath, targetPath, force);
+    const exists = await checkExists(sourcePath);
+
+    if (exists) {
+      const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
+      const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
+      await copy(sourcePath, targetPath, force);
+    } else {
+      logFail(`The file "%s" does not exist!`, sourcePath);
+      result = false;
+    }
   }
+
+  return result;
 }
 
 export async function copyScaffoldingFiles(
@@ -199,10 +207,15 @@ export async function copyScaffoldingFiles(
   target: string,
   files: Array<string | TemplateFileLocation>,
 ) {
+  let result = true;
+
   for (const file of files) {
     const subfiles = await getMatchingFiles(source, target, file, true);
-    await copyFiles(subfiles, ForceOverwrite.yes, []);
+    const success = await copyFiles(subfiles, ForceOverwrite.yes, []);
+    result = success && result;
   }
+
+  return result;
 }
 
 export async function copyPiralFiles(
@@ -212,10 +225,15 @@ export async function copyPiralFiles(
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo> = [],
 ) {
+  let result = true;
+
   for (const file of files) {
     const subfiles = await getFilesOf(root, name, file);
-    await copyFiles(subfiles, forceOverwrite, originalFiles);
+    const success = await copyFiles(subfiles, forceOverwrite, originalFiles);
+    result = success && result;
   }
+
+  return result;
 }
 
 export function getPiletsInfo(piralInfo: any): PiletsInfo {
@@ -351,31 +369,31 @@ export async function patchPiletPackage(
   };
   const allExternals = [...externals, ...coreExternals];
   const scripts = {
-    'debug-pilet': 'pilet debug',
-    'build-pilet': 'pilet build',
-    'upgrade-pilet': 'pilet upgrade',
+    start: 'pilet debug',
+    build: 'pilet build',
+    upgrade: 'pilet upgrade',
     ...info.scripts,
   };
   const peerDependencies = {
     ...allExternals.reduce((deps, name) => {
       deps[name] = '*';
       return deps;
-    }, {} as Record<string, string>),
+    }, {}),
     [name]: `*`,
   };
   const devDependencies = {
     ...Object.keys(typeDependencies).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || typeDependencies[name];
       return deps;
-    }, {} as Record<string, string>),
+    }, {}),
     ...Object.keys(info.devDependencies).reduce((deps, name) => {
       deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
       return deps;
-    }, {} as Record<string, string>),
+    }, {}),
     ...allExternals.filter(isValidDependency).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || 'latest';
       return deps;
-    }, {} as Record<string, string>),
+    }, {}),
     [name]: `${version || piralInfo.version}`,
     'piral-cli': `^${cliVersion}`,
   };
@@ -386,6 +404,17 @@ export async function patchPiletPackage(
     scripts,
   });
   return info.files;
+}
+
+export function checkAppShellPackage(appPackage: any) {
+  const { piralCLI = { generated: false, version: cliVersion } } = appPackage;
+
+  if (!piralCLI.generated) {
+    logWarn(`The used Piral instance does not seem to be a proper development package.
+Please make sure to build your development package with the Piral CLI using "piral build".`);
+  } else {
+    checkAppShellCompatibility(piralCLI.version);
+  }
 }
 
 export async function retrievePiletData(target: string, app?: string) {
@@ -412,6 +441,8 @@ export async function retrievePiletData(target: string, app?: string) {
     );
     throw new Error('Invalid Piral instance selected.');
   }
+
+  checkAppShellPackage(appPackage);
 
   return {
     dependencies: packageContent.dependencies || {},

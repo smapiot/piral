@@ -1,9 +1,8 @@
-import { Atom, swap } from '@dbeining/react-atom';
-import { GlobalState, withKey, withoutKey } from 'piral-core';
+import { withKey, withoutKey, GlobalStateContext } from 'piral-core';
 import { TileRegistration } from './types';
 
-export function registerTile(ctx: Atom<GlobalState>, name: string, value: TileRegistration) {
-  swap(ctx, state => ({
+export function registerTile(ctx: GlobalStateContext, name: string, value: TileRegistration) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,
@@ -12,8 +11,8 @@ export function registerTile(ctx: Atom<GlobalState>, name: string, value: TileRe
   }));
 }
 
-export function unregisterTile(ctx: Atom<GlobalState>, name: string) {
-  swap(ctx, state => ({
+export function unregisterTile(ctx: GlobalStateContext, name: string) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,

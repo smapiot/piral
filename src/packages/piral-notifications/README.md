@@ -12,7 +12,27 @@ The following functions are brought to the Pilet API.
 
 Shows a notification inside the app shell. The notification can be permanent (to be closed by the user) or temporary (closes after a specified time).
 
+## Usage
+
+> For authors of pilets
+
+You can use the `showNotification` function from the Pilet API to show a notification within the Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  piral.showNotification('Hello from my sample pilet!', {
+    type: 'info',
+  });
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

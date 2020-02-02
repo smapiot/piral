@@ -1,10 +1,14 @@
-import { Atom } from '@dbeining/react-atom';
+import { Atom, swap } from '@dbeining/react-atom';
 import { createLocaleApi, setupLocalizer } from './create';
 
 describe('Create Localize API', () => {
+  const state = Atom.of({});
   const context: any = {
     defineActions() {},
-    state: Atom.of({}),
+    state,
+    dispatch(update) {
+      swap(state, update);
+    },
   };
 
   it('createApi can translate from global translations using the current language', () => {

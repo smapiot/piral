@@ -1,11 +1,13 @@
 import { ComponentType, ReactPortal } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Atom } from '@dbeining/react-atom';
-import { PiletMetadata } from './meta';
+import { PiletMetadata } from 'piral-base';
 import { EventEmitter } from './utils';
 import { Dict, Without } from './common';
 import { LayoutType } from './layout';
 import { SharedDataItem, DataStoreTarget } from './data';
+import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
+import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag, Pilet } from './api';
 import {
   ComponentConverters,
   LoadingIndicatorProps,
@@ -14,11 +16,15 @@ import {
   LayoutProps,
   Errors,
 } from './components';
-import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
-import { BaseComponentProps, PageComponentProps, ExtensionComponentProps, PiletsBag, Pilet } from './api';
 
 export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
+}
+
+declare module './components' {
+  interface ComponentContext {
+    state: Atom<GlobalState>;
+  }
 }
 
 export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
@@ -37,6 +43,9 @@ export interface ExtensionRegistration extends BaseRegistration {
   defaults: any;
 }
 
+/**
+ * The Piral global app sub-state container for shared components.
+ */
 export interface ComponentsState extends PiralCustomComponentsState {
   /**
    * The loading indicator renderer.
@@ -56,6 +65,9 @@ export interface ComponentsState extends PiralCustomComponentsState {
   Layout: ComponentType<LayoutProps>;
 }
 
+/**
+ * The Piral global app sub-state container for app information.
+ */
 export interface AppState {
   /**
    * Information for the layout computation.
@@ -73,6 +85,9 @@ export interface AppState {
   error: Error | undefined;
 }
 
+/**
+ * The Piral global app sub-state container for component registrations.
+ */
 export interface RegistryState extends PiralCustomRegistryState {
   /**
    * The registered page components for the router.
@@ -88,6 +103,9 @@ export type ErrorComponentsState = {
   [P in keyof Errors]?: ComponentType<Errors[P]>;
 };
 
+/**
+ * The Piral global app state container.
+ */
 export interface GlobalState extends PiralCustomState {
   /**
    * The relevant state for the app itself.
@@ -127,12 +145,21 @@ export interface GlobalState extends PiralCustomState {
   provider?: JSX.Element;
 }
 
+/**
+ * The shape of an app action in Piral.
+ */
 export interface PiralAction<T extends (...args: any) => any> {
-  (this: GlobalStateContext, ctx: Atom<GlobalState>, ...args: Parameters<T>): ReturnType<T>;
+  (ctx: GlobalStateContext, ...args: Parameters<T>): ReturnType<T>;
 }
 
+/**
+ * A subset of the available app actions in Piral.
+ */
 export type PiralDefineActions = Partial<{ [P in keyof PiralActions]: PiralAction<PiralActions[P]> }>;
 
+/**
+ * The globally defined actions.
+ */
 export interface PiralActions extends PiralCustomActions {
   /**
    * Initializes the application shell.
@@ -236,15 +263,30 @@ export interface PiralActions extends PiralCustomActions {
    * @param entry The child to render.
    */
   showPortal(id: string, entry: ReactPortal): void;
+  /**
+   * Dispatches a state change.
+   * @param update The update function creating a new state.
+   */
+  dispatch(update: (state: GlobalState) => GlobalState): void;
+  /**
+   * Reads the selected part of the global state.
+   * @param select The selector for getting the desired part.
+   * @returns The desired part.
+   */
+  readState<S>(select: (state: GlobalState) => S): S;
 }
 
+/**
+ * The Piral app instance context.
+ */
 export interface GlobalStateContext extends PiralActions, EventEmitter {
   /**
    * The global state context atom.
+   * Changes to the state should always be dispatched via the `dispatch` action.
    */
   state: Atom<GlobalState>;
   /**
-   * The available APIs.
+   * The API objects created for the loaded pilets.
    */
   apis: PiletsBag;
   /**

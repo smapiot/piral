@@ -1,5 +1,29 @@
 # Piral Changelog
 
+## 0.10.0 (tbd)
+
+* Introduce compatibility check for the Piral CLI (#94)
+* Added new optional plugin `piral-mithril` for Mithril.js (#79)
+* Added new optional plugin `piral-aurelia` for Aurelia (#80)
+* Added new optional plugin `piral-litel` for LitElement (#85)
+* Added new optional plugin `piral-ember` for Ember.js (#96)
+* Added new optional plugin `piral-svelte` for Svelte (#97)
+* Added new optional plugin `piral-elm` for Elm (#118)
+* Added new optional plugin `piral-riot` for Riot.js
+* Added new optional plugin `piral-react-15` for React v15
+* Added new optional plugin `piral-lazy` for generic lazy loading
+* Replaced `react-arbiter` with `piral-base` (#109)
+* Changed `--skip-install` (default: `false`) flag to `--install` (default: `true`) for scaffolding
+* Changed `--only-core` to `--framework` (supporting `piral-base`)
+* Changed `--tag` to be a positional argument (for `pilet upgrade`)
+* Allow async `setup` in pilets
+* Support for `teardown` function in pilets
+* Added `dispatch` and `readState` actions
+* Allow async pilet module evaluation
+* Integrated `state` and `router` in foreign context
+* Introduced additional checks for missing files (#129)
+* Changed generation of the Piral instance declaration (#116)
+
 ## 0.9.9 (January 29, 2020)
 
 * Fixed declaration generation on Windows
@@ -70,7 +94,7 @@
 * Generate the declaration dynamically (#89)
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
-* Added new optional plugin `piral-inferno` (#86)
+* Added new optional plugin `piral-inferno` (#ƒ)
 * Added new optional plugin `piral-preact` (#86)
 * Added new optional plugin `piral-ngjs` (#87)
 * Improved and added better error messages in the Piral CLI (#92)

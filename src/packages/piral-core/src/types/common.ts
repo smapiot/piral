@@ -25,3 +25,5 @@ export type FirstParametersOf<T> = {
 }[keyof T];
 
 export type UnionOf<T> = { [K in keyof T]: T[K] }[keyof T];
+
+export type MaybeAsync<T> = T | (() => Promise<T>);

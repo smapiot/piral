@@ -20,7 +20,46 @@ If the first argument is a string a named search provider is registered. A named
 
 Removes a search provider from the app shell. This requires a named search provider.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `registerSearchProvider` function from the Pilet API to add a new search provider in the app shell.
+
+**Note**: When the first argument is a string we call it a *named* search provider.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyTile } from './MyTile';
+
+export function setup(piral: PiletApi) {
+  piral.registerSearchProvider(MyTile);
+}
+```
+
+You can use the `unregisterSearchProvider` function from the Pilet API to remove a previously added search provider from the app shell.
+
+**Note**: You'll need to have added a *named* search provider in order to be able to remove it.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyTile } from './MyTile';
+
+export function setup(piral: PiletApi) {
+  // register with a name
+  piral.registerSearchProvider('first', MyTile);
+  // and unregister; maybe some time later?
+  piral.unregisterSearchProvider('first');
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

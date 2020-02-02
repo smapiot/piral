@@ -1,4 +1,5 @@
 import { Atom, deref } from '@dbeining/react-atom';
+import { createActions, createListener } from 'piral-core';
 import { destroyFeed, createFeed, loadedFeed, updateFeed, loadFeed } from './actions';
 
 describe('Feeds Actions Module', () => {
@@ -10,7 +11,8 @@ describe('Feeds Actions Module', () => {
         bar: 10,
       },
     });
-    destroyFeed(state, 'foo');
+    const ctx = createActions(state, createListener({}));
+    destroyFeed(ctx, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -26,7 +28,8 @@ describe('Feeds Actions Module', () => {
         foo: 5,
       },
     });
-    createFeed(state, 'bar');
+    const ctx = createActions(state, createListener({}));
+    createFeed(ctx, 'bar');
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -48,7 +51,8 @@ describe('Feeds Actions Module', () => {
         foo: 5,
       },
     });
-    loadedFeed(state, 'bar', 'test', 'errror');
+    const ctx = createActions(state, createListener({}));
+    loadedFeed(ctx, 'bar', 'test', 'errror');
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -76,7 +80,8 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    updateFeed(state, 'bar', 15, (data, item) => [...data, item]);
+    const ctx = createActions(state, createListener({}));
+    updateFeed(ctx, 'bar', 15, (data, item) => [...data, item]);
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -104,7 +109,8 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    await updateFeed(state, 'bar', 15, (data, item) => Promise.resolve([...data, item]));
+    const ctx = createActions(state, createListener({}));
+    await updateFeed(ctx, 'bar', 15, (data, item) => Promise.resolve([...data, item]));
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -132,7 +138,8 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    await updateFeed(state, 'bar', 15, (data, item) => Promise.reject('Failed'));
+    const ctx = createActions(state, createListener({}));
+    await updateFeed(ctx, 'bar', 15, () => Promise.reject('Failed'));
     expect(deref(state)).toEqual({
       foo: 5,
       feeds: {
@@ -161,7 +168,8 @@ describe('Feeds Actions Module', () => {
       },
     });
     let cb = undefined;
-    const promise = loadFeed(state, {
+    const ctx = createActions(state, createListener({}));
+    const promise = loadFeed(ctx, {
       id: 'bar',
       initialize() {
         return Promise.resolve([1, 2, 3]);
@@ -226,7 +234,8 @@ describe('Feeds Actions Module', () => {
         },
       },
     });
-    await loadFeed(state, {
+    const ctx = createActions(state, createListener({}));
+    await loadFeed(ctx, {
       id: 'bar',
       initialize() {
         return Promise.reject('error');

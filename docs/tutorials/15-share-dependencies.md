@@ -89,7 +89,7 @@ While the explicit way is great for flexibility it comes with one caveat: For th
 
 By specifying the `typings` field in the *package.json* of the Piral instance we can tell Piral where the *.d.ts* files describing our app shell exports are placed.
 
-For referencing a file called *api.d.ts* adjacent to the *package.json* we would thus use the following snippet:
+As an example, for referencing a file called *api.d.ts*, which is adjacent to the *package.json* we would thus use the following snippet:
 
 ```json
 {
@@ -125,3 +125,5 @@ The rule of thumb for sharing the type declarations is: Everything exported top-
 ## Conclusion
 
 Sharing dependencies in Piral is an important aspect that can be controlled in simple ways. Piral understands itself here as a guide and tool. Sharing all dependencies is certainly not helpful and should be avoided. On the other hand sharing no dependency will in most cases not be beneficial, too. Finding a good "middle" way will take time.
+
+The most effective sharing comes by extending the Pilet API. One crucial aspect is that some sharing will be centralized in Piral's state container. In the next tutorial you'll learn how to use Piral's state container with (custom) actions.

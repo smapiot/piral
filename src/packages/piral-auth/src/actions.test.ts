@@ -1,5 +1,5 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { createListener } from 'piral-core';
+import { createListener, createActions } from 'piral-core';
 import { setUser } from './actions';
 
 describe('Auth Actions Module', () => {
@@ -12,13 +12,13 @@ describe('Auth Actions Module', () => {
         permissions: {},
       },
     });
-    const events = createListener(undefined);
+    const ctx = createActions(state, createListener({}));
     const user = {
       name: 'User',
       features: { a: 'on' },
       permissions: { allow: true },
     };
-    setUser.call(events, state, user);
+    setUser(ctx, user);
     expect(deref(state)).toEqual({
       foo: 5,
       user,
@@ -38,8 +38,8 @@ describe('Auth Actions Module', () => {
         },
       },
     });
-    const events = createListener(undefined);
-    setUser.call(events, state, undefined, {}, {});
+    const ctx = createActions(state, createListener({}));
+    setUser(ctx, undefined, {}, {});
     expect(deref(state)).toEqual({
       foo: 5,
       user: undefined,

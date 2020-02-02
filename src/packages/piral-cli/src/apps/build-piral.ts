@@ -1,4 +1,5 @@
-import { dirname, basename, extname, join, resolve } from 'path';
+import { dirname, basename, extname, join, resolve, relative } from 'path';
+import { declarationPiral } from './declaration-piral';
 import {
   setStandardEnvs,
   retrievePiletsInfo,
@@ -11,16 +12,18 @@ import {
   copyScaffoldingFiles,
   createDirectory,
   remove,
-  declarationFlattening,
   findPackageVersion,
   coreExternals,
-  combineApiDeclarations,
   cliVersion,
   logInfo,
   ParcelConfig,
+  checkCliCompatibility,
   patchModules,
   setupBundler,
   defaultCacheDir,
+  createFileFromTemplateIfNotExists,
+  ForceOverwrite,
+  gatherJsBundles,
 } from '../common';
 
 interface Destination {
@@ -67,7 +70,8 @@ async function bundleFiles(
   setStandardEnvs({
     production: true,
     root,
-    develop,
+    debugPiral: develop,
+    debugPilet: develop,
     piral,
     dependencies,
   });
@@ -82,14 +86,12 @@ async function bundleFiles(
     },
   });
 
-  await bundler.bundle();
-  return outDir;
-}
-
-async function generateDeclaration(outDir: string, root: string, name: string, dependencies: Record<string, string>) {
-  const declaration = combineApiDeclarations(root, name, Object.keys(dependencies));
-  const result = await declarationFlattening(root, name, declaration);
-  await createFileIfNotExists(outDir, 'index.d.ts', result);
+  const bundle = await bundler.bundle();
+  const [file] = gatherJsBundles(bundle);
+  return {
+    outDir,
+    outFile: relative(outDir, (file && file.src) || outDir),
+  };
 }
 
 export type PiralBuildType = 'all' | 'release' | 'develop';
@@ -147,6 +149,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const { externals } = pilets;
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
+  let success = true;
+
+  await checkCliCompatibility(root);
 
   if (fresh) {
     await removeDirectory(dest.outDir);
@@ -165,7 +170,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const originalPackageJson = resolve(root, 'package.json');
     const { files: originalFiles = [] } = require(originalPackageJson);
     const appDir = 'app';
-    const outDir = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', appDir, {
+    const { outDir, outFile } = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', appDir, {
       cacheDir: cache,
       watch: false,
       sourceMaps,
@@ -193,7 +198,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       .map(file => (typeof file === 'string' ? { from: file, to: file } : file))
       .map(file => ({
         ...file,
-        from: join('files', file.from),
+        to: file.to.replace(/\\/g, '/'),
+        from: join('files', file.from).replace(/\\/g, '/'),
       }));
     await createFileIfNotExists(rootDir, 'package.json', '{}');
     await updateExistingJson(rootDir, 'package.json', {
@@ -219,16 +225,23 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     });
     await createDirectory(filesDir);
     // for scaffolding we need to keep the files also available in the new package
-    await copyScaffoldingFiles(root, filesDir, pilets.files);
+    const prs1 = await copyScaffoldingFiles(root, filesDir, pilets.files);
     // we just want to make sure that "files" mentioned in the original package.json are respected in the package
-    await copyScaffoldingFiles(root, rootDir, originalFiles);
+    const prs2 = await copyScaffoldingFiles(root, rootDir, originalFiles);
     // actually including this one hints that the app shell should have been included - which is forbidden
-    await createFileIfNotExists(outDir, 'index.js', 'throw new Error("This file should not be included anywhere.");');
-    await generateDeclaration(outDir, root, name, dependencies.std);
+    await createFileFromTemplateIfNotExists('other', 'piral', outDir, 'index.js', ForceOverwrite.yes, {
+      name,
+      outFile,
+    });
+    await declarationPiral(baseDir, {
+      entry,
+      target: outDir,
+    });
     await createPackage(rootDir);
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 
     logDone(`Development package available in "${rootDir}".`);
+    success = prs1 && prs2;
   }
 
   if (type === 'all') {
@@ -240,7 +253,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   if (type !== 'develop') {
     logInfo('Starting build ...');
 
-    const outDir = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
+    const { outDir } = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
       cacheDir: cache,
       watch: false,
       sourceMaps,
@@ -253,5 +266,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     });
 
     logDone(`Files for publication available in "${outDir}".`);
+  }
+
+  if (!success) {
+    throw new Error('Finished with errors. See above for details.');
   }
 }

@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { PiletMetadata } from 'piral-core';
+import { PiletMetadata } from 'piral-base';
 import { MaybeAsync, PiralSsrExternalScript } from './types';
 
 const bundleUrl = '__bundleUrl__';

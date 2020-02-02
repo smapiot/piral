@@ -2,7 +2,7 @@ import { renderFile } from 'ejs';
 import { resolve } from 'path';
 import { ForceOverwrite, createFileIfNotExists } from './io';
 
-export type TemplateType = 'default' | 'empty';
+export type TemplateType = 'default' | 'empty' | 'other';
 
 export function fillTemplate(type: TemplateType, name: string, data: any = {}) {
   const path = resolve(__dirname, '..', '..', 'templates', type, `${name}.ejs`);

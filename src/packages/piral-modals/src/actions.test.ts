@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { registerModal, unregisterModal, openModal, closeModal } from './actions';
+import { createActions, createListener } from 'piral-core';
 
 describe('Modals Actions Module', () => {
   it('registerModal and unregisterModal', () => {
@@ -10,7 +11,8 @@ describe('Modals Actions Module', () => {
         modals: {},
       },
     });
-    registerModal(state, 'foo', 10);
+    const ctx = createActions(state, createListener({}));
+    registerModal(ctx, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {
@@ -20,7 +22,7 @@ describe('Modals Actions Module', () => {
         },
       },
     });
-    unregisterModal(state, 'foo');
+    unregisterModal(ctx, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {
@@ -35,7 +37,8 @@ describe('Modals Actions Module', () => {
       foo: 5,
       modals: ['b'],
     });
-    openModal(state, 'a');
+    const ctx = createActions(state, createListener({}));
+    openModal(ctx, 'a');
     expect(deref(state)).toEqual({
       foo: 5,
       modals: ['a', 'b'],
@@ -47,7 +50,8 @@ describe('Modals Actions Module', () => {
       foo: 5,
       modals: ['a', 'b', 'c'],
     });
-    closeModal(state, 'b');
+    const ctx = createActions(state, createListener({}));
+    closeModal(ctx, 'b');
     expect(deref(state)).toEqual({
       foo: 5,
       modals: ['a', 'c'],

@@ -20,7 +20,32 @@ Transforms a standard Hyperapp app into a component that can be used in Piral, e
 
 The extension slot component to be used in Hyperapp apps.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromHyperapp` function from the Pilet API to convert your Hyperapp components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { HyperappPage } from './HyperappPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromHyperapp(HyperappPage));
+}
+```
+
+Within Hyperapp components the Piral Hyperapp extension component can be used by referring to `HyperappExtension`, e.g.,
+
+```jsx
+<HyperappExtension name="name-of-extension" />
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Hyperapp with Piral is as simple as installing `piral-hyperapp` and `hyperapp`.
 

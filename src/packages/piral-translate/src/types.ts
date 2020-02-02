@@ -114,7 +114,7 @@ export interface PiletLocaleApi {
   translate<T = Record<string, string>>(tag: string, variables?: T): string;
   /**
    * Provides translations to the application.
-   * The translations will be exlusively used for retrieving translations for the pilet.
+   * The translations will be exclusively used for retrieving translations for the pilet.
    * @param messages The messages to use as translation basis.
    */
   setTranslations(messages: LocalizationMessages): void;

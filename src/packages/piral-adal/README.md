@@ -16,7 +16,28 @@ The following functions are brought to the Pilet API.
 
 Gets the currently authenticated user's token or `undefined` if no user is authenticated.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `getAccessToken` function from the Pilet API.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const userToken = piral.getAccessToken();
+  // do something with userToken
+}
+```
+
+Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

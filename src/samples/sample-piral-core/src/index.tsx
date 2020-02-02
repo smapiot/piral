@@ -160,7 +160,10 @@ const Layout: React.FC = ({ children }) => {
         <Menu />
       </div>
       <div className="app-content">{children}</div>
-      <div className="app-footer">For more information or the source code check out our GitHub repository.</div>
+      <div className="app-footer">
+        For more information or the source code check out our{' '}
+        <a href="https://github.com/smapiot/piral">GitHub repository</a>.
+      </div>
       <Notifications />
     </div>
   );
@@ -178,9 +181,6 @@ const instance = createInstance({
     createSearchApi(),
   ],
   requestPilets() {
-    // return fetch('http://localhost:9000/api/pilet')
-    //   .then(res => res.json())
-    //   .then(res => res.items);
     return new Promise(resolve => setTimeout(() => resolve([]), 1000));
   },
 });

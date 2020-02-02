@@ -9,3 +9,4 @@ export * from './pack-pilet';
 export * from './publish-pilet';
 export * from './validate-pilet';
 export * from './validate-piral';
+export * from './declaration-piral';

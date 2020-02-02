@@ -5,6 +5,7 @@ import {
   retrievePiralRoot,
   setStandardEnvs,
   openBrowser,
+  checkCliCompatibility,
   reorderInjectors,
   notifyServerOnline,
   logInfo,
@@ -61,6 +62,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);
 
+  await checkCliCompatibility(root);
+
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
@@ -94,6 +97,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   setStandardEnvs({
     root,
+    debugPiral: true,
     dependencies: externals,
     piral: name,
   });

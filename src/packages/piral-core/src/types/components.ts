@@ -19,6 +19,10 @@ export interface HtmlComponent<TProps> {
   type: 'html';
 }
 
+export interface ComponentContext {
+  router: RouteComponentProps;
+}
+
 export interface ForeignComponent<TProps> {
   /**
    * Called when the component is mounted.
@@ -26,14 +30,14 @@ export interface ForeignComponent<TProps> {
    * @param props The props to transport.
    * @param ctx The associated context.
    */
-  mount(element: HTMLElement, props: TProps, ctx: any): void;
+  mount(element: HTMLElement, props: TProps, ctx: ComponentContext): void;
   /**
    * Called when the component should be updated.
    * @param element The container hosting the element.
    * @param props The props to transport.
    * @param ctx The associated context.
    */
-  update?(element: HTMLElement, props: TProps, ctx: any): void;
+  update?(element: HTMLElement, props: TProps, ctx: ComponentContext): void;
   /**
    * Called when a component is unmounted.
    * @param element The container that was hosting the element.

@@ -1,8 +1,7 @@
 import { ComponentType } from 'react';
-import { ArbiterModule } from 'react-arbiter';
 import { RouteComponentProps } from 'react-router-dom';
+import { PiletMetadata, GenericPilet } from 'piral-base';
 import { Dict } from './common';
-import { PiletMetadata } from './meta';
 import { PiletCustomApi } from './custom';
 import { EventEmitter } from './utils';
 import { AnyComponent } from './components';
@@ -32,7 +31,7 @@ export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, 
 /**
  * Defines the full pilet; metadata and API.
  */
-export type Pilet = ArbiterModule<PiletApi>;
+export type Pilet = GenericPilet<PiletApi>;
 
 /**
  * Defines the Pilet API from piral-core.
@@ -86,10 +85,10 @@ export interface PiletCoreApi {
   Extension: ComponentType<ExtensionSlotProps>;
   /**
    * Renders an extension in a plain DOM component.
-   * @param element The DOM element as a container for rendering the extension.
+   * @param element The DOM element or shadow root as a container for rendering the extension.
    * @param props The extension's rendering props.
    */
-  renderHtmlExtension<T = any>(element: HTMLElement, props: ExtensionSlotProps<T>): void;
+  renderHtmlExtension<T = any>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<T>): void;
 }
 
 /**

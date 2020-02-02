@@ -24,7 +24,57 @@ Tracks an error or exceptional behavior incl. properties.
 
 Starts a tracking frame. The frame can be ended via the returned callback.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `trackEvent` function from the Pilet API to track a custom event with an arbitrary definition.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  piral.trackEvent('sample-pilet-ready');
+}
+```
+
+You can use the `trackError` function from the Pilet API to track an error from the pilet.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  try {
+    throw new Error('Ouch!');
+  } catch (e) {
+    piral.trackError(e);
+  }
+}
+```
+
+You can use the `trackFrame` function from the Pilet API to track a custom event with integrated running time measurement.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const frame = piral.trackFrame('sample-pilet-computation');
+
+  setTimeout(() => {
+    frame();
+  }, 4000);
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

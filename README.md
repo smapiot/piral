@@ -16,9 +16,15 @@ This makes Piral an ideal foundation for a mid-sized to large-scale applications
 
 ## Getting Started
 
-Piral is developed as a monorepo. As such this repository may contain an overwhelming amount of information.
+Piral itself is developed as a monorepo. As such this repository may contain an overwhelming amount of information.
 
 Our recommendation is to start at the documentation available at [docs.piral.io](https://docs.piral.io). Working through the available [tutorials](https://docs.piral.io/tutorials) will give you the necessary information in the best possible order.
+
+## Questions
+
+While [the GitHub issues](https://github.com/smapiot/piral/issues) may be used in case of questions, we would prefer general usage questions to be raised either in [our Gitter chat](https://gitter.im/piral-io/community) or [at StackOverflow](https://stackoverflow.com/questions/tagged/piral).
+
+Be sure to check [our FAQ](https://docs.piral.io/faq) and [the official tutorials](https://docs.piral.io/tutorials) upfront!
 
 ## Contributing
 

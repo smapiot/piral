@@ -1,10 +1,9 @@
-import { createElement } from 'react';
-import { createPortal } from 'react-dom';
-import { isfunc, ApiCreator } from 'react-arbiter';
+import { isfunc, GenericPiletApiCreator, PiletMetadata } from 'piral-base';
 import { __assign } from 'tslib';
-import { withApi, ExtensionSlot } from '../components';
-import { createDataOptions, getDataExpiration } from '../utils';
-import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
+import { withApi } from '../state';
+import { ExtensionSlot } from '../components';
+import { createDataOptions, getDataExpiration, renderInDom } from '../utils';
+import { PiletApi, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
 
 export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCoreApi> {
   return (api, target) => {
@@ -39,19 +38,7 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         context.unregisterExtension(name, arg);
       },
       renderHtmlExtension(element, props) {
-        const portalId = 'data-portal-id';
-        let parent = element.parentElement;
-
-        while (parent) {
-          if (parent.hasAttribute(portalId)) {
-            const portal = createPortal(createElement(ExtensionSlot, props), element);
-            const id = parent.getAttribute(portalId);
-            context.showPortal(id, portal);
-            break;
-          }
-
-          parent = parent.parentElement;
-        }
+        renderInDom(context, element, ExtensionSlot, props);
       },
       Extension: ExtensionSlot,
     };
@@ -90,7 +77,7 @@ export function createExtenders(context: GlobalStateContext, apis: Array<Extend>
   });
 }
 
-export function defaultApiCreator(context: GlobalStateContext, apis: Array<Extend>): ApiCreator<PiletApi> {
+export function defaultApiCreator(context: GlobalStateContext, apis: Array<Extend>): GenericPiletApiCreator<PiletApi> {
   const extenders = createExtenders(context, apis);
   return target => {
     const api = initializeApi(target, context);

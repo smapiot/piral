@@ -1,6 +1,5 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { swap } from '@dbeining/react-atom';
 import { buildName, withApi, Extend, Dict } from 'piral-core';
 import { DefaultTile, DefaultContainer } from './default';
 import { PiletDashboardApi, TilePreferences, BareTileComponentProps, TileRegistration } from './types';
@@ -63,7 +62,7 @@ export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDa
   return context => {
     context.defineActions(actions);
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       components: {
         ...state.components,

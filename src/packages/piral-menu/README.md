@@ -18,7 +18,46 @@ If the first argument is a string a named menu item is registered. A named menu 
 
 Removes a menu item from the app shell. This requires a named menu item.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `registerMenu` function from the Pilet API to add a new menu item in the app shell.
+
+**Note**: When the first argument is a string we call it a *named* menu item.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyTile } from './MyTile';
+
+export function setup(piral: PiletApi) {
+  piral.registerMenu(MyTile);
+}
+```
+
+You can use the `unregisterMenu` function from the Pilet API to remove a previously added menu item from the app shell.
+
+**Note**: You'll need to have added a *named* menu item in order to be able to remove it.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyTile } from './MyTile';
+
+export function setup(piral: PiletApi) {
+  // register with a name
+  piral.registerMenu('first', MyTile);
+  // and unregister; maybe some time later?
+  piral.unregisterMenu('first');
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

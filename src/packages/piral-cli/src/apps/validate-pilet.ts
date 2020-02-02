@@ -19,7 +19,10 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   const rules = await getPiletRules();
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);
-  const { dependencies, peerDependencies, devDependencies, root, ...data } = await retrievePiletData(target, app);
+  const { dependencies, peerDependencies, devDependencies, root, ignored: _, ...data } = await retrievePiletData(
+    target,
+    app,
+  );
   const { validators } = getPiletsInfo(data.appPackage);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];

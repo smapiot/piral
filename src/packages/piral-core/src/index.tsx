@@ -1,4 +1,5 @@
 export * from './createInstance';
+export * from './Piral';
 export * from './helpers';
 export * from './components';
 export * from './hooks';

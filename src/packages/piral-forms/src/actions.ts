@@ -1,5 +1,4 @@
-import { swap, Atom } from '@dbeining/react-atom';
-import { GlobalState, updateKey, removeIndicator } from 'piral-core';
+import { updateKey, removeIndicator, GlobalStateContext } from 'piral-core';
 import { FormDataState } from './types';
 
 function getNewFormState(newState: FormDataState, patch: Partial<FormDataState>) {
@@ -11,12 +10,12 @@ function getNewFormState(newState: FormDataState, patch: Partial<FormDataState>)
 }
 
 export function updateFormState(
-  ctx: Atom<GlobalState>,
+  ctx: GlobalStateContext,
   id: string,
   initial: FormDataState,
   patch: Partial<FormDataState>,
 ) {
-  swap(ctx, state => {
+  ctx.dispatch(state => {
     const newState = {
       ...initial,
       ...(state.forms[id] || {}),

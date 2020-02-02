@@ -8,7 +8,10 @@ function sanatize(id: string) {
 }
 
 function getPlatformProps(context: any, props: any) {
-  return [{ provide: 'Props', useValue: props }, { provide: 'Context', useValue: context }];
+  return [
+    { provide: 'Props', useValue: props },
+    { provide: 'Context', useValue: context },
+  ];
 }
 
 export function bootstrap<T extends BaseComponentProps>(

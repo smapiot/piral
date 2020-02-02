@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { updateFormState } from './actions';
+import { createActions, createListener } from 'piral-core';
 
 describe('Forms Actions Module', () => {
   it('updateFormState works on a fresh forms collection', () => {
@@ -7,7 +8,8 @@ describe('Forms Actions Module', () => {
       foo: 5,
       forms: {},
     });
-    updateFormState(state, 'a', { name: 'Foo', active: true }, { name: 'Bar' });
+    const ctx = createActions(state, createListener({}));
+    updateFormState(ctx, 'a', { name: 'Foo', active: true }, { name: 'Bar' });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -28,7 +30,8 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState(state, 'a', { name: 'Foo', active: true }, {});
+    const ctx = createActions(state, createListener({}));
+    updateFormState(ctx, 'a', { name: 'Foo', active: true }, {});
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -49,7 +52,8 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState(state, 'a', { name: 'Foo', active: true }, { name: 'bazeol' });
+    const ctx = createActions(state, createListener({}));
+    updateFormState(ctx, 'a', { name: 'Foo', active: true }, { name: 'bazeol' });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -70,7 +74,8 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState(state, 'a', { name: 'Foo' }, { active: false });
+    const ctx = createActions(state, createListener({}));
+    updateFormState(ctx, 'a', { name: 'Foo' }, { active: false });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {},
@@ -86,7 +91,8 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState(state, 'a', { name: 'Foo', submitting: true }, { active: false });
+    const ctx = createActions(state, createListener({}));
+    updateFormState(ctx, 'a', { name: 'Foo', submitting: true }, { active: false });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -108,7 +114,8 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState(state, 'a', { name: 'Foo', changed: true }, { submitting: false, active: '' });
+    const ctx = createActions(state, createListener({}));
+    updateFormState(ctx, 'a', { name: 'Foo', changed: true }, { submitting: false, active: '' });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {
@@ -131,7 +138,8 @@ describe('Forms Actions Module', () => {
         },
       },
     });
-    updateFormState(state, 'a', { name: 'Foo', changed: false, active: '' }, { submitting: false });
+    const ctx = createActions(state, createListener({}));
+    updateFormState(ctx, 'a', { name: 'Foo', changed: false, active: '' }, { submitting: false });
     expect(deref(state)).toEqual({
       foo: 5,
       forms: {},

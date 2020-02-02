@@ -1,12 +1,12 @@
 import {
   AvailableDependencies,
-  ApiCreator,
-  DependencyGetter,
-  ArbiterRecallStrategy,
-  ArbiterOptions,
+  GenericPiletApiCreator,
+  PiletDependencyGetter,
+  PiletLoadingStrategy,
+  LoadPiletsOptions,
   getDependencyResolver,
-  loadModule,
-} from 'react-arbiter';
+  loadPilet,
+} from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
 import { Pilet, PiletApi, PiletRequester, GlobalStateContext } from './types';
 
@@ -36,60 +36,94 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
   return () => dependencies;
 }
 
-interface PiralArbiterConfig {
+interface PiletOptionsConfig {
   availablePilets: Array<Pilet>;
-  createApi: ApiCreator<PiletApi>;
-  getDependencies: DependencyGetter;
-  strategy: ArbiterRecallStrategy<PiletApi>;
+  createApi: GenericPiletApiCreator<PiletApi>;
+  getDependencies: PiletDependencyGetter;
+  strategy: PiletLoadingStrategy<PiletApi>;
   requestPilets: PiletRequester;
   context: GlobalStateContext;
 }
 
-export function createArbiterOptions({
+export function createPiletOptions({
   context,
   createApi,
   availablePilets,
   getDependencies,
   strategy,
   requestPilets,
-}: PiralArbiterConfig): ArbiterOptions<PiletApi> {
-  if (process.env.DEBUG_PILET) {
-    const loadPilets = sessionStorage.getItem('dbg:loadPilets') === 'on';
+}: PiletOptionsConfig): LoadPiletsOptions<PiletApi> {
+  // if we build the debug version of piral (debug and emulator build)
+  if (process.env.DEBUG_PIRAL !== undefined) {
+    // the DEBUG_PIRAL env should contain the Piral CLI compatibility version
+    window['dbg:piral'] = {
+      debug: 'v0',
+      instance: {
+        name: process.env.BUILD_PCKG_NAME,
+        version: process.env.BUILD_PCKG_VERSION,
+        dependencies: process.env.SHARED_DEPENDENCIES,
+        context,
+      },
+      build: {
+        date: process.env.BUILD_TIME_FULL,
+        cli: process.env.PIRAL_CLI_VERSION,
+        compat: process.env.DEBUG_PIRAL,
+      },
+      pilets: {
+        createApi,
+        getDependencies,
+        requestPilets,
+      },
+    };
+  }
+
+  if (process.env.DEBUG_PILET !== undefined) {
+    // check if pilets should be loaded
+    const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
     const noPilets = () => Promise.resolve([]);
     requestPilets = loadPilets ? requestPilets : noPilets;
   }
 
   return {
-    modules: availablePilets,
+    pilets: availablePilets,
     getDependencies,
     strategy,
     dependencies: globalDependencies,
-    fetchModules() {
+    fetchPilets() {
       const promise = requestPilets();
 
-      if (process.env.DEBUG_PILET) {
+      // if we run against the debug pilet API (emulator build only)
+      if (process.env.DEBUG_PILET !== undefined) {
+        // the DEBUG_PILET env should point to an API address used as a proxy
         const initialTarget = `${location.origin}${process.env.DEBUG_PILET}`;
         const updateTarget = initialTarget.replace('http', 'ws');
         const appendix = fetch(initialTarget).then(res => res.json());
         const ws = new WebSocket(updateTarget);
 
         ws.onmessage = ({ data }) => {
-          const meta = JSON.parse(data);
-          const getter = getDependencyResolver(globalDependencies, getDependencies);
-          const fetcher = (url: string) =>
-            fetch(url, {
-              method: 'GET',
-              cache: 'reload',
-            }).then(m => m.text());
-          loadModule(meta, getter, fetcher).then(pilet => {
-            try {
-              const newApi = createApi(pilet);
-              context.injectPilet(pilet);
-              pilet.setup(newApi);
-            } catch (error) {
-              console.error(error);
-            }
-          });
+          const hardRefresh = sessionStorage.getItem('dbg:hard-refresh') === 'on';
+
+          // standard setting is to just perform an inject
+          if (!hardRefresh) {
+            const meta = JSON.parse(data);
+            const getter = getDependencyResolver(globalDependencies, getDependencies);
+            const fetcher = (url: string) =>
+              fetch(url, {
+                method: 'GET',
+                cache: 'reload',
+              }).then(m => m.text());
+            loadPilet(meta, getter, fetcher).then(pilet => {
+              try {
+                const newApi = createApi(pilet);
+                context.injectPilet(pilet);
+                pilet.setup(newApi);
+              } catch (error) {
+                console.error(error);
+              }
+            });
+          } else {
+            location.reload();
+          }
         };
 
         return promise

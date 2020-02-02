@@ -12,7 +12,7 @@ describe('New Piral Command', () => {
   it('scaffolding in an empty directory works', async () => {
     jest.setTimeout(60000);
     const dir = createTempDir();
-    await newPiral(dir, { skipInstall: true });
+    await newPiral(dir, { install: false });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
@@ -27,7 +27,7 @@ describe('New Piral Command', () => {
     const dir = createTempDir();
     await newPiral(dir, {
       language: PiletLanguage.js,
-      skipInstall: true,
+      install: false,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
@@ -42,15 +42,35 @@ describe('New Piral Command', () => {
     jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
-      onlyCore: true,
-      skipInstall: true,
+      framework: 'piral-core',
+      install: false,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'node_modules/piral-core/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+  });
+
+  it('scaffolding for piral-base works', async () => {
+    jest.setTimeout(60000);
+    const dir = createTempDir();
+    await newPiral(dir, {
+      framework: 'piral-base',
+      install: false,
+    });
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'node_modules/piral-core/package.json'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'node_modules/piral-base/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'src/index.ts'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.html'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
   });

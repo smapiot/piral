@@ -1,13 +1,12 @@
-import { Atom } from '@dbeining/react-atom';
-import { GlobalState, GlobalStateContext } from '../types';
+import { GlobalStateContext } from '../types';
 
-export function defineAction(this: GlobalStateContext, ctx: Atom<GlobalState>, actionName: string, action: any) {
-  this[actionName] = (...args) => action.call(this, ctx, ...args);
+export function defineAction(ctx: GlobalStateContext, actionName: string, action: any) {
+  ctx[actionName] = action.bind(ctx, ctx);
 }
 
-export function defineActions(this: GlobalStateContext, ctx: Atom<GlobalState>, actions: any) {
+export function defineActions(ctx: GlobalStateContext, actions: any) {
   for (const actionName of Object.keys(actions)) {
     const action = actions[actionName];
-    defineAction.call(this, ctx, actionName, action);
+    defineAction(ctx, actionName, action);
   }
 }

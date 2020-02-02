@@ -24,7 +24,70 @@ Runs a GraphQL mutation against the server specified in the app shell.
 
 Establishes a GraphQL subscription via the subscription host defined in the app shell.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `query` function from the Pilet API to execute a GraphQL query against the defined GraphQL server.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const gql = `query {
+    myResource(id: "example") {
+      name
+      age
+      whatever
+    }
+  }`;
+  const promise = piral.query(gql).then(({ name, age, whatever }) => {});
+}
+```
+
+You can use the `mutate` function from the Pilet API to run a GraphQL mutation against the defined GraphQL server.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const gql = `mutation {
+    changeMyResource(id: "example", name: "foo") {
+      name
+      age
+      whatever
+    }
+  }`;
+  const promise = piral.mutate(gql).then(({ name, age, whatever }) => {});
+}
+```
+
+You can use the `subscribe` function from the Pilet API to create a GraphQL subscription to the defined GraphQL server.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const gql = `subscription {
+    onMyResourceChange(id: "example") {
+      name
+      age
+      whatever
+    }
+  }`;
+  const unsubscribe = piral.subscribe(gql, ({ name, age, whatever }) => {});
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

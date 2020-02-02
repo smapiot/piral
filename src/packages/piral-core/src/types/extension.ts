@@ -11,7 +11,7 @@ export interface ExtensionSlotProps<T = any> {
    * Defines how the provided nodes should be rendered.
    * @param nodes The rendered extension nodes.
    */
-  render?(nodes: Array<React.ReactNode>): React.ReactElement<any> | null;
+  render?(nodes: Array<React.ReactNode>): React.ReactElement<any, any> | null;
   /**
    * The custom parameters for the given extension.
    */

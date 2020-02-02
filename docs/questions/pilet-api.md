@@ -4,7 +4,7 @@
 
 The `createConnector` function creates a so called "data feed connector". This is a simple HOC allowing you to separate data handling from rendering. The simplest case is a one-time HTTP call:
 
-```ts
+```jsx
 const connect = createConnector(() =>
   fetch('https://jsonplaceholder.com/api/posts').then(res => res.json()));
 const Page = connect(({ data }) => (

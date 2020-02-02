@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
 import { registerMenuItem, unregisterMenuItem } from './actions';
+import { createActions, createListener } from 'piral-core';
 
 describe('Menu Actions Module', () => {
   it('registerMenuItem and unregisterMenuItem', () => {
@@ -10,7 +11,8 @@ describe('Menu Actions Module', () => {
         menuItems: {},
       },
     });
-    registerMenuItem(state, 'foo', 10);
+    const ctx = createActions(state, createListener({}));
+    registerMenuItem(ctx, 'foo', 10);
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {
@@ -20,7 +22,7 @@ describe('Menu Actions Module', () => {
         },
       },
     });
-    unregisterMenuItem(state, 'foo');
+    unregisterMenuItem(ctx, 'foo');
     expect(deref(state)).toEqual({
       foo: 5,
       registry: {

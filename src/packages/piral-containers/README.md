@@ -14,7 +14,46 @@ The following functions are brought to the Pilet API.
 
 Creates a new pilet global state container. The state container will essentially couple to the app shell global state container. It is, however, only available for use inside the pilet.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `createState` function from the Pilet API to create your own sub states in the global state container of the Piral instance.
+
+Example use:
+
+```jsx
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyPage } from './MyPage';
+
+export function setup(piral: PiletApi) {
+  const connect = piral.createState({
+    state: {
+      count: 0,
+    },
+    actions: {
+      increment(dispatch) {
+        dispatch(state => ({
+          count: state.count + 1,
+        }));
+      },
+      decrement(dispatch) {
+        dispatch(state => ({
+          count: state.count - 1,
+        }));
+      },
+    },
+  });
+  piral.registerPage(
+    '/sample',
+    connect(({ state, actions }) => <MyPage count={state.count} {...actions} />),
+  );
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

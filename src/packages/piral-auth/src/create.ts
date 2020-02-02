@@ -1,5 +1,4 @@
 import * as actions from './actions';
-import { swap, deref } from '@dbeining/react-atom';
 import { Extend } from 'piral-core';
 import { PiralAuthApi, UserInfo } from './types';
 
@@ -22,14 +21,14 @@ export function createAuthApi(config: AuthConfig = {}): Extend<PiralAuthApi> {
   return context => {
     context.defineActions(actions);
 
-    swap(context.state, state => ({
+    context.dispatch(state => ({
       ...state,
       user,
     }));
 
     return {
       getUser() {
-        return deref(context.state).user;
+        return context.readState(state => state.user);
       },
     };
   };

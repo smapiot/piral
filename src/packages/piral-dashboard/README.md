@@ -18,7 +18,46 @@ If the first argument is a string a named tile is registered. A named tile can a
 
 Removes a tile from the app shell. This requires a named tile.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `registerTile` function from the Pilet API to add a new tile in the app shell.
+
+**Note**: When the first argument is a string we call it a *named* tile.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyTile } from './MyTile';
+
+export function setup(piral: PiletApi) {
+  piral.registerTile(MyTile);
+}
+```
+
+You can use the `unregisterTile` function from the Pilet API to remove a previously added tile from the app shell.
+
+**Note**: You'll need to have added a *named* tile in order to be able to remove it.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyTile } from './MyTile';
+
+export function setup(piral: PiletApi) {
+  // register with a name
+  piral.registerTile('first', MyTile);
+  // and unregister; maybe some time later?
+  piral.unregisterTile('first');
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

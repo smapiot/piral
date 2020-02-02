@@ -1,4 +1,4 @@
-import { isfunc } from 'react-arbiter';
+import { isfunc } from 'piral-base';
 import { FeedResolver, FeedConnectorOptions, ConnectorDetails } from './types';
 
 export function createFeedOptions<TData, TItem>(

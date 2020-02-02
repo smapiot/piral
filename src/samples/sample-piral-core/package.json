@@ -21,6 +21,7 @@
   "bugs": {
     "url": "https://github.com/smapiot/piral/issues"
   },
+  "app": "src/index.html",
   "dependencies": {
     "piral-containers": "^0.9.9",
     "piral-core": "^0.9.9",

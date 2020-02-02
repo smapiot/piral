@@ -32,7 +32,7 @@ describe('Environment Module', () => {
   });
 
   it('setStandardEnvs respects a given pilet by setting the right env', () => {
-    setStandardEnvs({ develop: true, root });
+    setStandardEnvs({ debugPilet: true, root });
     expect(process.env.DEBUG_PILET).toBe('/$pilet-api');
     expect(process.env.SHARED_DEPENDENCIES).toBe('');
   });

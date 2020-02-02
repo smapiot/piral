@@ -1,26 +1,24 @@
-import { swap, Atom, deref } from '@dbeining/react-atom';
 import { updateKey } from '../utils';
-import { GlobalState, DataStoreTarget, EventEmitter } from '../types';
+import { DataStoreTarget, GlobalStateContext } from '../types';
 
-export function resetData(ctx: Atom<GlobalState>) {
-  swap(ctx, state => ({
+export function resetData(ctx: GlobalStateContext) {
+  ctx.dispatch(state => ({
     ...state,
     data: {},
   }));
 }
 
-export function readDataItem(ctx: Atom<GlobalState>, key: string) {
-  return deref(ctx).data[key];
+export function readDataItem(ctx: GlobalStateContext, key: string) {
+  return ctx.readState(state => state.data[key]);
 }
 
-export function readDataValue(ctx: Atom<GlobalState>, key: string) {
+export function readDataValue(ctx: GlobalStateContext, key: string) {
   const item = readDataItem(ctx, key);
   return item && item.value;
 }
 
 export function writeDataItem(
-  this: EventEmitter,
-  ctx: Atom<GlobalState>,
+  ctx: GlobalStateContext,
   key: string,
   value: any,
   owner: string,
@@ -36,12 +34,12 @@ export function writeDataItem(
         target,
         expires,
       };
-  swap(ctx, state => ({
+  ctx.dispatch(state => ({
     ...state,
     data: updateKey(state.data, key, data),
   }));
 
-  this.emit('store-data', {
+  ctx.emit('store-data', {
     name: key,
     target,
     value,
@@ -51,8 +49,7 @@ export function writeDataItem(
 }
 
 export function tryWriteDataItem(
-  this: EventEmitter,
-  ctx: Atom<GlobalState>,
+  ctx: GlobalStateContext,
   key: string,
   value: any,
   owner: string,
@@ -68,6 +65,6 @@ export function tryWriteDataItem(
     return false;
   }
 
-  writeDataItem.call(this, ctx, key, value, owner, target, expires);
+  writeDataItem(ctx, key, value, owner, target, expires);
   return true;
 }

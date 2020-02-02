@@ -7,6 +7,7 @@ import {
   piletLanguageKeys,
   valueOfPiletLanguage,
   templateTypeKeys,
+  frameworkKeys,
 } from './helpers';
 import { ToolCommand, ListCommands } from './types';
 
@@ -168,6 +169,36 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'declaration-piral',
+    alias: ['declare-piral', 'declaration-portal', 'declare-portal'],
+    description: 'Creates the declaration file for a Piral instance.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          default: apps.declarationPiralDefaults.entry,
+        })
+        .string('target')
+        .describe('target', 'Sets the target directory for the generated .d.ts file.')
+        .default('target', apps.declarationPiralDefaults.target)
+        .choices('force-overwrite', forceOverwriteKeys)
+        .describe('force-overwrite', 'Determines if files should be overwritten by the declaration.')
+        .default('force-overwrite', keyOfForceOverwrite(apps.declarationPiralDefaults.forceOverwrite))
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.declarationPiral(args.base as string, {
+        entry: args.source as string,
+        target: args.target as string,
+        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+      });
+    },
+  },
+  {
     name: 'new-piral',
     alias: ['create-piral', 'scaffold-piral', 'setup-piral'],
     description: 'Creates a new Piral instance by adding all files and changes to the current project.',
@@ -182,9 +213,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('app')
         .describe('app', "Sets the path to the app's source HTML file.")
         .default('app', apps.newPiralDefaults.app)
-        .boolean('only-core')
-        .describe('only-core', 'Sets if "piral-core" should be used. Otherwise, "piral" is used.')
-        .default('only-core', apps.newPiralDefaults.onlyCore)
+        .choices('framework', frameworkKeys)
+        .describe('framework', 'Sets the framework/library level to use.')
+        .default('framework', apps.newPiralDefaults.framework)
         .boolean('install')
         .describe('install', 'Already performs the installation of its NPM dependencies.')
         .default('install', apps.newPiralDefaults.install)
@@ -208,7 +239,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.newPiral(args.base as string, {
         app: args.app as string,
         target: args.target as string,
-        onlyCore: args.onlyCore as boolean,
+        framework: args.framework,
         version: args.tag as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
@@ -486,12 +517,14 @@ const allCommands: Array<ToolCommand<any>> = [
     arguments: [],
     flags(argv) {
       return argv
+        .positional('target-version', {
+          type: 'string',
+          describe: 'Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".',
+          default: apps.upgradePiletDefaults.version,
+        })
         .string('target')
         .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
         .default('target', apps.upgradePiletDefaults.target)
-        .string('tag')
-        .describe('tag', 'Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".')
-        .default('tag', apps.upgradePiletDefaults.version)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
@@ -502,7 +535,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.upgradePilet(args.base as string, {
         target: args.target as string,
-        version: args.tag as string,
+        version: args.targetVersion as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
       });
     },

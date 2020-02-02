@@ -1,9 +1,8 @@
-import { swap, Atom } from '@dbeining/react-atom';
 import { appendItem, excludeOn, withKey, withoutKey } from '../utils';
-import { PageRegistration, ExtensionRegistration, GlobalState } from '../types';
+import { PageRegistration, ExtensionRegistration, GlobalStateContext } from '../types';
 
-export function registerPage(ctx: Atom<GlobalState>, name: string, value: PageRegistration) {
-  swap(ctx, state => ({
+export function registerPage(ctx: GlobalStateContext, name: string, value: PageRegistration) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,
@@ -12,8 +11,8 @@ export function registerPage(ctx: Atom<GlobalState>, name: string, value: PageRe
   }));
 }
 
-export function unregisterPage(ctx: Atom<GlobalState>, name: string) {
-  swap(ctx, state => ({
+export function unregisterPage(ctx: GlobalStateContext, name: string) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,
@@ -22,8 +21,8 @@ export function unregisterPage(ctx: Atom<GlobalState>, name: string) {
   }));
 }
 
-export function registerExtension(ctx: Atom<GlobalState>, name: string, value: ExtensionRegistration) {
-  swap(ctx, state => ({
+export function registerExtension(ctx: GlobalStateContext, name: string, value: ExtensionRegistration) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,
@@ -32,8 +31,8 @@ export function registerExtension(ctx: Atom<GlobalState>, name: string, value: E
   }));
 }
 
-export function unregisterExtension(ctx: Atom<GlobalState>, name: string, reference: any) {
-  swap(ctx, state => ({
+export function unregisterExtension(ctx: GlobalStateContext, name: string, reference: any) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,

@@ -1,23 +1,22 @@
-import { Atom, swap } from '@dbeining/react-atom';
-import { GlobalState, withKey, withoutKey, prependItem, excludeItem } from 'piral-core';
+import { withKey, withoutKey, prependItem, excludeItem, GlobalStateContext } from 'piral-core';
 import { ModalRegistration, OpenModalDialog } from './types';
 
-export function openModal(ctx: Atom<GlobalState>, dialog: OpenModalDialog) {
-  swap(ctx, state => ({
+export function openModal(ctx: GlobalStateContext, dialog: OpenModalDialog) {
+  ctx.dispatch(state => ({
     ...state,
     modals: prependItem(state.modals, dialog),
   }));
 }
 
-export function closeModal(ctx: Atom<GlobalState>, dialog: OpenModalDialog) {
-  swap(ctx, state => ({
+export function closeModal(ctx: GlobalStateContext, dialog: OpenModalDialog) {
+  ctx.dispatch(state => ({
     ...state,
     modals: excludeItem(state.modals, dialog),
   }));
 }
 
-export function registerModal(ctx: Atom<GlobalState>, name: string, value: ModalRegistration) {
-  swap(ctx, state => ({
+export function registerModal(ctx: GlobalStateContext, name: string, value: ModalRegistration) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,
@@ -26,8 +25,8 @@ export function registerModal(ctx: Atom<GlobalState>, name: string, value: Modal
   }));
 }
 
-export function unregisterModal(ctx: Atom<GlobalState>, name: string) {
-  swap(ctx, state => ({
+export function unregisterModal(ctx: GlobalStateContext, name: string) {
+  ctx.dispatch(state => ({
     ...state,
     registry: {
       ...state.registry,

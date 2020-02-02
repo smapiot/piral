@@ -42,20 +42,13 @@ Sets the path to the app's source HTML file.
 - Type: `string`
 - Default: `"./src/index.html"`
 
-### `--only-core`
+### `--framework`
 
-Sets if "piral-core" should be used. Otherwise, "piral" is used.
+Sets the framework/library level to use.
 
-- Type: `boolean`
-- Default: `false`
-
-### `--no-only-core`
-
-Opposite of:
-Sets if "piral-core" should be used. Otherwise, "piral" is used.
-
-- Type: `boolean`
-- Default: `true`
+- Type: `string`
+- Choices: `"piral"`, `"piral-core"`, `"piral-base"`
+- Default: `"piral"`
 
 ### `--install`
 

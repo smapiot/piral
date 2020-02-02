@@ -6,5 +6,6 @@ The available references:
 
 - [Architecture](./architecture.md)
 - [Package Metadata](./metadata.md)
+- [Debug Information](./debug.md)
 - [Error Handling](./errors.md)
 - [Articles and Posts](./articles.md)

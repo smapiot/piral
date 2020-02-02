@@ -20,7 +20,32 @@ Transforms a standard Preact component into a component that can be used in Pira
 
 The extension slot component to be used in Preact component.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `fromPreact` function from the Pilet API to convert your Preact components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { PreactPage } from './PreactPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromPreact(PreactPage));
+}
+```
+
+Within Preact components the Piral Preact extension component can be used by referring to `PreactExtension`, e.g.,
+
+```jsx
+<PreactExtension name="name-of-extension" />
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 Using Preact with Piral is as simple as installing `piral-preact` and `preact`.
 

@@ -1,14 +1,18 @@
-import { Atom } from '@dbeining/react-atom';
+import { Atom, swap } from '@dbeining/react-atom';
 import { createSearchApi } from './create';
 
 function createMockContainer() {
+  const state = Atom.of({});
   return {
     context: {
       on: jest.fn(),
       off: jest.fn(),
       emit: jest.fn(),
       defineActions() {},
-      state: Atom.of({}),
+      state,
+      dispatch(update) {
+        swap(state, update);
+      },
     } as any,
     api: {} as any,
   };

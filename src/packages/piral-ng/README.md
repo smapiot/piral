@@ -18,9 +18,34 @@ Transforms a standard Angular component into a component that can be used in Pir
 
 ### `NgExtension`
 
-The extension slot module to be used in Angular components. Automatically added to allow using `extension-component` elements.
+The extension slot module to be used in Angular components. This is not really needed, as it is made available automatically via an Angular custom element named `extension-component`.
+
+## Usage
+
+> For authors of pilets
+
+You can use the `fromNg` function from the Pilet API to convert your Angular components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { AngularPage } from './AngularPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromNg(AngularPage));
+}
+```
+
+Within Angular components the Piral Angular extension component can be used by referring to `extension-component`, e.g.,
+
+```html
+<extension-component name="name-of-extension"></extension-component>
+```
 
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular 2+.
 

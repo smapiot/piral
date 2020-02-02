@@ -22,7 +22,57 @@ Sets the translations (custom language to key to string mapping) for the pilet.
 
 Gets the translations defined in the pilet.
 
+## Usage
+
+> For authors of pilets
+
+You can use the `setTranslations` function from the Pilet API to set predefined translation snippets.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  piral.setTranslations({
+    en: {
+      home: 'home',
+    },
+    de: {
+      home: 'zuhause',
+    },
+  });
+}
+```
+
+You can use the `getTranslations` function from the Pilet API to get the currently defined translation snippets.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const translations = piral.getTranslations();
+  // received: { "en": { "home": "home" }, "de": { "home": "zuhause" }}
+}
+```
+
+You can use the `translate` function from the Pilet API to obtain a translation string for a given key using the currently selected language.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const homeStr = piral.translate('home'); // if in "de" -> "zuhause"
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 

@@ -99,6 +99,8 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
   const dir = createTempDir();
 
   mkdirSync(resolve(dir, 'src'));
+  console.log('Created temporary directory ...', dir);
+
   writeFileSync(resolve(dir, 'package.json'), defaultPackageJson(files), 'utf8');
   writeFileSync(resolve(dir, 'tsconfig.json'), tsConfigJson, 'utf8');
   writeFileSync(resolve(dir, 'src/index.html'), defaultIndexHtml, 'utf8');

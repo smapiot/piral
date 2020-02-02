@@ -22,7 +22,52 @@ Shows the modal dialog registered with the provided name.
 
 Does not open in case no modal dialog using the provided name is available (i.e., registered in the app shell).
 
+## Usage
+
+> For authors of pilets
+
+You can use the `showModal` function from the Pilet API to show a modal dialog registered by any pilet. In case of a naming conflict the dialogs from the current pilet are preferred.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  piral.showModal('my-modal', {
+    someValue: 42,
+  });
+}
+```
+
+You can use the `registerModal` function from the Pilet API to add a new modal dialog in the app shell.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { MyModal } from './MyModal';
+
+export function setup(piral: PiletApi) {
+  piral.registerModal('my-modal', MyModal);
+}
+```
+
+You can use the `unregisterModal` function from the Pilet API to remove a previously added modal dialog from the app shell.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  piral.unregisterModal('my-modal');
+}
+```
+
 ## Setup and Bootstrapping
+
+> For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
