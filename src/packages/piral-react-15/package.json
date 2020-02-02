@@ -1,6 +1,6 @@
 {
   "name": "piral-react-15",
-  "version": "0.9.9",
+  "version": "0.10.0",
   "description": "Plugin for integrating React v15 components in Piral.",
   "keywords": [
     "piral",
@@ -36,13 +36,13 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
+    "piral-core": "^0.10.0",
     "react-15": "npm:react@15",
-    "react-dom-15": "npm:react-dom@15",
-    "piral-core": "^0.9.3"
+    "react-dom-15": "npm:react-dom@15"
   },
   "peerDependencies": {
+    "piral-core": "^0.9.0 || ^0.10.0",
     "react-15": "*",
-    "react-dom-15": "*",
-    "piral-core": "^0.9.0 || ^0.10.0"
+    "react-dom-15": "*"
   }
 }
