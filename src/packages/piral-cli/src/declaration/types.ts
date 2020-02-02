@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 
 /**
- * Expose some internal TypeScript APIs
+ * Expose the internal TypeScript APIs that are used by TypeDoc
  */
 declare module 'typescript' {
   interface Symbol {
@@ -12,15 +12,21 @@ declare module 'typescript' {
 
   interface Type {
     id?: number;
+    typeName?: ts.Identifier;
+    intrinsicName?: string;
+    parent?: ts.Type;
+    typeParameters?: Array<ts.TypeParameter>;
   }
 
   interface Node {
     symbol?: ts.Symbol;
     localSymbol?: ts.Symbol;
+    type?: ts.Type;
   }
 
   interface Declaration {
     questionToken?: ts.Token<ts.SyntaxKind.QuestionToken>;
+    default?: ts.Node;
   }
 
   interface Expression {
@@ -206,6 +212,7 @@ export interface TypeModelTypeParameter {
   readonly kind: 'typeParameter';
   readonly typeName: string;
   readonly constraint?: TypeModel;
+  readonly default?: TypeModel;
 }
 
 export interface TypeModelUnion extends WithTypeArgs {
@@ -239,6 +246,7 @@ export interface TypeModelSubstitution {
 
 export interface TypeModelNonPrimitive {
   readonly kind: 'nonPrimitive';
+  readonly name?: string;
 }
 
 export interface TypeModelUnidentified {

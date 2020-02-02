@@ -106,7 +106,10 @@ function stringifyTypeArgs(type: WithTypeArgs) {
 function stringifyTypeParameter(type: TypeModelTypeParameter) {
   const name = type.typeName;
   const constraint = stringifyNode(type.constraint);
-  return constraint ? `${name} extends ${constraint}` : name;
+  const defaults = stringifyNode(type.default);
+  const constraintClause = constraint ? ` extends ${constraint}` : '';
+  const defaultsClause = defaults ? ` = ${defaults}` : '';
+  return `${name}${constraintClause}${defaultsClause}`;
 }
 
 function stringifyNode(type: TypeModel) {
@@ -134,6 +137,8 @@ function stringifyNode(type: TypeModel) {
     case 'never':
     case 'string':
       return type.kind;
+    case 'nonPrimitive':
+      return type.name || 'object';
     case 'esSymbol':
       return 'symbol';
     case 'unidentified':

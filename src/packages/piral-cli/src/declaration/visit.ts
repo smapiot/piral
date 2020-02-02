@@ -7,6 +7,7 @@ import {
   TypeReference,
   Symbol,
   InterfaceTypeWithDeclaredMembers,
+  InterfaceType,
 } from 'typescript';
 import {
   getLib,
@@ -32,19 +33,49 @@ import {
   TypeMemberModel,
 } from './types';
 
-function getTypeParameters(context: DeclVisitorContext, type: Type) {
+function getTypeArguments(context: DeclVisitorContext, type: Type) {
   const typeRef = type as TypeReference;
   return typeRef.typeArguments?.map(t => includeType(context, t)) ?? [];
 }
 
-function getComment(checker: TypeChecker, symbol: Symbol) {
-  const doc = symbol.getDocumentationComment(checker);
+function getTypeParameters(context: DeclVisitorContext, type: Type) {
+  const typeRef = type as InterfaceType;
+  return typeRef.typeParameters?.map(t => includeTypeParameter(context, t)) ?? [];
+}
 
-  if (doc) {
-    return doc.map(item => item.text).join('\n');
+function getDefaultTypeId(context: DeclVisitorContext, type: Type) {
+  const symbol = type?.symbol;
+  const decl = symbol?.declarations?.[0];
+  const defaultNode = decl?.default;
+
+  if (defaultNode) {
+    const defaultType = context.checker.getTypeAtLocation(defaultNode);
+    return defaultType?.id;
   }
 
   return undefined;
+}
+
+function getComment(checker: TypeChecker, symbol: Symbol) {
+  const doc = symbol?.getDocumentationComment(checker);
+  return doc?.map(item => item.text).join('\n');
+}
+
+function normalizeTypeParameters(context: DeclVisitorContext, type: Type, decl: Type, types: Array<TypeModel>) {
+  const typeParameterIds = decl.typeParameters?.map(t => getDefaultTypeId(context, t)) ?? [];
+  const typeArgumentIds = type.aliasTypeArguments?.map(t => t.id) ?? [];
+
+  for (let i = typeParameterIds.length; i--; ) {
+    const id = typeParameterIds[i];
+
+    if (!id || id !== typeArgumentIds[i]) {
+      break;
+    }
+
+    types.pop();
+  }
+
+  return types;
 }
 
 function includeExternal(context: DeclVisitorContext, type: Type) {
@@ -74,7 +105,7 @@ function includeExternal(context: DeclVisitorContext, type: Type) {
       // Right now this catches the JSXElementConstructor; but
       // I guess this code should be made "more robust" and also
       // more generic.
-      const parent: any = type.symbol?.declarations?.[0]?.parent;
+      const parent = type.symbol?.declarations?.[0]?.parent;
       const hiddenType = parent?.type?.parent?.parent?.parent;
       const hiddenTypeName = hiddenType?.symbol?.name;
 
@@ -87,7 +118,7 @@ function includeExternal(context: DeclVisitorContext, type: Type) {
               hiddenType.typeParameters?.map(() => ({
                 flags: TypeFlags.Any,
               })) || [],
-          },
+          } as any,
           `${getRefName(lib)}.${hiddenTypeName}`,
         );
       }
@@ -154,9 +185,11 @@ function makeAliasRef(context: DeclVisitorContext, type: Type, name: string): Ty
     };
   }
 
+  const types = type.aliasTypeArguments?.map(t => includeType(context, t)) ?? [];
+
   return {
     kind: 'ref',
-    types: type.aliasTypeArguments?.map(t => includeType(context, t)) ?? [],
+    types: normalizeTypeParameters(context, type, decl, types),
     refName: name,
   };
 }
@@ -187,9 +220,12 @@ function makeRef(
 }
 
 function includeRef(context: DeclVisitorContext, type: Type, refName: string, external?: Type): TypeModel {
+  const decl: any = type.symbol.declarations[0];
+  const types = getTypeArguments(context, type);
+
   return {
     kind: 'ref',
-    types: getTypeParameters(context, type),
+    types: normalizeTypeParameters(context, type, decl, types),
     refName,
     external,
   };
@@ -347,6 +383,7 @@ function includeBasic(context: DeclVisitorContext, type: Type): TypeModel {
   if (type.flags & TypeFlags.NonPrimitive) {
     return {
       kind: 'nonPrimitive',
+      name: type.intrinsicName,
     };
   }
 }
@@ -360,22 +397,47 @@ function includeInheritedTypes(context: DeclVisitorContext, type: Type) {
   });
 }
 
+function includeConstraint(context: DeclVisitorContext, type: Type): TypeModel {
+  const symbol = type.getSymbol();
+  const decl: any = symbol.declarations?.[0];
+  const constraint = decl?.constraint?.type ?? type.getConstraint();
+  const name = constraint?.typeName?.text;
+
+  if (name) {
+    return {
+      kind: 'ref',
+      refName: `keyof ${name}`,
+      types: [],
+    };
+  } else if (constraint) {
+    return includeType(context, constraint);
+  }
+
+  return undefined;
+}
+
+function includeDefaultTypeArgument(context: DeclVisitorContext, type: Type): TypeModel {
+  const symbol = type.getSymbol();
+  const decl: any = symbol.declarations?.[0];
+  const defaultNode = decl?.default;
+
+  if (defaultNode) {
+    const defaultType = context.checker.getTypeAtLocation(defaultNode);
+    return includeType(context, defaultType);
+  }
+
+  return undefined;
+}
+
 function includeTypeParameter(context: DeclVisitorContext, type: Type): TypeModel {
   if (isTypeParameter(type)) {
     const symbol = type.getSymbol();
-    const decl: any = symbol.declarations?.[0];
-    const constraint = decl?.constraint?.type ?? type.getConstraint();
-    const name = constraint?.typeName?.text;
+
     return {
       kind: 'typeParameter',
       typeName: symbol.name,
-      constraint: name
-        ? {
-            kind: 'ref',
-            refName: `keyof ${name}`,
-            types: [],
-          }
-        : constraint && includeType(context, constraint),
+      constraint: includeConstraint(context, type),
+      default: includeDefaultTypeArgument(context, type),
     };
   }
 }
