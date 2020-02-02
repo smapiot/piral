@@ -24,6 +24,7 @@
   "browserslist": [
     "last 1 chrome versions"
   ],
+  "app": "src/index.html",
   "pilets": {
     "externals": [
       "@angular/common",
