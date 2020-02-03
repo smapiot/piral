@@ -7,7 +7,6 @@ import {
   copyPiralFiles,
   ForceOverwrite,
   logInfo,
-  logDone,
   getFileStats,
   readPiralPackage,
   getPiletsInfo,
@@ -17,6 +16,7 @@ import {
   checkAppShellPackage,
   defaultCacheDir,
   removeDirectory,
+  createContextLogger,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -49,6 +49,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   const { devDependencies = {}, piral } = pckg;
 
   if (piral && typeof piral === 'object') {
+    const logger = createContextLogger();
     const sourceName = piral.name;
 
     if (!sourceName || typeof sourceName !== 'string') {
@@ -62,7 +63,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     const [packageRef, packageVersion] = await getCurrentPackageDetails(baseDir, sourceName, currentVersion, version);
-    const originalFiles = await getFileStats(root, sourceName, piral.files);
+    const originalFiles = await getFileStats(root, sourceName);
 
     logInfo(`Updating NPM package to %s ...`, packageRef);
 
@@ -81,11 +82,10 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     logInfo(`Taking care of templating ...`);
 
-    const files = await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
-    await copyPiralFiles(root, sourceName, files, forceOverwrite, originalFiles);
+    await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
+    await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles, logger.notify);
 
     logInfo(`Updating dependencies ...`);
-
     await installDependencies(root, '--no-package-lock');
 
     if (postUpgrade) {
@@ -94,7 +94,8 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     await removeDirectory(cache);
-    logDone(`All done!`);
+    logger.summary();
+    logger.throwIfError();
   } else {
     throw new Error(`Could not find a "piral" section in the "package.json" file. Aborting.`);
   }

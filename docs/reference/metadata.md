@@ -73,33 +73,20 @@ The additional fields for a pilet package are as follows:
   "name": "my-awesome-pilet",
   // ...
   "piral": {
-    "comment": "Warning to not remove it - no functional consequence.",
-    "name": "my-piral-instance",
-    "version": "1.0.0",
-    "tooling": "1.2.3",
-    "preScaffold": "echo 'Pre Scaffold'",
-    "postScaffold": "echo 'Post Scaffold'",
-    "preUpgrade": "echo 'Pre Upgrade'",
-    "postUpgrade": "echo 'Post Upgrade'",
-    "externals": [
-      "my-ui-lib"
-    ],
-    "scripts": {
-      "publish-pilet": "pilet publish --api-key $PILET_PUBLISH_KEY"
-    },
-    "files": [
-      ".editorconfig"
-    ],
-    "devDependencies": {
-      "prettier": "^1.16.4"
-    }
+    "comment": "Keep this section to use the Piral CLI.",
+    "name": "my-piral-instance"
   },
+  "externals": [],
 }
 ```
 
-The `preScaffold`, `postScaffold`, `preUpgrade`, `postUpgrade`, `externals`, `scripts`, `devDependencies`, and `files` are added to simplify diffing during an upgrade of the Piral app. Likewise, the `tooling` (version of the used Piral CLI) and `version` (version of the used Piral instance) are informative only. The name of the Piral instance is used to find the right entry point for debugging.
+The name of the Piral instance is used to find the right entry point for debugging.
+
+The `externals` represent the *additional* list of shared dependencies, i.e., dependencies treated as external. By default, this list is empty.
 
 **Remark**: The `piral` field is exclusively used by the Piral CLI. For information regarding what might be picked up by a feed service implementation see the specification of a pilet, which discusses all fields in depth.
+
+## Scaffold Scripts
 
 The `preScaffold` and `postScaffold` installation scripts are run during scaffold (`pilet new`) in the following order:
 

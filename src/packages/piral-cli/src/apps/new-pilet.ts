@@ -11,7 +11,6 @@ import {
   PiletLanguage,
   scaffoldPiletSourceFiles,
   logInfo,
-  logDone,
   installDependencies,
   combinePackageRef,
   getPackageName,
@@ -21,6 +20,7 @@ import {
   runScript,
   TemplateType,
   checkAppShellPackage,
+  createContextLogger,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -58,6 +58,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const success = await createDirectory(root);
 
   if (success) {
+    const logger = createContextLogger();
     logInfo(`Scaffolding new pilet in %s ...`, root);
 
     await createFileIfNotExists(
@@ -113,11 +114,9 @@ always-auth=true`,
     }
 
     logInfo(`Taking care of templating ...`);
-
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-
-    const files = await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
-    await copyPiralFiles(root, packageName, files, ForceOverwrite.yes);
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
+    await copyPiralFiles(root, packageName, ForceOverwrite.yes, [], logger.notify);
 
     if (install) {
       logInfo(`Installing dependencies ...`);
@@ -129,7 +128,8 @@ always-auth=true`,
       await runScript(postScaffold, root);
     }
 
-    logDone(`All done!`);
+    logger.summary();
+    logger.throwIfError();
   } else {
     throw new Error('Could not create directory.');
   }

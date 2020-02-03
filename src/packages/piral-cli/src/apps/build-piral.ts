@@ -24,6 +24,7 @@ import {
   createFileFromTemplateIfNotExists,
   ForceOverwrite,
   gatherJsBundles,
+  createContextLogger,
 } from '../common';
 
 interface Destination {
@@ -145,15 +146,16 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     optimizeModules = buildPiralDefaults.optimizeModules,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, version, root, dependencies, ignored, ...pilets } = await retrievePiletsInfo(entryFiles);
+  const { name, version, root, dependencies, ignored, files: scaffoldFiles, ...pilets } = await retrievePiletsInfo(entryFiles);
   const { externals } = pilets;
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
-  let success = true;
+  const logger = createContextLogger();
 
   await checkCliCompatibility(root);
 
   if (fresh) {
+    logInfo('Removing output directory ...');
     await removeDirectory(dest.outDir);
   }
 
@@ -194,21 +196,12 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     }, {} as Record<string, string>);
     const rootDir = resolve(outDir, '..');
     const filesDir = resolve(rootDir, 'files');
-    const files = pilets.files
-      .map(file => (typeof file === 'string' ? { from: file, to: file } : file))
-      .map(file => ({
-        ...file,
-        to: file.to.replace(/\\/g, '/'),
-        from: join('files', file.from).replace(/\\/g, '/'),
-      }));
+
     await createFileIfNotExists(rootDir, 'package.json', '{}');
     await updateExistingJson(rootDir, 'package.json', {
       name,
       version,
-      pilets: {
-        ...pilets,
-        files,
-      },
+      pilets,
       piralCLI: {
         version: cliVersion,
         generated: true,
@@ -223,25 +216,30 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         ...externalDependencies,
       },
     });
+
     await createDirectory(filesDir);
+
     // for scaffolding we need to keep the files also available in the new package
-    const prs1 = await copyScaffoldingFiles(root, filesDir, pilets.files);
+    await copyScaffoldingFiles(root, filesDir, scaffoldFiles, logger.notify);
+
     // we just want to make sure that "files" mentioned in the original package.json are respected in the package
-    const prs2 = await copyScaffoldingFiles(root, rootDir, originalFiles);
+    await copyScaffoldingFiles(root, rootDir, originalFiles, logger.notify);
+
     // actually including this one hints that the app shell should have been included - which is forbidden
     await createFileFromTemplateIfNotExists('other', 'piral', outDir, 'index.js', ForceOverwrite.yes, {
       name,
       outFile,
     });
+
     await declarationPiral(baseDir, {
       entry,
       target: outDir,
     });
+
     await createPackage(rootDir);
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 
     logDone(`Development package available in "${rootDir}".`);
-    success = prs1 && prs2;
   }
 
   if (type === 'all') {
@@ -268,7 +266,6 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logDone(`Files for publication available in "${outDir}".`);
   }
 
-  if (!success) {
-    throw new Error('Finished with errors. See above for details.');
-  }
+  logger.summary();
+  logger.throwIfError();
 }

@@ -12,7 +12,7 @@ import {
   getFileNames,
 } from './io';
 import { Framework } from './framework';
-import { logFail, logWarn } from './log';
+import { logFail, logWarn, NotifyContextLogger } from './log';
 import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
 import { getDevDependencies, PiletLanguage } from './language';
@@ -54,11 +54,10 @@ async function getMatchingFiles(
   source: string,
   target: string,
   file: string | TemplateFileLocation,
-  mirror = false,
 ): Promise<Array<FileDescriptor>> {
   const { from, to, deep = true } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
   const sourcePath = resolve(source, from);
-  const targetPath = resolve(target, mirror ? from : to);
+  const targetPath = resolve(target, to);
   const isDirectory = await checkIsDirectory(sourcePath);
 
   if (isDirectory) {
@@ -82,7 +81,7 @@ async function getMatchingFiles(
     }
 
     const relRoot = parts.join('/');
-    const tarRoot = resolve(target, mirror ? relRoot : to);
+    const tarRoot = resolve(target, to);
 
     return files.map(file => ({
       sourcePath: file,
@@ -96,11 +95,6 @@ async function getMatchingFiles(
       targetPath,
     },
   ];
-}
-
-function getFilesOf(root: string, name: string, file: string | TemplateFileLocation) {
-  const source = getPiralPath(root, name);
-  return getMatchingFiles(source, root, file);
 }
 
 export function findPackageRoot(pck: string, baseDir: string) {
@@ -157,34 +151,33 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
   };
 }
 
-export async function getFileStats(root: string, name: string, files: Array<string | TemplateFileLocation> = []) {
-  const results: Array<FileInfo> = [];
-  await Promise.all(
-    files.map(async file => {
-      const subfiles = await getFilesOf(root, name, file);
+function getAvailableFiles(root: string, name: string) {
+  const source = getPiralPath(root, name);
+  return getMatchingFiles(resolve(source, 'files'), root, '**/*');
+}
 
-      for (const subfile of subfiles) {
-        const { sourcePath, targetPath } = subfile;
-        const sourceHash = await getHash(sourcePath);
-        const targetHash = await getHash(targetPath);
-        results.push({
-          path: targetPath,
-          hash: targetHash,
-          changed: sourceHash !== targetHash,
-        });
-      }
+export async function getFileStats(root: string, name: string) {
+  const files = await getAvailableFiles(root, name);
+  return await Promise.all(
+    files.map(async file => {
+      const { sourcePath, targetPath } = file;
+      const sourceHash = await getHash(sourcePath);
+      const targetHash = await getHash(targetPath);
+      return {
+        path: targetPath,
+        hash: targetHash,
+        changed: sourceHash !== targetHash,
+      };
     }),
   );
-  return results;
 }
 
 async function copyFiles(
   subfiles: Array<FileDescriptor>,
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo>,
+  logger: NotifyContextLogger,
 ) {
-  let result = true;
-
   for (const subfile of subfiles) {
     const { sourcePath, targetPath } = subfile;
     const exists = await checkExists(sourcePath);
@@ -194,46 +187,32 @@ async function copyFiles(
       const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
       await copy(sourcePath, targetPath, force);
     } else {
-      logFail(`The file "%s" does not exist!`, sourcePath);
-      result = false;
+      logger('error', `The file "${sourcePath}" does not exist!`);
     }
   }
-
-  return result;
 }
 
 export async function copyScaffoldingFiles(
   source: string,
   target: string,
   files: Array<string | TemplateFileLocation>,
+  logger: NotifyContextLogger,
 ) {
-  let result = true;
-
   for (const file of files) {
-    const subfiles = await getMatchingFiles(source, target, file, true);
-    const success = await copyFiles(subfiles, ForceOverwrite.yes, []);
-    result = success && result;
+    const subfiles = await getMatchingFiles(source, target, file);
+    await copyFiles(subfiles, ForceOverwrite.yes, [], logger);
   }
-
-  return result;
 }
 
 export async function copyPiralFiles(
   root: string,
   name: string,
-  files: Array<string | TemplateFileLocation>,
   forceOverwrite: ForceOverwrite,
-  originalFiles: Array<FileInfo> = [],
+  originalFiles: Array<FileInfo>,
+  logger: NotifyContextLogger,
 ) {
-  let result = true;
-
-  for (const file of files) {
-    const subfiles = await getFilesOf(root, name, file);
-    const success = await copyFiles(subfiles, forceOverwrite, originalFiles);
-    result = success && result;
-  }
-
-  return result;
+  const files = await getAvailableFiles(root, name);
+  await copyFiles(files, forceOverwrite, originalFiles, logger);
 }
 
 export function getPiletsInfo(piralInfo: any): PiletsInfo {
@@ -360,12 +339,8 @@ export async function patchPiletPackage(
   const typeDependencies = language !== undefined ? getDevDependencies(language) : {};
   const { externals, ...info } = getPiletsInfo(piralInfo);
   const piral = {
-    comment: 'Keep this section to allow running `piral upgrade`.',
+    comment: 'Keep this section to use the Piral CLI.',
     name,
-    version: piralInfo.version,
-    tooling: cliVersion,
-    externals,
-    ...info,
   };
   const allExternals = [...externals, ...coreExternals];
   const scripts = {
@@ -403,7 +378,6 @@ export async function patchPiletPackage(
     peerDependencies,
     scripts,
   });
-  return info.files;
 }
 
 export function checkAppShellPackage(appPackage: any) {
