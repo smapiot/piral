@@ -1,5 +1,15 @@
 # Piral Changelog
 
+## 0.11.0 (tbd)
+
+* Switched to use `parcel-plugin-externals` in the Piral CLI (#126)
+* Changed *package.json* metadata format (#136)
+* Documented Pilet package spec (#137)
+* Documented Feed Service API spec (#138)
+* Improved API surface from `piral-base`
+* Declared `PiletApi` and `Pilet` in `piral-base`
+* Switched to use `piral-base` as declaration root
+
 ## 0.10.0 (February 2, 2020)
 
 * Introduce compatibility check for the Piral CLI (#94)
