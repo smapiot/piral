@@ -169,7 +169,15 @@ export async function patchModules(rootDir: string, cacheDir: string, ignoredPac
   }
 }
 
+declare module 'parcel-bundler' {
+  interface ParcelBundle {
+    getHash(): string;
+  }
+}
+
 const bundleUrlRef = '__bundleUrl__';
+const preamble = `!(function(global,parcelRequire){'use strict';`;
+const getBundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}`;
 
 function isFile(bundleDir: string, name: string) {
   const path = resolve(bundleDir, name);
@@ -177,10 +185,11 @@ function isFile(bundleDir: string, name: string) {
 }
 
 export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
-  const bundleUrl = `var ${bundleUrlRef}=function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}();`;
+  const bundleUrl = `var ${bundleUrlRef}=${getBundleUrl}();`;
 
   if (!prName) {
-    prName = `pr_${(bundle as any).getHash()}`;
+    const hash = bundle.getHash();
+    prName = `pr_${hash}`;
   }
 
   const bundles = gatherJsBundles(bundle);
@@ -227,19 +236,26 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
               result = `(function(){${stylesheet}})();${result}`;
             }
 
-            /**
-             * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
-             * `parcelRequire` declaration problems, and preventing `parcelRequire`
-             * from leaking into global (window).
-             * @see https://github.com/parcel-bundler/parcel/issues/1401
-             */
-            result = [
-              `!(function(global,parcelRequire){'use strict';${bundleUrl}`,
-              result
-                .split('"function"==typeof parcelRequire&&parcelRequire')
-                .join(`"function"==typeof global.${prName}&&global.${prName}`),
-              `;global.${prName}=parcelRequire}(window, window.${prName}));`,
-            ].join('\n');
+            // Only happens in (pilet) debug mode:
+            // Untouched bundles are not rewritten so we should not just wrap them
+            // again. We replace the existing Piral Require reference with a new one.
+            if (result.startsWith(preamble)) {
+              result = result.replace(/\.pr_[a-f0-9]{32}/g, `.${prName}`);
+            } else {
+              /**
+               * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
+               * `parcelRequire` declaration problems, and preventing `parcelRequire`
+               * from leaking into global (window).
+               * @see https://github.com/parcel-bundler/parcel/issues/1401
+               */
+              result = [
+                `${preamble}${bundleUrl}`,
+                result
+                  .split('"function"==typeof parcelRequire&&parcelRequire')
+                  .join(`"function"==typeof global.${prName}&&global.${prName}`),
+                `;global.${prName}=parcelRequire}(window, window.${prName}));`,
+              ].join('\n');
+            }
 
             writeFile(src, result, 'utf8', err => {
               if (err) {
