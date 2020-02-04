@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.10.1 (tbd)
+
+* Fixed declaration generation (#139)
+* Fixed pilet debug issues with side bundles
+
 ## 0.10.0 (February 2, 2020)
 
 * Introduce compatibility check for the Piral CLI (#94)

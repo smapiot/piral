@@ -166,6 +166,23 @@ export function stringifyExport(name: string, type: TypeModel) {
     case 'enumLiteral':
       const e = type.const ? 'const enum' : 'enum';
       return `${stringifyComment(type)}export ${e} ${name} ${stringifyEnum(type.values)}`;
+    case 'stringLiteral':
+    case 'booleanLiteral':
+    case 'numberLiteral':
+    case 'any':
+    case 'null':
+    case 'void':
+    case 'undefined':
+    case 'boolean':
+    case 'unknown':
+    case 'bigint':
+    case 'number':
+    case 'never':
+    case 'string':
+    case 'nonPrimitive':
+    case 'esSymbol':
+    case 'unidentified':
+      return `export declare const ${name}: ${stringifyNode(type)};`;
   }
 
   return '';

@@ -1,9 +1,9 @@
 import * as ts from 'typescript';
-import { logWarn } from '../common';
 import { isNodeExported, findPiralCoreApi, findDeclaredTypings } from './helpers';
-import { includeExportedType } from './visit';
+import { includeExportedType, includeExportedVariable } from './visit';
 import { stringifyDeclaration } from './stringify';
 import { DeclVisitorContext } from './types';
+import { logWarn } from '../common';
 
 export function generateDeclaration(
   name: string,
@@ -31,8 +31,19 @@ export function generateDeclaration(
   context.modules[name] = context.refs;
 
   const includeNode = (node: ts.Node) => {
-    const type = checker.getTypeAtLocation(node);
-    includeExportedType(context, type);
+    if (node) {
+      const type = checker.getTypeAtLocation(node);
+
+      if (type.flags !== ts.TypeFlags.Any) {
+        includeExportedType(context, type);
+      } else if (ts.isVariableStatement(node)) {
+        node.declarationList.declarations.forEach(decl => {
+          includeExportedVariable(context, decl);
+        });
+      } else {
+        logWarn(`Could not resolve type at position ${node.pos} of "${node.getSourceFile()?.fileName}".`);
+      }
+    }
   };
 
   const includeApi = (node: ts.Node) => {
@@ -55,14 +66,25 @@ export function generateDeclaration(
       context.refs = context.modules[name];
       includeNode(node);
     } else if (ts.isExportDeclaration(node)) {
-      const moduleName = node.moduleSpecifier.text;
-      const fileName = node.getSourceFile().resolvedModules?.get(moduleName)?.resolvedFileName;
+      const moduleName = node.moduleSpecifier?.text;
+      const elements = node.exportClause?.elements;
 
-      if (fileName) {
-        // maybe for later (undefined if *, i.e., all):
-        // --> const selected = node.exportClause?.elements.map(m => m.name);
-        const newFile = program.getSourceFile(fileName);
-        ts.forEachChild(newFile, includeTypings);
+      if (elements) {
+        // selected exports here
+        elements.forEach(el => {
+          if (el.symbol) {
+            const original = context.checker.getAliasedSymbol(el.symbol);
+            includeNode(original?.declarations?.[0]);
+          }
+        });
+      } else if (moduleName) {
+        // * exports from a module
+        const fileName = node.getSourceFile().resolvedModules?.get(moduleName)?.resolvedFileName;
+
+        if (fileName) {
+          const newFile = program.getSourceFile(fileName);
+          ts.forEachChild(newFile, includeTypings);
+        }
       }
     }
   };
