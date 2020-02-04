@@ -10,6 +10,11 @@
 * Declared `PiletApi` and `Pilet` in `piral-base`
 * Switched to use `piral-base` as declaration root
 
+## 0.10.1 (February 4, 2020)
+
+* Fixed declaration generation (#139)
+* Fixed pilet debug issues with side bundles
+
 ## 0.10.0 (February 2, 2020)
 
 * Introduce compatibility check for the Piral CLI (#94)
