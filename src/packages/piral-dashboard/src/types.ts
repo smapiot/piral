@@ -1,6 +1,6 @@
+import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Dict, WrappedComponent, BaseComponentProps, AnyComponent, BaseRegistration } from 'piral-core';
-import { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletDashboardApi {}
