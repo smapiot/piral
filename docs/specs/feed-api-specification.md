@@ -60,10 +60,10 @@ In case of a failed authentication, the HTTP response status code has to be `401
 The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
 
 ### Retrieving Pilets (User Facing)
-The service is required to expose an endpoint for retrieving pilets. Our *recommendation* is to use the same path as in the endpoint for publishing pilets (service facing), i.e., `/api/v1/pilet`. Depending on the exact implementation, a different endpoint should be used. We recommend using the same path as in the service facing API endpoint (used for publishing pilets).
+The service is required to expose an endpoint for retrieving pilets. Our *recommendation* is to use the same path as in the endpoint for publishing pilets (service facing), i.e., `/api/v1/pilet`. Depending on the exact implementation, a different endpoint may be used.
 
 #### Endpoint
-The service exposes a REST endpoint, which accepts a `GET` request from the client. It is recommended to authorize access to this endpoint, e.g., via a token provided in the `Authorization` header. Optionally, the provided credential for authorizing the request can in addition be used to tailor the list of pilets returned to the calling client.
+The service exposes a REST endpoint, which accepts a `GET` request from the client. It is recommended to authorize access to this endpoint, e.g., via a token provided in the `Authorization` header. Optionally, the provided credentials for authorizing the request can be used to tailor the list of pilets returned to the calling client.
 
 **Response**
 The API interface for retrieving pilets returns a resource in JSON format. The response contains a list of pilet metadata and is defined as follows (typed as `PiletApiResponse`): 
