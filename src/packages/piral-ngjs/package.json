@@ -1,6 +1,6 @@
 {
   "name": "piral-ngjs",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "Plugin for integrating Angular.js components in Piral.",
   "keywords": [
     "piral",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@types/angular": "^1.6.45",
     "angular": "^1.7.9",
-    "piral-core": "^0.10.1"
+    "piral-core": "^0.10.2"
   },
   "peerDependencies": {
     "angular": "^1.7.0",
