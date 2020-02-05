@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.10.2 (tbd)
+
+* Further improvements for the declaration generation
+
 ## 0.10.1 (February 4, 2020)
 
 * Fixed declaration generation (#139)

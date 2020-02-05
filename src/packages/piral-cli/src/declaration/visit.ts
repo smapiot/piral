@@ -9,6 +9,7 @@ import {
   InterfaceTypeWithDeclaredMembers,
   InterfaceType,
   VariableDeclaration,
+  TypeAliasDeclaration,
 } from 'typescript';
 import {
   getLib,
@@ -139,12 +140,18 @@ export function includeExportedType(context: DeclVisitorContext, type: Type) {
   }
 }
 
+export function includeExportedTypeAlias(context: DeclVisitorContext, variable: TypeAliasDeclaration) {
+  const name = (variable.name as any).text;
+  const type = context.checker.getTypeFromTypeNode(variable.type);
+  context.refs[name] = includeAnonymous(context, type);
+}
+
 export function includeExportedVariable(context: DeclVisitorContext, variable: VariableDeclaration) {
   const name = (variable.name as any).text;
   const type = variable.type
     ? context.checker.getTypeFromTypeNode(variable.type)
     : context.checker.getTypeAtLocation(variable.initializer);
-  context.refs[name] = includeType(context, type);
+  context.refs[name] = includeAnonymous(context, type);
 }
 
 function includeType(context: DeclVisitorContext, type: Type): TypeModel {

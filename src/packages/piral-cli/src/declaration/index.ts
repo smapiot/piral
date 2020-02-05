@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import { isNodeExported, findPiralCoreApi, findDeclaredTypings } from './helpers';
-import { includeExportedType, includeExportedVariable } from './visit';
+import { includeExportedType, includeExportedVariable, includeExportedTypeAlias } from './visit';
 import { stringifyDeclaration } from './stringify';
 import { DeclVisitorContext } from './types';
 import { logWarn } from '../common';
@@ -32,16 +32,22 @@ export function generateDeclaration(
 
   const includeNode = (node: ts.Node) => {
     if (node) {
-      const type = checker.getTypeAtLocation(node);
-
-      if (type.flags !== ts.TypeFlags.Any) {
-        includeExportedType(context, type);
-      } else if (ts.isVariableStatement(node)) {
-        node.declarationList.declarations.forEach(decl => {
-          includeExportedVariable(context, decl);
-        });
+      if (ts.isTypeAliasDeclaration(node)) {
+        includeExportedTypeAlias(context, node);
       } else {
-        logWarn(`Could not resolve type at position ${node.pos} of "${node.getSourceFile()?.fileName}".`);
+        const type = checker.getTypeAtLocation(node);
+
+        if (ts.isVariableDeclaration(node)) {
+          includeExportedVariable(context, node);
+        } else if (ts.isVariableStatement(node)) {
+          node.declarationList.declarations.forEach(decl => {
+            includeExportedVariable(context, decl);
+          });
+        } else if (type.flags !== ts.TypeFlags.Any) {
+          includeExportedType(context, type);
+        } else {
+          logWarn(`Could not resolve type at position ${node.pos} of "${node.getSourceFile()?.fileName}".`);
+        }
       }
     }
   };
@@ -56,14 +62,15 @@ export function generateDeclaration(
     if (ts.isModuleDeclaration(node)) {
       const moduleName = node.name.text;
       const existing = context.modules[moduleName];
+      const before = context.refs;
       context.modules[moduleName] = context.refs = existing || {};
       node.body.forEachChild(subNode => {
         if (isNodeExported(subNode)) {
           includeNode(subNode);
         }
       });
+      context.refs = before;
     } else if (isNodeExported(node)) {
-      context.refs = context.modules[name];
       includeNode(node);
     } else if (ts.isExportDeclaration(node)) {
       const moduleName = node.moduleSpecifier?.text;
