@@ -1,9 +1,16 @@
-import * as actions from './actions';
 import { isfunc } from 'piral-base';
 import { ReactChild, isValidElement, createElement } from 'react';
 import { buildName, Extend, Dict, withApi, PiletApi, GlobalStateContext } from 'piral-core';
+import { createActions } from './actions';
 import { DefaultContainer, DefaultInput, DefaultResult } from './default';
-import { PiletSearchApi, SearchSettings, SearchHandler, SearchProviderRegistration, SearchResultType } from './types';
+import {
+  PiletSearchApi,
+  SearchSettings,
+  SearchHandler,
+  SearchProviderRegistration,
+  SearchResultType,
+  SearchActionsConfig,
+} from './types';
 
 export interface InitialSearchProvider {
   /**
@@ -19,7 +26,7 @@ export interface InitialSearchProvider {
 /**
  * Available configuration options for the search plugin.
  */
-export interface SearchConfig {
+export interface SearchConfig extends SearchActionsConfig {
   /**
    * Sets the providers to be given by the app shell.
    * @default []
@@ -35,6 +42,18 @@ export interface SearchConfig {
    * @default ''
    */
   query?: string;
+  /**
+   * Determines if the providers are also used for an empty query.
+   * @default false
+   */
+  emptyTrigger?: boolean;
+  /**
+   * Allows filtering of the search providers to query.
+   * @param query The query that should be run.
+   * @param providerNames The names of the available search providers.
+   * @default undefined
+   */
+  filter?(query: string, providerNames: Array<string>): Array<string>;
 }
 
 function noop() {}
@@ -44,8 +63,9 @@ function createSearchRegistration(
   search: SearchHandler,
   settings: SearchSettings = {},
 ): SearchProviderRegistration {
-  const { onlyImmediate = false, onCancel = noop, onClear = noop } = settings;
+  const { onlyImmediate = false, onCancel = noop, onClear = noop, ...rest } = settings;
   return {
+    ...rest,
     pilet,
     onlyImmediate,
     cancel: isfunc(onCancel) ? onCancel : noop,
@@ -87,10 +107,10 @@ function wrapResults(
  * Creates new Pilet API extensions for search and filtering.
  */
 export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchApi> {
-  const { providers = [], results = [], query = '' } = config;
+  const { providers = [], results = [], query = '', ...actionConfig } = config;
 
   return context => {
-    context.defineActions(actions);
+    context.defineActions(createActions(actionConfig));
 
     context.dispatch(state => ({
       ...state,

@@ -184,3 +184,21 @@ export interface PiletSearchApi {
    */
   unregisterSearchProvider(name: string): void;
 }
+
+/**
+ * Configuration for creating the search actions.
+ */
+export interface SearchActionsConfig {
+  /**
+   * Determines if the providers are also used for an empty query.
+   * @default false
+   */
+  emptyTrigger?: boolean;
+  /**
+   * Allows filtering of the search providers to query.
+   * @param query The query that should be run.
+   * @param providerNames The names of the available search providers.
+   * @default undefined
+   */
+  filter?(query: string, providerNames: Array<string>): Array<string>;
+}

@@ -3,6 +3,10 @@
 ## 0.10.2 (tbd)
 
 * Further improvements for the declaration generation
+* Fixed top-level aliases in decl. generation (#141)
+* Fixed top-level decl. generation regarding unions and intersections (#140)
+* Fixed handling of nested exports in decl. generation (#142)
+* Added options for filtering to the `piral-search` plugin
 
 ## 0.10.1 (February 4, 2020)
 
