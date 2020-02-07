@@ -2,13 +2,13 @@
 
 ## Abstract
 
-The Piral Feed Service API represents a RESTful API that is used for publishing pilets and retrieving pilets.
+The Piral Feed Service API represents a RESTful API that is used for publishing and retrieving pilets.
 
 ## Introduction
 
-The Piral Feed Service API is usually represented in terms of a pilet feed service, which is used to allow publishing a pilet or retrieving pilets. To allow the Piral CLI (or any other "standard" application) to publish pilets a certain format needs to be specified. Likewise, a standard Piral instance should be capable of retrieving pilets for the user from a backend.
+The Piral Feed Service API is usually implemented and available as part of a pilet feed service, which supports publishing or retrieving pilets. To allow the Piral CLI (or any other "standard" application) to publish pilets, a certain format needs to be specified. Likewise, a standard Piral instance should be capable of retrieving pilets for the user from a backend.
 
-Besides the core functionality of publishing and retrieving pilets the Piral Feed Service API may also include an extended API conformance, which is used to provide alignment with some standard pilets such as "feature management" or "user information".
+Besides the core functionality of publishing and retrieving pilets, the Piral Feed Service API may also include an extended API conformance, which is used to provide alignment with some standard pilets e.g., for managing features or providing user information.
 
 ## Conformance
 
@@ -16,9 +16,82 @@ As well as sections marked as non-normative, all authoring guidelines, diagrams,
 
 The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
+
+
+## Glossary
+
+**API**: Application Program Interface
+
+**Pilet**: A module for transporting features into a Piral instance
+
+## Core API Design
+
+The core API design includes everything that is necessary to publish pilets to the service handling the pilets or to retrieve them with a client. There is no (standardized) additional management (e.g., feature flags) in context with handling the pilets.
+
+Implementations that are Piral conform must implement at least the core API design. Throughout the specification, the officially supported online version of the feed service ([feed.piral.io](https://feed.piral.io)) is used as a reference example.
+
+### Publishing Pilets (service facing)
+
+A pilet feed service must provide an endpoint for publishing a pilet. By default, `/api/v1/pilet` is used. However, the exact path can be also adjusted as required to fit into an existing API / endpoint design.
+
+#### Endpoint
+The endpoint needs to accept a `POST` request using basic authentication with an `Authorization` header. Other ways of authentication may be implemented as well. The value of the basic authentication is an API key that can be fully decided by the implementation. We recommend using a base64 encoded value here.
+
+The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tar ball (i.e., an NPM package). The content detail of this file is explained in the Pilet Specification (see references).
+
+**Request Example**
+```http
+POST /api/v1/pilet
+Content-Type: multipart/form-data;boundary="boundary"
+Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="pilet.tgz"
+
+<tgz-content>
+```
+
+**Success Response**
+In case of a successful upload, the HTTP response code has to be `200`. The exact response content is arbitrary. An empty response is valid.
+
+**Error Response**
+In case of a failed authentication, the HTTP response status code has to be `401`. In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. The error message should be transported via the status text.
+
+The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
+
+### Retrieving Pilets (User Facing)
+The service is required to expose an endpoint for retrieving pilets. Our *recommendation* is to use the same path as in the endpoint for publishing pilets (service facing), i.e., `/api/v1/pilet`. Depending on the exact implementation, a different endpoint may be used.
+
+#### Endpoint
+The service exposes a REST endpoint, which accepts a `GET` request from the client. It is recommended to authorize access to this endpoint, e.g., via a token provided in the `Authorization` header. Optionally, the provided credentials for authorizing the request can be used to tailor the list of pilets returned to the calling client.
+
+**Response**
+The API interface for retrieving pilets returns a resource in JSON format. The response contains a list of pilet metadata and is defined as follows (typed as `PiletApiResponse`): 
+
+```ts
+interface PiletApiResponse {
+  items: Array<PiletMetadata>;
+}
+
+interface PiletMetadata {
+  name: string;
+  version: string;
+  author: {
+    name?: string;
+    email?: string;
+  };
+  hash: string;
+  content?: string;
+  link?: string;
+  custom?: any;
+}
+```
+
+The schema is written and defined using a TypeScript interface (see references).
+
 ## Examples
 
-A working sample feed service exists and can be viewed at [github.com/smapiot/sample-pilet-service](https://github.com/smapiot/sample-pilet-service). The provided version should be a good starting point to see a Node.js express-based service using this specification.
+A working sample feed service exists and can be viewed at [github.com/smapiot/sample-pilet-service](https://github.com/smapiot/sample-pilet-service). The provided version represents a good starting point to see a Node.js express-based service implementing this specification.
 
 The crucial points following this specification are:
 
@@ -118,132 +191,6 @@ function getPiletMainPath(data, files) {
 
 An officially supported online version can be found at [feed.piral.io](https://feed.piral.io). This version does not have its source code available publicly.
 
-## Glossary
-
-**API**: Application Program Interface
-
-**GraphQL**: A data query and manipulation language for APIs
-
-**Pilet**: A module for transporting features into a Piral instance
-
-## Core API Design
-
-The core API design includes everything that is necessary to publish pilets or retrieve them as an end-user. There is no (standardized) additional management (e.g., feature flags) on top of these pilets.
-
-Implementations that are Piral conform must implement at least the core API design.
-
-### Pilet Feed Service
-
-#### Service Facing
-
-The pilet feed service needs to provide an endpoint for publishing a pilet. By default, `/api/v1/pilet` is used, however, the exact path can be also adjusted to fit into an existing API / endpoint design.
-
-The endpoint needs to accept a `POST` request using basic authentication with an `Authorization` header. Other ways of authentication may be implemented as well. The value of the basic authentication is an API key that can be fully decided by the implementation. We recommend using a base64 encoded value here.
-
-The payload of the `POST` request is a form encoded using `multipart/form-data`. There is a single entry called `file` transporting the contents of a file named *pilet.tgz*, which represents a Pilet tar ball (i.e., a NPM package). The content details of this file are explained in the Pilet Specification (see references).
-
-```http
-POST /api/v1/pilet
-Content-Type: multipart/form-data;boundary="boundary"
-Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
-
---boundary
-Content-Disposition: form-data; name="file"; filename="pilet.tgz"
-
-<tgz-content>
-```
-
-In case of a failed authentication the HTTP response status code has to be `401`. In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. The error message should be transported via the status text.
-
-In case of a successful upload the HTTP response code has to be `200`. The exact response content is arbitrary. An empty response is valid.
-
-The exact response may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
-
-Optional exposure with **GraphQL**.
-
-If GraphQL is used *as an additional transport* mechanism for the feed service then it *should* provide the following resources to be consumed by services:
-
-```graphql
-type PiletMetadata {
-  name: ID!
-  version: String!
-  author: PiletAuthor!
-  hash: String!
-  content: String
-  link: String
-  custom: JSON
-}
-
-type PiletAuthor {
-  name: String
-  email: String
-}
-
-type Mutation {
-  publishPilet(file: Upload!): PiletMetadata
-}
-```
-
-The schema is written as defined by the GraphQL specification (see references). The `Upload` type has to be defined via the multipart upload spec. An example implementation is available via the [Apollo Upload Client](https://github.com/jaydenseric/apollo-upload-client).
-
-The connection has to be defined with the API Key in the `Authorization` header. Alternatively, some other mechanism for authorization needs to be used.
-
-#### User Facing
-
-Required exposure with plain **REST**.
-
-The Piral feed service needs to provide an API interface returning a JSON response typed as `PiletApiResponse`, which is defined as follows:
-
-```ts
-interface PiletApiResponse {
-  items: Array<PiletMetadata>;
-}
-
-interface PiletMetadata {
-  name: string;
-  version: string;
-  author: {
-    name?: string;
-    email?: string;
-  };
-  hash: string;
-  content?: string;
-  link?: string;
-  custom?: any;
-}
-```
-
-The schema is written and defined using a TypeScript interface (see references).
-
-As endpoint our *recommendation* is `/api/v1/pilet`. Depending on the exact implementation a different endpoint should be used. We recommend using the same path as in the service facing API endpoint (used for publishing pilets).
-
-Optional exposure with **GraphQL**.
-
-If GraphQL is used *as an additional transport* mechanism for the feed service then it *should* provide the following resources to be consumed by end users:
-
-```graphql
-type PiletMetadata {
-  name: ID!
-  version: String!
-  author: PiletAuthor!
-  hash: String!
-  content: String
-  link: String
-  custom: JSON
-}
-
-type PiletAuthor {
-  name: String
-  email: String
-}
-
-type Query {
-  pilets: [PiletMetadata]
-}
-```
-
-The schema is written as defined by the GraphQL specification (see references).
-
 ## Limitations
 
 The Feed Service API specification only deals with the `GET` and the `POST` endpoint for pilets. It does not deal with the features that use pilets or the model used by the feed service. It also does not deal with the API key management.
@@ -260,5 +207,4 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 
 * [RFC2119](https://tools.ietf.org/html/rfc2119)
 * [Pilet Specification](https://docs.piral.io/reference/specifications/pilet)
-* [GraphQL Specification](https://graphql.github.io/graphql-spec/)
 * [TypeScript Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
