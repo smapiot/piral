@@ -12,7 +12,7 @@ function requireModule(name: string, dependencies: AvailableDependencies) {
   return dependency;
 }
 
-function checkPiletApp(app?: PiletApp): PiletApp {
+function checkPiletApp(name: string, app?: PiletApp): PiletApp {
   if (!app) {
     console.error('Invalid module found.', name);
   } else if (typeof app.setup !== 'function') {
@@ -26,6 +26,10 @@ function checkPiletApp(app?: PiletApp): PiletApp {
   };
 }
 
+function getLocalRequire(dependencies: AvailableDependencies = {}) {
+  return (moduleName: string) => requireModule(moduleName, dependencies);
+}
+
 /**
  * Compiles the given content from a generic dependency.
  * @param name The name of the dependency to compile.
@@ -34,11 +38,11 @@ function checkPiletApp(app?: PiletApp): PiletApp {
  * @param dependencies The globally available dependencies.
  * @returns The evaluated dependency.
  */
-export function evalDependency(name: string, content: string, link = '', dependencies: AvailableDependencies = {}) {
+export function evalDependency(name: string, content: string, link = '', dependencies?: AvailableDependencies) {
   const mod = {
     exports: {},
   } as PiletExports;
-  const require = (moduleName: string) => requireModule(moduleName, dependencies);
+  const require = getLocalRequire(dependencies);
 
   try {
     const sourceUrl = link && `\n//# sourceURL=${link}`;
@@ -63,8 +67,39 @@ export function compileDependency(
   name: string,
   content: string,
   link = '',
-  dependencies: AvailableDependencies = {},
+  dependencies?: AvailableDependencies,
 ): Promise<PiletApp> {
   const app = evalDependency(name, content, link, dependencies);
-  return Promise.resolve(app).then(checkPiletApp);
+  return Promise.resolve(app).then(app => checkPiletApp(name, app));
+}
+
+declare global {
+  interface HTMLScriptElement {
+    app?: PiletApp;
+  }
+}
+
+/**
+ * Includes the given script via its URL with a dependency resolution.
+ * @param name The name of the dependency to include.
+ * @param link The link to the dependency.
+ * @param requireRef The name of the global require to inject.
+ * @param dependencies The globally available dependencies.
+ * @returns The evaluated module.
+ */
+export function includeDependency(
+  name: string,
+  link: string,
+  requireRef: string,
+  dependencies?: AvailableDependencies,
+) {
+  return new Promise<PiletApp>(resolve => {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = link;
+    window[requireRef] = getLocalRequire(dependencies);
+    s.onload = () => resolve(checkPiletApp(name, s.app));
+    s.onerror = () => resolve(checkPiletApp(name));
+    document.body.appendChild(s);
+  });
 }

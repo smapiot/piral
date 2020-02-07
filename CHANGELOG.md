@@ -6,6 +6,7 @@
 * Changed *package.json* metadata format (#136)
 * Documented Pilet package spec (#137)
 * Documented Feed Service API spec (#138)
+* Added support for script evaluation mode (#144)
 * Improved API surface from `piral-base`
 * Declared `PiletApi` and `Pilet` in `piral-base`
 * Switched to use `piral-base` as declaration root

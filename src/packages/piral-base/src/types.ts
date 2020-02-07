@@ -20,6 +20,12 @@ export interface PiletMetadata {
    */
   link?: string;
   /**
+   * The reference name for the global require.
+   * If set this wil trigger the script mode instead of the eval
+   * mode.
+   */
+  requireRef?: string;
+  /**
    * The computed hash value of the pilet's content. Should be
    * accurate to allow caching.
    */

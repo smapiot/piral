@@ -1,6 +1,6 @@
 import { isfunc, createEmptyModule, getDependencyResolver } from './utils';
 import { defaultFetchDependency } from './fetch';
-import { compileDependency } from './dependency';
+import { compileDependency, includeDependency } from './dependency';
 import {
   PiletMetadata,
   Pilet,
@@ -8,18 +8,18 @@ import {
   PiletRequester,
   PiletDependencyFetcher,
   AvailableDependencies,
+  PiletApp,
 } from './types';
 
-function loadFromContent(
+function loadFrom(
   meta: PiletMetadata,
-  content: string,
   getDependencies: PiletDependencyGetter,
-  link?: string,
+  loader: (dependencies: AvailableDependencies) => Promise<PiletApp>,
 ): Promise<Pilet> {
   const dependencies = {
     ...(getDependencies(meta) || {}),
   };
-  return compileDependency(meta.name, content, link, dependencies).then(app => ({
+  return loader(dependencies).then(app => ({
     ...app,
     ...meta,
   }));
@@ -47,11 +47,16 @@ export function loadPilet(
   getDependencies: PiletDependencyGetter,
   fetchDependency = defaultFetchDependency,
 ): Promise<Pilet> {
-  const { link, content } = meta;
-  const retrieve = link ? fetchDependency(link) : content ? Promise.resolve(content) : undefined;
+  const { link, content, requireRef } = meta;
 
-  if (retrieve) {
-    return retrieve.then(content => loadFromContent(meta, content, getDependencies, link));
+  if (requireRef) {
+    return loadFrom(meta, getDependencies, deps => includeDependency(meta.name, link, requireRef, deps));
+  } else if (link) {
+    return fetchDependency(link).then(content =>
+      loadFrom(meta, getDependencies, deps => compileDependency(meta.name, content, link, deps)),
+    );
+  } else if (content) {
+    return loadFrom(meta, getDependencies, deps => compileDependency(meta.name, content, link, deps));
   } else {
     console.warn('Empty pilet found!', meta.name);
   }
