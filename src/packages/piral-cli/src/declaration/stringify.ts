@@ -166,6 +166,8 @@ export function stringifyExport(name: string, type: TypeModel) {
     case 'enumLiteral':
       const e = type.const ? 'const enum' : 'enum';
       return `${stringifyComment(type)}export ${e} ${name} ${stringifyEnum(type.values)}`;
+    case 'intersection':
+    case 'union':
     case 'stringLiteral':
     case 'booleanLiteral':
     case 'numberLiteral':
@@ -206,6 +208,7 @@ export function stringifyModule(name: string, refs: TypeRefs) {
 
 export function stringifyDeclaration(context: DeclVisitorContext) {
   const modules = Object.keys(context.modules)
+    .filter(moduleName => Object.keys(context.modules[moduleName]).length > 0)
     .map(moduleName => stringifyModule(moduleName, context.modules[moduleName]))
     .join('\n\n');
 

@@ -10,7 +10,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 This project and everyone participating in it is governed by the [Code of Conduct](../CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to the email specified there.
 
-## How Can I Contribute?
+## How Can I Contribute
 
 ### Development Instructions
 
@@ -28,7 +28,7 @@ This section guides you through submitting an enhancement suggestion for Piral, 
 
 Before creating enhancement suggestions, please make sure that you first check the [existing suggestions](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement), as you might find that the enhancement has already been requested. Fill out [the template](https://github.com/smapiot/piral/issues/new?template=feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
-#### How Do I Submit a Suggestion?
+#### How Do I Submit a Suggestion
 
 Enhancements or general suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). After you've determined that the enhancement is not already requested, go ahead and create an issue providing the following information:
 
@@ -66,7 +66,7 @@ Naming convention:
 - anything except `master`, `develop`, `release/*`, or `hotfix/*`
 - preferred `feature/{issue-id}-{issue-description}`, e.g., `feature/#123-add-foo`
 
-#### Creating a hotfix branch
+#### Creating a Hotfix Branch
 
 Create a branch **from** `master` which must merge back **into** either `master` and / or `develop`. While a *real* hotfix will apply to both immediately, a simple fix will just be applied to `develop`.
 
@@ -105,11 +105,13 @@ Following is a short guide on how to make a valid Pull Request.
 4. Before pushing your code, few more task that need to be preformed:
 
    - Make sure that the test and build scripts run successfully
+
      ```sh
      npm test
      lerna run build
      ```
-   - Update the CHANGELOG.md following our convention
+
+   - Update the *CHANGELOG.md* following our convention
 
 5. Commit and push the code to the origin.
 
