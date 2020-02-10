@@ -4,6 +4,10 @@
 
 * Extended debug helper for Piral Inspector
 * Allow capturing props in `fromElm`, `fromMithril`, `fromRiot`, `fromSvelte`, and `fromVue`
+* Fixed creation of declaration with mixed `type` and `declare const` (#146)
+* Fixed wrongly inferred types from regular expression in declaration (#147)
+* Fixed inferred types from array in declaration (#148)
+* Improved complicated types resolution in declaration (#149)
 
 ## 0.10.2 (February 5, 2020)
 

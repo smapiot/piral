@@ -148,8 +148,18 @@ export function isAnonymousObject(type: Type) {
   return isObjectType(type) && !!(type.objectFlags & ObjectFlags.Anonymous);
 }
 
-export function isReferenceType(type: ObjectType): type is TypeReference {
-  return !!(type.objectFlags & ObjectFlags.Reference);
+export function isReferenceType(type: Type): type is TypeReference {
+  return isObjectType(type) && !!(type.objectFlags & ObjectFlags.Reference);
+}
+
+export function isTupleType(type: Type): type is TypeReference {
+  return (
+    isObjectType(type) &&
+    isReferenceType(type) &&
+    type.target.objectFlags & ObjectFlags.Tuple &&
+    !!type.typeArguments &&
+    type.typeArguments.length > 0
+  );
 }
 
 export function isTypeParameter(type: Type) {
