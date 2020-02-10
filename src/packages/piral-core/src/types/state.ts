@@ -63,6 +63,10 @@ export interface ComponentsState extends PiralCustomComponentsState {
    * The layout used for pages.
    */
   Layout: ComponentType<LayoutProps>;
+  /**
+   * A component that can be used for debugging purposes.
+   */
+  Debug?: ComponentType;
 }
 
 /**

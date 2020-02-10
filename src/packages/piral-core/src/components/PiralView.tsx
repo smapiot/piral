@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, StaticRouter } from 'react-router-dom';
+import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout, PiralDebug } from './components';
 import { PiralRoutes } from './PiralRoutes';
-import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout } from './components';
 import { useGlobalState } from '../hooks';
 
 const NotFound: React.FC<RouteComponentProps> = props => <PiralError type="not_found" {...props} />;
@@ -34,6 +34,7 @@ export const PiralView: React.FC<PiralViewProps> = ({ children }) => (
     <Router>
       <PiralContent />
       {children}
+      <PiralDebug />
     </Router>
   </PiralProvider>
 );

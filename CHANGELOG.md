@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.10.3 (tbd)
+
+* Extended debug helper for Piral Inspector
+
 ## 0.10.2 (February 5, 2020)
 
 * Further improvements for the declaration generation
