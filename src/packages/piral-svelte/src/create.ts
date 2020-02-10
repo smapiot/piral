@@ -41,7 +41,7 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
   }
 
   return context => {
-    context.converters.svelte = ({ Component }) => {
+    context.converters.svelte = ({ Component, captured }) => {
       let instance: SvelteComponentInstance<any> = undefined;
 
       return {
@@ -57,6 +57,7 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
           instance = new Component({
             target: parent,
             props: {
+              ...captured,
               ...ctx,
               ...data,
             },
@@ -76,10 +77,11 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
     };
 
     return {
-      fromSvelte(Component) {
+      fromSvelte(Component, captured) {
         return {
           type: 'svelte',
           Component,
+          captured,
         };
       },
       SvelteExtension: selector,

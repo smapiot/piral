@@ -45,13 +45,13 @@ export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
   register(selector, VueExtension);
 
   return context => {
-    context.converters.vue = ({ root }) => {
+    context.converters.vue = ({ root, captured }) => {
       let instance: any = undefined;
 
       return {
         mount(parent, data, ctx) {
           const el = parent.appendChild(document.createElement(rootName));
-          instance = mountVue(el, root, data, ctx);
+          instance = mountVue(el, root, data, ctx, captured);
         },
         update(_, data) {
           for (const prop in data) {
@@ -67,10 +67,11 @@ export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
     };
 
     return {
-      fromVue(root) {
+      fromVue(root, captured) {
         return {
           type: 'vue',
           root,
+          captured,
         };
       },
       VueExtension,

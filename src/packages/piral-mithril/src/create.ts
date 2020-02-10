@@ -20,12 +20,26 @@ export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithri
   const { rootName = 'slot' } = config;
 
   return context => {
-    context.converters.mithril = ({ component }) => ({
-      mount(el, props) {
-        m.mount(el, { view: () => m(component, props) });
+    context.converters.mithril = ({ component, captured }) => ({
+      mount(el, props, ctx) {
+        m.mount(el, {
+          view: () =>
+            m(component, {
+              ...captured,
+              ...ctx,
+              ...props,
+            }),
+        });
       },
-      update(el, props) {
-        m.mount(el, { view: () => m(component, props) });
+      update(el, props, ctx) {
+        m.mount(el, {
+          view: () =>
+            m(component, {
+              ...captured,
+              ...ctx,
+              ...props,
+            }),
+        });
       },
       unmount(el) {
         // tslint:disable-next-line:no-null-keyword
@@ -34,10 +48,11 @@ export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithri
     });
 
     return api => ({
-      fromMithril(component) {
+      fromMithril(component, captured) {
         return {
           type: 'mithril',
           component,
+          captured,
         };
       },
       MithrilExtension: {

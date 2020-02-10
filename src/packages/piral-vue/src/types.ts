@@ -18,6 +18,10 @@ export interface VueComponent<TProps> {
    * The type of the Vue component.
    */
   type: 'vue';
+  /**
+   * Captures props for transport into the Vue component.
+   */
+  captured?: Record<string, any>;
 }
 
 /**
@@ -27,9 +31,10 @@ export interface PiletVueApi {
   /**
    * Wraps a Vue component for use in Piral.
    * @param component The root component.
+   * @param captured The optionally captured props.
    * @returns The Piral Vue component.
    */
-  fromVue<TProps>(component: Component<TProps>): VueComponent<TProps>;
+  fromVue<TProps>(component: Component<TProps>, captured?: Record<string, any>): VueComponent<TProps>;
   /**
    * Vue component for displaying extensions of the given name.
    */

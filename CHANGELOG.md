@@ -3,6 +3,7 @@
 ## 0.10.3 (tbd)
 
 * Extended debug helper for Piral Inspector
+* Allow capturing props in `fromElm`, `fromMithril`, `fromRiot`, `fromSvelte`, and `fromVue`
 
 ## 0.10.2 (February 5, 2020)
 

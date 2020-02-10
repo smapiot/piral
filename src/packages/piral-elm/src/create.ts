@@ -41,7 +41,7 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
   }
 
   return context => {
-    context.converters.elm = ({ main }) => ({
+    context.converters.elm = ({ main, captured }) => ({
       mount(parent, data, ctx) {
         const node = parent.appendChild(document.createElement('div'));
         parent.addEventListener(
@@ -55,6 +55,7 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
         main.init({
           node,
           flags: {
+            ...captured,
             ...ctx,
             ...data,
           },
@@ -66,7 +67,7 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
     });
 
     return {
-      fromElm(main) {
+      fromElm(main, captured) {
         return {
           type: 'elm',
           main,

@@ -10,6 +10,7 @@ export function mountVue<T extends BaseComponentProps>(
   root: Vue.Component<T>,
   props: T,
   ctx: ComponentContext,
+  captured?: Record<string, any>,
 ) {
   return new Vue({
     el,
@@ -19,7 +20,10 @@ export function mountVue<T extends BaseComponentProps>(
     },
     render(h) {
       return h(root, {
-        props,
+        props: {
+          ...captured,
+          ...props,
+        },
       });
     },
   });
