@@ -87,3 +87,24 @@ For (internal) links we recommend using `Link`, e.g., `<Link to="/">Home/<Link>`
 For other (programmatic) navigation we recommend using the `useHistory()` hook to retrieve the `history` object. With this object you can easily navigate, e.g., using `history.push('/my-page')`.
 
 ---------------------------------------
+
+## How can I sandbox my CSS?
+
+Sandboxing CSS is not so easy to do at runtime. That's why we rely on either the feed service or the pilet creation to solve this efficiently. In the best case you use some prefix unique per pilet.
+
+One option for you is to use [Tailwind](https://tailwindcss.com). In your *tailwind.config.js* file place, e.g.:
+
+```js
+module.exports = {
+  prefix:"wh-",
+  theme: {},
+  variants: {},
+  plugins: []
+};
+```
+
+Now the prefix `wh-` will be added to all tailwind classes.
+
+A stronger requirement would be a common scope for all CSS. One option here is to apply a proper [PostCSS configuration](https://postcss.org).
+
+---------------------------------------
