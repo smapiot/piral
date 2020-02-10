@@ -8,6 +8,7 @@
 * Fixed wrongly inferred types from regular expression in declaration (#147)
 * Fixed inferred types from array in declaration (#148)
 * Improved complicated types resolution in declaration (#149)
+* Added direct support for mono repo usage (#143)
 
 ## 0.10.2 (February 5, 2020)
 

@@ -45,6 +45,47 @@ export const debugPiletDefaults = {
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
 
+async function getOrMakeAppDir(
+  emulator: boolean,
+  appFile: string,
+  externals: Array<string>,
+  piral: string,
+  logLevel: 1 | 2 | 3,
+) {
+  if (!emulator) {
+    logInfo(`Preparing supplied Piral instance ...`);
+    const root = resolve(dirname(appFile), '..');
+    setStandardEnvs({
+      root,
+      production: true,
+      debugPiral: true,
+      debugPilet: true,
+      dependencies: externals,
+      piral,
+    });
+    const appBundler = setupBundler({
+      type: 'piral',
+      entryFiles: appFile,
+      config: {
+        watch: false,
+        minify: true,
+        sourceMaps: true,
+        contentHash: true,
+        publicUrl: './',
+        logLevel,
+        cacheDir: resolve(root, defaultCacheDir),
+        scopeHoist: false,
+        hmr: false,
+        autoInstall: false,
+      },
+    });
+    const bundle = await appBundler.bundle();
+    return dirname(bundle.name);
+  }
+
+  return dirname(appFile);
+}
+
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
   const {
     entry = debugPiletDefaults.entry,
@@ -62,10 +103,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
-  const { peerDependencies, root, appPackage, appFile, ignored } = await retrievePiletData(targetDir, app);
+  const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const krasConfig = readKrasConfig({ port }, krasrc);
   const cache = resolve(root, cacheDir);
+  const appDir = await getOrMakeAppDir(emulator, appFile, externals, appPackage.name, logLevel);
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(targetDir, 'mocks');
@@ -123,7 +165,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     bundler,
     port,
     root,
-    app: dirname(appFile),
+    app: appDir,
     handle: ['/', api],
     api,
   };

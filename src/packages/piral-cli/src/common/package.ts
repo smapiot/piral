@@ -12,7 +12,7 @@ import {
   getFileNames,
 } from './io';
 import { Framework } from './framework';
-import { logFail, logWarn } from './log';
+import { logFail, logWarn, logInfo } from './log';
 import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
 import { getDevDependencies, PiletLanguage } from './language';
@@ -406,15 +406,18 @@ export async function patchPiletPackage(
   return info.files;
 }
 
+/**
+ * Returns true if its an emulator package, otherwise it has to be a "raw" app shell.
+ */
 export function checkAppShellPackage(appPackage: any) {
   const { piralCLI = { generated: false, version: cliVersion } } = appPackage;
 
-  if (!piralCLI.generated) {
-    logWarn(`The used Piral instance does not seem to be a proper development package.
-Please make sure to build your development package with the Piral CLI using "piral build".`);
-  } else {
+  if (piralCLI.generated) {
     checkAppShellCompatibility(piralCLI.version);
+    return true;
   }
+
+  return false;
 }
 
 export async function retrievePiletData(target: string, app?: string) {
@@ -442,7 +445,7 @@ export async function retrievePiletData(target: string, app?: string) {
     throw new Error('Invalid Piral instance selected.');
   }
 
-  checkAppShellPackage(appPackage);
+  const emulator = checkAppShellPackage(appPackage);
 
   return {
     dependencies: packageContent.dependencies || {},
@@ -451,6 +454,7 @@ export async function retrievePiletData(target: string, app?: string) {
     ignored: checkArrayOrUndefined(packageContent, 'preservedDependencies'),
     appFile,
     appPackage,
+    emulator,
     root,
   };
 }
