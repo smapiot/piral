@@ -54,7 +54,8 @@ async function getOrMakeAppDir(
 ) {
   if (!emulator) {
     logInfo(`Preparing supplied Piral instance ...`);
-    const root = resolve(dirname(appFile), '..');
+    const packageJson = require.resolve(`${piral}/package.json`);
+    const root = resolve(packageJson, '..');
     setStandardEnvs({
       root,
       production: true,

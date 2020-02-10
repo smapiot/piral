@@ -12,7 +12,7 @@ import {
   getFileNames,
 } from './io';
 import { Framework } from './framework';
-import { logFail, logWarn, logInfo } from './log';
+import { logFail, logWarn } from './log';
 import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
 import { getDevDependencies, PiletLanguage } from './language';
