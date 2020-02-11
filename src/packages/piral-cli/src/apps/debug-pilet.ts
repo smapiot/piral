@@ -46,6 +46,7 @@ export const debugPiletDefaults = {
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
 
 async function getOrMakeAppDir(
+  baseDir: string,
   emulator: boolean,
   appFile: string,
   externals: Array<string>,
@@ -54,8 +55,11 @@ async function getOrMakeAppDir(
 ) {
   if (!emulator) {
     logInfo(`Preparing supplied Piral instance ...`);
+    const outDir = resolve(baseDir, 'dist', 'app');
     const packageJson = require.resolve(`${piral}/package.json`);
     const root = resolve(packageJson, '..');
+    const original = process.cwd();
+    process.chdir(root);
     setStandardEnvs({
       root,
       production: true,
@@ -74,6 +78,7 @@ async function getOrMakeAppDir(
         contentHash: true,
         publicUrl: './',
         logLevel,
+        outDir,
         cacheDir: resolve(root, defaultCacheDir),
         scopeHoist: false,
         hmr: false,
@@ -81,10 +86,55 @@ async function getOrMakeAppDir(
       },
     });
     const bundle = await appBundler.bundle();
+    process.chdir(original);
     return dirname(bundle.name);
   }
 
   return dirname(appFile);
+}
+
+async function bundlePilet(
+  root: string,
+  piral: string,
+  hmr: boolean,
+  scopeHoist: boolean,
+  autoInstall: boolean,
+  cacheDir: string,
+  externals: Array<string>,
+  targetDir: string,
+  entryModule: string,
+  logLevel: 1 | 2 | 3,
+) {
+  setStandardEnvs({
+    root,
+    piral,
+  });
+
+  const bundler = setupBundler({
+    type: 'pilet',
+    externals,
+    targetDir,
+    entryModule,
+    config: {
+      logLevel,
+      hmr: false,
+      minify: true,
+      scopeHoist,
+      publicUrl: './',
+      cacheDir,
+      autoInstall,
+    },
+  });
+
+  bundler.on('bundled', async bundle => {
+    await postProcess(bundle);
+
+    if (hmr) {
+      (bundler as any).emit('bundle-ready');
+    }
+  });
+
+  return bundler;
 }
 
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
@@ -106,9 +156,20 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const entryModule = await findEntryModule(entryFile, targetDir);
   const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
-  const krasConfig = readKrasConfig({ port }, krasrc);
   const cache = resolve(root, cacheDir);
-  const appDir = await getOrMakeAppDir(emulator, appFile, externals, appPackage.name, logLevel);
+
+  if (fresh) {
+    await removeDirectory(cache);
+  }
+
+  if (optimizeModules) {
+    logInfo('Preparing modules ...');
+    await patchModules(root, cache, ignored);
+  }
+
+  const appDir = await getOrMakeAppDir(root, emulator, appFile, externals, appPackage.name, logLevel);
+  const krasConfig = readKrasConfig({ port }, krasrc);
+  const api = debugPiletApi;
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(targetDir, 'mocks');
@@ -130,37 +191,18 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
-  if (fresh) {
-    await removeDirectory(cache);
-  }
-
-  if (optimizeModules) {
-    logInfo('Preparing modules ...');
-    await patchModules(root, cache, ignored);
-  }
-
-  setStandardEnvs({
+  const bundler = await bundlePilet(
     root,
-    piral: appPackage.name,
-  });
-
-  const bundler = setupBundler({
-    type: 'pilet',
+    appPackage.name,
+    hmr,
+    scopeHoist,
+    autoInstall,
+    cache,
     externals,
     targetDir,
     entryModule,
-    config: {
-      logLevel,
-      hmr: false,
-      minify: true,
-      scopeHoist,
-      publicUrl: './',
-      cacheDir: cache,
-      autoInstall,
-    },
-  });
-
-  const api = debugPiletApi;
+    logLevel,
+  );
   const injectorConfig = {
     active: true,
     bundler,
@@ -170,14 +212,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     handle: ['/', api],
     api,
   };
-
-  bundler.on('bundled', async bundle => {
-    await postProcess(bundle);
-
-    if (hmr) {
-      (bundler as any).emit('bundle-ready');
-    }
-  });
 
   krasConfig.map['/'] = '';
   krasConfig.map[api] = '';
