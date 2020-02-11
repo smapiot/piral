@@ -12,7 +12,10 @@ describe('New Pilet Command', () => {
   it('scaffolding in an empty directory works', async () => {
     jest.setTimeout(60000);
     const dir = createTempDir();
-    await newPilet(dir, { install: false });
+    await newPilet(dir, {
+      install: false,
+      source: 'piral@latest',
+    });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
@@ -26,6 +29,7 @@ describe('New Pilet Command', () => {
     await newPilet(dir, {
       language: PiletLanguage.js,
       install: false,
+      source: 'piral@latest',
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();

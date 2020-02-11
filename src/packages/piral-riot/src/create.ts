@@ -20,16 +20,24 @@ export function createRiotApi(config: RiotConfig = {}): Extend<PiletRiotApi> {
   const { extensionName = 'riot-extension' } = config;
 
   return context => {
-    context.converters.riot = ({ component }) => {
+    context.converters.riot = ({ component, captured }) => {
       const mountApp = riot.component(component);
       let app: riot.RiotComponent = undefined;
 
       return {
-        mount(el, props) {
-          app = mountApp(el, props);
+        mount(el, props, ctx) {
+          app = mountApp(el, {
+            ...captured,
+            ...ctx,
+            ...props,
+          });
         },
-        update(el, props) {
-          app = mountApp(el, props);
+        update(el, props, ctx) {
+          app = mountApp(el, {
+            ...captured,
+            ...ctx,
+            ...props,
+          });
         },
         unmount(el) {
           app.unmount(true);
@@ -39,10 +47,11 @@ export function createRiotApi(config: RiotConfig = {}): Extend<PiletRiotApi> {
     };
 
     return api => ({
-      fromRiot(component) {
+      fromRiot(component, captured) {
         return {
           type: 'riot',
           component,
+          captured,
         };
       },
       RiotExtension: {

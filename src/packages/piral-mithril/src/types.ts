@@ -22,6 +22,10 @@ export interface MithrilComponent<TProps> {
    */
   component: Component<TProps>;
   /**
+   * Captures props for transport into the Mithril.js component.
+   */
+  captured?: Record<string, any>;
+  /**
    * The type of the Mithril.js component.
    */
   type: 'mithril';
@@ -34,9 +38,10 @@ export interface PiletMithrilApi {
   /**
    * Wraps an Mithril.js component for use in Piral.
    * @param component The component root.
+   * @param captured The optionally captured props.
    * @returns The Piral Mithril.js component.
    */
-  fromMithril<TProps>(component: Component<TProps>): MithrilComponent<TProps>;
+  fromMithril<TProps>(component: Component<TProps>, captured?: Record<string, any>): MithrilComponent<TProps>;
   /**
    * Mithril.js component for displaying extensions of the given name.
    */
