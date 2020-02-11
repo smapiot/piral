@@ -18,6 +18,10 @@ export interface ElmComponent<TProps> {
    */
   main: ElmModule<TProps>;
   /**
+   * Captures props for transport into the Elm component.
+   */
+  captured?: Record<string, any>;
+  /**
    * The type of the Elm component.
    */
   type: 'elm';
@@ -30,9 +34,10 @@ export interface PiletElmApi {
   /**
    * Wraps a Elm module for use in Piral.
    * @param main The name of the root component.
+   * @param captured The optionally captured props.
    * @returns The Piral Elm component.
    */
-  fromElm<TProps>(main: ElmModule<TProps>): ElmComponent<TProps>;
+  fromElm<TProps>(main: ElmModule<TProps>, captured?: Record<string, any>): ElmComponent<TProps>;
   /**
    * Gets the name of the Elm extension.
    */

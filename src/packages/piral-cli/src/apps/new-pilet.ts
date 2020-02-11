@@ -21,6 +21,7 @@ import {
   TemplateType,
   checkAppShellPackage,
   createContextLogger,
+  PackageType,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -42,6 +43,17 @@ export const newPiletDefaults = {
   install: true,
   template: 'default' as const,
 };
+
+function isLocalPackage(name: string, type: PackageType, hadVersion: boolean) {
+  if (type === 'registry' && !hadVersion) {
+    try {
+      require.resolve(`${name}/package.json`);
+      return true;
+    } catch {}
+  }
+
+  return false;
+}
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
   const {
@@ -94,11 +106,17 @@ always-auth=true`,
       );
     }
 
-    const packageRef = combinePackageRef(sourceName, sourceVersion, type);
+    const isLocal = isLocalPackage(sourceName, type, hadVersion);
 
-    logInfo(`Installing NPM package %s ...`, packageRef);
+    if (!isLocal) {
+      const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
-    await installPackage(packageRef, root, '--save-dev', '--no-package-lock');
+      logInfo(`Installing NPM package %s ...`, packageRef);
+
+      await installPackage(packageRef, root, '--save-dev', '--no-package-lock');
+    } else {
+      logInfo(`Using locally available NPM package %s ...`, sourceName);
+    }
 
     const packageName = await getPackageName(root, sourceName, type);
     const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);

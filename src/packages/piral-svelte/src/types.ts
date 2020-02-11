@@ -27,6 +27,10 @@ export interface SvelteComponent<TProps> {
    */
   Component: SvelteModule<TProps>;
   /**
+   * Captures props for transport into the Svelte component.
+   */
+  captured?: Record<string, any>;
+  /**
    * The type of the Svelte component.
    */
   type: 'svelte';
@@ -39,9 +43,10 @@ export interface PiletSvelteApi {
   /**
    * Wraps a Svelte module for use in Piral.
    * @param Component The name of the root component.
+   * @param captured The optionally captured props.
    * @returns The Piral Svelte component.
    */
-  fromSvelte<TProps>(Component: SvelteModule<TProps>): SvelteComponent<TProps>;
+  fromSvelte<TProps>(Component: SvelteModule<TProps>, captured?: Record<string, any>): SvelteComponent<TProps>;
   /**
    * Gets the name of the Svelte extension.
    */

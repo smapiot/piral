@@ -70,7 +70,8 @@ export function createPiletOptions({
       },
       pilets: {
         createApi,
-        getDependencies,
+        getDependencies: getDependencyResolver(globalDependencies, getDependencies),
+        loadPilet,
         requestPilets,
       },
     };

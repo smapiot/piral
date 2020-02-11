@@ -11,6 +11,16 @@
 * Declared `PiletApi` and `Pilet` in `piral-base`
 * Switched to use `piral-base` as declaration root
 
+## 0.10.3 (February 11, 2020)
+
+* Extended debug helper for Piral Inspector
+* Allow capturing props in `fromElm`, `fromMithril`, `fromRiot`, `fromSvelte`, and `fromVue`
+* Fixed creation of declaration with mixed `type` and `declare const` (#146)
+* Fixed wrongly inferred types from regular expression in declaration (#147)
+* Fixed inferred types from array in declaration (#148)
+* Improved complicated types resolution in declaration (#149)
+* Added direct support for mono repo usage (#143)
+
 ## 0.10.2 (February 5, 2020)
 
 * Further improvements for the declaration generation

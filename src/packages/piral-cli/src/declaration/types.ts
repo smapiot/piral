@@ -8,6 +8,7 @@ declare module 'typescript' {
     id?: number;
     parent?: ts.Symbol;
     target?: any;
+    declaredType?: ts.Type;
   }
 
   interface Type {
@@ -26,6 +27,7 @@ declare module 'typescript' {
 
   interface Declaration {
     questionToken?: ts.Token<ts.SyntaxKind.QuestionToken>;
+    dotDotDotToken?: ts.Token<ts.SyntaxKind.DotDotDotToken>;
     default?: ts.Node;
   }
 
@@ -63,6 +65,7 @@ export type TypeModel =
   | TypeModelProp
   | TypeModelBoolean
   | TypeModelNumber
+  | TypeModelVariable
   | TypeModelObject
   | TypeModelUnidentified
   | TypeModelAny
@@ -100,6 +103,11 @@ export interface TypeModelProp extends WithTypeComments {
   readonly kind: 'prop';
   readonly valueType: TypeModel;
   readonly id: number;
+}
+
+export interface TypeModelVariable {
+  readonly kind: 'const';
+  readonly type: TypeModel;
 }
 
 export interface TypeModelRef extends WithTypeArgs {
@@ -140,6 +148,7 @@ export interface TypeModelFunctionParameter {
   readonly param: string;
   readonly type: TypeModel;
   readonly optional: boolean;
+  readonly spread: boolean;
 }
 
 export interface TypeModelEnum extends WithTypeComments {

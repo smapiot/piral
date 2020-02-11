@@ -49,3 +49,28 @@ Yes it can. The `piral-cli` looks for globally and locally installed packages th
 More information can be found in the [package information](https://npmjs.com/package/piral-cli).
 
 ---------------------------------------
+
+## What about mono repos?
+
+Piral was developed to by used in distributed environments, where each pilet could be in its own repository. Nevertheless, for convenience and to get a head start we fully support the mono repo use case, too.
+
+We advise you to use the following tools:
+
+1. Yarn: `npm i yarn@1 -g`
+2. Lerna: `npm i lerna -g`
+
+To set up a mono repo we encourage you torun in your desired repository:
+
+1. Run `npx lerna init`
+2. Add `piral-cli` to `devDependencies`
+3. Configure the workspaces
+4. Run `lerna create app-shell`
+5. Go into the app shell, run `npm init piral-instance`
+6. Fill out form, skipping installation of dependencies
+7. Run `lerna bootstrap` to resolve all dependencies
+8. For new pilets use `pilet new <your-app-shell-name>`
+9. Everything should just work as normal
+
+You can still create emulator packages of your app shell, which can be shipped to teams that do not (or cannot / should not) contribute to the mono repo.
+
+---------------------------------------
