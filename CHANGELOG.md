@@ -10,6 +10,7 @@
 * Improved API surface from `piral-base`
 * Declared `PiletApi` and `Pilet` in `piral-base`
 * Switched to use `piral-base` as declaration root
+* Included implied schema for generated pilets (supporting `v:0` and `v:1`)
 
 ## 0.10.3 (February 11, 2020)
 
