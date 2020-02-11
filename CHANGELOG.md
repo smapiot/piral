@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.10.3 (tbd)
+## 0.10.3 (February 11, 2020)
 
 * Extended debug helper for Piral Inspector
 * Allow capturing props in `fromElm`, `fromMithril`, `fromRiot`, `fromSvelte`, and `fromVue`
