@@ -14,6 +14,7 @@ import {
   findEntryModule,
   defaultCacheDir,
   removeDirectory,
+  PiletSchemaVersion,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -172,7 +173,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   };
 
   bundler.on('bundled', async bundle => {
-    await postProcess(bundle);
+    await postProcess(bundle, PiletSchemaVersion.directEval);
 
     if (hmr) {
       (bundler as any).emit('bundle-ready');

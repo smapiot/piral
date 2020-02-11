@@ -9,6 +9,7 @@ import {
   patchModules,
   setupBundler,
   defaultCacheDir,
+  PiletSchemaVersion,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -105,5 +106,5 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const bundle = await bundler.bundle();
 
-  await postProcess(bundle);
+  await postProcess(bundle, PiletSchemaVersion.directEval);
 }

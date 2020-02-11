@@ -42,7 +42,7 @@
     "@types/react-router-dom": "latest"
   },
   "dependencies": {
-    "graphql": "^14.3.0",
+    "current-script-polyfill": "^1.0.0",
     "piral-core": "^0.10.3",
     "piral-ext": "^0.10.3",
     "promise-polyfill": "^8.1.0",

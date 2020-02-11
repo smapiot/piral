@@ -176,7 +176,9 @@ declare module 'parcel-bundler' {
 }
 
 const bundleUrlRef = '__bundleUrl__';
+const piletMarker = '//@pilet v:';
 const preamble = `!(function(global,parcelRequire){'use strict';`;
+const insertScript = `function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;`;
 const getBundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}`;
 
 function isFile(bundleDir: string, name: string) {
@@ -184,14 +186,33 @@ function isFile(bundleDir: string, name: string) {
   return existsSync(path) && statSync(path).isFile();
 }
 
-export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
+export const enum PiletSchemaVersion {
+  directEval = 0,
+  currentScript = 1,
+}
+
+function getScriptHead(version: PiletSchemaVersion, prName: string) {
   const bundleUrl = `var ${bundleUrlRef}=${getBundleUrl}();`;
 
-  if (!prName) {
-    const hash = bundle.getHash();
-    prName = `pr_${hash}`;
+  switch (version) {
+    case PiletSchemaVersion.directEval:
+      return `${piletMarker}0\n${preamble}${bundleUrl}`;
+    case PiletSchemaVersion.currentScript:
+      return `${piletMarker}1(${prName})\n${preamble}${bundleUrl}${insertScript}`;
   }
 
+  return '';
+}
+
+/**
+ * Transforms a pilet's bundle to a microfrontend entry module.
+ * @param bundle The bundle to transform.
+ * @param version The manifest version to create.
+ */
+export function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVersion) {
+  const hash = bundle.getHash();
+  const prName = `pr_${hash}`;
+  const head = getScriptHead(version, prName);
   const bundles = gatherJsBundles(bundle);
 
   return Promise.all(
@@ -239,8 +260,8 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
             // Only happens in (pilet) debug mode:
             // Untouched bundles are not rewritten so we should not just wrap them
             // again. We replace the existing Piral Require reference with a new one.
-            if (result.startsWith(preamble)) {
-              result = result.replace(/\.pr_[a-f0-9]{32}/g, `.${prName}`);
+            if (result.startsWith(piletMarker)) {
+              result = result.replace(/\.pr_[A-Fa-f0-9]{32}/g, `.${prName}`);
             } else {
               /**
                * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
@@ -249,7 +270,7 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
                * @see https://github.com/parcel-bundler/parcel/issues/1401
                */
               result = [
-                `${preamble}${bundleUrl}`,
+                head,
                 result
                   .split('"function"==typeof parcelRequire&&parcelRequire')
                   .join(`"function"==typeof global.${prName}&&global.${prName}`),
