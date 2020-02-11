@@ -1,7 +1,12 @@
 import * as ts from 'typescript';
 import { isNodeExported, findPiralBaseApi, findDeclaredTypings } from './helpers';
-import { includeExportedType, includeExportedVariable, includeExportedTypeAlias } from './visit';
 import { stringifyDeclaration } from './stringify';
+import {
+  includeExportedType,
+  includeExportedVariable,
+  includeExportedTypeAlias,
+  includeExportedFunction,
+} from './visit';
 import { DeclVisitorContext } from './types';
 import { logWarn } from '../common';
 
@@ -43,6 +48,8 @@ export function generateDeclaration(
           node.declarationList.declarations.forEach(decl => {
             includeExportedVariable(context, decl);
           });
+        } else if (ts.isFunctionDeclaration(node)) {
+          includeExportedFunction(context, node);
         } else if (type.flags !== ts.TypeFlags.Any) {
           includeExportedType(context, type);
         } else {

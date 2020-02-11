@@ -12,6 +12,10 @@ import {
   isIdentifier,
   isInterfaceDeclaration,
   isClassDeclaration,
+  FunctionDeclaration,
+  Signature,
+  isTypeOperatorNode,
+  SyntaxKind,
 } from 'typescript';
 import {
   getLib,
@@ -35,6 +39,7 @@ import {
   DeclVisitorContext,
   TypeModelRef,
   TypeMemberModel,
+  TypeModelKeyOf,
 } from './types';
 
 function getTypeArguments(context: DeclVisitorContext, type: Type) {
@@ -63,6 +68,28 @@ function getDefaultTypeId(context: DeclVisitorContext, type: Type) {
 function getComment(checker: TypeChecker, symbol: Symbol) {
   const doc = symbol?.getDocumentationComment(checker);
   return doc?.map(item => item.text).join('\n');
+}
+
+function getFunctionType(context: DeclVisitorContext, sign: Signature): TypeModelFunction {
+  return {
+    kind: 'function',
+    types: getTypeParameters(context, sign as any),
+    parameters: sign.getParameters().map(param => ({
+      kind: 'parameter',
+      param: param.name,
+      spread: param.valueDeclaration.dotDotDotToken !== undefined,
+      optional: param.valueDeclaration.questionToken !== undefined,
+      type: includeType(context, context.checker.getTypeAtLocation(param.valueDeclaration)),
+    })),
+    returnType: includeType(context, sign.getReturnType()),
+  };
+}
+
+function getKeyOfType(context: DeclVisitorContext, type: Type): TypeModelKeyOf {
+  return {
+    kind: 'keyof',
+    value: includeType(context, type),
+  };
 }
 
 function normalizeTypeParameters(context: DeclVisitorContext, type: Type, decl: Type, types: Array<TypeModel>) {
@@ -144,12 +171,16 @@ export function includeExportedType(context: DeclVisitorContext, type: Type) {
 
 export function includeExportedTypeAlias(context: DeclVisitorContext, variable: TypeAliasDeclaration) {
   const name = (variable.name as any).text;
-  const type = context.checker.getTypeFromTypeNode(variable.type);
+  const child =
+    isTypeOperatorNode(variable.type) && variable.type.operator === SyntaxKind.KeyOfKeyword
+      ? getKeyOfType(context, context.checker.getTypeFromTypeNode(variable.type.type))
+      : includeAnonymous(context, context.checker.getTypeFromTypeNode(variable.type));
+
   context.refs[name] = {
     kind: 'alias',
     comment: getComment(context.checker, variable.symbol),
-    types: variable.typeParameters?.map(t => includeType(context, t.type)) ?? [],
-    child: includeAnonymous(context, type),
+    types: getTypeParameters(context, variable as any),
+    child,
   };
 }
 
@@ -160,7 +191,19 @@ export function includeExportedVariable(context: DeclVisitorContext, variable: V
     : context.checker.getTypeAtLocation(variable.initializer);
   context.refs[name] = {
     kind: 'const',
+    comment: getComment(context.checker, variable.symbol),
     type: includeType(context, type),
+  };
+}
+
+export function includeExportedFunction(context: DeclVisitorContext, func: FunctionDeclaration) {
+  const name = func.name.text;
+  const type = context.checker.getTypeAtLocation(func as any);
+  const [signature] = type.getCallSignatures();
+  const funcType = getFunctionType(context, signature);
+  context.refs[name] = {
+    ...funcType,
+    comment: getComment(context.checker, func.symbol),
   };
 }
 
@@ -558,19 +601,7 @@ function includeObject(context: DeclVisitorContext, type: Type): TypeModel {
     }
 
     const callSignatures = type.getCallSignatures();
-    const callsDescriptor: Array<TypeModelFunction> =
-      callSignatures?.map(sign => ({
-        kind: 'function',
-        types: sign.typeParameters?.map(t => includeTypeParameter(context, t)) ?? [],
-        parameters: sign.getParameters().map(param => ({
-          kind: 'parameter',
-          param: param.name,
-          spread: param.valueDeclaration.dotDotDotToken !== undefined,
-          optional: param.valueDeclaration.questionToken !== undefined,
-          type: includeType(context, context.checker.getTypeAtLocation(param.valueDeclaration)),
-        })),
-        returnType: includeType(context, sign.getReturnType()),
-      })) ?? [];
+    const callsDescriptor: Array<TypeModelFunction> = callSignatures?.map(sign => getFunctionType(context, sign)) ?? [];
 
     return {
       kind: 'object',

@@ -12,6 +12,12 @@
 * Switched to use `piral-base` as declaration root
 * Included implied schema for generated pilets (supporting `v:0` and `v:1`)
 
+## 0.10.4 (February 11, 2020)
+
+* Fixed declaration with expansion of `keyof` (#150)
+* Fixed declaration generation of exported functions and generator functions (#151)
+* Improved support for mono repo usage (#143)
+
 ## 0.10.3 (February 11, 2020)
 
 * Extended debug helper for Piral Inspector
