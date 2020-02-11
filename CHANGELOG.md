@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.10.4 (tbd)
+
+* Fixed declaration with expansion of `keyof` (#150)
+* Fixed declaration generation of exported functions and generator functions (#151)
+* Improved support for mono repo usage (#143)
+
 ## 0.10.3 (February 11, 2020)
 
 * Extended debug helper for Piral Inspector

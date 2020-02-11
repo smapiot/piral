@@ -38,7 +38,7 @@ function stringifyProp(type: TypeModelProp) {
     target.indices.length === 0 &&
     target.props.length === 0
   ) {
-    return `${comment}${name}${isOpt}${stringifySignatures(target.calls[0])}`;
+    return `${comment}${name}${isOpt}${stringifySignature(target.calls[0])}`;
   } else {
     return `${comment}${name}${isOpt}: ${stringifyNode(type.valueType)}`;
   }
@@ -46,11 +46,16 @@ function stringifyProp(type: TypeModelProp) {
 
 function stringifyParameter(param: TypeModelFunctionParameter) {
   const isOpt = param.optional ? '?' : '';
-  return `${param.param}${isOpt}: ${stringifyNode(param.type)}`;
+  const spread = param.spread ? '...' : '';
+  return `${spread}${param.param}${isOpt}: ${stringifyNode(param.type)}`;
 }
 
-function stringifySignatures(type: TypeModelFunction) {
-  const parameters = type.parameters.map(stringifyParameter).join(', ');
+function stringifyParameters(params: Array<TypeModelFunctionParameter>) {
+  return params.map(stringifyParameter).join(', ');
+}
+
+function stringifySignature(type: TypeModelFunction) {
+  const parameters = stringifyParameters(type.parameters);
   const ta = stringifyTypeArgs(type);
   const rt = stringifyNode(type.returnType);
   return `${ta}(${parameters}): ${rt}`;
@@ -77,13 +82,17 @@ function toContent(lines: Array<string>, terminator: string) {
 }
 
 function toBlock(lines: Array<string>, terminator: string) {
-  return `{\n${toContent(lines, terminator)}}`;
+  if (lines.length > 0) {
+    return `{\n${toContent(lines, terminator)}}`;
+  }
+
+  return '{}';
 }
 
 function stringifyInterface(type: TypeModelObject) {
   const lines: Array<string> = [
     ...type.props.map(p => stringifyProp(p)),
-    ...type.calls.map(c => stringifySignatures(c)),
+    ...type.calls.map(c => stringifySignature(c)),
     ...type.indices.map(i => stringifyIndex(i)),
   ];
   return toBlock(lines, ';');
@@ -126,6 +135,8 @@ function stringifyNode(type: TypeModel) {
       return type.types.map(stringifyNode).join(' & ');
     case 'member':
       return `${stringifyComment(type)}${type.name} = ${stringifyNode(type.value)}`;
+    case 'keyof':
+      return `keyof ${stringifyNode(type.value)}`;
     case 'any':
     case 'null':
     case 'void':
@@ -166,25 +177,10 @@ export function stringifyExport(name: string, type: TypeModel) {
     case 'enumLiteral':
       const e = type.const ? 'const enum' : 'enum';
       return `${stringifyComment(type)}export ${e} ${name} ${stringifyEnum(type.values)}`;
-    case 'intersection':
-    case 'union':
-    case 'stringLiteral':
-    case 'booleanLiteral':
-    case 'numberLiteral':
-    case 'any':
-    case 'null':
-    case 'void':
-    case 'undefined':
-    case 'boolean':
-    case 'unknown':
-    case 'bigint':
-    case 'number':
-    case 'never':
-    case 'string':
-    case 'nonPrimitive':
-    case 'esSymbol':
-    case 'unidentified':
-      return `export declare const ${name}: ${stringifyNode(type)};`;
+    case 'const':
+      return `${stringifyComment(type)}export const ${name}: ${stringifyNode(type.type)};`;
+    case 'function':
+      return `${stringifyComment(type)}export function ${name}${stringifySignature(type)};`;
   }
 
   return '';

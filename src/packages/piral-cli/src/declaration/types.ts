@@ -95,6 +95,7 @@ export type TypeModel =
   | TypeModelTuple
   | TypeModelFunction
   | TypeModelRef
+  | TypeModelKeyOf
   | TypeModelAlias;
 
 export interface TypeModelProp extends WithTypeComments {
@@ -105,7 +106,7 @@ export interface TypeModelProp extends WithTypeComments {
   readonly id: number;
 }
 
-export interface TypeModelVariable {
+export interface TypeModelVariable extends WithTypeComments {
   readonly kind: 'const';
   readonly type: TypeModel;
 }
@@ -114,6 +115,11 @@ export interface TypeModelRef extends WithTypeArgs {
   readonly kind: 'ref';
   readonly refName: string;
   readonly external?: ts.Type;
+}
+
+export interface TypeModelKeyOf {
+  readonly kind: 'keyof';
+  readonly value: TypeModel;
 }
 
 export interface TypeModelAny {
