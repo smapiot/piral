@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.10.5 (tbd)
+
+* Fixed that pilets are not watched in monorepos (#153)
+
+
 ## 0.10.4 (February 11, 2020)
 
 * Fixed declaration with expansion of `keyof` (#150)
