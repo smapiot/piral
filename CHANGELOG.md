@@ -3,7 +3,7 @@
 ## 0.10.5 (tbd)
 
 * Fixed that pilets are not watched in monorepos (#153)
-
+* Added support for default exports in custom declarations (#154)
 
 ## 0.10.4 (February 11, 2020)
 
