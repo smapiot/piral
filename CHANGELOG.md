@@ -4,6 +4,9 @@
 
 * Fixed that pilets are not watched in monorepos (#153)
 * Added support for default exports in custom declarations (#154)
+* Added `core-js` to standard opt-out polyfills (#157)
+* Fixed state container debugging output for use in IE11 (#157)
+* Allow disabling state container debug output
 
 ## 0.10.4 (February 11, 2020)
 
