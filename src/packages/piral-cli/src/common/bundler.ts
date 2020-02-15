@@ -3,7 +3,7 @@ import extendBundlerWithPlugins = require('parcel-plugin-codegen');
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { computeHash } from './hash';
-import { logFail } from './log';
+import { logFail, logWarn } from './log';
 import { ParcelConfig, extendConfig } from './settings';
 import { modifyBundlerForPilet, extendBundlerForPilet } from './pilet';
 import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
@@ -184,6 +184,18 @@ const getBundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stac
 function isFile(bundleDir: string, name: string) {
   const path = resolve(bundleDir, name);
   return existsSync(path) && statSync(path).isFile();
+}
+
+export function getPiletSchemaVersion(schemaVersion: 'v0' | 'v1') {
+  switch (schemaVersion) {
+    case 'v0':
+      return PiletSchemaVersion.directEval;
+    case 'v1':
+      return PiletSchemaVersion.currentScript;
+    default:
+      logWarn(`Found invalid pielt schema version "${schemaVersion}". Expected "v0" or "v1".`);
+      return PiletSchemaVersion.directEval;
+  }
 }
 
 export const enum PiletSchemaVersion {

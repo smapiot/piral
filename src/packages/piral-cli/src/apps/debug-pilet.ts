@@ -15,6 +15,7 @@ import {
   defaultCacheDir,
   removeDirectory,
   PiletSchemaVersion,
+  getPiletSchemaVersion,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -29,6 +30,7 @@ export interface DebugPiletOptions {
   hmr?: boolean;
   autoInstall?: boolean;
   optimizeModules?: boolean;
+  schemaVersion?: 'v0' | 'v1';
 }
 
 export const debugPiletDefaults = {
@@ -42,6 +44,7 @@ export const debugPiletDefaults = {
   hmr: true,
   autoInstall: true,
   optimizeModules: true,
+  schemaVersion: 'v1' as const,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -105,6 +108,7 @@ async function bundlePilet(
   targetDir: string,
   entryModule: string,
   logLevel: 1 | 2 | 3,
+  version: PiletSchemaVersion,
 ) {
   setStandardEnvs({
     root,
@@ -129,7 +133,7 @@ async function bundlePilet(
   });
 
   bundler.on('bundled', async bundle => {
-    await postProcess(bundle, PiletSchemaVersion.directEval);
+    await postProcess(bundle, version);
 
     if (hmr) {
       (bundler as any).emit('bundle-ready');
@@ -151,6 +155,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     logLevel = debugPiletDefaults.logLevel,
     fresh = debugPiletDefaults.fresh,
     optimizeModules = debugPiletDefaults.optimizeModules,
+    schemaVersion = debugPiletDefaults.schemaVersion,
     app,
   } = options;
   const entryFile = join(baseDir, entry);
@@ -159,6 +164,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const cache = resolve(root, cacheDir);
+  const version = getPiletSchemaVersion(schemaVersion);
 
   if (fresh) {
     await removeDirectory(cache);
@@ -204,6 +210,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     targetDir,
     entryModule,
     logLevel,
+    version,
   );
   const injectorConfig = {
     active: true,

@@ -314,6 +314,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
+        .choices('schema', ['v0', 'v1'])
+        .describe('schema', 'Sets the schema to be used when bundling the pilets.')
+        .default('schema', 'v1')
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -333,6 +336,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
         open: args.open as boolean,
+        schemaVersion: args.schema as any,
       });
     },
   },
@@ -379,6 +383,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.buildPiletDefaults.optimizeModules)
+        .choices('schema', ['v0', 'v1'])
+        .describe('schema', 'Sets the schema to be used when bundling the pilets.')
+        .default('schema', 'v1')
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -398,6 +405,7 @@ const allCommands: Array<ToolCommand<any>> = [
         optimizeModules: args.optimizeModules as boolean,
         fresh: args.fresh as boolean,
         logLevel: args.logLevel as any,
+        schemaVersion: args.schema as any,
         app: args.app as string,
       });
     },

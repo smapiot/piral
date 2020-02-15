@@ -10,6 +10,7 @@ import {
   setupBundler,
   defaultCacheDir,
   PiletSchemaVersion,
+  getPiletSchemaVersion,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -25,6 +26,7 @@ export interface BuildPiletOptions {
   contentHash?: boolean;
   scopeHoist?: boolean;
   optimizeModules?: boolean;
+  schemaVersion?: 'v0' | 'v1';
 }
 
 export const buildPiletDefaults = {
@@ -39,6 +41,7 @@ export const buildPiletDefaults = {
   contentHash: true,
   scopeHoist: false,
   optimizeModules: true,
+  schemaVersion: 'v1' as const,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -54,6 +57,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
     optimizeModules = buildPiletDefaults.optimizeModules,
+    schemaVersion = buildPiletDefaults.schemaVersion,
     app,
   } = options;
   const entryFile = join(baseDir, entry);
@@ -62,6 +66,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const cache = resolve(root, cacheDir);
+  const version = getPiletSchemaVersion(schemaVersion);
 
   const dest = {
     outDir: dirname(resolve(baseDir, target)),
@@ -105,6 +110,5 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   });
 
   const bundle = await bundler.bundle();
-
-  await postProcess(bundle, PiletSchemaVersion.directEval);
+  await postProcess(bundle, version);
 }
