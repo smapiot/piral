@@ -15,6 +15,13 @@ import {
   ObjectFlags,
   TypeReference,
   Symbol,
+  isIdentifier,
+  ExportAssignment,
+  isExportAssignment,
+  isTypeOperatorNode,
+  TypeOperatorNode,
+  isTypeReferenceNode,
+  TypeReferenceNode,
 } from 'typescript';
 
 const globalIndicator = '__global';
@@ -25,10 +32,10 @@ const piralCoreRoot = 'piral-core/lib/types/api';
 
 // note that a valid identifier is more complicated than this,
 // but let's keep it simple, which should be sufficient for most cases
-const isIdentifier = /^[a-zA-Z\_\$][a-zA-Z0-9\_\$]*$/;
+const checkIdentifier = /^[a-zA-Z\_\$][a-zA-Z0-9\_\$]*$/;
 
 export function makeIdentifier(identifier: string) {
-  return isIdentifier.test(identifier) ? identifier : JSON.stringify(identifier);
+  return checkIdentifier.test(identifier) ? identifier : JSON.stringify(identifier);
 }
 
 export function isGlobal(symbol: Symbol) {
@@ -55,11 +62,24 @@ export function getGlobalName(symbol: Symbol) {
   return name;
 }
 
+export function isDefaultExport(node: Node): node is ExportAssignment {
+  return node.symbol?.name === 'default';
+}
+
 export function isNodeExported(node: Node, alsoTopLevel = false): boolean {
   return (
+    isExportAssignment(node) ||
     (getCombinedModifierFlags(node as Declaration) & ModifierFlags.Export) !== 0 ||
     (alsoTopLevel && !!node.parent && node.parent.kind === SyntaxKind.SourceFile)
   );
+}
+
+export function isKeyOfType(type: Node): type is TypeOperatorNode {
+  return type && isTypeOperatorNode(type) && type.operator === SyntaxKind.KeyOfKeyword;
+}
+
+export function isIdentifierType(type: Node): type is TypeReferenceNode {
+  return type && isTypeReferenceNode(type) && isIdentifier(type.typeName);
 }
 
 export function findDeclaredTypings(root: string) {

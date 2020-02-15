@@ -22,13 +22,13 @@ declare module 'typescript' {
   interface Node {
     symbol?: ts.Symbol;
     localSymbol?: ts.Symbol;
-    type?: ts.Type;
   }
 
   interface Declaration {
     questionToken?: ts.Token<ts.SyntaxKind.QuestionToken>;
     dotDotDotToken?: ts.Token<ts.SyntaxKind.DotDotDotToken>;
     default?: ts.Node;
+    type?: ts.Node;
   }
 
   interface Expression {
@@ -87,6 +87,7 @@ export type TypeModel =
   | TypeModelFunctionParameter
   | TypeModelUnion
   | TypeModelIntersection
+  | TypeModelDefault
   | TypeModelIndex
   | TypeModelIndexedAccess
   | TypeModelConditional
@@ -97,6 +98,11 @@ export type TypeModel =
   | TypeModelRef
   | TypeModelKeyOf
   | TypeModelAlias;
+
+export interface TypeModelDefault extends WithTypeComments {
+  readonly kind: 'default';
+  readonly value: TypeModel;
+}
 
 export interface TypeModelProp extends WithTypeComments {
   readonly name: string;

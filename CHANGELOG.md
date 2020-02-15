@@ -2,8 +2,10 @@
 
 ## 0.10.5 (tbd)
 
+* Fixed `keyof` usage in interfaces and as parameters (#152)
 * Fixed that pilets are not watched in monorepos (#153)
 * Added support for default exports in custom declarations (#154)
+* Fixed missing inclusion of JSX exported modules (#155)
 * Added `core-js` to standard opt-out polyfills (#157)
 * Fixed state container debugging output for use in IE11 (#157)
 * Allow disabling state container debug output
