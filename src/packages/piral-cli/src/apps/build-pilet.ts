@@ -9,7 +9,6 @@ import {
   patchModules,
   setupBundler,
   defaultCacheDir,
-  PiletSchemaVersion,
   getPiletSchemaVersion,
 } from '../common';
 

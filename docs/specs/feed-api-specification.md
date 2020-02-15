@@ -66,7 +66,7 @@ The service is required to expose an endpoint for retrieving pilets. Our *recomm
 The service exposes a REST endpoint, which accepts a `GET` request from the client. It is recommended to authorize access to this endpoint, e.g., via a token provided in the `Authorization` header. Optionally, the provided credentials for authorizing the request can be used to tailor the list of pilets returned to the calling client.
 
 **Response**
-The API interface for retrieving pilets returns a resource in JSON format. The response contains a list of pilet metadata and is defined as follows (typed as `PiletApiResponse`): 
+The API interface for retrieving pilets returns a resource in JSON format. The response contains a list of pilet metadata and is defined as follows (typed as `PiletApiResponse`):
 
 ```ts
 interface PiletApiResponse {
@@ -205,6 +205,6 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 
 ## References
 
-* [RFC2119](https://tools.ietf.org/html/rfc2119)
-* [Pilet Specification](https://docs.piral.io/reference/specifications/pilet)
-* [TypeScript Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
+- [RFC2119](https://tools.ietf.org/html/rfc2119)
+- [Pilet Specification](https://docs.piral.io/reference/specifications/pilet)
+- [TypeScript Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
