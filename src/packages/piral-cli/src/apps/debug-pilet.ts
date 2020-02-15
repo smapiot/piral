@@ -120,6 +120,7 @@ async function bundlePilet(
       logLevel,
       hmr: false,
       minify: true,
+      watch: true,
       scopeHoist,
       publicUrl: './',
       cacheDir,

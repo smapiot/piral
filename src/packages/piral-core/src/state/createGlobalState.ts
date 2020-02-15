@@ -1,4 +1,4 @@
-import { Atom, addChangeHandler } from '@dbeining/react-atom';
+import { Atom } from '@dbeining/react-atom';
 import { BrowserRouter } from 'react-router-dom';
 import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout } from '../components';
 import { GlobalState, NestedPartial } from '../types';
@@ -38,22 +38,5 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
     modules: [],
   };
 
-  const globalState = Atom.of(extend(defaultState, customState));
-
-  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PILET !== undefined) {
-    addChangeHandler(globalState, 'debugging', ({ current, previous }) => {
-      const action = new Error().stack.split('\n')[6].replace(/^\s+at\s+Atom\./, '');
-      console.group(
-        `%c Piral State Change %c ${new Date().toLocaleTimeString()}`,
-        'color: gray; font-weight: lighter;',
-        'color: black; font-weight: bold;',
-      );
-      console.log('%c Previous', `color: #9E9E9E; font-weight: bold`, previous);
-      console.log('%c Action', `color: #03A9F4; font-weight: bold`, action);
-      console.log('%c Next', `color: #4CAF50; font-weight: bold`, current);
-      console.groupEnd();
-    });
-  }
-
-  return globalState;
+  return Atom.of(extend(defaultState, customState));
 }

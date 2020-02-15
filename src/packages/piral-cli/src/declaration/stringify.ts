@@ -181,6 +181,8 @@ export function stringifyExport(name: string, type: TypeModel) {
       return `${stringifyComment(type)}export const ${name}: ${stringifyNode(type.type)};`;
     case 'function':
       return `${stringifyComment(type)}export function ${name}${stringifySignature(type)};`;
+    case 'default':
+      return `${stringifyComment(type)}export default ${stringifyNode(type.value)};`;
   }
 
   return '';
