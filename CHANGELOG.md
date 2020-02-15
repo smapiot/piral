@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.10.5 (tbd)
+## 0.10.5 (February 15, 2020)
 
 * Fixed `keyof` usage in interfaces and as parameters (#152)
 * Fixed that pilets are not watched in monorepos (#153)
