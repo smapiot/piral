@@ -8853,6 +8853,11 @@ parcel-plugin-codegen@^0.4.0:
   resolved "https://registry.yarnpkg.com/parcel-plugin-codegen/-/parcel-plugin-codegen-0.4.0.tgz#dda4ecfc9c653e6e40cd31dc8f1c57947b2d3006"
   integrity sha512-uqM5iwMsoMpmRpBUnSXWXIY6kaxHuol1OSD5Wd6LLP9qjdsSgk/ldsp84LMsu6C5inoD/IvQ7ri59JlqG5R2hA==
 
+parcel-plugin-externals@^0.3.1-pre.20200217.1:
+  version "0.3.1-pre.20200217.1"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.3.1-pre.20200217.1.tgz#4c758a792e23c2640c1451b93eb97982de80a663"
+  integrity sha512-JjVQ1p/F/TrKz1msvbY7eFQ8V6+COkgG2amyQDPVcoqTq+wnkGgNc1DogP1SGAPA+/cHjpHipMIFUjQig5uKgg==
+
 parse-asn1@^5.0.0:
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/parse-asn1/-/parse-asn1-5.1.5.tgz#003271343da58dc94cace494faef3d2147ecea0e"
