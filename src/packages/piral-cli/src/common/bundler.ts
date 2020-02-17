@@ -1,11 +1,11 @@
 import * as Bundler from 'parcel-bundler';
 import extendBundlerWithPlugins = require('parcel-plugin-codegen');
+import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { computeHash } from './hash';
 import { logFail, logWarn } from './log';
 import { ParcelConfig, extendConfig } from './settings';
-import { modifyBundlerForPilet, extendBundlerForPilet } from './pilet';
 import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
 import {
   checkExists,
@@ -60,9 +60,9 @@ export function setupBundler(setup: BundlerSetup) {
 
   if (setup.type === 'pilet') {
     const { entryModule, targetDir, externals, config } = setup;
-    modifyBundlerForPilet(proto, externals, targetDir);
     bundler = new Bundler(entryModule, extendConfig(config));
-    extendBundlerForPilet(bundler);
+    const resolver = combineExternals(targetDir, [], externals);
+    extendBundlerWithExternals(bundler, resolver);
   } else {
     const { entryFiles, config } = setup;
     modifyBundlerForPiral(proto, dirname(entryFiles));
