@@ -146,7 +146,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     optimizeModules = buildPiralDefaults.optimizeModules,
   } = options;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, version, root, dependencies, ignored, files: scaffoldFiles, ...pilets } = await retrievePiletsInfo(entryFiles);
+  const { name, version, root, dependencies, ignored, files: scaffoldFiles, ...pilets } = await retrievePiletsInfo(
+    entryFiles,
+  );
   const { externals } = pilets;
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
@@ -161,7 +163,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cache, ignored);
+    await patchModules(root, ignored);
   }
 
   // everything except release -> build develop

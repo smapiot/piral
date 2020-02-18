@@ -92,7 +92,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cache, ignored);
+    await patchModules(root, ignored);
   }
 
   setStandardEnvs({

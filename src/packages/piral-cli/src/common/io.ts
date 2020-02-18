@@ -236,8 +236,9 @@ export async function readJson<T = any>(targetDir: string, fileName: string) {
   return JSON.parse(content || '{}') as T;
 }
 
-export function writeJson<T = any>(targetDir: string, fileName: string, data: T) {
-  return writeText(targetDir, fileName, JSON.stringify(data));
+export function writeJson<T = any>(targetDir: string, fileName: string, data: T, beautify = false) {
+  const content = beautify ? JSON.stringify(data, undefined, 2) : JSON.stringify(data);
+  return writeText(targetDir, fileName, content);
 }
 
 export function readBinary(targetDir: string, fileName: string) {

@@ -132,10 +132,10 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
               const packageFileData = await readJson(rootName, 'package.json');
 
               if (packageFileData.name && packageFileData._piralOptimized === undefined) {
+                packageFileData._piralOptimized = packageFileData.browserslist || true;
                 delete packageFileData.browserslist;
-                packageFileData._piralOptimized = true;
 
-                await writeJson(rootName, 'package.json', packageFileData);
+                await writeJson(rootName, 'package.json', packageFileData, true);
                 await writeText(rootName, '.browserslistrc', 'node 10.11');
               }
 
@@ -149,23 +149,28 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
 }
 
 async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
+  const file = '.patched';
   const modulesDir = resolve(rootDir, 'node_modules');
+  const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
   const exists = await checkExists(modulesDir);
 
   if (exists) {
-    await patch(modulesDir, ignoredPackages);
+    const currHash = computeHash(lockContent);
+    const prevHash = await readText(modulesDir, file);
+
+    if (prevHash !== currHash) {
+      await patch(modulesDir, ignoredPackages);
+      await createFileIfNotExists(modulesDir, file, currHash, ForceOverwrite.yes);
+    }
   }
 }
 
-export async function patchModules(rootDir: string, cacheDir: string, ignoredPackages = defaultIgnoredPackages) {
-  const file = '.patched';
-  const prevHash = await readText(cacheDir, file);
-  const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
-  const currHash = computeHash(lockContent);
+export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
+  const otherRoot = resolve(__dirname, '..', '..', '..', '..');
+  await patchFolder(rootDir, ignoredPackages);
 
-  if (prevHash !== currHash) {
-    await patchFolder(rootDir, ignoredPackages);
-    await createFileIfNotExists(cacheDir, file, currHash, ForceOverwrite.yes);
+  if (otherRoot !== rootDir) {
+    await patchFolder(otherRoot, ignoredPackages);
   }
 }
 
