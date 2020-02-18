@@ -120,3 +120,16 @@ Potentially, you are just looking at the "cross-framework demo" that we set up. 
 Note that components provided by pilets (independent of their use, e.g., as pages, tiles, modal dialogs, ...) can always be written in any framework supported by the app shell. Non-React components are not constraint to tiles and can also still participant in the extension mechanism, having a simple way of sharing (i.e., using) components between frameworks.
 
 ---------------------------------------
+
+## How performant is it?
+
+Well, if the question is: Is using Piral slower than just a monolith? Potentially, yes. However, the real answer is more complicated.
+
+1. If Piral is used in the "classic" setup, where the feed service is called from the client-side then we'll have at least two-round trips (feed service, pilets) before anything meaningful will happen.
+2. If Piral is used with shallow server-side rendering then we still have at least a single round trip (pilets).
+
+In the latter case we are pretty much as fast as a monolith that used bundle splitting to obtain additional information.
+
+We'll try to come up with a benchmark soon.
+
+---------------------------------------

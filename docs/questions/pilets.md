@@ -108,3 +108,13 @@ Now the prefix `wh-` will be added to all tailwind classes.
 A stronger requirement would be a common scope for all CSS. One option here is to apply a proper [PostCSS configuration](https://postcss.org).
 
 ---------------------------------------
+
+## Do I need to protect my pilets?
+
+The short answer is: no.
+
+Pilets should *never* contain any sensitive information.
+
+Even though you can feature flag pilets you should never assume that only certain people can read (or run) them. For this reason alone we do not recommend placing additional security measures to limit access to pilets. This will just slow down the time to first meaningful render without much additional security.
+
+---------------------------------------
