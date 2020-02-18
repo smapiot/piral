@@ -6,6 +6,7 @@ import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { runScript } from './scripts';
 import { logWarn, logInfo } from './log';
+import { PackageType } from './types';
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
@@ -58,8 +59,6 @@ export function makeGitUrl(fullName: string) {
   const gitted = fullName.startsWith(gitPrefix);
   return gitted ? fullName : `${gitPrefix}${fullName}`;
 }
-
-export type PackageType = 'registry' | 'file' | 'git';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';

@@ -1,6 +1,7 @@
 import * as tar from 'tar';
 import { createGunzip } from 'zlib';
 import { EventEmitter } from 'events';
+import { PackageFiles } from './types';
 
 const TarParser = tar.Parse as any;
 
@@ -8,10 +9,6 @@ interface ReadEntry extends EventEmitter {
   path: string;
   mode: number;
   ignore: boolean;
-}
-
-export interface PackageFiles {
-  [file: string]: Buffer;
 }
 
 export function untar(stream: NodeJS.ReadableStream): Promise<PackageFiles> {

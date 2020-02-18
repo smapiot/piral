@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { ContextLogger } from './types';
 
 function normEntry(prefix: string, message: string, maxLength = 30) {
   const input = `${prefix}: ${message}`;
@@ -33,15 +34,6 @@ export function logWarn(message: string, ...args: Array<string | number | boolea
 export function logFail(message: string, ...args: Array<string | number | boolean>) {
   console.error(chalk.red(message), ...args.map(arg => chalk.bold(arg.toString())));
 }
-
-export interface ContextLogger {
-  success(): boolean;
-  throwIfError(): void;
-  summary(): void;
-  notify(kind: 'error' | 'warning', message: string): void;
-}
-
-export type NotifyContextLogger = ContextLogger['notify'];
 
 export function createContextLogger(): ContextLogger {
   const errors: Array<string> = [];

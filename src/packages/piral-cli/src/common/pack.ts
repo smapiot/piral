@@ -1,6 +1,7 @@
 import { resolve, join } from 'path';
-import { readJson, ForceOverwrite, move } from './io';
+import { readJson, move } from './io';
 import { createPackage } from './npm';
+import { ForceOverwrite } from './types';
 
 export async function createPiletPackage(baseDir: string, source: string, target: string) {
   const root = resolve(baseDir, source);

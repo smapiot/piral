@@ -1,8 +1,8 @@
 import { join, dirname, relative } from 'path';
-import { Framework } from './framework';
-import { PiletLanguage, getLanguageExtension } from './language';
-import { fillTemplate, createFileFromTemplateIfNotExists, TemplateType } from './template';
-import { createDirectory, createFileIfNotExists, ForceOverwrite } from './io';
+import { getLanguageExtension } from './language';
+import { fillTemplate, createFileFromTemplateIfNotExists } from './template';
+import { createDirectory, createFileIfNotExists } from './io';
+import { Framework, ForceOverwrite, TemplateType, PiletLanguage } from './types';
 
 export async function scaffoldPiralSourceFiles(
   type: TemplateType,

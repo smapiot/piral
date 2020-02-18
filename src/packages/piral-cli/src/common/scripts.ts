@@ -21,20 +21,11 @@ export function runScript(
       env,
     });
 
-    cp.stdout.pipe(
-      output,
-      opt,
-    );
+    cp.stdout.pipe(output, opt);
 
-    input.pipe(
-      cp.stdin,
-      opt,
-    );
+    input.pipe(cp.stdin, opt);
 
-    cp.stderr.pipe(
-      process.stderr,
-      opt,
-    );
+    cp.stderr.pipe(process.stderr, opt);
 
     cp.on('error', reject);
     cp.on('close', (code, signal) => (code === 0 ? resolve() : reject(new Error(signal))));

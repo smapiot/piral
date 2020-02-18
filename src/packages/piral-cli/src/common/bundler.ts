@@ -5,19 +5,11 @@ import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { computeHash } from './hash';
 import { logFail, logWarn } from './log';
-import { ParcelConfig, extendConfig } from './settings';
+import { extendConfig } from './settings';
 import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
-import {
-  checkExists,
-  readJson,
-  writeText,
-  writeJson,
-  createFileIfNotExists,
-  checkIsDirectory,
-  getFileNames,
-  readText,
-  ForceOverwrite,
-} from './io';
+import { checkExists, checkIsDirectory, readJson, readText } from './io';
+import { createFileIfNotExists, writeText, writeJson, getFileNames } from './io';
+import { BundlerSetup, ForceOverwrite } from './types';
 
 export async function openBrowser(shouldOpen: boolean, port: number) {
   if (shouldOpen) {
@@ -29,22 +21,6 @@ export async function openBrowser(shouldOpen: boolean, port: number) {
     }
   }
 }
-
-export interface PiralBundlerSetup {
-  type: 'piral';
-  entryFiles: string;
-  config: ParcelConfig;
-}
-
-export interface PiletBundlerSetup {
-  type: 'pilet';
-  targetDir: string;
-  externals: Array<string>;
-  entryModule: string;
-  config: ParcelConfig;
-}
-
-export type BundlerSetup = PiralBundlerSetup | PiletBundlerSetup;
 
 let original: any;
 
@@ -151,10 +127,10 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
 async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
   const file = '.patched';
   const modulesDir = resolve(rootDir, 'node_modules');
-  const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
   const exists = await checkExists(modulesDir);
 
   if (exists) {
+    const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
     const currHash = computeHash(lockContent);
     const prevHash = await readText(modulesDir, file);
 
@@ -171,12 +147,6 @@ export async function patchModules(rootDir: string, ignoredPackages = defaultIgn
 
   if (otherRoot !== rootDir) {
     await patchFolder(otherRoot, ignoredPackages);
-  }
-}
-
-declare module 'parcel-bundler' {
-  interface ParcelBundle {
-    getHash(): string;
   }
 }
 

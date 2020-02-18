@@ -1,7 +1,4 @@
-export enum PiletLanguage {
-  ts,
-  js,
-}
+import { PiletLanguage } from './types';
 
 export const reactTypings = {
   '@types/react': 'latest',

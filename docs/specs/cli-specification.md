@@ -122,6 +122,10 @@ The specification does not cover things like validation, declaration generation,
 
 ## Examples
 
+The best example for following this specification is the `piral-cli` package itself.
+
+To come up with a more realistic example we will in the following implement a pilet build process using Webpack.
+
 (tbd)
 
 ## Acknowledgements

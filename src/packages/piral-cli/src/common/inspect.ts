@@ -1,22 +1,8 @@
 import { dirname, basename } from 'path';
-import { untar, PackageFiles } from './untar';
+import { untar } from './untar';
+import { PackageData, PackageFiles } from './types';
 
 const packageRoot = 'package/';
-
-export interface PackageData {
-  name: string;
-  version: string;
-  description: string;
-  main: string;
-  author:
-    | string
-    | {
-        name?: string;
-        url?: string;
-        email?: string;
-      };
-  custom?: any;
-}
 
 function getPackageJson(files: PackageFiles): PackageData {
   const fileName = `${packageRoot}package.json`;

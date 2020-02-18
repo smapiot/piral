@@ -3,7 +3,6 @@ import {
   readJson,
   copy,
   updateExistingJson,
-  ForceOverwrite,
   findFile,
   checkExists,
   getHash,
@@ -11,18 +10,12 @@ import {
   matchFiles,
   getFileNames,
 } from './io';
-import { Framework } from './framework';
-import { logFail, logWarn, NotifyContextLogger } from './log';
+import { logFail, logWarn } from './log';
 import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
-import { getDevDependencies, PiletLanguage } from './language';
+import { getDevDependencies } from './language';
+import { Framework, PiletLanguage, ForceOverwrite, NotifyContextLogger, FileInfo } from './types';
 import { PiletsInfo, TemplateFileLocation } from '../types';
-
-export interface FileInfo {
-  path: string;
-  hash: string;
-  changed: boolean;
-}
 
 function getPiralPath(root: string, name: string) {
   return resolve(root, 'node_modules', name);
