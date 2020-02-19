@@ -2,6 +2,7 @@ import * as Bundler from 'parcel-bundler';
 import extendBundlerWithPlugins = require('parcel-plugin-codegen');
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
+import { patchModule } from './bundler-patches';
 import { computeHash } from './hash';
 import { logFail } from './log';
 import { ParcelConfig, extendConfig } from './settings';
@@ -137,6 +138,7 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
 
                 await writeJson(rootName, 'package.json', packageFileData);
                 await writeText(rootName, '.browserslistrc', 'node 10.11');
+                await patchModule(folderName, rootName);
               }
 
               await patchFolder(rootName, ignoredPackages);
