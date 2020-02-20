@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.10.6 (tbd)
+## 0.10.6 (February 20, 2020)
 
 * Fixed export of default import in declaration (#158)
 * Fixed missing type references in declaration (#159)
