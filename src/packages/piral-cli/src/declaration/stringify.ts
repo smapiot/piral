@@ -12,6 +12,8 @@ import {
   TypeModelTypeParameter,
   WithTypeComments,
   DeclVisitorContext,
+  TypeModelConditional,
+  TypeModelMapped,
 } from './types';
 
 function stringifyComment(type: WithTypeComments) {
@@ -47,7 +49,7 @@ function stringifyProp(type: TypeModelProp) {
 function stringifyParameter(param: TypeModelFunctionParameter) {
   const isOpt = param.optional ? '?' : '';
   const spread = param.spread ? '...' : '';
-  return `${spread}${param.param}${isOpt}: ${stringifyNode(param.type)}`;
+  return `${spread}${param.param}${isOpt}: ${stringifyNode(param.value)}`;
 }
 
 function stringifyParameters(params: Array<TypeModelFunctionParameter>) {
@@ -62,8 +64,15 @@ function stringifySignature(type: TypeModelFunction) {
 }
 
 function stringifyIndex(type: TypeModelIndex) {
+  const isOpt = type.optional ? '?' : '';
   const index = `${type.keyName}: ${stringifyNode(type.keyType)}`;
-  return `[${index}]: ${stringifyNode(type.valueType)}`;
+  return `[${index}]${isOpt}: ${stringifyNode(type.valueType)}`;
+}
+
+function stringifyMapped(type: TypeModelMapped) {
+  const isOpt = type.optional ? '?' : '';
+  const index = `${type.name} in ${stringifyNode(type.constraint)}`;
+  return `[${index}]${isOpt}: ${stringifyNode(type.value)}`;
 }
 
 function stringifyIndexedAccess(type: TypeModelIndexedAccess) {
@@ -95,6 +104,11 @@ function stringifyInterface(type: TypeModelObject) {
     ...type.calls.map(c => stringifySignature(c)),
     ...type.indices.map(i => stringifyIndex(i)),
   ];
+
+  if (type.mapped) {
+    lines.push(stringifyMapped(type.mapped));
+  }
+
   return toBlock(lines, ';');
 }
 
@@ -113,12 +127,19 @@ function stringifyTypeArgs(type: WithTypeArgs) {
 }
 
 function stringifyTypeParameter(type: TypeModelTypeParameter) {
-  const name = type.typeName;
+  const name = stringifyNode(type.parameter);
   const constraint = stringifyNode(type.constraint);
   const defaults = stringifyNode(type.default);
   const constraintClause = constraint ? ` extends ${constraint}` : '';
   const defaultsClause = defaults ? ` = ${defaults}` : '';
   return `${name}${constraintClause}${defaultsClause}`;
+}
+
+function stringifyTernary(type: TypeModelConditional) {
+  const cond = stringifyNode(type.condition);
+  const primary = stringifyNode(type.primary);
+  const alt = stringifyNode(type.alternate);
+  return `${cond} ? ${primary} : ${alt}`;
 }
 
 function stringifyNode(type: TypeModel) {
@@ -135,8 +156,12 @@ function stringifyNode(type: TypeModel) {
       return type.types.map(stringifyNode).join(' & ');
     case 'member':
       return `${stringifyComment(type)}${type.name} = ${stringifyNode(type.value)}`;
+    case 'conditional':
+      return stringifyTernary(type);
     case 'keyof':
       return `keyof ${stringifyNode(type.value)}`;
+    case 'infer':
+      return `infer ${stringifyNode(type.parameter)}`;
     case 'any':
     case 'null':
     case 'void':
@@ -160,6 +185,8 @@ function stringifyNode(type: TypeModel) {
       return JSON.stringify(type.value);
     case 'indexedAccess':
       return stringifyIndexedAccess(type);
+    case 'mapped':
+      return stringifyMapped(type);
   }
 
   return '';
@@ -177,8 +204,10 @@ export function stringifyExport(name: string, type: TypeModel) {
     case 'enumLiteral':
       const e = type.const ? 'const enum' : 'enum';
       return `${stringifyComment(type)}export ${e} ${name} ${stringifyEnum(type.values)}`;
+    case 'default':
+      return `${stringifyComment(type)}export default ${stringifyNode(type.value)};`;
     case 'const':
-      return `${stringifyComment(type)}export const ${name}: ${stringifyNode(type.type)};`;
+      return `${stringifyComment(type)}export const ${name}: ${stringifyNode(type.value)};`;
     case 'function':
       return `${stringifyComment(type)}export function ${name}${stringifySignature(type)};`;
     case 'default':

@@ -22,6 +22,9 @@ import {
   TypeOperatorNode,
   isTypeReferenceNode,
   TypeReferenceNode,
+  ConditionalType,
+  isInferTypeNode,
+  InferTypeNode,
 } from 'typescript';
 
 const globalIndicator = '__global';
@@ -62,6 +65,10 @@ export function getGlobalName(symbol: Symbol) {
   return name;
 }
 
+export function isConditionalType(type: Type): type is ConditionalType {
+  return (type.flags & TypeFlags.Conditional) !== 0;
+}
+
 export function isDefaultExport(node: Node): node is ExportAssignment {
   return node.symbol?.name === 'default';
 }
@@ -80,6 +87,10 @@ export function isKeyOfType(type: Node): type is TypeOperatorNode {
 
 export function isIdentifierType(type: Node): type is TypeReferenceNode {
   return type && isTypeReferenceNode(type) && isIdentifier(type.typeName);
+}
+
+export function isInferType(type: Node): type is InferTypeNode {
+  return type && isInferTypeNode(type);
 }
 
 export function findDeclaredTypings(root: string) {

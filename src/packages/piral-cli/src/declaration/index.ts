@@ -72,6 +72,23 @@ export function generateDeclaration(
     }
   };
 
+  const swapName = (newName: string, oldName: string) => {
+    if (oldName !== newName) {
+      const isdef = oldName === 'default';
+
+      if (isdef) {
+        oldName = '_default';
+      }
+
+      context.refs[newName] = context.refs[oldName];
+      delete context.refs[oldName];
+
+      if (isdef) {
+        delete context.refs.default;
+      }
+    }
+  };
+
   const includeTypings = (node: ts.Node) => {
     if (ts.isModuleDeclaration(node)) {
       const moduleName = node.name.text;
@@ -94,7 +111,12 @@ export function generateDeclaration(
         // selected exports here
         elements.forEach(el => {
           if (el.symbol) {
-            if (el.propertyName) {
+            const original = context.checker.getAliasedSymbol(el.symbol);
+
+            if (original) {
+              includeNode(original.declarations?.[0]);
+              swapName(el.symbol.name, original.name);
+            } else if (el.propertyName) {
               // renamed selected export
               const symbol = context.checker.getExportSpecifierLocalTargetSymbol(el);
 
@@ -103,19 +125,8 @@ export function generateDeclaration(
                 const oldName = el.propertyName.text;
                 const decl = symbol?.declarations?.[0];
                 includeNode(decl);
-
-                if (oldName !== 'default') {
-                  context.refs[newName] = context.refs[oldName];
-                  delete context.refs[oldName];
-                } else {
-                  context.refs[newName] = context.refs._default;
-                  delete context.refs._default;
-                  delete context.refs.default;
-                }
+                swapName(newName, oldName);
               }
-            } else {
-              const original = context.checker.getAliasedSymbol(el.symbol);
-              includeNode(original?.declarations?.[0]);
             }
           }
         });

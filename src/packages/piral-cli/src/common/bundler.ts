@@ -3,6 +3,7 @@ import extendBundlerWithPlugins = require('parcel-plugin-codegen');
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
+import { patchModule } from './bundler-patches';
 import { computeHash } from './hash';
 import { logFail, logWarn } from './log';
 import { extendConfig } from './settings';
@@ -113,6 +114,7 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
 
                 await writeJson(rootName, 'package.json', packageFileData, true);
                 await writeText(rootName, '.browserslistrc', 'node 10.11');
+                await patchModule(folderName, rootName);
               }
 
               await patchFolder(rootName, ignoredPackages);
