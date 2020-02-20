@@ -99,7 +99,9 @@ export type TypeModel =
   | TypeModelFunction
   | TypeModelRef
   | TypeModelKeyOf
-  | TypeModelAlias;
+  | TypeModelAlias
+  | TypeModelMapped
+  | TypeModelInfer;
 
 export interface TypeModelDefault extends WithTypeComments {
   readonly kind: 'default';
@@ -121,7 +123,7 @@ export interface TypeModelDefault extends WithTypeComments {
 
 export interface TypeModelVariable extends WithTypeComments {
   readonly kind: 'const';
-  readonly type: TypeModel;
+  readonly value: TypeModel;
 }
 
 export interface TypeModelRef extends WithTypeArgs {
@@ -165,7 +167,7 @@ export interface TypeModelFunction extends WithTypeArgs {
 export interface TypeModelFunctionParameter {
   readonly kind: 'parameter';
   readonly param: string;
-  readonly type: TypeModel;
+  readonly value: TypeModel;
   readonly optional: boolean;
   readonly spread: boolean;
 }
@@ -236,9 +238,14 @@ export interface TypeModelNever {
   readonly kind: 'never';
 }
 
+export interface TypeModelInfer {
+  readonly kind: 'infer';
+  readonly parameter: TypeModel;
+}
+
 export interface TypeModelTypeParameter {
   readonly kind: 'typeParameter';
-  readonly type: TypeModel;
+  readonly parameter: TypeModel;
   readonly constraint?: TypeModel;
   readonly default?: TypeModel;
 }

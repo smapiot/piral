@@ -35,6 +35,7 @@ import {
   isKeyOfType,
   isIdentifierType,
   isConditionalType,
+  isInferType,
 } from './helpers';
 import {
   TypeModel,
@@ -101,6 +102,12 @@ function getParameterType(context: DeclVisitorContext, type: TypeNode): TypeMode
   if (isIdentifierType(type)) {
     const t = context.checker.getTypeAtLocation(type);
     return getTypeModel(context, t, (type.typeName as any).text);
+  } else if (isInferType(type)) {
+    const t = context.checker.getDeclaredTypeOfSymbol(type.typeParameter.symbol);
+    return {
+      kind: 'infer',
+      parameter: includeType(context, t),
+    };
   } else if (isKeyOfType(type)) {
     return getKeyOfType(context, context.checker.getTypeFromTypeNode(type.type));
   } else {
@@ -117,7 +124,7 @@ function getFunctionType(context: DeclVisitorContext, sign: Signature): TypeMode
       param: param.name,
       spread: param.valueDeclaration.dotDotDotToken !== undefined,
       optional: param.valueDeclaration.questionToken !== undefined,
-      type: getParameterType(context, param.valueDeclaration.type as any),
+      value: getParameterType(context, param.valueDeclaration.type as any),
     })),
     returnType: includeType(context, sign.getReturnType()),
   };
@@ -259,7 +266,7 @@ export function includeDefaultExport(context: DeclVisitorContext, node: ExportAs
   } else {
     context.refs._default = {
       kind: 'const',
-      type: includeAnonymous(context, type),
+      value: includeAnonymous(context, type),
     };
     context.refs.default = {
       kind: 'default',
@@ -288,7 +295,7 @@ export function includeExportedVariable(context: DeclVisitorContext, variable: V
   context.refs[name] = {
     kind: 'const',
     comment: getComment(context.checker, variable.symbol),
-    type: includeType(context, type),
+    value: includeType(context, type),
   };
 }
 
@@ -517,7 +524,7 @@ function includeBasic(context: DeclVisitorContext, type: Type): TypeModel {
       kind: 'conditional',
       condition: {
         kind: 'typeParameter',
-        type: includeType(context, type.root.checkType),
+        parameter: includeType(context, type.root.checkType),
         constraint: includeType(context, type.root.extendsType),
       },
       primary: includeType(context, type.root.trueType),
@@ -604,7 +611,7 @@ function includeTypeParameter(context: DeclVisitorContext, type: Type): TypeMode
   if (symbol) {
     return {
       kind: 'typeParameter',
-      type: {
+      parameter: {
         kind: 'ref',
         refName: symbol.name,
         types: [],
