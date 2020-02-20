@@ -17,6 +17,7 @@ declare module 'typescript' {
     intrinsicName?: string;
     parent?: ts.Type;
     typeParameters?: Array<ts.TypeParameter>;
+    typeParameter?: ts.TypeParameter;
   }
 
   interface Node {
@@ -62,6 +63,7 @@ export interface WithTypeComments {
 export type TypeModel =
   | TypeModelString
   | TypeMemberModel
+  | TypeModelDefault
   | TypeModelProp
   | TypeModelBoolean
   | TypeModelNumber
@@ -110,6 +112,11 @@ export interface TypeModelProp extends WithTypeComments {
   readonly kind: 'prop';
   readonly valueType: TypeModel;
   readonly id: number;
+}
+
+export interface TypeModelDefault extends WithTypeComments {
+  readonly kind: 'default';
+  readonly value: TypeModel;
 }
 
 export interface TypeModelVariable extends WithTypeComments {
@@ -231,7 +238,7 @@ export interface TypeModelNever {
 
 export interface TypeModelTypeParameter {
   readonly kind: 'typeParameter';
-  readonly typeName: string;
+  readonly type: TypeModel;
   readonly constraint?: TypeModel;
   readonly default?: TypeModel;
 }
@@ -244,11 +251,14 @@ export interface TypeModelIntersection extends WithTypeArgs {
   readonly kind: 'intersection';
 }
 
+export type TypeModelIndexKey = TypeModelUnion | TypeModelString | TypeModelNumber;
+
 export interface TypeModelIndex {
   readonly kind: 'index';
   readonly keyName: string;
-  readonly keyType: TypeModelUnion | TypeModelString | TypeModelNumber;
+  readonly keyType: TypeModelIndexKey;
   readonly valueType: TypeModel;
+  readonly optional: boolean;
 }
 
 export interface TypeModelIndexedAccess {
@@ -259,6 +269,9 @@ export interface TypeModelIndexedAccess {
 
 export interface TypeModelConditional {
   readonly kind: 'conditional';
+  readonly condition: TypeModel;
+  readonly primary: TypeModel;
+  readonly alternate: TypeModel;
 }
 
 export interface TypeModelSubstitution {
@@ -274,12 +287,21 @@ export interface TypeModelUnidentified {
   readonly kind: 'unidentified';
 }
 
+export interface TypeModelMapped {
+  readonly kind: 'mapped';
+  readonly name: string;
+  readonly constraint: TypeModel;
+  readonly optional: boolean;
+  readonly value: TypeModel;
+}
+
 export interface TypeModelObject extends WithTypeArgs, WithTypeComments {
   readonly kind: 'object';
   readonly props: Array<TypeModelProp>;
   readonly calls: Array<TypeModelFunction>;
   readonly indices: Array<TypeModelIndex>;
   readonly extends: Array<TypeModelRef>;
+  readonly mapped?: TypeModelMapped;
 }
 
 export interface TypeModelTuple extends WithTypeArgs {

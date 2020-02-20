@@ -22,6 +22,7 @@ import {
   TypeOperatorNode,
   isTypeReferenceNode,
   TypeReferenceNode,
+  ConditionalType,
 } from 'typescript';
 
 const globalIndicator = '__global';
@@ -60,6 +61,10 @@ export function getGlobalName(symbol: Symbol) {
   }
 
   return name;
+}
+
+export function isConditionalType(type: Type): type is ConditionalType {
+  return (type.flags & TypeFlags.Conditional) !== 0;
 }
 
 export function isDefaultExport(node: Node): node is ExportAssignment {

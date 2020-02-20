@@ -1,9 +1,17 @@
 # Piral Changelog
 
+## 0.10.6 (tbd)
+
+* Fixed export of default import in declaration (#158)
+* Fixed missing type references in declaration (#159)
+* Provide fix for invalid buffer import (#160)
+* Added support for conditionals in the generated declaration (#161)
+* Fixed build in mono repo to properly support IE11 (#162)
+
 ## 0.10.5 (February 15, 2020)
 
 * Fixed `keyof` usage in interfaces and as parameters (#152)
-* Fixed that pilets are not watched in monorepos (#153)
+* Fixed that pilets are not watched in mono repos (#153)
 * Added support for default exports in custom declarations (#154)
 * Fixed missing inclusion of JSX exported modules (#155)
 * Added `core-js` to standard opt-out polyfills (#157)
