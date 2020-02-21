@@ -1,6 +1,6 @@
 {
   "name": "piral-riot",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "Plugin for integrating Riot.js components in Piral.",
   "keywords": [
     "piral",
@@ -36,7 +36,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.10.6",
+    "piral-core": "^0.10.7",
     "riot": "4.7.2"
   },
   "peerDependencies": {
