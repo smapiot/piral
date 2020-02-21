@@ -15,7 +15,7 @@
 
 ## What's new in Piral
 
-- [What's new in Piral #5](https://dev.to/florianrappl/what-s-new-in-piral-5)
+- [What's new in Piral #5](https://dev.to/florianrappl/what-s-new-in-piral-5-b8k)
 - [What's new in Piral #4](https://dev.to/florianrappl/what-s-new-in-piral-4-4jlm)
 - [What's new in Piral #3](https://dev.to/florianrappl/what-s-new-in-piral-3-4onc)
 - [What's new in Piral #2](https://dev.to/florianrappl/what-s-new-in-piral-2-2baf)
