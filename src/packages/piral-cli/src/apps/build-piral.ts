@@ -159,7 +159,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cache, ignored);
+    await patchModules(root, ignored);
   }
 
   // everything except release -> build develop

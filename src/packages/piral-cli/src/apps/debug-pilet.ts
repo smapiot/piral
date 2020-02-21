@@ -165,7 +165,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cache, ignored);
+    await patchModules(root, ignored);
   }
 
   const appDir = await getOrMakeAppDir(root, emulator, appFile, externals, appPackage.name, logLevel);

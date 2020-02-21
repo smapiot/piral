@@ -1,12 +1,17 @@
 # Piral Changelog
 
+## 0.10.7 (tbd)
+
+* Included `core-js/stable` in Piral polyfills (#162)
+* Fixed build in mono repo to properly support IE11 (#162)
+* Fixed issue with modification of `has-symbols` package (#160)
+
 ## 0.10.6 (February 20, 2020)
 
 * Fixed export of default import in declaration (#158)
 * Fixed missing type references in declaration (#159)
 * Provide fix for invalid buffer import (#160)
 * Added support for conditionals in the generated declaration (#161)
-* Fixed build in mono repo to properly support IE11 (#162)
 
 ## 0.10.5 (February 15, 2020)
 

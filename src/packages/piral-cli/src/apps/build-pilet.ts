@@ -75,7 +75,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   if (optimizeModules) {
     logInfo('Preparing modules ...');
-    await patchModules(root, cache, ignored);
+    await patchModules(root, ignored);
   }
 
   setStandardEnvs({
