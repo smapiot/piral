@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.10.7 (tbd)
+## 0.10.7 (February 21, 2020)
 
 * Included `core-js/stable` in Piral polyfills (#162)
 * Fixed build in mono repo to properly support IE11 (#162)
