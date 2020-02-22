@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'piral/polyfills';
 import { renderInstance, getUserLocale, setupLocalizer } from 'piral';
 import { createAuthApi } from 'piral-auth';
 import { createSearchApi } from 'piral-search';
