@@ -93,7 +93,7 @@ export function setupPwaClient(config: PwaConfig = {}) {
     if (sw && !sw.onstatechange) {
       let ignoreWaiting = false;
 
-      function onUpdateStateChange() {
+      const onUpdateStateChange = () => {
         switch (sw.state) {
           case 'installed':
             ignoreWaiting &&
@@ -110,9 +110,9 @@ export function setupPwaClient(config: PwaConfig = {}) {
             sw.onstatechange = undefined;
             break;
         }
-      }
+      };
 
-      function onInstallStateChange() {
+      const onInstallStateChange = () => {
         switch (sw.state) {
           case 'activated':
           case 'redundant':
@@ -122,7 +122,7 @@ export function setupPwaClient(config: PwaConfig = {}) {
           case 'installed':
             break;
         }
-      }
+      };
 
       if (reg.active) {
         onUpdateStateChange();

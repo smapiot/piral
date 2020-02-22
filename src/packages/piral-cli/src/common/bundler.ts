@@ -144,7 +144,7 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
 }
 
 export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
-  const otherRoot = resolve(__dirname, '..', '..', '..', '..');
+  const otherRoot = resolve(require.resolve('parcel-bundler'), '..', '..', '..');
   await patchFolder(rootDir, ignoredPackages);
 
   if (otherRoot !== rootDir) {
