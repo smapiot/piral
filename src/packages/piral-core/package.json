@@ -19,7 +19,8 @@
   "sideEffects": false,
   "files": [
     "lib",
-    "src"
+    "src",
+    "dependencies.codegen"
   ],
   "repository": {
     "type": "git",

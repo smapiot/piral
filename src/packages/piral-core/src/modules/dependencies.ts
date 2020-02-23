@@ -3,7 +3,7 @@ import { PiletMetadata, AvailableDependencies, isfunc } from 'piral-base';
 const sharedDependencies: AvailableDependencies = {};
 
 if (process.env.SHARED_DEPENDENCIES) {
-  const fillDependencies = require('piral-cli/lib/shared-dependencies');
+  const fillDependencies = require('../../dependencies.codegen');
 
   if (isfunc(fillDependencies)) {
     fillDependencies(sharedDependencies);

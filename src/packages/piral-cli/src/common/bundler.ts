@@ -7,7 +7,6 @@ import { patchModule } from './bundler-patches';
 import { computeHash } from './hash';
 import { logFail, logWarn } from './log';
 import { extendConfig } from './settings';
-import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
 import { checkExists, checkIsDirectory, readJson, readText } from './io';
 import { createFileIfNotExists, writeText, writeJson, getFileNames } from './io';
 import { BundlerSetup, ForceOverwrite } from './types';
@@ -42,9 +41,7 @@ export function setupBundler(setup: BundlerSetup) {
     extendBundlerWithExternals(bundler, resolver);
   } else {
     const { entryFiles, config } = setup;
-    modifyBundlerForPiral(proto, dirname(entryFiles));
     bundler = new Bundler(entryFiles, extendConfig(config));
-    extendBundlerForPiral(bundler);
   }
 
   extendBundlerWithPlugins(bundler);
