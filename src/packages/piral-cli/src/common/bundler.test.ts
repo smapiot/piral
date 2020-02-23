@@ -11,8 +11,6 @@ jest.mock('fs', () => ({
 }));
 
 jest.mock('parcel-bundler', () => ({}));
-jest.mock('./VirtualPackager', () => ({}));
-jest.mock('./VirtualAsset', () => ({}));
 
 let readContent = '';
 let writeContent: string = undefined;
