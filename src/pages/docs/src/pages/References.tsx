@@ -19,6 +19,12 @@ export default () => (
         title="Types"
       />
       <ImageCard
+        link="/reference/codes"
+        image={require('../assets/top-docs.png')}
+        description="Details of the Piral CLI message codes."
+        title="Message Codes"
+      />
+      <ImageCard
         link="/reference/specifications"
         image={require('../assets/top-specs.png')}
         description="Technical specifications of the service layer."

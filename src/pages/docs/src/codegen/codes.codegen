@@ -1,0 +1,47 @@
+const { getCodes, getName, generateFile, generated, generatedName } = require('./paths');
+const { render } = require('./markdown');
+const { docRef } = require('./utils');
+
+function getRoute(name) {
+  return (name && `/reference/codes/${name}`) || '';
+}
+
+module.exports = function() {
+  const codes = getCodes();
+
+  const imports = codes
+    .map(file => {
+      const { mdValue } = render(file, generated);
+      const name = getName(file);
+      this.addDependency(file, { includedInParent: true });
+      generateFile(
+        name,
+        `
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
+
+export default () => (
+  <section className="container">
+    <Link to="/reference/codes" className="nav-link">Codes</Link> /
+    <Markdown content={${mdValue}} link="${docRef(file)}" />
+  </section>
+);`,
+        'jsx',
+      );
+      return name;
+    })
+    .map(
+      name => `
+{
+  id: '${name}',
+  route: '${getRoute(name)}',
+  page: lazy(() => import('./${generatedName}/${name}')),
+}`,
+    );
+
+  return `
+    const { lazy } = require('react');
+    module.exports = [${imports.join(', ')}];
+  `;
+};
