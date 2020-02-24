@@ -1,14 +1,21 @@
-import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules, checkCliCompatibility } from '../common';
+import {
+  retrievePiralRoot,
+  retrievePiletsInfo,
+  ruleSummary,
+  runRules,
+  checkCliCompatibility,
+  LogLevels,
+} from '../common';
 import { getPiralRules } from '../rules';
 
 export interface ValidatPiralOptions {
   entry?: string;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
 }
 
-export const validatePiralDefaults = {
+export const validatePiralDefaults: ValidatPiralOptions = {
   entry: './',
-  logLevel: 3 as const,
+  logLevel: LogLevels.info,
 };
 
 export async function validatePiral(baseDir = process.cwd(), options: ValidatPiralOptions = {}) {

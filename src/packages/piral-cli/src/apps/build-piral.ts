@@ -25,6 +25,7 @@ import {
   ForceOverwrite,
   gatherJsBundles,
   createContextLogger,
+  LogLevels,
 } from '../common';
 
 interface Destination {
@@ -104,7 +105,7 @@ export interface BuildPiralOptions {
   publicUrl?: string;
   minify?: boolean;
   detailedReport?: boolean;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   fresh?: boolean;
   type?: PiralBuildType;
   sourceMaps?: boolean;
@@ -113,16 +114,16 @@ export interface BuildPiralOptions {
   optimizeModules?: boolean;
 }
 
-export const buildPiralDefaults = {
+export const buildPiralDefaults: BuildPiralOptions = {
   entry: './',
   target: './dist',
   publicUrl: '/',
   cacheDir: defaultCacheDir,
   detailedReport: false,
-  logLevel: 3 as const,
+  logLevel: LogLevels.info,
   fresh: false,
   minify: true,
-  type: 'all' as const,
+  type: 'all',
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,

@@ -10,6 +10,7 @@ import {
   setupBundler,
   defaultCacheDir,
   getPiletSchemaVersion,
+  LogLevels,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -19,7 +20,7 @@ export interface BuildPiletOptions {
   cacheDir?: string;
   minify?: boolean;
   detailedReport?: boolean;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   fresh?: boolean;
   sourceMaps?: boolean;
   contentHash?: boolean;
@@ -28,19 +29,19 @@ export interface BuildPiletOptions {
   schemaVersion?: 'v0' | 'v1';
 }
 
-export const buildPiletDefaults = {
+export const buildPiletDefaults: BuildPiletOptions = {
   entry: './src/index',
   target: './dist/index.js',
   cacheDir: defaultCacheDir,
   detailedReport: false,
   minify: true,
-  logLevel: 3 as const,
+  logLevel: LogLevels.info,
   fresh: false,
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
   optimizeModules: true,
-  schemaVersion: 'v1' as const,
+  schemaVersion: 'v1',
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {

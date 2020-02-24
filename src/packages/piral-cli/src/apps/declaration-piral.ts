@@ -9,18 +9,21 @@ import {
   coreExternals,
   ForceOverwrite,
   matchFiles,
+  LogLevels,
 } from '../common';
 
 export interface DeclarationPiralOptions {
   entry?: string;
   target?: string;
   forceOverwrite?: ForceOverwrite;
+  logLevel?: LogLevels;
 }
 
-export const declarationPiralDefaults = {
+export const declarationPiralDefaults: DeclarationPiralOptions = {
   entry: './',
   target: './dist',
   forceOverwrite: ForceOverwrite.yes,
+  logLevel: LogLevels.info,
 };
 
 async function getAllFiles(entryModules: Array<string>) {

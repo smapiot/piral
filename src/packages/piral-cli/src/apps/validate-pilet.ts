@@ -1,21 +1,26 @@
 import { join, dirname } from 'path';
-import { ruleSummary, runRules, retrievePiletData, getPiletsInfo } from '../common';
+import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, LogLevels } from '../common';
 import { getPiletRules } from '../rules';
 import { PiletRuleContext } from '../types';
 
 export interface ValidatPiletOptions {
   entry?: string;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   app?: string;
 }
 
-export const validatePiletDefaults = {
+export const validatePiletDefaults: ValidatPiletOptions = {
   entry: './src/index',
-  logLevel: 3 as const,
+  logLevel: LogLevels.info,
+  app: undefined,
 };
 
 export async function validatePilet(baseDir = process.cwd(), options: ValidatPiletOptions = {}) {
-  const { entry = validatePiletDefaults.entry, logLevel = validatePiletDefaults.logLevel, app } = options;
+  const {
+    entry = validatePiletDefaults.entry,
+    logLevel = validatePiletDefaults.logLevel,
+    app = validatePiletDefaults.app,
+  } = options;
   const rules = await getPiletRules();
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);

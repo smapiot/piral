@@ -16,10 +16,11 @@ import {
   removeDirectory,
   PiletSchemaVersion,
   getPiletSchemaVersion,
+  LogLevels,
 } from '../common';
 
 export interface DebugPiletOptions {
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   cacheDir?: string;
   entry?: string;
   app?: string;
@@ -33,8 +34,8 @@ export interface DebugPiletOptions {
   schemaVersion?: 'v0' | 'v1';
 }
 
-export const debugPiletDefaults = {
-  logLevel: 3 as const,
+export const debugPiletDefaults: DebugPiletOptions = {
+  logLevel: LogLevels.info,
   cacheDir: defaultCacheDir,
   entry: './src/index',
   fresh: false,
@@ -44,7 +45,7 @@ export const debugPiletDefaults = {
   hmr: true,
   autoInstall: true,
   optimizeModules: true,
-  schemaVersion: 'v1' as const,
+  schemaVersion: 'v1',
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -55,7 +56,7 @@ async function getOrMakeAppDir(
   appFile: string,
   externals: Array<string>,
   piral: string,
-  logLevel: 1 | 2 | 3,
+  logLevel: LogLevels,
 ) {
   if (!emulator) {
     logInfo(`Preparing supplied Piral instance ...`);
@@ -107,7 +108,7 @@ async function bundlePilet(
   externals: Array<string>,
   targetDir: string,
   entryModule: string,
-  logLevel: 1 | 2 | 3,
+  logLevel: LogLevels,
   version: PiletSchemaVersion,
 ) {
   setStandardEnvs({

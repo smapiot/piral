@@ -12,6 +12,7 @@ import {
   patchModules,
   setupBundler,
   removeDirectory,
+  LogLevels,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -19,7 +20,7 @@ export interface DebugPiralOptions {
   cacheDir?: string;
   port?: number;
   publicUrl?: string;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   fresh?: boolean;
   open?: boolean;
   scopeHoist?: boolean;
@@ -28,12 +29,12 @@ export interface DebugPiralOptions {
   optimizeModules?: boolean;
 }
 
-export const debugPiralDefaults = {
+export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
   cacheDir: '.cache',
   port: 1234,
   publicUrl: '/',
-  logLevel: 3 as const,
+  logLevel: LogLevels.info,
   fresh: false,
   open: false,
   scopeHoist: false,

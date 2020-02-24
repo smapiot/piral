@@ -14,6 +14,7 @@ import {
   combinePackageRef,
   TemplateType,
   Framework,
+  LogLevels,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -25,17 +26,19 @@ export interface NewPiralOptions {
   language?: PiletLanguage;
   install?: boolean;
   template?: TemplateType;
+  logLevel?: LogLevels;
 }
 
-export const newPiralDefaults = {
+export const newPiralDefaults: NewPiralOptions = {
   app: './src/index.html',
-  framework: 'piral' as const,
+  framework: 'piral',
   target: '.',
   version: 'latest',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
   install: true,
-  template: 'default' as const,
+  template: 'default',
+  logLevel: LogLevels.info,
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {

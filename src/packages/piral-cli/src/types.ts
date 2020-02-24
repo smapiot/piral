@@ -1,4 +1,5 @@
 import { Argv, Arguments } from 'yargs';
+import { LogLevels } from './common/types';
 
 export interface ToolCommandRunner<U> {
   (args: Arguments<U>): void | Promise<void>;
@@ -45,7 +46,7 @@ export interface CliPlugin {
 export interface RuleContext {
   error(message: string): void;
   warning(message: string): void;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   root: string;
   entry: string;
   dependencies: Record<string, string>;

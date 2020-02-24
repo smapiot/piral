@@ -1,19 +1,21 @@
 import { relative, join } from 'path';
 import { buildPilet } from './build-pilet';
-import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone } from '../common';
+import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, LogLevels } from '../common';
 
 export interface PublishPiletOptions {
   source?: string;
   url?: string;
   apiKey?: string;
+  logLevel?: LogLevels;
   fresh?: boolean;
 }
 
-export const publishPiletDefaults = {
+export const publishPiletDefaults: PublishPiletOptions = {
   source: '*.tgz',
   url: '',
   apiKey: '',
   fresh: false,
+  logLevel: LogLevels.info,
 };
 
 async function getFiles(baseDir: string, source: string, fresh: boolean) {

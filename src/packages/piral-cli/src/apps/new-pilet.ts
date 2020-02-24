@@ -22,6 +22,7 @@ import {
   checkAppShellPackage,
   createContextLogger,
   PackageType,
+  LogLevels,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -32,16 +33,18 @@ export interface NewPiletOptions {
   language?: PiletLanguage;
   install?: boolean;
   template?: TemplateType;
+  logLevel?: LogLevels;
 }
 
-export const newPiletDefaults = {
+export const newPiletDefaults: NewPiletOptions = {
   target: '.',
   registry: defaultRegistry,
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
   install: true,
-  template: 'default' as const,
+  template: 'default',
+  logLevel: LogLevels.info,
 };
 
 function isLocalPackage(name: string, type: PackageType, hadVersion: boolean) {

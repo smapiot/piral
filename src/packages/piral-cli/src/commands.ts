@@ -183,6 +183,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory for the generated .d.ts file.')
         .default('target', apps.declarationPiralDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.declarationPiralDefaults.logLevel)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the declaration.')
         .default('force-overwrite', keyOfForceOverwrite(apps.declarationPiralDefaults.forceOverwrite))
@@ -195,6 +198,7 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -219,6 +223,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('install')
         .describe('install', 'Already performs the installation of its NPM dependencies.')
         .default('install', apps.newPiralDefaults.install)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.newPiralDefaults.logLevel)
         .string('tag')
         .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
         .default('tag', apps.newPiralDefaults.version)
@@ -245,6 +252,7 @@ const allCommands: Array<ToolCommand<any>> = [
         language: valueOfPiletLanguage(args.language as string),
         install: args.install as boolean,
         template: args.template,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -425,6 +433,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory or file of packing.')
         .default('target', apps.packPiletDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.packPiletDefaults.logLevel)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -433,6 +444,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.packPilet(args.base as string, {
         source: args.source as string,
         target: args.target as string,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -454,6 +466,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('api-key')
         .describe('api-key', 'Sets the potential API key to send to the service.')
         .default('api-key', apps.publishPiletDefaults.apiKey)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.publishPiletDefaults.logLevel)
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build, then packages and finally publishes the pilet.')
         .default('fresh', apps.publishPiletDefaults.fresh)
@@ -467,6 +482,7 @@ const allCommands: Array<ToolCommand<any>> = [
         source: args.source as string,
         apiKey: args.apiKey as string,
         url: args.url as string,
+        logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
       });
     },
@@ -496,6 +512,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiletDefaults.forceOverwrite))
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.newPiletDefaults.logLevel)
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new pilet.')
         .default('language', keyOfPiletLanguage(apps.newPiletDefaults.language))
@@ -513,6 +532,7 @@ const allCommands: Array<ToolCommand<any>> = [
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
+        logLevel: args.logLevel as any,
         install: args.install as boolean,
         template: args.template,
       });
@@ -533,6 +553,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
         .default('target', apps.upgradePiletDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.upgradePiletDefaults.logLevel)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
@@ -544,6 +567,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.upgradePilet(args.base as string, {
         target: args.target as string,
         version: args.targetVersion as string,
+        logLevel: args.logLevel as any,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
       });
     },

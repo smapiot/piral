@@ -17,18 +17,21 @@ import {
   defaultCacheDir,
   removeDirectory,
   createContextLogger,
+  LogLevels,
 } from '../common';
 
 export interface UpgradePiletOptions {
   version?: string;
   target?: string;
   forceOverwrite?: ForceOverwrite;
+  logLevel?: LogLevels;
 }
 
-export const upgradePiletDefaults = {
+export const upgradePiletDefaults: UpgradePiletOptions = {
   version: undefined,
   target: '.',
   forceOverwrite: ForceOverwrite.no,
+  logLevel: LogLevels.info,
 };
 
 export async function upgradePilet(baseDir = process.cwd(), options: UpgradePiletOptions = {}) {

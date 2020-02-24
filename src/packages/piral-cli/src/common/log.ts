@@ -1,5 +1,11 @@
 import chalk from 'chalk';
-import { ContextLogger } from './types';
+import * as messages from '../messages';
+import { ContextLogger, LogLevels } from './types';
+
+type Messages = typeof messages;
+type MessageTypes = keyof Messages;
+
+let maxLevel: LogLevels = LogLevels.info;
 
 function normEntry(prefix: string, message: string, maxLength = 30) {
   const input = `${prefix}: ${message}`;
@@ -11,28 +17,64 @@ function normEntry(prefix: string, message: string, maxLength = 30) {
   return input;
 }
 
+function logMessage(level: LogLevels, code: string, message: string) {
+  switch (level) {
+    case LogLevels.error:
+      return logFail(`[%s] ${message}`, code);
+    case LogLevels.warning:
+      return logWarn(`[%s] ${message}`, code);
+    case LogLevels.info:
+      return logInfo(`[%s] ${message}`, code);
+    case LogLevels.debug:
+      return logDebug(`[%s] ${message}`, code);
+    case LogLevels.verbose:
+      return logVerbose(`[%s] ${message}`, code);
+  }
+}
+
+export function setLogLevel(level: LogLevels) {
+  maxLevel = level;
+}
+
 export function logDebug(message: string, ...args: Array<string | number | boolean>) {
-  console.log(`[debug] ${message}`, ...args.map(arg => chalk.bold(arg.toString())));
+  if (maxLevel >= LogLevels.debug) {
+    console.log(`[debug] ${message}`, ...args.map(arg => chalk.bold(arg.toString())));
+  }
 }
 
 export function logVerbose(message: string, ...args: Array<string | number | boolean>) {
-  console.log(chalk.gray(message), ...args.map(arg => chalk.bold(arg.toString())));
+  if (maxLevel >= LogLevels.verbose) {
+    console.log(chalk.gray(message), ...args.map(arg => chalk.bold(arg.toString())));
+  }
 }
 
 export function logInfo(message: string, ...args: Array<string | number | boolean>) {
-  console.log(message, ...args.map(arg => chalk.bold(arg.toString())));
+  if (maxLevel >= LogLevels.info) {
+    console.log(message, ...args.map(arg => chalk.bold(arg.toString())));
+  }
 }
 
 export function logDone(message: string, ...args: Array<string | number | boolean>) {
-  console.log(chalk.greenBright(message), ...args.map(arg => chalk.bold(arg.toString())));
+  if (maxLevel !== LogLevels.disabled) {
+    console.log(chalk.greenBright(message), ...args.map(arg => chalk.bold(arg.toString())));
+  }
 }
 
 export function logWarn(message: string, ...args: Array<string | number | boolean>) {
-  console.warn(chalk.yellow(message), ...args.map(arg => chalk.bold(arg.toString())));
+  if (maxLevel >= LogLevels.warning) {
+    console.warn(chalk.yellow(message), ...args.map(arg => chalk.bold(arg.toString())));
+  }
 }
 
 export function logFail(message: string, ...args: Array<string | number | boolean>) {
-  console.error(chalk.red(message), ...args.map(arg => chalk.bold(arg.toString())));
+  if (maxLevel >= LogLevels.error) {
+    console.error(chalk.red(message), ...args.map(arg => chalk.bold(arg.toString())));
+  }
+}
+
+export function log<T extends MessageTypes>(level: LogLevels, type: T, ...args: Parameters<Messages[T]>) {
+  const [code, message] = messages[type].apply(this, args);
+  logMessage(level, code, message);
 }
 
 export function createContextLogger(): ContextLogger {
