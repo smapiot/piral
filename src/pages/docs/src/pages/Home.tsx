@@ -102,6 +102,15 @@ export default () => (
         <li>Node.js (v10+ recommended)</li>
         <li>NPM</li>
       </ul>
+      <h3>Overall Architecture</h3>
+      <p>A microfrontend solution with Piral usually consists of three parts:</p>
+      <ol>
+        <li>Your application shell (Piral instance)</li>
+        <li>A feed service to deliver information about the microfrontends</li>
+        <li>The pilets to actually represent the microfrontends</li>
+      </ol>
+      <p>The following diagram illustrates this form a high-level point of view.</p>
+      <img src={require('../../../../../docs/diagrams/architecture-overview.png')} alt="Architecture Overview Piral" />
       <h3>Your Application Shell</h3>
       <p>
         To create a new application shell just open a new terminal, create a new folder and run the following command:
@@ -138,6 +147,11 @@ export default () => (
         For more information, e.g., about <Link to="/tutorials/06-piral-layout">changing the layout</Link> visit the
         tutorials.
       </p>
+      <p>At this point the application shell of our new project using Piral is online.</p>
+      <img
+        src={require('../../../../../docs/diagrams/architecture-appshell.png')}
+        alt="Architecture Application Shell Piral"
+      />
       <h3>Your First Pilet</h3>
       <p>
         With the application shell created we can start development on our first pilet. Create a new folder and run the
@@ -169,6 +183,8 @@ export default () => (
         Building an publishing can be done in one command. Learn more about publishing in{' '}
         <Link to="/tutorials/03-publishing-pilets">the publishing tutorial</Link>.
       </p>
+      <p>This covers the creation of the different microfrontends or modules called pilets.</p>
+      <img src={require('../../../../../docs/diagrams/architecture-modules.png')} alt="Architecture Pilets Piral" />
       <h2>More Information</h2>
       <p>
         This should give you a brief look at what developing a microfrontend solution with Piral looks like. In the end,
