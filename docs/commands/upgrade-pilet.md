@@ -24,7 +24,12 @@ Instead of `upgrade-pilet` you can also use:
 
 ## Positionals
 
-Not applicable.
+### `target-version`
+
+Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".
+
+- Type: `string`
+- Default: `undefined`
 
 ## Flags
 
@@ -35,12 +40,12 @@ Sets the target directory to upgrade. By default, the current directory.
 - Type: `string`
 - Default: `"."`
 
-### `--tag`
+### `--log-level`
 
-Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".
+Sets the log level to use (1-5).
 
-- Type: `string`
-- Default: `undefined`
+- Type: `number`
+- Default: `3`
 
 ### `--force-overwrite`
 

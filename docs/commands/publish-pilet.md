@@ -49,6 +49,13 @@ Sets the potential API key to send to the service.
 - Type: `string`
 - Default: `""`
 
+### `--log-level`
+
+Sets the log level to use (1-5).
+
+- Type: `number`
+- Default: `3`
+
 ### `--fresh`
 
 Performs a fresh build, then packages and finally publishes the pilet.

@@ -52,7 +52,7 @@ Sets the base directory. By default the current directory is used.
 
 ### `depends-on-piral`
 
-Checks that the Piral instance depends either on `piral` or `piral-core`.
+Checks that the Piral instance depends either on `piral` or `piral-core` or `piral-base`.
 
 **Options**: `<none>`
 

@@ -65,6 +65,13 @@ Already performs the installation of its NPM dependencies.
 - Type: `boolean`
 - Default: `false`
 
+### `--log-level`
+
+Sets the log level to use (1-5).
+
+- Type: `number`
+- Default: `3`
+
 ### `--tag`
 
 Sets the tag or version of the package to install. By default, it is "latest".

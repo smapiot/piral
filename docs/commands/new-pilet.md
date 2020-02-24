@@ -74,6 +74,13 @@ Determines if files should be overwritten by the scaffolding.
 - Choices: `"no"`, `"prompt"`, `"yes"`
 - Default: `"no"`
 
+### `--log-level`
+
+Sets the log level to use (1-5).
+
+- Type: `number`
+- Default: `3`
+
 ### `--language`
 
 Determines the programming language for the new pilet.
