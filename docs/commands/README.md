@@ -8,16 +8,19 @@ These commands have all a `-piral` suffix when called from the generic `pb` tool
 
 - [build-piral](./build-piral.md)
 - [debug-piral](./debug-piral.md)
+- [validate-piral](./validate-piral.md)
 - [new-piral](./new-piral.md)
+- [declaration-piral](./declaration-piral.md)
 
 ## Pilet Related Commands
 
 These commands have all a `-pilet` suffix when called from the generic `pb` tool. They are also available on the `pilet` tool (here without the suffix, i.e., `pb new-pilet` is equivalent to `pilet new`).
 
-- [new-pilet](./new-pilet.md)
-- [upgrade-pilet](./upgrade-pilet.md)
 - [build-pilet](./build-pilet.md)
 - [debug-pilet](./debug-pilet.md)
+- [validate-pilet](./validate-pilet.md)
+- [new-pilet](./new-pilet.md)
+- [upgrade-pilet](./upgrade-pilet.md)
 - [pack-pilet](./pack-pilet.md)
 - [publish-pilet](./publish-pilet.md)
 

@@ -60,6 +60,10 @@ Used environment variables:
 | `DEBUG_PIRAL`         | ...     | `1.0`             |
 | `SHARED_DEPENDENCIES` | ...     | `react,react-dom` |
 
+(tbd)
+
+The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before included as a module. In case of a Piral instance we will need to evaluate the `dependencies.codegen` file in case the environment variable `SHARED_DEPENDENCIES` is set.
+
 ## Building a Pilet
 
 A pilet is a module that can be published to a feed service. The feed service then serves the modules for use in a Piral instance.
@@ -138,3 +142,4 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 
 - [RFC2119](https://tools.ietf.org/html/rfc2119)
 - [Parcel Bundler](https://parceljs.org)
+- [Webpack](https://webpack.js.org)
