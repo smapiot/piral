@@ -8,6 +8,7 @@
 * Fixed inline type of mapped type being dropped (#163)
 * Fixed expansion of function return types (#168)
 * Updated introductory documentation with more diagrams
+* Improved state container debug output
 
 ## 0.10.7 (February 21, 2020)
 

@@ -87,7 +87,7 @@ export function createPiletOptions({
 
         if (infos) {
           // Chrome, Firefox, ... (full capability)
-          const action = infos.split('\n')[6].replace(/^\s+at\s+Atom\./, '');
+          const action = infos.split('\n')[7].replace(/^\s+at\s+(Atom\.|Object\.)?/, '');
           console.group(
             `%c Piral State Change %c ${new Date().toLocaleTimeString()}`,
             'color: gray; font-weight: lighter;',
