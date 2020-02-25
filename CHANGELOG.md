@@ -7,6 +7,7 @@
 * Fixed generic type dropping with complicated extends rules (#167)
 * Fixed inline type of mapped type being dropped (#163)
 * Fixed expansion of function return types (#168)
+* Updated introductory documentation with more diagrams
 
 ## 0.10.7 (February 21, 2020)
 
