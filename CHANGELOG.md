@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 0.10.8 (tbd)
+
+* Fixed declaration dropping "extends string" in generic argument (#164)
+* Fixed generic type sometimes getting dropped in ternary expression (#166)
+* Fixed generic type dropping with complicated extends rules (#167)
+* Fixed inline type of mapped type being dropped (#163)
+* Fixed expansion of function return types (#168)
+
 ## 0.10.7 (February 21, 2020)
 
 * Included `core-js/stable` in Piral polyfills (#162)
