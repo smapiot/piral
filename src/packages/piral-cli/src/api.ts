@@ -1,4 +1,4 @@
-import { logWarn } from './common';
+import { logWarn, installPatch } from './common';
 import { commands } from './commands';
 import { addPiletRule, addPiralRule } from './rules';
 import {
@@ -9,6 +9,7 @@ import {
   RuleRunner,
   PiralRuleContext,
   PiletRuleContext,
+  PackagePatcher,
 } from './types';
 
 function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index: number) => void) {
@@ -110,6 +111,18 @@ export function withPiletRule(name: string, run: RuleRunner<PiletRuleContext>) {
     logWarn('Invalid argument for "run" - no pilet rule added.');
   } else {
     addPiletRule({ name, run });
+  }
+
+  return this;
+}
+
+export function withPatcher(packageName: string, patch: PackagePatcher) {
+  if (typeof packageName !== 'string') {
+    logWarn('Invalid argument for "packageName" - nothing installed.');
+  } else if (typeof patch !== 'function') {
+    logWarn('Invalid argument for "patch" - nothing installed.');
+  } else {
+    installPatch(packageName, patch);
   }
 
   return this;

@@ -50,12 +50,50 @@ import { createAdalApi } from 'piral-adal';
 The integration looks like:
 
 ```ts
+import { setupAdalClient } from 'piral-adal';
+
+const client = setupAdalClient({ clientId, ... });
+
 const instance = createInstance({
   // important part
-  extendApi: [createAdalApi({ clientId })],
+  extendApi: [createAdalApi(client)],
   // ...
 });
 ```
+
+The separation into `setupAdalClient` and `createAdalApi` was done to simplify the standard usage.
+
+Normally, you would want to have different modules here. As an example consider the following code:
+
+```ts
+// module adal.ts
+import { setupAdalClient } from 'piral-adal';
+
+export const client = setupAdalClient({ ... });
+
+// app.ts
+import { client } from './adal';
+
+export function render() {
+  renderInstance({
+    // ...
+    extendApi: [createAdalApi(client)],
+  });
+}
+
+// index.ts
+import { client } from './adal';
+
+if (location.pathname !== '/auth') {
+  if (client.account()) {
+    import('./app').then(({ render }) => render());
+  } else {
+    client.login();
+  }
+}
+```
+
+This way we evaluate the current path and act accordingly. Note that the actually used path may be different for your application.
 
 ## License
 

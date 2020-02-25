@@ -283,6 +283,7 @@ export interface TypeModelConditional {
 
 export interface TypeModelSubstitution {
   readonly kind: 'substitution';
+  readonly variable: TypeModel;
 }
 
 export interface TypeModelNonPrimitive {

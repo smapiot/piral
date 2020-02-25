@@ -25,9 +25,11 @@ import {
   ConditionalType,
   isInferTypeNode,
   InferTypeNode,
+  SubstitutionType,
 } from 'typescript';
 
 const globalIndicator = '__global';
+const anonymousIndicator = '__type';
 const modulesRoot = '/node_modules/';
 const typesRoot = '/node_modules/@types/';
 const tslibRoot = '/node_modules/typescript/lib';
@@ -39,6 +41,10 @@ const checkIdentifier = /^[a-zA-Z\_\$][a-zA-Z0-9\_\$]*$/;
 
 export function makeIdentifier(identifier: string) {
   return checkIdentifier.test(identifier) ? identifier : JSON.stringify(identifier);
+}
+
+export function isAnonymous(name: string) {
+  return name === anonymousIndicator;
 }
 
 export function isGlobal(symbol: Symbol) {
@@ -67,6 +73,10 @@ export function getGlobalName(symbol: Symbol) {
 
 export function isConditionalType(type: Type): type is ConditionalType {
   return (type.flags & TypeFlags.Conditional) !== 0;
+}
+
+export function isSubstitutionType(type: Type): type is SubstitutionType {
+  return (type.flags & TypeFlags.Substitution) !== 0;
 }
 
 export function isDefaultExport(node: Node): node is ExportAssignment {

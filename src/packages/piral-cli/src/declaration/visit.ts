@@ -36,6 +36,8 @@ import {
   isIdentifierType,
   isConditionalType,
   isInferType,
+  isSubstitutionType,
+  isAnonymous,
 } from './helpers';
 import {
   TypeModel,
@@ -90,7 +92,7 @@ function getTypeModel(context: DeclVisitorContext, type: Type, name?: string) {
 
     if (ext) {
       return ext;
-    } else if (name !== '__type' && !isAnonymousObject(type)) {
+    } else if (!isAnonymous(name) && !isAnonymousObject(type)) {
       return makeRef(context, type, name, includeNamed);
     }
   }
@@ -108,10 +110,8 @@ function getParameterType(context: DeclVisitorContext, type: TypeNode): TypeMode
       kind: 'infer',
       parameter: includeType(context, t),
     };
-  } else if (isKeyOfType(type)) {
-    return getKeyOfType(context, context.checker.getTypeFromTypeNode(type.type));
   } else {
-    return includeAnonymous(context, context.checker.getTypeFromTypeNode(type));
+    return includeAnonymousNode(context, type);
   }
 }
 
@@ -187,17 +187,17 @@ function normalizeTypeParameters(context: DeclVisitorContext, type: Type, decl: 
 
 function includeExternal(context: DeclVisitorContext, type: Type) {
   const name = type.symbol?.name;
-
-  if (isGlobal(type.symbol)) {
-    const name = getGlobalName(type.symbol);
-    return includeRef(context, type, name);
-  }
-
   const fn = type.symbol?.declarations?.[0]?.parent?.getSourceFile()?.fileName;
+  const anonymous = isAnonymous(name);
 
-  if (isBaseLib(fn)) {
-    // Include items from the ts core lib (no need to ref. them)
-    return includeRef(context, type, name, type);
+  if (!anonymous) {
+    if (isGlobal(type.symbol)) {
+      const name = getGlobalName(type.symbol);
+      return includeRef(context, type, name);
+    } else if (isBaseLib(fn)) {
+      // Include items from the ts core lib (no need to ref. them)
+      return includeRef(context, type, name, type);
+    }
   }
 
   const lib = getLib(fn, context.availableImports);
@@ -208,7 +208,7 @@ function includeExternal(context: DeclVisitorContext, type: Type) {
       context.usedImports.push(lib);
     }
 
-    if (name === '__type') {
+    if (anonymous) {
       // Right now this catches the JSXElementConstructor; but
       // I guess this code should be made "more robust" and also
       // more generic.
@@ -311,8 +311,17 @@ export function includeExportedFunction(context: DeclVisitorContext, func: Funct
 }
 
 function includeType(context: DeclVisitorContext, type: Type): TypeModel {
-  const alias = type.aliasSymbol?.name;
-  return getTypeModel(context, type, alias || type.symbol?.name);
+  const ta = type as any;
+
+  if (ta.stringsOnly === false) {
+    return {
+      kind: 'keyof',
+      value: includeType(context, ta.type),
+    };
+  } else {
+    const alias = type.aliasSymbol?.name;
+    return getTypeModel(context, type, alias || type.symbol?.name);
+  }
 }
 
 function makeAliasRef(context: DeclVisitorContext, type: Type, name: string): TypeModel {
@@ -532,9 +541,10 @@ function includeBasic(context: DeclVisitorContext, type: Type): TypeModel {
     };
   }
 
-  if (type.flags & TypeFlags.Substitution) {
+  if (isSubstitutionType(type)) {
     return {
       kind: 'substitution',
+      variable: includeType(context, type.typeVariable),
     };
   }
 
@@ -576,15 +586,15 @@ function includeInheritedTypes(context: DeclVisitorContext, type: Type) {
 function includeConstraint(context: DeclVisitorContext, type: Type): TypeModel {
   const symbol = type.symbol;
   const decl: any = symbol.declarations?.[0];
-  const constraint = decl?.constraint?.type ?? type.getConstraint?.();
-  const name = constraint?.typeName?.text;
+  const c = decl?.constraint;
+  const constraint = c?.type ?? type.getConstraint?.();
 
-  if (name) {
-    return {
-      kind: 'ref',
-      refName: `keyof ${name}`,
-      types: [],
-    };
+  if (isKeyOfType(c)) {
+    const ct = context.checker.getTypeAtLocation(c.type);
+    return getKeyOfType(context, ct);
+  } else if (c) {
+    const ct = context.checker.getTypeAtLocation(c);
+    return includeType(context, ct);
   } else if (constraint) {
     return includeType(context, constraint);
   }
@@ -786,6 +796,14 @@ function includeCombinator(context: DeclVisitorContext, type: Type): TypeModel {
 
 function includeNamed(context: DeclVisitorContext, type: Type): TypeModel {
   return includeBasic(context, type) ?? includeObject(context, type);
+}
+
+function includeAnonymousNode(context: DeclVisitorContext, type: TypeNode): TypeModel {
+  if (isKeyOfType(type)) {
+    return getKeyOfType(context, context.checker.getTypeFromTypeNode(type.type));
+  }
+
+  return includeAnonymous(context, context.checker.getTypeFromTypeNode(type));
 }
 
 function includeAnonymous(context: DeclVisitorContext, type: Type): TypeModel {

@@ -187,6 +187,8 @@ function stringifyNode(type: TypeModel) {
       return stringifyIndexedAccess(type);
     case 'mapped':
       return stringifyMapped(type);
+    case 'substitution':
+      return stringifyNode(type.variable);
   }
 
   return '';

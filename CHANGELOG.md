@@ -12,6 +12,18 @@
 * Switched to use `piral-base` as declaration root
 * Included implied schema for generated pilets (supporting `v:0` and `v:1`)
 
+## 0.10.8 (February 25, 2020)
+
+* Fixed declaration dropping "extends string" in generic argument (#164)
+* Fixed generic type sometimes getting dropped in ternary expression (#166)
+* Fixed generic type dropping with complicated extends rules (#167)
+* Fixed inline type of mapped type being dropped (#163)
+* Fixed expansion of function return types (#168)
+* Updated introductory documentation with more diagrams
+* Improved state container debug output
+* Fixed calling disposer in case of feed invalidation
+* Added new Piral CLI plugin capability "package patcher" (#160)
+
 ## 0.10.7 (February 21, 2020)
 
 * Included `core-js/stable` in Piral polyfills (#162)
