@@ -8,7 +8,8 @@ describe('Create fetch API Module', () => {
     const { fetch } = createFetchApi({
       base: 'https://jsonplaceholder.typicode.com',
     })(context) as any;
-    const result = await fetch('users').then(m => m.body);
+    const response = await fetch('users');
+    const result = response.body;
     expect(Array.isArray(result)).toBeTruthy();
     expect(result.length).toBe(10);
     expect(result[0].name).toBe('Leanne Graham');
@@ -19,7 +20,8 @@ describe('Create fetch API Module', () => {
     const { fetch } = createFetchApi({
       base: 'https://jsonplaceholder.typicode.com',
     })(context) as any;
-    const result = await fetch('users', { result: 'text' }).then(m => m.body);
+    const response = await fetch('users', { result: 'text' });
+    const result = response.body;
     expect(typeof result).toBe('string');
     expect(Array.isArray(JSON.parse(result))).toBeTruthy();
   });
@@ -29,7 +31,8 @@ describe('Create fetch API Module', () => {
     const { fetch } = createFetchApi({
       base: 'https://jsonplaceholder.typicode.com',
     })(context) as any;
-    const result = await fetch('users').then(m => m.code);
+    const response = await fetch('users');
+    const result = response.code;
     expect(result).toBe(200);
   });
 
@@ -38,7 +41,8 @@ describe('Create fetch API Module', () => {
     const { fetch } = createFetchApi({
       base: 'https://cdn.animenewsnetwork.com/encyclopedia/',
     })(context) as any;
-    const result = await fetch('api.xml?anime=4658').then(m => m.body);
+    const response = await fetch('api.xml?anime=4658');
+    const result = response.body;
     expect(result.substr(0, 5)).toBe(`<ann>`);
   });
 });

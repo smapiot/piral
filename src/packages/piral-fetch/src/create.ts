@@ -13,6 +13,7 @@ export function createFetchApi(config: FetchConfig = {}): Extend<PiletFetchApi> 
       fetch<T>(path, options: any = {}) {
         const originalHeaders = options.headers || {};
         const headerPromises: Array<Promise<any>> = [];
+
         context.emit('before-fetch', {
           headers: originalHeaders,
           method: options.method || 'GET',
