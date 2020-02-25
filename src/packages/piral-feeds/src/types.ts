@@ -153,4 +153,8 @@ export interface ConnectorDetails<TData, TItem> extends FeedConnectorOptions<TDa
    * The ID of the connector.
    */
   id: string;
+  /**
+   * The dispose function if active.
+   */
+  dispose?(): void;
 }

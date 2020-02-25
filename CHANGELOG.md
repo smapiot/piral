@@ -9,6 +9,7 @@
 * Fixed expansion of function return types (#168)
 * Updated introductory documentation with more diagrams
 * Improved state container debug output
+* Fixed calling disposer in case of feed invalidation
 
 ## 0.10.7 (February 21, 2020)
 

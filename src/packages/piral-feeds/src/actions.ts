@@ -37,7 +37,7 @@ export function loadFeed<TData, TItem>(ctx: GlobalStateContext, options: Connect
     baseData => {
       loadedFeed(ctx, id, baseData, undefined);
 
-      options.connect(item => {
+      options.dispose = options.connect(item => {
         updateFeed(ctx, id, item, options.update);
       });
     },

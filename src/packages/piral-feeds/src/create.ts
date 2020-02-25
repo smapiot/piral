@@ -28,7 +28,10 @@ export function createFeedsApi(config: FeedsConfig = {}): Extend<PiletFeedsApi> 
         createConnector(resolver) {
           const id = buildName(target.name, feeds++);
           const options = createFeedOptions(id, resolver);
-          const invalidate = () => context.createFeed(options.id);
+          const invalidate = () => {
+            options.dispose?.();
+            context.createFeed(options.id);
+          };
 
           if (options.immediately) {
             context.loadFeed(options);
