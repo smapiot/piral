@@ -10,6 +10,7 @@
 * Updated introductory documentation with more diagrams
 * Improved state container debug output
 * Fixed calling disposer in case of feed invalidation
+* Added new Piral CLI plugin capability "package patcher" (#160)
 
 ## 0.10.7 (February 21, 2020)
 

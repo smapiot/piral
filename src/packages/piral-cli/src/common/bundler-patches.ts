@@ -1,5 +1,5 @@
-import { readText, writeText } from './io';
 import { resolve } from 'path';
+import { readText, writeText } from './io';
 
 const windowOrGlobal = '(typeof window !== "undefined" ? window : global)';
 
@@ -26,6 +26,18 @@ const patchMap: Record<string, (rootDir: string) => Promise<void>> = {
     await replaceAll(utils, 'fetch-polyfill.js', 'global', windowOrGlobal);
   },
 };
+
+export function installPatch(name: string, patch: (rootDir: string) => Promise<void>) {
+  if (name in patchMap) {
+    const newPatch = patch;
+    const oldPatch = patchMap[name];
+    patch = rootDir => {
+      return oldPatch(rootDir).then(() => newPatch(rootDir));
+    };
+  }
+
+  patchMap[name] = patch;
+}
 
 export async function patchModule(packageName: string, rootDir: string) {
   const applyPatchAt = patchMap[packageName];
