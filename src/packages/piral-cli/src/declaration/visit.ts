@@ -37,6 +37,7 @@ import {
   isConditionalType,
   isInferType,
   isSubstitutionType,
+  isAnonymous,
 } from './helpers';
 import {
   TypeModel,
@@ -91,7 +92,7 @@ function getTypeModel(context: DeclVisitorContext, type: Type, name?: string) {
 
     if (ext) {
       return ext;
-    } else if (name !== '__type' && !isAnonymousObject(type)) {
+    } else if (!isAnonymous(name) && !isAnonymousObject(type)) {
       return makeRef(context, type, name, includeNamed);
     }
   }
@@ -186,17 +187,17 @@ function normalizeTypeParameters(context: DeclVisitorContext, type: Type, decl: 
 
 function includeExternal(context: DeclVisitorContext, type: Type) {
   const name = type.symbol?.name;
-
-  if (isGlobal(type.symbol)) {
-    const name = getGlobalName(type.symbol);
-    return includeRef(context, type, name);
-  }
-
   const fn = type.symbol?.declarations?.[0]?.parent?.getSourceFile()?.fileName;
+  const anonymous = isAnonymous(name);
 
-  if (isBaseLib(fn)) {
-    // Include items from the ts core lib (no need to ref. them)
-    return includeRef(context, type, name, type);
+  if (!anonymous) {
+    if (isGlobal(type.symbol)) {
+      const name = getGlobalName(type.symbol);
+      return includeRef(context, type, name);
+    } else if (isBaseLib(fn)) {
+      // Include items from the ts core lib (no need to ref. them)
+      return includeRef(context, type, name, type);
+    }
   }
 
   const lib = getLib(fn, context.availableImports);
@@ -207,7 +208,7 @@ function includeExternal(context: DeclVisitorContext, type: Type) {
       context.usedImports.push(lib);
     }
 
-    if (name === '__type') {
+    if (anonymous) {
       // Right now this catches the JSXElementConstructor; but
       // I guess this code should be made "more robust" and also
       // more generic.

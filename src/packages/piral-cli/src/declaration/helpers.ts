@@ -29,6 +29,7 @@ import {
 } from 'typescript';
 
 const globalIndicator = '__global';
+const anonymousIndicator = '__type';
 const modulesRoot = '/node_modules/';
 const typesRoot = '/node_modules/@types/';
 const tslibRoot = '/node_modules/typescript/lib';
@@ -40,6 +41,10 @@ const checkIdentifier = /^[a-zA-Z\_\$][a-zA-Z0-9\_\$]*$/;
 
 export function makeIdentifier(identifier: string) {
   return checkIdentifier.test(identifier) ? identifier : JSON.stringify(identifier);
+}
+
+export function isAnonymous(name: string) {
+  return name === anonymousIndicator;
 }
 
 export function isGlobal(symbol: Symbol) {
