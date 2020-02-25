@@ -16,8 +16,6 @@ As well as sections marked as non-normative, all authoring guidelines, diagrams,
 
 The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
-
-
 ## Glossary
 
 **API**: Application Program Interface
@@ -30,16 +28,20 @@ The core API design includes everything that is necessary to publish pilets to t
 
 Implementations that are Piral conform must implement at least the core API design. Throughout the specification, the officially supported online version of the feed service ([feed.piral.io](https://feed.piral.io)) is used as a reference example.
 
-### Publishing Pilets (service facing)
+### Publishing Pilets (Service Facing)
 
 A pilet feed service must provide an endpoint for publishing a pilet. By default, `/api/v1/pilet` is used. However, the exact path can be also adjusted as required to fit into an existing API / endpoint design.
 
 #### Endpoint
+
 The endpoint needs to accept a `POST` request using basic authentication with an `Authorization` header. Other ways of authentication may be implemented as well. The value of the basic authentication is an API key that can be fully decided by the implementation. We recommend using a base64 encoded value here.
 
 The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tar ball (i.e., an NPM package). The content detail of this file is explained in the Pilet Specification (see references).
 
-**Request Example**
+**Request**
+
+Consider the following example:
+
 ```http
 POST /api/v1/pilet
 Content-Type: multipart/form-data;boundary="boundary"
@@ -52,20 +54,36 @@ Content-Disposition: form-data; name="file"; filename="pilet.tgz"
 ```
 
 **Success Response**
+
 In case of a successful upload, the HTTP response code has to be `200`. The exact response content is arbitrary. An empty response is valid.
 
 **Error Response**
+
 In case of a failed authentication, the HTTP response status code has to be `401`. In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. The error message should be transported via the status text.
 
 The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
 
 ### Retrieving Pilets (User Facing)
+
 The service is required to expose an endpoint for retrieving pilets. Our *recommendation* is to use the same path as in the endpoint for publishing pilets (service facing), i.e., `/api/v1/pilet`. Depending on the exact implementation, a different endpoint may be used.
 
 #### Endpoint
+
 The service exposes a REST endpoint, which accepts a `GET` request from the client. It is recommended to authorize access to this endpoint, e.g., via a token provided in the `Authorization` header. Optionally, the provided credentials for authorizing the request can be used to tailor the list of pilets returned to the calling client.
 
-**Response**
+**Request**
+
+Consider the following example:
+
+```http
+GET /api/v1/pilet
+Content-Type: application/json
+```
+
+Arbitrary headers and query parameters may be transported. The evaluation of these parameter is implementation specific and could be used for evaluation of feature flags or authorization purposes.
+
+**Success Response**
+
 The API interface for retrieving pilets returns a resource in JSON format. The response contains a list of pilet metadata and is defined as follows (typed as `PiletApiResponse`):
 
 ```ts
@@ -88,6 +106,12 @@ interface PiletMetadata {
 ```
 
 The schema is written and defined using a TypeScript interface (see references).
+
+**Error Response**
+
+This endpoint should always succeed. In case of urgent server issues a response with HTTP status code `500` has to be served.
+
+In any other case an empty `items` array is suitable to indicate that no pilets are to be served.
 
 ## Examples
 

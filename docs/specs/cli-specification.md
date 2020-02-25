@@ -38,29 +38,49 @@ A Piral instance represents an app shell using either `piral`, `piral-core`, or 
 
 ### Building for Production Purposes
 
-(tbd)
+For producing files suitable for production purposes the following conditions should be respected.
 
 Used environment variables:
 
-| Name                  | Purpose | Example           |
-|-----------------------|---------|-------------------|
-| `NODE_ENV`            | ...     | `production`      |
-| `SHARED_DEPENDENCIES` | ...     | `react,react-dom` |
+| Name                  | Purpose                             | Example            |
+|-----------------------|-------------------------------------|--------------------|
+| `NODE_ENV`            | Indicate the target environment.    | `production`       |
+| `SHARED_DEPENDENCIES` | Allow exposing shared dependencies. | `react,react-dom`  |
+
+To derive some of these properties some special fields of the `package.json` are used.
+
+Special package keys:
+
+| Name                  | Purpose                             | Example            |
+|-----------------------|-------------------------------------|--------------------|
+| `app`                 | Path to the root page to use.       | `"src/index.html"` |
+| `pilets`.`externals`  | Names of the shared dependencies.   | `["reactstrap"]`   |
+
+The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before included as a module. In case of a Piral instance we will need to evaluate the `dependencies.codegen` file in case the environment variable `SHARED_DEPENDENCIES` is set.
 
 ### Building for Emulation Purposes
 
-(tbd)
+For emulation purposes the set of environment variables is used slightly different. Consequently, some new capabilities have to be integrated. One example of such a capability is the debug API. This API is inserted into `window` at runtime for inspection purposes.
+
+The browser extension Piral Inspector may be used to use the debug API conveniently.
 
 Used environment variables:
 
-| Name                  | Purpose | Example           |
-|-----------------------|---------|-------------------|
-| `NODE_ENV`            | ...     | `development`     |
-| `DEBUG_PILET`         | ...     | `v0`              |
-| `DEBUG_PIRAL`         | ...     | `1.0`             |
-| `SHARED_DEPENDENCIES` | ...     | `react,react-dom` |
+| Name                  | Purpose                             | Example            |
+|-----------------------|-------------------------------------|--------------------|
+| `NODE_ENV`            | Indicate the target environment.    | `development`      |
+| `DEBUG_PILET`         | Injects pilet from development API. | `/$pilet-api`      |
+| `DEBUG_PIRAL`         | Provides debug API for inspection.  | `1.0`              |
+| `SHARED_DEPENDENCIES` | Allow exposing shared dependencies. | `react,react-dom`  |
 
-(tbd)
+To derive some of these properties some special fields of the `package.json` are used.
+
+Special package keys:
+
+| Name                  | Purpose                             | Example            |
+|-----------------------|-------------------------------------|--------------------|
+| `app`                 | Path to the root page to use.       | `"src/index.html"` |
+| `pilets`.`externals`  | Names of the shared dependencies.   | `["reactstrap"]`   |
 
 The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before included as a module. In case of a Piral instance we will need to evaluate the `dependencies.codegen` file in case the environment variable `SHARED_DEPENDENCIES` is set.
 
@@ -68,17 +88,34 @@ The bundler application also needs to understand that a file ending with `.codeg
 
 A pilet is a module that can be published to a feed service. The feed service then serves the modules for use in a Piral instance.
 
-(tbd)
-
 Used environment variables:
 
-| Name                  | Purpose | Example           |
-|-----------------------|---------|-------------------|
-| `NODE_ENV`            | ...     | `production`      |
+| Name                  | Purpose                             | Example            |
+|-----------------------|-------------------------------------|--------------------|
+| `NODE_ENV`            | Indicate the target environment.    | `production`       |
+
+Some special fields of the `package.json` are used to switch on some building features.
+
+Special package keys:
+
+| Name                  | Purpose                             | Example            |
+|-----------------------|-------------------------------------|--------------------|
+| `app`                 | Path to the root page to use.       | `"src/index.html"` |
+| `peerDependencies`    | Indicates skipped dependencies.     | `{ "react": "*" }` |
+| `externals`           | Names of additional externals.      | `[ "reactstrap" ]` |
+| `piral`.`name`        | Name of the Piral instance.         | `"sample-piral"`   |
 
 ### Schema Versions
 
-(tbd)
+To allow versioning of a pilet's loading mechanism we use a special header line in the output bundle. The first line - if starting with a comment such as `//@pilet` will be treated as a pilet schema version indicator.
+
+Right now there are two available schema versions; a legacy one (`v0`) and the current standard (`v1`). Backwards compatibility should always be given when specifying a new schema version.
+
+Most notably the following components should all be able to gracefully fall back:
+
+- The Piral instance (consumer)
+- The Pilet Feed service (provider)
+- The Pilet script itself (module)
 
 **`v:0`**
 
