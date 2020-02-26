@@ -18,6 +18,7 @@ import {
   removeDirectory,
   createContextLogger,
   LogLevels,
+  setLogLevel,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -39,7 +40,9 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     version = upgradePiletDefaults.version,
     target = upgradePiletDefaults.target,
     forceOverwrite = upgradePiletDefaults.forceOverwrite,
+    logLevel = upgradePiletDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
   const root = resolve(baseDir, target);
   const cache = resolve(root, defaultCacheDir);
   const valid = await checkExistingDirectory(root);

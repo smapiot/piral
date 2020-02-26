@@ -13,6 +13,7 @@ import {
   setupBundler,
   removeDirectory,
   LogLevels,
+  setLogLevel,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -59,6 +60,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     fresh = debugPiralDefaults.fresh,
     optimizeModules = debugPiralDefaults.optimizeModules,
   } = options;
+  setLogLevel(logLevel);
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);

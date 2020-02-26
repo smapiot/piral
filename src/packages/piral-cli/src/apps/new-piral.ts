@@ -15,6 +15,7 @@ import {
   TemplateType,
   Framework,
   LogLevels,
+  setLogLevel,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -51,7 +52,9 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     language = newPiralDefaults.language,
     install = newPiralDefaults.install,
     template = newPiralDefaults.template,
+    logLevel = newPiralDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
   const root = resolve(baseDir, target);
   const success = await createDirectory(root);
 

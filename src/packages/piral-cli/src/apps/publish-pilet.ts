@@ -1,6 +1,16 @@
 import { relative, join } from 'path';
 import { buildPilet } from './build-pilet';
-import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone, LogLevels } from '../common';
+import {
+  postFile,
+  readBinary,
+  matchFiles,
+  createPiletPackage,
+  logWarn,
+  logInfo,
+  logDone,
+  LogLevels,
+  setLogLevel,
+} from '../common';
 
 export interface PublishPiletOptions {
   source?: string;
@@ -38,7 +48,9 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     url = publishPiletDefaults.url,
     apiKey = publishPiletDefaults.apiKey,
     fresh = publishPiletDefaults.fresh,
+    logLevel = publishPiletDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
   const files = await getFiles(baseDir, source, fresh);
 
   if (!url) {

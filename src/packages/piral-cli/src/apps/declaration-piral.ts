@@ -10,6 +10,7 @@ import {
   ForceOverwrite,
   matchFiles,
   LogLevels,
+  setLogLevel,
 } from '../common';
 
 export interface DeclarationPiralOptions {
@@ -43,7 +44,9 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
     entry = declarationPiralDefaults.entry,
     target = declarationPiralDefaults.target,
     forceOverwrite = declarationPiralDefaults.forceOverwrite,
+    logLevel = declarationPiralDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, externals } = await retrievePiletsInfo(entryFiles);
   const allowedImports = [...externals, ...coreExternals];

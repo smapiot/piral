@@ -17,6 +17,7 @@ import {
   PiletSchemaVersion,
   getPiletSchemaVersion,
   LogLevels,
+  setLogLevel,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -159,6 +160,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     schemaVersion = debugPiletDefaults.schemaVersion,
     app,
   } = options;
+  setLogLevel(logLevel);
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);

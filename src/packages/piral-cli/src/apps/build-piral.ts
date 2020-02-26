@@ -15,7 +15,6 @@ import {
   findPackageVersion,
   coreExternals,
   cliVersion,
-  logInfo,
   ParcelConfig,
   checkCliCompatibility,
   patchModules,
@@ -26,6 +25,9 @@ import {
   gatherJsBundles,
   createContextLogger,
   LogLevels,
+  logProgress,
+  setLogLevel,
+  logReset,
 } from '../common';
 
 interface Destination {
@@ -146,6 +148,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     type = buildPiralDefaults.type,
     optimizeModules = buildPiralDefaults.optimizeModules,
   } = options;
+  setLogLevel(logLevel);
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, version, root, dependencies, ignored, files: scaffoldFiles, ...pilets } = await retrievePiletsInfo(
     entryFiles,
@@ -158,18 +161,18 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   await checkCliCompatibility(root);
 
   if (fresh) {
-    logInfo('Removing output directory ...');
+    logProgress('Removing output directory ...');
     await removeDirectory(dest.outDir);
   }
 
   if (optimizeModules) {
-    logInfo('Preparing modules ...');
+    logProgress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 
   // everything except release -> build develop
   if (type !== 'release') {
-    logInfo('Starting build ...');
+    logProgress('Starting build ...');
 
     // we'll need this info for later
     const originalPackageJson = resolve(root, 'package.json');
@@ -243,16 +246,12 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
 
     logDone(`Development package available in "${rootDir}".`);
-  }
-
-  if (type === 'all') {
-    // Just have some space between the two builds
-    logInfo('\n\n\n\n\n\n');
+    logReset();
   }
 
   // everything except develop -> build release
   if (type !== 'develop') {
-    logInfo('Starting build ...');
+    logProgress('Starting build ...');
 
     const { outDir } = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
       cacheDir: cache,
@@ -267,6 +266,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     });
 
     logDone(`Files for publication available in "${outDir}".`);
+    logReset();
   }
 
   logger.summary();

@@ -1,4 +1,4 @@
-import { createPiletPackage, logDone, LogLevels } from '../common';
+import { createPiletPackage, logDone, LogLevels, setLogLevel } from '../common';
 
 export interface PackPiletOptions {
   source?: string;
@@ -13,7 +13,12 @@ export const packPiletDefaults: PackPiletOptions = {
 };
 
 export async function packPilet(baseDir = process.cwd(), options: PackPiletOptions = {}) {
-  const { source = packPiletDefaults.source, target = packPiletDefaults.target } = options;
+  const {
+    source = packPiletDefaults.source,
+    target = packPiletDefaults.target,
+    logLevel = packPiletDefaults.logLevel,
+  } = options;
+  setLogLevel(logLevel);
   await createPiletPackage(baseDir, source, target);
   logDone(`All done!`);
 }

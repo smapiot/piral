@@ -11,6 +11,7 @@ import {
   defaultCacheDir,
   getPiletSchemaVersion,
   LogLevels,
+  setLogLevel,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -60,6 +61,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     schemaVersion = buildPiletDefaults.schemaVersion,
     app,
   } = options;
+  setLogLevel(logLevel);
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);

@@ -1,5 +1,5 @@
 import { join, dirname } from 'path';
-import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, LogLevels } from '../common';
+import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, LogLevels, setLogLevel } from '../common';
 import { getPiletRules } from '../rules';
 import { PiletRuleContext } from '../types';
 
@@ -21,6 +21,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     logLevel = validatePiletDefaults.logLevel,
     app = validatePiletDefaults.app,
   } = options;
+  setLogLevel(logLevel);
   const rules = await getPiletRules();
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);

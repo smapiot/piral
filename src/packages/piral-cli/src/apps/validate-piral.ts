@@ -5,6 +5,7 @@ import {
   runRules,
   checkCliCompatibility,
   LogLevels,
+  setLogLevel,
 } from '../common';
 import { getPiralRules } from '../rules';
 
@@ -20,6 +21,7 @@ export const validatePiralDefaults: ValidatPiralOptions = {
 
 export async function validatePiral(baseDir = process.cwd(), options: ValidatPiralOptions = {}) {
   const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
+  setLogLevel(logLevel);
   const rules = await getPiralRules();
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { root, dependencies, ignored: _, ...info } = await retrievePiletsInfo(entryFiles);

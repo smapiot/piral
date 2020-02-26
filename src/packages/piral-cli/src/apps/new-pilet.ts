@@ -23,6 +23,7 @@ import {
   createContextLogger,
   PackageType,
   LogLevels,
+  setLogLevel,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -67,7 +68,9 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     language = newPiletDefaults.language,
     install = newPiletDefaults.install,
     template = newPiletDefaults.template,
+    logLevel = newPiletDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
   const root = resolve(baseDir, target);
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, source);
   const success = await createDirectory(root);
