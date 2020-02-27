@@ -49,6 +49,26 @@ export interface AdalConfig {
    * Otherwise, the client is responsive to the `before-fetch` event.
    */
   restrict?: boolean;
+  /**
+   * Determines the cache location.
+   */
+  cacheLocation?: 'localStorage' | 'sessionStorage';
+  /**
+   * If true MSAL will store the auth request state required for validation
+   * of the auth flows in the browser cookies.
+   * @default false
+   */
+  storeAuthStateInCookie?: boolean;
+  /**
+   * Determines the system specific options. Usually not needed.
+   * For more details see the MSAL.js documentation.
+   */
+  system?: any;
+  /**
+   * Determines the framework specific options. Usually not needed.
+   * For more details see the MSAL.js documentation.
+   */
+  framework?: any;
 }
 
 export interface AdalRequest {
@@ -93,6 +113,10 @@ export function setupAdalClient(config: AdalConfig): AdalClient {
     redirectUri = `${location.origin}/auth`,
     restrict = false,
     scopes = ['User.Read'],
+    storeAuthStateInCookie,
+    cacheLocation,
+    framework,
+    system,
   } = config;
   const msalInstance = new UserAgentApplication({
     auth: {
@@ -100,6 +124,12 @@ export function setupAdalClient(config: AdalConfig): AdalClient {
       redirectUri,
       authority,
     },
+    cache: {
+      storeAuthStateInCookie,
+      cacheLocation,
+    },
+    system,
+    framework,
   });
   const tokenRequest = { scopes };
   msalInstance.handleRedirectCallback(() => {});

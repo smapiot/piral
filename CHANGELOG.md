@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.10.9 (tbd)
+
+* Improved declaration generation (#168)
+* Added cache options to `piral-adal` (#169)
+
 ## 0.10.8 (February 25, 2020)
 
 * Fixed declaration dropping "extends string" in generic argument (#164)
