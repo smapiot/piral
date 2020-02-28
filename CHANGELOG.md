@@ -12,6 +12,11 @@
 * Switched to use `piral-base` as declaration root
 * Included implied schema for generated pilets (supporting `v:0` and `v:1`)
 
+## 0.10.9 (February 28, 2020)
+
+* Improved declaration generation (#168)
+* Added cache options to `piral-adal` (#169)
+
 ## 0.10.8 (February 25, 2020)
 
 * Fixed declaration dropping "extends string" in generic argument (#164)
