@@ -1,13 +1,9 @@
 import { exec } from 'child_process';
 import { resolve } from 'path';
 import { isWindows } from './info';
+import { logFail, logInfo } from './log';
 
-export function runScript(
-  script: string,
-  cwd = process.cwd(),
-  output: NodeJS.WritableStream = process.stdout,
-  input: NodeJS.ReadableStream = process.stdin,
-) {
+export function runScript(script: string, cwd = process.cwd(), output: NodeJS.WritableStream = process.stdout) {
   const bin = resolve('./node_modules/.bin');
   const sep = isWindows ? ';' : ':';
   const env = Object.assign({}, process.env);
@@ -23,9 +19,10 @@ export function runScript(
 
     cp.stdout.pipe(output, opt);
 
-    input.pipe(cp.stdin, opt);
-
-    cp.stderr.pipe(process.stderr, opt);
+    cp.stderr.on('data', chunk => {
+      const content = Buffer.from(chunk).toString('utf8');
+      logInfo(content);
+    });
 
     cp.on('error', reject);
     cp.on('close', (code, signal) => (code === 0 ? resolve() : reject(new Error(signal))));

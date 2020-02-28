@@ -11,6 +11,7 @@ import {
   matchFiles,
   LogLevels,
   setLogLevel,
+  logInfo,
 } from '../common';
 
 export interface DeclarationPiralOptions {
@@ -55,4 +56,5 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
   const files = await getAllFiles(entryModules);
   const result = generateDeclaration(name, root, files, allowedImports);
   await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
+  logInfo(`Created declaration file in "${target}".`);
 }

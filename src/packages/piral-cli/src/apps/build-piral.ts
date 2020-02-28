@@ -175,9 +175,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logProgress('Starting build ...');
 
     // we'll need this info for later
+    const appDir = 'app';
     const originalPackageJson = resolve(root, 'package.json');
     const { files: originalFiles = [] } = require(originalPackageJson);
-    const appDir = 'app';
     const { outDir, outFile } = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', appDir, {
       cacheDir: cache,
       watch: false,

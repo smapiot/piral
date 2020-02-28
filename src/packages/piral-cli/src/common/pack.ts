@@ -2,6 +2,7 @@ import { resolve, join } from 'path';
 import { readJson, move } from './io';
 import { createPackage } from './npm';
 import { ForceOverwrite } from './types';
+import { logFail, logInfo } from './log';
 
 export async function createPiletPackage(baseDir: string, source: string, target: string) {
   const root = resolve(baseDir, source);
@@ -9,21 +10,21 @@ export async function createPiletPackage(baseDir: string, source: string, target
   const pckg = await readJson(root, 'package.json');
 
   if (!pckg) {
-    console.error('No valid package.json found.');
+    logFail('No valid package.json found.');
     throw new Error('Invalid pilet.');
   }
 
   if (!pckg.name) {
-    console.error('Cannot pack the pilet - missing name.');
+    logFail('Cannot pack the pilet - missing name.');
     throw new Error('Invalid pilet.');
   }
 
   if (!pckg.version) {
-    console.error('Cannot pack the pilet - missing version.');
+    logFail('Cannot pack the pilet - missing version.');
     throw new Error('Invalid pilet.');
   }
 
-  console.log(`Packing pilet in ${resolve(baseDir, target)} ...`);
+  logInfo(`Packing pilet in ${resolve(baseDir, target)} ...`);
 
   await createPackage(root);
   const name = `${pckg.name}-${pckg.version}.tgz`.replace(/@/g, '').replace(/\//g, '-');

@@ -8,12 +8,12 @@ import {
   checkCliCompatibility,
   reorderInjectors,
   notifyServerOnline,
-  logInfo,
   patchModules,
   setupBundler,
   removeDirectory,
   LogLevels,
   setLogLevel,
+  logProgress,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -94,7 +94,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   }
 
   if (optimizeModules) {
-    logInfo('Preparing modules ...');
+    logProgress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 
