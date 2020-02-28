@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.10.9 (tbd)
+## 0.10.9 (February 28, 2020)
 
 * Improved declaration generation (#168)
 * Added cache options to `piral-adal` (#169)
