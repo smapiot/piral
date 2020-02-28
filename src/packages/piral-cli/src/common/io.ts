@@ -20,7 +20,7 @@ import { promptConfirm } from './interactive';
 import { nodeVersion } from './info';
 import { computeHash } from './hash';
 import { logFail, logWarn } from './log';
-import { ForceOverwrite } from './types';
+import { ForceOverwrite } from '../types';
 
 function promptOverwrite(file: string) {
   const message = `The file ${file} exists already. Do you want to overwrite it?`;

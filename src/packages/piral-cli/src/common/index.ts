@@ -22,5 +22,4 @@ export * from './scaffold';
 export * from './scripts';
 export * from './settings';
 export * from './template';
-export * from './types';
 export * from './untar';

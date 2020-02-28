@@ -9,7 +9,7 @@ import { logFail, logWarn } from './log';
 import { extendConfig } from './settings';
 import { checkExists, checkIsDirectory, readJson, readText } from './io';
 import { createFileIfNotExists, writeText, writeJson, getFileNames } from './io';
-import { BundlerSetup, ForceOverwrite } from './types';
+import { BundlerSetup, ForceOverwrite } from '../types';
 
 export async function openBrowser(shouldOpen: boolean, port: number) {
   if (shouldOpen) {

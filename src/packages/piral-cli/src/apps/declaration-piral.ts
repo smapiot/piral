@@ -1,5 +1,6 @@
 import { dirname, basename } from 'path';
 import { generateDeclaration } from '../declaration';
+import { LogLevels, ForceOverwrite } from '../types';
 import {
   retrievePiletsInfo,
   retrievePiralRoot,
@@ -7,9 +8,7 @@ import {
   readText,
   getEntryFiles,
   coreExternals,
-  ForceOverwrite,
   matchFiles,
-  LogLevels,
   setLogLevel,
   logInfo,
 } from '../common';

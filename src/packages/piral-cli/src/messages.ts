@@ -1,11 +1,27 @@
-/**
- * The error message tuple. Consists of
- * 1. The unique error code
- * 2. The (short) error message
- */
-export type QuickMessage = [string, string];
+import { QuickMessage, LogLevels } from './types';
 
 /**
+ * @kind Info
+ *
+ * @summary
+ * General information without further content.
+ *
+ * @abstract
+ * Printed to inform you about certain progress in the current command.
+ *
+ * @see
+ * - [Node Console](https://nodejs.org/api/console.html)
+ *
+ * @example
+ * Nothing of interest yet.
+ */
+export function generalInfo_0000(message: string): QuickMessage {
+  return [LogLevels.info, '0000', message];
+}
+
+/**
+ * @kind Error
+ *
  * @summary
  * Reported when the Piral instance defined in the package.json could not be found.
  *
@@ -48,5 +64,5 @@ export type QuickMessage = [string, string];
  * which will install all dependencies.
  */
 export function appInstanceNotFound_0010(name: string): QuickMessage {
-  return ['0010', `The defined Piral instance ("${name}") could not be found.`];
+  return [LogLevels.error, '0010', `The defined Piral instance ("${name}") could not be found.`];
 }

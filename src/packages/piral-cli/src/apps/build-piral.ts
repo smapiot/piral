@@ -1,5 +1,6 @@
 import { dirname, basename, extname, join, resolve, relative } from 'path';
 import { declarationPiral } from './declaration-piral';
+import { ParcelConfig, ForceOverwrite, LogLevels } from '../types';
 import {
   setStandardEnvs,
   retrievePiletsInfo,
@@ -15,16 +16,13 @@ import {
   findPackageVersion,
   coreExternals,
   cliVersion,
-  ParcelConfig,
   checkCliCompatibility,
   patchModules,
   setupBundler,
   defaultCacheDir,
   createFileFromTemplateIfNotExists,
-  ForceOverwrite,
   gatherJsBundles,
   createContextLogger,
-  LogLevels,
   logProgress,
   setLogLevel,
   logReset,

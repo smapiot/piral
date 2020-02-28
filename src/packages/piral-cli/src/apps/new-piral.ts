@@ -1,9 +1,8 @@
 import { resolve, basename } from 'path';
+import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, Framework } from '../types';
 import {
   installPackage,
   updateExistingJson,
-  PiletLanguage,
-  ForceOverwrite,
   getPiralPackage,
   scaffoldPiralSourceFiles,
   createDirectory,
@@ -12,9 +11,6 @@ import {
   logInfo,
   installDependencies,
   combinePackageRef,
-  TemplateType,
-  Framework,
-  LogLevels,
   setLogLevel,
 } from '../common';
 

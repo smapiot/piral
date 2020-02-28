@@ -1,4 +1,5 @@
 import { join, dirname, basename, resolve } from 'path';
+import { LogLevels } from '../types';
 import {
   setStandardEnvs,
   postProcess,
@@ -10,7 +11,6 @@ import {
   setupBundler,
   defaultCacheDir,
   getPiletSchemaVersion,
-  LogLevels,
   setLogLevel,
 } from '../common';
 

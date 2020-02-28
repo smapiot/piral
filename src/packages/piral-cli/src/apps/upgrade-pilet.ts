@@ -1,11 +1,11 @@
 import { resolve } from 'path';
+import { LogLevels, ForceOverwrite } from '../types';
 import {
   readJson,
   installPackage,
   checkExistingDirectory,
   patchPiletPackage,
   copyPiralFiles,
-  ForceOverwrite,
   logInfo,
   getFileStats,
   readPiralPackage,
@@ -17,7 +17,6 @@ import {
   defaultCacheDir,
   removeDirectory,
   createContextLogger,
-  LogLevels,
   setLogLevel,
 } from '../common';
 

@@ -1,5 +1,6 @@
 import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { LogLevels } from '../types';
 import {
   retrievePiletData,
   setStandardEnvs,
@@ -16,7 +17,6 @@ import {
   removeDirectory,
   PiletSchemaVersion,
   getPiletSchemaVersion,
-  LogLevels,
   setLogLevel,
 } from '../common';
 

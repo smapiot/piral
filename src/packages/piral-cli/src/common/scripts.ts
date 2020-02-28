@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import { resolve } from 'path';
 import { isWindows } from './info';
-import { logFail, logInfo } from './log';
+import { logInfo } from './log';
 
 export function runScript(script: string, cwd = process.cwd(), output: NodeJS.WritableStream = process.stdout) {
   const bin = resolve('./node_modules/.bin');

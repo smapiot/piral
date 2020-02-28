@@ -1,4 +1,4 @@
-import { PiletLanguage } from './types';
+import { PiletLanguage } from '../types';
 
 export const reactTypings = {
   '@types/react': 'latest',

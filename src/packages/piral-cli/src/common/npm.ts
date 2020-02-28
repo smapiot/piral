@@ -6,7 +6,7 @@ import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { runScript } from './scripts';
 import { logWarn, logInfo } from './log';
-import { PackageType } from './types';
+import { PackageType } from '../types';
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 

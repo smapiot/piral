@@ -1,5 +1,5 @@
 import { Argv, Arguments } from 'yargs';
-import { LogLevels } from './common/types';
+import { RuleRunner, PiletRuleContext, PiralRuleContext } from './common';
 
 export interface ToolCommandRunner<U> {
   (args: Arguments<U>): void | Promise<void>;
@@ -44,57 +44,6 @@ export interface CliPlugin {
   (api: CliPluginApi): void;
 }
 
-export interface RuleContext {
-  error(message: string): void;
-  warning(message: string): void;
-  logLevel?: LogLevels;
-  root: string;
-  entry: string;
-  dependencies: Record<string, string>;
-  devDependencies: Record<string, string>;
-  peerDependencies: Record<string, string>;
-}
-
 export interface PackagePatcher {
   (rootDir: string): Promise<void>;
-}
-
-export interface RuleRunner<T extends RuleContext> {
-  (context: T, options: any): void | Promise<void>;
-}
-
-export interface Rule<T extends RuleContext> {
-  run: RuleRunner<T>;
-  name: string;
-}
-
-export interface PiralRuleContext extends RuleContext {
-  info: PiletsInfo;
-}
-
-export interface PiletRuleContext extends RuleContext {
-  data: PiralData;
-}
-
-export interface TemplateFileLocation {
-  from: string;
-  to: string;
-  deep?: boolean;
-}
-
-export interface PiletsInfo {
-  files: Array<string | TemplateFileLocation>;
-  externals: Array<string>;
-  devDependencies: Record<string, string | true>;
-  scripts: Record<string, string>;
-  validators: Record<string, any>;
-  preScaffold: string;
-  postScaffold: string;
-  preUpgrade: string;
-  postUpgrade: string;
-}
-
-export interface PiralData {
-  appFile: string;
-  appPackage: any;
 }

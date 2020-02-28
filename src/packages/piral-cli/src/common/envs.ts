@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { debugPiletApi, pathSeparator, cliVersion, compatVersion } from './info';
-import { StandardEnvProps } from './types';
+import { StandardEnvProps } from '../types';
 
 function hasPath(path: string) {
   const paths = (process.env.PATH || '').split(pathSeparator);

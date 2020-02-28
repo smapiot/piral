@@ -1,4 +1,5 @@
 import { ParcelOptions } from 'parcel-bundler';
+import { LogLevels } from './common';
 
 declare module 'parcel-bundler' {
   interface ParcelBundle {
@@ -88,31 +89,10 @@ export interface FileInfo {
   changed: boolean;
 }
 
-export const enum LogLevels {
-  /**
-   * Logging disabled
-   */
-  disabled = 0,
-  /**
-   * Only log errors
-   */
-  error = 1,
-  /**
-   * Log errors and warnings
-   */
-  warning = 2,
-  /**
-   * Log errors, warnings and info
-   */
-  info = 3,
-  /**
-   * Verbose logging, which keeps everything in log with timestamps
-   * and also log http requests to dev server.
-   */
-  verbose = 4,
-  /**
-   * Debug logging active, which saves everything to a file with
-   * timestamps.
-   */
-  debug = 5,
-}
+/**
+ * The error message tuple. Consists of
+ * 0. The log level
+ * 1. The unique error code
+ * 2. The (short) error message
+ */
+export type QuickMessage = [LogLevels, string, string];

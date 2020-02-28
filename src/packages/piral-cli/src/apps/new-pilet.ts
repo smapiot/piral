@@ -1,4 +1,5 @@
 import { resolve, basename } from 'path';
+import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, PackageType } from '../types';
 import {
   createDirectory,
   createFileIfNotExists,
@@ -7,8 +8,6 @@ import {
   dissectPackageName,
   copyPiralFiles,
   patchPiletPackage,
-  ForceOverwrite,
-  PiletLanguage,
   scaffoldPiletSourceFiles,
   logInfo,
   installDependencies,
@@ -18,11 +17,8 @@ import {
   readPiralPackage,
   getPiletsInfo,
   runScript,
-  TemplateType,
   checkAppShellPackage,
   createContextLogger,
-  PackageType,
-  LogLevels,
   setLogLevel,
 } from '../common';
 

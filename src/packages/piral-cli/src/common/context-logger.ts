@@ -1,5 +1,5 @@
 import { logFail, logWarn, logVerbose, logDone } from './log';
-import { ContextLogger } from './types';
+import { ContextLogger } from '../types';
 
 function normEntry(prefix: string, message: string, maxLength = 30) {
   const input = `${prefix}: ${message}`;

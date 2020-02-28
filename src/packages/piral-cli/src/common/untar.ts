@@ -1,7 +1,7 @@
 import * as tar from 'tar';
 import { createGunzip } from 'zlib';
 import { EventEmitter } from 'events';
-import { PackageFiles } from './types';
+import { PackageFiles } from '../types';
 
 const TarParser = tar.Parse as any;
 

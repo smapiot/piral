@@ -1,7 +1,7 @@
 import * as logger from '@parcel/logger';
 import * as messages from '../messages';
 import { format } from 'util';
-import { LogLevels } from './types';
+import { LogLevels, QuickMessage } from '../types';
 
 type Messages = typeof messages;
 type MessageTypes = keyof Messages;
@@ -43,8 +43,8 @@ export function logReset() {
   logger.stopSpinner();
 }
 
-export function logMessage<T extends MessageTypes>(level: LogLevels, type: T, ...args: Parameters<Messages[T]>) {
-  const [code, message] = messages[type].apply(this, args);
+export function log<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>) {
+  const [level, code, message] = messages[type].apply(this, args) as QuickMessage;
 
   switch (level) {
     case LogLevels.error:

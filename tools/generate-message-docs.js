@@ -42,7 +42,7 @@ function generateMessageDocs() {
 
   for (const code of codes) {
     const target = join(rootFolder, `${code.id}.md`);
-    const content = `# ${code.id}
+    const content = `# ${code.kind}: ${code.id}
 
 ${code.docs.summary}
 

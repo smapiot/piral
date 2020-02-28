@@ -1,8 +1,8 @@
 import { resolve, join } from 'path';
 import { readJson, move } from './io';
 import { createPackage } from './npm';
-import { ForceOverwrite } from './types';
 import { logFail, logInfo } from './log';
+import { ForceOverwrite } from '../types';
 
 export async function createPiletPackage(baseDir: string, source: string, target: string) {
   const root = resolve(baseDir, source);

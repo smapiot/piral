@@ -1,5 +1,6 @@
 import { relative, join } from 'path';
 import { buildPilet } from './build-pilet';
+import { LogLevels } from '../types';
 import {
   postFile,
   readBinary,
@@ -8,7 +9,6 @@ import {
   logWarn,
   logInfo,
   logDone,
-  LogLevels,
   setLogLevel,
 } from '../common';
 

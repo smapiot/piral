@@ -1,5 +1,6 @@
 import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { LogLevels } from '../types';
 import {
   retrievePiletsInfo,
   retrievePiralRoot,
@@ -11,7 +12,6 @@ import {
   patchModules,
   setupBundler,
   removeDirectory,
-  LogLevels,
   setLogLevel,
   logProgress,
 } from '../common';

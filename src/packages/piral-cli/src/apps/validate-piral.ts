@@ -1,13 +1,13 @@
+import { getPiralRules } from '../rules';
+import { LogLevels } from '../types';
 import {
   retrievePiralRoot,
   retrievePiletsInfo,
   ruleSummary,
   runRules,
   checkCliCompatibility,
-  LogLevels,
   setLogLevel,
 } from '../common';
-import { getPiralRules } from '../rules';
 
 export interface ValidatPiralOptions {
   entry?: string;

@@ -1,7 +1,7 @@
 import { join, dirname } from 'path';
-import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, LogLevels, setLogLevel } from '../common';
+import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, setLogLevel } from '../common';
 import { getPiletRules } from '../rules';
-import { PiletRuleContext } from '../types';
+import { PiletRuleContext, LogLevels } from '../types';
 
 export interface ValidatPiletOptions {
   entry?: string;

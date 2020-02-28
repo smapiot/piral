@@ -1,4 +1,5 @@
-import { createPiletPackage, logDone, LogLevels, setLogLevel } from '../common';
+import { createPiletPackage, logDone, setLogLevel } from '../common';
+import { LogLevels } from '../types';
 
 export interface PackPiletOptions {
   source?: string;

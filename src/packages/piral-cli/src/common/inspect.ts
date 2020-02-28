@@ -1,6 +1,6 @@
 import { dirname, basename } from 'path';
 import { untar } from './untar';
-import { PackageData, PackageFiles } from './types';
+import { PackageData, PackageFiles } from '../types';
 
 const packageRoot = 'package/';
 
