@@ -116,30 +116,32 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
 describe('Build Piral Command', () => {
   it('missing source should result in an error', async () => {
     const dir = createTempDir();
-    console.error = jest.fn();
+    let error = false;
 
     try {
       await buildPiral(dir);
-    } catch {}
+    } catch {
+      error = true;
+    }
 
-    expect(console.error).toHaveBeenCalled();
+    expect(error).toBeTruthy();
   });
 
   it(
     'can create a develop build without files',
     async () => {
       const dir = scaffoldNewPiralInstance();
-      console.error = jest.fn();
-      console.warn = jest.fn();
+      let error = false;
 
       try {
         await buildPiral(dir, {
           type: 'develop',
         });
-      } catch {}
+      } catch {
+        error = true;
+      }
 
-      expect(console.error).not.toHaveBeenCalled();
-      expect(console.warn).not.toHaveBeenCalled();
+      expect(error).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/develop/piral-local-test-1.0.0.tgz'))).toBeTruthy();
       expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
     },
@@ -150,17 +152,17 @@ describe('Build Piral Command', () => {
     'can create a release build',
     async () => {
       const dir = scaffoldNewPiralInstance();
-      console.error = jest.fn();
-      console.warn = jest.fn();
+      let error = false;
 
       try {
         await buildPiral(dir, {
           type: 'release',
         });
-      } catch {}
+      } catch {
+        error = true;
+      }
 
-      expect(console.error).not.toHaveBeenCalled();
-      expect(console.warn).not.toHaveBeenCalled();
+      expect(error).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/develop/piral-local-test-1.0.0.tgz'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
     },
@@ -179,15 +181,15 @@ describe('Build Piral Command', () => {
       ]);
       writeFileSync(resolve(dir, 'foo.txt'), 'foo!', 'utf8');
       writeFileSync(resolve(dir, 'src/bar.txt'), 'bar!', 'utf8');
-      console.error = jest.fn();
-      console.warn = jest.fn();
+      let error = false;
 
       try {
         await buildPiral(dir);
-      } catch {}
+      } catch {
+        error = true;
+      }
 
-      expect(console.error).not.toHaveBeenCalled();
-      expect(console.warn).not.toHaveBeenCalled();
+      expect(error).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/develop/piral-local-test-1.0.0.tgz'))).toBeTruthy();
       expect(existsSync(resolve(dir, 'dist/release'))).toBeTruthy();
     },

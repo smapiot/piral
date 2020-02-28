@@ -1,10 +1,13 @@
 import { postProcess, PiletSchemaVersion } from './bundler';
 
 jest.mock('fs', () => ({
-  readFile(name: string, enc: string, cb: Function) {
+  readFile(_name: string, _enc: string, cb: Function) {
     cb(undefined, readContent);
   },
-  writeFile(name: string, content: string, enc: string, cb: Function) {
+  readFileSync() {
+    return '';
+  },
+  writeFile(_name: string, content: string, _enc: string, cb: Function) {
     writeContent = content;
     cb(undefined);
   },

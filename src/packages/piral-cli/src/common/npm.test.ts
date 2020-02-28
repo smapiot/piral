@@ -5,6 +5,7 @@ import { Stream } from 'stream';
 jest.mock('child_process');
 jest.mock('fs', () => ({
   exists: (file: string, cb: (status: boolean) => void) => cb(true),
+  readFileSync: () => '',
 }));
 
 describe('NPM Module', () => {
