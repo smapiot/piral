@@ -97,14 +97,12 @@ function getTypeModel(context: DeclVisitorContext, type: Type, name?: string) {
       }
     }
 
-    if (!isAnonymousObject(type)) {
-      const ext = includeExternal(context, type);
+    const ext = includeExternal(context, type);
 
-      if (ext) {
-        return ext;
-      } else if (!isAnonymous(name)) {
-        return makeRef(context, type, name, includeNamed);
-      }
+    if (ext) {
+      return ext;
+    } else if (!isAnonymous(name) && !isAnonymousObject(type)) {
+      return makeRef(context, type, name, includeNamed);
     }
   }
 

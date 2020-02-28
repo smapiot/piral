@@ -8,6 +8,8 @@ import { AnyComponent } from './components';
 import { ExtensionSlotProps } from './extension';
 import { SharedData, DataStoreOptions } from './data';
 
+export { PiletMetadata, EventEmitter };
+
 export interface BaseComponentProps {
   /**
    * The currently used pilet API.
