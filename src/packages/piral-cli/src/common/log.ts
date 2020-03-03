@@ -11,36 +11,54 @@ export function setLogLevel(logLevel: LogLevels) {
 }
 
 export function logInfo(message: string, ...args: Array<string | number | boolean>) {
-  logger.log(format(message, ...args));
+  const msg = format(message, ...args);
+  logger.log(msg);
+  return msg;
 }
 
 export function logDebug(message: string, ...args: Array<string | number | boolean>) {
-  logger.verbose(format(message, ...args));
+  const msg = format(message, ...args);
+  logger.verbose(msg);
+  return msg;
 }
 
 export function logVerbose(message: string, ...args: Array<string | number | boolean>) {
+  const msg = format(message, ...args);
+  logger.log(msg);
+  return msg;
   logger.verbose(format(message, ...args));
 }
 
 export function logDone(message: string, ...args: Array<string | number | boolean>) {
-  logger.success(format(message, ...args));
+  const msg = format(message, ...args);
+  logger.success(msg);
+  return msg;
 }
 
 export function logWarn(message: string, ...args: Array<string | number | boolean>) {
-  logger.warn(format(message, ...args));
+  const msg = format(message, ...args);
+  logger.warn(msg);
+  return msg;
 }
 
 export function logFail(message: string, ...args: Array<string | number | boolean>) {
-  logger.error(format(message, ...args));
+  const msg = format(message, ...args);
+  logger.error(msg);
+  return msg;
 }
 
-export function logProgress(message: string, ...args: Array<string | number | boolean>) {
+export function progress(message: string, ...args: Array<string | number | boolean>) {
   logger.progress(format(message, ...args));
 }
 
 export function logReset() {
   logger.lines = 0;
   logger.stopSpinner();
+}
+
+export function fail<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>) {
+  const message = log(type, ...args);
+  throw new Error(message);
 }
 
 export function log<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>) {

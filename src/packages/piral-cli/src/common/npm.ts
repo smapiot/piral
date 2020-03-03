@@ -1,27 +1,37 @@
 import { resolve } from 'path';
 import { createReadStream, existsSync } from 'fs';
-import { MemoryStream } from './MemoryStream';
+import { log, fail } from './log';
 import { isWindows } from './info';
+import { runScript } from './scripts';
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
-import { runScript } from './scripts';
-import { logWarn, logInfo } from './log';
+import { MemoryStream } from './MemoryStream';
 import { PackageType } from '../types';
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
 function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
+  log('generalDebug_0003', 'Starting the NPM process ...');
   const cwd = resolve(process.cwd(), target);
   const cmd = [npmCommand, ...args].join(' ');
+  log('generalDebug_0003', `Applying NPM cmd "${cmd}" in directory "${cwd}".`);
   return runScript(cmd, cwd, output);
 }
 
 export function isLocalPackage(baseDir: string, fullName: string) {
+  log('generalDebug_0003', 'Checking if its a local package ...');
+
   if (fullName) {
     if (/^[\.\/\~]/.test(fullName)) {
+      log('generalDebug_0003', 'Found a local package by name.');
       return true;
     } else if (fullName.endsWith('.tgz')) {
-      return existsSync(resolve(baseDir, fullName));
+      log('generalDebug_0003', ' Verifying if local path exists ...');
+
+      if (existsSync(resolve(baseDir, fullName))) {
+        log('generalDebug_0003', 'Found a potential local package by path.');
+        return true;
+      }
     }
   }
 
@@ -29,9 +39,15 @@ export function isLocalPackage(baseDir: string, fullName: string) {
 }
 
 export function isGitPackage(fullName: string) {
+  log('generalDebug_0003', 'Checking if its a Git package ...');
+
   if (fullName) {
     const gitted = fullName.startsWith(gitPrefix);
-    return gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName);
+
+    if (gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName)) {
+      log('generalDebug_0003', 'Found a Git package by name.');
+      return true;
+    }
   }
 
   return false;
@@ -87,7 +103,7 @@ export async function dissectPackageName(
     const exists = await checkExists(fullPath);
 
     if (!exists) {
-      throw new Error(`Could not find "${fullPath}" for scaffolding. Aborting.`);
+      fail('scaffoldPathDoesNotExist_0030', fullPath);
     }
 
     return [fullPath, 'latest', false, 'file'];
@@ -134,15 +150,13 @@ export async function getCurrentPackageDetails(
     const gitUrl = makeGitUrl(desired);
     return [gitUrl, getGitPackageVersion(gitUrl)];
   } else if (sourceVersion && sourceVersion.startsWith('file:')) {
-    logWarn('The Piral instance is currently resolved locally, but no local file for the upgrade has been specified.');
-    logInfo('Trying to obtain the pilet from NPM instead.');
+    log('localeFileForUpgradeMissing_0050');
   } else if (sourceVersion && sourceVersion.startsWith('git+')) {
     if (desired === 'latest') {
       const gitUrl = desired;
       return [gitUrl, getGitPackageVersion(gitUrl)];
     } else {
-      logWarn('The Piral instance is currently resolved via Git, but latest was not used to try a direct update.');
-      logInfo('Trying to obtain the pilet from NPM instead.');
+      log('gitLatestForUpgradeMissing_0051');
     }
   }
 

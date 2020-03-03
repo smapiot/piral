@@ -11,6 +11,7 @@
 * Declared `PiletApi` and `Pilet` in `piral-base`
 * Switched to use `piral-base` as declaration root
 * Included implied schema for generated pilets (supporting `v:0` and `v:1`)
+* Improved logging and documented all message codes (#172)
 
 ## 0.10.9 (February 28, 2020)
 

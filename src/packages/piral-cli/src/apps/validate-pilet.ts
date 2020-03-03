@@ -1,5 +1,5 @@
 import { join, dirname } from 'path';
-import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, setLogLevel } from '../common';
+import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, setLogLevel, progress } from '../common';
 import { getPiletRules } from '../rules';
 import { PiletRuleContext, LogLevels } from '../types';
 
@@ -22,6 +22,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     app = validatePiletDefaults.app,
   } = options;
   setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const rules = await getPiletRules();
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);
@@ -54,6 +55,5 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   };
 
   await runRules(rules, context, validators);
-
   ruleSummary(errors, warnings);
 }

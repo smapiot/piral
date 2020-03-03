@@ -23,7 +23,7 @@ import {
   createFileFromTemplateIfNotExists,
   gatherJsBundles,
   createContextLogger,
-  logProgress,
+  progress,
   setLogLevel,
   logReset,
 } from '../common';
@@ -147,6 +147,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     optimizeModules = buildPiralDefaults.optimizeModules,
   } = options;
   setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, version, root, dependencies, ignored, files: scaffoldFiles, ...pilets } = await retrievePiletsInfo(
     entryFiles,
@@ -159,18 +160,18 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   await checkCliCompatibility(root);
 
   if (fresh) {
-    logProgress('Removing output directory ...');
+    progress('Removing output directory ...');
     await removeDirectory(dest.outDir);
   }
 
   if (optimizeModules) {
-    logProgress('Preparing modules ...');
+    progress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 
   // everything except release -> build develop
   if (type !== 'release') {
-    logProgress('Starting build ...');
+    progress('Starting build ...');
 
     // we'll need this info for later
     const appDir = 'app';
@@ -249,7 +250,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   // everything except develop -> build release
   if (type !== 'develop') {
-    logProgress('Starting build ...');
+    progress('Starting build ...');
 
     const { outDir } = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
       cacheDir: cache,

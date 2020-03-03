@@ -7,6 +7,7 @@ import {
   runRules,
   checkCliCompatibility,
   setLogLevel,
+  progress,
 } from '../common';
 
 export interface ValidatPiralOptions {
@@ -22,12 +23,14 @@ export const validatePiralDefaults: ValidatPiralOptions = {
 export async function validatePiral(baseDir = process.cwd(), options: ValidatPiralOptions = {}) {
   const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
   setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const rules = await getPiralRules();
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { root, dependencies, ignored: _, ...info } = await retrievePiletsInfo(entryFiles);
-  await checkCliCompatibility(root);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];
+
+  await checkCliCompatibility(root);
 
   await runRules(rules, {
     error(message) {

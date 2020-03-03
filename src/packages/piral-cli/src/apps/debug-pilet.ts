@@ -9,7 +9,6 @@ import {
   openBrowser,
   reorderInjectors,
   notifyServerOnline,
-  logInfo,
   patchModules,
   setupBundler,
   findEntryModule,
@@ -18,6 +17,7 @@ import {
   PiletSchemaVersion,
   getPiletSchemaVersion,
   setLogLevel,
+  progress,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -60,7 +60,7 @@ async function getOrMakeAppDir(
   logLevel: LogLevels,
 ) {
   if (!emulator) {
-    logInfo(`Preparing supplied Piral instance ...`);
+    progress(`Preparing supplied Piral instance ...`);
     const outDir = resolve(baseDir, 'dist', 'app');
     const packageJson = require.resolve(`${piral}/package.json`);
     const root = resolve(packageJson, '..');
@@ -161,6 +161,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     app,
   } = options;
   setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
@@ -168,19 +169,20 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const externals = Object.keys(peerDependencies);
   const cache = resolve(root, cacheDir);
   const version = getPiletSchemaVersion(schemaVersion);
+  const krasConfig = readKrasConfig({ port }, krasrc);
+  const api = debugPiletApi;
 
   if (fresh) {
+    progress('Removing output directory ...');
     await removeDirectory(cache);
   }
 
   if (optimizeModules) {
-    logInfo('Preparing modules ...');
+    progress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 
   const appDir = await getOrMakeAppDir(root, emulator, appFile, externals, appPackage.name, logLevel);
-  const krasConfig = readKrasConfig({ port }, krasrc);
-  const api = debugPiletApi;
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(targetDir, 'mocks');

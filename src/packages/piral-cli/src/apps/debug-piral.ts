@@ -13,7 +13,7 @@ import {
   setupBundler,
   removeDirectory,
   setLogLevel,
-  logProgress,
+  progress,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -61,13 +61,13 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     optimizeModules = debugPiralDefaults.optimizeModules,
   } = options;
   setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);
+  const krasConfig = readKrasConfig({ port }, krasrc);
 
   await checkCliCompatibility(root);
-
-  const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(dirname(entryFiles), 'mocks');
@@ -90,11 +90,12 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   }
 
   if (fresh) {
+    progress('Removing output directory ...');
     await removeDirectory(cache);
   }
 
   if (optimizeModules) {
-    logProgress('Preparing modules ...');
+    progress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 

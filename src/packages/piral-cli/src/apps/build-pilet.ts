@@ -6,12 +6,13 @@ import {
   removeDirectory,
   findEntryModule,
   retrievePiletData,
-  logInfo,
   patchModules,
   setupBundler,
   defaultCacheDir,
   getPiletSchemaVersion,
   setLogLevel,
+  progress,
+  logDone,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -62,6 +63,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     app,
   } = options;
   setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
@@ -76,13 +78,14 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   };
 
   if (fresh) {
+    progress('Removing output directory ...');
     await removeDirectory(dest.outDir);
   }
 
   await removeDirectory(cache);
 
   if (optimizeModules) {
-    logInfo('Preparing modules ...');
+    progress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 
@@ -113,4 +116,5 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const bundle = await bundler.bundle();
   await postProcess(bundle, version);
+  logDone('Successfully built pilet!');
 }

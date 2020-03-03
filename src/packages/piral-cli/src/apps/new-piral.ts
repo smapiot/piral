@@ -8,10 +8,11 @@ import {
   createDirectory,
   createFileIfNotExists,
   logDone,
-  logInfo,
   installDependencies,
   combinePackageRef,
   setLogLevel,
+  fail,
+  progress,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -51,13 +52,14 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     logLevel = newPiralDefaults.logLevel,
   } = options;
   setLogLevel(logLevel);
+  progress('Preparing source and target ...');
   const root = resolve(baseDir, target);
   const success = await createDirectory(root);
 
   if (success) {
     const packageRef = combinePackageRef(framework, version, 'registry');
 
-    logInfo(`Creating a new Piral instance in %s ...`, root);
+    progress(`Creating a new Piral instance in %s ...`, root);
 
     await createFileIfNotExists(
       root,
@@ -78,21 +80,21 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework));
 
-    logInfo(`Installing NPM package ${packageRef} ...`);
+    progress(`Installing NPM package ${packageRef} ...`);
 
     await installPackage(packageRef, root, '--no-package-lock');
 
-    logInfo(`Taking care of templating ...`);
+    progress(`Taking care of templating ...`);
 
     await scaffoldPiralSourceFiles(template, language, root, app, framework, forceOverwrite);
 
     if (install) {
-      logInfo(`Installing dependencies ...`);
+      progress(`Installing dependencies ...`);
       await installDependencies(root, '--no-package-lock');
     }
 
-    logDone(`All done!`);
+    logDone(`Successfully scaffolded new Piral instance!`);
   } else {
-    throw new Error('Could not create directory.');
+    fail('cannotCreateDirectory_0044');
   }
 }

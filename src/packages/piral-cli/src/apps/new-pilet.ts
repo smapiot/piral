@@ -9,7 +9,6 @@ import {
   copyPiralFiles,
   patchPiletPackage,
   scaffoldPiletSourceFiles,
-  logInfo,
   installDependencies,
   combinePackageRef,
   getPackageName,
@@ -20,6 +19,8 @@ import {
   checkAppShellPackage,
   createContextLogger,
   setLogLevel,
+  fail,
+  progress,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -67,13 +68,14 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     logLevel = newPiletDefaults.logLevel,
   } = options;
   setLogLevel(logLevel);
+  progress('Preparing source and target ...');
   const root = resolve(baseDir, target);
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, source);
   const success = await createDirectory(root);
 
   if (success) {
     const logger = createContextLogger();
-    logInfo(`Scaffolding new pilet in %s ...`, root);
+    progress(`Scaffolding new pilet in %s ...`, root);
 
     await createFileIfNotExists(
       root,
@@ -97,7 +99,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     );
 
     if (registry !== newPiletDefaults.registry) {
-      logInfo(`Setting up NPM registry (%s) ...`, registry);
+      progress(`Setting up NPM registry (%s) ...`, registry);
 
       await createFileIfNotExists(
         root,
@@ -113,11 +115,11 @@ always-auth=true`,
     if (!isLocal) {
       const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
-      logInfo(`Installing NPM package %s ...`, packageRef);
+      progress(`Installing NPM package %s ...`, packageRef);
 
       await installPackage(packageRef, root, '--save-dev', '--no-package-lock');
     } else {
-      logInfo(`Using locally available NPM package %s ...`, sourceName);
+      progress(`Using locally available NPM package %s ...`, sourceName);
     }
 
     const packageName = await getPackageName(root, sourceName, type);
@@ -129,28 +131,28 @@ always-auth=true`,
     const { preScaffold, postScaffold } = getPiletsInfo(piralInfo);
 
     if (preScaffold) {
-      logInfo(`Running preScaffold script ...`);
+      progress(`Running preScaffold script ...`);
       await runScript(preScaffold, root);
     }
 
-    logInfo(`Taking care of templating ...`);
+    progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
     await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
     await copyPiralFiles(root, packageName, ForceOverwrite.yes, [], logger.notify);
 
     if (install) {
-      logInfo(`Installing dependencies ...`);
+      progress(`Installing dependencies ...`);
       await installDependencies(root, '--no-package-lock');
     }
 
     if (postScaffold) {
-      logInfo(`Running postScaffold script ...`);
+      progress(`Running postScaffold script ...`);
       await runScript(postScaffold, root);
     }
 
     logger.summary();
     logger.throwIfError();
   } else {
-    throw new Error('Could not create directory.');
+    fail('cannotCreateDirectory_0044');
   }
 }

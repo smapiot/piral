@@ -20,6 +20,86 @@ export function generalInfo_0000(message: string): QuickMessage {
 }
 
 /**
+ * @kind Warning
+ *
+ * @summary
+ * General warning without further content.
+ *
+ * @abstract
+ * Printed to inform you about a potential problem that may require
+ * changes to your project.
+ *
+ * @see
+ * - [Node Console](https://nodejs.org/api/console.html)
+ *
+ * @example
+ * Nothing of interest yet.
+ */
+export function generalWarning_0001(message: string): QuickMessage {
+  return [LogLevels.warning, '0001', message];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * General error without further content.
+ *
+ * @abstract
+ * Printed to inform you about a problem that requires changes to
+ * your project.
+ *
+ * @see
+ * - [Node Console](https://nodejs.org/api/console.html)
+ *
+ * @example
+ * Nothing of interest yet.
+ */
+export function generalError_0002(message: string): QuickMessage {
+  return [LogLevels.error, '0002', message];
+}
+
+/**
+ * @kind Debug
+ *
+ * @summary
+ * General debug message without further content.
+ *
+ * @abstract
+ * Printed to give some indication about the application's current
+ * progress and state.
+ *
+ * @see
+ * - [Node Console](https://nodejs.org/api/console.html)
+ *
+ * @example
+ * Nothing of interest yet.
+ */
+export function generalDebug_0003(message: string): QuickMessage {
+  return [LogLevels.debug, '0003', message];
+}
+
+/**
+ * @kind Verbose
+ *
+ * @summary
+ * General info message without further content.
+ *
+ * @abstract
+ * Printed to inform you about some more detailed progress in the
+ * application.
+ *
+ * @see
+ * - [Node Console](https://nodejs.org/api/console.html)
+ *
+ * @example
+ * Nothing of interest yet.
+ */
+export function generalVerbose_0004(message: string): QuickMessage {
+  return [LogLevels.verbose, '0004', message];
+}
+
+/**
  * @kind Error
  *
  * @summary
@@ -65,4 +145,566 @@ export function generalInfo_0000(message: string): QuickMessage {
  */
 export function appInstanceNotFound_0010(name: string): QuickMessage {
   return [LogLevels.error, '0010', `The defined Piral instance ("${name}") could not be found.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * No valid package.json found
+ *
+ * @abstract
+ * For performing this action on the pilet more information is required, which should come from
+ * the project's package.json.
+ *
+ * To operate correctly the piral-cli needs to read information provided in the package.json.
+ * Unfortunately, in the given scenario no package.json was found, or the contents of the found
+ * package.json have not met the expected standard.
+ *
+ * Make sure to operate the piral-cli only in a valid Node.js project folder. A valid Node.js
+ * project folder has a package.json in its root.
+ *
+ * @see
+ * - [NPM Package Specification](https://docs.npmjs.com/files/package.json)
+ *
+ * @example
+ * You can see if you are currently in a correct folder.
+ *
+ * ```sh
+ * ls package.json
+ * ```
+ *
+ * If nothing is displayed make sure to either change to the right directory, or to start a new
+ * project using:
+ *
+ * ```sh
+ * npm init
+ * ```
+ *
+ * If you want to start directly with a pilet just use the following command:
+ *
+ * ```sh
+ * npm init pilet
+ * ```
+ */
+export function packageJsonNotFound_0020(): QuickMessage {
+  return [LogLevels.error, '0020', `No valid package.json could be found.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Cannot pack the pilet - missing name.
+ *
+ * @abstract
+ * For performing this action on the pilet the piral-cli needs to know the name of the pilet.
+ * The name of the pilet is provided by the name field specified in its package.json.
+ *
+ * A valid package.json file requires a valid name. The name has to follow standard naming
+ * conventions of the NPM system.
+ *
+ * @see
+ * - [Package Naming Guidelines](https://docs.npmjs.com/package-name-guidelines)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to:
+ *
+ * ```json
+ * {
+ *   "name": "my-pilet",
+ *   "version": "1.0.0",
+ *   "dependencies": {},
+ *   "devDependencies": {
+ *     "piral-cli": "^0.11.0",
+ *     "my-piral": "1.0.0"
+ *   },
+ *   "piral": {
+ *     "name": "my-piral",
+ *     "tooling": "0.11.0"
+ *   }
+ * }
+ * ```
+ *
+ * The exact values do not matter much, but rather the general structure.
+ */
+export function packageJsonMissingName_0021(): QuickMessage {
+  return [LogLevels.error, '0021', `Cannot pack the pilet - missing name.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Cannot pack the pilet - missing version.
+ *
+ * @abstract
+ * For performing this action on the pilet the piral-cli needs to know the version of the pilet.
+ * The version of the pilet is provided by the version field specified in its package.json.
+ *
+ * A valid package.json file requires a valid version. The version has to follow standard semver
+ * specification.
+ *
+ * @see
+ * - [NPM on Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to:
+ *
+ * ```json
+ * {
+ *   "name": "my-pilet",
+ *   "version": "1.0.0",
+ *   "dependencies": {},
+ *   "devDependencies": {
+ *     "piral-cli": "^0.11.0",
+ *     "my-piral": "1.0.0"
+ *   },
+ *   "piral": {
+ *     "name": "my-piral",
+ *     "tooling": "0.11.0"
+ *   }
+ * }
+ * ```
+ *
+ * The exact values do not matter much, but rather the general structure.
+ */
+export function packageJsonMissingVersion_0022(): QuickMessage {
+  return [LogLevels.error, '0022', `Cannot pack the pilet - missing version.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Cannot not find the given full path to successfully scaffold the pilet.
+ *
+ * @abstract
+ * The provided Piral instance resolves to a local file, however, this file cannot be found from the
+ * current directory. Either specify an absolute path or make sure that the relative path works for
+ * the current working directory.
+ *
+ * Since no Piral instance can be resolved the scaffolding process needs to be stopped.
+ *
+ * @see
+ * - [Current Working Directory](https://en.wikipedia.org/wiki/Working_directory)
+ *
+ * @example
+ * ...
+ */
+export function scaffoldPathDoesNotExist_0030(fullPath: string): QuickMessage {
+  return [LogLevels.error, '0030', `Could not find "${fullPath}" for scaffolding.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The provided target must be an existing directory containing a package.json.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function invalidPiletTarget_0040(): QuickMessage {
+  return [LogLevels.error, '0040', `The provided target directory is not a valid.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The section "piral" in the "package.json" file is missing.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function invalidPiletPackage_0041(): QuickMessage {
+  return [LogLevels.error, '0041', `Could not find a Piral instance reference.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The field "name" <string> in the "piral" section of the "package.json" file is missing.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function invalidPiletPackage_0042(): QuickMessage {
+  return [LogLevels.error, '0042', `Could not find a Piral instance reference.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The reference to the Piral instance in the "package.json" file is invalid.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function invalidPiralReference_0043(): QuickMessage {
+  return [LogLevels.error, '0043', `Invalid Piral instance reference.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The desired target directory could not be created.
+ *
+ * @abstract
+ * When a non-existing target directory is specified the Piral CLI needs to create it first. This,
+ * however, can lead to problems if
+ *
+ * - the file system is corrupted
+ * - necessary privileges are missing
+ * - the given path is invalid
+ *
+ * If one of these cases is hit the Piral CLI needs to stop the action.
+ *
+ * @see
+ * - [File System Permissions](https://en.wikipedia.org/wiki/File_system_permissions)
+ *
+ * @example
+ * On nix systems the easiest way to ensure ownership of a folder is using the `chmod` command.
+ * Make sure, however, to only expand permissions when overall security is still ensured.
+ *
+ * Ideally, you'd select a folder that is below your home directory. That way the necessary
+ * permissions are there by definition.
+ *
+ * On nix systems you can change to your home directory via:
+ *
+ * ```sh
+ * cd ~
+ * ```
+ *
+ * On Windows you can use:
+ *
+ * ```sh
+ * cd %HOMEPATH%
+ * ```
+ */
+export function cannotCreateDirectory_0044(): QuickMessage {
+  return [LogLevels.error, '0044', 'Could not create the target directory.'];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * Reported when the Piral instance is locally resolved, but no location for the upgrade is known.
+ *
+ * @abstract
+ * The Piral instance is currently resolved locally, but no local file for the upgrade has been specified.
+ *
+ * Since the local resolution only works against a filename the update process has also to be triggered with
+ * a file location. Otherwise, there is no chance to know a different file location.
+ *
+ * Potentially, you wanted to switch / resolve the module from NPM instead. Therefore, we are then trying to
+ * obtain the Piral instance from NPM instead using the known name.
+ *
+ * @see
+ * - [Local File Dependencies](https://stackoverflow.com/questions/14381898/local-dependency-in-package-json)
+ *
+ * @example
+ * You may have set up the pilet using a locally available tgz file. In this case your original command may
+ * have looked similar to:
+ *
+ * ```json
+ * pilet new ../../my-app-shell/dist/develop/my-app-shell-1.0.0.tgz
+ * ```
+ *
+ * To run an upgrade in such a scenario a command such as
+ *
+ * ```sh
+ * pilet upgrade ../../my-app-shell/dist/develop/my-app-shell-1.1.0.tgz
+ * ```
+ *
+ * needs to be used.
+ */
+export function localeFileForUpgradeMissing_0050(): QuickMessage {
+  return [LogLevels.warning, '0050', `No local file for the upgrade has been specified.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * Reported when the Piral instance is resolved via git, but an invalid version was specified.
+ *
+ * @abstract
+ * The Piral instance is currently resolved via Git, but latest was not used to try a direct update.
+ *
+ * Right now we only support "latest" for Git resolved Piral instances. In this scenario we obtain the
+ * current head from the repository's default branch and update accordingly.
+ *
+ * Potentially, you wanted to switch / resolve the module from NPM instead. Therefore, we are then trying to
+ * obtain the Piral instance from NPM instead using the known name.
+ *
+ * @see
+ * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ *
+ * @example
+ * You may have set up the pilet using a locally available tgz file. In this case your original command may
+ * have looked similar to:
+ *
+ * ```json
+ * pilet new https://github.com/foo/my-app-shell.git
+ * ```
+ *
+ * To run an upgrade in such a scenario a command such as
+ *
+ * ```sh
+ * pilet upgrade latest
+ * ```
+ *
+ * needs to be used.
+ *
+ * Since "latest" is the default version the specifier can actually be omitted, too.
+ */
+export function gitLatestForUpgradeMissing_0051(): QuickMessage {
+  return [LogLevels.warning, '0051', `No valid version has been not used.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Incomplete configuration. Missing URL of the pilet feed.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function missingPiletFeedUrl_0060(): QuickMessage {
+  return [LogLevels.error, '0060', `Missing pilet feed service URL.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Could not find a valid pilet to upload to the pilet feed.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function missingPiletTarball_0061(source: string): QuickMessage {
+  return [LogLevels.error, '0061', `No files found using pattern "${source}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Could not upload the pilet to the pilet feed.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function failedToUpload_0062(fileName: string): QuickMessage {
+  return [LogLevels.warning, '0062', `Could not upload "${fileName}" to feed service.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Could not read the contents from the pilet.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function failedToRead_0063(fileName: string): QuickMessage {
+  return [LogLevels.warning, '0063', `Could not read the file "${fileName}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Did finish uploading the pilet(s) with errors.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function failedUploading_0064(): QuickMessage {
+  return [LogLevels.error, '0064', 'Failed to upload some pilet(s)!'];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The Piral CLI detected a misalignment between the used version of the tooling in the Piral instance and the currently
+ * used version of the tooling.
+ *
+ * @abstract
+ * The tooling of the pilet and the tooling used to produce the Piral instance should be aligned at least with their most
+ * significant ("major") version. As such using the Piral CLI for building the emulator package in version 0.10.5 should be
+ * aligned with a similar 0.10.x version of the Piral CLI for the pilet.
+ *
+ * Recommendation: Update to the same version of the Piral CLI.
+ *
+ * ```sh
+ * npm i piral-cli@{piralVersion}
+ * ```
+ *
+ * Alternatively, you can also try to update the Piral instance.
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * As an example the following package.json may be given:
+ *
+ * ```json
+ * {
+ *   "name": "my-pilet",
+ *   "dependencies": {},
+ *   "devDependencies": {
+ *     "my-app-shell": "^1.0.0"
+ *     "piral-cli": "^0.11.0"
+ *   },
+ *   "piral": {
+ *     "name": "my-app-shell",
+ *     "tooling": "0.10.3"
+ *   }
+ * }
+ * ```
+ *
+ * Since the used Piral instance is using the 0.10.3 version of the piral-cli the pilet should also use a 0.10.x version.
+ *
+ * To solve this just update the Piral CLI accordingly.
+ *
+ * ```sh
+ * npm i piral-cli@0.10.3
+ * ```
+ */
+export function appShellIncompatible_0100(piralVersion: string, cliVersion: string): QuickMessage {
+  return [
+    LogLevels.warning,
+    '0100',
+    `The Piral instance's CLI version (${piralVersion}) may be incompatible to the used version (${cliVersion}).`,
+  ];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The Piral CLI detected a misalignment between the used version of the framework and the used version of the tooling.
+ *
+ * @abstract
+ * The tooling and the framework of Piral should aligned at least with their most significant ("major") version. As such
+ * using Piral in the frontend in version 0.10.5 should be aligned with a similar 0.10.x version of the Piral CLI for the
+ * tooling.
+ *
+ * Recommendation: Update to the same version of the Piral CLI.
+ *
+ * ```sh
+ * npm i piral-cli@{piralVersion}
+ * ```
+ *
+ * Alternatively, you can also change the used version of Piral.
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * As an example the following package.json may be given:
+ *
+ * ```json
+ * {
+ *   "name": "my-app-shell",
+ *   "dependencies": {
+ *     "piral": "^0.10.0"
+ *   },
+ *   "devDependencies": {
+ *     "piral-cli": "^0.11.0"
+ *   }
+ * }
+ * ```
+ *
+ * Since Piral itself is using the 0.10.x version the used Piral CLI should also be using a 0.10.x version.
+ *
+ * To solve this just update the Piral CLI accordingly.
+ *
+ * ```sh
+ * npm i piral-cli@^0.10.0
+ * ```
+ */
+export function toolingIncompatible_0101(piralVersion: string, cliVersion: string): QuickMessage {
+  return [
+    LogLevels.warning,
+    '0101',
+    `The version of Piral (${piralVersion}) may be incompatible to the used version of "piral-cli" (${cliVersion}).`,
+  ];
 }

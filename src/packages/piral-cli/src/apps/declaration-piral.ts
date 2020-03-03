@@ -10,7 +10,8 @@ import {
   coreExternals,
   matchFiles,
   setLogLevel,
-  logInfo,
+  logDone,
+  progress,
 } from '../common';
 
 const piralBaseRoot = 'piral-base/lib/types';
@@ -73,12 +74,15 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
     logLevel = declarationPiralDefaults.logLevel,
   } = options;
   setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, externals } = await retrievePiletsInfo(entryFiles);
   const allowedImports = [...externals, ...coreExternals];
   const appFile = await readText(dirname(entryFiles), basename(entryFiles));
   const entryModules = await getEntryFiles(appFile, dirname(entryFiles));
   const files = await getAllFiles(entryModules);
+
+  progress('Bundling declaration file ...');
   const result = generateDeclaration({
     name,
     root,
@@ -92,6 +96,8 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
     ],
     imports: allowedImports,
   });
+
+  progress('Writing declaration file ...');
   await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
-  logInfo(`Created declaration file in "${target}".`);
+  logDone(`Created declaration file in "${target}".`);
 }
