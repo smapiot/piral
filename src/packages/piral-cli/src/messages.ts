@@ -315,13 +315,31 @@ export function scaffoldPathDoesNotExist_0030(fullPath: string): QuickMessage {
  * The provided target must be an existing directory containing a package.json.
  *
  * @abstract
- * ...
+ * The Piral CLI has to get some meta information for a pilet from its package.json.
+ * The meta information include its name, version, which Piral instance to use, as well
+ * as other relevant infos.
+ *
+ * Make sure to start the Piral CLI in the right folder containing a package.json or a
+ * subdirectory. Alternatively, make sure to provide an additional path to the Piral
+ * CLI via command line parameters.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [NPM Package Specification](https://docs.npmjs.com/files/package.json)
  *
  * @example
- * ...
+ * Make sure you are in the right directory by calling commands such as
+ *
+ * ```sh
+ * pwd # gets the current directory
+ * ```
+ *
+ * or
+ *
+ * ```sh
+ * ls -la # gets the files of the current directory
+ * ```
+ *
+ * Navigate to the right directory via the `cd` command.
  */
 export function invalidPiletTarget_0040(): QuickMessage {
   return [LogLevels.error, '0040', `The provided target directory is not a valid.`];
@@ -334,13 +352,43 @@ export function invalidPiletTarget_0040(): QuickMessage {
  * The section "piral" in the "package.json" file is missing.
  *
  * @abstract
- * ...
+ * The Piral CLI has to get some meta information for a pilet from its package.json.
+ * The meta information include its name, version, which Piral instance to use, as well
+ * as other relevant infos.
+ *
+ * Make sure that you modified the package.json correctly using the specification for
+ * pilets or that the pilet was initially created / scaffolded by the Piral CLI using
+ * the
+ *
+ * ```sh
+ * pilet new
+ * ```
+ *
+ * command.
+ *
+ * Specifically, the package.json needs to contain a special key called `piral`, which
+ * contains an object with additional fields.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/reference#pilets---package-definition)
  *
  * @example
- * ...
+ * Your pilet's package.json may look similar to the following snippet:
+ *
+ * ```json
+ * {
+ *   "name": "my-pilet",
+ *   "version": "1.0.0",
+ *   "devDependencies": {
+ *     "my-piral": "1.0.0",
+ *     "piral-cli": "0.11.0"
+ *   },
+ *   "piral": {
+ *     "name": "my-piral",
+ *     "tooling": "0.11.0"
+ *   }
+ * }
+ * ```
  */
 export function invalidPiletPackage_0041(): QuickMessage {
   return [LogLevels.error, '0041', `Could not find a Piral instance reference.`];
@@ -353,13 +401,44 @@ export function invalidPiletPackage_0041(): QuickMessage {
  * The field "name" <string> in the "piral" section of the "package.json" file is missing.
  *
  * @abstract
- * ...
+ * The Piral CLI has to get some meta information for a pilet from its package.json.
+ * The meta information include its name, version, which Piral instance to use, as well
+ * as other relevant infos.
+ *
+ * Make sure that you modified the package.json correctly using the specification for
+ * pilets or that the pilet was initially created / scaffolded by the Piral CLI using
+ * the
+ *
+ * ```sh
+ * pilet new
+ * ```
+ *
+ * command.
+ *
+ * Specifically, the package.json needs to contain a special section called `piral`, which
+ * should contain (among others) a field `name` pointing to the Piral instance to use.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/reference#pilets---package-definition)
  *
  * @example
- * ...
+ * If your Piral instance is called `my-piral` then the package.json may look similar to
+ * the following snippet:
+ *
+ * ```json
+ * {
+ *   "name": "my-pilet",
+ *   "version": "1.0.0",
+ *   "devDependencies": {
+ *     "my-piral": "1.0.0",
+ *     "piral-cli": "0.11.0"
+ *   },
+ *   "piral": {
+ *     "name": "my-piral",
+ *     "tooling": "0.11.0"
+ *   }
+ * }
+ * ```
  */
 export function invalidPiletPackage_0042(): QuickMessage {
   return [LogLevels.error, '0042', `Could not find a Piral instance reference.`];
@@ -372,13 +451,32 @@ export function invalidPiletPackage_0042(): QuickMessage {
  * The reference to the Piral instance in the "package.json" file is invalid.
  *
  * @abstract
- * ...
+ * Even though everything seems to be correct on the first glance it may be that the
+ * actual reference is broken. This could be due to various reasons.
+ *
+ * - NPM linking is broken
+ * - The dependencies have not been installed yet (run `npm i`)
+ * - The Piral instance's name is invalid (e.g., due to a typo)
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/reference#pilets---package-definition)
+ * - [Node Modules Loading](https://nodejs.org/api/modules.html#modules_loading_from_node_modules_folders)
  *
  * @example
- * ...
+ * Let's say you just cloned the pilet via
+ *
+ * ```sh
+ * git clone https://myhub.com/mypilet
+ * ```
+ *
+ * Right now the dependencies should still be missing as dependencies are usually not
+ * checked in. Under these circumstances the Piral instance reference is invalid.
+ *
+ * Make sure to resolve the dependencies correctly by running
+ *
+ * ```sh
+ * npm i
+ * ```
  */
 export function invalidPiralReference_0043(): QuickMessage {
   return [LogLevels.error, '0043', `Invalid Piral instance reference.`];
@@ -511,13 +609,23 @@ export function gitLatestForUpgradeMissing_0051(): QuickMessage {
  * Incomplete configuration. Missing URL of the pilet feed.
  *
  * @abstract
- * ...
+ * The publish command works either against the official public feed using a feed name
+ * (e.g., `sample`) or a fully qualified URL working against *any* feed service.
+ *
+ * Make sure that the provided publish endpoint URL follows the Feed Service API specification.
+ *
+ * If the URL is missing (i.e., not provided) then the Piral CLI does not know to which feed
+ * service to publish.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [Feed API Specification](https://docs.piral.io/reference/specifications/feed-api-specification)
  *
  * @example
- * ...
+ * Always specify the URL via the `--url` provider.
+ *
+ * ```sh
+ * pilet publish --url https://feed.piral.io/api/v1/pilet/sample
+ * ```
  */
 export function missingPiletFeedUrl_0060(): QuickMessage {
   return [LogLevels.error, '0060', `Missing pilet feed service URL.`];
@@ -530,13 +638,45 @@ export function missingPiletFeedUrl_0060(): QuickMessage {
  * Could not find a valid pilet to upload to the pilet feed.
  *
  * @abstract
- * ...
+ * The `pilet publish` commands works against an already created pilet package.
+ * If no pilet package is yet available the command will ultimately fail.
+ *
+ * There are a couple of options. For instance, using the `--fresh` flag it is
+ * possible to trigger a `pilet build` and `pilet pack` process implicitly.
+ *
+ * Otherwise, make sure to have a `.tgz` file in the directory or specify it
+ * directly.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [NPM Pack](https://docs.npmjs.com/cli-commands/pack.html)
  *
  * @example
- * ...
+ * Make sure to have build a pilet beforehand:
+ *
+ * ```sh
+ * pilet build
+ * ```
+ *
+ * Then you should pack the current contents:
+ *
+ * ```sh
+ * pilet pack
+ * ```
+ *
+ * Finally, you can publish it:
+ *
+ * ```sh
+ * pilet publish --url sample
+ * ```
+ *
+ * To do these three commands in one sweep just use `--fresh`:
+ *
+ * ```sh
+ * pilet publish --fresh --url sample
+ * ```
+ *
+ * Using multiple commands is preferred if you use custom options, otherwise
+ * just go for the single command.
  */
 export function missingPiletTarball_0061(source: string): QuickMessage {
   return [LogLevels.error, '0061', `No files found using pattern "${source}".`];
@@ -549,13 +689,34 @@ export function missingPiletTarball_0061(source: string): QuickMessage {
  * Could not upload the pilet to the pilet feed.
  *
  * @abstract
- * ...
+ * Uploading to the pilet feed service API failed. This could have various reasons:
+ *
+ * - Loss of connectivity
+ * - The provided authentication was invalid or missing
+ * - The URL was invalid
+ * - The feed service does not follow the specification
+ * - A custom condition from the feed service was rejected
+ * - The given pilet was already available at the feed service
+ *
+ * The Piral CLI will print the error response from the feed service. Please contact
+ * your feed service admin if nothing was printed.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [Feed API Specification](https://docs.piral.io/reference/specifications/feed-api-specification)
  *
  * @example
- * ...
+ * Make sure that you are connected to the internet and that the desired feed service URL
+ * can be reached from your computer.
+ *
+ * Run
+ *
+ * ```sh
+ * pilet publish --fresh --url https://myfeedservice.com/api/pilet
+ * ```
+ *
+ * Look at the error response. Make sure that your version is not yet published. If other
+ * conditions (e.g., a certain naming convention for your pilet) need to be followed adjust
+ * the package.json accordingly.
  */
 export function failedToUpload_0062(fileName: string): QuickMessage {
   return [LogLevels.warning, '0062', `Could not upload "${fileName}" to feed service.`];
