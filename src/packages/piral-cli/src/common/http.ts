@@ -1,6 +1,6 @@
 import * as request from 'request';
 import { platform } from 'os';
-import { logWarn } from './log';
+import { log } from './log';
 
 const os = platform();
 
@@ -30,7 +30,7 @@ export function postFile(target: string, key: string, file: Buffer) {
       },
       (err, res, body) => {
         if (err) {
-          logWarn(err);
+          log('failedHttpPost_0065', err);
           resolve(false);
         } else {
           const status = res.statusCode;
@@ -38,11 +38,7 @@ export function postFile(target: string, key: string, file: Buffer) {
 
           if (!success) {
             const message = getMessage(body);
-            logWarn(`Failed to upload: ${res.statusMessage} (%s).`, status);
-
-            if (message) {
-              logWarn(message);
-            }
+            log('unsuccessfulHttpPost_0066', res.statusMessage, status, message || '');
           }
 
           resolve(success);

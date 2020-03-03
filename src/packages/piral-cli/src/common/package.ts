@@ -1,19 +1,10 @@
 import { resolve, join, extname, basename, dirname, relative } from 'path';
-import { logFail, logWarn } from './log';
+import { log, fail } from './log';
+import { getDevDependencies } from './language';
 import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
-import { getDevDependencies } from './language';
-import {
-  readJson,
-  copy,
-  updateExistingJson,
-  findFile,
-  checkExists,
-  getHash,
-  checkIsDirectory,
-  matchFiles,
-  getFileNames,
-} from './io';
+import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
+import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import {
   Framework,
   PiletLanguage,
@@ -37,7 +28,7 @@ function getDependencyVersion(
   const selected = typeof version === 'string' ? version : version === true ? allDependencies[name] : undefined;
 
   if (!selected) {
-    logWarn(`The version for "${name}" could not be resolved. Using "latest".`);
+    log('cannotResolveVersion_0052', name);
   }
 
   return selected || 'latest';
@@ -249,15 +240,13 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
     const exists = await checkExists(packageName);
 
     if (!exists) {
-      logFail(`Cannot find a valid entry point. Missing package.json in "%s".`, rootDir);
-      throw new Error('Invalid Piral instance.');
+      fail('entryPointMissing_0070', rootDir);
     }
 
     const { app } = require(packageName);
 
     if (!app) {
-      logFail(`Cannot find a valid entry point. Missing field "%s" in the "%s".`, 'app', 'package.json');
-      throw new Error('Invalid Piral instance.');
+      fail('entryPointMissing_0071');
     }
 
     return join(dirname(packageName), app);
@@ -272,7 +261,7 @@ function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
   if (Array.isArray(items)) {
     return items;
   } else if (items !== undefined) {
-    logWarn(`The value of "${key}" should be an array. Found "${typeof items}".`);
+    log('expectedArray_0072', key, typeof items);
   }
 
   return undefined;
@@ -286,7 +275,7 @@ export async function findPackageVersion(rootPath: string, packageName: string) 
     const packageJson = await findFile(moduleName, 'package.json');
     return require(packageJson).version;
   } catch (e) {
-    logWarn(`Could not resolve "${packageName}" from "${rootPath}". Taking "latest" version.`);
+    log('cannotResolveDependency_0053', packageName, rootPath);
     return 'latest';
   }
 }
@@ -295,15 +284,13 @@ export async function retrievePiletsInfo(entryFile: string) {
   const exists = await checkExists(entryFile);
 
   if (!exists) {
-    logFail(`The given entry pointing to "%s" does not exist.`, entryFile);
-    throw new Error('Invalid Piral instance.');
+    fail('entryPointNotFound_0073', entryFile);
   }
 
   const packageJson = await findFile(entryFile, 'package.json');
 
   if (!packageJson) {
-    logFail('Cannot find any package.json. You need a valid package.json for your Piral instance.');
-    throw new Error('Invalid Piral instance.');
+    fail('packageJsonMissing_0074');
   }
 
   const packageInfo = require(packageJson);
@@ -398,8 +385,7 @@ export async function retrievePiletData(target: string, app?: string) {
   const packageJson = await findFile(target, 'package.json');
 
   if (!packageJson) {
-    logFail('Cannot find the "%s". You need a valid package.json for your pilet.', 'package.json');
-    throw new Error('Invalid pilet.');
+    fail('packageJsonMissing_0075');
   }
 
   const root = dirname(packageJson);
@@ -411,12 +397,7 @@ export async function retrievePiletData(target: string, app?: string) {
   const appFile: string = appPackage && appPackage.app;
 
   if (!appFile) {
-    logFail(
-      'Cannot find the Piral instance. Make sure the "%s" of the Piral instance is valid (has an "%s" field).',
-      'package.json',
-      'app',
-    );
-    throw new Error('Invalid Piral instance selected.');
+    fail('appInstanceInvalid_0011');
   }
 
   const emulator = checkAppShellPackage(appPackage);

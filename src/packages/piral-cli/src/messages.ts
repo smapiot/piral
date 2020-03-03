@@ -151,6 +151,39 @@ export function appInstanceNotFound_0010(name: string): QuickMessage {
  * @kind Error
  *
  * @summary
+ * Reported when the Piral instance defined in the package.json seems invalid.
+ *
+ * @abstract
+ * There are a couple of properties that need to be fulfilled by a valid Piral instance.
+ * An important property is that the package.json contains an "app" field.
+ *
+ * The app field denotes the entry point of the Piral instance for bundling purposes.
+ * It should be an HTML file.
+ *
+ * @see
+ * - [Parcel HTML Asset](https://parceljs.org/html.html)
+ *
+ * @example
+ * Make sure the package.json of the Piral instance is valid (has an "app" field).
+ *
+ * This could look as follows:
+ *
+ * ```json
+ * {
+ *   "name": "my-piral",
+ *   // ...
+ *   "app": "src/index.html"
+ * }
+ * ```
+ */
+export function appInstanceInvalid_0011(): QuickMessage {
+  return [LogLevels.error, '0011', `Could not find a valid Piral instance.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * No valid package.json found
  *
  * @abstract
@@ -528,6 +561,46 @@ export function cannotCreateDirectory_0044(): QuickMessage {
  * @kind Warning
  *
  * @summary
+ * Reported when a file could not be overwritten.
+ *
+ * @abstract
+ * Usually, this only indicates that a file already existed and was not overwritten.
+ * There are three modes concerning the overwrite policy:
+ *
+ * - Do not overwrite (usually the default)
+ * - Ask before overwriting
+ * - Always overwrite
+ *
+ * In the first mode the warning is produced to indicate an operation was not
+ * performed due to the integrated overwrite protection.
+ *
+ * @see
+ * - [File System Permissions](https://en.wikipedia.org/wiki/File_system_permissions)
+ *
+ * @example
+ * Many commands allow setting the overwrite mode. For instance, when performing an
+ * upgrade of a pilet we can set it.
+ *
+ * To ask before overwriting the following command works:
+ *
+ * ```sh
+ * pilet upgrade --force-overwrite prompt
+ * ```
+ *
+ * If you want to always overwrite use:
+ *
+ * ```sh
+ * pilet upgrade --force-overwrite yes
+ * ```
+ */
+export function didNotOverWriteFile_0045(file: string): QuickMessage {
+  return [LogLevels.warning, '0045', `Did not overwrite: File ${file} already exists.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
  * Reported when the Piral instance is locally resolved, but no location for the upgrade is known.
  *
  * @abstract
@@ -600,6 +673,70 @@ export function localeFileForUpgradeMissing_0050(): QuickMessage {
  */
 export function gitLatestForUpgradeMissing_0051(): QuickMessage {
   return [LogLevels.warning, '0051', `No valid version has been not used.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * Reported when the version of a dependency cannot be resolved.
+ *
+ * @abstract
+ * When a pilet is scaffolded from a Piral instance special dev tools may be installed
+ * as specified from the "devDependencies" section in the "pilets" section.
+ *
+ * The default version resolution falls back to the version specified already in the
+ * standard "devDependencies" of the Piral instance's package.json.
+ *
+ * Under some conditions no version of the specified dependency can be determined.
+ *
+ * The conditions may be:
+ *
+ * - Missing dev dependencies
+ * - Invalid dev dependencies
+ * - Disk failures
+ *
+ * @see
+ * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/reference#piral-instance---package-definition)
+ *
+ * @example
+ * The primary example hits when a dev dependency was specified that is otherwise not given.
+ *
+ * Consider the following package.json:
+ *
+ * ```json
+ * {
+ *   "name": "my-piral",
+ *   "devDependencies": {},
+ *   "pilets": {
+ *     "devDependencies": {
+ *       "prettier": true
+ *     }
+ *   }
+ * }
+ * ```
+ */
+export function cannotResolveVersion_0052(name: string): QuickMessage {
+  return [LogLevels.warning, '0052', `The version for "${name}" could not be resolved. Using "latest".`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * Reported when a dependency cannot be resolved.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/reference#piral-instance---package-definition)
+ *
+ * @example
+ * ...
+ */
+export function cannotResolveDependency_0053(name: string, rootDir: string): QuickMessage {
+  return [LogLevels.warning, '0053', `Could not resolve "${name}" from "${rootDir}". Taking "latest" version.`];
 }
 
 /**
@@ -683,7 +820,7 @@ export function missingPiletTarball_0061(source: string): QuickMessage {
 }
 
 /**
- * @kind Error
+ * @kind Warning
  *
  * @summary
  * Could not upload the pilet to the pilet feed.
@@ -723,7 +860,7 @@ export function failedToUpload_0062(fileName: string): QuickMessage {
 }
 
 /**
- * @kind Error
+ * @kind Warning
  *
  * @summary
  * Could not read the contents from the pilet.
@@ -797,6 +934,183 @@ export function failedToRead_0063(fileName: string): QuickMessage {
  */
 export function failedUploading_0064(): QuickMessage {
   return [LogLevels.error, '0064', 'Failed to upload some pilet(s)!'];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The HTTP post request failed.
+ *
+ * @abstract
+ * While submitting the HTTP post request an error was reported. This usually indicates
+ * a problem with the network, either due to
+ *
+ * - loss of connectivity
+ * - an invalid host name (DNS broken)
+ * - a system restriction (e.g., firewall)
+ * - invalid SSL certificate
+ *
+ * Make sure to understand the presented Node.js error before proceeding.
+ *
+ * @see
+ * - [Feed API Specification](https://docs.piral.io/reference/specifications/feed-api-specification)
+ *
+ * @example
+ * The easiest way to replicate an error would be to use an invalid host.
+ *
+ * ```sh
+ * pilet publish --url https://doesnotexist/api/pilet
+ * ```
+ */
+export function failedHttpPost_0065(error: string): QuickMessage {
+  return [LogLevels.error, '0065', `Failed to upload via HTTP: ${error}.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The HTTP post request was reported to be unsuccessful.
+ *
+ * @abstract
+ * The URL could be reached, however, the returned status code did not indicate success.
+ * Note that only a status code of 200 will be interpreted as successful.
+ *
+ * The error message prints the received status text and status code. Usually, this should be
+ * sufficient to know where the problem lies. Some feed service implementations will also provide
+ * a custom payload with further information. This response body will also be printed.
+ *
+ * @see
+ * - [Feed API Specification](https://docs.piral.io/reference/specifications/feed-api-specification)
+ *
+ * @example
+ * The easiest way to replicate an error would be to use any URL.
+ *
+ * ```sh
+ * pilet publish --url https://example.com/api/pilet
+ * ```
+ */
+export function unsuccessfulHttpPost_0066(statusText: string, statusCode: number, error: string): QuickMessage {
+  return [LogLevels.warning, '0066', `Failed to upload: ${statusText} (${statusCode}). ${error}`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * ...
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ *
+ * @example
+ * ...
+ */
+export function entryPointMissing_0070(rootDir: string): QuickMessage {
+  return [LogLevels.error, '0070', `Cannot find a valid entry point. Missing package.json in "${rootDir}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * ...
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ *
+ * @example
+ * ...
+ */
+export function entryPointMissing_0071(): QuickMessage {
+  return [LogLevels.error, '0071', `Cannot find a valid entry point. Missing field "app" in the "package.json".`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * ...
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ *
+ * @example
+ * ...
+ */
+export function expectedArray_0072(key: string, type: string): QuickMessage {
+  return [LogLevels.warning, '0072', `The value of "${key}" should be an array. Found "${type}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * ...
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ *
+ * @example
+ * ...
+ */
+export function entryPointNotFound_0073(app: string): QuickMessage {
+  return [LogLevels.error, '0073', `The given entry pointing to "${app}" does not exist.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * ...
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ *
+ * @example
+ * ...
+ */
+export function packageJsonMissing_0074(): QuickMessage {
+  return [
+    LogLevels.error,
+    '0074',
+    'Cannot find the "package.json". You need a valid package.json for your Piral instance.',
+  ];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * ...
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ *
+ * @example
+ * ...
+ */
+export function packageJsonMissing_0075(): QuickMessage {
+  return [LogLevels.error, '0075', 'Cannot find the "package.json". You need a valid package.json for your pilet.'];
 }
 
 /**
@@ -907,4 +1221,150 @@ export function toolingIncompatible_0101(piralVersion: string, cliVersion: strin
     '0101',
     `The version of Piral (${piralVersion}) may be incompatible to the used version of "piral-cli" (${cliVersion}).`,
   ];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The browser could not be opened.
+ *
+ * @abstract
+ * The Piral CLI uses a package called "open" for automatically opening a browser.
+ * The package tries to find the system's default browser and open it with the URL
+ * given by the currently started debug process.
+ *
+ * This will fail under the following circumstances:
+ *
+ * - There are not enough rights to know what is the default browser
+ * - There are not enough rights to open the default browser
+ * - The default browser cannot be opened
+ * - The API for opening the default browser is invalid
+ *
+ * @see
+ * - [NPM Open Package](https://www.npmjs.com/package/open)
+ *
+ * @example
+ * The browser is usually just opened via the command line:
+ *
+ * ```sh
+ * pilet debug --open
+ * ```
+ */
+export function failedToOpenBrowser_0070(error: string): QuickMessage {
+  return [LogLevels.error, '0070', `Unexpected error while opening in browser: ${error}.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid pilet schema version was found.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function invalidSchemaVersion_0071(schemaVersion: string): QuickMessage {
+  return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Expected "v0" or "v1".`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid argument for "commandName" was supplied.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiCommandNameInvalid_0200(type: string): QuickMessage {
+  return [LogLevels.warning, '0200', `Invalid argument for "commandName" - no ${type} added.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid value for the given argument was supplied.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiArgumentInvalid_0201(name: string, type: string): QuickMessage {
+  return [LogLevels.warning, '0201', `Invalid argument for "${name}" - no ${type} added.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid argument for "name" was supplied.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiValidateNameInvalid_0202(type: string): QuickMessage {
+  return [LogLevels.warning, '0202', `Invalid argument for "name" - no ${type} rule added.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid argument for "run" was supplied.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiValidateRunInvalid_0203(type: string): QuickMessage {
+  return [LogLevels.warning, '0203', `Invalid argument for "run" - no ${type} rule added.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid value for the given argument was supplied.
+ *
+ * @abstract
+ * ...
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiPatchInvalid_0204(name: string): QuickMessage {
+  return [LogLevels.warning, '0204', `Invalid argument for "${name}" - nothing installed.`];
 }

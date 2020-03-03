@@ -15,11 +15,11 @@ import {
   mkdirSync,
   statSync,
 } from 'fs';
+import { log } from './log';
 import { deepMerge } from './merge';
-import { promptConfirm } from './interactive';
 import { nodeVersion } from './info';
 import { computeHash } from './hash';
-import { logFail, logWarn } from './log';
+import { promptConfirm } from './interactive';
 import { ForceOverwrite } from '../types';
 
 function promptOverwrite(file: string) {
@@ -74,7 +74,8 @@ export async function createDirectory(targetDir: string) {
       createDirectoryLegacy(targetDir);
       return true;
     } catch (e) {
-      logFail(`Error while creating ${targetDir}: `, e);
+      log('cannotCreateDirectory_0044');
+      log('generalDebug_0003', `Error while creating ${targetDir}: ${e}`);
       return false;
     }
   }
@@ -85,7 +86,8 @@ export async function createDirectory(targetDir: string) {
     });
     return true;
   } catch (e) {
-    logFail(`Error while creating ${targetDir}: `, e);
+    log('cannotCreateDirectory_0044');
+    log('generalDebug_0003', `Error while creating ${targetDir}: ${e}`);
     return false;
   }
 }
@@ -278,7 +280,7 @@ export async function copy(source: string, target: string, forceOverwrite = Forc
         await copy(source, target, ForceOverwrite.yes);
       }
     } else {
-      logWarn(e.message || `Did not overwrite: File ${target} already exists.`);
+      log('didNotOverWriteFile_0045', target);
     }
   }
 }

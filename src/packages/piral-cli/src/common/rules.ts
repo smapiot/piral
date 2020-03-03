@@ -2,9 +2,7 @@ import { logInfo, logWarn, logFail } from './log';
 import { RuleContext, Rule } from '../types';
 
 export function ruleSummary(errors: Array<string>, warnings: Array<string>) {
-  logInfo('');
-  logInfo(`Found ${warnings.length} warning(s) and ${errors.length} error(s).`);
-  logInfo('');
+  logInfo(`\nFound ${warnings.length} warning(s) and ${errors.length} error(s).\n`);
   warnings.forEach(warning => logWarn(warning));
   errors.forEach(error => logFail(error));
 

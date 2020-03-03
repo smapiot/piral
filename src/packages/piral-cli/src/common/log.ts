@@ -26,7 +26,6 @@ export function logVerbose(message: string, ...args: Array<string | number | boo
   const msg = format(message, ...args);
   logger.log(msg);
   return msg;
-  logger.verbose(format(message, ...args));
 }
 
 export function logDone(message: string, ...args: Array<string | number | boolean>) {
@@ -58,7 +57,9 @@ export function logReset() {
 
 export function fail<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>) {
   const message = log(type, ...args);
-  throw new Error(message);
+  const error = new Error(message);
+  (error as any).logged = true;
+  throw error;
 }
 
 export function log<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>) {

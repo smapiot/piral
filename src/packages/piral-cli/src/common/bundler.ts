@@ -3,10 +3,10 @@ import extendBundlerWithPlugins = require('parcel-plugin-codegen');
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
-import { patchModule } from './bundler-patches';
+import { log } from './log';
 import { computeHash } from './hash';
-import { logFail, logWarn } from './log';
 import { extendConfig } from './settings';
+import { patchModule } from './bundler-patches';
 import { checkExists, checkIsDirectory, readJson, readText } from './io';
 import { createFileIfNotExists, writeText, writeJson, getFileNames } from './io';
 import { BundlerSetup, ForceOverwrite } from '../types';
@@ -17,7 +17,7 @@ export async function openBrowser(shouldOpen: boolean, port: number) {
       const open = require('opn');
       await open(`http://localhost:${port}`, undefined);
     } catch (err) {
-      logFail(`Unexpected error while opening in browser: ${err}`);
+      log('failedToOpenBrowser_0070', err);
     }
   }
 }
@@ -167,7 +167,7 @@ export function getPiletSchemaVersion(schemaVersion: 'v0' | 'v1') {
     case 'v1':
       return PiletSchemaVersion.currentScript;
     default:
-      logWarn(`Found invalid pielt schema version "${schemaVersion}". Expected "v0" or "v1".`);
+      log('invalidSchemaVersion_0071', schemaVersion);
       return PiletSchemaVersion.directEval;
   }
 }
