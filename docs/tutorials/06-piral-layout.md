@@ -28,8 +28,6 @@ renderInstance({
     DashboardTile: MyDashboardTile,
   },
 });
-
-export * from 'piral/api';
 ```
 
 We use a single property called `layout`, which expects an object with components that are used to represent various building blocks.

@@ -1,5 +1,5 @@
-import { dirname, basename } from 'path';
-import { generateDeclaration } from '../declaration';
+import { dirname, basename, resolve } from 'path';
+import { generateDeclaration } from 'dets';
 import { LogLevels, ForceOverwrite } from '../types';
 import {
   retrievePiletsInfo,
@@ -12,6 +12,32 @@ import {
   setLogLevel,
   logInfo,
 } from '../common';
+
+const piralBaseRoot = 'piral-base/lib/types';
+
+function findPiralBaseApi(root: string) {
+  try {
+    return require
+      .resolve(piralBaseRoot, {
+        paths: [root],
+      })
+      ?.replace(/\.js$/, '.d.ts');
+  } catch {
+    return undefined;
+  }
+}
+
+function findDeclaredTypings(root: string) {
+  try {
+    const { typings } = require(resolve(root, 'package.json'));
+
+    if (typings) {
+      return [resolve(root, typings)];
+    }
+  } catch {}
+
+  return [];
+}
 
 export interface DeclarationPiralOptions {
   entry?: string;
@@ -53,7 +79,19 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
   const appFile = await readText(dirname(entryFiles), basename(entryFiles));
   const entryModules = await getEntryFiles(appFile, dirname(entryFiles));
   const files = await getAllFiles(entryModules);
-  const result = generateDeclaration(name, root, files, allowedImports);
+  const result = generateDeclaration({
+    name,
+    root,
+    files,
+    types: findDeclaredTypings(root),
+    apis: [
+      {
+        file: findPiralBaseApi(root),
+        name: 'PiletApi',
+      },
+    ],
+    imports: allowedImports,
+  });
   await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
   logInfo(`Created declaration file in "${target}".`);
 }
