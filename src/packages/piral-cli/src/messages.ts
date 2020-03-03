@@ -729,13 +729,33 @@ export function failedToUpload_0062(fileName: string): QuickMessage {
  * Could not read the contents from the pilet.
  *
  * @abstract
- * ...
+ * Publishing pilet requires a valid tgz file that can be read and transmitted.
+ * If such a file can be found, however, cannot be opened then we have no chance
+ * of publishing the pilet.
+ *
+ * This warning is thus emitted in case of:
+ *
+ * - an empty tgz file
+ * - an inaccessible tgz file
+ *
+ * Make sure that the disk is properly functioning and that necessary permissions
+ * are set to allow accessing the file.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [File System Permissions](https://en.wikipedia.org/wiki/File_system_permissions)
  *
  * @example
- * ...
+ * Find the available tgz files:
+ *
+ * ```sh
+ * ls -la *.tgz
+ * ```
+ *
+ * Make sure that at least one tgz file is available. Check the displayed permissions
+ * and use `chmod` to set the right permissions.
+ *
+ * Usually, changing permissions should not be required at all. Make sure you operate
+ * from the same user account as when the tgz file was created.
  */
 export function failedToRead_0063(fileName: string): QuickMessage {
   return [LogLevels.warning, '0063', `Could not read the file "${fileName}".`];
@@ -748,13 +768,32 @@ export function failedToRead_0063(fileName: string): QuickMessage {
  * Did finish uploading the pilet(s) with errors.
  *
  * @abstract
- * ...
+ * The Piral CLI tries to upload all matched .tgz files. In case of
+ * multiple hits all files are published. This may not be the behavior you
+ * look for as it will lead to errors in case of already published pilets.
+ *
+ * To avoid uploading already published pilets either perform a fresh
+ * build omitting any tgz inputs at all or specify the tgz file directly.
  *
  * @see
  * - [Semantic Versioning](https://semver.org)
  *
  * @example
- * ...
+ * To perform a fresh build use the following command:
+ *
+ * ```sh
+ * pilet publish --fresh --url sample
+ * ```
+ *
+ * In order to specify the file explicitly just use a positional argument.
+ *
+ * ```sh
+ * pilet publish my-pilet-1.0.0.tgz --url sample
+ * ```
+ *
+ * Make sure that the specified file exists.
+ *
+ * Additionally, you can use globs to match multiple files.
  */
 export function failedUploading_0064(): QuickMessage {
   return [LogLevels.error, '0064', 'Failed to upload some pilet(s)!'];
