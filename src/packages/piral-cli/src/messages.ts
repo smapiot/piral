@@ -999,16 +999,42 @@ export function unsuccessfulHttpPost_0066(statusText: string, statusCode: number
  * @kind Error
  *
  * @summary
- * ...
+ * The package.json containing a valid entry point for the Piral instance is missing.
  *
  * @abstract
- * ...
+ * A Piral instance needs to be a valid Node.js project. Valid Node.js projects contain a
+ * package.json file in their root directory. This file is used by the Piral CLI to get
+ * relevant meta data for the Piral instance.
+ *
+ * The relevant meta data includes information such as the name of the Piral instance, the
+ * additional typings, what dependencies are shared with the pilets, and what is the entry
+ * point for bundling.
+ *
+ * The entry point for bundling refers to the index.html file that should act as the file
+ * containing all references for scripts, stylesheets, and other resources.
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [Parcel Bundling](https://codeburst.io/bundle-your-web-application-with-parceljs-b4eee99bdb55)
  *
  * @example
- * ...
+ * The following shows a valid package.json of a Piral instance:
+ *
+ * ```json
+ * {
+ *   "name": "my-app-shell",
+ *   "version": "1.0.0",
+ *   "app": "src/index.html",
+ *   "dependencies": {
+ *     "piral": "0.11.0"
+ *   },
+ *   "devDependencies": {
+ *     "piral-cli": "0.11.0"
+ *   },
+ *   "pilets": {}
+ * }
+ * ```
+ *
+ * The app field indicates what file to use as entry point.
  */
 export function entryPointMissing_0070(rootDir: string): QuickMessage {
   return [LogLevels.error, '0070', `Cannot find a valid entry point. Missing package.json in "${rootDir}".`];
@@ -1018,16 +1044,39 @@ export function entryPointMissing_0070(rootDir: string): QuickMessage {
  * @kind Error
  *
  * @summary
- * ...
+ * The package.json of the Piral instance is missing the "app" field.
  *
  * @abstract
- * ...
+ * A Piral instance needs to be a valid Node.js project. Valid Node.js projects contain a
+ * package.json file in their root directory. This file is used by the Piral CLI to get
+ * relevant meta data for the Piral instance.
+ *
+ * Among other meta data the file requires a special field "app". The field is used to
+ * indicate what file to be used as entry point for the bundler. It is usually set to an
+ * HTML file containing a reference to the entry script(s) and style sheet(s).
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [Parcel Bundling](https://codeburst.io/bundle-your-web-application-with-parceljs-b4eee99bdb55)
  *
  * @example
- * ...
+ * The following shows a valid package.json of a Piral instance:
+ *
+ * ```json
+ * {
+ *   "name": "my-app-shell",
+ *   "version": "1.0.0",
+ *   "app": "src/index.html",
+ *   "dependencies": {
+ *     "piral": "0.11.0"
+ *   },
+ *   "devDependencies": {
+ *     "piral-cli": "0.11.0"
+ *   },
+ *   "pilets": {}
+ * }
+ * ```
+ *
+ * The app field indicates what file to use as entry point.
  */
 export function entryPointMissing_0071(): QuickMessage {
   return [LogLevels.error, '0071', `Cannot find a valid entry point. Missing field "app" in the "package.json".`];
@@ -1075,16 +1124,29 @@ export function entryPointNotFound_0073(app: string): QuickMessage {
  * @kind Error
  *
  * @summary
- * ...
+ * The project is missing a package.json.
  *
  * @abstract
- * ...
+ * Make sure to start the Piral CLI in the right directory. It should run from the project's
+ * root directory. A Node.js project's root directory contains a file called package.json.
+ *
+ * The package.json contains important meta information such as the name, version, and entry
+ * point for the bundler.
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [NPM Init](https://docs.npmjs.com/cli/init)
  *
  * @example
- * ...
+ * You can create a new NPM project using the `npm init` command. This will essentially guide
+ * you through a number of decisions for creating a proper package.json.
+ *
+ * Even better you could start a new Piral instance using the following command:
+ *
+ * ```sh
+ * npm init piral-instance
+ * ```
+ *
+ * This will create or patch a package.json to be a valid Piral instance.
  */
 export function packageJsonMissing_0074(): QuickMessage {
   return [
@@ -1098,16 +1160,29 @@ export function packageJsonMissing_0074(): QuickMessage {
  * @kind Error
  *
  * @summary
- * ...
+ * The project is missing a package.json.
  *
  * @abstract
- * ...
+ * Make sure to start the Piral CLI in the right directory. It should run from the project's
+ * root directory. A Node.js project's root directory contains a file called package.json.
+ *
+ * The package.json contains important meta information such as the name, version, and entry
+ * point for the bundler.
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [NPM Init](https://docs.npmjs.com/cli/init)
  *
  * @example
- * ...
+ * You can create a new NPM project using the `npm init` command. This will essentially guide
+ * you through a number of decisions for creating a proper package.json.
+ *
+ * Even better you could start a new pilet using the following command:
+ *
+ * ```sh
+ * npm init pilet
+ * ```
+ *
+ * This will create or patch a package.json to be a valid pilet.
  */
 export function packageJsonMissing_0075(): QuickMessage {
   return [LogLevels.error, '0075', 'Cannot find the "package.json". You need a valid package.json for your pilet.'];
@@ -1262,13 +1337,27 @@ export function failedToOpenBrowser_0070(error: string): QuickMessage {
  * An invalid pilet schema version was found.
  *
  * @abstract
- * ...
+ * For building a pilet you can select a schema version to use. The schema version affects
+ * the interpretation of compatible feed services slightly and has an impact of the usage
+ * of the pilet in the browser.
+ *
+ * The selected schema version needs to be either "v0" or "v1".
+ *
+ * - v0: will download and evaluate the pilet explicitly
+ * - v1: will use a script tag for integration of the pilet (default)
+ *
+ * The v1 version has better support for older browsers, but requires a polyfill to work
+ * correctly. This polyfill is part of the standard Piral polyfills.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [GitHub currentScript-polyfill](https://github.com/amiller-gh/currentScript-polyfill)
  *
  * @example
- * ...
+ * Use the following command to switch explicitly to v0:
+ *
+ * ```sh
+ * pilet build --schema v0
+ * ```
  */
 export function invalidSchemaVersion_0071(schemaVersion: string): QuickMessage {
   return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Expected "v0" or "v1".`];
@@ -1281,10 +1370,15 @@ export function invalidSchemaVersion_0071(schemaVersion: string): QuickMessage {
  * An invalid argument for "commandName" was supplied.
  *
  * @abstract
- * ...
+ * This warning indicates that a Piral CLI plugin is not working as intended. Usually,
+ * you should not see this as a user, but rather as a developer testing a Piral CLI
+ * plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
  *
  * @see
- * - [Semantic Versioning](https://semver.org)
+ * - [Invalid Parameter](https://www.pcmag.com/encyclopedia/term/invalid-parameter)
  *
  * @example
  * ...
@@ -1300,7 +1394,12 @@ export function apiCommandNameInvalid_0200(type: string): QuickMessage {
  * An invalid value for the given argument was supplied.
  *
  * @abstract
- * ...
+ * This warning indicates that a Piral CLI plugin is not working as intended. Usually,
+ * you should not see this as a user, but rather as a developer testing a Piral CLI
+ * plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
  *
  * @see
  * - [Semantic Versioning](https://semver.org)
@@ -1319,7 +1418,12 @@ export function apiArgumentInvalid_0201(name: string, type: string): QuickMessag
  * An invalid argument for "name" was supplied.
  *
  * @abstract
- * ...
+ * This warning indicates that a Piral CLI plugin is not working as intended. Usually,
+ * you should not see this as a user, but rather as a developer testing a Piral CLI
+ * plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
  *
  * @see
  * - [Semantic Versioning](https://semver.org)
@@ -1338,7 +1442,12 @@ export function apiValidateNameInvalid_0202(type: string): QuickMessage {
  * An invalid argument for "run" was supplied.
  *
  * @abstract
- * ...
+ * This warning indicates that a Piral CLI plugin is not working as intended. Usually,
+ * you should not see this as a user, but rather as a developer testing a Piral CLI
+ * plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
  *
  * @see
  * - [Semantic Versioning](https://semver.org)
@@ -1357,7 +1466,12 @@ export function apiValidateRunInvalid_0203(type: string): QuickMessage {
  * An invalid value for the given argument was supplied.
  *
  * @abstract
- * ...
+ * This warning indicates that a Piral CLI plugin is not working as intended. Usually,
+ * you should not see this as a user, but rather as a developer testing a Piral CLI
+ * plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
  *
  * @see
  * - [Semantic Versioning](https://semver.org)
