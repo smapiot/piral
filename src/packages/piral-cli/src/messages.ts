@@ -715,6 +715,22 @@ export function gitLatestForUpgradeMissing_0051(): QuickMessage {
  *   }
  * }
  * ```
+ *
+ * Just make sure that `prettier` is already available on the standard `devDependencies`.
+ *
+ * ```json
+ * {
+ *   "name": "my-piral",
+ *   "devDependencies": {
+ *     "prettier": "^1.0.0"
+ *   },
+ *   "pilets": {
+ *     "devDependencies": {
+ *       "prettier": true
+ *     }
+ *   }
+ * }
+ * ```
  */
 export function cannotResolveVersion_0052(name: string): QuickMessage {
   return [LogLevels.warning, '0052', `The version for "${name}" could not be resolved. Using "latest".`];
@@ -727,13 +743,54 @@ export function cannotResolveVersion_0052(name: string): QuickMessage {
  * Reported when a dependency cannot be resolved.
  *
  * @abstract
- * ...
+ * When a pilet is scaffolded from a Piral instance special dev tools may be installed
+ * as specified from the "devDependencies" section in the "pilets" section.
+ *
+ * The default version resolution falls back to the version specified already in the
+ * standard "devDependencies" of the Piral instance's package.json.
+ *
+ * Under some conditions no version of the specified dependency can be determined.
+ *
+ * The conditions may be:
+ *
+ * - Missing dev dependencies
+ * - Invalid dev dependencies
+ * - Disk failures
  *
  * @see
  * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/reference#piral-instance---package-definition)
  *
  * @example
- * ...
+ * The primary example hits when a dev dependency was specified that is otherwise not given.
+ *
+ * Consider the following package.json:
+ *
+ * ```json
+ * {
+ *   "name": "my-piral",
+ *   "devDependencies": {},
+ *   "pilets": {
+ *     "devDependencies": {
+ *       "prettier": true
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * Just make sure that `prettier` is already available on the standard `devDependencies`.
+ *
+ * ```json
+ * {
+ *   "name": "my-piral",
+ *   "devDependencies": {
+ *     "prettier": "^1.0.0"
+ *   },
+ *   "pilets": {
+ *     "devDependencies": {
+ *       "prettier": true
+ *     }
+ *   }
+ * }
  */
 export function cannotResolveDependency_0053(name: string, rootDir: string): QuickMessage {
   return [LogLevels.warning, '0053', `Could not resolve "${name}" from "${rootDir}". Taking "latest" version.`];
@@ -1086,16 +1143,46 @@ export function entryPointMissing_0071(): QuickMessage {
  * @kind Warning
  *
  * @summary
- * ...
+ * An Array field in the package.json was defined with another type.
  *
  * @abstract
- * ...
+ * The package.json additions that Piral brings to the table are all well-defined. As such
+ * using unexpected types such as a string in case of an array will be ignored and will lead
+ * to warnings.
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [JavaScript Types](https://javascript.info/types)
+ * - [JSON Types](https://cswr.github.io/JsonSchema/spec/basic_types/)
  *
  * @example
- * ...
+ * In case of, e.g., "externals" an array needs to be supplied. So given the following snippet
+ * of a package.json
+ *
+ * ```json
+ * {
+ *   "name": "my-app-shell",
+ *   "version": "1.0.0",
+ *   "app": "src/index.html",
+ *   "pilets": {
+ *     "externals": true
+ *   }
+ * }
+ * ```
+ *
+ * the value needs to be a valid array. It could be also dismissed or presented as an empty array.
+ *
+ * The following would work:
+ *
+ * ```json
+ * {
+ *   "name": "my-app-shell",
+ *   "version": "1.0.0",
+ *   "app": "src/index.html",
+ *   "pilets": {
+ *     "externals": []
+ *   }
+ * }
+ * ```
  */
 export function expectedArray_0072(key: string, type: string): QuickMessage {
   return [LogLevels.warning, '0072', `The value of "${key}" should be an array. Found "${type}".`];
@@ -1105,18 +1192,38 @@ export function expectedArray_0072(key: string, type: string): QuickMessage {
  * @kind Error
  *
  * @summary
- * ...
+ * The entry point specified in the "app" field does not exist.
  *
  * @abstract
- * ...
+ * The entry point of a Piral instance is provided via the "app" field of the
+ * package.json. The field is interpreted as a file path relative to the location
+ * of the package.json. In case the resolved file path is invalid the bundler
+ * cannot start building the Piral instance.
+ *
+ * Make sure to only enter valid paths to resolve the app entry point correctly.
+ *
+ * Check that a forward slash (`/`) has been used as path separator. Do not use
+ * backslashes (`\`).
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [File not found](https://stackoverflow.com/questions/17575492/file-not-found-in-node-js)
  *
  * @example
- * ...
+ * Let's assume we have a folder structure that looks like
+ *
+ * ```sh
+ * package.json
+ * + src
+ *   + index.html
+ * ```
+ *
+ * The app field in the package.json has to be "src/index.html", not "index.html" or "/src/index.html".
+ *
+ * Alternatively, you can also specify the path as "./src/index.html" (keep the dot in front). We
+ * recommend also using the `/` as path separator on Windows to enable cross-platform usage of the
+ * same repository.
  */
-export function entryPointNotFound_0073(app: string): QuickMessage {
+export function entryPointDoesNotExist_0073(app: string): QuickMessage {
   return [LogLevels.error, '0073', `The given entry pointing to "${app}" does not exist.`];
 }
 

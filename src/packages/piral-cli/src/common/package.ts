@@ -284,7 +284,7 @@ export async function retrievePiletsInfo(entryFile: string) {
   const exists = await checkExists(entryFile);
 
   if (!exists) {
-    fail('entryPointNotFound_0073', entryFile);
+    fail('entryPointDoesNotExist_0073', entryFile);
   }
 
   const packageJson = await findFile(entryFile, 'package.json');
