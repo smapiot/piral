@@ -12,6 +12,7 @@
 * Switched to use `piral-base` as declaration root
 * Included implied schema for generated pilets (supporting `v:0` and `v:1`)
 * Improved logging and documented all message codes (#172)
+* Added new optional plugin `piral-redux` for Redux integration
 
 ## 0.10.9 (February 28, 2020)
 
