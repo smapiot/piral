@@ -90,6 +90,7 @@ const defaultIgnoredPackages = ['core-js'];
  * This makes sense in general as only the application should determine the target.
  */
 async function patch(staticPath: string, ignoredPackages: Array<string>) {
+  log('generalDebug_0003', `Patching files in "${staticPath}" ...`);
   const folderNames = await getFileNames(staticPath);
   return Promise.all(
     folderNames.map(async folderName => {
@@ -115,7 +116,9 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
               }
 
               await patchFolder(rootName, ignoredPackages);
-            } catch (e) {}
+            } catch (e) {
+              log('generalDebug_0003', `Encountered a patching error: ${e}`);
+            }
           }
         }
       }
@@ -132,6 +135,7 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
     const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
     const currHash = computeHash(lockContent);
     const prevHash = await readText(modulesDir, file);
+    log('generalDebug_0003', `Evaluated patch module hashes: "${currHash}" and "${prevHash}".`);
 
     if (prevHash !== currHash) {
       await patch(modulesDir, ignoredPackages);
@@ -141,10 +145,12 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
 }
 
 export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
+  log('generalDebug_0003', `Patching modules starting in "${rootDir}" ...`);
   const otherRoot = resolve(require.resolve('parcel-bundler'), '..', '..', '..');
   await patchFolder(rootDir, ignoredPackages);
 
   if (otherRoot !== rootDir) {
+    log('generalDebug_0003', `Also patching modules in "${otherRoot}" ...`);
     await patchFolder(otherRoot, ignoredPackages);
   }
 }

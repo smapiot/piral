@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { log } from './log';
 import { debugPiletApi, pathSeparator, cliVersion, compatVersion } from './info';
 import { StandardEnvProps } from '../types';
 
@@ -8,6 +9,7 @@ function hasPath(path: string) {
 }
 
 export function setStandardEnvs(options: StandardEnvProps) {
+  log('generalDebug_0003', `Setting environment variables in "${options.root}" ...`);
   const packageJson = require(join(options.root, 'package.json'));
   const binDir = join(options.root, 'node_modules', '.bin');
 

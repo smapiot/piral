@@ -44,6 +44,7 @@ async function getMatchingFiles(
   const isDirectory = await checkIsDirectory(sourcePath);
 
   if (isDirectory) {
+    log('generalDebug_0003', `Matching in directory "${sourcePath}".`);
     const pattern = deep ? '**/*' : '*';
     const files = await matchFiles(sourcePath, pattern);
     return files.map(file => ({
@@ -51,6 +52,7 @@ async function getMatchingFiles(
       targetPath: resolve(targetPath, relative(sourcePath, file)),
     }));
   } else if (globPatternStartIndicators.some(m => from.indexOf(m) !== -1)) {
+    log('generalDebug_0003', `Matching using glob "${sourcePath}".`);
     const files = await matchFiles(source, from);
     const parts = sourcePath.split('/');
 
@@ -72,6 +74,8 @@ async function getMatchingFiles(
     }));
   }
 
+  log('generalDebug_0003', `Assume direct path source "${sourcePath}".`);
+
   return [
     {
       sourcePath,
@@ -86,6 +90,7 @@ export function findPackageRoot(pck: string, baseDir: string) {
       paths: [baseDir],
     });
   } catch (ex) {
+    log('generalDebug_0003', `Could not find the package root in "${baseDir}": ${ex}.`);
     return undefined;
   }
 }
@@ -103,6 +108,7 @@ function findPackage(pck: string | Array<string>, baseDir: string) {
     const path = findPackageRoot(pck, baseDir);
 
     if (path) {
+      log('generalDebug_0003', `Following the app package in "${path}" ...`);
       const appPackage = require(path);
       const relPath = appPackage && appPackage.app;
       appPackage.app = relPath && resolve(dirname(path), relPath);
@@ -114,6 +120,7 @@ function findPackage(pck: string | Array<string>, baseDir: string) {
 }
 
 export function readPiralPackage(root: string, name: string) {
+  log('generalDebug_0003', `Reading the piral package in "${root}" ...`);
   const path = getPiralPath(root, name);
   return readJson(path, 'package.json');
 }
@@ -136,6 +143,7 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
 
 function getAvailableFiles(root: string, name: string) {
   const source = getPiralPath(root, name);
+  log('generalDebug_0003', `Get matching files from "${source}".`);
   return getMatchingFiles(resolve(source, 'files'), root, '**/*');
 }
 
@@ -145,7 +153,9 @@ export async function getFileStats(root: string, name: string) {
     files.map(async file => {
       const { sourcePath, targetPath } = file;
       const sourceHash = await getHash(sourcePath);
+      log('generalDebug_0003', `Obtained hash from "${sourcePath}": ${sourceHash}`);
       const targetHash = await getHash(targetPath);
+      log('generalDebug_0003', `Obtained hash from "${targetPath}": ${targetHash}`);
       return {
         path: targetPath,
         hash: targetHash,
@@ -179,6 +189,8 @@ export async function copyScaffoldingFiles(
   target: string,
   files: Array<string | TemplateFileLocation>,
 ) {
+  log('generalDebug_0003', `Copying the scaffolding files ...`);
+
   for (const file of files) {
     const subfiles = await getMatchingFiles(source, target, file);
     await copyFiles(subfiles, ForceOverwrite.yes, []);
@@ -191,6 +203,7 @@ export async function copyPiralFiles(
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo>,
 ) {
+  log('generalDebug_0003', `Copying the Piral files ...`);
   const files = await getAvailableFiles(root, name);
   await copyFiles(files, forceOverwrite, originalFiles);
 }
@@ -223,9 +236,11 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
 
 export async function retrievePiralRoot(baseDir: string, entry: string) {
   const rootDir = join(baseDir, entry);
+  log('generalDebug_0003', `Retrieving Piral root from "${rootDir}" ...`);
 
   if (extname(rootDir) !== '.html') {
     const packageName = basename(rootDir) === 'package.json' ? rootDir : join(rootDir, 'package.json');
+    log('generalDebug_0003', `Trying to get entry point from "${packageName}".`);
     const exists = await checkExists(packageName);
 
     if (!exists) {
@@ -238,9 +253,11 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
       fail('entryPointMissing_0071');
     }
 
+    log('generalDebug_0003', `Found app entry point in "${app}".`);
     return join(dirname(packageName), app);
   }
 
+  log('generalDebug_0003', `Found app entry point in "${rootDir}".`);
   return rootDir;
 }
 
@@ -258,6 +275,7 @@ function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
 
 export async function findPackageVersion(rootPath: string, packageName: string) {
   try {
+    log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
     const moduleName = require.resolve(packageName, {
       paths: [rootPath],
     });
@@ -311,6 +329,7 @@ export async function patchPiletPackage(
   piralInfo: any,
   language?: PiletLanguage,
 ) {
+  log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
   const piralDependencies = piralInfo.devDependencies || {};
   const typeDependencies = language !== undefined ? getDevDependencies(language) : {};
   const { externals, ...info } = getPiletsInfo(piralInfo);
@@ -354,6 +373,7 @@ export async function patchPiletPackage(
     peerDependencies,
     scripts,
   });
+  log('generalDebug_0003', `Succesfully patched the package.json.`);
 }
 
 /**
@@ -367,6 +387,7 @@ export function checkAppShellPackage(appPackage: any) {
     return true;
   }
 
+  log('generalDebug_0003', `Missing "piralCLI" section. Assume raw app shell.`);
   return false;
 }
 
@@ -406,6 +427,7 @@ export async function retrievePiletData(target: string, app?: string) {
 export async function findEntryModule(entryFile: string, target: string) {
   const entry = basename(entryFile);
   const files = await getFileNames(target);
+  log('generalDebug_0003', `Found ${files.length} potential entry points in "${target}".`);
 
   for (const file of files) {
     const ext = extname(file);

@@ -3,7 +3,9 @@ import { findPackageVersion } from './package';
 import { log } from './log';
 
 export function checkAppShellCompatibility(piralVersion: string) {
+  log('generalDebug_0003', `Checking compatibility ...`);
   const compatible = findCompatVersion(piralVersion);
+  log('generalDebug_0003', `Used versions: "${compatible}" and "${compatVersion}".`);
 
   if (compatVersion !== compatible) {
     log('appShellIncompatible_0100', piralVersion, cliVersion);
@@ -14,8 +16,10 @@ export function checkAppShellCompatibility(piralVersion: string) {
 }
 
 export async function checkCliCompatibility(root: string) {
+  log('generalDebug_0003', `Checking compatibility ...`);
   const piralVersion = await findPackageVersion(root, 'piral-base');
   const compatible = findCompatVersion(piralVersion);
+  log('generalDebug_0003', `Used versions: "${compatible}" and "${compatVersion}".`);
 
   if (compatVersion !== compatible) {
     log('toolingIncompatible_0101', piralVersion, cliVersion);

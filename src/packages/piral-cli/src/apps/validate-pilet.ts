@@ -1,5 +1,5 @@
 import { join, dirname } from 'path';
-import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, setLogLevel, progress } from '../common';
+import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, setLogLevel, progress, log } from '../common';
 import { getPiletRules } from '../rules';
 import { PiletRuleContext, LogLevels } from '../types';
 
@@ -40,12 +40,10 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   const warnings: Array<string> = [];
   const context: PiletRuleContext = {
     error(message) {
-      //TODO
-      errors.push(message);
+      errors.push(log('generalError_0002', message));
     },
     warning(message) {
-      //TODO
-      warnings.push(message);
+      warnings.push(log('generalVerbose_0004', message));
     },
     logLevel,
     entry: entryFile,

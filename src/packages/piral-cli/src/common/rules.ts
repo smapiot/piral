@@ -17,6 +17,7 @@ export async function runRules<T extends RuleContext>(
   configurations: Record<string, any> = {},
 ) {
   for (const rule of rules) {
+    log('generalDebug_0003', `Running rule "${rule?.name}" ...`);
     const options = configurations[rule.name];
     await rule.run(context, options);
   }

@@ -20,6 +20,7 @@ import {
   setLogLevel,
   fail,
   progress,
+  log,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -130,6 +131,7 @@ always-auth=true`,
 
     if (preScaffold) {
       progress(`Running preScaffold script ...`);
+      log('generalDebug_0003', `Run: ${preScaffold}`);
       await runScript(preScaffold, root);
     }
 
@@ -145,6 +147,7 @@ always-auth=true`,
 
     if (postScaffold) {
       progress(`Running postScaffold script ...`);
+      log('generalDebug_0003', `Run: ${postScaffold}`);
       await runScript(postScaffold, root);
     }
   } else {

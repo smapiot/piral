@@ -1,14 +1,7 @@
+import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules } from '../common';
+import { setLogLevel, progress, log, checkCliCompatibility } from '../common';
 import { getPiralRules } from '../rules';
 import { LogLevels } from '../types';
-import {
-  retrievePiralRoot,
-  retrievePiletsInfo,
-  ruleSummary,
-  runRules,
-  checkCliCompatibility,
-  setLogLevel,
-  progress,
-} from '../common';
 
 export interface ValidatPiralOptions {
   entry?: string;
@@ -34,12 +27,10 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
 
   await runRules(rules, {
     error(message) {
-      //TODO
-      errors.push(message);
+      errors.push(log('generalError_0002', message));
     },
     warning(message) {
-      //TODO
-      warnings.push(message);
+      warnings.push(log('generalVerbose_0004', message));
     },
     logLevel,
     entry: entryFiles,

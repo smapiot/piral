@@ -65,12 +65,14 @@ function isLegacy() {
 }
 
 export function removeDirectory(targetDir: string) {
+  log('generalDebug_0003', `Removing the directory "${targetDir}" ...`);
   return new Promise<void>((resolve, reject) => rimraf(targetDir, err => (err ? reject(err) : resolve())));
 }
 
 export async function createDirectory(targetDir: string) {
   if (isLegacy()) {
     try {
+      log('generalDebug_0003', `Trying to create "${targetDir}" in legacy mode ...`);
       createDirectoryLegacy(targetDir);
       return true;
     } catch (e) {
@@ -81,6 +83,7 @@ export async function createDirectory(targetDir: string) {
   }
 
   try {
+    log('generalDebug_0003', `Trying to create "${targetDir}" in modern mode ...`);
     await new Promise((resolve, reject) => {
       mkdir(targetDir, { recursive: true }, err => (err ? reject(err) : resolve()));
     });
@@ -93,12 +96,14 @@ export async function createDirectory(targetDir: string) {
 }
 
 export async function getEntryFiles(content: string, basePath: string) {
+  log('generalDebug_0003', `Extract entry files from "${basePath}".`);
   const matcher = /<script\s.*?src=(?:"(.*?)"|'(.*?)'|([^\s>]*)).*?>/gi;
   const results: Array<string> = [];
   let result: RegExpExecArray = undefined;
 
   while ((result = matcher.exec(content))) {
     const src = result[1] || result[2] || result[3];
+    log('generalDebug_0003', `Found potential entry file "${src}".`);
     const filePath = resolve(basePath, src);
     const exists = await checkExists(filePath);
 
@@ -117,7 +122,10 @@ export function checkExists(target: string) {
 }
 
 export async function checkExistingDirectory(target: string) {
+  log('generalDebug_0003', `Checking directory "${target}" ...`);
+
   if (await checkExists(target)) {
+    log('generalDebug_0003', `Target exists, but not yet clear if directory.`);
     return await checkIsDirectory(target);
   }
 
@@ -185,6 +193,7 @@ export async function createFileIfNotExists(
   forceOverwrite = ForceOverwrite.no,
 ) {
   const targetFile = join(targetDir, fileName);
+  log('generalDebug_0003', `Checking if file "${targetFile}" exists ...`);
   const exists = await checkExists(targetFile);
 
   if (
@@ -193,6 +202,7 @@ export async function createFileIfNotExists(
     (forceOverwrite === ForceOverwrite.prompt && (await promptOverwrite(targetFile)))
   ) {
     await createDirectory(dirname(targetFile));
+    log('generalDebug_0003', `Creating file "${targetFile}" ...`);
     await new Promise((resolve, reject) => {
       writeFile(targetFile, content, 'utf8', err => (err ? reject(err) : resolve()));
     });
@@ -201,9 +211,11 @@ export async function createFileIfNotExists(
 
 export async function updateExistingFile(targetDir: string, fileName: string, content: string) {
   const targetFile = join(targetDir, fileName);
+  log('generalDebug_0003', `Checking if file "${targetFile}" exists ...`);
   const exists = await checkExists(targetFile);
 
   if (exists) {
+    log('generalDebug_0003', `Updating file "${targetFile}" ...`);
     await new Promise((resolve, reject) => {
       writeFile(targetFile, content, 'utf8', err => (err ? reject(err) : resolve()));
     });
@@ -312,6 +324,7 @@ export async function move(source: string, target: string, forceOverwrite = Forc
 
 export async function getSourceFiles(entry: string) {
   const dir = dirname(entry);
+  log('generalDebug_0003', `Trying to get source files from "${dir}" ...`);
   const files = await matchFiles(dir, '**/*.?(jsx|tsx|js|ts)');
   return files.map(path => {
     const directory = dirname(path);

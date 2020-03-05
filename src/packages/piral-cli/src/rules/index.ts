@@ -1,4 +1,5 @@
 import { readdir } from 'fs';
+import { log } from '../common';
 import { RuleContext, PiralRuleContext, PiletRuleContext, Rule } from '../types';
 
 const piralRules: Array<Rule<PiralRuleContext>> = [];
@@ -16,8 +17,10 @@ function getRules<T extends RuleContext>(target: 'pilet' | 'piral') {
           files
             .filter(name => name.startsWith(prefix) && name.endsWith('.js'))
             .map(fileName => {
+              log('generalDebug_0003', `Including module "${fileName}" ...`);
               const run = require(`./${fileName}`).default;
               const name = fileName.substr(prefix.length).replace(/\.js$/, '');
+              log('generalDebug_0003', `Included rule with name: "${name}".`);
               return {
                 run,
                 name,
@@ -34,7 +37,9 @@ export function addPiralRule(rule: Rule<PiralRuleContext>) {
 }
 
 export async function getPiralRules() {
+  log('generalDebug_0003', 'Getting Piral validation rules ...');
   const rules = await getRules<PiralRuleContext>('piral');
+  log('generalDebug_0003', `Found ${rules.length} rules.`);
   return [...rules, ...piralRules];
 }
 
@@ -43,6 +48,8 @@ export function addPiletRule(rule: Rule<PiletRuleContext>) {
 }
 
 export async function getPiletRules() {
+  log('generalDebug_0003', 'Getting pilet validation rules ...');
   const rules = await getRules<PiletRuleContext>('pilet');
+  log('generalDebug_0003', `Found ${rules.length} rules.`);
   return [...rules, ...piletRules];
 }

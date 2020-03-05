@@ -18,6 +18,7 @@ import {
   setLogLevel,
   progress,
   fail,
+  log,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -81,6 +82,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     if (preUpgrade) {
       progress(`Running preUpgrade script ...`);
+      log('generalDebug_0003', `Run: ${preUpgrade}`);
       await runScript(preUpgrade, root);
     }
 
@@ -94,6 +96,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     if (postUpgrade) {
       progress(`Running postUpgrade script ...`);
+      log('generalDebug_0003', `Run: ${postUpgrade}`);
       await runScript(postUpgrade, root);
     }
 

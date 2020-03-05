@@ -137,6 +137,8 @@ export async function getCurrentPackageDetails(
   sourceVersion: string,
   desired: string,
 ): Promise<[string, undefined | string]> {
+  log('generalDebug_0003', `Checking package details in "${baseDir}" ...`);
+
   if (isLocalPackage(baseDir, desired)) {
     const fullPath = resolve(baseDir, desired);
     const exists = await checkExists(fullPath);
