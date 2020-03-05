@@ -1,7 +1,6 @@
 export * from './bundler-patches';
 export * from './bundler';
 export * from './compatibility';
-export * from './context-logger';
 export * from './config';
 export * from './emoji';
 export * from './envs';

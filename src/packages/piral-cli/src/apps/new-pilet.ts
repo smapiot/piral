@@ -17,7 +17,6 @@ import {
   getPiletsInfo,
   runScript,
   checkAppShellPackage,
-  createContextLogger,
   setLogLevel,
   fail,
   progress,
@@ -74,7 +73,6 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const success = await createDirectory(root);
 
   if (success) {
-    const logger = createContextLogger();
     progress(`Scaffolding new pilet in %s ...`, root);
 
     await createFileIfNotExists(
@@ -138,7 +136,7 @@ always-auth=true`,
     progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
     await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
-    await copyPiralFiles(root, packageName, ForceOverwrite.yes, [], logger.notify);
+    await copyPiralFiles(root, packageName, ForceOverwrite.yes, []);
 
     if (install) {
       progress(`Installing dependencies ...`);
@@ -149,9 +147,6 @@ always-auth=true`,
       progress(`Running postScaffold script ...`);
       await runScript(postScaffold, root);
     }
-
-    logger.summary();
-    logger.throwIfError();
   } else {
     fail('cannotCreateDirectory_0044');
   }

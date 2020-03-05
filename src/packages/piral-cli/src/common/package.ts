@@ -5,15 +5,7 @@ import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import {
-  Framework,
-  PiletLanguage,
-  ForceOverwrite,
-  NotifyContextLogger,
-  FileInfo,
-  PiletsInfo,
-  TemplateFileLocation,
-} from '../types';
+import { Framework, PiletLanguage, ForceOverwrite, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
 
 function getPiralPath(root: string, name: string) {
   return resolve(root, 'node_modules', name);
@@ -167,7 +159,6 @@ async function copyFiles(
   subfiles: Array<FileDescriptor>,
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo>,
-  logger: NotifyContextLogger,
 ) {
   for (const subfile of subfiles) {
     const { sourcePath, targetPath } = subfile;
@@ -178,7 +169,7 @@ async function copyFiles(
       const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
       await copy(sourcePath, targetPath, force);
     } else {
-      logger('error', `The file "${sourcePath}" does not exist!`);
+      fail('cannotFindFile_0046', sourcePath);
     }
   }
 }
@@ -187,11 +178,10 @@ export async function copyScaffoldingFiles(
   source: string,
   target: string,
   files: Array<string | TemplateFileLocation>,
-  logger: NotifyContextLogger,
 ) {
   for (const file of files) {
     const subfiles = await getMatchingFiles(source, target, file);
-    await copyFiles(subfiles, ForceOverwrite.yes, [], logger);
+    await copyFiles(subfiles, ForceOverwrite.yes, []);
   }
 }
 
@@ -200,10 +190,9 @@ export async function copyPiralFiles(
   name: string,
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo>,
-  logger: NotifyContextLogger,
 ) {
   const files = await getAvailableFiles(root, name);
-  await copyFiles(files, forceOverwrite, originalFiles, logger);
+  await copyFiles(files, forceOverwrite, originalFiles);
 }
 
 export function getPiletsInfo(piralInfo: any): PiletsInfo {

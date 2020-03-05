@@ -22,7 +22,6 @@ import {
   defaultCacheDir,
   createFileFromTemplateIfNotExists,
   gatherJsBundles,
-  createContextLogger,
   progress,
   setLogLevel,
   logReset,
@@ -155,7 +154,6 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const { externals } = pilets;
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
-  const logger = createContextLogger();
 
   await checkCliCompatibility(root);
 
@@ -225,10 +223,10 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await createDirectory(filesDir);
 
     // for scaffolding we need to keep the files also available in the new package
-    await copyScaffoldingFiles(root, filesDir, scaffoldFiles, logger.notify);
+    await copyScaffoldingFiles(root, filesDir, scaffoldFiles);
 
     // we just want to make sure that "files" mentioned in the original package.json are respected in the package
-    await copyScaffoldingFiles(root, rootDir, originalFiles, logger.notify);
+    await copyScaffoldingFiles(root, rootDir, originalFiles);
 
     // actually including this one hints that the app shell should have been included - which is forbidden
     await createFileFromTemplateIfNotExists('other', 'piral', outDir, 'index.js', ForceOverwrite.yes, {
@@ -267,7 +265,4 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logDone(`Files for publication available in "${outDir}".`);
     logReset();
   }
-
-  logger.summary();
-  logger.throwIfError();
 }

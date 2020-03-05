@@ -74,15 +74,6 @@ export interface PackageFiles {
   [file: string]: Buffer;
 }
 
-export interface ContextLogger {
-  success(): boolean;
-  throwIfError(): void;
-  summary(): void;
-  notify(kind: 'error' | 'warning', message: string): void;
-}
-
-export type NotifyContextLogger = ContextLogger['notify'];
-
 export interface FileInfo {
   path: string;
   hash: string;

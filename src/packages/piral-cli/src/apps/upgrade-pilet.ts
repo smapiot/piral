@@ -15,7 +15,6 @@ import {
   checkAppShellPackage,
   defaultCacheDir,
   removeDirectory,
-  createContextLogger,
   setLogLevel,
   progress,
   fail,
@@ -55,7 +54,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   const { devDependencies = {}, piral } = pckg;
 
   if (piral && typeof piral === 'object') {
-    const logger = createContextLogger();
     const sourceName = piral.name;
 
     if (!sourceName || typeof sourceName !== 'string') {
@@ -89,7 +87,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     progress(`Taking care of templating ...`);
 
     await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
-    await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles, logger.notify);
+    await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles);
 
     progress(`Updating dependencies ...`);
     await installDependencies(root, '--no-package-lock');
@@ -100,8 +98,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     await removeDirectory(cache);
-    logger.summary();
-    logger.throwIfError();
   } else {
     fail('invalidPiletPackage_0041');
   }

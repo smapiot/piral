@@ -1,13 +1,13 @@
-import { logInfo, logWarn, logFail } from './log';
+import { fail, log } from './log';
 import { RuleContext, Rule } from '../types';
 
 export function ruleSummary(errors: Array<string>, warnings: Array<string>) {
-  logInfo(`\nFound ${warnings.length} warning(s) and ${errors.length} error(s).\n`);
-  warnings.forEach(warning => logWarn(warning));
-  errors.forEach(error => logFail(error));
-
   if (errors.length > 0) {
-    throw new Error(`Please fix the ${errors.length} error(s).`);
+    fail('validationFailed_0080', errors.length);
+  } else if (warnings.length > 0) {
+    log('validationWarned_0081', warnings.length);
+  } else {
+    log('validationSuccess_0082');
   }
 }
 

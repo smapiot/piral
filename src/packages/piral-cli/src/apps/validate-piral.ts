@@ -34,9 +34,11 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
 
   await runRules(rules, {
     error(message) {
+      //TODO
       errors.push(message);
     },
     warning(message) {
+      //TODO
       warnings.push(message);
     },
     logLevel,

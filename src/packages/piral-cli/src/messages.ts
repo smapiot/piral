@@ -598,6 +598,35 @@ export function didNotOverWriteFile_0045(file: string): QuickMessage {
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * Reported when a file could not be found.
+ *
+ * @abstract
+ * Usually, this only indicates that a file already existed and was deleted or
+ * that the configuration is corrupt.
+ *
+ * Make sure to have a valid Piral instance and the latest version of the Piral
+ * CLI installed. Verify that the node_modules have not been corrupted.
+ *
+ * To avoid any issues try to upgrade the Piral CLI and reinstall the project
+ * dependencies.
+ *
+ * @see
+ * - [File System Permissions](https://en.wikipedia.org/wiki/File_system_permissions)
+ *
+ * @example
+ * On some systems the node_modules folder may become instable or get corrupted
+ * with multiple dependency installations and modifications. After a time a
+ * complete swipe may be the best solution to ensure a stable project
+ * configuration.
+ */
+export function cannotFindFile_0046(file: string): QuickMessage {
+  return [LogLevels.error, '0046', `The file "${file}" does not exist!`];
+}
+
+/**
  * @kind Warning
  *
  * @summary
@@ -1293,6 +1322,77 @@ export function packageJsonMissing_0074(): QuickMessage {
  */
 export function packageJsonMissing_0075(): QuickMessage {
   return [LogLevels.error, '0075', 'Cannot find the "package.json". You need a valid package.json for your pilet.'];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The validation process failed.
+ *
+ * @abstract
+ * The validation found errors. For the error details you'll need to check the
+ * console output. Make sure to either follow the individual error codes or
+ * instructions in the console.
+ *
+ * If the performed validations are incorrectly placed or inappropriate for the
+ * current project then change the settings in your Piral instance configuration.
+ *
+ * @see
+ * - [Validation](...)
+ *
+ * @example
+ * ...
+ */
+export function validationFailed_0080(errors: number): QuickMessage {
+  return [LogLevels.error, '0080', `Validation failed. Found ${errors} error(s).`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The validation process succeeded with warnings.
+ *
+ * @abstract
+ * The validation found warnings. For the warnings details you'll need to check
+ * the console output. Make sure to either follow the individual message codes
+ * or instructions in the console. Not all warnings could be that relevant for
+ * your project.
+ *
+ * If the performed validations are incorrectly placed or inappropriate for the
+ * current project then change the settings in your Piral instance configuration.
+ *
+ * @see
+ * - [Validation](...)
+ *
+ * @example
+ * ...
+ */
+export function validationWarned_0081(warnings: number): QuickMessage {
+  return [LogLevels.warning, '0081', `Validation suceeded with ${warnings} warning(s).`];
+}
+
+/**
+ * @kind Info
+ *
+ * @summary
+ * The validation process succeeded.
+ *
+ * @abstract
+ * The validation found no warnings or errors.
+ *
+ * If the performed validations are incorrectly placed or inappropriate for the
+ * current project then change the settings in your Piral instance configuration.
+ *
+ * @see
+ * - [Validation](...)
+ *
+ * @example
+ * ...
+ */
+export function validationSuccess_0082(): QuickMessage {
+  return [LogLevels.info, '0082', `Validation successfully.`];
 }
 
 /**

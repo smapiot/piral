@@ -40,9 +40,11 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   const warnings: Array<string> = [];
   const context: PiletRuleContext = {
     error(message) {
+      //TODO
       errors.push(message);
     },
     warning(message) {
+      //TODO
       warnings.push(message);
     },
     logLevel,
