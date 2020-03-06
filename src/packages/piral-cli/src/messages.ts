@@ -680,7 +680,7 @@ export function localeFileForUpgradeMissing_0050(): QuickMessage {
  * obtain the Piral instance from NPM instead using the known name.
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/@jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [Git Dependencies in NPM](https://medium.com/&commat;jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
  *
  * @example
  * You may have set up the pilet using a locally available tgz file. In this case your original command may
@@ -1339,7 +1339,7 @@ export function packageJsonMissing_0075(): QuickMessage {
  * current project then change the settings in your Piral instance configuration.
  *
  * @see
- * - [Validation](...)
+ * - [Validation](https://docs.piral.io/tutorials/08-the-piral-cli#validations)
  *
  * @example
  * ...
@@ -1364,7 +1364,7 @@ export function validationFailed_0080(errors: number): QuickMessage {
  * current project then change the settings in your Piral instance configuration.
  *
  * @see
- * - [Validation](...)
+ * - [Validation](https://docs.piral.io/tutorials/08-the-piral-cli#validations)
  *
  * @example
  * ...
@@ -1386,7 +1386,7 @@ export function validationWarned_0081(warnings: number): QuickMessage {
  * current project then change the settings in your Piral instance configuration.
  *
  * @see
- * - [Validation](...)
+ * - [Validation](https://docs.piral.io/tutorials/08-the-piral-cli#validations)
  *
  * @example
  * ...
@@ -1410,7 +1410,7 @@ export function validationSuccess_0082(): QuickMessage {
  * Recommendation: Update to the same version of the Piral CLI.
  *
  * ```sh
- * npm i piral-cli@{piralVersion}
+ * npm i piral-cli&commat;{piralVersion}
  * ```
  *
  * Alternatively, you can also try to update the Piral instance.
@@ -1441,7 +1441,7 @@ export function validationSuccess_0082(): QuickMessage {
  * To solve this just update the Piral CLI accordingly.
  *
  * ```sh
- * npm i piral-cli@0.10.3
+ * npm i piral-cli&commat;0.10.3
  * ```
  */
 export function appShellIncompatible_0100(piralVersion: string, cliVersion: string): QuickMessage {
@@ -1466,7 +1466,7 @@ export function appShellIncompatible_0100(piralVersion: string, cliVersion: stri
  * Recommendation: Update to the same version of the Piral CLI.
  *
  * ```sh
- * npm i piral-cli@{piralVersion}
+ * npm i piral-cli&commat;{piralVersion}
  * ```
  *
  * Alternatively, you can also change the used version of Piral.
@@ -1494,7 +1494,7 @@ export function appShellIncompatible_0100(piralVersion: string, cliVersion: stri
  * To solve this just update the Piral CLI accordingly.
  *
  * ```sh
- * npm i piral-cli@^0.10.0
+ * npm i piral-cli&commat;^0.10.0
  * ```
  */
 export function toolingIncompatible_0101(piralVersion: string, cliVersion: string): QuickMessage {

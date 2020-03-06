@@ -5,6 +5,7 @@ const { createProgram, isExportAssignment, getCombinedModifierFlags, ModifierFla
 const projectRoot = resolve(__dirname, '..');
 const rootFolder = resolve(projectRoot, 'docs', 'messages');
 const messagesFile = resolve(projectRoot, 'src', 'packages', 'piral-cli', 'src', 'messages.ts');
+const replacements = [['&commat;', '@']];
 
 function isNodeExported(node) {
   return (
@@ -12,6 +13,14 @@ function isNodeExported(node) {
     (getCombinedModifierFlags(node) & ModifierFlags.Export) !== 0 ||
     (!!node.parent && node.parent.kind === SyntaxKind.SourceFile)
   );
+}
+
+function normalizeText(content) {
+  for (const replacement of replacements) {
+    content = content.split(replacement[0]).join(replacement[1]);
+  }
+
+  return content;
 }
 
 function getCodes() {
@@ -27,7 +36,7 @@ function getCodes() {
       codes.push({
         id: type.symbol.name.split('_').pop(),
         docs: docs.reduce((prev, curr) => {
-          prev[curr.name] = curr.text;
+          prev[curr.name] = normalizeText(curr.text);
           return prev;
         }, {}),
       });
