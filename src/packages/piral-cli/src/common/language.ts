@@ -1,3 +1,4 @@
+import { log } from './log';
 import { PiletLanguage } from '../types';
 
 export const reactTypings = {
@@ -13,6 +14,8 @@ export function getLanguageExtension(language: PiletLanguage) {
       return '.jsx';
     case PiletLanguage.ts:
       return '.tsx';
+    default:
+      log('generalDebug_0003', 'Did not find a valid language. Just skipping extension.');
   }
 }
 
@@ -26,6 +29,7 @@ export function getDevDependencies(language: PiletLanguage, typings: Record<stri
       };
     case PiletLanguage.js:
     default:
+      log('generalDebug_0003', 'Did not find a valid language. Just skipping devDependencies.');
       return {};
   }
 }

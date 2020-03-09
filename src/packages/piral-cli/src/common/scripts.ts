@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
 import { resolve } from 'path';
+import { log } from './log';
 import { isWindows } from './info';
 import { MemoryStream } from './MemoryStream';
 
@@ -9,6 +10,7 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
   const env = Object.assign({}, process.env);
 
   env.PATH = `${bin}${sep}${env.PATH}`;
+  log('generalDebug_0003', `Running "${script}" in "${cwd}" ("${bin}").`);
 
   return new Promise<void>((resolve, reject) => {
     const error = new MemoryStream();

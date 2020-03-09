@@ -1,4 +1,5 @@
 import { join, dirname, relative } from 'path';
+import { log } from './log';
 import { getLanguageExtension } from './language';
 import { fillTemplate, createFileFromTemplateIfNotExists } from './template';
 import { createDirectory, createFileIfNotExists } from './io';
@@ -17,6 +18,7 @@ export async function scaffoldPiralSourceFiles(
 
   switch (packageName) {
     case 'piral': {
+      log('generalDebug_0003', `Scaffolding Piral Instance files using "piral" ...`);
       const appTemplate = await fillTemplate(type, 'piral-index.html', {
         extension: getLanguageExtension(language),
       });
@@ -42,6 +44,7 @@ export async function scaffoldPiralSourceFiles(
     }
 
     case 'piral-core': {
+      log('generalDebug_0003', `Scaffolding Piral Instance files using "piral-core" ...`);
       const appTemplate = await fillTemplate(type, 'piral-core-index.html', {
         extension: getLanguageExtension(language),
       });
@@ -64,6 +67,7 @@ export async function scaffoldPiralSourceFiles(
     }
 
     case 'piral-base':
+      log('generalDebug_0003', `Scaffolding Piral Instance files using "piral-base" ...`);
       await createFileFromTemplateIfNotExists(type, 'piral', mocks, 'backend.js', forceOverwrite);
 
       switch (language) {
@@ -77,6 +81,10 @@ export async function scaffoldPiralSourceFiles(
           await createFileFromTemplateIfNotExists(type, 'piral-base', src, 'index.js', forceOverwrite);
           break;
       }
+      break;
+
+    default:
+      log('generalDebug_0003', `Not scaffolding Piral Instance files. Uknown type "${packageName}" ...`);
       break;
   }
 }
@@ -94,6 +102,7 @@ export async function scaffoldPiletSourceFiles(
 
   switch (language) {
     case PiletLanguage.ts:
+      log('generalDebug_0003', `Scaffolding pilet for TypeScript ...`);
       await createFileFromTemplateIfNotExists(type, 'pilet', root, 'tsconfig.json', forceOverwrite, {
         src: relative(root, src),
       });
@@ -102,9 +111,13 @@ export async function scaffoldPiletSourceFiles(
       });
       break;
     case PiletLanguage.js:
+      log('generalDebug_0003', `Scaffolding pilet for JavaScript ...`);
       await createFileFromTemplateIfNotExists(type, 'pilet', src, 'index.jsx', forceOverwrite, {
         sourceName,
       });
+      break;
+    default:
+      log('generalDebug_0003', `Not scaffolding pilet. Unknown language "${language}" ...`);
       break;
   }
 }
