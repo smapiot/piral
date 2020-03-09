@@ -7948,6 +7948,11 @@ parcel-plugin-externals@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.3.1.tgz#e1d6c62c8e55234973e74f7e77d57c70c6152e6b"
 
+parcel-plugin-import-maps@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-import-maps/-/parcel-plugin-import-maps-0.1.0.tgz#b950a444873845492d420c2934aeb9c1cb10ce85"
+  integrity sha512-qo2lETyuNx68ykmsYVJfslQ/wW7UziUGUHtGdDJHeEw4dHZqx+oLxnd0sBwpf6pGcm7Hh1ifypfBMxiq5Gb+fQ==
+
 parse-asn1@^5.0.0:
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/parse-asn1/-/parse-asn1-5.1.5.tgz#003271343da58dc94cace494faef3d2147ecea0e"

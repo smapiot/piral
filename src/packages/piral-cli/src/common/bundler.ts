@@ -1,5 +1,6 @@
 import * as Bundler from 'parcel-bundler';
-import extendBundlerWithPlugins = require('parcel-plugin-codegen');
+import extendBundlerWithCodegen = require('parcel-plugin-codegen');
+import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
@@ -44,7 +45,8 @@ export function setupBundler(setup: BundlerSetup) {
     bundler = new Bundler(entryFiles, extendConfig(config));
   }
 
-  extendBundlerWithPlugins(bundler);
+  extendBundlerWithCodegen(bundler);
+  extendBundlerWithImportMaps(bundler);
   return bundler;
 }
 
