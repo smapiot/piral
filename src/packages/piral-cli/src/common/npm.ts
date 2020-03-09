@@ -53,16 +53,22 @@ export function isGitPackage(fullName: string) {
   return false;
 }
 
-export function installDependencies(target = '.', ...flags: Array<string>) {
-  return runNpmProcess(['install', ...flags], target);
+export async function installDependencies(target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['install', ...flags], target, ms);
+  return ms.value;
 }
 
-export function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
-  return runNpmProcess(['install', packageRef, ...flags], target);
+export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['install', packageRef, ...flags], target, ms);
+  return ms.value;
 }
 
-export function createPackage(target = '.', ...flags: Array<string>) {
-  return runNpmProcess(['pack', ...flags], target);
+export async function createPackage(target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['pack', ...flags], target, ms);
+  return ms.value;
 }
 
 export async function findLatestVersion(packageName: string) {
