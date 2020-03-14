@@ -1,4 +1,5 @@
-import * as request from 'request';
+import axios from 'axios';
+import * as FormData from 'form-data';
 import { platform } from 'os';
 import { log } from './log';
 
@@ -18,36 +19,36 @@ function getMessage(body: string) {
 }
 
 export function postFile(target: string, key: string, file: Buffer) {
-  return new Promise<boolean>(resolve => {
-    request(
-      target,
-      {
-        method: 'POST',
-        headers: {
-          authorization: `Basic ${key}`,
-          'user-agent': `piral-cli/http.node-${os}`,
-        },
+  const form = new FormData();
+  form.append('file', file, 'pilet.tgz');
+  return axios
+    .post(target, form, {
+      headers: {
+        ...form.getHeaders(),
+        authorization: `Basic ${key}`,
+        'user-agent': `piral-cli/http.node-${os}`,
       },
-      (err, res, body) => {
-        if (err) {
-          log('failedHttpPost_0065', err);
-          resolve(false);
+    })
+    .then(
+      () => true,
+      error => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const { data, statusText, status } = error.response;
+          const message = getMessage(data);
+          log('unsuccessfulHttpPost_0066', statusText, status, message || '');
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          log('failedHttpPost_0065', error.request);
         } else {
-          const status = res.statusCode;
-          const success = status === 200;
-
-          if (!success) {
-            const message = getMessage(body);
-            log('unsuccessfulHttpPost_0066', res.statusMessage, status, message || '');
-          }
-
-          resolve(success);
+          // Something happened in setting up the request that triggered an Error
+          log('failedHttpPost_0065', error.message);
         }
+
+        return false;
       },
-    )
-      .form()
-      .append('file', file, {
-        filename: 'pilet.tgz',
-      });
-  });
+    );
 }

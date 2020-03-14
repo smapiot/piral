@@ -2,33 +2,35 @@ import { postFile } from './http';
 
 const apiUrl = 'http://sample.fooo.com/api/v1/pilet';
 
-jest.mock('request', () => {
-  const fn = (target, options, callback) => {
-    const found = target === apiUrl;
-    const auth = options.headers.authorization === 'Basic 123';
+jest.mock('axios', () => ({
+  default: {
+    post(url, _, options) {
+      const found = url === apiUrl;
+      const auth = options.headers.authorization === 'Basic 123';
 
-    if (!found) {
-      callback(undefined, {
-        statusCode: 404,
-        statusMessage: 'Not found',
-      });
-    } else if (!auth) {
-      callback(undefined, {
-        statusCode: 401,
-        statusMessage: 'Not authorized',
-      });
-    } else {
-      callback(undefined, {
-        statusCode: 200,
-        statusMessage: 'OK',
-      });
-    }
-  };
-  fn.form = {
-    append() {},
-  };
-  return jest.fn(fn);
-});
+      if (!found) {
+        return Promise.reject({
+          response: {
+            status: 404,
+            statusText: 'Not found',
+          },
+        });
+      } else if (!auth) {
+        return Promise.reject({
+          response: {
+            status: 401,
+            statusText: 'Not authorized',
+          },
+        });
+      } else {
+        return Promise.resolve({
+          status: 200,
+          statusText: 'OK',
+        });
+      }
+    },
+  },
+}));
 
 describe('HTTP Module', () => {
   it('postFile form posts a file successfully should be ok', async () => {
