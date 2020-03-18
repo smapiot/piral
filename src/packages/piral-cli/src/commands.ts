@@ -542,7 +542,7 @@ const allCommands: Array<ToolCommand<any>> = [
     name: 'upgrade-pilet',
     alias: ['upgrade'],
     description: 'Upgrades an existing pilet to the latest version of the used Piral instance.',
-    arguments: [],
+    arguments: ['[target-version]'],
     flags(argv) {
       return argv
         .positional('target-version', {
