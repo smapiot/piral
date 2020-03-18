@@ -38,12 +38,12 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "react-redux": "7.2.0",
-    "redux": "4.0.5"
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
-    "@types/react-redux": "5.0.19",
-    "@types/redux": "3.6.0",
+    "@types/react-redux": "^5.0.19",
+    "@types/redux": "^3.6.0",
     "piral-core": "^0.10.9"
   },
   "peerDependencies": {
