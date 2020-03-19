@@ -28,7 +28,7 @@ The configuration of your web server should be as for any SPA. Just make sure th
 
 In order to configure the 404 not found redirects for netlify.com you'll need to provide a file called `_redirects` with the following content:
 
-```plain
+```plaintext
 /*    /index.html   200
 ```
 
@@ -38,7 +38,7 @@ In order to configure the 404 not found redirects for netlify.com you'll need to
 
 In order to configure the 404 not found redirects for an Apache webserver you'll need to provide a file called `.htaccess` with the following content:
 
-```plain
+```plaintext
 RewriteEngine On
 RewriteCond %{SERVER_PORT} 80
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

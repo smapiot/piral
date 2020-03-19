@@ -431,7 +431,7 @@ export function invalidPiletPackage_0041(): QuickMessage {
  * @kind Error
  *
  * @summary
- * The field "name" <string> in the "piral" section of the "package.json" file is missing.
+ * The field "name" in the "piral" section of the "package.json" file is missing.
  *
  * @abstract
  * The Piral CLI has to get some meta information for a pilet from its package.json.

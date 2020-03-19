@@ -7,13 +7,13 @@ Upgrades an existing pilet to the latest version of the used Piral instance.
 From the command line:
 
 ```sh
-pb upgrade-pilet 
+pb upgrade-pilet [target-version]
 ```
 
 Alternative:
 
 ```sh
-pilet upgrade 
+pilet upgrade [target-version]
 ```
 
 ## Aliases
