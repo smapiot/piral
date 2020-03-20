@@ -13,6 +13,8 @@
 * Included implied schema for generated pilets (supporting `v:0` and `v:1`)
 * Improved logging and documented all message codes (#172)
 * Added new optional plugin `piral-redux` for Redux integration
+* Use `dets` for declaration generation of Piral instances
+* Updated dependencies
 
 ## 0.10.9 (February 28, 2020)
 
