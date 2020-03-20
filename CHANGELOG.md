@@ -14,7 +14,8 @@
 * Improved logging and documented all message codes (#172)
 * Added new optional plugin `piral-redux` for Redux integration
 * Use `dets` for declaration generation of Piral instances
-* Updated dependencies
+* Updated multiple dependencies
+* Added support for aliases prefixed with `@` (#170)
 
 ## 0.10.9 (February 28, 2020)
 

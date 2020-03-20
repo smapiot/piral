@@ -1,4 +1,5 @@
 import * as Bundler from 'parcel-bundler';
+import extendBundlerWithAtAlias = require('parcel-plugin-at-alias');
 import extendBundlerWithCodegen = require('parcel-plugin-codegen');
 import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
@@ -45,6 +46,7 @@ export function setupBundler(setup: BundlerSetup) {
     bundler = new Bundler(entryFiles, extendConfig(config));
   }
 
+  extendBundlerWithAtAlias(bundler);
   extendBundlerWithCodegen(bundler);
   extendBundlerWithImportMaps(bundler);
   return bundler;
