@@ -32,6 +32,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     availablePilets = [],
     extendApi = [],
     requestPilets = defaultModuleRequester,
+    fetchDependency,
     getDependencies = getLocalDependencies,
     async = false,
   } = config;
@@ -48,6 +49,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     context,
     createApi,
     availablePilets,
+    fetchDependency,
     getDependencies,
     strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
     requestPilets,

@@ -1,9 +1,9 @@
-import { PiletRequester, PiletDependencyGetter, PiletLoadingStrategy, Pilet, AvailableDependencies } from 'piral-base';
+import { PiletRequester, PiletDependencyFetcher, PiletDependencyGetter, PiletLoadingStrategy, Pilet, AvailableDependencies } from 'piral-base';
 import { NestedPartial } from './common';
 import { Extend } from './plugin';
 import { GlobalState, PiralDefineActions } from './state';
 
-export { PiletLoadingStrategy, PiletDependencyGetter, PiletRequester, AvailableDependencies };
+export { PiletLoadingStrategy, PiletDependencyFetcher, PiletDependencyGetter, PiletRequester, AvailableDependencies };
 
 export interface PiralPiletConfiguration {
   /*
@@ -24,6 +24,10 @@ export interface PiralPiletConfiguration {
 }
 
 export interface PiralStateConfiguration {
+  /**
+   * The callback for defining how a dependency will be fetched.
+   */
+  fetchDependency?: PiletDependencyFetcher;
   /**
    * Function to get the dependencies for a given module.
    */
