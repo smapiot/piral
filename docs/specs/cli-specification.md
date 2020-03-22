@@ -8,7 +8,6 @@ The Piral CLI is a command line tool, which offers a rich feature set to allow b
 
 For building client-side microfrontends, a combination of tools is required. The Piral framework tries to simplify this process by offering a tool (`piral-cli`) to help with the most common processes. While this tool may be handy for most developers, it may be too restrictive for others. Therefore, we wanted to provide with this specification the description for all necessary processes to support custom implementations, too.
 
-
 ## Conformance
 
 As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.
@@ -57,9 +56,9 @@ The bundler application also needs to understand that a file ending with `.codeg
 
 ### Building for Emulation Purposes
 
-When executing the piral instance for emulation purposes, some additional capabilities have to be integrated. One example of such a capability is the debug API. This API is inserted into `window` at runtime for inspection purposes. The browser extension *Piral Inspector* may be used for debugging the API conveniently.
+When executing the Piral instance for emulation purposes, some additional capabilities have to be integrated. One example of such a capability is the debug API. This API is inserted into `window` at runtime for inspection purposes. The browser extension *Piral Inspector* may be used for debugging the API conveniently.
 
-For running the priral instance in emulation mode, the set of relevant environment variables is slightly different: 
+For running the Piral instance in emulation mode, the set of relevant environment variables is slightly different:
 
 | Environment Variable  | Purpose                             | Example            |
 |:----------------------|:------------------------------------|:-------------------|
@@ -155,6 +154,120 @@ The specification does not cover things like validation, declaration generation,
 ## Examples
 
 The best example for following this specification is the `piral-cli` package itself.
+
+Using Webpack for building a pilet could be done via the following configuration.
+
+```js
+import * as webpack from 'webpack';
+import * as TerserPlugin from 'terser-webpack-plugin';
+import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import * as ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
+
+const jsonpFunction = `pr_my_pilet_prefixed`;
+const piralExternals = shellPkg.pilets?.externals ?? [];
+const piletExternals = piletPkg.externals ?? [];
+const peerDependencies = Object.keys(piletPkg.peerDependencies ?? {});
+const externals = [...piralExternals, ...piletExternals, ...peerDependencies];
+
+module.exports = {
+  devtool: 'source-map',
+  mode: 'production',
+  entry: {
+    main: ['./src/index.tsx'],
+  },
+  externals,
+  output: {
+    path: './dist',
+    filename: 'index.js',
+    library: 'my-pilet',
+    libraryTarget: 'umd',
+    jsonpFunction,
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif|mp4|mp3|svg|ogg|webp|wav)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              esModule: false,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.tsx?$/,
+        loaders: [
+          {
+            loader: 'awesome-typescript-loader',
+            options: {
+              tsconfig: './tsconfig.json',
+            },
+          },
+        ],
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader',
+        exclude: './node_modules',
+      },
+    ],
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          warnings: false,
+          ie8: true,
+          output: {
+            comments: /^@pilet/,
+          },
+        },
+      }),
+    ],
+  },
+  plugins: getPlugins([
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env),
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+    new webpack.BannerPlugin({
+      banner: `//@pilet v:1(${jsonpFunction})`,
+      entryOnly: true,
+      raw: true,
+    }),
+    new ReplaceInFileWebpackPlugin([
+      {
+        dir: './dist',
+        files: ['index.js'],
+        rules: [
+          {
+            search: /^\!function\s?\(e,\s?t\)\s?\{/m,
+            replace: `!function(e,t){function define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(d.map(window.${jsonpFunction})));}define.amd=!0;`,
+          },
+        ],
+      },
+    ]),
+    new webpack.optimize.OccurrenceOrderPlugin(true),
+  ]),
+};
+```
+
+This assumes that the source of the pilet is stored in `src` and the bundled files should be written to `dist`. The configuration supports TypeScript, CSS, and most media files.
+
+Critical is the correct definition of the `externals` and the output formatting. In the previous example we use the `v1` schema.
 
 ## Acknowledgements
 
