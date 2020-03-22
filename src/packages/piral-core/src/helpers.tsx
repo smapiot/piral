@@ -1,5 +1,5 @@
 import { addChangeHandler } from '@dbeining/react-atom';
-import { PiletApiCreator, LoadPiletsOptions, getDependencyResolver, loadPilet } from 'piral-base';
+import { PiletApiCreator, LoadPiletsOptions, PiletDependencyFetcher, getDependencyResolver, loadPilet } from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
 import {
   AvailableDependencies,
@@ -39,6 +39,7 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
 interface PiletOptionsConfig {
   availablePilets: Array<Pilet>;
   createApi: PiletApiCreator;
+  fetchDependency: PiletDependencyFetcher;
   getDependencies: PiletDependencyGetter;
   strategy: PiletLoadingStrategy;
   requestPilets: PiletRequester;
@@ -49,6 +50,7 @@ export function createPiletOptions({
   context,
   createApi,
   availablePilets,
+  fetchDependency,
   getDependencies,
   strategy,
   requestPilets,
@@ -113,6 +115,7 @@ export function createPiletOptions({
 
   return {
     pilets: availablePilets,
+    fetchDependency,
     getDependencies,
     strategy,
     dependencies: globalDependencies,
