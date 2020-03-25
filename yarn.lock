@@ -4254,9 +4254,9 @@ detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
 
-dets@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.4.0.tgz#d07474b338dab74d421a1b6d731dc1f6e22be860"
+dets@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.4.2.tgz#6a79f0ad72f66ae61b119721aa6befd1236bdf56"
   dependencies:
     yargs "^15.3.1"
 

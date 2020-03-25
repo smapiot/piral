@@ -17,6 +17,12 @@ The essential development workflow is displayed below. We start with the app she
 
 The important aspect of the diagram above is the deployment independence of each layer. Teams responsible for the different pilets can deploy independently of other teams. Obviously, in real life some feature constraints and other business values may impact the deployment independence, but technically there are no such constraints if well set up.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](http://youtu.be/dQw4w9WgXcQ)
+
 ## Setup Phase
 
 In the setup phase all the processes should be derived together with the team. While most of the team performs the onboarding to the desired tech stack (i.e., writing pilets, using React plus maybe others like GraphQL, Redux, Rx, ...) a smaller team takes care of creating an initial version of the app shell.
