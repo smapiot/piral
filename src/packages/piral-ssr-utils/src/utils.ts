@@ -74,14 +74,6 @@ export function loadPilets(
 }
 
 /**
- * Represents a requester for retrieving the embedded pilets.
- */
-export function requestEmbeddedPilets(): Promise<Array<PiletMetadata>> {
-  const pilets = window.__pilets__;
-  return Promise.resolve(pilets || []);
-}
-
-/**
  * Creates a script reference from the given embedded content.
  * @param embedded The embedded content to externalize.
  * @param asExternal The external script generator.
