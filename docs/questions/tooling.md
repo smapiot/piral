@@ -52,14 +52,14 @@ More information can be found in the [package information](https://npmjs.com/pac
 
 ## What about mono repos?
 
-Piral was developed to by used in distributed environments, where each pilet could be in its own repository. Nevertheless, for convenience and to get a head start we fully support the mono repo use case, too.
+Piral was developed to be used in distributed environments, where each pilet could be in its own repository. Nevertheless, for convenience and to get a head start we fully support the mono repo use case, too.
 
 We advise you to use the following tools:
 
 1. Yarn: `npm i yarn@1 -g`
 2. Lerna: `npm i lerna -g`
 
-To set up a mono repo we encourage you torun in your desired repository:
+To set up a mono repo we encourage you to run in your desired repository:
 
 1. Run `npx lerna init`
 2. Add `piral-cli` to `devDependencies`
