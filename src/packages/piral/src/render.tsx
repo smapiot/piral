@@ -1,7 +1,7 @@
 import { render } from 'react-dom';
-import { createPiral } from './api';
-import { getContainer, createInstanceElement } from './utils';
+import { getContainer } from './utils';
 import { PiralRenderOptions } from './types';
+import { runInstance } from './run';
 
 /**
  * Sets up a new Piral instance and renders it using the provided options.
@@ -14,10 +14,6 @@ import { renderInstance } from 'piral';
 renderInstance();
 ```
  */
-export function renderInstance(options: PiralRenderOptions = {}) {
-  const { selector = '#app', settings, layout, errors, ...config } = options;
-  const instance = createPiral(config, settings);
-  const app = createInstanceElement(instance, layout, errors);
-  render(app, getContainer(selector));
-  return instance;
+export function renderInstance(options?: PiralRenderOptions) {
+  return runInstance((app, selector) => render(app, getContainer(selector)), options);
 }

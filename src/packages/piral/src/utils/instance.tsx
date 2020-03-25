@@ -7,7 +7,7 @@ export function createInstanceElement(
   instance?: PiralInstance,
   layout?: Partial<ComponentsState>,
   errors?: Partial<ErrorComponentsState>,
-) {
+): React.ReactElement {
   return (
     <Piral instance={instance}>
       <SetLayout layout={layout} />
