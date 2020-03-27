@@ -2,7 +2,10 @@
 
 ## 0.11.0 (tbd)
 
+* Documented the Piral CLI spec (#110)
+* Added support for import maps via `parcel-plugin-import-maps` (#124)
 * Switched to use `parcel-plugin-externals` in the Piral CLI (#126)
+* Included video links in the tutorials (#135)
 * Changed *package.json* metadata format (#136)
 * Documented Pilet package spec (#137)
 * Documented Feed Service API spec (#138)
@@ -11,11 +14,13 @@
 * Declared `PiletApi` and `Pilet` in `piral-base`
 * Switched to use `piral-base` as declaration root
 * Included implied schema for generated pilets (supporting `v:0` and `v:1`)
+* Added support for aliases prefixed with `@` (#170)
+* Provided third-party Piral CLI plugin for webpack (#171)
 * Improved logging and documented all message codes (#172)
+* Added missing option for customer fetcher (#176)
 * Added new optional plugin `piral-redux` for Redux integration
 * Use `dets` for declaration generation of Piral instances
 * Updated multiple dependencies
-* Added support for aliases prefixed with `@` (#170)
 
 ## 0.10.9 (February 28, 2020)
 
