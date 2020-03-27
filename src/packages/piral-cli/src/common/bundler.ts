@@ -205,13 +205,13 @@ function getScriptHead(version: PiletSchemaVersion, prName: string) {
  * @param bundle The bundle to transform.
  * @param version The manifest version to create.
  */
-export function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVersion) {
+export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVersion) {
   const hash = bundle.getHash();
   const prName = `pr_${hash}`;
   const head = getScriptHead(version, prName);
   const bundles = gatherJsBundles(bundle);
 
-  return Promise.all(
+  await Promise.all(
     bundles.map(
       ({ src, children }) =>
         new Promise<void>((resolve, reject) => {
@@ -285,4 +285,6 @@ export function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVe
         }),
     ),
   );
+
+  return prName;
 }
