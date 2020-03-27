@@ -65,7 +65,7 @@ Ideally, the events are all known by every participant and can thus be hard code
 
 Let's assume you want to declare a new `hello` event that gives us a `message` field in its event args.
 
-```tsx
+```ts
 declare module 'piral-core/lib/types/custom' {
   interface PiralCustomEventMap {
     hello: PiralHelloEvent;
