@@ -13,7 +13,7 @@ So far we did not spent much time on setting up the Piral instance. In reality, 
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/u7XhTuf2hDQ)
 
 ## Layout Basics
 

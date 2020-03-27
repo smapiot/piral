@@ -21,7 +21,7 @@ In this tutorial we'll see how easy it is to use other frameworks in Piral. We'l
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/sRik0kyFO_g)
 
 ## Direct Bundling
 

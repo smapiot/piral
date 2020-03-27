@@ -21,7 +21,7 @@ We designed Piral to be as simple as possible, while remaining as flexible and p
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/2MlcqG-UCbA)
 
 ## Piral Cloud Services
 
@@ -128,10 +128,10 @@ The view shows further information about the published pilets and provides funct
 
 ## Configure the Feed Service in the Piral instance
 
-Now that the pilet is available via the feed Service, we just need to configure our Piral instance to pull the pilets from the created feed. We need to modify the `backend.js` file in the folder `./src/mocks` of the Piral instance. The path to the newly created feed needs to be specified, in our case:
+Now that the pilet is available via the feed Service, we just need to configure our Piral instance to pull the pilets from the created feed. We need to modify the `index.tsx` file in the `./src` folder of the Piral instance. The path to the newly created feed needs to be specified, in our case:
 
 ```javascript
-const apiService = 'https://feed.piral.io/api/v1/pilet/my-tutorial-feed';
+const feedUrl = 'https://feed.piral.io/api/v1/pilet/my-tutorial-feed';
 ```
 
 Please assign your individual feed url accordingly. When you now launch your Piral instance using the piral-cli (`piral debug`), the newly published pilet will be loaded into the application shell.

@@ -13,7 +13,7 @@ So far we almost exclusively used existing elements without deeply understanding
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/s8dYsd7eQPc)
 
 ## The Pilet Foundation
 

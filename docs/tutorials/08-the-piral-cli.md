@@ -23,7 +23,7 @@ Here, `any-command` is the union of all `piral-command` (suffixed with `-piral`)
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/Uk5t49f4o2A)
 
 ## Responsibilities
 

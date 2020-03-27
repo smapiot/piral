@@ -19,7 +19,7 @@ This quick start will show us how to
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/jHmzE1j64zo)
 
 ## Prerequisites
 

@@ -15,7 +15,7 @@ Piral has been designed in such a way that its up to the user to decide how deep
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/OyPUm2ZwEkY)
 
 ## Separate Data from Views
 

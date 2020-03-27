@@ -13,7 +13,7 @@ One of the great things that Piral encourages is offline-first development. Note
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/xTxVoEs2Pn4)
 
 ## Introduction to Kras
 

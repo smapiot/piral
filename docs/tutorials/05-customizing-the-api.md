@@ -13,7 +13,7 @@ Turning back to the Piral instance we can determine how the Pilet API looks like
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/2o4ImfZWdLM)
 
 Let's start by looking at how we scaffolded the Piral instance.
 

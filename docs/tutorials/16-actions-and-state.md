@@ -22,7 +22,7 @@ Piral controls this whole mechanism with hooks even though you can also use the 
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/Mr-pVfZUry8)
 
 ## Available Methods and Hooks
 

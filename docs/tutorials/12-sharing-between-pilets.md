@@ -13,7 +13,7 @@ Pilets provide a great way to develop and release business functionality in isol
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/EIXtih5_M3M)
 
 ## Data
 

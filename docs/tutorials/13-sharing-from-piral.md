@@ -15,7 +15,7 @@ Depending on what we want to share one way or another may be applicable.
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/UToVUmG5aFI)
 
 ## Using a Shared Package
 

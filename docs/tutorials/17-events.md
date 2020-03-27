@@ -19,7 +19,7 @@ If we need the information to be available also for future use (i.e., even to in
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/dWVz0lOGIoI)
 
 ## Basic Support
 

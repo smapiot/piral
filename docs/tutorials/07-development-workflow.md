@@ -21,7 +21,7 @@ The important aspect of the diagram above is the deployment independence of each
 
 We also have this tutorial available in form of a video.
 
-@[youtube](http://youtu.be/dQw4w9WgXcQ)
+@[youtube](https://youtu.be/R-LqjbLuOqA)
 
 ## Setup Phase
 
