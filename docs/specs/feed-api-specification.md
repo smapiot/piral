@@ -101,11 +101,18 @@ interface PiletMetadata {
   hash: string;
   content?: string;
   link?: string;
+  requireRef?: string;
   custom?: any;
 }
 ```
 
 The schema is written and defined using a TypeScript interface (see references).
+
+If you want to embed the JavaScript then you must use `content` *instead* of an URL in `link`.
+
+If the `requireRef` field is used then the `content` will be embedded via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
+
+The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
 
 **Error Response**
 
