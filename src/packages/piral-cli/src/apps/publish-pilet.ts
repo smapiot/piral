@@ -19,6 +19,7 @@ export interface PublishPiletOptions {
   apiKey?: string;
   logLevel?: LogLevels;
   fresh?: boolean;
+  schemaVersion?: 'v0' | 'v1';
 }
 
 export const publishPiletDefaults: PublishPiletOptions = {
@@ -27,16 +28,18 @@ export const publishPiletDefaults: PublishPiletOptions = {
   apiKey: '',
   fresh: false,
   logLevel: LogLevels.info,
+  schemaVersion: 'v1',
 };
 
-async function getFiles(baseDir: string, source: string, fresh: boolean) {
+async function getFiles(baseDir: string, source: string, fresh: boolean, schemaVersion: 'v0' | 'v1') {
   if (fresh) {
-    log('generalDebug_0003', 'Found fresh flag. Trying to resolve the package.json.');
+    log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
     const details = require(join(baseDir, 'package.json'));
     progress('Triggering pilet build ...');
     await buildPilet(baseDir, {
       target: details.main,
       fresh,
+      schemaVersion,
     });
     log('generalDebug_0003', 'Successfully built.');
     progress('Triggering pilet pack ...');
@@ -56,11 +59,12 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     apiKey = publishPiletDefaults.apiKey,
     fresh = publishPiletDefaults.fresh,
     logLevel = publishPiletDefaults.logLevel,
+    schemaVersion = publishPiletDefaults.schemaVersion,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   log('generalDebug_0003', 'Getting the tgz files ...');
-  const files = await getFiles(baseDir, source, fresh);
+  const files = await getFiles(baseDir, source, fresh, schemaVersion);
   const successfulUploads: Array<string> = [];
   log('generalDebug_0003', 'Received available tgz files.');
 

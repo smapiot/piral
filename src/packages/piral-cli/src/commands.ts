@@ -324,7 +324,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
         .choices('schema', ['v0', 'v1'])
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
-        .default('schema', 'v1')
+        .default('schema', apps.debugPiletDefaults.schemaVersion)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -393,7 +393,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('optimize-modules', apps.buildPiletDefaults.optimizeModules)
         .choices('schema', ['v0', 'v1'])
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
-        .default('schema', 'v1')
+        .default('schema', apps.buildPiletDefaults.schemaVersion)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -472,6 +472,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build, then packages and finally publishes the pilet.')
         .default('fresh', apps.publishPiletDefaults.fresh)
+        .choices('schema', ['v0', 'v1'])
+        .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
+        .default('schema', apps.publishPiletDefaults.schemaVersion)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
@@ -484,6 +487,7 @@ const allCommands: Array<ToolCommand<any>> = [
         url: args.url as string,
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
+        schemaVersion: args.schema as any,
       });
     },
   },
