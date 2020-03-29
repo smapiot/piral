@@ -103,11 +103,11 @@ module.exports = function() {
       .join('\n\n'),
   );
 
-  const codes = findKeywords(
-    getCodes()
-      .map(m => readFileSync(m, 'utf8'))
-      .join('\n\n'),
-  );
+  const codes = getCodes().map(m => ({
+    result: findKeywords(readFileSync(m, 'utf8')),
+    meta: render(m).meta,
+    name: getName(m),
+  }));
 
   const tutorials = getTutorials().map(m => ({
     result: findKeywords(readFileSync(m, 'utf8')),
@@ -137,15 +137,18 @@ module.exports = function() {
       route: '/faq',
     },
     {
-      keywords: codes,
-      title: 'Codes',
-      route: '/reference/codes',
-    },
-    {
       keywords: types,
       title: 'Types',
       route: '/reference/types',
     },
+    ...codes.map(code => ({
+      keywords: [...code.result, {
+        count: 100,
+        keyword: code.name,
+      }],
+      title: code.meta.title,
+      route: `/reference/codes/${code.name}`,
+    })),
     ...tutorials.map(tutorial => ({
       keywords: tutorial.result,
       title: tutorial.meta.title,
