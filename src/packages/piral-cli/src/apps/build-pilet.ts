@@ -116,5 +116,5 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const bundle = await bundler.bundle();
   await postProcess(bundle, version);
-  logDone('Successfully built pilet!');
+  logDone('Pilet built successfully!');
 }

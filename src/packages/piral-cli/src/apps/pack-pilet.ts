@@ -22,5 +22,5 @@ export async function packPilet(baseDir = process.cwd(), options: PackPiletOptio
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   await createPiletPackage(baseDir, source, target);
-  logDone(`Successfully packed pilet!`);
+  logDone(`Pilet packed successfully!`);
 }

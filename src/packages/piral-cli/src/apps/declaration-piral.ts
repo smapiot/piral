@@ -99,5 +99,5 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
 
   progress('Writing declaration file ...');
   await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
-  logDone(`Created declaration file in "${target}".`);
+  logDone(`Declaration created successfully in "${target}"!`);
 }

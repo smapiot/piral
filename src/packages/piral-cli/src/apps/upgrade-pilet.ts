@@ -19,6 +19,7 @@ import {
   progress,
   fail,
   log,
+  logDone,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -101,6 +102,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     await removeDirectory(cache);
+    logDone('Pilet upgraded successfully!');
   } else {
     fail('invalidPiletPackage_0041');
   }

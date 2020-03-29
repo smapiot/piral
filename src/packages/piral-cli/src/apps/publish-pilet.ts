@@ -96,9 +96,9 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     log('generalDebug_0003', 'Finished uploading the file.');
   }
 
-  if (files.length !== successfulUploads.length) {
+  if (files.length === successfulUploads.length) {
+    logDone(`Pilet(s) published successfully!`);
+  } else {
     fail('failedUploading_0064');
   }
-
-  logDone(`Successfully published pilet(s)!`);
 }
