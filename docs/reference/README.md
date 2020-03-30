@@ -9,3 +9,4 @@ The available references:
 - [Debug Information](./debug.md)
 - [Error Handling](./errors.md)
 - [Articles and Posts](./articles.md)
+- [Migration](./migration.md)
