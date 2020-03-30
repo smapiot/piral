@@ -9,6 +9,7 @@ import {
   ReducerUnion,
   PiralReduxActions,
   PiralReduxState,
+  ReduxConnectorComponentProps,
 } from './types';
 
 /**
@@ -25,17 +26,24 @@ export interface ReduxConfig {
   enhancer?: StoreEnhancer;
 }
 
+function defaultReducer<T>(state: T): T {
+  return state;
+}
+
 /**
  * Creates new Pilet API extensions for creating a Redux state container.
  */
 export function createReduxApi(config: ReduxConfig = {}): Extend<PiletReduxApi> {
-  const { reducer, enhancer } = config;
+  const { reducer = defaultReducer, enhancer } = config;
   const otherReducers = {};
   const store = createStore(createReducer() as Reducer<any>, enhancer);
   const provider = createElement(Provider, { store });
+  const initialState: PiralReduxState = {
+    stores: {},
+  };
 
   function createReducer() {
-    return (state: PiralReduxState, action: ReducerUnion<PiralReduxActions>): PiralReduxState => {
+    return (state: PiralReduxState = initialState, action: ReducerUnion<PiralReduxActions>): PiralReduxState => {
       switch (action.type) {
         case 'create-store': {
           const stores = state.stores;
@@ -43,7 +51,7 @@ export function createReduxApi(config: ReduxConfig = {}): Extend<PiletReduxApi> 
             ...state,
             stores: {
               ...stores,
-              [action.name]: {},
+              [action.name]: action.value,
             },
           };
         }
@@ -56,30 +64,25 @@ export function createReduxApi(config: ReduxConfig = {}): Extend<PiletReduxApi> 
             },
           };
         }
-        default: {
-          const stores = {};
-          const rest = reducer(state, action);
+        case 'change-store': {
+          const reducer = otherReducers[action.name];
+          const oldState = state.stores[action.name];
+          const newState = reducer(oldState, action.action);
 
-          Object.keys(otherReducers).forEach(key => {
-            const oldState = state.stores[key];
-            const newState = otherReducers[key](oldState, action);
-
-            if (newState !== oldState) {
-              stores[key] = newState;
-            }
-          });
-
-          if (rest !== state || Object.keys(stores).length > 0) {
+          if (oldState !== newState) {
             return {
-              ...rest,
+              ...state,
               stores: {
                 ...state.stores,
-                ...stores,
+                [action.name]: newState,
               },
             };
           }
 
           return state;
+        }
+        default: {
+          return reducer(state, action) as PiralReduxState;
         }
       }
     };
@@ -92,10 +95,20 @@ export function createReduxApi(config: ReduxConfig = {}): Extend<PiletReduxApi> 
       createReduxStore(reducer) {
         const name = meta.name;
         otherReducers[name] = reducer;
+        store.dispatch({
+          type: 'create-store',
+          name,
+          value: reducer(undefined, { type: '$init' }),
+        });
+        const dispatch = (action: any) => ({
+          type: 'change-store',
+          name,
+          action,
+        });
         return component =>
-          connect<{}, {}, { data: any }, PiralReduxState>(state => ({
-            data: state.stores[name],
-          }))(component) as any;
+          connect<{}, {}, ReduxConnectorComponentProps, PiralReduxState>(state => ({ state: state.stores[name] }), {
+            dispatch,
+          })(component) as any;
       },
     });
   };
