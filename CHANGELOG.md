@@ -21,6 +21,7 @@
 * Added new optional plugin `piral-redux` for Redux integration
 * Use `dets` for declaration generation of Piral instances
 * Updated multiple dependencies
+* Added new `piral upgrade` command to patch Piral instances
 
 ## 0.10.9 (February 28, 2020)
 

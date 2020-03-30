@@ -319,6 +319,80 @@ export function packageJsonMissingVersion_0022(): QuickMessage {
 }
 
 /**
+ * @kind Warning
+ *
+ * @summary
+ * Cannot pack the package.
+ *
+ * @abstract
+ * For updating a Piral instance the packages have to be installed. Otherwise,
+ * it is impossible for the Piral CLI to detect what packages need to be updated
+ * and which ones can remain at their current version.
+ *
+ * @see
+ * - [NPM Install](https://docs.npmjs.com/cli/install)
+ *
+ * @example
+ * Check that the package is indeed installed:
+ *
+ * ```sh
+ * cat node_modules/{missing-package}/package.json
+ * ```
+ *
+ * The displayed content should look similar to:
+ *
+ * ```json
+ * {
+ *   "name": "missing package",
+ *   "version": "1.0.0",
+ *   "dependencies": {},
+ *   "devDependencies": {}
+ * }
+ * ```
+ *
+ * The exact values do not matter much, but rather that the file is found at all.
+ */
+export function packageNotInstalled_0023(name: string): QuickMessage {
+  return [LogLevels.warning, '0023', `Cannot find the package "${name}". Skipping.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The desired version is invalid.
+ *
+ * @abstract
+ * For updating a Piral instance the provided version must be a valid version
+ * identifier (e.g., 0.10.0) or a valid tag (e.g., latest).
+ *
+ * Before an update is performed the desired version is checked with the available
+ * versions. If no release for the given version was found then an error is emitted.
+ *
+ * @see
+ * - [StackOverflow Listing NPM Versions](https://stackoverflow.com/questions/41415945/how-to-list-all-versions-of-an-npm-module)
+ *
+ * @example
+ * Check that the version is valid:
+ *
+ * ```sh
+ * npm show piral-cli version --tag 0.10.10
+ * ```
+ *
+ * The result has to be a valid version answer. In the given example there is no
+ * response, so it is empty. A valid response appear for:
+ *
+ * ```sh
+ * npm show piral-cli version --tag 0.10.9
+ * ```
+ *
+ * Here the answer is 0.10.9.
+ */
+export function packageVersionInvalid_0024(version: string): QuickMessage {
+  return [LogLevels.error, '0024', `The given package version "${version}" is invalid.`];
+}
+
+/**
  * @kind Error
  *
  * @summary

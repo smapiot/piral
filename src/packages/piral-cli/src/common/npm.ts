@@ -74,11 +74,15 @@ export async function createPackage(target = '.', ...flags: Array<string>) {
   return ms.value;
 }
 
-export async function findLatestVersion(packageName: string) {
+export async function findSpecificVersion(packageName: string, version: string) {
   const ms = new MemoryStream();
-  await runNpmProcess(['show', packageName, 'version'], '.', ms);
+  await runNpmProcess(['show', packageName, 'version', `--tag ${version}`], '.', ms);
   log('generalDebug_0003', `NPM show result: ${ms.value}`);
   return ms.value;
+}
+
+export function findLatestVersion(packageName: string) {
+  return findSpecificVersion(packageName, 'latest');
 }
 
 export function makeGitUrl(fullName: string) {

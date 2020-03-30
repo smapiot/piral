@@ -257,6 +257,36 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'upgrade-piral',
+    alias: ['patch'],
+    description: 'Upgrades the Piral instance to the latest version of the used Piral packages.',
+    arguments: ['[target-version]'],
+    flags(argv) {
+      return argv
+        .positional('target-version', {
+          type: 'string',
+          describe: 'Sets the tag or version of Piral to upgrade to. By default, it is "latest".',
+          default: apps.upgradePiralDefaults.version,
+        })
+        .string('target')
+        .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
+        .default('target', apps.upgradePiralDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.upgradePiralDefaults.logLevel)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.upgradePiral(args.base as string, {
+        target: args.target as string,
+        version: args.targetVersion as string,
+        logLevel: args.logLevel as any,
+      });
+    },
+  },
+  {
     name: 'validate-piral',
     alias: ['verify-piral', 'check-piral'],
     description: 'Checks the validity of the current project as a Piral instance.',
