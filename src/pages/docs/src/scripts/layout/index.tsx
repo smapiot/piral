@@ -11,11 +11,11 @@ const version = process.env.BUILD_PCKG_VERSION;
 export const Layout: React.FC = ({ children }) => {
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(false);
+  const closeSearch = () => setOpen(false);
   const openSearch = (e: React.SyntheticEvent) => {
     e.preventDefault();
     setOpen(true);
   };
-  const closeSearch = () => setOpen(false);
 
   return (
     <>
