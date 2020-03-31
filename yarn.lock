@@ -8122,9 +8122,9 @@ parcel-plugin-externals@^0.3.1:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.3.3.tgz#8f830fe1dae5b02df487be83e9f38cee45d195eb"
 
-parcel-plugin-import-maps@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/parcel-plugin-import-maps/-/parcel-plugin-import-maps-0.3.0.tgz#0b99e2e97cb1bd5e07ad3fe03b302377c24471d6"
+parcel-plugin-import-maps@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-import-maps/-/parcel-plugin-import-maps-0.3.1.tgz#34d0135b5363324ca8b88e37072848cf5fe37cc3"
 
 parse-asn1@^5.0.0:
   version "5.1.5"
