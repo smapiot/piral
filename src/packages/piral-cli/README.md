@@ -20,6 +20,7 @@ Right now the following plugins exist:
 
 - [**piral-cli-local-feed**](https://github.com/FlorianRappl/piral-cli-local-feed), provides the ability to start a local feed service
 - [**piral-cli-dotenv**](https://github.com/FlorianRappl/piral-cli-dotenv), provides the ability to easily integrate environment variables
+- [**piral-cli-webpack**](https://github.com/FlorianRappl/piral-cli-webpack), provides an integration for Webpack to build and debug pilets
 
 You'll find an updated list [on NPM](https://www.npmjs.com/search?q=keywords%3Apiral-cli) using the keyword **piral-cli**.
 
