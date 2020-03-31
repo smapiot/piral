@@ -190,6 +190,8 @@ export default () => (
 );
 ```
 
+The showcased use of `ready` works in all cases, however, sometimes you may want to delay loading until you actually need a resource. In these situations it makes sense to use another variant of `ready`, which gets a single parameter as input data. If the parameter is a single string, it is interpreted as the package to look for. Alternatively, an array of package names can be passed in, too.
+
 ## Conclusion
 
 Sharing dependencies in Piral is an important aspect that can be controlled in simple ways. Piral understands itself here as a guide and tool. Sharing all dependencies is certainly not helpful and should be avoided. On the other hand sharing no dependency will in most cases not be beneficial, too. Finding a good "middle" way will take time.
