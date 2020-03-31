@@ -26,6 +26,10 @@ function checkPiletApp(name: string, app?: PiletApp): PiletApp {
   };
 }
 
+function checkPiletAppAsync(name: string, app?: PiletApp | Promise<PiletApp>): Promise<PiletApp> {
+  return Promise.resolve(app).then(resolvedApp => checkPiletApp(name, resolvedApp));
+}
+
 function getLocalRequire(dependencies: AvailableDependencies = {}) {
   return (moduleName: string) => requireModule(moduleName, dependencies);
 }
@@ -70,7 +74,7 @@ export function compileDependency(
   dependencies?: AvailableDependencies,
 ): Promise<PiletApp> {
   const app = evalDependency(name, content, link, dependencies);
-  return Promise.resolve(app).then(app => checkPiletApp(name, app));
+  return checkPiletAppAsync(name, app);
 }
 
 declare global {
@@ -98,7 +102,7 @@ export function includeDependency(
     s.async = true;
     s.src = link;
     window[requireRef] = getLocalRequire(dependencies);
-    s.onload = () => resolve(checkPiletApp(name, s.app));
+    s.onload = () => resolve(checkPiletAppAsync(name, s.app));
     s.onerror = () => resolve(checkPiletApp(name));
     document.body.appendChild(s);
   });
