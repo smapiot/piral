@@ -148,9 +148,7 @@ The next step is to introduce a loader wrapper. Since import maps are loaded asy
 
 ```ts
 // index.ts
-import { ready } from 'importmap';
-
-module.exports = ready().then(() => require('./root'));
+module.exports = require('importmap').ready().then(() => require('./root'));
 ```
 
 where `root` refers to the usual pilet root module, e.g.,
