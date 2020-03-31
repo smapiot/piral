@@ -67,7 +67,7 @@
     "parcel-plugin-at-alias": "^0.2.0",
     "parcel-plugin-codegen": "^0.5.0",
     "parcel-plugin-externals": "^0.3.1",
-    "parcel-plugin-import-maps": "^0.2.0",
+    "parcel-plugin-import-maps": "^0.3.0",
     "rc": "^1.2.8",
     "rimraf": "^3.0.0",
     "tar": "^4.4.8",
