@@ -3,6 +3,7 @@ import { join, resolve, basename } from 'path';
 import * as api from './api';
 import { resolvers } from './resolvers';
 import { CliPlugin } from './types';
+import { log } from './common';
 
 function getGlobalPackageDir() {
   for (const resolver of resolvers) {
@@ -23,6 +24,7 @@ function getLocalPackageDir() {
 function getAllPlugins(rootDir: string): Promise<Array<string>> {
   return new Promise<Array<string>>(resolve => {
     if (rootDir) {
+      log('generalDebug_0003', `Getting plugins from dir "${rootDir}" ...`);
       readdir(rootDir, (_, files) => {
         const prefix = 'piral-cli-';
         const pluginPaths = (files || [])
@@ -32,6 +34,7 @@ function getAllPlugins(rootDir: string): Promise<Array<string>> {
         resolve(pluginPaths);
       });
     } else {
+      log('generalDebug_0003', `Skipping plugins from dir "${rootDir}" ...`);
       resolve([]);
     }
   });
@@ -64,9 +67,11 @@ export async function loadPlugins() {
 
       if (typeof plugin === 'function') {
         plugin(api);
+      } else {
+        log('generalDebug_0003', `Skipping plugin from "${pluginPath}". Did not export a function.`);
       }
     } catch (ex) {
-      console.warn(`Failed to load plugin from "${pluginPath}": ${ex}`);
+      log('pluginCouldNotBeLoaded_0205', pluginPath, ex);
     }
   }
 }

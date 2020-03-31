@@ -1763,3 +1763,28 @@ export function apiValidateRunInvalid_0203(type: string): QuickMessage {
 export function apiPatchInvalid_0204(name: string): QuickMessage {
   return [LogLevels.warning, '0204', `Invalid argument for "${name}" - nothing installed.`];
 }
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The plugin could not be loaded.
+ *
+ * @abstract
+ * This warning is shown when a found plugin could not be loaded during the startup of
+ * the Piral CLI. This could be an incompatible plugin or no plugin at all.
+ *
+ * Make sure that this is a valid plugin.
+ *
+ * Our recommendation is to get in touch with the author of the plugin if you think that
+ * this is a mistake and happened due to regression.
+ *
+ * @see
+ * - [CLI Plugin Definition](https://www.npmjs.com/package/piral-cli#plugins)
+ *
+ * @example
+ * ...
+ */
+export function pluginCouldNotBeLoaded_0205(pluginPath: string, ex: any): QuickMessage {
+  return [LogLevels.warning, '0205', `Failed to load plugin from "${pluginPath}": ${ex}`];
+}
