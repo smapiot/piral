@@ -124,7 +124,13 @@ The mechanism to share dependencies used in pilets is called "import maps". Impo
 
 Since Piral uses Parcel as bundler we rely on the Parcel plugin `parcel-plugin-import-maps`.
 
-The first step is to declare potentially shared dependencies via the pilet's *package.json*:
+The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load it again. Otherwise, it will load the different resources.
+
+![Using Import Maps to Share Dependencies](../diagrams/import-maps.png)
+
+That way you can safely use multiple versions of your dependencies. If you consolidate them you'll get a performance improvement. Otherwise, you'll get the performance penalty as usual, however, you gained the flexibility to independently choose your version.
+
+The effort to actually use import maps is quite low. The first step is to declare potentially shared dependencies via the pilet's *package.json*:
 
 ```json
 {
