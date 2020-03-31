@@ -44,7 +44,7 @@ export function getLocalDependencies(): AvailableDependencies {
  *
  * @example
 ```js
-return fetch('https://feed.piral.io/api/v1/pilet/sample')
+return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
   .then(res => res.json())
   .then(res => res.items);
 ```

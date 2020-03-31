@@ -921,7 +921,7 @@ export function cannotResolveDependency_0053(name: string, rootDir: string): Qui
  * Always specify the URL via the `--url` provider.
  *
  * ```sh
- * pilet publish --url https://feed.piral.io/api/v1/pilet/sample
+ * pilet publish --url https://feed.piral.cloud/api/v1/pilet/sample
  * ```
  */
 export function missingPiletFeedUrl_0060(): QuickMessage {

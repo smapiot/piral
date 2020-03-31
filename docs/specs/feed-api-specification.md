@@ -26,7 +26,7 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 The core API design includes everything that is necessary to publish pilets to the service handling the pilets or to retrieve them with a client. There is no (standardized) additional management (e.g., feature flags) in context with handling the pilets.
 
-Implementations that are Piral conform must implement at least the core API design. Throughout the specification, the officially supported online version of the feed service ([feed.piral.io](https://feed.piral.io)) is used as a reference example.
+Implementations that are Piral conform must implement at least the core API design. Throughout the specification, the officially supported online version of the feed service ([feed.piral.cloud](https://feed.piral.cloud)) is used as a reference example.
 
 ### Publishing Pilets (Service Facing)
 
@@ -220,7 +220,7 @@ function getPiletMainPath(data, files) {
 }
 ```
 
-An officially supported online version can be found at [feed.piral.io](https://feed.piral.io). This version does not have its source code available publicly.
+An officially supported online version can be found at [piral.cloud](https://www.piral.cloud). This version does not have its source code available publicly.
 
 ## Limitations
 
