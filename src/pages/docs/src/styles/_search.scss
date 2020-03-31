@@ -28,9 +28,9 @@
     position: relative;
     width: 100%;
 
-    input[type=search] {
+    input[type=search], input[type=text] {
       background: #fdfdfd;
-      padding: 1em 2.5em 1em 1em;
+      padding: 1rem 2.5rem 1rem 1rem;
       border: none;
       box-sizing: border-box;
       width: 100%;
@@ -53,6 +53,7 @@
     padding: 0;
     margin: 0;
     background: $color-secondary;
+    color: #fff;
 
     li {
       display: block;
@@ -79,7 +80,7 @@
     }
 
     a {
-      color: white;
+      color: #fff;
       text-decoration: none;
 
       &:hover {
