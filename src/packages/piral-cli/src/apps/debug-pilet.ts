@@ -135,10 +135,10 @@ async function bundlePilet(
   });
 
   bundler.on('bundled', async bundle => {
-    await postProcess(bundle, version);
+    const requireRef = await postProcess(bundle, version);
 
     if (hmr) {
-      (bundler as any).emit('bundle-ready');
+      (bundler as any).emit('bundle-ready', { requireRef, version, root });
     }
   });
 

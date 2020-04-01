@@ -71,6 +71,14 @@ Performs a fresh build, then packages and finally publishes the pilet.
 - Type: `boolean`
 - Default: `true`
 
+### `--schema`
+
+Sets the schema to be used when making a fresh build of the pilet.
+
+- Type: `string`
+- Choices: `"v0"`, `"v1"`
+- Default: `"v1"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

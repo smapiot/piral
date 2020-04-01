@@ -5,10 +5,10 @@ if (process.env.NODE_ENV === 'test') {
     require('./<%- outFile %>');
     const ctx = window['dbg:piral'];
     const dependencies = (ctx && ctx.pilets && ctx.pilets.getDependencies({})) || {};
-    exports = dependencies['<%- name %>'] || {};
+    module.exports = dependencies['<%- name %>'] || {};
   } else {
     console.error('Your test environment does not define "window". Please make sure to provide a proper environment.');
-    exports = {};
+    module.exports = {};
   }
 } else {
   // under "normal" circumstances disallow such an import

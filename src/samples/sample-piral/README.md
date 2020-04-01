@@ -40,7 +40,7 @@ This will create a new pilet called `my-first-pilet` in the *./my-first-pilet* f
 
 ## Pilets
 
-The pilets all come from the [public sample feed](https://feed.piral.io/api/v1/pilet/sample).
+The pilets all come from the [public sample feed](https://feed.piral.cloud/api/v1/pilet/sample).
 
 Their sources are scattered:
 

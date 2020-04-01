@@ -29,7 +29,7 @@ In the setup phase all the processes should be derived together with the team. W
 
 > Scaffold the Piral instance using the Piral CLI.
 
-While creating the initial version of the app shell the corresponding pilet feed should be set up. While a custom feed service could be desirable in the long run our recommendation is to start at least with the [public feed service](https://feed.piral.io). Setting up a feed and connecting the app shell to it can be done in no time.
+While creating the initial version of the app shell the corresponding pilet feed should be set up. While a custom feed service could be desirable in the long run our recommendation is to start at least with the [public feed service](https://feed.piral.cloud). Setting up a feed and connecting the app shell to it can be done in no time.
 
 > Create a pilet feed in Piral feed service. Connect your app shell to it.
 

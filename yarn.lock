@@ -4254,9 +4254,9 @@ detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
 
-dets@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.4.2.tgz#6a79f0ad72f66ae61b119721aa6befd1236bdf56"
+dets@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.5.3.tgz#44780fb231e1f5b6bdd71b03f27cd6c906a18b04"
   dependencies:
     yargs "^15.3.1"
 
@@ -6795,9 +6795,9 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
 
-kras@^0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.10.2.tgz#658c1c1d1840645bb9b6c5a407e819186eda63f5"
+kras@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.10.3.tgz#8c2303c63aa9c9ee19c78330f3340a38d8e023ec"
   dependencies:
     yargs "^15.3.1"
 
@@ -8122,9 +8122,9 @@ parcel-plugin-externals@^0.3.1:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.3.3.tgz#8f830fe1dae5b02df487be83e9f38cee45d195eb"
 
-parcel-plugin-import-maps@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/parcel-plugin-import-maps/-/parcel-plugin-import-maps-0.2.0.tgz#da7ce60c677c59d5593f1a47aba086cefed54188"
+parcel-plugin-import-maps@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-import-maps/-/parcel-plugin-import-maps-0.3.1.tgz#34d0135b5363324ca8b88e37072848cf5fe37cc3"
 
 parse-asn1@^5.0.0:
   version "5.1.5"

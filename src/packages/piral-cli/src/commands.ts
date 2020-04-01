@@ -257,6 +257,36 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'upgrade-piral',
+    alias: ['patch'],
+    description: 'Upgrades the Piral instance to the latest version of the used Piral packages.',
+    arguments: ['[target-version]'],
+    flags(argv) {
+      return argv
+        .positional('target-version', {
+          type: 'string',
+          describe: 'Sets the tag or version of Piral to upgrade to. By default, it is "latest".',
+          default: apps.upgradePiralDefaults.version,
+        })
+        .string('target')
+        .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
+        .default('target', apps.upgradePiralDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.upgradePiralDefaults.logLevel)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.upgradePiral(args.base as string, {
+        target: args.target as string,
+        version: args.targetVersion as string,
+        logLevel: args.logLevel as any,
+      });
+    },
+  },
+  {
     name: 'validate-piral',
     alias: ['verify-piral', 'check-piral'],
     description: 'Checks the validity of the current project as a Piral instance.',
@@ -324,7 +354,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
         .choices('schema', ['v0', 'v1'])
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
-        .default('schema', 'v1')
+        .default('schema', apps.debugPiletDefaults.schemaVersion)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -393,7 +423,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('optimize-modules', apps.buildPiletDefaults.optimizeModules)
         .choices('schema', ['v0', 'v1'])
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
-        .default('schema', 'v1')
+        .default('schema', apps.buildPiletDefaults.schemaVersion)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -472,6 +502,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build, then packages and finally publishes the pilet.')
         .default('fresh', apps.publishPiletDefaults.fresh)
+        .choices('schema', ['v0', 'v1'])
+        .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
+        .default('schema', apps.publishPiletDefaults.schemaVersion)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
@@ -484,6 +517,7 @@ const allCommands: Array<ToolCommand<any>> = [
         url: args.url as string,
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
+        schemaVersion: args.schema as any,
       });
     },
   },

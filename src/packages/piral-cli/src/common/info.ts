@@ -15,6 +15,7 @@ export function findCompatVersion(version: string) {
 export const nodeVersion = process.version.substr(1);
 export const cliVersion = info.version;
 export const compatVersion = findCompatVersion(cliVersion);
+export const repositoryUrl = info.repository.url;
 export const isWindows = process.platform === 'win32';
 export const defaultCacheDir = '.cache';
 export const pathSeparator = isWindows ? ';' : ':';

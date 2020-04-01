@@ -26,7 +26,7 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 The core API design includes everything that is necessary to publish pilets to the service handling the pilets or to retrieve them with a client. There is no (standardized) additional management (e.g., feature flags) in context with handling the pilets.
 
-Implementations that are Piral conform must implement at least the core API design. Throughout the specification, the officially supported online version of the feed service ([feed.piral.io](https://feed.piral.io)) is used as a reference example.
+Implementations that are Piral conform must implement at least the core API design. Throughout the specification, the officially supported online version of the feed service ([feed.piral.cloud](https://feed.piral.cloud)) is used as a reference example.
 
 ### Publishing Pilets (Service Facing)
 
@@ -101,11 +101,18 @@ interface PiletMetadata {
   hash: string;
   content?: string;
   link?: string;
+  requireRef?: string;
   custom?: any;
 }
 ```
 
 The schema is written and defined using a TypeScript interface (see references).
+
+If you want to embed the JavaScript then you must use `content` *instead* of an URL in `link`.
+
+If the `requireRef` field is used then the `content` will be embedded via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
+
+The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
 
 **Error Response**
 
@@ -213,7 +220,7 @@ function getPiletMainPath(data, files) {
 }
 ```
 
-An officially supported online version can be found at [feed.piral.io](https://feed.piral.io). This version does not have its source code available publicly.
+An officially supported online version can be found at [piral.cloud](https://www.piral.cloud). This version does not have its source code available publicly.
 
 ## Limitations
 

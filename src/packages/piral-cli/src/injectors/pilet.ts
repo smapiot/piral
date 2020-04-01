@@ -14,6 +14,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
+  private requireRef?: string;
 
   constructor(options: PiletInjectorConfig, _: any, core: EventEmitter) {
     this.config = options;
@@ -30,8 +31,9 @@ export default class PiletInjector implements KrasInjector {
       delete cbs[e.id];
     });
 
-    bundler.on('bundle-ready', () => {
+    bundler.on('bundle-ready', ({ requireRef, version }) => {
       const meta = this.getMeta();
+      this.requireRef = version === 1 ? requireRef : undefined;
 
       for (const id of Object.keys(cbs)) {
         cbs[id](meta);
@@ -66,6 +68,7 @@ export default class PiletInjector implements KrasInjector {
       version: def.version,
       link: `http://localhost:${port}${api}/${link}`,
       hash: bundler.mainBundle.entryAsset.hash,
+      requireRef: this.requireRef,
       noCache: true,
       custom: def.custom,
     });

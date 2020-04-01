@@ -33,7 +33,7 @@ As already mentioned the provided API is determined by the underlying applicatio
 
 ![Display API in VSCode](../diagrams/pilet-api-vscode.png)
 
-Note that the API will also be also passed on to all registered components as a prop named `piral`.
+Note that the API will also be passed on to all registered components as a prop named `piral`.
 
 The API contains functionality to be placed in the following categories:
 

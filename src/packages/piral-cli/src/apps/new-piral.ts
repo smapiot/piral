@@ -93,7 +93,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       await installDependencies(root, '--no-package-lock');
     }
 
-    logDone(`Successfully scaffolded new Piral instance!`);
+    logDone(`Piral instance scaffolded successfully!`);
   } else {
     fail('cannotCreateDirectory_0044');
   }

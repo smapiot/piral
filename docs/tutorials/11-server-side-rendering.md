@@ -125,7 +125,7 @@ import axios from 'axios';
 import { renderFromServer } from 'piral-ssr-utils';
 import { createApp } from '../common/app';
 
-const feedUrl = 'https://feed.piral.io/api/v1/pilet/sample';
+const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
 
 function readRemoteText(link: string) {
   return axios.get(link).then(res => res.data);
@@ -188,7 +188,7 @@ import axios from 'axios';
 import { renderFromServer } from 'piral-ssr-utils';
 import { createApp } from '../common/app';
 
-const feedUrl = 'https://feed.piral.io/api/v1/pilet/sample';
+const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
 
 function readRemoteText(link: string) {
   return axios.get(link).then(res => res.data);

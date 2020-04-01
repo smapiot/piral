@@ -37,6 +37,7 @@ export const App = () => (
         {codes.map(code => (
           <Route key={code.id} exact path={code.route} component={code.page} />
         ))}
+        <Route exact path="/reference/codes/*" component={CodesReferencePage} />
         <Route exact path="/reference/plugins" component={PluginsReferencePage} />
         {plugins.map(plugin => (
           <Route key={plugin.id} exact path={plugin.route} component={plugin.page} />

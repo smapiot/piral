@@ -61,7 +61,7 @@ const instance = createInstance({
     createDashboardApi(),
   ],
   requestPilets() {
-    return fetch('https://feed.piral.io/api/v1/pilet/cross-fx')
+    return fetch('https://feed.piral.cloud/api/v1/pilet/cross-fx')
       .then(res => res.json())
       .then(res => res.items);
   },

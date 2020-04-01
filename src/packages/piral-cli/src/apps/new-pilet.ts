@@ -21,6 +21,7 @@ import {
   fail,
   progress,
   log,
+  logDone,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -150,6 +151,8 @@ always-auth=true`,
       log('generalDebug_0003', `Run: ${postScaffold}`);
       await runScript(postScaffold, root);
     }
+
+    logDone(`Pilet scaffolded successfully!`);
   } else {
     fail('cannotCreateDirectory_0044');
   }
