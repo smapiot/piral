@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.11.1 (tbd)
+
+* Improved naming of the extension slot component `key`
+* Fixed default version for `piral upgrade` command
+* Added `piral-oidc` plugin (#177)
+* Added `piral-oauth2` plugin (#178)
+
 ## 0.11.0 (April 1, 2020)
 
 * Documented the Piral CLI spec (#110)

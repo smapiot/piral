@@ -1,8 +1,8 @@
 [![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
 
-# [Piral ADAL](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-adal.svg?style=flat)](https://www.npmjs.com/package/piral-adal) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral OIDC](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-oidc.svg?style=flat)](https://www.npmjs.com/package/piral-oidc) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is a plugin that only has a peer dependency to `piral-core`. What `piral-adal` brings to the table is a direct integration with Azure Active Directory on basis of the MSAL library that can be used with `piral` or `piral-core`.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-oidc` brings to the table is a direct integration with OpenID Connect identity providers on basis of the oidc-client library that can be used with `piral` or `piral-core`.
 
 The set includes the `getAccessToken` API to retrieve the current user's access token.
 
@@ -41,49 +41,49 @@ Note that this value may change if the Piral instance supports an "on the fly" l
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
-For the setup of the library itself you'll need to import `createAdalApi` from the `piral-adal` package.
+For the setup of the library itself you'll need to import `createOidcApi` from the `piral-oidc` package.
 
 ```ts
-import { createAdalApi } from 'piral-adal';
+import { createOidcApi } from 'piral-oidc';
 ```
 
 The integration looks like:
 
 ```ts
-import { createAdalApi, setupAdalClient } from 'piral-adal';
+import { createOidcApi, setupOidcClient } from 'piral-oidc';
 
-const client = setupAdalClient({ clientId, ... });
+const client = setupOidcClient({ clientId, ... });
 
 const instance = createInstance({
   // important part
-  extendApi: [createAdalApi(client)],
+  extendApi: [createOidcApi(client)],
   // ...
 });
 ```
 
-The separation into `setupAdalClient` and `createAdalApi` was done to simplify the standard usage.
+The separation into `setupOidcClient` and `createOidcApi` was done to simplify the standard usage.
 
 Normally, you would want to have different modules here. As an example consider the following code:
 
 ```ts
-// module adal.ts
-import { setupAdalClient } from 'piral-adal';
+// module oidc.ts
+import { setupOidcClient } from 'piral-oidc';
 
-export const client = setupAdalClient({ ... });
+export const client = setupOidcClient({ ... });
 
 // app.ts
-import { createAdalApi } from 'piral-adal';
-import { client } from './adal';
+import { createOidcApi } from 'piral-oidc';
+import { client } from './oidc';
 
 export function render() {
   renderInstance({
     // ...
-    extendApi: [createAdalApi(client)],
+    extendApi: [createOidcApi(client)],
   });
 }
 
 // index.ts
-import { client } from './adal';
+import { client } from './oidc';
 
 if (location.pathname !== '/auth') {
   if (client.account()) {
