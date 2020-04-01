@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.11.0 (tbd)
+## 0.11.0 (April 1, 2020)
 
 * Documented the Piral CLI spec (#110)
 * Added support for import maps via `parcel-plugin-import-maps` (#124)
