@@ -11,6 +11,7 @@ const tutorials = resolve(docs, 'tutorials');
 const questions = resolve(docs, 'questions');
 const reference = resolve(docs, 'reference');
 const commands = resolve(docs, 'commands');
+const messages = resolve(docs, 'messages');
 const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
 
@@ -64,6 +65,10 @@ function getReferences() {
 
 function getCommands() {
   return getDocsFrom(commands);
+}
+
+function getCodes() {
+  return getDocsFrom(messages);
 }
 
 function getSpecs() {
@@ -126,6 +131,7 @@ module.exports = {
   getQuestions,
   getReferences,
   getCommands,
+  getCodes,
   getPluginCategory,
   getPluginCategories,
   getPluginTypes,

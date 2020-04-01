@@ -9,17 +9,22 @@ export type Options = 'suggest' | 'required' | 'ignore';
 export default async function(context: PiletRuleContext, options: Options = 'suggest') {
   if (options !== 'ignore') {
     const { name, version } = context.data.appPackage;
-    const latestVersion = await findLatestVersion(name);
+    const demanded = (context.devDependencies && context.devDependencies[name]) || '';
+    const isfixed = demanded.startsWith('git+') || demanded.startsWith('file:');
 
-    if (version !== latestVersion) {
-      const notify = options === 'required' ? context.error : context.warning;
-      notify(
-        `
+    if (isfixed) {
+      const latestVersion = await findLatestVersion(name);
+
+      if (version !== latestVersion) {
+        const notify = options === 'required' ? context.error : context.warning;
+        notify(
+          `
 The used version of "${name}" is outdated.
   Expected: v${latestVersion}.
   Received: v${version}.
 `,
-      );
+        );
+      }
     }
   }
 }

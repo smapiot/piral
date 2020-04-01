@@ -9,6 +9,12 @@ level: Intermediate
 
 So far we did not spent much time on setting up the Piral instance. In reality, a fair amount of time should be invested into setting up the Piral instance correctly. Primarily, this has nothing to do with Piral itself, but rather with standard things such as the used styling and the potential points of interaction with the user.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/u7XhTuf2hDQ)
+
 ## Layout Basics
 
 Coming up with a great layout is a good start for a supreme user experience. Before we start creating a large amount of pilets the application shell should be in a good shape.
@@ -28,8 +34,6 @@ renderInstance({
     DashboardTile: MyDashboardTile,
   },
 });
-
-export * from 'piral/api';
 ```
 
 We use a single property called `layout`, which expects an object with components that are used to represent various building blocks.

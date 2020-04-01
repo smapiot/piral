@@ -1,4 +1,5 @@
 import { resolve, basename } from 'path';
+import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, PackageType } from '../types';
 import {
   createDirectory,
   createFileIfNotExists,
@@ -7,11 +8,7 @@ import {
   dissectPackageName,
   copyPiralFiles,
   patchPiletPackage,
-  ForceOverwrite,
-  PiletLanguage,
   scaffoldPiletSourceFiles,
-  logInfo,
-  logDone,
   installDependencies,
   combinePackageRef,
   getPackageName,
@@ -19,9 +16,12 @@ import {
   readPiralPackage,
   getPiletsInfo,
   runScript,
-  TemplateType,
   checkAppShellPackage,
-  PackageType,
+  setLogLevel,
+  fail,
+  progress,
+  log,
+  logDone,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -32,16 +32,18 @@ export interface NewPiletOptions {
   language?: PiletLanguage;
   install?: boolean;
   template?: TemplateType;
+  logLevel?: LogLevels;
 }
 
-export const newPiletDefaults = {
+export const newPiletDefaults: NewPiletOptions = {
   target: '.',
   registry: defaultRegistry,
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
   install: true,
-  template: 'default' as const,
+  template: 'default',
+  logLevel: LogLevels.info,
 };
 
 function isLocalPackage(name: string, type: PackageType, hadVersion: boolean) {
@@ -64,13 +66,16 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     language = newPiletDefaults.language,
     install = newPiletDefaults.install,
     template = newPiletDefaults.template,
+    logLevel = newPiletDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
+  progress('Preparing source and target ...');
   const root = resolve(baseDir, target);
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, source);
   const success = await createDirectory(root);
 
   if (success) {
-    logInfo(`Scaffolding new pilet in %s ...`, root);
+    progress(`Scaffolding new pilet in %s ...`, root);
 
     await createFileIfNotExists(
       root,
@@ -94,7 +99,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     );
 
     if (registry !== newPiletDefaults.registry) {
-      logInfo(`Setting up NPM registry (%s) ...`, registry);
+      progress(`Setting up NPM registry (%s) ...`, registry);
 
       await createFileIfNotExists(
         root,
@@ -110,11 +115,11 @@ always-auth=true`,
     if (!isLocal) {
       const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
-      logInfo(`Installing NPM package %s ...`, packageRef);
+      progress(`Installing NPM package %s ...`, packageRef);
 
       await installPackage(packageRef, root, '--save-dev', '--no-package-lock');
     } else {
-      logInfo(`Using locally available NPM package %s ...`, sourceName);
+      progress(`Using locally available NPM package %s ...`, sourceName);
     }
 
     const packageName = await getPackageName(root, sourceName, type);
@@ -126,29 +131,29 @@ always-auth=true`,
     const { preScaffold, postScaffold } = getPiletsInfo(piralInfo);
 
     if (preScaffold) {
-      logInfo(`Running preScaffold script ...`);
+      progress(`Running preScaffold script ...`);
+      log('generalDebug_0003', `Run: ${preScaffold}`);
       await runScript(preScaffold, root);
     }
 
-    logInfo(`Taking care of templating ...`);
-
+    progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-
-    const files = await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
-    await copyPiralFiles(root, packageName, files, ForceOverwrite.yes);
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
+    await copyPiralFiles(root, packageName, ForceOverwrite.yes, []);
 
     if (install) {
-      logInfo(`Installing dependencies ...`);
+      progress(`Installing dependencies ...`);
       await installDependencies(root, '--no-package-lock');
     }
 
     if (postScaffold) {
-      logInfo(`Running postScaffold script ...`);
+      progress(`Running postScaffold script ...`);
+      log('generalDebug_0003', `Run: ${postScaffold}`);
       await runScript(postScaffold, root);
     }
 
-    logDone(`All done!`);
+    logDone(`Pilet scaffolded successfully!`);
   } else {
-    throw new Error('Could not create directory.');
+    fail('cannotCreateDirectory_0044');
   }
 }

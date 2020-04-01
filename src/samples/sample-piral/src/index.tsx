@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'piral/polyfills';
 import { renderInstance, getUserLocale, setupLocalizer } from 'piral';
 import { createAuthApi } from 'piral-auth';
 import { createSearchApi } from 'piral-search';
@@ -20,7 +21,7 @@ renderInstance({
   },
   extendApi: [createAuthApi(), createSearchApi()],
   requestPilets() {
-    return fetch('https://feed.piral.io/api/v1/pilet/sample')
+    return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
       .then(res => res.json())
       .then(res => res.items);
   },

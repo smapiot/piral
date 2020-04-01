@@ -183,6 +183,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory for the generated .d.ts file.')
         .default('target', apps.declarationPiralDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.declarationPiralDefaults.logLevel)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the declaration.')
         .default('force-overwrite', keyOfForceOverwrite(apps.declarationPiralDefaults.forceOverwrite))
@@ -195,6 +198,7 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -219,6 +223,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('install')
         .describe('install', 'Already performs the installation of its NPM dependencies.')
         .default('install', apps.newPiralDefaults.install)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.newPiralDefaults.logLevel)
         .string('tag')
         .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
         .default('tag', apps.newPiralDefaults.version)
@@ -245,6 +252,37 @@ const allCommands: Array<ToolCommand<any>> = [
         language: valueOfPiletLanguage(args.language as string),
         install: args.install as boolean,
         template: args.template,
+        logLevel: args.logLevel as any,
+      });
+    },
+  },
+  {
+    name: 'upgrade-piral',
+    alias: ['patch'],
+    description: 'Upgrades the Piral instance to the latest version of the used Piral packages.',
+    arguments: ['[target-version]'],
+    flags(argv) {
+      return argv
+        .positional('target-version', {
+          type: 'string',
+          describe: 'Sets the tag or version of Piral to upgrade to. By default, it is "latest".',
+          default: apps.upgradePiralDefaults.version,
+        })
+        .string('target')
+        .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
+        .default('target', apps.upgradePiralDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.upgradePiralDefaults.logLevel)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.upgradePiral(args.base as string, {
+        target: args.target as string,
+        version: args.targetVersion as string,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -314,6 +352,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
+        .choices('schema', ['v0', 'v1'])
+        .describe('schema', 'Sets the schema to be used when bundling the pilets.')
+        .default('schema', apps.debugPiletDefaults.schemaVersion)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -333,6 +374,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
         open: args.open as boolean,
+        schemaVersion: args.schema as any,
       });
     },
   },
@@ -379,6 +421,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.buildPiletDefaults.optimizeModules)
+        .choices('schema', ['v0', 'v1'])
+        .describe('schema', 'Sets the schema to be used when bundling the pilets.')
+        .default('schema', apps.buildPiletDefaults.schemaVersion)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -398,6 +443,7 @@ const allCommands: Array<ToolCommand<any>> = [
         optimizeModules: args.optimizeModules as boolean,
         fresh: args.fresh as boolean,
         logLevel: args.logLevel as any,
+        schemaVersion: args.schema as any,
         app: args.app as string,
       });
     },
@@ -417,6 +463,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory or file of packing.')
         .default('target', apps.packPiletDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.packPiletDefaults.logLevel)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -425,6 +474,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.packPilet(args.base as string, {
         source: args.source as string,
         target: args.target as string,
+        logLevel: args.logLevel as any,
       });
     },
   },
@@ -446,9 +496,15 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('api-key')
         .describe('api-key', 'Sets the potential API key to send to the service.')
         .default('api-key', apps.publishPiletDefaults.apiKey)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.publishPiletDefaults.logLevel)
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build, then packages and finally publishes the pilet.')
         .default('fresh', apps.publishPiletDefaults.fresh)
+        .choices('schema', ['v0', 'v1'])
+        .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
+        .default('schema', apps.publishPiletDefaults.schemaVersion)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
@@ -459,7 +515,9 @@ const allCommands: Array<ToolCommand<any>> = [
         source: args.source as string,
         apiKey: args.apiKey as string,
         url: args.url as string,
+        logLevel: args.logLevel as any,
         fresh: args.fresh as boolean,
+        schemaVersion: args.schema as any,
       });
     },
   },
@@ -488,6 +546,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiletDefaults.forceOverwrite))
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.newPiletDefaults.logLevel)
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new pilet.')
         .default('language', keyOfPiletLanguage(apps.newPiletDefaults.language))
@@ -505,6 +566,7 @@ const allCommands: Array<ToolCommand<any>> = [
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
+        logLevel: args.logLevel as any,
         install: args.install as boolean,
         template: args.template,
       });
@@ -514,7 +576,7 @@ const allCommands: Array<ToolCommand<any>> = [
     name: 'upgrade-pilet',
     alias: ['upgrade'],
     description: 'Upgrades an existing pilet to the latest version of the used Piral instance.',
-    arguments: [],
+    arguments: ['[target-version]'],
     flags(argv) {
       return argv
         .positional('target-version', {
@@ -525,6 +587,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory to upgrade. By default, the current directory.')
         .default('target', apps.upgradePiletDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.upgradePiletDefaults.logLevel)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
@@ -536,6 +601,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.upgradePilet(args.base as string, {
         target: args.target as string,
         version: args.targetVersion as string,
+        logLevel: args.logLevel as any,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
       });
     },

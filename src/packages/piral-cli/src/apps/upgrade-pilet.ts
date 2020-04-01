@@ -1,13 +1,11 @@
 import { resolve } from 'path';
+import { LogLevels, ForceOverwrite } from '../types';
 import {
   readJson,
   installPackage,
   checkExistingDirectory,
   patchPiletPackage,
   copyPiralFiles,
-  ForceOverwrite,
-  logInfo,
-  logDone,
   getFileStats,
   readPiralPackage,
   getPiletsInfo,
@@ -17,18 +15,25 @@ import {
   checkAppShellPackage,
   defaultCacheDir,
   removeDirectory,
+  setLogLevel,
+  progress,
+  fail,
+  log,
+  logDone,
 } from '../common';
 
 export interface UpgradePiletOptions {
   version?: string;
   target?: string;
   forceOverwrite?: ForceOverwrite;
+  logLevel?: LogLevels;
 }
 
-export const upgradePiletDefaults = {
+export const upgradePiletDefaults: UpgradePiletOptions = {
   version: undefined,
   target: '.',
   forceOverwrite: ForceOverwrite.no,
+  logLevel: LogLevels.info,
 };
 
 export async function upgradePilet(baseDir = process.cwd(), options: UpgradePiletOptions = {}) {
@@ -36,13 +41,15 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     version = upgradePiletDefaults.version,
     target = upgradePiletDefaults.target,
     forceOverwrite = upgradePiletDefaults.forceOverwrite,
+    logLevel = upgradePiletDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
   const root = resolve(baseDir, target);
   const cache = resolve(root, defaultCacheDir);
   const valid = await checkExistingDirectory(root);
 
   if (!valid) {
-    throw new Error('The provided target is not a valid. It must be a directory containing a package.json.');
+    fail('invalidPiletTarget_0040');
   }
 
   const pckg = await readJson(root, 'package.json');
@@ -52,19 +59,19 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     const sourceName = piral.name;
 
     if (!sourceName || typeof sourceName !== 'string') {
-      throw new Error(`Missing "name" <string> in the "piral" section of the "package.json" file. Aborting.`);
+      fail('invalidPiletPackage_0042');
     }
 
     const currentVersion = devDependencies[sourceName];
 
     if (!currentVersion || typeof currentVersion !== 'string') {
-      throw new Error(`Invalid reference to the Piral instance in the "package.json" file. Aborting.`);
+      fail('invalidPiralReference_0043');
     }
 
     const [packageRef, packageVersion] = await getCurrentPackageDetails(baseDir, sourceName, currentVersion, version);
-    const originalFiles = await getFileStats(root, sourceName, piral.files);
+    const originalFiles = await getFileStats(root, sourceName);
 
-    logInfo(`Updating NPM package to %s ...`, packageRef);
+    progress(`Updating NPM package to %s ...`, packageRef);
 
     await installPackage(packageRef, root, '--no-save', '--no-package-lock');
 
@@ -75,27 +82,28 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
 
     if (preUpgrade) {
-      logInfo(`Running preUpgrade script ...`);
+      progress(`Running preUpgrade script ...`);
+      log('generalDebug_0003', `Run: ${preUpgrade}`);
       await runScript(preUpgrade, root);
     }
 
-    logInfo(`Taking care of templating ...`);
+    progress(`Taking care of templating ...`);
 
-    const files = await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
-    await copyPiralFiles(root, sourceName, files, forceOverwrite, originalFiles);
+    await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
+    await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles);
 
-    logInfo(`Updating dependencies ...`);
-
+    progress(`Updating dependencies ...`);
     await installDependencies(root, '--no-package-lock');
 
     if (postUpgrade) {
-      logInfo(`Running postUpgrade script ...`);
+      progress(`Running postUpgrade script ...`);
+      log('generalDebug_0003', `Run: ${postUpgrade}`);
       await runScript(postUpgrade, root);
     }
 
     await removeDirectory(cache);
-    logDone(`All done!`);
+    logDone('Pilet upgraded successfully!');
   } else {
-    throw new Error(`Could not find a "piral" section in the "package.json" file. Aborting.`);
+    fail('invalidPiletPackage_0041');
   }
 }

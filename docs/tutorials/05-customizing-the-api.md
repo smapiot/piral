@@ -9,6 +9,12 @@ level: Intermediate
 
 Turning back to the Piral instance we can determine how the Pilet API looks like. By default, the Pilet API is already extensive and well-suited for many use cases. Nevertheless, we may need to add another useful API to give our pilets the right set of capabilities.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/2o4ImfZWdLM)
+
 Let's start by looking at how we scaffolded the Piral instance.
 
 ## Standard Scaffolding Approach

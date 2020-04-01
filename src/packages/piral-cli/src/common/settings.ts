@@ -1,10 +1,5 @@
-import { ParcelOptions } from 'parcel-bundler';
 import { defaultCacheDir } from './info';
-
-export interface ParcelConfig extends ParcelOptions {
-  global?: string;
-  autoInstall?: boolean;
-}
+import { ParcelConfig } from '../types';
 
 export function extendConfig(options: ParcelConfig): ParcelConfig {
   return {

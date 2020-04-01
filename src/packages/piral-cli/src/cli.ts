@@ -1,6 +1,5 @@
 import * as yargs from 'yargs';
 import { ToolCommand } from './types';
-import { logFail } from './common';
 
 let argv = yargs;
 
@@ -27,7 +26,8 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
         Promise.resolve(command.run(args)).then(
           () => process.exit(0),
           err => {
-            err && logFail(err.message);
+            err && !err.logged && console.error(err.message);
+            console.log('Codes Reference: https://docs.piral.io/code/search');
             process.exit(1);
           },
         ),
@@ -35,7 +35,7 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
   }
 
   argv
-    .epilog('For more information, check out the documentation at https://piral.io.')
+    .epilog('For more information, check out the documentation at https://docs.piral.io.')
     .help()
     .strict().argv;
 }

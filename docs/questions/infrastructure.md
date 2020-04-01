@@ -28,7 +28,7 @@ The configuration of your web server should be as for any SPA. Just make sure th
 
 In order to configure the 404 not found redirects for netlify.com you'll need to provide a file called `_redirects` with the following content:
 
-```plain
+```plaintext
 /*    /index.html   200
 ```
 
@@ -38,7 +38,7 @@ In order to configure the 404 not found redirects for netlify.com you'll need to
 
 In order to configure the 404 not found redirects for an Apache webserver you'll need to provide a file called `.htaccess` with the following content:
 
-```plain
+```plaintext
 RewriteEngine On
 RewriteCond %{SERVER_PORT} 80
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -52,5 +52,15 @@ RewriteRule . /index.html [L]
 
 ErrorDocument 404 /
 ```
+
+---------------------------------------
+
+## Is the feed service reliable?
+
+The feed service is as reliable as you build it. If you are concerned about your feed service going down we recommend using multiple instances located at different data centers. Another option is to provide a CI build to include a static feed service response in your delivered HTML or JS. That way you can always fall back to a known configuration.
+
+Our feed service is reliable up to a certain degree. For the free community edition we don't give out any SLA. The paid enterprise edition has a SLA - just get in touch with us for details.
+
+We will not shut down the free community edition. Also any planned changes to the infrastructure will be announced ahead of time (at least two weeks).
 
 ---------------------------------------

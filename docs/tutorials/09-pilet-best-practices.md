@@ -11,6 +11,12 @@ In general a pilet should be treated like a normal application, i.e., a sound ar
 
 Piral has been designed in such a way that its up to the user to decide how deep Piral should be integrated (or visible) in pilets. Our recommendation is to keep the connection shallow, i.e., to only reference Piral in the root module. Let's investigate some patterns we may want to follow.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/OyPUm2ZwEkY)
+
 ## Separate Data from Views
 
 Piral wants to help you to separate your data handling from your actual views. Using Piral's `createConnector` HOC you can separate the two easily.

@@ -11,6 +11,12 @@ Sharing data between pilets is certainly one use case, however, the more importa
 
 Depending on what we want to share one way or another may be applicable.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/UToVUmG5aFI)
+
 ## Using a Shared Package
 
 Sharing components or other (global, i.e., not really Piral instance dependent) functionality should be done with packages. The idea is that the package is included in the app shell as a shared dependency.

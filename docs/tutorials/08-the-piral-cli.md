@@ -19,6 +19,12 @@ pilet [pilet-command]
 
 Here, `any-command` is the union of all `piral-command` (suffixed with `-piral`) and all `pilet-command` (suffixed with `-pilet`) instructions. Additionally, some commands that that belong to neither category may be found here.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/Uk5t49f4o2A)
+
 ## Responsibilities
 
 Before we continue, let's recap why the Piral CLI has been introduced in the first place. The following diagram shows the place of the Piral CLI in the Piral ecosystem.

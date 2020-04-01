@@ -112,7 +112,7 @@ function getType(flag: Flag) {
   }
 }
 
-export function runQuestionnaire(commandName: string, ignoredInstructions = ['base']) {
+export function runQuestionnaire(commandName: string, ignoredInstructions = ['base', 'log-level']) {
   const [command] = commands.all.filter(m => m.name === commandName);
   const instructions = getCommandData(command.flags);
   const questions = instructions

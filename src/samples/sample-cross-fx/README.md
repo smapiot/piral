@@ -28,7 +28,7 @@ will produce the assets in the *dist/demo-cross/release* directory.
 
 The pilets for this sample are stored in a separate repository. You'll find the [repository at GitHub](https://github.com/smapiot/sample-cross-fx-pilets).
 
-Each pilet is published on the public feed service in the [cross-fx feed](https://feed.piral.io/api/v1/pilet/cross-fx).
+Each pilet is published on the public feed service in the [cross-fx feed](https://feed.piral.cloud/api/v1/pilet/cross-fx).
 
 ## License
 

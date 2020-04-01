@@ -9,6 +9,14 @@ level: Advanced
 
 One of the great things that Piral encourages is offline-first development. Note, however, that this is only encouraged not enforced. What Piral does to make offline-first possible is the integration of [kras](https://github.com/FlorianRappl/kras).
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/xTxVoEs2Pn4)
+
+## Introduction to Kras
+
 What kras brings to the table:
 
 - HTTP proxying into an arbitrary environment

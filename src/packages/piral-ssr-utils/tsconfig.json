@@ -3,9 +3,9 @@
   "compilerOptions": {
     "outDir": "./lib",
     "skipLibCheck": true,
+    "target": "ES6",
     "lib": ["dom", "es2015", "es2018"],
-    "jsx": "react",
-    "importHelpers": true
+    "jsx": "react"
   },
   "include": [
     "./src"

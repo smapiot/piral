@@ -9,6 +9,12 @@ level: Intermediate
 
 Pilets provide a great way to develop and release business functionality in isolation. However, in the real world we may want to mix functionalities. As such one team should be responsible for a functionality that is shown as a dedicated page, while another team cares about a subfunctionality that may appear on dedicated pages, but also in general or other components.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/EIXtih5_M3M)
+
 ## Data
 
 Data from one pilet can be shared with other pilets via the `setData` and `getData` methods of the pilet API. The only thing to know is the name of the data item. It should be as unique as possible as overwriting is not allowed. Thus, the first one writing data will "own" (i.e., have the right to modify) it.

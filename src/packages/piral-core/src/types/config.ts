@@ -1,8 +1,9 @@
-import { PiletDependencyGetter, PiletLoadingStrategy } from 'piral-base';
-import { Pilet, PiletApi } from './api';
+import { PiletRequester, PiletDependencyFetcher, PiletDependencyGetter, PiletLoadingStrategy, Pilet, AvailableDependencies } from 'piral-base';
 import { NestedPartial } from './common';
-import { PiletRequester, Extend } from './plugin';
+import { Extend } from './plugin';
 import { GlobalState, PiralDefineActions } from './state';
+
+export { PiletLoadingStrategy, PiletDependencyFetcher, PiletDependencyGetter, PiletRequester, AvailableDependencies };
 
 export interface PiralPiletConfiguration {
   /*
@@ -24,6 +25,10 @@ export interface PiralPiletConfiguration {
 
 export interface PiralStateConfiguration {
   /**
+   * The callback for defining how a dependency will be fetched.
+   */
+  fetchDependency?: PiletDependencyFetcher;
+  /**
    * Function to get the dependencies for a given module.
    */
   getDependencies?: PiletDependencyGetter;
@@ -31,7 +36,7 @@ export interface PiralStateConfiguration {
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.
    */
-  async?: boolean | PiletLoadingStrategy<PiletApi>;
+  async?: boolean | PiletLoadingStrategy;
   /**
    * Optionally, sets up the initial state of the application 📦.
    */

@@ -1,19 +1,18 @@
 import { resolve, basename } from 'path';
+import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, Framework } from '../types';
 import {
   installPackage,
   updateExistingJson,
-  PiletLanguage,
-  ForceOverwrite,
   getPiralPackage,
   scaffoldPiralSourceFiles,
   createDirectory,
   createFileIfNotExists,
   logDone,
-  logInfo,
   installDependencies,
   combinePackageRef,
-  TemplateType,
-  Framework,
+  setLogLevel,
+  fail,
+  progress,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -25,17 +24,19 @@ export interface NewPiralOptions {
   language?: PiletLanguage;
   install?: boolean;
   template?: TemplateType;
+  logLevel?: LogLevels;
 }
 
-export const newPiralDefaults = {
+export const newPiralDefaults: NewPiralOptions = {
   app: './src/index.html',
-  framework: 'piral' as const,
+  framework: 'piral',
   target: '.',
   version: 'latest',
   forceOverwrite: ForceOverwrite.no,
   language: PiletLanguage.ts,
   install: true,
-  template: 'default' as const,
+  template: 'default',
+  logLevel: LogLevels.info,
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
@@ -48,14 +49,17 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     language = newPiralDefaults.language,
     install = newPiralDefaults.install,
     template = newPiralDefaults.template,
+    logLevel = newPiralDefaults.logLevel,
   } = options;
+  setLogLevel(logLevel);
+  progress('Preparing source and target ...');
   const root = resolve(baseDir, target);
   const success = await createDirectory(root);
 
   if (success) {
     const packageRef = combinePackageRef(framework, version, 'registry');
 
-    logInfo(`Creating a new Piral instance in %s ...`, root);
+    progress(`Creating a new Piral instance in %s ...`, root);
 
     await createFileIfNotExists(
       root,
@@ -76,21 +80,21 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework));
 
-    logInfo(`Installing NPM package ${packageRef} ...`);
+    progress(`Installing NPM package ${packageRef} ...`);
 
     await installPackage(packageRef, root, '--no-package-lock');
 
-    logInfo(`Taking care of templating ...`);
+    progress(`Taking care of templating ...`);
 
     await scaffoldPiralSourceFiles(template, language, root, app, framework, forceOverwrite);
 
     if (install) {
-      logInfo(`Installing dependencies ...`);
+      progress(`Installing dependencies ...`);
       await installDependencies(root, '--no-package-lock');
     }
 
-    logDone(`All done!`);
+    logDone(`Piral instance scaffolded successfully!`);
   } else {
-    throw new Error('Could not create directory.');
+    fail('cannotCreateDirectory_0044');
   }
 }

@@ -161,6 +161,14 @@ Also includes the node modules for target transpilation.
 - Type: `boolean`
 - Default: `false`
 
+### `--schema`
+
+Sets the schema to be used when bundling the pilets.
+
+- Type: `string`
+- Choices: `"v0"`, `"v1"`
+- Default: `"v1"`
+
 ### `--app`
 
 Sets the name of the Piral instance.

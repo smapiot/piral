@@ -1,5 +1,6 @@
 import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { LogLevels } from '../types';
 import {
   retrievePiletData,
   setStandardEnvs,
@@ -8,16 +9,19 @@ import {
   openBrowser,
   reorderInjectors,
   notifyServerOnline,
-  logInfo,
   patchModules,
   setupBundler,
   findEntryModule,
   defaultCacheDir,
   removeDirectory,
+  PiletSchemaVersion,
+  getPiletSchemaVersion,
+  setLogLevel,
+  progress,
 } from '../common';
 
 export interface DebugPiletOptions {
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   cacheDir?: string;
   entry?: string;
   app?: string;
@@ -28,10 +32,11 @@ export interface DebugPiletOptions {
   hmr?: boolean;
   autoInstall?: boolean;
   optimizeModules?: boolean;
+  schemaVersion?: 'v0' | 'v1';
 }
 
-export const debugPiletDefaults = {
-  logLevel: 3 as const,
+export const debugPiletDefaults: DebugPiletOptions = {
+  logLevel: LogLevels.info,
   cacheDir: defaultCacheDir,
   entry: './src/index',
   fresh: false,
@@ -41,6 +46,7 @@ export const debugPiletDefaults = {
   hmr: true,
   autoInstall: true,
   optimizeModules: true,
+  schemaVersion: 'v1',
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -51,10 +57,10 @@ async function getOrMakeAppDir(
   appFile: string,
   externals: Array<string>,
   piral: string,
-  logLevel: 1 | 2 | 3,
+  logLevel: LogLevels,
 ) {
   if (!emulator) {
-    logInfo(`Preparing supplied Piral instance ...`);
+    progress(`Preparing supplied Piral instance ...`);
     const outDir = resolve(baseDir, 'dist', 'app');
     const packageJson = require.resolve(`${piral}/package.json`);
     const root = resolve(packageJson, '..');
@@ -103,7 +109,8 @@ async function bundlePilet(
   externals: Array<string>,
   targetDir: string,
   entryModule: string,
-  logLevel: 1 | 2 | 3,
+  logLevel: LogLevels,
+  version: PiletSchemaVersion,
 ) {
   setStandardEnvs({
     root,
@@ -128,10 +135,10 @@ async function bundlePilet(
   });
 
   bundler.on('bundled', async bundle => {
-    await postProcess(bundle);
+    const requireRef = await postProcess(bundle, version);
 
     if (hmr) {
-      (bundler as any).emit('bundle-ready');
+      (bundler as any).emit('bundle-ready', { requireRef, version, root });
     }
   });
 
@@ -150,27 +157,32 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     logLevel = debugPiletDefaults.logLevel,
     fresh = debugPiletDefaults.fresh,
     optimizeModules = debugPiletDefaults.optimizeModules,
+    schemaVersion = debugPiletDefaults.schemaVersion,
     app,
   } = options;
+  setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
   const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const cache = resolve(root, cacheDir);
+  const version = getPiletSchemaVersion(schemaVersion);
+  const krasConfig = readKrasConfig({ port }, krasrc);
+  const api = debugPiletApi;
 
   if (fresh) {
+    progress('Removing output directory ...');
     await removeDirectory(cache);
   }
 
   if (optimizeModules) {
-    logInfo('Preparing modules ...');
+    progress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 
   const appDir = await getOrMakeAppDir(root, emulator, appFile, externals, appPackage.name, logLevel);
-  const krasConfig = readKrasConfig({ port }, krasrc);
-  const api = debugPiletApi;
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(targetDir, 'mocks');
@@ -203,6 +215,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     targetDir,
     entryModule,
     logLevel,
+    version,
   );
   const injectorConfig = {
     active: true,

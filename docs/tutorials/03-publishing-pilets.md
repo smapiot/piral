@@ -17,13 +17,19 @@ In terms of microfrontends, that's as minimal as it can be. Most solutions requi
 
 We designed Piral to be as simple as possible, while remaining as flexible and powerful as possible. The SPA-first approach removes any need for a server. With Piral you can go serverless if you want to.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/2MlcqG-UCbA)
+
 ## Piral Cloud Services
 
 In this spirit we provide a free[^1] community edition of the service that you can use for providing the **feed service**, as well as a way to publish your pilets. This leaves you at the task of creating a Piral instance.
 
 **Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification we also have published a Node.js sample implementation at GitHub (https://github.com/smapiot/sample-pilet-service). The sample implementation can also be installed or run locally very easily.
 
-The service can be found at <https://feed.piral.io>. Registration is possible by using a Microsoft Account to log into the service. We do not need any personal data besides the email / account id, which is provided after your approval.
+The service can be found at [piral.cloud](https://www.piral.cloud). Registration is possible by using a Microsoft Account to log into the service. We do not need any personal data besides the email / account id, which is provided after your approval.
 
 For our tutorials, we will utilize the community edition of the feed service.
 
@@ -50,7 +56,7 @@ For publishing (or retrieving) pilets you will need a feed. A feed is like a con
 
 ### Access to the Feed Service
 
-To use the community edition of the **feed service** as part of the Piral Cloud Services, you don't need to create or register an account. Just navigate to the community feed service <https://feed.piral.io> and sign in with a Microsoft Account by pressing the sign-in button on the home page of the service.
+To use the community edition of the **feed service** as part of the Piral Cloud Services, you don't need to create or register an account. Just navigate to the community feed service [piral.cloud](https://www.piral.cloud) and sign in with a Microsoft Account by pressing the sign-in button on the home page of the service.
 
 ![Microsoft Login](../diagrams/ms-login.svg)
 
@@ -107,7 +113,7 @@ Since your feed will have a different name, just replace the name of the feed wi
 For publishing the pilet navigate to the folder of the pilet and invoke the following command:
 
 ```sh
-pilet publish --fresh --url https://feed.piral.io/api/v1/pilet/my-tutorial-feed --api-key <your-api-key>
+pilet publish --fresh --url https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed --api-key <your-api-key>
 ```
 
 The `--fresh` flag tells the Piral CLI to invoke a fresh build and do everything from building up to packaging the pilet. Without this flag, we would already need a packaged pilet ready for publishing.
@@ -122,10 +128,10 @@ The view shows further information about the published pilets and provides funct
 
 ## Configure the Feed Service in the Piral instance
 
-Now that the pilet is available via the feed Service, we just need to configure our Piral instance to pull the pilets from the created feed. We need to modify the `backend.js` file in the folder `./src/mocks` of the Piral instance. The path to the newly created feed needs to be specified, in our case:
+Now that the pilet is available via the feed Service, we just need to configure our Piral instance to pull the pilets from the created feed. We need to modify the `index.tsx` file in the `./src` folder of the Piral instance. The path to the newly created feed needs to be specified, in our case:
 
 ```javascript
-const apiService = 'https://feed.piral.io/api/v1/pilet/my-tutorial-feed';
+const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed';
 ```
 
 Please assign your individual feed url accordingly. When you now launch your Piral instance using the piral-cli (`piral debug`), the newly published pilet will be loaded into the application shell.

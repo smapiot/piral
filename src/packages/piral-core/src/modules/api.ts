@@ -1,9 +1,9 @@
-import { isfunc, GenericPiletApiCreator, PiletMetadata } from 'piral-base';
+import { isfunc, PiletApiCreator } from 'piral-base';
 import { __assign } from 'tslib';
 import { withApi } from '../state';
 import { ExtensionSlot } from '../components';
 import { createDataOptions, getDataExpiration, renderInDom } from '../utils';
-import { PiletApi, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
+import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, Extend, ApiExtender } from '../types';
 
 export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCoreApi> {
   return (api, target) => {
@@ -77,7 +77,7 @@ export function createExtenders(context: GlobalStateContext, apis: Array<Extend>
   });
 }
 
-export function defaultApiCreator(context: GlobalStateContext, apis: Array<Extend>): GenericPiletApiCreator<PiletApi> {
+export function defaultApiCreator(context: GlobalStateContext, apis: Array<Extend>): PiletApiCreator {
   const extenders = createExtenders(context, apis);
   return target => {
     const api = initializeApi(target, context);

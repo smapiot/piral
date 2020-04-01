@@ -37,11 +37,11 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "lit-element": "2.2.1",
+    "lit-element": "^2.2.1",
     "piral-core": "^0.10.9"
   },
   "peerDependencies": {
     "lit-element": "^2.0.0",
-    "piral-core": "^0.9.0 || ^0.10.0"
+    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0"
   }
 }

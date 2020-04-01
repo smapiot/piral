@@ -1,7 +1,7 @@
 const { readFileSync } = require('fs');
 const { extract } = require('keyword-extractor');
 const { render } = require('./markdown');
-const { getName, getCommands, getDocs, getQuestions, getSpecs, getTutorials, getCoreTypes } = require('./paths');
+const { getName, getCommands, getDocs, getQuestions, getSpecs, getTutorials, getCoreTypes, getCodes } = require('./paths');
 
 function normalize(keyword) {
   if (keyword.startsWith('```')) {
@@ -103,6 +103,12 @@ module.exports = function() {
       .join('\n\n'),
   );
 
+  const codes = getCodes().map(m => ({
+    result: findKeywords(readFileSync(m, 'utf8')),
+    meta: render(m).meta,
+    name: getName(m),
+  }));
+
   const tutorials = getTutorials().map(m => ({
     result: findKeywords(readFileSync(m, 'utf8')),
     meta: render(m).meta,
@@ -135,6 +141,14 @@ module.exports = function() {
       title: 'Types',
       route: '/reference/types',
     },
+    ...codes.map(code => ({
+      keywords: [...code.result, {
+        count: 100,
+        keyword: code.name,
+      }],
+      title: code.meta.title,
+      route: `/reference/codes/${code.name}`,
+    })),
     ...tutorials.map(tutorial => ({
       keywords: tutorial.result,
       title: tutorial.meta.title,

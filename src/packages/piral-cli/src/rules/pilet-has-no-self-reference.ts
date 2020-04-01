@@ -9,7 +9,7 @@ export type Options = 'ignore' | 'active';
 export default async function(context: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
     const { name } = context.data.appPackage;
-    const names = ['piral', 'piral-core', name];
+    const names = ['piral', 'piral-core', 'piral-base', name];
     const files = await getSourceFiles(context.entry);
     const testers: Array<RegExp> = [];
 

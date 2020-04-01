@@ -24,13 +24,13 @@ Now you can create a new Piral instance in your code:
 import { createInstance } from 'piral-core';
 
 const App = createInstance({
-  requestPilets: () => fetch('https://feed.piral.io/api/v1/pilet/sample'),
+  requestPilets: () => fetch('https://feed.piral.cloud/api/v1/pilet/sample'),
 });
 ```
 
 **Remark**: For all available API options make sure to check out the [documentation](https://docs.piral.io).
 
-**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [feed.piral.io](https://feed.piral.io)) or your own API / mechanism to serve the modules.
+**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [piral.cloud](https://www.piral.cloud)) or your own API / mechanism to serve the modules.
 
 Finally, you can render this Piral instance by using the `render` function from `react-dom`:
 

@@ -30,7 +30,7 @@ export const Footer: React.FC = () => (
               </a>
             </li>
             <li>
-              <a href="https://feed.piral.io" target="_blank">
+              <a href="https://piral.cloud" target="_blank">
                 Cloud Services
               </a>
             </li>

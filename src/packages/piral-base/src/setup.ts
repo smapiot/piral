@@ -1,4 +1,4 @@
-import { GenericPilet } from './types';
+import { Pilet, PiletApi } from './types';
 
 /**
  * Sets up the given pilet by calling the exported `setup` function
@@ -6,7 +6,7 @@ import { GenericPilet } from './types';
  * @param app The pilet's evaluated content.
  * @param api The generated API for the pilet.
  */
-export function setupPilet<TApi>(app: GenericPilet<TApi>, api: TApi) {
+export function setupPilet(app: Pilet, api: PiletApi) {
   try {
     return app.setup(api);
   } catch (e) {

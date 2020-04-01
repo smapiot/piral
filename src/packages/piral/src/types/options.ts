@@ -1,10 +1,11 @@
+import { ReactElement } from 'react';
 import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral-core';
 import { PiralExtSettings } from 'piral-ext';
 
 /**
  * Defines the base options for rendering a Piral instance.
  */
-export interface PiralRenderBaseOptions extends PiralConfiguration {
+export interface PiralRenderBaseOptions {
   /**
    * Customizes the plugin settings.
    */
@@ -22,10 +23,22 @@ export interface PiralRenderBaseOptions extends PiralConfiguration {
 /**
  * Defines the options for rendering a Piral instance.
  */
-export interface PiralRenderOptions extends PiralRenderBaseOptions {
+export interface PiralRenderOptions extends PiralRenderBaseOptions, PiralConfiguration {
   /**
    * Sets the selector of the element to render into.
    * @default '#app'
    */
   selector?: string | Element;
+  /**
+   * Sets an optional middleware for adjusting the configuration.
+   * @default cfg => cfg
+   */
+  middleware?: (config: PiralConfiguration) => PiralConfiguration;
+}
+
+/**
+ * Defines how the runner for an app element looks like.
+ */
+export interface PiralRunner {
+  (app: ReactElement, selector: string | Element): void;
 }

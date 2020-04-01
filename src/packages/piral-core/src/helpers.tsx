@@ -1,15 +1,14 @@
+import { addChangeHandler } from '@dbeining/react-atom';
+import { PiletApiCreator, LoadPiletsOptions, PiletDependencyFetcher, getDependencyResolver, loadPilet } from 'piral-base';
+import { globalDependencies, getLocalDependencies } from './modules';
 import {
   AvailableDependencies,
-  GenericPiletApiCreator,
+  Pilet,
+  PiletRequester,
+  GlobalStateContext,
   PiletDependencyGetter,
   PiletLoadingStrategy,
-  LoadPiletsOptions,
-  getDependencyResolver,
-  loadPilet,
-} from 'piral-base';
-import { addChangeHandler } from '@dbeining/react-atom';
-import { globalDependencies, getLocalDependencies } from './modules';
-import { Pilet, PiletApi, PiletRequester, GlobalStateContext } from './types';
+} from './types';
 
 /**
  * Creates a dependency getter that sets the shared dependencies explicitly.
@@ -39,9 +38,10 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
 
 interface PiletOptionsConfig {
   availablePilets: Array<Pilet>;
-  createApi: GenericPiletApiCreator<PiletApi>;
+  createApi: PiletApiCreator;
+  fetchDependency: PiletDependencyFetcher;
   getDependencies: PiletDependencyGetter;
-  strategy: PiletLoadingStrategy<PiletApi>;
+  strategy: PiletLoadingStrategy;
   requestPilets: PiletRequester;
   context: GlobalStateContext;
 }
@@ -50,10 +50,11 @@ export function createPiletOptions({
   context,
   createApi,
   availablePilets,
+  fetchDependency,
   getDependencies,
   strategy,
   requestPilets,
-}: PiletOptionsConfig): LoadPiletsOptions<PiletApi> {
+}: PiletOptionsConfig): LoadPiletsOptions {
   // if we build the debug version of piral (debug and emulator build)
   if (process.env.DEBUG_PIRAL !== undefined) {
     // the DEBUG_PIRAL env should contain the Piral CLI compatibility version
@@ -114,6 +115,7 @@ export function createPiletOptions({
 
   return {
     pilets: availablePilets,
+    fetchDependency,
     getDependencies,
     strategy,
     dependencies: globalDependencies,

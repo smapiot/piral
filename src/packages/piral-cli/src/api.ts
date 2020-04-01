@@ -1,4 +1,4 @@
-import { logWarn, installPatch } from './common';
+import { log, installPatch } from './common';
 import { commands } from './commands';
 import { addPiletRule, addPiralRule } from './rules';
 import {
@@ -34,9 +34,9 @@ export function withoutCommand(commandName: string) {
 
 export function withFlags<T>(commandName: string, setter: ToolCommandFlagsSetter<T>) {
   if (typeof commandName !== 'string') {
-    logWarn('Invalid argument for "commandName" - no flags added.');
+    log('apiCommandNameInvalid_0200', 'flags');
   } else if (typeof setter !== 'function') {
-    logWarn('Invalid argument for "setter" - no flags added.');
+    log('apiArgumentInvalid_0201', 'setter', 'flags');
   } else {
     findAll(commandName, command => {
       const current = command.flags || (x => x);
@@ -49,9 +49,9 @@ export function withFlags<T>(commandName: string, setter: ToolCommandFlagsSetter
 
 export function wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<U>) {
   if (typeof commandName !== 'string') {
-    logWarn('Invalid argument for "commandName" - no command wrapped.');
+    log('apiCommandNameInvalid_0200', 'command');
   } else if (typeof wrapper !== 'function') {
-    logWarn('Invalid argument for "wrapper" - no command wrapped.');
+    log('apiArgumentInvalid_0201', 'wrapper', 'command');
   } else {
     findAll(commandName, command => {
       const current = command.run;
@@ -64,9 +64,9 @@ export function wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<
 
 export function beforeCommand<U>(commandName: string, before: ToolCommandRunner<U>) {
   if (typeof commandName !== 'string') {
-    logWarn('Invalid argument for "commandName" - no before command added.');
+    log('apiCommandNameInvalid_0200', 'before command');
   } else if (typeof before !== 'function') {
-    logWarn('Invalid argument for "before" - no before command added.');
+    log('apiArgumentInvalid_0201', 'before', 'before command');
   } else {
     wrapCommand<U>(commandName, async (args, current) => {
       await before(args);
@@ -79,9 +79,9 @@ export function beforeCommand<U>(commandName: string, before: ToolCommandRunner<
 
 export function afterCommand<U>(commandName: string, after: ToolCommandRunner<U>) {
   if (typeof commandName !== 'string') {
-    logWarn('Invalid argument for "commandName" - no after command added.');
+    log('apiCommandNameInvalid_0200', 'after command');
   } else if (typeof after !== 'function') {
-    logWarn('Invalid argument for "after" - no after command added.');
+    log('apiArgumentInvalid_0201', 'after', 'after command');
   } else {
     wrapCommand<U>(commandName, async (args, current) => {
       await current(args);
@@ -94,9 +94,9 @@ export function afterCommand<U>(commandName: string, after: ToolCommandRunner<U>
 
 export function withPiralRule(name: string, run: RuleRunner<PiralRuleContext>) {
   if (typeof name !== 'string') {
-    logWarn('Invalid argument for "name" - no Piral rule added.');
+    log('apiValidateNameInvalid_0202', 'Piral');
   } else if (typeof run !== 'function') {
-    logWarn('Invalid argument for "run" - no Piral rule added.');
+    log('apiValidateRunInvalid_0203', 'Piral');
   } else {
     addPiralRule({ name, run });
   }
@@ -106,9 +106,9 @@ export function withPiralRule(name: string, run: RuleRunner<PiralRuleContext>) {
 
 export function withPiletRule(name: string, run: RuleRunner<PiletRuleContext>) {
   if (typeof name !== 'string') {
-    logWarn('Invalid argument for "name" - no pilet rule added.');
+    log('apiValidateNameInvalid_0202', 'pilet');
   } else if (typeof run !== 'function') {
-    logWarn('Invalid argument for "run" - no pilet rule added.');
+    log('apiValidateRunInvalid_0203', 'pilet');
   } else {
     addPiletRule({ name, run });
   }
@@ -118,9 +118,9 @@ export function withPiletRule(name: string, run: RuleRunner<PiletRuleContext>) {
 
 export function withPatcher(packageName: string, patch: PackagePatcher) {
   if (typeof packageName !== 'string') {
-    logWarn('Invalid argument for "packageName" - nothing installed.');
+    log('apiPatchInvalid_0204', 'packageName');
   } else if (typeof patch !== 'function') {
-    logWarn('Invalid argument for "patch" - nothing installed.');
+    log('apiPatchInvalid_0204', 'patch');
   } else {
     installPatch(packageName, patch);
   }

@@ -1,3 +1,4 @@
+import { PiralEventMap } from 'piral-base';
 import { PiralCustomEventMap } from './custom';
 
 export interface PiralStorage {
@@ -27,13 +28,6 @@ export interface Disposable {
   (): void;
 }
 
-export interface Listener<T> {
-  /**
-   * Receives an event of type T.
-   */
-  (arg: T): void;
-}
-
 export interface PiralStoreDataEvent {
   /**
    * The name of the item that was stored.
@@ -57,28 +51,8 @@ export interface PiralStoreDataEvent {
   expires: number;
 }
 
-export interface PiralEventMap extends PiralCustomEventMap {
-  'store-data': PiralStoreDataEvent;
-  [custom: string]: any;
-}
-
-export interface EventEmitter {
-  /**
-   * Attaches a new event listener.
-   * @param type The type of the event to listen for.
-   * @param callback The callback to trigger.
-   */
-  on<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
-  /**
-   * Detaches an existing event listener.
-   * @param type The type of the event to listen for.
-   * @param callback The callback to trigger.
-   */
-  off<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
-  /**
-   * Emits a new event with the given type.
-   * @param type The type of the event to emit.
-   * @param arg The payload of the event.
-   */
-  emit<K extends keyof PiralEventMap>(type: K, arg: PiralEventMap[K]): EventEmitter;
+declare module 'piral-base/lib/types' {
+  interface PiralEventMap extends PiralCustomEventMap {
+    'store-data': PiralStoreDataEvent;
+  }
 }

@@ -1,3 +1,6 @@
+/**
+ * Describes the metadata transported by a pilet.
+ */
 export interface PiletMetadata {
   /**
    * The name of the pilet, i.e., the package id.
@@ -17,6 +20,12 @@ export interface PiletMetadata {
    */
   link?: string;
   /**
+   * The reference name for the global require.
+   * If set this wil trigger the script mode instead of the eval
+   * mode.
+   */
+  requireRef?: string;
+  /**
    * The computed hash value of the pilet's content. Should be
    * accurate to allow caching.
    */
@@ -34,25 +43,88 @@ export interface PiletMetadata {
   custom?: any;
 }
 
-export interface GenericPiletApp<TApi> {
+/**
+ * Defines the API accessible from pilets.
+ */
+export interface PiletApi extends EventEmitter {
+  /**
+   * Gets the metadata of the current pilet.
+   */
+  meta: PiletMetadata;
+}
+
+/**
+ * The map of known Piral app shell events.
+ */
+export interface PiralEventMap {
+  [custom: string]: any;
+}
+
+/**
+ * Listener for Piral app shell events.
+ */
+export interface Listener<T> {
+  /**
+   * Receives an event of type T.
+   */
+  (arg: T): void;
+}
+
+/**
+ * The emitter for Piral app shell events.
+ */
+export interface EventEmitter {
+  /**
+   * Attaches a new event listener.
+   * @param type The type of the event to listen for.
+   * @param callback The callback to trigger.
+   */
+  on<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
+  /**
+   * Detaches an existing event listener.
+   * @param type The type of the event to listen for.
+   * @param callback The callback to trigger.
+   */
+  off<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
+  /**
+   * Emits a new event with the given type.
+   * @param type The type of the event to emit.
+   * @param arg The payload of the event.
+   */
+  emit<K extends keyof PiralEventMap>(type: K, arg: PiralEventMap[K]): EventEmitter;
+}
+
+/**
+ * The pilet app, i.e., the functional exports.
+ */
+export interface PiletApp {
   /**
    * Integrates the evaluated pilet into the application.
    * @param api The API to access the application.
    */
-  setup(api: TApi): void | Promise<void>;
+  setup(api: PiletApi): void | Promise<void>;
   /**
    * Optional function for cleanup.
    * @param api The API to access the application.
    */
-  teardown?(api: TApi): void;
+  teardown?(api: PiletApi): void;
 }
 
-export interface GenericPiletExports<TApi> {
-  exports: GenericPiletApp<TApi> | undefined;
+/**
+ * Defines the exports of a pilet.
+ */
+export interface PiletExports {
+  exports: PiletApp | undefined;
 }
 
-export type GenericPilet<TApi> = GenericPiletApp<TApi> & PiletMetadata;
+/**
+ * An evaluated pilet, i.e., a full pilet: functionality and metadata.
+ */
+export type Pilet = PiletApp & PiletMetadata;
 
+/**
+ * The callback to fetch a JS content from an URL.
+ */
 export interface PiletDependencyFetcher {
   /**
    * Defines how other dependencies are fetched.
@@ -62,15 +134,21 @@ export interface PiletDependencyFetcher {
   (url: string): Promise<string>;
 }
 
-export interface GenericPiletApiCreator<TApi> {
+/**
+ * The creator function for the pilet API.
+ */
+export interface PiletApiCreator {
   /**
    * Creates an API for the given raw pilet.
    * @param target The raw (meta) content of the pilet.
    * @returns The API object to be used with the pilet.
    */
-  (target: PiletMetadata): TApi;
+  (target: PiletMetadata): PiletApi;
 }
 
+/**
+ * The callback to get the shared dependencies for a specific pilet.
+ */
 export interface PiletDependencyGetter {
   /**
    * Gets the locally available dependencies for the specified
@@ -82,44 +160,62 @@ export interface PiletDependencyGetter {
   (target: PiletMetadata): AvailableDependencies | undefined | false;
 }
 
-export interface PiletFetcher {
+/**
+ * The interface describing a function capable of fetching pilets.
+ */
+export interface PiletRequester {
   /**
    * Gets the raw pilets (e.g., from a server) asynchronously.
    */
   (): Promise<Array<PiletMetadata>>;
 }
 
+/**
+ * The record containing all available dependencies.
+ */
 export interface AvailableDependencies {
   [name: string]: any;
 }
 
-export interface PiletsLoaded<TApi> {
-  (error: Error | undefined, pilets: Array<GenericPilet<TApi>>): void;
+/**
+ * The callback to be used when pilets have been loaded.
+ */
+export interface PiletsLoaded {
+  (error: Error | undefined, pilets: Array<Pilet>): void;
 }
 
-export interface PiletsLoading<TApi> {
-  (error: Error | undefined, pilets: Array<GenericPilet<TApi>>, loaded: boolean): void;
+/**
+ * The callback to be used when pilets are loading.
+ */
+export interface PiletsLoading {
+  (error: Error | undefined, pilets: Array<Pilet>, loaded: boolean): void;
 }
 
-export interface PiletLoadingStrategy<TApi> {
-  (options: LoadPiletsOptions<TApi>, pilets: PiletsLoaded<TApi>): PromiseLike<void>;
+/**
+ * The strategy for loading pilets.
+ */
+export interface PiletLoadingStrategy {
+  (options: LoadPiletsOptions, pilets: PiletsLoaded): PromiseLike<void>;
 }
 
-export interface LoadPiletsOptions<TApi> {
+/**
+ * The options for loading pilets.
+ */
+export interface LoadPiletsOptions {
   /**
    * The callback function for creating an API object.
    * The API object is passed on to a specific pilet.
    */
-  createApi: GenericPiletApiCreator<TApi>;
+  createApi: PiletApiCreator;
   /**
    * The callback for fetching the dynamic pilets.
    */
-  fetchPilets: PiletFetcher;
+  fetchPilets: PiletRequester;
   /**
    * Optionally, some already existing evaluated pilets, e.g.,
    * helpful when debugging or in SSR scenarios.
    */
-  pilets?: Array<GenericPilet<TApi>>;
+  pilets?: Array<Pilet>;
   /**
    * The callback for defining how a dependency will be fetched.
    */
@@ -137,5 +233,5 @@ export interface LoadPiletsOptions<TApi> {
   /**
    * Optionally, defines the loading strategy to use.
    */
-  strategy?: PiletLoadingStrategy<TApi>;
+  strategy?: PiletLoadingStrategy;
 }

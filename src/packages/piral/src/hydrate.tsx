@@ -1,6 +1,6 @@
 import { hydrate } from 'react-dom';
-import { createPiral } from './api';
-import { getContainer, createInstanceElement } from './utils';
+import { runInstance } from './run';
+import { getContainer } from './utils';
 import { PiralRenderOptions } from './types';
 
 /**
@@ -14,10 +14,6 @@ import { hydrateInstance } from 'piral';
 hydrateInstance();
 ```
  */
-export function hydrateInstance(options: PiralRenderOptions = {}) {
-  const { selector = '#app', settings, layout, errors, ...config } = options;
-  const instance = createPiral(config, settings);
-  const app = createInstanceElement(instance, layout, errors);
-  hydrate(app, getContainer(selector));
-  return instance;
+export function hydrateInstance(options?: PiralRenderOptions) {
+  return runInstance((app, selector) => hydrate(app, getContainer(selector)), options);
 }

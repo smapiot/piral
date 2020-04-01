@@ -1,33 +1,55 @@
 import { relative, join } from 'path';
 import { buildPilet } from './build-pilet';
-import { postFile, readBinary, matchFiles, createPiletPackage, logWarn, logInfo, logDone } from '../common';
+import { LogLevels } from '../types';
+import {
+  postFile,
+  readBinary,
+  matchFiles,
+  createPiletPackage,
+  logDone,
+  fail,
+  setLogLevel,
+  progress,
+  log,
+} from '../common';
 
 export interface PublishPiletOptions {
   source?: string;
   url?: string;
   apiKey?: string;
+  logLevel?: LogLevels;
   fresh?: boolean;
+  schemaVersion?: 'v0' | 'v1';
 }
 
-export const publishPiletDefaults = {
+export const publishPiletDefaults: PublishPiletOptions = {
   source: '*.tgz',
   url: '',
   apiKey: '',
   fresh: false,
+  logLevel: LogLevels.info,
+  schemaVersion: 'v1',
 };
 
-async function getFiles(baseDir: string, source: string, fresh: boolean) {
+async function getFiles(baseDir: string, source: string, fresh: boolean, schemaVersion: 'v0' | 'v1') {
   if (fresh) {
+    log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
     const details = require(join(baseDir, 'package.json'));
+    progress('Triggering pilet build ...');
     await buildPilet(baseDir, {
       target: details.main,
       fresh,
+      schemaVersion,
     });
+    log('generalDebug_0003', 'Successfully built.');
+    progress('Triggering pilet pack ...');
     const file = await createPiletPackage(baseDir, '.', '.');
+    log('generalDebug_0003', 'Successfully packed.');
     return [file];
+  } else {
+    log('generalDebug_0003', 'Did not find fresh flag. Trying to match files.');
+    return await matchFiles(baseDir, source);
   }
-
-  return await matchFiles(baseDir, source);
 }
 
 export async function publishPilet(baseDir = process.cwd(), options: PublishPiletOptions = {}) {
@@ -36,35 +58,51 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     url = publishPiletDefaults.url,
     apiKey = publishPiletDefaults.apiKey,
     fresh = publishPiletDefaults.fresh,
+    logLevel = publishPiletDefaults.logLevel,
+    schemaVersion = publishPiletDefaults.schemaVersion,
   } = options;
-  const files = await getFiles(baseDir, source, fresh);
+  setLogLevel(logLevel);
+  progress('Reading configuration ...');
+  log('generalDebug_0003', 'Getting the tgz files ...');
+  const files = await getFiles(baseDir, source, fresh, schemaVersion);
+  const successfulUploads: Array<string> = [];
+  log('generalDebug_0003', 'Received available tgz files.');
 
   if (!url) {
-    throw new Error('Incomplete configuration. Missing URL of the pilet feed!');
+    fail('missingPiletFeedUrl_0060');
   }
 
   if (files.length === 0) {
-    throw new Error(`No files found at '${source}'.`);
+    fail('missingPiletTarball_0061', source);
   }
 
+  log('generalInfo_0000', `Using feed service "${url}".`);
+
   for (const file of files) {
+    log('generalDebug_0003', 'Reading the file for upload ...');
     const fileName = relative(baseDir, file);
     const content = await readBinary(baseDir, fileName);
 
-    if (!content) {
-      logWarn(`Content of '%s' cannot be read.`, fileName);
-      continue;
-    }
+    if (content) {
+      progress(`Publishing "%s" ...`, file, url);
+      const result = await postFile(url, apiKey, content);
 
-    logInfo(`Publishing '%s' to '%s' ...`, file, url);
-    const result = await postFile(url, apiKey, content);
-
-    if (result) {
-      logDone(`Uploaded successfully!`);
+      if (result) {
+        successfulUploads.push(file);
+        progress(`Published successfully!`);
+      } else {
+        log('failedToUpload_0062', fileName);
+      }
     } else {
-      throw new Error('Could not upload.');
+      log('failedToRead_0063', fileName);
     }
+
+    log('generalDebug_0003', 'Finished uploading the file.');
   }
 
-  logInfo('All done!');
+  if (files.length === successfulUploads.length) {
+    logDone(`Pilet(s) published successfully!`);
+  } else {
+    fail('failedUploading_0064');
+  }
 }

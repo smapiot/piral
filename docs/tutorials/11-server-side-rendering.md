@@ -121,16 +121,14 @@ async function sendIndex(_: express.Request, res: express.Response) {
 We need to render the app from the server. For this we should make use of the previously defined and exported `createApp` function.
 
 ```ts
-import * as request from 'request';
+import axios from 'axios';
 import { renderFromServer } from 'piral-ssr-utils';
 import { createApp } from '../common/app';
 
-const feedUrl = 'https://feed.piral.io/api/v1/pilet/sample';
+const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
 
 function readRemoteText(link: string) {
-  return new Promise<string>(resolve => {
-    request(link, (_err, _res, body) => resolve(body));
-  });
+  return axios.get(link).then(res => res.data);
 }
 
 async function readRemoteJson(link: string) {
@@ -186,16 +184,14 @@ Following the approach described beforehand we can extend the `sendIndex` functi
 The only thing to add is the `getPilet` function in the provided options. This way, we can tell the SSR utility how to retrieve a pilet from its link.
 
 ```ts
-import * as request from 'request';
+import axios from 'axios';
 import { renderFromServer } from 'piral-ssr-utils';
 import { createApp } from '../common/app';
 
-const feedUrl = 'https://feed.piral.io/api/v1/pilet/sample';
+const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
 
 function readRemoteText(link: string) {
-  return new Promise<string>(resolve => {
-    request(link, (_err, _res, body) => resolve(body));
-  });
+  return axios.get(link).then(res => res.data);
 }
 
 async function readRemoteJson(link: string) {

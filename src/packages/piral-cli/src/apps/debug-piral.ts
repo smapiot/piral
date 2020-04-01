@@ -1,5 +1,6 @@
 import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { LogLevels } from '../types';
 import {
   retrievePiletsInfo,
   retrievePiralRoot,
@@ -8,10 +9,11 @@ import {
   checkCliCompatibility,
   reorderInjectors,
   notifyServerOnline,
-  logInfo,
   patchModules,
   setupBundler,
   removeDirectory,
+  setLogLevel,
+  progress,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -19,7 +21,7 @@ export interface DebugPiralOptions {
   cacheDir?: string;
   port?: number;
   publicUrl?: string;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   fresh?: boolean;
   open?: boolean;
   scopeHoist?: boolean;
@@ -28,12 +30,12 @@ export interface DebugPiralOptions {
   optimizeModules?: boolean;
 }
 
-export const debugPiralDefaults = {
+export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
   cacheDir: '.cache',
   port: 1234,
   publicUrl: '/',
-  logLevel: 3 as const,
+  logLevel: LogLevels.info,
   fresh: false,
   open: false,
   scopeHoist: false,
@@ -58,13 +60,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     fresh = debugPiralDefaults.fresh,
     optimizeModules = debugPiralDefaults.optimizeModules,
   } = options;
+  setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);
+  const krasConfig = readKrasConfig({ port }, krasrc);
 
   await checkCliCompatibility(root);
-
-  const krasConfig = readKrasConfig({ port }, krasrc);
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(dirname(entryFiles), 'mocks');
@@ -87,11 +90,12 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   }
 
   if (fresh) {
+    progress('Removing output directory ...');
     await removeDirectory(cache);
   }
 
   if (optimizeModules) {
-    logInfo('Preparing modules ...');
+    progress('Preparing modules ...');
     await patchModules(root, ignored);
   }
 

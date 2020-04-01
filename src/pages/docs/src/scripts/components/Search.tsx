@@ -6,6 +6,8 @@ export interface SearchProps {
   close(): void;
 }
 
+const worker = new Worker('../search.ts');
+
 export const Search: React.FC<SearchProps> = ({ open, close }) => {
   const [input, setInput] = React.useState('');
   const [items, setItems] = React.useState([]);
@@ -17,32 +19,32 @@ export const Search: React.FC<SearchProps> = ({ open, close }) => {
   }, [open]);
 
   React.useEffect(() => {
+    const handler = (ev: MessageEvent) => {
+      switch (ev.data.type) {
+        case 'load':
+          return import('../../codegen/search.codegen').then(pages =>
+            worker.postMessage({
+              type: 'data',
+              pages,
+            }),
+          );
+        case 'results':
+          return setItems(ev.data.results);
+      }
+    };
+    worker.addEventListener('message', handler);
+    return () => worker.removeEventListener('message', handler);
+  }, []);
+
+  React.useEffect(() => {
     const id = setTimeout(() => {
       if (input) {
-        const tokens = input.toLowerCase().split(/[\s]+/);
-        import('../../codegen/search.codegen').then(pages => {
-          const maxResults = 5;
-          const results = pages
-            .map(page => {
-              const found = page.keywords.filter(k => tokens.indexOf(k.keyword) !== -1);
-              return {
-                ...page,
-                keywords: found.map(m => m.keyword),
-                rating: found.reduce((sum, k) => sum + k.count, 0) + Math.pow(10, found.length),
-              };
-            })
-            .sort((a, b) => b.rating - a.rating)
-            .filter((page, i) => page.rating > 1 && i < maxResults)
-            .map(page => ({
-              url: page.route,
-              title: page.title,
-              keywords: page.keywords,
-              rating: page.rating,
-            }));
-
-          setItems(results);
+        setItems(undefined);
+        worker.postMessage({
+          type: 'search',
+          input,
         });
-      } else if (items.length !== 0) {
+      } else if (!items || items.length !== 0) {
         setItems([]);
       }
     }, 300);
@@ -58,17 +60,21 @@ export const Search: React.FC<SearchProps> = ({ open, close }) => {
             <i className="fas fa-search" />
           </div>
           <ul className="search-results">
-            {items.map(item => (
-              <li key={item.url}>
-                <Link to={item.url}>
-                  <div>
-                    <span className="title">{item.title}</span>
-                    <span className="url">{item.url}</span>
-                    <span className="keywords">{item.keywords.join(', ')}</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
+            {items !== undefined ? (
+              items.map(item => (
+                <li key={item.url}>
+                  <Link to={item.url}>
+                    <div>
+                      <span className="title">{item.title}</span>
+                      <span className="url">{item.url}</span>
+                      <span className="keywords">{item.keywords.join(', ')}</span>
+                    </div>
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <li>Loading ...</li>
+            )}
           </ul>
         </div>
       </div>

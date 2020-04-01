@@ -1,24 +1,17 @@
 import * as Bundler from 'parcel-bundler';
-import extendBundlerWithPlugins = require('parcel-plugin-codegen');
+import extendBundlerWithAtAlias = require('parcel-plugin-at-alias');
+import extendBundlerWithCodegen = require('parcel-plugin-codegen');
+import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
+import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
-import { patchModule } from './bundler-patches';
+import { log } from './log';
 import { computeHash } from './hash';
-import { logFail } from './log';
-import { ParcelConfig, extendConfig } from './settings';
-import { modifyBundlerForPilet, extendBundlerForPilet } from './pilet';
-import { modifyBundlerForPiral, extendBundlerForPiral } from './piral';
-import {
-  checkExists,
-  readJson,
-  writeText,
-  writeJson,
-  createFileIfNotExists,
-  checkIsDirectory,
-  getFileNames,
-  readText,
-  ForceOverwrite,
-} from './io';
+import { extendConfig } from './settings';
+import { patchModule } from './bundler-patches';
+import { checkExists, checkIsDirectory, readJson, readText } from './io';
+import { createFileIfNotExists, writeText, writeJson, getFileNames } from './io';
+import { BundlerSetup, ForceOverwrite } from '../types';
 
 export async function openBrowser(shouldOpen: boolean, port: number) {
   if (shouldOpen) {
@@ -26,26 +19,10 @@ export async function openBrowser(shouldOpen: boolean, port: number) {
       const open = require('opn');
       await open(`http://localhost:${port}`, undefined);
     } catch (err) {
-      logFail(`Unexpected error while opening in browser: ${err}`);
+      log('failedToOpenBrowser_0070', err);
     }
   }
 }
-
-export interface PiralBundlerSetup {
-  type: 'piral';
-  entryFiles: string;
-  config: ParcelConfig;
-}
-
-export interface PiletBundlerSetup {
-  type: 'pilet';
-  targetDir: string;
-  externals: Array<string>;
-  entryModule: string;
-  config: ParcelConfig;
-}
-
-export type BundlerSetup = PiralBundlerSetup | PiletBundlerSetup;
 
 let original: any;
 
@@ -61,17 +38,17 @@ export function setupBundler(setup: BundlerSetup) {
 
   if (setup.type === 'pilet') {
     const { entryModule, targetDir, externals, config } = setup;
-    modifyBundlerForPilet(proto, externals, targetDir);
     bundler = new Bundler(entryModule, extendConfig(config));
-    extendBundlerForPilet(bundler);
+    const resolver = combineExternals(targetDir, [], externals);
+    extendBundlerWithExternals(bundler, resolver);
   } else {
     const { entryFiles, config } = setup;
-    modifyBundlerForPiral(proto, dirname(entryFiles));
     bundler = new Bundler(entryFiles, extendConfig(config));
-    extendBundlerForPiral(bundler);
   }
 
-  extendBundlerWithPlugins(bundler);
+  extendBundlerWithAtAlias(bundler);
+  extendBundlerWithCodegen(bundler);
+  extendBundlerWithImportMaps(bundler);
   return bundler;
 }
 
@@ -117,6 +94,7 @@ const defaultIgnoredPackages = ['core-js'];
  * This makes sense in general as only the application should determine the target.
  */
 async function patch(staticPath: string, ignoredPackages: Array<string>) {
+  log('generalDebug_0003', `Patching files in "${staticPath}" ...`);
   const folderNames = await getFileNames(staticPath);
   return Promise.all(
     folderNames.map(async folderName => {
@@ -133,16 +111,18 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
               const packageFileData = await readJson(rootName, 'package.json');
 
               if (packageFileData.name && packageFileData._piralOptimized === undefined) {
+                packageFileData._piralOptimized = packageFileData.browserslist || true;
                 delete packageFileData.browserslist;
-                packageFileData._piralOptimized = true;
 
-                await writeJson(rootName, 'package.json', packageFileData);
+                await writeJson(rootName, 'package.json', packageFileData, true);
                 await writeText(rootName, '.browserslistrc', 'node 10.11');
                 await patchModule(folderName, rootName);
               }
 
               await patchFolder(rootName, ignoredPackages);
-            } catch (e) {}
+            } catch (e) {
+              log('generalDebug_0003', `Encountered a patching error: ${e}`);
+            }
           }
         }
       }
@@ -159,6 +139,7 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
     const lockContent = (await readText(rootDir, 'package-lock.json')) || (await readText(rootDir, 'yarn.lock'));
     const currHash = computeHash(lockContent);
     const prevHash = await readText(modulesDir, file);
+    log('generalDebug_0003', `Evaluated patch module hashes: "${currHash}" and "${prevHash}".`);
 
     if (prevHash !== currHash) {
       await patch(modulesDir, ignoredPackages);
@@ -168,22 +149,20 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
 }
 
 export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
-  const otherRoot = resolve(__dirname, '..', '..', '..', '..');
+  log('generalDebug_0003', `Patching modules starting in "${rootDir}" ...`);
+  const otherRoot = resolve(require.resolve('parcel-bundler'), '..', '..', '..');
   await patchFolder(rootDir, ignoredPackages);
 
   if (otherRoot !== rootDir) {
+    log('generalDebug_0003', `Also patching modules in "${otherRoot}" ...`);
     await patchFolder(otherRoot, ignoredPackages);
   }
 }
 
-declare module 'parcel-bundler' {
-  interface ParcelBundle {
-    getHash(): string;
-  }
-}
-
 const bundleUrlRef = '__bundleUrl__';
+const piletMarker = '//@pilet v:';
 const preamble = `!(function(global,parcelRequire){'use strict';`;
+const insertScript = `function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;`;
 const getBundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}`;
 
 function isFile(bundleDir: string, name: string) {
@@ -191,17 +170,48 @@ function isFile(bundleDir: string, name: string) {
   return existsSync(path) && statSync(path).isFile();
 }
 
-export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
+export function getPiletSchemaVersion(schemaVersion: 'v0' | 'v1') {
+  switch (schemaVersion) {
+    case 'v0':
+      return PiletSchemaVersion.directEval;
+    case 'v1':
+      return PiletSchemaVersion.currentScript;
+    default:
+      log('invalidSchemaVersion_0071', schemaVersion);
+      return PiletSchemaVersion.directEval;
+  }
+}
+
+export const enum PiletSchemaVersion {
+  directEval = 0,
+  currentScript = 1,
+}
+
+function getScriptHead(version: PiletSchemaVersion, prName: string) {
   const bundleUrl = `var ${bundleUrlRef}=${getBundleUrl}();`;
 
-  if (!prName) {
-    const hash = bundle.getHash();
-    prName = `pr_${hash}`;
+  switch (version) {
+    case PiletSchemaVersion.directEval:
+      return `${piletMarker}0\n${preamble}${bundleUrl}`;
+    case PiletSchemaVersion.currentScript:
+      return `${piletMarker}1(${prName})\n${preamble}${bundleUrl}${insertScript}`;
   }
 
+  return '';
+}
+
+/**
+ * Transforms a pilet's bundle to a microfrontend entry module.
+ * @param bundle The bundle to transform.
+ * @param version The manifest version to create.
+ */
+export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVersion) {
+  const hash = bundle.getHash();
+  const prName = `pr_${hash}`;
+  const head = getScriptHead(version, prName);
   const bundles = gatherJsBundles(bundle);
 
-  return Promise.all(
+  await Promise.all(
     bundles.map(
       ({ src, children }) =>
         new Promise<void>((resolve, reject) => {
@@ -246,8 +256,8 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
             // Only happens in (pilet) debug mode:
             // Untouched bundles are not rewritten so we should not just wrap them
             // again. We replace the existing Piral Require reference with a new one.
-            if (result.startsWith(preamble)) {
-              result = result.replace(/\.pr_[a-f0-9]{32}/g, `.${prName}`);
+            if (result.startsWith(piletMarker)) {
+              result = result.replace(/\.pr_[A-Fa-f0-9]{32}/g, `.${prName}`);
             } else {
               /**
                * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
@@ -256,7 +266,7 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
                * @see https://github.com/parcel-bundler/parcel/issues/1401
                */
               result = [
-                `${preamble}${bundleUrl}`,
+                head,
                 result
                   .split('"function"==typeof parcelRequire&&parcelRequire')
                   .join(`"function"==typeof global.${prName}&&global.${prName}`),
@@ -275,4 +285,6 @@ export function postProcess(bundle: Bundler.ParcelBundle, prName = '') {
         }),
     ),
   );
+
+  return prName;
 }

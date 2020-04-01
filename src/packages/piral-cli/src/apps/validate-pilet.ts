@@ -1,21 +1,28 @@
 import { join, dirname } from 'path';
-import { ruleSummary, runRules, retrievePiletData, getPiletsInfo } from '../common';
+import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, setLogLevel, progress, log } from '../common';
 import { getPiletRules } from '../rules';
-import { PiletRuleContext } from '../types';
+import { PiletRuleContext, LogLevels } from '../types';
 
 export interface ValidatPiletOptions {
   entry?: string;
-  logLevel?: 1 | 2 | 3;
+  logLevel?: LogLevels;
   app?: string;
 }
 
-export const validatePiletDefaults = {
+export const validatePiletDefaults: ValidatPiletOptions = {
   entry: './src/index',
-  logLevel: 3 as const,
+  logLevel: LogLevels.info,
+  app: undefined,
 };
 
 export async function validatePilet(baseDir = process.cwd(), options: ValidatPiletOptions = {}) {
-  const { entry = validatePiletDefaults.entry, logLevel = validatePiletDefaults.logLevel, app } = options;
+  const {
+    entry = validatePiletDefaults.entry,
+    logLevel = validatePiletDefaults.logLevel,
+    app = validatePiletDefaults.app,
+  } = options;
+  setLogLevel(logLevel);
+  progress('Reading configuration ...');
   const rules = await getPiletRules();
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);
@@ -33,10 +40,10 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   const warnings: Array<string> = [];
   const context: PiletRuleContext = {
     error(message) {
-      errors.push(message);
+      errors.push(log('generalError_0002', message));
     },
     warning(message) {
-      warnings.push(message);
+      warnings.push(log('generalVerbose_0004', message));
     },
     logLevel,
     entry: entryFile,
@@ -48,6 +55,5 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   };
 
   await runRules(rules, context, validators);
-
   ruleSummary(errors, warnings);
 }

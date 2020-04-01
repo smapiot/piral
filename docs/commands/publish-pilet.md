@@ -49,6 +49,13 @@ Sets the potential API key to send to the service.
 - Type: `string`
 - Default: `""`
 
+### `--log-level`
+
+Sets the log level to use (1-5).
+
+- Type: `number`
+- Default: `3`
+
 ### `--fresh`
 
 Performs a fresh build, then packages and finally publishes the pilet.
@@ -63,6 +70,14 @@ Performs a fresh build, then packages and finally publishes the pilet.
 
 - Type: `boolean`
 - Default: `true`
+
+### `--schema`
+
+Sets the schema to be used when making a fresh build of the pilet.
+
+- Type: `string`
+- Choices: `"v0"`, `"v1"`
+- Default: `"v1"`
 
 ### `--base`
 

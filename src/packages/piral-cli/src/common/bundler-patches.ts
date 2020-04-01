@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { readText, writeText } from './io';
+import { log } from './log';
 
 const windowOrGlobal = '(typeof window !== "undefined" ? window : global)';
 
@@ -43,6 +44,7 @@ export async function patchModule(packageName: string, rootDir: string) {
   const applyPatchAt = patchMap[packageName];
 
   if (typeof applyPatchAt === 'function') {
+    log('generalDebug_0003', `Applying patchers for ${packageName} in "${rootDir}" ...`);
     await applyPatchAt(rootDir);
   }
 }

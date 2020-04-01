@@ -1,6 +1,4 @@
-import { GenericPiletApiCreator, LoadPiletsOptions } from 'piral-base';
-import { PiletApi } from './api';
-import { EventEmitter } from './utils';
+import { PiletApi, PiletApiCreator, LoadPiletsOptions, EventEmitter } from 'piral-base';
 import { GlobalStateContext } from './state';
 import { LayoutBreakpoints } from './layout';
 
@@ -15,7 +13,7 @@ export interface PortalProps {
  */
 export interface PiralInstance extends EventEmitter {
   context: GlobalStateContext;
-  createApi: GenericPiletApiCreator<PiletApi>;
-  options: LoadPiletsOptions<PiletApi>;
+  createApi: PiletApiCreator;
+  options: LoadPiletsOptions;
   root: PiletApi;
 }

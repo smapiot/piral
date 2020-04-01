@@ -15,11 +15,16 @@
 
 ## What's new in Piral
 
+- [What's new in Piral #5](https://dev.to/florianrappl/what-s-new-in-piral-5-b8k)
+- [What's new in Piral #4](https://dev.to/florianrappl/what-s-new-in-piral-4-4jlm)
+- [What's new in Piral #3](https://dev.to/florianrappl/what-s-new-in-piral-3-4onc)
 - [What's new in Piral #2](https://dev.to/florianrappl/what-s-new-in-piral-2-2baf)
 - [What's new in Piral #1](https://dev.to/florianrappl/what-s-new-in-piral-1-5a32)
 
 ## Talks at Conferences
 
+- [ReactConf Europe on YouTube, 02/2020](https://youtu.be/kG7gIF16cOk)
+- [c't webdev in Cologne, 02/2020](https://ctwebdev.de/programm.html)
 - [O'Reilly Software Architecture Conference in Berlin, 11/2019](https://conferences.oreilly.com/software-architecture/sa-eu/public/schedule/detail/78683)
 
 ## Talks at Meetups

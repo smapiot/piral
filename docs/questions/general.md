@@ -33,7 +33,7 @@ While `piral` is build on top of `piral-core`, `piral-core` is itself build on t
 A Piral instance requires the following things:
 
 1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral))
-2. A backend service to provision the pilets (you can use our available [feed service](https://feed.piral.io))
+2. A backend service to provision the pilets (you can use our available [feed service](https://www.piral.cloud))
 3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) NPM feed or a Git repository
 
 The SPA can be hosted on a static storage, while the backend service may be run anyway - serverless may be an option here, too.
@@ -118,5 +118,18 @@ Each version has its own pros and cons.
 Potentially, you are just looking at the "cross-framework demo" that we set up. In order to illustrate Piral's cross-framework's abilities best we placed all components on a dashboard in form of single tiles. These tiles are represented in form of these "boxes".
 
 Note that components provided by pilets (independent of their use, e.g., as pages, tiles, modal dialogs, ...) can always be written in any framework supported by the app shell. Non-React components are not constraint to tiles and can also still participant in the extension mechanism, having a simple way of sharing (i.e., using) components between frameworks.
+
+---------------------------------------
+
+## How performant is it?
+
+Well, if the question is: Is using Piral slower than just a monolith? Potentially, yes. However, the real answer is more complicated.
+
+1. If Piral is used in the "classic" setup, where the feed service is called from the client-side then we'll have at least two-round trips (feed service, pilets) before anything meaningful will happen.
+2. If Piral is used with shallow server-side rendering then we still have at least a single round trip (pilets).
+
+In the latter case we are pretty much as fast as a monolith that used bundle splitting to obtain additional information.
+
+We'll try to come up with a benchmark soon.
 
 ---------------------------------------

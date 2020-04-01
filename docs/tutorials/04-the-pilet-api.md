@@ -9,6 +9,12 @@ level: Elementary
 
 So far we almost exclusively used existing elements without deeply understanding or touching them. Now it's time to see how pilet development may look in reality and how we can - from a pilet - bring in all the functionality to the application shell we want or need.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/s8dYsd7eQPc)
+
 ## The Pilet Foundation
 
 As described earlier a pilet is just a library compiled as an UMD module that exposes a function called `setup`. The `setup` function receives a special object that we like to call the *pilet API*. It is the API *created specifically for the pilet*. This allows the pilet to bring in new functionality to the application shell (called Piral instance).
@@ -27,7 +33,7 @@ As already mentioned the provided API is determined by the underlying applicatio
 
 ![Display API in VSCode](../diagrams/pilet-api-vscode.png)
 
-Note that the API will also be also passed on to all registered components as a prop named `piral`.
+Note that the API will also be passed on to all registered components as a prop named `piral`.
 
 The API contains functionality to be placed in the following categories:
 

@@ -23,5 +23,7 @@ The following tutorials are currently available:
 13. [Sharing from Piral](./13-sharing-from-piral.md) - share information from the Piral instance.
 14. [Converters](./14-converters.md) - how to make multiple frameworks play together.
 15. [Shared Dependencies](./15-share-dependencies.md) - defined implicitly and explicitly.
+16. [Actions and State](./16-actions-and-state.md) - custom declarations and extensions.
+17. [Events](./17-events.md) - and how to use them in Piral.
 
 Please don't hesitate to send us feedback regarding the tutorials and suggestions for additional topics.

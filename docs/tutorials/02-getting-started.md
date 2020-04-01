@@ -15,6 +15,12 @@ This quick start will show us how to
 2. Setup an **application shell** based on Piral
 3. Create your first **pilet** with some basic functions
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/jHmzE1j64zo)
+
 ## Prerequisites
 
 For completing the tutorials, the following general prerequisites must be met:

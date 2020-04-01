@@ -17,6 +17,12 @@ Nevertheless, we are also aware that for legacy (i.e., migration) or future purp
 
 In this tutorial we'll see how easy it is to use other frameworks in Piral. We'll start with direct bundling, which can be done in any pilet without changing the app shell at all.
 
+## Video
+
+We also have this tutorial available in form of a video.
+
+@[youtube](https://youtu.be/sRik0kyFO_g)
+
 ## Direct Bundling
 
 Out of the box Piral supports two kinds of components: React and vanilla JS. The latter is also called *foreign components*, which refers pretty much to non-React component.

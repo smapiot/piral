@@ -9,6 +9,10 @@ level: Beginner
 
 Many modern backend system landscapes follow the architecture pattern of **microservices**, while the frontends are still mostly implemented as single applications, which integrate with the entire backend as a kind of monolithic solution. The **Piral** ecosystem offers the framework for building **microfrontend** solutions, which allows the creation of distributed web application reflecting the flexibility and modularized structure of a microservice backend.
 
+We also have a quick introduction of Piral available in form of a video.
+
+@[youtube](https://youtu.be/ltTXWEwhSiY)
+
 The following tutorials will start with guidance for the first steps through to advanced topics for working with the Piral framework.
 
 ![Classic Frontend Monolith](../diagrams/overview.png)

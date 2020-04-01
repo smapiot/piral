@@ -1,36 +1,48 @@
 import { resolve, join } from 'path';
-import { readJson, ForceOverwrite, move } from './io';
+import { log, progress, fail } from './log';
+import { readJson, move } from './io';
 import { createPackage } from './npm';
+import { ForceOverwrite } from '../types';
+
+async function getFile(root: string, name: string, dest: string) {
+  const proposed = join(root, name);
+
+  if (dest !== root) {
+    log('generalDebug_0003', `Moving file from "${root}" to "${dest}" ...`);
+    const file = await move(proposed, dest, ForceOverwrite.yes);
+    log('generalDebug_0003', 'Successfully moved file.');
+    return file;
+  }
+
+  return proposed;
+}
 
 export async function createPiletPackage(baseDir: string, source: string, target: string) {
   const root = resolve(baseDir, source);
   const dest = resolve(baseDir, target);
+  log('generalDebug_0003', `Reading the package at "${root}" ...`);
   const pckg = await readJson(root, 'package.json');
+  log('generalDebug_0003', 'Successfully read package.');
 
   if (!pckg) {
-    console.error('No valid package.json found.');
-    throw new Error('Invalid pilet.');
+    fail('packageJsonNotFound_0020');
   }
 
   if (!pckg.name) {
-    console.error('Cannot pack the pilet - missing name.');
-    throw new Error('Invalid pilet.');
+    fail('packageJsonMissingName_0021');
   }
 
   if (!pckg.version) {
-    console.error('Cannot pack the pilet - missing version.');
-    throw new Error('Invalid pilet.');
+    fail('packageJsonMissingVersion_0022');
   }
 
-  console.log(`Packing pilet in ${resolve(baseDir, target)} ...`);
-
+  progress(`Packing pilet in ${resolve(baseDir, target)} ...`);
+  log('generalDebug_0003', 'Creating package ...');
   await createPackage(root);
+  log('generalDebug_0003', 'Successfully created package.');
   const name = `${pckg.name}-${pckg.version}.tgz`.replace(/@/g, '').replace(/\//g, '-');
-  const file = join(root, name);
-
-  if (dest !== root) {
-    return await move(file, dest, ForceOverwrite.yes);
-  }
-
+  log('generalDebug_0003', `Assumed package name "${name}".`);
+  const file = await getFile(root, name, dest);
+  log('generalDebug_0003', `Packed file "${file}".`);
   return file;
 }

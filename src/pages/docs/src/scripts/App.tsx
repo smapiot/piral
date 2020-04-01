@@ -9,6 +9,7 @@ const DocumentationPage = React.lazy(() => import('../pages/Documentation'));
 const TypeReferencePage = React.lazy(() => import('../pages/Types'));
 const SpecificationReferencePage = React.lazy(() => import('../pages/Specification'));
 const ToolingReferencePage = React.lazy(() => import('../pages/Tooling'));
+const CodesReferencePage = React.lazy(() => import('../pages/Codes'));
 const PluginsReferencePage = React.lazy(() => import('../pages/Extensions'));
 const SamplesPage = React.lazy(() => import('../pages/Samples'));
 const FaqPage = React.lazy(() => import('../pages/Faq'));
@@ -16,6 +17,7 @@ const NotFoundPage = React.lazy(() => import('../pages/NotFound'));
 
 const tutorials = require('../codegen/tutorials.codegen');
 const plugins = require('../codegen/extensions.codegen');
+const codes = require('../codegen/codes.codegen');
 
 export const App = () => (
   <BrowserRouter>
@@ -31,6 +33,11 @@ export const App = () => (
         <Route exact path="/reference/types/:tab?" component={TypeReferencePage} />
         <Route exact path="/reference/specifications/:tab?" component={SpecificationReferencePage} />
         <Route exact path="/reference/tooling/:tab?" component={ToolingReferencePage} />
+        <Route exact path="/reference/codes" component={CodesReferencePage} />
+        {codes.map(code => (
+          <Route key={code.id} exact path={code.route} component={code.page} />
+        ))}
+        <Route exact path="/reference/codes/*" component={CodesReferencePage} />
         <Route exact path="/reference/plugins" component={PluginsReferencePage} />
         {plugins.map(plugin => (
           <Route key={plugin.id} exact path={plugin.route} component={plugin.page} />
@@ -38,6 +45,7 @@ export const App = () => (
         <Route exact path="/samples" component={SamplesPage} />
         <Route exact path="/faq" component={FaqPage} />
         <Redirect from="/reference/extensions" to="/reference/plugins" />
+        <Redirect from="/code/:id" to="/reference/codes/:id" />
         <Route component={NotFoundPage} />
       </Switch>
     </Layout>

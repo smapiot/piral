@@ -8,17 +8,13 @@ A pilet is a small module that delivers additional functionality to a Piral inst
 
 A Piral instance alone only provides the shell for dynamically integrated modules called *pilets*. A pilet should be rather small and as atomic as possible. It could be bound to perform a certain task and / or to be delivered to certain users only.
 
-At its core a pilet is just a JavaScript library that exports a single function which is used by a Piral instance. This allows the pilet to integrate the provided functionality when called by the Piral instance.
+At its core a pilet is just a JavaScript library that exports at least a single function which is used by a Piral instance. This allows the pilet to integrate the provided functionality when called by the Piral instance.
 
 ## Conformance
 
 As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.
 
 The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
-
-## Examples
-
-(tbd)
 
 ## Glossary
 
@@ -58,6 +54,8 @@ A pilet package may contain more file types than just JSON and JS. Any asset tha
 
 The *root JS file* contains the root module, which is the first module loaded when the bundle is evaluated by a JS engine.
 
+### UMD Creation
+
 For proper bundling of the JS files the UMD specification should be followed. The following parts are all relevant for the created bundle.
 
 1. Wrap the content of the bundle in an IIFE.
@@ -66,6 +64,8 @@ For proper bundling of the JS files the UMD specification should be followed. Th
 4. Work through the bundled modules using the module resolver (A) for resolving dependencies.
 
 *Remark*: As global `require` (C) a `window.pr_...` function should be used that is generated (and valid) for the current bundle only.
+
+### Bundle Splitting
 
 The dynamic splitting of the single bundle into multiple files needs to adhere to the following algorithm.
 
@@ -92,6 +92,8 @@ The following algorithm works quite reliably:
    4. Otherwise just return `/`
 
 The script for the partial resource has to be loaded from the same base URL as the currently running script.
+
+**Remark**: The code above works for `v0` and `v1` of the pilet layout. For `v1` the code could be also reduced to an evaluation against the `src` of the `currentScript` element, which also happens implicitly without any implementation.
 
 ## Package Keys
 
@@ -196,13 +198,151 @@ The following TypeScript interface defines the expected exported shape of a pile
 
 ```ts
 interface RootModuleLayout {
-  setup(api: PiletApi): void;
+  setup(api: PiletApi): void | Promise<void>;
+  teardown?(api: PiletApi): void;
 }
+
+type RootModule = Promise<RootModuleLayout> | RootModuleLayout;
 ```
+
+In case calling the module results in a `Promise`, the evaluation is postponed until the `Promise` was resolved.
+
+In case calling the `setup` function of pilet returns a `Promise`, the depending on the used loading strategy the application may wait before continuing.
 
 The provided pilet API must contain at least the following functionality.
 
-(tbd)
+```ts
+interface PiletApi {
+  meta: PiletMetadata;
+  on(type: string, callback: Listener): PiletApi;
+  off(type: string, callback: Listener): PiletApi;
+  emit(type: string, arg: any): PiletApi;
+}
+```
+
+where the `PiletMetadata` interface refers to
+
+```ts
+interface PiletMetadata {
+  name: string;
+  version: string;
+  link: string;
+  hash: string;
+  custom?: any;
+}
+```
+
+to indicate the metadata of the current pilet.
+
+The remaining parts of the Pilet API are defined by the Piral instance. While `piral-core` and the Piral plugins add quite some functionality here, these APIs are not part of the base Piral API that is framework agnostic.
+
+## Pilet Spec Version Marker
+
+The root module (i.e., generated main bundle) can be decorated with a special comment. When the pilet feed service detects that the main bundle starts with a comment like
+
+```js
+//@pilet v:
+```
+
+it will automatically parse that line as a pilet spec version marker. The syntax is as follows:
+
+```js
+//@pilet v:<version-number>[(<spec-arguments>)]
+```
+
+Right now the following values for `<version-number>` exist:
+
+- `0`: Initial specification.
+- `1`: Extended specification.
+
+All specifications are backwards compatible, i.e., evaluating a `v:1` pilet with a `v:0` Piral instance should work.
+
+### `v:0`
+
+- Evaluation can be done with `new Function` or `eval`.
+- Exports to `module.exports`.
+- Supports transport via `content` and `link`.
+- No arguments defined.
+
+### `v:1`
+
+- Evaluation should be done by appending a new `<script>`.
+- Exports to `document.currentScript.app`.
+- Supports transport via `link`.
+- Requires a single argument declaring the global require reference.
+
+## Examples
+
+The [Piral CLI](https://www.npmjs.com/package/piral-cli) provides all capabilities to successfully build a pilet and package it according to this specification. The bundling itself is done with [Parcel](https://parceljs.org).
+
+The *package.json* for this example looks like
+
+```json
+{
+  "name": "pilet-example",
+  "version": "1.0.0",
+  "description": "No description.",
+  "keywords": [],
+  "dependencies": {},
+  "devDependencies": {
+    "sample-piral": "latest",
+  },
+  "peerDependencies": {
+    "sample-piral": "*"
+  },
+  "scripts": {
+    "build": "pilet build"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "piral": {
+    "name": "sample-piral"
+  }
+}
+```
+
+which was made for the `sample-piral` Piral instance.
+
+Starting with a single file *src/index.js* that looks like
+
+```js
+export function setup(piral) {
+  piral.showNotification('Hello World!');
+}
+```
+
+the application is capable of creating a file `dist/index.js`, which was formed to contain:
+
+```js
+//@pilet v:0
+!(function(global,parcelRequire){
+parcelRequire=function(e,r,t,n){var i,o="function"==typeof global.pr_1fab123ad4fd76bd20e5e5e97366fd47&&global.pr_1fab123ad4fd76bd20e5e5e97366fd47,u="function"==typeof require&&require;function f(t,n){if(!r[t]){if(!e[t]){var i="function"==typeof global.pr_1fab123ad4fd7
+6bd20e5e5e97366fd47&&global.pr_1fab123ad4fd76bd20e5e5e97366fd47;if(!n&&i)return i(t,!0);if(o)return o(t,!0);if(u&&"string"==typeof t)return u(t);var c=new Error("Cannot find module '"+t+"'");throw c.code="MODULE_NOT_FOUND",c}p.resolve=function(r){return e[t][1][r]||r}
+,p.cache={};var l=r[t]=new f.Module(t);e[t][0].call(l.exports,p,l,l.exports,this)}return r[t].exports;function p(e){return f(p.resolve(e))}}f.isParcelRequire=!0,f.Module=function(e){this.id=e,this.bundle=f,this.exports={}},f.modules=e,f.cache=r,f.parent=o,f.register=f
+unction(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)try{f(t[c])}catch(e){i||(i=e)}if(t.length){var l=f(t[t.length-1]);"object"==typeof exports&&"undefined"!=typeof module?module.exports=l:"function"==typeof define&&define.amd?define(function(
+){return l}):n&&(this[n]=l)}if(parcelRequire=f,i)throw i;return f}({"zo2T":[function(require,module,exports) {
+"use strict";function e(e){e.showNotification("Hello World!")}Object.defineProperty(exports,"__esModule",{value:!0}),exports.setup=e;
+},{}]},{},["zo2T"], null)
+;global.pr_1fab123ad4fd76bd20e5e5e97366fd47=parcelRequire}(window, window.pr_1fab123ad4fd76bd20e5e5e97366fd47));
+```
+
+Parcel transpiles the module system to a single file. It still allows child bundles, however, the communication of the externals need to go over the described global `require`, which is *unique* per pilet and the same for the main bundle and all child bundles.
+
+In the example above the `require` is referenced via
+
+```js
+window.pr_1fab123ad4fd76bd20e5e5e97366fd47
+```
+
+Importantly, the code above still takes a global `require` function if available. This function is set per pilet from the Piral instance and it used to resolve the shared dependencies.
+
+**Remark**: The initial comment is a pilet marker. If left out version 0 should be inferred by the pilet feed service. In the provided example version 0 is explicitly marked.
+
+The internal structure and wrapper is bundler specific. The one shown is generated by Parcel.
+
+The final package for this Pilet can be created using `npm` (or the Piral CLI for that matter) using `npm pack`.
 
 ## Limitations
 
@@ -210,14 +350,15 @@ Not all assets should be packed into a pilet. Videos and larger (or in general p
 
 The maximum specified file size of a pilet is 16 MB. Anything larger is potentially not supported by the used feed service.
 
-(tbd)
-
 ## Acknowledgements
 
-(tbd)
+This specification was created by [smapiot](https://smapiot.com).
+
+The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The review was done by [Lothar Schöttner](https://smapiot.com). Suggestions from [Jens Thirmeyer](https://www.iotcloudarchitect.com) have been taken into consideration.
 
 ## References
 
-* [RFC2119](https://tools.ietf.org/html/rfc2119)
-* [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
-* [UMD: Patterns and Examples](https://github.com/umdjs/umd)
+- [RFC2119](https://tools.ietf.org/html/rfc2119)
+- [CLI Specification](https://docs.piral.io/reference/specifications/cli)
+- [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
+- [UMD: Patterns and Examples](https://github.com/umdjs/umd)

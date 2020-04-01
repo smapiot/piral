@@ -42,6 +42,7 @@
     "@types/react-router-dom": "latest"
   },
   "dependencies": {
+    "current-script-polyfill": "^1.0.0",
     "core-js": "3.6.4",
     "piral-core": "^0.10.9",
     "piral-ext": "^0.10.9",

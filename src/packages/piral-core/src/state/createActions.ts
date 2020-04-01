@@ -1,6 +1,6 @@
 import * as actions from '../actions';
 import { Atom } from '@dbeining/react-atom';
-import { GlobalState, GlobalStateContext, EventEmitter, PiralDefineActions } from '../types';
+import { EventEmitter, GlobalState, GlobalStateContext, PiralDefineActions } from '../types';
 
 function createContext(state: Atom<GlobalState>, events: EventEmitter) {
   const ctx = {
