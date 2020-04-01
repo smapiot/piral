@@ -22,7 +22,7 @@ export interface UpgradePiralOptions {
 }
 
 export const upgradePiralDefaults: UpgradePiralOptions = {
-  version: undefined,
+  version: 'latest',
   target: '.',
   logLevel: LogLevels.info,
 };
