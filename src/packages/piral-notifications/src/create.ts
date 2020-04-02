@@ -67,7 +67,7 @@ function createNotification(
     component: toComponent(content),
     options,
     close() {
-      context.closeNotification(notification);
+      setTimeout(() => context.closeNotification(notification), 0);
     },
   };
 

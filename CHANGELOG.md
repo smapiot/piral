@@ -3,7 +3,9 @@
 ## 0.11.1 (tbd)
 
 * Improved naming of the extension slot component `key`
+* Improved display error when upload to the feed service failed
 * Fixed default version for `piral upgrade` command
+* Fixed potential timing issues with closing modals and notifications
 * Added `piral-oidc` plugin (#177)
 * Added `piral-oauth2` plugin (#178)
 
