@@ -33,6 +33,21 @@ interface FileDescriptor {
 
 const globPatternStartIndicators = ['*', '?', '[', '!(', '?(', '+(', '@('];
 
+function stripGlobPatternFromPath(sourcePath: string) {
+  const parts = sourcePath.split('/');
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+
+    if (globPatternStartIndicators.some(m => part.indexOf(m) !== -1)) {
+      parts.splice(i, parts.length - i);
+      break;
+    }
+  }
+
+  return parts.join('/');
+}
+
 async function getMatchingFiles(
   source: string,
   target: string,
@@ -43,34 +58,23 @@ async function getMatchingFiles(
   const targetPath = resolve(target, to);
   const isDirectory = await checkIsDirectory(sourcePath);
 
-  if (isDirectory) {
+  if (globPatternStartIndicators.some(m => from.indexOf(m) !== -1)) {
+    log('generalDebug_0003', `Matching using glob "${sourcePath}".`);
+    const files = await matchFiles(source, from);
+    const relRoot = stripGlobPatternFromPath(sourcePath);
+    const tarRoot = stripGlobPatternFromPath(resolve(target, to));
+
+    return files.map(file => ({
+      sourcePath: file,
+      targetPath: resolve(tarRoot, relative(relRoot, file)),
+    }));
+  } else if (isDirectory) {
     log('generalDebug_0003', `Matching in directory "${sourcePath}".`);
     const pattern = deep ? '**/*' : '*';
     const files = await matchFiles(sourcePath, pattern);
     return files.map(file => ({
       sourcePath: file,
       targetPath: resolve(targetPath, relative(sourcePath, file)),
-    }));
-  } else if (globPatternStartIndicators.some(m => from.indexOf(m) !== -1)) {
-    log('generalDebug_0003', `Matching using glob "${sourcePath}".`);
-    const files = await matchFiles(source, from);
-    const parts = sourcePath.split('/');
-
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-
-      if (globPatternStartIndicators.some(m => part.indexOf(m) !== -1)) {
-        parts.splice(i, parts.length - i);
-        break;
-      }
-    }
-
-    const relRoot = parts.join('/');
-    const tarRoot = resolve(target, to);
-
-    return files.map(file => ({
-      sourcePath: file,
-      targetPath: resolve(tarRoot, relative(relRoot, file)),
     }));
   }
 
