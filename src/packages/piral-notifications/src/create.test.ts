@@ -19,13 +19,14 @@ function createMockContainer() {
 }
 
 describe('Create Notifications API Extensions', () => {
-  it('createCoreApi showNotification uses an action and leaves a disposer', () => {
+  it('createCoreApi showNotification uses an action and leaves a disposer', async () => {
     const container = createMockContainer();
     container.context.openNotification = jest.fn();
     container.context.closeNotification = jest.fn();
     const api = (createNotificationsApi()(container.context) as any)(container.api);
     const close = api.showNotification('my notification');
     close();
+    await new Promise(resolve => setTimeout(resolve, 0));
     expect(container.context.openNotification).toHaveBeenCalled();
     expect(container.context.closeNotification).toHaveBeenCalled();
   });

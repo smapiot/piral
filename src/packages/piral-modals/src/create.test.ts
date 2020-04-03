@@ -44,13 +44,14 @@ describe('Create Modals API Extensions', () => {
     expect(container.context.unregisterModal.mock.calls[0][0]).toBe(container.context.registerModal.mock.calls[0][0]);
   });
 
-  it('createCoreApi showModal uses an action and leaves a disposer', () => {
+  it('createCoreApi showModal uses an action and leaves a disposer', async () => {
     const container = createMockContainer();
     container.context.openModal = jest.fn();
     container.context.closeModal = jest.fn();
     const api = (createModalsApi()(container.context) as any)(container.api, moduleMetadata);
     const close = api.showModal('my-modal');
     close();
+    await new Promise(resolve => setTimeout(resolve, 0));
     expect(container.context.openModal).toHaveBeenCalled();
     expect(container.context.closeModal).toHaveBeenCalled();
   });
