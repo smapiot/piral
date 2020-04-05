@@ -18,7 +18,7 @@ function checkCreateApi(createApi: PiletApiCreator) {
  * @returns The integrated pilets.
  */
 export function createPilets(createApi: PiletApiCreator, pilets: Array<Pilet>) {
-  const promises = [];
+  const promises: Array<Promise<void> | void> = [];
 
   if (checkCreateApi(createApi)) {
     for (const pilet of pilets) {
@@ -37,7 +37,7 @@ export function createPilets(createApi: PiletApiCreator, pilets: Array<Pilet>) {
  * @returns The integrated pilet.
  */
 export function createPilet(createApi: PiletApiCreator, pilet: Pilet) {
-  const promises = [];
+  const promises: Array<Promise<void> | void> = [];
 
   if (checkCreateApi(createApi)) {
     const api = createApi(pilet);
