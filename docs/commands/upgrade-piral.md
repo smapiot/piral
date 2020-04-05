@@ -29,7 +29,7 @@ Instead of `upgrade-piral` you can also use:
 Sets the tag or version of Piral to upgrade to. By default, it is "latest".
 
 - Type: `string`
-- Default: `undefined`
+- Default: `latest`
 
 ## Flags
 
@@ -46,6 +46,21 @@ Sets the log level to use (1-5).
 
 - Type: `number`
 - Default: `3`
+
+### `--install`
+
+Already performs the update of its NPM dependencies.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-install`
+
+Opposite of:
+Already performs the update of its NPM dependencies.
+
+- Type: `boolean`
+- Default: `false`
 
 ### `--base`
 

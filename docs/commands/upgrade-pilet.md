@@ -47,6 +47,21 @@ Sets the log level to use (1-5).
 - Type: `number`
 - Default: `3`
 
+### `--install`
+
+Already performs the update of its NPM dependencies.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-install`
+
+Opposite of:
+Already performs the update of its NPM dependencies.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--force-overwrite`
 
 Determines if files should be overwritten by the upgrading process.
