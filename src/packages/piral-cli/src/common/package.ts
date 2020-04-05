@@ -278,7 +278,7 @@ function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
   return undefined;
 }
 
-export async function findPackageVersion(rootPath: string, packageName: string) {
+export async function findPackageVersion(rootPath: string, packageName: string): Promise<string> {
   try {
     log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
     const moduleName = require.resolve(packageName, {
