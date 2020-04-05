@@ -7,8 +7,11 @@
 * Fixed default version for `piral upgrade` command
 * Fixed potential timing issues with closing modals and notifications
 * Fixed bug in `pilet debug` with reload
+* Fixed missing file copy during pilet scaffolding and upgrade
 * Added `piral-oidc` plugin (#177)
 * Added `piral-oauth2` plugin (#178)
+* Added optional `--no-install` flag to `piral upgrade`
+* Added optional `--no-install` flag to `pilet upgrade`
 
 ## 0.11.0 (April 1, 2020)
 
