@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import { buildName, Extend } from 'piral-core';
+import { buildName, Extend, StateDispatcher } from 'piral-core';
 import { withPiletState } from './withPiletState';
 import { PiletContainersApi } from './types';
 
@@ -25,14 +25,20 @@ export function createContainersApi(config: ContainersConfig = {}): Extend<Pilet
 
       return {
         createState(options) {
+          if (!options || typeof options.actions !== 'object' || typeof options.state !== 'object') {
+            throw new Error('Missing options. "state" and "actions" are required.');
+          }
+
           const actions = {};
           const id = buildName(target.name, containers++);
-          const cb = dispatch => context.replaceState(id, dispatch);
+          const cb = (dispatch: StateDispatcher<any>) => context.replaceState(id, dispatch);
           context.createState(id, options.state);
+
           Object.keys(options.actions).forEach(key => {
             const action = options.actions[key];
             actions[key] = (...args) => action.call(api, cb, ...args);
           });
+
           return component => withPiletState(component, id, actions) as any;
         },
       };
