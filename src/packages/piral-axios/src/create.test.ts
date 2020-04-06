@@ -20,11 +20,14 @@ function createMockContainer() {
 
 describe('Piral-Axios create module', () => {
   let terminate = () => {};
+  let port;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const express = require('express');
     const cors = require('cors');
+    const getPort = require('get-port');
     const app = express();
+    port = await getPort();
 
     app.use(cors());
 
@@ -32,7 +35,7 @@ describe('Piral-Axios create module', () => {
       res.json([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     });
 
-    terminate = app.listen(3000);
+    terminate = app.listen(port);
   });
 
   afterAll(() => terminate());
@@ -40,7 +43,7 @@ describe('Piral-Axios create module', () => {
   it('createAxiosApi fires before-fetch before fetching', async () => {
     const { context } = createMockContainer();
     const api: any = createAxiosApi()(context);
-    await api.axios.get('http://localhost:3000/json');
+    await api.axios.get(`http://localhost:${port}/json`);
     expect(context.emit).toHaveBeenCalledWith('before-fetch', expect.anything());
   });
 });
