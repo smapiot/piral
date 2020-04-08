@@ -1829,6 +1829,11 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@riotjs/util/-/util-1.2.0.tgz#a1fdaaa82e214eeff0b740b2b24600b6dfe62d7d"
 
+"@servie/events@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@servie/events/-/events-1.0.0.tgz#8258684b52d418ab7b86533e861186638ecc5dc1"
+  integrity sha512-sBSO19KzdrJCM3gdx6eIxV8M9Gxfgg6iDQmH5TIAGaUu+X9VDdsINXJOnoiZ1Kx3TrHdH4bt5UVglkjsEGBcvw==
+
 "@sinonjs/commons@^1.7.0":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.7.1.tgz#da5fd19a5f71177a53778073978873964f49acf1"
@@ -2243,6 +2248,11 @@
   resolved "https://registry.yarnpkg.com/@types/through/-/through-0.0.30.tgz#e0e42ce77e897bd6aead6f6ea62aeb135b8a3895"
   dependencies:
     "@types/node" "*"
+
+"@types/tough-cookie@^2.3.5":
+  version "2.3.7"
+  resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.7.tgz#979434b5900f9d710f5d4e15c466cadb8e9fdc47"
+  integrity sha512-rMQbgMGxnLsdn8e9aPVyuN+zMQLrZ2QW8xlv7eWS1mydfGXN+tsTKffcIzd8rGCcLdmi3xvQw2MDaZI1bBNTaw==
 
 "@types/yargs-parser@*":
   version "15.0.0"
@@ -2892,7 +2902,7 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
-base64-js@^1.0.2:
+base64-js@^1.0.2, base64-js@^1.3.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
 
@@ -3259,6 +3269,11 @@ byline@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/byline/-/byline-5.0.0.tgz#741c5216468eadc457b03410118ad77de8c1ddb1"
 
+byte-length@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/byte-length/-/byte-length-1.0.2.tgz#ba5a5909240b0121c079b7f7b15248d6f08223cc"
+  integrity sha512-ovBpjmsgd/teRmgcPh23d4gJvxDoXtAzEL9xTfMU8Yc2kqCDb7L9jAG0XHl1nzuGl+h3ebCIF1i62UFyA9V/2Q==
+
 byte-size@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/byte-size/-/byte-size-5.0.1.tgz#4b651039a5ecd96767e71a3d7ed380e48bed4191"
@@ -3498,6 +3513,14 @@ cli-spinners@^1.1.0:
 cli-width@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-2.2.0.tgz#ff19ede8a9a5e579324147b0c11f0fbcbabed639"
+
+client-oauth2@^4.2.5:
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/client-oauth2/-/client-oauth2-4.2.5.tgz#cee9499ef0acc84ee545a76a8a51942ddf26f473"
+  integrity sha512-GAhVLveAbBkwcfEH/d5lTW9eCgcPR3Up93cx7v4qWTdLCa4O0m3ykNNn4aAVeWOiHfWL5skO+3u0F/gfAxZuPQ==
+  dependencies:
+    popsicle "12.0.4"
+    safe-buffer "^5.1.1"
 
 cliui@^5.0.0:
   version "5.0.0"
@@ -3801,7 +3824,7 @@ core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
 
-core-js@^2.4.0, core-js@^2.5.7, core-js@^2.6.5:
+core-js@^2.4.0, core-js@^2.5.7, core-js@^2.6.4, core-js@^2.6.5:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
 
@@ -3901,6 +3924,11 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+crypto-js@^3.1.9-1:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
+  integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
 
 css-color-names@0.0.4, css-color-names@^0.0.4:
   version "0.0.4"
@@ -7066,7 +7094,14 @@ make-dir@^3.0.0:
   dependencies:
     semver "^6.0.0"
 
-make-error@1.x:
+make-error-cause@^2.2.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/make-error-cause/-/make-error-cause-2.3.0.tgz#ecd11875971e506d510e93d37796e5b83f46d6f9"
+  integrity sha512-etgt+n4LlOkGSJbBTV9VROHA5R7ekIPS4vfh+bCAoJgRrJWdqJCBbpS3osRJ/HrT7R68MzMiY3L3sDJ/Fd8aBg==
+  dependencies:
+    make-error "^1.3.5"
+
+make-error@1.x, make-error@^1.3.5:
   version "1.3.6"
   resolved "https://registry.yarnpkg.com/make-error/-/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
 
@@ -7861,6 +7896,16 @@ octokit-pagination-methods@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/octokit-pagination-methods/-/octokit-pagination-methods-1.1.0.tgz#cf472edc9d551055f9ef73f6e42b4dbb4c80bea4"
 
+oidc-client@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/oidc-client/-/oidc-client-1.10.1.tgz#fe67ae54924fc1c338062f3fd733be362026192c"
+  integrity sha512-/QB5Nl7c9GmT9ir1E+OVY3+yZZnuk7Qa9ZEAJqSvDq0bAyAU9KAgeKipTEfKjGdGLTeOLy9FRWuNpULMkfZydQ==
+  dependencies:
+    base64-js "^1.3.0"
+    core-js "^2.6.4"
+    crypto-js "^3.1.9-1"
+    uuid "^3.3.2"
+
 on-finished@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"
@@ -8339,6 +8384,57 @@ pn@^1.1.0:
 popper.js@^1.14.4:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+
+popsicle-content-encoding@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/popsicle-content-encoding/-/popsicle-content-encoding-1.0.0.tgz#2ab419083fee0387bf6e64d21b1a9af560795adb"
+  integrity sha512-4Df+vTfM8wCCJVTzPujiI6eOl3SiWQkcZg0AMrOkD1enMXsF3glIkFUZGvour1Sj7jOWCsNSEhBxpbbhclHhzw==
+
+popsicle-cookie-jar@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/popsicle-cookie-jar/-/popsicle-cookie-jar-1.0.0.tgz#9e8c89be7182b31f7ce0e66dad465ae475d8f47c"
+  integrity sha512-vrlOGvNVELko0+J8NpGC5lHWDGrk8LQJq9nwAMIVEVBfN1Lib3BLxAaLRGDTuUnvl45j5N9dT2H85PULz6IjjQ==
+  dependencies:
+    "@types/tough-cookie" "^2.3.5"
+    tough-cookie "^3.0.1"
+
+popsicle-redirects@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/popsicle-redirects/-/popsicle-redirects-1.1.0.tgz#2a5abb49a7ad49c02e90b24d4608dc0b8b23176a"
+  integrity sha512-XCpzVjVk7tty+IJnSdqWevmOr1n8HNDhL86v7mZ6T1JIIf2KGybxUk9mm7ZFOhWMkGB0e8XkacHip7BV8AQWQA==
+
+popsicle-transport-http@^1.0.0:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/popsicle-transport-http/-/popsicle-transport-http-1.0.7.tgz#a20bf0dd3a42d4acd55fb9cf34e8cff47789ba49"
+  integrity sha512-UVpbAfJn9Z19A84WdIklHzbK8EHt7o1w0u6JEkAx6BTlkSxI6T2Lo5Vr989YO8pPmbFZhNClz3Eir8fldAYWpQ==
+  dependencies:
+    make-error-cause "^2.2.0"
+    pump "^3.0.0"
+
+popsicle-transport-xhr@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/popsicle-transport-xhr/-/popsicle-transport-xhr-1.0.2.tgz#aa4b7ab74d37f880cf857622cbbaf5ead3e43cb2"
+  integrity sha512-v9eAJnj1tydT4VmDdyKFE1z/+oL01vB7AS3LfSFMAYv33dzqlxtbApKALcYWBQotIqw3FoIqd2FiDR6qJsOxtA==
+
+popsicle-user-agent@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/popsicle-user-agent/-/popsicle-user-agent-1.0.0.tgz#976af355b605966168733c4e03ad1e4f783f5d48"
+  integrity sha512-epKaq3TTfTzXcxBxjpoKYMcTTcAX8Rykus6QZu77XNhJuRHSRxMd+JJrbX/3PFI0opFGSN0BabbAYCbGxbu0mA==
+
+popsicle@12.0.4:
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/popsicle/-/popsicle-12.0.4.tgz#297adb1132a79fdbc54ca902645811b177f6234f"
+  integrity sha512-UuxhAFa4RXBecC6ZK24sKra/9va1bTxnb3CQpFsm+VBW72sl+UtTAmZv7LZTvvDNnGusAqisN+a6xSN9xSQzZA==
+  dependencies:
+    popsicle-content-encoding "^1.0.0"
+    popsicle-cookie-jar "^1.0.0"
+    popsicle-redirects "^1.0.0"
+    popsicle-transport-http "^1.0.0"
+    popsicle-transport-xhr "^1.0.0"
+    popsicle-user-agent "^1.0.0"
+    servie "^4.0.6"
+    throwback "^4.1.0"
+    tough-cookie "^3.0.1"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
@@ -9603,6 +9699,14 @@ serve-static@1.14.1, serve-static@^1.12.4:
     parseurl "~1.3.3"
     send "0.17.1"
 
+servie@^4.0.6:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/servie/-/servie-4.3.2.tgz#7168140d62cb9476cb8b184fc8ceda24d5154e7e"
+  integrity sha512-1NpFf3LjkDDq4IIuBqtqHfSdPWhXpuyWwuBdwbifZjWSxQd8rCWz5W9AluxNvWfteM1qQ26puODIzWljvBJc5A==
+  dependencies:
+    "@servie/events" "^1.0.0"
+    byte-length "^1.0.2"
+
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
@@ -10297,6 +10401,11 @@ through2@^3.0.0:
 through@2, "through@>=2.2.7 <3", through@^2.3.4, through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+
+throwback@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/throwback/-/throwback-4.1.0.tgz#421aac7ba9eff473105385ac4a2b0130d4b0a59c"
+  integrity sha512-dLFe8bU8SeH0xeqeKL7BNo8XoPC/o91nz9/ooeplZPiso+DZukhoyZcSz9TFnUNScm+cA9qjU1m1853M6sPOng==
 
 timers-browserify@^2.0.4:
   version "2.0.11"
