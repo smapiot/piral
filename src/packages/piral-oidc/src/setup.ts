@@ -114,9 +114,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
           } else if (user.access_token && user.expires_in > 60) {
             res(user.access_token);
           } else {
-            userManager.signinSilent().then(() => {
-              retrieveToken().then(res, rej);
-            }, rej);
+            userManager.signinSilent().then(() => retrieveToken().then(res, rej), rej);
           }
         },
         err => rej(err),
