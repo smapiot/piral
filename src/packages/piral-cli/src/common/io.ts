@@ -174,6 +174,7 @@ export async function matchFiles(baseDir: string, pattern: string) {
       {
         cwd: baseDir,
         absolute: true,
+        dot: true,
       },
       (err, files) => {
         if (err) {

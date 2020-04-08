@@ -8,6 +8,7 @@
 * Fixed potential timing issues with closing modals and notifications
 * Fixed bug in `pilet debug` with reload
 * Fixed missing file copy during pilet scaffolding and upgrade
+* Fixed missing files in the emulator package
 * Added `piral-oidc` plugin (#177)
 * Added `piral-oauth2` plugin (#178)
 * Added optional `--no-install` flag to `piral upgrade`

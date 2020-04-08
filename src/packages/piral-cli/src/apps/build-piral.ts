@@ -201,6 +201,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const filesDir = resolve(rootDir, 'files');
 
     await createFileIfNotExists(rootDir, 'package.json', '{}');
+    await createFileIfNotExists(rootDir, '.npmignore', ['!.gitignore', '!.npmrc'].join('\n'));
     await updateExistingJson(rootDir, 'package.json', {
       name,
       version,
