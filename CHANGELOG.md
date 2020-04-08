@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.11.1 (tbd)
+## 0.11.1 (April 8, 2020)
 
 * Improved naming of the extension slot component `key`
 * Improved display error when upload to the feed service failed
