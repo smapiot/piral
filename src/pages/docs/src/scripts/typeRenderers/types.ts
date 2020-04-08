@@ -16,6 +16,7 @@ export const enum TiKind {
   TypeParameter = 131072,
   ObjectLiteral = 2097152,
   TypeAlias = 4194304,
+  Reference = 16777216,
 }
 
 export type ColorKind = 'primary' | 'blue' | 'green' | 'pink' | 'orange' | 'purple' | 'red';
