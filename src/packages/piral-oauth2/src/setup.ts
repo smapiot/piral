@@ -121,7 +121,6 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         window.location.href = client.code.getUri();
       },
       logout() {
-        // TODO: Revoke token/actually logout
         currentToken = undefined;
       },
       extendHeaders(req) {
