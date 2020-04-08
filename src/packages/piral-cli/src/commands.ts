@@ -274,6 +274,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.upgradePiralDefaults.logLevel)
+        .boolean('install')
+        .describe('install', 'Already performs the update of its NPM dependencies.')
+        .default('install', apps.upgradePiralDefaults.install)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -283,6 +286,7 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         version: args.targetVersion as string,
         logLevel: args.logLevel as any,
+        install: args.install as boolean,
       });
     },
   },
@@ -590,6 +594,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.upgradePiletDefaults.logLevel)
+        .boolean('install')
+        .describe('install', 'Already performs the update of its NPM dependencies.')
+        .default('install', apps.upgradePiletDefaults.install)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
@@ -603,6 +610,7 @@ const allCommands: Array<ToolCommand<any>> = [
         version: args.targetVersion as string,
         logLevel: args.logLevel as any,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        install: args.install as boolean,
       });
     },
   },

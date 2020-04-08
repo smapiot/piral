@@ -27,6 +27,7 @@ export interface UpgradePiletOptions {
   target?: string;
   forceOverwrite?: ForceOverwrite;
   logLevel?: LogLevels;
+  install?: boolean;
 }
 
 export const upgradePiletDefaults: UpgradePiletOptions = {
@@ -34,6 +35,7 @@ export const upgradePiletDefaults: UpgradePiletOptions = {
   target: '.',
   forceOverwrite: ForceOverwrite.no,
   logLevel: LogLevels.info,
+  install: true,
 };
 
 export async function upgradePilet(baseDir = process.cwd(), options: UpgradePiletOptions = {}) {
@@ -42,6 +44,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     target = upgradePiletDefaults.target,
     forceOverwrite = upgradePiletDefaults.forceOverwrite,
     logLevel = upgradePiletDefaults.logLevel,
+    install = upgradePiletDefaults.install,
   } = options;
   setLogLevel(logLevel);
   const root = resolve(baseDir, target);
@@ -92,8 +95,10 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
     await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles);
 
-    progress(`Updating dependencies ...`);
-    await installDependencies(root, '--no-package-lock');
+    if (install) {
+      progress(`Updating dependencies ...`);
+      await installDependencies(root, '--no-package-lock');
+    }
 
     if (postUpgrade) {
       progress(`Running postUpgrade script ...`);

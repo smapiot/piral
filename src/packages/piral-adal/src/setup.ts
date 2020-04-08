@@ -114,7 +114,7 @@ export function setupAdalClient(config: AdalConfig): AdalClient {
     restrict = false,
     scopes = ['User.Read'],
     storeAuthStateInCookie,
-    cacheLocation,
+    cacheLocation = 'sessionStorage',
     framework,
     system,
   } = config;

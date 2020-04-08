@@ -32,6 +32,8 @@ function render(node: TiNode) {
       return <TypeAliasRenderer node={node} render={render} />;
     case TiKind.Enumeration:
       return <EnumerationRenderer node={node} render={render} />;
+    case TiKind.Reference:
+      return null;
     default:
       return <span>{node.name}</span>;
   }

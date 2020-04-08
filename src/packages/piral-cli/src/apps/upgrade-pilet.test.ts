@@ -13,7 +13,9 @@ describe('Upgrade Pilet Command', () => {
     let failed = false;
 
     try {
-      await upgradePilet(dir);
+      await upgradePilet(dir, {
+        install: false,
+      });
     } catch {
       failed = true;
     }

@@ -9,9 +9,9 @@ export function ExtensionSlot<T = any>({ name, render = defaultRender, empty, pa
   return render(
     extensions.length === 0 && isfunc(empty)
       ? [defaultRender(empty(), 'empty')]
-      : extensions.map(({ component: Component, defaults = {} }, i) => (
+      : extensions.map(({ component: Component, reference, defaults = {} }, i) => (
           <Component
-            key={`${Component.displayName || '_'}${i}`}
+            key={`${reference?.displayName || '_'}${i}`}
             params={{
               ...defaults,
               ...(params || {}),

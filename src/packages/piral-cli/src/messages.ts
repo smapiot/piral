@@ -1152,7 +1152,11 @@ export function failedHttpPost_0065(error: string): QuickMessage {
  * ```
  */
 export function unsuccessfulHttpPost_0066(statusText: string, statusCode: number, error: string): QuickMessage {
-  return [LogLevels.warning, '0066', `Failed to upload: ${statusText} (${statusCode}). ${error}`];
+  return [
+    LogLevels.warning,
+    '0066',
+    `Failed to upload: ${statusText} (${statusCode}). Received: ${JSON.stringify(error)}`,
+  ];
 }
 
 /**

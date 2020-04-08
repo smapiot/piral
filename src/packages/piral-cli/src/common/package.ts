@@ -141,10 +141,15 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
   };
 }
 
-function getAvailableFiles(root: string, name: string) {
+async function getAvailableFiles(root: string, name: string) {
   const source = getPiralPath(root, name);
   log('generalDebug_0003', `Get matching files from "${source}".`);
-  return getMatchingFiles(resolve(source, 'files'), root, '**/*');
+  const base = resolve(source, 'files');
+  const files = await matchFiles(base, '**/*');
+  return files.map(file => ({
+    sourcePath: file,
+    targetPath: resolve(root, relative(base, file)),
+  }));
 }
 
 export async function getFileStats(root: string, name: string) {
@@ -273,7 +278,7 @@ function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
   return undefined;
 }
 
-export async function findPackageVersion(rootPath: string, packageName: string) {
+export async function findPackageVersion(rootPath: string, packageName: string): Promise<string> {
   try {
     log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
     const moduleName = require.resolve(packageName, {

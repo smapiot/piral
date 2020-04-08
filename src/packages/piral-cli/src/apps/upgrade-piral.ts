@@ -19,12 +19,14 @@ export interface UpgradePiralOptions {
   version?: string;
   target?: string;
   logLevel?: LogLevels;
+  install?: boolean;
 }
 
 export const upgradePiralDefaults: UpgradePiralOptions = {
-  version: undefined,
+  version: 'latest',
   target: '.',
   logLevel: LogLevels.info,
+  install: true,
 };
 
 function updateDependencies(deps: Record<string, string>, version: string) {
@@ -49,6 +51,7 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
     version = upgradePiralDefaults.version,
     target = upgradePiralDefaults.target,
     logLevel = upgradePiralDefaults.logLevel,
+    install = upgradePiralDefaults.install,
   } = options;
   setLogLevel(logLevel);
   const root = resolve(baseDir, target);
@@ -77,8 +80,10 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
   log('generalDebug_0003', `Patching the package.json ...`);
   await updateExistingJson(root, 'package.json', pckg);
 
-  progress(`Updating the NPM packages to %s ...`, version);
-  await installDependencies(root, '--no-package-lock');
+  if (install) {
+    progress(`Updating the NPM packages to %s ...`, version);
+    await installDependencies(root, '--no-package-lock');
+  }
 
   logDone('Piral instance upgraded successfully!');
 }

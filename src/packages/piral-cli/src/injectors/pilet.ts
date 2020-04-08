@@ -32,8 +32,8 @@ export default class PiletInjector implements KrasInjector {
     });
 
     bundler.on('bundle-ready', ({ requireRef, version }) => {
-      const meta = this.getMeta();
       this.requireRef = version === 1 ? requireRef : undefined;
+      const meta = this.getMeta();
 
       for (const id of Object.keys(cbs)) {
         cbs[id](meta);

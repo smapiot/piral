@@ -1,8 +1,5 @@
 module.exports = {
   collectCoverage: true,
-  collectCoverageFrom: [
-    'src/packages/**/src/**/*',
-  ],
   setupFiles: [
     './test/setup.ts',
   ],

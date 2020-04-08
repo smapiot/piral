@@ -50,7 +50,7 @@ import { createAdalApi } from 'piral-adal';
 The integration looks like:
 
 ```ts
-import { setupAdalClient } from 'piral-adal';
+import { createAdalApi, setupAdalClient } from 'piral-adal';
 
 const client = setupAdalClient({ clientId, ... });
 
@@ -72,6 +72,7 @@ import { setupAdalClient } from 'piral-adal';
 export const client = setupAdalClient({ ... });
 
 // app.ts
+import { createAdalApi } from 'piral-adal';
 import { client } from './adal';
 
 export function render() {

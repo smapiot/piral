@@ -1,5 +1,19 @@
 # Piral Changelog
 
+## 0.11.1 (tbd)
+
+* Improved naming of the extension slot component `key`
+* Improved display error when upload to the feed service failed
+* Fixed default version for `piral upgrade` command
+* Fixed potential timing issues with closing modals and notifications
+* Fixed bug in `pilet debug` with reload
+* Fixed missing file copy during pilet scaffolding and upgrade
+* Fixed missing files in the emulator package
+* Added `piral-oidc` plugin (#177)
+* Added `piral-oauth2` plugin (#178)
+* Added optional `--no-install` flag to `piral upgrade`
+* Added optional `--no-install` flag to `pilet upgrade`
+
 ## 0.11.0 (April 1, 2020)
 
 * Documented the Piral CLI spec (#110)

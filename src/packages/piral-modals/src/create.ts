@@ -77,7 +77,7 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
             alternative: name,
             options,
             close() {
-              context.closeModal(dialog);
+              setTimeout(() => context.closeModal(dialog), 0);
             },
           };
           context.openModal(dialog);

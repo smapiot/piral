@@ -4,11 +4,14 @@ import { createFetchApi } from './create';
 
 describe('Create fetch API Module', () => {
   let terminate = () => {};
+  let port;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const express = require('express');
     const cors = require('cors');
+    const getPort = require('get-port');
     const app = express();
+    port = await getPort();
 
     app.use(cors());
 
@@ -29,7 +32,7 @@ describe('Create fetch API Module', () => {
       );
     });
 
-    terminate = app.listen(3000);
+    terminate = app.listen(port);
   });
 
   afterAll(() => terminate());
@@ -37,7 +40,7 @@ describe('Create fetch API Module', () => {
   it('works with default options against a JSON API', async () => {
     const context = { emit: jest.fn() } as any;
     const { fetch } = createFetchApi({
-      base: 'http://localhost:3000',
+      base: `http://localhost:${port}`,
     })(context) as any;
     const response = await fetch('json');
     const result = response.body;
@@ -49,7 +52,7 @@ describe('Create fetch API Module', () => {
   it('interprets the result as text if explicitly used despite JSON API', async () => {
     const context = { emit: jest.fn() } as any;
     const { fetch } = createFetchApi({
-      base: 'http://localhost:3000',
+      base: `http://localhost:${port}`,
     })(context) as any;
     const response = await fetch('json', { result: 'text' });
     const result = response.body;
@@ -60,7 +63,7 @@ describe('Create fetch API Module', () => {
   it('has the correct response code', async () => {
     const context = { emit: jest.fn() } as any;
     const { fetch } = createFetchApi({
-      base: 'http://localhost:3000',
+      base: `http://localhost:${port}`,
     })(context) as any;
     const response = await fetch('json');
     const result = response.code;
@@ -70,7 +73,7 @@ describe('Create fetch API Module', () => {
   it('works with default options against a non-JSON API', async () => {
     const context = { emit: jest.fn() } as any;
     const { fetch } = createFetchApi({
-      base: 'http://localhost:3000',
+      base: `http://localhost:${port}`,
     })(context) as any;
     const response = await fetch('xml');
     const result = response.body;
