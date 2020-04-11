@@ -144,8 +144,14 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
 
 async function getAvailableFiles(root: string, name: string) {
   const source = getPiralPath(root, name);
+  log('generalDebug_0003', `Checking if "files.tar" exists in "${source}" ...`);
+  const exists = await checkExists(resolve(source, 'files.tar'));
+
+  if (exists) {
+    await unpackTarball(source, 'files.tar');
+  }
+
   log('generalDebug_0003', `Get matching files from "${source}".`);
-  await unpackTarball(source, 'files.tar');
   const base = resolve(source, 'files');
   const files = await matchFiles(base, '**/*');
   return files.map(file => ({

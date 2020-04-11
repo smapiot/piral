@@ -14,16 +14,19 @@ interface ReadEntry extends EventEmitter {
 }
 
 export function createTarball(sourceDir: string, targetDir: string, targetFile: string) {
+  const folder = relative(targetDir, sourceDir);
+  log('generalDebug_0003', `Create archive "${targetFile}" in "${targetDir}" containing "${folder}".`);
   return tar.create(
     {
       file: resolve(targetDir, targetFile),
       cwd: targetDir,
     },
-    [relative(targetDir, sourceDir)],
+    [folder],
   );
 }
 
 export function unpackTarball(sourceDir: string, sourceFile: string) {
+  log('generalDebug_0003', `Extract files from "${sourceFile}" in "${sourceDir}".`);
   return tar.extract({
     file: resolve(sourceDir, sourceFile),
     keep: false,
