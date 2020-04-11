@@ -1,22 +1,23 @@
 import { Extend } from 'piral-core';
-import { PiletElmApi } from './types';
+import { boot } from './internal';
+import { PiletBlazorApi } from './types';
 
 /**
- * Available configuration options for the Elm plugin.
+ * Available configuration options for the Blazor plugin.
  */
-export interface ElmConfig {
+export interface BlazorConfig {
   /**
    * Defines the name of the extension component.
-   * @default elm-extension
+   * @default blazor-extension
    */
   selector?: string;
 }
 
 /**
- * Creates new Pilet API extensions for integration of Elm.
+ * Creates new Pilet API extensions for integration of Blazor.
  */
-export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
-  const { selector = 'elm-extension' } = config;
+export function createBlazorApi(config: BlazorConfig = {}): Extend<PiletBlazorApi> {
+  const { selector = 'blazor-extension' } = config;
 
   if ('customElements' in window) {
     class ElmExtension extends HTMLElement {
@@ -41,7 +42,10 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
   }
 
   return context => {
-    context.converters.elm = ({ main, captured }) => ({
+    //TODO
+    boot();
+
+    context.converters.blazor = ({ module }) => ({
       mount(parent, data, ctx) {
         const node = parent.appendChild(document.createElement('div'));
         parent.addEventListener(
@@ -52,14 +56,7 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
           },
           false,
         );
-        main.init({
-          node,
-          flags: {
-            ...captured,
-            ...ctx,
-            ...data,
-          },
-        });
+        //TODO
       },
       unmount(el) {
         el.innerHTML = '';
@@ -67,14 +64,13 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
     });
 
     return {
-      fromElm(main, captured) {
+      fromBlazor(module) {
         return {
-          type: 'elm',
-          captured,
-          main,
+          type: 'blazor',
+          module,
         };
       },
-      ElmExtension: selector,
+      BlazorExtension: selector,
     };
   };
 }

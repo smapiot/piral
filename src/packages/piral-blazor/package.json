@@ -1,0 +1,50 @@
+{
+  "name": "piral-blazor",
+  "version": "0.11.1",
+  "description": "Plugin for integrating Blazor components in Piral.",
+  "keywords": [
+    "piral",
+    "pilet-api",
+    "smapiot",
+    "portal",
+    "modules",
+    "api",
+    "plugin",
+    "plugin-converter",
+    "blazor",
+    "dotnet",
+    "wasm"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typedoc": "typedoc --json ../../../docs/types/piral-blazor.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@microsoft/dotnet-js-interop": "5.0.0-preview.2.20167.3"
+  },
+  "devDependencies": {
+    "@types/emscripten": "^1.39.3",
+    "piral-core": "^0.11.1"
+  },
+  "peerDependencies": {
+    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0"
+  }
+}
