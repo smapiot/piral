@@ -1,3 +1,4 @@
+export * from './archive';
 export * from './bundler-patches';
 export * from './bundler';
 export * from './compatibility';
@@ -21,4 +22,3 @@ export * from './scaffold';
 export * from './scripts';
 export * from './settings';
 export * from './template';
-export * from './untar';

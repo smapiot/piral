@@ -1,4 +1,5 @@
 import * as tar from 'tar';
+import { resolve, relative } from 'path';
 import { createGunzip } from 'zlib';
 import { EventEmitter } from 'events';
 import { log } from './log';
@@ -12,7 +13,25 @@ interface ReadEntry extends EventEmitter {
   ignore: boolean;
 }
 
-export function untar(stream: NodeJS.ReadableStream): Promise<PackageFiles> {
+export function createTarball(sourceDir: string, targetDir: string, targetFile: string) {
+  return tar.create(
+    {
+      file: resolve(targetDir, targetFile),
+      cwd: targetDir,
+    },
+    [relative(targetDir, sourceDir)],
+  );
+}
+
+export function unpackTarball(sourceDir: string, sourceFile: string) {
+  return tar.extract({
+    file: resolve(sourceDir, sourceFile),
+    keep: false,
+    cwd: sourceDir,
+  });
+}
+
+export function unpackGzTar(stream: NodeJS.ReadableStream): Promise<PackageFiles> {
   return new Promise((resolve, reject) => {
     const files: PackageFiles = {};
     log('generalDebug_0003', `Unpacking the stream ...`);

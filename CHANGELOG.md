@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.11.2 (tbd)
+
+* Improved scaffolding of files for pilets (#189)
+
 ## 0.11.1 (April 8, 2020)
 
 * Improved naming of the extension slot component `key`

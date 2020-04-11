@@ -1,5 +1,5 @@
 import { dirname, basename } from 'path';
-import { untar } from './untar';
+import { unpackGzTar } from './archive';
 import { PackageData, PackageFiles } from '../types';
 
 const packageRoot = 'package/';
@@ -28,11 +28,11 @@ export interface PiletPackageData extends PackageData {
 }
 
 export function inspectPackage(stream: NodeJS.ReadableStream): Promise<PackageData> {
-  return untar(stream).then(files => getPackageJson(files));
+  return unpackGzTar(stream).then(files => getPackageJson(files));
 }
 
 export function inspectPilet(stream: NodeJS.ReadableStream): Promise<PiletPackageData> {
-  return untar(stream).then(files => {
+  return unpackGzTar(stream).then(files => {
     const data = getPackageJson(files);
     const path = getPiletMainPath(data, files);
     const root = dirname(path);

@@ -25,6 +25,7 @@ import {
   progress,
   setLogLevel,
   logReset,
+  createTarball,
 } from '../common';
 
 interface Destination {
@@ -201,7 +202,6 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     const filesDir = resolve(rootDir, 'files');
 
     await createFileIfNotExists(rootDir, 'package.json', '{}');
-    await createFileIfNotExists(rootDir, '.npmignore', ['!.gitignore', '!.npmrc'].join('\n'));
     await updateExistingJson(rootDir, 'package.json', {
       name,
       version,
@@ -235,13 +235,21 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       outFile,
     });
 
+    // create the index.d.ts to be used by the pilets
     await declarationPiral(baseDir, {
       entry,
       target: outDir,
     });
 
+    // since things like .gitignore are not properly treated by NPM we pack the files and remove the directory
+    await createTarball(filesDir, rootDir, 'files.tar');
+    await removeDirectory(filesDir);
+
+    // finally we can create the package
     await createPackage(rootDir);
-    await Promise.all([removeDirectory(outDir), removeDirectory(filesDir), remove(resolve(rootDir, 'package.json'))]);
+
+    // cleanup
+    await Promise.all([removeDirectory(outDir), remove(resolve(rootDir, 'files.tar')), remove(resolve(rootDir, 'package.json'))]);
 
     logDone(`Development package available in "${rootDir}".`);
     logReset();

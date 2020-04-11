@@ -1,5 +1,6 @@
 import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
+import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
 import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
@@ -144,6 +145,7 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
 async function getAvailableFiles(root: string, name: string) {
   const source = getPiralPath(root, name);
   log('generalDebug_0003', `Get matching files from "${source}".`);
+  await unpackTarball(source, 'files.tar');
   const base = resolve(source, 'files');
   const files = await matchFiles(base, '**/*');
   return files.map(file => ({
