@@ -367,7 +367,7 @@ export class BrowserRenderer {
       }
       case 'OPTION': {
         const value = attributeFrame ? frameReader.attributeValue(attributeFrame) : null;
-        if (value || value === '') {
+        if (value) {
           element.setAttribute('value', value);
         } else {
           element.removeAttribute('value');

@@ -1,60 +1,106 @@
-import '@microsoft/dotnet-js-interop';
+import './globals';
 import { setPlatform } from './Environment';
+import { Pointer } from './Platform/Platform';
+import { BootJsonData, BootConfigResult } from './Platform/BootConfig';
 import { monoPlatform } from './Platform/Mono/MonoPlatform';
+import { WebAssemblyResourceLoader } from './Platform/WebAssemblyResourceLoader';
+import { WebAssemblyConfigLoader } from './Platform/WebAssemblyConfigLoader';
 import { renderBatch } from './Rendering/Renderer';
 import { SharedMemoryRenderBatch } from './Rendering/RenderBatch/SharedMemoryRenderBatch';
-import { Pointer } from './Platform/Platform';
 import { attachRootComponentToElement } from './Rendering/Renderer';
 import { setEventDispatcher } from './Rendering/RendererEventDispatcher';
 
-// Keep in sync with BootJsonData in Microsoft.AspNetCore.Blazor.Build
-interface BootJsonData {
-  entryAssembly: string;
-  assemblies: string[];
-  linkerEnabled: boolean;
-}
+export { BootJsonData };
 
-async function fetchBootConfigAsync() {
-  // Later we might make the location of this configurable (e.g., as an attribute on the <script>
-  // element that's importing this file), but currently there isn't a use case for that.
-  const bootConfigResponse = await fetch('_framework/blazor.boot.json', { method: 'Get', credentials: 'include' });
-  return bootConfigResponse.json() as Promise<BootJsonData>;
-}
+export const eventNames = {
+  render: 'render-blazor-extension',
+  navigate: 'navigate-blazor',
+};
 
-export async function boot() {
-  setEventDispatcher((eventDescriptor, eventArgs) => DotNet.invokeMethodAsync('Microsoft.AspNetCore.Blazor', 'DispatchEvent', eventDescriptor, JSON.stringify(eventArgs)));
+export async function initializeBlazor(data: BootJsonData) {
+  data.cacheBootResources = false;
+
+  setEventDispatcher((eventDescriptor, eventArgs) =>
+    DotNet.invokeMethodAsync(
+      'Microsoft.AspNetCore.Components.WebAssembly',
+      'DispatchEvent',
+      eventDescriptor,
+      JSON.stringify(eventArgs),
+    ),
+  );
 
   // Configure environment for execution under Mono WebAssembly with shared-memory rendering
   const platform = setPlatform(monoPlatform);
-  const _internal = {
+  const isRooted = (target: HTMLElement) => {
+    let parent = target.parentElement;
+
+    while (parent) {
+      if (parent.id === 'blazor-root') {
+        return true;
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return false;
+  };
+
+  Object.assign(window['Blazor'], {
+    platform,
+    emitRenderEvent(target: HTMLElement, name: string) {
+      const eventInit = {
+        bubbles: true,
+        detail: {
+          target,
+          props: {
+            name,
+          },
+        },
+      };
+      const delayEmit = () =>
+        requestAnimationFrame(() => {
+          if (!isRooted(target)) {
+            target.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
+          } else {
+            delayEmit();
+          }
+        });
+      delayEmit();
+    },
+    emitNavigateEvent(target: HTMLElement, to: string) {
+      target.dispatchEvent(
+        new CustomEvent(eventNames.navigate, {
+          bubbles: true,
+          detail: {
+            to,
+          },
+        }),
+      );
+    },
+  });
+
+  Object.assign(window['Blazor']._internal, {
     attachRootComponentToElement,
     renderBatch(browserRendererId: number, batchAddress: Pointer) {
       renderBatch(browserRendererId, new SharedMemoryRenderBatch(batchAddress));
     },
-  };
+  });
 
-  // Fetch the boot JSON file
-  const bootConfig = await fetchBootConfigAsync();
+  const bootConfigResult = new BootConfigResult(data);
 
-  if (!bootConfig.linkerEnabled) {
-    console.info('Blazor is running in dev mode without IL stripping. To make the bundle size significantly smaller, publish the application or see https://go.microsoft.com/fwlink/?linkid=870414');
-  }
-
-  // Determine the URLs of the assemblies we want to load, then begin fetching them all
-  const loadAssemblyUrls = bootConfig.assemblies
-    .map(filename => `_framework/_bin/${filename}`);
+  const [resourceLoader] = await Promise.all([
+    WebAssemblyResourceLoader.initAsync(bootConfigResult.bootConfig),
+    WebAssemblyConfigLoader.initAsync(bootConfigResult),
+  ]);
 
   try {
-    await platform.start(loadAssemblyUrls);
+    await platform.start(resourceLoader);
+    platform.callEntryPoint(resourceLoader.bootConfig.entryAssembly);
   } catch (ex) {
     throw new Error(`Failed to start platform. Reason: ${ex}`);
   }
 
-  // Start up the application
-  platform.callEntryPoint(bootConfig.entryAssembly);
-
   return {
     platform,
-    _internal,
   };
 }

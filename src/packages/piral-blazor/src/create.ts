@@ -1,76 +1,78 @@
 import { Extend } from 'piral-core';
-import { boot } from './internal';
+import { initializeBlazor, eventNames } from './internal';
 import { PiletBlazorApi } from './types';
 
 /**
  * Available configuration options for the Blazor plugin.
  */
-export interface BlazorConfig {
-  /**
-   * Defines the name of the extension component.
-   * @default blazor-extension
-   */
-  selector?: string;
-}
+export interface BlazorConfig {}
 
 /**
  * Creates new Pilet API extensions for integration of Blazor.
  */
 export function createBlazorApi(config: BlazorConfig = {}): Extend<PiletBlazorApi> {
-  const { selector = 'blazor-extension' } = config;
-
-  if ('customElements' in window) {
-    class ElmExtension extends HTMLElement {
-      connectedCallback() {
-        if (this.isConnected) {
-          this.dispatchEvent(
-            new CustomEvent('render-html', {
-              bubbles: true,
-              detail: {
-                target: this,
-                props: {
-                  name: this.getAttribute('name'),
-                },
-              },
-            }),
-          );
-        }
-      }
-    }
-
-    customElements.define(selector, ElmExtension);
-  }
-
   return context => {
-    //TODO
-    boot();
+    const root = document.body.appendChild(document.createElement('div'));
+    root.style.display = 'none';
+    root.id = 'blazor-root';
 
-    context.converters.blazor = ({ module }) => ({
-      mount(parent, data, ctx) {
-        const node = parent.appendChild(document.createElement('div'));
-        parent.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            const { piral } = data;
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
-        //TODO
-      },
-      unmount(el) {
-        el.innerHTML = '';
-      },
-    });
+    let loader: Promise<any>;
+
+    context.converters.blazor = ({ moduleName, args }) => {
+      let id: string;
+      let referenceId: string;
+      let node: HTMLElement;
+      let renderHandler: (ev: CustomEvent) => void;
+      let navigateHandler: (ev: CustomEvent) => void;
+      let state: 'fresh' | 'mounted' | 'removed';
+
+      return {
+        mount(el, data, ctx) {
+          const props = { ...args, ...data };
+          loader
+            .then(() => DotNet.invokeMethodAsync<string>('NewBlazorApp', 'Activate', moduleName, props))
+            .then(refId => {
+              if (state === 'fresh') {
+                id = `${moduleName}-${refId}`;
+                node = el.appendChild(root.querySelector(`#${id} > div`));
+                state = 'mounted';
+                referenceId = refId;
+              }
+            })
+            .catch(err => console.error(err));
+          renderHandler = ev => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+          navigateHandler = ev => ctx.router.history.push(ev.detail.to);
+          el.addEventListener(eventNames.render, renderHandler, false);
+          el.addEventListener(eventNames.navigate, navigateHandler, false);
+          state = 'fresh';
+        },
+        unmount(el) {
+          el.removeEventListener(eventNames.render, renderHandler, false);
+          el.removeEventListener(eventNames.navigate, navigateHandler, false);
+
+          if (state === 'mounted') {
+            root.querySelector(`#${id}`).appendChild(node);
+            DotNet.invokeMethodAsync('NewBlazorApp', 'Deactivate', moduleName, referenceId);
+          }
+
+          el.innerHTML = '';
+          state = 'removed';
+        },
+      };
+    };
 
     return {
-      fromBlazor(module) {
+      setupBlazor(cfg) {
+        cfg.cacheBootResources = false;
+        loader = initializeBlazor(cfg);
+      },
+      fromBlazor(moduleName, args) {
         return {
           type: 'blazor',
-          module,
+          moduleName,
+          args,
         };
       },
-      BlazorExtension: selector,
     };
   };
 }
