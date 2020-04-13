@@ -1,4 +1,5 @@
 import { ForeignComponent } from 'piral-core';
+import { BootJsonData } from './internal';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletBlazorApi {}
@@ -8,15 +9,15 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
-export interface BlazorModule<TProps> {
-  attach(opts: { container: Element; props?: TProps }): void;
-}
-
 export interface BlazorComponent<TProps> {
   /**
    * The name of the Blazor module to render.
    */
-  module: BlazorModule<TProps>;
+  moduleName: string;
+  /**
+   * The args to transport into activation function.
+   */
+  args: TProps;
   /**
    * The type of the Blazor component.
    */
@@ -28,13 +29,15 @@ export interface BlazorComponent<TProps> {
  */
 export interface PiletBlazorApi {
   /**
+   * Sets up the blazor application using its boot data.
+   * @param cfg The configuration to use for the set up.
+   */
+  setupBlazor(cfg: BootJsonData): void;
+  /**
    * Wraps a Blazor module for use in Piral.
-   * @param main The name of the root component.
+   * @param moduleName The name of the exposed Blazor component.
+   * @param args The props to use as arguments for the Blazor component.
    * @returns The Piral Blazor component.
    */
-  fromBlazor<TProps>(main: BlazorModule<TProps>): BlazorComponent<TProps>;
-  /**
-   * Gets the name of the Blazor extension.
-   */
-  BlazorExtension: string;
+  fromBlazor<TProps>(moduleName: string, args: TProps): BlazorComponent<TProps>;
 }
