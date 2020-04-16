@@ -1,31 +1,20 @@
 import { dirname, basename, extname, join, resolve, relative } from 'path';
-import { declarationPiral } from './declaration-piral';
-import { ParcelConfig, ForceOverwrite, LogLevels } from '../types';
+import { ParcelConfig, LogLevels } from '../types';
 import {
   setStandardEnvs,
   retrievePiletsInfo,
   retrievePiralRoot,
   removeDirectory,
-  updateExistingJson,
-  createFileIfNotExists,
   logDone,
-  createPackage,
-  copyScaffoldingFiles,
-  createDirectory,
-  remove,
-  findPackageVersion,
-  coreExternals,
-  cliVersion,
   checkCliCompatibility,
   patchModules,
   setupBundler,
   defaultCacheDir,
-  createFileFromTemplateIfNotExists,
   gatherJsBundles,
   progress,
   setLogLevel,
   logReset,
-  createTarball,
+  createEmulatorPackage,
 } from '../common';
 
 interface Destination {
@@ -149,10 +138,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, version, root, dependencies, ignored, files: scaffoldFiles, ...pilets } = await retrievePiletsInfo(
-    entryFiles,
-  );
-  const { externals } = pilets;
+  const { name, root, ignored, externals } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
@@ -173,10 +159,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     progress('Starting build ...');
 
     // we'll need this info for later
-    const appDir = 'app';
-    const originalPackageJson = resolve(root, 'package.json');
-    const { files: originalFiles = [] } = require(originalPackageJson);
-    const { outDir, outFile } = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', appDir, {
+    const { outDir, outFile } = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', 'app', {
       cacheDir: cache,
       watch: false,
       sourceMaps,
@@ -187,69 +170,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       publicUrl,
       logLevel,
     });
-    const allExternals = [...externals, ...coreExternals];
-    const externalPackages = await Promise.all(
-      allExternals.map(async name => ({
-        name,
-        version: await findPackageVersion(dirname(entryFiles), name),
-      })),
-    );
-    const externalDependencies = externalPackages.reduce((deps, dep) => {
-      deps[dep.name] = dep.version;
-      return deps;
-    }, {} as Record<string, string>);
-    const rootDir = resolve(outDir, '..');
-    const filesDir = resolve(rootDir, 'files');
-
-    await createFileIfNotExists(rootDir, 'package.json', '{}');
-    await updateExistingJson(rootDir, 'package.json', {
-      name,
-      version,
-      pilets,
-      piralCLI: {
-        version: cliVersion,
-        generated: true,
-      },
-      main: `${appDir}/index.js`,
-      typings: `${appDir}/index.d.ts`,
-      app: `${appDir}/index.html`,
-      peerDependencies: {},
-      devDependencies: {
-        ...dependencies.dev,
-        ...dependencies.std,
-        ...externalDependencies,
-      },
-    });
-
-    await createDirectory(filesDir);
-
-    // for scaffolding we need to keep the files also available in the new package
-    await copyScaffoldingFiles(root, filesDir, scaffoldFiles);
-
-    // we just want to make sure that "files" mentioned in the original package.json are respected in the package
-    await copyScaffoldingFiles(root, rootDir, originalFiles);
-
-    // actually including this one hints that the app shell should have been included - which is forbidden
-    await createFileFromTemplateIfNotExists('other', 'piral', outDir, 'index.js', ForceOverwrite.yes, {
-      name,
-      outFile,
-    });
-
-    // create the index.d.ts to be used by the pilets
-    await declarationPiral(baseDir, {
-      entry,
-      target: outDir,
-    });
-
-    // since things like .gitignore are not properly treated by NPM we pack the files and remove the directory
-    await createTarball(filesDir, rootDir, 'files.tar');
-    await removeDirectory(filesDir);
-
-    // finally we can create the package
-    await createPackage(rootDir);
-
-    // cleanup
-    await Promise.all([removeDirectory(outDir), remove(resolve(rootDir, 'files.tar')), remove(resolve(rootDir, 'package.json'))]);
+    const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
     logDone(`Development package available in "${rootDir}".`);
     logReset();
