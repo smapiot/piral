@@ -7,7 +7,7 @@ import { InputFormOptions, FormProps } from './types';
 export function withForm<TFormData, TProps>(
   Component: React.ComponentType<TProps & FormProps<TFormData>>,
   options: InputFormOptions<TFormData, TProps>,
-): React.ComponentType<TProps> {
+): React.FC<TProps> {
   const FormView: React.FC<TProps & RouteComponentProps & { initialData: TFormData }> = props => {
     const formProps = useForm(props.initialData, props.history, options);
     return (

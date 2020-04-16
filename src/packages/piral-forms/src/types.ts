@@ -1,5 +1,5 @@
 import 'piral-core';
-import { ComponentType, ChangeEvent } from 'react';
+import { ComponentType, ChangeEvent, FC } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletFormsApi {}
@@ -123,7 +123,7 @@ export interface FormCreator<TFormData, TProps> {
   /**
    * Form function for wrapping a component.
    */
-  (component: ComponentType<TProps & FormProps<TFormData>>): ComponentType<TProps>;
+  (component: ComponentType<TProps & FormProps<TFormData>>): FC<TProps>;
 }
 
 /**

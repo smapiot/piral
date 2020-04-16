@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, FC } from 'react';
 import { RemainingArgs, StateDispatcher } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -79,5 +79,5 @@ export interface StateContainer<TState, TActions> {
    * State container connector function for wrapping a component.
    * @param component The component to connect by providing a state and an action prop.
    */
-  <TProps>(component: ComponentType<TProps & StateConnectorProps<TState, TActions>>): ComponentType<TProps>;
+  <TProps>(component: ComponentType<TProps & StateConnectorProps<TState, TActions>>): FC<TProps>;
 }

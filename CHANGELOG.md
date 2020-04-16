@@ -3,6 +3,7 @@
 ## 0.11.2 (tbd)
 
 * Improved scaffolding of files for pilets (#189)
+* Fixed the returned type of the `piral-feeds` HOC (#193)
 
 ## 0.11.1 (April 8, 2020)
 
