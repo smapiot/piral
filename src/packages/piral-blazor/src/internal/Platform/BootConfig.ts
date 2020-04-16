@@ -19,11 +19,3 @@ export type ResourceList = Record<string, string>;
 export class BootConfigResult {
   constructor(public bootConfig: BootJsonData, public applicationEnvironment = 'Production') {}
 }
-
-let testAnchor: HTMLAnchorElement;
-
-export function toAbsoluteUri(relativeUri: string) {
-  testAnchor = testAnchor || document.createElement('a');
-  testAnchor.href = relativeUri;
-  return testAnchor.href;
-}

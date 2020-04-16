@@ -1,4 +1,5 @@
-import { BootJsonData, ResourceList, toAbsoluteUri } from './BootConfig';
+import { BootJsonData, ResourceList } from './BootConfig';
+import { toAbsoluteUri } from '../Services/NavigationManager';
 
 const networkFetchCacheMode = 'no-cache';
 
