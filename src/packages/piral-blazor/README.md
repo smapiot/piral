@@ -4,13 +4,17 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-blazor` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Blazor loader and converter for any component registration, as well as a `fromBlazor` shortcut together with a `blazor-extension` web component.
+The set includes an Blazor loader and converter for any component registration, as well as a `fromBlazor` shortcut together with some Blazor component coming in the `Piral.Blazor.Utils` NuGet package.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
+
+### `defineBlazorReferences()`
+
+Adds the URLs to additional DLLs that need to be referenced for obtaining the Blazor components. At best this uses `require.resolve` to get the URL from the bundler.
 
 ### `fromBlazor()`
 
@@ -21,6 +25,26 @@ Transforms a standard Blazor component into a component that can be used in Pira
 > For authors of pilets
 
 You can use the `fromBlazor` function from the Pilet API to convert your Blazor components to components usable by your Piral instance.
+
+Example use:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  piral.defineBlazorReferences([
+    require.resolve('./My.Components.dll'),
+    require.resolve('./My.Dependency.dll'),
+  ])
+  piral.registerPage('/sample', piral.fromBlazor('sample-page'));
+}
+```
+
+Within Blazor components the `Extension` component referenced from `Piral.Blazor.Utils`, e.g.,
+
+```jsx
+<Extension name="name-of-extension" />
+```
 
 ## Setup and Bootstrapping
 

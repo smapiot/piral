@@ -85,7 +85,7 @@ export function createBlazorApi(config: BlazorConfig = {}): Extend<PiletBlazorAp
                   .then(addReference),
               ),
             );
-          let result = !lazy && load();
+          let result = !lazy && loader.then(load);
           dependency = () => result || (result = load());
         },
         fromBlazor(moduleName, args) {

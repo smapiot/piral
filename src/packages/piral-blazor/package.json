@@ -22,6 +22,7 @@
   "typings": "lib/index.d.ts",
   "sideEffects": false,
   "files": [
+    "infra.codegen",
     "lib",
     "src"
   ],
