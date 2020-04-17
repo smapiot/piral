@@ -7,6 +7,7 @@
 * Fixed verbose logging on Windows (#192)
 * Fixed the returned type of the `piral-feeds` HOC (#193)
 * Improved the emulator package creation
+* Improved responsive layout check and re-set
 
 ## 0.11.1 (April 8, 2020)
 
