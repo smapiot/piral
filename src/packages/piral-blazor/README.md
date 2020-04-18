@@ -66,6 +66,10 @@ const instance = createInstance({
 });
 ```
 
+This will automatically download and include the necessary binary files for providing Blazor WASM support. The binary files will be taken from the `Piral.Blazor.Core` NuGet package.
+
+By default, the latest version of the `Piral.Blazor.Core` NuGet package is downloaded. To change this set the `PIRAL_BLAZOR_VERSION` environment variable to the desired version.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = function() {
-  const version = '';
+  const version = process.env.PIRAL_BLAZOR_VERSION || '';
   const prefix = 'staticwebassets/';
   const outDir = this.options.outDir;
   const frameworkDir = path.resolve(outDir, '_framework');
