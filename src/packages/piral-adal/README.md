@@ -20,15 +20,15 @@ Gets the currently authenticated user's token or `undefined` if no user is authe
 
 > For authors of pilets
 
-You can use the `getAccessToken` function from the Pilet API.
+You can use the `getAccessToken` function from the Pilet API. This returns a promise.
 
 Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
 
-export function setup(piral: PiletApi) {
-  const userToken = piral.getAccessToken();
+export async function setup(piral: PiletApi) {
+  const userToken = await piral.getAccessToken();
   // do something with userToken
 }
 ```

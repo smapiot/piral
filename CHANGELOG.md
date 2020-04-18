@@ -3,6 +3,7 @@
 ## 0.11.2 (tbd)
 
 * Added new optional plugin `piral-blazor` for Blazor (#112)
+* Added tutorial on authentication in Piral (#182)
 * Improved scaffolding of files for pilets (#189)
 * Added app shell watching for pilet debug in monorepos (#190)
 * Fixed verbose logging on Windows (#192)
