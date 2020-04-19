@@ -1,5 +1,6 @@
 import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { fork } from 'child_process';
 import { LogLevels } from '../types';
 import {
   retrievePiletData,
@@ -52,7 +53,6 @@ export const debugPiletDefaults: DebugPiletOptions = {
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
 
 async function getOrMakeAppDir(
-  baseDir: string,
   emulator: boolean,
   appFile: string,
   externals: Array<string>,
@@ -60,40 +60,30 @@ async function getOrMakeAppDir(
   logLevel: LogLevels,
 ) {
   if (!emulator) {
-    progress(`Preparing supplied Piral instance ...`);
-    const outDir = resolve(baseDir, 'dist', 'app');
     const packageJson = require.resolve(`${piral}/package.json`);
-    const root = resolve(packageJson, '..');
-    const original = process.cwd();
-    process.chdir(root);
-    setStandardEnvs({
-      root,
-      production: true,
-      debugPiral: true,
-      debugPilet: true,
-      dependencies: externals,
-      piral,
-    });
-    const appBundler = setupBundler({
-      type: 'piral',
-      entryFiles: appFile,
-      config: {
-        watch: false,
-        minify: true,
-        sourceMaps: true,
-        contentHash: true,
-        publicUrl: './',
+    const cwd = resolve(packageJson, '..');
+    return await new Promise(res => {
+      const dbg = resolve(__dirname, '..', 'common', 'debug.js');
+      const ps = fork(dbg, [], { cwd });
+      ps.send({
+        type: 'start',
+        env: {
+          production: true,
+          debugPiral: true,
+          debugPilet: true,
+          dependencies: externals,
+          piral,
+        },
+        appFile,
         logLevel,
-        outDir,
-        cacheDir: resolve(root, defaultCacheDir),
-        scopeHoist: false,
-        hmr: false,
-        autoInstall: false,
-      },
+      });
+      ps.on('message', msg => {
+        switch (msg.type) {
+          case 'done':
+            return res(msg.outDir);
+        }
+      });
     });
-    const bundle = await appBundler.bundle();
-    process.chdir(original);
-    return dirname(bundle.name);
   }
 
   return dirname(appFile);
@@ -182,7 +172,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     await patchModules(root, ignored);
   }
 
-  const appDir = await getOrMakeAppDir(root, emulator, appFile, externals, appPackage.name, logLevel);
+  const appDir = await getOrMakeAppDir(emulator, appFile, externals, appPackage.name, logLevel);
 
   if (krasConfig.directory === undefined) {
     krasConfig.directory = join(targetDir, 'mocks');

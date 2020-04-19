@@ -1,5 +1,6 @@
 import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
+import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
 import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
@@ -143,6 +144,13 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
 
 async function getAvailableFiles(root: string, name: string) {
   const source = getPiralPath(root, name);
+  log('generalDebug_0003', `Checking if "files.tar" exists in "${source}" ...`);
+  const exists = await checkExists(resolve(source, 'files.tar'));
+
+  if (exists) {
+    await unpackTarball(source, 'files.tar');
+  }
+
   log('generalDebug_0003', `Get matching files from "${source}".`);
   const base = resolve(source, 'files');
   const files = await matchFiles(base, '**/*');

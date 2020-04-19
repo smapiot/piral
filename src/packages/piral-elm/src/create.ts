@@ -70,6 +70,7 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
       fromElm(main, captured) {
         return {
           type: 'elm',
+          captured,
           main,
         };
       },

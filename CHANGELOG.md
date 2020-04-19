@@ -1,5 +1,16 @@
 # Piral Changelog
 
+## 0.11.2 (tbd)
+
+* Added new optional plugin `piral-blazor` for Blazor (#112)
+* Added tutorial on authentication in Piral (#182)
+* Improved scaffolding of files for pilets (#189)
+* Added app shell watching for pilet debug in monorepos (#190)
+* Fixed verbose logging on Windows (#192)
+* Fixed the returned type of the `piral-feeds` HOC (#193)
+* Improved the emulator package creation
+* Improved responsive layout check and re-set
+
 ## 0.11.1 (April 8, 2020)
 
 * Improved naming of the extension slot component `key`

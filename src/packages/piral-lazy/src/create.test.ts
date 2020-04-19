@@ -25,6 +25,10 @@ function createMockContainer() {
 describe('Piral-Lazy create module', () => {
   it('appends lazy loading for a DOM component', () => {
     const { context } = createMockContainer();
-    const api = createLazyApi()(context);
+    const load = () => Promise.resolve({});
+    const api: any = createLazyApi()(context);
+    const lazyComponent = api.fromLazy(load);
+    expect(lazyComponent.type).toBe('lazy');
+    expect(lazyComponent.load).toBe(load);
   });
 });

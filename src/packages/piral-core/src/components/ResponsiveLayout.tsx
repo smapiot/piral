@@ -12,9 +12,11 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ breakpoints 
   const changeTo = useAction('changeLayout');
   const selected = useMedia(breakpoints, defaultLayouts, current);
 
-  if (selected !== current) {
-    changeTo(selected);
-  }
+  React.useEffect(() => {
+    if (selected !== current) {
+      changeTo(selected);
+    }
+  }, [selected]);
 
   return defaultRender(children);
 };

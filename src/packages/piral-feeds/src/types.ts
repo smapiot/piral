@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, FC } from 'react';
 import { Disposable } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -99,7 +99,7 @@ export interface FeedConnector<TData> {
    * Connector function for wrapping a component.
    * @param component The component to connect by providing a data prop.
    */
-  <TProps>(component: ComponentType<TProps & FeedConnectorProps<TData>>): ComponentType<TProps>;
+  <TProps>(component: ComponentType<TProps & FeedConnectorProps<TData>>): FC<TProps>;
   /**
    * Invalidates the underlying feed connector.
    * Forces a reload on next use.
