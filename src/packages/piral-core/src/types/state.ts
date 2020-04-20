@@ -44,7 +44,7 @@ export interface PageRegistration extends BaseRegistration {
 }
 
 export interface ExtensionRegistration extends BaseRegistration {
-  component: WrappedComponent<ExtensionComponentProps<any>>;
+  component: WrappedComponent<ExtensionComponentProps<string>>;
   reference: any;
   defaults: any;
 }

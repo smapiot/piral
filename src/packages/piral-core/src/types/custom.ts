@@ -24,6 +24,11 @@ export interface PiralCustomActions {}
 export interface PiralCustomEventMap {}
 
 /**
+ * Custom extension slots outside of piral-core.
+ */
+export interface PiralCustomExtensionSlotMap {}
+
+/**
  * Custom parts of the global registry state defined outside of piral-core.
  */
 export interface PiralCustomRegistryState {}

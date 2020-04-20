@@ -3,6 +3,7 @@
 ## 0.11.3 (tbd)
 
 * Fixed robustness of the declaration generation
+* Improved typings for declaring extensions (using `PiralCustomExtensionSlotMap`)
 
 ## 0.11.2 (April 19, 2020)
 

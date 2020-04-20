@@ -110,7 +110,7 @@ export const Pilet1: Pilet = {
 
     piral.registerExtension('error', () => <div>Custom Error page</div>);
 
-    piral.registerExtension<ErrorInfoProps>('error', ({ params }) => {
+    piral.registerExtension('error', ({ params }) => {
       if (params.type === 'not_found') {
         return <div>The page was not found!!!</div>;
       }
