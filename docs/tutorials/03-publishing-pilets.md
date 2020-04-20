@@ -62,7 +62,7 @@ To use the community edition of the **feed service** as part of the Piral Cloud 
 
 Upon successful login the landing page of the feed service will be displayed.
 
-### Create a feed
+### Create a Feed
 
 For creating a new feed, follow the link `Cerate Feed` on the right-hand side of the top menu.
 

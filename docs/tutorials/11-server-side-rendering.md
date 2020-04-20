@@ -7,7 +7,7 @@ level: Proficient
 
 # Server-Side Rendering
 
-Piral makes the development of highly interactive distributed frontend applications quite easy. To enable this Piral uses an approach that focuses on developer experience by allowing using a serverless-first approach. As a consequence, the pilets are retrieves at runtime from a feed service. This approach is also known as client-side rendering (CSR).
+Piral makes the development of highly interactive distributed frontend applications quite easy. To enable this Piral uses an approach that focuses on developer experience by allowing using a serverless-first approach. As a consequence, the pilets are retrieves at runtime from a pilet feed service. This approach is also known as client-side rendering (CSR).
 
 Naturally, performance implications apply. While pilets should be cached indefinitely (i.e., they will only require a download if never downloaded or if they have been updated), the responsive from the feed service can never be cached. The additional round-trip time (RTT) to retrieve the pilet feed will add to the JavaScript evaluation and execution time.
 
@@ -27,7 +27,7 @@ The diagram below shows this sequence.
 
 ![Sequence of SSR](../diagrams/ssr-sequence.png)
 
-**Remark**: The sequence above can be simplified if the feed service is on the same server as the webserver. Likewise, we do not have to provide the full chain, i.e., we could go for a hybrid between the full CSR and the full SSR, e.g., by only including the response from the feed service in the SSR part thus still leaving the pilets for retrieval on the client-side.
+**Remark**: The sequence above can be simplified if the pilet feed service is on the same server as the webserver. Likewise, we do not have to provide the full chain, i.e., we could go for a hybrid between the full CSR and the full SSR, e.g., by only including the response from the feed service in the SSR part thus still leaving the pilets for retrieval on the client-side.
 
 ## General SSR Setup
 
@@ -173,11 +173,11 @@ The diagram below shows this sequence.
 
 **Remark**: The replacement for the embedded data needs to be placed *before* the root module (in the example above `<script src="index.tsx"></script>`) is referenced.
 
-The embedded data is either the data from the feed (this section) or the data from the feed including the pilets (see next section).
+The embedded data is either the data from the pilet feed (this section) or the data from the feed including the pilets (see next section).
 
 ## Embedding the Pilets
 
-Embedding the feed may already be enough to provide improved startup performance. Nevertheless, especially for "cold starts", i.e., where no pilets have yet been seen or loaded, it can make sense to also deliver the pilets with the initial response.
+Embedding the pilet feed may already be enough to provide improved startup performance. Nevertheless, especially for "cold starts", i.e., where no pilets have yet been seen or loaded, it can make sense to also deliver the pilets with the initial response.
 
 Following the approach described beforehand we can extend the `sendIndex` function to also include the pilets.
 
@@ -219,10 +219,10 @@ async function sendIndex(_: express.Request, res: express.Response) {
 }
 ```
 
-Generally, this approach gives us quite some flexibility. It allows us to use caching in addition to HTTP requests. It also allows us to embed a feed directly on the server-side, potentially not requiring any feed seen outside.
+Generally, this approach gives us quite some flexibility. It allows us to use caching in addition to HTTP requests. It also allows us to embed a pilet feed directly on the server-side, potentially not requiring any feed seen outside.
 
 ## Conclusion
 
-SSR can be helpful to improve startup performance and user experience. The cost of optimizing the backend is, however, not negligible and should be considered, too. Providing the fastest response possible to feed and page requests could be already sufficient to ensure a great user experience.
+SSR can be helpful to improve startup performance and user experience. The cost of optimizing the backend is, however, not negligible and should be considered, too. Providing the fastest response possible to pilet feed and general page requests could be already sufficient to ensure a great user experience.
 
 In the next part we will look in more detail at the sharing mechanisms between pilets that offered by Piral.
