@@ -1406,6 +1406,57 @@ export function packageJsonMissing_0075(): QuickMessage {
  * @kind Error
  *
  * @summary
+ * The declaration could not be generated.
+ *
+ * @abstract
+ * A Piral instance emulator package consists of a pre-bundled version of the
+ * app shell, its package.json, files for scaffolding, and generated typings.
+ *
+ * The typings are generated to provide the smallest bundle possible, together
+ * with accurate typing that does not only reflect the truly available subset
+ * for the pilets, but also custom API additions and more.
+ *
+ * Our way of generating requires a custom tool called dets, which is a TS
+ * declaration bundler. It can do more than just spit out *.d.ts file and
+ * somehow merge them together - it actually performs this on the real AST
+ * of the found application. This way any interface merging is respected,
+ * as well as not available APIs omitted.
+ *
+ * When the declaration cannot be created its either the fault of a missing
+ * configuration or a bug in dets. Make sure to have an appropriate package.json
+ * with the right configuration. The tsconfig.json is not used, so any
+ * custom setting there may also be indicator of an issue.
+ *
+ * @see
+ * - [dets](https://github.com/FlorianRappl/dets)
+ * - [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
+ *
+ * @example
+ * The declaration can be build independently:
+ *
+ * ```sh
+ * piral declaration
+ * ```
+ *
+ * If an error occurs check first if the package.json contains a valid "app"
+ * field pointing to the HTML. The HTML requires a script reference to the
+ * entry point of the appplication, e.g.,
+ *
+ * ```html
+ * <script src="./index.tsx"></script>
+ * ```
+ *
+ * The TypeScript declaration generator will take all files as input to
+ * gather all required information for constructing the API declaration.
+ */
+export function declarationCouldNotBeGenerated_0076(rootDir: string, error: Error): QuickMessage {
+  return [LogLevels.error, '0076', `Could not create the declaration in "${rootDir}". Error: ${error}`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * The validation process failed.
  *
  * @abstract

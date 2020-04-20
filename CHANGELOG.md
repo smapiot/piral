@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.11.3 (tbd)
+
+* Fixed robustness of the declaration generation
+
 ## 0.11.2 (April 19, 2020)
 
 * Added new optional plugin `piral-blazor` for Blazor (#112)
