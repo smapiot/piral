@@ -13,7 +13,7 @@ type MessageTypes = keyof Messages;
 if (isWindows) {
   const stripAnsi = require('strip-ansi');
 
-  logger.prototype.verbose = function(message: string) {
+  logger.verbose = function(message: string) {
     if (this.logLevel < 4) {
       return;
     }
