@@ -2,15 +2,15 @@ import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { useGlobalState } from '../hooks';
 import { defaultRender } from '../utils';
-import { ExtensionSlotProps, PiralExtensionSlotMap } from '../types';
+import { ExtensionSlotProps } from '../types';
 
-export function ExtensionSlot<T extends keyof PiralExtensionSlotMap>({
+export function ExtensionSlot<T extends string>({
   name,
   render = defaultRender,
   empty,
   params,
-}: ExtensionSlotProps) {
-  const extensions = useGlobalState(s => s.registry.extensions[name as string] || []);
+}: ExtensionSlotProps<T>) {
+  const extensions = useGlobalState(s => s.registry.extensions[name] || []);
   return render(
     extensions.length === 0 && isfunc(empty)
       ? [defaultRender(empty(), 'empty')]

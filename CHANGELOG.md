@@ -3,7 +3,7 @@
 ## 0.11.3 (tbd)
 
 * Fixed robustness of the declaration generation
-* Improved typings for declaring extensions (using `PiralCustomExtensionSlotMap`)
+* Improved typings for declaring extensions (using `PiralCustomExtensionSlotMap`) (#197)
 * Fixed Parcel logger verbose mode switch on Windows (#199)
 * Documented the use of `regenerator-runtime` (#200)
 * Added optional meta data argument for `registerPage` (#201)
