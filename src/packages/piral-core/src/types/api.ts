@@ -19,7 +19,7 @@ export interface ExtensionComponentProps<T> extends BaseComponentProps {
   /**
    * The provided parameters for showing the extension.
    */
-  params: T extends keyof PiralExtensionSlotMap ? PiralExtensionSlotMap[T] : any;
+  params: T extends keyof PiralExtensionSlotMap ? PiralExtensionSlotMap[T] : T extends string ? any : T;
 }
 
 export interface RouteBaseProps<UrlParams = any, UrlState = any>
@@ -69,24 +69,33 @@ export interface PiletCoreApi {
    * @param Component The component to be rendered.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T extends string>(name: T, Component: AnyComponent<ExtensionComponentProps<T>>, defaults?: T): void;
+  registerExtension<TName>(
+    name: TName extends string ? TName : string,
+    Component: AnyComponent<ExtensionComponentProps<TName>>,
+    defaults?: TName,
+  ): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
    * @param Component The registered extension component to unregister.
    */
-  unregisterExtension<T extends string>(name: T, Component: AnyComponent<ExtensionComponentProps<T>>): void;
+  unregisterExtension<TName>(
+    name: TName extends string ? TName : string,
+    Component: AnyComponent<ExtensionComponentProps<TName>>,
+  ): void;
   /**
    * React component for displaying extensions for a given name.
+   * @param props The extension's rendering props.
+   * @return The created React element.
    */
-  Extension<T extends string>(props: ExtensionSlotProps<T>): ReactElement | null;
+  Extension<TName>(props: ExtensionSlotProps<TName>): ReactElement | null;
   /**
    * Renders an extension in a plain DOM component.
    * @param element The DOM element or shadow root as a container for rendering the extension.
    * @param props The extension's rendering props.
    */
-  renderHtmlExtension<T extends string>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<T>): void;
+  renderHtmlExtension<TName>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<TName>): void;
 }
 
 declare module 'piral-base/lib/types' {

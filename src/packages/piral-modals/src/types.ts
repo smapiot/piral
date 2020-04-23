@@ -119,13 +119,19 @@ export interface BareModalComponentProps<TOpts> {
   options?: TOpts;
 }
 
-export type ModalComponentProps<TOpts> = BaseComponentProps & BareModalComponentProps<TOpts>;
-
 export interface ModalRegistration extends BaseRegistration {
   name: string;
   component: WrappedComponent<ModalComponentProps<any>>;
   defaults: any;
 }
+
+export interface PiralCustomModalsMap {}
+
+export interface PiralModalsMap extends PiralCustomModalsMap {}
+
+export type ModalOptions<T> = T extends keyof PiralModalsMap ? PiralModalsMap[T] : T extends string ? any : T;
+
+export type ModalComponentProps<T> = BaseComponentProps & BareModalComponentProps<ModalOptions<T>>;
 
 export interface PiletModalsApi {
   /**
@@ -135,7 +141,7 @@ export interface PiletModalsApi {
    * @param options Optional arguments for creating the modal.
    * @returns A callback to trigger closing the modal.
    */
-  showModal<TOpts = any>(name: string, options?: TOpts): Disposable;
+  showModal<T>(name: T extends string ? T : string, options?: ModalOptions<T>): Disposable;
   /**
    * Registers a modal dialog using a React component.
    * The name needs to be unique to be used without the pilet's name.
@@ -143,10 +149,14 @@ export interface PiletModalsApi {
    * @param Component The component to render the page.
    * @param defaults Optionally, sets the default values for the inserted options.
    */
-  registerModal<TOpts>(name: string, Component: AnyComponent<ModalComponentProps<TOpts>>, defaults?: TOpts): void;
+  registerModal<T>(
+    name: T extends string ? T : string,
+    Component: AnyComponent<ModalComponentProps<T>>,
+    defaults?: ModalOptions<T>,
+  ): void;
   /**
    * Unregisters a modal by its name.
    * @param name The name that was previously registered.
    */
-  unregisterModal(name: string): void;
+  unregisterModal<T>(name: T extends string ? T : string): void;
 }
