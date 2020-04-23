@@ -17,9 +17,10 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         const expiration = getDataExpiration(expires);
         return context.tryWriteDataItem(name, value, pilet, target, expiration);
       },
-      registerPage(route, arg) {
+      registerPage(route, arg, meta) {
         context.registerPage(route, {
           pilet,
+          meta,
           component: withApi(context.converters, arg, api, 'page'),
         });
       },

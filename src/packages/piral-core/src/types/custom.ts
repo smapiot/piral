@@ -4,6 +4,11 @@
 export interface PiletCustomApi {}
 
 /**
+ * Custom meta data to include for pages.
+ */
+export interface PiralCustomPageMeta {}
+
+/**
  * Custom state extensions defined outside of piral-core.
  */
 export interface PiralCustomState {}

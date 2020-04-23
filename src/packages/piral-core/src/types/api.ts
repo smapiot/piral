@@ -1,7 +1,7 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { PiletApi, Pilet, PiletMetadata, EventEmitter } from 'piral-base';
-import { PiletCustomApi } from './custom';
+import { PiletCustomApi, PiralCustomPageMeta } from './custom';
 import { AnyComponent } from './components';
 import { ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import { SharedData, DataStoreOptions } from './data';
@@ -28,6 +28,8 @@ export interface RouteBaseProps<UrlParams = any, UrlState = any>
 
 export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
 
+export interface PiralPageMeta extends PiralCustomPageMeta {}
+
 /**
  * Defines the Pilet API from piral-core.
  */
@@ -52,8 +54,9 @@ export interface PiletCoreApi {
    * Params are following the path-to-regexp notation, e.g., :id for an id parameter.
    * @param route The route to register.
    * @param Component The component to render the page.
+   * @param meta The optional metadata to use.
    */
-  registerPage(route: string, Component: AnyComponent<PageComponentProps>): void;
+  registerPage(route: string, Component: AnyComponent<PageComponentProps>, meta?: PiralPageMeta): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.

@@ -13,6 +13,7 @@ import {
   PageComponentProps,
   ExtensionComponentProps,
   PiletsBag,
+  PiralPageMeta,
 } from './api';
 import {
   ComponentConverters,
@@ -41,6 +42,7 @@ export interface BaseRegistration {
 
 export interface PageRegistration extends BaseRegistration {
   component: WrappedComponent<PageComponentProps>;
+  meta: PiralPageMeta;
 }
 
 export interface ExtensionRegistration extends BaseRegistration {

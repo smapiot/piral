@@ -4,6 +4,8 @@
 
 * Fixed robustness of the declaration generation
 * Improved typings for declaring extensions (using `PiralCustomExtensionSlotMap`)
+* Fixed Parcel logger verbose mode switch on Windows (#199)
+* Added optional meta data argument for `registerPage` (#201)
 
 ## 0.11.2 (April 19, 2020)
 
