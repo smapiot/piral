@@ -103,3 +103,15 @@ Piral is primarily using React, which makes it necessary for you to build your P
 For documentation on `piral-mithril` please consult the [package information](https://npmjs.com/package/piral-mithril).
 
 ---------------------------------------
+
+## Can the Feed Connector Initialize Directly?
+
+If you want to have the data directly, e.g., before a page or another component is loaded then just use the `immediately` option.
+
+Example:
+
+```js
+const connect = createConnector({ /* usual options */, immediately: true });
+```
+
+---------------------------------------
