@@ -28,7 +28,7 @@ export interface Disposable {
   (): void;
 }
 
-export interface PiralStoreDataEvent {
+export interface PiralStoreDataEvent<TValue = any> {
   /**
    * The name of the item that was stored.
    */
@@ -40,7 +40,7 @@ export interface PiralStoreDataEvent {
   /**
    * The value that was stored.
    */
-  value: any;
+  value: TValue;
   /**
    * The owner of the item.
    */

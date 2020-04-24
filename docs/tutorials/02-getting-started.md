@@ -88,7 +88,7 @@ piral build
 
 This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `develop` and `release`. The latter contains the files for publishing the app shell to some host later on, the former contains a development package.
 
-The development package is a tarball containing the application shell, in our case it will be named `my-app-1.0.0.tgz`. Usually the tarball will be published to a (private) NPM feed, so that all development teams will be able reference and use the same Piral instance for developing their pilets.
+The development package is a tarball containing the application shell, in our case it will be named `my-app-1.0.0.tgz`. Usually the tarball will be published to a (private) NPM registry, so that all development teams will be able reference and use the same Piral instance for developing their pilets.
 
 ![Folder structure of the application shell](../diagrams/my-app-structure.png)
 

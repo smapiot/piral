@@ -1,10 +1,9 @@
-import { ComponentType } from 'react';
+import { ReactElement } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { PiletApi, Pilet, PiletMetadata, EventEmitter } from 'piral-base';
-import { Dict } from './common';
-import { PiletCustomApi } from './custom';
+import { PiletCustomApi, PiralCustomPageMeta } from './custom';
 import { AnyComponent } from './components';
-import { ExtensionSlotProps } from './extension';
+import { ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import { SharedData, DataStoreOptions } from './data';
 
 export { PiletApi, Pilet, PiletMetadata, EventEmitter };
@@ -16,11 +15,11 @@ export interface BaseComponentProps {
   piral: PiletApi;
 }
 
-export interface ExtensionComponentProps<T = Dict<any>> extends BaseComponentProps {
+export interface ExtensionComponentProps<T> extends BaseComponentProps {
   /**
    * The provided parameters for showing the extension.
    */
-  params: T;
+  params: T extends keyof PiralExtensionSlotMap ? PiralExtensionSlotMap[T] : T extends string ? any : T;
 }
 
 export interface RouteBaseProps<UrlParams = any, UrlState = any>
@@ -28,6 +27,8 @@ export interface RouteBaseProps<UrlParams = any, UrlState = any>
     BaseComponentProps {}
 
 export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
+
+export interface PiralPageMeta extends PiralCustomPageMeta {}
 
 /**
  * Defines the Pilet API from piral-core.
@@ -53,8 +54,9 @@ export interface PiletCoreApi {
    * Params are following the path-to-regexp notation, e.g., :id for an id parameter.
    * @param route The route to register.
    * @param Component The component to render the page.
+   * @param meta The optional metadata to use.
    */
-  registerPage(route: string, Component: AnyComponent<PageComponentProps>): void;
+  registerPage(route: string, Component: AnyComponent<PageComponentProps>, meta?: PiralPageMeta): void;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
@@ -67,24 +69,33 @@ export interface PiletCoreApi {
    * @param Component The component to be rendered.
    * @param defaults Optionally, sets the default values for the expected data.
    */
-  registerExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>, defaults?: T): void;
+  registerExtension<TName>(
+    name: TName extends string ? TName : string,
+    Component: AnyComponent<ExtensionComponentProps<TName>>,
+    defaults?: TName,
+  ): void;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.
    * @param name The name of the extension slot to unregister from.
    * @param Component The registered extension component to unregister.
    */
-  unregisterExtension<T>(name: string, Component: AnyComponent<ExtensionComponentProps<T>>): void;
+  unregisterExtension<TName>(
+    name: TName extends string ? TName : string,
+    Component: AnyComponent<ExtensionComponentProps<TName>>,
+  ): void;
   /**
    * React component for displaying extensions for a given name.
+   * @param props The extension's rendering props.
+   * @return The created React element.
    */
-  Extension: ComponentType<ExtensionSlotProps>;
+  Extension<TName>(props: ExtensionSlotProps<TName>): ReactElement | null;
   /**
    * Renders an extension in a plain DOM component.
    * @param element The DOM element or shadow root as a container for rendering the extension.
    * @param props The extension's rendering props.
    */
-  renderHtmlExtension<T = any>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<T>): void;
+  renderHtmlExtension<TName>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<TName>): void;
 }
 
 declare module 'piral-base/lib/types' {

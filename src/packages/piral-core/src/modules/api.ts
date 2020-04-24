@@ -17,9 +17,10 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         const expiration = getDataExpiration(expires);
         return context.tryWriteDataItem(name, value, pilet, target, expiration);
       },
-      registerPage(route, arg) {
+      registerPage(route, arg, meta) {
         context.registerPage(route, {
           pilet,
+          meta,
           component: withApi(context.converters, arg, api, 'page'),
         });
       },
@@ -27,7 +28,7 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         context.unregisterPage(route);
       },
       registerExtension(name, arg, defaults) {
-        context.registerExtension(name, {
+        context.registerExtension(name as string, {
           pilet,
           component: withApi(context.converters, arg, api, 'extension'),
           reference: arg,
@@ -35,7 +36,7 @@ export function createCoreApi(context: GlobalStateContext): ApiExtender<PiletCor
         });
       },
       unregisterExtension(name, arg) {
-        context.unregisterExtension(name, arg);
+        context.unregisterExtension(name as string, arg);
       },
       renderHtmlExtension(element, props) {
         renderInDom(context, element, ExtensionSlot, props);

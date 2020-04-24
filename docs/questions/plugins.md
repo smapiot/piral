@@ -103,3 +103,27 @@ Piral is primarily using React, which makes it necessary for you to build your P
 For documentation on `piral-mithril` please consult the [package information](https://npmjs.com/package/piral-mithril).
 
 ---------------------------------------
+
+## Do you support Blazor?
+
+Short answer - yes.
+
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-blazor`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Hyperapp components efficiently.
+
+As Blazor is quite a special technology (since its based on WebAssembly) there are some very special things to follow for integration. The result, however, could be worth it. As Piral gives you here a truly unique and wonderful way of building your application - modular, distributed, and with the fastest possible Blazor startup time!
+
+For documentation on `piral-blazor` please consult the [package information](https://npmjs.com/package/piral-blazor).
+
+---------------------------------------
+
+## Can the feed connector initialize directly?
+
+If you want to have the data directly, e.g., before a page or another component is loaded then just use the `immediately` option.
+
+Example:
+
+```js
+const connect = createConnector({ /* usual options */, immediately: true });
+```
+
+---------------------------------------

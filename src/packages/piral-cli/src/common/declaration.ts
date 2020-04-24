@@ -1,6 +1,6 @@
 import { generateDeclaration } from 'dets';
 import { dirname, basename, resolve } from 'path';
-import { progress } from './log';
+import { progress, log } from './log';
 import { coreExternals } from './info';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
@@ -59,20 +59,25 @@ export async function createDeclaration(
   const files = await getAllFiles(entryModules);
 
   progress('Bundling declaration file ...');
-  const result = generateDeclaration({
-    name,
-    root,
-    files,
-    types: findDeclaredTypings(root),
-    apis: [
-      {
-        file: findPiralBaseApi(root),
-        name: 'PiletApi',
-      },
-    ],
-    imports: allowedImports,
-  });
 
-  progress('Writing declaration file ...');
-  await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
+  try {
+    const result = generateDeclaration({
+      name,
+      root,
+      files,
+      types: findDeclaredTypings(root),
+      apis: [
+        {
+          file: findPiralBaseApi(root),
+          name: 'PiletApi',
+        },
+      ],
+      imports: allowedImports,
+    });
+
+    progress('Writing declaration file ...');
+    await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
+  } catch (ex) {
+    log('declarationCouldNotBeGenerated_0076', baseDir, ex);
+  }
 }

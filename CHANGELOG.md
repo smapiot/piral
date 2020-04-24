@@ -1,5 +1,14 @@
 # Piral Changelog
 
+## 0.11.3 (tbd)
+
+* Fixed robustness of the declaration generation
+* Improved typings for declaring extensions (using `PiralCustomExtensionSlotMap`) (#197)
+* Added generic type for `PiralStoreDataEvent` (#198)
+* Fixed Parcel logger verbose mode switch on Windows (#199)
+* Documented the use of `regenerator-runtime` (#200)
+* Added optional meta data argument for `registerPage` (#201)
+
 ## 0.11.2 (April 19, 2020)
 
 * Added new optional plugin `piral-blazor` for Blazor (#112)

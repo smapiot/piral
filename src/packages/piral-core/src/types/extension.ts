@@ -1,7 +1,8 @@
-/**
- * Props for defining an extension slot.
- */
-export interface ExtensionSlotProps<T = any> {
+import { PiralCustomExtensionSlotMap } from './custom';
+
+export interface PiralExtensionSlotMap extends PiralCustomExtensionSlotMap {}
+
+export interface BaseExtensionSlotProps<TName, TParams> {
   /**
    * Defines what should be rendered when no components are available
    * for the specified extension.
@@ -15,9 +16,17 @@ export interface ExtensionSlotProps<T = any> {
   /**
    * The custom parameters for the given extension.
    */
-  params?: T;
+  params?: TParams;
   /**
    * The name of the extension to render.
    */
-  name: string;
+  name: TName;
 }
+
+/**
+ * Props for defining an extension slot.
+ */
+export type ExtensionSlotProps<K = string> = BaseExtensionSlotProps<
+  K extends string ? K : string,
+  K extends keyof PiralExtensionSlotMap ? PiralExtensionSlotMap[K] : K extends string ? any : K
+>;

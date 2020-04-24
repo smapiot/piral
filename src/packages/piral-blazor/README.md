@@ -10,15 +10,38 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 ## Documentation
 
+As Blazor is quite a special technology (since its based on WebAssembly) there are some very special things to follow for integration. The result, however, could be worth it. As Piral gives you here a truly unique and wonderful way of building your application - modular, distributed, and with the fastest possible Blazor startup time!
+
+**Important**:
+We recommend building pilets for `piral-blazor` exclusively with the official template.
+
+The template can be installed using the `dotnet` CLI:
+
+```sh
+dotnet new -i Piral.Blazor.Template
+```
+
+Then you can always apply the template in an empty folder:
+
+```sh
+dotnet new blazorpilet --piralInstance my-app-shell
+```
+
+where `my-app-shell` should refer to the name of the NPM package of your app shell. The `--npmRegistry` option is there, to cover cases where your app shell is not hosted in the standard NPM registry.
+
 The following functions are brought to the Pilet API.
 
 ### `defineBlazorReferences()`
 
 Adds the URLs to additional DLLs that need to be referenced for obtaining the Blazor components. At best this uses `require.resolve` to get the URL from the bundler.
 
+When you use the `blazorpilet` template you don't need to fill / use this. It is automatically used and filled with generated code. Only touch this one if you know what you are doing.
+
 ### `fromBlazor()`
 
 Transforms a standard Blazor component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+
+There is only a single argument, which refers to the name of the exposed Blazor component.
 
 ## Usage
 
@@ -33,8 +56,8 @@ import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
   piral.defineBlazorReferences([
-    require.resolve('./My.Components.dll'),
     require.resolve('./My.Dependency.dll'),
+    require.resolve('./My.Components.dll'),
   ])
   piral.registerPage('/sample', piral.fromBlazor('sample-page'));
 }
