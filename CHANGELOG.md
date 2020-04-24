@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.11.3 (tbd)
+## 0.11.3 (April 24, 2020)
 
 * Fixed robustness of the declaration generation
 * Improved typings for declaring extensions (using `PiralCustomExtensionSlotMap`) (#197)
