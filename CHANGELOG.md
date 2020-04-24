@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.11.4 (tbd)
+
+* Fixed a bug in `piral-fetch` regarding unset `Content-Type`
+
 ## 0.11.3 (April 24, 2020)
 
 * Fixed robustness of the declaration generation
