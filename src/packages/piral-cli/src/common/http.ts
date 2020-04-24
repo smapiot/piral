@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as FormData from 'form-data';
+import { Agent } from 'https';
 import { platform } from 'os';
 import { log } from './log';
 
@@ -18,8 +19,9 @@ function getMessage(body: string) {
   return '';
 }
 
-export function postFile(target: string, key: string, file: Buffer) {
+export function postFile(target: string, key: string, file: Buffer, ca?: Buffer) {
   const form = new FormData();
+  const httpsAgent = ca ? new Agent({ ca }) : undefined;
   form.append('file', file, 'pilet.tgz');
   return axios
     .post(target, form, {
@@ -28,6 +30,7 @@ export function postFile(target: string, key: string, file: Buffer) {
         authorization: `Basic ${key}`,
         'user-agent': `piral-cli/http.node-${os}`,
       },
+      httpsAgent,
     })
     .then(
       () => true,

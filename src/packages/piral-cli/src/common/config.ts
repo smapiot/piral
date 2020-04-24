@@ -5,7 +5,7 @@ export const config = rc('piral', {
    * Key to be used for all servers in case there is
    * no specialized key in apiKeys specified.
    */
-  apiKey: '',
+  apiKey: undefined,
   /**
    * Hostname to API key specifications.
    */
@@ -14,5 +14,9 @@ export const config = rc('piral', {
    * URL to be used for publishing a pilet in case
    * there is no specialized key in url specified.
    */
-  url: '',
+  url: undefined,
+  /**
+   * Path to a custom certificate file.
+   */
+  cert: undefined,
 });

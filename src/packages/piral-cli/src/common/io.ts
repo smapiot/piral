@@ -117,7 +117,11 @@ export async function getEntryFiles(content: string, basePath: string) {
 
 export function checkExists(target: string) {
   return new Promise<boolean>(resolve => {
-    exists(target, resolve);
+    if (target !== undefined) {
+      exists(target, resolve);
+    } else {
+      resolve(false);
+    }
   });
 }
 

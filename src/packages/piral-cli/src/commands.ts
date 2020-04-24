@@ -500,6 +500,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('api-key')
         .describe('api-key', 'Sets the potential API key to send to the service.')
         .default('api-key', apps.publishPiletDefaults.apiKey)
+        .string('ca-cert')
+        .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
+        .default('ca-cert', apps.publishPiletDefaults.cert)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.publishPiletDefaults.logLevel)
@@ -520,6 +523,7 @@ const allCommands: Array<ToolCommand<any>> = [
         apiKey: args.apiKey as string,
         url: args.url as string,
         logLevel: args.logLevel as any,
+        cert: args.caCert as string,
         fresh: args.fresh as boolean,
         schemaVersion: args.schema as any,
       });
