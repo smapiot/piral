@@ -3,6 +3,7 @@
 ## 0.11.4 (tbd)
 
 * Fixed a bug in `piral-fetch` regarding unset `Content-Type`
+* Added testimonials on the homepage (#194)
 
 ## 0.11.3 (April 24, 2020)
 
