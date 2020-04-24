@@ -7,3 +7,4 @@ export * from './Features';
 export * from './GitHubCat';
 export * from './Status';
 export * from './Technologies';
+export * from './Testimonials';
