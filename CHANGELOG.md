@@ -4,6 +4,7 @@
 
 * Fixed a bug in `piral-fetch` regarding unset `Content-Type`
 * Added testimonials on the homepage (#194)
+* Added support for Yarn and Pnpm (#203)
 * Added optional `--cacert` flag to `pilet publish` command (#204)
 
 ## 0.11.3 (April 24, 2020)
