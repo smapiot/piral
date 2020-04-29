@@ -69,7 +69,7 @@ export default () => (
             </Link>
           </p>
           <p>
-            <Link to="/references" className="btn primary">
+            <Link to="/reference" className="btn primary">
               <i className="fas fa-info-circle" /> References
             </Link>
           </p>
