@@ -1,5 +1,5 @@
 import { dirname, basename, extname, join, resolve, relative } from 'path';
-import { ParcelConfig, LogLevels } from '../types';
+import { ParcelConfig, LogLevels, PiralBuildType } from '../types';
 import {
   setStandardEnvs,
   retrievePiletsInfo,
@@ -84,8 +84,6 @@ async function bundleFiles(
     outFile: relative(outDir, (file && file.src) || outDir),
   };
 }
-
-export type PiralBuildType = 'all' | 'release' | 'develop';
 
 export interface BuildPiralOptions {
   entry?: string;

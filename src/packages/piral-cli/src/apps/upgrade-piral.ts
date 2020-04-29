@@ -1,5 +1,5 @@
 import { resolve, join } from 'path';
-import { LogLevels } from '../types';
+import { LogLevels, NpmClientType } from '../types';
 import {
   readJson,
   checkExistingDirectory,
@@ -13,6 +13,7 @@ import {
   checkExists,
   repositoryUrl,
   findSpecificVersion,
+  determineNpmClient,
 } from '../common';
 
 export interface UpgradePiralOptions {
@@ -20,6 +21,7 @@ export interface UpgradePiralOptions {
   target?: string;
   logLevel?: LogLevels;
   install?: boolean;
+  npmClient?: NpmClientType;
 }
 
 export const upgradePiralDefaults: UpgradePiralOptions = {
@@ -27,6 +29,7 @@ export const upgradePiralDefaults: UpgradePiralOptions = {
   target: '.',
   logLevel: LogLevels.info,
   install: true,
+  npmClient: undefined,
 };
 
 function updateDependencies(deps: Record<string, string>, version: string) {
@@ -62,6 +65,8 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
     fail('packageJsonNotFound_0020');
   }
 
+  const npmClient = await determineNpmClient(root, options.npmClient);
+
   progress(`Checking provided version ...`);
   const realVersion = await findSpecificVersion('piral-cli', version);
 
@@ -82,7 +87,7 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
 
   if (install) {
     progress(`Updating the NPM packages to %s ...`, version);
-    await installDependencies(root, '--no-package-lock');
+    await installDependencies(npmClient, root);
   }
 
   logDone('Piral instance upgraded successfully!');

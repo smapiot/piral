@@ -1,5 +1,5 @@
 import { resolve, basename } from 'path';
-import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, Framework } from '../types';
+import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, Framework, NpmClientType } from '../types';
 import {
   installPackage,
   updateExistingJson,
@@ -13,6 +13,7 @@ import {
   setLogLevel,
   fail,
   progress,
+  determineNpmClient,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -25,6 +26,7 @@ export interface NewPiralOptions {
   install?: boolean;
   template?: TemplateType;
   logLevel?: LogLevels;
+  npmClient?: NpmClientType;
 }
 
 export const newPiralDefaults: NewPiralOptions = {
@@ -37,6 +39,7 @@ export const newPiralDefaults: NewPiralOptions = {
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
+  npmClient: undefined,
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
@@ -57,6 +60,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   const success = await createDirectory(root);
 
   if (success) {
+    const npmClient = await determineNpmClient(root, options.npmClient);
     const packageRef = combinePackageRef(framework, version, 'registry');
 
     progress(`Creating a new Piral instance in %s ...`, root);
@@ -82,7 +86,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     progress(`Installing NPM package ${packageRef} ...`);
 
-    await installPackage(packageRef, root, '--no-package-lock');
+    await installPackage(npmClient, packageRef, root);
 
     progress(`Taking care of templating ...`);
 
@@ -90,7 +94,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     if (install) {
       progress(`Installing dependencies ...`);
-      await installDependencies(root, '--no-package-lock');
+      await installDependencies(npmClient, root);
     }
 
     logDone(`Piral instance scaffolded successfully!`);

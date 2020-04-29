@@ -1,6 +1,7 @@
-import { ForceOverwrite, PiletLanguage, TemplateType, Framework } from './types';
+import { ForceOverwrite, PiletLanguage, TemplateType, Framework, NpmClientType } from './types';
 
 export const templateTypeKeys: Array<TemplateType> = ['default', 'empty'];
+export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
 export const frameworkKeys: Array<Framework> = ['piral', 'piral-core', 'piral-base'];
 export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter(m => typeof ForceOverwrite[m] === 'number');
 

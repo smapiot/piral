@@ -1,21 +1,123 @@
 import { resolve } from 'path';
-import { createReadStream, existsSync } from 'fs';
+import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
-import { isWindows } from './info';
-import { runScript } from './scripts';
+import { config } from './config';
 import { inspectPackage } from './inspect';
-import { readJson, checkExists } from './io';
-import { MemoryStream } from './MemoryStream';
-import { PackageType } from '../types';
+import { readJson, checkExists, findFile } from './io';
+import { clientTypeKeys } from '../helpers';
+import { PackageType, NpmClientType } from '../types';
 
-const npmCommand = isWindows ? 'npm.cmd' : 'npm';
+export function detectPnpm(root: string) {
+  return new Promise(res => {
+    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, noPnpmLock => {
+      res(!noPnpmLock);
+    });
+  });
+}
 
-function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
-  log('generalDebug_0003', 'Starting the NPM process ...');
-  const cwd = resolve(process.cwd(), target);
-  const cmd = [npmCommand, ...args].join(' ');
-  log('generalDebug_0003', `Applying NPM cmd "${cmd}" in directory "${cwd}".`);
-  return runScript(cmd, cwd, output);
+export function detectNpm(root: string) {
+  return new Promise(res => {
+    access(resolve(root, 'package-lock.json'), constants.F_OK, noPackageLock => {
+      res(!noPackageLock);
+    });
+  });
+}
+
+export function detectYarn(root: string) {
+  return new Promise(res => {
+    access(resolve(root, 'yarn.lock'), constants.F_OK, noYarnLock => {
+      res(!noYarnLock);
+    });
+  });
+}
+
+export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
+  log('generalDebug_0003', 'Trying to get defined client from Lerna ...');
+  const file = await findFile(root, 'lerna.json');
+
+  if (file) {
+    log('generalDebug_0003', `Found Lerna config in "${file}".`);
+
+    try {
+      return require(file).npmClient;
+    } catch (err) {
+      log('generalError_0002', `Could not read lerna.json: ${err}.`);
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * For details about how this works consult issue
+ * https://github.com/smapiot/piral/issues/203
+ * @param root The project's root directory.
+ */
+export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClientType> {
+  if (!selected || !clientTypeKeys.includes(selected)) {
+    log('generalDebug_0003', 'No NPM client selected. Checking for lock files ...');
+    const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
+    const found = +hasNpm + +hasYarn + +hasPnpm;
+    log('generalDebug_0003', `Results of the lock file check: NPM = ${hasNpm}, Yarn = ${hasYarn}, Pnpm = ${hasPnpm}`);
+    const defaultClient = config.npmClient;
+
+    if (found !== 1) {
+      const lernaClient = await getLernaNpmClient(root);
+
+      if (clientTypeKeys.includes(lernaClient)) {
+        log('generalDebug_0003', `Found valid NPM client via Lerna: ${lernaClient}.`);
+        return lernaClient;
+      }
+    } else if (hasNpm) {
+      log('generalDebug_0003', `Found valid NPM client via lockfile.`);
+      return 'npm';
+    } else if (hasYarn) {
+      log('generalDebug_0003', `Found valid Yarn client via lockfile.`);
+      return 'yarn';
+    } else if (hasPnpm) {
+      log('generalDebug_0003', `Found valid Pnpm client via lockfile.`);
+      return 'pnpm';
+    }
+
+    if (clientTypeKeys.includes(defaultClient)) {
+      log('generalDebug_0003', `Found valid Pnpm client the default client: "${defaultClient}".`);
+      return defaultClient;
+    }
+
+    log('generalDebug_0003', 'Using the default NPM client.');
+    return 'npm';
+  }
+
+  return selected;
+}
+
+export function installDependencies(client: NpmClientType, target = '.'): Promise<string> {
+  const c = require(`./clients/${client}`);
+  return c.installDependencies(target);
+}
+
+export function installPackage(
+  client: NpmClientType,
+  packageRef: string,
+  target = '.',
+  ...flags: Array<string>
+): Promise<string> {
+  const c = require(`./clients/${client}`);
+  return c.installPackage(packageRef, target, ...flags);
+}
+
+export function createPackage(target = '.'): Promise<string> {
+  const c = require(`./clients/npm`);
+  return c.createPackage(target);
+}
+
+export function findSpecificVersion(packageName: string, version: string): Promise<string> {
+  const c = require(`./clients/npm`);
+  return c.findSpecificVersion(packageName, version);
+}
+
+export function findLatestVersion(packageName: string) {
+  return findSpecificVersion(packageName, 'latest');
 }
 
 export function isLocalPackage(baseDir: string, fullName: string) {
@@ -51,38 +153,6 @@ export function isGitPackage(fullName: string) {
   }
 
   return false;
-}
-
-export async function installDependencies(target = '.', ...flags: Array<string>) {
-  const ms = new MemoryStream();
-  await runNpmProcess(['install', ...flags], target, ms);
-  log('generalDebug_0003', `NPM install dependencies result: ${ms.value}`);
-  return ms.value;
-}
-
-export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
-  const ms = new MemoryStream();
-  await runNpmProcess(['install', packageRef, ...flags], target, ms);
-  log('generalDebug_0003', `NPM install package result: ${ms.value}`);
-  return ms.value;
-}
-
-export async function createPackage(target = '.', ...flags: Array<string>) {
-  const ms = new MemoryStream();
-  await runNpmProcess(['pack', ...flags], target, ms);
-  log('generalDebug_0003', `NPM pack result: ${ms.value}`);
-  return ms.value;
-}
-
-export async function findSpecificVersion(packageName: string, version: string) {
-  const ms = new MemoryStream();
-  await runNpmProcess(['show', packageName, 'version', `--tag ${version}`], '.', ms);
-  log('generalDebug_0003', `NPM show result: ${ms.value}`);
-  return ms.value;
-}
-
-export function findLatestVersion(packageName: string) {
-  return findSpecificVersion(packageName, 'latest');
 }
 
 export function makeGitUrl(fullName: string) {

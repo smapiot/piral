@@ -19,4 +19,8 @@ export const config = rc('piral', {
    * Path to a custom certificate file.
    */
   cert: undefined,
+  /**
+   * Selects the default npm client to use.
+   */
+  npmClient: 'npm',
 });
