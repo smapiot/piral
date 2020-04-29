@@ -92,21 +92,35 @@ describe('NPM Module', () => {
   it('installs a package using the NPM command line tool without a target', () => {
     const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
     (cp as any).exec = emitter;
-    installPackage('foo', 'latest');
+    installPackage('npm', 'foo', 'latest');
     expect(emitter).toHaveBeenCalledTimes(3);
   });
 
   it('installs a package using the NPM command line tool without a version', () => {
     const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
     (cp as any).exec = emitter;
-    installPackage('foo');
+    installPackage('npm', 'foo');
+    expect(emitter).toHaveBeenCalledTimes(3);
+  });
+
+  it('installs a package using the Yarn command line tool without a version', () => {
+    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
+    (cp as any).exec = emitter;
+    installPackage('yarn', 'foo');
+    expect(emitter).toHaveBeenCalledTimes(3);
+  });
+
+  it('installs a package using the Pnpm command line tool without a version', () => {
+    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
+    (cp as any).exec = emitter;
+    installPackage('pnpm', 'foo');
     expect(emitter).toHaveBeenCalledTimes(3);
   });
 
   it('installs a package using the NPM command line tool with some flag', () => {
     const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
     (cp as any).exec = emitter;
-    installPackage('foo', '1.3', '.', '--a=b');
+    installPackage('npm', 'foo', '1.3', '.', '--a=b');
     expect(emitter).toHaveBeenCalledTimes(3);
   });
 });
