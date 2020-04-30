@@ -1,4 +1,5 @@
-import { postProcess, PiletSchemaVersion } from './bundler';
+import { postProcess } from './bundler';
+import { PiletSchemaVersion } from '../types';
 
 jest.mock('fs', () => ({
   readFile(_name: string, _enc: string, cb: Function) {

@@ -154,7 +154,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       externals,
       publicUrl,
       dest.outFile,
-      join(dest.outDir, 'release', 'app'),
+      join(dest.outDir, 'release'),
       entryFiles,
       logLevel,
       ignored,

@@ -2,11 +2,14 @@ import { resolve } from 'path';
 import { fork } from 'child_process';
 import { LogLevels, PiletSchemaVersion, Bundler, BundleDetails } from '../types';
 
+function getPath(name: string) {
+  return resolve(__dirname, '..', '..', 'lib', 'parcel', `run-${name}.js`);
+}
+
 function callDynamic(name: string, cwd: string, args: any) {
-  const debugPath = resolve(__dirname, `run-${name}.js`);
   return new Promise<Bundler>(resolve => {
     let pending = true;
-    const ps = fork(debugPath, [], { cwd });
+    const ps = fork(getPath(name), [], { cwd });
     const listeners: Array<(args: any) => void> = [];
     const promise = new Promise<void>(done => {
       const f = () => {
@@ -64,9 +67,8 @@ function callDynamic(name: string, cwd: string, args: any) {
 }
 
 function callStatic(name: string, cwd: string, args: any) {
-  const debugPath = resolve(__dirname, `run-${name}.js`);
   return new Promise<{ outFile: string; outDir: string }>(resolve => {
-    const ps = fork(debugPath, [], { cwd });
+    const ps = fork(getPath(name), [], { cwd });
     ps.on('message', msg => {
       switch (msg.type) {
         case 'done':
