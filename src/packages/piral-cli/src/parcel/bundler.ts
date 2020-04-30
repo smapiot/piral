@@ -5,24 +5,21 @@ import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
-import { log } from './log';
-import { computeHash } from './hash';
-import { extendConfig } from './settings';
 import { patchModule } from './bundler-patches';
-import { checkExists, checkIsDirectory, readJson, readText } from './io';
-import { createFileIfNotExists, writeText, writeJson, getFileNames } from './io';
-import { BundlerSetup, ForceOverwrite } from '../types';
-
-export async function openBrowser(shouldOpen: boolean, port: number) {
-  if (shouldOpen) {
-    try {
-      const open = require('opn');
-      await open(`http://localhost:${port}`, undefined);
-    } catch (err) {
-      log('failedToOpenBrowser_0070', err);
-    }
-  }
-}
+import {
+  log,
+  computeHash,
+  extendConfig,
+  checkExists,
+  checkIsDirectory,
+  readJson,
+  readText,
+  createFileIfNotExists,
+  writeText,
+  writeJson,
+  getFileNames,
+} from '../common';
+import { BundlerSetup, ForceOverwrite, PiletSchemaVersion } from '../types';
 
 let original: any;
 
@@ -168,23 +165,6 @@ const getBundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stac
 function isFile(bundleDir: string, name: string) {
   const path = resolve(bundleDir, name);
   return existsSync(path) && statSync(path).isFile();
-}
-
-export function getPiletSchemaVersion(schemaVersion: 'v0' | 'v1') {
-  switch (schemaVersion) {
-    case 'v0':
-      return PiletSchemaVersion.directEval;
-    case 'v1':
-      return PiletSchemaVersion.currentScript;
-    default:
-      log('invalidSchemaVersion_0071', schemaVersion);
-      return PiletSchemaVersion.directEval;
-  }
-}
-
-export const enum PiletSchemaVersion {
-  directEval = 0,
-  currentScript = 1,
 }
 
 function getScriptHead(version: PiletSchemaVersion, prName: string) {

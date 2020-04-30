@@ -1,5 +1,6 @@
-import { log, installPatch } from './common';
+import { log } from './common';
 import { commands } from './commands';
+import { installPatch } from './parcel';
 import { addPiletRule, addPiralRule } from './rules';
 import {
   ToolCommand,

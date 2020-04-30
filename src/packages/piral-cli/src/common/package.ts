@@ -6,10 +6,30 @@ import { cliVersion, coreExternals } from './info';
 import { checkAppShellCompatibility } from './compatibility';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { Framework, PiletLanguage, ForceOverwrite, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
+import {
+  Framework,
+  PiletLanguage,
+  ForceOverwrite,
+  FileInfo,
+  PiletsInfo,
+  TemplateFileLocation,
+  PiletSchemaVersion,
+} from '../types';
 
 function getPiralPath(root: string, name: string) {
   return resolve(root, 'node_modules', name);
+}
+
+export function getPiletSchemaVersion(schemaVersion: 'v0' | 'v1') {
+  switch (schemaVersion) {
+    case 'v0':
+      return PiletSchemaVersion.directEval;
+    case 'v1':
+      return PiletSchemaVersion.currentScript;
+    default:
+      log('invalidSchemaVersion_0071', schemaVersion);
+      return PiletSchemaVersion.directEval;
+  }
 }
 
 function getDependencyVersion(

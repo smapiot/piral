@@ -59,6 +59,11 @@ export enum ForceOverwrite {
   yes,
 }
 
+export const enum PiletSchemaVersion {
+  directEval = 0,
+  currentScript = 1,
+}
+
 export interface PackageData {
   name: string;
   version: string;

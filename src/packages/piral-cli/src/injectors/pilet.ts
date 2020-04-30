@@ -3,9 +3,10 @@ import { getType } from 'mime';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+import { Bundler } from '../types';
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
-  bundler: any;
+  bundler: Bundler;
   root: string;
   port: number;
   api: string;
@@ -31,7 +32,7 @@ export default class PiletInjector implements KrasInjector {
       delete cbs[e.id];
     });
 
-    bundler.on('bundle-ready', ({ requireRef, version }) => {
+    bundler.on(({ requireRef, version }) => {
       this.requireRef = version === 1 ? requireRef : undefined;
       const meta = this.getMeta();
 
@@ -60,14 +61,12 @@ export default class PiletInjector implements KrasInjector {
 
   getMeta() {
     const { bundler, root, port, api } = this.config;
-    const dir = bundler.options.outDir;
     const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-    const link = bundler.mainBundle.name.substr(dir.length + 1);
     return JSON.stringify({
       name: def.name,
       version: def.version,
-      link: `http://localhost:${port}${api}/${link}`,
-      hash: bundler.mainBundle.entryAsset.hash,
+      link: `http://localhost:${port}${api}/${bundler.bundle.name}`,
+      hash: bundler.bundle.hash,
       requireRef: this.requireRef,
       noCache: true,
       custom: def.custom,
@@ -120,12 +119,10 @@ export default class PiletInjector implements KrasInjector {
       }
     } else if (req.target === api) {
       const path = req.url.substr(1).split('?')[0];
-      const target = join(bundler.options.outDir, path);
+      const target = join(bundler.bundle.dir, path);
 
       if (bundler.pending) {
-        return new Promise(resolve => {
-          bundler.once('bundled', () => resolve(this.sendResponse(path, target, req.url)));
-        });
+        return bundler.ready().then(() => this.sendResponse(path, target, req.url));
       }
 
       return this.sendResponse(path, target, req.url);

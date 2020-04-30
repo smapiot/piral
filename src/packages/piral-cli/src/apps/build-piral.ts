@@ -1,20 +1,18 @@
-import { dirname, basename, extname, join, resolve, relative } from 'path';
-import { ParcelConfig, LogLevels, PiralBuildType } from '../types';
+import { dirname, basename, extname, join, resolve } from 'path';
+import { callPiralBuild } from '../parcel';
+import { LogLevels, PiralBuildType } from '../types';
 import {
-  setStandardEnvs,
   retrievePiletsInfo,
   retrievePiralRoot,
   removeDirectory,
   logDone,
   checkCliCompatibility,
-  patchModules,
-  setupBundler,
   defaultCacheDir,
-  gatherJsBundles,
   progress,
   setLogLevel,
   logReset,
   createEmulatorPackage,
+  logInfo,
 } from '../common';
 
 interface Destination {
@@ -36,53 +34,6 @@ function getDestination(entryFiles: string, target: string): Destination {
       outFile: basename(target),
     };
   }
-}
-
-async function bundleFiles(
-  piral: string,
-  develop: boolean,
-  root: string,
-  dependencies: Array<string>,
-  entryFiles: string,
-  dest: Destination,
-  category: string,
-  dir: string,
-  config: ParcelConfig,
-) {
-  const subDir = join(dest.outDir, category);
-  const outDir = join(subDir, dir);
-
-  // since we create this anyway let's just pretend we want to have it clean!
-  await removeDirectory(subDir);
-
-  // using different environment variables requires clearing the cache
-  await removeDirectory(config.cacheDir);
-
-  setStandardEnvs({
-    production: true,
-    root,
-    debugPiral: develop,
-    debugPilet: develop,
-    piral,
-    dependencies,
-  });
-
-  const bundler = setupBundler({
-    type: 'piral',
-    entryFiles,
-    config: {
-      ...config,
-      outDir,
-      outFile: dest.outFile,
-    },
-  });
-
-  const bundle = await bundler.bundle();
-  const [file] = gatherJsBundles(bundle);
-  return {
-    outDir,
-    outFile: relative(outDir, (file && file.src) || outDir),
-  };
 }
 
 export interface BuildPiralOptions {
@@ -147,27 +98,34 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(dest.outDir);
   }
 
-  if (optimizeModules) {
-    progress('Preparing modules ...');
-    await patchModules(root, ignored);
-  }
-
   // everything except release -> build develop
   if (type !== 'release') {
     progress('Starting build ...');
 
-    // we'll need this info for later
-    const { outDir, outFile } = await bundleFiles(name, true, root, externals, entryFiles, dest, 'develop', 'app', {
-      cacheDir: cache,
-      watch: false,
+    // since we create this anyway let's just pretend we want to have it clean!
+    await removeDirectory(join(dest.outDir, 'develop'));
+
+    logInfo('Starting bundling emulator ...');
+    const { outDir, outFile } = await callPiralBuild(
+      root,
+      name,
+      true,
+      optimizeModules,
+      scopeHoist,
       sourceMaps,
       contentHash,
-      minify,
-      scopeHoist,
       detailedReport,
+      minify,
+      cache,
+      externals,
       publicUrl,
+      dest.outFile,
+      join(dest.outDir, 'develop', 'app'),
+      entryFiles,
       logLevel,
-    });
+      ignored,
+    );
+
     const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
     logDone(`Development package available in "${rootDir}".`);
@@ -178,17 +136,29 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   if (type !== 'develop') {
     progress('Starting build ...');
 
-    const { outDir } = await bundleFiles(name, false, root, externals, entryFiles, dest, 'release', '.', {
-      cacheDir: cache,
-      watch: false,
+    // since we create this anyway let's just pretend we want to have it clean!
+    await removeDirectory(join(dest.outDir, 'release'));
+
+    logInfo('Starting bundling release ...');
+    const { outDir } = await callPiralBuild(
+      root,
+      name,
+      false,
+      optimizeModules,
+      scopeHoist,
       sourceMaps,
       contentHash,
-      minify,
-      scopeHoist,
       detailedReport,
+      minify,
+      cache,
+      externals,
       publicUrl,
+      dest.outFile,
+      join(dest.outDir, 'release', 'app'),
+      entryFiles,
       logLevel,
-    });
+      ignored,
+    );
 
     logDone(`Files for publication available in "${outDir}".`);
     logReset();

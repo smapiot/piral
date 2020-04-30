@@ -1,18 +1,20 @@
 import { resolve, dirname, basename } from 'path';
-import { log, progress } from './log';
-import { defaultCacheDir } from './info';
-import { setStandardEnvs } from './envs';
 import { setupBundler } from './bundler';
-import { LogLevels, StandardEnvProps } from '../types';
+import { log, progress, defaultCacheDir, setStandardEnvs } from '../common';
+import { LogLevels } from '../types';
 
-async function run(root: string, entryFiles: string, logLevel: LogLevels, env: StandardEnvProps) {
+async function run(root: string, piral: string, externals: Array<string>, entryFiles: string, logLevel: LogLevels) {
   progress(`Preparing supplied Piral instance ...`);
 
   const outDir = resolve(root, 'dist', 'app');
   const cacheDir = resolve(root, defaultCacheDir);
 
   setStandardEnvs({
-    ...env,
+    piral,
+    dependencies: externals,
+    production: true,
+    debugPiral: true,
+    debugPilet: true,
     root,
   });
 
@@ -46,7 +48,7 @@ async function run(root: string, entryFiles: string, logLevel: LogLevels, env: S
 process.on('message', async msg => {
   switch (msg.type) {
     case 'start':
-      const outPath = await run(process.cwd(), msg.appFile, msg.logLevel, msg.env);
+      const outPath = await run(process.cwd(), msg.piral, msg.externals, msg.entryFiles, msg.logLevel);
       process.send({
         type: 'done',
         outDir: dirname(outPath),

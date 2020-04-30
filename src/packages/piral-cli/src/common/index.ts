@@ -1,6 +1,5 @@
 export * from './archive';
-export * from './bundler-patches';
-export * from './bundler';
+export * from './browser';
 export * from './compatibility';
 export * from './config';
 export * from './declaration';
