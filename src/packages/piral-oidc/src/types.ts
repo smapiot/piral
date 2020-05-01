@@ -1,3 +1,4 @@
+import 'piral-core';
 import { Profile } from 'oidc-client';
 
 /**
