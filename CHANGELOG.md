@@ -7,6 +7,7 @@
 * Added support for Yarn and Pnpm (#203)
 * Added optional `--cacert` flag to `pilet publish` command (#204)
 * Fixed `NODE_ENV` mode of the emulator (#207)
+* Added `getProfile()` to [piral-oidc](./src/packages/piral-oidc/README.md) (#210)
 
 ## 0.11.3 (April 24, 2020)
 
