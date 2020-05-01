@@ -59,8 +59,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         user => {
           if (!user || user.expires_in <= 0) {
             rej('Not logged in. Please call `login()` to retreive the current profile.');
-          }
-          else {
+          } else {
             res(user.profile);
           }
         },
