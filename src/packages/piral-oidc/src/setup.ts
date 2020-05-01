@@ -39,7 +39,7 @@ export function setupOidcClient<TCustomClaims extends {} = {}>(config: OidcConfi
   const retrieveToken = () => {
     return new Promise<string>((res, rej) => {
       userManager.getUser().then(
-        user => {
+        (user) => {
           if (!user) {
             rej('Not logged in. Please call `login()` to retrieve a token.');
           } else if (user.access_token && user.expires_in > 60) {
@@ -48,7 +48,7 @@ export function setupOidcClient<TCustomClaims extends {} = {}>(config: OidcConfi
             userManager.signinSilent().then(() => retrieveToken().then(res, rej), rej);
           }
         },
-        err => rej(err),
+        (err) => rej(err),
       );
     });
   };
@@ -56,14 +56,14 @@ export function setupOidcClient<TCustomClaims extends {} = {}>(config: OidcConfi
   const retrieveProfile = () => {
     return new Promise<OidcProfileWithCustomClaims<TCustomClaims>>((res, rej) => {
       userManager.getUser().then(
-        user => {
+        (user) => {
           if (!user || user.expires_in <= 0) {
             rej('Not logged in. Please call `login()` to retreive the current profile.');
           } else {
             res(user.profile as OidcProfileWithCustomClaims<TCustomClaims>);
           }
         },
-        err => rej(err),
+        (err) => rej(err),
       );
     });
   };
@@ -79,7 +79,7 @@ export function setupOidcClient<TCustomClaims extends {} = {}>(config: OidcConfi
       if (!restrict) {
         req.setHeaders(
           retrieveToken().then(
-            token => token && { Authorization: `Bearer ${token}` },
+            (token) => token && { Authorization: `Bearer ${token}` },
             () => undefined,
           ),
         );

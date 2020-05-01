@@ -23,5 +23,5 @@ describe('Piral-Oidc create module', () => {
 
   it('createOidcApi should add a function named getProfile', () => {
     expect((createOidcApi(mock)(context) as any).getProfile).toEqual(expect.any(Function));
-  })
+  });
 });

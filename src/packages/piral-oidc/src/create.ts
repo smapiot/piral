@@ -7,7 +7,7 @@ import { PiralOidcApi, OidcClient } from './types';
 export function createOidcApi<TCustomClaims = {}>(
   client: OidcClient<TCustomClaims>,
 ): Extend<PiralOidcApi<TCustomClaims>> {
-  return context => {
+  return (context) => {
     context.on('before-fetch', client.extendHeaders);
 
     return {
