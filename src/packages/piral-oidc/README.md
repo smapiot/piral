@@ -86,11 +86,9 @@ export function render() {
 import { client } from './oidc';
 
 if (location.pathname !== '/auth') {
-  if (client.account()) {
-    import('./app').then(({ render }) => render());
-  } else {
-    client.login();
-  }
+  client.profile()
+    .then((profile) => { import('./app').then(({ render }) => render()); })
+    .catch(reason => { client.login(); } );
 }
 ```
 
