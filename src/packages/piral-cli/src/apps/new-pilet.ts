@@ -128,7 +128,7 @@ always-auth=true`,
     }
 
     const packageName = await getPackageName(root, sourceName, type);
-    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);
+    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, root);
     const piralInfo = await readPiralPackage(root, packageName);
 
     checkAppShellPackage(piralInfo);

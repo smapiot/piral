@@ -75,7 +75,13 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       fail('invalidPiralReference_0043');
     }
 
-    const [packageRef, packageVersion] = await getCurrentPackageDetails(baseDir, sourceName, currentVersion, version);
+    const [packageRef, packageVersion] = await getCurrentPackageDetails(
+      baseDir,
+      sourceName,
+      currentVersion,
+      version,
+      root,
+    );
     const originalFiles = await getFileStats(root, sourceName);
 
     progress(`Updating NPM package to %s ...`, packageRef);
