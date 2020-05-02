@@ -32,6 +32,8 @@ Piral is developed as a monorepo.
 - [piral-axios](./piral-axios/README.md) provides the `axios` API for making HTTP requests
 - [piral-containers](./piral-containers/README.md) allows individual pilets to use their own global state
 - [piral-forms](./piral-forms/README.md) allows construction of reusable forms
+- [piral-oauth2](./piral-oauth2/README.md) integrates generic OAuth 2 for authentication with a fetch middleware
+- [piral-oidc](./piral-oidc/README.md) integrates OpenID Connect for authentication with a fetch middleware
 - [piral-pwa](./piral-pwa/README.md) enables out-of-the-box PWA support with benefits
 - [piral-search](./piral-search/README.md) provides enhanced search capability
 - [piral-tracking](./piral-tracking/README.md) provides the tracking API
@@ -39,6 +41,7 @@ Piral is developed as a monorepo.
 ## Available Opt-In Converter Packages
 
 - [piral-aurelia](./piral-aurelia/README.md) provides integration for *Aurelia*
+- [piral-blazor](./piral-blazor/README.md) provides integration for *Blazor*
 - [piral-elm](./piral-elm/README.md) provides integration for *Elm*
 - [piral-ember](./piral-ember/README.md) provides integration for *Ember.js*
 - [piral-hyperapp](./piral-hyperapp/README.md) provides integration for *Hyperapp*
