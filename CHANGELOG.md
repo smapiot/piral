@@ -8,6 +8,7 @@
 * Added optional `--cacert` flag to `pilet publish` command (#204)
 * Fixed `NODE_ENV` mode of the emulator (#207)
 * Switched to relative paths for local Piral references
+* Added new package `siteless` for painless microfrontends
 
 ## 0.11.3 (April 24, 2020)
 
