@@ -78,7 +78,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   await removeDirectory(cache);
 
-  logInfo('Starting bundling ...');
+  logInfo('Bundle pilet ...');
 
   await callPiletBuild(
     root,

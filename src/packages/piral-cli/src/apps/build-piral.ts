@@ -105,7 +105,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     // since we create this anyway let's just pretend we want to have it clean!
     await removeDirectory(join(dest.outDir, 'develop'));
 
-    logInfo('Starting bundling emulator ...');
+    logInfo('Bundle emulator ...');
     const { outDir, outFile } = await callPiralBuild(
       root,
       name,
@@ -115,7 +115,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       sourceMaps,
       contentHash,
       detailedReport,
-      minify,
+      false,
       cache,
       externals,
       publicUrl,
@@ -139,7 +139,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     // since we create this anyway let's just pretend we want to have it clean!
     await removeDirectory(join(dest.outDir, 'release'));
 
-    logInfo('Starting bundling release ...');
+    logInfo('Bundle release ...');
     const { outDir } = await callPiralBuild(
       root,
       name,
