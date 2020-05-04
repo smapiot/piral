@@ -42,7 +42,9 @@ export interface NotificationsHostProps {}
 
 export interface NotificationsToastProps extends BareNotificationProps {}
 
-export interface NotificationOptions {
+export interface PiralCustomNotificationOptions {}
+
+export interface NotificationOptions extends PiralCustomNotificationOptions {
   /**
    * The title of the notification, if any.
    */

@@ -98,6 +98,22 @@ const instance = createInstance({
 });
 ```
 
+### Customizing
+
+You can customize the available dialogs and their options.
+
+```ts
+import 'piral-menu';
+
+declare module 'piral-menu/lib/types' {
+  interface PiralCustomMenuSettings {
+    category?: string;
+  }
+}
+
+// now registerMenu(() => null, { category: 'general' }) is strongly typed in pilets
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

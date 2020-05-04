@@ -84,7 +84,9 @@ export interface MenuItemErrorInfoProps {
 
 export interface MenuComponentProps extends BaseComponentProps {}
 
-export interface MenuSettings {
+export interface PiralCustomMenuSettings {}
+
+export interface MenuSettings extends PiralCustomMenuSettings {
   /**
    * Sets the type of the menu to attach to.
    * @default "general"
