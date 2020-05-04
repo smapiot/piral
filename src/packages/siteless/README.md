@@ -10,7 +10,7 @@
 
 Just drop in the `siteless` JavaScript in an HTML file and you are done!
 
-The script could be taken from **jsdelivr**:
+The script could be taken from, e.g., jsdelivr:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/siteless/siteless.min.js"></script>
@@ -22,6 +22,11 @@ Then set up an inline script to call `initializePiral` handing over the only req
 const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';
 initializePiral(() => fetch(feedUrl).then(res => res.json()).then(res => res.items));
 ```
+
+Our **CDN URLs** are (latest version):
+
+- **unpkg**: https://unpkg.com/siteless/siteless.min.js
+- **jsdelivr**: https://cdn.jsdelivr.net/npm/siteless/siteless.min.js
 
 ## Running
 
