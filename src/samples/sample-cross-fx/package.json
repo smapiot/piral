@@ -78,6 +78,7 @@
     "lit-element": "^2.2.1",
     "mithril": "^2.0.4",
     "piral-aurelia": "^0.11.3",
+    "piral-blazor": "^0.11.3",
     "piral-core": "^0.11.3",
     "piral-elm": "^0.11.3",
     "piral-hyperapp": "^0.11.3",
