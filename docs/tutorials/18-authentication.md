@@ -252,3 +252,5 @@ By default, the `createAuthApi` call starts with no user.
 Realizing authentication in Piral works exactly the same as in any other React or JS web app. The enhanced possibilities of providing HTTP middleware or a strongly typed API for the pilets can be leveraged quite easily.
 
 Piral makes it quite easy to integrate any desired authentication flow in your app.
+
+In the next tutorial we'll have a look on how to migrate existing server-based websites to be fully delivered in pilets.
