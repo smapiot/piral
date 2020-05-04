@@ -13,6 +13,13 @@ jest.mock('piral-core', () => ({
   },
 }));
 
+jest.mock('react', () => ({
+  useEffect() {},
+  useState(initial) {
+    return [initial, () => {}];
+  },
+}));
+
 describe('Piral-Translate hooks module', () => {
   it('uses the translate action underneath', () => {
     const translate = useTranslate();
