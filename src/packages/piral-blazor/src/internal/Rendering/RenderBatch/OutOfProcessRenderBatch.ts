@@ -1,4 +1,19 @@
-import { RenderBatch, ArrayRange, RenderTreeDiff, ArrayValues, RenderTreeEdit, EditType, FrameType, RenderTreeFrame, RenderTreeDiffReader, RenderTreeFrameReader, RenderTreeEditReader, ArrayRangeReader, ArrayBuilderSegmentReader, ArrayBuilderSegment } from './RenderBatch';
+import {
+  RenderBatch,
+  ArrayRange,
+  RenderTreeDiff,
+  ArrayValues,
+  RenderTreeEdit,
+  EditType,
+  FrameType,
+  RenderTreeFrame,
+  RenderTreeDiffReader,
+  RenderTreeFrameReader,
+  RenderTreeEditReader,
+  ArrayRangeReader,
+  ArrayBuilderSegmentReader,
+  ArrayBuilderSegment,
+} from './RenderBatch';
 import { decodeUtf8 } from './Utf8Decoder';
 
 const updatedComponentsEntryLength = 4; // Each is a single int32 giving the location of the data
@@ -43,7 +58,7 @@ export class OutOfProcessRenderBatch implements RenderBatch {
   }
 
   referenceFramesEntry(values: ArrayValues<RenderTreeFrame>, index: number): RenderTreeFrame {
-    return (values as any) + index * referenceFramesEntryLength as any;
+    return ((values as any) + index * referenceFramesEntryLength) as any;
   }
 
   disposedComponentIdsEntry(values: ArrayValues<number>, index: number): number {
@@ -68,8 +83,7 @@ export class OutOfProcessRenderBatch implements RenderBatch {
 }
 
 class OutOfProcessRenderTreeDiffReader implements RenderTreeDiffReader {
-  constructor(private batchDataUint8: Uint8Array) {
-  }
+  constructor(private batchDataUint8: Uint8Array) {}
 
   componentId(diff: RenderTreeDiff) {
     // First int32 is componentId
@@ -78,7 +92,7 @@ class OutOfProcessRenderTreeDiffReader implements RenderTreeDiffReader {
 
   edits(diff: RenderTreeDiff) {
     // Entries data starts after the componentId (which is a 4-byte int)
-    return (diff as any + 4);
+    return (diff as any) + 4;
   }
 
   editsEntry(values: ArrayValues<RenderTreeEdit>, index: number) {
@@ -87,34 +101,32 @@ class OutOfProcessRenderTreeDiffReader implements RenderTreeDiffReader {
 }
 
 class OutOfProcessRenderTreeEditReader implements RenderTreeEditReader {
-  constructor(private batchDataUint8: Uint8Array, private stringReader: OutOfProcessStringReader) {
-  }
+  constructor(private batchDataUint8: Uint8Array, private stringReader: OutOfProcessStringReader) {}
 
   editType(edit: RenderTreeEdit) {
     return readInt32LE(this.batchDataUint8, edit as any); // 1st int
   }
 
   siblingIndex(edit: RenderTreeEdit) {
-    return readInt32LE(this.batchDataUint8, edit as any + 4); // 2nd int
+    return readInt32LE(this.batchDataUint8, (edit as any) + 4); // 2nd int
   }
 
   newTreeIndex(edit: RenderTreeEdit) {
-    return readInt32LE(this.batchDataUint8, edit as any + 8); // 3rd int
+    return readInt32LE(this.batchDataUint8, (edit as any) + 8); // 3rd int
   }
 
   moveToSiblingIndex(edit: RenderTreeEdit) {
-    return readInt32LE(this.batchDataUint8, edit as any + 8); // 3rd int
+    return readInt32LE(this.batchDataUint8, (edit as any) + 8); // 3rd int
   }
 
   removedAttributeName(edit: RenderTreeEdit) {
-    const stringIndex = readInt32LE(this.batchDataUint8, edit as any + 12); // 4th int
+    const stringIndex = readInt32LE(this.batchDataUint8, (edit as any) + 12); // 4th int
     return this.stringReader.readString(stringIndex);
   }
 }
 
 class OutOfProcessRenderTreeFrameReader implements RenderTreeFrameReader {
-  constructor(private batchDataUint8: Uint8Array, private stringReader: OutOfProcessStringReader) {
-  }
+  constructor(private batchDataUint8: Uint8Array, private stringReader: OutOfProcessStringReader) {}
 
   // For render frames, the 2nd-4th ints have different meanings depending on frameType.
   // It's the caller's responsibility not to evaluate properties that aren't applicable to the frameType.
@@ -124,45 +136,45 @@ class OutOfProcessRenderTreeFrameReader implements RenderTreeFrameReader {
   }
 
   subtreeLength(frame: RenderTreeFrame) {
-    return readInt32LE(this.batchDataUint8, frame as any + 4); // 2nd int
+    return readInt32LE(this.batchDataUint8, (frame as any) + 4); // 2nd int
   }
 
   elementReferenceCaptureId(frame: RenderTreeFrame) {
-    const stringIndex = readInt32LE(this.batchDataUint8, frame as any + 4); // 2nd int
+    const stringIndex = readInt32LE(this.batchDataUint8, (frame as any) + 4); // 2nd int
     return this.stringReader.readString(stringIndex);
   }
 
   componentId(frame: RenderTreeFrame) {
-    return readInt32LE(this.batchDataUint8, frame as any + 8); // 3rd int
+    return readInt32LE(this.batchDataUint8, (frame as any) + 8); // 3rd int
   }
 
   elementName(frame: RenderTreeFrame) {
-    const stringIndex = readInt32LE(this.batchDataUint8, frame as any + 8); // 3rd int
+    const stringIndex = readInt32LE(this.batchDataUint8, (frame as any) + 8); // 3rd int
     return this.stringReader.readString(stringIndex);
   }
 
   textContent(frame: RenderTreeFrame) {
-    const stringIndex = readInt32LE(this.batchDataUint8, frame as any + 4); // 2nd int
+    const stringIndex = readInt32LE(this.batchDataUint8, (frame as any) + 4); // 2nd int
     return this.stringReader.readString(stringIndex);
   }
 
   markupContent(frame: RenderTreeFrame) {
-    const stringIndex = readInt32LE(this.batchDataUint8, frame as any + 4); // 2nd int
+    const stringIndex = readInt32LE(this.batchDataUint8, (frame as any) + 4); // 2nd int
     return this.stringReader.readString(stringIndex)!;
   }
 
   attributeName(frame: RenderTreeFrame) {
-    const stringIndex = readInt32LE(this.batchDataUint8, frame as any + 4); // 2nd int
+    const stringIndex = readInt32LE(this.batchDataUint8, (frame as any) + 4); // 2nd int
     return this.stringReader.readString(stringIndex);
   }
 
   attributeValue(frame: RenderTreeFrame) {
-    const stringIndex = readInt32LE(this.batchDataUint8, frame as any + 8); // 3rd int
+    const stringIndex = readInt32LE(this.batchDataUint8, (frame as any) + 8); // 3rd int
     return this.stringReader.readString(stringIndex);
   }
 
   attributeEventHandlerId(frame: RenderTreeFrame) {
-    return readUint64LE(this.batchDataUint8, frame as any + 12); // Bytes 12-19
+    return readUint64LE(this.batchDataUint8, (frame as any) + 12); // Bytes 12-19
   }
 }
 
@@ -175,10 +187,14 @@ class OutOfProcessStringReader {
   }
 
   readString(index: number): string | null {
-    if (index === -1) { // Special value encodes 'null'
+    if (index === -1) {
+      // Special value encodes 'null'
       return null;
     } else {
-      const stringTableEntryPos = readInt32LE(this.batchDataUint8, this.stringTableStartIndex + index * stringTableEntryLength);
+      const stringTableEntryPos = readInt32LE(
+        this.batchDataUint8,
+        this.stringTableStartIndex + index * stringTableEntryLength,
+      );
 
       // By default, .NET's BinaryWriter gives LEB128-length-prefixed UTF-8 data.
       // This is convenient enough to decode in JavaScript.
@@ -187,7 +203,7 @@ class OutOfProcessStringReader {
       const utf8Data = new Uint8Array(
         this.batchDataUint8.buffer,
         this.batchDataUint8.byteOffset + charsStart,
-        numUtf8Bytes
+        numUtf8Bytes,
       );
       return decodeUtf8(utf8Data);
     }
@@ -195,8 +211,7 @@ class OutOfProcessStringReader {
 }
 
 class OutOfProcessArrayRangeReader implements ArrayRangeReader {
-  constructor(private batchDataUint8: Uint8Array) {
-  }
+  constructor(private batchDataUint8: Uint8Array) {}
 
   count<T>(arrayRange: ArrayRange<T>) {
     // First int is count
@@ -205,13 +220,12 @@ class OutOfProcessArrayRangeReader implements ArrayRangeReader {
 
   values<T>(arrayRange: ArrayRange<T>) {
     // Entries data starts after the 'count' int (i.e., after 4 bytes)
-    return arrayRange as any + 4;
+    return (arrayRange as any) + 4;
   }
 }
 
 class OutOfProcessArrayBuilderSegmentReader implements ArrayBuilderSegmentReader {
-  constructor(private batchDataUint8: Uint8Array) {
-  }
+  constructor(private batchDataUint8: Uint8Array) {}
 
   offset<T>(arrayBuilderSegment: ArrayBuilderSegment<T>) {
     // Not used by the out-of-process representation of RenderBatch data.
@@ -226,22 +240,18 @@ class OutOfProcessArrayBuilderSegmentReader implements ArrayBuilderSegmentReader
 
   values<T>(arrayBuilderSegment: ArrayBuilderSegment<T>): ArrayValues<T> {
     // Entries data starts after the 'count' int (i.e., after 4 bytes)
-    return arrayBuilderSegment as any + 4;
+    return (arrayBuilderSegment as any) + 4;
   }
 }
 
 function readInt32LE(buffer: Uint8Array, position: number): any {
-  return (buffer[position])
-    | (buffer[position + 1] << 8)
-    | (buffer[position + 2] << 16)
-    | (buffer[position + 3] << 24);
+  return buffer[position] | (buffer[position + 1] << 8) | (buffer[position + 2] << 16) | (buffer[position + 3] << 24);
 }
 
 function readUint32LE(buffer: Uint8Array, position: number): any {
-  return (buffer[position])
-    + (buffer[position + 1] << 8)
-    + (buffer[position + 2] << 16)
-    + ((buffer[position + 3] << 24) >>> 0); // The >>> 0 coerces the value to unsigned
+  return (
+    buffer[position] + (buffer[position + 1] << 8) + (buffer[position + 2] << 16) + ((buffer[position + 3] << 24) >>> 0)
+  ); // The >>> 0 coerces the value to unsigned
 }
 
 function readUint64LE(buffer: Uint8Array, position: number): any {
@@ -249,10 +259,12 @@ function readUint64LE(buffer: Uint8Array, position: number): any {
   // those all implicitly convert to int32
   const highPart = readUint32LE(buffer, position + 4);
   if (highPart > maxSafeNumberHighPart) {
-    throw new Error(`Cannot read uint64 with high order part ${highPart}, because the result would exceed Number.MAX_SAFE_INTEGER.`);
+    throw new Error(
+      `Cannot read uint64 with high order part ${highPart}, because the result would exceed Number.MAX_SAFE_INTEGER.`,
+    );
   }
 
-  return (highPart * uint64HighPartShift) + readUint32LE(buffer, position);
+  return highPart * uint64HighPartShift + readUint32LE(buffer, position);
 }
 
 function readLEB128(buffer: Uint8Array, position: number) {
@@ -270,7 +282,5 @@ function readLEB128(buffer: Uint8Array, position: number) {
 }
 
 function numLEB128Bytes(value: number) {
-  return value < 128 ? 1
-    : value < 16384 ? 2
-      : value < 2097152 ? 3 : 4;
+  return value < 128 ? 1 : value < 16384 ? 2 : value < 2097152 ? 3 : 4;
 }

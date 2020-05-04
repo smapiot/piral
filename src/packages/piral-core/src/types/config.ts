@@ -1,4 +1,11 @@
-import { PiletRequester, PiletDependencyFetcher, PiletDependencyGetter, PiletLoadingStrategy, Pilet, AvailableDependencies } from 'piral-base';
+import {
+  PiletRequester,
+  PiletDependencyFetcher,
+  PiletDependencyGetter,
+  PiletLoadingStrategy,
+  Pilet,
+  AvailableDependencies,
+} from 'piral-base';
 import { NestedPartial } from './common';
 import { Extend } from './plugin';
 import { GlobalState, PiralDefineActions } from './state';

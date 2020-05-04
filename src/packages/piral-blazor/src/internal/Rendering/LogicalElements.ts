@@ -53,7 +53,7 @@ export function toLogicalRootCommentElement(start: Comment, end: Comment): Logic
   const parent = start.parentNode;
   const parentLogicalElement = toLogicalElement(parent, /* allow existing contents */ true);
   const children = getLogicalChildrenArray(parentLogicalElement);
-  Array.from(parent.childNodes).forEach(n => children.push(n as unknown as LogicalElement));
+  Array.from(parent.childNodes).forEach(n => children.push((n as unknown) as LogicalElement));
   start[logicalParentPropname] = parentLogicalElement;
   // We might not have an end comment in the case of non-prerendered components.
   if (end) {
@@ -72,17 +72,17 @@ export function toLogicalElement(element: Node, allowExistingContents?: boolean)
   }
 
   element[logicalChildrenPropname] = [];
-  return element as unknown as LogicalElement;
+  return (element as unknown) as LogicalElement;
 }
 
 export function createAndInsertLogicalContainer(parent: LogicalElement, childIndex: number): LogicalElement {
   const containerElement = document.createComment('!');
   insertLogicalChild(containerElement, parent, childIndex);
-  return containerElement as any as LogicalElement;
+  return (containerElement as any) as LogicalElement;
 }
 
 export function insertLogicalChild(child: Node, parent: LogicalElement, childIndex: number) {
-  const childAsLogicalElement = child as any as LogicalElement;
+  const childAsLogicalElement = (child as any) as LogicalElement;
   if (child instanceof Comment) {
     const existingGrandchildren = getLogicalChildrenArray(childAsLogicalElement);
     if (existingGrandchildren && getLogicalChildrenArray(childAsLogicalElement).length > 0) {
@@ -106,7 +106,7 @@ export function insertLogicalChild(child: Node, parent: LogicalElement, childInd
   const newSiblings = getLogicalChildrenArray(parent);
   if (childIndex < newSiblings.length) {
     // Insert
-    const nextSibling = newSiblings[childIndex] as any as Node;
+    const nextSibling = (newSiblings[childIndex] as any) as Node;
     nextSibling.parentNode!.insertBefore(child, nextSibling);
     newSiblings.splice(childIndex, 0, childAsLogicalElement);
   } else {
@@ -134,7 +134,7 @@ export function removeLogicalChild(parent: LogicalElement, childIndex: number) {
   }
 
   // Finally, remove the node itself
-  const domNodeToRemove = childToRemove as any as Node;
+  const domNodeToRemove = (childToRemove as any) as Node;
   domNodeToRemove.parentNode!.removeChild(domNodeToRemove);
 }
 
@@ -175,8 +175,8 @@ export function permuteLogicalChildren(parent: LogicalElement, permutationList: 
 
   // Phase 2: insert markers
   permutationList.forEach((listEntry: PermutationListEntryWithTrackingData) => {
-    const marker = listEntry.moveToBeforeMarker = document.createComment('marker');
-    const insertBeforeNode = siblings[listEntry.toSiblingIndex + 1] as any as Node;
+    const marker = (listEntry.moveToBeforeMarker = document.createComment('marker'));
+    const insertBeforeNode = (siblings[listEntry.toSiblingIndex + 1] as any) as Node;
     if (insertBeforeNode) {
       insertBeforeNode.parentNode!.insertBefore(marker, insertBeforeNode);
     } else {
@@ -190,7 +190,7 @@ export function permuteLogicalChildren(parent: LogicalElement, permutationList: 
     const parentDomNode = insertBefore.parentNode!;
     const elementToMove = listEntry.moveRangeStart!;
     const moveEndNode = listEntry.moveRangeEnd!;
-    let nextToMove = elementToMove as any as Node | null;
+    let nextToMove = (elementToMove as any) as Node | null;
     while (nextToMove) {
       const nextNext = nextToMove.nextSibling;
       parentDomNode.insertBefore(nextToMove, insertBefore);
@@ -222,15 +222,15 @@ export function getClosestDomElement(logicalElement: LogicalElement) {
 }
 
 export interface PermutationListEntry {
-  fromSiblingIndex: number,
-  toSiblingIndex: number,
+  fromSiblingIndex: number;
+  toSiblingIndex: number;
 }
 
 interface PermutationListEntryWithTrackingData extends PermutationListEntry {
   // These extra properties are used internally when processing the permutation list
-  moveRangeStart?: LogicalElement,
-  moveRangeEnd?: Node,
-  moveToBeforeMarker?: Node,
+  moveRangeStart?: LogicalElement;
+  moveRangeEnd?: Node;
+  moveToBeforeMarker?: Node;
 }
 
 function getLogicalNextSibling(element: LogicalElement): LogicalElement | null {
@@ -245,7 +245,7 @@ function appendDomNode(child: Node, parent: LogicalElement) {
   if (parent instanceof Element) {
     parent.appendChild(child);
   } else if (parent instanceof Comment) {
-    const parentLogicalNextSibling = getLogicalNextSibling(parent) as any as Node;
+    const parentLogicalNextSibling = (getLogicalNextSibling(parent) as any) as Node;
     if (parentLogicalNextSibling) {
       // Since the parent has a logical next-sibling, its appended child goes right before that
       parentLogicalNextSibling.parentNode!.insertBefore(child, parentLogicalNextSibling);
@@ -270,14 +270,12 @@ function findLastDomNodeInRange(element: LogicalElement) {
   const nextSibling = getLogicalNextSibling(element);
   if (nextSibling) {
     // Simple case: not the last logical sibling, so take the node before the next sibling
-    return (nextSibling as any as Node).previousSibling;
+    return ((nextSibling as any) as Node).previousSibling;
   } else {
     // Harder case: there's no logical next-sibling, so recurse upwards until we find
     // a logical ancestor that does have one, or a physical element
     const logicalParent = getLogicalParent(element)!;
-    return logicalParent instanceof Element
-      ? logicalParent.lastChild
-      : findLastDomNodeInRange(logicalParent);
+    return logicalParent instanceof Element ? logicalParent.lastChild : findLastDomNodeInRange(logicalParent);
   }
 }
 
@@ -286,4 +284,6 @@ function createSymbolOrFallback(fallback: string): symbol | string {
 }
 
 // Nominal type to represent a logical element without needing to allocate any object for instances
-export interface LogicalElement { LogicalElement__DO_NOT_IMPLEMENT: any }
+export interface LogicalElement {
+  LogicalElement__DO_NOT_IMPLEMENT: any;
+}

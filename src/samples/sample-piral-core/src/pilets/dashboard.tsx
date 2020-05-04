@@ -11,8 +11,6 @@ export const DashboardPilet: Pilet = {
   version: '1.0.0',
   hash: '3',
   setup(piral) {
-    piral.registerExtension('dashboard', ({ params: { children } }) => (
-      <div className="tiles">{children}</div>
-    ));
+    piral.registerExtension('dashboard', ({ params: { children } }) => <div className="tiles">{children}</div>);
   },
 };

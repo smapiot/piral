@@ -15,5 +15,5 @@ describe('Piral-Base create module', () => {
       },
     });
     loading.connect(reporter);
-  })
+  });
 });

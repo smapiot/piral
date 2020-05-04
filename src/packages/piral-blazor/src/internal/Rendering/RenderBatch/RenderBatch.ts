@@ -54,13 +54,25 @@ export interface RenderTreeFrameReader {
   attributeEventHandlerId(frame: RenderTreeFrame): number;
 }
 
-export interface ArrayRange<T> { ArrayRange__DO_NOT_IMPLEMENT: any }
-export interface ArrayBuilderSegment<T> { ArrayBuilderSegment__DO_NOT_IMPLEMENT: any }
-export interface ArrayValues<T> { ArrayValues__DO_NOT_IMPLEMENT: any }
+export interface ArrayRange<T> {
+  ArrayRange__DO_NOT_IMPLEMENT: any;
+}
+export interface ArrayBuilderSegment<T> {
+  ArrayBuilderSegment__DO_NOT_IMPLEMENT: any;
+}
+export interface ArrayValues<T> {
+  ArrayValues__DO_NOT_IMPLEMENT: any;
+}
 
-export interface RenderTreeDiff { RenderTreeDiff__DO_NOT_IMPLEMENT: any }
-export interface RenderTreeFrame { RenderTreeFrame__DO_NOT_IMPLEMENT: any }
-export interface RenderTreeEdit { RenderTreeEdit__DO_NOT_IMPLEMENT: any }
+export interface RenderTreeDiff {
+  RenderTreeDiff__DO_NOT_IMPLEMENT: any;
+}
+export interface RenderTreeFrame {
+  RenderTreeFrame__DO_NOT_IMPLEMENT: any;
+}
+export interface RenderTreeEdit {
+  RenderTreeEdit__DO_NOT_IMPLEMENT: any;
+}
 
 export enum EditType {
   // The values must be kept in sync with the .NET equivalent in RenderTreeEditType.cs
