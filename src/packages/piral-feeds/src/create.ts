@@ -41,7 +41,7 @@ export function createFeedsApi(config: FeedsConfig = {}): Extend<PiletFeedsApi> 
 
           const connect = (component => withFeed(component, options) as any) as FeedConnector<any>;
 
-          Object.keys(options.reducers || {}).forEach(type => {
+          Object.keys(options.reducers).forEach(type => {
             const reducer = options.reducers[type];
 
             if (typeof reducer === 'function') {

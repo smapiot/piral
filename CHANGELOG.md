@@ -9,6 +9,8 @@
 * Fixed `NODE_ENV` mode of the emulator (#207)
 * Switched to relative paths for local Piral references
 * Added new package `siteless` for painless microfrontends
+* Added `reducers` option to `piral-feeds`
+* Improved options and typings of `piral-feeds`
 
 ## 0.11.3 (April 24, 2020)
 

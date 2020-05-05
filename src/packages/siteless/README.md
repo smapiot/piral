@@ -58,9 +58,17 @@ You can either compose from different microfrontends or use a single microfronte
 
 Only the most basic dependencies are implicitly shared. There is no explicit sharing of other dependencies. If dependencies should be shared then the import maps feature of Piral should be used.
 
-## Deploying
+## Codesandbox
 
-(tbd)
+We've created a small codesandbox to allow you to play around with the concepts quite easily.
+
+<iframe
+  src="https://codesandbox.io/embed/winter-star-is6nx?autoresize=1&previewwindow=tests&fontsize=14&module=%2Fsrc%2Fpilets%2Fsample.tsx&moduleview=1&view=editor"
+  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+  title="Siteless Starter"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
 
 ## License
 

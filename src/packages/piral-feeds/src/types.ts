@@ -91,7 +91,7 @@ export interface PiletFeedsApi {
    * Creates a connector for wrapping components with data relations.
    * @param options The options for creating the connector.
    */
-  createConnector<TData, TItem, TReducers extends FeedConnectorReducers<TData> = {}>(
+  createConnector<TData, TItem, TReducers extends FeedConnectorReducers<TData>>(
     options: FeedConnectorOptions<TData, TItem, TReducers>,
   ): FeedConnector<TData, TReducers>;
 }
@@ -137,7 +137,7 @@ export interface FeedSubscriber<TItem> {
 }
 
 export interface FeedConnectorReducers<TData> {
-  [name: string]: (data: TData, ...args: any) => TData;
+  [name: string]: (data: TData, ...args: any) => Promise<TData> | TData;
 }
 
 export interface FeedConnectorOptions<TData, TItem, TReducers extends FeedConnectorReducers<TData> = {}> {
@@ -151,14 +151,14 @@ export interface FeedConnectorOptions<TData, TItem, TReducers extends FeedConnec
    * @param callback The function to call when an item updated.
    * @returns A callback for disconnecting from the feed.
    */
-  connect: FeedSubscriber<TItem>;
+  connect?: FeedSubscriber<TItem>;
   /**
    * Function to be called when some data updated.
    * @param data The current set of data.
    * @param item The updated item to include.
    * @returns The promise for retrieving the updated data set or the updated data set.
    */
-  update: FeedReducer<TData, TItem>;
+  update?: FeedReducer<TData, TItem>;
   /**
    * Defines the optional reducers for modifying the data state.
    */
