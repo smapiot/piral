@@ -5,7 +5,7 @@ import { OidcConfig, OidcClient, OidcProfileWithCustomClaims } from './types';
  * Sets up a new client wrapping the oidc-client API.
  * @param config The configuration for the client.
  */
-export function setupOidcClient<TCustomClaims extends {} = {}>(config: OidcConfig): OidcClient<TCustomClaims> {
+export function setupOidcClient(config: OidcConfig): OidcClient {
   const {
     clientId,
     clientSecret,
@@ -54,13 +54,13 @@ export function setupOidcClient<TCustomClaims extends {} = {}>(config: OidcConfi
   };
 
   const retrieveProfile = () => {
-    return new Promise<OidcProfileWithCustomClaims<TCustomClaims>>((res, rej) => {
+    return new Promise<OidcProfileWithCustomClaims>((res, rej) => {
       userManager.getUser().then(
         (user) => {
           if (!user || user.expires_in <= 0) {
             rej('Not logged in. Please call `login()` to retreive the current profile.');
           } else {
-            res(user.profile as OidcProfileWithCustomClaims<TCustomClaims>);
+            res(user.profile as OidcProfileWithCustomClaims);
           }
         },
         (err) => rej(err),
@@ -86,6 +86,6 @@ export function setupOidcClient<TCustomClaims extends {} = {}>(config: OidcConfi
       }
     },
     token: retrieveToken,
-    profile: retrieveProfile,
+    account: retrieveProfile,
   };
 }

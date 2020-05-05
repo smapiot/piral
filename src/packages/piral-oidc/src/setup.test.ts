@@ -1,10 +1,7 @@
-import { setupOidcClient } from './setup';
-import { OidcConfig, OidcClient } from './types';
-import { UserManager, User } from 'oidc-client';
+import { UserManager } from 'oidc-client';
 
-interface ICustomClaims {
-  foo: string;
-}
+import { setupOidcClient } from './setup';
+import { OidcClient, OidcConfig } from './types';
 
 jest.mock('oidc-client');
 
@@ -27,19 +24,19 @@ describe('Piral-Oidc setup module', () => {
   });
 
   it('setupOidcClient should return the following signature', () => {
-    const client = setupOidcClient<ICustomClaims>(oidcConfig);
-    expect(client).toMatchObject<OidcClient<ICustomClaims>>({
+    const client = setupOidcClient(oidcConfig);
+    expect(client).toMatchObject<OidcClient>({
       login: expect.any(Function),
       logout: expect.any(Function),
       extendHeaders: expect.any(Function),
       token: expect.any(Function),
-      profile: expect.any(Function),
+      account: expect.any(Function),
     });
   });
 
   it('setupOidcClient should do silent redirect', () => {
     expect(UserManager).not.toHaveBeenCalled();
-    const client = setupOidcClient<ICustomClaims>(oidcConfig);
+    const client = setupOidcClient(oidcConfig);
     expect(UserManager).toHaveBeenCalledTimes(1);
     const instance = MockUserManager.mock.instances[0];
     expect(instance.signinRedirectCallback).toHaveBeenCalledTimes(1);
@@ -48,12 +45,12 @@ describe('Piral-Oidc setup module', () => {
   });
 
   describe('setupOidcClient returned object', () => {
-    let client: OidcClient<ICustomClaims>;
+    let client: OidcClient;
     let userManager: UserManager;
 
     beforeEach(() => {
       jest.clearAllMocks();
-      client = setupOidcClient<ICustomClaims>(oidcConfig);
+      client = setupOidcClient(oidcConfig);
       userManager = MockUserManager.mock.instances[0];
     });
 
@@ -109,7 +106,7 @@ describe('Piral-Oidc setup module', () => {
       await expect(client.token()).rejects.toThrow(e);
     });
 
-    it('profile() should return the User profile', () => {
+    it('account() should return the User profile', () => {
       const user: any = {
         access_token: '123',
         expires_in: 100,
@@ -118,10 +115,10 @@ describe('Piral-Oidc setup module', () => {
         },
       };
       (userManager.getUser as jest.MockedFunction<typeof userManager.getUser>).mockResolvedValue(user);
-      return expect(client.profile()).resolves.toBe(user.profile);
+      return expect(client.account()).resolves.toBe(user.profile);
     });
 
-    it('profile() should reject when user is expired', () => {
+    it('account() should reject when user is expired', () => {
       const user: any = {
         access_token: '123',
         expires_in: 0,
@@ -130,12 +127,12 @@ describe('Piral-Oidc setup module', () => {
         },
       };
       (userManager.getUser as jest.MockedFunction<typeof userManager.getUser>).mockResolvedValue(user);
-      return expect(client.profile()).rejects.toMatch('Not logged in.');
+      return expect(client.account()).rejects.toMatch('Not logged in.');
     });
 
-    it('profile() should reject when user is not authenticated', () => {
+    it('account() should reject when user is not authenticated', () => {
       (userManager.getUser as jest.MockedFunction<typeof userManager.getUser>).mockResolvedValue(null);
-      return expect(client.profile()).rejects.toMatch('Not logged in.');
+      return expect(client.account()).rejects.toMatch('Not logged in.');
     });
   });
 });

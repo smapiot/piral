@@ -44,7 +44,27 @@ export interface OidcConfig {
   restrict?: boolean;
 }
 
-export type OidcProfileWithCustomClaims<TCustomClaims extends {}> = TCustomClaims & Profile;
+/**
+ * This interface is used to merge in custom OIDC Claims to the
+ * `getProfile()` call. It can be used as follows below.
+ *
+ * (in this example, `piletApi.getProfile()` will return an object
+ * with the default OIDC claims, and also contain `myCustomClaim`):
+ *
+ * ```
+ * //piral-instance/index.tsx
+ * import 'piral-oidc';
+ *
+ * declare module 'piral-oidc/lib/types' {
+ *   interface CustomProfile {
+ *     myCustomClaim: string;
+ *   }
+ * }
+ * ```
+ */
+export interface CustomProfile {}
+
+export type OidcProfileWithCustomClaims = CustomProfile & Profile;
 
 export interface OidcRequest {
   /**
@@ -54,7 +74,7 @@ export interface OidcRequest {
   setHeaders(headers: any): void;
 }
 
-export interface OidcClient<TCustomClaims extends {} = {}> {
+export interface OidcClient {
   /**
    * Performs a login.
    */
@@ -66,7 +86,7 @@ export interface OidcClient<TCustomClaims extends {} = {}> {
   /**
    * Retrieves the current user profile.
    */
-  profile(): Promise<OidcProfileWithCustomClaims<TCustomClaims>>;
+  account(): Promise<OidcProfileWithCustomClaims>;
   /**
    * Gets a token.
    */
@@ -77,15 +97,15 @@ export interface OidcClient<TCustomClaims extends {} = {}> {
   extendHeaders(req: OidcRequest): void;
 }
 
-export interface PiralOidcApi<TCustomClaims extends {} = {}> {
+export interface PiralOidcApi {
   /**
    * Gets the currently valid access token, if any.
    */
   getAccessToken(): Promise<string | undefined>;
 
-  getProfile(): Promise<OidcProfileWithCustomClaims<TCustomClaims>>;
+  getProfile(): Promise<OidcProfileWithCustomClaims>;
 }
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi<TCustomClaims extends {} = {}> extends PiralOidcApi<TCustomClaims> {}
+  interface PiletCustomApi extends PiralOidcApi {}
 }
