@@ -56,15 +56,15 @@ export interface OidcConfig {
  * import 'piral-oidc';
  *
  * declare module 'piral-oidc/lib/types' {
- *   interface CustomProfile {
+ *   interface PiralCustomOidcProfile {
  *     myCustomClaim: string;
  *   }
  * }
  * ```
  */
-export interface CustomProfile {}
+export interface PiralCustomOidcProfile {}
 
-export type OidcProfileWithCustomClaims = CustomProfile & Profile;
+export type OidcProfileWithCustomClaims = PiralCustomOidcProfile & Profile;
 
 export interface OidcRequest {
   /**

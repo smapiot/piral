@@ -2,7 +2,7 @@ import { createOidcApi } from './create';
 import { PiralOidcApi } from './types';
 
 declare module 'piral-oidc/src/types' {
-  interface CustomProfile {
+  interface PiralCustomOidcProfile {
     testClaim: string;
   }
 }

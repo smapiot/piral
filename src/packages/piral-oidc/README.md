@@ -59,7 +59,7 @@ The provided library only brings API extensions for pilets to a Piral instance.
 For the setup of the library itself you'll need to import `createOidcApi` from the `piral-oidc` package.
 
 *Custom claims* are supported by declaration merging. Reference the `types` module in typescript and
-merge into the CustomProfile.
+merge into the PiralCustomOidcProfile.
 
 ```ts
 import { createOidcApi } from 'piral-oidc';
@@ -72,7 +72,7 @@ import { createOidcApi, setupOidcClient } from 'piral-oidc';
 
 // These should match what your server provides
 declare module "piral-oidc/lib/types" {
-    interface CustomProfile {
+    interface PiralCustomOidcProfile {
         companies: Array<string>;
         organizations: Array<string>;
     }
