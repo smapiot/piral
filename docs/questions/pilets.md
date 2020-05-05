@@ -118,3 +118,13 @@ Pilets should *never* contain any sensitive information.
 Even though you can feature flag pilets you should never assume that only certain people can read (or run) them. For this reason alone we do not recommend placing additional security measures to limit access to pilets. This will just slow down the time to first meaningful render without much additional security.
 
 ---------------------------------------
+
+## When to create a new pilet?
+
+There is no direct guideline. It all depends on the project, the developers, and the domain model. We like to make multiple pilets when we identify multiple loading patterns, i.e., if things can / should be shipped independently (not only technically, but really also be provisioned differently) then having multiple pilets may make sense.
+
+In general there is no limit on how many pilets can be provisioned for a single user. Performance-wise less may be better, however, keep in mind that the total code size matters, too. A range between 20 and 60 pilets is definitely no problem. In extreme scenarios going over 150 or 200 pilets may be acceptable, too.
+
+If you feel like you need more advise don't hesitate to use the [community chat](https://gitter.im/piral-io/community).
+
+---------------------------------------

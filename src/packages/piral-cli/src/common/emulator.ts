@@ -3,10 +3,17 @@ import { findPackageVersion, copyScaffoldingFiles } from './package';
 import { createFileFromTemplateIfNotExists } from './template';
 import { coreExternals, cliVersion } from './info';
 import { createPackage } from './npm';
-import { createDirectory, removeDirectory, remove, createFileIfNotExists, updateExistingJson } from './io';
 import { createDeclaration } from './declaration';
 import { ForceOverwrite } from '../types';
 import { createTarball } from './archive';
+import {
+  createDirectory,
+  removeDirectory,
+  createFileIfNotExists,
+  updateExistingJson,
+  getFileNames,
+  removeAny,
+} from './io';
 
 const packageJson = 'package.json';
 const filesTar = 'files.tar';
@@ -87,12 +94,16 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   // finally package everything up
   await createPackage(rootDir);
 
+  // get all files
+  const names = await getFileNames(rootDir);
+
   // cleanup
-  await Promise.all([
-    removeDirectory(targetDir),
-    remove(resolve(rootDir, filesTar)),
-    remove(resolve(rootDir, packageJson)),
-  ]);
+  await Promise.all(
+    names
+      .filter(name => !name.endsWith('.tgz'))
+      .map(name => resolve(rootDir, name))
+      .map(file => removeAny(file)),
+  );
 
   return rootDir;
 }

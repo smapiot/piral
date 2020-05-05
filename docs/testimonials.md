@@ -2,10 +2,6 @@
 
 A collection of some statements from community members regarding Piral as a framework for microfrontends.
 
-> Piral have saved us a hell of a lot of work by setting this all up.
-
-*Stephen Ely*
-
 > Piral seems very good, the best frontend framework I've explored in the last weeks.
 
 *Willian Alves*

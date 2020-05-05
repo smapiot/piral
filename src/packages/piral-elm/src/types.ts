@@ -9,7 +9,7 @@ declare module 'piral-core/lib/types/custom' {
 }
 
 export interface ElmModule<TProps> {
-  init(opts: { node: Element, flags?: TProps }): void;
+  init(opts: { node: Element; flags?: TProps }): void;
 }
 
 export interface ElmComponent<TProps> {

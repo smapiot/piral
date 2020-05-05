@@ -123,6 +123,24 @@ const MyLayout = ({ children }) => {
 
 If you want to customize the styling (which you should) make sure to register components such as `ModalsHost` (shell for the modals) or `ModalsDialog` (wrapper for an individual dialog) via, e.g., `<SetComponent name="ModalsHost" component={MyModalsHost} />`.
 
+### Customizing
+
+You can customize the available dialogs and their options.
+
+```ts
+import 'piral-modals';
+
+declare module 'piral-modals/lib/types' {
+  interface PiralCustomModalsMap {
+    login: {
+      required?: boolean;
+    };
+  }
+}
+
+// now showModal("login", { required: true }) is strongly typed in pilets
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

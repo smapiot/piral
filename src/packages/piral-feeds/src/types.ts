@@ -1,5 +1,5 @@
 import { ComponentType, FC } from 'react';
-import { Disposable } from 'piral-core';
+import { Disposable, RemainingArgs } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletFeedsApi {}
@@ -27,6 +27,13 @@ declare module 'piral-core/lib/types/custom' {
      * @param feed The feed details to use for loading.
      */
     loadFeed<TData, TItem>(feed: ConnectorDetails<TData, TItem>): void;
+    /**
+     * Updates an existing feed.
+     * @param id The id of the feed.
+     * @param item The item to pass on to the reducer.
+     * @param reducer The reducer to use.
+     */
+    updateFeed<TData, TItem>(id: string, item: TItem, reducer: FeedReducer<TData, TItem>): void;
   }
 
   interface PiralCustomErrors {
@@ -84,7 +91,9 @@ export interface PiletFeedsApi {
    * Creates a connector for wrapping components with data relations.
    * @param options The options for creating the connector.
    */
-  createConnector<TData, TItem>(options: FeedConnectorOptions<TData, TItem>): FeedConnector<TData>;
+  createConnector<TData, TItem, TReducers extends FeedConnectorReducers<TData> = {}>(
+    options: FeedConnectorOptions<TData, TItem, TReducers>,
+  ): FeedConnector<TData, TReducers>;
 }
 
 export interface FeedConnectorProps<TData> {
@@ -94,7 +103,11 @@ export interface FeedConnectorProps<TData> {
   data: TData;
 }
 
-export interface FeedConnector<TData> {
+export type GetActions<TReducers> = {
+  [P in keyof TReducers]: (...args: RemainingArgs<TReducers[P]>) => void;
+};
+
+export type FeedConnector<TData, TReducers = {}> = GetActions<TReducers> & {
   /**
    * Connector function for wrapping a component.
    * @param component The component to connect by providing a data prop.
@@ -105,7 +118,7 @@ export interface FeedConnector<TData> {
    * Forces a reload on next use.
    */
   invalidate(): void;
-}
+};
 
 export interface FeedResolver<TData> {
   /**
@@ -123,7 +136,11 @@ export interface FeedSubscriber<TItem> {
   (callback: (value: TItem) => void): Disposable;
 }
 
-export interface FeedConnectorOptions<TData, TItem> {
+export interface FeedConnectorReducers<TData> {
+  [name: string]: (data: TData, ...args: any) => TData;
+}
+
+export interface FeedConnectorOptions<TData, TItem, TReducers extends FeedConnectorReducers<TData> = {}> {
   /**
    * Function to derive the initial set of data.
    * @returns The promise for retrieving the initial data set.
@@ -143,12 +160,17 @@ export interface FeedConnectorOptions<TData, TItem> {
    */
   update: FeedReducer<TData, TItem>;
   /**
+   * Defines the optional reducers for modifying the data state.
+   */
+  reducers?: TReducers;
+  /**
    * Optional flag to avoid lazy loading and initialize the data directly.
    */
   immediately?: boolean;
 }
 
-export interface ConnectorDetails<TData, TItem> extends FeedConnectorOptions<TData, TItem> {
+export interface ConnectorDetails<TData, TItem, TReducers extends FeedConnectorReducers<TData> = {}>
+  extends FeedConnectorOptions<TData, TItem, TReducers> {
   /**
    * The ID of the connector.
    */

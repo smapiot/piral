@@ -15,6 +15,8 @@
     "watch:docs": "piral debug src/pages/docs/src/index.html",
     "build:page": "piral build src/pages/www/src/index.html --target dist/www/index.html --type release",
     "watch:page": "piral debug src/pages/www/src/index.html",
+    "watch:siteless": "piral debug src/packages/siteless/src/index.html",
+    "build:siteless": "piral build src/packages/siteless/src/index.html --target dist/siteless/index.html --type release && cp dist/siteless/release/*.js src/packages/siteless/siteless.min.js && piral build src/packages/siteless/src/index.html --target dist/siteless/index.html --type develop",
     "watch:demo-cross": "piral debug src/samples/sample-cross-fx/src/index.html",
     "build:demo-cross": "piral build src/samples/sample-cross-fx/src/index.html --target dist/demo-cross/index.html",
     "watch:demo-core": "piral debug src/samples/sample-piral-core/src/index.html",

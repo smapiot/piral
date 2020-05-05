@@ -57,19 +57,19 @@ describe('Piral-Menu Menu component', () => {
       type: '1',
     };
     const { context } = createMockContainer({
-      'foo': {
+      foo: {
         component: () => <div />,
         settings: {
           type: '1',
         },
       },
-      'bar': {
+      bar: {
         component: () => <div />,
         settings: {
           type: '1',
         },
       },
-      'qxz': {
+      qxz: {
         component: () => <div />,
         settings: {
           type: 'general',
@@ -88,19 +88,19 @@ describe('Piral-Menu Menu component', () => {
   it('uses container and item for general if type not specified', () => {
     const fake: any = {};
     const { context } = createMockContainer({
-      'foo': {
+      foo: {
         component: () => <div />,
         settings: {
           type: '1',
         },
       },
-      'bar': {
+      bar: {
         component: () => <div />,
         settings: {
           type: '1',
         },
       },
-      'qxz': {
+      qxz: {
         component: () => <div />,
         settings: {
           type: 'general',

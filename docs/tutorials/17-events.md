@@ -92,3 +92,5 @@ While it could be possible to fake Piral events in practice it would be very har
 ## Conclusion
 
 Events are a great way to distribute information quickly among multiple subscribers. The Piral instance can also leverage events to inform pilets about certain changes.
+
+In the next tutorial we'll have a look on how to easily integrate authentication in Piral.

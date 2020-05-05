@@ -1,6 +1,7 @@
 import * as cp from 'child_process';
-import { dissectPackageName, installPackage } from './npm';
 import { Stream } from 'stream';
+import { resolve } from 'path';
+import { dissectPackageName, installPackage } from './npm';
 
 jest.mock('child_process');
 jest.mock('fs', () => ({
@@ -37,7 +38,7 @@ describe('NPM Module', () => {
     const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '../foo/bar');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
-    expect(name).toBe('/home/foo/bar');
+    expect(name).toBe(resolve('/home/yolo', '../foo/bar'));
     expect(type).toBe('file');
   });
 
@@ -45,7 +46,7 @@ describe('NPM Module', () => {
     const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '/foo/bar');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
-    expect(name).toBe('/foo/bar');
+    expect(name).toBe(resolve('/home/yolo', '/foo/bar'));
     expect(type).toBe('file');
   });
 

@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { resolve, relative } from 'path';
 import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
@@ -220,6 +220,7 @@ export async function getCurrentPackageDetails(
   sourceName: string,
   sourceVersion: string,
   desired: string,
+  root: string,
 ): Promise<[string, undefined | string]> {
   log('generalDebug_0003', `Checking package details in "${baseDir}" ...`);
 
@@ -231,7 +232,7 @@ export async function getCurrentPackageDetails(
       throw new Error(`Could not find "${fullPath}" for upgrading. Aborting.`);
     }
 
-    return [fullPath, getFilePackageVersion(fullPath)];
+    return [fullPath, getFilePackageVersion(fullPath, root)];
   } else if (isGitPackage(desired)) {
     const gitUrl = makeGitUrl(desired);
     return [gitUrl, getGitPackageVersion(gitUrl)];
@@ -273,20 +274,27 @@ export async function getPackageName(root: string, name: string, type: PackageTy
   }
 }
 
-export function getFilePackageVersion(sourceName: string) {
-  return `${filePrefix}${sourceName}`;
+export function getFilePackageVersion(sourceName: string, root: string) {
+  const path = relative(root, sourceName);
+  return `${filePrefix}${path}`;
 }
 
 export function getGitPackageVersion(sourceName: string) {
   return `${sourceName}`;
 }
 
-export function getPackageVersion(hadVersion: boolean, sourceName: string, sourceVersion: string, type: PackageType) {
+export function getPackageVersion(
+  hadVersion: boolean,
+  sourceName: string,
+  sourceVersion: string,
+  type: PackageType,
+  root: string,
+) {
   switch (type) {
     case 'registry':
       return hadVersion && sourceVersion;
     case 'file':
-      return getFilePackageVersion(sourceName);
+      return getFilePackageVersion(sourceName, root);
     case 'git':
       return getGitPackageVersion(sourceName);
   }
