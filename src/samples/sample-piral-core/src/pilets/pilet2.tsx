@@ -14,9 +14,9 @@ export const Pilet2: Pilet = {
   setup(piral) {
     console.log(piral);
 
-    const connect = piral.createConnector<Array<string>, string>({
+    const connect = piral.createConnector({
       initialize() {
-        return new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 2000));
+        return new Promise<Array<string>>(resolve => setTimeout(() => resolve(['one', 'two', 'three']), 2000));
       },
       connect(cb) {
         let i = 0;
@@ -25,7 +25,7 @@ export const Pilet2: Pilet = {
         }, 1000);
         return () => clearInterval(id);
       },
-      update(data, item) {
+      update(data: Array<string>, item: string) {
         return [...data, item];
       },
     });
