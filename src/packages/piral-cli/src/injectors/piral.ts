@@ -59,12 +59,7 @@ export default class PiralInjector implements KrasInjector {
       const path = req.url.substr(1);
       const dir = bundler.bundle.dir;
       const target = join(dir, path.split('?')[0]);
-
-      if (bundler.pending) {
-        return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
-      }
-
-      return this.sendResponse(path, target, dir, req.url);
+      return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
     }
   }
 }

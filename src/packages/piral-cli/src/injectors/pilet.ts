@@ -120,12 +120,7 @@ export default class PiletInjector implements KrasInjector {
     } else if (req.target === api) {
       const path = req.url.substr(1).split('?')[0];
       const target = join(bundler.bundle.dir, path);
-
-      if (bundler.pending) {
-        return bundler.ready().then(() => this.sendResponse(path, target, req.url));
-      }
-
-      return this.sendResponse(path, target, req.url);
+      return bundler.ready().then(() => this.sendResponse(path, target, req.url));
     }
   }
 }

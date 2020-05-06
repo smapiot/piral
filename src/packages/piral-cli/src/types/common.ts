@@ -34,7 +34,6 @@ export interface BundleDetails {
 }
 
 export interface Bundler {
-  readonly pending: boolean;
   readonly bundle: BundleDetails;
   start(): void;
   on(cb: (args: any) => void): void;

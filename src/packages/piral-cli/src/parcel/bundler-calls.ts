@@ -8,26 +8,22 @@ function getPath(name: string) {
 
 function callDynamic(name: string, cwd: string, args: any) {
   return new Promise<Bundler>(resolve => {
-    let pending = true;
     const ps = fork(getPath(name), [], { cwd });
     const listeners: Array<(args: any) => void> = [];
-    const promise = new Promise<void>(done => {
+    const setPending = () => new Promise<void>(done => {
       const f = () => {
-        pending = false;
         done();
         listeners.splice(listeners.indexOf(f), 1);
       };
       listeners.push(f);
     });
+    let promise = setPending();
     const bundle: BundleDetails = {
       dir: cwd,
       hash: '',
       name: '',
     };
     const bundler: Bundler = {
-      get pending() {
-        return pending;
-      },
       bundle,
       start() {
         ps.send({
@@ -48,6 +44,9 @@ function callDynamic(name: string, cwd: string, args: any) {
 
     ps.on('message', msg => {
       switch (msg.type) {
+        case 'pending':
+          promise = setPending();
+          break;
         case 'update':
           bundle.hash = msg.outHash;
           bundle.name = msg.outName;

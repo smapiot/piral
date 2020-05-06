@@ -51,7 +51,13 @@ process.on('message', async msg => {
           await patchModules(root, msg.ignored);
         }
 
-        bundler.bundle();
+        await bundler.bundle();
+
+        bundler.on('buildStart', () => {
+          process.send({
+            type: 'pending',
+          });
+        });
       }
 
       break;
