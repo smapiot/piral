@@ -7,9 +7,13 @@ declare module 'parcel-bundler' {
   }
 }
 
+export type PiralBuildType = 'all' | 'release' | 'develop';
+
 export type TemplateType = 'default' | 'empty' | 'other';
 
 export type PackageType = 'registry' | 'file' | 'git';
+
+export type NpmClientType = 'npm' | 'yarn' | 'pnpm';
 
 export interface ParcelConfig extends ParcelOptions {
   global?: string;
@@ -53,6 +57,11 @@ export enum ForceOverwrite {
   no,
   prompt,
   yes,
+}
+
+export const enum PiletSchemaVersion {
+  directEval = 0,
+  currentScript = 1,
 }
 
 export interface PackageData {

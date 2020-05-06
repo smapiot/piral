@@ -8,8 +8,9 @@ import {
   valueOfPiletLanguage,
   templateTypeKeys,
   frameworkKeys,
+  clientTypeKeys,
 } from './helpers';
-import { ToolCommand, ListCommands } from './types';
+import { ToolCommand, ListCommands, NpmClientType, LogLevels, TemplateType, PiralBuildType } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
   if (command.name.endsWith(suffix)) {
@@ -91,7 +92,7 @@ const allCommands: Array<ToolCommand<any>> = [
         optimizeModules: args.optimizeModules as boolean,
         scopeHoist: args.scopeHoist as boolean,
         publicUrl: args.publicUrl as string,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
         fresh: args.fresh as boolean,
         open: args.open as boolean,
       });
@@ -163,8 +164,8 @@ const allCommands: Array<ToolCommand<any>> = [
         sourceMaps: args.sourceMaps as boolean,
         detailedReport: args.detailedReport as boolean,
         optimizeModules: args.optimizeModules as boolean,
-        logLevel: args.logLevel as any,
-        type: args.type as any,
+        logLevel: args.logLevel as LogLevels,
+        type: args.type as PiralBuildType,
       });
     },
   },
@@ -198,7 +199,7 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
       });
     },
   },
@@ -238,6 +239,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('template', templateTypeKeys)
         .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
         .default('template', apps.newPiralDefaults.template)
+        .choices('npm-client', clientTypeKeys)
+        .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
+        .default('npm-client', apps.newPiralDefaults.npmClient)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -251,8 +255,9 @@ const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
         install: args.install as boolean,
-        template: args.template,
-        logLevel: args.logLevel as any,
+        template: args.template as TemplateType,
+        logLevel: args.logLevel as LogLevels,
+        npmClient: args.npmClient as NpmClientType,
       });
     },
   },
@@ -277,6 +282,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('install')
         .describe('install', 'Already performs the update of its NPM dependencies.')
         .default('install', apps.upgradePiralDefaults.install)
+        .choices('npm-client', clientTypeKeys)
+        .describe('npm-client', 'Sets the NPM client to be used when upgrading.')
+        .default('npm-client', apps.upgradePiralDefaults.npmClient)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -285,8 +293,9 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.upgradePiral(args.base as string, {
         target: args.target as string,
         version: args.targetVersion as string,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
         install: args.install as boolean,
+        npmClient: args.npmClient as NpmClientType,
       });
     },
   },
@@ -312,7 +321,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.validatePiral(args.base as string, {
         entry: args.entry as string,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
       });
     },
   },
@@ -375,7 +384,7 @@ const allCommands: Array<ToolCommand<any>> = [
         autoInstall: args.autoinstall as boolean,
         optimizeModules: args.optimizeModules as boolean,
         app: args.app as string,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
         fresh: args.fresh as boolean,
         open: args.open as boolean,
         schemaVersion: args.schema as any,
@@ -446,7 +455,7 @@ const allCommands: Array<ToolCommand<any>> = [
         detailedReport: args.detailedReport as boolean,
         optimizeModules: args.optimizeModules as boolean,
         fresh: args.fresh as boolean,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
         schemaVersion: args.schema as any,
         app: args.app as string,
       });
@@ -478,7 +487,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.packPilet(args.base as string, {
         source: args.source as string,
         target: args.target as string,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
       });
     },
   },
@@ -500,6 +509,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('api-key')
         .describe('api-key', 'Sets the potential API key to send to the service.')
         .default('api-key', apps.publishPiletDefaults.apiKey)
+        .string('ca-cert')
+        .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
+        .default('ca-cert', apps.publishPiletDefaults.cert)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.publishPiletDefaults.logLevel)
@@ -519,7 +531,8 @@ const allCommands: Array<ToolCommand<any>> = [
         source: args.source as string,
         apiKey: args.apiKey as string,
         url: args.url as string,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
+        cert: args.caCert as string,
         fresh: args.fresh as boolean,
         schemaVersion: args.schema as any,
       });
@@ -559,6 +572,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('template', templateTypeKeys)
         .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
         .default('template', templateTypeKeys[0])
+        .choices('npm-client', clientTypeKeys)
+        .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
+        .default('npm-client', apps.newPiletDefaults.npmClient)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -570,9 +586,10 @@ const allCommands: Array<ToolCommand<any>> = [
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
         install: args.install as boolean,
-        template: args.template,
+        template: args.template as TemplateType,
+        npmClient: args.npmClient as NpmClientType,
       });
     },
   },
@@ -600,6 +617,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
+        .choices('npm-client', clientTypeKeys)
+        .describe('npm-client', 'Sets the NPM client to be used when upgrading.')
+        .default('npm-client', apps.upgradePiletDefaults.npmClient)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -608,9 +628,10 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.upgradePilet(args.base as string, {
         target: args.target as string,
         version: args.targetVersion as string,
-        logLevel: args.logLevel as any,
+        logLevel: args.logLevel as LogLevels,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         install: args.install as boolean,
+        npmClient: args.npmClient as NpmClientType,
       });
     },
   },
@@ -638,8 +659,8 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.validatePilet(args.base as string, {
         entry: args.entry as string,
-        logLevel: args.logLevel as any,
-        app: args.app,
+        logLevel: args.logLevel as LogLevels,
+        app: args.app as string,
       });
     },
   },

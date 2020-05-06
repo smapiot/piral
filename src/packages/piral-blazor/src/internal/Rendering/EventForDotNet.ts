@@ -1,14 +1,11 @@
 export class EventForDotNet<TData extends UIEventArgs> {
-  public constructor(public readonly type: EventArgsType, public readonly data: TData) {
-  }
+  public constructor(public readonly type: EventArgsType, public readonly data: TData) {}
 
   public static fromDOMEvent(event: Event): EventForDotNet<UIEventArgs> {
     const element = event.target as Element;
     switch (event.type) {
-
       case 'input':
       case 'change': {
-
         if (isTimeBasedInput(element)) {
           const normalizedValue = normalizeTimeBasedValue(element);
           return new EventForDotNet<UIChangeEventArgs>('change', { type: event.type, value: normalizedValue });
@@ -99,7 +96,6 @@ function parseDragEvent(event: any) {
   return {
     ...parseMouseEvent(event),
     dataTransfer: event.dataTransfer,
-
   };
 }
 
@@ -133,7 +129,6 @@ function parseProgressEvent(event: ProgressEvent) {
 }
 
 function parseTouchEvent(event: TouchEvent) {
-
   function parseTouch(touchList: TouchList) {
     const touches: UITouchPoint[] = [];
 
@@ -214,13 +209,7 @@ function isCheckbox(element: Element | null): boolean {
   return !!element && element.tagName === 'INPUT' && element.getAttribute('type') === 'checkbox';
 }
 
-const timeBasedInputs = [
-  'date',
-  'datetime-local',
-  'month',
-  'time',
-  'week',
-];
+const timeBasedInputs = ['date', 'datetime-local', 'month', 'time', 'week'];
 
 function isTimeBasedInput(element: Element): element is HTMLInputElement {
   return timeBasedInputs.indexOf(element.getAttribute('type')!) !== -1;
@@ -246,7 +235,19 @@ function normalizeTimeBasedValue(element: HTMLInputElement): string {
 
 // The following interfaces must be kept in sync with the UIEventArgs C# classes
 
-export type EventArgsType = 'change' | 'clipboard' | 'drag' | 'error' | 'focus' | 'keyboard' | 'mouse' | 'pointer' | 'progress' | 'touch' | 'unknown' | 'wheel';
+export type EventArgsType =
+  | 'change'
+  | 'clipboard'
+  | 'drag'
+  | 'error'
+  | 'focus'
+  | 'keyboard'
+  | 'mouse'
+  | 'pointer'
+  | 'progress'
+  | 'touch'
+  | 'unknown'
+  | 'wheel';
 
 export interface UIEventArgs {
   type: string;
@@ -256,8 +257,7 @@ interface UIChangeEventArgs extends UIEventArgs {
   value: string | boolean;
 }
 
-interface UIClipboardEventArgs extends UIEventArgs {
-}
+interface UIClipboardEventArgs extends UIEventArgs {}
 
 interface UIDragEventArgs extends UIEventArgs {
   detail: number;
@@ -297,8 +297,7 @@ interface UIErrorEventArgs extends UIEventArgs {
   // do that. https://developer.mozilla.org/en-US/docs/Web/API/ErrorEvent
 }
 
-interface UIFocusEventArgs extends UIEventArgs {
-}
+interface UIFocusEventArgs extends UIEventArgs {}
 
 interface UIKeyboardEventArgs extends UIEventArgs {
   key: string;

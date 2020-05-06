@@ -29,6 +29,10 @@ button {
   font-weight: 700;
   transition: .3s ease-in-out !important;
 
+  & + & {
+    margin-left: 1em !important;
+  }
+
   &:hover {
     text-decoration: none;
   }
@@ -311,6 +315,91 @@ img {
 
     .octo-arm {
       animation: octocat-wave 560ms ease-in-out;
+    }
+  }
+}
+
+.testimonials {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.testimonial {
+  flex-basis: 344px;
+  max-width: 344px;
+  padding: 0.5rem;
+  box-sizing: content-box;
+
+  .testimonial-item {
+    background: $color-secondary;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+
+    .testimonial-item-content {
+      color: white;
+      flex-grow: 1;
+      -webkit-font-smoothing: antialiased;
+
+      p {
+        text-align: left;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        letter-spacing: -.1px;
+      }
+
+      &::before {
+        content: "";
+        display: block;
+        width: 1.5rem;
+        height: 1rem;
+        margin-top: 0.75rem;
+        margin-bottom: 1rem;
+        background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2218%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%2013.481c0-2.34.611-4.761%201.833-7.263C3.056%203.716%204.733%201.643%206.865%200L11%202.689C9.726%204.382%208.777%206.093%208.152%207.824c-.624%201.73-.936%203.578-.936%205.545V18H0v-4.519zm13%200c0-2.34.611-4.761%201.833-7.263%201.223-2.502%202.9-4.575%205.032-6.218L24%202.689c-1.274%201.693-2.223%203.404-2.848%205.135-.624%201.73-.936%203.578-.936%205.545V18H13v-4.519z%22%20fill%3D%22%236163FF%22%20fill-rule%3D%22nonzero%22%2F%3E%3C%2Fsvg%3E);
+        background-repeat: no-repeat;
+      }
+    }
+
+    .testimonial-item-footer {
+      margin-top: 2rem;
+      position: relative;
+      font-weight: 600;
+      padding-top: 1.25rem;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      letter-spacing: -.1px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: block;
+        height: 1px;
+        background: $color-primary;
+      }
+
+      .testimonial-item-face {
+        display: inline-block;
+        border-radius: 100%;
+        margin-right: 1em;
+        filter: grayscale(70%);
+      }
+
+      .testimonial-item-name {
+        color: #eceded;
+
+        &:last-child {
+          padding-left: 0.5em;
+          color: $color-primary;
+        }
+      }
     }
   }
 }

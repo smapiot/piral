@@ -1,5 +1,5 @@
 import { resolve, basename } from 'path';
-import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, PackageType } from '../types';
+import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, PackageType, NpmClientType } from '../types';
 import {
   createDirectory,
   createFileIfNotExists,
@@ -22,6 +22,7 @@ import {
   progress,
   log,
   logDone,
+  determineNpmClient,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -33,6 +34,7 @@ export interface NewPiletOptions {
   install?: boolean;
   template?: TemplateType;
   logLevel?: LogLevels;
+  npmClient?: NpmClientType;
 }
 
 export const newPiletDefaults: NewPiletOptions = {
@@ -44,6 +46,7 @@ export const newPiletDefaults: NewPiletOptions = {
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
+  npmClient: undefined,
 };
 
 function isLocalPackage(name: string, type: PackageType, hadVersion: boolean) {
@@ -75,6 +78,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const success = await createDirectory(root);
 
   if (success) {
+    const npmClient = await determineNpmClient(root, options.npmClient);
+
     progress(`Scaffolding new pilet in %s ...`, root);
 
     await createFileIfNotExists(
@@ -117,13 +122,13 @@ always-auth=true`,
 
       progress(`Installing NPM package %s ...`, packageRef);
 
-      await installPackage(packageRef, root, '--save-dev', '--no-package-lock');
+      await installPackage(npmClient, packageRef, root, '--save-dev');
     } else {
       progress(`Using locally available NPM package %s ...`, sourceName);
     }
 
     const packageName = await getPackageName(root, sourceName, type);
-    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type);
+    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, root);
     const piralInfo = await readPiralPackage(root, packageName);
 
     checkAppShellPackage(piralInfo);
@@ -143,7 +148,7 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      await installDependencies(root, '--no-package-lock');
+      await installDependencies(npmClient, root);
     }
 
     if (postScaffold) {

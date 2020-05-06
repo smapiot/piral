@@ -36,7 +36,7 @@ describe('Piral-Core SetRedirect component', () => {
       </StateContext.Provider>,
     );
     expect(deref<any>(context.state).routes).toEqual({
-      "/foo": expect.anything(),
+      '/foo': expect.anything(),
     });
   });
 });

@@ -38,9 +38,11 @@ export function setup(piral: PiletApi) {
 
 The most powerful variant declares three different sections:
 
-1. `initialize` to declare how data should be loaded initially (e.g., by loading from some API)
-2. `connect` to define how updates of the data should be retrieved (e.g., via a WebSocket connection)
-3. `update` to handle the patching of data (e.g., combining the current data with the data retrieved from a WebSocket connection)
+1. `initialize` to declare how data should be loaded initially (e.g., by loading from some API) *required*
+2. `connect` to define how updates of the data should be retrieved (e.g., via a WebSocket connection) *optional*
+3. `update` to handle the patching of data (e.g., combining the current data with the data retrieved from a WebSocket connection) *optional*
+
+If you specify `connect` we recommend to also define `update`.
 
 Example use:
 
@@ -48,7 +50,7 @@ Example use:
 import { PiletApi } from '<name-of-piral-instance>';
 import { Page } from './Page';
 
-export function setup(piral: PiletApi) {
+export function setup(piral) {
   const connect = createConnector({
     initialize() {
       return fetch('http://example.com').then(res => res.json());
@@ -67,6 +69,47 @@ export function setup(piral: PiletApi) {
 ```
 
 Calling `createConnector` returns a higher-order component that injects a new prop called `data` into the component.
+
+Furthermore two more options are available:
+
+- **`immediately`** optionally avoids lazy loading and fetches the data immediately.
+- **`reducers`** allows to extend the HOC with some actions triggering the provided reducer functions.
+
+The latter can be used like in the following example:
+
+```jsx
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const connect = piral.createConnector({
+    initialize() {
+      return Promise.resolve([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    },
+    update(data: Array<number>) {
+      return data;
+    },
+    reducers: {
+      shuffle(data) {
+        return data.slice().sort(() => Math.random() - 0.5);
+      },
+    },
+  });
+
+  piral.registerPage(
+    "/sample",
+    connect(({ data }) => (
+      <>
+        <ul>
+          {data.map((i) => (
+            <li key={i}>{i}</li>
+          ))}
+        </ul>
+        <button onClick={connect.shuffle}>Shuffle</button>
+      </>
+    ))
+  );
+}
+```
 
 ## Setup and Bootstrapping
 

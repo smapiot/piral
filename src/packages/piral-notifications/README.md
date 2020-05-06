@@ -94,6 +94,22 @@ const MyLayout = ({ children }) => {
 
 If you want to customize the styling (which you should) make sure to register components such as `NotificationsHost` (shell for the notifications) or `NotificationsToast` (wrapper for an individual notification) via, e.g., `<SetComponent name="NotificationsHost" component={MyNotificationsHost} />`.
 
+### Customizing
+
+You can customize the options available when showing another notification.
+
+```ts
+import 'piral-notifications';
+
+declare module 'piral-notifications/lib/types' {
+  interface PiralCustomNotificationOptions {
+    actions?: Array<'dismiss' | 'snooze'>
+  }
+}
+
+// now showNotification("...", { actions: [] }) works, too
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

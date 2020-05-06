@@ -1,5 +1,11 @@
 import { addChangeHandler } from '@dbeining/react-atom';
-import { PiletApiCreator, LoadPiletsOptions, PiletDependencyFetcher, getDependencyResolver, loadPilet } from 'piral-base';
+import {
+  PiletApiCreator,
+  LoadPiletsOptions,
+  PiletDependencyFetcher,
+  getDependencyResolver,
+  loadPilet,
+} from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
 import {
   AvailableDependencies,

@@ -1,6 +1,5 @@
 import { resolve } from 'path';
-import { readText, writeText } from './io';
-import { log } from './log';
+import { readText, writeText, log } from '../common';
 
 const windowOrGlobal = '(typeof window !== "undefined" ? window : global)';
 

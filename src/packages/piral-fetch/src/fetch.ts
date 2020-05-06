@@ -30,7 +30,7 @@ export function httpFetch<T>(config: FetchConfig, path: string, options: FetchOp
 
   return fetch(url.href, init).then(res => {
     const contentType = res.headers.get(ct);
-    const json = result === 'json' || (result === 'auto' && contentType.indexOf('json') !== -1);
+    const json = result === 'json' || (result === 'auto' && !!contentType && contentType.indexOf('json') !== -1);
     const promise = json ? res.json() : res.text();
 
     return promise.then(body => ({

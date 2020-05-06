@@ -10,6 +10,7 @@ describe('Feed Module', () => {
     expect(result.id).toBe('foo');
     expect(result.initialize).not.toBeUndefined();
     expect(result.update).not.toBeUndefined();
+    expect(result.reducers).not.toBeUndefined();
     expect(result.connect).not.toBeUndefined();
     const cleanup = result.connect(undefined);
     expect(cleanup).not.toBeUndefined();
@@ -28,6 +29,7 @@ describe('Feed Module', () => {
     expect(result.id).toBe('foo');
     expect(result.initialize).not.toBeUndefined();
     expect(result.update).not.toBeUndefined();
+    expect(result.reducers).not.toBeUndefined();
     expect(result.connect).not.toBeUndefined();
     result.connect(undefined);
     result.initialize();
@@ -35,6 +37,22 @@ describe('Feed Module', () => {
     expect(options.update).toHaveBeenCalled();
     expect(options.connect).toHaveBeenCalled();
     expect(options.initialize).toHaveBeenCalled();
+  });
+
+  it('createFeedOptions works with reducers', () => {
+    const reducers = {
+      a() {},
+      b() {},
+      c() {},
+    };
+    const options = {
+      connect: jest.fn(),
+      update: jest.fn(),
+      initialize: jest.fn(),
+      reducers,
+    };
+    const result = createFeedOptions('foo', options);
+    expect(result.reducers).toBe(reducers);
   });
 
   it('createFeedOptions works immediately', () => {

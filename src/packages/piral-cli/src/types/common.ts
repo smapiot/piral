@@ -27,6 +27,20 @@ export const enum LogLevels {
   debug = 5,
 }
 
+export interface BundleDetails {
+  dir: string;
+  name: string;
+  hash: string;
+}
+
+export interface Bundler {
+  readonly bundle: BundleDetails;
+  start(): void;
+  on(cb: (args: any) => void): void;
+  off(cb: (args: any) => void): void;
+  ready(): Promise<void>;
+}
+
 export interface TemplateFileLocation {
   from: string;
   to: string;

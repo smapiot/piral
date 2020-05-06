@@ -1,18 +1,16 @@
 import { join, dirname, basename, resolve } from 'path';
+import { callPiletBuild } from '../parcel';
 import { LogLevels } from '../types';
 import {
-  setStandardEnvs,
-  postProcess,
   removeDirectory,
   findEntryModule,
   retrievePiletData,
-  patchModules,
-  setupBundler,
   defaultCacheDir,
   getPiletSchemaVersion,
   setLogLevel,
   progress,
   logDone,
+  logInfo,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -71,50 +69,36 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const externals = Object.keys(peerDependencies);
   const cache = resolve(root, cacheDir);
   const version = getPiletSchemaVersion(schemaVersion);
-
-  const dest = {
-    outDir: dirname(resolve(baseDir, target)),
-    outFile: basename(target),
-  };
+  const outDir = dirname(resolve(baseDir, target));
 
   if (fresh) {
     progress('Removing output directory ...');
-    await removeDirectory(dest.outDir);
+    await removeDirectory(outDir);
   }
 
   await removeDirectory(cache);
 
-  if (optimizeModules) {
-    progress('Preparing modules ...');
-    await patchModules(root, ignored);
-  }
+  logInfo('Bundle pilet ...');
 
-  setStandardEnvs({
-    production: true,
-    piral: appPackage.name,
+  await callPiletBuild(
     root,
-  });
-
-  const bundler = setupBundler({
-    type: 'pilet',
+    appPackage.name,
+    optimizeModules,
+    scopeHoist,
+    sourceMaps,
+    contentHash,
+    detailedReport,
+    minify,
+    cache,
     externals,
     targetDir,
+    basename(target),
+    outDir,
     entryModule,
-    config: {
-      ...dest,
-      cacheDir: cache,
-      watch: false,
-      sourceMaps,
-      minify,
-      scopeHoist,
-      contentHash,
-      publicUrl: './',
-      detailedReport,
-      logLevel,
-    },
-  });
+    logLevel,
+    version,
+    ignored,
+  );
 
-  const bundle = await bundler.bundle();
-  await postProcess(bundle, version);
   logDone('Pilet built successfully!');
 }

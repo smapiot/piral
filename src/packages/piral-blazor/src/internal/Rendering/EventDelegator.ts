@@ -24,7 +24,12 @@ const nonBubblingEvents = toLookup([
 const disableableEventNames = toLookup(['click', 'dblclick', 'mousedown', 'mousemove', 'mouseup']);
 
 export interface OnEventCallback {
-  (event: Event, eventHandlerId: number, eventArgs: EventForDotNet<UIEventArgs>, eventFieldInfo: EventFieldInfo | null): void;
+  (
+    event: Event,
+    eventHandlerId: number,
+    eventArgs: EventForDotNet<UIEventArgs>,
+    eventFieldInfo: EventFieldInfo | null,
+  ): void;
 }
 
 // Responsible for adding/removing the eventInfo on an expando property on DOM elements, and
@@ -128,7 +133,7 @@ export class EventDelegator {
         }
       }
 
-      candidateElement = (eventIsNonBubbling || stopPropagationWasRequested) ? null : candidateElement.parentElement;
+      candidateElement = eventIsNonBubbling || stopPropagationWasRequested ? null : candidateElement.parentElement;
     }
 
     // Special case for navigation interception
@@ -137,7 +142,10 @@ export class EventDelegator {
     }
   }
 
-  private getEventHandlerInfosForElement(element: Element, createIfNeeded: boolean): EventHandlerInfosForElement | null {
+  private getEventHandlerInfosForElement(
+    element: Element,
+    createIfNeeded: boolean,
+  ): EventHandlerInfosForElement | null {
     if (element.hasOwnProperty(this.eventsCollectionKey)) {
       return element[this.eventsCollectionKey];
     } else if (createIfNeeded) {
@@ -155,8 +163,7 @@ class EventInfoStore {
 
   private countByEventName: { [eventName: string]: number } = {};
 
-  constructor(private globalListener: EventListener) {
-  }
+  constructor(private globalListener: EventListener) {}
 
   public add(info: EventHandlerInfo) {
     if (this.infosByEventHandlerId[info.eventHandlerId]) {
@@ -275,7 +282,12 @@ function toLookup(items: string[]): { [key: string]: boolean } {
 function eventIsDisabledOnElement(element: Element, eventName: string): boolean {
   // We want to replicate the normal DOM event behavior that, for 'interactive' elements
   // with a 'disabled' attribute, certain mouse events are suppressed
-  return (element instanceof HTMLButtonElement || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement)
-    && disableableEventNames.hasOwnProperty(eventName)
-    && element.disabled;
+  return (
+    (element instanceof HTMLButtonElement ||
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement) &&
+    disableableEventNames.hasOwnProperty(eventName) &&
+    element.disabled
+  );
 }

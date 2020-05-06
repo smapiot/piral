@@ -24,6 +24,7 @@ export function useDynamicLanguage(
     );
     return () => (active = false);
   }, [selected]);
+
   return [selected, setSelected];
 }
 

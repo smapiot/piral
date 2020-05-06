@@ -1,6 +1,15 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
+const urls = {
+  introvideo: 'https://www.youtube.com/embed/SkKvpBHy_5I',
+  codesandbox:
+    'https://codesandbox.io/embed/winter-star-is6nx?autoresize=1&previewwindow=tests&fontsize=14&module=%2Fsrc%2Fpilets%2Fsample.tsx&moduleview=1&view=editor',
+  logrocket: 'https://blog.logrocket.com/taming-the-front-end-monolith-dbaede402c39/',
+  devto: 'https://dev.to/florianrappl/microfrontends-based-on-react-4oo9',
+  bitdev: 'https://blog.bitsrc.io/building-react-microfrontends-using-piral-c26eb206310e',
+};
+
 export default () => (
   <section className="container">
     <h1>Piral Documentation</h1>
@@ -21,7 +30,7 @@ export default () => (
               width="640"
               height="390"
               itemType="text/html"
-              src="https://www.youtube.com/embed/SkKvpBHy_5I"
+              src={urls.introvideo}
               allowFullScreen={false}
             />
           </div>
@@ -69,7 +78,7 @@ export default () => (
             </Link>
           </p>
           <p>
-            <Link to="/references" className="btn primary">
+            <Link to="/reference" className="btn primary">
               <i className="fas fa-info-circle" /> References
             </Link>
           </p>
@@ -185,26 +194,38 @@ export default () => (
       </p>
       <p>This covers the creation of the different microfrontends or modules called pilets.</p>
       <img src={require('../../../../../docs/diagrams/architecture-modules.png')} alt="Architecture Pilets Piral" />
+      <h2>Siteless Code Sandbox</h2>
+      <p>
+        We prepared a little codesandbox using an empty app shell package called <code>siteless</code>. This sandbox
+        allows you to easily develop some pilets and play around with their interaction patterns.
+      </p>
+      <iframe
+        src={urls.codesandbox}
+        style={{ width: '100%', height: '500px', border: 0, borderRadius: '4px', overflow: 'hidden' }}
+        title="Siteless Starter"
+        allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr"
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+      />
       <h2>More Information</h2>
       <p>
         This should give you a brief look at what developing a microfrontend solution with Piral looks like. In the end,
         Piral tries to get out of your way. All the decisions (incl. full behavior) can be specified. The starter
         boilerplate is just here to give you a head start.
       </p>
-      <p>Below you'll find a list of more articles and starters.</p>
+      <p>Below you'll find a list of some articles and starters.</p>
       <ul>
         <li>
-          <a href="https://blog.bitsrc.io/building-react-microfrontends-using-piral-c26eb206310e" target="_blank">
+          <a href={urls.bitdev} target="_blank">
             Bits and Pieces, 11/2019
           </a>
         </li>
         <li>
-          <a href="https://dev.to/florianrappl/microfrontends-based-on-react-4oo9" target="_blank">
+          <a href={urls.devto} target="_blank">
             dev.to, 11/2019
           </a>
         </li>
         <li>
-          <a href="https://blog.logrocket.com/taming-the-front-end-monolith-dbaede402c39/" target="_blank">
+          <a href={urls.logrocket} target="_blank">
             Logrocket, 02/2019
           </a>
         </li>

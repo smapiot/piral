@@ -1,6 +1,8 @@
 import { isfunc } from 'piral-base';
 import { FeedResolver, FeedConnectorOptions, ConnectorDetails } from './types';
 
+const noop = () => {};
+
 export function createFeedOptions<TData, TItem>(
   id: string,
   resolver: FeedResolver<TData> | FeedConnectorOptions<TData, TItem>,
@@ -8,30 +10,40 @@ export function createFeedOptions<TData, TItem>(
   if (isfunc(resolver)) {
     return {
       id,
-      connect() {
-        return () => {};
-      },
       initialize() {
         return resolver();
+      },
+      connect() {
+        return noop;
       },
       update(data) {
         return Promise.resolve(data);
       },
       immediately: false,
+      reducers: {},
     };
   } else {
     return {
       id,
-      connect(cb) {
-        return resolver.connect(cb);
-      },
       initialize() {
         return resolver.initialize();
       },
+      connect(cb) {
+        if (typeof resolver.connect === 'function') {
+          return resolver.connect(cb);
+        } else {
+          return noop;
+        }
+      },
       update(data, item) {
-        return resolver.update(data, item);
+        if (typeof resolver.update === 'function') {
+          return resolver.update(data, item);
+        } else {
+          return Promise.resolve(data);
+        }
       },
       immediately: resolver.immediately,
+      reducers: resolver.reducers || {},
     };
   }
 }

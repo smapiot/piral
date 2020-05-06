@@ -1,0 +1,30 @@
+const fs = require('fs');
+const path = require('path');
+
+module.exports = function() {
+  const file = path.resolve(__dirname, '../../../../../docs/testimonials.md');
+  const content = fs.readFileSync(file, 'utf8');
+  const rx = /^> (.*)$/gm;
+  const sx = /^\*(.*)\*$/gm;
+  const items = [];
+  let rxMatch = rx.exec(content);
+  let sxMatch = sx.exec(content);
+
+  while (rxMatch && sxMatch) {
+    const id = items.length;
+    const parts = sxMatch[1].split(' ');
+
+    items.push({
+      id,
+      phrase: rxMatch[1],
+      lastName: parts.pop(),
+      firstName: parts.join(' '),
+      face: fs.readFileSync(path.resolve(__dirname, `../assets/face-${id}.jpg`)).toString('base64'),
+    });
+
+    rxMatch = rx.exec(content);
+    sxMatch = sx.exec(content);
+  }
+
+  return `module.exports = ${JSON.stringify(items)}`;
+};

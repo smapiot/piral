@@ -1,4 +1,4 @@
-import { relative, join } from 'path';
+import { relative, join, dirname, basename } from 'path';
 import { buildPilet } from './build-pilet';
 import { LogLevels } from '../types';
 import {
@@ -11,6 +11,8 @@ import {
   setLogLevel,
   progress,
   log,
+  config,
+  checkExists,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -19,6 +21,7 @@ export interface PublishPiletOptions {
   apiKey?: string;
   logLevel?: LogLevels;
   fresh?: boolean;
+  cert?: string;
   schemaVersion?: 'v0' | 'v1';
 }
 
@@ -27,6 +30,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
   url: '',
   apiKey: '',
   fresh: false,
+  cert: undefined,
   logLevel: LogLevels.info,
   schemaVersion: 'v1',
 };
@@ -55,17 +59,19 @@ async function getFiles(baseDir: string, source: string, fresh: boolean, schemaV
 export async function publishPilet(baseDir = process.cwd(), options: PublishPiletOptions = {}) {
   const {
     source = publishPiletDefaults.source,
-    url = publishPiletDefaults.url,
-    apiKey = publishPiletDefaults.apiKey,
+    url = config.url ?? publishPiletDefaults.url,
+    apiKey = config.apiKey ?? publishPiletDefaults.apiKey,
     fresh = publishPiletDefaults.fresh,
     logLevel = publishPiletDefaults.logLevel,
     schemaVersion = publishPiletDefaults.schemaVersion,
+    cert = config.cert ?? publishPiletDefaults.cert,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   log('generalDebug_0003', 'Getting the tgz files ...');
   const files = await getFiles(baseDir, source, fresh, schemaVersion);
   const successfulUploads: Array<string> = [];
+  let ca: Buffer = undefined;
   log('generalDebug_0003', 'Received available tgz files.');
 
   if (!url) {
@@ -74,6 +80,15 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
   if (files.length === 0) {
     fail('missingPiletTarball_0061', source);
+  }
+
+  log('generalDebug_0003', 'Checking if certificate exists.');
+
+  if (await checkExists(cert)) {
+    const dir = dirname(cert);
+    const file = basename(cert);
+    log('generalDebug_0003', `Reading certificate file "${file}" from "${dir}".`);
+    ca = await readBinary(dir, file);
   }
 
   log('generalInfo_0000', `Using feed service "${url}".`);
@@ -85,7 +100,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
     if (content) {
       progress(`Publishing "%s" ...`, file, url);
-      const result = await postFile(url, apiKey, content);
+      const result = await postFile(url, apiKey, content, ca);
 
       if (result) {
         successfulUploads.push(file);

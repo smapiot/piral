@@ -53,11 +53,11 @@ describe('Piral-Dashboard Dashboard component', () => {
   it('uses container and tile for each tile of a connected dashboard', () => {
     const fake: any = {};
     const { context } = createMockContainer({
-      'foo': {
+      foo: {
         component: () => <div />,
         preferences: {},
       },
-      'bar': {
+      bar: {
         component: () => <div />,
         preferences: {},
       },

@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-oidc` brings to the table is a direct integration with OpenID Connect identity providers on basis of the oidc-client library that can be used with `piral` or `piral-core`.
 
-The set includes the `getAccessToken` API to retrieve the current user's access token.
+The set includes the `getAccessToken` API to retrieve the current user's access token, as well as `getProfile` to retrieve the current user's open id claims.
 
 By default, these Pilet API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -14,7 +14,11 @@ The following functions are brought to the Pilet API.
 
 ### `getAccessToken()`
 
-Gets the currently authenticated user's token or `undefined` if no user is authenticated.
+Gets a promise for the currently authenticated user's token or `undefined` if no user is authenticated.
+
+### `getProfile()`
+
+Gets a promise for the currently authenticated user's open id claims. Rejects if the user is expired or not authenticated.
 
 ## Usage
 
@@ -35,6 +39,17 @@ export async function setup(piral: PiletApi) {
 
 Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
 
+If you need to use claims from the authentication:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export async function setup(piral: PiletApi) {
+    const userClaims = await piral.getProfile();
+    // consume profile / claims information
+}
+```
+
 ## Setup and Bootstrapping
 
 > For Piral instance developers
@@ -42,6 +57,9 @@ Note that this value may change if the Piral instance supports an "on the fly" l
 The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createOidcApi` from the `piral-oidc` package.
+
+*Custom claims* are supported by declaration merging. Reference the `types` module in typescript and
+merge into the PiralCustomOidcProfile.
 
 ```ts
 import { createOidcApi } from 'piral-oidc';
@@ -51,6 +69,14 @@ The integration looks like:
 
 ```ts
 import { createOidcApi, setupOidcClient } from 'piral-oidc';
+
+// These should match what your server provides
+declare module "piral-oidc/lib/types" {
+    interface PiralCustomOidcProfile {
+        companies: Array<string>;
+        organizations: Array<string>;
+    }
+}
 
 const client = setupOidcClient({ clientId, ... });
 
@@ -86,11 +112,13 @@ export function render() {
 import { client } from './oidc';
 
 if (location.pathname !== '/auth') {
-  if (client.account()) {
-    import('./app').then(({ render }) => render());
-  } else {
-    client.login();
-  }
+  client.token()
+    .then(() => { import('./app').then(({ render }) => render()); })
+    .catch(reason => { 
+      // You may want to log your failed authentication attempts
+      // console.error(reason); 
+      client.login();
+    });
 }
 ```
 

@@ -84,8 +84,8 @@ export function navigateTo(uri: string, forceLoad: boolean, replace: boolean = f
     const temporaryUri = uri + '?';
     history.replaceState(null, '', temporaryUri);
     location.replace(uri);
-  } else if (replace){
-    history.replaceState(null, '', absoluteUri)
+  } else if (replace) {
+    history.replaceState(null, '', absoluteUri);
   } else {
     // It's either an external URL, or forceLoad is requested, so do a full page load
     location.href = uri;
@@ -100,9 +100,9 @@ function performInternalNavigation(absoluteInternalHref: string, interceptedLink
   // we render the new page. As a best approximation, wait until the next batch.
   resetScrollAfterNextBatch();
 
-  if(!replace){
+  if (!replace) {
     history.pushState(null, /* ignored title */ '', absoluteInternalHref);
-  }else{
+  } else {
     history.replaceState(null, /* ignored title */ '', absoluteInternalHref);
   }
   notifyLocationChanged(interceptedLink);
@@ -122,11 +122,7 @@ export function toAbsoluteUri(relativeUri: string) {
 }
 
 function findClosestAncestor(element: Element | null, tagName: string) {
-  return !element
-    ? null
-    : element.tagName === tagName
-      ? element
-      : findClosestAncestor(element.parentElement, tagName);
+  return !element ? null : element.tagName === tagName ? element : findClosestAncestor(element.parentElement, tagName);
 }
 
 function isWithinBaseUriSpace(href: string) {

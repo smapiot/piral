@@ -1,5 +1,18 @@
 # Piral Changelog
 
+## 0.11.4 (tbd)
+
+* Fixed a bug in `piral-fetch` regarding unset `Content-Type`
+* Added testimonials on the homepage (#194)
+* Added support for Yarn and Pnpm (#203)
+* Added optional `--cacert` flag to `pilet publish` command (#204)
+* Fixed `NODE_ENV` mode of the emulator (#207)
+* Added `getProfile()` to [piral-oidc](./src/packages/piral-oidc/README.md) (#210)
+* Switched to relative paths for local Piral references
+* Added new package `siteless` for painless microfrontends
+* Added `reducers` option to `piral-feeds`
+* Improved options and typings of `piral-feeds`
+
 ## 0.11.3 (April 24, 2020)
 
 * Fixed robustness of the declaration generation

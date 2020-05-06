@@ -12,7 +12,7 @@ function createMockContainer(initialState = {}) {
       state,
       read() {
         return deref(state);
-      }
+      },
     } as any,
   };
 }

@@ -13,7 +13,8 @@ export function createLazyApi(): Extend<PiletLazyApi> {
     context.converters.lazy = ({ load }) => {
       let present: [HTMLElement, any, ComponentContext] = undefined;
       let portalId: string = undefined;
-      const promise = load.current || (load.current = load().then(c => convertComponent(context.converters[c.type], c)));
+      const promise =
+        load.current || (load.current = load().then(c => convertComponent(context.converters[c.type], c)));
       const component: ForeignComponent<any> = {
         mount(...args) {
           portalId = renderInDom(context, args[0], PiralLoadingIndicator, {});

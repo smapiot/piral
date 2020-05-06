@@ -49,6 +49,13 @@ Sets the potential API key to send to the service.
 - Type: `string`
 - Default: `""`
 
+### `--ca-cert`
+
+Sets a custom certificate authority to use, if any.
+
+- Type: `string`
+- Default: `undefined`
+
 ### `--log-level`
 
 Sets the log level to use (1-5).

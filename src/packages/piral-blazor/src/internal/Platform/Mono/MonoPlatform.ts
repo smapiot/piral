@@ -15,7 +15,7 @@ export const monoPlatform: Platform = {
 
       // dotnet.js assumes the existence of this
       window['Browser'] = {
-        init: () => { },
+        init: () => {},
       };
 
       // Emscripten works by expecting the module config to be a global
@@ -35,7 +35,11 @@ export const monoPlatform: Platform = {
     // In the future, we might want Blazor.start to return a Promise<Promise<value>>, where the
     // outer promise reflects the startup process, and the inner one reflects the possibly-async
     // .NET entrypoint method.
-    const invokeEntrypoint = bindStaticMethod('Microsoft.AspNetCore.Components.WebAssembly', 'Microsoft.AspNetCore.Components.WebAssembly.Hosting.EntrypointInvoker', 'InvokeEntrypoint');
+    const invokeEntrypoint = bindStaticMethod(
+      'Microsoft.AspNetCore.Components.WebAssembly',
+      'Microsoft.AspNetCore.Components.WebAssembly.Hosting.EntrypointInvoker',
+      'InvokeEntrypoint',
+    );
     // Note we're passing in null because passing arrays is problematic until https://github.com/mono/mono/issues/18245 is resolved.
     invokeEntrypoint(assemblyName, null);
   },
@@ -50,48 +54,58 @@ export const monoPlatform: Platform = {
     return Module.getValue(getArrayDataPointer(array), 'i32');
   },
 
-  getArrayEntryPtr: function getArrayEntryPtr<TPtr extends Pointer>(array: System_Array<TPtr>, index: number, itemSize: number): TPtr {
+  getArrayEntryPtr: function getArrayEntryPtr<TPtr extends Pointer>(
+    array: System_Array<TPtr>,
+    index: number,
+    itemSize: number,
+  ): TPtr {
     // First byte is array length, followed by entries
     const address = getArrayDataPointer(array) + 4 + index * itemSize;
-    return address as any as TPtr;
+    return (address as any) as TPtr;
   },
 
   getObjectFieldsBaseAddress: function getObjectFieldsBaseAddress(referenceTypedObject: System_Object): Pointer {
     // The first two int32 values are internal Mono data
-    return (referenceTypedObject as any as number + 8) as any as Pointer;
+    return ((((referenceTypedObject as any) as number) + 8) as any) as Pointer;
   },
 
   readInt16Field: function readHeapInt16(baseAddress: Pointer, fieldOffset?: number): number {
-    return Module.getValue((baseAddress as any as number) + (fieldOffset || 0), 'i16');
+    return Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i16');
   },
 
   readInt32Field: function readHeapInt32(baseAddress: Pointer, fieldOffset?: number): number {
-    return Module.getValue((baseAddress as any as number) + (fieldOffset || 0), 'i32');
+    return Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i32');
   },
 
   readUint64Field: function readHeapUint64(baseAddress: Pointer, fieldOffset?: number): number {
     // Module.getValue(..., 'i64') doesn't work because the implementation treats 'i64' as
     // being the same as 'i32'. Also we must take care to read both halves as unsigned.
-    const address = (baseAddress as any as number) + (fieldOffset || 0);
+    const address = ((baseAddress as any) as number) + (fieldOffset || 0);
     const heapU32Index = address >> 2;
     const highPart = Module.HEAPU32[heapU32Index + 1];
     if (highPart > maxSafeNumberHighPart) {
-      throw new Error(`Cannot read uint64 with high order part ${highPart}, because the result would exceed Number.MAX_SAFE_INTEGER.`);
+      throw new Error(
+        `Cannot read uint64 with high order part ${highPart}, because the result would exceed Number.MAX_SAFE_INTEGER.`,
+      );
     }
 
-    return (highPart * uint64HighOrderShift) + Module.HEAPU32[heapU32Index];
+    return highPart * uint64HighOrderShift + Module.HEAPU32[heapU32Index];
   },
 
   readFloatField: function readHeapFloat(baseAddress: Pointer, fieldOffset?: number): number {
-    return Module.getValue((baseAddress as any as number) + (fieldOffset || 0), 'float');
+    return Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'float');
   },
 
   readObjectField: function readHeapObject<T extends System_Object>(baseAddress: Pointer, fieldOffset?: number): T {
-    return Module.getValue((baseAddress as any as number) + (fieldOffset || 0), 'i32') as any as T;
+    return (Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i32') as any) as T;
   },
 
-  readStringField: function readHeapObject(baseAddress: Pointer, fieldOffset?: number, readBoolValueAsString?: boolean): string | null {
-    const fieldValue = Module.getValue((baseAddress as any as number) + (fieldOffset || 0), 'i32');
+  readStringField: function readHeapObject(
+    baseAddress: Pointer,
+    fieldOffset?: number,
+    readBoolValueAsString?: boolean,
+  ): string | null {
+    const fieldValue = Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i32');
     if (fieldValue === 0) {
       return null;
     }
@@ -99,18 +113,18 @@ export const monoPlatform: Platform = {
     if (readBoolValueAsString) {
       // Some fields are stored as a union of bool | string | null values, but need to read as a string.
       // If the stored value is a bool, the behavior we want is empty string ('') for true, or null for false.
-      const unboxedValue = BINDING.unbox_mono_obj(fieldValue as any as System_Object);
-      if (typeof (unboxedValue) === 'boolean') {
+      const unboxedValue = BINDING.unbox_mono_obj((fieldValue as any) as System_Object);
+      if (typeof unboxedValue === 'boolean') {
         return unboxedValue ? '' : null;
       }
       return unboxedValue;
     }
 
-    return BINDING.conv_string(fieldValue as any as System_String);
+    return BINDING.conv_string((fieldValue as any) as System_String);
   },
 
   readStructField: function readStructField<T extends Pointer>(baseAddress: Pointer, fieldOffset?: number): T {
-    return ((baseAddress as any as number) + (fieldOffset || 0)) as any as T;
+    return ((((baseAddress as any) as number) + (fieldOffset || 0)) as any) as T;
   },
 };
 
@@ -124,9 +138,9 @@ function addScriptTagsToDocument(resourceLoader: WebAssemblyResourceLoader) {
   // because it's the only part of the loading process that can't use cache:'no-cache' (because it's
   // not a 'fetch') and isn't controllable by the developer (so they can't put in their own cache-busting
   // querystring). So, to find out the exact URL we have to search the boot manifest.
-  const dotnetJsResourceName = Object
-    .keys(resourceLoader.bootConfig.resources.runtime)
-    .filter(n => n.startsWith('dotnet.') && n.endsWith('.js'))[0];
+  const dotnetJsResourceName = Object.keys(resourceLoader.bootConfig.resources.runtime).filter(
+    n => n.startsWith('dotnet.') && n.endsWith('.js'),
+  )[0];
   const scriptElem = document.createElement('script');
   scriptElem.src = `_framework/wasm/${dotnetJsResourceName}`;
   scriptElem.defer = true;
@@ -158,12 +172,16 @@ function addGlobalModuleScriptTagsToDocument(callback: () => void) {
   document.body.appendChild(scriptElem);
 }
 
-function createEmscriptenModuleInstance(resourceLoader: WebAssemblyResourceLoader, onReady: () => void, onError: (reason?: any) => void) {
+function createEmscriptenModuleInstance(
+  resourceLoader: WebAssemblyResourceLoader,
+  onReady: () => void,
+  onError: (reason?: any) => void,
+) {
   const resources = resourceLoader.bootConfig.resources;
   const module = {} as typeof Module;
   const suppressMessages = ['DEBUGGING ENABLED'];
 
-  module.print = line => (suppressMessages.indexOf(line) < 0 && console.log(line));
+  module.print = line => suppressMessages.indexOf(line) < 0 && console.log(line);
 
   module.printErr = line => {
     console.error(line);
@@ -174,12 +192,16 @@ function createEmscriptenModuleInstance(resourceLoader: WebAssemblyResourceLoade
 
   // Begin loading the .dll/.pdb/.wasm files, but don't block here. Let other loading processes run in parallel.
   const dotnetWasmResourceName = 'dotnet.wasm';
-  const assembliesBeingLoaded = resourceLoader.loadResources(resources.assembly, filename => `_framework/_bin/${filename}`);
+  const assembliesBeingLoaded = resourceLoader.loadResources(
+    resources.assembly,
+    filename => `_framework/_bin/${filename}`,
+  );
   const pdbsBeingLoaded = resourceLoader.loadResources(resources.pdb || {}, filename => `_framework/_bin/${filename}`);
   const wasmBeingLoaded = resourceLoader.loadResource(
     /* name */ dotnetWasmResourceName,
-    /* url */  `_framework/wasm/${dotnetWasmResourceName}`,
-    /* hash */ resourceLoader.bootConfig.resources.runtime[dotnetWasmResourceName]);
+    /* url */ `_framework/wasm/${dotnetWasmResourceName}`,
+    /* hash */ resourceLoader.bootConfig.resources.runtime[dotnetWasmResourceName],
+  );
 
   // Override the mechanism for fetching the main wasm file so we can connect it to our cache
   (module as any).instantiateWasm = (imports, successCallback): WebAssembly.Exports => {
@@ -212,16 +234,22 @@ function createEmscriptenModuleInstance(resourceLoader: WebAssemblyResourceLoade
 
     // Wire-up callbacks for satellite assemblies. Blazor will call these as part of the application
     // startup sequence to load satellite assemblies for the application's culture.
-    window['Blazor']._internal.getSatelliteAssemblies = (culturesToLoadDotNetArray: System_Array<System_String>) : System_Object =>  {
+    window['Blazor']._internal.getSatelliteAssemblies = (
+      culturesToLoadDotNetArray: System_Array<System_String>,
+    ): System_Object => {
       const culturesToLoad = BINDING.mono_array_to_js_array<System_String, string>(culturesToLoadDotNetArray);
       const satelliteResources = resourceLoader.bootConfig.resources.satelliteResources;
 
       if (satelliteResources) {
-        const resourcePromises = Promise.all(culturesToLoad
+        const resourcePromises = Promise.all(
+          culturesToLoad
             .filter(culture => satelliteResources.hasOwnProperty(culture))
-            .map(culture => resourceLoader.loadResources(satelliteResources[culture], fileName => `_framework/_bin/${fileName}`))
+            .map(culture =>
+              resourceLoader.loadResources(satelliteResources[culture], fileName => `_framework/_bin/${fileName}`),
+            )
             .reduce((previous, next) => previous.concat(next), new Array<LoadingResource>())
-            .map(async resource => (await resource.response).arrayBuffer()));
+            .map(async resource => (await resource.response).arrayBuffer()),
+        );
 
         return BINDING.js_to_mono_obj(
           resourcePromises.then(resourcesToLoad => {
@@ -229,17 +257,22 @@ function createEmscriptenModuleInstance(resourceLoader: WebAssemblyResourceLoade
               window['Blazor']._internal.readSatelliteAssemblies = () => {
                 const array = BINDING.mono_obj_array_new(resourcesToLoad.length);
                 for (var i = 0; i < resourcesToLoad.length; i++) {
-                  BINDING.mono_obj_array_set(array, i, BINDING.js_typed_array_to_array(new Uint8Array(resourcesToLoad[i])));
+                  BINDING.mono_obj_array_set(
+                    array,
+                    i,
+                    BINDING.js_typed_array_to_array(new Uint8Array(resourcesToLoad[i])),
+                  );
                 }
                 return array;
-            };
-          }
+              };
+            }
 
-          return resourcesToLoad.length;
-        }));
+            return resourcesToLoad.length;
+          }),
+        );
       }
       return BINDING.js_to_mono_obj(Promise.resolve(0));
-    }
+    };
   });
 
   module.postRun.push(() => {
@@ -248,10 +281,10 @@ function createEmscriptenModuleInstance(resourceLoader: WebAssemblyResourceLoade
     }
     resourceLoader.purgeUnusedCacheEntriesAsync(); // Don't await - it's fine to run in background
 
-    MONO.mono_wasm_setenv("MONO_URI_DOTNETRELATIVEORABSOLUTE", "true");
+    MONO.mono_wasm_setenv('MONO_URI_DOTNETRELATIVEORABSOLUTE', 'true');
     const load_runtime = Module.cwrap('mono_wasm_load_runtime', null, ['string', 'number']);
     load_runtime(appBinDirName, hasDebuggingEnabled() ? 1 : 0);
-    MONO.mono_wasm_runtime_ready ();
+    MONO.mono_wasm_runtime_ready();
     attachInteropInvoker();
     onReady();
   });
@@ -274,8 +307,8 @@ function createEmscriptenModuleInstance(resourceLoader: WebAssemblyResourceLoade
       mono_wasm_add_assembly(loadAsName, heapAddress, data.length);
       MONO.loaded_files.push(toAbsoluteUrl(dependency.url));
     } catch (errorInfo) {
-        onError(errorInfo);
-        return;
+      onError(errorInfo);
+      return;
     }
 
     Module.removeRunDependency(runDependencyId);
@@ -289,7 +322,7 @@ function toAbsoluteUrl(possiblyRelativeUrl: string) {
 }
 
 function getArrayDataPointer<T>(array: System_Array<T>): number {
-  return <number><any>array + 12; // First byte from here is length, then following bytes are entries
+  return <number>(<any>array) + 12; // First byte from here is length, then following bytes are entries
 }
 
 function bindStaticMethod(assembly: string, typeName: string, method: string) {
@@ -299,32 +332,46 @@ function bindStaticMethod(assembly: string, typeName: string, method: string) {
 }
 
 function attachInteropInvoker(): void {
-  const dotNetDispatcherInvokeMethodHandle =  bindStaticMethod('Microsoft.AspNetCore.Components.WebAssembly', 'Microsoft.AspNetCore.Components.WebAssembly.Services.DefaultWebAssemblyJSRuntime', 'InvokeDotNet');
-  const dotNetDispatcherBeginInvokeMethodHandle = bindStaticMethod('Microsoft.AspNetCore.Components.WebAssembly', 'Microsoft.AspNetCore.Components.WebAssembly.Services.DefaultWebAssemblyJSRuntime', 'BeginInvokeDotNet');
-  const dotNetDispatcherEndInvokeJSMethodHandle = bindStaticMethod('Microsoft.AspNetCore.Components.WebAssembly', 'Microsoft.AspNetCore.Components.WebAssembly.Services.DefaultWebAssemblyJSRuntime', 'EndInvokeJS');
+  const dotNetDispatcherInvokeMethodHandle = bindStaticMethod(
+    'Microsoft.AspNetCore.Components.WebAssembly',
+    'Microsoft.AspNetCore.Components.WebAssembly.Services.DefaultWebAssemblyJSRuntime',
+    'InvokeDotNet',
+  );
+  const dotNetDispatcherBeginInvokeMethodHandle = bindStaticMethod(
+    'Microsoft.AspNetCore.Components.WebAssembly',
+    'Microsoft.AspNetCore.Components.WebAssembly.Services.DefaultWebAssemblyJSRuntime',
+    'BeginInvokeDotNet',
+  );
+  const dotNetDispatcherEndInvokeJSMethodHandle = bindStaticMethod(
+    'Microsoft.AspNetCore.Components.WebAssembly',
+    'Microsoft.AspNetCore.Components.WebAssembly.Services.DefaultWebAssemblyJSRuntime',
+    'EndInvokeJS',
+  );
 
   DotNet.attachDispatcher({
-    beginInvokeDotNetFromJS: (callId: number, assemblyName: string | null, methodIdentifier: string, dotNetObjectId: any | null, argsJson: string): void => {
+    beginInvokeDotNetFromJS: (
+      callId: number,
+      assemblyName: string | null,
+      methodIdentifier: string,
+      dotNetObjectId: any | null,
+      argsJson: string,
+    ): void => {
       if (!dotNetObjectId && !assemblyName) {
         throw new Error('Either assemblyName or dotNetObjectId must have a non null value.');
       }
       // As a current limitation, we can only pass 4 args. Fortunately we only need one of
       // 'assemblyName' or 'dotNetObjectId', so overload them in a single slot
-      const assemblyNameOrDotNetObjectId: string = dotNetObjectId
-        ? dotNetObjectId.toString()
-        : assemblyName;
+      const assemblyNameOrDotNetObjectId: string = dotNetObjectId ? dotNetObjectId.toString() : assemblyName;
 
-        dotNetDispatcherBeginInvokeMethodHandle(
-          callId ? callId.toString() : null,
-          assemblyNameOrDotNetObjectId,
-          methodIdentifier,
-          argsJson,
-        );
+      dotNetDispatcherBeginInvokeMethodHandle(
+        callId ? callId.toString() : null,
+        assemblyNameOrDotNetObjectId,
+        methodIdentifier,
+        argsJson,
+      );
     },
     endInvokeJSFromDotNet: (asyncHandle, succeeded, serializedArgs): void => {
-      dotNetDispatcherEndInvokeJSMethodHandle(
-        serializedArgs
-      );
+      dotNetDispatcherEndInvokeJSMethodHandle(serializedArgs);
     },
     invokeDotNetFromJS: (assemblyName, methodIdentifier, dotNetObjectId, argsJson) => {
       return dotNetDispatcherInvokeMethodHandle(
@@ -346,8 +393,7 @@ async function compileWasmModule(wasmResource: LoadingResource, imports: any): P
     try {
       const streamingResult = await WebAssembly['instantiateStreaming'](wasmResource.response, imports);
       return streamingResult.instance;
-    }
-    catch (ex) {
+    } catch (ex) {
       console.info('Streaming compilation failed. Falling back to ArrayBuffer instantiation. ', ex);
     }
   }

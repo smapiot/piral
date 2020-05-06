@@ -13,12 +13,10 @@ export class WebAssemblyResourceLoader {
     return new WebAssemblyResourceLoader(bootConfig, cache);
   }
 
-  constructor(readonly bootConfig: BootJsonData, readonly cacheIfUsed: Cache | null) {
-  }
+  constructor(readonly bootConfig: BootJsonData, readonly cacheIfUsed: Cache | null) {}
 
   loadResources(resources: ResourceList, url: (name: string) => string): LoadingResource[] {
-    return Object.keys(resources)
-      .map(name => this.loadResource(name, url(name), resources[name]));
+    return Object.keys(resources).map(name => this.loadResource(name, url(name), resources[name]));
   }
 
   loadResource(name: string, url: string, contentHash: string): LoadingResource {
@@ -28,7 +26,10 @@ export class WebAssemblyResourceLoader {
 
     const response = this.cacheIfUsed
       ? this.loadResourceWithCaching(this.cacheIfUsed, name, url, contentHash)
-      : fetch(url, { cache: networkFetchCacheMode, integrity: this.bootConfig.cacheBootResources ? contentHash : undefined });
+      : fetch(url, {
+          cache: networkFetchCacheMode,
+          integrity: this.bootConfig.cacheBootResources ? contentHash : undefined,
+        });
 
     return { name, url, response };
   }
@@ -44,8 +45,15 @@ export class WebAssemblyResourceLoader {
       return;
     }
 
-    const linkerDisabledWarning = this.bootConfig.linkerEnabled ? '%c' : '\n%cThis application was built with linking (tree shaking) disabled. Published applications will be significantly smaller.';
-    console.groupCollapsed(`%cblazor%c Loaded ${toDataSizeString(totalResponseBytes)} resources${linkerDisabledWarning}`, 'background: purple; color: white; padding: 1px 3px; border-radius: 3px;', 'font-weight: bold;', 'font-weight: normal;');
+    const linkerDisabledWarning = this.bootConfig.linkerEnabled
+      ? '%c'
+      : '\n%cThis application was built with linking (tree shaking) disabled. Published applications will be significantly smaller.';
+    console.groupCollapsed(
+      `%cblazor%c Loaded ${toDataSizeString(totalResponseBytes)} resources${linkerDisabledWarning}`,
+      'background: purple; color: white; padding: 1px 3px; border-radius: 3px;',
+      'font-weight: bold;',
+      'font-weight: normal;',
+    );
 
     if (cacheLoadsEntries.length) {
       console.groupCollapsed(`Loaded ${toDataSizeString(cacheResponseBytes)} resources from cache`);
@@ -118,12 +126,15 @@ export class WebAssemblyResourceLoader {
 
     // Add to cache as a custom response object so we can track extra data such as responseBytes
     // We can't rely on the server sending content-length (ASP.NET Core doesn't by default)
-    await cache.put(cacheKey, new Response(responseData, {
-      headers: {
-        'content-type': response.headers.get('content-type') || '',
-        'content-length': (responseBytes || response.headers.get('content-length') || '').toString()
-      }
-    }));
+    await cache.put(
+      cacheKey,
+      new Response(responseData, {
+        headers: {
+          'content-type': response.headers.get('content-type') || '',
+          'content-length': (responseBytes || response.headers.get('content-length') || '').toString(),
+        },
+      }),
+    );
   }
 }
 
