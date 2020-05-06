@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.11.4 (tbd)
+## 0.11.4 (May 6, 2020)
 
 * Fixed a bug in `piral-fetch` regarding unset `Content-Type`
 * Added testimonials on the homepage (#194)
