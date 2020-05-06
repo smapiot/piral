@@ -29,6 +29,10 @@ button {
   font-weight: 700;
   transition: .3s ease-in-out !important;
 
+  & + & {
+    margin-left: 1em !important;
+  }
+
   &:hover {
     text-decoration: none;
   }
@@ -381,10 +385,15 @@ img {
         background: $color-primary;
       }
 
+      .testimonial-item-face {
+        display: inline-block;
+        border-radius: 100%;
+        margin-right: 1em;
+        filter: grayscale(70%);
+      }
+
       .testimonial-item-name {
-        &:first-child {
-          color: #eceded;
-        }
+        color: #eceded;
 
         &:last-child {
           padding-left: 0.5em;

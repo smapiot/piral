@@ -46,7 +46,47 @@ initializePiral(() => fetch(feedUrl).then(res => res.json()).then(res => res.ite
 
 ## Building your First Pilet
 
-(tbd)
+Building your first pilet works exactly as with any other pilet in Piral.
+
+First, initialize a new NPM project in an empty directory:
+
+```sh
+npm init pilet
+```
+
+Answer the survey question with `siteless` as your Piral instance. Now you can open your favorite IDE (e.g., for VS Code with `code .`) and start the dev server:
+
+```sh
+npm start
+```
+
+You can change the content of the `src/index.tsx` file or add new files as you like.
+
+For instance, the file may look as follows:
+
+```jsx
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+export function setup(app) {
+  app.registerTile(() => <Link to="/my-page">My Page</Link>);
+
+  app.registerPage('/my-page', () => (
+    <>
+      <h1>My First Page</h1>
+      <p>This is some content ...</p>
+    </>
+  ));
+}
+```
+
+Once you are done you can build a production version:
+
+```sh
+npm run build
+```
+
+Even better you can publish your pilet to an active pilet feed, too.
 
 ## Adding Layout
 
@@ -62,13 +102,7 @@ Only the most basic dependencies are implicitly shared. There is no explicit sha
 
 We've created a small codesandbox to allow you to play around with the concepts quite easily.
 
-<iframe
-  src="https://codesandbox.io/embed/winter-star-is6nx?autoresize=1&previewwindow=tests&fontsize=14&module=%2Fsrc%2Fpilets%2Fsample.tsx&moduleview=1&view=editor"
-  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-  title="Siteless Starter"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-></iframe>
+[![Edit Siteless Starter](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/siteless-starter-is6nx?fontsize=14&hidenavigation=1&theme=dark)
 
 ## License
 
