@@ -28,9 +28,10 @@ button {
   padding: 12px 30px !important;
   font-weight: 700;
   transition: .3s ease-in-out !important;
+  margin-right: 1em !important;
 
-  & + & {
-    margin-left: 1em !important;
+  &:last-child {
+    margin-right: 0em !important;
   }
 
   &:hover {
