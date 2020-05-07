@@ -2,6 +2,8 @@
 
 ## 0.11.5 (tbd)
 
+* Fixed bug in pilet debug when touching files with CSS references
+* Added tutorial for the migration of existing applications (#180)
 * Added `piral-cli-parcel` plugin for Parcel integration (#125)
 
 ## 0.11.4 (May 6, 2020)

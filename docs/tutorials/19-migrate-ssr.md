@@ -125,3 +125,5 @@ Returning a JSON serialization of the models instead of raw HTML (i.e., the rend
 ## Conclusion
 
 There are multiple options for the migration of existing applications. Our recommendation is to start with the simplest and continue with more advanced techniques when its necessary.
+
+In the next tutorial we look at how an existing React application can be migrated efficiently to a modular frontend project.
