@@ -1,7 +1,7 @@
 import { dirname, basename, extname, join, resolve } from 'path';
-import { callPiralBuild } from '../parcel';
 import { LogLevels, PiralBuildType } from '../types';
 import {
+  callPiralBuild,
   retrievePiletsInfo,
   retrievePiralRoot,
   removeDirectory,
@@ -106,25 +106,25 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(join(dest.outDir, 'develop'));
 
     logInfo('Bundle emulator ...');
-    const { outDir, outFile } = await callPiralBuild(
+    const { dir: outDir, name: outFile } = await callPiralBuild({
       root,
-      name,
-      true,
+      piral: name,
+      develop: true,
       optimizeModules,
       scopeHoist,
       sourceMaps,
       contentHash,
       detailedReport,
-      false,
-      cache,
+      minify: false,
+      cacheDir: cache,
       externals,
       publicUrl,
-      dest.outFile,
-      join(dest.outDir, 'develop', 'app'),
+      outFile: dest.outFile,
+      outDir: join(dest.outDir, 'develop', 'app'),
       entryFiles,
       logLevel,
       ignored,
-    );
+    });
 
     const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
@@ -140,25 +140,25 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(join(dest.outDir, 'release'));
 
     logInfo('Bundle release ...');
-    const { outDir } = await callPiralBuild(
+    const { dir: outDir } = await callPiralBuild({
       root,
-      name,
-      false,
+      piral: name,
+      develop: false,
       optimizeModules,
       scopeHoist,
       sourceMaps,
       contentHash,
       detailedReport,
       minify,
-      cache,
+      cacheDir: cache,
       externals,
       publicUrl,
-      dest.outFile,
-      join(dest.outDir, 'release'),
+      outFile: dest.outFile,
+      outDir: join(dest.outDir, 'release'),
       entryFiles,
       logLevel,
       ignored,
-    );
+    });
 
     logDone(`Files for publication available in "${outDir}".`);
     logReset();

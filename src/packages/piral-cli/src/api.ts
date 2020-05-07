@@ -1,6 +1,5 @@
 import { log } from './common';
 import { commands } from './commands';
-import { installPatch } from './parcel';
 import { addPiletRule, addPiralRule } from './rules';
 import {
   ToolCommand,
@@ -11,6 +10,7 @@ import {
   PiralRuleContext,
   PiletRuleContext,
   PackagePatcher,
+  BundlerDefinition,
 } from './types';
 
 function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index: number) => void) {
@@ -123,8 +123,15 @@ export function withPatcher(packageName: string, patch: PackagePatcher) {
   } else if (typeof patch !== 'function') {
     log('apiPatchInvalid_0204', 'patch');
   } else {
-    installPatch(packageName, patch);
+    //TODO
+    // installPatch(packageName, patch);
   }
+
+  return this;
+}
+
+export function withBundler(bundlerName: string, bundler: BundlerDefinition) {
+  // TOOD
 
   return this;
 }

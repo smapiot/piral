@@ -1,7 +1,7 @@
+import { LogLevels } from 'piral-cli';
 import { resolve, dirname, basename } from 'path';
+import { log, progress, defaultCacheDir, setStandardEnvs } from 'piral-cli/utils';
 import { setupBundler } from './bundler';
-import { log, progress, defaultCacheDir, setStandardEnvs } from '../common';
-import { LogLevels } from '../types';
 
 async function run(root: string, piral: string, externals: Array<string>, entryFiles: string, logLevel: LogLevels) {
   progress(`Preparing supplied Piral instance ...`);

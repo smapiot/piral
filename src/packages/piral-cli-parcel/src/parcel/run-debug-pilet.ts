@@ -1,35 +1,36 @@
-import { setupBundler, patchModules } from './bundler';
-import { setStandardEnvs, progress } from '../common';
-import { LogLevels } from '../types';
+import { LogLevels } from 'piral-cli';
+import { setupBundler, postProcess, patchModules } from './bundler';
+import { setStandardEnvs, progress } from 'piral-cli/utils';
 
 async function run(
   root: string,
   piral: string,
   scopeHoist: boolean,
   autoInstall: boolean,
-  hmr: boolean,
   cacheDir: string,
   externals: Array<string>,
-  publicUrl: string,
-  entryFiles: string,
+  targetDir: string,
+  entryModule: string,
   logLevel: LogLevels,
 ) {
   setStandardEnvs({
-    root,
-    debugPiral: true,
-    dependencies: externals,
     piral,
+    root,
   });
 
   const bundler = setupBundler({
-    type: 'piral',
-    entryFiles,
+    type: 'pilet',
+    externals,
+    targetDir,
+    entryModule,
     config: {
-      publicUrl,
       logLevel,
-      cacheDir,
+      hmr: false,
+      minify: true,
+      watch: true,
       scopeHoist,
-      hmr,
+      publicUrl: './',
+      cacheDir,
       autoInstall,
     },
   });
@@ -66,23 +67,28 @@ process.on('message', async msg => {
         msg.piral,
         msg.scopeHoist,
         msg.autoInstall,
-        msg.hmr,
         msg.cacheDir,
         msg.externals,
-        msg.publicUrl,
-        msg.entryFiles,
+        msg.targetDir,
+        msg.entryModule,
         msg.logLevel,
       );
 
-      bundler.on('bundled', () => {
-        process.send({
-          type: 'update',
-          outHash: bundler.mainBundle.entryAsset.hash,
-          outName: bundler.mainBundle.name.substr(bundler.options.outDir.length + 1),
-          args: {
-            root,
-          },
-        });
+      bundler.on('bundled', async bundle => {
+        const requireRef = await postProcess(bundle, msg.version);
+
+        if (msg.hmr) {
+          process.send({
+            type: 'update',
+            outHash: bundler.mainBundle.entryAsset.hash,
+            outName: bundler.mainBundle.name.substr(bundler.options.outDir.length),
+            args: {
+              requireRef,
+              version: msg.version,
+              root,
+            },
+          });
+        }
       });
 
       process.send({

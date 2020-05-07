@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.11.5 (tbd)
+
+* Added `piral-cli-parcel` plugin for Parcel integration (#125)
+
 ## 0.11.4 (May 6, 2020)
 
 * Fixed a bug in `piral-fetch` regarding unset `Content-Type`

@@ -1,7 +1,7 @@
 import { dirname, basename } from 'path';
+import { LogLevels, PiletSchemaVersion } from 'piral-cli';
+import { progress, setStandardEnvs, removeDirectory } from 'piral-cli/utils';
 import { setupBundler, postProcess, patchModules } from './bundler';
-import { progress, setStandardEnvs, removeDirectory } from '../common';
-import { LogLevels, PiletSchemaVersion } from '../types';
 
 async function run(
   root: string,

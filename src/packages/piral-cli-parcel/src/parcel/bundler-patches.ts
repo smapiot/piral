@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { readText, writeText, log } from '../common';
+import { readText, writeText, log } from 'piral-cli/utils';
 
 const windowOrGlobal = '(typeof window !== "undefined" ? window : global)';
 

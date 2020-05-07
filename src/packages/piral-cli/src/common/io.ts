@@ -8,8 +8,8 @@ import { log } from './log';
 import { deepMerge } from './merge';
 import { nodeVersion } from './info';
 import { computeHash } from './hash';
+import { ForceOverwrite } from './enums';
 import { promptConfirm } from './interactive';
-import { ForceOverwrite } from '../types';
 
 function promptOverwrite(file: string) {
   const message = `The file ${file} exists already. Do you want to overwrite it?`;

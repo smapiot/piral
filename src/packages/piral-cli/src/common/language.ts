@@ -1,5 +1,5 @@
 import { log } from './log';
-import { PiletLanguage } from '../types';
+import { PiletLanguage } from './enums';
 
 export const reactTypings = {
   '@types/react': 'latest',

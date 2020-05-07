@@ -2,14 +2,16 @@ import * as Bundler from 'parcel-bundler';
 import extendBundlerWithAtAlias = require('parcel-plugin-at-alias');
 import extendBundlerWithCodegen = require('parcel-plugin-codegen');
 import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
+import { PiletSchemaVersion } from 'piral-cli';
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { patchModule } from './bundler-patches';
+import { extendConfig } from './settings';
+import { BundlerSetup } from '../types';
 import {
   log,
   computeHash,
-  extendConfig,
   checkExists,
   checkIsDirectory,
   readJson,
@@ -18,8 +20,8 @@ import {
   writeText,
   writeJson,
   getFileNames,
-} from '../common';
-import { BundlerSetup, ForceOverwrite, PiletSchemaVersion } from '../types';
+  ForceOverwrite,
+} from 'piral-cli/utils';
 
 let original: any;
 
@@ -171,10 +173,13 @@ function getScriptHead(version: PiletSchemaVersion, prName: string) {
   const bundleUrl = `var ${bundleUrlRef}=${getBundleUrl}();`;
 
   switch (version) {
-    case PiletSchemaVersion.directEval:
+    case 'v0': // directEval
       return `${piletMarker}0\n${preamble}${bundleUrl}`;
-    case PiletSchemaVersion.currentScript:
+    case 'v1': // currentScript
       return `${piletMarker}1(${prName})\n${preamble}${bundleUrl}${insertScript}`;
+    default:
+      log('invalidSchemaVersion_0071', version);
+      return getScriptHead('v0', prName);
   }
 
   return '';

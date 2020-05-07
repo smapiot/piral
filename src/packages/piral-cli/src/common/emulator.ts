@@ -4,7 +4,7 @@ import { createFileFromTemplateIfNotExists } from './template';
 import { coreExternals, cliVersion } from './info';
 import { createPackage } from './npm';
 import { createDeclaration } from './declaration';
-import { ForceOverwrite } from '../types';
+import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
 import {
   createDirectory,

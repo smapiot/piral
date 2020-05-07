@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { fork } from 'child_process';
-import { LogLevels, PiletSchemaVersion, Bundler, BundleDetails } from '../types';
+import { LogLevels, Bundler, BundleDetails, PiletSchemaVersion } from 'piral-cli';
 
 function getPath(name: string) {
   return resolve(__dirname, '..', '..', 'lib', 'parcel', `run-${name}.js`);
@@ -42,7 +42,7 @@ function callDynamic(name: string, cwd: string, args: any) {
       },
     };
 
-    ps.on('message', msg => {
+    ps.on('message', (msg: any) => {
       switch (msg.type) {
         case 'pending':
           promise = setPending();
@@ -68,7 +68,7 @@ function callDynamic(name: string, cwd: string, args: any) {
 function callStatic(name: string, cwd: string, args: any) {
   return new Promise<{ outFile: string; outDir: string }>(resolve => {
     const ps = fork(getPath(name), [], { cwd });
-    ps.on('message', msg => {
+    ps.on('message', (msg: any) => {
       switch (msg.type) {
         case 'done':
           return resolve({

@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { LogLevels, ForceOverwrite, NpmClientType } from '../types';
+import { LogLevels, NpmClientType } from '../types';
 import {
   readJson,
   installPackage,
@@ -21,6 +21,7 @@ import {
   log,
   logDone,
   determineNpmClient,
+  ForceOverwrite,
 } from '../common';
 
 export interface UpgradePiletOptions {

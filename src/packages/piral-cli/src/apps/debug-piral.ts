@@ -1,8 +1,8 @@
 import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
-import { callPiralDebug } from '../parcel';
 import { LogLevels } from '../types';
 import {
+  callPiralDebug,
   retrievePiletsInfo,
   retrievePiralRoot,
   openBrowser,
@@ -92,20 +92,20 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     await removeDirectory(cache);
   }
 
-  const bundler = await callPiralDebug(
+  const bundler = await callPiralDebug({
     root,
-    name,
+    piral: name,
     optimizeModules,
     hmr,
     scopeHoist,
     autoInstall,
-    cache,
+    cacheDir: cache,
     externals,
     publicUrl,
     entryFiles,
     logLevel,
     ignored,
-  );
+  });
 
   const injectorConfig = {
     active: true,

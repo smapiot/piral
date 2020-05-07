@@ -1,8 +1,9 @@
 import { join, dirname, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
-import { callDebugPiralFromMonoRepo, callPiletDebug } from '../parcel';
-import { LogLevels } from '../types';
+import { LogLevels, PiletSchemaVersion } from '../types';
 import {
+  callDebugPiralFromMonoRepo,
+  callPiletDebug,
   retrievePiletData,
   debugPiletApi,
   openBrowser,
@@ -13,7 +14,6 @@ import {
   removeDirectory,
   setLogLevel,
   progress,
-  getPiletSchemaVersion,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -28,7 +28,7 @@ export interface DebugPiletOptions {
   hmr?: boolean;
   autoInstall?: boolean;
   optimizeModules?: boolean;
-  schemaVersion?: 'v0' | 'v1';
+  schemaVersion?: PiletSchemaVersion;
 }
 
 export const debugPiletDefaults: DebugPiletOptions = {
@@ -57,8 +57,14 @@ async function getOrMakeAppDir(
   if (!emulator) {
     const packageJson = require.resolve(`${piral}/package.json`);
     const cwd = resolve(packageJson, '..');
-    const { outDir } = await callDebugPiralFromMonoRepo(cwd, externals, piral, appFile, logLevel);
-    return outDir;
+    const { dir } = await callDebugPiralFromMonoRepo({
+      root: cwd,
+      externals,
+      piral,
+      entryFiles: appFile,
+      logLevel,
+    });
+    return dir;
   }
 
   return dirname(appFile);
@@ -87,7 +93,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const cache = resolve(root, cacheDir);
-  const version = getPiletSchemaVersion(schemaVersion);
   const krasConfig = readKrasConfig({ port }, krasrc);
   const api = debugPiletApi;
 
@@ -118,21 +123,22 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
-  const bundler = await callPiletDebug(
+  const bundler = await callPiletDebug({
     root,
-    appPackage.name,
+    piral: appPackage.name,
     optimizeModules,
     hmr,
     scopeHoist,
     autoInstall,
-    cache,
+    cacheDir: cache,
     externals,
     targetDir,
     entryModule,
     logLevel,
-    version,
+    version: schemaVersion,
     ignored,
-  );
+  });
+
   const injectorConfig = {
     active: true,
     bundler,

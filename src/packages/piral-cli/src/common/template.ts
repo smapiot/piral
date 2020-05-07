@@ -1,8 +1,9 @@
 import { renderFile } from 'ejs';
 import { resolve } from 'path';
 import { log } from './log';
+import { ForceOverwrite } from './enums';
 import { createFileIfNotExists } from './io';
-import { TemplateType, ForceOverwrite } from '../types';
+import { TemplateType } from '../types';
 
 export function fillTemplate(type: TemplateType, name: string, data: any = {}) {
   const path = resolve(__dirname, '..', '..', 'templates', type, `${name}.ejs`);

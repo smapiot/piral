@@ -1,6 +1,6 @@
 import { relative, join, dirname, basename } from 'path';
 import { buildPilet } from './build-pilet';
-import { LogLevels } from '../types';
+import { LogLevels, PiletSchemaVersion } from '../types';
 import {
   postFile,
   readBinary,
@@ -22,7 +22,7 @@ export interface PublishPiletOptions {
   logLevel?: LogLevels;
   fresh?: boolean;
   cert?: string;
-  schemaVersion?: 'v0' | 'v1';
+  schemaVersion?: PiletSchemaVersion;
 }
 
 export const publishPiletDefaults: PublishPiletOptions = {
@@ -35,7 +35,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
   schemaVersion: 'v1',
 };
 
-async function getFiles(baseDir: string, source: string, fresh: boolean, schemaVersion: 'v0' | 'v1') {
+async function getFiles(baseDir: string, source: string, fresh: boolean, schemaVersion: PiletSchemaVersion) {
   if (fresh) {
     log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
     const details = require(join(baseDir, 'package.json'));
