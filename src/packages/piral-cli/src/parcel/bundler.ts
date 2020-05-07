@@ -6,6 +6,7 @@ import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-exte
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { patchModule } from './bundler-patches';
+import { BundlerSetup, ForceOverwrite, PiletSchemaVersion } from '../types';
 import {
   log,
   computeHash,
@@ -19,7 +20,6 @@ import {
   writeJson,
   getFileNames,
 } from '../common';
-import { BundlerSetup, ForceOverwrite, PiletSchemaVersion } from '../types';
 
 let original: any;
 
@@ -230,7 +230,17 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
                 `e.href=${bundleUrlRef}+${JSON.stringify(cssName)}`,
                 `d.head.appendChild(e)`,
               ].join(';');
-              result = `(function(){${stylesheet}})();${result}`;
+
+              /**
+               * Only happens in debug mode:
+               * Apply this only when the stylesheet is not yet part of the file.
+               * This solves the edge case of touching files (i.e., saving without any change).
+               * Here, Parcel triggers a re-build, but does not change the output files.
+               * Making the change here would destroy the file.
+               */
+              if (result.indexOf(stylesheet) === -1) {
+                result = `(function(){${stylesheet}})();${result}`;
+              }
             }
 
             // Only happens in (pilet) debug mode:
