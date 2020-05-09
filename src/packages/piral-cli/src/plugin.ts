@@ -1,9 +1,8 @@
 import { readdir, statSync } from 'fs';
 import { join, resolve, basename } from 'path';
-import * as api from './api';
-import { resolvers } from './resolvers';
-import { CliPlugin } from './types';
 import { log } from './common';
+import { resolvers } from './resolvers';
+import { inject } from './inject';
 
 function getGlobalPackageDir() {
   for (const resolver of resolvers) {
@@ -21,6 +20,15 @@ function getLocalPackageDir() {
   return resolve(__dirname, '..', '..');
 }
 
+function isPluginDirectory(dir: string) {
+  try {
+    return statSync(dir).isDirectory();
+  } catch (err) {
+    log('generalDebug_0003', `Could not load the plugin at "${dir}": ${err}`);
+    return false;
+  }
+}
+
 function getAllPlugins(rootDir: string): Promise<Array<string>> {
   return new Promise<Array<string>>(resolve => {
     if (rootDir) {
@@ -30,7 +38,7 @@ function getAllPlugins(rootDir: string): Promise<Array<string>> {
         const pluginPaths = (files || [])
           .filter(m => m.startsWith(prefix) && m.length > prefix.length)
           .map(m => join(rootDir, m))
-          .filter(m => statSync(m).isDirectory());
+          .filter(isPluginDirectory);
         resolve(pluginPaths);
       });
     } else {
@@ -62,16 +70,6 @@ export async function loadPlugins() {
   const allPlugins = [...localPlugins, ...globalPlugins.filter(plugin => includeUnique(localPlugins, plugin))];
 
   for (const pluginPath of allPlugins) {
-    try {
-      const plugin: CliPlugin = require(pluginPath);
-
-      if (typeof plugin === 'function') {
-        plugin(api);
-      } else {
-        log('generalDebug_0003', `Skipping plugin from "${pluginPath}". Did not export a function.`);
-      }
-    } catch (ex) {
-      log('pluginCouldNotBeLoaded_0205', pluginPath, ex);
-    }
+    inject(pluginPath);
   }
 }
