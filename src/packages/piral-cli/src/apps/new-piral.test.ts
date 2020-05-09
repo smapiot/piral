@@ -2,7 +2,7 @@ import { mkdtempSync, existsSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
 import { newPiral } from './new-piral';
-import { PiletLanguage } from '../types';
+import { PiletLanguage } from '../common';
 
 function createTempDir() {
   return mkdtempSync(join(tmpdir(), 'piral-tests-new-piral-'));

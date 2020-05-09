@@ -1,7 +1,7 @@
 import { dirname, basename, extname, join, resolve } from 'path';
 import { LogLevels, PiralBuildType } from '../types';
+import { callPiralBuild } from '../bundler';
 import {
-  callPiralBuild,
   retrievePiletsInfo,
   retrievePiralRoot,
   removeDirectory,

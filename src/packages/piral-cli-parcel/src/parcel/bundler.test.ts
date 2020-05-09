@@ -1,4 +1,3 @@
-import { PiletSchemaVersion } from 'piral-cli';
 import { postProcess } from './bundler';
 
 jest.mock('fs', () => ({
@@ -31,7 +30,7 @@ describe('Pilet Build Module', () => {
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.directEval,
+      'v0',
     );
     expect(writeContent).toBeUndefined();
   });
@@ -47,7 +46,7 @@ describe('Pilet Build Module', () => {
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.directEval,
+      'v0',
     );
     expect(writeContent).toBeUndefined();
   });
@@ -63,7 +62,7 @@ describe('Pilet Build Module', () => {
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.directEval,
+      'v0',
     );
     expect(writeContent)
       .toBe(`//@pilet v:0\n!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
@@ -82,7 +81,7 @@ no-js
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.currentScript,
+      'v1',
     );
     expect(writeContent)
       .toBe(`//@pilet v:1(pr_abcdef)\n!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;

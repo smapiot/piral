@@ -1,8 +1,8 @@
 import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { callPiralDebug } from '../bundler';
 import { LogLevels } from '../types';
 import {
-  callPiralDebug,
   retrievePiletsInfo,
   retrievePiralRoot,
   openBrowser,

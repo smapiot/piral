@@ -1,7 +1,7 @@
 import { join, dirname, basename, resolve } from 'path';
 import { LogLevels, PiletSchemaVersion } from '../types';
+import { callPiletBuild } from '../bundler';
 import {
-  callPiletBuild,
   removeDirectory,
   findEntryModule,
   retrievePiletData,

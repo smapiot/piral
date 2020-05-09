@@ -1695,8 +1695,42 @@ export function failedToOpenBrowser_0070(error: string): QuickMessage {
  * pilet build --schema v0
  * ```
  */
-export function invalidSchemaVersion_0071(schemaVersion: string): QuickMessage {
-  return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Expected "v0" or "v1".`];
+export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<string>): QuickMessage {
+  const s = schemas.map(m => `"${m}"`).join(', ');
+  return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Available schemas: ${s}.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The provided bundler is not available.
+ *
+ * @abstract
+ * Piral allows you to set up your own tooling for building and debugging. This
+ * is a powerful concept. By default, the Parcel bundler is used. Alternatives
+ * include Webpack and Rollup.
+ *
+ * In case where multiple bundlers are installed the first one is picked. This
+ * may not be what you want. In this scenario you can override the selection by
+ * explicitly picking a bundler name (e.g., "parcel"). If, for some reason, the
+ * name does not correspond to one of the currently installed bundlers the
+ * bundler missing error appears.
+ *
+ * @see
+ * - [Parcel](https://parceljs.org)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ *
+ * @example
+ * Use the following command to make the parcel bundler available:
+ *
+ * ```sh
+ * npm i piral-cli-parcel --save-dev
+ * ```
+ */
+export function bundlerMissing_0072(bundlerName: string, installed: Array<string>): QuickMessage {
+  const s = installed.map(m => `"${m}"`).join(', ');
+  return [LogLevels.error, '0072', `Cannot find bundler "${bundlerName}". Installed bundlers: ${s}.`];
 }
 
 /**
@@ -1842,4 +1876,28 @@ export function apiPatchInvalid_0204(name: string): QuickMessage {
  */
 export function pluginCouldNotBeLoaded_0205(pluginPath: string, ex: any): QuickMessage {
   return [LogLevels.warning, '0205', `Failed to load plugin from "${pluginPath}": ${ex}`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid value for the given argument was supplied.
+ *
+ * @abstract
+ * This warning indicates that a Piral CLI bundler plugin is not working as intended.
+ * Usually, * you should not see this as a user, but rather as a developer testing a
+ * Piral CLI plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiBundlerInvalid_0206(name: string): QuickMessage {
+  return [LogLevels.warning, '0206', `Invalid argument for "${name}" - skipped bundler.`];
 }

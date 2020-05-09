@@ -1,5 +1,6 @@
-import { log } from './common';
+import { log, installPatch } from './common';
 import { commands } from './commands';
+import { setBundler } from './bundler';
 import { addPiletRule, addPiralRule } from './rules';
 import {
   ToolCommand,
@@ -123,15 +124,23 @@ export function withPatcher(packageName: string, patch: PackagePatcher) {
   } else if (typeof patch !== 'function') {
     log('apiPatchInvalid_0204', 'patch');
   } else {
-    //TODO
-    // installPatch(packageName, patch);
+    installPatch(packageName, patch);
   }
 
   return this;
 }
 
-export function withBundler(bundlerName: string, bundler: BundlerDefinition) {
-  // TOOD
+export function withBundler(name: string, actions: BundlerDefinition) {
+  if (typeof name !== 'string') {
+    log('apiBundlerInvalid_0206', 'bundlerName');
+  } else if (typeof actions !== 'object') {
+    log('apiBundlerInvalid_0206', 'bundler');
+  } else {
+    setBundler({
+      name,
+      actions,
+    });
+  }
 
   return this;
 }

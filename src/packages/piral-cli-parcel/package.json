@@ -38,6 +38,7 @@
     "@types/node": "^13.9.0",
     "@types/parcel-bundler": "^1.12.1",
     "@types/yargs": "^15.0.0",
+    "piral-cli": "^0.11.4",
     "typescript": "^3.8.3"
   },
   "dependencies": {

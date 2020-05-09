@@ -20,7 +20,9 @@
   "files": [
     "lib",
     "src",
-    "templates"
+    "templates",
+    "utils.d.ts",
+    "utils.js"
   ],
   "repository": {
     "type": "git",

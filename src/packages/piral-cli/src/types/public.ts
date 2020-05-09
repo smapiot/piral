@@ -38,6 +38,7 @@ export interface CliPluginApi {
   withPiralRule(ruleName: string, runner: RuleRunner<PiralRuleContext>): CliPluginApi;
   withPiletRule(ruleName: string, runner: RuleRunner<PiletRuleContext>): CliPluginApi;
   withPatcher(packageName: string, patch: PackagePatcher): CliPluginApi;
+  withBundler(bundlerName: string, bundler: BundlerDefinition): CliPluginApi;
 }
 
 export interface CliPlugin {

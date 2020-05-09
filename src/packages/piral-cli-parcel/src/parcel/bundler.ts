@@ -178,11 +178,9 @@ function getScriptHead(version: PiletSchemaVersion, prName: string) {
     case 'v1': // currentScript
       return `${piletMarker}1(${prName})\n${preamble}${bundleUrl}${insertScript}`;
     default:
-      log('invalidSchemaVersion_0071', version);
+      log('invalidSchemaVersion_0071', version, ['v0', 'v1']);
       return getScriptHead('v0', prName);
   }
-
-  return '';
 }
 
 /**

@@ -1,6 +1,5 @@
 export * from './archive';
 export * from './browser';
-export * from './bundler';
 export * from './compatibility';
 export * from './config';
 export * from './declaration';
@@ -19,6 +18,7 @@ export * from './merge';
 export * from './npm';
 export * from './pack';
 export * from './package';
+export * from './patches';
 export * from './port';
 export * from './rules';
 export * from './scaffold';

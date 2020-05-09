@@ -1,59 +1,69 @@
 import { resolve } from 'path';
-import { fork } from 'child_process';
-import { LogLevels, Bundler, BundleDetails, PiletSchemaVersion } from 'piral-cli';
+import { fork, ChildProcess } from 'child_process';
+import { Bundler, BundleDetails } from 'piral-cli';
 
 function getPath(name: string) {
   return resolve(__dirname, '..', '..', 'lib', 'parcel', `run-${name}.js`);
 }
 
-function callDynamic(name: string, cwd: string, args: any) {
-  return new Promise<Bundler>(resolve => {
-    const ps = fork(getPath(name), [], { cwd });
-    const listeners: Array<(args: any) => void> = [];
-    const setPending = () => new Promise<void>(done => {
+function createBundler(cwd: string, ps: ChildProcess, args: any) {
+  const listeners: Array<(args: any) => void> = [];
+  const bundle: BundleDetails = {
+    dir: cwd,
+    hash: '',
+    name: '',
+  };
+  const setPending = () =>
+    new Promise<void>(done => {
       const f = () => {
         done();
-        listeners.splice(listeners.indexOf(f), 1);
+        bundler.off(f);
       };
-      listeners.push(f);
+      bundler.on(f);
     });
-    let promise = setPending();
-    const bundle: BundleDetails = {
-      dir: cwd,
-      hash: '',
-      name: '',
-    };
-    const bundler: Bundler = {
-      bundle,
-      start() {
-        ps.send({
-          type: 'bundle',
-          ...args,
-        });
-      },
-      on(cb) {
-        listeners.push(cb);
-      },
-      off(cb) {
-        listeners.splice(listeners.indexOf(cb), 1);
-      },
-      ready() {
-        return promise;
-      },
-    };
+  const bundler = {
+    bundle,
+    start() {
+      ps.send({
+        type: 'bundle',
+        ...args,
+      });
+    },
+    on(cb) {
+      listeners.push(cb);
+    },
+    off(cb) {
+      listeners.splice(listeners.indexOf(cb), 1);
+    },
+    emit(msg) {
+      listeners.forEach(cb => cb(msg));
+    },
+    ready() {
+      return promise;
+    },
+    setPending,
+  };
+  let promise = setPending();
+  return bundler;
+}
+
+export function callDynamic(name: string, cwd: string, args: any) {
+  return new Promise<Bundler>(resolve => {
+    const ps = fork(getPath(name), [], { cwd });
+    const bundler = createBundler(cwd, ps, args);
 
     ps.on('message', (msg: any) => {
       switch (msg.type) {
         case 'pending':
-          promise = setPending();
+          bundler.setPending();
           break;
         case 'update':
-          bundle.hash = msg.outHash;
-          bundle.name = msg.outName;
-          listeners.forEach(cb => cb(msg.args));
+          bundler.bundle.hash = msg.outHash;
+          bundler.bundle.name = msg.outName;
+          bundler.emit(msg.args);
           break;
         case 'done':
-          bundle.dir = msg.outDir;
+          bundler.bundle.dir = msg.outDir;
           return resolve(bundler);
       }
     });
@@ -65,16 +75,17 @@ function callDynamic(name: string, cwd: string, args: any) {
   });
 }
 
-function callStatic(name: string, cwd: string, args: any) {
-  return new Promise<{ outFile: string; outDir: string }>(resolve => {
+export function callStatic(name: string, cwd: string, args: any) {
+  return new Promise<Bundler>(resolve => {
     const ps = fork(getPath(name), [], { cwd });
+    const bundler = createBundler(cwd, ps, args);
+
     ps.on('message', (msg: any) => {
       switch (msg.type) {
         case 'done':
-          return resolve({
-            outFile: msg.outFile,
-            outDir: msg.outDir,
-          });
+          bundler.bundle.dir = msg.outDir;
+          bundler.bundle.name = msg.outFile;
+          return resolve(bundler);
       }
     });
 
@@ -82,158 +93,5 @@ function callStatic(name: string, cwd: string, args: any) {
       type: 'start',
       ...args,
     });
-  });
-}
-
-export function callDebugPiralFromMonoRepo(
-  cwd: string,
-  externals: Array<string>,
-  piral: string,
-  entryFiles: string,
-  logLevel: LogLevels,
-) {
-  return callStatic('debug-mono-piral', cwd, {
-    piral,
-    externals,
-    entryFiles,
-    logLevel,
-  });
-}
-
-export function callPiletDebug(
-  cwd: string,
-  piral: string,
-  optimizeModules: boolean,
-  hmr: boolean,
-  scopeHoist: boolean,
-  autoInstall: boolean,
-  cacheDir: string,
-  externals: Array<string>,
-  targetDir: string,
-  entryModule: string,
-  logLevel: LogLevels,
-  version: PiletSchemaVersion,
-  ignored: Array<string>,
-) {
-  return callDynamic('debug-pilet', cwd, {
-    piral,
-    optimizeModules,
-    hmr,
-    scopeHoist,
-    autoInstall,
-    cacheDir,
-    externals,
-    targetDir,
-    entryModule,
-    logLevel,
-    version,
-    ignored,
-  });
-}
-
-export function callPiralDebug(
-  cwd: string,
-  piral: string,
-  optimizeModules: boolean,
-  hmr: boolean,
-  scopeHoist: boolean,
-  autoInstall: boolean,
-  cacheDir: string,
-  externals: Array<string>,
-  publicUrl: string,
-  entryFiles: string,
-  logLevel: LogLevels,
-  ignored: Array<string>,
-) {
-  return callDynamic('debug-piral', cwd, {
-    piral,
-    optimizeModules,
-    hmr,
-    scopeHoist,
-    autoInstall,
-    cacheDir,
-    externals,
-    publicUrl,
-    entryFiles,
-    logLevel,
-    ignored,
-  });
-}
-
-export function callPiletBuild(
-  cwd: string,
-  piral: string,
-  optimizeModules: boolean,
-  scopeHoist: boolean,
-  sourceMaps: boolean,
-  contentHash: boolean,
-  detailedReport: boolean,
-  minify: boolean,
-  cacheDir: string,
-  externals: Array<string>,
-  targetDir: string,
-  outFile: string,
-  outDir: string,
-  entryModule: string,
-  logLevel: LogLevels,
-  version: PiletSchemaVersion,
-  ignored: Array<string>,
-) {
-  return callStatic('build-pilet', cwd, {
-    piral,
-    optimizeModules,
-    scopeHoist,
-    sourceMaps,
-    contentHash,
-    detailedReport,
-    minify,
-    cacheDir,
-    externals,
-    targetDir,
-    outFile,
-    outDir,
-    entryModule,
-    logLevel,
-    version,
-    ignored,
-  });
-}
-
-export function callPiralBuild(
-  cwd: string,
-  piral: string,
-  develop: boolean,
-  optimizeModules: boolean,
-  scopeHoist: boolean,
-  sourceMaps: boolean,
-  contentHash: boolean,
-  detailedReport: boolean,
-  minify: boolean,
-  cacheDir: string,
-  externals: Array<string>,
-  publicUrl: string,
-  outFile: string,
-  outDir: string,
-  entryFiles: string,
-  logLevel: LogLevels,
-  ignored: Array<string>,
-) {
-  return callStatic('build-piral', cwd, {
-    piral,
-    optimizeModules,
-    scopeHoist,
-    develop,
-    sourceMaps,
-    contentHash,
-    detailedReport,
-    minify,
-    cacheDir,
-    externals,
-    publicUrl,
-    outFile,
-    outDir,
-    entryFiles,
-    logLevel,
-    ignored,
   });
 }
