@@ -1,5 +1,4 @@
-import { resolve } from 'path';
-import { installPackage, cliVersion, fail } from './common';
+import { installPackage, cliVersion, fail, progress, log, determineNpmClient } from './common';
 import {
   Bundler,
   BundleDetails,
@@ -18,24 +17,25 @@ export interface QualifiedBundler {
 
 const bundlers: Array<QualifiedBundler> = [];
 
-async function installDefaultBundler() {
+async function installDefaultBundler(root: string) {
   const parcel = 'piral-cli-parcel';
 
   try {
+    log('generalDebug_0003', `Trying to resolve ${parcel}.`);
     require(parcel);
   } catch {
-    const location = resolve(__dirname, '..');
-    await installPackage('npm', `${parcel}@${cliVersion}`, location, '--no-save', '--no-package-lock');
+    log('generalDebug_0003', `Determining NPM client at "${root}" ...`);
+    const client = await determineNpmClient(root);
+    log('generalDebug_0003', `Prepare to install ${parcel}@${cliVersion} using "${client}" into "${root}".`);
+    progress(`Installing ${parcel} ...`);
+    await installPackage(client, `${parcel}@${cliVersion}`, root, '--save-dev');
+    log('generalDebug_0003', 'Installed bundler.');
   }
 
   require('./inject').inject(parcel);
 }
 
-export function setBundler(bundler: QualifiedBundler) {
-  bundlers.push(bundler);
-}
-
-export async function getBundler(bundlerName?: string) {
+async function findBundler(root: string, bundlerName?: string) {
   const [defaultBundler] = bundlers;
 
   if (bundlerName) {
@@ -51,30 +51,34 @@ export async function getBundler(bundlerName?: string) {
 
     return bundler;
   } else if (!defaultBundler) {
-    await installDefaultBundler();
+    await installDefaultBundler(root);
     return bundlers[0];
   } else {
     return defaultBundler;
   }
 }
 
+export function setBundler(bundler: QualifiedBundler) {
+  bundlers.push(bundler);
+}
+
 export async function callPiralDebug(args: DebugPiralParameters, bundlerName?: string): Promise<Bundler> {
-  const bundler = await getBundler(bundlerName);
+  const bundler = await findBundler(args.root, bundlerName);
   return await bundler.actions.debugPiral(args);
 }
 
 export async function callPiletDebug(args: DebugPiletParameters, bundlerName?: string): Promise<Bundler> {
-  const bundler = await getBundler(bundlerName);
+  const bundler = await findBundler(args.root, bundlerName);
   return await bundler.actions.debugPilet(args);
 }
 
 export async function callPiralBuild(args: BuildPiralParameters, bundlerName?: string): Promise<BundleDetails> {
-  const bundler = await getBundler(bundlerName);
+  const bundler = await findBundler(args.root, bundlerName);
   return await bundler.actions.buildPiral(args);
 }
 
 export async function callPiletBuild(args: BuildPiletParameters, bundlerName?: string): Promise<BundleDetails> {
-  const bundler = await getBundler(bundlerName);
+  const bundler = await findBundler(args.root, bundlerName);
   return await bundler.actions.buildPilet(args);
 }
 
@@ -82,7 +86,7 @@ export async function callDebugPiralFromMonoRepo(
   args: WatchPiralParameters,
   bundlerName?: string,
 ): Promise<BundleDetails> {
-  const bundler = await getBundler(bundlerName);
+  const bundler = await findBundler(args.root, bundlerName);
   const { bundle } = await bundler.actions.watchPiral(args);
   return bundle;
 }
