@@ -157,7 +157,7 @@ export async function patchModules(rootDir: string, ignoredPackages = defaultIgn
 }
 
 const bundleUrlRef = '__bundleUrl__';
-const piletMarker = '//@pilet v:';
+const piletMarker = '/*@pilet v:';
 const preamble = `!(function(global,parcelRequire){'use strict';`;
 const insertScript = `function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;`;
 const getBundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}`;
@@ -172,9 +172,9 @@ function getScriptHead(version: PiletSchemaVersion, prName: string) {
 
   switch (version) {
     case PiletSchemaVersion.directEval:
-      return `${piletMarker}0\n${preamble}${bundleUrl}`;
+      return `${piletMarker}0*/ ${preamble}${bundleUrl}`;
     case PiletSchemaVersion.currentScript:
-      return `${piletMarker}1(${prName})\n${preamble}${bundleUrl}${insertScript}`;
+      return `${piletMarker}1(${prName})*/ ${preamble}${bundleUrl}${insertScript}`;
   }
 
   return '';
@@ -245,13 +245,11 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
                * from leaking into global (window).
                * @see https://github.com/parcel-bundler/parcel/issues/1401
                */
-              result = [
-                head,
+              result = (head + ';' + 
                 result
                   .split('"function"==typeof parcelRequire&&parcelRequire')
-                  .join(`"function"==typeof global.${prName}&&global.${prName}`),
-                `;global.${prName}=parcelRequire}(window, window.${prName}));`,
-              ].join('\n');
+                  .join(`"function"==typeof global.${prName}&&global.${prName}`) +
+                `\n;global.${prName}=parcelRequire}(window, window.${prName}));`)
             }
 
             writeFile(src, result, 'utf8', err => {
