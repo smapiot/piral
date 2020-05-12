@@ -4,6 +4,7 @@ import extendBundlerWithCodegen = require('parcel-plugin-codegen');
 import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
 import { PiletSchemaVersion } from 'piral-cli';
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
+import { SourceMapConsumer, SourceMapGenerator } from 'source-map';
 import { existsSync, statSync, readFile, writeFile } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { patchModule } from './bundler-patches';
@@ -52,31 +53,40 @@ export function setupBundler(setup: BundlerSetup) {
 }
 
 export interface BundleSource {
+  parent: Bundler.ParcelBundle;
   children: Set<Bundler.ParcelBundle>;
   src: string;
+  css: string;
   map: string;
 }
 
-export function gatherJsBundles(bundle: Bundler.ParcelBundle, gatheredBundles: Array<BundleSource> = []) {
+export function gatherJsBundles(
+  bundle: Bundler.ParcelBundle,
+  gatheredBundles: Array<BundleSource> = [],
+  parent: Bundler.ParcelBundle = undefined,
+) {
   if (bundle.type === 'js') {
-    let map = undefined;
+    const source: BundleSource = {
+      parent,
+      children: bundle.childBundles,
+      src: bundle.name,
+      css: undefined,
+      map: undefined,
+    };
 
     for (const childBundle of bundle.childBundles) {
       if (childBundle.name.endsWith('.js.map')) {
-        map = childBundle.name;
-        break;
+        source.map = childBundle.name;
+      } else if (childBundle.name.endsWith('.css')) {
+        source.css = childBundle.name;
       }
     }
 
-    gatheredBundles.push({
-      children: bundle.childBundles,
-      src: bundle.name,
-      map,
-    });
+    gatheredBundles.push(source);
   }
 
   for (const childBundle of bundle.childBundles) {
-    gatherJsBundles(childBundle, gatheredBundles);
+    gatherJsBundles(childBundle, gatheredBundles, bundle);
   }
 
   return gatheredBundles;
@@ -170,17 +180,60 @@ function isFile(bundleDir: string, name: string) {
 }
 
 function getScriptHead(version: PiletSchemaVersion, prName: string) {
-  const bundleUrl = `var ${bundleUrlRef}=${getBundleUrl}();`;
-
   switch (version) {
     case 'v0': // directEval
-      return `${piletMarker}0\n${preamble}${bundleUrl}`;
+      return `${piletMarker}0\n${getSideHead(prName)}`;
     case 'v1': // currentScript
-      return `${piletMarker}1(${prName})\n${preamble}${bundleUrl}${insertScript}`;
+      return `${piletMarker}1(${prName})\n${getSideHead(prName)}${insertScript}`;
     default:
       log('invalidSchemaVersion_0071', version, ['v0', 'v1']);
       return getScriptHead('v0', prName);
   }
+}
+
+function getSideHead(prName: string) {
+  const bundleUrl = `var ${bundleUrlRef}=${getBundleUrl}();`;
+  return `${preamble}${bundleUrl}`;
+}
+
+function readFileContent(src: string) {
+  return new Promise<string>((resolve, reject) =>
+    readFile(src, 'utf8', (err, data) => (err ? reject(err) : resolve(data))),
+  );
+}
+
+function writeFileContent(src: string, content: string) {
+  return new Promise<void>((resolve, reject) =>
+    writeFile(src, content, 'utf8', err => (err ? reject(err) : resolve())),
+  );
+}
+
+async function applySourceMapShift(sourceFile: string, lineOffset = 1): Promise<string> {
+  const content = await readFileContent(sourceFile);
+  const incomingSourceMap = JSON.parse(content);
+  const consumer = new SourceMapConsumer(incomingSourceMap);
+  const generator = new SourceMapGenerator({
+    file: incomingSourceMap.file,
+    sourceRoot: incomingSourceMap.sourceRoot,
+  });
+
+  consumer.eachMapping(m => {
+    // skip invalid (not-connected) mapping
+    // refs: https://github.com/mozilla/source-map/blob/182f4459415de309667845af2b05716fcf9c59ad/lib/source-map-generator.js#L268-L275
+    if (m.originalLine > 0 && m.originalColumn >= 0 && m.source) {
+      generator.addMapping({
+        source: m.source,
+        name: m.name,
+        original: { line: m.originalLine, column: m.originalColumn },
+        generated: { line: m.generatedLine + lineOffset, column: m.generatedColumn },
+      });
+    }
+  });
+
+  const outgoingSourceMap = JSON.parse(generator.toString());
+  outgoingSourceMap.sources = incomingSourceMap.sources;
+  outgoingSourceMap.sourcesContent = incomingSourceMap.sourcesContent;
+  return JSON.stringify(outgoingSourceMap);
 }
 
 /**
@@ -191,92 +244,89 @@ function getScriptHead(version: PiletSchemaVersion, prName: string) {
 export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVersion) {
   const hash = bundle.getHash();
   const prName = `pr_${hash}`;
-  const head = getScriptHead(version, prName);
   const bundles = gatherJsBundles(bundle);
 
   await Promise.all(
-    bundles.map(
-      ({ src, children }) =>
-        new Promise<void>((resolve, reject) => {
-          const bundleDir = dirname(src);
+    bundles.map(async ({ src, css, map }) => {
+      const bundleDir = dirname(src);
+      const data = await readFileContent(src);
+      const head = parent ? getScriptHead(version, prName) : getSideHead(prName);
+      const marker = parent ? piletMarker : head;
 
-          readFile(src, 'utf8', (err, data) => {
-            if (err) {
-              return reject(err);
-            }
+      let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
+        if (isFile(bundleDir, value)) {
+          return str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`);
+        } else {
+          return str;
+        }
+      });
 
-            let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
-              if (isFile(bundleDir, value)) {
-                return str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`);
-              }
+      /**
+       * In pure JS bundles (i.e., we are not starting with an HTML file) Parcel
+       * just omits the included CSS... This is bad (to say the least).
+       * Here, we search for any sibling CSS bundles (there should be at most 1)
+       * and include it asap using a standard approach.
+       * Note: In the future we may allow users to disable this behavior (via a Piral
+       * setting to disallow CSS inject).
+       */
+      if (css) {
+        const cssName = basename(css);
+        const stylesheet = [
+          `var d=document`,
+          `var e=d.createElement("link")`,
+          `e.type="text/css"`,
+          `e.rel="stylesheet"`,
+          `e.href=${bundleUrlRef}+${JSON.stringify(cssName)}`,
+          `d.head.appendChild(e)`,
+        ].join(';');
 
-              return str;
-            });
+        /**
+         * Only happens in debug mode:
+         * Apply this only when the stylesheet is not yet part of the file.
+         * This solves the edge case of touching files (i.e., saving without any change).
+         * Here, Parcel triggers a re-build, but does not change the output files.
+         * Making the change here would destroy the file.
+         */
+        if (result.indexOf(stylesheet) === -1) {
+          result = `(function(){${stylesheet}})();${result}`;
+        }
+      }
 
-            /**
-             * In pure JS bundles (i.e., we are not starting with an HTML file) Parcel
-             * just omits the included CSS... This is bad (to say the least).
-             * Here, we search for any sibling CSS bundles (there should be at most 1)
-             * and include it asap using a standard approach.
-             * Note: In the future we may allow users to disable this behavior (via a Piral
-             * setting to disallow CSS inject).
-             */
-            const [cssBundle] = [...children].filter(m => /\.css$/.test(m.name));
+      /**
+       * Only happens in (pilet) debug mode:
+       * Untouched bundles are not rewritten so we should not just wrap them
+       * again. We replace the existing Piral Require reference with a new one.
+       */
+      if (result.startsWith(marker)) {
+        result = result.replace(/\.pr_[A-Fa-f0-9]{32}/g, `.${prName}`);
+      } else {
+        /**
+         * We perform quite some updates to the generated bundle.
+         * We need to take care of aligning the .js.map file to these changes.
+         */
+        if (map) {
+          const offset = head.split('\n').length;
+          const result = await applySourceMapShift(map, offset);
+          await writeFileContent(map, result);
+        }
 
-            if (cssBundle) {
-              const cssName = basename(cssBundle.name);
-              const stylesheet = [
-                `var d=document`,
-                `var e=d.createElement("link")`,
-                `e.type="text/css"`,
-                `e.rel="stylesheet"`,
-                `e.href=${bundleUrlRef}+${JSON.stringify(cssName)}`,
-                `d.head.appendChild(e)`,
-              ].join(';');
+        /**
+         * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
+         * `parcelRequire` declaration problems, and preventing `parcelRequire`
+         * from leaking into global (window).
+         * @see https://github.com/parcel-bundler/parcel/issues/1401
+         */
+        result = [
+          head,
+          result
+            .split('"function"==typeof parcelRequire&&parcelRequire')
+            .join(`"function"==typeof global.${prName}&&global.${prName}`),
+          `;global.${prName}=parcelRequire}(window, window.${prName}));`,
+        ].join('\n');
+      }
 
-              /**
-               * Only happens in debug mode:
-               * Apply this only when the stylesheet is not yet part of the file.
-               * This solves the edge case of touching files (i.e., saving without any change).
-               * Here, Parcel triggers a re-build, but does not change the output files.
-               * Making the change here would destroy the file.
-               */
-              if (result.indexOf(stylesheet) === -1) {
-                result = `(function(){${stylesheet}})();${result}`;
-              }
-            }
-
-            // Only happens in (pilet) debug mode:
-            // Untouched bundles are not rewritten so we should not just wrap them
-            // again. We replace the existing Piral Require reference with a new one.
-            if (result.startsWith(piletMarker)) {
-              result = result.replace(/\.pr_[A-Fa-f0-9]{32}/g, `.${prName}`);
-            } else {
-              /**
-               * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
-               * `parcelRequire` declaration problems, and preventing `parcelRequire`
-               * from leaking into global (window).
-               * @see https://github.com/parcel-bundler/parcel/issues/1401
-               */
-              result = [
-                head,
-                result
-                  .split('"function"==typeof parcelRequire&&parcelRequire')
-                  .join(`"function"==typeof global.${prName}&&global.${prName}`),
-                `;global.${prName}=parcelRequire}(window, window.${prName}));`,
-              ].join('\n');
-            }
-
-            writeFile(src, result, 'utf8', err => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve();
-              }
-            });
-          });
-        }),
-    ),
+      await writeFileContent(src, result);
+    }),
   );
 
   return prName;
