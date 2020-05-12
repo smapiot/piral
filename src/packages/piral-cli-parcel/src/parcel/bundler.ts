@@ -247,7 +247,7 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
   const bundles = gatherJsBundles(bundle);
 
   await Promise.all(
-    bundles.map(async ({ src, css, map }) => {
+    bundles.map(async ({ src, css, map, parent }) => {
       const bundleDir = dirname(src);
       const data = await readFileContent(src);
       const head = parent ? getScriptHead(version, prName) : getSideHead(prName);
