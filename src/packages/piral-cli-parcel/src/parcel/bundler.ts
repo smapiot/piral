@@ -248,10 +248,11 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
 
   await Promise.all(
     bundles.map(async ({ src, css, map, parent }) => {
+      const root = parent === undefined;
       const bundleDir = dirname(src);
       const data = await readFileContent(src);
-      const head = parent ? getScriptHead(version, prName) : getSideHead(prName);
-      const marker = parent ? piletMarker : head;
+      const head = root ? getScriptHead(version, prName) : getSideHead(prName);
+      const marker = root ? piletMarker : head;
 
       let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
         if (isFile(bundleDir, value)) {
