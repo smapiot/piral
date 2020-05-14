@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps, StaticRouter } from 'react-router-dom';
+import { RouteComponentProps, StaticRouter } from 'react-router';
 import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout, PiralDebug } from './components';
 import { PiralRoutes } from './PiralRoutes';
 import { useGlobalState } from '../hooks';
