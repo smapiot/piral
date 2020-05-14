@@ -115,10 +115,10 @@ export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchAp
     context.dispatch(state => ({
       ...state,
       components: {
-        ...state.components,
         SearchContainer: DefaultContainer,
         SearchInput: DefaultInput,
         SearchResult: DefaultResult,
+        ...state.components,
       },
       registry: {
         ...state.registry,

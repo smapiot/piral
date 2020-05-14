@@ -66,9 +66,9 @@ export function createMenuApi(config: MenuConfig = {}): Extend<PiletMenuApi> {
     context.dispatch(state => ({
       ...state,
       components: {
-        ...state.components,
         MenuContainer: DefaultContainer,
         MenuItem: DefaultItem,
+        ...state.components,
       },
       registry: {
         ...state.registry,

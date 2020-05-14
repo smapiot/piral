@@ -65,9 +65,9 @@ export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDa
     context.dispatch(state => ({
       ...state,
       components: {
-        ...state.components,
         DashboardTile: DefaultTile,
         DashboardContainer: DefaultContainer,
+        ...state.components,
       },
       registry: {
         ...state.registry,
