@@ -4,7 +4,7 @@ export function createConverter() {
   const convert = <TProps extends BaseComponentProps>(elementName: string): ForeignComponent<TProps> => {
     return {
       mount(parent, data, ctx) {
-        const { piral } = data as BaseComponentProps;
+        const { piral } = data;
         const el = parent.appendChild(document.createElement(elementName));
         el.setAttribute('props', JSON.stringify(data));
         el.setAttribute('ctx', JSON.stringify(ctx));
