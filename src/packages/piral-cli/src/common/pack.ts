@@ -36,7 +36,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
     fail('packageJsonMissingVersion_0022');
   }
 
-  progress(`Packing pilet in ${resolve(baseDir, target)} ...`);
+  progress(`Packing pilet in ${dest} ...`);
   log('generalDebug_0003', 'Creating package ...');
   await createPackage(root);
   log('generalDebug_0003', 'Successfully created package.');

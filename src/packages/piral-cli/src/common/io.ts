@@ -280,7 +280,7 @@ export async function updateExistingJson<T>(targetDir: string, fileName: string,
   await updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));
 }
 
-export async function copy(source: string, target: string, forceOverwrite = ForceOverwrite.no) {
+export async function copy(source: string, target: string, forceOverwrite = ForceOverwrite.no): Promise<boolean> {
   await createDirectory(dirname(target));
 
   try {
@@ -288,17 +288,20 @@ export async function copy(source: string, target: string, forceOverwrite = Forc
     await new Promise((resolve, reject) => {
       copyFile(source, target, flag, err => (err ? reject(err) : resolve()));
     });
+    return true;
   } catch (e) {
     if (forceOverwrite === ForceOverwrite.prompt) {
       const shouldOverwrite = await promptOverwrite(target);
 
       if (shouldOverwrite) {
-        await copy(source, target, ForceOverwrite.yes);
+        return await copy(source, target, ForceOverwrite.yes);
       }
     } else {
       log('didNotOverWriteFile_0045', target);
     }
   }
+
+  return false;
 }
 
 /**
@@ -328,9 +331,14 @@ export async function move(source: string, target: string, forceOverwrite = Forc
     target = resolve(target, file);
   }
 
-  await copy(source, target, forceOverwrite);
-  await removeFile(source);
-  return target;
+  const success = await copy(source, target, forceOverwrite);
+
+  if (success) {
+    await removeFile(source);
+    return target;
+  }
+
+  return source;
 }
 
 export async function getSourceFiles(entry: string) {
