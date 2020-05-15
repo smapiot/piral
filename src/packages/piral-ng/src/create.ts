@@ -1,7 +1,6 @@
 import { Extend } from 'piral-core';
-import { Component, ElementRef, Input, NgModuleRef, Inject, enableProdMode } from '@angular/core';
-import { enqueue } from './queue';
-import { bootstrap } from './bootstrap';
+import { Component, ElementRef, Input, Inject, enableProdMode } from '@angular/core';
+import { createConverter } from './converter';
 import { PiletNgApi } from './types';
 
 /**
@@ -29,8 +28,7 @@ export interface NgConfig {
  * Creates the Pilet API extensions for Angular.
  */
 export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
-  let next = ~~(Math.random() * 10000);
-  const { rootName = 'slot', selectId = () => `ng-${next++}`, selector = 'extension-component' } = config;
+  const { rootName = 'slot', selector = 'extension-component', selectId } = config;
   const template = `<${rootName}></${rootName}>`;
 
   @Component({
@@ -51,24 +49,13 @@ export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
     }
   }
 
-  if (process.env.DEBUG_PILET !== undefined) {
+  if (process.env.ENV === 'production') {
     enableProdMode();
   }
 
   return context => {
-    context.converters.ng = ({ component }) => {
-      const id = selectId();
-      let result: Promise<void | NgModuleRef<any>> = Promise.resolve();
-
-      return {
-        mount(el, props, ctx) {
-          result = enqueue(() => bootstrap(ctx, props, component, el, id));
-        },
-        unmount(el) {
-          result.then(ngMod => ngMod && ngMod.destroy());
-        },
-      };
-    };
+    const convert = createConverter(selectId);
+    context.converters.ng = ({ component }) => convert(component);
 
     return {
       NgExtension,

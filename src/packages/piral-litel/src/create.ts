@@ -1,5 +1,6 @@
-import { Extend, BaseComponentProps } from 'piral-core';
+import { Extend } from 'piral-core';
 import { LitElement, property, customElement } from 'lit-element';
+import { createConverter } from './converter';
 import { PiletLitElApi } from './types';
 
 /**
@@ -49,34 +50,8 @@ export function createLitElApi(config: LitElConfig = {}): Extend<PiletLitElApi> 
   }
 
   return context => {
-    context.converters.litel = ({ elementName }) => {
-      return {
-        mount(parent, data, ctx) {
-          const { piral } = data as BaseComponentProps;
-          const el = parent.appendChild(document.createElement(elementName));
-          el.setAttribute('props', JSON.stringify(data));
-          el.setAttribute('ctx', JSON.stringify(ctx));
-          el.shadowRoot.addEventListener(
-            'render-html',
-            (ev: CustomEvent) => {
-              piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-            },
-            false,
-          );
-        },
-        update(parent, data, ctx) {
-          const el = parent.querySelector(elementName);
-
-          if (el) {
-            el.setAttribute('props', JSON.stringify(data));
-            el.setAttribute('ctx', JSON.stringify(ctx));
-          }
-        },
-        unmount(el) {
-          el.innerHTML = '';
-        },
-      };
-    };
+    const convert = createConverter();
+    context.converters.litel = ({ elementName }) => convert(elementName);
 
     return {
       fromLitEl(elementName) {

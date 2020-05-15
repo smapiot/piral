@@ -1,5 +1,6 @@
 import { Extend } from 'piral-core';
-import { mountHyperapp, createHyperappElement } from './mount';
+import { createHyperappElement } from './mount';
+import { createConverter } from './converter';
 import { PiletHyperappApi } from './types';
 
 /**
@@ -20,17 +21,8 @@ export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHype
   const { rootName = 'slot' } = config;
 
   return context => {
-    context.converters.hyperapp = component => ({
-      mount(el, props, ctx) {
-        mountHyperapp(el, component.root, props, ctx, component.state, component.actions);
-      },
-      update(el, props, ctx) {
-        mountHyperapp(el, component.root, props, ctx, component.state, component.actions);
-      },
-      unmount(el) {
-        el.innerHTML = '';
-      },
-    });
+    const convert = createConverter();
+    context.converters.hyperapp = ({ root, state, actions }) => convert(root, state, actions);
 
     return api => {
       const HyperappExtension = props =>

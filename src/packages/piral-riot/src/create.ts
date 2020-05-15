@@ -1,5 +1,5 @@
-import * as riot from 'riot';
 import { Extend } from 'piral-core';
+import { createConverter } from './converter';
 import { PiletRiotApi } from './types';
 
 /**
@@ -20,31 +20,8 @@ export function createRiotApi(config: RiotConfig = {}): Extend<PiletRiotApi> {
   const { extensionName = 'riot-extension' } = config;
 
   return context => {
-    context.converters.riot = ({ component, captured }) => {
-      const mountApp = riot.component(component);
-      let app: riot.RiotComponent = undefined;
-
-      return {
-        mount(el, props, ctx) {
-          app = mountApp(el, {
-            ...captured,
-            ...ctx,
-            ...props,
-          });
-        },
-        update(el, props, ctx) {
-          app = mountApp(el, {
-            ...captured,
-            ...ctx,
-            ...props,
-          });
-        },
-        unmount(el) {
-          app.unmount(true);
-          el.innerHTML = '';
-        },
-      };
-    };
+    const convert = createConverter();
+    context.converters.riot = ({ component, captured }) => convert(component, captured);
 
     return api => ({
       fromRiot(component, captured) {

@@ -1,5 +1,6 @@
 import * as angular from 'angular';
 import { Extend } from 'piral-core';
+import { createConverter } from './converter';
 import { PiletNgjsApi } from './types';
 
 /**
@@ -46,24 +47,8 @@ export function createNgjsApi(config: NgjsConfig = {}): Extend<PiletNgjsApi> {
   });
 
   return context => {
-    context.converters.ngjs = ({ name, root }) => {
-      let injector: any = undefined;
-
-      return {
-        mount(el, props, ctx) {
-          el.appendChild(document.createElement(name));
-          root.value('props', props);
-          root.value('piral', props.piral);
-          root.value('ctx', ctx);
-          injector = angular.bootstrap(el, [root.name]);
-        },
-        unmount(el) {
-          const rootScope = injector.get('$rootScope');
-          rootScope.$destroy();
-          injector = undefined;
-        },
-      };
-    };
+    const convert = createConverter();
+    context.converters.ngjs = ({ name, root }) => convert(name, root);
 
     return {
       NgjsExtension,

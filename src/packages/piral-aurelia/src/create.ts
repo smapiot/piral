@@ -1,7 +1,6 @@
 import { Extend } from 'piral-core';
-import { Aurelia, inlineView, customElement, bindable } from 'aurelia-framework';
-import { initialize } from 'aurelia-pal-browser';
-import { DefaultLoader } from './DefaultLoader';
+import { inlineView, customElement, bindable } from 'aurelia-framework';
+import { createConverter } from './converter';
 import { PiletAureliaApi } from './types';
 
 /**
@@ -22,38 +21,8 @@ export function createAureliaApi(config: AureliaConfig = {}): Extend<PiletAureli
   const { rootName = 'span' } = config;
 
   return context => {
-    initialize();
-
-    context.converters.aurelia = ({ root }) => {
-      let aurelia: Aurelia = undefined;
-
-      return {
-        mount(el, props, ctx) {
-          const { piral } = props;
-
-          aurelia = new Aurelia(new DefaultLoader());
-
-          aurelia.use
-            .eventAggregator()
-            .history()
-            .defaultBindingLanguage()
-            .globalResources([piral.AureliaExtension])
-            .defaultResources();
-
-          aurelia.container.registerInstance('props', props);
-          aurelia.container.registerInstance('ctx', ctx);
-
-          aurelia.start().then(() => aurelia.setRoot(root, el));
-        },
-        update(_, props, ctx) {
-          aurelia.container.registerInstance('props', props);
-          aurelia.container.registerInstance('ctx', ctx);
-        },
-        unmount() {
-          aurelia = undefined;
-        },
-      };
-    };
+    const convert = createConverter();
+    context.converters.aurelia = ({ root }) => convert(root);
 
     return api => {
       @customElement('extension-component')

@@ -1,5 +1,6 @@
 import { Extend } from 'piral-core';
-import { initialize, addReference, activate, deactivate, attachEvents } from './internal';
+import { addReference } from './internal';
+import { createConverter } from './converter';
 import { PiletBlazorApi } from './types';
 
 /**
@@ -18,59 +19,10 @@ export interface BlazorConfig {
  */
 export function createBlazorApi(config: BlazorConfig = {}): Extend<PiletBlazorApi> {
   const { lazy = true } = config;
-  const bootConfig = require('../infra.codegen');
-  const boot = () => initialize(bootConfig);
 
   return context => {
-    const root = document.body.appendChild(document.createElement('div'));
-    root.style.display = 'none';
-    root.id = 'blazor-root';
-
-    let loader = !lazy && boot();
-
-    context.converters.blazor = ({ moduleName, args, dependency }) => {
-      let id: string;
-      let referenceId: string;
-      let node: HTMLElement;
-      let dispose = () => {};
-      let state: 'fresh' | 'mounted' | 'removed';
-
-      return {
-        mount(el, data, ctx) {
-          const props = { ...args, ...data };
-
-          (loader || (loader = boot()))
-            .then(dependency)
-            .then(() => activate(moduleName, props))
-            .then(refId => {
-              if (state === 'fresh') {
-                id = `${moduleName}-${refId}`;
-                node = el.appendChild(root.querySelector(`#${id} > div`));
-                state = 'mounted';
-                referenceId = refId;
-              }
-            })
-            .catch(err => console.error(err));
-          dispose = attachEvents(
-            el,
-            ev => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-            ev => ctx.router.history.push(ev.detail.to),
-          );
-          state = 'fresh';
-        },
-        unmount(el) {
-          dispose();
-
-          if (state === 'mounted') {
-            root.querySelector(`#${id}`).appendChild(node);
-            deactivate(moduleName, referenceId);
-          }
-
-          el.innerHTML = '';
-          state = 'removed';
-        },
-      };
-    };
+    const convert = createConverter(lazy);
+    context.converters.blazor = ({ moduleName, args, dependency }) => convert(moduleName, dependency, args);
 
     return () => {
       let dependency: () => Promise<any>;
@@ -85,7 +37,7 @@ export function createBlazorApi(config: BlazorConfig = {}): Extend<PiletBlazorAp
                   .then(addReference),
               ),
             );
-          let result = !lazy && loader.then(load);
+          let result = !lazy && convert.loader.then(load);
           dependency = () => result || (result = load());
         },
         fromBlazor(moduleName, args) {
