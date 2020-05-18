@@ -47,18 +47,20 @@ export function loadPilet(
   getDependencies: PiletDependencyGetter,
   fetchDependency = defaultFetchDependency,
 ): Promise<Pilet> {
-  const { link, content, requireRef } = meta;
+  if ('requireRef' in meta) {
+    return loadFrom(meta, getDependencies, deps => includeDependency(meta, deps));
+  }
 
-  if (requireRef) {
-    return loadFrom(meta, getDependencies, deps => includeDependency(meta.name, link, requireRef, deps));
-  } else if (link) {
+  const { name, link, content } = meta;
+
+  if (link) {
     return fetchDependency(link).then(content =>
-      loadFrom(meta, getDependencies, deps => compileDependency(meta.name, content, link, deps)),
+      loadFrom(meta, getDependencies, deps => compileDependency(name, content, link, deps)),
     );
   } else if (content) {
-    return loadFrom(meta, getDependencies, deps => compileDependency(meta.name, content, link, deps));
+    return loadFrom(meta, getDependencies, deps => compileDependency(name, content, link, deps));
   } else {
-    console.warn('Empty pilet found!', meta.name);
+    console.warn('Empty pilet found!', name);
   }
 
   return Promise.resolve(createEmptyModule(meta));
@@ -89,6 +91,7 @@ export function loadPilets(
   fetchDependency?: PiletDependencyFetcher,
   globalDependencies?: AvailableDependencies,
   getLocalDependencies?: PiletDependencyGetter,
+  integrity?: boolean,
 ): Promise<Array<Pilet>> {
   const getDependencies = getDependencyResolver(globalDependencies, getLocalDependencies);
 
