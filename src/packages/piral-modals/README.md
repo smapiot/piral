@@ -131,6 +131,11 @@ You can customize the available dialogs and their options.
 import 'piral-modals';
 
 declare module 'piral-modals/lib/types' {
+  // interface shared across all dialogs defined in PiralCustomModalsMap
+  interface BaseModalOptions {
+    common?: boolean;
+  }
+
   interface PiralCustomModalsMap {
     login: {
       required?: boolean;
@@ -138,7 +143,7 @@ declare module 'piral-modals/lib/types' {
   }
 }
 
-// now showModal("login", { required: true }) is strongly typed in pilets
+// now showModal("login", { required: true, common: true }) is strongly typed in pilets
 ```
 
 ## License
