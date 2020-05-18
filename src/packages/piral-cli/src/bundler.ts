@@ -35,24 +35,36 @@ async function installDefaultBundler(root: string) {
   require('./inject').inject(parcel);
 }
 
+function checkDefaultBundler(bundler: QualifiedBundler) {
+  if (!bundler?.actions) {
+    fail('defaultBundlerMissing_0073');
+  }
+
+  return bundler;
+}
+
+function checkCustomBundler(bundler: QualifiedBundler, bundlerName: string) {
+  if (!bundler?.actions) {
+    fail(
+      'bundlerMissing_0072',
+      bundlerName,
+      bundlers.map(b => b.name),
+    );
+  }
+
+  return bundler;
+}
+
 async function findBundler(root: string, bundlerName?: string) {
   const [defaultBundler] = bundlers;
 
   if (bundlerName) {
     const [bundler] = bundlers.filter(m => m.name === bundlerName);
-
-    if (!bundler) {
-      fail(
-        'bundlerMissing_0072',
-        bundlerName,
-        bundlers.map(b => b.name),
-      );
-    }
-
-    return bundler;
+    return checkCustomBundler(bundler, bundlerName);
   } else if (!defaultBundler) {
     await installDefaultBundler(root);
-    return bundlers[0];
+    const [bundler] = bundlers;
+    return checkDefaultBundler(bundler);
   } else {
     return defaultBundler;
   }
