@@ -101,7 +101,7 @@ export interface OpenModalDialog {
   /**
    * Defines the transported options.
    */
-  options: any;
+  options: BaseModalOptions;
   /**
    * Closes the modal dialog.
    */
@@ -125,11 +125,13 @@ export interface ModalRegistration extends BaseRegistration {
   defaults: any;
 }
 
+export interface BaseModalOptions {}
+
 export interface PiralCustomModalsMap {}
 
 export interface PiralModalsMap extends PiralCustomModalsMap {}
 
-export type ModalOptions<T> = T extends keyof PiralModalsMap ? PiralModalsMap[T] : T extends string ? any : T;
+export type ModalOptions<T> = T extends keyof PiralModalsMap ? (PiralModalsMap[T] & BaseModalOptions) : T extends string ? BaseModalOptions : T;
 
 export type ModalComponentProps<T> = BaseComponentProps & BareModalComponentProps<ModalOptions<T>>;
 
