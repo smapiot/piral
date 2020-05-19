@@ -1,6 +1,7 @@
 import { Extend, ExtensionSlotProps } from 'piral-core';
 import { Component } from 'vue';
-import { mountVue, register } from './mount';
+import { register } from './mount';
+import { createConverter } from './converter';
 import { PiletVueApi } from './types';
 
 /**
@@ -45,26 +46,8 @@ export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
   register(selector, VueExtension);
 
   return context => {
-    context.converters.vue = ({ root, captured }) => {
-      let instance: any = undefined;
-
-      return {
-        mount(parent, data, ctx) {
-          const el = parent.appendChild(document.createElement(rootName));
-          instance = mountVue(el, root, data, ctx, captured);
-        },
-        update(_, data) {
-          for (const prop in data) {
-            instance[prop] = data[prop];
-          }
-        },
-        unmount(el) {
-          instance.$destroy();
-          el.innerHTML = '';
-          instance = undefined;
-        },
-      };
-    };
+    const convert = createConverter(rootName);
+    context.converters.vue = ({ root, captured }) => convert(root, captured);
 
     return {
       fromVue(root, captured) {

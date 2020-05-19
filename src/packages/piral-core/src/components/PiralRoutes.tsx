@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { Route, Switch, RouteComponentProps } from 'react-router';
+import { Route, Switch, RouteComponentProps, SwitchProps } from 'react-router';
 import { useGlobalState } from '../hooks';
 
-export interface RoutesProps {
+export interface RoutesProps extends SwitchProps {
   NotFound: React.ComponentType<RouteComponentProps>;
 }
 
-export const PiralRoutes: React.FC<RoutesProps> = ({ NotFound }) => {
+export const PiralRoutes: React.FC<RoutesProps> = ({ NotFound, ...props }) => {
   const routes = useGlobalState(s => s.routes);
   const pages = useGlobalState(s => s.registry.pages);
 
   return (
-    <Switch>
+    <Switch {...props}>
       {Object.keys(routes).map(url => (
         <Route exact key={url} path={url} component={routes[url]} />
       ))}

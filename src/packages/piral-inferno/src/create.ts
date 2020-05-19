@@ -1,7 +1,8 @@
 import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { Component } from 'inferno';
 import { createElement } from 'inferno-create-element';
-import { mountInferno, unmountInferno, anyPropType } from './mount';
+import { anyPropType } from './mount';
+import { createConverter } from './converter';
 import { PiletInfernoApi } from './types';
 
 /**
@@ -46,17 +47,8 @@ export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfern
   };
 
   return context => {
-    context.converters.inferno = component => ({
-      mount(el, props, ctx) {
-        mountInferno(el, component.root, props, ctx);
-      },
-      update(el, props, ctx) {
-        mountInferno(el, component.root, props, ctx);
-      },
-      unmount(el) {
-        unmountInferno(el);
-      },
-    });
+    const convert = createConverter();
+    context.converters.inferno = ({ root }) => convert(root);
 
     return {
       fromInferno(root) {

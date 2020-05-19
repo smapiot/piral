@@ -1,5 +1,6 @@
 import { Extend } from 'piral-core';
-import { PiletSvelteApi, SvelteComponentInstance } from './types';
+import { createConverter } from './converter';
+import { PiletSvelteApi } from './types';
 
 /**
  * Available configuration options for the Svelte plugin.
@@ -41,40 +42,8 @@ export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteAp
   }
 
   return context => {
-    context.converters.svelte = ({ Component, captured }) => {
-      let instance: SvelteComponentInstance<any> = undefined;
-
-      return {
-        mount(parent, data, ctx) {
-          parent.addEventListener(
-            'render-html',
-            (ev: CustomEvent) => {
-              const { piral } = data;
-              piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-            },
-            false,
-          );
-          instance = new Component({
-            target: parent,
-            props: {
-              ...captured,
-              ...ctx,
-              ...data,
-            },
-          });
-        },
-        update(_, data) {
-          Object.keys(data).forEach(key => {
-            instance[key] = data[key];
-          });
-        },
-        unmount(el) {
-          instance.$destroy();
-          instance = undefined;
-          el.innerHTML = '';
-        },
-      };
-    };
+    const convert = createConverter();
+    context.converters.svelte = ({ Component, captured }) => convert(Component, captured);
 
     return {
       fromSvelte(Component, captured) {

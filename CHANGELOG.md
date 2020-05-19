@@ -6,6 +6,8 @@
 * Added tutorial for the migration of existing applications (#180)
 * Added `piral-cli-parcel` plugin for Parcel integration (#125)
 * Fixed the source map offset in Parcel (#216)
+* Added `BaseModalOptions` interface to `piral-modals` (#217)
+* Specified `integrity` value in pilet response data model
 
 ## 0.11.4 (May 6, 2020)
 

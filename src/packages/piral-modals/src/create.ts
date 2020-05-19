@@ -56,9 +56,9 @@ export function createModalsApi(config: ModalsConfig = {}): Extend<PiletModalsAp
     context.dispatch(state => ({
       ...state,
       components: {
-        ...state.components,
         ModalsHost: DefaultHost,
         ModalsDialog: DefaultDialog,
+        ...state.components,
       },
       registry: {
         ...state.registry,

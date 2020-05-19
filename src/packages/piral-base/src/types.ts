@@ -1,7 +1,4 @@
-/**
- * Describes the metadata transported by a pilet.
- */
-export interface PiletMetadata {
+export interface PiletMetadataV1 {
   /**
    * The name of the pilet, i.e., the package id.
    */
@@ -20,12 +17,6 @@ export interface PiletMetadata {
    */
   link?: string;
   /**
-   * The reference name for the global require.
-   * If set this wil trigger the script mode instead of the eval
-   * mode.
-   */
-  requireRef?: string;
-  /**
    * The computed hash value of the pilet's content. Should be
    * accurate to allow caching.
    */
@@ -42,6 +33,39 @@ export interface PiletMetadata {
    */
   custom?: any;
 }
+
+export interface PiletMetadataV2 {
+  /**
+   * The name of the pilet, i.e., the package id.
+   */
+  name: string;
+  /**
+   * The version of the pilet. Should be semantically versioned.
+   */
+  version: string;
+  /**
+   * The link for retrieving the content of the pilet.
+   */
+  link: string;
+  /**
+   * The reference name for the global require.
+   */
+  requireRef: string;
+  /**
+   * The computed integrity of the pilet. Will be used to set the
+   * integrity value of the script.
+   */
+  integrity?: string;
+  /**
+   * Optionally provides some custom metadata for the pilet.
+   */
+  custom?: any;
+}
+
+/**
+ * Describes the metadata transported by a pilet.
+ */
+export type PiletMetadata = PiletMetadataV1 | PiletMetadataV2;
 
 /**
  * Defines the API accessible from pilets.

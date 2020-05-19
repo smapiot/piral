@@ -105,9 +105,9 @@ export function createNotificationsApi(config: NotificationsConfig = {}): Extend
     context.dispatch(state => ({
       ...state,
       components: {
-        ...state.components,
         NotificationsHost: DefaultHost,
         NotificationsToast: DefaultToast,
+        ...state.components,
       },
       notifications: getNotifications(context, messages, defaultOptions),
     }));
