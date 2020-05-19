@@ -1,5 +1,5 @@
 import 'piral-core';
-import { Profile } from 'oidc-client';
+import { Profile, UserManagerEvents } from 'oidc-client';
 
 /**
  * Available configuration options for the OpenID Connect plugin.
@@ -42,6 +42,11 @@ export interface OidcConfig {
    * Otherwise, the client is responsive to the `before-fetch` event.
    */
   restrict?: boolean;
+  /**
+   * If provided, the window will redirect to this Uri after getting
+   * a new session from the redirectUri callback.
+   */
+  appUri?: string;
 }
 
 /**
@@ -76,13 +81,25 @@ export interface OidcRequest {
 
 export interface OidcClient {
   /**
-   * Performs a login.
+   * Performs a login. Will do nothing when called from a non-top window.
    */
-  login(): void;
+  login(): Promise<void>;
   /**
    * Performs a logout.
    */
-  logout(): void;
+  logout(): Promise<void>;
+  /**
+   * Performs a login when the app needs a new token, handles callbacks when on 
+   * a callback URL, and redirects into the app route if the client was configured with an `appUri`.
+   * 
+   * When this resolves to true, the app-shell should call its `render()` method.
+   * When this resolves to false, do not call `render()`.
+   * 
+   * If this rejects, the app-shell should redirect to the login page or handle
+   * an authentication failure manually, it is also advised to log this error to a logging service,
+   * as no users will be be authorized to enter the application.
+   */
+  handleAuthentication(): Promise<boolean>;
   /**
    * Retrieves the current user profile.
    */
@@ -95,6 +112,10 @@ export interface OidcClient {
    * Extends the headers of the provided request.
    */
   extendHeaders(req: OidcRequest): void;
+  /**
+   * The internal oidc-client library User Manager events.
+   */
+  events: UserManagerEvents;
 }
 
 export interface PiralOidcApi {
@@ -103,6 +124,9 @@ export interface PiralOidcApi {
    */
   getAccessToken(): Promise<string | undefined>;
 
+  /**
+   * Gets the user's claims from oidc.
+   */
   getProfile(): Promise<OidcProfileWithCustomClaims>;
 }
 
