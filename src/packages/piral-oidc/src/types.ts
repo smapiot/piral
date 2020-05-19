@@ -89,12 +89,12 @@ export interface OidcClient {
    */
   logout(): Promise<void>;
   /**
-   * Performs a login when the app needs a new token, handles callbacks when on 
+   * Performs a login when the app needs a new token, handles callbacks when on
    * a callback URL, and redirects into the app route if the client was configured with an `appUri`.
-   * 
+   *
    * When this resolves to true, the app-shell should call its `render()` method.
    * When this resolves to false, do not call `render()`.
-   * 
+   *
    * If this rejects, the app-shell should redirect to the login page or handle
    * an authentication failure manually, it is also advised to log this error to a logging service,
    * as no users will be be authorized to enter the application.

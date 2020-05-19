@@ -48,13 +48,13 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     return new Promise<string>((res, rej) => {
       userManager
         .getUser()
-        .then(user => {
+        .then((user) => {
           if (!user) {
             rej(notLoggedInMessage);
           } else if (user.access_token && user.expires_in > 60) {
             res(user.access_token);
           } else {
-            return userManager.signinSilent().then(user => {
+            return userManager.signinSilent().then((user) => {
               if (!user || !user.access_token) {
                 throw new Error('Silent renew failed to retrieve access token');
               }
@@ -62,21 +62,21 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
             });
           }
         })
-        .catch(err => rej(err));
+        .catch((err) => rej(err));
     });
   };
 
   const retrieveProfile = () => {
     return new Promise<OidcProfileWithCustomClaims>((res, rej) => {
       userManager.getUser().then(
-        user => {
+        (user) => {
           if (!user || user.expires_in <= 0) {
             rej(notLoggedInMessage);
           } else {
             res(user.profile as OidcProfileWithCustomClaims);
           }
         },
-        err => rej(err),
+        (err) => rej(err),
       );
     });
   };
@@ -88,7 +88,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
           window.location.pathname === new URL(userManager.settings.popup_redirect_uri).pathname) &&
         window !== window.top
       ) {
-        /* 
+        /*
          * This is a silent redirect frame. The correct behavior is to notify the parent of the updated user,
          * and then to do nothing else. Encountering an error here means the background IFrame failed
          * to update the parent. This is usually due to a timeout from a network error.
@@ -122,20 +122,20 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         return resolve(true);
       }
 
-      /* 
+      /*
        * The current page is a normal flow, not a callback or signout. We should retrieve the current access_token,
        * or log the user in if there is no current session.
        * This branch of code should also tell the user to render the main application.
        */
       return retrieveToken()
-        .then(token => {
+        .then((token) => {
           if (token) {
             return resolve(true);
           } else {
             return reject(new Error('Invalid token during authentication'));
           }
         })
-        .catch(async reason => {
+        .catch(async (reason) => {
           if (new RegExp(notLoggedInMessage).test(reason)) {
             /*
              * Expected Error during normal code flow:
@@ -170,7 +170,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       if (!restrict) {
         req.setHeaders(
           retrieveToken().then(
-            token => token && { Authorization: `Bearer ${token}` },
+            (token) => token && { Authorization: `Bearer ${token}` },
             () => undefined,
           ),
         );
