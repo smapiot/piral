@@ -53,13 +53,13 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     return new Promise<string>((res, rej) => {
       userManager
         .getUser()
-        .then(user => {
+        .then((user) => {
           if (!user) {
             rej(notLoggedInMessage);
           } else if (user.access_token && user.expires_in > 60) {
             res(user.access_token);
           } else {
-            return userManager.signinSilent().then(user => {
+            return userManager.signinSilent().then((user) => {
               if (!user || !user.access_token) {
                 throw new Error(silentRenewFailedMessage);
               }
@@ -67,21 +67,21 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
             });
           }
         })
-        .catch(err => rej(err));
+        .catch((err) => rej(err));
     });
   };
 
   const retrieveProfile = () => {
     return new Promise<OidcProfileWithCustomClaims>((res, rej) => {
       userManager.getUser().then(
-        user => {
+        (user) => {
           if (!user || user.expires_in <= 0) {
             rej(notLoggedInMessage);
           } else {
             res(user.profile as OidcProfileWithCustomClaims);
           }
         },
-        err => rej(err),
+        (err) => rej(err),
       );
     });
   };
@@ -133,7 +133,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
        * This branch of code should also tell the user to render the main application.
        */
       return retrieveToken()
-        .then(token => {
+        .then((token) => {
           if (token) {
             return resolve(true);
           } else {
@@ -141,7 +141,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
             return reject(new Error(invalidTokenMessage));
           }
         })
-        .catch(async reason => {
+        .catch(async (reason) => {
           if (reason.message === notLoggedInMessage || reason === notLoggedInMessage) {
             /*
              * Expected Error during normal code flow:
@@ -176,7 +176,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       if (!restrict) {
         req.setHeaders(
           retrieveToken().then(
-            token => token && { Authorization: `Bearer ${token}` },
+            (token) => token && { Authorization: `Bearer ${token}` },
             () => undefined,
           ),
         );
