@@ -107,6 +107,7 @@ describe('Piral-Oidc setup module', () => {
       expect(mockSignoutRedirectCallback).toHaveBeenCalledTimes(1);
       expect(mockSignoutPopupCallback).not.toHaveBeenCalled();
     });
+
     it('should call signoutPopupCallback and signoutSilentCallback when on the post_logout_redirect_uri in an IFrame', () => {
       setWindowInIFrame();
       expect(UserManager).not.toHaveBeenCalled();
