@@ -23,6 +23,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     scopes,
     restrict = false,
     appUri,
+    logLevel,
   } = config;
 
   const userManager = new UserManager({
@@ -37,7 +38,10 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     scope: scopes?.join(' '),
   });
 
-  if (process.env.NODE_ENV === 'development') {
+  if (logLevel !== undefined) {
+    Log.logger = console;
+    Log.level = logLevel;
+  } else if (process.env.NODE_ENV === 'development') {
     Log.logger = console;
     Log.level = Log.DEBUG;
   }

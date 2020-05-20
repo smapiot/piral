@@ -47,6 +47,19 @@ export interface OidcConfig {
    * a new session from the redirectUri callback.
    */
   appUri?: string;
+  /**
+   * If provided, logging will be enabled for the oidc-client.
+   * Defaults to Log.DEBUG in development NODE_ENV.
+   */
+  logLevel?: LogLevel;
+}
+
+export enum LogLevel {
+  NONE = 0,
+  ERROR = 1,
+  WARN = 2,
+  INFO = 3,
+  DEBUG = 4,
 }
 
 /**
