@@ -54,12 +54,12 @@ export interface OidcConfig {
   logLevel?: LogLevel;
 }
 
-export enum LogLevel {
-  NONE = 0,
-  ERROR = 1,
-  WARN = 2,
-  INFO = 3,
-  DEBUG = 4,
+export const enum LogLevel {
+  none = 'none',
+  error = 'error',
+  warn = 'warn',
+  info = 'info',
+  debug = 'debug',
 }
 
 /**
@@ -145,4 +145,42 @@ export interface PiralOidcApi {
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiralOidcApi {}
+}
+
+export const enum OidcErrorType {
+  /**
+   * This error was thrown at some point during authentication, by the browser or by oidc-client
+   * and we are unable to handle it.
+   */
+  unknown = 'unknown',
+  /**
+   * This error happens when the user does not have an access token during Authentication.
+   * It is an expected error, and should be handled during `handleAuthentication()` calls.
+   * If doing manual authentication, prompt the user to `login()` when receiving it.
+   */
+  notAuthorized = 'notAuthorized',
+  /**
+   * This error happens when silent renew fails in the background. It is not expected, and
+   * signifies a network error or configuration problem.
+   */
+  silentRenewFailed = 'silentRenewFailed',
+  /**
+   * This is an unexpected error that happens when the `token()` call retrieves a User from
+   * the user manager, but it does not have an access_token. This signifies a configuration
+   * error, make sure the correct `scopes` are supplied during configuration.
+   */
+  invalidToken = 'invalidToken',
+  /**
+   * This error happened during an Open ID callback. This signifies a network or configuration error
+   * which is non-recoverable. This should be logged to a logging service, and the user should be
+   * prompted to logout().
+   */
+  oidcCallback = 'oidcCallback',
+}
+
+/**
+ * This Error is used for Authentication errors in piral-oidc.
+ */
+export interface PiralOidcError extends Error {
+  type: Readonly<OidcErrorType>;
 }

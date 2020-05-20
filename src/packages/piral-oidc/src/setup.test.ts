@@ -1,7 +1,7 @@
 import { UserManager, UserManagerEvents } from 'oidc-client';
 
-import { setupOidcClient, notLoggedInMessage } from './setup';
-import { OidcClient, OidcConfig } from './types';
+import { setupOidcClient } from './setup';
+import { OidcClient, OidcConfig, OidcErrorType } from './types';
 
 jest.mock('oidc-client');
 
@@ -162,14 +162,20 @@ describe('Piral-Oidc setup module', () => {
 
     it('token() should reject without a user', () => {
       mockGetUser.mockResolvedValue(undefined);
-      return expect(client.token()).rejects.toMatch(notLoggedInMessage);
+      return expect(client.token()).rejects.toHaveProperty('type', OidcErrorType.notAuthorized);
     });
 
     it('token() rejects when UserManager rejects', async () => {
       const e = new Error('test error');
       mockGetUser.mockRejectedValue(e);
-      await expect(client.token()).rejects.toThrow(e);
+      await expect(client.token()).rejects.toHaveProperty('type', OidcErrorType.unknown);
     });
+
+    it('token() should reject when a user does not have an access_token', () => {
+        mockGetUser.mockResolvedValue({});
+        mockSigninSilent.mockResolvedValue({});
+        return expect(client.token()).rejects.toHaveProperty('type', OidcErrorType.invalidToken);
+    })
 
     it('account() should return the User profile', () => {
       const user: any = {
@@ -192,12 +198,12 @@ describe('Piral-Oidc setup module', () => {
         },
       };
       mockGetUser.mockResolvedValue(user);
-      return expect(client.account()).rejects.toMatch('Not logged in.');
+      return expect(client.account()).rejects.toHaveProperty('type', OidcErrorType.notAuthorized);
     });
 
     it('account() should reject when user is not authenticated', () => {
       mockGetUser.mockResolvedValue(undefined);
-      return expect(client.account()).rejects.toMatch('Not logged in.');
+      return expect(client.account()).rejects.toHaveProperty('type', OidcErrorType.notAuthorized);
     });
 
     it('handleAuthentication() calls signinSilentCallback when on the silent_redirect_uri path in an IFrame', async () => {
@@ -270,7 +276,7 @@ describe('Piral-Oidc setup module', () => {
     it('handleAuthentication() rejects when token() rejects', async () => {
       const e = new Error('test error');
       mockGetUser.mockRejectedValue(e);
-      await expect(client.handleAuthentication()).rejects.toThrow(e);
+      await expect(client.handleAuthentication()).rejects.toHaveProperty('type', OidcErrorType.unknown);
     });
 
     it('extendHeaders() calls request.setHeaders with the authorization header when the user has a token', async () => {

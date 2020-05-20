@@ -1,12 +1,18 @@
 import { UserManager, Log } from 'oidc-client';
-import { OidcConfig, OidcClient, OidcProfileWithCustomClaims } from './types';
+import { OidcConfig, OidcClient, OidcProfileWithCustomClaims, OidcErrorType, LogLevel } from './types';
+import { OidcError } from './OidcError';
 
-/** Error message received when getting a user without an access token. */
-export const notLoggedInMessage = 'Not logged in. Please call `login()` to retrieve a token.';
-/** Error message received when silent renew fails in the background. */
-export const silentRenewFailedMessage = 'Silent renew failed to retrieve access token';
-/** Error message received when authentication fails unexpectedly. */
-const invalidTokenMessage = 'Invalid token during authentication';
+const logLevelToOidcMap = {
+    [LogLevel.none]: 0,
+    [LogLevel.error]: 1,
+    [LogLevel.warn]: 2,
+    [LogLevel.info]: 3,
+    [LogLevel.debug]: 4,
+};
+
+const convertLogLevelToOidcClient = (level: LogLevel ) => {
+    return logLevelToOidcMap[level];
+};
 
 /**
  * Sets up a new client wrapping the oidc-client API.
@@ -40,7 +46,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
 
   if (logLevel !== undefined) {
     Log.logger = console;
-    Log.level = logLevel;
+    Log.level = convertLogLevelToOidcClient(logLevel);
   } else if (process.env.NODE_ENV === 'development') {
     Log.logger = console;
     Log.level = Log.DEBUG;
@@ -58,35 +64,38 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     return new Promise<string>((res, rej) => {
       userManager
         .getUser()
-        .then((user) => {
+        .then(user => {
           if (!user) {
-            rej(notLoggedInMessage);
+            rej(new OidcError(OidcErrorType.notAuthorized));
           } else if (user.access_token && user.expires_in > 60) {
             res(user.access_token);
           } else {
-            return userManager.signinSilent().then((user) => {
-              if (!user || !user.access_token) {
-                throw new Error(silentRenewFailedMessage);
+            return userManager.signinSilent().then(user => {
+              if (!user) {
+                return rej(new OidcError(OidcErrorType.silentRenewFailed));
+              }
+              if (!user.access_token) {
+                  return rej(new OidcError(OidcErrorType.invalidToken));
               }
               return res(user.access_token);
             });
           }
         })
-        .catch((err) => rej(err));
+        .catch(err => rej(new OidcError(OidcErrorType.unknown, err)));
     });
   };
 
   const retrieveProfile = () => {
     return new Promise<OidcProfileWithCustomClaims>((res, rej) => {
       userManager.getUser().then(
-        (user) => {
+        user => {
           if (!user || user.expires_in <= 0) {
-            rej(notLoggedInMessage);
+            return rej(new OidcError(OidcErrorType.notAuthorized));
           } else {
-            res(user.profile as OidcProfileWithCustomClaims);
+            return res(user.profile as OidcProfileWithCustomClaims);
           }
         },
-        (err) => rej(err),
+        err => rej(new OidcError(OidcErrorType.unknown, err)),
       );
     });
   };
@@ -106,7 +115,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         try {
           await userManager.signinSilentCallback();
         } catch (e) {
-          return reject(e);
+          return reject(new OidcError(OidcErrorType.oidcCallback, e));
         }
         return resolve(false);
       }
@@ -119,7 +128,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
            * Failing to handle a sign-in callback is non-recoverable. The user is expected to call `logout()`, after
            * logging this error to their internal error-handling service. Usually, this is due to a misconfigured auth server.
            */
-          return reject(e);
+          return reject(new OidcError(OidcErrorType.oidcCallback, e));
         }
 
         if (appUri) {
@@ -138,16 +147,16 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
        * This branch of code should also tell the user to render the main application.
        */
       return retrieveToken()
-        .then((token) => {
+        .then(token => {
           if (token) {
             return resolve(true);
           } else {
             /* We should never get into this state, retireveToken() should reject if there is no token */
-            return reject(new Error(invalidTokenMessage));
+            return reject(new OidcError(OidcErrorType.invalidToken));
           }
         })
-        .catch(async (reason) => {
-          if (reason.message === notLoggedInMessage || reason === notLoggedInMessage) {
+        .catch(async (reason: OidcError) => {
+          if (reason.type === OidcErrorType.notAuthorized) {
             /*
              * Expected Error during normal code flow:
              * This is the first time logging in since a logout (or ever), instead of asking the user
@@ -181,7 +190,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       if (!restrict) {
         req.setHeaders(
           retrieveToken().then(
-            (token) => token && { Authorization: `Bearer ${token}` },
+            token => token && { Authorization: `Bearer ${token}` },
             () => undefined,
           ),
         );
