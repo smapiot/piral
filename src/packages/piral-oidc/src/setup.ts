@@ -2,6 +2,8 @@ import { UserManager, Log } from 'oidc-client';
 import { OidcConfig, OidcClient, OidcProfileWithCustomClaims, OidcErrorType, LogLevel } from './types';
 import { OidcError } from './OidcError';
 
+const doesWindowLocationMatch = (targetUri: string) => window.location.pathname === new URL(targetUri).pathname;
+
 const logLevelToOidcMap = {
   [LogLevel.none]: 0,
   [LogLevel.error]: 1,
@@ -52,7 +54,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     Log.level = Log.DEBUG;
   }
 
-  if (window.location.pathname === new URL(userManager.settings.post_logout_redirect_uri).pathname) {
+  if (doesWindowLocationMatch(userManager.settings.post_logout_redirect_uri)) {
     if (window === window.top) {
       userManager.signoutRedirectCallback();
     } else {
@@ -103,8 +105,8 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
   const handleAuthentication = (): Promise<boolean> =>
     new Promise(async (resolve, reject) => {
       if (
-        (window.location.pathname === new URL(userManager.settings.silent_redirect_uri).pathname ||
-          window.location.pathname === new URL(userManager.settings.popup_redirect_uri).pathname) &&
+        (doesWindowLocationMatch(userManager.settings.silent_redirect_uri) ||
+          doesWindowLocationMatch(userManager.settings.popup_redirect_uri)) &&
         window !== window.top
       ) {
         /*
@@ -120,7 +122,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         return resolve(false);
       }
 
-      if (window.location.pathname === new URL(userManager.settings.redirect_uri).pathname && window === window.top) {
+      if (doesWindowLocationMatch(userManager.settings.redirect_uri) && window === window.top) {
         try {
           await userManager.signinCallback();
         } catch (e) {
