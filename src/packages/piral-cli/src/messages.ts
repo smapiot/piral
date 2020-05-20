@@ -1734,6 +1734,35 @@ export function bundlerMissing_0072(bundlerName: string, installed: Array<string
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * No default bundler is available.
+ *
+ * @abstract
+ * Piral allows you to set up your own tooling for building and debugging. This
+ * is a powerful concept. By default, the Parcel bundler is used. Alternatives
+ * include Webpack and Rollup.
+ *
+ * In case where no bundler is installed and the default bundler could not be
+ * successfully installed this error is shown.
+ *
+ * @see
+ * - [Parcel](https://parceljs.org)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ *
+ * @example
+ * Use the following command to make the parcel bundler available:
+ *
+ * ```sh
+ * npm i piral-cli-parcel --save-dev
+ * ```
+ */
+export function defaultBundlerMissing_0073(): QuickMessage {
+  return [LogLevels.error, '0073', `Cannot find a default bundler.`];
+}
+
+/**
  * @kind Warning
  *
  * @summary

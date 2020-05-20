@@ -26,7 +26,7 @@ async function run(root: string, piral: string, externals: Array<string>, entryF
       minify: false,
       sourceMaps: true,
       contentHash: false,
-      publicUrl: './',
+      publicUrl: '/',
       logLevel,
       outDir,
       cacheDir,

@@ -1,4 +1,4 @@
-import { PiletApp, AvailableDependencies, PiletExports } from './types';
+import { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV2 } from './types';
 
 function requireModule(name: string, dependencies: AvailableDependencies) {
   const dependency = dependencies[name];
@@ -85,25 +85,24 @@ declare global {
 
 /**
  * Includes the given script via its URL with a dependency resolution.
- * @param name The name of the dependency to include.
- * @param link The link to the dependency.
- * @param requireRef The name of the global require to inject.
+ * @param meta The meta data of the dependency to include.
  * @param dependencies The globally available dependencies.
  * @returns The evaluated module.
  */
-export function includeDependency(
-  name: string,
-  link: string,
-  requireRef: string,
-  dependencies?: AvailableDependencies,
-) {
+export function includeDependency(meta: PiletMetadataV2, dependencies?: AvailableDependencies) {
   return new Promise<PiletApp>(resolve => {
+    const rr = meta.requireRef;
     const s = document.createElement('script');
     s.async = true;
-    s.src = link;
-    window[requireRef] = getLocalRequire(dependencies);
-    s.onload = () => resolve(checkPiletAppAsync(name, s.app));
-    s.onerror = () => resolve(checkPiletApp(name));
+    s.src = meta.link;
+
+    if (meta.integrity) {
+      s.integrity = meta.integrity;
+    }
+
+    window[rr] = getLocalRequire(dependencies);
+    s.onload = () => resolve(checkPiletAppAsync(meta.name, s.app));
+    s.onerror = () => resolve(checkPiletApp(meta.name));
     document.body.appendChild(s);
   });
 }

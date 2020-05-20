@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch, RouteComponentProps, SwitchProps } from 'react-router-dom';
+import { Route, Switch, RouteComponentProps, SwitchProps } from 'react-router';
 import { useGlobalState } from '../hooks';
 
 export interface RoutesProps extends SwitchProps {

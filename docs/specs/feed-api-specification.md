@@ -91,26 +91,35 @@ interface PiletApiResponse {
   items: Array<PiletMetadata>;
 }
 
-interface PiletMetadata {
+interface PiletMetadataV1 {
   name: string;
   version: string;
-  author: {
-    name?: string;
-    email?: string;
-  };
-  hash: string;
   content?: string;
   link?: string;
-  requireRef?: string;
+  hash: string;
+  noCache?: boolean | string;
   custom?: any;
 }
+
+interface PiletMetadataV2 {
+  name: string;
+  version: string;
+  link: string;
+  requireRef: string;
+  integrity?: string;
+  custom?: any;
+}
+
+type PiletMetadata = PiletMetadataV1 | PiletMetadataV2;
 ```
 
 The schema is written and defined using a TypeScript interface (see references).
 
-If you want to embed the JavaScript then you must use `content` *instead* of an URL in `link`.
+If you want to embed the JavaScript then you must follow the `PiletMetadataV1` interface and use `content` *instead* of an URL in `link`.
 
-If the `requireRef` field is used then the `content` will be embedded via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
+If the `requireRef` field is used then `PiletMetadataV2` will be used implicitly. In this case the pilet is integrated via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
+
+In `PiletMetadataV2` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
 
 The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
 
@@ -239,3 +248,4 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 - [RFC2119](https://tools.ietf.org/html/rfc2119)
 - [Pilet Specification](https://docs.piral.io/reference/specifications/pilet)
 - [TypeScript Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
+- [Subresource Integrity](https://www.w3.org/TR/SRI/)

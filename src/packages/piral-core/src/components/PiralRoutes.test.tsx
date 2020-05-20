@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { mount } from 'enzyme';
 import { PiralRoutes } from './PiralRoutes';
 

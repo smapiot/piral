@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import { PiletApi, Pilet, PiletMetadata, EventEmitter } from 'piral-base';
 import { PiletCustomApi, PiralCustomPageMeta } from './custom';
 import { AnyComponent } from './components';
