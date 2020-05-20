@@ -29,6 +29,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     authority: identityProviderUri,
     redirect_uri: redirectUri,
     silent_redirect_uri: redirectUri,
+    popup_redirect_uri: redirectUri,
     post_logout_redirect_uri: postLogoutRedirectUri,
     client_id: clientId,
     client_secret: clientSecret,
