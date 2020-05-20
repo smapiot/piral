@@ -172,10 +172,10 @@ describe('Piral-Oidc setup module', () => {
     });
 
     it('token() should reject when a user does not have an access_token', () => {
-        mockGetUser.mockResolvedValue({});
-        mockSigninSilent.mockResolvedValue({});
-        return expect(client.token()).rejects.toHaveProperty('type', OidcErrorType.invalidToken);
-    })
+      mockGetUser.mockResolvedValue({});
+      mockSigninSilent.mockResolvedValue({});
+      return expect(client.token()).rejects.toHaveProperty('type', OidcErrorType.invalidToken);
+    });
 
     it('account() should return the User profile', () => {
       const user: any = {

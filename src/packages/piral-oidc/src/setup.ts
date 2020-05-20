@@ -3,15 +3,15 @@ import { OidcConfig, OidcClient, OidcProfileWithCustomClaims, OidcErrorType, Log
 import { OidcError } from './OidcError';
 
 const logLevelToOidcMap = {
-    [LogLevel.none]: 0,
-    [LogLevel.error]: 1,
-    [LogLevel.warn]: 2,
-    [LogLevel.info]: 3,
-    [LogLevel.debug]: 4,
+  [LogLevel.none]: 0,
+  [LogLevel.error]: 1,
+  [LogLevel.warn]: 2,
+  [LogLevel.info]: 3,
+  [LogLevel.debug]: 4,
 };
 
-const convertLogLevelToOidcClient = (level: LogLevel ) => {
-    return logLevelToOidcMap[level];
+const convertLogLevelToOidcClient = (level: LogLevel) => {
+  return logLevelToOidcMap[level];
 };
 
 /**
@@ -64,38 +64,38 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     return new Promise<string>((res, rej) => {
       userManager
         .getUser()
-        .then(user => {
+        .then((user) => {
           if (!user) {
             rej(new OidcError(OidcErrorType.notAuthorized));
           } else if (user.access_token && user.expires_in > 60) {
             res(user.access_token);
           } else {
-            return userManager.signinSilent().then(user => {
+            return userManager.signinSilent().then((user) => {
               if (!user) {
                 return rej(new OidcError(OidcErrorType.silentRenewFailed));
               }
               if (!user.access_token) {
-                  return rej(new OidcError(OidcErrorType.invalidToken));
+                return rej(new OidcError(OidcErrorType.invalidToken));
               }
               return res(user.access_token);
             });
           }
         })
-        .catch(err => rej(new OidcError(OidcErrorType.unknown, err)));
+        .catch((err) => rej(new OidcError(OidcErrorType.unknown, err)));
     });
   };
 
   const retrieveProfile = () => {
     return new Promise<OidcProfileWithCustomClaims>((res, rej) => {
       userManager.getUser().then(
-        user => {
+        (user) => {
           if (!user || user.expires_in <= 0) {
             return rej(new OidcError(OidcErrorType.notAuthorized));
           } else {
             return res(user.profile as OidcProfileWithCustomClaims);
           }
         },
-        err => rej(new OidcError(OidcErrorType.unknown, err)),
+        (err) => rej(new OidcError(OidcErrorType.unknown, err)),
       );
     });
   };
@@ -147,7 +147,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
        * This branch of code should also tell the user to render the main application.
        */
       return retrieveToken()
-        .then(token => {
+        .then((token) => {
           if (token) {
             return resolve(true);
           } else {
@@ -190,7 +190,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       if (!restrict) {
         req.setHeaders(
           retrieveToken().then(
-            token => token && { Authorization: `Bearer ${token}` },
+            (token) => token && { Authorization: `Bearer ${token}` },
             () => undefined,
           ),
         );
