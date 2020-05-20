@@ -29,6 +29,31 @@ dotnet new blazorpilet --piralInstance my-app-shell
 
 where `my-app-shell` should refer to the name of the NPM package of your app shell. The `--npmRegistry` option is there, to cover cases where your app shell is not hosted in the standard NPM registry.
 
+Exposing components looks like:
+
+```cs
+@attribute [ExposePilet("sample-page")]
+
+<div>
+    <p>
+        Current count: @counter
+    </p>
+    <p>
+        <button @onclick="Increment">Increment</button>
+    </p>
+</div>
+
+@code {
+    int counter = 0;
+
+    void Increment()
+    {
+        counter++;
+    }
+}
+
+```
+
 The following functions are brought to the Pilet API.
 
 ### `defineBlazorReferences()`
