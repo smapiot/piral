@@ -1,5 +1,5 @@
 import 'piral-core';
-import { Profile, UserManagerEvents } from 'oidc-client';
+import { Profile } from 'oidc-client';
 
 /**
  * Available configuration options for the OpenID Connect plugin.
@@ -125,10 +125,6 @@ export interface OidcClient {
    * Extends the headers of the provided request.
    */
   extendHeaders(req: OidcRequest): void;
-  /**
-   * The internal oidc-client library User Manager events.
-   */
-  events: UserManagerEvents;
 }
 
 export interface PiralOidcApi {

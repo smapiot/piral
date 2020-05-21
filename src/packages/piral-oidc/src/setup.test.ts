@@ -1,4 +1,4 @@
-import { UserManager, UserManagerEvents } from 'oidc-client';
+import { UserManager } from 'oidc-client';
 
 import { setupOidcClient } from './setup';
 import { OidcClient, OidcConfig, OidcErrorType } from './types';
@@ -11,7 +11,6 @@ describe('Piral-Oidc setup module', () => {
   const setWindowInTop = () =>
     Object.defineProperty(window, 'top', { value: window, configurable: true, writable: true });
   const originalWindowLocation = window.location;
-  const retrieveTokenErrMessage = 'Silent renew failed to retrieve access token';
   let oidcConfig: OidcConfig;
   const MockUserManager = UserManager as jest.MockedClass<typeof UserManager>;
   const user = {
@@ -28,8 +27,6 @@ describe('Piral-Oidc setup module', () => {
   const mockSignoutRedirectCallback = jest.fn().mockResolvedValue(undefined).mockName('signoutRedirectCallback');
   const mockSignoutPopupCallback = jest.fn().mockResolvedValue(undefined).mockName('signoutPopupCallback');
 
-  const mockEvents: UserManagerEvents = {} as any;
-
   const postLogoutRedirectUri = 'http://localhost:8000/post-logout';
   const redirectUri = 'http://localhost:8000/callback';
   const appUri = 'http://localhost:8000/app';
@@ -39,7 +36,6 @@ describe('Piral-Oidc setup module', () => {
     MockUserManager.mockImplementation((settings) => {
       return {
         getUser: mockGetUser,
-        events: mockEvents,
         settings: {
           popup_redirect_uri: settings.popup_redirect_uri || settings.redirect_uri,
           post_logout_redirect_uri: settings.post_logout_redirect_uri,
@@ -91,7 +87,6 @@ describe('Piral-Oidc setup module', () => {
         extendHeaders: expect.any(Function),
         token: expect.any(Function),
         account: expect.any(Function),
-        events: mockEvents,
         handleAuthentication: expect.any(Function),
       });
     });

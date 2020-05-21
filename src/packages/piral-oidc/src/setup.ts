@@ -199,7 +199,6 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       }
     },
     token: retrieveToken,
-    account: retrieveProfile,
-    events: userManager.events,
+    account: retrieveProfile
   };
 }
