@@ -1,5 +1,20 @@
 import { UserManager, Log } from 'oidc-client';
-import { OidcConfig, OidcClient, OidcProfileWithCustomClaims } from './types';
+import { OidcConfig, OidcClient, OidcProfileWithCustomClaims, OidcErrorType, LogLevel } from './types';
+import { OidcError } from './OidcError';
+
+const doesWindowLocationMatch = (targetUri: string) => window.location.pathname === new URL(targetUri).pathname;
+
+const logLevelToOidcMap = {
+  [LogLevel.none]: 0,
+  [LogLevel.error]: 1,
+  [LogLevel.warn]: 2,
+  [LogLevel.info]: 3,
+  [LogLevel.debug]: 4,
+};
+
+const convertLogLevelToOidcClient = (level: LogLevel) => {
+  return logLevelToOidcMap[level];
+};
 
 /**
  * Sets up a new client wrapping the oidc-client API.
@@ -15,11 +30,15 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     responseType,
     scopes,
     restrict = false,
+    appUri,
+    logLevel,
   } = config;
+
   const userManager = new UserManager({
     authority: identityProviderUri,
     redirect_uri: redirectUri,
     silent_redirect_uri: redirectUri,
+    popup_redirect_uri: redirectUri,
     post_logout_redirect_uri: postLogoutRedirectUri,
     client_id: clientId,
     client_secret: clientSecret,
@@ -27,29 +46,44 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     scope: scopes?.join(' '),
   });
 
-  if (process.env.NODE_ENV === 'development') {
+  if (logLevel !== undefined) {
+    Log.logger = console;
+    Log.level = convertLogLevelToOidcClient(logLevel);
+  } else if (process.env.NODE_ENV === 'development') {
     Log.logger = console;
     Log.level = Log.DEBUG;
   }
 
-  userManager.signinRedirectCallback();
-  userManager.signinSilentCallback();
-  userManager.signoutRedirectCallback();
+  if (doesWindowLocationMatch(userManager.settings.post_logout_redirect_uri)) {
+    if (window === window.top) {
+      userManager.signoutRedirectCallback();
+    } else {
+      userManager.signoutPopupCallback();
+    }
+  }
 
   const retrieveToken = () => {
     return new Promise<string>((res, rej) => {
-      userManager.getUser().then(
-        (user) => {
+      userManager
+        .getUser()
+        .then((user) => {
           if (!user) {
-            rej('Not logged in. Please call `login()` to retrieve a token.');
+            rej(new OidcError(OidcErrorType.notAuthorized));
           } else if (user.access_token && user.expires_in > 60) {
             res(user.access_token);
           } else {
-            userManager.signinSilent().then(() => retrieveToken().then(res, rej), rej);
+            return userManager.signinSilent().then((user) => {
+              if (!user) {
+                return rej(new OidcError(OidcErrorType.silentRenewFailed));
+              }
+              if (!user.access_token) {
+                return rej(new OidcError(OidcErrorType.invalidToken));
+              }
+              return res(user.access_token);
+            });
           }
-        },
-        (err) => rej(err),
-      );
+        })
+        .catch((err) => rej(new OidcError(OidcErrorType.unknown, err)));
     });
   };
 
@@ -58,23 +92,102 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       userManager.getUser().then(
         (user) => {
           if (!user || user.expires_in <= 0) {
-            rej('Not logged in. Please call `login()` to retreive the current profile.');
+            return rej(new OidcError(OidcErrorType.notAuthorized));
           } else {
-            res(user.profile as OidcProfileWithCustomClaims);
+            return res(user.profile as OidcProfileWithCustomClaims);
           }
         },
-        (err) => rej(err),
+        (err) => rej(new OidcError(OidcErrorType.unknown, err)),
       );
     });
   };
 
+  const handleAuthentication = (): Promise<boolean> =>
+    new Promise(async (resolve, reject) => {
+      if (
+        (doesWindowLocationMatch(userManager.settings.silent_redirect_uri) ||
+          doesWindowLocationMatch(userManager.settings.popup_redirect_uri)) &&
+        window !== window.top
+      ) {
+        /*
+         * This is a silent redirect frame. The correct behavior is to notify the parent of the updated user,
+         * and then to do nothing else. Encountering an error here means the background IFrame failed
+         * to update the parent. This is usually due to a timeout from a network error.
+         */
+        try {
+          await userManager.signinSilentCallback();
+        } catch (e) {
+          return reject(new OidcError(OidcErrorType.oidcCallback, e));
+        }
+        return resolve(false);
+      }
+
+      if (doesWindowLocationMatch(userManager.settings.redirect_uri) && window === window.top) {
+        try {
+          await userManager.signinCallback();
+        } catch (e) {
+          /*
+           * Failing to handle a sign-in callback is non-recoverable. The user is expected to call `logout()`, after
+           * logging this error to their internal error-handling service. Usually, this is due to a misconfigured auth server.
+           */
+          return reject(new OidcError(OidcErrorType.oidcCallback, e));
+        }
+
+        if (appUri) {
+          Log.debug(`Redirecting to ${appUri} due to appUri being configured.`);
+          window.location.href = appUri;
+          return resolve(false);
+        }
+
+        /* If appUri is not configured, we let the user decide what to do after getting a session. */
+        return resolve(true);
+      }
+
+      /*
+       * The current page is a normal flow, not a callback or signout. We should retrieve the current access_token,
+       * or log the user in if there is no current session.
+       * This branch of code should also tell the user to render the main application.
+       */
+      return retrieveToken()
+        .then((token) => {
+          if (token) {
+            return resolve(true);
+          } else {
+            /* We should never get into this state, retireveToken() should reject if there is no token */
+            return reject(new OidcError(OidcErrorType.invalidToken));
+          }
+        })
+        .catch(async (reason: OidcError) => {
+          if (reason.type === OidcErrorType.notAuthorized) {
+            /*
+             * Expected Error during normal code flow:
+             * This is the first time logging in since a logout (or ever), instead of asking the user
+             * to call `login()`, just perform it ourself here.
+             *
+             * The resolve shouldn't matter, as `signinRedirect` will redirect the browser location
+             * to the user's configured redirectUri.
+             */
+            await userManager.signinRedirect();
+            return resolve(false);
+          }
+
+          /*
+           * Getting here is a non-recoverable error. It is up to the user to determine what to do.
+           * Usually this is a result of failing to reach the authentication server, or a misconfigured
+           * authentication server, or a bad clock skew (commonly caused by docker in windows).
+           */
+          return reject(reason);
+        });
+    });
+
   return {
     login() {
-      userManager.signinRedirect();
+      return userManager.signinRedirect();
     },
     logout() {
-      userManager.signoutRedirect();
+      return userManager.signoutRedirect();
     },
+    handleAuthentication,
     extendHeaders(req) {
       if (!restrict) {
         req.setHeaders(
@@ -86,6 +199,6 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       }
     },
     token: retrieveToken,
-    account: retrieveProfile,
+    account: retrieveProfile
   };
 }
