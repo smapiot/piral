@@ -6,6 +6,7 @@
 * Added tutorial for the migration of existing applications (#180)
 * Added `piral-cli-parcel` plugin for Parcel integration (#125)
 * Fixed the source map offset in Parcel (#216)
+* Added `handleAuthentication` to piral-oidc (#219)
 * Added `BaseModalOptions` interface to `piral-modals` (#217)
 * Specified `integrity` value in pilet response data model
 * Fixed the `publicUrl` of the app shell in monorepo (#220)
