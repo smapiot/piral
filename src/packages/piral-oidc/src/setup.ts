@@ -1,5 +1,5 @@
 import { UserManager, Log } from 'oidc-client';
-import { OidcConfig, OidcClient, OidcProfileWithCustomClaims, OidcErrorType, LogLevel } from './types';
+import { OidcConfig, OidcClient, OidcProfile, OidcErrorType, LogLevel } from './types';
 import { OidcError } from './OidcError';
 
 const doesWindowLocationMatch = (targetUri: string) => window.location.pathname === new URL(targetUri).pathname;
@@ -66,13 +66,13 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     return new Promise<string>((res, rej) => {
       userManager
         .getUser()
-        .then((user) => {
+        .then(user => {
           if (!user) {
             rej(new OidcError(OidcErrorType.notAuthorized));
           } else if (user.access_token && user.expires_in > 60) {
             res(user.access_token);
           } else {
-            return userManager.signinSilent().then((user) => {
+            return userManager.signinSilent().then(user => {
               if (!user) {
                 return rej(new OidcError(OidcErrorType.silentRenewFailed));
               }
@@ -83,21 +83,21 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
             });
           }
         })
-        .catch((err) => rej(new OidcError(OidcErrorType.unknown, err)));
+        .catch(err => rej(new OidcError(OidcErrorType.unknown, err)));
     });
   };
 
   const retrieveProfile = () => {
-    return new Promise<OidcProfileWithCustomClaims>((res, rej) => {
+    return new Promise<OidcProfile>((res, rej) => {
       userManager.getUser().then(
-        (user) => {
+        user => {
           if (!user || user.expires_in <= 0) {
             return rej(new OidcError(OidcErrorType.notAuthorized));
           } else {
-            return res(user.profile as OidcProfileWithCustomClaims);
+            return res(user.profile as OidcProfile);
           }
         },
-        (err) => rej(new OidcError(OidcErrorType.unknown, err)),
+        err => rej(new OidcError(OidcErrorType.unknown, err)),
       );
     });
   };
@@ -149,7 +149,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
        * This branch of code should also tell the user to render the main application.
        */
       return retrieveToken()
-        .then((token) => {
+        .then(token => {
           if (token) {
             return resolve(true);
           } else {
@@ -192,13 +192,13 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       if (!restrict) {
         req.setHeaders(
           retrieveToken().then(
-            (token) => token && { Authorization: `Bearer ${token}` },
+            token => token && { Authorization: `Bearer ${token}` },
             () => undefined,
           ),
         );
       }
     },
     token: retrieveToken,
-    account: retrieveProfile
+    account: retrieveProfile,
   };
 }

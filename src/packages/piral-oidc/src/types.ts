@@ -54,11 +54,29 @@ export interface OidcConfig {
   logLevel?: LogLevel;
 }
 
-export const enum LogLevel {
+/**
+ * The available log levels.
+ */
+export enum LogLevel {
+  /**
+   * Logging disabled.
+   */
   none = 'none',
+  /**
+   * Only log on error.
+   */
   error = 'error',
+  /**
+   * Start logging when its at least a warning.
+   */
   warn = 'warn',
+  /**
+   * Already start logging on info level.
+   */
   info = 'info',
+  /**
+   * Log everything - good for debugging purposes.
+   */
   debug = 'debug',
 }
 
@@ -82,7 +100,10 @@ export const enum LogLevel {
  */
 export interface PiralCustomOidcProfile {}
 
-export type OidcProfileWithCustomClaims = PiralCustomOidcProfile & Profile;
+/**
+ * The defined OIDC profile.
+ */
+export type OidcProfile = PiralCustomOidcProfile & Profile;
 
 export interface OidcRequest {
   /**
@@ -116,7 +137,7 @@ export interface OidcClient {
   /**
    * Retrieves the current user profile.
    */
-  account(): Promise<OidcProfileWithCustomClaims>;
+  account(): Promise<OidcProfile>;
   /**
    * Gets a token.
    */
@@ -136,14 +157,17 @@ export interface PiralOidcApi {
   /**
    * Gets the user's claims from oidc.
    */
-  getProfile(): Promise<OidcProfileWithCustomClaims>;
+  getProfile(): Promise<OidcProfile>;
 }
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiralOidcApi {}
 }
 
-export const enum OidcErrorType {
+/**
+ * The available error types.
+ */
+export enum OidcErrorType {
   /**
    * This error was thrown at some point during authentication, by the browser or by oidc-client
    * and we are unable to handle it.

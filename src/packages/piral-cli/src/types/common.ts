@@ -1,4 +1,4 @@
-export const enum LogLevels {
+export enum LogLevels {
   /**
    * Logging disabled
    */
