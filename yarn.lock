@@ -2298,6 +2298,10 @@
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.4.3.tgz#384f4f6d54563ba465fb4df21fe89e78a76fc530"
 
+"@zeit/ncc@^0.22.3":
+  version "0.22.3"
+  resolved "https://registry.yarnpkg.com/@zeit/ncc/-/ncc-0.22.3.tgz#fca6b86b4454ce7a7e1e7e755165ec06457f16cd"
+
 "@zkochan/cmd-shim@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@zkochan/cmd-shim/-/cmd-shim-3.1.0.tgz#2ab8ed81f5bb5452a85f25758eb9b8681982fd2e"
@@ -4296,7 +4300,6 @@ detect-newline@^3.0.0:
 dets@^0.5.5:
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/dets/-/dets-0.5.5.tgz#785025951b98437092f7a3cd6dca933a85e78460"
-  integrity sha512-zkJkRd4BZlQumsR3+fQG0nQTS+ogpZ6+C+TVA2+r6YXR6VUYPYsR1CXtUFGvBmmFiOumenzNbugWTKUnqsv/hg==
   dependencies:
     yargs "^15.3.1"
 

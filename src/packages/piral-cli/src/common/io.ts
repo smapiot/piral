@@ -1,4 +1,3 @@
-import * as glob from 'glob';
 import * as rimraf from 'rimraf';
 import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
@@ -10,6 +9,7 @@ import { nodeVersion } from './info';
 import { computeHash } from './hash';
 import { ForceOverwrite } from './enums';
 import { promptConfirm } from './interactive';
+import { glob } from '../external';
 
 function promptOverwrite(file: string) {
   const message = `The file ${file} exists already. Do you want to overwrite it?`;

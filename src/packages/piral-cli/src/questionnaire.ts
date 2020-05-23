@@ -1,4 +1,4 @@
-import { prompt } from 'inquirer';
+import { inquirer } from './external';
 import { commands } from './commands';
 
 type FlagType = 'string' | 'number' | 'boolean';
@@ -126,7 +126,7 @@ export function runQuestionnaire(commandName: string, ignoredInstructions = ['ba
       validate: instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true,
     }));
 
-  return prompt(questions).then(answers => {
+  return inquirer.prompt(questions).then(answers => {
     const parameters: any = {};
 
     for (const instruction of instructions) {

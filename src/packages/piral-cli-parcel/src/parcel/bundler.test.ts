@@ -13,6 +13,18 @@ jest.mock('fs', () => ({
   },
 }));
 
+jest.mock('piral-cli/lib/external', () => ({
+  rc() {},
+  logger: {
+    stopSpinner() {},
+    verbose() {},
+    info() {},
+    error() {},
+    log() {},
+    setOptions() {},
+  }
+}));
+
 jest.mock('parcel-bundler', () => ({}));
 
 let readContent = '';

@@ -1,8 +1,8 @@
 import { join } from 'path';
-import { getType } from 'mime';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+import { mime } from '../external';
 import { Bundler } from '../types';
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
@@ -90,7 +90,7 @@ export default class PiletInjector implements KrasInjector {
 
   sendFile(target: string, url: string): KrasResponse {
     const content = readFileSync(target);
-    return this.sendContent(content, getType(target), url);
+    return this.sendContent(content, mime.getType(target), url);
   }
 
   sendResponse(path: string, target: string, url: string): KrasResponse {

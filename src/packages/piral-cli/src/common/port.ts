@@ -1,5 +1,5 @@
-import getPort = require('get-port');
 import { log } from './log';
+import { getPort } from '../external';
 
 export async function getFreePort(preferred?: number) {
   log('generalDebug_0003', `Looking for a free port. Preferred port: ${preferred}`);

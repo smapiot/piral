@@ -1,8 +1,7 @@
-import axios from 'axios';
-import * as FormData from 'form-data';
 import { Agent } from 'https';
 import { platform } from 'os';
 import { log } from './log';
+import { axios, FormData } from '../external';
 
 const os = platform();
 
@@ -23,7 +22,7 @@ export function postFile(target: string, key: string, file: Buffer, ca?: Buffer)
   const form = new FormData();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
   form.append('file', file, 'pilet.tgz');
-  return axios
+  return axios.default
     .post(target, form, {
       headers: {
         ...form.getHeaders(),

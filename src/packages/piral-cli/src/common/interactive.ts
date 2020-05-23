@@ -1,4 +1,4 @@
-import { prompt } from 'inquirer';
+import { inquirer } from '../external';
 
 export function promptSelect(message: string, values: Array<string>, defaultValue: string): Promise<string> {
   const questions = [
@@ -10,7 +10,7 @@ export function promptSelect(message: string, values: Array<string>, defaultValu
       default: defaultValue,
     },
   ];
-  return prompt(questions).then((answers: any) => answers.q);
+  return inquirer.prompt(questions).then((answers: any) => answers.q);
 }
 
 export function promptConfirm(message: string, defaultValue: boolean): Promise<boolean> {
@@ -22,5 +22,5 @@ export function promptConfirm(message: string, defaultValue: boolean): Promise<b
       default: defaultValue,
     },
   ];
-  return prompt(questions).then((answers: any) => answers.q);
+  return inquirer.prompt(questions).then((answers: any) => answers.q);
 }
