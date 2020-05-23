@@ -58,7 +58,57 @@ For this scenario we assume that the application was scaffolded using `create-re
 
 While this is in general quite similar to the scenario above, we will now assume that the created app should be converted to a **pilet**, not a **Piral instance**.
 
+The first thing you can drop is the usage of `react-scripts` for building etc., i.e., remove the following in your *package.json*:
 
+```json
+  "react-scripts": "3.4.1"
+```
+
+Furthermore, we should remove the related scripts from the *package.json*. Most notably, we should remove:
+
+```json
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+```
+
+Now we can just upgrade our project to a pilet using:
+
+```sh
+npm init pilet
+```
+
+This will guide us through the available options. Afterwards, we should check if everything is fine and remove potentially redundant entries in the *package.json*. For instance, we may see multiple entries for `react` or `react-dom`. Here, the entries that have been added to the `devDependencies` should remain, while others should be removed.
+
+**Important**: If the standard *index.css* is still in the *src* folder then the `pilet debug` and `pilet build` commands should be explicitly pointed to the *index.tsx* (or *index.jsx*) file.
+
+Example:
+
+```json
+    "start": "pilet debug src/index.tsx",
+    "build": "pilet build src/index.tsx",
+```
+
+This explicit setting is also useful when the original *index.js* should be kept. In any case, once multiple "index" files are available an explicit command is preferred.
+
+At this point we only need to take care of wiring everything up in the `setup` function of our new index file. Example:
+
+```ts
+import "./index.css";
+import * as React from "react";
+import { PiletApi } from "sample-piral";
+import { Link } from "react-router-dom";
+
+const App = React.lazy(() => import("./App"));
+
+export function setup(app: PiletApi) {
+  app.registerMenu(() => <Link to="/sample">Sample</Link>);
+  app.registerPage("/sample", App);
+}
+```
+
+Finally, we can test out the pilet - first by running `yarn start` and then by trying the unit tests. Here, potentially some work on migrating away from the React scripts need to be spent.
+
+For an example of this [see our sample on GitHub](https://github.com/piral-samples/pilet-cra-migration).
 
 ## What about Next.js
 
