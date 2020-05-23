@@ -58,7 +58,7 @@ For this scenario we assume that the application was scaffolded using `create-re
 
 While this is in general quite similar to the scenario above, we will now assume that the created app should be converted to a **pilet**, not a **Piral instance**.
 
-The first thing you can drop is the usage of `react-scripts` for building etc., i.e., remove the following in your *package.json*:
+* The first thing you can drop is the usage of `react-scripts` for building etc., i.e., remove the following in your *package.json*:
 
 ```json
   "react-scripts": "3.4.1"
@@ -71,7 +71,7 @@ Furthermore, we should remove the related scripts from the *package.json*. Most 
     "eject": "react-scripts eject"
 ```
 
-Now we can just upgrade our project to a pilet using:
+* Now we can just upgrade our project to a pilet using:
 
 ```sh
 npm init pilet
@@ -106,9 +106,21 @@ export function setup(app: PiletApi) {
 }
 ```
 
-Finally, we can test out the pilet - first by running `yarn start` and then by trying the unit tests. Here, potentially some work on migrating away from the React scripts need to be spent.
+* Finally, we can test out the pilet - first by running `yarn start` and then by trying the unit tests. Here, potentially some work on migrating away from the React scripts need to be spent.
 
 For an example of this [see our sample on GitHub](https://github.com/piral-samples/pilet-cra-migration).
+
+* Also notably we should add some things to our *.gitignore*, if not done yet.
+
+```plain
+.cache
+dist
+*.tgz
+```
+
+Regarding the use of CSS in general: By default, Piral makes no restrictions on what you can put into your CSS from your pilets. As a result, two pilets may collide with each other in styling. Even worse, a pilet may destroy the global design of the app shell.
+
+Luckily, there are ways around this. The best-practice here is to "namespace" our CSS, which is facilitated by usage of SASS or CSS-in-JS libraries. Pilets will need to give careful consideration to what "reset" or "normalization" libraries they're using, and microfrontends should decouple themselves from whatever CSS artifacts other pilets are exporting.
 
 ## What about Next.js
 
