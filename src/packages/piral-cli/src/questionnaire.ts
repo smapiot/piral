@@ -1,3 +1,4 @@
+import { argv } from 'yargs';
 import { inquirer } from './external';
 import { commands } from './commands';
 
@@ -114,9 +115,12 @@ function getType(flag: Flag) {
 
 export function runQuestionnaire(commandName: string, ignoredInstructions = ['base', 'log-level']) {
   const [command] = commands.all.filter(m => m.name === commandName);
+  const acceptAll = argv.y === true;
   const instructions = getCommandData(command.flags);
   const questions = instructions
     .filter(instruction => !ignoredInstructions.includes(instruction.name))
+    .filter(instruction => !acceptAll || (instruction.default === undefined && instruction.required))
+    .filter(instruction => argv[instruction.name] === undefined)
     .map(instruction => ({
       name: instruction.name,
       default: instruction.values ? instruction.values.indexOf(instruction.default) : instruction.default,
@@ -130,7 +134,7 @@ export function runQuestionnaire(commandName: string, ignoredInstructions = ['ba
     const parameters: any = {};
 
     for (const instruction of instructions) {
-      const value = answers[instruction.name];
+      const value = answers[instruction.name] ?? argv[instruction.name];
       parameters[instruction.name] =
         value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
     }
