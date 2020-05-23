@@ -1,4 +1,4 @@
-import { yargs } from './external';
+import * as yargs from 'yargs';
 import { ToolCommand } from './types';
 
 let argv = yargs;

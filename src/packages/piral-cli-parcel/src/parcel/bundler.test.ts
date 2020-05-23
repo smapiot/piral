@@ -22,7 +22,7 @@ jest.mock('piral-cli/lib/external', () => ({
     error() {},
     log() {},
     setOptions() {},
-  }
+  },
 }));
 
 jest.mock('parcel-bundler', () => ({}));

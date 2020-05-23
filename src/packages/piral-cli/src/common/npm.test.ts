@@ -4,6 +4,7 @@ import { resolve } from 'path';
 import { dissectPackageName, installPackage } from './npm';
 
 jest.mock('child_process');
+
 jest.mock('../external', () => ({
   rc() {},
   logger: {
@@ -13,8 +14,9 @@ jest.mock('../external', () => ({
     error() {},
     log() {},
     setOptions() {},
-  }
+  },
 }));
+
 jest.mock('fs', () => ({
   exists: (file: string, cb: (status: boolean) => void) => cb(true),
   readFileSync: () => '',
