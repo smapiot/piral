@@ -3,11 +3,19 @@ import { join } from 'path';
 import { format } from 'util';
 import { createWriteStream } from 'fs';
 import { isWindows } from './info';
-import { logger, stripAnsi } from '../external';
+import { stripAnsi } from '../external';
 import { LogLevels, QuickMessage } from '../types';
 
 type Messages = typeof messages;
 type MessageTypes = keyof Messages;
+
+const logger = (() => {
+  try {
+    return require('@parcel/logger');
+  } catch {
+    return require('../external').logger;
+  }
+})();
 
 // unfortunately, Parcel's support for verbose logging on Windows is broken
 if (isWindows) {
