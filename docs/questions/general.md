@@ -66,6 +66,8 @@ The concept of an app shell is an ingredient that is optional for microfrontends
 
 The app shell could be also used fairly minimal and without any of the features that come for free with Piral (e.g., dashboard, menu entries, modal dialog management, ...). It will still be required to load the pilets and ensure proper isolation as well as communication between them.
 
+If you are looking for "Piral without the app shell", then [check out Siteless](https://www.npmjs.com/package/siteless).
+
 ---------------------------------------
 
 ## Are all pilets are loaded in the start?
@@ -130,6 +132,36 @@ Well, if the question is: Is using Piral slower than just a monolith? Potentiall
 
 In the latter case we are pretty much as fast as a monolith that used bundle splitting to obtain additional information.
 
-We'll try to come up with a benchmark soon.
+Obviously, any outcome would heavily depend on the target application and network situation.
+
+---------------------------------------
+
+## How can I use TransitionGroup with Routes?
+
+In this way you'd use a layout with a custom routes handling. By default, the children of `Layout` are a `PiralRoutes` instance. If you discard the given children you can just use your own instance - as shown below.
+
+```jsx
+const AnimatedRoutes = withRouter(({ location }) => (
+  <TransitionGroup>
+    <CSSTransition key={location.key} classNames="slide" timeout={1000}>
+      <PiralRoutes location={location} NotFound={NotFound} />
+    </CSSTransition>
+  </TransitionGroup>
+));
+```
+
+As an example, an empty layout with animated pages looks as follows:
+
+```jsx
+const Layout = () => (
+  <AnimatedRoutes />
+);
+```
+
+The assumed `NotFound` page can be taken from:
+
+```jsx
+const NotFound = props => <PiralError type="not_found" {...props} />;
+```
 
 ---------------------------------------
