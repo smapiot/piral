@@ -1,5 +1,5 @@
-import { setLogLevel, logDone, createDeclaration } from '../common';
-import { LogLevels, ForceOverwrite } from '../types';
+import { setLogLevel, logDone, createDeclaration, ForceOverwrite } from '../common';
+import { LogLevels } from '../types';
 
 export interface DeclarationPiralOptions {
   entry?: string;

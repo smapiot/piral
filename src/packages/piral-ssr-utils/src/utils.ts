@@ -56,12 +56,12 @@ export function loadPilets(
 ) {
   return Promise.all(
     metadata.map(async pilet => {
-      const originalContent = pilet.content || (await getPilet(pilet.link));
+      const originalContent = 'content' in pilet && pilet.content ? pilet.content : await getPilet(pilet.link);
 
       if (typeof originalContent === 'string') {
         return {
           custom: pilet.custom,
-          hash: pilet.hash,
+          hash: 'requireRef' in pilet ? pilet.integrity : pilet.hash,
           name: pilet.name,
           version: pilet.version,
           content: modifyUrlReferences(originalContent, pilet.link),

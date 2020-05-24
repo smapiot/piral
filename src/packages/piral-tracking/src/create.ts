@@ -18,7 +18,7 @@ export function createTrackingApi(config: TrackingConfig = {}): Extend<PiletTrac
         measurements,
       });
     },
-    trackError(error, properties = {}, measurements = {}, severityLevel = SeverityLevel.Information) {
+    trackError(error, properties = {}, measurements = {}, severityLevel = SeverityLevel.information) {
       api.emit('track-error', {
         error,
         properties,

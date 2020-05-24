@@ -1,5 +1,7 @@
-import { ForceOverwrite, PiletLanguage, TemplateType, Framework, NpmClientType } from './types';
+import { ForceOverwrite, PiletLanguage } from './common/enums';
+import { TemplateType, Framework, NpmClientType, PiletSchemaVersion } from './types';
 
+export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1'];
 export const templateTypeKeys: Array<TemplateType> = ['default', 'empty'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
 export const frameworkKeys: Array<Framework> = ['piral', 'piral-core', 'piral-base'];

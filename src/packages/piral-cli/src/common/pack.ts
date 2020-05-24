@@ -2,7 +2,7 @@ import { resolve, join } from 'path';
 import { log, progress, fail } from './log';
 import { readJson, move } from './io';
 import { createPackage } from './npm';
-import { ForceOverwrite } from '../types';
+import { ForceOverwrite } from './enums';
 
 async function getFile(root: string, name: string, dest: string) {
   const proposed = join(root, name);
@@ -36,7 +36,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
     fail('packageJsonMissingVersion_0022');
   }
 
-  progress(`Packing pilet in ${resolve(baseDir, target)} ...`);
+  progress(`Packing pilet in ${dest} ...`);
   log('generalDebug_0003', 'Creating package ...');
   await createPackage(root);
   log('generalDebug_0003', 'Successfully created package.');

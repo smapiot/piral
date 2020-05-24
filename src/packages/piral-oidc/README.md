@@ -124,6 +124,55 @@ if (location.pathname !== '/auth') {
 
 This way we evaluate the current path and act accordingly. Note that the actually used path may be different for your application.
 
+### Built-in authentication flow
+
+A convenience method named `handleAuthentication()` was added to the `oidcClient` to
+handle callbacks and routing for you. In order to use this, add a `appUrl` to the
+client configuration that points to your entry-point route, and then call `handleAuthentication()` in your index file.
+
+`handleAuthentication()` will return a promise that resolves to a boolean true/false
+value, when this is true, the application should call `render()`, when false, do nothing (this is a silent renew happening in the background). 
+
+If the promise rejects, it is advised that the error is logged to an external logging service, as this indicates a user that could not gain entry into the application. Afterwards, call `logout()` or prompt the user for the next action.
+
+```typescript
+// module oidc.ts
+import { setupOidcClient } from 'piral-oidc';
+
+export const client = setupOidcClient({
+    appUrl: location.origin + '/app',
+    redirectUrl: location.origin + '/auth',
+    postLogoutUrl: location.origin + '/logout'
+});
+
+// app.ts
+import { createOidcApi } from 'piral-oidc';
+import { client } from './oidc';
+
+export function render() {
+  renderInstance({
+    // ...
+    extendApi: [createOidcApi(client)],
+  });
+}
+
+// index.ts
+import { client } from './oidc';
+import { loggingService } from './your/logging/service';
+
+client.handleAuthentication()
+    .then(async (shouldRender) => {
+        if (shouldRender) {
+            const render = await import('./app');
+            render();
+        }
+    })
+    .catch(async (err) => {
+        await loggingService.fatal(err);
+        client.logout();
+    })
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

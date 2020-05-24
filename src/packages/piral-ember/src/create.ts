@@ -1,6 +1,7 @@
 import { Extend } from 'piral-core';
 import { loadEmberApp } from './load';
-import { PiletEmberApi, EmberInstance } from './types';
+import { createConverter } from './converter';
+import { PiletEmberApi } from './types';
 
 /**
  * Available configuration options for the Ember.js plugin.
@@ -42,39 +43,8 @@ export function createEmberApi(config: EmberConfig = {}): Extend<PiletEmberApi> 
   }
 
   return context => {
-    context.converters.ember = ({ App, opts }) => {
-      let app: EmberInstance<any> = undefined;
-
-      return {
-        mount(rootElement, props, ctx) {
-          rootElement.addEventListener(
-            'render-html',
-            (ev: CustomEvent) => {
-              const { piral } = props;
-              piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-            },
-            false,
-          );
-          app = App.create({
-            ...opts,
-            rootElement,
-            props,
-            ctx,
-          });
-        },
-        update(_, props, ctx) {
-          app.setProperties({
-            props,
-            ctx,
-          });
-        },
-        unmount(rootElement) {
-          app.destroy();
-          app = undefined;
-          rootElement.innerHTML = '';
-        },
-      };
-    };
+    const convert = createConverter();
+    context.converters.ember = ({ App, opts }) => convert(App, opts);
 
     return {
       fromEmber(App, opts) {

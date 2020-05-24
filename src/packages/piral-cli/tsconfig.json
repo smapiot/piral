@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
+    "declaration": false,
     "target": "ES6"
   },
   "include": [

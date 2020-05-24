@@ -1,18 +1,24 @@
-import * as logger from '@parcel/logger';
 import * as messages from '../messages';
 import { join } from 'path';
 import { format } from 'util';
 import { createWriteStream } from 'fs';
 import { isWindows } from './info';
+import { stripAnsi } from '../external';
 import { LogLevels, QuickMessage } from '../types';
 
 type Messages = typeof messages;
 type MessageTypes = keyof Messages;
 
+const logger = (() => {
+  try {
+    return require('@parcel/logger');
+  } catch {
+    return require('../external').logger;
+  }
+})();
+
 // unfortunately, Parcel's support for verbose logging on Windows is broken
 if (isWindows) {
-  const stripAnsi = require('strip-ansi');
-
   logger.verbose = function(message: string) {
     if (this.logLevel < 4) {
       return;
@@ -28,7 +34,7 @@ if (isWindows) {
         this.logFile = createWriteStream(join(process.cwd(), fileName));
       }
 
-      this.logFile.write(stripAnsi(message) + '\n');
+      this.logFile.write(stripAnsi.default(message) + '\n');
     }
 
     this._log(message);

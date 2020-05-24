@@ -1,4 +1,4 @@
-const rc = require('rc');
+import { rc } from '../external';
 
 export const config = rc('piral', {
   /**

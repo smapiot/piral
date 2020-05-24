@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import { FirstParametersOf, UnionOf } from './common';
 import { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
 import { LayoutType } from './layout';

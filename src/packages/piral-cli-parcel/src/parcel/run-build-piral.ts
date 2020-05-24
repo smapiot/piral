@@ -1,7 +1,7 @@
 import { relative } from 'path';
+import { LogLevels } from 'piral-cli';
+import { setStandardEnvs, progress, removeDirectory } from 'piral-cli/utils';
 import { setupBundler, gatherJsBundles, patchModules } from './bundler';
-import { setStandardEnvs, progress, removeDirectory } from '../common';
-import { LogLevels } from '../types';
 
 async function run(
   root: string,

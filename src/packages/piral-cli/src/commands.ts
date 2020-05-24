@@ -9,6 +9,7 @@ import {
   templateTypeKeys,
   frameworkKeys,
   clientTypeKeys,
+  schemaKeys,
 } from './helpers';
 import { ToolCommand, ListCommands, NpmClientType, LogLevels, TemplateType, PiralBuildType } from './types';
 
@@ -365,7 +366,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
-        .choices('schema', ['v0', 'v1'])
+        .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
         .default('schema', apps.debugPiletDefaults.schemaVersion)
         .string('app')
@@ -434,7 +435,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.buildPiletDefaults.optimizeModules)
-        .choices('schema', ['v0', 'v1'])
+        .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
         .default('schema', apps.buildPiletDefaults.schemaVersion)
         .string('app')
@@ -518,7 +519,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build, then packages and finally publishes the pilet.')
         .default('fresh', apps.publishPiletDefaults.fresh)
-        .choices('schema', ['v0', 'v1'])
+        .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
         .default('schema', apps.publishPiletDefaults.schemaVersion)
         .string('base')

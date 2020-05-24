@@ -24,8 +24,8 @@ export function notifyServerOnline(bundler: Bundler, api: string | false) {
   return (svc: any) => {
     log('generalDebug_0003', `The kras server for debugging is online!`);
     const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
-    logInfo(`${liveIcon}  Running at ${chalk.bold(address)}.`);
-    logInfo(`${settingsIcon}  Manage via ${chalk.bold(address + api)}.`);
+    logInfo(`${liveIcon}  Running at ${chalk.bold(address)}`);
+    logInfo(`${settingsIcon}  Manage via ${chalk.bold(address + api)}`);
     logReset();
     bundler.start();
   };

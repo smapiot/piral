@@ -42,6 +42,42 @@ export interface OidcConfig {
    * Otherwise, the client is responsive to the `before-fetch` event.
    */
   restrict?: boolean;
+  /**
+   * If provided, the window will redirect to this Uri after getting
+   * a new session from the redirectUri callback.
+   */
+  appUri?: string;
+  /**
+   * If provided, logging will be enabled for the oidc-client.
+   * Defaults to Log.DEBUG in development NODE_ENV.
+   */
+  logLevel?: LogLevel;
+}
+
+/**
+ * The available log levels.
+ */
+export enum LogLevel {
+  /**
+   * Logging disabled.
+   */
+  none = 'none',
+  /**
+   * Only log on error.
+   */
+  error = 'error',
+  /**
+   * Start logging when its at least a warning.
+   */
+  warn = 'warn',
+  /**
+   * Already start logging on info level.
+   */
+  info = 'info',
+  /**
+   * Log everything - good for debugging purposes.
+   */
+  debug = 'debug',
 }
 
 /**
@@ -64,7 +100,10 @@ export interface OidcConfig {
  */
 export interface PiralCustomOidcProfile {}
 
-export type OidcProfileWithCustomClaims = PiralCustomOidcProfile & Profile;
+/**
+ * The defined OIDC profile.
+ */
+export type OidcProfile = PiralCustomOidcProfile & Profile;
 
 export interface OidcRequest {
   /**
@@ -76,17 +115,29 @@ export interface OidcRequest {
 
 export interface OidcClient {
   /**
-   * Performs a login.
+   * Performs a login. Will do nothing when called from a non-top window.
    */
-  login(): void;
+  login(): Promise<void>;
   /**
    * Performs a logout.
    */
-  logout(): void;
+  logout(): Promise<void>;
+  /**
+   * Performs a login when the app needs a new token, handles callbacks when on
+   * a callback URL, and redirects into the app route if the client was configured with an `appUri`.
+   *
+   * When this resolves to true, the app-shell should call its `render()` method.
+   * When this resolves to false, do not call `render()`.
+   *
+   * If this rejects, the app-shell should redirect to the login page or handle
+   * an authentication failure manually, it is also advised to log this error to a logging service,
+   * as no users will be be authorized to enter the application.
+   */
+  handleAuthentication(): Promise<boolean>;
   /**
    * Retrieves the current user profile.
    */
-  account(): Promise<OidcProfileWithCustomClaims>;
+  account(): Promise<OidcProfile>;
   /**
    * Gets a token.
    */
@@ -103,9 +154,53 @@ export interface PiralOidcApi {
    */
   getAccessToken(): Promise<string | undefined>;
 
-  getProfile(): Promise<OidcProfileWithCustomClaims>;
+  /**
+   * Gets the user's claims from oidc.
+   */
+  getProfile(): Promise<OidcProfile>;
 }
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiralOidcApi {}
+}
+
+/**
+ * The available error types.
+ */
+export enum OidcErrorType {
+  /**
+   * This error was thrown at some point during authentication, by the browser or by oidc-client
+   * and we are unable to handle it.
+   */
+  unknown = 'unknown',
+  /**
+   * This error happens when the user does not have an access token during Authentication.
+   * It is an expected error, and should be handled during `handleAuthentication()` calls.
+   * If doing manual authentication, prompt the user to `login()` when receiving it.
+   */
+  notAuthorized = 'notAuthorized',
+  /**
+   * This error happens when silent renew fails in the background. It is not expected, and
+   * signifies a network error or configuration problem.
+   */
+  silentRenewFailed = 'silentRenewFailed',
+  /**
+   * This is an unexpected error that happens when the `token()` call retrieves a User from
+   * the user manager, but it does not have an access_token. This signifies a configuration
+   * error, make sure the correct `scopes` are supplied during configuration.
+   */
+  invalidToken = 'invalidToken',
+  /**
+   * This error happened during an Open ID callback. This signifies a network or configuration error
+   * which is non-recoverable. This should be logged to a logging service, and the user should be
+   * prompted to logout().
+   */
+  oidcCallback = 'oidcCallback',
+}
+
+/**
+ * This Error is used for Authentication errors in piral-oidc.
+ */
+export interface PiralOidcError extends Error {
+  type: Readonly<OidcErrorType>;
 }

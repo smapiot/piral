@@ -1,4 +1,5 @@
 import { Extend } from 'piral-core';
+import { createConverter } from './converter';
 import { PiletElmApi } from './types';
 
 /**
@@ -41,30 +42,8 @@ export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
   }
 
   return context => {
-    context.converters.elm = ({ main, captured }) => ({
-      mount(parent, data, ctx) {
-        const node = parent.appendChild(document.createElement('div'));
-        parent.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            const { piral } = data;
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
-        main.init({
-          node,
-          flags: {
-            ...captured,
-            ...ctx,
-            ...data,
-          },
-        });
-      },
-      unmount(el) {
-        el.innerHTML = '';
-      },
-    });
+    const convert = createConverter();
+    context.converters.elm = ({ main, captured }) => convert(main, captured);
 
     return {
       fromElm(main, captured) {

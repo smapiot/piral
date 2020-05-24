@@ -1,5 +1,16 @@
 # Piral Changelog
 
+## 0.11.5 (tbd)
+
+* Fixed bug in pilet debug when touching files with CSS references
+* Added tutorial for the migration of existing applications (#180)
+* Added `piral-cli-parcel` plugin for Parcel integration (#125)
+* Fixed the source map offset in Parcel (#216)
+* Added `handleAuthentication` to piral-oidc (#219)
+* Added `BaseModalOptions` interface to `piral-modals` (#217)
+* Specified `integrity` value in pilet response data model
+* Fixed the `publicUrl` of the app shell in monorepo (#220)
+
 ## 0.11.4 (May 6, 2020)
 
 * Fixed a bug in `piral-fetch` regarding unset `Content-Type`

@@ -1,9 +1,10 @@
 import { join, dirname, relative } from 'path';
 import { log } from './log';
+import { ForceOverwrite, PiletLanguage } from './enums';
 import { getLanguageExtension } from './language';
 import { fillTemplate, createFileFromTemplateIfNotExists } from './template';
 import { createDirectory, createFileIfNotExists } from './io';
-import { Framework, ForceOverwrite, TemplateType, PiletLanguage } from '../types';
+import { Framework, TemplateType } from '../types';
 
 export async function scaffoldPiralSourceFiles(
   type: TemplateType,

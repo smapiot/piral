@@ -1160,6 +1160,36 @@ export function unsuccessfulHttpPost_0066(statusText: string, statusCode: number
 }
 
 /**
+ * @kind Info
+ *
+ * @summary
+ * The HTTP post response body data.
+ *
+ * @abstract
+ * When the pilet was successfully updated the server is free to respond with
+ * whatever HTTP body. Since the content of this body may be interesting, we
+ * show the content in the terminal.
+ *
+ * Note that we serialize the content to a string. So the result may not look
+ * as wanted from the server's perspective. In general we do not recommend to
+ * transport lengthy messages as a result of publishing a pilet.
+ *
+ * @see
+ * - [Feed API Specification](https://docs.piral.io/reference/specifications/feed-api-specification)
+ *
+ * @example
+ * The easiest way to see the output is to publish a pilet to the temporary feed.
+ *
+ * ```sh
+ * pilet publish --api-key ac6c202085f07099da1729a20e5750e651ef093ef4a5856c70997a6cc71dcab2 --url https://feed.piral.cloud/api/v1/pilet/temp
+ * ```
+ */
+export function httpPostResponse_0067(response: any): QuickMessage {
+  const content = typeof response !== 'string' ? JSON.stringify(response, undefined, 2) : response;
+  return [LogLevels.info, '0067', `HTTP: ${content}`];
+}
+
+/**
  * @kind Error
  *
  * @summary
@@ -1695,8 +1725,71 @@ export function failedToOpenBrowser_0070(error: string): QuickMessage {
  * pilet build --schema v0
  * ```
  */
-export function invalidSchemaVersion_0071(schemaVersion: string): QuickMessage {
-  return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Expected "v0" or "v1".`];
+export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<string>): QuickMessage {
+  const s = schemas.map(m => `"${m}"`).join(', ');
+  return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Available schemas: ${s}.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The provided bundler is not available.
+ *
+ * @abstract
+ * Piral allows you to set up your own tooling for building and debugging. This
+ * is a powerful concept. By default, the Parcel bundler is used. Alternatives
+ * include Webpack and Rollup.
+ *
+ * In case where multiple bundlers are installed the first one is picked. This
+ * may not be what you want. In this scenario you can override the selection by
+ * explicitly picking a bundler name (e.g., "parcel"). If, for some reason, the
+ * name does not correspond to one of the currently installed bundlers the
+ * bundler missing error appears.
+ *
+ * @see
+ * - [Parcel](https://parceljs.org)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ *
+ * @example
+ * Use the following command to make the parcel bundler available:
+ *
+ * ```sh
+ * npm i piral-cli-parcel --save-dev
+ * ```
+ */
+export function bundlerMissing_0072(bundlerName: string, installed: Array<string>): QuickMessage {
+  const s = installed.map(m => `"${m}"`).join(', ');
+  return [LogLevels.error, '0072', `Cannot find bundler "${bundlerName}". Installed bundlers: ${s}.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * No default bundler is available.
+ *
+ * @abstract
+ * Piral allows you to set up your own tooling for building and debugging. This
+ * is a powerful concept. By default, the Parcel bundler is used. Alternatives
+ * include Webpack and Rollup.
+ *
+ * In case where no bundler is installed and the default bundler could not be
+ * successfully installed this error is shown.
+ *
+ * @see
+ * - [Parcel](https://parceljs.org)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ *
+ * @example
+ * Use the following command to make the parcel bundler available:
+ *
+ * ```sh
+ * npm i piral-cli-parcel --save-dev
+ * ```
+ */
+export function defaultBundlerMissing_0073(): QuickMessage {
+  return [LogLevels.error, '0073', `Cannot find a default bundler.`];
 }
 
 /**
@@ -1842,4 +1935,28 @@ export function apiPatchInvalid_0204(name: string): QuickMessage {
  */
 export function pluginCouldNotBeLoaded_0205(pluginPath: string, ex: any): QuickMessage {
   return [LogLevels.warning, '0205', `Failed to load plugin from "${pluginPath}": ${ex}`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid value for the given argument was supplied.
+ *
+ * @abstract
+ * This warning indicates that a Piral CLI bundler plugin is not working as intended.
+ * Usually, * you should not see this as a user, but rather as a developer testing a
+ * Piral CLI plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiBundlerInvalid_0206(name: string): QuickMessage {
+  return [LogLevels.warning, '0206', `Invalid argument for "${name}" - skipped bundler.`];
 }

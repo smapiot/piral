@@ -1,5 +1,5 @@
 import { ComponentType, ReactPortal } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import { Atom } from '@dbeining/react-atom';
 import { Dict, Without } from './common';
 import { LayoutType } from './layout';

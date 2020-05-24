@@ -1,6 +1,7 @@
 import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { createElement, Component } from 'react-15';
-import { mountReact15, unmountReact15, anyPropType } from './mount';
+import { anyPropType } from './mount';
+import { createConverter } from './converter';
 import { PiletReact15Api } from './types';
 
 /**
@@ -45,17 +46,8 @@ export function createReact15Api(config: React15Config = {}): Extend<PiletReact1
   };
 
   return context => {
-    context.converters.react15 = component => ({
-      mount(el, props, ctx) {
-        mountReact15(el, component.root, props, ctx);
-      },
-      update(el, props, ctx) {
-        mountReact15(el, component.root, props, ctx);
-      },
-      unmount(el) {
-        unmountReact15(el);
-      },
-    });
+    const convert = createConverter();
+    context.converters.react15 = ({ root }) => convert(root);
 
     return {
       fromReact15(root) {

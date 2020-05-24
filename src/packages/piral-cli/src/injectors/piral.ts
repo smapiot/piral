@@ -1,7 +1,7 @@
 import { join } from 'path';
-import { getType } from 'mime';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+import { mime } from '../external';
 import { Bundler } from '../types';
 
 export interface PiralInjectorConfig extends KrasInjectorConfig {
@@ -42,7 +42,7 @@ export default class PiralInjector implements KrasInjector {
     return {
       injector: { name: this.name },
       headers: {
-        'content-type': getType(target),
+        'content-type': mime.getType(target),
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',
         expires: '0',

@@ -1,11 +1,9 @@
-import * as tar from 'tar';
 import { resolve, relative } from 'path';
 import { createGunzip } from 'zlib';
 import { EventEmitter } from 'events';
 import { log } from './log';
+import { tar } from '../external';
 import { PackageFiles } from '../types';
-
-const TarParser = tar.Parse as any;
 
 interface ReadEntry extends EventEmitter {
   path: string;
@@ -35,6 +33,8 @@ export function unpackTarball(sourceDir: string, sourceFile: string) {
 }
 
 export function unpackGzTar(stream: NodeJS.ReadableStream): Promise<PackageFiles> {
+  const TarParser = tar.Parse as any;
+
   return new Promise((resolve, reject) => {
     const files: PackageFiles = {};
     log('generalDebug_0003', `Unpacking the stream ...`);

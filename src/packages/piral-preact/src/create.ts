@@ -1,6 +1,7 @@
 import { Extend, ExtensionSlotProps, compare } from 'piral-core';
 import { Component, createElement } from 'preact';
-import { mountPreact, unmountPreact, anyPropType } from './mount';
+import { anyPropType } from './mount';
+import { createConverter } from './converter';
 import { PiletPreactApi } from './types';
 
 /**
@@ -46,17 +47,8 @@ export function createPreactApi(config: PreactConfig = {}): Extend<PiletPreactAp
   }
 
   return context => {
-    context.converters.preact = component => ({
-      mount(el, props, ctx) {
-        mountPreact(el, component.root, props, ctx);
-      },
-      update(el, props, ctx) {
-        mountPreact(el, component.root, props, ctx);
-      },
-      unmount(el) {
-        unmountPreact(el);
-      },
-    });
+    const convert = createConverter();
+    context.converters.preact = ({ root }) => convert(root);
 
     return {
       fromPreact(root) {

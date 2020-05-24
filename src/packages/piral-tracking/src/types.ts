@@ -11,27 +11,30 @@ declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletTrackingApi {}
 }
 
-export const enum SeverityLevel {
+/**
+ * The severity level of the tracking information.
+ */
+export enum SeverityLevel {
   /**
    * Verbose severity level.
    */
-  Verbose = 0,
+  verbose = 0,
   /**
    * Information severity level.
    */
-  Information = 1,
+  information = 1,
   /**
    * Warning severity level.
    */
-  Warning = 2,
+  warning = 2,
   /**
    * Error severity level.
    */
-  Error = 3,
+  error = 3,
   /**
    * Critical severity level.
    */
-  Critical = 4,
+  critical = 4,
 }
 
 export interface Tracker {

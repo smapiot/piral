@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router';
 import { useAction, useSetter } from '../hooks';
 
 export interface SetRedirectProps {

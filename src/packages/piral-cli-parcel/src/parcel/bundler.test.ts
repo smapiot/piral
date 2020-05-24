@@ -1,5 +1,4 @@
 import { postProcess } from './bundler';
-import { PiletSchemaVersion } from '../types';
 
 jest.mock('fs', () => ({
   readFile(_name: string, _enc: string, cb: Function) {
@@ -11,6 +10,18 @@ jest.mock('fs', () => ({
   writeFile(_name: string, content: string, _enc: string, cb: Function) {
     writeContent = content;
     cb(undefined);
+  },
+}));
+
+jest.mock('piral-cli/lib/external', () => ({
+  rc() {},
+  logger: {
+    stopSpinner() {},
+    verbose() {},
+    info() {},
+    error() {},
+    log() {},
+    setOptions() {},
   },
 }));
 
@@ -31,7 +42,7 @@ describe('Pilet Build Module', () => {
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.directEval,
+      'v0',
     );
     expect(writeContent).toBeUndefined();
   });
@@ -47,7 +58,7 @@ describe('Pilet Build Module', () => {
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.directEval,
+      'v0',
     );
     expect(writeContent).toBeUndefined();
   });
@@ -63,10 +74,38 @@ describe('Pilet Build Module', () => {
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.directEval,
+      'v0',
     );
     expect(writeContent)
       .toBe(`//@pilet v:0\n!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
+no-js
+;global.pr_abcdef=parcelRequire}(window, window.pr_abcdef));`);
+  });
+
+  it('postProcess should change the content if JS without header if not parent v:0', async () => {
+    readContent = 'no-js';
+    await postProcess(
+      {
+        getHash() {
+          return 'abcdef';
+        },
+        type: 'js',
+        name: '',
+        childBundles: [
+          {
+            getHash() {
+              return 'abcdef';
+            },
+            type: 'js',
+            name: '',
+            childBundles: [],
+          },
+        ],
+      } as any,
+      'v0',
+    );
+    expect(writeContent)
+      .toBe(`!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
 no-js
 ;global.pr_abcdef=parcelRequire}(window, window.pr_abcdef));`);
   });
@@ -82,10 +121,38 @@ no-js
         name: '',
         childBundles: [],
       } as any,
-      PiletSchemaVersion.currentScript,
+      'v1',
     );
     expect(writeContent)
       .toBe(`//@pilet v:1(pr_abcdef)\n!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;
+no-js
+;global.pr_abcdef=parcelRequire}(window, window.pr_abcdef));`);
+  });
+
+  it('postProcess should change the content if JS without header if not parent v:1', async () => {
+    readContent = 'no-js';
+    await postProcess(
+      {
+        getHash() {
+          return 'abcdef';
+        },
+        type: 'js',
+        name: '',
+        childBundles: [
+          {
+            getHash() {
+              return 'abcdef';
+            },
+            type: 'js',
+            name: '',
+            childBundles: [],
+          },
+        ],
+      } as any,
+      'v1',
+    );
+    expect(writeContent)
+      .toBe(`!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
 no-js
 ;global.pr_abcdef=parcelRequire}(window, window.pr_abcdef));`);
   });

@@ -1,6 +1,8 @@
 import { resolve, basename } from 'path';
-import { LogLevels, ForceOverwrite, PiletLanguage, TemplateType, PackageType, NpmClientType } from '../types';
+import { LogLevels, TemplateType, PackageType, NpmClientType } from '../types';
 import {
+  ForceOverwrite,
+  PiletLanguage,
   createDirectory,
   createFileIfNotExists,
   defaultRegistry,

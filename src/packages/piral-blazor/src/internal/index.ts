@@ -53,6 +53,10 @@ export function addReference(blob: Blob) {
   });
 }
 
+export function removeReference(name: string) {
+  return DotNet.invokeMethodAsync(coreLib, 'UnloadComponentsFromLibrary', name);
+}
+
 export function attachEvents(
   host: HTMLElement,
   render: (ev: CustomEvent) => void,

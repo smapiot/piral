@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import { join, resolve } from 'path';
 import { tmpdir } from 'os';
 import { buildPiral } from './build-piral';
+import { setBundler } from '../bundler';
 
 const twoMinutes = 2 * 60 * 1000;
 
@@ -114,6 +115,13 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
 }
 
 describe('Build Piral Command', () => {
+  beforeEach(() => {
+    setBundler({
+      name: 'parcel',
+      actions: require('piral-cli-parcel/lib/actions'),
+    });
+  });
+
   it('missing source should result in an error', async () => {
     const dir = createTempDir();
     let error = false;

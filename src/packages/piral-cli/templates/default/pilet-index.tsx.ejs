@@ -2,7 +2,9 @@ import { PiletApi} from '<%- sourceName %>';
 import * as React from 'react';
 
 export function setup(app: PiletApi) {
-  app.showNotification('Hello from Piral!');
+  app.showNotification('Hello from Piral!', {
+    autoClose: 2000,
+  });
   app.registerMenu(() =>
     <a href="https://docs.piral.io" target="_blank">Documentation</a>
   );

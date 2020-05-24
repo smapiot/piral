@@ -1,12 +1,11 @@
 import { join, dirname, basename, resolve } from 'path';
-import { callPiletBuild } from '../parcel';
-import { LogLevels } from '../types';
+import { LogLevels, PiletSchemaVersion } from '../types';
+import { callPiletBuild } from '../bundler';
 import {
   removeDirectory,
   findEntryModule,
   retrievePiletData,
   defaultCacheDir,
-  getPiletSchemaVersion,
   setLogLevel,
   progress,
   logDone,
@@ -26,7 +25,7 @@ export interface BuildPiletOptions {
   contentHash?: boolean;
   scopeHoist?: boolean;
   optimizeModules?: boolean;
-  schemaVersion?: 'v0' | 'v1';
+  schemaVersion?: PiletSchemaVersion;
 }
 
 export const buildPiletDefaults: BuildPiletOptions = {
@@ -68,7 +67,6 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
   const cache = resolve(root, cacheDir);
-  const version = getPiletSchemaVersion(schemaVersion);
   const outDir = dirname(resolve(baseDir, target));
 
   if (fresh) {
@@ -80,25 +78,25 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   logInfo('Bundle pilet ...');
 
-  await callPiletBuild(
+  await callPiletBuild({
     root,
-    appPackage.name,
+    piral: appPackage.name,
     optimizeModules,
     scopeHoist,
     sourceMaps,
     contentHash,
     detailedReport,
     minify,
-    cache,
+    cacheDir: cache,
     externals,
     targetDir,
-    basename(target),
+    outFile: basename(target),
     outDir,
     entryModule,
     logLevel,
-    version,
+    version: schemaVersion,
     ignored,
-  );
+  });
 
   logDone('Pilet built successfully!');
 }

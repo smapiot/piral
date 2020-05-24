@@ -19,6 +19,7 @@ function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModule
  * This strategy is dependent on the async parameter. If false it will start rendering when
  * everything has been received, otherwise it will start rendering when the metadata has been
  * received. In any case it will evaluate pilets as fast as possible.
+ * @param async Uses the asynchronous mode.
  */
 export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy {
   return (options, cb) => {

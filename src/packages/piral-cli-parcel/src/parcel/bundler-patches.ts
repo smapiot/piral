@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { readText, writeText, log } from '../common';
+import { readText, writeText, log, getPatch } from 'piral-cli/utils';
 
 const windowOrGlobal = '(typeof window !== "undefined" ? window : global)';
 
@@ -11,7 +11,7 @@ async function replaceAll(dir: string, file: string, original: string, replaceme
   }
 }
 
-const patchMap: Record<string, (rootDir: string) => Promise<void>> = {
+export const standardPatches: Record<string, (rootDir: string) => Promise<void>> = {
   async buffer(rootDir) {
     await replaceAll(rootDir, 'index.js', ' global.', ` ${windowOrGlobal}.`);
   },
@@ -27,20 +27,8 @@ const patchMap: Record<string, (rootDir: string) => Promise<void>> = {
   },
 };
 
-export function installPatch(name: string, patch: (rootDir: string) => Promise<void>) {
-  if (name in patchMap) {
-    const newPatch = patch;
-    const oldPatch = patchMap[name];
-    patch = rootDir => {
-      return oldPatch(rootDir).then(() => newPatch(rootDir));
-    };
-  }
-
-  patchMap[name] = patch;
-}
-
 export async function patchModule(packageName: string, rootDir: string) {
-  const applyPatchAt = patchMap[packageName];
+  const applyPatchAt = getPatch(packageName);
 
   if (typeof applyPatchAt === 'function') {
     log('generalDebug_0003', `Applying patchers for ${packageName} in "${rootDir}" ...`);

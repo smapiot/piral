@@ -1,36 +1,35 @@
-import { setupBundler, postProcess, patchModules } from './bundler';
-import { setStandardEnvs, progress } from '../common';
-import { LogLevels } from '../types';
+import { LogLevels } from 'piral-cli';
+import { setStandardEnvs, progress } from 'piral-cli/utils';
+import { setupBundler, patchModules } from './bundler';
 
 async function run(
   root: string,
   piral: string,
   scopeHoist: boolean,
   autoInstall: boolean,
+  hmr: boolean,
   cacheDir: string,
   externals: Array<string>,
-  targetDir: string,
-  entryModule: string,
+  publicUrl: string,
+  entryFiles: string,
   logLevel: LogLevels,
 ) {
   setStandardEnvs({
-    piral,
     root,
+    debugPiral: true,
+    dependencies: externals,
+    piral,
   });
 
   const bundler = setupBundler({
-    type: 'pilet',
-    externals,
-    targetDir,
-    entryModule,
+    type: 'piral',
+    entryFiles,
     config: {
+      publicUrl,
       logLevel,
-      hmr: false,
-      minify: true,
-      watch: true,
-      scopeHoist,
-      publicUrl: './',
       cacheDir,
+      scopeHoist,
+      hmr,
       autoInstall,
     },
   });
@@ -67,28 +66,23 @@ process.on('message', async msg => {
         msg.piral,
         msg.scopeHoist,
         msg.autoInstall,
+        msg.hmr,
         msg.cacheDir,
         msg.externals,
-        msg.targetDir,
-        msg.entryModule,
+        msg.publicUrl,
+        msg.entryFiles,
         msg.logLevel,
       );
 
-      bundler.on('bundled', async bundle => {
-        const requireRef = await postProcess(bundle, msg.version);
-
-        if (msg.hmr) {
-          process.send({
-            type: 'update',
-            outHash: bundler.mainBundle.entryAsset.hash,
-            outName: bundler.mainBundle.name.substr(bundler.options.outDir.length),
-            args: {
-              requireRef,
-              version: msg.version,
-              root,
-            },
-          });
-        }
+      bundler.on('bundled', () => {
+        process.send({
+          type: 'update',
+          outHash: bundler.mainBundle.entryAsset.hash,
+          outName: bundler.mainBundle.name.substr(bundler.options.outDir.length + 1),
+          args: {
+            root,
+          },
+        });
       });
 
       process.send({

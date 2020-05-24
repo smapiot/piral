@@ -2,9 +2,9 @@ import { generateDeclaration } from 'dets';
 import { dirname, basename, resolve } from 'path';
 import { progress, log } from './log';
 import { coreExternals } from './info';
+import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
-import { ForceOverwrite } from '../types';
 
 const piralBaseRoot = 'piral-base/lib/types';
 

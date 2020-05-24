@@ -1,5 +1,5 @@
 import { ComponentType, cloneElement } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import { withKey, replaceOrAddItem, removeNested } from '../utils';
 import {
   LayoutType,
