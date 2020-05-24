@@ -24,6 +24,6 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
     cp.stderr.pipe(error, opt);
 
     cp.on('error', () => reject(new Error(error.value)));
-    cp.on('close', (code, signal) => (code === 0 ? resolve() : reject(new Error(signal))));
+    cp.on('close', code => (code === 0 ? resolve() : reject(new Error(error.value))));
   });
 }

@@ -1160,6 +1160,39 @@ export function unsuccessfulHttpPost_0066(statusText: string, statusCode: number
 }
 
 /**
+ * @kind Info
+ *
+ * @summary
+ * The HTTP post response body data.
+ *
+ * @abstract
+ * When the pilet was successfully updated the server is free to respond with
+ * whatever HTTP body. Since the content of this body may be interesting, we
+ * show the content in the terminal.
+ *
+ * Note that we serialize the content to a string. So the result may not look
+ * as wanted from the server's perspective. In general we do not recommend to
+ * transport lengthy messages as a result of publishing a pilet.
+ *
+ * @see
+ * - [Feed API Specification](https://docs.piral.io/reference/specifications/feed-api-specification)
+ *
+ * @example
+ * The easiest way to see the output is to publish a pilet to the temporary feed.
+ *
+ * ```sh
+ * pilet publish --api-key ac6c202085f07099da1729a20e5750e651ef093ef4a5856c70997a6cc71dcab2 --url https://feed.piral.cloud/api/v1/pilet/temp
+ * ```
+ */
+export function httpPostResponse_0067(response: any): QuickMessage {
+  return [
+    LogLevels.info,
+    '0067',
+    `HTTP: ${response}`,
+  ];
+}
+
+/**
  * @kind Error
  *
  * @summary

@@ -32,7 +32,7 @@ export function postFile(target: string, key: string, file: Buffer, ca?: Buffer)
       httpsAgent,
     })
     .then(
-      () => true,
+      res => res.data || true,
       error => {
         if (error.response) {
           // The request was made and the server responded with a status code

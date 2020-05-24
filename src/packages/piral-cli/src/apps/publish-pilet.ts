@@ -104,6 +104,11 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
       if (result) {
         successfulUploads.push(file);
+
+        if (result !== true) {
+          log('httpPostResponse_0067', result);
+        }
+
         progress(`Published successfully!`);
       } else {
         log('failedToUpload_0062', fileName);

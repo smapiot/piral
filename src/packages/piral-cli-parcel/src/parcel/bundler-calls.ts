@@ -7,20 +7,22 @@ function getPath(name: string) {
 }
 
 function createBundler(cwd: string, ps: ChildProcess, args: any) {
+  let promise = Promise.resolve();
   const listeners: Array<(args: any) => void> = [];
   const bundle: BundleDetails = {
     dir: cwd,
     hash: '',
     name: '',
   };
-  const setPending = () =>
-    new Promise<void>(done => {
+  const setPending = () => {
+    promise = new Promise(done => {
       const f = () => {
         done();
         bundler.off(f);
       };
       bundler.on(f);
     });
+  };
   const bundler = {
     bundle,
     start() {
@@ -43,7 +45,7 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
     },
     setPending,
   };
-  let promise = setPending();
+  setPending();
   return bundler;
 }
 
