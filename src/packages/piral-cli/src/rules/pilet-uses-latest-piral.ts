@@ -12,7 +12,7 @@ export default async function(context: PiletRuleContext, options: Options = 'sug
     const demanded = (context.devDependencies && context.devDependencies[name]) || '';
     const isfixed = demanded.startsWith('git+') || demanded.startsWith('file:');
 
-    if (isfixed) {
+    if (!isfixed) {
       const latestVersion = await findLatestVersion(name);
 
       if (version !== latestVersion) {
