@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.11.5 (tbd)
+## 0.11.5 (May 24, 2020)
 
 * Fixed bug in pilet debug when touching files with CSS references
 * Added tutorial for the migration of existing applications (#180)
