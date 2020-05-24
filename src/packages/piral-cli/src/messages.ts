@@ -1185,11 +1185,8 @@ export function unsuccessfulHttpPost_0066(statusText: string, statusCode: number
  * ```
  */
 export function httpPostResponse_0067(response: any): QuickMessage {
-  return [
-    LogLevels.info,
-    '0067',
-    `HTTP: ${response}`,
-  ];
+  const content = typeof response !== 'string' ? JSON.stringify(response, undefined, 2) : response;
+  return [LogLevels.info, '0067', `HTTP: ${content}`];
 }
 
 /**
