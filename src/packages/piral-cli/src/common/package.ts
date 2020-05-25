@@ -2,7 +2,7 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
-import { cliVersion, coreExternals } from './info';
+import { cliVersion, coreExternals, filesTar, filesOnceTar } from './info';
 import { checkAppShellCompatibility } from './compatibility';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
@@ -143,17 +143,17 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
   };
 }
 
-async function getAvailableFiles(root: string, name: string) {
+async function getAvailableFiles(root: string, name: string, tarBall: string) {
   const source = getPiralPath(root, name);
   log('generalDebug_0003', `Checking if "files.tar" exists in "${source}" ...`);
-  const exists = await checkExists(resolve(source, 'files.tar'));
+  const exists = await checkExists(resolve(source, `${tarBall}.tar`));
 
   if (exists) {
-    await unpackTarball(source, 'files.tar');
+    await unpackTarball(source, `${tarBall}.tar`);
   }
 
   log('generalDebug_0003', `Get matching files from "${source}".`);
-  const base = resolve(source, 'files');
+  const base = resolve(source, tarBall);
   const files = await matchFiles(base, '**/*');
   return files.map(file => ({
     sourcePath: file,
@@ -162,7 +162,7 @@ async function getAvailableFiles(root: string, name: string) {
 }
 
 export async function getFileStats(root: string, name: string) {
-  const files = await getAvailableFiles(root, name);
+  const files = await getAvailableFiles(root, name, filesTar);
   return await Promise.all(
     files.map(async file => {
       const { sourcePath, targetPath } = file;
@@ -215,10 +215,16 @@ export async function copyPiralFiles(
   root: string,
   name: string,
   forceOverwrite: ForceOverwrite,
-  originalFiles: Array<FileInfo>,
+  originalFiles?: Array<FileInfo>,
 ) {
   log('generalDebug_0003', `Copying the Piral files ...`);
-  const files = await getAvailableFiles(root, name);
+  const files = await getAvailableFiles(root, name, filesTar);
+
+  if (originalFiles === undefined) {
+    const initialFiles = await getAvailableFiles(root, name, filesOnceTar);
+    files.push(...initialFiles);
+  }
+
   await copyFiles(files, forceOverwrite, originalFiles);
 }
 

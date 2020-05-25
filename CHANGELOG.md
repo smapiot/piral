@@ -3,6 +3,7 @@
 ## 0.11.6 (tbd)
 
 * Updated documentation page (#206)
+* Added `once` flag for scaffolding (#225)
 
 ## 0.11.5 (May 24, 2020)
 

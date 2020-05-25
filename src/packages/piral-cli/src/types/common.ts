@@ -45,6 +45,7 @@ export interface TemplateFileLocation {
   from: string;
   to: string;
   deep?: boolean;
+  once?: boolean;
 }
 
 export interface PiletsInfo {
