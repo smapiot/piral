@@ -1,17 +1,12 @@
 import { resolve } from 'path';
 import { log } from '../log';
-import { isWindows } from '../info';
-import { runScript } from '../scripts';
+import { runShell } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
-
-const pnpmCommand = isWindows ? 'pnpm.cmd' : 'pnpm';
 
 function runPnpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   log('generalDebug_0003', 'Starting the Pnpm process ...');
   const cwd = resolve(process.cwd(), target);
-  const cmd = [pnpmCommand, ...args].join(' ');
-  log('generalDebug_0003', `Applying Pnpm cmd "${cmd}" in directory "${cwd}".`);
-  return runScript(cmd, cwd, output);
+  return runShell('pnpm', args, cwd, output);
 }
 
 function convert(flags: Array<string>) {

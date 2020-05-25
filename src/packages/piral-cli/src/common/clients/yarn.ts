@@ -1,17 +1,12 @@
 import { resolve } from 'path';
 import { log } from '../log';
-import { isWindows } from '../info';
-import { runScript } from '../scripts';
+import { runShell } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
-
-const yarnCommand = isWindows ? 'yarn.cmd' : 'yarn';
 
 function runYarnProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   log('generalDebug_0003', 'Starting the Yarn process ...');
   const cwd = resolve(process.cwd(), target);
-  const cmd = [yarnCommand, ...args].join(' ');
-  log('generalDebug_0003', `Applying Yarn cmd "${cmd}" in directory "${cwd}".`);
-  return runScript(cmd, cwd, output);
+  return runShell('yarn', args, cwd, output);
 }
 
 function convert(flags: Array<string>) {

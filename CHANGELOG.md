@@ -4,6 +4,7 @@
 
 * Updated documentation page (#206)
 * Added `once` flag for scaffolding (#225)
+* Fixed potentially non-working Piral CLI scaffold on Windows (#192)
 
 ## 0.11.5 (May 24, 2020)
 
