@@ -10,10 +10,17 @@ import {
 import { LazyComponentLoader } from './types';
 
 export function createConverter(context: GlobalStateContext) {
-  const convert = <TProps extends BaseComponentProps>(load: LazyComponentLoader<TProps>): ForeignComponent<TProps> => {
+  const convert = <TProps extends BaseComponentProps>(
+    load: LazyComponentLoader<TProps>,
+    deps: Array<Promise<any>> = [],
+  ): ForeignComponent<TProps> => {
     let present: [HTMLElement, any, ComponentContext] = undefined;
     let portalId: string = undefined;
-    const promise = load.current || (load.current = load().then(c => convertComponent(context.converters[c.type], c)));
+    const promise =
+      load.current ??
+      (load.current = Promise.all(deps)
+        .then(load)
+        .then(comp => convertComponent(context.converters[comp.type], comp)));
     const component: ForeignComponent<TProps> = {
       mount(...args) {
         portalId = renderInDom(context, args[0], PiralLoadingIndicator, {});

@@ -12,6 +12,20 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 The following functions are brought to the Pilet API.
 
+### `defineDependency()`
+
+Allows to define lazy loading dependencies in form of lazy loading functions. This can be used to ensure certain data is available or that certain modules are already loaded.
+
+A simple example:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  piral.defineDependency('lodash', () => import('https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js'));
+}
+```
+
 ### `fromLazy()`
 
 Transforms the result of a promise derived from a callback (i.e., lazy loading) to a proper component. This is thought for non-React lazy loading. For React you'll need to use the known way of applying `React.lazy` to your component initialization.
@@ -34,6 +48,35 @@ export function setup(piral: PiletApi) {
 ```
 
 **Remark**: For React components `React.lazy` should be preferred. The provided lazy loading wrapper should only be used for third-party components that require a converter.
+
+For lazy loading externals we recommend a combination with import maps. These can be set up in *package.json* as simple as follows:
+
+```json
+{
+  "name": "my-pilet",
+  "version": "1.0.0",
+  "importmap": {
+    "imports": {
+      "lodash": "./node_modules/lodash/index.js"
+    }
+  }
+}
+```
+
+Now we can actually use this in combination with `defineDependency`:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  const loadFromImport = (name: string) => require('importmap').ready(name);
+  piral.defineDependency('lodash', () => loadFromImport('lodash'));
+  const LazyPage = piral.fromLazy(() => import('./MyPage'), ['lodash']);
+  piral.registerPage('/sample', LazyPage);
+}
+```
+
+**Important**: You'll either need to use import maps or `externals` in your package.json to be able to use `require` or `import from` in your lazy loaded bundles. Otherwise, the noted packages will be fixed bundled in. If you follow the setup above you'd be fine in any case.
 
 ## Setup and Bootstrapping
 

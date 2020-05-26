@@ -91,7 +91,6 @@ export function loadPilets(
   fetchDependency?: PiletDependencyFetcher,
   globalDependencies?: AvailableDependencies,
   getLocalDependencies?: PiletDependencyGetter,
-  integrity?: boolean,
 ): Promise<Array<Pilet>> {
   const getDependencies = getDependencyResolver(globalDependencies, getLocalDependencies);
 
