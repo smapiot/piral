@@ -1,38 +1,12 @@
-import { ForeignComponent, FirstParametersOf, ComponentConverters } from 'piral-core';
+import { FC } from 'react';
+import { FirstParametersOf, ComponentConverters } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletLazyApi {}
-
-  interface PiralCustomComponentConverters<TProps> {
-    lazy(component: LazyComponent<TProps>): ForeignComponent<TProps>;
-  }
-}
-
-export interface DependencyCache {
-  [name: string]: {
-    result: Promise<any>;
-    loader: LazyDependencyLoader;
-  };
 }
 
 export interface LazyComponentLoader<TProps> {
   (): Promise<FirstParametersOf<ComponentConverters<TProps>>>;
-  current?: Promise<ForeignComponent<TProps>>;
-}
-
-export interface LazyComponent<TProps> {
-  /**
-   * Triggers the async loading process of the component.
-   */
-  load: LazyComponentLoader<TProps>;
-  /**
-   * The promises resolving in the optional dependencies.
-   */
-  deps?: Array<Promise<any>>;
-  /**
-   * The type of the lazy component.
-   */
-  type: 'lazy';
 }
 
 export interface LazyDependencyLoader {
@@ -55,5 +29,5 @@ export interface PiletLazyApi {
    * @param deps The optional names of the dependencies to load beforehand.
    * @returns The lazy loading component.
    */
-  fromLazy<T>(cb: LazyComponentLoader<T>, deps?: Array<string>): LazyComponent<T>;
+  fromLazy<T>(cb: LazyComponentLoader<T>, deps?: Array<string>): FC<T>;
 }

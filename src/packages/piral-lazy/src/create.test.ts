@@ -29,7 +29,6 @@ describe('Piral-Lazy create module', () => {
     const apiCreator: any = createLazyApi()(context);
     const { fromLazy } = apiCreator();
     const lazyComponent = fromLazy(load);
-    expect(lazyComponent.type).toBe('lazy');
-    expect(lazyComponent.load).toBe(load);
+    expect(lazyComponent).not.toBeUndefined();
   });
 });
