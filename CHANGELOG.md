@@ -6,6 +6,7 @@
 * Added `once` flag for scaffolding (#225)
 * Fixed potentially non-working Piral CLI scaffold on Windows (#192)
 * Added `defineDependency` to `piral-lazy` (#226)
+* Fixed the use of `matchMedia` for other platforms (#222)
 
 ## 0.11.5 (May 24, 2020)
 
