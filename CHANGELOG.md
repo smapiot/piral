@@ -8,6 +8,7 @@
 * Fixed potentially non-working Piral CLI scaffold on Windows (#192)
 * Fixed the use of `matchMedia` for other platforms (#222)
 * Fixed discarded props with multiple `includeProvider` calls (#227)
+* Fixed broken source map support in pilet debug (#229)
 
 ## 0.11.5 (May 24, 2020)
 

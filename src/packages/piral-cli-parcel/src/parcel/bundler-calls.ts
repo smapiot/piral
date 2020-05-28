@@ -6,9 +6,11 @@ function getPath(name: string) {
   return resolve(__dirname, '..', '..', 'lib', 'parcel', `run-${name}.js`);
 }
 
+type BundleListener = (args: any) => void;
+
 function createBundler(cwd: string, ps: ChildProcess, args: any) {
   let promise = Promise.resolve();
-  const listeners: Array<(args: any) => void> = [];
+  const listeners: Array<BundleListener> = [];
   const bundle: BundleDetails = {
     dir: cwd,
     hash: '',
@@ -31,14 +33,14 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
         ...args,
       });
     },
-    on(cb) {
+    on(cb: BundleListener) {
       listeners.push(cb);
     },
-    off(cb) {
+    off(cb: BundleListener) {
       listeners.splice(listeners.indexOf(cb), 1);
     },
-    emit(msg) {
-      listeners.forEach(cb => cb(msg));
+    emit(args: any) {
+      [...listeners].forEach(cb => cb(args));
     },
     ready() {
       return promise;

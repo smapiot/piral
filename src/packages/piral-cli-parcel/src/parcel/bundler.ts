@@ -173,6 +173,7 @@ const piletMarker = '//@pilet v:';
 const preamble = `!(function(global,parcelRequire){'use strict';`;
 const insertScript = `function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;`;
 const getBundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}`;
+const initializer = `${preamble}var ${bundleUrlRef}=${getBundleUrl}();`;
 
 function isFile(bundleDir: string, name: string) {
   const path = resolve(bundleDir, name);
@@ -182,18 +183,13 @@ function isFile(bundleDir: string, name: string) {
 function getScriptHead(version: PiletSchemaVersion, prName: string) {
   switch (version) {
     case 'v0': // directEval
-      return `${piletMarker}0\n${getSideHead(prName)}`;
+      return `${piletMarker}0\n${initializer}`;
     case 'v1': // currentScript
-      return `${piletMarker}1(${prName})\n${getSideHead(prName)}${insertScript}`;
+      return `${piletMarker}1(${prName})\n${initializer}${insertScript}`;
     default:
       log('invalidSchemaVersion_0071', version, ['v0', 'v1']);
       return getScriptHead('v0', prName);
   }
-}
-
-function getSideHead(prName: string) {
-  const bundleUrl = `var ${bundleUrlRef}=${getBundleUrl}();`;
-  return `${preamble}${bundleUrl}`;
 }
 
 function readFileContent(src: string) {
@@ -251,7 +247,7 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
       const root = parent === undefined;
       const bundleDir = dirname(src);
       const data = await readFileContent(src);
-      const head = root ? getScriptHead(version, prName) : getSideHead(prName);
+      const head = root ? getScriptHead(version, prName) : initializer;
       const marker = root ? piletMarker : head;
 
       let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
@@ -322,8 +318,23 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
           result
             .split('"function"==typeof parcelRequire&&parcelRequire')
             .join(`"function"==typeof global.${prName}&&global.${prName}`),
-          `;global.${prName}=parcelRequire}(window, window.${prName}));`,
         ].join('\n');
+
+        const lines = result.split('\n');
+        const sourceMapping = lines.pop();
+        const hasSourceMaps = sourceMapping.indexOf('//# sourceMappingURL=') === 0;
+
+        if (!hasSourceMaps) {
+          lines.push(sourceMapping);
+        }
+
+        lines.push(`;global.${prName}=parcelRequire}(window, window.${prName}));`);
+
+        if (hasSourceMaps) {
+          lines.push(sourceMapping);
+        }
+
+        result = lines.join('\n');
       }
 
       await writeFileContent(src, result);
