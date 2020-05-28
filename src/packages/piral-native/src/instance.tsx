@@ -1,14 +1,5 @@
 import * as React from 'react';
-import { Dashboard } from 'piral-ext';
-import {
-  Piral,
-  SetRoute,
-  PiralInstance,
-  ComponentsState,
-  ErrorComponentsState,
-  SetErrors,
-  SetLayout,
-} from 'piral-core';
+import { Piral, PiralInstance, ComponentsState, ErrorComponentsState, SetErrors, SetLayout } from 'piral-core';
 
 export function createInstanceElement(
   instance?: PiralInstance,
@@ -19,7 +10,6 @@ export function createInstanceElement(
     <Piral instance={instance}>
       <SetLayout layout={layout} />
       <SetErrors errors={errors} />
-      <SetRoute path="/" component={Dashboard} />
     </Piral>
   );
 }

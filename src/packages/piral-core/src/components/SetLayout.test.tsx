@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import { Atom, swap, deref } from '@dbeining/react-atom';
-import { StateContext } from 'piral-core';
 import { SetLayout } from './SetLayout';
+import { StateContext } from '../state/stateContext';
 
 const FakeContainer = () => null;
 FakeContainer.displayName = 'FakeContainer';
@@ -36,9 +36,11 @@ describe('Piral SetLayout component', () => {
     const node = mount(
       <StateContext.Provider value={context}>
         <SetLayout
-          layout={{
-            DashboardContainer: FakeContainer,
-          }}
+          layout={
+            {
+              DashboardContainer: FakeContainer,
+            } as any
+          }
         />
       </StateContext.Provider>,
     );

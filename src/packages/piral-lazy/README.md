@@ -78,6 +78,24 @@ export function setup(piral: PiletApi) {
 
 **Important**: You'll either need to use import maps or `externals` in your package.json to be able to use `require` or `import from` in your lazy loaded bundles. Otherwise, the noted packages will be fixed bundled in. If you follow the setup above you'd be fine in any case.
 
+The other use case could be population of data, e.g., in combination with a global state container:
+
+```ts
+// Lazy loaders
+const TranslatePageView = () => import('./translatepage').then(m => m.default);
+const common = () => import('./common');
+const prerequest = () => fetch('/somedata')
+  .then(res => import('./setstore').then(m => m.default(res)));
+
+// Components
+const TranslatePage = app.fromLazy(TranslatePageView, ['common', 'prerequest']);
+
+// Registrations
+app.defineDependency('common', common);
+app.defineDependency('prerequest', prerequest);
+app.registerPage('/translate', TranslatePage);
+```
+
 ## Setup and Bootstrapping
 
 > For Piral instance developers
