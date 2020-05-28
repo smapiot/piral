@@ -20,7 +20,8 @@
   "files": [
     "lib",
     "src",
-    "dependencies.codegen"
+    "dependencies.codegen",
+    "dependencies.codegen.native.js"
   ],
   "repository": {
     "type": "git",
