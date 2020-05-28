@@ -26,7 +26,7 @@ async function run(
     config: {
       logLevel,
       hmr: false,
-      minify: true,
+      minify: false,
       watch: true,
       scopeHoist,
       publicUrl: './',
@@ -75,7 +75,7 @@ process.on('message', async msg => {
       );
 
       bundler.on('bundled', async bundle => {
-        const requireRef = await postProcess(bundle, msg.version);
+        const requireRef = await postProcess(bundle, msg.version, false);
 
         if (msg.hmr) {
           process.send({

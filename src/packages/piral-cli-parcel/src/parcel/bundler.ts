@@ -237,10 +237,13 @@ async function applySourceMapShift(sourceFile: string, lineOffset = 1): Promise<
  * @param bundle The bundle to transform.
  * @param version The manifest version to create.
  */
-export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVersion) {
+export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSchemaVersion, minified: boolean) {
   const hash = bundle.getHash();
   const prName = `pr_${hash}`;
   const bundles = gatherJsBundles(bundle);
+  const originalRequire = minified
+    ? '"function"==typeof parcelRequire&&parcelRequire'
+    : "typeof parcelRequire === 'function' && parcelRequire";
 
   await Promise.all(
     bundles.map(async ({ src, css, map, parent }) => {
@@ -250,7 +253,7 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
       const head = root ? getScriptHead(version, prName) : initializer;
       const marker = root ? piletMarker : head;
 
-      let result = data.replace(/^module\.exports="(.*)";$/gm, (str, value) => {
+      let result = data.replace(/^module\.exports\s?=\s?"(.*)";$/gm, (str, value) => {
         if (isFile(bundleDir, value)) {
           return str.replace(`"${value}"`, `${bundleUrlRef}+"${value}"`);
         } else {
@@ -315,9 +318,7 @@ export async function postProcess(bundle: Bundler.ParcelBundle, version: PiletSc
          */
         result = [
           head,
-          result
-            .split('"function"==typeof parcelRequire&&parcelRequire')
-            .join(`"function"==typeof global.${prName}&&global.${prName}`),
+          result.split(originalRequire).join(`"function"==typeof global.${prName}&&global.${prName}`),
         ].join('\n');
 
         const lines = result.split('\n');
