@@ -62,6 +62,10 @@ export interface MenuItemProps {
    * The type of the menu.
    */
   type: MenuType;
+  /**
+   * The provided menu settings.
+   */
+  meta: MenuSettings;
 }
 
 /**
