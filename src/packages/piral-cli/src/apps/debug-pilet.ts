@@ -58,6 +58,8 @@ async function getOrMakeAppDir(
     const cwd = resolve(packageJson, '..');
     const { dir } = await callDebugPiralFromMonoRepo({
       root: cwd,
+      optimizeModules: false,
+      ignored: [],
       externals,
       piral,
       entryFiles: appFile,

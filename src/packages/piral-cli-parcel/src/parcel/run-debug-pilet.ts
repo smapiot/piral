@@ -1,6 +1,6 @@
 import { LogLevels } from 'piral-cli';
-import { setupBundler, postProcess, patchModules } from './bundler';
-import { setStandardEnvs, progress } from 'piral-cli/utils';
+import { setupBundler, postProcess } from './bundler';
+import { setStandardEnvs } from 'piral-cli/utils';
 
 async function run(
   root: string,
@@ -46,11 +46,6 @@ process.on('message', async msg => {
   switch (msg.type) {
     case 'bundle':
       if (bundler) {
-        if (msg.optimizeModules) {
-          progress('Preparing modules ...');
-          await patchModules(root, msg.ignored);
-        }
-
         await bundler.bundle();
 
         bundler.on('buildStart', () => {

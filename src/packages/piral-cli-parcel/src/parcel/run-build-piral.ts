@@ -1,12 +1,11 @@
 import { relative } from 'path';
 import { LogLevels } from 'piral-cli';
-import { setStandardEnvs, progress, removeDirectory } from 'piral-cli/utils';
-import { setupBundler, gatherJsBundles, patchModules } from './bundler';
+import { setStandardEnvs, removeDirectory } from 'piral-cli/utils';
+import { setupBundler, gatherJsBundles } from './bundler';
 
 async function run(
   root: string,
   piral: string,
-  optimizeModules: boolean,
   scopeHoist: boolean,
   develop: boolean,
   sourceMaps: boolean,
@@ -20,13 +19,7 @@ async function run(
   outDir: string,
   entryFiles: string,
   logLevel: LogLevels,
-  ignored: Array<string>,
 ) {
-  if (optimizeModules) {
-    progress('Preparing modules ...');
-    await patchModules(root, ignored);
-  }
-
   // using different environment variables requires clearing the cache
   await removeDirectory(cacheDir);
 
@@ -67,7 +60,6 @@ process.on('message', async msg => {
       const bundle = await run(
         process.cwd(),
         msg.piral,
-        msg.optimizeModules,
         msg.scopeHoist,
         msg.develop,
         msg.sourceMaps,
@@ -81,7 +73,6 @@ process.on('message', async msg => {
         msg.outDir,
         msg.entryFiles,
         msg.logLevel,
-        msg.ignored,
       );
       const [file] = gatherJsBundles(bundle);
       process.send({

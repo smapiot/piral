@@ -1,12 +1,11 @@
 import { dirname, basename } from 'path';
 import { LogLevels, PiletSchemaVersion } from 'piral-cli';
-import { progress, setStandardEnvs, removeDirectory } from 'piral-cli/utils';
-import { setupBundler, postProcess, patchModules } from './bundler';
+import { setStandardEnvs, removeDirectory } from 'piral-cli/utils';
+import { setupBundler, postProcess } from './bundler';
 
 async function run(
   root: string,
   piral: string,
-  optimizeModules: boolean,
   scopeHoist: boolean,
   sourceMaps: boolean,
   contentHash: boolean,
@@ -20,13 +19,7 @@ async function run(
   entryModule: string,
   logLevel: LogLevels,
   version: PiletSchemaVersion,
-  ignored: Array<string>,
 ) {
-  if (optimizeModules) {
-    progress('Preparing modules ...');
-    await patchModules(root, ignored);
-  }
-
   // using different environment variables requires clearing the cache
   await removeDirectory(cacheDir);
 
@@ -67,7 +60,6 @@ process.on('message', async msg => {
       const outPath = await run(
         process.cwd(),
         msg.piral,
-        msg.optimizeModules,
         msg.scopeHoist,
         msg.sourceMaps,
         msg.contentHash,
@@ -81,7 +73,6 @@ process.on('message', async msg => {
         msg.entryModule,
         msg.logLevel,
         msg.version,
-        msg.ignored,
       );
       process.send({
         type: 'done',

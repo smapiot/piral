@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { readText, writeText, log, getPatch } from 'piral-cli/utils';
+import { readText, writeText } from 'piral-cli/utils';
 
 const windowOrGlobal = '(typeof window !== "undefined" ? window : global)';
 
@@ -26,12 +26,3 @@ export const standardPatches: Record<string, (rootDir: string) => Promise<void>>
     await replaceAll(utils, 'fetch-polyfill.js', 'global', windowOrGlobal);
   },
 };
-
-export async function patchModule(packageName: string, rootDir: string) {
-  const applyPatchAt = getPatch(packageName);
-
-  if (typeof applyPatchAt === 'function') {
-    log('generalDebug_0003', `Applying patchers for ${packageName} in "${rootDir}" ...`);
-    await applyPatchAt(rootDir);
-  }
-}

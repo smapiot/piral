@@ -1,4 +1,4 @@
-import { installPackage, cliVersion, fail, progress, log, determineNpmClient } from './common';
+import { installPackage, cliVersion, fail, progress, log, determineNpmClient, patchModules, logReset } from './common';
 import {
   Bundler,
   BundleDetails,
@@ -8,6 +8,7 @@ import {
   WatchPiralParameters,
   DebugPiletParameters,
   BundlerDefinition,
+  BaseBundleParameters,
 } from './types';
 
 export interface QualifiedBundler {
@@ -74,27 +75,39 @@ async function findBundler(root: string, bundlerName?: string) {
   }
 }
 
+async function prepareModules(args: BaseBundleParameters) {
+  if (args.optimizeModules) {
+    progress('Preparing modules ...');
+    await patchModules(args.root, args.ignored);
+    logReset();
+  }
+}
+
 export function setBundler(bundler: QualifiedBundler) {
   bundlers.push(bundler);
 }
 
 export async function callPiralDebug(args: DebugPiralParameters, bundlerName?: string): Promise<Bundler> {
   const bundler = await findBundler(args.root, bundlerName);
+  await prepareModules(args);
   return await bundler.actions.debugPiral(args);
 }
 
 export async function callPiletDebug(args: DebugPiletParameters, bundlerName?: string): Promise<Bundler> {
   const bundler = await findBundler(args.root, bundlerName);
+  await prepareModules(args);
   return await bundler.actions.debugPilet(args);
 }
 
 export async function callPiralBuild(args: BuildPiralParameters, bundlerName?: string): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
+  await prepareModules(args);
   return await bundler.actions.buildPiral(args);
 }
 
 export async function callPiletBuild(args: BuildPiletParameters, bundlerName?: string): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
+  await prepareModules(args);
   return await bundler.actions.buildPilet(args);
 }
 
@@ -103,6 +116,7 @@ export async function callDebugPiralFromMonoRepo(
   bundlerName?: string,
 ): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
+  await prepareModules(args);
   const { bundle } = await bundler.actions.watchPiral(args);
   return bundle;
 }

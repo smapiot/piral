@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { fork, ChildProcess } from 'child_process';
-import { Bundler, BundleDetails } from 'piral-cli';
+import { Bundler, BundleDetails, BaseBundleParameters } from 'piral-cli';
 
 function getPath(name: string) {
   return resolve(__dirname, '..', '..', 'lib', 'parcel', `run-${name}.js`);
@@ -51,7 +51,8 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
   return bundler;
 }
 
-export function callDynamic(name: string, cwd: string, args: any) {
+export function callDynamic<T extends BaseBundleParameters>(name: string, args: T) {
+  const cwd = args.root;
   return new Promise<Bundler>(resolve => {
     const ps = fork(getPath(name), [], { cwd });
     const bundler = createBundler(cwd, ps, args);
@@ -79,7 +80,8 @@ export function callDynamic(name: string, cwd: string, args: any) {
   });
 }
 
-export function callStatic(name: string, cwd: string, args: any) {
+export function callStatic<T extends BaseBundleParameters>(name: string, args: T) {
+  const cwd = args.root;
   return new Promise<Bundler>(resolve => {
     const ps = fork(getPath(name), [], { cwd });
     const bundler = createBundler(cwd, ps, args);
