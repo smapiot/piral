@@ -1,8 +1,8 @@
 [![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Core](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-core.svg?style=flat)](https://www.npmjs.com/package/piral-core) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Native](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-native.svg?style=flat)](https://www.npmjs.com/package/piral-native) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is the core library that is required for any Piral instance. Plugins and pre-made layouts or templates build upon this layer. While `piral-core` is certainly opinionated the library tries to keep most options as flexible as possible.
+This is the Piral framework prepared for use with React Native. Everything has to be prepared to run in a standard React Native application.
 
 ## Documentation
 
@@ -10,41 +10,13 @@ For details on the provided API check out the [documentation at the Piral websit
 
 ## Getting Started
 
-Creating your own Piral app based on `piral-core` is as simple as installing `piral-core` as a dependency to your React app:
+Creating your own React Native app based on `piral-native` is as simple as installing `piral-native` as a dependency to your React Native app:
 
 ```sh
-npm i piral-core
+npm i piral-native
 ```
 
 **Remark**: This package already includes TypeScript declarations. No need to install other packages.
-
-Now you can create a new Piral instance in your code:
-
-```jsx
-import { createInstance } from 'piral-core';
-
-const App = createInstance({
-  requestPilets: () => fetch('https://feed.piral.cloud/api/v1/pilet/sample'),
-});
-```
-
-**Remark**: For all available API options make sure to check out the [documentation](https://docs.piral.io).
-
-**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [piral.cloud](https://www.piral.cloud)) or your own API / mechanism to serve the modules.
-
-Finally, you can render this Piral instance by using the `render` function from `react-dom`:
-
-```jsx
-render((
-  <App>
-    {content => <Layout>{content}</Layout>}
-  </App>
-), document.querySelector('#app'));
-```
-
-Alternatively, you can use your new Piral instance anywhere as a component.
-
-Your Piral app can be build with any technology that you like or already use (e.g., Webpack, Parcel, ...). If you are unsure what to you use you may fall back to `piral-cli`, which (among other things) also contains a build mechanism that *should just work* :rocket:.
 
 ## License
 

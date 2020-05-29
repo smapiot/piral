@@ -223,6 +223,7 @@ export async function copyPiralFiles(
   if (originalFiles === undefined) {
     const initialFiles = await getAvailableFiles(root, name, filesOnceTar);
     files.push(...initialFiles);
+    originalFiles = [];
   }
 
   await copyFiles(files, forceOverwrite, originalFiles);
