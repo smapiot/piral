@@ -5,6 +5,8 @@
 * Updated documentation page (#206)
 * Added `once` flag for scaffolding (#225)
 * Added `defineDependency` to `piral-lazy` (#226)
+* Added `piral-jest-utils` package for Jest mocking (#192)
+* Added `piral-native` package for React Native (#222)
 * Fixed potentially non-working Piral CLI scaffold on Windows (#192)
 * Fixed the use of `matchMedia` for other platforms (#222)
 * Fixed discarded props with multiple `includeProvider` calls (#227)
