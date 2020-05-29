@@ -43,22 +43,15 @@ export async function runShell(exe: string, args: Array<string>, cwd: string, ou
     // on windows we sometimes may see a strange behavior,
     // see https://github.com/smapiot/piral/issues/192
     if (isWindows) {
+      log('generalDebug_0003', `Checking on Windows where to find "${exe}".`);
       const ms = new MemoryStream();
-      log('generalDebug_0003', `Checking on Windows if "${exeCmd} -v" and "${exe} -v" work.`);
-      const fails = await runScript(`${exeCmd} -v`, cwd, ms).then(
-        () => false,
-        () => true,
-      );
-      const retry = await runScript(`${exe} -v`, cwd, ms).then(
-        () => true,
-        () => false,
-      );
-      log('generalDebug_0003', `Results: "${exeCmd} -v" (success: ${!fails}) and "${exe} -v" (success: ${retry}).`);
+      await runScript(`where.exe ${exe}`, cwd, ms);
+      const [path] = ms.value.split('\n').filter(m => m.endsWith('.cmd'));
+      log('generalDebug_0003', `Found "${path}" for "${exe}".`);
 
-      // only if, e.g., "npm.cmd -v" failed we should try if "npm -v" works
-      if (fails && retry) {
-        log('generalDebug_0003', `Retrying with "${exe}" in directory "${cwd}".`);
-        return await runCommand(exe, args, cwd, output);
+      if (path) {
+        log('generalDebug_0003', `Retrying with "${path}" in directory "${cwd}".`);
+        return await runCommand(path, args, cwd, output);
       }
     }
 
