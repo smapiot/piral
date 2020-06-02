@@ -18,7 +18,7 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
   const defaultState: GlobalState = {
     app: {
       error: undefined,
-      loading: false,
+      loading: typeof window !== 'undefined',
       layout: 'desktop',
     },
     components: {
