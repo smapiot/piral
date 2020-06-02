@@ -70,7 +70,7 @@ process.on('message', async msg => {
       ).catch(error => {
         process.send({
           type: 'fail',
-          error,
+          error: error?.message,
         });
       });
 

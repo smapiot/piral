@@ -90,7 +90,7 @@ export function logReset() {
   logger.stopSpinner();
 }
 
-export function fail<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>) {
+export function fail<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>): never {
   const message = log(type, ...args);
   const error = new Error(message);
   (error as any).logged = true;

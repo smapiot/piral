@@ -12,6 +12,8 @@
 * Fixed the use of `matchMedia` for other platforms (#222)
 * Fixed discarded props with multiple `includeProvider` calls (#227)
 * Fixed broken source map support in pilet debug (#229)
+* Fixed CSR should start with rendering the spinner
+* Fixed Parcel bundler not reporting failure properly
 
 ## 0.11.5 (May 24, 2020)
 

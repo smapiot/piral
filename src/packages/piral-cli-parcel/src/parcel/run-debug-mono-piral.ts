@@ -51,7 +51,7 @@ process.on('message', async msg => {
       const outPath = await run(process.cwd(), msg.piral, msg.externals, msg.entryFiles, msg.logLevel).catch(error => {
         process.send({
           type: 'fail',
-          error,
+          error: error?.message,
         });
       });
 
