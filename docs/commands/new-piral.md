@@ -103,6 +103,14 @@ Sets the boilerplate template to be used when scaffolding.
 - Choices: `"default"`, `"empty"`
 - Default: `"default"`
 
+### `--npm-client`
+
+Sets the NPM client to be used when scaffolding.
+
+- Type: `string`
+- Choices: `"npm"`, `"pnpm"`, `"yarn"`
+- Default: `undefined`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

@@ -1793,6 +1793,36 @@ export function defaultBundlerMissing_0073(): QuickMessage {
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * The bundling process failed.
+ *
+ * @abstract
+ * For transforming sources (e.g., a Piral instance or a pilet) into a single
+ * set of distributables (JS, CSS, other assets) a bundler is used. When the
+ * transformation process fails the Piral CLI will report the received error
+ * from the underlying bundler.
+ *
+ * The detailed set of logs / messages should be available in the command
+ * line. These are formatted according to the currently used bundler.
+ *
+ * @see
+ * - [Parcel](https://parceljs.org)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ *
+ * @example
+ * Use the following command to make the parcel bundler available:
+ *
+ * ```sh
+ * npm i piral-cli-parcel --save-dev
+ * ```
+ */
+export function bundlingFailed_0074(error: string): QuickMessage {
+  return [LogLevels.error, '0074', `The bundling process failed: ${error || 'Invalid input.'}`];
+}
+
+/**
  * @kind Warning
  *
  * @summary
