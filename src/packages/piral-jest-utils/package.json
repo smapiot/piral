@@ -33,6 +33,8 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-jest-utils.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "piral-core": "^0.11.5"
+  },
   "peerDependencies": {}
 }

@@ -1,4 +1,4 @@
-import { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV2 } from './types';
+import { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV1 } from './types';
 
 function requireModule(name: string, dependencies: AvailableDependencies) {
   const dependency = dependencies[name];
@@ -89,7 +89,7 @@ declare global {
  * @param dependencies The globally available dependencies.
  * @returns The evaluated module.
  */
-export function includeDependency(meta: PiletMetadataV2, dependencies?: AvailableDependencies) {
+export function includeDependency(meta: PiletMetadataV1, dependencies?: AvailableDependencies) {
   return new Promise<PiletApp>(resolve => {
     const rr = meta.requireRef;
     const s = document.createElement('script');
@@ -97,6 +97,7 @@ export function includeDependency(meta: PiletMetadataV2, dependencies?: Availabl
     s.src = meta.link;
 
     if (meta.integrity) {
+      s.crossOrigin = 'anonymous';
       s.integrity = meta.integrity;
     }
 
