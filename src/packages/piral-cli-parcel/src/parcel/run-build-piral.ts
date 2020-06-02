@@ -73,13 +73,22 @@ process.on('message', async msg => {
         msg.outDir,
         msg.entryFiles,
         msg.logLevel,
-      );
-      const [file] = gatherJsBundles(bundle);
-      process.send({
-        type: 'done',
-        outDir: msg.outDir,
-        outFile: relative(msg.outDir, file?.src || msg.outDir),
+      ).catch(error => {
+        process.send({
+          type: 'fail',
+          error,
+        });
       });
+
+      if (bundle) {
+        const [file] = gatherJsBundles(bundle);
+        process.send({
+          type: 'done',
+          outDir: msg.outDir,
+          outFile: relative(msg.outDir, file?.src || msg.outDir),
+        });
+      }
+
       break;
   }
 });

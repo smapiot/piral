@@ -53,7 +53,7 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
 
 export function callDynamic<T extends BaseBundleParameters>(name: string, args: T) {
   const cwd = args.root;
-  return new Promise<Bundler>(resolve => {
+  return new Promise<Bundler>((resolve, reject) => {
     const ps = fork(getPath(name), [], { cwd });
     const bundler = createBundler(cwd, ps, args);
 
@@ -70,6 +70,8 @@ export function callDynamic<T extends BaseBundleParameters>(name: string, args: 
         case 'done':
           bundler.bundle.dir = msg.outDir;
           return resolve(bundler);
+        case 'fail':
+          return reject(msg.error);
       }
     });
 
@@ -82,7 +84,7 @@ export function callDynamic<T extends BaseBundleParameters>(name: string, args: 
 
 export function callStatic<T extends BaseBundleParameters>(name: string, args: T) {
   const cwd = args.root;
-  return new Promise<Bundler>(resolve => {
+  return new Promise<Bundler>((resolve, reject) => {
     const ps = fork(getPath(name), [], { cwd });
     const bundler = createBundler(cwd, ps, args);
 
@@ -92,6 +94,8 @@ export function callStatic<T extends BaseBundleParameters>(name: string, args: T
           bundler.bundle.dir = msg.outDir;
           bundler.bundle.name = msg.outFile;
           return resolve(bundler);
+        case 'fail':
+          return reject(msg.error);
       }
     });
 

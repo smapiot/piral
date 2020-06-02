@@ -48,12 +48,21 @@ async function run(root: string, piral: string, externals: Array<string>, entryF
 process.on('message', async msg => {
   switch (msg.type) {
     case 'start':
-      const outPath = await run(process.cwd(), msg.piral, msg.externals, msg.entryFiles, msg.logLevel);
-      process.send({
-        type: 'done',
-        outDir: dirname(outPath),
-        outFile: basename(outPath),
+      const outPath = await run(process.cwd(), msg.piral, msg.externals, msg.entryFiles, msg.logLevel).catch(error => {
+        process.send({
+          type: 'fail',
+          error,
+        });
       });
+
+      if (outPath) {
+        process.send({
+          type: 'done',
+          outDir: dirname(outPath),
+          outFile: basename(outPath),
+        });
+      }
+
       break;
   }
 });

@@ -73,12 +73,21 @@ process.on('message', async msg => {
         msg.entryModule,
         msg.logLevel,
         msg.version,
-      );
-      process.send({
-        type: 'done',
-        outDir: dirname(outPath),
-        outFile: basename(outPath),
+      ).catch(error => {
+        process.send({
+          type: 'fail',
+          error,
+        });
       });
+
+      if (outPath) {
+        process.send({
+          type: 'done',
+          outDir: dirname(outPath),
+          outFile: basename(outPath),
+        });
+      }
+
       break;
   }
 });

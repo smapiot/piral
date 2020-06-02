@@ -67,23 +67,30 @@ process.on('message', async msg => {
         msg.publicUrl,
         msg.entryFiles,
         msg.logLevel,
-      );
-
-      bundler.on('bundled', () => {
+      ).catch(error => {
         process.send({
-          type: 'update',
-          outHash: bundler.mainBundle.entryAsset.hash,
-          outName: bundler.mainBundle.name.substr(bundler.options.outDir.length + 1),
-          args: {
-            root,
-          },
+          type: 'fail',
+          error,
         });
       });
 
-      process.send({
-        type: 'done',
-        outDir: bundler.options.outDir,
-      });
+      if (bundler) {
+        bundler.on('bundled', () => {
+          process.send({
+            type: 'update',
+            outHash: bundler.mainBundle.entryAsset.hash,
+            outName: bundler.mainBundle.name.substr(bundler.options.outDir.length + 1),
+            args: {
+              root,
+            },
+          });
+        });
+
+        process.send({
+          type: 'done',
+          outDir: bundler.options.outDir,
+        });
+      }
 
       break;
   }

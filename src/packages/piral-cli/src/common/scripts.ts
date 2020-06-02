@@ -12,6 +12,12 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
   env.PATH = `${bin}${sep}${env.PATH}`;
   log('generalDebug_0003', `Running "${script}" in "${cwd}" ("${bin}").`);
 
+  if (isWindows) {
+    // on windows we sometimes may see a strange behavior,
+    // see https://github.com/smapiot/piral/issues/192
+    env.PATH = `%AppData%\\npm${sep}${env.PATH}`;
+  }
+
   return new Promise<void>((resolve, reject) => {
     const error = new MemoryStream();
     const opt = { end: false };
@@ -36,25 +42,5 @@ export function runCommand(npmCommand: string, args: Array<string>, cwd: string,
 
 export async function runShell(exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) {
   const exeCmd = isWindows ? `${exe}.cmd` : exe;
-
-  try {
-    return await runCommand(exeCmd, args, cwd, output);
-  } catch (ex) {
-    // on windows we sometimes may see a strange behavior,
-    // see https://github.com/smapiot/piral/issues/192
-    if (isWindows) {
-      log('generalDebug_0003', `Checking on Windows where to find "${exe}".`);
-      const ms = new MemoryStream();
-      await runScript(`where.exe ${exe}`, cwd, ms);
-      const [path] = ms.value.split('\n').filter(m => m.endsWith('.cmd'));
-      log('generalDebug_0003', `Found "${path}" for "${exe}".`);
-
-      if (path) {
-        log('generalDebug_0003', `Retrying with "${path}" in directory "${cwd}".`);
-        return await runCommand(path, args, cwd, output);
-      }
-    }
-
-    throw ex;
-  }
+  return await runCommand(exeCmd, args, cwd, output);
 }
