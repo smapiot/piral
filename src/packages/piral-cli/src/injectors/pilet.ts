@@ -104,9 +104,9 @@ export default class PiletInjector implements KrasInjector {
 
   handle(req: KrasRequest): KrasResponse {
     const { bundler, app, api } = this.config;
+    const path = req.url.substr(1).split('?')[0];
 
     if (!req.target) {
-      const path = req.url.substr(1);
       const target = join(app, path);
 
       if (existsSync(target) && statSync(target).isFile()) {
@@ -118,7 +118,6 @@ export default class PiletInjector implements KrasInjector {
         });
       }
     } else if (req.target === api) {
-      const path = req.url.substr(1).split('?')[0];
       const target = join(bundler.bundle.dir, path);
       return bundler.ready().then(() => this.sendResponse(path, target, req.url));
     }
