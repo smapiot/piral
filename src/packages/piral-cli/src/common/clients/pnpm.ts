@@ -1,12 +1,12 @@
 import { resolve } from 'path';
 import { log } from '../log';
-import { runShell } from '../scripts';
+import { runCommand } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
 
 function runPnpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   log('generalDebug_0003', 'Starting the Pnpm process ...');
   const cwd = resolve(process.cwd(), target);
-  return runShell('pnpm', args, cwd, output);
+  return runCommand('pnpm', args, cwd, output);
 }
 
 function convert(flags: Array<string>) {

@@ -1,12 +1,12 @@
 import { resolve } from 'path';
 import { log } from '../log';
-import { runShell } from '../scripts';
+import { runCommand } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
 
 function runYarnProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   log('generalDebug_0003', 'Starting the Yarn process ...');
   const cwd = resolve(process.cwd(), target);
-  return runShell('yarn', args, cwd, output);
+  return runCommand('yarn', args, cwd, output);
 }
 
 function convert(flags: Array<string>) {
