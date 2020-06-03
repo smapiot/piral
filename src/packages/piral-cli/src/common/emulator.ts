@@ -1,11 +1,12 @@
 import { join, resolve, relative } from 'path';
-import { findPackageVersion, copyScaffoldingFiles } from './package';
+import { findDependencyVersion, copyScaffoldingFiles } from './package';
 import { createFileFromTemplateIfNotExists } from './template';
 import { coreExternals, cliVersion, filesTar, filesOnceTar } from './info';
 import { createPackage } from './npm';
 import { createDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
+import { TemplateFileLocation } from '../types';
 import {
   createDirectory,
   removeDirectory,
@@ -14,7 +15,6 @@ import {
   getFileNames,
   removeAny,
 } from './io';
-import { TemplateFileLocation } from '../types';
 
 const packageJson = 'package.json';
 
@@ -27,7 +27,7 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   const externalPackages = await Promise.all(
     allExternals.map(async name => ({
       name,
-      version: await findPackageVersion(sourceDir, name),
+      version: await findDependencyVersion(piralPkg, sourceDir, name),
     })),
   );
   const externalDependencies = externalPackages.reduce((deps, dep) => {

@@ -7,6 +7,9 @@ import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
 
+const gitPrefix = 'git+';
+const filePrefix = 'file:';
+
 export function detectPnpm(root: string) {
   return new Promise(res => {
     access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, noPnpmLock => {
@@ -135,6 +138,8 @@ export function isLocalPackage(baseDir: string, fullName: string) {
         return true;
       }
     }
+
+    return fullName.startsWith(filePrefix);
   }
 
   return false;
@@ -160,8 +165,12 @@ export function makeGitUrl(fullName: string) {
   return gitted ? fullName : `${gitPrefix}${fullName}`;
 }
 
-const gitPrefix = 'git+';
-const filePrefix = 'file:';
+export function makeFilePath(basePath: string, fullName: string) {
+  const prefixed = fullName.startsWith(filePrefix);
+  const relPath = !prefixed ? fullName : fullName.replace(filePrefix, '');
+  const absPath = resolve(basePath, relPath);
+  return `${filePrefix}${absPath}`;
+}
 
 /**
  * Looks at the provided package name and normalizes it

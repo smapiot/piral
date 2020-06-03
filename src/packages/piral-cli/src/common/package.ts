@@ -8,6 +8,7 @@ import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { PiletLanguage, ForceOverwrite } from './enums';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 
 function getPiralPath(root: string, name: string) {
   return resolve(root, 'node_modules', name);
@@ -292,6 +293,25 @@ function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
   }
 
   return undefined;
+}
+
+export function findDependencyVersion(
+  pckg: Record<string, any>,
+  rootPath: string,
+  packageName: string,
+): Promise<string> {
+  const { devDependencies = {}, dependencies = {} } = pckg;
+  const desiredVersion = dependencies[packageName] ?? devDependencies[packageName];
+
+  if (desiredVersion) {
+    if (isGitPackage(desiredVersion)) {
+      return Promise.resolve(makeGitUrl(desiredVersion));
+    } else if (isLocalPackage(rootPath, desiredVersion)) {
+      return Promise.resolve(makeFilePath(rootPath, desiredVersion));
+    }
+  }
+
+  return findPackageVersion(rootPath, packageName);
 }
 
 export async function findPackageVersion(rootPath: string, packageName: string): Promise<string> {

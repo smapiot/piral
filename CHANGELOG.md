@@ -14,6 +14,7 @@
 * Fixed broken source map support in pilet debug (#229)
 * Fixed CSR should start with rendering the spinner
 * Fixed Parcel bundler not reporting failure properly
+* Fixed shared dependency declaration for Git references (#233)
 
 ## 0.11.5 (May 24, 2020)
 
