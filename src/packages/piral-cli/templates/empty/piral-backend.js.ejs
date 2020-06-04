@@ -13,7 +13,7 @@ function isPiletQuery(content) {
 const apiService = '';// 'https://feed.piral.cloud/api/v1/pilet/sample';
 
 module.exports = function(_, req, res) {
-  if ((req.path = '/' && req.method === 'POST' && isPiletQuery(req.content))) {
+  if ((req.path === '/' && req.method === 'POST' && isPiletQuery(req.content))) {
     if (apiService) {
       return new Promise(resolve => {
         request.get(apiService, (_1, _2, body) => {
