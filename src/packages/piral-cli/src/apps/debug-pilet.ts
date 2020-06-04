@@ -143,7 +143,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const injectorConfig = {
     active: true,
     bundler,
-    port,
     root,
     app: appDir,
     handle: ['/', api],

@@ -15,6 +15,7 @@
 * Fixed CSR should start with rendering the spinner
 * Fixed Parcel bundler not reporting failure properly
 * Fixed shared dependency declaration for Git references (#233)
+* Fixed debugging of pilets in VS Code Server (#235)
 
 ## 0.11.5 (May 24, 2020)
 

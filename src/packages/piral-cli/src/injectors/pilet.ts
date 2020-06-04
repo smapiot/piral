@@ -8,7 +8,6 @@ import { Bundler } from '../types';
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   root: string;
-  port: number;
   api: string;
   app: string;
 }
@@ -60,12 +59,13 @@ export default class PiletInjector implements KrasInjector {
   setOptions() {}
 
   getMeta() {
-    const { bundler, root, port, api } = this.config;
+    const { bundler, root, api } = this.config;
     const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+    const file = bundler.bundle.name.replace(/^\//, '');
     return JSON.stringify({
       name: def.name,
       version: def.version,
-      link: `http://localhost:${port}${api}/${bundler.bundle.name}`,
+      link: `${api}/${file}`,
       hash: bundler.bundle.hash,
       requireRef: this.requireRef,
       noCache: true,
