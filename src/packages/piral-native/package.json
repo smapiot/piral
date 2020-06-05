@@ -40,7 +40,7 @@
     "@types/react-router-dom": "^5.0.0",
     "@types/react-router-native": "^5.1.0",
     "react": "^16.8.1",
-    "react-native": "^0.61.5"
+    "react-native": "^0.62.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
