@@ -131,7 +131,11 @@ export interface PiralCustomModalsMap {}
 
 export interface PiralModalsMap extends PiralCustomModalsMap {}
 
-export type ModalOptions<T> = T extends keyof PiralModalsMap ? (PiralModalsMap[T] & BaseModalOptions) : T extends string ? BaseModalOptions : T;
+export type ModalOptions<T> = T extends keyof PiralModalsMap
+  ? PiralModalsMap[T] & BaseModalOptions
+  : T extends string
+  ? BaseModalOptions
+  : T;
 
 export type ModalComponentProps<T> = BaseComponentProps & BareModalComponentProps<ModalOptions<T>>;
 

@@ -50,6 +50,6 @@ export function createPiralMockApi<T extends PiletApi>(baseObj: Partial<T> = {})
 
   return {
     api,
-    registry
+    registry,
   };
 }

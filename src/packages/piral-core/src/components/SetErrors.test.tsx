@@ -36,9 +36,11 @@ describe('Piral SetErrors component', () => {
     const node = mount(
       <StateContext.Provider value={context}>
         <SetErrors
-          errors={{
-            menu: FakeError,
-          } as any}
+          errors={
+            {
+              menu: FakeError,
+            } as any
+          }
         />
       </StateContext.Provider>,
     );
