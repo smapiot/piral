@@ -133,8 +133,10 @@ export function createPiletOptions({
         // the DEBUG_PILET env should point to an API address used as a proxy
         const initialTarget = `${location.origin}${process.env.DEBUG_PILET}`;
         const updateTarget = initialTarget.replace('http', 'ws');
-        const appendix = fetch(initialTarget).then(res => res.json());
         const ws = new WebSocket(updateTarget);
+        const appendix = fetch(initialTarget)
+          .then(res => res.json())
+          .then(item => (Array.isArray(item) ? item : [item]));
 
         ws.onmessage = ({ data }) => {
           const hardRefresh = sessionStorage.getItem('dbg:hard-refresh') === 'on';
@@ -167,7 +169,7 @@ export function createPiletOptions({
             console.error(`Requesting the pilets failed. We'll continue loading without pilets (DEBUG only).`, err);
             return [];
           })
-          .then(pilets => appendix.then(pilet => [...pilets, pilet]));
+          .then(pilets => appendix.then(debugPilets => [...pilets, ...debugPilets]));
       }
 
       return promise;

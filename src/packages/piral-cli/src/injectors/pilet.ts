@@ -5,9 +5,13 @@ import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kra
 import { mime } from '../external';
 import { Bundler } from '../types';
 
-export interface PiletInjectorConfig extends KrasInjectorConfig {
+interface Pilet {
   bundler: Bundler;
   root: string;
+}
+
+export interface PiletInjectorConfig extends KrasInjectorConfig {
+  pilets: Array<Pilet>;
   api: string;
   app: string;
 }
@@ -18,7 +22,7 @@ export default class PiletInjector implements KrasInjector {
 
   constructor(options: PiletInjectorConfig, _: any, core: EventEmitter) {
     this.config = options;
-    const { bundler, api } = options;
+    const { pilets, api } = options;
     const cbs = {};
 
     core.on('user-connected', e => {
@@ -31,14 +35,16 @@ export default class PiletInjector implements KrasInjector {
       delete cbs[e.id];
     });
 
-    bundler.on(({ requireRef, version }) => {
-      this.requireRef = version === 'v1' ? requireRef : undefined;
-      const meta = this.getMeta();
+    pilets.forEach((p, i) =>
+      p.bundler.on(({ requireRef, version }) => {
+        this.requireRef = version === 'v1' ? requireRef : undefined;
+        const meta = JSON.stringify(this.getMetaOf(i));
 
-      for (const id of Object.keys(cbs)) {
-        cbs[id](meta);
-      }
-    });
+        for (const id of Object.keys(cbs)) {
+          cbs[id](meta);
+        }
+      }),
+    );
   }
 
   get active() {
@@ -58,19 +64,30 @@ export default class PiletInjector implements KrasInjector {
 
   setOptions() {}
 
-  getMeta() {
-    const { bundler, root, api } = this.config;
+  getMetaOf(index: number) {
+    const { api, pilets } = this.config;
+    const { bundler, root } = pilets[index];
     const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
     const file = bundler.bundle.name.replace(/^\//, '');
-    return JSON.stringify({
+    return {
       name: def.name,
       version: def.version,
-      link: `${api}/${file}`,
+      link: `${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef: this.requireRef,
       noCache: true,
       custom: def.custom,
-    });
+    };
+  }
+
+  getMeta() {
+    const { pilets } = this.config;
+
+    if (pilets.length === 1) {
+      return JSON.stringify(this.getMetaOf(0));
+    }
+
+    return JSON.stringify(pilets.map((_, i) => this.getMetaOf(i)));
   }
 
   sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
@@ -93,17 +110,28 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, mime.getType(target), url);
   }
 
-  sendResponse(path: string, target: string, url: string): KrasResponse {
+  sendResponse(path: string, url: string): KrasResponse {
     if (!path) {
       const content = this.getMeta();
       return this.sendContent(content, 'application/json', url);
-    } else if (existsSync(target) && statSync(target).isFile()) {
-      return this.sendFile(target, url);
+    } else {
+      const { pilets } = this.config;
+      const [index, ...rest] = path.split('/');
+      const pilet = pilets[+index];
+      const bundler = pilet?.bundler;
+
+      return bundler?.ready().then(() => {
+        const target = join(bundler.bundle.dir, rest.join('/'));
+
+        if (existsSync(target) && statSync(target).isFile()) {
+          return this.sendFile(target, url);
+        }
+      });
     }
   }
 
   handle(req: KrasRequest): KrasResponse {
-    const { bundler, app, api } = this.config;
+    const { app, api } = this.config;
     const path = req.url.substr(1).split('?')[0];
 
     if (!req.target) {
@@ -118,8 +146,7 @@ export default class PiletInjector implements KrasInjector {
         });
       }
     } else if (req.target === api) {
-      const target = join(bundler.bundle.dir, path);
-      return bundler.ready().then(() => this.sendResponse(path, target, req.url));
+      return this.sendResponse(path, req.url);
     }
   }
 }
