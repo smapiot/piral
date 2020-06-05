@@ -3,23 +3,8 @@ import { EventEmitter } from 'events';
 
 describe('Piral-CLI piral injector', () => {
   it('PiletInjector is active when configured', () => {
-    const bundler = {
-      pending: true,
-      bundle: {
-        dir: '',
-        hash: '',
-        name: '',
-      },
-      on() {},
-      off() {},
-      start() {},
-      ready() {
-        return Promise.resolve();
-      },
-    };
     const config = {
-      bundler,
-      root: '',
+      pilets: [],
       port: 1234,
       api: '',
       app: '',

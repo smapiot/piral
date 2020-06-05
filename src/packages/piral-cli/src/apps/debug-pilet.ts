@@ -13,6 +13,7 @@ import {
   removeDirectory,
   setLogLevel,
   progress,
+  matchAny,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -92,7 +93,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const krasConfig = readKrasConfig({ port }, krasrc);
   const api = debugPiletApi;
   const multi = entry.indexOf('*') !== -1;
-  const allEntries = [entry];
+  const allEntries = multi ? await matchAny(baseDir, entry) : [entry];
 
   const pilets = await Promise.all(
     allEntries.map(async entry => {

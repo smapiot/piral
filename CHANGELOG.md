@@ -7,6 +7,7 @@
 * Added `defineDependency` to `piral-lazy` (#226)
 * Added `piral-jest-utils` package for Jest mocking (#192)
 * Added `piral-native` package for React Native (#222)
+* Added multi-debug capability to `pilet debug` (#234)
 * Improved API of tiles and menu items
 * Fixed potentially non-working Piral CLI scaffold on Windows (#192)
 * Fixed the use of `matchMedia` for other platforms (#222)
