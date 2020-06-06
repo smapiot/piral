@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.11.6 (tbd)
+## 0.11.6 (June 6, 2020)
 
 * Updated documentation page (#206)
 * Added `once` flag for scaffolding (#225)
