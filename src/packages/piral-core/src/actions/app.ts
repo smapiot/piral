@@ -1,4 +1,4 @@
-import { ComponentType, cloneElement } from 'react';
+import { ComponentType, cloneElement, createElement } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { withKey, replaceOrAddItem, removeNested } from '../utils';
 import {
@@ -72,8 +72,10 @@ export function setRoute<T = {}>(
 }
 
 export function includeProvider(ctx: GlobalStateContext, provider: JSX.Element) {
+  const wrapper: React.FC = props => cloneElement(provider, props);
+
   ctx.dispatch(state => ({
     ...state,
-    provider: !state.provider ? provider : cloneElement(provider, undefined, state.provider),
+    provider: !state.provider ? wrapper : props => createElement(state.provider, undefined, wrapper(props)),
   }));
 }

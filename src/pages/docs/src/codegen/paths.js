@@ -15,11 +15,22 @@ const messages = resolve(docs, 'messages');
 const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
 
-const coreNames = ['piral', 'piral-base', 'piral-core', 'piral-cli', 'piral-ext', 'piral-ssr-utils'];
+const coreNames = [
+  'piral',
+  'piral-base',
+  'piral-core',
+  'piral-native',
+  'piral-cli',
+  'piral-ext',
+  'piral-ssr-utils',
+  'piral-jest-utils',
+];
 const coreTypes = coreNames.map(name => `${name}.json`);
 
 function getCategory(keywords) {
-  return keywords.filter(keyword => keyword.startsWith(categoryPrefix)).map(keyword => keyword.substr(categoryPrefix.length))[0];
+  return keywords
+    .filter(keyword => keyword.startsWith(categoryPrefix))
+    .map(keyword => keyword.substr(categoryPrefix.length))[0];
 }
 
 function readReadme(dir) {

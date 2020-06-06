@@ -12,6 +12,12 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
   env.PATH = `${bin}${sep}${env.PATH}`;
   log('generalDebug_0003', `Running "${script}" in "${cwd}" ("${bin}").`);
 
+  if (isWindows) {
+    // on windows we sometimes may see a strange behavior,
+    // see https://github.com/smapiot/piral/issues/192
+    env.PATH = ['%AppData%\\npm', '%ProgramFiles%\\nodejs', '%ProgramFiles(x86)%\\nodejs', env.PATH].join(sep);
+  }
+
   return new Promise<void>((resolve, reject) => {
     const error = new MemoryStream();
     const opt = { end: false };
@@ -26,4 +32,11 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
     cp.on('error', () => reject(new Error(error.value)));
     cp.on('close', code => (code === 0 ? resolve() : reject(new Error(error.value))));
   });
+}
+
+export function runCommand(exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) {
+  const npmCommand = isWindows ? `${exe}.cmd` : exe;
+  const cmd = [npmCommand, ...args].join(' ');
+  log('generalDebug_0003', `Applying cmd "${cmd}" in directory "${cwd}".`);
+  return runScript(cmd, cwd, output);
 }

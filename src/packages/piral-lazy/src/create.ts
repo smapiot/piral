@@ -1,19 +1,48 @@
-import { Extend } from 'piral-core';
-import { createConverter } from './converter';
-import { PiletLazyApi } from './types';
+import { lazy } from 'react';
+import { Extend, withApi, HtmlComponent } from 'piral-core';
+import { PiletLazyApi, LazyDependencyLoader } from './types';
+
+interface DependencyCache {
+  [name: string]: {
+    result: Promise<any>;
+    loader: LazyDependencyLoader;
+  };
+}
 
 export function createLazyApi(): Extend<PiletLazyApi> {
   return context => {
-    const convert = createConverter(context);
-    context.converters.lazy = ({ load }) => convert(load);
+    return api => {
+      const cache: DependencyCache = {};
+      const getDependency = (name: string) => {
+        const dep = cache[name];
 
-    return {
-      fromLazy(load) {
-        return {
-          type: 'lazy',
-          load,
-        };
-      },
+        if (!dep) {
+          throw new Error(
+            `The given dependency "${name}" cannot be found. Please add it first using "defineDependency"`,
+          );
+        }
+
+        return dep.result ?? (dep.result = dep.loader());
+      };
+      const wrapComponent = <T>(comp: HtmlComponent<T>) => ({
+        default: withApi(context.converters, comp, api, 'unknown'),
+      });
+
+      return {
+        defineDependency(name, loader) {
+          cache[name] = {
+            loader,
+            result: undefined,
+          };
+        },
+        fromLazy(load, deps = []) {
+          return lazy(() =>
+            Promise.all(deps.map(getDependency))
+              .then(load)
+              .then(wrapComponent),
+          );
+        },
+      };
     };
   };
 }

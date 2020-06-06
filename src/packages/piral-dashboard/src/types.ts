@@ -59,6 +59,10 @@ export interface DashboardTileProps {
    * The resizable status.
    */
   resizable: boolean;
+  /**
+   * The provided tile preferences.
+   */
+  meta: TilePreferences;
 }
 
 export interface TileErrorInfoProps {
@@ -93,7 +97,9 @@ export interface BareTileComponentProps {
 
 export type TileComponentProps = BaseComponentProps & BareTileComponentProps;
 
-export interface TilePreferences {
+export interface PiralCustomTilePreferences {}
+
+export interface TilePreferences extends PiralCustomTilePreferences {
   /**
    * Sets the desired initial number of columns.
    * This may be overridden either by the user (if resizable true), or by the dashboard.

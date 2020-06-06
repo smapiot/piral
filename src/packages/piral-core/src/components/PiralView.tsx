@@ -23,8 +23,8 @@ const PiralContent: React.FC = () => {
 const Router = typeof window === 'undefined' ? props => <StaticRouter location="/" {...props} /> : PiralRouter;
 
 const PiralProvider: React.FC = ({ children }) => {
-  const provider = useGlobalState(m => m.provider) || <React.Fragment />;
-  return React.cloneElement(provider, undefined, children);
+  const provider = useGlobalState(m => m.provider) || React.Fragment;
+  return React.createElement(provider, undefined, children);
 };
 
 export interface PiralViewProps {}

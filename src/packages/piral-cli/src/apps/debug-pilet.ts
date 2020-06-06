@@ -13,6 +13,9 @@ import {
   removeDirectory,
   setLogLevel,
   progress,
+  matchAny,
+  fail,
+  log,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -46,18 +49,21 @@ export const debugPiletDefaults: DebugPiletOptions = {
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
 
-async function getOrMakeAppDir(
-  emulator: boolean,
-  appFile: string,
-  externals: Array<string>,
-  piral: string,
-  logLevel: LogLevels,
-) {
+interface AppInfo {
+  emulator: boolean;
+  appFile: string;
+  externals: Array<string>;
+  piral: string;
+}
+
+async function getOrMakeAppDir({ emulator, piral, externals, appFile }: AppInfo, logLevel: LogLevels) {
   if (!emulator) {
     const packageJson = require.resolve(`${piral}/package.json`);
     const cwd = resolve(packageJson, '..');
     const { dir } = await callDebugPiralFromMonoRepo({
       root: cwd,
+      optimizeModules: false,
+      ignored: [],
       externals,
       piral,
       entryFiles: appFile,
@@ -86,25 +92,66 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
-  const entryFile = join(baseDir, entry);
-  const targetDir = dirname(entryFile);
-  const entryModule = await findEntryModule(entryFile, targetDir);
-  const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(targetDir, app);
-  const externals = Object.keys(peerDependencies);
-  const cache = resolve(root, cacheDir);
   const krasConfig = readKrasConfig({ port }, krasrc);
   const api = debugPiletApi;
+  const multi = entry.indexOf('*') !== -1;
+  log('generalDebug_0003', `Looking for ${multi ? 'multi' : 'single'}) "${entry}" in "${baseDir}".`);
+  const allEntries = multi ? await matchAny(baseDir, entry) : [entry];
+  log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
-  if (fresh) {
-    progress('Removing output directory ...');
-    await removeDirectory(cache);
+  if (allEntries.length === 0) {
+    fail('entryFileMissing_0077');
   }
 
-  const appDir = await getOrMakeAppDir(emulator, appFile, externals, appPackage.name, logLevel);
+  const pilets = await Promise.all(
+    allEntries.map(async entry => {
+      const entryFile = join(baseDir, entry);
+      const targetDir = dirname(entryFile);
+      const entryModule = await findEntryModule(entryFile, targetDir);
+      const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(
+        targetDir,
+        app,
+      );
+      const externals = Object.keys(peerDependencies);
+      const cache = resolve(root, cacheDir);
 
-  if (krasConfig.directory === undefined) {
-    krasConfig.directory = join(targetDir, 'mocks');
-  }
+      if (fresh) {
+        progress('Removing output directory ...');
+        await removeDirectory(cache);
+      }
+
+      if (krasConfig.directory === undefined) {
+        krasConfig.directory = join(targetDir, 'mocks');
+      }
+
+      const bundler = await callPiletDebug({
+        root,
+        piral: appPackage.name,
+        optimizeModules,
+        hmr,
+        scopeHoist,
+        autoInstall,
+        cacheDir: cache,
+        externals,
+        targetDir,
+        entryModule,
+        logLevel,
+        version: schemaVersion,
+        ignored,
+      });
+
+      return {
+        emulator,
+        appFile,
+        externals,
+        piral: appPackage.name,
+        bundler,
+        root,
+      };
+    }),
+  );
+
+  const appDir = await getOrMakeAppDir(pilets[0], logLevel);
 
   if (krasConfig.ssl === undefined) {
     krasConfig.ssl = undefined;
@@ -122,27 +169,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
-  const bundler = await callPiletDebug({
-    root,
-    piral: appPackage.name,
-    optimizeModules,
-    hmr,
-    scopeHoist,
-    autoInstall,
-    cacheDir: cache,
-    externals,
-    targetDir,
-    entryModule,
-    logLevel,
-    version: schemaVersion,
-    ignored,
-  });
-
   const injectorConfig = {
     active: true,
-    bundler,
-    port,
-    root,
+    pilets,
     app: appDir,
     handle: ['/', api],
     api,
@@ -154,7 +183,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
-  krasServer.on('open', notifyServerOnline(bundler, krasConfig.api));
+  krasServer.on(
+    'open',
+    notifyServerOnline(
+      pilets.map(p => p.bundler),
+      krasConfig.api,
+    ),
+  );
 
   await krasServer.start();
   openBrowser(open, port);

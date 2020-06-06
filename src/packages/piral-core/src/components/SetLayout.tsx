@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ComponentsState, SetComponent } from 'piral-core';
+import { SetComponent } from './SetComponent';
+import { ComponentsState } from '../types';
 
 export interface SetLayoutProps {
   /**

@@ -1487,6 +1487,42 @@ export function declarationCouldNotBeGenerated_0076(rootDir: string, error: Erro
  * @kind Error
  *
  * @summary
+ * The path does not match to any valid entry file.
+ *
+ * @abstract
+ * Pilets will be bundled by specifying their root module. The
+ * root module is the module containing the exported `setup`
+ * function, which is then used by the app shell to integrate
+ * the pilet.
+ *
+ * @example
+ * Let's say you started by scaffolding a pilet like so:
+ *
+ * ```sh
+ * npm init pilet
+ * ```
+ *
+ * This will give you a `src` folder containing the root module named
+ * `index.tsx`.
+ *
+ * In this case you'd write:
+ *
+ * ```sh
+ * pilet debug src/index.tsx
+ * ```
+ *
+ * While in some scenarios we support dropping the extension there are
+ * some edge cases that would not work without an extension. Our
+ * recommendation is to be explicit about the root module's extension.
+ */
+export function entryFileMissing_0077(): QuickMessage {
+  return [LogLevels.error, '0077', 'No valid entry file for the pilet found.'];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * The validation process failed.
  *
  * @abstract
@@ -1790,6 +1826,36 @@ export function bundlerMissing_0072(bundlerName: string, installed: Array<string
  */
 export function defaultBundlerMissing_0073(): QuickMessage {
   return [LogLevels.error, '0073', `Cannot find a default bundler.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The bundling process failed.
+ *
+ * @abstract
+ * For transforming sources (e.g., a Piral instance or a pilet) into a single
+ * set of distributables (JS, CSS, other assets) a bundler is used. When the
+ * transformation process fails the Piral CLI will report the received error
+ * from the underlying bundler.
+ *
+ * The detailed set of logs / messages should be available in the command
+ * line. These are formatted according to the currently used bundler.
+ *
+ * @see
+ * - [Parcel](https://parceljs.org)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ *
+ * @example
+ * Use the following command to make the parcel bundler available:
+ *
+ * ```sh
+ * npm i piral-cli-parcel --save-dev
+ * ```
+ */
+export function bundlingFailed_0074(error: string): QuickMessage {
+  return [LogLevels.error, '0074', `The bundling process failed: ${error || 'Invalid input.'}`];
 }
 
 /**

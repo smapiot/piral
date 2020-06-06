@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ErrorComponentsState, SetError } from 'piral-core';
+import { SetError } from './SetError';
+import { ErrorComponentsState } from '../types';
 
 export interface SetErrorsProps {
   /**

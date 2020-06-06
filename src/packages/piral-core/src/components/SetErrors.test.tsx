@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import { Atom, swap, deref } from '@dbeining/react-atom';
-import { StateContext } from 'piral-core';
 import { SetErrors } from './SetErrors';
+import { StateContext } from '../state/stateContext';
 
 const FakeError = () => null;
 FakeError.displayName = 'FakeError';
@@ -36,9 +36,11 @@ describe('Piral SetErrors component', () => {
     const node = mount(
       <StateContext.Provider value={context}>
         <SetErrors
-          errors={{
-            menu: FakeError,
-          }}
+          errors={
+            {
+              menu: FakeError,
+            } as any
+          }
         />
       </StateContext.Provider>,
     );

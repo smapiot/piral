@@ -40,7 +40,7 @@
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
-    "@types/react-router-dom": "latest",
+    "@types/react-router-dom": "^5.0.0",
     "piral-cli": "^0.11.5",
     "sass": "^1.17.0"
   },

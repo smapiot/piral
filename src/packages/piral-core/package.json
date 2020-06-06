@@ -20,7 +20,8 @@
   "files": [
     "lib",
     "src",
-    "dependencies.codegen"
+    "dependencies.codegen",
+    "dependencies.codegen.native.js"
   ],
   "repository": {
     "type": "git",
@@ -38,7 +39,7 @@
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
     "@types/react-router": "^5.0.0",
-    "@types/react-router-dom": "latest",
+    "@types/react-router-dom": "^5.0.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1"
   },

@@ -7,4 +7,5 @@ configure({
 
 declare const global: any;
 
+global.matchMedia = () => ({ matches: false });
 global.requestAnimationFrame = (cb: any) => setTimeout(cb, 0);

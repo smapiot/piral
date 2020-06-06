@@ -1,5 +1,23 @@
 # Piral Changelog
 
+## 0.11.6 (tbd)
+
+* Updated documentation page (#206)
+* Added `once` flag for scaffolding (#225)
+* Added `defineDependency` to `piral-lazy` (#226)
+* Added `piral-jest-utils` package for Jest mocking (#192)
+* Added `piral-native` package for React Native (#222)
+* Added multi-debug capability to `pilet debug` (#234)
+* Improved API of tiles and menu items
+* Fixed potentially non-working Piral CLI scaffold on Windows (#192)
+* Fixed the use of `matchMedia` for other platforms (#222)
+* Fixed discarded props with multiple `includeProvider` calls (#227)
+* Fixed broken source map support in pilet debug (#229)
+* Fixed CSR should start with rendering the spinner
+* Fixed Parcel bundler not reporting failure properly
+* Fixed shared dependency declaration for Git references (#233)
+* Fixed debugging of pilets in VS Code Server (#235)
+
 ## 0.11.5 (May 24, 2020)
 
 * Fixed bug in pilet debug when touching files with CSS references

@@ -1,0 +1,54 @@
+{
+  "name": "piral-native",
+  "version": "0.11.5",
+  "description": "The Piral framework for use in React Native.",
+  "keywords": [
+    "app",
+    "smapiot",
+    "modules",
+    "microfrontend",
+    "mobile",
+    "native",
+    "react"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typedoc": "typedoc --json ../../../docs/types/piral-native.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/history": "^4.7.2",
+    "@types/react": "^16.8.1",
+    "@types/react-router": "^5.0.0",
+    "@types/react-router-dom": "^5.0.0",
+    "@types/react-router-native": "^5.1.0",
+    "react": "^16.8.1",
+    "react-native": "^0.62.2"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
+  },
+  "dependencies": {
+    "piral-core": "^0.11.5",
+    "react-router-dom": "5.2.0",
+    "react-router-native": "5.2.0"
+  }
+}

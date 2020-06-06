@@ -9,10 +9,17 @@ Piral is developed as a monorepo.
 - [piral-base](./piral-base/README.md) represents the framework independent base library
 - [piral-core](./piral-core/README.md) represents the React-dependent core library
 - [piral-ext](./piral-ext/README.md) bundles some useful standard plugins for use in `piral`
+- [piral-native](./piral-native/README.md) represents the standard library tailored for React Native
+- [siteless](./siteless/README.md) is a predefined app shell for building siteless UIs
 
 ## Available Utility Packages
 
+- [piral-jest-utils](./piral-jest-utils/README.md) provides utilities for testing pilets with Jest
 - [piral-ssr-utils](./piral-ssr-utils/README.md) provides utilities for enabling server-side rendering
+
+## Available Opt-In Piral CLI Plugins
+
+- [piral-cli-parcel](./piral-cli-parcel/README.md) enables using Parcel as standard bundler
 
 ## Available Opt-Out Pilet API Plugins
 
@@ -35,6 +42,7 @@ Piral is developed as a monorepo.
 - [piral-oauth2](./piral-oauth2/README.md) integrates generic OAuth 2 for authentication with a fetch middleware
 - [piral-oidc](./piral-oidc/README.md) integrates OpenID Connect for authentication with a fetch middleware
 - [piral-pwa](./piral-pwa/README.md) enables out-of-the-box PWA support with benefits
+- [piral-redux](./piral-redux/README.md) provides bindings for using a distributed Redux-based state container
 - [piral-search](./piral-search/README.md) provides enhanced search capability
 - [piral-tracking](./piral-tracking/README.md) provides the tracking API
 
@@ -46,7 +54,7 @@ Piral is developed as a monorepo.
 - [piral-ember](./piral-ember/README.md) provides integration for *Ember.js*
 - [piral-hyperapp](./piral-hyperapp/README.md) provides integration for *Hyperapp*
 - [piral-inferno](./piral-inferno/README.md) provides integration for *Inferno*
-- [piral-lazy](./piral-lazy/README.md) provides lazy loading for third-party components
+- [piral-lazy](./piral-lazy/README.md) provides generic lazy loading for all components
 - [piral-litel](./piral-litel/README.md) provides integration for *LitElement*
 - [piral-mithril](./piral-mithril/README.md) provides integration for *Mithril*
 - [piral-ng](./piral-ng/README.md) provides integration for *Angular*

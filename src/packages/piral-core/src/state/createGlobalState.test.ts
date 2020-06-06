@@ -11,7 +11,7 @@ describe('Create Global State Module', () => {
     expect(deref(globalState)).toEqual({
       app: {
         layout: 'desktop',
-        loading: false,
+        loading: true,
         error: undefined,
       },
       errorComponents: {},
@@ -37,7 +37,7 @@ describe('Create Global State Module', () => {
     expect(deref(globalState)).toEqual({
       app: {
         layout: 'desktop',
-        loading: false,
+        loading: true,
         error: undefined,
       },
       errorComponents: {},
@@ -68,7 +68,7 @@ describe('Create Global State Module', () => {
       app: {
         error: undefined,
         layout: 'desktop',
-        loading: false,
+        loading: true,
       },
       errorComponents: {},
       components: {
@@ -93,7 +93,7 @@ describe('Create Global State Module', () => {
     expect(deref(globalState)).toEqual({
       app: {
         layout: 'desktop',
-        loading: false,
+        loading: true,
         error: undefined,
       },
       errorComponents: {},
@@ -121,7 +121,7 @@ describe('Create Global State Module', () => {
     expect(deref(globalState)).toEqual({
       app: {
         layout: 'desktop',
-        loading: false,
+        loading: true,
         error: undefined,
       },
       errorComponents: {},
@@ -149,7 +149,7 @@ describe('Create Global State Module', () => {
     expect(deref(globalState)).toEqual({
       app: {
         layout: 'desktop',
-        loading: false,
+        loading: true,
         error: undefined,
       },
       errorComponents: {},
@@ -183,7 +183,7 @@ describe('Create Global State Module', () => {
     expect(deref(globalState)).toEqual({
       app: {
         layout: 'desktop',
-        loading: false,
+        loading: true,
         error: undefined,
       },
       errorComponents: {},
@@ -204,6 +204,36 @@ describe('Create Global State Module', () => {
         '/': '...' as any,
         '/foo': '...' as any,
       },
+    });
+  });
+
+  it('global state with explicit loading override', () => {
+    const globalState = createGlobalState({
+      app: {
+        loading: false,
+      },
+    });
+    expect(deref(globalState)).toEqual({
+      app: {
+        layout: 'desktop',
+        loading: false,
+        error: undefined,
+      },
+      errorComponents: {},
+      components: {
+        ErrorInfo: DefaultErrorInfo,
+        LoadingIndicator: DefaultLoadingIndicator,
+        Router: DefaultRouter,
+        Layout: DefaultLayout,
+      },
+      registry: {
+        extensions: {},
+        pages: {},
+      },
+      modules: [],
+      portals: {},
+      data: {},
+      routes: {},
     });
   });
 });

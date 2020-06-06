@@ -53,10 +53,14 @@ export interface PackagePatcher {
   (rootDir: string): Promise<void>;
 }
 
-export interface DebugPiralParameters {
+export interface BaseBundleParameters {
   root: string;
-  piral: string;
   optimizeModules: boolean;
+  ignored: Array<string>;
+}
+
+export interface DebugPiralParameters extends BaseBundleParameters {
+  piral: string;
   scopeHoist: boolean;
   autoInstall: boolean;
   hmr: boolean;
@@ -65,21 +69,17 @@ export interface DebugPiralParameters {
   publicUrl: string;
   entryFiles: string;
   logLevel: LogLevels;
-  ignored: Array<string>;
 }
 
-export interface WatchPiralParameters {
-  root: string;
+export interface WatchPiralParameters extends BaseBundleParameters {
   piral: string;
   externals: Array<string>;
   entryFiles: string;
   logLevel: LogLevels;
 }
 
-export interface BuildPiralParameters {
-  root: string;
+export interface BuildPiralParameters extends BaseBundleParameters {
   piral: string;
-  optimizeModules: boolean;
   scopeHoist: boolean;
   develop: boolean;
   sourceMaps: boolean;
@@ -93,13 +93,10 @@ export interface BuildPiralParameters {
   outDir: string;
   entryFiles: string;
   logLevel: LogLevels;
-  ignored: Array<string>;
 }
 
-export interface DebugPiletParameters {
-  root: string;
+export interface DebugPiletParameters extends BaseBundleParameters {
   piral: string;
-  optimizeModules: boolean;
   scopeHoist: boolean;
   autoInstall: boolean;
   hmr: boolean;
@@ -109,13 +106,10 @@ export interface DebugPiletParameters {
   entryModule: string;
   logLevel: LogLevels;
   version: PiletSchemaVersion;
-  ignored: Array<string>;
 }
 
-export interface BuildPiletParameters {
-  root: string;
+export interface BuildPiletParameters extends BaseBundleParameters {
   piral: string;
-  optimizeModules: boolean;
   scopeHoist: boolean;
   sourceMaps: boolean;
   contentHash: boolean;
@@ -129,7 +123,6 @@ export interface BuildPiletParameters {
   entryModule: string;
   logLevel: LogLevels;
   version: PiletSchemaVersion;
-  ignored: Array<string>;
 }
 
 export interface BundlerDefinition {

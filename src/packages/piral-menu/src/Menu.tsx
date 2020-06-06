@@ -10,9 +10,10 @@ export const Menu: React.FC<MenuProps> = ({ type = 'general' }) => {
     .map(name => ({
       name,
       Component: menuItems[name].component,
+      meta: menuItems[name].settings,
     }));
-  const children = renderItems.map(({ name, Component }) => (
-    <PiralMenuItem key={name} type={type}>
+  const children = renderItems.map(({ name, Component, meta }) => (
+    <PiralMenuItem key={name} type={type} meta={meta}>
       <Component />
     </PiralMenuItem>
   ));

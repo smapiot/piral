@@ -154,7 +154,7 @@ export interface GlobalState extends PiralCustomState {
   /**
    * The current provider.
    */
-  provider?: JSX.Element;
+  provider?: ComponentType;
 }
 
 /**

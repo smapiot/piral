@@ -11,6 +11,8 @@ import {
   PiletApp,
 } from './types';
 
+const inBrowser = typeof document !== 'undefined';
+
 function loadFrom(
   meta: PiletMetadata,
   getDependencies: PiletDependencyGetter,
@@ -47,18 +49,18 @@ export function loadPilet(
   getDependencies: PiletDependencyGetter,
   fetchDependency = defaultFetchDependency,
 ): Promise<Pilet> {
-  if ('requireRef' in meta) {
+  if (inBrowser && 'requireRef' in meta) {
     return loadFrom(meta, getDependencies, deps => includeDependency(meta, deps));
   }
 
-  const { name, link, content } = meta;
+  const { name, link } = meta;
 
   if (link) {
     return fetchDependency(link).then(content =>
       loadFrom(meta, getDependencies, deps => compileDependency(name, content, link, deps)),
     );
-  } else if (content) {
-    return loadFrom(meta, getDependencies, deps => compileDependency(name, content, link, deps));
+  } else if ('content' in meta && meta.content) {
+    return loadFrom(meta, getDependencies, deps => compileDependency(name, meta.content, link, deps));
   } else {
     console.warn('Empty pilet found!', name);
   }
@@ -91,7 +93,6 @@ export function loadPilets(
   fetchDependency?: PiletDependencyFetcher,
   globalDependencies?: AvailableDependencies,
   getLocalDependencies?: PiletDependencyGetter,
-  integrity?: boolean,
 ): Promise<Array<Pilet>> {
   const getDependencies = getDependencyResolver(globalDependencies, getLocalDependencies);
 

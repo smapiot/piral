@@ -6,7 +6,7 @@ const headers = {
 };
 
 module.exports = function(_, req, res) {
-  if (req.url == '/api/posts' && req.method === 'GET') {
+  if (req.url === '/api/posts' && req.method === 'GET') {
     if (mock) {
       return res({
         headers,

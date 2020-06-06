@@ -70,6 +70,14 @@ Determines if files should be overwritten by the upgrading process.
 - Choices: `"no"`, `"prompt"`, `"yes"`
 - Default: `"no"`
 
+### `--npm-client`
+
+Sets the NPM client to be used when upgrading.
+
+- Type: `string`
+- Choices: `"npm"`, `"pnpm"`, `"yarn"`
+- Default: `undefined`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

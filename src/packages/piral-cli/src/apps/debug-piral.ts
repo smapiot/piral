@@ -118,7 +118,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
-  krasServer.on('open', notifyServerOnline(bundler, krasConfig.api));
+  krasServer.on('open', notifyServerOnline([bundler], krasConfig.api));
 
   await krasServer.start();
   openBrowser(open, port);

@@ -146,7 +146,7 @@ always-auth=true`,
     progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
     await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
-    await copyPiralFiles(root, packageName, ForceOverwrite.yes, []);
+    await copyPiralFiles(root, packageName, ForceOverwrite.yes);
 
     if (install) {
       progress(`Installing dependencies ...`);

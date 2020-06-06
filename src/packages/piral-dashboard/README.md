@@ -104,6 +104,22 @@ const instance = createInstance({
 });
 ```
 
+### Customizing
+
+You can customize the available tiles and their options.
+
+```ts
+import 'piral-dashboard';
+
+declare module 'piral-dashboard/lib/types' {
+  interface PiralCustomTilePreferences {
+    category?: string;
+  }
+}
+
+// now registerTile(() => null, { category: 'general' }) is strongly typed in pilets
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

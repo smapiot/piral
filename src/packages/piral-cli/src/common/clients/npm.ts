@@ -1,17 +1,12 @@
 import { resolve } from 'path';
 import { log } from '../log';
-import { isWindows } from '../info';
-import { runScript } from '../scripts';
+import { runCommand } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
-
-const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
 function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   log('generalDebug_0003', 'Starting the NPM process ...');
   const cwd = resolve(process.cwd(), target);
-  const cmd = [npmCommand, ...args].join(' ');
-  log('generalDebug_0003', `Applying NPM cmd "${cmd}" in directory "${cwd}".`);
-  return runScript(cmd, cwd, output);
+  return runCommand('npm', args, cwd, output);
 }
 
 export async function installDependencies(target = '.', ...flags: Array<string>) {

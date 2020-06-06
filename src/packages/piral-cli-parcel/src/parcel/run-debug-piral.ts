@@ -1,6 +1,6 @@
 import { LogLevels } from 'piral-cli';
-import { setStandardEnvs, progress } from 'piral-cli/utils';
-import { setupBundler, patchModules } from './bundler';
+import { setStandardEnvs } from 'piral-cli/utils';
+import { setupBundler } from './bundler';
 
 async function run(
   root: string,
@@ -45,11 +45,6 @@ process.on('message', async msg => {
   switch (msg.type) {
     case 'bundle':
       if (bundler) {
-        if (msg.optimizeModules) {
-          progress('Preparing modules ...');
-          await patchModules(root, msg.ignored);
-        }
-
         await bundler.bundle();
 
         bundler.on('buildStart', () => {
@@ -72,23 +67,30 @@ process.on('message', async msg => {
         msg.publicUrl,
         msg.entryFiles,
         msg.logLevel,
-      );
-
-      bundler.on('bundled', () => {
+      ).catch(error => {
         process.send({
-          type: 'update',
-          outHash: bundler.mainBundle.entryAsset.hash,
-          outName: bundler.mainBundle.name.substr(bundler.options.outDir.length + 1),
-          args: {
-            root,
-          },
+          type: 'fail',
+          error: error?.message,
         });
       });
 
-      process.send({
-        type: 'done',
-        outDir: bundler.options.outDir,
-      });
+      if (bundler) {
+        bundler.on('bundled', () => {
+          process.send({
+            type: 'update',
+            outHash: bundler.mainBundle.entryAsset.hash,
+            outName: bundler.mainBundle.name.substr(bundler.options.outDir.length + 1),
+            args: {
+              root,
+            },
+          });
+        });
+
+        process.send({
+          type: 'done',
+          outDir: bundler.options.outDir,
+        });
+      }
 
       break;
   }

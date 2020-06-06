@@ -1,4 +1,4 @@
-require('promise-polyfill');
+require('promise-polyfill/lib/polyfill');
 require('url-polyfill');
 require('whatwg-fetch');
 require('current-script-polyfill');

@@ -1,4 +1,4 @@
-export interface PiletMetadataV1 {
+export interface PiletMetadataV0 {
   /**
    * The name of the pilet, i.e., the package id.
    */
@@ -34,7 +34,7 @@ export interface PiletMetadataV1 {
   custom?: any;
 }
 
-export interface PiletMetadataV2 {
+export interface PiletMetadataV1 {
   /**
    * The name of the pilet, i.e., the package id.
    */
@@ -65,7 +65,7 @@ export interface PiletMetadataV2 {
 /**
  * Describes the metadata transported by a pilet.
  */
-export type PiletMetadata = PiletMetadataV1 | PiletMetadataV2;
+export type PiletMetadata = PiletMetadataV0 | PiletMetadataV1;
 
 /**
  * Defines the API accessible from pilets.

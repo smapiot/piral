@@ -1,6 +1,6 @@
 import { LogLevels } from 'piral-cli';
-import { setupBundler, postProcess, patchModules } from './bundler';
-import { setStandardEnvs, progress } from 'piral-cli/utils';
+import { setupBundler, postProcess } from './bundler';
+import { setStandardEnvs } from 'piral-cli/utils';
 
 async function run(
   root: string,
@@ -26,7 +26,7 @@ async function run(
     config: {
       logLevel,
       hmr: false,
-      minify: true,
+      minify: false,
       watch: true,
       scopeHoist,
       publicUrl: './',
@@ -46,11 +46,6 @@ process.on('message', async msg => {
   switch (msg.type) {
     case 'bundle':
       if (bundler) {
-        if (msg.optimizeModules) {
-          progress('Preparing modules ...');
-          await patchModules(root, msg.ignored);
-        }
-
         await bundler.bundle();
 
         bundler.on('buildStart', () => {
@@ -72,29 +67,36 @@ process.on('message', async msg => {
         msg.targetDir,
         msg.entryModule,
         msg.logLevel,
-      );
-
-      bundler.on('bundled', async bundle => {
-        const requireRef = await postProcess(bundle, msg.version);
-
-        if (msg.hmr) {
-          process.send({
-            type: 'update',
-            outHash: bundler.mainBundle.entryAsset.hash,
-            outName: bundler.mainBundle.name.substr(bundler.options.outDir.length),
-            args: {
-              requireRef,
-              version: msg.version,
-              root,
-            },
-          });
-        }
+      ).catch(error => {
+        process.send({
+          type: 'fail',
+          error: error?.message,
+        });
       });
 
-      process.send({
-        type: 'done',
-        outDir: bundler.options.outDir,
-      });
+      if (bundler) {
+        bundler.on('bundled', async bundle => {
+          const requireRef = await postProcess(bundle, msg.version, false);
+
+          if (msg.hmr) {
+            process.send({
+              type: 'update',
+              outHash: bundler.mainBundle.entryAsset.hash,
+              outName: bundler.mainBundle.name.substr(bundler.options.outDir.length),
+              args: {
+                requireRef,
+                version: msg.version,
+                root,
+              },
+            });
+          }
+        });
+
+        process.send({
+          type: 'done',
+          outDir: bundler.options.outDir,
+        });
+      }
 
       break;
   }
