@@ -8,6 +8,7 @@ import { Bundler } from '../types';
 interface Pilet {
   bundler: Bundler;
   root: string;
+  requireRef?: string;
 }
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
@@ -18,7 +19,6 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
-  private requireRef?: string;
 
   constructor(options: PiletInjectorConfig, _: any, core: EventEmitter) {
     this.config = options;
@@ -37,7 +37,7 @@ export default class PiletInjector implements KrasInjector {
 
     pilets.forEach((p, i) =>
       p.bundler.on(({ requireRef, version }) => {
-        this.requireRef = version === 'v1' ? requireRef : undefined;
+        p.requireRef = version === 'v1' ? requireRef : undefined;
         const meta = JSON.stringify(this.getMetaOf(i));
 
         for (const id of Object.keys(cbs)) {
@@ -66,7 +66,7 @@ export default class PiletInjector implements KrasInjector {
 
   getMetaOf(index: number) {
     const { api, pilets } = this.config;
-    const { bundler, root } = pilets[index];
+    const { bundler, root, requireRef } = pilets[index];
     const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
     const file = bundler.bundle.name.replace(/^\//, '');
     return {
@@ -74,7 +74,7 @@ export default class PiletInjector implements KrasInjector {
       version: def.version,
       link: `${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
-      requireRef: this.requireRef,
+      requireRef,
       noCache: true,
       custom: def.custom,
     };

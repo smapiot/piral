@@ -1487,6 +1487,42 @@ export function declarationCouldNotBeGenerated_0076(rootDir: string, error: Erro
  * @kind Error
  *
  * @summary
+ * The path does not match to any valid entry file.
+ *
+ * @abstract
+ * Pilets will be bundled by specifying their root module. The
+ * root module is the module containing the exported `setup`
+ * function, which is then used by the app shell to integrate
+ * the pilet.
+ *
+ * @example
+ * Let's say you started by scaffolding a pilet like so:
+ *
+ * ```sh
+ * npm init pilet
+ * ```
+ *
+ * This will give you a `src` folder containing the root module named
+ * `index.tsx`.
+ *
+ * In this case you'd write:
+ *
+ * ```sh
+ * pilet debug src/index.tsx
+ * ```
+ *
+ * While in some scenarios we support dropping the extension there are
+ * some edge cases that would not work without an extension. Our
+ * recommendation is to be explicit about the root module's extension.
+ */
+export function entryFileMissing_0077(): QuickMessage {
+  return [LogLevels.error, '0077', 'No valid entry file for the pilet found.'];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * The validation process failed.
  *
  * @abstract

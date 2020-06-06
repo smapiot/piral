@@ -14,6 +14,8 @@ import {
   setLogLevel,
   progress,
   matchAny,
+  fail,
+  log,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -93,7 +95,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const krasConfig = readKrasConfig({ port }, krasrc);
   const api = debugPiletApi;
   const multi = entry.indexOf('*') !== -1;
+  log('generalDebug_0003', `Looking for ${multi ? 'multi' : 'single'}) "${entry}" in "${baseDir}".`);
   const allEntries = multi ? await matchAny(baseDir, entry) : [entry];
+  log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
+
+  if (allEntries.length === 0) {
+    fail('entryFileMissing_0077');
+  }
 
   const pilets = await Promise.all(
     allEntries.map(async entry => {
