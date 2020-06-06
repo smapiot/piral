@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.11.7 (tbd)
+
+* Added `bundler` to `.piralrc` options (#237)
+
 ## 0.11.6 (June 6, 2020)
 
 * Updated documentation page (#206)

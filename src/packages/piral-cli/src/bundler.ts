@@ -1,4 +1,14 @@
-import { installPackage, cliVersion, fail, progress, log, determineNpmClient, patchModules, logReset } from './common';
+import {
+  installPackage,
+  cliVersion,
+  fail,
+  progress,
+  log,
+  determineNpmClient,
+  patchModules,
+  logReset,
+  config,
+} from './common';
 import {
   Bundler,
   BundleDetails,
@@ -19,25 +29,17 @@ export interface QualifiedBundler {
 const bundlers: Array<QualifiedBundler> = [];
 
 async function installDefaultBundler(root: string) {
-  const parcel = 'piral-cli-parcel';
-
-  // try {
-  //   log('generalDebug_0003', `Trying to resolve ${parcel}.`);
-  //   require(parcel);
-  // } catch {
-  // -- that did not work out as expected, since failed module
-  // -- requires seem to be captured in the context.
-  // -- instead, we'll assume an installation is necessary
-  // }
-
+  const selectedBundler = config.bundler || 'parcel';
+  log('generalDebug_0003', `Installation of default bundler for "${selectedBundler}".`);
+  const selectedPackage = `piral-cli-${selectedBundler}`;
   log('generalDebug_0003', `Determining NPM client at "${root}" ...`);
   const client = await determineNpmClient(root);
-  log('generalDebug_0003', `Prepare to install ${parcel}@${cliVersion} using "${client}" into "${root}".`);
-  progress(`Installing ${parcel} ...`);
-  await installPackage(client, `${parcel}@${cliVersion}`, root, '--save-dev');
-  log('generalDebug_0003', 'Installed bundler.');
+  log('generalDebug_0003', `Prepare to install ${selectedPackage}@${cliVersion} using "${client}" into "${root}".`);
+  progress(`Installing ${selectedPackage} ...`);
+  await installPackage(client, `${selectedPackage}@${cliVersion}`, root, '--save-dev');
+  log('generalDebug_0003', `Installed bundler from "${selectedPackage}".`);
 
-  require('./inject').inject(parcel);
+  require('./inject').inject(selectedPackage);
 }
 
 function checkDefaultBundler(bundler: QualifiedBundler) {
