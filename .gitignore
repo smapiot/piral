@@ -1,9 +1,14 @@
 # Exclude compiled files
 dist
+src/converters/*/lib
+src/framework/*/lib
 src/initializers/*/lib
 src/packages/*/lib
 src/pages/*/lib
+src/plugins/*/lib
 src/samples/*/lib
+src/tooling/*/lib
+src/utilities/*/lib
 __generated__
 
 # OS files

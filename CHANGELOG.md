@@ -3,6 +3,7 @@
 ## 0.11.7 (tbd)
 
 * Added `bundler` to `.piralrc` options (#237)
+* Restructured the repository (#240)
 
 ## 0.11.6 (June 6, 2020)
 

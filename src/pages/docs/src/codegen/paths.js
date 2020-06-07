@@ -5,7 +5,7 @@ const readme = 'README.md';
 const generatedName = '__generated__';
 const categoryPrefix = 'plugin-';
 const docs = resolve(__dirname, '../../../../../docs');
-const packages = resolve(__dirname, '../../../../packages');
+const packagesRoot = resolve(__dirname, '../../../..');
 const generated = resolve(__dirname, generatedName);
 const tutorials = resolve(docs, 'tutorials');
 const questions = resolve(docs, 'questions');
@@ -15,17 +15,22 @@ const messages = resolve(docs, 'messages');
 const types = resolve(docs, 'types');
 const specs = resolve(docs, 'specs');
 
-const coreNames = [
-  'piral',
-  'piral-base',
-  'piral-core',
-  'piral-native',
-  'piral-cli',
-  'piral-ext',
-  'piral-ssr-utils',
-  'piral-jest-utils',
-];
-const coreTypes = coreNames.map(name => `${name}.json`);
+const packages = {
+  plugins: getPackages('plugins'),
+  converters: getPackages('converters'),
+  framework: getPackages('framework'),
+  utilities: getPackages('utilities'),
+  tooling: getPackages('tooling'),
+};
+
+const corePackages = [...packages.framework, ...packages.utilities, ...packages.tooling];
+
+const pluginPackages = [...packages.plugins, ...packages.converters];
+
+function getPackages(dirName) {
+  const dir = resolve(packagesRoot, dirName);
+  return readdirSync(dir).filter(name => existsSync(resolve(dir, name, 'package.json')));
+}
 
 function getCategory(keywords) {
   return keywords
@@ -58,8 +63,20 @@ function getDocsFrom(dir, tester = /\.md$/) {
     .map(name => resolve(dir, name));
 }
 
+function getPackageRoot(packageName) {
+  for (const key of Object.keys(packages)) {
+    if (packages[key].includes(packageName)) {
+      return resolve(packagesRoot, key, packageName);
+    }
+  }
+}
+
 function isCoreType(fileName) {
-  return coreTypes.some(type => fileName.endsWith(type));
+  return corePackages.some(name => fileName.endsWith(`${name}.json`));
+}
+
+function isPluginType(fileName) {
+  return pluginPackages.some(name => fileName.endsWith(`${name}.json`));
 }
 
 function getTutorials() {
@@ -90,19 +107,12 @@ function getCoreTypes() {
   return getDocsFrom(types, /\.json$/).filter(file => isCoreType(file));
 }
 
-function getPluginCategories() {
-  return readdirSync(packages)
-    .map(pckg => resolve(packages, pckg, 'package.json'))
-    .map(packageJson => existsSync(packageJson) && getCategory(require(packageJson).keywords))
-    .filter((item, index, self) => item && self.indexOf(item) === index);
-}
-
 function getPluginCategory(plugin) {
   return getCategory(plugin.keywords);
 }
 
 function getPluginTypes() {
-  return getDocsFrom(types, /\.json$/).filter(file => !isCoreType(file));
+  return getDocsFrom(types, /\.json$/).filter(file => !file.endsWith('piral-ext.json') && isPluginType(file));
 }
 
 function getPluginImage(name) {
@@ -136,6 +146,11 @@ function getRelativePath(path, basePath = docs) {
 }
 
 module.exports = {
+  packagesRoot,
+  corePackages,
+  pluginPackages,
+  getPackageRoot,
+  packages,
   generated,
   generatedName,
   getTutorials,
@@ -144,7 +159,6 @@ module.exports = {
   getCommands,
   getCodes,
   getPluginCategory,
-  getPluginCategories,
   getPluginTypes,
   getPluginImage,
   getSpecs,
