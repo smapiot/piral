@@ -1,6 +1,6 @@
 import { relative, join, dirname, basename } from 'path';
 import { buildPilet } from './build-pilet';
-import { LogLevels, PiletSchemaVersion } from '../types';
+import { LogLevels, PiletSchemaVersion, PiletPublishSource } from '../types';
 import {
   postFile,
   readBinary,
@@ -13,6 +13,8 @@ import {
   log,
   config,
   checkExists,
+  findTarball,
+  downloadFile,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -23,6 +25,7 @@ export interface PublishPiletOptions {
   fresh?: boolean;
   cert?: string;
   schemaVersion?: PiletSchemaVersion;
+  from?: PiletPublishSource;
 }
 
 export const publishPiletDefaults: PublishPiletOptions = {
@@ -33,9 +36,16 @@ export const publishPiletDefaults: PublishPiletOptions = {
   cert: undefined,
   logLevel: LogLevels.info,
   schemaVersion: 'v1',
+  from: 'local',
 };
 
-async function getFiles(baseDir: string, source: string, fresh: boolean, schemaVersion: PiletSchemaVersion) {
+async function getFiles(
+  baseDir: string,
+  source: string,
+  from: PiletPublishSource,
+  fresh: boolean,
+  schemaVersion: PiletSchemaVersion,
+) {
   if (fresh) {
     log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
     const details = require(join(baseDir, 'package.json'));
@@ -51,8 +61,20 @@ async function getFiles(baseDir: string, source: string, fresh: boolean, schemaV
     log('generalDebug_0003', 'Successfully packed.');
     return [file];
   } else {
-    log('generalDebug_0003', 'Did not find fresh flag. Trying to match files.');
-    return await matchFiles(baseDir, source);
+    log('generalDebug_0003', `Did not find fresh flag. Trying to match from "${from}".`);
+
+    switch (from) {
+      case 'local':
+        log('generalDebug_0003', `Matching files using "${source}".`);
+        return await matchFiles(baseDir, source);
+      case 'remote':
+        log('generalDebug_0003', `Matching files using "${source}".`);
+        return await downloadFile(source);
+      case 'npm':
+        log('generalDebug_0003', `Matching files using "${source}".`);
+        const url = await findTarball(source);
+        return await downloadFile(url);
+    }
   }
 }
 
@@ -63,13 +85,14 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     apiKey = config.apiKey ?? publishPiletDefaults.apiKey,
     fresh = publishPiletDefaults.fresh,
     logLevel = publishPiletDefaults.logLevel,
+    from = publishPiletDefaults.from,
     schemaVersion = publishPiletDefaults.schemaVersion,
     cert = config.cert ?? publishPiletDefaults.cert,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   log('generalDebug_0003', 'Getting the tgz files ...');
-  const files = await getFiles(baseDir, source, fresh, schemaVersion);
+  const files = await getFiles(baseDir, source, from, fresh, schemaVersion);
   const successfulUploads: Array<string> = [];
   let ca: Buffer = undefined;
   log('generalDebug_0003', 'Received available tgz files.');

@@ -10,8 +10,18 @@ import {
   frameworkKeys,
   clientTypeKeys,
   schemaKeys,
+  fromKeys,
 } from './helpers';
-import { ToolCommand, ListCommands, NpmClientType, LogLevels, TemplateType, PiralBuildType } from './types';
+import {
+  ToolCommand,
+  ListCommands,
+  NpmClientType,
+  LogLevels,
+  TemplateType,
+  PiralBuildType,
+  PiletPublishSource,
+  PiletSchemaVersion,
+} from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
   if (command.name.endsWith(suffix)) {
@@ -388,7 +398,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args.logLevel as LogLevels,
         fresh: args.fresh as boolean,
         open: args.open as boolean,
-        schemaVersion: args.schema as any,
+        schemaVersion: args.schema as PiletSchemaVersion,
       });
     },
   },
@@ -457,7 +467,7 @@ const allCommands: Array<ToolCommand<any>> = [
         optimizeModules: args.optimizeModules as boolean,
         fresh: args.fresh as boolean,
         logLevel: args.logLevel as LogLevels,
-        schemaVersion: args.schema as any,
+        schemaVersion: args.schema as PiletSchemaVersion,
         app: args.app as string,
       });
     },
@@ -522,6 +532,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
         .default('schema', apps.publishPiletDefaults.schemaVersion)
+        .choices('from', fromKeys)
+        .describe('from', 'Sets the type of the source to use for publishing.')
+        .default('from', apps.publishPiletDefaults.from)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
@@ -535,7 +548,8 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args.logLevel as LogLevels,
         cert: args.caCert as string,
         fresh: args.fresh as boolean,
-        schemaVersion: args.schema as any,
+        from: args.from as PiletPublishSource,
+        schemaVersion: args.schema as PiletSchemaVersion,
       });
     },
   },

@@ -1193,6 +1193,35 @@ export function httpPostResponse_0067(response: any): QuickMessage {
  * @kind Error
  *
  * @summary
+ * The HTTP get request failed.
+ *
+ * @abstract
+ * While submitting the HTTP get request an error was reported. This usually indicates
+ * a problem with the network, either due to
+ *
+ * - loss of connectivity
+ * - an invalid host name (DNS broken)
+ * - a system restriction (e.g., firewall)
+ * - invalid SSL certificate
+ *
+ * It could also mean that the endpoint is not reachable or requires additional headers /
+ * authentication for retrieving the content.
+ *
+ * @example
+ * The easiest way to replicate an error would be to use an invalid host.
+ *
+ * ```sh
+ * pilet publish https://doesnotexist/api/pilet.tgz --from remote
+ * ```
+ */
+export function failedHttpGet_0068(error: string): QuickMessage {
+  return [LogLevels.error, '0068', `Failed to download via HTTP: ${error}.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * The package.json containing a valid entry point for the Piral instance is missing.
  *
  * @abstract

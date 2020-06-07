@@ -1,5 +1,8 @@
+import { join } from 'path';
 import { Agent } from 'https';
-import { platform } from 'os';
+import { Stream } from 'stream';
+import { platform, tmpdir } from 'os';
+import { createWriteStream } from 'fs';
 import { log } from './log';
 import { axios, FormData } from '../external';
 
@@ -18,7 +21,37 @@ function getMessage(body: string) {
   return '';
 }
 
-export function postFile(target: string, key: string, file: Buffer, ca?: Buffer) {
+function streamToFile(source: Stream, target: string) {
+  const dest = createWriteStream(target);
+  return new Promise<string>((resolve, reject) => {
+    source.pipe(dest);
+    source.on('error', err => reject(err));
+    dest.on('finish', () => resolve(target));
+  });
+}
+
+export function downloadFile(target: string): Promise<string> {
+  return axios.default
+    .get<Stream>(target, {
+      responseType: 'stream',
+      headers: {
+        'user-agent': `piral-cli/http.node-${os}`,
+      },
+    })
+    .then(
+      res => {
+        const target = join(tmpdir(), 'pilet.tgz');
+        log('generalDebug_0003', `Writing the downloaded file to "${target}".`);
+        return streamToFile(res.data, target);
+      },
+      error => {
+        log('failedHttpGet_0068', error.message);
+        return undefined;
+      },
+    );
+}
+
+export function postFile(target: string, key: string, file: Buffer, ca?: Buffer): Promise<object | boolean> {
   const form = new FormData();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
   form.append('file', file, 'pilet.tgz');

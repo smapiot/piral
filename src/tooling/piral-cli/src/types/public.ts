@@ -135,6 +135,8 @@ export interface BundlerDefinition {
 
 export type PiletSchemaVersion = 'v0' | 'v1';
 
+export type PiletPublishSource = 'local' | 'npm' | 'remote';
+
 export type PiralBuildType = 'all' | 'release' | 'develop';
 
 export type TemplateType = 'default' | 'empty' | 'other';

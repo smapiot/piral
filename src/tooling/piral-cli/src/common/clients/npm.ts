@@ -36,3 +36,10 @@ export async function findSpecificVersion(packageName: string, version: string) 
   log('generalDebug_0003', `NPM show result: ${ms.value}`);
   return ms.value;
 }
+
+export async function findTarball(packageRef: string, target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['view', packageRef, 'dist.tarball', ...flags], target, ms);
+  log('generalDebug_0003', `NPM view packageRef result: ${ms.value}`);
+  return ms.value;
+}
