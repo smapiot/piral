@@ -45,7 +45,7 @@ async function getFiles(
   from: PiletPublishSource,
   fresh: boolean,
   schemaVersion: PiletSchemaVersion,
-) {
+): Promise<Array<string>> {
   if (fresh) {
     log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
     const details = require(join(baseDir, 'package.json'));
@@ -68,11 +68,12 @@ async function getFiles(
         log('generalDebug_0003', `Matching files using "${source}".`);
         return await matchFiles(baseDir, source);
       case 'remote':
-        log('generalDebug_0003', `Matching files using "${source}".`);
+        log('generalDebug_0003', `Download file from "${source}".`);
         return await downloadFile(source);
       case 'npm':
-        log('generalDebug_0003', `Matching files using "${source}".`);
+        log('generalDebug_0003', `View NPM package "${source}".`);
         const url = await findTarball(source);
+        log('generalDebug_0003', `Download file from "${url}".`);
         return await downloadFile(url);
     }
   }
@@ -91,15 +92,16 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
+
+  if (!url) {
+    fail('missingPiletFeedUrl_0060');
+  }
+
   log('generalDebug_0003', 'Getting the tgz files ...');
   const files = await getFiles(baseDir, source, from, fresh, schemaVersion);
   const successfulUploads: Array<string> = [];
   let ca: Buffer = undefined;
   log('generalDebug_0003', 'Received available tgz files.');
-
-  if (!url) {
-    fail('missingPiletFeedUrl_0060');
-  }
 
   if (files.length === 0) {
     fail('missingPiletTarball_0061', source);

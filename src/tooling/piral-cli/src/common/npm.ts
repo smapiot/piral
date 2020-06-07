@@ -116,7 +116,7 @@ export function createPackage(target = '.'): Promise<string> {
 
 export function findTarball(packageRef: string) {
   const c = require(`./clients/npm`);
-  return c.createPackage(packageRef);
+  return c.findTarball(packageRef);
 }
 
 export function findSpecificVersion(packageName: string, version: string): Promise<string> {

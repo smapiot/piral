@@ -23,14 +23,14 @@ function getMessage(body: string) {
 
 function streamToFile(source: Stream, target: string) {
   const dest = createWriteStream(target);
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<Array<string>>((resolve, reject) => {
     source.pipe(dest);
     source.on('error', err => reject(err));
-    dest.on('finish', () => resolve(target));
+    dest.on('finish', () => resolve([target]));
   });
 }
 
-export function downloadFile(target: string): Promise<string> {
+export function downloadFile(target: string): Promise<Array<string>> {
   return axios.default
     .get<Stream>(target, {
       responseType: 'stream',
@@ -38,17 +38,16 @@ export function downloadFile(target: string): Promise<string> {
         'user-agent': `piral-cli/http.node-${os}`,
       },
     })
-    .then(
-      res => {
-        const target = join(tmpdir(), 'pilet.tgz');
-        log('generalDebug_0003', `Writing the downloaded file to "${target}".`);
-        return streamToFile(res.data, target);
-      },
-      error => {
-        log('failedHttpGet_0068', error.message);
-        return undefined;
-      },
-    );
+    .then(res => {
+      const rid = Math.random().toString(36).split('.').pop();
+      const target = join(tmpdir(), `pilet_${rid}.tgz`);
+      log('generalDebug_0003', `Writing the downloaded file to "${target}".`);
+      return streamToFile(res.data, target);
+    })
+    .catch(error => {
+      log('failedHttpGet_0068', error.message);
+      return [];
+    });
 }
 
 export function postFile(target: string, key: string, file: Buffer, ca?: Buffer): Promise<object | boolean> {
