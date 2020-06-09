@@ -4,7 +4,7 @@ const { createProgram, isExportAssignment, getCombinedModifierFlags, ModifierFla
 
 const projectRoot = resolve(__dirname, '..');
 const rootFolder = resolve(projectRoot, 'docs', 'messages');
-const messagesFile = resolve(projectRoot, 'src', 'packages', 'piral-cli', 'src', 'messages.ts');
+const messagesFile = resolve(projectRoot, 'src', 'tooling', 'piral-cli', 'src', 'messages.ts');
 const replacements = [['&commat;', '@']];
 
 function isNodeExported(node) {

@@ -1,6 +1,6 @@
 {
   "name": "piral-documentation-page",
-  "version": "0.11.4",
+  "version": "0.11.6",
   "private": true,
   "description": "The documentation page for Piral.",
   "keywords": [
@@ -43,7 +43,7 @@
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
-    "@types/react-router-dom": "latest",
+    "@types/react-router-dom": "^5.0.0",
     "keyword-extractor": "0.0.17",
     "markdown-it": "^9.0.1",
     "markdown-it-abbr": "1.0.4",

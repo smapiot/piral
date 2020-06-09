@@ -13,13 +13,15 @@ module.exports = function() {
   const items = data
     .map(
       item => `{
-        content: <TutorialCard
-          title="${item.title}"
-          description="${item.description}"
-          level="${item.level}"
-          audience="${item.audience}"
-          link="${item.file}"
-          />,
+        content: (
+          <TutorialCard
+            title="${item.title}"
+            description="${item.description}"
+            level="${item.level}"
+            audience="${item.audience}"
+            link="${item.file}"
+          />
+        ),
         icon: "${item.file.substr(0, 2)}",
       }`,
     )

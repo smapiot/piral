@@ -1,0 +1,44 @@
+{
+  "name": "piral-svelte",
+  "version": "0.11.6",
+  "description": "Plugin for integrating Svelte components in Piral.",
+  "keywords": [
+    "piral",
+    "pilet-api",
+    "smapiot",
+    "portal",
+    "modules",
+    "api",
+    "plugin",
+    "plugin-converter",
+    "svelte"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typedoc": "typedoc --json ../../../docs/types/piral-svelte.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "piral-core": "^0.11.6"
+  },
+  "peerDependencies": {
+    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0"
+  }
+}

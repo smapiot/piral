@@ -112,7 +112,7 @@ For an example of this [see our sample on GitHub](https://github.com/piral-sampl
 
 * Also notably we should add some things to our *.gitignore*, if not done yet.
 
-```plain
+```plaintext
 .cache
 dist
 *.tgz

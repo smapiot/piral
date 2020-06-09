@@ -1,9 +1,10 @@
 const { join, resolve } = require('path');
 const { writeFileSync, readFileSync, readdirSync } = require('fs');
 
-const rootFolder = resolve(__dirname, '..', 'docs', 'commands');
-const commandFolder = '../src/packages/piral-cli/lib/commands';
-const validationFolder = '../src/packages/piral-cli/src/rules';
+const projectRoot = resolve(__dirname, '..');
+const rootFolder = resolve(projectRoot, 'docs', 'commands');
+const commandFolder = resolve(projectRoot, 'src', 'tooling', 'piral-cli', 'lib', 'commands');
+const validationFolder = resolve(projectRoot, 'src', 'tooling', 'piral-cli', 'src', 'rules');
 const nl = '\n';
 
 const { commands } = require(commandFolder);

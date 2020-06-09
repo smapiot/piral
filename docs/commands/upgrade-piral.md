@@ -62,6 +62,14 @@ Already performs the update of its NPM dependencies.
 - Type: `boolean`
 - Default: `false`
 
+### `--npm-client`
+
+Sets the NPM client to be used when upgrading.
+
+- Type: `string`
+- Choices: `"npm"`, `"pnpm"`, `"yarn"`
+- Default: `undefined`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
