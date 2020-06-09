@@ -51,8 +51,20 @@ export interface PiralStoreDataEvent<TValue = any> {
   expires: number;
 }
 
+export interface PiralUnloadPiletEvent {
+  /**
+   * The name of the pilet.
+   */
+  name: string;
+  /**
+   * The version of the pilet.
+   */
+  version: string;
+}
+
 declare module 'piral-base/lib/types' {
   interface PiralEventMap extends PiralCustomEventMap {
     'store-data': PiralStoreDataEvent;
+    'unload-pilet': PiralUnloadPiletEvent;
   }
 }

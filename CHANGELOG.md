@@ -4,6 +4,7 @@
 
 * Added `bundler` to `.piralrc` options (#237)
 * Added option to publish directly from an NPM registry (#239)
+* Added the `unload-pilet` event when `injectPilet` is used
 * Restructured the repository (#240)
 
 ## 0.11.6 (June 6, 2020)
