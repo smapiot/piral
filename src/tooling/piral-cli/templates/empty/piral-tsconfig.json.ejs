@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
     "declaration": true,
-    "target": "es6",
-    "sourceMap": true,
-    "outDir": "./lib",
-    "skipLibCheck": true,
-    "lib": ["dom", "es2018"],
-    "moduleResolution": "node",
-    "module": "esnext",
+    "noImplicitAny": false,
+    "removeComments": false,
     "jsx": "react",
-    "importHelpers": true
+    "noLib": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "target": "es5",
+    "sourceMap": true,
+    "lib": ["es6", "dom", "esnext"]
   },
   "include": [
     "./<%- src %>"
