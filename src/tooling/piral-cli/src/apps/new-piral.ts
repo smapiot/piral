@@ -78,6 +78,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
           keywords: ['piral'],
           dependencies: {},
           scripts: {},
+          browserslist: ">= .5%, not dead, ie 11, node 10",
         },
         undefined,
         2,
