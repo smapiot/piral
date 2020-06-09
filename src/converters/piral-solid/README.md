@@ -30,10 +30,10 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import './SolidPage';
+import { SolidPage } from './SolidPage';
 
 export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromSolid('my-page'));
+  piral.registerPage('/sample', piral.fromSolid(SolidPage));
 }
 ```
 
@@ -47,10 +47,10 @@ Within Solid components the Piral Solid extension component can be used by refer
 
 > For Piral instance developers
 
-Using Solid with Piral is as simple as installing `piral-solid` and `solid`.
+Using Solid with Piral is as simple as installing `piral-solid` and `solid-js`.
 
 ```ts
-import 'solid';
+import 'solid-js';
 import { createSolidApi } from 'piral-solid';
 ```
 
