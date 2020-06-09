@@ -22,6 +22,7 @@ Piral is developed as a monorepo.
 - [piral-auth](./piral-auth/README.md) provides the `getUser` API
 - [piral-adal](./piral-adal/README.md) integrates MSAL for authentication with a fetch middleware
 - [piral-axios](./piral-axios/README.md) provides the `axios` API for making HTTP requests
+- [piral-configs](./piral-configs/README.md) provides rich configuration options with validation
 - [piral-containers](./piral-containers/README.md) allows individual pilets to use their own global state
 - [piral-forms](./piral-forms/README.md) allows construction of reusable forms
 - [piral-lazy](./piral-lazy/README.md) provides generic lazy loading for all components
