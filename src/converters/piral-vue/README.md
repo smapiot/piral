@@ -64,6 +64,18 @@ const instance = createInstance({
 });
 ```
 
+The `vue` package should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "vue"
+    ]
+  }
+}
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

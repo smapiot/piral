@@ -64,6 +64,19 @@ const instance = createInstance({
 });
 ```
 
+The `lit-element` and `@webcomponents/webcomponentsjs` packages should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "@webcomponents/webcomponentsjs",
+      "lit-element"
+    ]
+  }
+}
+```
+
 ## Preparing Pilets
 
 Unfortunately, LitElement is quite sensitive regarding how its transpiled. Right now the only way to be sure that classes are indeed transpiled as they should (from perspective of LitElement) is to place the following snippet in the *package.json* of each pilet using `piral-litel`:

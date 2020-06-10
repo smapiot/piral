@@ -50,7 +50,6 @@ Within Solid components the Piral Solid extension component can be used by refer
 Using Solid with Piral is as simple as installing `piral-solid` and `solid-js`.
 
 ```ts
-import 'solid-js';
 import { createSolidApi } from 'piral-solid';
 ```
 
@@ -62,6 +61,19 @@ const instance = createInstance({
   extendApi: [createSolidApi()],
   // ...
 });
+```
+
+The `solid-js` and `solid-js/dom` packages should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "solid-js",
+      "solid-js/dom"
+    ]
+  }
+}
 ```
 
 ## License
