@@ -2,6 +2,7 @@
 
 ## 0.11.7 (tbd)
 
+* Added new optional plugin `piral-solid` for Solid (#231)
 * Added `bundler` to `.piralrc` options (#237)
 * Added option to publish directly from an NPM registry (#239)
 * Restructured the repository (#240)
