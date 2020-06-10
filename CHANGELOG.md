@@ -2,8 +2,10 @@
 
 ## 0.11.7 (tbd)
 
+* Added new optional plugin `piral-solid` for Solid (#231)
 * Added `bundler` to `.piralrc` options (#237)
 * Added option to publish directly from an NPM registry (#239)
+* Added the `unload-pilet` event when `injectPilet` is used
 * Restructured the repository (#240)
 * Added `piral-configs` for configuration management (#238)
 

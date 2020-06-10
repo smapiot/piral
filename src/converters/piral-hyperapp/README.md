@@ -64,6 +64,18 @@ const instance = createInstance({
 });
 ```
 
+The `hyperapp` package should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "hyperapp"
+    ]
+  }
+}
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

@@ -21,6 +21,7 @@ import { createRiotApi } from 'piral-riot';
 import { createElmApi } from 'piral-elm';
 import { createSvelteApi } from 'piral-svelte';
 import { createBlazorApi } from 'piral-blazor';
+import { createSolidApi } from 'piral-solid';
 import { createDashboardApi, Dashboard } from 'piral-dashboard';
 
 const Loader: React.FC<LoadingIndicatorProps> = () => (
@@ -60,6 +61,7 @@ const instance = createInstance({
     createElmApi(),
     createSvelteApi(),
     createBlazorApi(),
+    createSolidApi(),
     createDashboardApi(),
   ],
   requestPilets() {

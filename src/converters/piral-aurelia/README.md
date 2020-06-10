@@ -64,6 +64,23 @@ const instance = createInstance({
 });
 ```
 
+The `aurelia` related packages should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "aurelia-framework",
+      "aurelia-templating-binding",
+      "aurelia-templating-resources",
+      "aurelia-pal-browser",
+      "aurelia-event-aggregator",
+      "aurelia-history-browser"
+    ]
+  }
+}
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

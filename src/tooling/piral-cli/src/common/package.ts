@@ -357,7 +357,7 @@ export async function retrievePiletsInfo(entryFile: string) {
   };
 }
 
-function isValidDependency(name: string) {
+export function isValidDependency(name: string) {
   // super simple check at the moment
   // just to filter out things like "redux-saga/effects"
   return name.indexOf('/') === -1 || name.indexOf('@') === 0;

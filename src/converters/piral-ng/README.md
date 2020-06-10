@@ -87,6 +87,26 @@ const instance = createInstance({
 });
 ```
 
+The related packages should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "@angular/common",
+      "@angular/compiler",
+      "@angular/core",
+      "@angular/platform-browser",
+      "@angular/platform-browser-dynamic",
+      "rxjs",
+      "zone.js"
+    ]
+  }
+}
+```
+
+Depending on your Angular needs you'd want to share more packages.
+
 ## Injected Services
 
 Depending on the mounted component different services are injected. the following table lists the names of the injected services per component type.

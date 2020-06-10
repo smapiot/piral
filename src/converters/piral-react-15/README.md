@@ -64,6 +64,18 @@ const instance = createInstance({
 });
 ```
 
+The `react-15` package (or whatever alias you've chosen) should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "react-15"
+    ]
+  }
+}
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

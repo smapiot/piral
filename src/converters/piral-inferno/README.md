@@ -64,6 +64,19 @@ const instance = createInstance({
 });
 ```
 
+The `inferno` and `inferno-create-element` package should be shared with the pilets via the *package.json*:
+
+```json
+{
+  "pilets": {
+    "externals": [
+      "inferno",
+      "inferno-create-element"
+    ]
+  }
+}
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
