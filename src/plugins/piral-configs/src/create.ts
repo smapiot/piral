@@ -1,5 +1,6 @@
 import { Extend } from 'piral-core';
-import { PiletConfigsApi, JsonSchema } from './types';
+import { Validator, Schema } from 'jsonschema';
+import { PiletConfigsApi } from './types';
 
 /**
  * Available configuration options for the configs plugin.
@@ -29,9 +30,20 @@ export function createConfigsApi(config: ConfigsConfig = {}): Extend<PiletConfig
     }
   };
 
-  const validate = (schema: JsonSchema, proposedConfig: any, defaultConfig: any) => {
-    //TODO check schema with proposedConfig
-    return defaultConfig;
+  const validate = (schema: Schema, proposedConfig: any, defaultConfig: any) => {
+    const validator = new Validator();
+    const result = validator.validate(proposedConfig, schema);
+
+    if (!result.valid) {
+      console.warn(
+        `The given configuration does not match the provided schema. Taking the default configuration.`,
+        proposedConfig,
+        result,
+      );
+      return defaultConfig;
+    }
+
+    return proposedConfig;
   };
 
   return ctx => (_, meta) => ({
