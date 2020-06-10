@@ -9646,9 +9646,10 @@ parcel-plugin-codegen@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/parcel-plugin-codegen/-/parcel-plugin-codegen-0.5.0.tgz#3b7161ea7f21731d45bbd6df8efc4cf8a8038677"
 
-parcel-plugin-externals@^0.3.1:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.3.3.tgz#8f830fe1dae5b02df487be83e9f38cee45d195eb"
+parcel-plugin-externals@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.5.0.tgz#fa47c555b424e0243eaac3298c9506561f0be6e4"
+  integrity sha512-jwtGEwXMWl1583ktg5t30QPUkmbvGZASxt/JaSuJ29/7fLRCXBNmAsAPY8+9raLxc7SHfqZsO7TBHSsxKDJvow==
 
 parcel-plugin-import-maps@^0.3.1:
   version "0.3.1"

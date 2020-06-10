@@ -26,7 +26,7 @@ export function setupBundler(setup: BundlerSetup) {
   if (setup.type === 'pilet') {
     const { entryModule, targetDir, externals, config } = setup;
     bundler = new Bundler(entryModule, extendConfig(config));
-    const resolver = combineExternals(targetDir, [], externals);
+    const resolver = combineExternals(targetDir, [], externals, {});
     extendBundlerWithExternals(bundler, resolver);
   } else {
     const { entryFiles, config } = setup;
@@ -118,7 +118,8 @@ function writeFileContent(src: string, content: string) {
 async function applySourceMapShift(sourceFile: string, lineOffset = 1): Promise<string> {
   const content = await readFileContent(sourceFile);
   const incomingSourceMap = JSON.parse(content);
-  const consumer = new SourceMapConsumer(incomingSourceMap);
+  // we need the await, because (in contrast to the d.ts), this may return a Promise!
+  const consumer = await new SourceMapConsumer(incomingSourceMap);
   const generator = new SourceMapGenerator({
     file: incomingSourceMap.file,
     sourceRoot: incomingSourceMap.sourceRoot,

@@ -5,15 +5,14 @@ import { render, createComponent } from 'solid-js/dom';
 export function createConverter() {
   const convert = <TProps extends BaseComponentProps>(root: Component<TProps>): ForeignComponent<TProps> => {
     return {
-      mount(parent, data) {
-        render(createComponent(root, data), parent);
+      mount(parent, data, context) {
+        render(createComponent(root, { context, ...data }), parent);
       },
-      update(parent, data) {
-        render(createComponent(root, data), parent);
+      update(parent, data, context) {
+        render(createComponent(root, { context, ...data }), parent);
       },
       unmount(el) {
-        // tslint:disable-next-line:no-null-keyword
-        render(null, el);
+        render(() => undefined, el);
         el.innerHTML = '';
       },
     };

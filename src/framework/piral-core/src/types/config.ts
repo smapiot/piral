@@ -13,7 +13,7 @@ import { GlobalState, PiralDefineActions } from './state';
 export { PiletLoadingStrategy, PiletDependencyFetcher, PiletDependencyGetter, PiletRequester, AvailableDependencies };
 
 export interface PiralPiletConfiguration {
-  /*
+  /**
    * Function to load the modules asynchronously, e.g., from a server 🚚.
    */
   requestPilets?: PiletRequester;
