@@ -23,7 +23,7 @@ Gets the currently active configuration.
 > For authors of pilets
 
 ```ts
-export function setup(app) {
+export function setup(app: PiletApi) {
   // define the schema and the default value
   const configSchema = {
     type: 'object',
@@ -40,6 +40,20 @@ export function setup(app) {
   app.defineConfigSchema(configSchema, defaultConfig);
 
   const { increment } = app.getCurrentConfig();
+  
+  app.registerExtension('home-dashboard', () => {
+    const [count, setCount] = React.useState(0);
+    return (
+      <a
+        href="#"
+        onClick={ev => {
+          setCount(count => count + increment);
+          ev.preventDefault();
+        }}>
+        {count}
+      </a>
+    );
+  });
 }
 ```
 
@@ -52,7 +66,7 @@ The provided library only brings API extensions for pilets to a Piral instance.
 For the setup of the library itself you'll need to import `createConfigsApi` from the `piral-configs` package.
 
 ```ts
-import { createConfigsApi } from 'piral-feeds';
+import { createConfigsApi } from 'piral-configs';
 ```
 
 The integration looks like:
