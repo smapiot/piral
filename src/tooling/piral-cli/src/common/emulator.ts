@@ -1,5 +1,5 @@
 import { join, resolve, relative } from 'path';
-import { findDependencyVersion, copyScaffoldingFiles } from './package';
+import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from './package';
 import { createFileFromTemplateIfNotExists } from './template';
 import { coreExternals, cliVersion, filesTar, filesOnceTar } from './info';
 import { createPackage } from './npm';
@@ -25,7 +25,7 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   const allExternals = [...externals, ...coreExternals];
 
   const externalPackages = await Promise.all(
-    allExternals.map(async name => ({
+    allExternals.filter(isValidDependency).map(async name => ({
       name,
       version: await findDependencyVersion(piralPkg, sourceDir, name),
     })),
