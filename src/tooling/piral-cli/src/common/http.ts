@@ -30,13 +30,15 @@ function streamToFile(source: Stream, target: string) {
   });
 }
 
-export function downloadFile(target: string): Promise<Array<string>> {
+export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>> {
+  const httpsAgent = ca ? new Agent({ ca }) : undefined;
   return axios.default
     .get<Stream>(target, {
       responseType: 'stream',
       headers: {
         'user-agent': `piral-cli/http.node-${os}`,
       },
+      httpsAgent,
     })
     .then(res => {
       const rid = Math.random().toString(36).split('.').pop();

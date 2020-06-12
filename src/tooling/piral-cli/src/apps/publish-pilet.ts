@@ -45,6 +45,7 @@ async function getFiles(
   from: PiletPublishSource,
   fresh: boolean,
   schemaVersion: PiletSchemaVersion,
+  ca?: Buffer,
 ): Promise<Array<string>> {
   if (fresh) {
     log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
@@ -69,12 +70,12 @@ async function getFiles(
         return await matchFiles(baseDir, source);
       case 'remote':
         log('generalDebug_0003', `Download file from "${source}".`);
-        return await downloadFile(source);
+        return await downloadFile(source, ca);
       case 'npm':
         log('generalDebug_0003', `View NPM package "${source}".`);
         const url = await findTarball(source);
         log('generalDebug_0003', `Download file from "${url}".`);
-        return await downloadFile(url);
+        return await downloadFile(url, ca);
     }
   }
 }
@@ -97,23 +98,23 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     fail('missingPiletFeedUrl_0060');
   }
 
-  log('generalDebug_0003', 'Getting the tgz files ...');
-  const files = await getFiles(baseDir, source, from, fresh, schemaVersion);
-  const successfulUploads: Array<string> = [];
-  let ca: Buffer = undefined;
-  log('generalDebug_0003', 'Received available tgz files.');
-
-  if (files.length === 0) {
-    fail('missingPiletTarball_0061', source);
-  }
-
   log('generalDebug_0003', 'Checking if certificate exists.');
+  let ca: Buffer = undefined;
 
   if (await checkExists(cert)) {
     const dir = dirname(cert);
     const file = basename(cert);
     log('generalDebug_0003', `Reading certificate file "${file}" from "${dir}".`);
     ca = await readBinary(dir, file);
+  }
+
+  log('generalDebug_0003', 'Getting the tgz files ...');
+  const files = await getFiles(baseDir, source, from, fresh, schemaVersion, ca);
+  const successfulUploads: Array<string> = [];
+  log('generalDebug_0003', 'Received available tgz files.');
+
+  if (files.length === 0) {
+    fail('missingPiletTarball_0061', source);
   }
 
   log('generalInfo_0000', `Using feed service "${url}".`);
