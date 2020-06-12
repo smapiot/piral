@@ -4,10 +4,11 @@
 
 * Added new optional plugin `piral-solid` for Solid (#231)
 * Added `bundler` to `.piralrc` options (#237)
-* Added option to publish directly from an NPM registry (#239)
-* Added the `unload-pilet` event when `injectPilet` is used
-* Restructured the repository (#240)
+* Added `piral-cli-webpack` as first-class option (#237)
 * Added `piral-configs` for configuration management (#238)
+* Added option to publish directly from an NPM registry (#239)
+* Added the `unload-pilet` event when `injectPilet` is used (#252)
+* Restructured the repository (#240)
 
 ## 0.11.6 (June 6, 2020)
 
