@@ -6,6 +6,7 @@
 * Added `bundler` to `.piralrc` options (#237)
 * Added option to publish directly from an NPM registry (#239)
 * Added the `unload-pilet` event when `injectPilet` is used
+* Added `loadPilet` option to `piral-base`
 * Restructured the repository (#240)
 * Added `piral-configs` for configuration management (#238)
 

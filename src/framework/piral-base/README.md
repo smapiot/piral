@@ -10,11 +10,17 @@ For details on the provided API check out the [documentation at the Piral websit
 
 ## Getting Started
 
-Creating your own Piral app based on `piral-base` is **not recommended**.
+Creating your own Piral app based on `piral-base` is in general **not recommended**.
 
-The only exception is when a Piral-fork that is based on another technology than React should be created. In any other case please look at `piral-core` or the full `piral` framework.
+The only exception is when a Piral-fork that is based on another technology than React should be created. In any other case please look at `piral-core` library or the full `piral` framework.
 
 More information can be found in our [documentation at the Piral website](https://docs.piral.io).
+
+## Available Options
+
+By default, the loading of pilets assumes standard metadata. In general, however, the `loadPilet` option allows to bring in other ways.
+
+One example of using `loadPilet` to extend Piral beyond its initial capabilities is to use SystemJS for loading the pilets.
 
 ## License
 

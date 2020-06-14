@@ -223,6 +223,13 @@ export interface PiletLoadingStrategy {
 }
 
 /**
+ * The callback to be used to load a single pilet.
+ */
+export interface PiletLoader {
+  (meta: PiletMetadata): Promise<Pilet>;
+}
+
+/**
  * The options for loading pilets.
  */
 export interface LoadPiletsOptions {
@@ -240,6 +247,10 @@ export interface LoadPiletsOptions {
    * helpful when debugging or in SSR scenarios.
    */
   pilets?: Array<Pilet>;
+  /**
+   * Optionally, defines how to load a pilet.
+   */
+  loadPilet?: PiletLoader;
   /**
    * The callback for defining how a dependency will be fetched.
    */
