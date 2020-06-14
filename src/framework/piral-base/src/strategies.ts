@@ -1,5 +1,5 @@
-import { getDependencyResolver } from './utils';
-import { loadPilet, loadPilets, loadMetadata } from './load';
+import { createDefaultLoader } from './loader';
+import { loadPilets, loadMetadata } from './load';
 import { createPilets, createPilet } from './aggregate';
 import { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
 
@@ -23,8 +23,15 @@ function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModule
  */
 export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy {
   return (options, cb) => {
-    const { fetchPilets, fetchDependency, dependencies, getDependencies, createApi, pilets = [] } = options;
-    const getDep = getDependencyResolver(dependencies, getDependencies);
+    const {
+      fetchPilets,
+      fetchDependency,
+      dependencies,
+      getDependencies,
+      createApi,
+      pilets = [],
+      loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency),
+    } = options;
     const loader = loadMetadata(fetchPilets);
 
     return createPilets(createApi, pilets).then(allModules => {
@@ -34,7 +41,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
 
       const followUp = loader.then(metadata => {
         const promises = metadata.map(m =>
-          loadPilet(m, getDep, fetchDependency).then(mod => {
+          loadPilet(m).then(mod => {
             const available = pilets.filter(m => m.name === mod.name).length === 0;
 
             if (available) {
@@ -86,8 +93,17 @@ export function asyncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): Pro
  * false. Loads and evaluates all pilets before rendering.
  */
 export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
-  const { fetchPilets, fetchDependency, dependencies, getDependencies, createApi, pilets = [] } = options;
-  return loadPilets(fetchPilets, fetchDependency, dependencies, getDependencies)
+  const {
+    fetchPilets,
+    fetchDependency,
+    dependencies,
+    getDependencies,
+    createApi,
+    pilets = [],
+    loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency),
+  } = options;
+
+  return loadPilets(fetchPilets, loadPilet)
     .then(newModules => evalAll(createApi, pilets, newModules))
     .then(modules => cb(undefined, modules))
     .catch(error => cb(error, []));

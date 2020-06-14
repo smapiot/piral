@@ -8,6 +8,7 @@
 * Added `piral-configs` for configuration management (#238)
 * Added option to publish directly from an NPM registry (#239)
 * Added the `unload-pilet` event when `injectPilet` is used (#252)
+* Added `loadPilet` option to `piral-base`
 * Restructured the repository (#240)
 
 ## 0.11.6 (June 6, 2020)
