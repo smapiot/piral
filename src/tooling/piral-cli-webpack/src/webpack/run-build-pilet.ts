@@ -39,6 +39,7 @@ async function run(
     sourceMaps,
     contentHash,
     minify,
+    false,
   );
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: false,

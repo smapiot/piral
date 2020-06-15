@@ -23,7 +23,7 @@ async function run(
   });
 
   const otherConfigPath = resolve(root, defaultWebpackConfig);
-  const baseConfig = await getPiletConfig(root, entryModule, targetDir, externals, true, true, false, false);
+  const baseConfig = await getPiletConfig(root, entryModule, targetDir, externals, true, true, false, false, true);
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: true,
   });

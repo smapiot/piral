@@ -12,11 +12,13 @@ export async function getPiralConfig(
   sourceMaps = true,
   contentHash = true,
   minimize = true,
+  hmr = false,
   publicPath = '/',
   progress = false,
 ): Promise<webpack.Configuration> {
   const production = !develop;
   const piralPkg = getPackageData();
+  const defaultMain = hmr ? ['webpack-hot-middleware/client?name=piral'] : [];
 
   function getFileName() {
     const name = contentHash ? '[hash]' : develop ? 'dev' : 'prod';
@@ -29,7 +31,7 @@ export async function getPiralConfig(
     mode: develop ? 'development' : 'production',
 
     entry: {
-      main: [template],
+      main: [...defaultMain, template],
     },
 
     output: {
@@ -67,6 +69,7 @@ export async function getPiralConfig(
       ],
       progress,
       production,
+      hmr,
     ),
   };
 }

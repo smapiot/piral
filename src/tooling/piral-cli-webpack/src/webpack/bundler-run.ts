@@ -6,6 +6,12 @@ interface BuildResult {
   outDir: string;
 }
 
+function getOutput(assets: Record<string, any>) {
+  return Object.keys(assets)
+    .filter(m => assets[m].emitted)
+    .map(m => `/${m}`)[0];
+}
+
 export function runWebpack(wpConfig: webpack.Configuration) {
   const eventEmitter = new EventEmitter();
   const outDir = wpConfig.output.path;
@@ -16,41 +22,46 @@ export function runWebpack(wpConfig: webpack.Configuration) {
     },
   };
 
-  const bundle = () => new Promise<BuildResult>((resolve, reject) => {
-    const compiler = webpack(wpConfig, (err, stats) => {
-      if (err) {
-        console.error(err);
-        reject(err);
-      } else {
-        console.log(
-          stats.toString({
-            chunks: false,
-            colors: true,
-            usedExports: true,
-          }),
-        );
+  wpConfig.plugins.push({
+    apply(compiler) {
+      compiler.hooks.beforeCompile.tap('piral-cli', () => {
+        eventEmitter.emit('buildStart');
+      });
 
-        if (stats.hasErrors()) {
-          reject(stats.toJson());
-        } else {
-          resolve({
-            outFile: stats.compilation.outputPath.replace(outDir, ''),
-            outDir,
-          });
-        }
-      }
-    }) as webpack.Compiler;
-
-    compiler.hooks.beforeCompile.tap('piral-cli', () => {
-      eventEmitter.emit('buildStart');
-    });
-
-    compiler.hooks.done.tap('piral-cli', stats => {
-      mainBundle.name = stats.compilation.outputPath.replace(outDir, '');
-      mainBundle.entryAsset.hash = stats.hash;
-      eventEmitter.emit('bundled');
-    });
+      compiler.hooks.done.tap('piral-cli', stats => {
+        mainBundle.name = outDir + getOutput(stats.compilation.assets);
+        mainBundle.entryAsset.hash = stats.hash;
+        eventEmitter.emit('bundled');
+      });
+    },
   });
+
+  const bundle = () =>
+    new Promise<BuildResult>((resolve, reject) => {
+      webpack(wpConfig, (err, stats) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          console.log(
+            stats.toString({
+              chunks: false,
+              colors: true,
+              usedExports: true,
+            }),
+          );
+
+          if (stats.hasErrors()) {
+            reject(stats.toJson());
+          } else {
+            resolve({
+              outFile: getOutput(stats.compilation.assets),
+              outDir,
+            });
+          }
+        }
+      });
+    });
 
   return {
     bundle,

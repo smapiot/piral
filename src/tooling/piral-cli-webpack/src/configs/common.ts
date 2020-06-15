@@ -1,7 +1,7 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
 import { progress, logReset, log } from 'piral-cli/utils';
-import { RuleSetRule, ProgressPlugin, optimize } from 'webpack';
+import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
 
 export const extensions = ['.ts', '.tsx', '.js', '.json'];
 
@@ -26,7 +26,7 @@ export function getVariables(): Record<string, string> {
   }, {});
 }
 
-export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean) {
+export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, hmr = false) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -47,6 +47,10 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
         }
       }),
     );
+  }
+
+  if (hmr) {
+    otherPlugins.push(new HotModuleReplacementPlugin());
   }
 
   if (production) {

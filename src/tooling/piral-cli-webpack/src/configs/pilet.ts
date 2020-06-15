@@ -13,6 +13,7 @@ export async function getPiletConfig(
   sourceMaps = true,
   contentHash = true,
   minimize = true,
+  hmr = false,
   publicPath = '/',
   progress = false,
 ): Promise<webpack.Configuration> {
@@ -21,6 +22,7 @@ export async function getPiletConfig(
     ...getPackageData(),
     externals,
   };
+  const defaultMain = hmr ? [`webpack-hot-middleware/client?name=pilet-${piletPkg.name}`] : [];
 
   function getFileName() {
     const name = contentHash ? 'index.[hash]' : 'index';
@@ -33,7 +35,7 @@ export async function getPiletConfig(
     mode: develop ? 'development' : 'production',
 
     entry: {
-      main: [join(__dirname, '..', 'set-path'), template],
+      main: [...defaultMain, join(__dirname, '..', 'set-path'), template],
     },
 
     output: {
@@ -73,6 +75,7 @@ export async function getPiletConfig(
       ],
       progress,
       production,
+      hmr,
     ),
   };
 }
