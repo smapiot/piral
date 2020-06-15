@@ -3301,6 +3301,10 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/symlink-or-copy/-/symlink-or-copy-1.2.0.tgz#4151a81b4052c80bc2becbae09f3a9ec010a9c7a"
 
+"@types/systemjs@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@types/systemjs/-/systemjs-6.1.0.tgz#eb92e3181391b6f49b8310077fe65bfa3db9392a"
+
 "@types/tapable@*", "@types/tapable@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.5.tgz#9adbc12950582aa65ead76bffdf39fe0c27a3c02"
@@ -13084,6 +13088,10 @@ sync-disk-cache@^1.3.3:
     mkdirp "^0.5.0"
     rimraf "^2.2.8"
     username-sync "^1.0.2"
+
+systemjs@^6.3.2:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/systemjs/-/systemjs-6.3.2.tgz#2c3407f949260fdfb3b837c191869db933d1fe0f"
 
 tapable@^1.0.0, tapable@^1.1.3:
   version "1.1.3"
