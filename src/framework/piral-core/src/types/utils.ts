@@ -53,13 +53,9 @@ export interface PiralStoreDataEvent<TValue = any> {
 
 export interface PiralUnloadPiletEvent {
   /**
-   * The name of the pilet.
+   * The name of the pilet to be unloaded.
    */
   name: string;
-  /**
-   * The version of the pilet.
-   */
-  version: string;
 }
 
 declare module 'piral-base/lib/types' {

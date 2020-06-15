@@ -39,7 +39,6 @@ export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {
 
   ctx.emit('unload-pilet', {
     name: pilet.name,
-    version: pilet.version,
   });
 }
 
