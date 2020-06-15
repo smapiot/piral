@@ -9,6 +9,7 @@ export async function getPiletConfig(
   template: string,
   dist: string,
   externals: Array<string>,
+  piral: string,
   develop = false,
   sourceMaps = true,
   contentHash = true,
@@ -20,6 +21,9 @@ export async function getPiletConfig(
   const production = !develop;
   const piletPkg = {
     ...getPackageData(),
+    piral: {
+      name: piral,
+    },
     externals,
   };
   const defaultMain = hmr ? [`webpack-hot-middleware/client?name=pilet-${piletPkg.name}`] : [];

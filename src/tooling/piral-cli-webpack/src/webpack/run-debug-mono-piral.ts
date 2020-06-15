@@ -1,4 +1,3 @@
-import { LogLevels } from 'piral-cli';
 import { setStandardEnvs, progress } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -6,7 +5,7 @@ import { extendConfig } from '../helpers';
 import { getPiralConfig } from '../configs';
 import { defaultWebpackConfig } from '../constants';
 
-async function run(root: string, piral: string, externals: Array<string>, entryFiles: string, _logLevel: LogLevels) {
+async function run(root: string, piral: string, externals: Array<string>, entryFiles: string) {
   progress(`Preparing supplied Piral instance ...`);
 
   const outDir = resolve(root, 'dist', 'app');
@@ -33,7 +32,7 @@ async function run(root: string, piral: string, externals: Array<string>, entryF
 process.on('message', async msg => {
   switch (msg.type) {
     case 'start':
-      const result = await run(process.cwd(), msg.piral, msg.externals, msg.entryFiles, msg.logLevel).catch(error => {
+      const result = await run(process.cwd(), msg.piral, msg.externals, msg.entryFiles).catch(error => {
         process.send({
           type: 'fail',
           error: error?.message,

@@ -1,4 +1,3 @@
-import { LogLevels } from 'piral-cli';
 import { setStandardEnvs } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -6,24 +5,15 @@ import { getPiletConfig } from '../configs';
 import { extendConfig } from '../helpers';
 import { defaultWebpackConfig } from '../constants';
 
-async function run(
-  root: string,
-  piral: string,
-  _scopeHoist: boolean,
-  _autoInstall: boolean,
-  _cacheDir: string,
-  externals: Array<string>,
-  targetDir: string,
-  entryModule: string,
-  _logLevel: LogLevels,
-) {
+async function run(root: string, piral: string, externals: Array<string>, entryModule: string) {
   setStandardEnvs({
     piral,
     root,
   });
 
   const otherConfigPath = resolve(root, defaultWebpackConfig);
-  const baseConfig = await getPiletConfig(root, entryModule, targetDir, externals, true, true, false, false, true);
+  const dist = resolve(root, 'dist');
+  const baseConfig = await getPiletConfig(root, entryModule, dist, externals, piral, true, true, false, false, true);
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: true,
   });
@@ -50,17 +40,7 @@ process.on('message', async msg => {
 
       break;
     case 'start':
-      bundler = await run(
-        root,
-        msg.piral,
-        msg.scopeHoist,
-        msg.autoInstall,
-        msg.cacheDir,
-        msg.externals,
-        msg.targetDir,
-        msg.entryModule,
-        msg.logLevel,
-      ).catch(error => {
+      bundler = await run(root, msg.piral, msg.externals, msg.entryModule).catch(error => {
         process.send({
           type: 'fail',
           error: error?.message,

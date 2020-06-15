@@ -1,4 +1,3 @@
-import { LogLevels } from 'piral-cli';
 import { setStandardEnvs } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -9,14 +8,10 @@ import { defaultWebpackConfig } from '../constants';
 async function run(
   root: string,
   piral: string,
-  _scopeHoist: boolean,
-  _autoInstall: boolean,
   hmr: boolean,
-  _cacheDir: string,
   externals: Array<string>,
   publicUrl: string,
   entryFiles: string,
-  _logLevel: LogLevels,
 ) {
   setStandardEnvs({
     root,
@@ -54,18 +49,7 @@ process.on('message', async msg => {
 
       break;
     case 'start':
-      bundler = await run(
-        root,
-        msg.piral,
-        msg.scopeHoist,
-        msg.autoInstall,
-        msg.hmr,
-        msg.cacheDir,
-        msg.externals,
-        msg.publicUrl,
-        msg.entryFiles,
-        msg.logLevel,
-      ).catch(error => {
+      bundler = await run(root, msg.piral, msg.hmr, msg.externals, msg.publicUrl, msg.entryFiles).catch(error => {
         process.send({
           type: 'fail',
           error: error?.message,
