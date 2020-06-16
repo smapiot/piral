@@ -2,12 +2,13 @@ import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import { Html5EntryWebpackPlugin } from 'html5-entry-webpack-plugin';
 import { PiralInstanceWebpackPlugin } from 'piral-instance-webpack-plugin';
-import { getRules, getPlugins, extensions, getVariables, getPackageData } from './common';
+import { getRules, getPlugins, extensions, getVariables } from './common';
 
 export async function getPiralConfig(
   baseDir: string,
   template: string,
   dist: string,
+  externals: Array<string>,
   develop = false,
   sourceMaps = true,
   contentHash = true,
@@ -17,13 +18,9 @@ export async function getPiralConfig(
   progress = false,
 ): Promise<webpack.Configuration> {
   const production = !develop;
-  const piralPkg = getPackageData();
-  const defaultMain = hmr ? ['webpack-hot-middleware/client?name=piral'] : [];
-
-  function getFileName() {
-    const name = contentHash ? '[hash]' : develop ? 'dev' : 'prod';
-    return `index.${name}.js`;
-  }
+  const name = process.env.BUILD_PCKG_NAME;
+  const version = process.env.BUILD_PCKG_VERSION;
+  const defaultMain = hmr ? ['webpack-hot-middleware/client'] : [];
 
   return {
     devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
@@ -37,7 +34,8 @@ export async function getPiralConfig(
     output: {
       publicPath,
       path: dist,
-      filename: getFileName(),
+      filename: `index.${contentHash ? '.[hash]' : ''}.js`,
+      chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
     },
 
     resolve: {
@@ -63,7 +61,10 @@ export async function getPiralConfig(
     plugins: getPlugins(
       [
         new Html5EntryWebpackPlugin(),
-        new PiralInstanceWebpackPlugin(piralPkg, {
+        new PiralInstanceWebpackPlugin({
+          name,
+          version,
+          externals,
           variables: getVariables(),
         }),
       ],

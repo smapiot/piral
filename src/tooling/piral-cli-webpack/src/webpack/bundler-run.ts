@@ -17,6 +17,7 @@ export function runWebpack(wpConfig: webpack.Configuration) {
   const outDir = wpConfig.output.path;
   const mainBundle = {
     name: '',
+    requireRef: undefined,
     entryAsset: {
       hash: '',
     },
@@ -30,6 +31,7 @@ export function runWebpack(wpConfig: webpack.Configuration) {
 
       compiler.hooks.done.tap('piral-cli', stats => {
         mainBundle.name = outDir + getOutput(stats.compilation.assets);
+        mainBundle.requireRef = stats.compilation.outputOptions?.jsonpFunction?.replace('_chunks', '');
         mainBundle.entryAsset.hash = stats.hash;
         eventEmitter.emit('bundled');
       });

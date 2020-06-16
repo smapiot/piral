@@ -1,3 +1,4 @@
+import { PiletSchemaVersion } from 'piral-cli';
 import { setStandardEnvs } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -5,7 +6,13 @@ import { getPiletConfig } from '../configs';
 import { extendConfig } from '../helpers';
 import { defaultWebpackConfig } from '../constants';
 
-async function run(root: string, piral: string, externals: Array<string>, entryModule: string) {
+async function run(
+  root: string,
+  piral: string,
+  externals: Array<string>,
+  entryModule: string,
+  version: PiletSchemaVersion,
+) {
   setStandardEnvs({
     piral,
     root,
@@ -13,7 +20,19 @@ async function run(root: string, piral: string, externals: Array<string>, entryM
 
   const otherConfigPath = resolve(root, defaultWebpackConfig);
   const dist = resolve(root, 'dist');
-  const baseConfig = await getPiletConfig(root, entryModule, dist, externals, piral, true, true, false, false, true);
+  const baseConfig = await getPiletConfig(
+    root,
+    entryModule,
+    dist,
+    'index.js',
+    externals,
+    piral,
+    version,
+    true,
+    true,
+    false,
+    false,
+  );
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: true,
   });
@@ -40,7 +59,7 @@ process.on('message', async msg => {
 
       break;
     case 'start':
-      bundler = await run(root, msg.piral, msg.externals, msg.entryModule).catch(error => {
+      bundler = await run(root, msg.piral, msg.externals, msg.entryModule, msg.version).catch(error => {
         process.send({
           type: 'fail',
           error: error?.message,
@@ -55,7 +74,7 @@ process.on('message', async msg => {
               outHash: bundler.mainBundle.entryAsset.hash,
               outName: bundler.mainBundle.name.substr(bundler.options.outDir.length),
               args: {
-                requireRef: 'abc',
+                requireRef: bundler.mainBundle.requireRef,
                 version: msg.version,
                 root,
               },

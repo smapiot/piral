@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "bootstrap": "lerna clean --yes && lerna bootstrap",
-    "setup": "yarn bootstrap && yarn build && yarn bootstrap",
+    "setup": "yarn bootstrap",
     "build": "lerna run build",
     "build:docs": "piral build src/pages/docs/src/index.html --target dist/docs/index.html --type release",
     "watch:docs": "piral debug src/pages/docs/src/index.html",

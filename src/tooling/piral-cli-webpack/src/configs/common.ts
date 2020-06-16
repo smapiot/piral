@@ -5,13 +5,6 @@ import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } fro
 
 export const extensions = ['.ts', '.tsx', '.js', '.json'];
 
-export function getPackageData() {
-  return {
-    name: process.env.BUILD_PCKG_NAME,
-    version: process.env.BUILD_PCKG_VERSION,
-  };
-}
-
 export function getVariables(): Record<string, string> {
   return [
     'NODE_ENV',

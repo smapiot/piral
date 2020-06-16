@@ -1,37 +1,28 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
+import { PiletSchemaVersion } from 'piral-cli';
 import { PiletWebpackPlugin } from 'pilet-webpack-plugin';
 import { join } from 'path';
-import { getRules, getPlugins, extensions, getVariables, getPackageData } from './common';
+import { getRules, getPlugins, extensions, getVariables } from './common';
 
 export async function getPiletConfig(
   baseDir: string,
   template: string,
   dist: string,
+  filename: string,
   externals: Array<string>,
   piral: string,
+  schema: PiletSchemaVersion,
   develop = false,
   sourceMaps = true,
   contentHash = true,
   minimize = true,
-  hmr = false,
   publicPath = '/',
   progress = false,
 ): Promise<webpack.Configuration> {
   const production = !develop;
-  const piletPkg = {
-    ...getPackageData(),
-    piral: {
-      name: piral,
-    },
-    externals,
-  };
-  const defaultMain = hmr ? [`webpack-hot-middleware/client?name=pilet-${piletPkg.name}`] : [];
-
-  function getFileName() {
-    const name = contentHash ? 'index.[hash]' : 'index';
-    return `${name}.js`;
-  }
+  const name = process.env.BUILD_PCKG_NAME;
+  const version = process.env.BUILD_PCKG_VERSION;
 
   return {
     devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
@@ -39,13 +30,14 @@ export async function getPiletConfig(
     mode: develop ? 'development' : 'production',
 
     entry: {
-      main: [...defaultMain, join(__dirname, '..', 'set-path'), template],
+      main: [join(__dirname, '..', 'set-path'), template],
     },
 
     output: {
       publicPath,
       path: dist,
-      filename: getFileName(),
+      filename,
+      chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
     },
 
     resolve: {
@@ -73,13 +65,17 @@ export async function getPiletConfig(
 
     plugins: getPlugins(
       [
-        new PiletWebpackPlugin(piletPkg, {
+        new PiletWebpackPlugin({
+          name,
+          piral,
+          version,
+          externals,
+          schema,
           variables: getVariables(),
         }),
       ],
       progress,
       production,
-      hmr,
     ),
   };
 }

@@ -20,7 +20,7 @@ async function run(root: string, piral: string, externals: Array<string>, entryF
   });
 
   const otherConfigPath = resolve(root, defaultWebpackConfig);
-  const baseConfig = await getPiralConfig(root, entryFiles, outDir, true, true, false, false, true);
+  const baseConfig = await getPiralConfig(root, entryFiles, outDir, externals, true, true, false, false, true);
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: true,
   });

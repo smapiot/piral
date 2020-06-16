@@ -31,6 +31,7 @@ async function run(
     root,
     entryFiles,
     outDir,
+    externals,
     develop,
     sourceMaps,
     contentHash,

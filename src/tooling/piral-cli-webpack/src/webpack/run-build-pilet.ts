@@ -14,8 +14,9 @@ async function run(
   minify: boolean,
   externals: Array<string>,
   outDir: string,
+  outFile: string,
   entryModule: string,
-  _version: PiletSchemaVersion,
+  version: PiletSchemaVersion,
 ) {
   setStandardEnvs({
     production: true,
@@ -28,13 +29,14 @@ async function run(
     root,
     entryModule,
     outDir,
+    outFile,
     externals,
     piral,
+    version,
     true,
     sourceMaps,
     contentHash,
     minify,
-    false,
   );
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: false,
@@ -55,6 +57,7 @@ process.on('message', async msg => {
         msg.minify,
         msg.externals,
         msg.outDir,
+        msg.outFile,
         msg.entryModule,
         msg.version,
       ).catch(error => {
