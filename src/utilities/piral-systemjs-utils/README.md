@@ -30,11 +30,13 @@ The lib already comes with SystemJS as a dependency. There is nothing else requi
 import 'piral-systemjs-utils/vendor';
 ```
 
+The contents of the vendor bundle are listed below.
+
 Now you should actually register the shared components. This will add all the Piral-shared dependencies to SystemJS, which allows sharing across boundaries.
 
 ```ts
 import { extendSharedDependencies } from 'piral';
-import { registerSharedDependencies } from 'piral-systemjs-utils/vendor';
+import { registerSharedDependencies } from 'piral-systemjs-utils';
 
 registerSharedDependencies();
 ```
@@ -66,7 +68,7 @@ This is everything for setting up SystemJS in Piral.
 
 ### App Shell Authors
 
-Using the set up SystemJS import maps is simple. When your Piral instance is created supply the `loadPilet` and `requestPilets` functions from the helper library.
+Using the configured SystemJS import maps is simple. When your Piral instance is created supply the `loadPilet` and `requestPilets` functions from the helper library.
 
 An example:
 
@@ -90,6 +92,20 @@ By default, this will assume that all entries of the previously supplied import 
 Pilet authors don't need to know anything besides that the build system has support SystemJS. Therefore, like with the Piral instance, pilets need to be created via `piral-cli-webpack` or another bundler supporting SystemJS.
 
 (tbd)
+
+## Vendor Bundle
+
+The vendor bundle comes with the following SystemJS scripts:
+
+- The core library
+- AMD support
+- Support for named exports
+- Support for named registrations
+- Support for default exports / imports
+
+If you'd like to customize this list then we recommend to avoid importing `piral-systemjs-utils/vendor` and instead declaring your own imports.
+
+In most cases you should be fine with importing `piral-systemjs-utils/vendor`.
 
 ## License
 

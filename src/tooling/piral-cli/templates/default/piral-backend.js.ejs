@@ -1,4 +1,4 @@
-const request = require('request');
+const axios = require('axios').default;
 
 const mock = true;
 const headers = {
@@ -20,20 +20,11 @@ module.exports = function(_, req, res) {
         ]),
       });
     } else {
-      return new Promise(resolve => {
-        request('https://jsonplaceholder.typicode.com/posts', (err, _, content) => {
-          if (!err) {
-            resolve(
-              res({
-                headers,
-                content,
-              }),
-            );
-          } else {
-            resolve();
-          }
-        });
-      });
+      return axios.get('https://jsonplaceholder.typicode.com/posts')
+        .then(
+          ({ data }) => res({ headers, content: data }),
+          () => undefined,
+        );
     }
   }
 };

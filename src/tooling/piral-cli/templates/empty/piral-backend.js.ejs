@@ -1,4 +1,4 @@
-const request = require('request');
+const axios = require('axios').default;
 
 function isPiletQuery(content) {
   try {
@@ -15,18 +15,15 @@ const apiService = '';// 'https://feed.piral.cloud/api/v1/pilet/sample';
 module.exports = function(_, req, res) {
   if ((req.path === '/' && req.method === 'POST' && isPiletQuery(req.content))) {
     if (apiService) {
-      return new Promise(resolve => {
-        request.get(apiService, (_1, _2, body) => {
-          const response = res({
-            content: JSON.stringify({
-              data: {
-                pilets: JSON.parse(body).items,
-              },
-            }),
-          });
-          resolve(response);
-        });
-      });
+      return axios.get(apiService).then(({ data }) =>
+        res({
+          content: JSON.stringify({
+            data: {
+              pilets: data.items,
+            },
+          }),
+        }),
+      );
     } else {
       return res({
         content: JSON.stringify({
