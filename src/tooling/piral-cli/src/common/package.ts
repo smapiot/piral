@@ -128,8 +128,23 @@ export function readPiralPackage(root: string, name: string) {
   return readJson(path, 'package.json');
 }
 
-export function getPiralPackage(app: string, language: PiletLanguage, version: string, framework: Framework) {
+export function getPiralPackage(
+  app: string,
+  language: PiletLanguage,
+  version: string,
+  framework: Framework,
+  bundler?: string,
+) {
   const typings = framework === 'piral-base' ? {} : undefined;
+  const devDependencies = {
+    ...getDevDependencies(language, typings),
+    'piral-cli': `${version}`,
+  };
+
+  if (bundler && bundler !== 'none') {
+    devDependencies[`piral-cli-${bundler}`] = `${version}`;
+  }
+
   return {
     app,
     scripts: {
@@ -137,10 +152,7 @@ export function getPiralPackage(app: string, language: PiletLanguage, version: s
       build: 'piral build',
     },
     pilets: getPiletsInfo({}),
-    devDependencies: {
-      ...getDevDependencies(language, typings),
-      'piral-cli': `${version}`,
-    },
+    devDependencies,
   };
 }
 
@@ -369,6 +381,7 @@ export async function patchPiletPackage(
   version: string,
   piralInfo: any,
   language?: PiletLanguage,
+  bundler?: string,
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
   const piralDependencies = piralInfo.devDependencies || {};
@@ -408,6 +421,11 @@ export async function patchPiletPackage(
     [name]: `${version || piralInfo.version}`,
     'piral-cli': `^${cliVersion}`,
   };
+
+  if (bundler && bundler !== 'none') {
+    devDependencies[`piral-cli-${bundler}`] = `^${cliVersion}`;
+  }
+
   await updateExistingJson(root, 'package.json', {
     piral,
     devDependencies,

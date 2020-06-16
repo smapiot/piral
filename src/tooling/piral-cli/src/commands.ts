@@ -11,6 +11,7 @@ import {
   clientTypeKeys,
   schemaKeys,
   fromKeys,
+  bundlerKeys,
 } from './helpers';
 import {
   ToolCommand,
@@ -253,6 +254,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('npm-client', clientTypeKeys)
         .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
         .default('npm-client', apps.newPiralDefaults.npmClient)
+        .choices('bundler', bundlerKeys)
+        .describe('bundler', 'Sets the default bundler to install.')
+        .default('bundler', apps.newPiralDefaults.bundler)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -269,6 +273,7 @@ const allCommands: Array<ToolCommand<any>> = [
         template: args.template as TemplateType,
         logLevel: args.logLevel as LogLevels,
         npmClient: args.npmClient as NpmClientType,
+        bundler: args.bundler as string,
       });
     },
   },
@@ -590,6 +595,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('npm-client', clientTypeKeys)
         .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
         .default('npm-client', apps.newPiletDefaults.npmClient)
+        .choices('bundler', bundlerKeys)
+        .describe('bundler', 'Sets the default bundler to install.')
+        .default('bundler', apps.newPiletDefaults.bundler)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -605,6 +613,7 @@ const allCommands: Array<ToolCommand<any>> = [
         install: args.install as boolean,
         template: args.template as TemplateType,
         npmClient: args.npmClient as NpmClientType,
+        bundler: args.bundler as string,
       });
     },
   },

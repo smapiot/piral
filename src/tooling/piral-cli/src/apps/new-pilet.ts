@@ -37,6 +37,7 @@ export interface NewPiletOptions {
   template?: TemplateType;
   logLevel?: LogLevels;
   npmClient?: NpmClientType;
+  bundler?: string;
 }
 
 export const newPiletDefaults: NewPiletOptions = {
@@ -49,6 +50,7 @@ export const newPiletDefaults: NewPiletOptions = {
   template: 'default',
   logLevel: LogLevels.info,
   npmClient: undefined,
+  bundler: 'none',
 };
 
 function isLocalPackage(name: string, type: PackageType, hadVersion: boolean) {
@@ -72,6 +74,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     install = newPiletDefaults.install,
     template = newPiletDefaults.template,
     logLevel = newPiletDefaults.logLevel,
+    bundler = newPiletDefaults.bundler,
   } = options;
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
@@ -145,7 +148,7 @@ always-auth=true`,
 
     progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, language, bundler);
     await copyPiralFiles(root, packageName, ForceOverwrite.yes);
 
     if (install) {

@@ -9,6 +9,8 @@
 * Added option to publish directly from an NPM registry (#239)
 * Added the `unload-pilet` event when `injectPilet` is used (#252)
 * Added `loadPilet` option to `piral-base`
+* Added option to specify the default bundler on `piral new`
+* Added option to specify the default bundler on `pilet new`
 * Restructured the repository (#240)
 
 ## 0.11.6 (June 6, 2020)
