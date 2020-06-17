@@ -3,6 +3,7 @@ import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import { callDebugPiralFromMonoRepo, callPiletDebug } from '../bundler';
 import { LogLevels, PiletSchemaVersion } from '../types';
 import {
+  checkExistingDirectory,
   retrievePiletData,
   debugPiletApi,
   openBrowser,
@@ -118,6 +119,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const allEntries = multi ? await matchAny(baseDir, entryList) : entryList;
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
+  if (krasConfig.sources === undefined) {
+    krasConfig.sources = [];
+  }
+
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
   }
@@ -133,14 +138,20 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       );
       const externals = Object.keys(peerDependencies);
       const cache = resolve(root, cacheDir);
+      const mocks = join(targetDir, 'mocks');
+      const exists = await checkExistingDirectory(mocks);
 
       if (fresh) {
         progress('Removing output directory ...');
         await removeDirectory(cache);
       }
 
-      if (krasConfig.directory === undefined) {
-        krasConfig.directory = join(targetDir, 'mocks');
+      if (exists) {
+        if (krasConfig.directory === undefined) {
+          krasConfig.directory = mocks;
+        }
+
+        krasConfig.sources.push(mocks);
       }
 
       const bundler = await callPiletDebug({

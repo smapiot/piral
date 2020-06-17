@@ -20,7 +20,7 @@ export async function getPiralConfig(
   const production = !develop;
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
-  const defaultMain = hmr ? ['webpack-hot-middleware/client'] : [];
+  const defaultMain = hmr ? [`webpack-hot-middleware/client?path=http://localhost:12345/__webpack_hmr`] : [];
 
   return {
     devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
