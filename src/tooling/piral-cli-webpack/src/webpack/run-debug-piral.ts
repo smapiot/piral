@@ -1,4 +1,4 @@
-import { setStandardEnvs } from 'piral-cli/utils';
+import { setStandardEnvs, getFreePort } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
 import { getPiralConfig } from '../configs';
@@ -22,7 +22,19 @@ async function run(
 
   const otherConfigPath = resolve(root, defaultWebpackConfig);
   const dist = resolve(root, 'dist');
-  const baseConfig = await getPiralConfig(root, entryFiles, dist, externals, true, true, false, false, hmr, publicUrl);
+  const hmrPort = hmr ? await getFreePort(62123) : 0;
+  const baseConfig = await getPiralConfig(
+    root,
+    entryFiles,
+    dist,
+    externals,
+    true,
+    true,
+    false,
+    false,
+    publicUrl,
+    hmrPort,
+  );
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: true,
   });

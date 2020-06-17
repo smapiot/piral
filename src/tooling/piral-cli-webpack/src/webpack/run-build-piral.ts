@@ -36,7 +36,6 @@ async function run(
     sourceMaps,
     contentHash,
     minify,
-    false,
     publicUrl,
   );
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
