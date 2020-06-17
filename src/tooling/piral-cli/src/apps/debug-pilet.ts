@@ -52,6 +52,7 @@ const injectorName = resolve(__dirname, '../injectors/pilet.js');
 interface AppInfo {
   emulator: boolean;
   appFile: string;
+  appVersion: string;
   externals: Array<string>;
   piral: string;
 }
@@ -73,6 +74,23 @@ async function getOrMakeAppDir({ emulator, piral, externals, appFile }: AppInfo,
   }
 
   return dirname(appFile);
+}
+
+function checkSanity(pilets: Array<AppInfo>) {
+  for (let i = 1; i < pilets.length; i++) {
+    const previous = pilets[i - 1];
+    const current = pilets[i];
+
+    if (previous.piral !== current.piral) {
+      return log('piletMultiDebugAppShellDifferent_0301', previous.piral, current.piral);
+    } else if (previous.appVersion !== current.appVersion) {
+      return log('piletMultiDebugAppShellVersions_0302', previous.appVersion, current.appVersion);
+    } else if (previous.externals.length !== current.externals.length) {
+      return log('piletMultiDebugExternalsDifferent_0303', previous.externals, current.externals);
+    } else if (previous.externals.some(m => !current.externals.includes(m))) {
+      return log('piletMultiDebugExternalsDifferent_0303', previous.externals, current.externals);
+    }
+  }
 }
 
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
@@ -143,6 +161,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       return {
         emulator,
         appFile,
+        appVersion: appPackage.version,
         externals,
         piral: appPackage.name,
         bundler,
@@ -150,6 +169,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       };
     }),
   );
+
+  // sanity check see #250
+  checkSanity(pilets);
 
   const appDir = await getOrMakeAppDir(pilets[0], logLevel);
 

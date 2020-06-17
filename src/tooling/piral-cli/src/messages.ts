@@ -2055,3 +2055,81 @@ export function pluginCouldNotBeLoaded_0205(pluginPath: string, ex: any): QuickM
 export function apiBundlerInvalid_0206(name: string): QuickMessage {
   return [LogLevels.warning, '0206', `Invalid argument for "${name}" - skipped bundler.`];
 }
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The declared Piral instances are different.
+ *
+ * @abstract
+ * In a multi-pilet debugging scenario where one (or more) pilets
+ * declared a different Piral instance in their package.json this
+ * warning appears. It should remind you that only the Piral instance
+ * from the first found pilet will be used.
+ *
+ * Usually the warning is an indicator for you that something is not
+ * right. It could be that an invalid pilet, or a wrong folder or
+ * repository has been mixed in your multi-pilet debugging source set.
+ *
+ * @example
+ * Have a look at the package.json of each pilet. Find the differences
+ * and either re-align them, improve your multi-pilet selection, or
+ * remove the invalid pilet.
+ */
+export function piletMultiDebugAppShellDifferent_0301(expected: string, actual: string): QuickMessage {
+  return [LogLevels.warning, '0301', `Different app shells found: "${expected}" and "${actual}".`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The used Piral instance versions are different.
+ *
+ * @abstract
+ * In a multi-pilet debugging scenario where one (or more) pilets
+ * declared the same Piral instance in their package.json, but the
+ * found Piral instances have different versions, this warning appears.
+ * It should remind you that only the Piral instance from the first
+ * found pilet will be used.
+ *
+ * Usually the warning is an indicator for you that something is not
+ * right. It could be that some pilet(s) have not been properly set up
+ * or updated.
+ *
+ * @example
+ * Have a look at the package.json of each pilet. Find the differences
+ * and either re-align them, improve your multi-pilet selection, or
+ * remove the invalid pilet.
+ */
+export function piletMultiDebugAppShellVersions_0302(expected: string, actual: string): QuickMessage {
+  return [LogLevels.warning, '0302', `Different app shell versions found: "${expected}" and "${actual}".`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The declared shared dependencies are different.
+ *
+ * @abstract
+ * In a multi-pilet debugging scenario where one (or more) pilets
+ * declared a different set of externals in their package.json this
+ * warning appears. It should remind you that only the externals from
+ * the first found pilet will be used.
+ *
+ * Usually the warning is an indicator for you that something is not
+ * right. It could be that some pilet(s) have not been properly set up
+ * or updated.
+ *
+ * @example
+ * Have a look at the package.json of each pilet. Find the differences
+ * and either re-align them, improve your multi-pilet selection, or
+ * remove the invalid pilet.
+ */
+export function piletMultiDebugExternalsDifferent_0303(expected: Array<string>, actual: Array<string>): QuickMessage {
+  const el = expected.join(', ');
+  const al = actual.join(', ');
+  return [LogLevels.warning, '0303', `Different shared dependencies encountered: "${el}" and "${al}".`];
+}
