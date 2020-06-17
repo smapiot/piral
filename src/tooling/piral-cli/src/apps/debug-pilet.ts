@@ -21,7 +21,7 @@ import {
 export interface DebugPiletOptions {
   logLevel?: LogLevels;
   cacheDir?: string;
-  entry?: string;
+  entry?: string | Array<string>;
   app?: string;
   fresh?: boolean;
   open?: boolean;
@@ -112,9 +112,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   progress('Reading configuration ...');
   const krasConfig = readKrasConfig({ port }, krasrc);
   const api = debugPiletApi;
-  const multi = entry.indexOf('*') !== -1;
-  log('generalDebug_0003', `Looking for ${multi ? 'multi' : 'single'}) "${entry}" in "${baseDir}".`);
-  const allEntries = multi ? await matchAny(baseDir, entry) : [entry];
+  const entryList = Array.isArray(entry) ? entry : [entry];
+  const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
+  log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${baseDir}".`);
+  const allEntries = multi ? await matchAny(baseDir, entryList) : entryList;
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (allEntries.length === 0) {

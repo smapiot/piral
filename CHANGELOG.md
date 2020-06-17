@@ -11,6 +11,8 @@
 * Added `loadPilet` option to `piral-base`
 * Added option to specify the default bundler on `piral new`
 * Added option to specify the default bundler on `pilet new`
+* Added a sanity check for multi-pilet debugging (#250)
+* Added the ability to pass in multiple sources for `pilet debug`
 * Restructured the repository (#240)
 
 ## 0.11.6 (June 6, 2020)

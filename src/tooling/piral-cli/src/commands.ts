@@ -345,7 +345,7 @@ const allCommands: Array<ToolCommand<any>> = [
     name: 'debug-pilet',
     alias: ['watch-pilet', 'debug', 'watch'],
     description: 'Starts the debugging process for a pilet using a Piral instance.',
-    arguments: ['[source]'],
+    arguments: ['[source..]'],
     // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
     flags(argv: any) {
       return argv
