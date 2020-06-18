@@ -49,6 +49,7 @@ export async function getPiralConfig(
       minimize,
       minimizer: [
         new TerserPlugin({
+          extractComments: false,
           terserOptions: {
             warnings: false,
             ie8: true,

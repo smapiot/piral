@@ -52,6 +52,7 @@ export async function getPiletConfig(
       minimize,
       minimizer: [
         new TerserPlugin({
+          extractComments: false,
           terserOptions: {
             warnings: false,
             ie8: true,

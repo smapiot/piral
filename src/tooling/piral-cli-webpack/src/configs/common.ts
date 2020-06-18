@@ -13,8 +13,12 @@ export function getVariables(): Record<string, string> {
     'BUILD_PCKG_VERSION',
     'BUILD_PCKG_NAME',
     'SHARED_DEPENDENCIES',
+    'DEBUG_PIRAL',
+    'DEBUG_PILET',
   ].reduce((prev, curr) => {
-    prev[curr] = process.env[curr];
+    if (curr in process.env) {
+      prev[curr] = process.env[curr];
+    }
     return prev;
   }, {});
 }
