@@ -11,7 +11,10 @@ import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types'
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 
 function getPiralPath(root: string, name: string) {
-  return resolve(root, 'node_modules', name);
+  const path = require.resolve(`${name}/package.json`, {
+    paths: [root],
+  });
+  return dirname(path);
 }
 
 function getDependencyVersion(

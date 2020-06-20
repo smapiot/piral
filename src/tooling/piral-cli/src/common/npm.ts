@@ -10,6 +10,11 @@ import { PackageType, NpmClientType } from '../types';
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
 
+function isProjectReference(name: string) {
+  const target = resolve(name, 'package.json');
+  return checkExists(target);
+}
+
 export function detectPnpm(root: string) {
   return new Promise(res => {
     access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, noPnpmLock => {
@@ -204,6 +209,12 @@ export async function dissectPackageName(
       fail('scaffoldPathDoesNotExist_0030', fullPath);
     }
 
+    const isReference = await isProjectReference(fullPath);
+
+    if (isReference) {
+      fail('projectReferenceNotSupported_0032', fullPath);
+    }
+
     return [fullPath, 'latest', false, 'file'];
   } else {
     const index = fullName.indexOf('@', 1);
@@ -243,7 +254,13 @@ export async function getCurrentPackageDetails(
     const exists = await checkExists(fullPath);
 
     if (!exists) {
-      throw new Error(`Could not find "${fullPath}" for upgrading. Aborting.`);
+      fail('upgradePathDoesNotExist_0031', fullPath);
+    }
+
+    const isReference = await isProjectReference(fullPath);
+
+    if (isReference) {
+      fail('projectReferenceNotSupported_0032', fullPath);
     }
 
     return [fullPath, getFilePackageVersion(fullPath, root)];
@@ -275,10 +292,16 @@ export function combinePackageRef(name: string, version: string, type: PackageTy
 export async function getPackageName(root: string, name: string, type: PackageType) {
   switch (type) {
     case 'file':
-      const p = resolve(process.cwd(), name);
-      const s = createReadStream(p);
-      const i = await inspectPackage(s);
-      return i.name;
+      const originalPackageJson = await readJson(name, 'package.json');
+
+      if (!originalPackageJson.name) {
+        const p = resolve(process.cwd(), name);
+        const s = createReadStream(p);
+        const i = await inspectPackage(s);
+        return i.name;
+      }
+
+      return originalPackageJson.name;
     case 'git':
       const pj = await readJson(root, 'package.json');
       const dd = pj.devDependencies || {};

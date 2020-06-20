@@ -419,6 +419,56 @@ export function scaffoldPathDoesNotExist_0030(fullPath: string): QuickMessage {
  * @kind Error
  *
  * @summary
+ * Cannot not find the given full path to successfully upgrade the pilet.
+ *
+ * @abstract
+ * The provided Piral instance resolves to a local file, however, this file cannot be found from the
+ * current directory. Either specify an absolute path or make sure that the relative path works for
+ * the current working directory.
+ *
+ * Since no Piral instance can be resolved the upgrade process needs to be stopped.
+ *
+ * @see
+ * - [Current Working Directory](https://en.wikipedia.org/wiki/Working_directory)
+ *
+ * @example
+ * ...
+ */
+export function upgradePathDoesNotExist_0031(fullPath: string): QuickMessage {
+  return [LogLevels.error, '0031', `Could not find "${fullPath}" for upgrading.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Right now project references are not supported. Please specify a tarball.
+ *
+ * @abstract
+ * The provided Piral instance resolves to a local project directory. Instead,
+ * an already prepared tarball (using "piral build") has been expected.
+ *
+ * In the future we may change this and support direct project references, too,
+ * however, right now you'll need to first prepare your Piral instance by
+ * running `piral build`. Obviously, we could run that for you, too, but we would
+ * not know what options you may want to use.
+ *
+ * Since no Piral instance can be resolved the command needs to be aborted.
+ *
+ * @see
+ * - [Current Working Directory](https://en.wikipedia.org/wiki/Working_directory)
+ *
+ * @example
+ * ...
+ */
+export function projectReferenceNotSupported_0032(fullPath: string): QuickMessage {
+  return [LogLevels.error, '0032', `Expected a tarball, but found a project at "${fullPath}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * The provided target must be an existing directory containing a package.json.
  *
  * @abstract
