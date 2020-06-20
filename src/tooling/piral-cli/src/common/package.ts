@@ -10,13 +10,6 @@ import { PiletLanguage, ForceOverwrite } from './enums';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 
-function getPiralPath(root: string, name: string) {
-  const path = require.resolve(`${name}/package.json`, {
-    paths: [root],
-  });
-  return dirname(path);
-}
-
 function getDependencyVersion(
   name: string,
   devDependencies: Record<string, string | true>,
@@ -88,6 +81,13 @@ async function getMatchingFiles(
       targetPath,
     },
   ];
+}
+
+export function getPiralPath(root: string, name: string) {
+  const path = require.resolve(`${name}/package.json`, {
+    paths: [root],
+  });
+  return dirname(path);
 }
 
 export function findPackageRoot(pck: string, baseDir: string) {

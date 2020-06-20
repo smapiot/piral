@@ -39,13 +39,27 @@ export function detectYarn(root: string) {
   });
 }
 
-export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
-  log('generalDebug_0003', 'Trying to get defined client from Lerna ...');
-  const file = await findFile(root, 'lerna.json');
+export async function getLernaConfigPath(root: string) {
+  log('generalDebug_0003', 'Trying to get the configuration file for Lerna ...');
+  const file = findFile(root, 'lerna.json');
 
   if (file) {
     log('generalDebug_0003', `Found Lerna config in "${file}".`);
+    return file;
+  }
 
+  return undefined;
+}
+
+export async function detectMonorepo(root: string) {
+  const file = await getLernaConfigPath(root);
+  return file !== undefined;
+}
+
+export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
+  const file = await getLernaConfigPath(root);
+
+  if (file) {
     try {
       return require(file).npmClient;
     } catch (err) {
@@ -97,6 +111,11 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
   }
 
   return selected;
+}
+
+export function bootstrapMonorepo(target = '.') {
+  const c = require(`./clients/lerna`);
+  return c.bootstrap(target);
 }
 
 export function installDependencies(client: NpmClientType, target = '.'): Promise<string> {
@@ -279,6 +298,17 @@ export async function getCurrentPackageDetails(
   }
 
   return [combinePackageRef(sourceName, desired, 'registry'), desired];
+}
+
+export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean) {
+  if (type === 'registry' && !hadVersion) {
+    try {
+      require.resolve(`${name}/package.json`);
+      return true;
+    } catch {}
+  }
+
+  return false;
 }
 
 export function combinePackageRef(name: string, version: string, type: PackageType) {
