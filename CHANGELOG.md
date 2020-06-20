@@ -13,6 +13,7 @@
 * Added option to specify the default bundler on `pilet new`
 * Added a sanity check for multi-pilet debugging (#250)
 * Added the ability to pass in multiple sources for `pilet debug`
+* Added support for scoped piral-cli plugins (#254)
 * Extended the multi-debug capability of `pilet debug` (#250)
 * Improved mono repo support for `pilet new` (#248)
 * Improved mono repo support for `pilet upgrade` (#247)
