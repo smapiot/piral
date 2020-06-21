@@ -51,11 +51,6 @@ export async function getLernaConfigPath(root: string) {
   return undefined;
 }
 
-export async function detectMonorepo(root: string) {
-  const file = await getLernaConfigPath(root);
-  return file !== undefined;
-}
-
 export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
   const file = await getLernaConfigPath(root);
 
@@ -111,6 +106,17 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
   }
 
   return selected;
+}
+
+export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
+  const c = require(`./clients/npm`);
+  const details = await c.listPackage(refName, root);
+  return details?.dependencies[refName]?.extraneous ?? false;
+}
+
+export async function detectMonorepo(root: string) {
+  const file = await getLernaConfigPath(root);
+  return file !== undefined;
 }
 
 export function bootstrapMonorepo(target = '.') {

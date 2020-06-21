@@ -26,6 +26,7 @@ import {
   getPiralPath,
   detectMonorepo,
   bootstrapMonorepo,
+  isMonorepoPackageRef,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -80,6 +81,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       fail('invalidPiralReference_0043');
     }
 
+    const monorepoRef = await isMonorepoPackageRef(sourceName, baseDir);
     const [packageRef, packageVersion] = await getCurrentPackageDetails(
       baseDir,
       sourceName,
@@ -89,9 +91,11 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     );
     const originalFiles = await getFileStats(root, sourceName);
 
-    progress(`Updating NPM package to %s ...`, packageRef);
-
-    await installPackage(npmClient, packageRef, root, '--no-save');
+    if (!monorepoRef) {
+      // only install the latest if the shell does come from remote
+      progress(`Updating NPM package to %s ...`, packageRef);
+      await installPackage(npmClient, packageRef, root, '--no-save');
+    }
 
     const piralInfo = await readPiralPackage(root, sourceName);
 

@@ -142,7 +142,7 @@ always-auth=true`,
 
     progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, language, bundler);
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler });
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs

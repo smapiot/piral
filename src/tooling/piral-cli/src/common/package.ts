@@ -383,24 +383,28 @@ export async function patchPiletPackage(
   name: string,
   version: string,
   piralInfo: any,
-  language?: PiletLanguage,
-  bundler?: string,
+  newInfo?: { language: PiletLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
-  const piralDependencies = piralInfo.devDependencies || {};
-  const typeDependencies = language !== undefined ? getDevDependencies(language) : {};
   const { externals, ...info } = getPiletsInfo(piralInfo);
   const piral = {
     comment: 'Keep this section to use the Piral CLI.',
     name,
   };
-  const allExternals = [...externals, ...coreExternals];
-  const scripts = {
-    start: 'pilet debug',
-    build: 'pilet build',
-    upgrade: 'pilet upgrade',
-    ...info.scripts,
+  const piralDependencies = {
+    ...piralInfo.devDependencies,
+    ...piralInfo.dependencies,
   };
+  const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
+  const allExternals = [...externals, ...coreExternals];
+  const scripts = newInfo
+    ? {
+        start: 'pilet debug',
+        build: 'pilet build',
+        upgrade: 'pilet upgrade',
+        ...info.scripts,
+      }
+    : info.scripts;
   const peerDependencies = {
     ...allExternals.reduce((deps, name) => {
       deps[name] = '*';
@@ -418,15 +422,25 @@ export async function patchPiletPackage(
       return deps;
     }, {}),
     ...allExternals.filter(isValidDependency).reduce((deps, name) => {
-      deps[name] = piralDependencies[name] || 'latest';
+      const version = piralDependencies[name];
+
+      if (version || newInfo) {
+        // set only if we have an explicit version or we are in the scaffolding case
+        deps[name] = version || 'latest';
+      }
+
       return deps;
     }, {}),
     [name]: `${version || piralInfo.version}`,
-    'piral-cli': `^${cliVersion}`,
   };
 
-  if (bundler && bundler !== 'none') {
-    devDependencies[`piral-cli-${bundler}`] = `^${cliVersion}`;
+  if (newInfo) {
+    const bundler = newInfo.bundler;
+    devDependencies['piral-cli'] = `^${cliVersion}`;
+
+    if (bundler && bundler !== 'none') {
+      devDependencies[`piral-cli-${bundler}`] = `^${cliVersion}`;
+    }
   }
 
   await updateExistingJson(root, 'package.json', {
