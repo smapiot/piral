@@ -1,4 +1,4 @@
-const axios = require('axios').default;
+const https = require('https');
 
 const mock = true;
 const headers = {
@@ -20,11 +20,17 @@ module.exports = function(_, req, res) {
         ]),
       });
     } else {
-      return axios.get('https://jsonplaceholder.typicode.com/posts')
-        .then(
-          ({ data }) => res({ headers, content: data }),
-          () => undefined,
-        );
+      return new Promise((resolve, reject) => {
+        const fetch = https.get('https://jsonplaceholder.typicode.com/posts', response => {
+          const parts = [];
+
+          response.on('data', chunk => parts.push(chunk));
+
+          response.on('end', () => resolve(res({ headers, content: Buffer.concat(parts) })));
+        });
+
+        fetch.on('error', err => reject(err));
+      });
     }
   }
 };

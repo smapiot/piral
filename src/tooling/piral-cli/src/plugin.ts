@@ -70,7 +70,7 @@ async function getAllPlugins(rootDir: string): Promise<Array<string>> {
         const files = await listDirectory(path);
         await fillPlugins(
           files.filter(isPlugin).map(m => join(path, m)),
-          pluginPaths,
+          plugins,
         );
       }),
     ]);
