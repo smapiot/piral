@@ -4,10 +4,14 @@ Piral is developed as a monorepo.
 
 ## Available Sources
 
+- [converters](./converters/README.md) contains all the published converter plugins
+- [framework](./framework/README.md) contains the core framework packages
 - [initializers](./initializers/README.md) provides available NPM initializers
-- [packages](./packages/README.md) contains all the published packages
 - [pages](./pages/README.md) has the code for the basic Piral websites
+- [plugins](./plugins/README.md) contains all the published pilet API plugins
 - [samples](./samples/README.md) has example applications for different parts of the solution
+- [tooling](./tooling/README.md) contains the Piral CLI and some plugin packages
+- [utilities](./utilities/README.md) has some Node.js utility packages
 
 ## Development of Piral
 

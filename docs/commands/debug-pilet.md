@@ -7,13 +7,13 @@ Starts the debugging process for a pilet using a Piral instance.
 From the command line:
 
 ```sh
-pb debug-pilet [source]
+pb debug-pilet [source..]
 ```
 
 Alternative:
 
 ```sh
-pilet debug [source]
+pilet debug [source..]
 ```
 
 ## Aliases

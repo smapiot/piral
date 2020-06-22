@@ -1,11 +1,7 @@
 module.exports = {
   collectCoverage: true,
-  setupFiles: [
-    './test/setup.ts',
-  ],
-  roots: [
-    'src/packages/',
-  ],
+  setupFiles: ['./tools/test-setup.js'],
+  roots: ['src/'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.jsx?$': 'babel-jest',
@@ -19,5 +15,5 @@ module.exports = {
     },
   },
   testURL: 'http://localhost',
-  verbose: true
+  verbose: true,
 };

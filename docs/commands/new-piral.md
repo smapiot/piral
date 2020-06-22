@@ -111,6 +111,14 @@ Sets the NPM client to be used when scaffolding.
 - Choices: `"npm"`, `"pnpm"`, `"yarn"`
 - Default: `undefined`
 
+### `--bundler`
+
+Sets the default bundler to install.
+
+- Type: `string`
+- Choices: `"none"`, `"parcel"`, `"webpack"`
+- Default: `"none"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

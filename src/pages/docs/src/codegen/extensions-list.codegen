@@ -1,6 +1,6 @@
 const { readFileSync } = require('fs');
 const { basename, resolve } = require('path');
-const { getPluginTypes, getPluginCategory, getPluginImage } = require('./paths');
+const { getPluginTypes, getPluginCategory, getPluginImage, getPackageRoot } = require('./paths');
 
 function transformUpper(str) {
   return str[0].toUpperCase() + str.substr(1);
@@ -12,7 +12,8 @@ module.exports = function() {
   const children = getPluginTypes().map(file => {
     const name = basename(file).replace('.json', '');
     const image = getPluginImage(name);
-    const dest = resolve(__dirname, '..', '..', '..', '..', 'packages', name, 'package.json');
+    const packageRoot = getPackageRoot(name);
+    const dest = resolve(packageRoot, 'package.json');
     const data = JSON.parse(readFileSync(dest, 'utf8'));
     const category = getPluginCategory(data);
     this.addDependency(dest, { includedInParent: true });

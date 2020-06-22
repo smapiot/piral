@@ -1,0 +1,51 @@
+const https = require('https');
+
+function isPiletQuery(content) {
+  try {
+    const q = JSON.parse(content).query.replace(/\s+/g, ' ');
+    return q.indexOf('query initialData { pilets {') !== -1;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Place a script here to "redirect" a standard API to some GraphQL.
+const apiService = ''; // 'https://feed.piral.cloud/api/v1/pilet/sample';
+
+module.exports = function(_, req, res) {
+  if (req.path === '/' && req.method === 'POST' && isPiletQuery(req.content)) {
+    if (apiService) {
+      return new Promise((resolve, reject) => {
+        const fetch = https.get(apiService, response => {
+          const parts = [];
+
+          response.on('data', chunk => parts.push(chunk));
+
+          response.on('end', () => {
+            const data = JSON.parse(Buffer.concat(parts).toString('utf8'));
+
+            resolve(
+              res({
+                content: JSON.stringify({
+                  data: {
+                    pilets: data.items,
+                  },
+                }),
+              }),
+            );
+          });
+        });
+
+        fetch.on('error', err => reject(err));
+      });
+    } else {
+      return res({
+        content: JSON.stringify({
+          data: {
+            pilets: [],
+          },
+        }),
+      });
+    }
+  }
+};

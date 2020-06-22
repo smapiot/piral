@@ -1,10 +1,8 @@
 const { resolve } = require('path');
 const { readFileSync } = require('fs');
-const { getPluginTypes, getName, generateFile, generated, generatedName, getPluginImage } = require('./paths');
+const { getPluginTypes, getName, generateFile, generated, generatedName, getPluginImage, getPackageRoot } = require('./paths');
 const { render } = require('./markdown');
 const { docRef } = require('./utils');
-
-const packages = resolve(__dirname, '..', '..', '..', '..', 'packages');
 
 function getRoute(name) {
   return (name && `/reference/plugins/${name}/:tab?`) || '';
@@ -19,8 +17,9 @@ module.exports = function() {
       const type = readFileSync(file, 'utf8');
       const name = getName(file);
       const image = getPluginImage(name);
-      const readme = resolve(packages, name, 'README.md');
-      const packageJson = resolve(packages, name, 'package.json');
+      const pluginRoot = getPackageRoot(name);
+      const readme = resolve(pluginRoot, 'README.md');
+      const packageJson = resolve(pluginRoot, 'package.json');
       const plugin = require(packageJson);
       const peerDepNames = Object.keys(plugin.peerDependencies || {}).filter(m => !standardPeerDeps.includes(m));
       const peerDependencies =

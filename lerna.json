@@ -1,9 +1,13 @@
 {
   "packages": [
+    "src/converters/*",
+    "src/framework/*",
     "src/initializers/*",
-    "src/packages/*",
+    "src/pages/*",
+    "src/plugins/*",
     "src/samples/*",
-    "src/pages/*"
+    "src/tooling/*",
+    "src/utilities/*"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
