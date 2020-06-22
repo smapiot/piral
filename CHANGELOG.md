@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.11.8 (tbd)
+
+* Updated documentation layout (#206)
+
 ## 0.11.7 (June 22, 2020)
 
 * Added new optional plugin `piral-solid` for Solid (#231)
