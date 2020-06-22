@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.11.7 (tbd)
+## 0.11.7 (June 22, 2020)
 
 * Added new optional plugin `piral-solid` for Solid (#231)
 * Added `bundler` to `.piralrc` options (#237)
