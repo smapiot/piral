@@ -88,7 +88,7 @@ function getQuestions() {
 }
 
 function getReferences() {
-  return readReadme(reference);
+  return [...readReadme(reference), resolve(docs, 'test.md')];
 }
 
 function getCommands() {

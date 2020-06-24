@@ -7,6 +7,7 @@ const markdownItEmoji = require('markdown-it-emoji');
 const markdownItFootnote = require('markdown-it-footnote');
 const markdownItFrontMatter = require('markdown-it-front-matter');
 const markdownItHljs = require('markdown-it-highlightjs');
+const markdownItContainer = require('markdown-it-container');
 const markdownItMark = require('markdown-it-mark');
 const markdownItReplaceLink = require('markdown-it-replace-link');
 const markdownItSmartArrows = require('markdown-it-smartarrows');
@@ -38,6 +39,42 @@ function getMdValue(result) {
   return content;
 }
 
+function wrapContainer(containerName, utils) {
+  const prefix = `${containerName}:`;
+  return {
+    validate(params) {
+      return params.trim().startsWith(prefix);
+    },
+    render(tokens, idx) {
+      if (tokens[idx].nesting === 1) {
+        const titleHtml = tokens[idx].info.trim().substring(prefix.length).trim();
+        const title = utils.escapeHtml(titleHtml);
+        return `<div class="box ${containerName}"><p class="box-title">${title}</p>\n`;
+      } else {
+        return '</div>\n';
+      }
+    },
+  };
+}
+
+function wrapCollapsed(containerName, utils) {
+  const prefix = `${containerName}:`;
+  return {
+    validate(params) {
+      return params.trim().startsWith(prefix);
+    },
+    render(tokens, idx) {
+      if (tokens[idx].nesting === 1) {
+        const titleHtml = tokens[idx].info.trim().substring(prefix.length).trim();
+        const title = utils.escapeHtml(titleHtml);
+        return `<details class="${containerName}"><summary>${title}</summary>\n`;
+      } else {
+        return '</details>\n';
+      }
+    },
+  };
+}
+
 function render(file, baseDir = __dirname) {
   const content = readFileSync(file, 'utf8');
   const result = {
@@ -67,19 +104,27 @@ function render(file, baseDir = __dirname) {
 
       return link;
     },
-  })
-    .use(markdownItAbbr)
+  });
+
+  md.use(markdownItAbbr)
     .use(markdownItAnchor, { level: [1, 2] })
     .use(markdownItEmoji)
     .use(markdownItFootnote)
     .use(markdownItFrontMatter, fm => (result.meta = YAML.parse(fm)))
     .use(markdownItHljs)
+    .use(markdownItContainer, 'warning', wrapContainer('warning', md.utils))
+    .use(markdownItContainer, 'tip', wrapContainer('tip', md.utils))
+    .use(markdownItContainer, 'failure', wrapContainer('failure', md.utils))
+    .use(markdownItContainer, 'question', wrapContainer('question', md.utils))
+    .use(markdownItContainer, 'success', wrapContainer('success', md.utils))
+    .use(markdownItContainer, 'summary', wrapCollapsed('summary', md.utils))
     .use(markdownItMark)
     .use(markdownItReplaceLink)
     .use(markdownItSmartArrows)
     .use(markdownItSub)
     .use(markdownItSup)
     .use(markdownItVideo);
+
   result.content = md.render(content);
   result.mdValue = '`' + getMdValue(result) + '`';
   return result;
