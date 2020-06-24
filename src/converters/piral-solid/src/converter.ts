@@ -8,9 +8,6 @@ export function createConverter() {
       mount(parent, data, context) {
         render(() => createComponent(root, { context, ...data }), parent);
       },
-      update(parent, data, context) {
-        render(() => createComponent(root, { context, ...data }), parent);
-      },
       unmount(el) {
         render(() => undefined, el);
         el.innerHTML = '';
