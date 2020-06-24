@@ -5,6 +5,7 @@
 * Updated documentation layout (#206)
 * Fixed root-level update in `piral-riot`, `piral-solid`, and `piral-hyperapp`
 * Added basic support for mounting modules in `piral-ng`
+* Added ability to add new menu types in `piral-menu`
 
 ## 0.11.7 (June 22, 2020)
 
