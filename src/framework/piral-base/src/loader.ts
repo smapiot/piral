@@ -37,7 +37,7 @@ export function createDefaultLoader(
 
 export function getDefaultLoader(getDependencies: PiletDependencyGetter, fetchDependency = defaultFetchDependency) {
   return (meta: PiletMetadata): Promise<Pilet> => {
-    if (inBrowser && 'requireRef' in meta) {
+    if (inBrowser && 'requireRef' in meta && meta.requireRef) {
       return loadFrom(meta, getDependencies, deps => includeDependency(meta, deps));
     }
 
