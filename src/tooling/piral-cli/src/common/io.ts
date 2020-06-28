@@ -170,25 +170,33 @@ export async function findFile(topDir: string, fileName: string): Promise<string
   return path;
 }
 
-export async function matchAny(baseDir: string, pattern: string) {
-  return new Promise<Array<string>>((resolve, reject) => {
-    glob(
-      pattern,
-      {
-        cwd: baseDir,
-      },
-      (err, files) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(files);
-        }
-      },
-    );
-  });
+export async function matchAny(baseDir: string, patterns: Array<string>) {
+  const matches: Array<string> = [];
+  await Promise.all(
+    patterns.map(
+      pattern =>
+        new Promise<Array<string>>((resolve, reject) => {
+          glob(
+            pattern,
+            {
+              cwd: baseDir,
+            },
+            (err, files) => {
+              if (err) {
+                reject(err);
+              } else {
+                matches.push(...files);
+                resolve();
+              }
+            },
+          );
+        }),
+    ),
+  );
+  return matches;
 }
 
-export async function matchFiles(baseDir: string, pattern: string) {
+export function matchFiles(baseDir: string, pattern: string) {
   return new Promise<Array<string>>((resolve, reject) => {
     glob(
       pattern,

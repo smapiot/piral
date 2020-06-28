@@ -41,7 +41,10 @@ export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>
       httpsAgent,
     })
     .then(res => {
-      const rid = Math.random().toString(36).split('.').pop();
+      const rid = Math.random()
+        .toString(36)
+        .split('.')
+        .pop();
       const target = join(tmpdir(), `pilet_${rid}.tgz`);
       log('generalDebug_0003', `Writing the downloaded file to "${target}".`);
       return streamToFile(res.data, target);

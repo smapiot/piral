@@ -10,6 +10,11 @@ import { PackageType, NpmClientType } from '../types';
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
 
+function isProjectReference(name: string) {
+  const target = resolve(name, 'package.json');
+  return checkExists(target);
+}
+
 export function detectPnpm(root: string) {
   return new Promise(res => {
     access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, noPnpmLock => {
@@ -34,13 +39,22 @@ export function detectYarn(root: string) {
   });
 }
 
-export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
-  log('generalDebug_0003', 'Trying to get defined client from Lerna ...');
-  const file = await findFile(root, 'lerna.json');
+export async function getLernaConfigPath(root: string) {
+  log('generalDebug_0003', 'Trying to get the configuration file for Lerna ...');
+  const file = findFile(root, 'lerna.json');
 
   if (file) {
     log('generalDebug_0003', `Found Lerna config in "${file}".`);
+    return file;
+  }
 
+  return undefined;
+}
+
+export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
+  const file = await getLernaConfigPath(root);
+
+  if (file) {
     try {
       return require(file).npmClient;
     } catch (err) {
@@ -92,6 +106,22 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
   }
 
   return selected;
+}
+
+export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
+  const c = require(`./clients/npm`);
+  const details = await c.listPackage(refName, root);
+  return details?.dependencies[refName]?.extraneous ?? false;
+}
+
+export async function detectMonorepo(root: string) {
+  const file = await getLernaConfigPath(root);
+  return file !== undefined;
+}
+
+export function bootstrapMonorepo(target = '.') {
+  const c = require(`./clients/lerna`);
+  return c.bootstrap(target);
 }
 
 export function installDependencies(client: NpmClientType, target = '.'): Promise<string> {
@@ -204,6 +234,12 @@ export async function dissectPackageName(
       fail('scaffoldPathDoesNotExist_0030', fullPath);
     }
 
+    const isReference = await isProjectReference(fullPath);
+
+    if (isReference) {
+      fail('projectReferenceNotSupported_0032', fullPath);
+    }
+
     return [fullPath, 'latest', false, 'file'];
   } else {
     const index = fullName.indexOf('@', 1);
@@ -243,7 +279,13 @@ export async function getCurrentPackageDetails(
     const exists = await checkExists(fullPath);
 
     if (!exists) {
-      throw new Error(`Could not find "${fullPath}" for upgrading. Aborting.`);
+      fail('upgradePathDoesNotExist_0031', fullPath);
+    }
+
+    const isReference = await isProjectReference(fullPath);
+
+    if (isReference) {
+      fail('projectReferenceNotSupported_0032', fullPath);
     }
 
     return [fullPath, getFilePackageVersion(fullPath, root)];
@@ -264,6 +306,17 @@ export async function getCurrentPackageDetails(
   return [combinePackageRef(sourceName, desired, 'registry'), desired];
 }
 
+export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean) {
+  if (type === 'registry' && !hadVersion) {
+    try {
+      require.resolve(`${name}/package.json`);
+      return true;
+    } catch {}
+  }
+
+  return false;
+}
+
 export function combinePackageRef(name: string, version: string, type: PackageType) {
   if (type === 'registry') {
     return `${name}@${version || 'latest'}`;
@@ -275,10 +328,16 @@ export function combinePackageRef(name: string, version: string, type: PackageTy
 export async function getPackageName(root: string, name: string, type: PackageType) {
   switch (type) {
     case 'file':
-      const p = resolve(process.cwd(), name);
-      const s = createReadStream(p);
-      const i = await inspectPackage(s);
-      return i.name;
+      const originalPackageJson = await readJson(name, 'package.json');
+
+      if (!originalPackageJson.name) {
+        const p = resolve(process.cwd(), name);
+        const s = createReadStream(p);
+        const i = await inspectPackage(s);
+        return i.name;
+      }
+
+      return originalPackageJson.name;
     case 'git':
       const pj = await readJson(root, 'package.json');
       const dd = pj.devDependencies || {};

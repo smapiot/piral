@@ -89,7 +89,7 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
 
 export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
   log('generalDebug_0003', `Patching modules starting in "${rootDir}" ...`);
-  const otherRoot = resolve(require.resolve('parcel-bundler'), '..', '..', '..');
+  const otherRoot = resolve(require.resolve('piral-cli/package.json'), '..', '..', '..');
   await patchFolder(rootDir, ignoredPackages);
 
   if (otherRoot !== rootDir) {

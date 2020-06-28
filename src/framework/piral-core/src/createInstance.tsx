@@ -35,6 +35,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     fetchDependency,
     getDependencies = getLocalDependencies,
     async = false,
+    loadPilet,
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
@@ -48,6 +49,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   const options = createPiletOptions({
     context,
     createApi,
+    loadPilet,
     availablePilets,
     fetchDependency,
     getDependencies,

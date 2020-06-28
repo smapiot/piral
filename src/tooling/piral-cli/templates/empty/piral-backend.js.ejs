@@ -1,4 +1,4 @@
-const request = require('request');
+const https = require('https');
 
 function isPiletQuery(content) {
   try {
@@ -10,22 +10,33 @@ function isPiletQuery(content) {
 }
 
 // Place a script here to "redirect" a standard API to some GraphQL.
-const apiService = '';// 'https://feed.piral.cloud/api/v1/pilet/sample';
+const apiService = ''; // 'https://feed.piral.cloud/api/v1/pilet/sample';
 
 module.exports = function(_, req, res) {
-  if ((req.path === '/' && req.method === 'POST' && isPiletQuery(req.content))) {
+  if (req.path === '/' && req.method === 'POST' && isPiletQuery(req.content)) {
     if (apiService) {
-      return new Promise(resolve => {
-        request.get(apiService, (_1, _2, body) => {
-          const response = res({
-            content: JSON.stringify({
-              data: {
-                pilets: JSON.parse(body).items,
-              },
-            }),
+      return new Promise((resolve, reject) => {
+        const fetch = https.get(apiService, response => {
+          const parts = [];
+
+          response.on('data', chunk => parts.push(chunk));
+
+          response.on('end', () => {
+            const data = JSON.parse(Buffer.concat(parts).toString('utf8'));
+
+            resolve(
+              res({
+                content: JSON.stringify({
+                  data: {
+                    pilets: data.items,
+                  },
+                }),
+              }),
+            );
           });
-          resolve(response);
         });
+
+        fetch.on('error', err => reject(err));
       });
     } else {
       return res({

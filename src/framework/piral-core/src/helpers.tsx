@@ -4,7 +4,8 @@ import {
   LoadPiletsOptions,
   PiletDependencyFetcher,
   getDependencyResolver,
-  loadPilet,
+  getDefaultLoader,
+  PiletLoader,
 } from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
 import {
@@ -42,13 +43,14 @@ export function extendSharedDependencies(additionalDependencies: AvailableDepend
   return () => dependencies;
 }
 
-interface PiletOptionsConfig {
+export interface PiletOptionsConfig {
   availablePilets: Array<Pilet>;
   createApi: PiletApiCreator;
   fetchDependency: PiletDependencyFetcher;
   getDependencies: PiletDependencyGetter;
   strategy: PiletLoadingStrategy;
   requestPilets: PiletRequester;
+  loadPilet: PiletLoader;
   context: GlobalStateContext;
 }
 
@@ -58,9 +60,13 @@ export function createPiletOptions({
   availablePilets,
   fetchDependency,
   getDependencies,
+  loadPilet,
   strategy,
   requestPilets,
 }: PiletOptionsConfig): LoadPiletsOptions {
+  getDependencies = getDependencyResolver(globalDependencies, getDependencies);
+  loadPilet = loadPilet ?? getDefaultLoader(getDependencies, fetchDependency);
+
   // if we build the debug version of piral (debug and emulator build)
   if (process.env.DEBUG_PIRAL !== undefined) {
     // the DEBUG_PIRAL env should contain the Piral CLI compatibility version
@@ -79,7 +85,7 @@ export function createPiletOptions({
       },
       pilets: {
         createApi,
-        getDependencies: getDependencyResolver(globalDependencies, getDependencies),
+        getDependencies,
         loadPilet,
         requestPilets,
       },
@@ -120,11 +126,11 @@ export function createPiletOptions({
   }
 
   return {
-    pilets: availablePilets,
-    fetchDependency,
-    getDependencies,
     strategy,
+    getDependencies,
     dependencies: globalDependencies,
+    pilets: availablePilets,
+    loadPilet,
     fetchPilets() {
       const promise = requestPilets();
 
@@ -144,13 +150,7 @@ export function createPiletOptions({
           if (!hardRefresh) {
             // standard setting is to just perform an inject
             const meta = JSON.parse(data);
-            const getter = getDependencyResolver(globalDependencies, getDependencies);
-            const fetcher = (url: string) =>
-              fetch(url, {
-                method: 'GET',
-                cache: 'reload',
-              }).then(m => m.text());
-            loadPilet(meta, getter, fetcher).then(pilet => {
+            loadPilet(meta).then(pilet => {
               try {
                 const newApi = createApi(pilet);
                 context.injectPilet(pilet);

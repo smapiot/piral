@@ -1,6 +1,6 @@
 [![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Jest Utils](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-jest-utils.svg?style=flat)](https://www.npmjs.com/package/piral-search) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Jest Utils](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-jest-utils.svg?style=flat)](https://www.npmjs.com/package/piral-jest-utils) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a utility library that can be used for testing pilets.
 
@@ -10,7 +10,7 @@ What `piral-jest-utils` offers are utilities and mocks that make testing of pile
 
 This should only be installed as a development dependency (`devDependencies`) as it is only designed for testing.
 
-If you'd love touse yarn:
+If you'd love to use yarn:
 
 ```sh
 yarn add --dev piral-jest-utils

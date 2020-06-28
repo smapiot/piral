@@ -86,6 +86,14 @@ Sets the schema to be used when making a fresh build of the pilet.
 - Choices: `"v0"`, `"v1"`
 - Default: `"v1"`
 
+### `--from`
+
+Sets the type of the source to use for publishing.
+
+- Type: `string`
+- Choices: `"local"`, `"remote"`, `"npm"`
+- Default: `"local"`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

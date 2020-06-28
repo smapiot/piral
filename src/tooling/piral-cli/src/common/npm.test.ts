@@ -18,7 +18,7 @@ jest.mock('../external', () => ({
 }));
 
 jest.mock('fs', () => ({
-  exists: (file: string, cb: (status: boolean) => void) => cb(true),
+  exists: (file: string, cb: (status: boolean) => void) => cb(!file.endsWith('package.json')),
   readFileSync: () => '',
 }));
 

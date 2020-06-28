@@ -1,6 +1,6 @@
 {
   "name": "piral-auth",
-  "version": "0.11.6",
+  "version": "0.11.7",
   "description": "Plugin for handling authentication in Piral.",
   "keywords": [
     "piral",
@@ -37,7 +37,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.11.6"
+    "piral-core": "^0.11.7"
   },
   "peerDependencies": {
     "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0"

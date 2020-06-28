@@ -22,6 +22,11 @@ import {
   logDone,
   determineNpmClient,
   ForceOverwrite,
+  copyScaffoldingFiles,
+  getPiralPath,
+  detectMonorepo,
+  bootstrapMonorepo,
+  isMonorepoPackageRef,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -76,6 +81,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       fail('invalidPiralReference_0043');
     }
 
+    const monorepoRef = await isMonorepoPackageRef(sourceName, baseDir);
     const [packageRef, packageVersion] = await getCurrentPackageDetails(
       baseDir,
       sourceName,
@@ -85,15 +91,17 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     );
     const originalFiles = await getFileStats(root, sourceName);
 
-    progress(`Updating NPM package to %s ...`, packageRef);
-
-    await installPackage(npmClient, packageRef, root, '--no-save');
+    if (!monorepoRef) {
+      // only install the latest if the shell does come from remote
+      progress(`Updating NPM package to %s ...`, packageRef);
+      await installPackage(npmClient, packageRef, root, '--no-save');
+    }
 
     const piralInfo = await readPiralPackage(root, sourceName);
 
-    checkAppShellPackage(piralInfo);
+    const isEmulator = checkAppShellPackage(piralInfo);
 
-    const { preUpgrade, postUpgrade } = getPiletsInfo(piralInfo);
+    const { preUpgrade, postUpgrade, files } = getPiletsInfo(piralInfo);
 
     if (preUpgrade) {
       progress(`Running preUpgrade script ...`);
@@ -104,11 +112,29 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     progress(`Taking care of templating ...`);
 
     await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
-    await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles);
+
+    if (isEmulator) {
+      // in the emulator case we get the files from the contained tarball
+      await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles);
+    } else {
+      // otherwise, we perform the same action as in the emulator creation
+      // just with a different target; not a created directory, but the root
+      await copyScaffoldingFiles(
+        getPiralPath(root, sourceName),
+        root,
+        files.filter(m => typeof m === 'string' || !m.once),
+      );
+    }
 
     if (install) {
       progress(`Updating dependencies ...`);
-      await installDependencies(npmClient, root);
+      const isMonorepo = await detectMonorepo(root);
+
+      if (isMonorepo) {
+        await bootstrapMonorepo(root);
+      } else {
+        await installDependencies(npmClient, root);
+      }
     }
 
     if (postUpgrade) {

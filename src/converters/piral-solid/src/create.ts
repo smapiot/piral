@@ -32,7 +32,7 @@ export function createSolidApi(config: SolidConfig = {}): Extend<PiletSolidApi> 
       },
       SolidExtension(props) {
         const element = document.createElement(rootName);
-        api.renderHtmlExtension(element, props);
+        setTimeout(() => api.renderHtmlExtension(element, props), 0);
         return element as any;
       },
     });

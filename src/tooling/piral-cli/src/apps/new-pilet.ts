@@ -1,5 +1,5 @@
 import { resolve, basename } from 'path';
-import { LogLevels, TemplateType, PackageType, NpmClientType } from '../types';
+import { LogLevels, TemplateType, NpmClientType } from '../types';
 import {
   ForceOverwrite,
   PiletLanguage,
@@ -25,6 +25,11 @@ import {
   log,
   logDone,
   determineNpmClient,
+  isLinkedPackage,
+  copyScaffoldingFiles,
+  getPiralPath,
+  detectMonorepo,
+  bootstrapMonorepo,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -37,6 +42,7 @@ export interface NewPiletOptions {
   template?: TemplateType;
   logLevel?: LogLevels;
   npmClient?: NpmClientType;
+  bundler?: string;
 }
 
 export const newPiletDefaults: NewPiletOptions = {
@@ -49,18 +55,8 @@ export const newPiletDefaults: NewPiletOptions = {
   template: 'default',
   logLevel: LogLevels.info,
   npmClient: undefined,
+  bundler: 'none',
 };
-
-function isLocalPackage(name: string, type: PackageType, hadVersion: boolean) {
-  if (type === 'registry' && !hadVersion) {
-    try {
-      require.resolve(`${name}/package.json`);
-      return true;
-    } catch {}
-  }
-
-  return false;
-}
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
   const {
@@ -72,6 +68,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     install = newPiletDefaults.install,
     template = newPiletDefaults.template,
     logLevel = newPiletDefaults.logLevel,
+    bundler = newPiletDefaults.bundler,
   } = options;
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
@@ -117,7 +114,7 @@ always-auth=true`,
       );
     }
 
-    const isLocal = isLocalPackage(sourceName, type, hadVersion);
+    const isLocal = isLinkedPackage(sourceName, type, hadVersion);
 
     if (!isLocal) {
       const packageRef = combinePackageRef(sourceName, sourceVersion, type);
@@ -133,9 +130,9 @@ always-auth=true`,
     const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, root);
     const piralInfo = await readPiralPackage(root, packageName);
 
-    checkAppShellPackage(piralInfo);
+    const isEmulator = checkAppShellPackage(piralInfo);
 
-    const { preScaffold, postScaffold } = getPiletsInfo(piralInfo);
+    const { preScaffold, postScaffold, files } = getPiletsInfo(piralInfo);
 
     if (preScaffold) {
       progress(`Running preScaffold script ...`);
@@ -145,12 +142,26 @@ always-auth=true`,
 
     progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, language);
-    await copyPiralFiles(root, packageName, ForceOverwrite.yes);
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler });
+
+    if (isEmulator) {
+      // in the emulator case we get the files (and files_once) from the contained tarballs
+      await copyPiralFiles(root, packageName, ForceOverwrite.yes);
+    } else {
+      // otherwise, we perform the same action as in the emulator creation
+      // just with a different target; not a created directory, but the root
+      await copyScaffoldingFiles(getPiralPath(root, packageName), root, files);
+    }
 
     if (install) {
       progress(`Installing dependencies ...`);
-      await installDependencies(npmClient, root);
+      const isMonorepo = await detectMonorepo(root);
+
+      if (isMonorepo) {
+        await bootstrapMonorepo(root);
+      } else {
+        await installDependencies(npmClient, root);
+      }
     }
 
     if (postScaffold) {

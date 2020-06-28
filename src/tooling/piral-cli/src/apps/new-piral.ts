@@ -29,6 +29,7 @@ export interface NewPiralOptions {
   template?: TemplateType;
   logLevel?: LogLevels;
   npmClient?: NpmClientType;
+  bundler?: string;
 }
 
 export const newPiralDefaults: NewPiralOptions = {
@@ -42,6 +43,7 @@ export const newPiralDefaults: NewPiralOptions = {
   template: 'default',
   logLevel: LogLevels.info,
   npmClient: undefined,
+  bundler: 'none',
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
@@ -55,6 +57,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     install = newPiralDefaults.install,
     template = newPiralDefaults.template,
     logLevel = newPiralDefaults.logLevel,
+    bundler = newPiralDefaults.bundler,
   } = options;
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
@@ -84,7 +87,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       ),
     );
 
-    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework));
+    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework, bundler));
 
     progress(`Installing NPM package ${packageRef} ...`);
 
