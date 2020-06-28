@@ -90,6 +90,8 @@ export interface MenuComponentProps extends BaseComponentProps {}
 
 export interface PiralCustomMenuSettings {}
 
+export interface PiralCustomMenuTypes {}
+
 export interface MenuSettings extends PiralCustomMenuSettings {
   /**
    * Sets the type of the menu to attach to.
@@ -98,7 +100,9 @@ export interface MenuSettings extends PiralCustomMenuSettings {
   type?: MenuType;
 }
 
-export type MenuType = 'general' | 'admin' | 'user' | 'header' | 'footer';
+export type StandardMenuType = 'general' | 'admin' | 'user' | 'header' | 'footer';
+
+export type MenuType = StandardMenuType | keyof PiralCustomMenuTypes;
 
 export interface MenuItemRegistration extends BaseRegistration {
   component: WrappedComponent<MenuComponentProps>;

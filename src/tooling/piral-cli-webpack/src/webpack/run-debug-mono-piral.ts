@@ -1,4 +1,4 @@
-import { setStandardEnvs, progress, getFreePort } from 'piral-cli/utils';
+import { setStandardEnvs, progress, getFreePort, logReset } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
 import { extendConfig } from '../helpers';
@@ -38,7 +38,9 @@ async function run(root: string, piral: string, hmr: boolean, externals: Array<s
   });
 
   const bundler = runWebpack(wpConfig);
-  return await bundler.bundle();
+  const bundle = await bundler.bundle();
+  logReset();
+  return bundle;
 }
 
 process.on('message', async msg => {

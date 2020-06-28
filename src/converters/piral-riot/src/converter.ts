@@ -17,13 +17,6 @@ export function createConverter() {
           ...props,
         });
       },
-      update(el, props, ctx) {
-        app = mountApp(el, {
-          ...captured,
-          ...ctx,
-          ...props,
-        });
-      },
       unmount(el) {
         app.unmount(true);
         el.innerHTML = '';

@@ -14,7 +14,7 @@ export function createConverter(selectId = () => `ng-${next++}`) {
       mount(el, props, ctx) {
         result = enqueue(() => bootstrap(ctx, props, component, el, id));
       },
-      unmount(el) {
+      unmount() {
         result.then(ngMod => ngMod && ngMod.destroy());
       },
     };

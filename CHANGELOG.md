@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 0.11.8 (tbd)
+
+* Updated documentation layout (#206)
+* Fixed root-level update in `piral-riot`, `piral-solid`, and `piral-hyperapp`
+* Fixed multi-asset output handling in `debug-pilet` with `piral-cli-webpack` (#258)
+* Added basic support for mounting modules in `piral-ng`
+* Added ability to add new menu types in `piral-menu`
+
 ## 0.11.7 (June 22, 2020)
 
 * Added new optional plugin `piral-solid` for Solid (#231)
