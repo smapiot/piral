@@ -93,6 +93,8 @@ function isFile(bundleDir: string, name: string) {
 
 function getScriptHead(version: PiletSchemaVersion, prName: string) {
   switch (version) {
+    case 'none':
+      return `\n${initializer}`;
     case 'v0': // directEval
       return `${piletMarker}0\n${initializer}`;
     case 'v1': // currentScript
