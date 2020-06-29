@@ -20,7 +20,6 @@ export const isWindows = process.platform === 'win32';
 export const defaultCacheDir = '.cache';
 export const pathSeparator = isWindows ? ';' : ':';
 export const defaultRegistry = 'https://registry.npmjs.org/';
-export const debugPiletApi = '/$pilet-api';
 export const filesTar = 'files';
 export const filesOnceTar = 'files_once';
 export const coreExternals = [

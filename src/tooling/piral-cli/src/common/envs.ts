@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { log } from './log';
-import { debugPiletApi, pathSeparator, cliVersion, compatVersion } from './info';
+import { config } from './config';
+import { pathSeparator, cliVersion, compatVersion } from './info';
 import { StandardEnvProps } from '../types';
 
 function hasPath(path: string) {
@@ -31,7 +32,7 @@ export function setStandardEnvs(options: StandardEnvProps) {
   }
 
   if (options.debugPilet) {
-    process.env.DEBUG_PILET = debugPiletApi;
+    process.env.DEBUG_PILET = config.piletApi;
   } else {
     delete process.env.DEBUG_PILET;
   }
