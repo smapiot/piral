@@ -13,13 +13,19 @@ export function createConverter() {
 
     return {
       mount(parent, props) {
+        // The Cycle DOM element is not directly rendered into parent, but into a nested container.
+        // This is done because Cycle "erases" information on the host element. If parent was used,
+        // Piral related properties like data-portal-id could be removed, leading to things not working.
+        const host = document.createElement('div');
+        parent.appendChild(host);
+
         const drivers: PiralDomDrivers<TProps> = {
-          DOM: makeDOMDriver(parent),
+          DOM: makeDOMDriver(host),
           props: () => props$,
         };
 
-        props$.shamefullySendNext(props);
         dispose = run(main as Main, drivers);
+        props$.shamefullySendNext(props);
       },
       update(_, props) {
         props$.shamefullySendNext(props);

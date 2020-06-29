@@ -1,7 +1,7 @@
 import { Stream } from 'xstream';
 import { Driver, Drivers, MatchingMain, Main } from '@cycle/run';
 import { MainDOMSource, VNode } from '@cycle/dom';
-import { ForeignComponent } from 'piral-core';
+import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletCycleApi {}
@@ -46,4 +46,8 @@ export interface PiletCycleApi {
    * @returns The Piral Cycle.js component.
    */
   fromCycle<TProps>(root: MatchingMain<PiralDomDrivers<TProps>, Main>): CycleComponent<TProps>;
+  /**
+   * Renders a Piral extension into a Cycle component.
+   */
+  CycleExtension: (props: ExtensionSlotProps<unknown>) => VNode;
 }
