@@ -49,5 +49,5 @@ export interface PiletCycleApi {
   /**
    * Renders a Piral extension into a Cycle component.
    */
-  CycleExtension: (props: ExtensionSlotProps<unknown>) => VNode;
+  CycleExtension(props: ExtensionSlotProps<unknown>): VNode;
 }

@@ -1,7 +1,7 @@
 import { BaseComponentProps, ForeignComponent } from 'piral-core';
 import run, { MatchingMain, Main } from '@cycle/run';
 import xs from 'xstream';
-import { PiralDomDrivers } from '.';
+import { PiralDomDrivers } from './types';
 import { makeDOMDriver } from '@cycle/dom';
 
 export function createConverter() {
@@ -16,7 +16,7 @@ export function createConverter() {
         // The Cycle DOM element is not directly rendered into parent, but into a nested container.
         // This is done because Cycle "erases" information on the host element. If parent was used,
         // Piral related properties like data-portal-id could be removed, leading to things not working.
-        const host = document.createElement('div');
+        const host = document.createElement('slot');
         parent.appendChild(host);
 
         const drivers: PiralDomDrivers<TProps> = {
