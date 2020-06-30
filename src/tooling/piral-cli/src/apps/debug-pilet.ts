@@ -5,7 +5,7 @@ import { LogLevels, PiletSchemaVersion } from '../types';
 import {
   checkExistingDirectory,
   retrievePiletData,
-  debugPiletApi,
+  config,
   openBrowser,
   reorderInjectors,
   notifyServerOnline,
@@ -112,7 +112,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const krasConfig = readKrasConfig({ port }, krasrc);
-  const api = debugPiletApi;
+  const api = config.piletApi;
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${baseDir}".`);

@@ -7566,9 +7566,9 @@ html-webpack-plugin@^4.2.0:
     tapable "^1.1.3"
     util.promisify "1.0.0"
 
-html5-entry-webpack-plugin@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.0.tgz#8bbac908e61d0fa5bb8d139a5e97a787e0e1c4f1"
+html5-entry-webpack-plugin@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.1.tgz#9c1c7a7bfb06b66dd88740488aaa3468cae62103"
   dependencies:
     cheerio "^1.0.0-rc.3"
     html-webpack-plugin "^4.2.0"
@@ -10667,9 +10667,9 @@ parcel-bundler@^1.12.4:
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
 
-parcel-codegen-loader@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.0.tgz#e08586ce15e31cfa5ed6bb967c17d6b7b098b5ab"
+parcel-codegen-loader@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.1.tgz#c3230d71bef5cd639d1d24347000e771e8182201"
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
@@ -10881,9 +10881,9 @@ pify@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
 
-pilet-webpack-plugin@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.0.tgz#6bf3675c7ef2ac59aed42d4ea9bb94f81f2a146d"
+pilet-webpack-plugin@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.1.tgz#10a4540f87822643967a18507776f48be4c86a7e"
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -10895,9 +10895,9 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
-piral-instance-webpack-plugin@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.0.tgz#5f410d8ea112f7d08323f0c03b6d50c7bd8e15b4"
+piral-instance-webpack-plugin@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.1.tgz#6b65aa052f7a0dfcfdafe1ae22ea287c75f35913"
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"

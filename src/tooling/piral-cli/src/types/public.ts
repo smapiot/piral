@@ -133,7 +133,7 @@ export interface BundlerDefinition {
   buildPilet(args: BuildPiletParameters): Promise<BundleDetails>;
 }
 
-export type PiletSchemaVersion = 'v0' | 'v1';
+export type PiletSchemaVersion = 'none' | 'v0' | 'v1';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 

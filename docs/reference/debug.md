@@ -10,6 +10,7 @@ The following session variables are actively used.
 |--------------------|-------------|----------------------------------------------------------------------------|---------|
 | `dbg:hard-refresh` | `off`, `on` | Performs a hard reload when changes to the currently debugged pilet occur. | `off`   |
 | `dbg:load-pilets`  | `off`, `on` | Still loads all the "usual" pilets besides the debugged pilet.             | `off`   |
+| `dbg:view-state`   | `off`, `on` | Shows the state changes in the browser development console.                | `on`    |
 
 ## Window Variables
 

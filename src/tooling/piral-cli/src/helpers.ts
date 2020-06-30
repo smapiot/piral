@@ -1,7 +1,7 @@
 import { ForceOverwrite, PiletLanguage } from './common/enums';
 import { TemplateType, Framework, NpmClientType, PiletSchemaVersion, PiletPublishSource } from './types';
 
-export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1'];
+export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'none'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const templateTypeKeys: Array<TemplateType> = ['default', 'empty'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];

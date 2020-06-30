@@ -8,6 +8,7 @@ export interface PiralCliConfig {
   cert?: string;
   npmClient?: NpmClientType;
   bundler?: string;
+  piletApi?: string;
 }
 
 export const config: PiralCliConfig = rc('piral', {
@@ -38,4 +39,8 @@ export const config: PiralCliConfig = rc('piral', {
    * none given and found.
    */
   bundler: 'parcel',
+  /**
+   * Selects the default pilet API path to use.
+   */
+  piletApi: '/$pilet-api',
 });
