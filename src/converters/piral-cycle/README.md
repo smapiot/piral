@@ -62,7 +62,7 @@ CycleExtension({ name: "name-of-extension" })
 
 > For Piral instance developers
 
-Using Cycle.js with Piral is as simple as installing `piral-cycle` and `cycle`.
+Using Cycle.js with Piral is as simple as installing `piral-cycle` and Cycle.js.
 
 ```ts
 import { createCycleApi } from 'piral-cycle';
@@ -78,14 +78,15 @@ const instance = createInstance({
 });
 ```
 
-The `@cycle/run` and `@cycle/dom` packages should be shared with the pilets via the *package.json*:
+The `@cycle/run`, `@cycle/dom` and `xstream` packages should be shared with the pilets via the *package.json*:
 
 ```json
 {
   "pilets": {
     "externals": [
       "@cycle/run",
-      "@cycle/dom"
+      "@cycle/dom",
+      "xstream"
     ]
   }
 }
