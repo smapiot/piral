@@ -53,11 +53,11 @@ function sanitizeCmdArgs(args: Array<string>) {
 
     if (/.*\s.*/.test(result)) {
       if (!result.startsWith(quote)) {
-        result = quote + result;
+        result = `${quote}${result}`;
       }
 
       if (!result.endsWith(quote)) {
-        result = result + quote;
+        result = `${result}${quote}`;
       }
     }
 
