@@ -51,7 +51,7 @@ function sanitizeCmdArgs(args: Array<string>) {
   return args.map(arg => {
     let result = arg.trim();
 
-    if (/.*\s.*/.test(result)) {
+    if (/\s/.test(result)) {
       if (!result.startsWith(quote)) {
         result = `${quote}${result}`;
       }
