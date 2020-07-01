@@ -139,7 +139,9 @@ export function createPiletOptions({
         // the DEBUG_PILET env should point to an API address used as a proxy
         const piletApi = process.env.DEBUG_PILET;
         // either take a full URI or make it an absolute path relative to the current origin
-        const initialTarget = /^https?:/.test(piletApi) ? piletApi : `${location.origin}${piletApi[0] === '/' ? '' : '/'}${piletApi}`;
+        const initialTarget = /^https?:/.test(piletApi)
+          ? piletApi
+          : `${location.origin}${piletApi[0] === '/' ? '' : '/'}${piletApi}`;
         const updateTarget = initialTarget.replace('http', 'ws');
         const ws = new WebSocket(updateTarget);
         const appendix = fetch(initialTarget)

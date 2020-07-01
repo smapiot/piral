@@ -14,24 +14,27 @@ describe('Piral-Base strategies module', () => {
   it('syncStrategy evaluates all in one sweep', async () => {
     const setupMock = jest.fn();
     const callbackMock = jest.fn();
-    await syncStrategy({
-      createApi: createMockApi,
-      fetchPilets: jest.fn(),
-      pilets: [
-        {
-          setup: setupMock,
-          hash: '',
-          name: '',
-          version: '',
-        },
-        {
-          setup: setupMock,
-          hash: '',
-          name: '',
-          version: '',
-        },
-      ],
-    }, callbackMock);
+    await syncStrategy(
+      {
+        createApi: createMockApi,
+        fetchPilets: jest.fn(),
+        pilets: [
+          {
+            setup: setupMock,
+            hash: '',
+            name: '',
+            version: '',
+          },
+          {
+            setup: setupMock,
+            hash: '',
+            name: '',
+            version: '',
+          },
+        ],
+      },
+      callbackMock,
+    );
 
     expect(setupMock).toHaveBeenCalledTimes(2);
     expect(callbackMock).toHaveBeenCalledTimes(1);
@@ -42,11 +45,14 @@ describe('Piral-Base strategies module', () => {
   it('syncStrategy evaluates also with no modules', async () => {
     const setupMock = jest.fn();
     const callbackMock = jest.fn();
-    await syncStrategy({
-      createApi: createMockApi,
-      fetchPilets: jest.fn(),
-      pilets: [],
-    }, callbackMock);
+    await syncStrategy(
+      {
+        createApi: createMockApi,
+        fetchPilets: jest.fn(),
+        pilets: [],
+      },
+      callbackMock,
+    );
 
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(callbackMock).toHaveBeenCalledTimes(1);
@@ -57,11 +63,14 @@ describe('Piral-Base strategies module', () => {
   it('syncStrategy reports error if failed due to invalid arguments', async () => {
     const setupMock = jest.fn();
     const callbackMock = jest.fn();
-    await syncStrategy({
-      createApi: createMockApi,
-      fetchPilets: jest.fn(),
-      pilets: true as any,
-    }, callbackMock);
+    await syncStrategy(
+      {
+        createApi: createMockApi,
+        fetchPilets: jest.fn(),
+        pilets: true as any,
+      },
+      callbackMock,
+    );
 
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(callbackMock).toHaveBeenCalledTimes(1);
