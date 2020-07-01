@@ -215,6 +215,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   krasConfig.map[api] = '';
   krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);
 
+  log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
+
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
   krasServer.on(
