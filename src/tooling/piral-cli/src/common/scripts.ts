@@ -36,7 +36,23 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
 
 export function runCommand(exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) {
   const npmCommand = isWindows ? `${exe}.cmd` : exe;
-  const cmd = [npmCommand, ...args].join(' ');
+  const sanitizedArgs = sanitizeCmdArgs(args);
+  const cmd = [npmCommand, ...sanitizedArgs].join(' ');
   log('generalDebug_0003', `Applying cmd "${cmd}" in directory "${cwd}".`);
   return runScript(cmd, cwd, output);
+}
+
+function sanitizeCmdArgs(args: Array<string>) {
+  // Introduced for fixing https://github.com/smapiot/piral/issues/259.
+  // If an arg contains a whitespace, it can be incorrectly interpreted as two separate arguments.
+  // For the moment, it's fixed by simply wrapping each arg in "quotation marks".
+  // To ensure that this doesn't conflict with user-provided quotation marks, *one* leading/trailing " ' char
+  // is trimmed from each arg. Only one, because multiple are usually deliberate and removing them thus becomes
+  // a destructive action (e.g. we wouldn't want to replace "'foo'" with "foo", because one pair of quotes disappears here).
+  return args.map(arg => {
+    const trimWhiteSpaceAndQuotMarks = /^\s*['"]?(.*?)['"]?\s*$/;
+    const match = trimWhiteSpaceAndQuotMarks.exec(arg);
+    const sanitizedArg = match[1];
+    return `"${sanitizedArg}"`;
+  });
 }
