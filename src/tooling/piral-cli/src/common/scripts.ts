@@ -45,14 +45,22 @@ export function runCommand(exe: string, args: Array<string>, cwd: string, output
 function sanitizeCmdArgs(args: Array<string>) {
   // Introduced for fixing https://github.com/smapiot/piral/issues/259.
   // If an arg contains a whitespace, it can be incorrectly interpreted as two separate arguments.
-  // For the moment, it's fixed by simply wrapping each arg in "quotation marks".
-  // To ensure that this doesn't conflict with user-provided quotation marks, *one* leading/trailing " ' char
-  // is trimmed from each arg. Only one, because multiple are usually deliberate and removing them thus becomes
-  // a destructive action (e.g. we wouldn't want to replace "'foo'" with "foo", because one pair of quotes disappears here).
+  // For the moment, it's fixed by simply wrapping each arg in OS specific quotation marks.
+  const quote = isWindows ? '"' : "'";
+
   return args.map(arg => {
-    const trimWhiteSpaceAndQuotMarks = /^\s*['"]?(.*?)['"]?\s*$/;
-    const match = trimWhiteSpaceAndQuotMarks.exec(arg);
-    const sanitizedArg = match[1];
-    return `"${sanitizedArg}"`;
+    let result = arg.trim();
+
+    if (/.*\s.*/.test(result)) {
+      if (!result.startsWith(quote)) {
+        result = quote + result;
+      }
+
+      if (!result.endsWith(quote)) {
+        result = result + quote;
+      }
+    }
+
+    return result;
   });
 }
