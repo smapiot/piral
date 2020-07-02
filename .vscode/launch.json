@@ -27,7 +27,7 @@
           "request": "launch",
           "runtimeArgs": [
             "--inspect-brk",
-            "${workspaceRoot}/node_modules/jest/bin/jest.js",
+            "${workspaceRoot}/node_modules/jest/bin/jest.js /src/framework/piral-base/src/strategies.test.ts",
             "--runInBand"
           ],
           "console": "integratedTerminal",
