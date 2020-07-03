@@ -1,5 +1,5 @@
-import { asyncStrategy, blazingStrategy, standardStrategy, syncStrategy } from './strategies';
-import { PiletMetadata, LoadPiletsOptions, PiletApiCreator, Pilet } from './types';
+import { blazingStrategy, standardStrategy, syncStrategy } from './strategies';
+import { PiletMetadata, LoadPiletsOptions, Pilet } from './types';
 
 function createMockApi(meta: PiletMetadata) {
   return {

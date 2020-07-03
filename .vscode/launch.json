@@ -20,19 +20,6 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/node_modules/.bin/piral",
             "args": ["debug", "./packages/piral-sample/src/index.html"]
-        },
-        {
-          "name": "Debug Jest Tests Windows",
-          "type": "node",
-          "request": "launch",
-          "runtimeArgs": [
-            "--inspect-brk",
-            "${workspaceRoot}/node_modules/jest/bin/jest.js /src/framework/piral-base/src/strategies.test.ts",
-            "--runInBand"
-          ],
-          "console": "integratedTerminal",
-          "internalConsoleOptions": "neverOpen",
-          "port": 9229
         }
     ],
     "compounds": [
