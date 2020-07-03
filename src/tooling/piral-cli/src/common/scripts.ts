@@ -36,7 +36,31 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
 
 export function runCommand(exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) {
   const npmCommand = isWindows ? `${exe}.cmd` : exe;
-  const cmd = [npmCommand, ...args].join(' ');
+  const sanitizedArgs = sanitizeCmdArgs(args);
+  const cmd = [npmCommand, ...sanitizedArgs].join(' ');
   log('generalDebug_0003', `Applying cmd "${cmd}" in directory "${cwd}".`);
   return runScript(cmd, cwd, output);
+}
+
+function sanitizeCmdArgs(args: Array<string>) {
+  // Introduced for fixing https://github.com/smapiot/piral/issues/259.
+  // If an arg contains a whitespace, it can be incorrectly interpreted as two separate arguments.
+  // For the moment, it's fixed by simply wrapping each arg in OS specific quotation marks.
+  const quote = isWindows ? '"' : "'";
+
+  return args.map(arg => {
+    let result = arg.trim();
+
+    if (/\s/.test(result)) {
+      if (!result.startsWith(quote)) {
+        result = `${quote}${result}`;
+      }
+
+      if (!result.endsWith(quote)) {
+        result = `${result}${quote}`;
+      }
+    }
+
+    return result;
+  });
 }

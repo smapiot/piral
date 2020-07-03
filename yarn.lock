@@ -1630,7 +1630,6 @@
 "@cycle/dom@^22.7.0":
   version "22.7.0"
   resolved "https://registry.yarnpkg.com/@cycle/dom/-/dom-22.7.0.tgz#91b97fdc90129f3a2a73d908adb101c2a5abbf94"
-  integrity sha512-QR6R7lqRTRFdbSVSptPIXLtbJS1DOmSjibwaazrRbLmty9nhtdZDsuzFk6np/R2m8ScfkWSLPPMjVwy0gImSwg==
   dependencies:
     "@cycle/run" "^5.2.0"
     snabbdom "^0.7.4"
@@ -1640,7 +1639,6 @@
 "@cycle/run@^5.2.0", "@cycle/run@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@cycle/run/-/run-5.4.0.tgz#d4bdeb9eb7f40ec14c924b96bbfae0fe08f5d710"
-  integrity sha512-IAFwavuZGZP39XjxL7eQyQ9e6xZUMUjvlhFd3lZoyJPavHBbW8GPiCy5SJ3NCxM6trbgQQ8agu7sr72J83clBA==
   dependencies:
     quicktask "1.1.0"
     xstream "10.x || 11.x"
@@ -1651,9 +1649,9 @@
   dependencies:
     "@libre/atom" "^1.3.2"
 
-"@dotnet/jsinterop@3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@dotnet/jsinterop/-/jsinterop-3.1.3.tgz#2bf67fc3786c930eb8b40805e689705d3db98b13"
+"@dotnet/jsinterop@3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@dotnet/jsinterop/-/jsinterop-3.1.5.tgz#9260c1326bb75b7b4fab2a5c9419e0635a4cf645"
 
 "@ember-data/rfc395-data@^0.0.4":
   version "0.0.4"
@@ -11612,7 +11610,6 @@ quick-temp@^0.1.3, quick-temp@^0.1.5:
 quicktask@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/quicktask/-/quicktask-1.1.0.tgz#70795fd5922fb122100e662118c73a06aadd7352"
-  integrity sha512-b3w19IEXnt5auacLAbePVsqPyVQUwmuhJQrrWnVhm4pP8PAMg2U9vFHbAD9XYXXbMDjdLJs0x5NLqwTV8uFK4g==
 
 quote-stream@^1.0.1, quote-stream@~1.0.2:
   version "1.0.2"
@@ -12681,14 +12678,12 @@ smart-buffer@^4.1.0:
 snabbdom-selector@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/snabbdom-selector/-/snabbdom-selector-4.2.0.tgz#f5a2719eecfbebf5da18a6bf96f0d9008b4d66c3"
-  integrity sha512-hNIg1xDMxssUeMC/4r3OGxXhm8pbyJ0KIG0pXrA3J5ZQK+FkPa+WA9DYw4ROMLq5/LrfurMNMvy3IMm+0CzcnA==
   dependencies:
     tree-selector "^2.1.0"
 
 snabbdom@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/snabbdom/-/snabbdom-0.7.4.tgz#817f07e8d3fb870960c3763b8da56f1ba982d31a"
-  integrity sha512-nnN+7uZ2NTIiu7EPMNwSDhmrYXqwlfCP/j72RdzvDPujXyvQxOW7Jl9yuLayzxMHDNWQR7FM6Pcn4wnDpKRe6Q==
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
@@ -13526,7 +13521,6 @@ tr46@^1.0.1:
 tree-selector@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/tree-selector/-/tree-selector-2.1.1.tgz#644af6c3aa361aabdd8ae545b58f82155884fc17"
-  integrity sha512-NVFYU6YzyUHSMS7+qbhdHlBHG5P9IPjycQa+8MnIBDpq/UWEkMD+lAL/56x7Fty+mAq9SWgtg9D4flZfuOZdDg==
 
 tree-sync@^1.2.2:
   version "1.4.0"
@@ -14362,7 +14356,6 @@ xpipe@^1.0.5:
 "xstream@10.x || 11.x", xstream@11.x, xstream@^11.12.0:
   version "11.12.0"
   resolved "https://registry.yarnpkg.com/xstream/-/xstream-11.12.0.tgz#a85fded069cc8ac3aedc9538e5d94ab6d0ce845a"
-  integrity sha512-rceZqhyRPJdmDNh8hyFEnOacNrL4pTVkNZzoLvFqOVaIZHbM3bS15ycqI5V9eJXCRMfgEapwzcNzPjkIRUkv2Q==
   dependencies:
     symbol-observable "1.2.0"
 

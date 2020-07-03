@@ -12,10 +12,14 @@ describe('Pack Pilet Command', () => {
     const dir = createTempDir();
     const target = 'foo.tgz';
     const packageJson = resolve(dir, 'package.json');
-    writeFileSync(packageJson, JSON.stringify({
-      name: 'my-pilet',
-      version: '1.0.0',
-    }), 'utf8');
+    writeFileSync(
+      packageJson,
+      JSON.stringify({
+        name: 'my-pilet',
+        version: '1.0.0',
+      }),
+      'utf8',
+    );
 
     await packPilet(dir, {
       target,
@@ -28,10 +32,14 @@ describe('Pack Pilet Command', () => {
     const originalDir = process.cwd();
     const dir = createTempDir();
     const packageJson = resolve(dir, 'package.json');
-    writeFileSync(packageJson, JSON.stringify({
-      name: 'my-pilet',
-      version: '1.0.0',
-    }), 'utf8');
+    writeFileSync(
+      packageJson,
+      JSON.stringify({
+        name: 'my-pilet',
+        version: '1.0.0',
+      }),
+      'utf8',
+    );
     process.chdir(dir);
 
     await packPilet();
@@ -43,15 +51,21 @@ describe('Pack Pilet Command', () => {
   it('will fail if the source does not exist', async () => {
     const dir = createTempDir();
     const packageJson = resolve(dir, 'package.json');
-    writeFileSync(packageJson, JSON.stringify({
-      name: 'my-pilet',
-      version: '1.0.0',
-    }), 'utf8');
+    writeFileSync(
+      packageJson,
+      JSON.stringify({
+        name: 'my-pilet',
+        version: '1.0.0',
+      }),
+      'utf8',
+    );
 
-    await expect(packPilet(dir, {
-      source: 'foo',
-      logLevel: 2,
-    })).rejects.toThrowError();
+    await expect(
+      packPilet(dir, {
+        source: 'foo',
+        logLevel: 2,
+      }),
+    ).rejects.toThrowError();
 
     expect(existsSync(resolve(dir, 'my-pilet-1.0.0.tgz'))).toBeFalsy();
   });
@@ -59,9 +73,13 @@ describe('Pack Pilet Command', () => {
   it('will fail if no version is given', async () => {
     const dir = createTempDir();
     const packageJson = resolve(dir, 'package.json');
-    writeFileSync(packageJson, JSON.stringify({
-      name: 'my-pilet',
-    }), 'utf8');
+    writeFileSync(
+      packageJson,
+      JSON.stringify({
+        name: 'my-pilet',
+      }),
+      'utf8',
+    );
 
     await expect(packPilet(dir)).rejects.toThrowError();
 

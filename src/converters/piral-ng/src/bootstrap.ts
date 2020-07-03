@@ -41,7 +41,8 @@ export function bootstrap<T extends BaseComponentProps>(
   props: T,
   moduleOrComponent: any,
   node: HTMLElement,
-  id: string,) {
+  id: string,
+) {
   const annotations = moduleOrComponent.__annotations__;
   const annotation = annotations?.[0];
 
@@ -77,7 +78,7 @@ export function bootstrapComponent<T extends BaseComponentProps>(
     declarations,
     bootstrap: [component],
   })
-  class BootstrapModule { }
+  class BootstrapModule {}
 
   return startup(context, props, BootstrapModule, node);
 }
@@ -98,10 +99,13 @@ export function bootstrapModule<T extends BaseComponentProps>(
     const providers = annotation.providers || [];
     const declarations = annotation.declarations || [];
     const [component] = annotation.bootstrap || [];
-    annotation.providers = [...providers, {
-      provide: 'piral',
-      useValue: piral,
-    }];
+    annotation.providers = [
+      ...providers,
+      {
+        provide: 'piral',
+        useValue: piral,
+      },
+    ];
     annotation.declarations = [...declarations, piral.NgExtension];
 
     if (component) {

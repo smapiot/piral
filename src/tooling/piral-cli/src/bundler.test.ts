@@ -1,4 +1,11 @@
-import { setBundler, callPiletBuild, callPiletDebug, callPiralBuild, callPiralDebug, callDebugPiralFromMonoRepo } from './bundler';
+import {
+  setBundler,
+  callPiletBuild,
+  callPiletDebug,
+  callPiralBuild,
+  callPiralDebug,
+  callDebugPiralFromMonoRepo,
+} from './bundler';
 
 let common: any;
 let defaults = {
@@ -22,33 +29,37 @@ jest.mock('./inject', () => ({
   },
 }));
 
-jest.mock('./common', () => common = ({
-  config: {
-    bundler: 'parcel',
-  },
-  cliVersion: '1.0.0',
-  installPackage: jest.fn(),
-  fail(msg) {
-    throw new Error(msg);
-  },
-  progress() { },
-  log() { },
-  determineNpmClient() {
-    return 'npm';
-  },
-  patchModules: jest.fn(),
-  logReset() { },
-}));
+jest.mock(
+  './common',
+  () =>
+    (common = {
+      config: {
+        bundler: 'parcel',
+      },
+      cliVersion: '1.0.0',
+      installPackage: jest.fn(),
+      fail(msg) {
+        throw new Error(msg);
+      },
+      progress() {},
+      log() {},
+      determineNpmClient() {
+        return 'npm';
+      },
+      patchModules: jest.fn(),
+      logReset() {},
+    }),
+);
 
 describe('Piral CLI Bundler Module', () => {
   it('fails if no default bundler can be installed, but required', async () => {
     defaults.bundler = false;
-    return expect(callPiletBuild({ root: undefined, } as any)).rejects.toThrow();
+    return expect(callPiletBuild({ root: undefined } as any)).rejects.toThrow();
   });
 
   it('using no bundler installs a bundler if none available', async () => {
     defaults.bundler = true;
-    return expect(callPiletBuild({ root: undefined, } as any)).resolves.not.toThrow();
+    return expect(callPiletBuild({ root: undefined } as any)).resolves.not.toThrow();
   });
 
   it('setting the bundler can resolve it properly for call pilet build', async () => {
@@ -65,7 +76,7 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiletBuild({ root: undefined, } as any, 'foo1');
+    await callPiletBuild({ root: undefined } as any, 'foo1');
     expect(actions.buildPilet).toHaveBeenCalled();
   });
 
@@ -106,7 +117,7 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiralBuild({ root: undefined, } as any, 'foo2');
+    await callPiralBuild({ root: undefined } as any, 'foo2');
     expect(actions.buildPiral).toHaveBeenCalled();
   });
 
@@ -124,7 +135,7 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiletDebug({ root: undefined, } as any, 'foo3');
+    await callPiletDebug({ root: undefined } as any, 'foo3');
     expect(actions.debugPilet).toHaveBeenCalled();
   });
 
@@ -142,7 +153,7 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiralDebug({ root: undefined, } as any, 'foo4');
+    await callPiralDebug({ root: undefined } as any, 'foo4');
     expect(actions.debugPiral).toHaveBeenCalled();
   });
 
@@ -160,11 +171,11 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callDebugPiralFromMonoRepo({ root: undefined, } as any, 'foo5');
+    await callDebugPiralFromMonoRepo({ root: undefined } as any, 'foo5');
     expect(actions.watchPiral).toHaveBeenCalled();
   });
 
   it('using a non-available bundler should fail', () => {
-    return expect(callDebugPiralFromMonoRepo({ root: undefined, } as any, 'qxz')).rejects.toThrow();
+    return expect(callDebugPiralFromMonoRepo({ root: undefined } as any, 'qxz')).rejects.toThrow();
   });
 });
