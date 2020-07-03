@@ -184,7 +184,7 @@ describe('Piral-Base strategies module', () => {
       pilets: pilets,
     };
 
-    // Arrange
+    // Act
     await standardStrategy(loadingOptions, callbackMock);
 
     // Assert
