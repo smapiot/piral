@@ -25,5 +25,8 @@ The following tutorials are currently available:
 15. [Shared Dependencies](./15-share-dependencies.md) - defined implicitly and explicitly.
 16. [Actions and State](./16-actions-and-state.md) - custom declarations and extensions.
 17. [Events](./17-events.md) - and how to use them in Piral.
+18. [Authentication](./18-authentication.md) - and how to use authentication with Piral.
+19. [Migration of SSR Applications](./19-migrate-ssr.md) - discusses options for migration of existing websites.
+29. [Migration of Existing Applications](./20-migrate-app.md) - illustrates how existing applications can be migrated.
 
 Please don't hesitate to send us feedback regarding the tutorials and suggestions for additional topics.
