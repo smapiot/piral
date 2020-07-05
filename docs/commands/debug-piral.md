@@ -143,7 +143,7 @@ Automatically installs missing Node.js packages.
 Also includes the node modules for target transpilation.
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--no-optimize-modules`
 
@@ -151,7 +151,7 @@ Opposite of:
 Also includes the node modules for target transpilation.
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--base`
 
