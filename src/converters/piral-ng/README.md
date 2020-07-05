@@ -64,10 +64,10 @@ import 'zone.js/dist/zone';
 Furthermore, switching on the production mode may be useful.
 
 ```ts
-import { enableProdMod } from '@angular/core';
+import { enableProdMode } from '@angular/core';
 
 if (process.env.NODE_ENV === 'production') {
-  enableProdMod();
+  enableProdMode();
 }
 ```
 

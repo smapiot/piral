@@ -1,7 +1,7 @@
 {
-  "name": "piral-blazor",
+  "name": "piral-cycle",
   "version": "0.11.7",
-  "description": "Plugin for integrating Blazor components in Piral.",
+  "description": "Plugin for integrating Cycle.js components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -11,9 +11,7 @@
     "api",
     "plugin",
     "plugin-converter",
-    "blazor",
-    "dotnet",
-    "wasm"
+    "cycle"
   ],
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -22,7 +20,6 @@
   "typings": "lib/index.d.ts",
   "sideEffects": false,
   "files": [
-    "infra.codegen",
     "lib",
     "src"
   ],
@@ -35,19 +32,19 @@
   },
   "scripts": {
     "build": "tsc",
-    "typedoc": "typedoc --json ../../../docs/types/piral-blazor.json src --exclude \"src/**/*.test.*\"",
+    "typedoc": "typedoc --json ../../../docs/types/piral-cycle.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {
-    "@dotnet/jsinterop": "3.1.5",
-    "axios": "^0.19.2",
-    "yauzl": "^2.10.0"
-  },
   "devDependencies": {
-    "@types/emscripten": "0.0.34",
-    "piral-core": "^0.11.7"
+    "@cycle/run": "^5.4.0",
+    "@cycle/dom": "^22.7.0",
+    "piral-core": "^0.11.6",
+    "xstream": "^11.12.0"
   },
   "peerDependencies": {
-    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0"
+    "@cycle/run": "^5.0.0",
+    "@cycle/dom": "^22.0.0",
+    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0",
+    "xstream": "^11.0.0"
   }
 }

@@ -4,15 +4,19 @@ import { createPilets, createPilet } from './aggregate';
 import { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
 
 function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModules: Array<Pilet>) {
-  for (const oldModule of oldModules) {
-    const [newModule] = newModules.filter(m => m.name === oldModule.name);
+  try {
+    for (const oldModule of oldModules) {
+      const [newModule] = newModules.filter(m => m.name === oldModule.name);
 
-    if (newModule) {
-      newModules.splice(newModules.indexOf(newModule), 1);
+      if (newModule) {
+        newModules.splice(newModules.indexOf(newModule), 1);
+      }
     }
-  }
 
-  return createPilets(createApi, [...oldModules, ...newModules]);
+    return createPilets(createApi, [...oldModules, ...newModules]);
+  } catch (err) {
+    return Promise.reject(err);
+  }
 }
 
 /**
@@ -36,7 +40,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
 
     return createPilets(createApi, pilets).then(allModules => {
       if (async && allModules.length > 0) {
-        cb(undefined, allModules);
+        cb(undefined, [...allModules]);
       }
 
       const followUp = loader.then(metadata => {
@@ -49,7 +53,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
                 allModules.push(newModule);
 
                 if (async) {
-                  cb(undefined, allModules);
+                  cb(undefined, [...allModules]);
                 }
               });
             }

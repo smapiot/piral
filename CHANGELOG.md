@@ -4,8 +4,15 @@
 
 * Updated documentation layout (#206)
 * Fixed root-level update in `piral-riot`, `piral-solid`, and `piral-hyperapp`
+* Fixed multi-asset output handling in `debug-pilet` with `piral-cli-webpack` (#258)
+* Fixed handling of spaces in `piral-cli` arguments (#259)
+* Fixed ignoring scoped pathed externals (#263)
 * Added basic support for mounting modules in `piral-ng`
 * Added ability to add new menu types in `piral-menu`
+* Added options for configuration of the `piletApi` in the `.piralrc`
+* Added new optional plugin `piral-cycle` (#232)
+* Changed module optimization to default to `false` (#256)
+* Changed the default bundler to `piral-cli-webpack`
 
 ## 0.11.7 (June 22, 2020)
 
@@ -288,7 +295,7 @@
 * Generate the declaration dynamically (#89)
 * Fixed bug concerning the `store-data` event
 * Fixed bug in Piral CLI regarding Pilet scaffolding
-* Added new optional plugin `piral-inferno` (#ƒ)
+* Added new optional plugin `piral-inferno` (#86)
 * Added new optional plugin `piral-preact` (#86)
 * Added new optional plugin `piral-ngjs` (#87)
 * Improved and added better error messages in the Piral CLI (#92)

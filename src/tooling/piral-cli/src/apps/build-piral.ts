@@ -65,7 +65,7 @@ export const buildPiralDefaults: BuildPiralOptions = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
-  optimizeModules: true,
+  optimizeModules: false,
 };
 
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {

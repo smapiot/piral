@@ -1627,15 +1627,31 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@cycle/dom@^22.7.0":
+  version "22.7.0"
+  resolved "https://registry.yarnpkg.com/@cycle/dom/-/dom-22.7.0.tgz#91b97fdc90129f3a2a73d908adb101c2a5abbf94"
+  dependencies:
+    "@cycle/run" "^5.2.0"
+    snabbdom "^0.7.4"
+    snabbdom-selector "^4.2.0"
+    xstream "11.x"
+
+"@cycle/run@^5.2.0", "@cycle/run@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@cycle/run/-/run-5.4.0.tgz#d4bdeb9eb7f40ec14c924b96bbfae0fe08f5d710"
+  dependencies:
+    quicktask "1.1.0"
+    xstream "10.x || 11.x"
+
 "@dbeining/react-atom@^4.0.0":
   version "4.1.6"
   resolved "https://registry.yarnpkg.com/@dbeining/react-atom/-/react-atom-4.1.6.tgz#16e2ba3b522c22cc729402bf974dc0d5542ca846"
   dependencies:
     "@libre/atom" "^1.3.2"
 
-"@dotnet/jsinterop@3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@dotnet/jsinterop/-/jsinterop-3.1.3.tgz#2bf67fc3786c930eb8b40805e689705d3db98b13"
+"@dotnet/jsinterop@3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@dotnet/jsinterop/-/jsinterop-3.1.5.tgz#9260c1326bb75b7b4fab2a5c9419e0635a4cf645"
 
 "@ember-data/rfc395-data@^0.0.4":
   version "0.0.4"
@@ -7548,9 +7564,9 @@ html-webpack-plugin@^4.2.0:
     tapable "^1.1.3"
     util.promisify "1.0.0"
 
-html5-entry-webpack-plugin@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.0.tgz#8bbac908e61d0fa5bb8d139a5e97a787e0e1c4f1"
+html5-entry-webpack-plugin@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.1.tgz#9c1c7a7bfb06b66dd88740488aaa3468cae62103"
   dependencies:
     cheerio "^1.0.0-rc.3"
     html-webpack-plugin "^4.2.0"
@@ -10653,9 +10669,9 @@ parcel-bundler@^1.12.4:
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
 
-parcel-codegen-loader@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.0.tgz#e08586ce15e31cfa5ed6bb967c17d6b7b098b5ab"
+parcel-codegen-loader@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.1.tgz#c3230d71bef5cd639d1d24347000e771e8182201"
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
@@ -10867,9 +10883,9 @@ pify@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
 
-pilet-webpack-plugin@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.0.tgz#6bf3675c7ef2ac59aed42d4ea9bb94f81f2a146d"
+pilet-webpack-plugin@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.1.tgz#10a4540f87822643967a18507776f48be4c86a7e"
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -10881,9 +10897,9 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
-piral-instance-webpack-plugin@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.0.tgz#5f410d8ea112f7d08323f0c03b6d50c7bd8e15b4"
+piral-instance-webpack-plugin@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.1.tgz#6b65aa052f7a0dfcfdafe1ae22ea287c75f35913"
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"
@@ -11594,6 +11610,10 @@ quick-temp@^0.1.3, quick-temp@^0.1.5:
     mktemp "~0.4.0"
     rimraf "^2.5.4"
     underscore.string "~3.3.4"
+
+quicktask@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/quicktask/-/quicktask-1.1.0.tgz#70795fd5922fb122100e662118c73a06aadd7352"
 
 quote-stream@^1.0.1, quote-stream@~1.0.2:
   version "1.0.2"
@@ -12659,6 +12679,16 @@ smart-buffer@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
 
+snabbdom-selector@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/snabbdom-selector/-/snabbdom-selector-4.2.0.tgz#f5a2719eecfbebf5da18a6bf96f0d9008b4d66c3"
+  dependencies:
+    tree-selector "^2.1.0"
+
+snabbdom@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/snabbdom/-/snabbdom-0.7.4.tgz#817f07e8d3fb870960c3763b8da56f1ba982d31a"
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -13197,7 +13227,7 @@ symbol-observable@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.1.tgz#8340fc4702c3122df5d22288f88283f513d3fdd4"
 
-symbol-observable@^1.0.3, symbol-observable@^1.0.4, symbol-observable@^1.2.0:
+symbol-observable@1.2.0, symbol-observable@^1.0.3, symbol-observable@^1.0.4, symbol-observable@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
 
@@ -13491,6 +13521,10 @@ tr46@^1.0.1:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-1.0.1.tgz#a8b13fd6bfd2489519674ccde55ba3693b706d09"
   dependencies:
     punycode "^2.1.0"
+
+tree-selector@^2.1.0:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/tree-selector/-/tree-selector-2.1.1.tgz#644af6c3aa361aabdd8ae545b58f82155884fc17"
 
 tree-sync@^1.2.2:
   version "1.4.0"
@@ -14322,6 +14356,12 @@ xmldom@0.1.x:
 xpipe@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/xpipe/-/xpipe-1.0.5.tgz#8dd8bf45fc3f7f55f0e054b878f43a62614dafdf"
+
+"xstream@10.x || 11.x", xstream@11.x, xstream@^11.12.0:
+  version "11.12.0"
+  resolved "https://registry.yarnpkg.com/xstream/-/xstream-11.12.0.tgz#a85fded069cc8ac3aedc9538e5d94ab6d0ce845a"
+  dependencies:
+    symbol-observable "1.2.0"
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

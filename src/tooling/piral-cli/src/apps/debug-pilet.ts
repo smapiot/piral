@@ -5,7 +5,7 @@ import { LogLevels, PiletSchemaVersion } from '../types';
 import {
   checkExistingDirectory,
   retrievePiletData,
-  debugPiletApi,
+  config,
   openBrowser,
   reorderInjectors,
   notifyServerOnline,
@@ -44,7 +44,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
-  optimizeModules: true,
+  optimizeModules: false,
   schemaVersion: 'v1',
 };
 
@@ -112,7 +112,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const krasConfig = readKrasConfig({ port }, krasrc);
-  const api = debugPiletApi;
+  const api = config.piletApi;
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${baseDir}".`);
@@ -214,6 +214,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   krasConfig.map['/'] = '';
   krasConfig.map[api] = '';
   krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);
+
+  log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
