@@ -15,9 +15,10 @@ const markdownItSub = require('markdown-it-sub');
 const markdownItSup = require('markdown-it-sup');
 const markdownItVideo = require('markdown-it-video');
 const { readFileSync } = require('fs');
-const { extname, basename, relative } = require('path');
+const { extname, basename } = require('path');
 const { createHash } = require('crypto');
 const { docRef, imgRef, rootPath } = require('./utils');
+const { makeRelativePath } = require('./paths');
 
 function computeHash(content) {
   return createHash('sha1')
@@ -96,7 +97,7 @@ function render(file, baseDir = __dirname) {
         const content = readFileSync(target);
         const hash = computeHash(content);
         const id = `${name}_${hash}${ext}`;
-        result.images[id] = relative(baseDir, target);
+        result.images[id] = makeRelativePath(baseDir, target);
         return id;
       } else if (/LICENSE$/.test(link)) {
         return docRef(link, rootPath);
@@ -126,7 +127,7 @@ function render(file, baseDir = __dirname) {
     .use(markdownItVideo);
 
   result.content = md.render(content);
-  result.mdValue = '`' + getMdValue(result) + '`';
+  result.mdValue = ['`', getMdValue(result), '`'].join('');
   return result;
 }
 

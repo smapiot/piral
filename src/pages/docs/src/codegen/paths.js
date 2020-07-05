@@ -141,8 +141,12 @@ function getAbsolutePath(path, basePath = docs) {
   return resolve(dirname(basePath), path);
 }
 
+function makeRelativePath(baseDir, target) {
+  return relative(baseDir, target).split('\\').join('/');
+}
+
 function getRelativePath(path, basePath = docs) {
-  return relative(docs, getAbsolutePath(path, basePath));
+  return makeRelativePath(docs, getAbsolutePath(path, basePath));
 }
 
 module.exports = {
@@ -165,6 +169,7 @@ module.exports = {
   getCoreTypes,
   getDocs,
   getName,
+  makeRelativePath,
   getRelativePath,
   getAbsolutePath,
   generateFile,
