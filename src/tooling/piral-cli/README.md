@@ -4,7 +4,7 @@
 
 Piral CLI is a command-line tool that can also be used as a library. It should make common tasks such as building a pilet, scaffolding a pilet, or debugging a piral instance simple.
 
-Internally, Piral CLI is build upon existing tools with connection points to their respective eco-systems. For instance, the build / debug commands use [Parcel](https://parceljs.org) and can be configured / extended just like a normal Parcel build job could be. This way the whole Parcel ecosystem including possibilities for you to roll out your own plugins is possible.
+Internally, Piral CLI is build upon existing tools with connection points to their respective eco-systems.
 
 ## Documentation
 
@@ -16,11 +16,15 @@ The Piral CLI can be extended with plugins.
 
 ### Available Plugins
 
-Right now the following plugins exist:
+Right now the following generic plugins exist:
 
 - [**piral-cli-local-feed**](https://github.com/FlorianRappl/piral-cli-local-feed), provides the ability to start a local feed service
 - [**piral-cli-dotenv**](https://github.com/FlorianRappl/piral-cli-dotenv), provides the ability to easily integrate environment variables
-- [**piral-cli-webpack**](https://github.com/FlorianRappl/piral-cli-webpack), provides an integration for Webpack to build and debug pilets
+
+Also the following bundler plugin exists (bringing build / debug capabilities):
+
+- [**piral-cli-parcel**](https://github.com/smapiot/piral), provides an integration for Parcel as a bundler
+- [**piral-cli-webpack**](https://github.com/smapiot/piral), provides an integration for Webpack as a bundler
 
 You'll find an updated list [on NPM](https://www.npmjs.com/search?q=keywords%3Apiral-cli) using the keyword **piral-cli**.
 
