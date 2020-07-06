@@ -3,6 +3,7 @@ title: Publishing Pilets
 description: Publish your first pilet using the public feed service.
 audience: Architects, Developers
 level: Elementary
+section: Getting Started
 ---
 
 # Publishing Pilets

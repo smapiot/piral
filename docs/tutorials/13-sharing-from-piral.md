@@ -3,6 +3,7 @@ title: Sharing From Piral
 description: How to share information from the Piral instance.
 audience: Architects, Developers
 level: Advanced
+section: Details
 ---
 
 # Sharing From Piral

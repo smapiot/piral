@@ -3,6 +3,7 @@ title: Events
 description: Using events to communicate between pilets.
 audience: Developers
 level: Intermediate
+section: Details
 ---
 
 # Events

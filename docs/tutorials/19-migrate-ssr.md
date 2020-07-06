@@ -3,6 +3,7 @@ title: Migration of SSR Applications
 description: Discusses options for migration of existing websites.
 audience: Architects, Developers
 level: Proficient
+section: Details
 ---
 
 # Migration of SSR Applications

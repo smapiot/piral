@@ -3,6 +3,7 @@ title: Introduction
 description: Find out what Piral is about. Learn more about the structure of our tutorials.
 audience: Everyone
 level: Beginner
+section: Getting Started
 ---
 
 # Introduction

@@ -3,6 +3,7 @@ title: The Pilet API
 description: A closer look at pilets and the Pilet API.
 audience: Developers
 level: Elementary
+section: Details
 ---
 
 # The Pilet API
