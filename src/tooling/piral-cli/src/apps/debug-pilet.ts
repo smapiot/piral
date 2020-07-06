@@ -44,7 +44,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
-  optimizeModules: true,
+  optimizeModules: false,
   schemaVersion: 'v1',
 };
 
