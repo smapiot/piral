@@ -5,15 +5,12 @@ import { DefaultLoadingIndicator } from '../components/DefaultLoader';
 
 describe('Util Foreign.', () => {
   it('Convert component function throws error due to missing converter function.', () => {
-    try {
-      expect(convertComponent(null, createElement('div'))).toThrow(
-        'No converter for component of type "div" registered.',
-      );
-    } catch {
-      expect(true).toEqual(true);
-    }
+    const t = () => {
+      convertComponent(null, createElement('div'));
+    };
+    expect(t).toThrow('No converter for component of type "div" registered.');
   });
-  
+
   it('Convert component function returns converted component.', () => {
     const fComponent: ForeignComponent<any> = {
       mount: () => {},
