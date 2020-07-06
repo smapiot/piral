@@ -52,7 +52,7 @@ import { Link } from 'react-router-dom';
 import { TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
 
 export default () => (
-  <section className="container">
+  <section className="layout-container">
     <Link to="/reference/plugins" className="nav-link">Plugins</Link> /
     <div className="plugin-info">
       <img src={require('../../assets/${image}')} />

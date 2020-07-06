@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ImageCard } from '../scripts/components';
 
 export default () => (
-  <section className="container">
+  <section className="layout-container">
     <h1>References</h1>
     <p>Further topics and detailed documentation on the whole Piral ecosystem.</p>
     <div className="boxes">

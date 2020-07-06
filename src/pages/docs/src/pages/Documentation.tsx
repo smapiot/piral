@@ -5,7 +5,7 @@ const Introduction = require('../codegen/documentation.codegen');
 const Reference = require('../codegen/reference.codegen');
 
 export default ({}) => (
-  <section className="container">
+  <section className="layout-container">
     <Tabs titles={['Introduction', 'Reference']}>
       <Introduction />
       <Reference />

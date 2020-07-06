@@ -38,7 +38,7 @@ const CodeInput: React.FC = () => {
 };
 
 export default () => (
-  <section className="container">
+  <section className="layout-container">
     <h1>Message Codes</h1>
     <p>These codes are used in the Piral CLI to explain available warnings, errors, and more in depth.</p>
     <CodeInput />

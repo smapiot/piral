@@ -11,7 +11,6 @@ const SpecificationReferencePage = React.lazy(() => import('../pages/Specificati
 const ToolingReferencePage = React.lazy(() => import('../pages/Tooling'));
 const CodesReferencePage = React.lazy(() => import('../pages/Codes'));
 const PluginsReferencePage = React.lazy(() => import('../pages/Extensions'));
-const SamplesPage = React.lazy(() => import('../pages/Samples'));
 const FaqPage = React.lazy(() => import('../pages/Faq'));
 const NotFoundPage = React.lazy(() => import('../pages/NotFound'));
 
@@ -42,7 +41,6 @@ export const App = () => (
         {plugins.map(plugin => (
           <Route key={plugin.id} exact path={plugin.route} component={plugin.page} />
         ))}
-        <Route exact path="/samples" component={SamplesPage} />
         <Route exact path="/faq" component={FaqPage} />
         <Redirect from="/reference/extensions" to="/reference/plugins" />
         <Redirect from="/code/:id" to="/reference/codes/:id" />

@@ -9,7 +9,7 @@ export interface TutorialProps {
 }
 
 export const Tutorial: React.FC<TutorialProps> = ({ previous, next, children }) => (
-  <section className="container">
+  <section className="layout-container">
     <ContentPage>
       {children}
       <div className="tutorial-nav">

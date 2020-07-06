@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const TutorialsList = require('../codegen/tutorials-list.codegen');
 
 export default () => (
-  <section className="container">
+  <section className="layout-container">
     <h1>Tutorials</h1>
     <p>
       These tutorials provide a guideline for developing an application based on Piral. They are also helpful for
