@@ -13,6 +13,7 @@ describe('Util Foreign.', () => {
       expect(true).toEqual(true);
     }
   });
+  
   it('Convert component function returns converted component.', () => {
     const fComponent: ForeignComponent<any> = {
       mount: () => {},
@@ -22,6 +23,7 @@ describe('Util Foreign.', () => {
     }, createElement('div'));
     expect(result).toEqual(fComponent);
   });
+
   it('Render in DOM', () => {
     const context = {
       showPortal: jest.fn(),
@@ -32,6 +34,7 @@ describe('Util Foreign.', () => {
     var result = renderInDom(context, element, DefaultLoadingIndicator, {});
     expect(result).toBe('100');
   });
+
   it('Render in DOM with parent node missing', () => {
     const context = {
       showPortal: jest.fn(),
