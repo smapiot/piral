@@ -1,5 +1,5 @@
-import { syncStrategy } from './strategies';
-import { PiletMetadata } from './types';
+import { blazingStrategy, standardStrategy, syncStrategy } from './strategies';
+import { PiletMetadata, LoadPiletsOptions, Pilet } from './types';
 
 function createMockApi(meta: PiletMetadata) {
   return {
@@ -76,5 +76,158 @@ describe('Piral-Base strategies module', () => {
     expect(callbackMock).toHaveBeenCalledTimes(1);
     expect(callbackMock.mock.calls[0][0]).not.toBeUndefined();
     expect(callbackMock.mock.calls[0][1]).toHaveLength(0);
+  });
+
+  it('blazingStrategy evaluates all in one sweep', async () => {
+    // Arrange
+    const setupMock = jest.fn();
+    const callbackMock = jest.fn();
+    const pilets: Array<Pilet> = [
+      {
+        setup: setupMock,
+        hash: '12g',
+        name: 'somePilet',
+        version: '1',
+      },
+      {
+        setup: setupMock,
+        hash: '99a',
+        name: 'anotherPilet',
+        version: '2',
+      },
+    ];
+    const loadingOptions: LoadPiletsOptions = {
+      createApi: createMockApi,
+      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      loadPilet: jest.fn(m => Promise.resolve(m as any)),
+      fetchDependency: jest.fn(),
+      dependencies: jest.fn(),
+      getDependencies: jest.fn(),
+    };
+
+    // Act
+    await blazingStrategy(loadingOptions, callbackMock);
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    // Assert
+    expect(setupMock).toHaveBeenCalledTimes(2);
+    expect(callbackMock).toHaveBeenCalledTimes(2);
+    expect(callbackMock.mock.calls[0][0]).toBeUndefined();
+    expect(callbackMock.mock.calls[0][1]).toHaveLength(1);
+    expect(callbackMock.mock.calls[1][0]).toBeUndefined();
+    expect(callbackMock.mock.calls[1][1]).toHaveLength(2);
+  });
+
+  it('blazingStrategy evaluates also with no modules', async () => {
+    // Arrange
+    const setupMock = jest.fn();
+    const callbackMock = jest.fn();
+    const pilets: Array<Pilet> = [];
+    const loadingOptions: LoadPiletsOptions = {
+      createApi: createMockApi,
+      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      loadPilet: jest.fn(m => Promise.resolve(m as any)),
+      fetchDependency: jest.fn(),
+      dependencies: jest.fn(),
+      getDependencies: jest.fn(),
+      pilets: pilets,
+    };
+
+    // Act
+    await blazingStrategy(loadingOptions, callbackMock);
+
+    // Assert
+    expect(setupMock).toHaveBeenCalledTimes(0);
+    expect(callbackMock).toHaveBeenCalledTimes(0);
+  });
+
+  it('blazingStrategy reports error if failed due to invalid arguments', async () => {
+    // Arrange
+    const setupMock = jest.fn();
+    const callbackMock = jest.fn();
+    const pilets = true as any;
+    const invalidLoadPiletOptions: LoadPiletsOptions = {
+      createApi: createMockApi,
+      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      pilets: pilets,
+    };
+
+    // Act
+    await blazingStrategy(invalidLoadPiletOptions, callbackMock);
+
+    // Assert
+    expect(setupMock).toHaveBeenCalledTimes(0);
+    expect(callbackMock).toHaveBeenCalledTimes(0);
+  });
+
+  it('standardStrategy evaluates all in one sweep', async () => {
+    // Arrange
+    const setupMock = jest.fn();
+    const callbackMock = jest.fn();
+    const pilets: Array<Pilet> = [
+      {
+        setup: setupMock,
+        hash: '12g',
+        name: 'somePilet',
+        version: '1',
+      },
+      {
+        setup: setupMock,
+        hash: '99a',
+        name: 'anotherPilet',
+        version: '2',
+      },
+    ];
+    const loadingOptions: LoadPiletsOptions = {
+      createApi: createMockApi,
+      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      pilets: pilets,
+    };
+
+    // Act
+    await standardStrategy(loadingOptions, callbackMock);
+
+    // Assert
+    expect(setupMock).toHaveBeenCalledTimes(2);
+    expect(callbackMock).toHaveBeenCalledTimes(1);
+    expect(callbackMock.mock.calls[0][0]).toBeUndefined();
+    expect(callbackMock.mock.calls[0][1]).toHaveLength(2);
+  });
+
+  it('standardStrategy evaluates also with no modules', async () => {
+    // Arrange
+    const callbackMock = jest.fn();
+    const loadingOptions: LoadPiletsOptions = {
+      createApi: createMockApi,
+      fetchPilets: jest.fn(() => Promise.resolve([])),
+      pilets: [],
+    };
+
+    // Act
+    await standardStrategy(loadingOptions, callbackMock);
+
+    // Assert
+    expect(callbackMock).toHaveBeenCalledTimes(1);
+    expect(callbackMock.mock.calls[0][0]).toBeUndefined();
+    expect(callbackMock.mock.calls[0][1]).toHaveLength(0);
+  });
+
+  it('standardStrategy reports error if failed due to invalid arguments', async () => {
+    // Arrange
+    const setupMock = jest.fn();
+    const callbackMock = jest.fn();
+    const pilets = true as any;
+    const invalidLoadPiletOptions: LoadPiletsOptions = {
+      createApi: createMockApi,
+      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      pilets: pilets,
+    };
+
+    // Act
+    await blazingStrategy(invalidLoadPiletOptions, callbackMock);
+
+    // Assert
+    expect(setupMock).toHaveBeenCalledTimes(0);
+    expect(callbackMock).toHaveBeenCalledTimes(0);
   });
 });

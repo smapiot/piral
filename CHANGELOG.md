@@ -11,6 +11,8 @@
 * Added ability to add new menu types in `piral-menu`
 * Added options for configuration of the `piletApi` in the `.piralrc`
 * Added new optional plugin `piral-cycle` (#232)
+* Changed module optimization to default to `false` (#256)
+* Changed the default bundler to `piral-cli-webpack`
 
 ## 0.11.7 (June 22, 2020)
 

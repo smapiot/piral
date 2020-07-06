@@ -40,7 +40,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
 
     return createPilets(createApi, pilets).then(allModules => {
       if (async && allModules.length > 0) {
-        cb(undefined, allModules);
+        cb(undefined, [...allModules]);
       }
 
       const followUp = loader.then(metadata => {
@@ -53,7 +53,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
                 allModules.push(newModule);
 
                 if (async) {
-                  cb(undefined, allModules);
+                  cb(undefined, [...allModules]);
                 }
               });
             }

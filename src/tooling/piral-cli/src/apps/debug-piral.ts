@@ -40,7 +40,7 @@ export const debugPiralDefaults: DebugPiralOptions = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
-  optimizeModules: true,
+  optimizeModules: false,
 };
 
 const injectorName = resolve(__dirname, '../injectors/piral.js');

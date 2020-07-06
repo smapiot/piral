@@ -39,7 +39,7 @@ export const buildPiletDefaults: BuildPiletOptions = {
   sourceMaps: true,
   contentHash: true,
   scopeHoist: false,
-  optimizeModules: true,
+  optimizeModules: false,
   schemaVersion: 'v1',
 };
 
