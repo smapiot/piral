@@ -5,8 +5,8 @@ import { Sidebar } from './Sidebar';
 export interface SectionItem {
   title: string;
   links: Array<{
-    name: string;
-    href: string;
+    id: string;
+    route: string;
   }>;
 }
 
@@ -23,9 +23,9 @@ export const SectionMenu: React.FC<SectionMenuProps> = ({ sections, active }) =>
           <div className="section-nav-title">{section.title}</div>
           <ul className="section-nav-list">
             {section.links.map(link => (
-              <li key={link.href}>
-                <Link className={active === link.href ? 'active' : ''} to={link.href}>
-                  {link.name}
+              <li key={link.id}>
+                <Link className={active === link.route ? 'active' : ''} to={link.route}>
+                  {link.id}
                 </Link>
               </li>
             ))}

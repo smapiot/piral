@@ -1,46 +1,19 @@
 import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { routes } from './sitemap';
 import { Layout } from './layout';
 
-const ReferencePage = React.lazy(() => import('../pages/References'));
-const DocumentationPage = React.lazy(() => import('../pages/Documentation'));
-const TypeReferencePage = React.lazy(() => import('../pages/Types'));
-const SpecificationReferencePage = React.lazy(() => import('../pages/Specification'));
-const ToolingReferencePage = React.lazy(() => import('../pages/Tooling'));
-const CodesReferencePage = React.lazy(() => import('../pages/Codes'));
-const PluginsReferencePage = React.lazy(() => import('../pages/Extensions'));
-const FaqPage = React.lazy(() => import('../pages/Faq'));
 const NotFoundPage = React.lazy(() => import('../pages/NotFound'));
-
-const tutorials = require('../codegen/tutorials.codegen');
-const plugins = require('../codegen/extensions.codegen');
-const codes = require('../codegen/codes.codegen');
 
 export const App = () => (
   <BrowserRouter>
     <Layout>
       <Switch>
+        {routes}
         <Redirect exact from="/" to="/guidelines" />
-        <Redirect exact from="/tutorials" to={tutorials[0]?.route} />
-        {tutorials.map(tutorial => (
-          <Route key={tutorial.id} exact path={tutorial.route} component={tutorial.page} />
-        ))}
-        <Route exact path="/reference" component={ReferencePage} />
-        <Route exact path="/reference/documentation/:tab?" component={DocumentationPage} />
-        <Route exact path="/reference/types/:tab?" component={TypeReferencePage} />
-        <Route exact path="/reference/specifications/:tab?" component={SpecificationReferencePage} />
-        <Route exact path="/reference/tooling/:tab?" component={ToolingReferencePage} />
-        <Route exact path="/reference/codes" component={CodesReferencePage} />
-        {codes.map(code => (
-          <Route key={code.id} exact path={code.route} component={code.page} />
-        ))}
-        <Route exact path="/reference/codes/*" component={CodesReferencePage} />
-        <Route exact path="/reference/plugins" component={PluginsReferencePage} />
-        {plugins.map(plugin => (
-          <Route key={plugin.id} exact path={plugin.route} component={plugin.page} />
-        ))}
-        <Route exact path="/faq" component={FaqPage} />
-        <Redirect from="/reference/extensions" to="/reference/plugins" />
+        <Redirect exact from="/tutorials" to="/guidelines" />
+        <Redirect from="/reference/extensions" to="/plugins" />
+        <Redirect from="/reference/plugins" to="/plugins" />
         <Redirect from="/code/:id" to="/reference/codes/:id" />
         <Route component={NotFoundPage} />
       </Switch>

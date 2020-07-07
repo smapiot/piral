@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { useLocation } from 'react-router';
 import { TocMenu } from './TocMenu';
 import { SectionMenu } from './SectionMenu';
-import { useLocation } from 'react-router';
+import { resolveSections } from '../sitemap';
 
 export const ContentPage: React.FC = ({ children }) => {
   const ref = React.useRef(undefined);
@@ -17,33 +18,7 @@ export const ContentPage: React.FC = ({ children }) => {
 
   return (
     <>
-      <SectionMenu
-        active={pathname}
-        sections={[
-          {
-            title: 'Getting Started',
-            links: [
-              {
-                href: '/tutorials/01-introduction',
-                name: 'Introduction',
-              },
-              {
-                href: '/tutorials/02-getting-started',
-                name: 'Getting Started',
-              },
-            ],
-          },
-          {
-            title: 'Examples',
-            links: [
-              {
-                href: '/tutorials/03-introduction',
-                name: 'Cross-Framework Sample',
-              },
-            ],
-          },
-        ]}
-      />
+      <SectionMenu active={pathname} sections={resolveSections(pathname)} />
       <TocMenu content={ref} />
       <div className="content-display" ref={ref}>
         {children}

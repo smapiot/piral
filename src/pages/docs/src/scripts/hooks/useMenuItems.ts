@@ -24,6 +24,10 @@ function extractMenuItems(sections: NodeListOf<HTMLElement>, active: HTMLElement
     };
 
     while (level-- > 0) {
+      if (!last) {
+        break;
+      }
+
       if (level === 0) {
         const isActive = section === active;
 
@@ -74,7 +78,7 @@ export function useMenuItems(content: RefObject<HTMLElement>) {
             .pop() || sections[0];
 
         if (active !== newActive) {
-          setItems((content && extractMenuItems(sections, newActive)) || []);
+          setItems(extractMenuItems(sections, newActive) || []);
           active = newActive;
         }
       };

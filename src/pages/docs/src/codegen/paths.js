@@ -8,6 +8,7 @@ const docs = resolve(__dirname, '../../../../../docs');
 const packagesRoot = resolve(__dirname, '../../../..');
 const generated = resolve(__dirname, generatedName);
 const tutorials = resolve(docs, 'tutorials');
+const samples = resolve(docs, 'examples');
 const questions = resolve(docs, 'questions');
 const reference = resolve(docs, 'reference');
 const commands = resolve(docs, 'commands');
@@ -81,6 +82,10 @@ function isPluginType(fileName) {
 
 function getTutorials() {
   return getDocsFrom(tutorials);
+}
+
+function getSamples() {
+  return getDocsFrom(samples);
 }
 
 function getQuestions() {
@@ -158,6 +163,7 @@ module.exports = {
   generated,
   generatedName,
   getTutorials,
+  getSamples,
   getQuestions,
   getReferences,
   getCommands,
