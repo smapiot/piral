@@ -2,6 +2,47 @@ div.content {
   display: flex;
   flex: 1 0 auto;
   width: 100%;
+
+  .section-nav {
+    position: sticky;
+    top: 2.4rem;
+    align-self: flex-start;
+    width: 12.1rem;
+    padding: 1.2rem 0;
+    overflow: hidden;
+  }
+
+  .toc-nav {
+    position: sticky;
+    top: 2.4rem;
+    align-self: flex-start;
+    width: 12.1rem;
+    padding: 1.2rem 0;
+    overflow: hidden;
+    order: 2;
+  }
+
+  .content-display {
+    flex: 1;
+  }
+}
+
+.scroller {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.32) transparent;
+  overflow-y: auto;
+  backface-visibility: hidden;
+  scroll-snap-type: y mandatory;
+  touch-action: pan-y;
+
+  &::-webkit-scrollbar {
+    width: .2rem;
+    height: .2rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.32);
+  }
 }
 
 .icon {

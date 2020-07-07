@@ -131,12 +131,9 @@
     border-radius: 0 0 2px 2px;
 
     .search-scroll {
+      background: white;
       max-height: 0;
       height: 100%;
-      overflow-y: auto;
-      background: white;
-      scroll-snap-type: y mandatory;
-      touch-action: pan-y;
     }
 
     .search-result {

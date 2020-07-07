@@ -95,7 +95,7 @@ export const Search: React.FC = () => {
           </button>
         </form>
         <div className="search-results">
-          <div className="search-scroll">
+          <div className="search-scroll scroller">
             <div className="search-result">
               <div className="search-result-meta">
                 {!input.length ? 'Type to start searching' : `${items.length} matching documents`}
