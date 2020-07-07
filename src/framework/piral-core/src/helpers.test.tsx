@@ -1,6 +1,6 @@
-import { createPiletOptions, PiletOptionsConfig } from './helpers';
+import { createPiletOptions, PiletOptionsConfig, extendSharedDependencies, setSharedDependencies } from './helpers';
 import { globalDependencies } from './modules';
-import { PiletMetadata, Pilet } from 'piral-base';
+import { PiletMetadata, Pilet, AvailableDependencies } from 'piral-base';
 import { Atom, swap } from '@dbeining/react-atom';
 
 function createMockApi(meta: PiletMetadata){
@@ -36,6 +36,53 @@ function createMockContainer() {
 }
 
 describe('Piral-Core helpers module', () => {
+
+  it('setSharedDependencies set the shared dependecies', () => {
+
+    // Arrange
+    const dependencies: AvailableDependencies = {
+      "gg": {},
+      "ff": {}
+    };
+
+    // Act
+    const dependencyGetter = setSharedDependencies(dependencies);
+    const result = dependencyGetter();
+
+    // Assert
+    expect(result).not.toBeUndefined();
+  })
+
+  it('extendSharedDependencies should extend the dependecies', () => {
+
+    // Arrange
+    const additionalDependencies: AvailableDependencies = {
+      "gg": {},
+      "ff": {}
+    };
+
+    // Act
+    const extendedDependecies = extendSharedDependencies(additionalDependencies);
+
+    // Assert
+    expect(extendedDependecies).not.toBeUndefined();
+  });
+
+  it('extendSharedDependencies should extend the dependecies', () => {
+
+    // Arrange
+    const additionalDependencies: AvailableDependencies = {
+      "gg": {},
+      "ff": {}
+    }
+
+    // Act
+    const extendedDependecies = extendSharedDependencies(additionalDependencies);
+
+    // Assert
+    expect(extendedDependecies).not.toBeUndefined();
+  });
+
   it('createPiletOptions creates the options using the provided pilets', () => {
 
     const wasUndefined = process.env.DEBUG_PIRAL === undefined;
@@ -161,6 +208,58 @@ describe('Piral-Core helpers module', () => {
 
     if(wasUndefined) {
       process.env.DEBUG_PIRAL = undefined;
+    }
+  });
+
+  it('createPiletOptions runs in PILET_DEBUG context', () => {
+    const wasUndefined = process.env.DEBUG_PILET === undefined;
+
+    // Arrange
+    process.env.DEBUG_PILET = "localhost:1234";
+    const setupMock = jest.fn();
+    const requestPilets = jest.fn(() => Promise.resolve(providedPilets));
+    const globalContext = createMockContainer().context
+    const providedPilets: Array<Pilet> = [
+      {
+        setup: setupMock,
+        hash: '12g',
+        name: 'somePilet',
+        version: '1',
+      },
+      {
+        setup: setupMock,
+        hash: '99a',
+        name: 'anotherPilet',
+        version: '2',
+      },
+    ];
+    const optionsConfig: PiletOptionsConfig = {
+      createApi: createMockApi,
+      availablePilets: providedPilets,
+      context: globalContext,
+      fetchDependency: jest.fn(),
+      getDependencies: jest.fn(),
+      loadPilet: jest.fn(),
+      requestPilets: requestPilets,
+      strategy: jest.fn()
+    }
+
+    let hasFailed = false;
+
+    // Act
+    const options = createPiletOptions(optionsConfig);
+    try {
+      options.fetchPilets(); //This call should not work in node.js test environment
+    }
+    catch {
+      hasFailed = true;
+    }
+
+    // Assert
+    expect(hasFailed).toBeTruthy();
+
+    if(wasUndefined) {
+      process.env.DEBUG_PILET = undefined;
     }
   });
 });
