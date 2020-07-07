@@ -15,7 +15,7 @@ import {
 } from 'piral';
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends SitelessApi { }
+  interface PiletCustomApi extends SitelessApi {}
 }
 
 declare global {
