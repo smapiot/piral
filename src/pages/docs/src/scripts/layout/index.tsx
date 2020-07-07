@@ -45,7 +45,7 @@ export const Layout: React.FC = ({ children }) => {
         <nav className="layout-container">
           <ul className={active ? 'menu active' : 'menu'}>
             <li>
-              <NavLink to="/tutorials">Guidelines</NavLink>
+              <NavLink to="/guidelines">Guidelines</NavLink>
             </li>
             <li>
               <NavLink to="/reference">Reference</NavLink>
@@ -62,7 +62,7 @@ export const Layout: React.FC = ({ children }) => {
           </ul>
         </nav>
       </header>
-      <div className="content">
+      <div className="layout-container content">
         <React.Suspense fallback={<Loader />}>{children}</React.Suspense>
       </div>
       <Footer />

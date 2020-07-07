@@ -5,29 +5,46 @@ export interface MenuItem {
   title: string;
   children: MenuItems;
   active: boolean;
+  parent: MenuItem | undefined;
 }
 
 export type MenuItems = Array<MenuItem>;
 
 function extractMenuItems(sections: NodeListOf<HTMLElement>, active: HTMLElement): MenuItems {
-  const items = [];
+  const items: Array<MenuItem> = [];
 
   Array.prototype.forEach.call(sections, section => {
-    if (section.localName === 'h1') {
-      items.push({
-        href: `#${section.id}`,
-        title: section.textContent,
-        active: section === active,
-        children: [],
-      });
-    } else if (items.length > 0) {
-      const last = items[items.length - 1];
-      last.children.push({
-        href: `#${section.id}`,
-        title: section.textContent,
-        active: section === active,
-        children: [],
-      });
+    let level = +section.localName.substr(1, 1) - 1;
+    let last: MenuItem = {
+      active: false,
+      children: items,
+      href: '',
+      title: '',
+      parent: undefined,
+    };
+
+    while (level-- > 0) {
+      if (level === 0) {
+        const isActive = section === active;
+
+        last.children.push({
+          href: `#${section.id}`,
+          title: section.textContent,
+          active: isActive,
+          parent: last,
+          children: [],
+        });
+
+        if (isActive) {
+          while (last !== undefined) {
+            last.active = true;
+            last = last.parent;
+          }
+        }
+      } else {
+        const items = last.children;
+        last = items[items.length - 1];
+      }
     }
   });
 
@@ -41,10 +58,12 @@ function seen(offset: number, position: number, height: number, last: boolean) {
 
 export function useMenuItems(content: RefObject<HTMLElement>) {
   const [items, setItems] = useState<MenuItems>([]);
+
   useEffect(() => {
     if (content.current) {
-      const sections = content.current.querySelectorAll<HTMLElement>('h1, h2');
+      const sections = content.current.querySelectorAll<HTMLElement>('h2, h3, h4, h5, h6');
       let active = undefined;
+
       const handler = () => {
         const position = document.documentElement.scrollTop;
         const height = document.documentElement.clientHeight;
@@ -66,5 +85,6 @@ export function useMenuItems(content: RefObject<HTMLElement>) {
 
     return () => {};
   }, [content.current]);
+
   return items;
 }

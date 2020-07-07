@@ -108,7 +108,7 @@ function render(file, baseDir = __dirname) {
   });
 
   md.use(markdownItAbbr)
-    .use(markdownItAnchor, { level: [1, 2] })
+    .use(markdownItAnchor, { level: [1, 2, 3, 4, 5, 6] })
     .use(markdownItEmoji)
     .use(markdownItFootnote)
     .use(markdownItFrontMatter, fm => (result.meta = YAML.parse(fm)))

@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { useStickySidebar } from '../hooks';
 
-export const Sidebar: React.FC = ({ children }) => {
+export interface SidebarProps {
+  className: string;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ children, className }) => {
   const container = useStickySidebar();
 
   return (
-    <div className="doc-sidebar sticky" ref={container}>
-      <nav className="doc-menu">{children}</nav>
+    <div className={`${className} sticky`} ref={container}>
+      <div className="scroller">{children}</div>
     </div>
   );
 };

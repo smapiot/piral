@@ -9,7 +9,7 @@ export interface TutorialProps {
 }
 
 export const Tutorial: React.FC<TutorialProps> = ({ previous, next, children }) => (
-  <section className="layout-container">
+  <>
     <ContentPage>
       {children}
       <div className="tutorial-nav">
@@ -17,5 +17,5 @@ export const Tutorial: React.FC<TutorialProps> = ({ previous, next, children }) 
         {next ? <Link to={next}>Next</Link> : <a />}
       </div>
     </ContentPage>
-  </section>
+  </>
 );

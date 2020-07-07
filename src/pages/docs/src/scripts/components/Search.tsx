@@ -103,7 +103,7 @@ export const Search: React.FC = () => {
               <ol className="search-result-list">
                 {items.map(item => (
                   <li key={item.url} className="search-result-list-item">
-                    <Link to={item.url}>
+                    <Link to={item.url} onClick={closeSearch}>
                       <div>
                         <span className="title">{item.title}</span>
                         <span className="url">{item.url}</span>
