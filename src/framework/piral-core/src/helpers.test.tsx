@@ -68,21 +68,6 @@ describe('Piral-Core helpers module', () => {
     expect(extendedDependecies).not.toBeUndefined();
   });
 
-  it('extendSharedDependencies should extend the dependecies', () => {
-
-    // Arrange
-    const additionalDependencies: AvailableDependencies = {
-      "gg": {},
-      "ff": {}
-    }
-
-    // Act
-    const extendedDependecies = extendSharedDependencies(additionalDependencies);
-
-    // Assert
-    expect(extendedDependecies).not.toBeUndefined();
-  });
-
   it('createPiletOptions creates the options using the provided pilets', () => {
 
     const wasUndefined = process.env.DEBUG_PIRAL === undefined;
