@@ -3,15 +3,17 @@ import { EventEmitter } from 'events';
 
 describe('Piral-CLI piral injector', () => {
   it('PiletInjector is active when configured', () => {
-    const config = {
+    const options = {
       pilets: [],
-      port: 1234,
       api: '',
       app: '',
       active: true,
     };
+    const config = {
+      port: 1234,
+    };
     const core = new EventEmitter();
-    const injector = new PiletInjector(config, undefined, core);
+    const injector = new PiletInjector(options, config, core);
     expect(injector.active).toBeTruthy();
   });
 });
