@@ -204,6 +204,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   const injectorConfig = {
+    ssl: krasConfig.ssl,
     active: true,
     pilets,
     app: appDir,

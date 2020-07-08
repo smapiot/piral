@@ -20,20 +20,22 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
   private port: number;
+  private https: boolean;
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
     this.port = config.port;
+    this.https = !!config.ssl;
     const { pilets, api } = options;
     const cbs = {};
 
-    core.on('user-connected', e => {
+    core.on('user-connected', (e) => {
       if (e.target === '*' && e.url === api.substr(1)) {
         cbs[e.id] = (msg: string) => e.ws.send(msg);
       }
     });
 
-    core.on('user-disconnected', e => {
+    core.on('user-disconnected', (e) => {
       delete cbs[e.id];
     });
 
@@ -74,7 +76,7 @@ export default class PiletInjector implements KrasInjector {
     return {
       name: def.name,
       version: def.version,
-      link: `http://localhost:${this.port}${api}/${index}/${file}`,
+      link: `${this.https ? 'https' : 'http'}://localhost:${this.port}${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef,
       noCache: true,
