@@ -209,6 +209,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     app: appDir,
     handle: ['/', api],
     api,
+    port,
   };
 
   krasConfig.map['/'] = '';
