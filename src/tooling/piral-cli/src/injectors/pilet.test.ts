@@ -85,6 +85,7 @@ describe('Piral-CLI piral injector', () => {
       app: '',
       active: true,
     };
+
     const core = new EventEmitter();
     const injector = new PiletInjector(config, undefined, core);
     const request: KrasRequest = {

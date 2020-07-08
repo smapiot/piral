@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration } from 'kras';
 import { mime } from '../external';
 import { Bundler } from '../types';
 
@@ -19,9 +19,11 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
+  private port: number;
 
-  constructor(options: PiletInjectorConfig, _: any, core: EventEmitter) {
+  constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
+    this.port = config.port;
     const { pilets, api } = options;
     const cbs = {};
 
@@ -72,7 +74,7 @@ export default class PiletInjector implements KrasInjector {
     return {
       name: def.name,
       version: def.version,
-      link: `${api}/${index}/${file}`,
+      link: `http://localhost:${this.port}${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef,
       noCache: true,

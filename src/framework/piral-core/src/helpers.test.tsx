@@ -36,13 +36,11 @@ function createMockContainer() {
 }
 
 describe('Piral-Core helpers module', () => {
-
   it('setSharedDependencies set the shared dependecies', () => {
-
     // Arrange
     const dependencies: AvailableDependencies = {
-      "gg": {},
-      "ff": {}
+      gg: {},
+      ff: {},
     };
 
     // Act
@@ -51,14 +49,13 @@ describe('Piral-Core helpers module', () => {
 
     // Assert
     expect(result).not.toBeUndefined();
-  })
+  });
 
   it('extendSharedDependencies should extend the dependecies', () => {
-
     // Arrange
     const additionalDependencies: AvailableDependencies = {
-      "gg": {},
-      "ff": {}
+      gg: {},
+      ff: {},
     };
 
     // Act
@@ -197,10 +194,10 @@ describe('Piral-Core helpers module', () => {
     const wasUndefined = process.env.DEBUG_PILET === undefined;
 
     // Arrange
-    process.env.DEBUG_PILET = "localhost:1234";
+    process.env.DEBUG_PILET = 'localhost:1234';
     const setupMock = jest.fn();
     const requestPilets = jest.fn(() => Promise.resolve(providedPilets));
-    const globalContext = createMockContainer().context
+    const globalContext = createMockContainer().context;
     const providedPilets: Array<Pilet> = [
       {
         setup: setupMock,
@@ -223,8 +220,8 @@ describe('Piral-Core helpers module', () => {
       getDependencies: jest.fn(),
       loadPilet: jest.fn(),
       requestPilets: requestPilets,
-      strategy: jest.fn()
-    }
+      strategy: jest.fn(),
+    };
 
     let hasFailed = false;
 
@@ -232,15 +229,14 @@ describe('Piral-Core helpers module', () => {
     const options = createPiletOptions(optionsConfig);
     try {
       options.fetchPilets(); //This call should not work in node.js test environment
-    }
-    catch {
+    } catch {
       hasFailed = true;
     }
 
     // Assert
     expect(hasFailed).toBeTruthy();
 
-    if(wasUndefined) {
+    if (wasUndefined) {
       process.env.DEBUG_PILET = undefined;
     }
   });

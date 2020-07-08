@@ -13,6 +13,7 @@
 * Added new optional plugin `piral-cycle` (#232)
 * Changed module optimization to default to `false` (#256)
 * Changed the default bundler to `piral-cli-webpack`
+* Changed pilet injector to return full URL (#270)
 
 ## 0.11.7 (June 22, 2020)
 
