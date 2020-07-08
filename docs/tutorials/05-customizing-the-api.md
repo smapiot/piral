@@ -3,6 +3,7 @@ title: Customizing the API
 description: Learn how to extend and customize the Pilet API.
 audience: Developers
 level: Intermediate
+section: Details
 ---
 
 # Customizing the Pilet API

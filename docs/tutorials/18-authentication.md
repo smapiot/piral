@@ -3,6 +3,7 @@ title: Authentication
 description: How to use authentication with Piral.
 audience: Architects, Developers
 level: Intermediate
+section: Details
 ---
 
 # Authentication

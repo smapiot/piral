@@ -3,43 +3,19 @@ header {
   background: $color-secondary;
 }
 
-header .header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-
-  .logo {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    color: white;
-
-    img {
-      max-height: 2em;
-      margin-right: 0.5em;
-    }
-
-    > span {
-      font-size: 1.2em;
-    }
-
-    .brand-name {
-      font-weight: bold;
-    }
-  }
-
+header nav {
   ul {
     list-style: none;
     display: flex;
     flex-direction: row;
     padding: 0;
+    margin: 0;
+    margin-top: 1em;
     flex: 1 0 auto;
-    justify-content: flex-end;
+    justify-content: flex-start;
 
     > li {
-      padding: 0 0.5em;
+      padding-right: 1em;
 
       a {
         color: white;
@@ -57,19 +33,7 @@ header .header {
     }
   }
 
-  .hamburger {
-    display: none;
-
-    a {
-      color: white;
-    }
-  }
-
   @media (max-width: $mobileBrk) {
-    .hamburger {
-      display: block;
-    }
-
     .menu {
       display: none;
       flex: 1 100%;
@@ -83,6 +47,48 @@ header .header {
       > li {
         padding: 0.5em 0;
       }
+    }
+  }
+}
+
+header .header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+    flex: 9999;
+
+    img {
+      max-height: 2em;
+      margin-right: 0.5em;
+    }
+
+    > span {
+      font-size: 1.2em;
+    }
+
+    .brand-name {
+      font-weight: bold;
+    }
+  }
+
+  .hamburger {
+    display: none;
+
+    a {
+      color: white;
+    }
+  }
+
+  @media (max-width: $mobileBrk) {
+    .hamburger {
+      display: block;
     }
   }
 }

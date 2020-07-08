@@ -1,24 +1,43 @@
 const { readFileSync } = require('fs');
-const { getCoreTypes } = require('./paths');
+const { getCoreTypes, generatedName, generateFile } = require('./paths');
+
+function getRoute(name) {
+  return (name && `/types/${name}`) || '';
+}
 
 module.exports = function() {
-  const titles = [];
-  const children = [];
+  const files = getCoreTypes();
 
-  getCoreTypes().forEach(file => {
-    const content = readFileSync(file, 'utf8');
-    const title = file
-      .split('/')
-      .pop()
-      .replace('.json', '');
-    this.addDependency(file, { includedInParent: true });
-    titles.push(title);
-    children.push(`<TypeInfo key="${title}">{${content}}</TypeInfo>`);
-  });
+  const imports = files
+    .map(file => {
+      const content = readFileSync(file, 'utf8');
+      const name = file
+        .split('/')
+        .pop()
+        .replace('.json', '');
+      this.addDependency(file, { includedInParent: true });
+      generateFile(
+        `types-${name}`,
+        `
+import * as React from 'react';
+import { TypeInfo, ContentPage } from '../../scripts/components';
+export default () => (
+  <ContentPage>
+    <TypeInfo key="${name}">{${content}}</TypeInfo>
+  </ContentPage>
+);`,
+        'jsx',
+      );
+      return `
+      {
+        id: '${name}',
+        route: '${getRoute(name)}',
+        page: lazy(() => import('./${generatedName}/types-${name}')),
+      }`;
+    });
 
   return `
-    const React = require('react');
-    const { TypeInfo, Tabs } = require('../scripts/components');
-    module.exports = () => (<Tabs titles={${JSON.stringify(titles)}}>{[${children.join(',')}]}</Tabs>);
+    const { lazy } = require('react');
+    module.exports = [${imports.join(', ')}];
   `;
 };

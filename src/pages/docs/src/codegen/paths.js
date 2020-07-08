@@ -8,6 +8,7 @@ const docs = resolve(__dirname, '../../../../../docs');
 const packagesRoot = resolve(__dirname, '../../../..');
 const generated = resolve(__dirname, generatedName);
 const tutorials = resolve(docs, 'tutorials');
+const samples = resolve(docs, 'examples');
 const questions = resolve(docs, 'questions');
 const reference = resolve(docs, 'reference');
 const commands = resolve(docs, 'commands');
@@ -83,12 +84,16 @@ function getTutorials() {
   return getDocsFrom(tutorials);
 }
 
+function getSamples() {
+  return getDocsFrom(samples);
+}
+
 function getQuestions() {
   return getDocsFrom(questions);
 }
 
 function getReferences() {
-  return readReadme(reference);
+  return [...readReadme(reference), resolve(docs, 'test.md')];
 }
 
 function getCommands() {
@@ -141,8 +146,12 @@ function getAbsolutePath(path, basePath = docs) {
   return resolve(dirname(basePath), path);
 }
 
+function makeRelativePath(baseDir, target) {
+  return relative(baseDir, target).split('\\').join('/');
+}
+
 function getRelativePath(path, basePath = docs) {
-  return relative(docs, getAbsolutePath(path, basePath));
+  return makeRelativePath(docs, getAbsolutePath(path, basePath));
 }
 
 module.exports = {
@@ -154,6 +163,7 @@ module.exports = {
   generated,
   generatedName,
   getTutorials,
+  getSamples,
   getQuestions,
   getReferences,
   getCommands,
@@ -165,6 +175,7 @@ module.exports = {
   getCoreTypes,
   getDocs,
   getName,
+  makeRelativePath,
   getRelativePath,
   getAbsolutePath,
   generateFile,

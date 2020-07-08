@@ -31,7 +31,8 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
-    "piral": "^0.11.7"
+    "piral": "^0.11.7",
+    "piral-lazy": "^0.11.7"
   },
   "devDependencies": {
     "piral-cli": "^0.11.7"

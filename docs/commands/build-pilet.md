@@ -151,7 +151,7 @@ Tries to reduce bundle size by introducing tree shaking.
 Also includes the node modules for target transpilation.
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--no-optimize-modules`
 
@@ -159,14 +159,14 @@ Opposite of:
 Also includes the node modules for target transpilation.
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--schema`
 
 Sets the schema to be used when bundling the pilets.
 
 - Type: `string`
-- Choices: `"v0"`, `"v1"`
+- Choices: `"v0"`, `"v1"`, `"none"`
 - Default: `"v1"`
 
 ### `--app`
