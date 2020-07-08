@@ -32,11 +32,16 @@ export default class PiralInjector implements KrasInjector {
 
   setOptions() {}
 
-  sendResponse(path: string, target: string, dir: string, url: string): KrasResponse {
+  sendResponse(path: string, target: string, dir: string, url: string, recursionDepth: number = 0): KrasResponse {
+
+    if(recursionDepth > 10) {
+      return undefined;
+    }
+
     if (!path || !existsSync(target) || !statSync(target).isFile()) {
       const { bundler } = this.config;
       const newTarget = join(bundler.bundle.dir, bundler.bundle.name);
-      return this.sendResponse(bundler.bundle.name, newTarget, dir, url);
+      return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
     }
 
     return {
