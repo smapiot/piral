@@ -1,26 +1,29 @@
-import PiletInjector from './pilet';
 import { EventEmitter } from 'events';
 import { KrasRequest } from 'kras';
+import PiletInjector from './pilet';
 
-const configMock = {
+const optionsMock = {
   pilets: [],
-  port: 1234,
   api: '',
   app: '',
   active: true,
 };
 
+const configMock: any = {
+  port: 1234,
+};
+
 describe('Piral-CLI piral injector', () => {
   it('PiletInjector is active when configured', () => {
     const core = new EventEmitter();
-    const injector = new PiletInjector(configMock, undefined, core);
+    const injector = new PiletInjector(optionsMock, configMock, core);
     expect(injector.active).toBeTruthy();
   });
 
   it('PiletInjector properties can be accessed', () => {
     // Arrange
     const core = new EventEmitter();
-    const injector = new PiletInjector(configMock, undefined, core);
+    const injector = new PiletInjector(optionsMock, configMock, core);
 
     // Act
     injector.active = false;
@@ -36,7 +39,7 @@ describe('Piral-CLI piral injector', () => {
   it('PiletInjector does not send empty content', () => {
     // Arrange
     const core = new EventEmitter();
-    const injector = new PiletInjector(configMock, undefined, core);
+    const injector = new PiletInjector(optionsMock, configMock, core);
     const target = '';
     const url = '';
 
@@ -55,7 +58,7 @@ describe('Piral-CLI piral injector', () => {
   it('PiletInjector does not crash when sending invalid content', () => {
     // Arrange
     const core = new EventEmitter();
-    const injector = new PiletInjector(configMock, undefined, core);
+    const injector = new PiletInjector(optionsMock, configMock, core);
 
     // Act
     const res = injector.sendContent('someContent', 'application/json', 'invalidUrl');
@@ -67,7 +70,7 @@ describe('Piral-CLI piral injector', () => {
   it('PiletInjector can send reponse and fails with invalid path', () => {
     // Arrange
     const core = new EventEmitter();
-    const injector = new PiletInjector(configMock, undefined, core);
+    const injector = new PiletInjector(optionsMock, configMock, core);
 
     // Act
     const res = injector.sendResponse('some/nice/invalid/path', 'localhost:1234');
@@ -78,22 +81,21 @@ describe('Piral-CLI piral injector', () => {
 
   it('PiletInjector wont crash on mocked request', () => {
     // Arrange
-    const config = {
+    const optionsMock = {
       pilets: [],
-      port: 1234,
       api: 'http://someFakeApi:1234',
       app: '',
       active: true,
     };
 
     const core = new EventEmitter();
-    const injector = new PiletInjector(config, undefined, core);
+    const injector = new PiletInjector(optionsMock, configMock, core);
     const request: KrasRequest = {
       content: 'someFakeContent',
       headers: {},
       method: 'PUT',
       query: {},
-      target: config.api,
+      target: optionsMock.api,
       url: 'localhost:1234',
     };
 
@@ -106,15 +108,14 @@ describe('Piral-CLI piral injector', () => {
 
   it('PiletInjector wont crash on request with no target', () => {
     // Arrange
-    const config = {
+    const optionsMock = {
       pilets: [],
-      port: 1234,
       api: 'http://someFakeApi:1234',
       app: '',
       active: true,
     };
     const core = new EventEmitter();
-    const injector = new PiletInjector(config, undefined, core);
+    const injector = new PiletInjector(optionsMock, configMock, core);
     const request: KrasRequest = {
       content: 'someFakeContent',
       headers: {},
