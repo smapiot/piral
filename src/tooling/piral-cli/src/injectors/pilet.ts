@@ -15,6 +15,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
   api: string;
   app: string;
+  port: number;
 }
 
 export default class PiletInjector implements KrasInjector {
@@ -65,14 +66,14 @@ export default class PiletInjector implements KrasInjector {
   setOptions() {}
 
   getMetaOf(index: number) {
-    const { api, pilets } = this.config;
+    const { port, api, pilets } = this.config;
     const { bundler, root, requireRef } = pilets[index];
     const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
     const file = bundler.bundle.name.replace(/^\//, '');
     return {
       name: def.name,
       version: def.version,
-      link: `${api}/${index}/${file}`,
+      link: `http://localhost:${port}${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef,
       noCache: true,
