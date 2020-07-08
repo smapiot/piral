@@ -141,11 +141,13 @@ export default class PiletInjector implements KrasInjector {
 
       if (existsSync(target) && statSync(target).isFile()) {
         return this.sendFile(target, req.url);
-      } else {
+      } else if (req.url !== '/index.html') {
         return this.handle({
           ...req,
           url: '/index.html',
         });
+      } else {
+        return undefined;
       }
     } else if (req.target === api) {
       return this.sendResponse(path, req.url);
