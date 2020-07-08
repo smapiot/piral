@@ -2,16 +2,90 @@ div.content {
   display: flex;
   flex: 1 0 auto;
   width: 100%;
+
+  .section-nav {
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+    width: 240px;
+    padding: 1.5rem 0;
+    overflow: hidden;
+    height: calc(100vh - 10rem);
+
+    @media (max-width: $tabletBrk) {
+      display: none;
+    }
+  }
+
+  .toc-nav {
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+    width: 240px;
+    padding: 1.5rem 0;
+    overflow: hidden;
+    order: 2;
+    height: calc(100vh - 10rem);
+
+    @media (max-width: $screenBrk) {
+      display: none;
+    }
+  }
+
+  .content-display {
+    flex: 1;
+    padding: 1.5rem;
+  }
+}
+
+.scroller {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.32) transparent;
+  overflow-y: auto;
+  backface-visibility: hidden;
+  scroll-snap-type: y mandatory;
+  touch-action: pan-y;
+  max-height: 100%;
+
+  &::-webkit-scrollbar {
+    width: .2rem;
+    height: .2rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.32);
+  }
+}
+
+.icon {
+  position: absolute;
+  z-index: 2;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+
+  svg {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0 auto;
+    fill: currentColor;
+  }
 }
 
 .version-info {
-  margin-top: 1rem;
+  margin: 0.5rem 0;
+  flex: 1 0 250px;
   text-align: right;
-  font-size: 0.9em;
-  color: #999;
+  font-size: 0.8em;
+  color: white;
 
   i {
     margin-left: 0.5rem;
+  }
+
+  @media (max-width: $mobileBrk) {
+    display: none;
   }
 }
 
@@ -20,4 +94,41 @@ div.content {
   width: 600px;
   margin: 0 auto;
   display: block;
+}
+
+.layout-container {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+  box-sizing: border-box;
+
+  @media (min-width: $tabletBrk) {
+    max-width: 720px;
+  }
+
+  @media (min-width: $desktopBrk) {
+    max-width: 960px;
+  }
+
+  @media (min-width: $screenBrk) {
+    max-width: 1140px;
+  }
+
+  @media (min-width: 1300px) {
+    max-width: 1220px;
+  }
+
+  @media (min-width: 1400px) {
+    max-width: 1300px;
+  }
+
+  @media (min-width: 1500px) {
+    max-width: 1400px;
+  }
+
+  @media (min-width: 1600px) {
+    max-width: 1500px;
+  }
 }

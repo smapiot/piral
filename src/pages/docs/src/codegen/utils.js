@@ -39,6 +39,7 @@ function niceName(path) {
 module.exports = {
   imgRef,
   docRef,
+  capitalize,
   niceName,
   getTitle,
   rootPath,

@@ -1,4 +1,10 @@
-import { asyncStrategy, blazingStrategy, standardStrategy, syncStrategy, createProgressiveStrategy } from './strategies';
+import {
+  asyncStrategy,
+  blazingStrategy,
+  standardStrategy,
+  syncStrategy,
+  createProgressiveStrategy,
+} from './strategies';
 import { PiletMetadata, LoadPiletsOptions, Pilet } from './types';
 
 function createMockApi(meta: PiletMetadata) {
@@ -295,7 +301,7 @@ describe('Piral-Base strategies module', () => {
     };
 
     // Act
-    const strategy = createProgressiveStrategy(false)
+    const strategy = createProgressiveStrategy(false);
     await strategy(loadingOptions, callbackMock);
 
     // Assert

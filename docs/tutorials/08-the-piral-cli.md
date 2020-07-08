@@ -3,6 +3,7 @@ title: The Piral CLI
 description: Details about the working with our tooling.
 audience: Developers
 level: Elementary
+section: Details
 ---
 
 # The Piral CLI

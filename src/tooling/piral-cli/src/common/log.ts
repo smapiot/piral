@@ -59,7 +59,7 @@ export function logDebug(message: string, ...args: Array<string | number | boole
 
 export function logVerbose(message: string, ...args: Array<string | number | boolean>) {
   const msg = format(message, ...args);
-  logger.log(msg);
+  logger.logLevel > 3 && logger.log(msg);
   return msg;
 }
 

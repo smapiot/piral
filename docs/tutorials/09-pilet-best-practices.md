@@ -3,6 +3,7 @@ title: Pilet Best Practices
 description: Our recommendations for developing great pilets.
 audience: Architects, Developers
 level: Advanced
+section: Details
 ---
 
 # Pilet Best Practices

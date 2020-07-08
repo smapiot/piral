@@ -3,6 +3,7 @@ title: Getting Started
 description: Build your first application shell and add a pilet to it.
 audience: Architects, Developers
 level: Beginner
+section: Getting Started
 ---
 
 # Getting Started

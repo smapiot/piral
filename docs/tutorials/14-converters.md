@@ -3,6 +3,7 @@ title: Converters
 description: Piral allows multiple frameworks to work together using converters.
 audience: Architects, Developers
 level: Advanced
+section: Details
 ---
 
 # Converters

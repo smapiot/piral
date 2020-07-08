@@ -9,13 +9,11 @@ export interface TutorialProps {
 }
 
 export const Tutorial: React.FC<TutorialProps> = ({ previous, next, children }) => (
-  <section className="container">
-    <ContentPage>
-      {children}
-      <div className="tutorial-nav">
-        {previous ? <Link to={previous}>Previous</Link> : <a />}
-        {next ? <Link to={next}>Next</Link> : <a />}
-      </div>
-    </ContentPage>
-  </section>
+  <ContentPage>
+    {children}
+    <div className="tutorial-nav">
+      {previous ? <Link to={previous}>Previous</Link> : <a />}
+      {next ? <Link to={next}>Next</Link> : <a />}
+    </div>
+  </ContentPage>
 );
