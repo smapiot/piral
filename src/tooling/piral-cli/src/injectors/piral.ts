@@ -4,6 +4,11 @@ import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kra
 import { mime } from '../external';
 import { Bundler } from '../types';
 
+/**
+ * The maximum amount of retries when sending a response
+ */
+const maxRetrySendResponse = 4;
+
 export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
 }
@@ -32,9 +37,8 @@ export default class PiralInjector implements KrasInjector {
 
   setOptions() {}
 
-  sendResponse(path: string, target: string, dir: string, url: string, recursionDepth: number = 0): KrasResponse {
-
-    if(recursionDepth > 10) {
+  sendResponse(path: string, target: string, dir: string, url: string, recursionDepth = 0): KrasResponse {
+    if (recursionDepth > maxRetrySendResponse) {
       return undefined;
     }
 
