@@ -1,6 +1,15 @@
 const { resolve } = require('path');
 const { readFileSync } = require('fs');
-const { getPluginTypes, getName, generateFile, generated, generatedName, getPluginImage, getPackageRoot, getPluginCategory } = require('./paths');
+const {
+  getPluginTypes,
+  getName,
+  generateFile,
+  generated,
+  generatedName,
+  getPluginImage,
+  getPackageRoot,
+  getPluginCategory,
+} = require('./paths');
 const { render } = require('./markdown');
 const { docRef } = require('./utils');
 
@@ -46,7 +55,7 @@ module.exports = function() {
       ].join('');
       this.addDependency(readme, { includedInParent: true });
       generateFile(
-        name,
+        `plugin-${name}`,
         `
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -69,13 +78,14 @@ export default () => (
       );
       return [name, category];
     })
+    .sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]))
     .map(
       ([name, category]) => `
 {
   id: '${name}',
   route: '${getRoute(name)}',
   category: '${category}',
-  page: lazy(() => import('./${generatedName}/${name}')),
+  page: lazy(() => import('./${generatedName}/plugin-${name}')),
 }`,
     );
 

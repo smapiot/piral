@@ -11,33 +11,30 @@ module.exports = function() {
   const imports = files
     .map(file => {
       const content = readFileSync(file, 'utf8');
-      const title = file
+      const name = file
         .split('/')
         .pop()
         .replace('.json', '');
       this.addDependency(file, { includedInParent: true });
       generateFile(
-        title,
+        `types-${name}`,
         `
 import * as React from 'react';
 import { TypeInfo, ContentPage } from '../../scripts/components';
 export default () => (
   <ContentPage>
-    <TypeInfo key="${title}">{${content}}</TypeInfo>
+    <TypeInfo key="${name}">{${content}}</TypeInfo>
   </ContentPage>
 );`,
         'jsx',
       );
-      return title;
-    })
-    .map(
-      name => `
-{
-  id: '${name}',
-  route: '${getRoute(name)}',
-  page: lazy(() => import('./${generatedName}/${name}')),
-}`,
-    );
+      return `
+      {
+        id: '${name}',
+        route: '${getRoute(name)}',
+        page: lazy(() => import('./${generatedName}/types-${name}')),
+      }`;
+    });
 
   return `
     const { lazy } = require('react');

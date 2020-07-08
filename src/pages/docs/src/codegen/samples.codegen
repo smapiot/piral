@@ -15,7 +15,7 @@ module.exports = function() {
       const { mdValue } = render(file, generated);
       this.addDependency(file, { includedInParent: true });
       generateFile(
-        name,
+        `sample-${name}`,
         `
 import * as React from 'react';
 import { ContentPage, Markdown } from '../../scripts/components';
@@ -26,16 +26,13 @@ export default () => (
 );`,
         'jsx',
       );
-      return name;
-    })
-    .map(
-      name => `
-{
-  id: '${name}',
-  route: '${getRoute(name)}',
-  page: lazy(() => import('./${generatedName}/${name}')),
-}`,
-    );
+      return `
+      {
+        id: '${name}',
+        route: '${getRoute(name)}',
+        page: lazy(() => import('./${generatedName}/sample-${name}')),
+      }`;
+    });
 
   return `
     const { lazy } = require('react');

@@ -1,71 +1,83 @@
 import * as React from 'react';
 import { Route, Redirect, matchPath } from 'react-router-dom';
 
-const tutorials = require('../codegen/tutorials.codegen');
+function populate<T extends SectionLink = any>(source: Array<T>, select: (item: T) => string) {
+  const results: Array<SectionInfo> = [];
+
+  source.forEach(item => {
+    const title = select(item);
+    const [result] = results.filter(m => m.title === title);
+
+    if (result) {
+      result.links.push(item);
+    } else {
+      results.push({
+        title,
+        links: [item],
+      });
+    }
+  });
+
+  return results;
+}
+
+const tutorials = populate(require('../codegen/tutorials.codegen'), t => t.section);
+const plugins = populate(require('../codegen/extensions.codegen'), p => p.category);
+const commands = populate(require('../codegen/tooling.codegen'), c => c.tool);
+const specification = require('../codegen/specification.codegen');
+const documentation = require('../codegen/documentation.codegen');
 const samples = require('../codegen/samples.codegen');
-const plugins = require('../codegen/extensions.codegen');
+const questions = require('../codegen/faq.codegen');
 const codes = require('../codegen/codes.codegen');
 const types = require('../codegen/types.codegen');
 
-const guidelines = [];
-const extensions = [];
-
-tutorials.forEach(tutorial => {
-  const [guideline] = guidelines.filter(m => m.title === tutorial.section);
-
-  if (guideline) {
-    guideline.links.push(tutorial);
-  } else {
-    guidelines.push({
-      title: tutorial.section,
-      links: [tutorial],
-    });
-  }
-});
-
-plugins.forEach(plugin => {
-  const [extension] = extensions.filter(m => m.title === plugin.category);
-
-  if (extension) {
-    extension.links.push(plugin);
-  } else {
-    extensions.push({
-      title: plugin.category,
-      links: [plugin],
-    });
-  }
-});
+export interface SectionLink {
+  id: string;
+  route: string;
+  page: React.FC;
+}
 
 export interface SectionInfo {
   title: string;
-  links: Array<{
-    id: string;
-    route: string;
-    page: React.FC;
-  }>;
+  links: Array<SectionLink>;
 }
 
 export const sitemap: Record<string, Array<SectionInfo>> = {
   guidelines: [
-    ...guidelines,
+    ...tutorials,
     {
       title: 'Example',
       links: samples,
     },
   ],
-  reference: [],
-  tooling: [],
-  plugins: [...extensions],
-  types: [
+  reference: [
     {
-      title: 'Framework',
-      links: types,
+      title: 'Documentation',
+      links: documentation,
     },
-  ],
-  codes: [
+    {
+      title: 'Specification',
+      links: specification,
+    },
+    {
+      title: 'FAQ',
+      links: questions,
+    },
     {
       title: 'Codes',
       links: codes,
+    },
+  ],
+  tooling: [...commands],
+  plugins: [...plugins],
+  types: [
+    {
+      title: 'Framework',
+      links: types.filter(m => !m.id.endsWith('-utils')),
+    },
+    {
+      title: 'Utilities',
+      links: types.filter(m => m.id.endsWith('-utils')),
     },
   ],
 };

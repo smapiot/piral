@@ -17,7 +17,7 @@ module.exports = function() {
       const { mdValue, meta = {} } = render(file, generated);
       this.addDependency(file, { includedInParent: true });
       generateFile(
-        name,
+        `tutorial-${name}`,
         `
 import * as React from 'react';
 import { Tutorial, Markdown } from '../../scripts/components';
@@ -31,17 +31,14 @@ export default () => (
 );`,
         'jsx',
       );
-      return [name, meta.section || ''];
-    })
-    .map(
-      ([name, section]) => `
-{
-  id: '${name}',
-  route: '${getRoute(name)}',
-  section: '${section}',
-  page: lazy(() => import('./${generatedName}/${name}')),
-}`,
-    );
+      return `
+      {
+        id: '${name}',
+        route: '${getRoute(name)}',
+        section: '${meta.section || ''}',
+        page: lazy(() => import('./${generatedName}/tutorial-${name}')),
+      }`;
+    });
 
   return `
     const { lazy } = require('react');

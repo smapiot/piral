@@ -6,6 +6,7 @@ export interface SectionItem {
   title: string;
   links: Array<{
     id: string;
+    title?: string;
     route: string;
   }>;
 }
@@ -25,7 +26,7 @@ export const SectionMenu: React.FC<SectionMenuProps> = ({ sections, active }) =>
             {section.links.map(link => (
               <li key={link.id}>
                 <Link className={active === link.route ? 'active' : ''} to={link.route}>
-                  {link.id}
+                  {link.title || link.id}
                 </Link>
               </li>
             ))}
