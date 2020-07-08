@@ -18,7 +18,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiletInjector properties can be accessed', () => {
-
     // Arrange
     const core = new EventEmitter();
     const injector = new PiletInjector(configMock, undefined, core);
@@ -35,7 +34,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiletInjector does not send empty content', () => {
-
     // Arrange
     const core = new EventEmitter();
     const injector = new PiletInjector(configMock, undefined, core);
@@ -55,7 +53,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiletInjector does not crash when sending invalid content', () => {
-
     // Arrange
     const core = new EventEmitter();
     const injector = new PiletInjector(configMock, undefined, core);
@@ -68,7 +65,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiletInjector can send reponse and fails with invalid path', () => {
-
     // Arrange
     const core = new EventEmitter();
     const injector = new PiletInjector(configMock, undefined, core);
@@ -81,14 +77,13 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiletInjector wont crash on mocked request', () => {
-
     // Arrange
     const config = {
       pilets: [],
       port: 1234,
       api: 'http://someFakeApi:1234',
       app: '',
-      active: true
+      active: true,
     };
     const core = new EventEmitter();
     const injector = new PiletInjector(config, undefined, core);
@@ -98,8 +93,8 @@ describe('Piral-CLI piral injector', () => {
       method: 'PUT',
       query: {},
       target: config.api,
-      url: 'localhost:1234'
-    }
+      url: 'localhost:1234',
+    };
 
     // Act
     const res = injector.handle(request);
@@ -109,7 +104,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiletInjector wont crash on request with no target', () => {
-
     // Arrange
     const config = {
       pilets: [],
@@ -126,8 +120,8 @@ describe('Piral-CLI piral injector', () => {
       method: 'PUT',
       query: {},
       target: '',
-      url: 'localhost:1234'
-    }
+      url: 'localhost:1234',
+    };
 
     // Act
     const res = injector.handle(request);

@@ -41,7 +41,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiralInjector properties can be accessed', () => {
-
     // Arrange
     const config = {
       bundler: bundlerMock,
@@ -60,7 +59,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiralInjector can send reponse and fails with invalid path', () => {
-
     // Arrange
     const config = {
       bundler: bundlerMock,
@@ -76,7 +74,6 @@ describe('Piral-CLI piral injector', () => {
   });
 
   it('PiralInjector wont crash when handling an invalid request', async () => {
-
     // Arrange
     const config = {
       bundler: bundlerMock,
@@ -89,7 +86,7 @@ describe('Piral-CLI piral injector', () => {
       method: 'PUT',
       query: {},
       target: '',
-      url: 'localhost:1234'
+      url: 'localhost:1234',
     };
 
     // Act
