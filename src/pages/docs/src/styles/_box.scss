@@ -18,6 +18,9 @@
 
     &::before {
       position: absolute;
+      font-family: "Font Awesome 5 Free";
+      font-size: 0.875rem;
+      text-align: center;
       top: 0.6rem;
       left: 0.6rem;
       width: 1rem;
@@ -33,7 +36,8 @@
       background-color: rgba(0, 191, 165, .1);
 
       &::before {
-        background-color: #00bfa5;
+        color: #00bfa5;
+        content: "\f06d";
       }
     }
   }
@@ -45,7 +49,8 @@
       background-color: rgba(255, 145, 0, .1);
 
       &::before {
-        background-color: #ff9100;
+        color: #ff9100;
+        content: "\f071";
       }
     }
   }
@@ -57,7 +62,8 @@
       background-color: rgba(255, 82, 82, .1);
 
       &::before {
-        background-color: #ff5252;
+        color: #ff5252;
+        content: "\f057";
       }
     }
   }
@@ -69,7 +75,8 @@
       background-color: rgba(0, 200, 83, .1);
 
       &::before {
-        background-color: #00c853;
+        color: #00c853;
+        content: "\f058";
       }
     }
   }
@@ -81,7 +88,8 @@
       background-color: rgba(100, 221, 23, .1);
 
       &::before {
-        background-color: #64dd17;
+        color: #64dd17;
+        content: "\f059";
       }
     }
   }
@@ -93,7 +101,8 @@
       background-color: rgba(68, 138, 255, .1);
 
       &::before {
-        background-color: #448aff;
+        color: #448aff;
+        content: "\f02d";
       }
     }
   }
@@ -135,26 +144,28 @@ details {
       list-style-type: none;
     }
 
-    &::before {
+    &::before, &::after {
       position: absolute;
-      left: 0.6rem;
-      top: 0.6rem;
+      font-family: "Font Awesome 5 Free";
+      font-size: 0.875rem;
+      top: 0.6em;
+      text-align: center;
       width: 1rem;
       height: 1rem;
-      background-color: #448aff;
-      content: "";
+    }
+
+    &::before {
+      left: 0.6rem;
+      color: #448aff;
+      content: "\f02d";
     }
 
     &::after {
-      position: absolute;
-      top: 0.6rem;
       right: 0.6rem;
-      width: 1rem;
-      height: 1rem;
-      background-color: currentColor;
+      color: currentColor;
       transform: rotate(0deg);
       transition: transform 250ms;
-      content: "";
+      content: "\f054";
     }
   }
 }
