@@ -1,3 +1,7 @@
+---
+title: Piral Core
+---
+
 # Example: Only Core Library
 
 An example app based on `piral-core`.

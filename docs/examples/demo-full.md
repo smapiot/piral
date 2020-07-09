@@ -1,3 +1,7 @@
+---
+title: Full Piral
+---
+
 # Example: Full Piral
 
 An example app based on `piral`.
