@@ -171,7 +171,7 @@ const Layout: React.FC = ({ children }) => {
 
 const instance = createInstance({
   availablePilets,
-  extendApi: [
+  plugins: [
     createMenuApi(),
     createNotificationsApi(),
     createContainersApi(),

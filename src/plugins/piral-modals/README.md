@@ -82,7 +82,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createModalsApi()],
+  plugins: [createModalsApi()],
   // ...
 });
 ```
@@ -94,7 +94,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createModalsApi({
+  plugins: [createModalsApi({
     dialogs: [
       {
         name: 'userinfo',

@@ -72,7 +72,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createDashboardApi()],
+  plugins: [createDashboardApi()],
   // ...
 });
 ```
@@ -84,7 +84,7 @@ Consider for example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createDashboardApi({
+  plugins: [createDashboardApi({
     defaultPreferences: {
       initialColumns: 2,
       initialRows: 2,

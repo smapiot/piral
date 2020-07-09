@@ -40,7 +40,7 @@ export function setup(app: PiletApi) {
   app.defineConfigSchema(configSchema, defaultConfig);
 
   const { increment } = app.getCurrentConfig();
-  
+
   app.registerExtension('home-dashboard', () => {
     const [count, setCount] = React.useState(0);
     return (
@@ -74,7 +74,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createConfigsApi()],
+  plugins: [createConfigsApi()],
   // ...
 });
 ```

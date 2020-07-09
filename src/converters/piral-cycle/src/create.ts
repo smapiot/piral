@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { PiletCycleApi } from './types';
 import { h } from '@cycle/dom';
@@ -17,7 +17,7 @@ export interface CycleConfig {
 /**
  * Creates new Pilet API extensions for integration of Cycle.
  */
-export function createCycleApi(config: CycleConfig = {}): Extend<PiletCycleApi> {
+export function createCycleApi(config: CycleConfig = {}): PiralPlugin<PiletCycleApi> {
   const { rootName = 'slot' } = config;
 
   return context => {

@@ -61,7 +61,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createNgjsApi()],
+  plugins: [createNgjsApi()],
   // ...
 });
 ```

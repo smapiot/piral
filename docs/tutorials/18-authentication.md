@@ -167,7 +167,7 @@ import { Layout } from './layout/UserLayout';
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 const instance = createInstance({
-  extendApi: [createAdalApi(client)],
+  plugins: [createAdalApi(client)],
   requestPilets,
 });
 
@@ -209,7 +209,7 @@ const NotFound = React.lazy(() => import('./pages/NotFound'));
 const account = client.account();
 
 const instance = createInstance({
-  extendApi: [createAdalApi(client), createAuthApi({
+  plugins: [createAdalApi(client), createAuthApi({
     user: {
       id: account.userName,
       firstName: account.name.split(' ').shift(),
@@ -234,7 +234,7 @@ In scenarios where the user information changes during the lifetime of the appli
 // ...
 
 const instance = createInstance({
-  extendApi: [createAdalApi(client), createAuthApi()],
+  plugins: [createAdalApi(client), createAuthApi()],
   requestPilets,
 });
 

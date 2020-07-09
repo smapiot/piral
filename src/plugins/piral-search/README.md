@@ -74,7 +74,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createSearchApi()],
+  plugins: [createSearchApi()],
   // ...
 });
 ```
@@ -86,7 +86,7 @@ For example:
 ```jsx
 const instance = createInstance({
   // important part
-  extendApi: [createSearchApi({
+  plugins: [createSearchApi({
     query: '!help',
     results: [
       <div>

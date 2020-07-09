@@ -51,7 +51,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createAuthApi()],
+  plugins: [createAuthApi()],
   // ...
 });
 ```
@@ -61,7 +61,7 @@ The options include defining an existing user (e.g., obtained by a redirect).
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createAuthApi({
+  plugins: [createAuthApi({
     user: {
       firstName: 'Hans',
       lastName: 'Zimmermann',

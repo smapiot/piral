@@ -30,7 +30,8 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     state,
     actions,
     availablePilets = [],
-    extendApi = [],
+    extendApi,
+    plugins,
     requestPilets = defaultModuleRequester,
     fetchDependency,
     getDependencies = getLocalDependencies,
@@ -40,7 +41,9 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
   const context = createActions(globalState, events);
-  const createApi = defaultApiCreator(context, Array.isArray(extendApi) ? extendApi : [extendApi]);
+  const definedPlugins = plugins || extendApi || [];
+  const usedPlugins = Array.isArray(definedPlugins) ? definedPlugins : [definedPlugins];
+  const createApi = defaultApiCreator(context, usedPlugins);
   const root = createApi({
     name: 'root',
     version: process.env.BUILD_PCKG_VERSION || '1.0.0',

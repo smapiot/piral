@@ -56,7 +56,7 @@ const client = setupAdalClient({ clientId, ... });
 
 const instance = createInstance({
   // important part
-  extendApi: [createAdalApi(client)],
+  plugins: [createAdalApi(client)],
   // ...
 });
 ```
@@ -78,7 +78,7 @@ import { client } from './adal';
 export function render() {
   renderInstance({
     // ...
-    extendApi: [createAdalApi(client)],
+    plugins: [createAdalApi(client)],
   });
 }
 

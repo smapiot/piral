@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { addReference } from './internal';
 import { createConverter } from './converter';
 import { PiletBlazorApi } from './types';
@@ -17,7 +17,7 @@ export interface BlazorConfig {
 /**
  * Creates new Pilet API extensions for integration of Blazor.
  */
-export function createBlazorApi(config: BlazorConfig = {}): Extend<PiletBlazorApi> {
+export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBlazorApi> {
   const { lazy = true } = config;
 
   return context => {

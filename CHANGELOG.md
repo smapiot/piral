@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 1.0.0 (tbd)
+
+* Documentation cleanup
+* Renamed `extendApi` to `plugins` (keeping `extendApi` as deprecated)
+
 ## 0.11.8 (July 9, 2020)
 
 * Updated documentation layout (#206)

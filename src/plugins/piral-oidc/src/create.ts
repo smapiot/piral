@@ -1,10 +1,10 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { PiralOidcApi, OidcClient } from './types';
 
 /**
  * Creates new Pilet API extensions for the integration of OpenID Connect.
  */
-export function createOidcApi(client: OidcClient): Extend<PiralOidcApi> {
+export function createOidcApi(client: OidcClient): PiralPlugin<PiralOidcApi> {
   return context => {
     context.on('before-fetch', client.extendHeaders);
 

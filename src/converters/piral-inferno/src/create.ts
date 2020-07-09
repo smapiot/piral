@@ -1,4 +1,4 @@
-import { Extend, ExtensionSlotProps, compare } from 'piral-core';
+import { PiralPlugin, ExtensionSlotProps, compare } from 'piral-core';
 import { Component } from 'inferno';
 import { createElement } from 'inferno-create-element';
 import { anyPropType } from './mount';
@@ -19,7 +19,7 @@ export interface InfernoConfig {
 /**
  * Creates Pilet API extensions for integrating Inferno.
  */
-export function createInfernoApi(config: InfernoConfig = {}): Extend<PiletInfernoApi> {
+export function createInfernoApi(config: InfernoConfig = {}): PiralPlugin<PiletInfernoApi> {
   const { rootName = 'slot' } = config;
 
   const InfernoExtension: any = class extends Component<ExtensionSlotProps> {

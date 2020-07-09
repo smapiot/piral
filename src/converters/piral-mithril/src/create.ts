@@ -1,5 +1,5 @@
 import * as m from 'mithril';
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { PiletMithrilApi } from './types';
 
@@ -17,7 +17,7 @@ export interface MithrilConfig {
 /**
  * Creates new Pilet API extensions for integrating Mithril.js.
  */
-export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithrilApi> {
+export function createMithrilApi(config: MithrilConfig = {}): PiralPlugin<PiletMithrilApi> {
   const { rootName = 'slot' } = config;
 
   return context => {
