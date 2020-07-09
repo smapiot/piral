@@ -11,6 +11,8 @@ interface Pilet {
   requireRef?: string;
 }
 
+type Protocol = 'https' | 'https';
+
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
   api: string;
@@ -20,12 +22,12 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
   private port: number;
-  private https: boolean;
+  private protocol: Protocol;
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
     this.port = config.port;
-    this.https = !!config.ssl;
+    this.protocol = config.ssl ? 'https' : 'http';
     const { pilets, api } = options;
     const cbs = {};
 
@@ -76,7 +78,7 @@ export default class PiletInjector implements KrasInjector {
     return {
       name: def.name,
       version: def.version,
-      link: `${this.https ? 'https' : 'http'}://localhost:${this.port}${api}/${index}/${file}`,
+      link: `${this.protocol}://localhost:${this.port}${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef,
       noCache: true,
