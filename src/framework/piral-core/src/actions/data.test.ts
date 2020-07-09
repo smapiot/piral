@@ -22,6 +22,7 @@ describe('Data Actions Module', () => {
     const value = readDataItem(ctx, 'foo');
     expect(value).toBe(10);
   });
+
   it('readDataValue reads the current value', () => {
     const state = Atom.of({
       foo: 5,
@@ -201,6 +202,7 @@ describe('Data Actions Module', () => {
     });
     const success = tryWriteDataItem(ctx, 'bar', 10, 'me');
     expect(success).toBe(true);
+    expect(deref(state).data.bar.value).toBe(10);
   });
 
   it('tryWriteDataItem can not overwrite item if not owner', () => {
@@ -225,5 +227,6 @@ describe('Data Actions Module', () => {
     });
     const success = tryWriteDataItem(ctx, 'bar', 10, 'me');
     expect(success).toBe(false);
+    expect(deref(state).data.bar.value).toBe(5);
   });
 });
