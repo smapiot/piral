@@ -12,9 +12,9 @@ export const App = () => (
         {routes}
         <Redirect exact from="/" to="/guidelines" />
         <Redirect exact from="/tutorials" to="/guidelines" />
-        <Redirect from="/reference/extensions" to="/plugins" />
-        <Redirect from="/reference/plugins" to="/plugins" />
-        <Redirect from="/code/:id" to="/reference/codes/:id" />
+        <Redirect exact from="/reference/extensions/:id?" to="/plugins/:id" />
+        <Redirect exact from="/reference/plugins/:id?" to="/plugins/:id" />
+        <Redirect exact from="/code/:id" to="/reference/codes/:id" />
         <Route component={NotFoundPage} />
       </Switch>
     </Layout>

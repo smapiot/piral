@@ -5,8 +5,9 @@ import { SectionMenu } from './SectionMenu';
 import { resolveSections } from '../sitemap';
 
 export const ContentPage: React.FC = ({ children }) => {
-  const ref = React.useRef(undefined);
   const { hash, pathname } = useLocation();
+  const ref = React.useRef(undefined);
+  const sections = React.useMemo(() => resolveSections(pathname), [pathname]);
 
   React.useEffect(() => {
     const tid = setTimeout(() => {
@@ -18,7 +19,7 @@ export const ContentPage: React.FC = ({ children }) => {
 
   return (
     <>
-      <SectionMenu active={pathname} sections={resolveSections(pathname)} />
+      <SectionMenu active={pathname} sections={sections} />
       <TocMenu content={ref} />
       <div className="content-display" ref={ref}>
         {children}

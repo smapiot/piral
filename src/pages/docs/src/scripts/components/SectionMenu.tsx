@@ -12,11 +12,11 @@ export interface SectionItem {
 }
 
 export interface SectionMenuProps {
-  sections: Array<SectionItem>;
+  sections?: Array<SectionItem>;
   active: string;
 }
 
-export const SectionMenu: React.FC<SectionMenuProps> = ({ sections, active }) => {
+export const SectionMenu: React.FC<SectionMenuProps> = ({ sections = [], active }) => {
   return (
     <Sidebar className="section-nav">
       {sections.map(section => (
