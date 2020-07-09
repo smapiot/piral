@@ -11,7 +11,7 @@ interface Pilet {
   requireRef?: string;
 }
 
-type Protocol = 'https' | 'https';
+type Protocol = 'https' | 'http';
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
