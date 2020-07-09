@@ -37,18 +37,70 @@ function getDestination(entryFiles: string, target: string): Destination {
 }
 
 export interface BuildPiralOptions {
+  /**
+   * The location of the piral
+   */
   entry?: string;
+
+  /**
+   * Sets the target directory where the output of the bundling should be placed.
+   */
   target?: string;
+
+  /**
+   * Sets the cache directory for bundling.
+   */
   cacheDir?: string;
+
+  /**
+   * Sets the public URL (path) of the bundle.
+   */
   publicUrl?: string;
+
+  /**
+   * Performs minification or other post-bundle transformations.
+   */
   minify?: boolean;
+
+  /**
+   * States if a detailed report should be created when building the piral instance.
+   */
   detailedReport?: boolean;
+
+  /**
+   * Sets the log level to use.
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Performs a fresh build by removing the target directory first.
+   */
   fresh?: boolean;
+
+  /**
+   * Selects the target type of the build (e.g. 'release'). "all" builds all target types.
+   */
   type?: PiralBuildType;
+
+  /**
+   * Create associated source maps for the bundles.
+   */
   sourceMaps?: boolean;
+
+  /**
+   * Appends a hash to the side-bundle files.
+   */
   contentHash?: boolean;
+
+  /**
+   * States if tree shaking should be used when creating the bundle.
+   * (may reduce bundle size)
+   */
   scopeHoist?: boolean;
+
+  /**
+   * States if the node modules should be included for target transpilation
+   */
   optimizeModules?: boolean;
 }
 

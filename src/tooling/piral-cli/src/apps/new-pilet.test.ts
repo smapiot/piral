@@ -15,12 +15,29 @@ describe('New Pilet Command', () => {
     await newPilet(dir, {
       install: false,
       source: 'piral@latest',
+      registry: 'https://someFakeRegistry.com',
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
-    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeTruthy();
+  });
+
+  it('command will fail when providing invalid registry', async () => {
+    // Arrange
+    const dir = createTempDir();
+    const options = {
+      install: true,
+      source: 'piral@latest',
+      registry: 'https://someFakeRegistry.com',
+    };
+
+    // Act
+    const result = await newPilet(dir, options);
+
+    // Assert
+    expect(result).toBeUndefined();
   });
 
   it('scaffolding with language JS works', async () => {
