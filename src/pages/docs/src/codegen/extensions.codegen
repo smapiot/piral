@@ -1,11 +1,20 @@
 const { resolve } = require('path');
 const { readFileSync } = require('fs');
-const { getPluginTypes, getName, generateFile, generated, generatedName, getPluginImage, getPackageRoot } = require('./paths');
+const {
+  getPluginTypes,
+  getName,
+  generateFile,
+  generated,
+  generatedName,
+  getPluginImage,
+  getPackageRoot,
+  getPluginCategory,
+} = require('./paths');
 const { render } = require('./markdown');
 const { docRef } = require('./utils');
 
 function getRoute(name) {
-  return (name && `/reference/plugins/${name}/:tab?`) || '';
+  return (name && `/plugins/${name}/:tab?`) || '';
 }
 
 module.exports = function() {
@@ -21,6 +30,7 @@ module.exports = function() {
       const readme = resolve(pluginRoot, 'README.md');
       const packageJson = resolve(pluginRoot, 'package.json');
       const plugin = require(packageJson);
+      const category = getPluginCategory(plugin);
       const peerDepNames = Object.keys(plugin.peerDependencies || {}).filter(m => !standardPeerDeps.includes(m));
       const peerDependencies =
         peerDepNames.length > 0
@@ -45,15 +55,14 @@ module.exports = function() {
       ].join('');
       this.addDependency(readme, { includedInParent: true });
       generateFile(
-        name,
+        `plugin-${name}`,
         `
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
+import { ContentPage, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
 
 export default () => (
-  <section className="container">
-    <Link to="/reference/plugins" className="nav-link">Plugins</Link> /
+  <ContentPage>
     <div className="plugin-info">
       <img src={require('../../assets/${image}')} />
       <h1>${name}</h1>
@@ -63,18 +72,20 @@ export default () => (
       <TypeInfo>{${type}}</TypeInfo>
       <PluginMeta {...${JSON.stringify(plugin)}} />
     </Tabs>
-  </section>
+  </ContentPage>
 );`,
         'jsx',
       );
-      return name;
+      return [name, category];
     })
+    .sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]))
     .map(
-      name => `
+      ([name, category]) => `
 {
   id: '${name}',
   route: '${getRoute(name)}',
-  page: lazy(() => import('./${generatedName}/${name}')),
+  category: '${category}',
+  page: lazy(() => import('./${generatedName}/plugin-${name}')),
 }`,
     );
 

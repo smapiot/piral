@@ -1,35 +1,56 @@
-const { getCommands } = require('./paths');
+const { getCommands, generateFile, generatedName, generated, getName } = require('./paths');
 const { docRef } = require('./utils');
 const { render } = require('./markdown');
 
-module.exports = function() {
-  const commands = {
-    piral: [],
-    pilet: [],
-  };
-  getCommands().forEach(file => {
-    const { mdValue } = render(file);
-    this.addDependency(file, { includedInParent: true });
-    const content = `<Markdown content={${mdValue}} link="${docRef(file)}" />`;
+function getRoute(name) {
+  return (name && `/tooling/${name}`) || '';
+}
 
-    if (file.endsWith('-piral.md')) {
-      commands.piral.push(content);
-    } else if (file.endsWith('-pilet.md')) {
-      commands.pilet.push(content);
-    }
-  });
+function getType(file) {
+  if (file.endsWith('-piral.md')) {
+    return `Piral CLI - piral`;
+  } else if (file.endsWith('-pilet.md')) {
+    return `Piral CLI - pilet`;
+  } else {
+    return `Piral CLI - pb`;
+  }
+}
+
+module.exports = function() {
+  const commands = getCommands();
+
+  const imports = commands
+    .map(file => {
+      const name = getName(file);
+      const { mdValue } = render(file, generated);
+      this.addDependency(file, { includedInParent: true });
+      const tool = getType(file);
+
+      generateFile(
+        `tooling-${name}`,
+        `
+import * as React from 'react';
+import { ContentPage, Markdown } from '../../scripts/components';
+
+export default () => (
+  <ContentPage>
+    <Markdown content={${mdValue}} link="${docRef(file)}" />
+  </ContentPage>
+);`,
+        'jsx',
+      );
+
+      return `
+      {
+        id: '${name}',
+        route: '${getRoute(name)}',
+        tool: '${tool}',
+        page: lazy(() => import('./${generatedName}/tooling-${name}')),
+      }`;
+    });
 
   return `
-    const React = require('react');
-    const { Markdown, ContentPage, Tabs } = require('../scripts/components');
-    module.exports = () => (
-      <Tabs titles={${JSON.stringify(Object.keys(commands))}}>
-        ${Object.keys(commands).map(command => `
-          <ContentPage>
-            ${commands[command].join('')}
-          </ContentPage>
-        `).join('')}
-      </Tabs>
-    );
+    const { lazy } = require('react');
+    module.exports = [${imports.join(', ')}];
   `;
 };

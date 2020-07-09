@@ -6,3 +6,4 @@ Piral is developed as a monorepo.
 
 - [piral-cli](./piral-cli/README.md) provides some command line tooling
 - [piral-cli-parcel](./piral-cli-parcel/README.md) enables using Parcel as standard bundler
+- [piral-cli-webpack](./piral-cli-webpack/README.md) enables using Webpack as standard bundler

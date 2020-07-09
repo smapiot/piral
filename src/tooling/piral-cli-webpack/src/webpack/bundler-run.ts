@@ -1,4 +1,5 @@
 import * as webpack from 'webpack';
+import { resolve, basename, dirname } from 'path';
 import { EventEmitter } from 'events';
 
 interface BuildResult {
@@ -6,10 +7,10 @@ interface BuildResult {
   outDir: string;
 }
 
-function getOutput(assets: Record<string, any>) {
-  return Object.keys(assets)
-    .filter(m => assets[m].emitted)
-    .map(m => `/${m}`)[0];
+function getOutput(stats: webpack.Stats) {
+  const { outputPath, entrypoints } = stats.toJson();
+  const assets = entrypoints.main.assets;
+  return resolve(outputPath, assets[0]);
 }
 
 export function runWebpack(wpConfig: webpack.Configuration) {
@@ -30,7 +31,7 @@ export function runWebpack(wpConfig: webpack.Configuration) {
       });
 
       compiler.hooks.done.tap('piral-cli', stats => {
-        mainBundle.name = outDir + getOutput(stats.compilation.assets);
+        mainBundle.name = getOutput(stats);
         mainBundle.requireRef = stats.compilation.outputOptions?.jsonpFunction?.replace('_chunks', '');
         mainBundle.entryAsset.hash = stats.hash;
         eventEmitter.emit('bundled');
@@ -56,9 +57,10 @@ export function runWebpack(wpConfig: webpack.Configuration) {
           if (stats.hasErrors()) {
             reject(stats.toJson());
           } else {
+            const file = getOutput(stats);
             resolve({
-              outFile: getOutput(stats.compilation.assets),
-              outDir,
+              outFile: `/${basename(file)}`,
+              outDir: dirname(file),
             });
           }
         }

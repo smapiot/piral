@@ -2,6 +2,25 @@ import * as React from 'react';
 import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { withApi } from './withApi';
+import { ComponentConverters } from '../types';
+import { StateContext } from '../state';
+import { Atom } from '@dbeining/react-atom';
+import { unmountComponentAtNode } from 'react-dom';
+
+function createMockContainer() {
+  const state = Atom.of({
+    portals: {},
+  });
+  return {
+    context: {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      state,
+      destroyPortal: id => {},
+    } as any,
+  };
+}
 
 jest.mock('../hooks');
 
@@ -11,6 +30,10 @@ jest.mock('../hooks');
       ErrorInfo: StubErrorInfo,
     },
   });
+
+(hooks as any).useActions = () => ({
+  destroyPortal: jest.fn(),
+});
 
 const StubErrorInfo: React.FC = props => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
@@ -59,5 +82,43 @@ describe('withApi Module', () => {
     const Component = withApi({}, StubComponent, api, 'feed');
     mount(<Component shouldCrash />);
     expect(console.error).toHaveBeenCalled();
+  });
+
+  it('Wraps component of type object', () => {
+    const api: any = {};
+    const converters: ComponentConverters<any> = {
+      html: component => {
+        return component.component;
+      },
+    };
+    const context = createMockContainer();
+    const Component = withApi(converters, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
+
+    const node = mount(
+      <StateContext.Provider value={context.context}>
+        <Component />
+      </StateContext.Provider>,
+    );
+
+    expect(node.children.length).toBe(1);
+  });
+
+  it('Wraps component which is object == null.', () => {
+    const api: any = {};
+    const converters: ComponentConverters<any> = {
+      html: component => {
+        return component.component;
+      },
+    };
+    const context = createMockContainer();
+    const Component = withApi(converters, null, api, 'unknown');
+
+    const node = mount(
+      <StateContext.Provider value={context.context}>
+        <Component />
+      </StateContext.Provider>,
+    );
+
+    expect(Component.displayName).toBeUndefined();
   });
 });

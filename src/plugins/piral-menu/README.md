@@ -114,6 +114,20 @@ declare module 'piral-menu/lib/types' {
 // now registerMenu(() => null, { category: 'general' }) is strongly typed in pilets
 ```
 
+You can also add new types to the `type` selection.
+
+```ts
+import 'piral-menu';
+
+declare module 'piral-menu/lib/types' {
+  interface PiralCustomMenuTypes {
+    'left-footer': 'left-footer';
+  }
+}
+
+// now registerMenu(() => null, { type: 'left-footer' }) is strongly typed in pilets
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

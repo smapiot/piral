@@ -1,0 +1,160 @@
+.box, details {
+  margin: 1.5625em 0;
+  padding: 0 .6rem;
+  overflow: hidden;
+  color: $color-text;
+  font-size: 1rem;
+  page-break-inside: avoid;
+  background-color: $color-back;
+  border-left: .3rem solid #448aff;
+  border-radius: .1rem;
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, .05), 0 0 0.05rem rgba(0, 0, 0, .1);
+
+  .box-title {
+    position: relative;
+    margin: 0 -0.6rem;
+    padding: .4rem .6rem .4rem 2rem;
+    font-weight: 700;
+
+    &::before {
+      position: absolute;
+      top: 0.6rem;
+      left: 0.6rem;
+      width: 1rem;
+      height: 1rem;
+      content: "";
+    }
+  }
+
+  &.tip {
+    border-color: #00bfa5;
+
+    .box-title {
+      background-color: rgba(0, 191, 165, .1);
+
+      &::before {
+        background-color: #00bfa5;
+      }
+    }
+  }
+
+  &.warning {
+    border-color: #ff9100;
+
+    .box-title {
+      background-color: rgba(255, 145, 0, .1);
+
+      &::before {
+        background-color: #ff9100;
+      }
+    }
+  }
+
+  &.failure {
+    border-color: #ff5252;
+
+    .box-title {
+      background-color: rgba(255, 82, 82, .1);
+
+      &::before {
+        background-color: #ff5252;
+      }
+    }
+  }
+
+  &.success {
+    border-color: #00c853;
+
+    .box-title {
+      background-color: rgba(0, 200, 83, .1);
+
+      &::before {
+        background-color: #00c853;
+      }
+    }
+  }
+
+  &.question {
+    border-color: #64dd17;
+
+    .box-title {
+      background-color: rgba(100, 221, 23, .1);
+
+      &::before {
+        background-color: #64dd17;
+      }
+    }
+  }
+
+  &.summary {
+    border-color: #448aff;
+
+    .box-title {
+      background-color: rgba(68, 138, 255, .1);
+
+      &::before {
+        background-color: #448aff;
+      }
+    }
+  }
+}
+
+details {
+  display: block;
+  padding-top: 0;
+  overflow: visible;
+
+  &:not([open]) {
+    padding-bottom: 0;
+
+    & > summary {
+      border-bottom-right-radius: .1rem;
+    }
+  }
+
+  &[open] > summary::after {
+    transform: rotate(90deg);
+  }
+
+  summary {
+    position: relative;
+    margin: 0 -0.6rem;
+    font-weight: 700;
+    display: block;
+    min-height: 1rem;
+    padding: .4rem 1.8rem .4rem 2rem;
+    border-top-right-radius: .1rem;
+    cursor: pointer;
+    background-color: rgba(68, 138, 255, .1);
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:first-of-type {
+      list-style-type: none;
+    }
+
+    &::before {
+      position: absolute;
+      left: 0.6rem;
+      top: 0.6rem;
+      width: 1rem;
+      height: 1rem;
+      background-color: #448aff;
+      content: "";
+    }
+
+    &::after {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      width: 1rem;
+      height: 1rem;
+      background-color: currentColor;
+      transform: rotate(0deg);
+      transition: transform 250ms;
+      content: "";
+    }
+  }
+}

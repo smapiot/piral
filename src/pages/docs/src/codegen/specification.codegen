@@ -1,25 +1,45 @@
-const { getSpecs } = require('./paths');
+const { getSpecs, generateFile, generatedName, generated, getName } = require('./paths');
 const { docRef, getTitle } = require('./utils');
 const { render } = require('./markdown');
 
-module.exports = function() {
-  const titles = [];
-  const children = [];
+function getRoute(name) {
+  return (name && `/reference/specifications/${name}`) || '';
+}
 
-  getSpecs().forEach(file => {
-    const { mdValue } = render(file);
+module.exports = function() {
+  const specs = getSpecs();
+
+  const imports = specs.map(file => {
+    const { mdValue } = render(file, generated);
+    const title = getTitle(file);
+    const name = getName(file);
     this.addDependency(file, { includedInParent: true });
-    titles.push(getTitle(file));
-    children.push(`
-      <ContentPage key="${file}">
-        <Markdown content={${mdValue}} link="${docRef(file)}" />
-      </ContentPage>
-    `);
+
+    generateFile(
+      `spec-${name}`,
+      `
+import * as React from 'react';
+import { ContentPage, Markdown } from '../../scripts/components';
+
+export default () => (
+  <ContentPage>
+    <Markdown content={${mdValue}} link="${docRef(file)}" />
+  </ContentPage>
+);`,
+      'jsx',
+    );
+
+    return `
+    {
+      id: '${name}',
+      title: '${title}',
+      route: '${getRoute(name)}',
+      page: lazy(() => import('./${generatedName}/spec-${name}')),
+    }`;
   });
 
   return `
-    const React = require('react');
-    const { Tabs, ContentPage, Markdown } = require('../scripts/components');
-    module.exports = () => (<Tabs titles={${JSON.stringify(titles)}}>{[${children.join(',')}]}</Tabs>);
+    const { lazy } = require('react');
+    module.exports = [${imports.join(', ')}];
   `;
 };

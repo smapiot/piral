@@ -3,6 +3,7 @@ title: Migration of Existing Applications
 description: Illustrates how existing applications can be migrated conveniently.
 audience: Architects, Developers
 level: Advanced
+section: Details
 ---
 
 # Migration of Existing Applications

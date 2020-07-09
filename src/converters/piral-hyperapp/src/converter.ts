@@ -12,9 +12,6 @@ export function createConverter() {
       mount(el, props, ctx) {
         mountHyperapp(el, root, props, ctx, state, actions);
       },
-      update(el, props, ctx) {
-        mountHyperapp(el, root, props, ctx, state, actions);
-      },
       unmount(el) {
         el.innerHTML = '';
       },

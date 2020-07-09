@@ -83,7 +83,7 @@ Performs a fresh build, then packages and finally publishes the pilet.
 Sets the schema to be used when making a fresh build of the pilet.
 
 - Type: `string`
-- Choices: `"v0"`, `"v1"`
+- Choices: `"v0"`, `"v1"`, `"none"`
 - Default: `"v1"`
 
 ### `--from`

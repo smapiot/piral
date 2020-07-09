@@ -1,6 +1,6 @@
 import { LogLevels } from 'piral-cli';
 import { resolve, dirname, basename } from 'path';
-import { log, progress, defaultCacheDir, setStandardEnvs } from 'piral-cli/utils';
+import { log, progress, logReset, defaultCacheDir, setStandardEnvs } from 'piral-cli/utils';
 import { setupBundler } from './bundler';
 
 async function run(root: string, piral: string, externals: Array<string>, entryFiles: string, logLevel: LogLevels) {
@@ -41,6 +41,8 @@ async function run(root: string, piral: string, externals: Array<string>, entryF
   bundler.on('bundled', () => {
     log('generalInfo_0000', `The Piral instance changed. Refresh your browser to get the latest changes.`);
   });
+
+  logReset();
 
   return bundle.name;
 }

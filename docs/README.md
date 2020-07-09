@@ -17,7 +17,7 @@ Furthermore, we also have some additional references online. For instance, you c
 
 If you like to get some help using our CLI tool see the [command reference](./commands/README.md).
 
-For a set of recipes and guides have a look at our [tutorials](./tutorials/README.md) section.
+For a set of recipes and guides have a look at our [tutorials](./tutorials/README.md) section. There are also some [examples](./examples/README.md) described.
 
 Besides the available documentation you may also find some helpful hints in our dedicated [Questions & Answers](./questions/README.md) section.
 

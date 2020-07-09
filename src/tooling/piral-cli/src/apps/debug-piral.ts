@@ -12,6 +12,7 @@ import {
   removeDirectory,
   setLogLevel,
   progress,
+  log,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -39,7 +40,7 @@ export const debugPiralDefaults: DebugPiralOptions = {
   scopeHoist: false,
   hmr: true,
   autoInstall: true,
-  optimizeModules: true,
+  optimizeModules: false,
 };
 
 const injectorName = resolve(__dirname, '../injectors/piral.js');
@@ -115,6 +116,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   krasConfig.map['/'] = '';
   krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);
+
+  log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');

@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration } from 'kras';
 import { mime } from '../external';
 import { Bundler } from '../types';
 
@@ -11,6 +11,8 @@ interface Pilet {
   requireRef?: string;
 }
 
+type Protocol = 'https' | 'http';
+
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
   api: string;
@@ -19,9 +21,13 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
+  private port: number;
+  private protocol: Protocol;
 
-  constructor(options: PiletInjectorConfig, _: any, core: EventEmitter) {
+  constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
+    this.port = config.port;
+    this.protocol = config.ssl ? 'https' : 'http';
     const { pilets, api } = options;
     const cbs = {};
 
@@ -72,7 +78,7 @@ export default class PiletInjector implements KrasInjector {
     return {
       name: def.name,
       version: def.version,
-      link: `${api}/${index}/${file}`,
+      link: `${this.protocol}://localhost:${this.port}${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef,
       noCache: true,
@@ -139,11 +145,13 @@ export default class PiletInjector implements KrasInjector {
 
       if (existsSync(target) && statSync(target).isFile()) {
         return this.sendFile(target, req.url);
-      } else {
+      } else if (req.url !== '/index.html') {
         return this.handle({
           ...req,
           url: '/index.html',
         });
+      } else {
+        return undefined;
       }
     } else if (req.target === api) {
       return this.sendResponse(path, req.url);
