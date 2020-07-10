@@ -13,6 +13,8 @@ import {
   logReset,
   createEmulatorPackage,
   logInfo,
+  readJson,
+  runScript,
 } from '../common';
 
 interface Destination {
@@ -98,6 +100,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(dest.outDir);
   }
 
+  const pckg = await readJson(root, 'package.json');
+  const { postPiralBuildDevelop, postPiralBuildRelease } = pckg.scripts;
+
   // everything except release -> build develop
   if (type !== 'release') {
     progress('Starting build ...');
@@ -125,6 +130,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       logLevel,
       ignored,
     });
+
+    // run post piral build script if provided
+    if (postPiralBuildDevelop) {
+      progress(`Running 'postPiralBuildDevelop' script ...`);
+      logInfo(`Run: ${postPiralBuildDevelop}`);
+      await runScript(postPiralBuildDevelop, root);
+      logInfo(`Successfully ran 'postPiralBuildDevelop' script.`);
+    }
 
     const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
@@ -159,6 +172,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       logLevel,
       ignored,
     });
+
+    // run post piral build script if provided
+    if (postPiralBuildRelease) {
+      progress(`Running 'postPiralBuildRelease' script ...`);
+      logInfo(`Run: ${postPiralBuildRelease}`);
+      await runScript(postPiralBuildRelease, root);
+      logInfo(`Successfully ran 'postPiralBuildRelease' script.`);
+    }
 
     logDone(`Files for publication available in "${outDir}".`);
     logReset();
