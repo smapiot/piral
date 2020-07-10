@@ -13,10 +13,10 @@ export interface SectionItem {
 }
 
 export interface SectionMenuProps {
-  sections?: Array<SectionItem>;
+  sections: Array<SectionItem>;
 }
 
-export const SectionMenu: React.FC<SectionMenuProps> = ({ sections = [] }) => {
+export const SectionMenu: React.FC<SectionMenuProps> = ({ sections }) => {
   const container = React.useRef<HTMLDivElement>(undefined);
 
   React.useEffect(() => container.current?.scrollTo(0, 0), [sections]);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, NavLink, Route } from 'react-router-dom';
-import { Search, ContentPage } from '../components';
+import { Search, ContentPage, QuickNav } from '../components';
 import { Footer } from '../../../../common/components/Footer';
 import { Loader } from '../../../../common/components/Loader';
 import { ScrollToTop } from '../../../../common/components/ScrollToTop';
@@ -67,6 +67,7 @@ export const Layout: React.FC = ({ children }) => {
           <React.Suspense fallback={<Loader />}>{children}</React.Suspense>
         </ContentPage>
       </div>
+      <QuickNav />
       <Footer />
     </>
   );

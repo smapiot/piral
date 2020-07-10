@@ -3,6 +3,7 @@ export * from './Markdown';
 export * from './PageContent';
 export * from './PageContext';
 export * from './PluginMeta';
+export * from './QuickNav';
 export * from './Search';
 export * from './Sidebar';
 export * from './Tabs';

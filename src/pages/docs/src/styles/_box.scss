@@ -6,7 +6,7 @@
   font-size: 1rem;
   page-break-inside: avoid;
   background-color: $color-back;
-  border-left: .3rem solid #448aff;
+  border-left: .3rem solid $color-secondary;
   border-radius: .1rem;
   box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, .05), 0 0 0.05rem rgba(0, 0, 0, .1);
 
@@ -30,78 +30,78 @@
   }
 
   &.tip {
-    border-color: #00bfa5;
+    border-color: $color-tip;
 
     .box-title {
-      background-color: rgba(0, 191, 165, .1);
+      background-color: transparentize($color: $color-tip, $amount: 0.9);
 
       &::before {
-        color: #00bfa5;
+        color: $color-tip;
         content: "\f06d";
       }
     }
   }
 
   &.warning {
-    border-color: #ff9100;
+    border-color: $color-warning;
 
     .box-title {
-      background-color: rgba(255, 145, 0, .1);
+      background-color: transparentize($color: $color-warning, $amount: 0.9);
 
       &::before {
-        color: #ff9100;
+        color: $color-warning;
         content: "\f071";
       }
     }
   }
 
   &.failure {
-    border-color: #ff5252;
+    border-color: $color-danger;
 
     .box-title {
-      background-color: rgba(255, 82, 82, .1);
+      background-color: transparentize($color: $color-danger, $amount: 0.9);
 
       &::before {
-        color: #ff5252;
+        color: $color-danger;
         content: "\f057";
       }
     }
   }
 
   &.success {
-    border-color: #00c853;
+    border-color: $color-success;
 
     .box-title {
-      background-color: rgba(0, 200, 83, .1);
+      background-color: transparentize($color: $color-success, $amount: 0.9);
 
       &::before {
-        color: #00c853;
+        color: $color-success;
         content: "\f058";
       }
     }
   }
 
   &.question {
-    border-color: #64dd17;
+    border-color: $color-purple;
 
     .box-title {
-      background-color: rgba(100, 221, 23, .1);
+      background-color: transparentize($color: $color-purple, $amount: 0.9);
 
       &::before {
-        color: #64dd17;
+        color: $color-purple;
         content: "\f059";
       }
     }
   }
 
   &.summary {
-    border-color: #448aff;
+    border-color: $color-secondary;
 
     .box-title {
-      background-color: rgba(68, 138, 255, .1);
+      background-color: transparentize($color: $color-secondary, $amount: 0.9);
 
       &::before {
-        color: #448aff;
+        color: $color-secondary;
         content: "\f02d";
       }
     }
@@ -134,7 +134,7 @@ details {
     padding: .4rem 1.8rem .4rem 2rem;
     border-top-right-radius: .1rem;
     cursor: pointer;
-    background-color: rgba(68, 138, 255, .1);
+    background-color: transparentize($color: $color-secondary, $amount: 0.9);
 
     &::-webkit-details-marker {
       display: none;
@@ -156,7 +156,7 @@ details {
 
     &::before {
       left: 0.6rem;
-      color: #448aff;
+      color: $color-secondary;
       content: "\f02d";
     }
 
