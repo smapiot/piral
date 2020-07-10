@@ -45,11 +45,11 @@ jest.mock('../external', () => ({
 const jsonValueString = JSON.stringify({ dependencies: { npm: { extraneous: true } } });
 jest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
-    return new Promise<void>((resolve, reject) => { 
+    return new Promise<void>((resolve, reject) => {
       output?.write(jsonValueString, () => {});
-      resolve(); 
+      resolve();
     });
-  }
+  },
 }));
 
 jest.mock('fs', () => ({
@@ -151,93 +151,78 @@ describe('NPM Module', () => {
   });
 
   it('installs a package using the NPM command line tool without a target', async () => {
-    await installPackage('npm', 'foo', 'latest')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('npm', 'foo', 'latest').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('installs a package using the NPM command line tool without a version', async () => {
-    await installPackage('npm', 'foo')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('npm', 'foo').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('installs a package using the Yarn command line tool without a version', async () => {
-    await installPackage('yarn', 'foo')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('yarn', 'foo').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('installs a package using the Pnpm command line tool without a version', async () => {
-    await installPackage('pnpm', 'foo')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('pnpm', 'foo').then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('installs a package using the NPM command line tool with some flag', async() => {
-    await installPackage('npm', 'foo', '1.3', '.', '--a=b')
-    .then(result => expect(result).toEqual(jsonValueString));    
+  it('installs a package using the NPM command line tool with some flag', async () => {
+    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('detectNpm finds package-lock.json', async () => {
-    await detectNpm('test')
-     .then(result => expect(result).toBeTruthy());
+    await detectNpm('test').then(result => expect(result).toBeTruthy());
   });
 
   it('detectPnpm finds nppm-lock.yaml', async () => {
-    await detectPnpm('test')
-      .then(result => expect(result).toBeTruthy());
+    await detectPnpm('test').then(result => expect(result).toBeTruthy());
   });
 
   it('detectYarn finds yarn.lock', async () => {
-    await detectYarn('test')
-      .then(result => expect(result).toBeTruthy());
+    await detectYarn('test').then(result => expect(result).toBeTruthy());
   });
 
   it('uses npm to verify whether a particular package is included in monorepo package', async () => {
-    await isMonorepoPackageRef('npm', './')
-      .then(result => expect(result).toBeTruthy()); 
+    await isMonorepoPackageRef('npm', './').then(result => expect(result).toBeTruthy());
   });
 
   it('verfiies whether lerna config path is valid', async () => {
-    await detectMonorepo('./')
-  .then(result => { console.log(`result: ${result}`); expect(result).toBeTruthy() }); 
+    await detectMonorepo('./').then(result => {
+      console.log(`result: ${result}`);
+      expect(result).toBeTruthy();
+    });
   });
 
   it('verfiies whether lerna bootstrap ran', async () => {
-    await bootstrapMonorepo()
-    .then(result => expect(result).toEqual(jsonValueString));
+    await bootstrapMonorepo().then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('install dependencies with npm client', async () => {
-    await installDependencies('npm')
-      .then(result => expect(result).toEqual(jsonValueString));
+    await installDependencies('npm').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('install dependencies with pnpm client', async () => {
-    await installDependencies('pnpm')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await installDependencies('pnpm').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('install dependencies with yarn client', async () => {
-    await installDependencies('yarn')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await installDependencies('yarn').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('create npm package', async () => {
-    await createPackage()
-    .then(result => expect(result).toEqual(jsonValueString));
+    await createPackage().then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('find npm tarball', async () => {
-    await findTarball('foo')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await findTarball('foo').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('find latest version', async () => {
-    await findLatestVersion('foo')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await findLatestVersion('foo').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('find specific version', async () => {
-    await findSpecificVersion('foo', '1.0.0')
-    .then(result => expect(result).toEqual(jsonValueString));
+    await findSpecificVersion('foo', '1.0.0').then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('check if package is local', () => {
