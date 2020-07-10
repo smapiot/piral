@@ -191,10 +191,10 @@ describe('Piral-Core helpers module', () => {
   });
 
   it('createPiletOptions runs in PILET_DEBUG context', () => {
-    const wasUndefined = process.env.DEBUG_PILET === undefined;
+    const wasUndefined = window['dbg:pilet-api'] === undefined;
 
     // Arrange
-    process.env.DEBUG_PILET = 'localhost:1234';
+    window['dbg:pilet-api'] = 'localhost:1234';
     const setupMock = jest.fn();
     window.fetch = jest.fn((_, options) =>
       Promise.resolve({
@@ -247,7 +247,7 @@ describe('Piral-Core helpers module', () => {
     expect(hasFailed).toBeFalsy();
 
     if (wasUndefined) {
-      process.env.DEBUG_PILET = undefined;
+      window['dbg:pilet-api'] = undefined;
     }
   });
 });

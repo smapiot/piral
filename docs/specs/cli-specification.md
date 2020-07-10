@@ -63,7 +63,6 @@ For running the Piral instance in emulation mode, the set of relevant environmen
 | Environment Variable  | Purpose                             | Example            |
 |:----------------------|:------------------------------------|:-------------------|
 | `NODE_ENV`            | Indicate the target environment.    | `development`      |
-| `DEBUG_PILET`         | Injects pilet from development API. | `/$pilet-api`      |
 | `DEBUG_PIRAL`         | Provides debug API for inspection.  | `1.0`              |
 | `SHARED_DEPENDENCIES` | Allow exposing shared dependencies. | `react,react-dom`  |
 

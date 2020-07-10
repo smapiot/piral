@@ -11,8 +11,6 @@ interface Pilet {
   requireRef?: string;
 }
 
-type Protocol = 'https' | 'http';
-
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
   api: string;
@@ -21,13 +19,11 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
-  private port: number;
-  private protocol: Protocol;
+  private piletApi: string;
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
-    this.port = config.port;
-    this.protocol = config.ssl ? 'https' : 'http';
+    this.piletApi = `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${config.api}`;
     const { pilets, api } = options;
     const cbs = {};
 
@@ -78,7 +74,7 @@ export default class PiletInjector implements KrasInjector {
     return {
       name: def.name,
       version: def.version,
-      link: `${this.protocol}://localhost:${this.port}${api}/${index}/${file}`,
+      link: `${this.piletApi}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef,
       noCache: true,
@@ -136,6 +132,18 @@ export default class PiletInjector implements KrasInjector {
     }
   }
 
+  sendIndexFile(target: string, url: string): KrasResponse {
+    const indexHtml = readFileSync(target, 'utf8');
+    
+    // mechanism to inject server side debug piletApi config into piral emulator
+    const windowInjectionScript = `window['dbg:pilet-api'] = '${this.piletApi}';`;
+    const findStr = `<script`;
+    const replaceStr = `<script><!-- Pilet Debugging Emulator Config Injection -->${windowInjectionScript}</script>\n<script`;
+    const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);
+
+    return this.sendContent(content, mime.getType(target), url);
+  }
+
   handle(req: KrasRequest): KrasResponse {
     const { app, api } = this.config;
     const path = req.url.substr(1).split('?')[0];
@@ -144,6 +152,9 @@ export default class PiletInjector implements KrasInjector {
       const target = join(app, path);
 
       if (existsSync(target) && statSync(target).isFile()) {
+        if (req.url === '/index.html') {
+          return this.sendIndexFile(target, req.url);
+        }
         return this.sendFile(target, req.url);
       } else if (req.url !== '/index.html') {
         return this.handle({

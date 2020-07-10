@@ -32,9 +32,9 @@ export function setStandardEnvs(options: StandardEnvProps) {
   }
 
   if (options.debugPilet) {
-    process.env.DEBUG_PILET = config.piletApi;
+    window['dbg:pilet-api'] = config.piletApi;
   } else {
-    delete process.env.DEBUG_PILET;
+    delete window['dbg:pilet-api'];
   }
 
   if (options.production) {
