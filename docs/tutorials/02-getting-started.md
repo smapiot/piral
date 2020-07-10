@@ -63,6 +63,16 @@ piral new --target my-app
 
 As result we will find in the folder `./my-app` the files for the newly created application shell.
 
+::: tip: Use NPM Initializers
+In case you don't want to install the Piral CLI globally, you can also leverage the NPM initializer for this command.
+
+```sh
+npm init piral-instance --target my-app -y
+```
+
+The NPM initializer comes with a quick survey going over the options. Specifying `-y` will take the default values.
+:::
+
 ### Run the Application Shell
 
 To execute the created Piral instance, navigate to the directory `my-app` and run the following `piral-cli` command:

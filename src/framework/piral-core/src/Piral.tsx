@@ -17,6 +17,7 @@ const app = (
     <Define name="Layout" component={MyLayout} />
   </Piral>
 );
+```
  */
 export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => (
   <StateContext.Provider value={instance.context}>
