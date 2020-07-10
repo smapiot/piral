@@ -42,6 +42,16 @@ jest.mock('../external', () => ({
   },
 }));
 
+const jsonValueString = JSON.stringify({ dependencies: { npm: { extraneous: true } } });
+jest.mock('./scripts', () => ({
+  runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
+    return new Promise<void>((resolve, reject) => { 
+      output?.write(jsonValueString, () => {});
+      resolve(); 
+    });
+  }
+}));
+
 jest.mock('fs', () => ({
   constants: {
     F_OK: 1,
@@ -140,133 +150,94 @@ describe('NPM Module', () => {
     expect(type).toBe('registry');
   });
 
-  it('installs a package using the NPM command line tool without a target', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    installPackage('npm', 'foo', 'latest');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('installs a package using the NPM command line tool without a target', async () => {
+    await installPackage('npm', 'foo', 'latest')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('installs a package using the NPM command line tool without a version', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    installPackage('npm', 'foo');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('installs a package using the NPM command line tool without a version', async () => {
+    await installPackage('npm', 'foo')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('installs a package using the Yarn command line tool without a version', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    installPackage('yarn', 'foo');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('installs a package using the Yarn command line tool without a version', async () => {
+    await installPackage('yarn', 'foo')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('installs a package using the Pnpm command line tool without a version', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    installPackage('pnpm', 'foo');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('installs a package using the Pnpm command line tool without a version', async () => {
+    await installPackage('pnpm', 'foo')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('installs a package using the NPM command line tool with some flag', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    installPackage('npm', 'foo', '1.3', '.', '--a=b');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('installs a package using the NPM command line tool with some flag', async() => {
+    await installPackage('npm', 'foo', '1.3', '.', '--a=b')
+    .then(result => expect(result).toEqual(jsonValueString));    
   });
 
-  it('detectNpm finds package-lock.json', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    detectNpm('test')
-      .then(res => expect(res).toBeTruthy())
-      .catch(err => expect(err).toBeTruthy());
+  it('detectNpm finds package-lock.json', async () => {
+    await detectNpm('test')
+     .then(result => expect(result).toBeTruthy());
   });
 
-  it('detectPnpm finds nppm-lock.yaml', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    detectPnpm('test')
-      .then(res => expect(res).toBeTruthy())
-      .catch(err => expect(err).toBeTruthy());
+  it('detectPnpm finds nppm-lock.yaml', async () => {
+    await detectPnpm('test')
+      .then(result => expect(result).toBeTruthy());
   });
 
-  it('detectYarn finds yarn.lock', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    detectYarn('test')
-      .then(res => expect(res).toBeTruthy())
-      .catch(err => expect(err).toBeTruthy());
+  it('detectYarn finds yarn.lock', async () => {
+    await detectYarn('test')
+      .then(result => expect(result).toBeTruthy());
   });
 
-  it('uses npm to verify whether a particular package is included in monorepo package', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    isMonorepoPackageRef('npm', './');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('uses npm to verify whether a particular package is included in monorepo package', async () => {
+    await isMonorepoPackageRef('npm', './')
+      .then(result => expect(result).toBeTruthy()); 
   });
 
-  it('verfiies whether lerna config path is valid', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = detectMonorepo('./');
-    expect(result).toBeTruthy();
+  it('verfiies whether lerna config path is valid', async () => {
+    await detectMonorepo('./')
+  .then(result => { console.log(`result: ${result}`); expect(result).toBeTruthy() }); 
   });
 
-  it('verfiies whether lerna bootstrap ran', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = bootstrapMonorepo();
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('verfiies whether lerna bootstrap ran', async () => {
+    await bootstrapMonorepo()
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('install dependencies with npm client', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = installDependencies('npm');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('install dependencies with npm client', async () => {
+    await installDependencies('npm')
+      .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('install dependencies with pnpm client', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = installDependencies('pnpm');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('install dependencies with pnpm client', async () => {
+    await installDependencies('pnpm')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('install dependencies with yarn client', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = installDependencies('yarn');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('install dependencies with yarn client', async () => {
+    await installDependencies('yarn')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('create npm package', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = createPackage();
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('create npm package', async () => {
+    await createPackage()
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('find npm tarball', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = findTarball('foo');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('find npm tarball', async () => {
+    await findTarball('foo')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('find latest version', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = findLatestVersion('foo');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('find latest version', async () => {
+    await findLatestVersion('foo')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
-  it('find specific version', () => {
-    const emitter = jest.fn(() => ({ on: emitter, stdout: new Stream(), stdin: new Stream(), stderr: new Stream() }));
-    (cp as any).exec = emitter;
-    const result = findSpecificVersion('foo', '1.0.0');
-    expect(emitter).toHaveBeenCalledTimes(3);
+  it('find specific version', async () => {
+    await findSpecificVersion('foo', '1.0.0')
+    .then(result => expect(result).toEqual(jsonValueString));
   });
 
   it('check if package is local', () => {
