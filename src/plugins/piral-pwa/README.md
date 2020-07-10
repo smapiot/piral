@@ -16,7 +16,7 @@ Allows pilets to present a "native" notification. The exact looks of this are pl
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `showAppNotification` function from the Pilet API to show a native notification in the host browser or operating system from the Piral instance.
 
@@ -32,9 +32,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -85,7 +85,7 @@ const instance = createInstance({
 });
 ```
 
-## Customizing the Service Worker
+### Customizing the Service Worker
 
 By default, a service worker is generated for you. This behavior can be overridden if you place a file called `sw.js` in your `src` folder.
 
@@ -99,7 +99,7 @@ You don't need to use them, but they can be quite helpful. For instance, on `__P
 
 **Remark**: How the parameters and helpers can be influenced (i.e., configured) is currently work in progress and should be figured out until v1.
 
-## Configuration of the Provided Options
+### Configuration of the Provided Options
 
 The parameters for the generated service worker can be configured, too. All in all this follows the options known from Webpack's [offline-plugin](https://github.com/NekR/offline-plugin), see [options](https://github.com/NekR/offline-plugin/blob/master/docs/options.md) for explanations.
 
@@ -120,6 +120,8 @@ The `.pwarc` may look as follows:
 ```
 
 More details on the configuration will follow. Further options will be integrated soon, too.
+
+:::
 
 ## License
 

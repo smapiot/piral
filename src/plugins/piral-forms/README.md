@@ -18,7 +18,7 @@ Returns a higher-order component for providing the form-related props such as `e
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `createForm` function from the Pilet API to create a global state container managed form inside the Piral instance.
 
@@ -45,9 +45,9 @@ export function setup(piral: PiletApi) {
 
 Calling `createForm` returns a higher-order component that injects new props from the `FormProps<TFormData>` interface into the component. These props contain among others a `formData` record and a `submit` function.
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -68,6 +68,8 @@ const instance = createInstance({
 ```
 
 There are no options available.
+
+:::
 
 ## License
 

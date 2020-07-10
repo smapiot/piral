@@ -32,7 +32,7 @@ Transforms the result of a promise derived from a callback (i.e., lazy loading) 
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromLazy` function from the Pilet API to convert your lazy loaded components to components usable by your Piral instance.
 
@@ -96,9 +96,9 @@ app.defineDependency('prerequest', prerequest);
 app.registerPage('/translate', TranslatePage);
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using lazy loading with Piral is as simple as installing `piral-lazy`.
 
@@ -115,6 +115,8 @@ const instance = createInstance({
   // ...
 });
 ```
+
+:::
 
 ## License
 

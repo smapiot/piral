@@ -26,7 +26,7 @@ Starts a tracking frame. The frame can be ended via the returned callback.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `trackEvent` function from the Pilet API to track a custom event with an arbitrary definition.
 
@@ -72,9 +72,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -95,6 +95,8 @@ const instance = createInstance({
 ```
 
 There are no options available.
+
+:::
 
 ## Events
 

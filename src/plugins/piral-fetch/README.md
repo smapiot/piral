@@ -16,7 +16,7 @@ This is a simpler version of the standard `fetch` from the browser.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fetch` function from the Pilet API to communicate with your backend. This instance has advantages over using the plain `fetch` function.
 
@@ -34,9 +34,9 @@ export function setup(piral: PiletApi) {
 
 Note that the response is slightly different to the `fetch` function from the browser.
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -76,6 +76,8 @@ const instance = createInstance({
 ```
 
 **Note**: `piral-fetch` plays nicely together with authentication providers such as `piral-adal`. As such authentication tokens are automatically inserted on requests to the base URL.
+
+:::
 
 ## License
 

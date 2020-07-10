@@ -22,7 +22,7 @@ Transforms a standard Ember.js component into a component that can be used in Pi
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromEmber` function from the Pilet API to convert your Ember.js components to components usable by your Piral instance.
 
@@ -43,9 +43,9 @@ Within Ember.js components the Piral Ember.js extension component can be used by
 <ember-extension name="name-of-extension"></ember-extension>
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using Ember.js with Piral is as simple as installing `piral-ember` and `ember-source`.
 
@@ -62,6 +62,8 @@ const instance = createInstance({
   // ...
 });
 ```
+
+:::
 
 ## License
 

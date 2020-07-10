@@ -22,7 +22,7 @@ The extension slot module to be referenced in Angular.js module definitions. All
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromNgjs` function from the Pilet API to convert your Angular.js modules to components usable by your Piral instance.
 
@@ -44,9 +44,9 @@ Within Angular.js components the Piral Angular.js extension component can be use
 <extension-component name="name-of-extension"></extension-component>
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular.js 1.x.
 
@@ -77,6 +77,8 @@ The `angular` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
+
+:::
 
 ## License
 

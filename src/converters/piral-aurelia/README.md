@@ -22,7 +22,7 @@ The extension slot component to be used in Aurelia component. This is not really
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromAurelia` function from the Pilet API to convert your Aurelia components to components usable by your Piral instance.
 
@@ -43,9 +43,9 @@ Within Aurelia components the Piral Aurelia extension component can be used by r
 <extension-component name="name-of-extension"></extension-component>
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using Aurelia with Piral is as simple as installing `piral-aurelia` and `aurelia-framework`.
 
@@ -80,6 +80,8 @@ The `aurelia` related packages should be shared with the pilets via the *package
   }
 }
 ```
+
+:::
 
 ## License
 

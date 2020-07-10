@@ -16,7 +16,7 @@ Creates a new pilet global state container. The state container will essentially
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `createState` function from the Pilet API to create your own sub states in the global state container of the Piral instance.
 
@@ -51,9 +51,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -74,6 +74,8 @@ const instance = createInstance({
 ```
 
 There are no options available.
+
+:::
 
 ## License
 

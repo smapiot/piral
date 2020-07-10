@@ -22,7 +22,7 @@ The extension slot component to be used in Preact component.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromPreact` function from the Pilet API to convert your Preact components to components usable by your Piral instance.
 
@@ -43,9 +43,9 @@ Within Preact components the Piral Preact extension component can be used by ref
 <PreactExtension name="name-of-extension" />
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using Preact with Piral is as simple as installing `piral-preact` and `preact`.
 
@@ -75,6 +75,8 @@ The `preact` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
+
+:::
 
 ## License
 

@@ -21,6 +21,7 @@ Gets the currently active configuration.
 ## Usage
 
 ::: summary: For pilet authors
+
 Just use `defineConfigSchema` in your `setup` to define your configuration checker and the default values. Later you can access the retrieved configuration via `getCurrentConfig`.
 
 A quick example:
@@ -43,7 +44,7 @@ export function setup(app: PiletApi) {
   app.defineConfigSchema(configSchema, defaultConfig);
 
   const { increment } = app.getCurrentConfig();
-  
+
   app.registerExtension('home-dashboard', () => {
     const [count, setCount] = React.useState(0);
     return (
@@ -61,9 +62,11 @@ export function setup(app: PiletApi) {
 ```
 
 Make sure you use `getCurrentConfig` *after* the configuration schema has been defined.
+
 :::
 
 ::: summary: For Piral instance developers
+
 The provided library only brings API extensions for pilets to a Piral instance.
 
 For the setup of the library itself you'll need to import `createConfigsApi` from the `piral-configs` package.
@@ -83,6 +86,7 @@ const instance = createInstance({
 ```
 
 There are no options available.
+
 :::
 
 ## License
