@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
 import { mount } from 'enzyme';
+import { Atom } from '@dbeining/react-atom';
 import { withApi } from './withApi';
 import { ComponentConverters } from '../types';
 import { StateContext } from '../state';
-import { Atom } from '@dbeining/react-atom';
-import { unmountComponentAtNode } from 'react-dom';
 
 function createMockContainer() {
   const state = Atom.of({
