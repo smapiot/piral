@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 
 export interface SectionItem {
@@ -7,27 +7,29 @@ export interface SectionItem {
   links: Array<{
     id: string;
     title?: string;
+    link?: string;
     route: string;
   }>;
 }
 
 export interface SectionMenuProps {
   sections: Array<SectionItem>;
-  active: string;
 }
 
-export const SectionMenu: React.FC<SectionMenuProps> = ({ sections, active }) => {
+export const SectionMenu: React.FC<SectionMenuProps> = ({ sections }) => {
+  const container = React.useRef<HTMLDivElement>(undefined);
+
+  React.useEffect(() => container.current?.scrollTo(0, 0), [sections]);
+
   return (
-    <Sidebar className="section-nav">
+    <Sidebar className="section-nav" ref={container}>
       {sections.map(section => (
         <React.Fragment key={section.title}>
           <div className="section-nav-title">{section.title}</div>
           <ul className="section-nav-list">
             {section.links.map(link => (
               <li key={link.id}>
-                <Link className={active === link.route ? 'active' : ''} to={link.route}>
-                  {link.title || link.id}
-                </Link>
+                <NavLink to={link.link || link.route}>{link.title || link.id}</NavLink>
               </li>
             ))}
           </ul>

@@ -1,3 +1,7 @@
+---
+title: Webshop
+---
+
 # Example: Pure Microfrontend Shop
 
 An example app based on `piral`.

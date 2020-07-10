@@ -1,3 +1,7 @@
+---
+title: Cross Frameworks
+---
+
 # Example: Cross-Framework Components
 
 An example app based on `piral-core`.

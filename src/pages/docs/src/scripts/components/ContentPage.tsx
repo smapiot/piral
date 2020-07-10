@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useLocation } from 'react-router';
+import { Page } from './PageContext';
 import { TocMenu } from './TocMenu';
 import { SectionMenu } from './SectionMenu';
 import { resolveSections } from '../sitemap';
 
 export const ContentPage: React.FC = ({ children }) => {
-  const ref = React.useRef(undefined);
   const { hash, pathname } = useLocation();
+  const sections = React.useMemo(() => resolveSections(pathname), [pathname]);
 
   React.useEffect(() => {
     const tid = setTimeout(() => {
@@ -17,12 +18,10 @@ export const ContentPage: React.FC = ({ children }) => {
   }, [hash]);
 
   return (
-    <>
-      <SectionMenu active={pathname} sections={resolveSections(pathname)} />
-      <TocMenu content={ref} />
-      <div className="content-display" ref={ref}>
-        {children}
-      </div>
-    </>
+    <Page>
+      <SectionMenu sections={sections} />
+      <TocMenu />
+      <div className="content-display">{children}</div>
+    </Page>
   );
 };

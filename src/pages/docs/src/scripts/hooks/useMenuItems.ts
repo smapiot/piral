@@ -60,12 +60,12 @@ function seen(offset: number, position: number, height: number, last: boolean) {
   return value < 15 || (last && value < height);
 }
 
-export function useMenuItems(content: RefObject<HTMLElement>) {
+export function useMenuItems(current: HTMLElement) {
   const [items, setItems] = useState<MenuItems>([]);
 
   useEffect(() => {
-    if (content.current) {
-      const sections = content.current.querySelectorAll<HTMLElement>('h2, h3, h4, h5, h6');
+    if (current) {
+      const sections = current.querySelectorAll<HTMLElement>('h2, h3, h4, h5, h6');
       let active = undefined;
 
       const handler = () => {
@@ -87,8 +87,8 @@ export function useMenuItems(content: RefObject<HTMLElement>) {
       return () => document.removeEventListener('scroll', handler);
     }
 
-    return () => {};
-  }, [content.current]);
+    return () => { };
+  }, [current]);
 
   return items;
 }

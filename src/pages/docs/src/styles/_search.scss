@@ -13,6 +13,7 @@
 
   .search-overlay {
     position: fixed;
+    z-index: 1;
     top: 0;
     left: 0;
     width: 0;
@@ -64,6 +65,7 @@
   }
 
   .search-details {
+    z-index: 1;
     width: 10rem;
     transition: width 250ms cubic-bezier(0.1, 0.7, 0.1, 1);
     position: relative;

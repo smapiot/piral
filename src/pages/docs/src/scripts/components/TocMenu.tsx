@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { usePage } from './PageContext';
 import { Sidebar } from './Sidebar';
 import { MenuItems, useMenuItems } from '../hooks';
 
-export interface TocMenuProps {
-  content?: React.RefObject<HTMLDivElement>;
-}
+export interface TocMenuProps {}
 
 function c(...items: Array<string | boolean | number>) {
   return items.filter(item => !!item).join(' ');
@@ -26,7 +25,8 @@ function renderMenuItems(items: MenuItems, level = 1) {
   );
 }
 
-export const TocMenu: React.FC<TocMenuProps> = ({ content }) => {
-  const items = useMenuItems(content);
+export const TocMenu: React.FC = () => {
+  const { current } = usePage();
+  const items = useMenuItems(current);
   return <Sidebar className="toc-nav">{renderMenuItems(items)}</Sidebar>;
 };
