@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
 import { DefaultPicker } from './default';
@@ -49,7 +49,7 @@ export function setupLocalizer(config: LocaleConfig = {}): Localizable {
  * Creates new Pilet API extensions for localization.
  * @param localizer The specific localizer to be used, if any.
  */
-export function createLocaleApi(localizer: Localizable = setupLocalizer()): Extend<PiletLocaleApi> {
+export function createLocaleApi(localizer: Localizable = setupLocalizer()): PiralPlugin<PiletLocaleApi> {
   return context => {
     context.defineActions(createActions(localizer));
 

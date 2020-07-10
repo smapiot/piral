@@ -11,7 +11,7 @@ const urls = {
 };
 
 export default () => (
-  <section className="container">
+  <section className="layout-container">
     <h1>Piral Documentation</h1>
     <div className="markdown-body">
       <p>

@@ -1,6 +1,6 @@
 {
   "name": "piral-documentation-page",
-  "version": "0.11.7",
+  "version": "0.11.8",
   "private": true,
   "description": "The documentation page for Piral.",
   "keywords": [
@@ -48,6 +48,7 @@
     "markdown-it": "^9.0.1",
     "markdown-it-abbr": "1.0.4",
     "markdown-it-anchor": "5.2.4",
+    "markdown-it-container": "3.0.0",
     "markdown-it-emoji": "1.4.0",
     "markdown-it-footnote": "3.0.2",
     "markdown-it-front-matter": "0.1.2",

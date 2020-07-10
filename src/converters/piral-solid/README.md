@@ -58,7 +58,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createSolidApi()],
+  plugins: [createSolidApi()],
   // ...
 });
 ```

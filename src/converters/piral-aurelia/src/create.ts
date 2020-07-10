@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { inlineView, customElement, bindable } from 'aurelia-framework';
 import { createConverter } from './converter';
 import { PiletAureliaApi } from './types';
@@ -17,7 +17,7 @@ export interface AureliaConfig {
 /**
  * Creates new Pilet API extensions for integrating Aurelia.
  */
-export function createAureliaApi(config: AureliaConfig = {}): Extend<PiletAureliaApi> {
+export function createAureliaApi(config: AureliaConfig = {}): PiralPlugin<PiletAureliaApi> {
   const { rootName = 'span' } = config;
 
   return context => {

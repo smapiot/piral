@@ -3,6 +3,7 @@ title: Actions and State
 description: How to use existing and new actions to manipulate the state.
 audience: Architects, Developers
 level: Proficient
+section: Details
 ---
 
 # Actions and State

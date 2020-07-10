@@ -51,7 +51,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createFetchApi()],
+  plugins: [createFetchApi()],
   // ...
 });
 ```
@@ -63,7 +63,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createFetchApi({
+  plugins: [createFetchApi({
     base: 'https://example.com/api/v1',
     default: {
       headers: {

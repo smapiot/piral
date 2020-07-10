@@ -3,6 +3,7 @@ title: Sharing Between Pilets
 description: Pilets can share anything such as values, functions, or components.
 audience: Architects, Developers
 level: Intermediate
+section: Details
 ---
 
 # Sharing Between Pilets

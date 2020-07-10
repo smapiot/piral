@@ -3,6 +3,7 @@ title: Sharing Dependencies
 description: Dependencies can be shared in Piral implicitly and explicitly.
 audience: Developers
 level: Proficient
+section: Details
 ---
 
 # Sharing Dependencies

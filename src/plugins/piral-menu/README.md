@@ -72,7 +72,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createMenuApi()],
+  plugins: [createMenuApi()],
   // ...
 });
 ```
@@ -84,7 +84,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createMenuApi({
+  plugins: [createMenuApi({
     defaultSettings: {
       type: 'admin',
     },

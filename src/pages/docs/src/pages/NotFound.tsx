@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export default () => (
-  <section className="container">
+  <section className="layout-container">
     <img className="not-found-teaser" src={require('../assets/not_found.svg')} alt="Not Found" />
     <h1>Page Not Found</h1>
     <p>The page you are looking for has not been found here. Maybe start a search?</p>

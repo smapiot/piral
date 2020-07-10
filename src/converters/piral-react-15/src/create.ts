@@ -1,4 +1,4 @@
-import { Extend, ExtensionSlotProps, compare } from 'piral-core';
+import { PiralPlugin, ExtensionSlotProps, compare } from 'piral-core';
 import { createElement, Component } from 'react-15';
 import { anyPropType } from './mount';
 import { createConverter } from './converter';
@@ -18,7 +18,7 @@ export interface React15Config {
 /**
  * Creates Pilet API extensions for integrating React 15.x.
  */
-export function createReact15Api(config: React15Config = {}): Extend<PiletReact15Api> {
+export function createReact15Api(config: React15Config = {}): PiralPlugin<PiletReact15Api> {
   const { rootName = 'slot' } = config;
 
   const React15Extension: any = class extends Component<ExtensionSlotProps> {

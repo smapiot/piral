@@ -1,6 +1,11 @@
 # Piral Changelog
 
-## 0.11.8 (tbd)
+## 1.0.0 (tbd)
+
+* Documentation cleanup
+* Renamed `extendApi` to `plugins` (keeping `extendApi` as deprecated)
+
+## 0.11.8 (July 9, 2020)
 
 * Updated documentation layout (#206)
 * Fixed root-level update in `piral-riot`, `piral-solid`, and `piral-hyperapp`
@@ -13,6 +18,7 @@
 * Added new optional plugin `piral-cycle` (#232)
 * Changed module optimization to default to `false` (#256)
 * Changed the default bundler to `piral-cli-webpack`
+* Changed pilet injector to return full URL (#270)
 
 ## 0.11.7 (June 22, 2020)
 

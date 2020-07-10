@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { Component, ElementRef, Input, Inject, enableProdMode } from '@angular/core';
 import { createConverter } from './converter';
 import { PiletNgApi } from './types';
@@ -27,7 +27,7 @@ export interface NgConfig {
 /**
  * Creates the Pilet API extensions for Angular.
  */
-export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
+export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
   const { rootName = 'slot', selector = 'extension-component', selectId } = config;
   const template = `<${rootName}></${rootName}>`;
 

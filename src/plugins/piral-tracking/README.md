@@ -89,7 +89,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createTrackingApi()],
+  plugins: [createTrackingApi()],
   // ...
 });
 ```

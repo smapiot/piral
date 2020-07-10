@@ -1,7 +1,7 @@
-import { Extend, createInstance, PiralConfiguration } from 'piral-core';
+import { PiralPlugin, createInstance, PiralConfiguration } from 'piral-core';
 import { NativeRouter } from 'react-router-native';
 
-function extendPiralApi(customApis: Extend | Array<Extend> = []) {
+function extendPiralApi(customApis: PiralPlugin | Array<PiralPlugin> = []) {
   return Array.isArray(customApis) ? customApis : [customApis];
 }
 
@@ -28,6 +28,6 @@ export function createNativePiral(config: PiralConfiguration = {}) {
         ...deps,
       };
     },
-    extendApi: extendPiralApi(config.extendApi),
+    plugins: extendPiralApi(config.plugins || config.extendApi),
   });
 }

@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { Validator, Schema } from 'jsonschema';
 import { PiletConfigsApi } from './types';
 
@@ -13,7 +13,7 @@ export interface ConfigsConfig {
   retrieve?<T>(configName: string): T | undefined;
 }
 
-export function createConfigsApi(config: ConfigsConfig = {}): Extend<PiletConfigsApi> {
+export function createConfigsApi(config: ConfigsConfig = {}): PiralPlugin<PiletConfigsApi> {
   const readConfig = (name: string, defaultConfig: any) => {
     const key = `config-${name}`;
     const current = config.retrieve?.(key);

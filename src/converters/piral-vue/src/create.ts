@@ -1,4 +1,4 @@
-import { Extend, ExtensionSlotProps } from 'piral-core';
+import { PiralPlugin, ExtensionSlotProps } from 'piral-core';
 import { Component } from 'vue';
 import { register } from './mount';
 import { createConverter } from './converter';
@@ -23,7 +23,7 @@ export interface VueConfig {
 /**
  * Creates new Pilet API extensions for integration of Vue.
  */
-export function createVueApi(config: VueConfig = {}): Extend<PiletVueApi> {
+export function createVueApi(config: VueConfig = {}): PiralPlugin<PiletVueApi> {
   const { rootName = 'slot', selector = 'extension-component' } = config;
 
   const VueExtension: Component<ExtensionSlotProps> = {

@@ -56,7 +56,7 @@ const client = setupOAuth2Client({ clientId, ... });
 
 const instance = createInstance({
   // important part
-  extendApi: [createOAuth2Api(client)],
+  plugins: [createOAuth2Api(client)],
   // ...
 });
 ```
@@ -78,7 +78,7 @@ import { client } from './oauth2';
 export function render() {
   renderInstance({
     // ...
-    extendApi: [createOAuth2Api(client)],
+    plugins: [createOAuth2Api(client)],
   });
 }
 

@@ -3,6 +3,7 @@ title: Piral Layout
 description: Set up the layout of your Piral instance.
 audience: Developers
 level: Intermediate
+section: Details
 ---
 
 # Piral Layout Setup

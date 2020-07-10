@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { LitElement, property, customElement } from 'lit-element';
 import { createConverter } from './converter';
 import { PiletLitElApi } from './types';
@@ -17,7 +17,7 @@ export interface LitElConfig {
 /**
  * Creates new Pilet API extensions for integration of LitElement.
  */
-export function createLitElApi(config: LitElConfig = {}): Extend<PiletLitElApi> {
+export function createLitElApi(config: LitElConfig = {}): PiralPlugin<PiletLitElApi> {
   const { selector = 'litel-extension' } = config;
 
   @customElement(selector)

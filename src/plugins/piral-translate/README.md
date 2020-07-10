@@ -87,7 +87,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createLocaleApi()],
+  plugins: [createLocaleApi()],
   // ...
 });
 ```
@@ -111,7 +111,7 @@ const localizer = setupLocalizer({
 
 const instance = createInstance({
   // important part
-  extendApi: [createLocaleApi(localizer)],
+  plugins: [createLocaleApi(localizer)],
   // ...
 });
 ```

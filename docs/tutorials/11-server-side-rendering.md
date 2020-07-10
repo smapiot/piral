@@ -3,6 +3,7 @@ title: Server-Side Rendering
 description: How to improve startup performance with SSR.
 audience: Architects, Developers
 level: Proficient
+section: Details
 ---
 
 # Server-Side Rendering
