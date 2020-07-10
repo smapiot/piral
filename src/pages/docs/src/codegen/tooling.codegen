@@ -22,20 +22,24 @@ module.exports = function() {
   const imports = commands
     .map(file => {
       const name = getName(file);
+      const route = getRoute(name);
       const { mdValue } = render(file, generated);
       this.addDependency(file, { includedInParent: true });
       const tool = getType(file);
 
       generateFile(
         `tooling-${name}`,
-        `
+        `// ${route}
 import * as React from 'react';
-import { ContentPage, Markdown } from '../../scripts/components';
+import { PageContent, Markdown } from '../../scripts/components';
+
+const link = "${docRef(file)}";
+const html = ${mdValue};
 
 export default () => (
-  <ContentPage>
-    <Markdown content={${mdValue}} link="${docRef(file)}" />
-  </ContentPage>
+  <PageContent>
+    <Markdown content={html} link={link} />
+  </PageContent>
 );`,
         'jsx',
       );
@@ -43,7 +47,7 @@ export default () => (
       return `
       {
         id: '${name}',
-        route: '${getRoute(name)}',
+        route: '${route}',
         tool: '${tool}',
         page: lazy(() => import('./${generatedName}/tooling-${name}')),
       }`;

@@ -15,23 +15,25 @@ module.exports = function() {
         .split('/')
         .pop()
         .replace('.json', '');
+      const route = getRoute(name);
       this.addDependency(file, { includedInParent: true });
       generateFile(
         `types-${name}`,
-        `
+        `// ${route}
 import * as React from 'react';
-import { TypeInfo, ContentPage } from '../../scripts/components';
+import { PageContent, TypeInfo } from '../../scripts/components';
+
 export default () => (
-  <ContentPage>
+  <PageContent>
     <TypeInfo key="${name}">{${content}}</TypeInfo>
-  </ContentPage>
+  </PageContent>
 );`,
         'jsx',
       );
       return `
       {
         id: '${name}',
-        route: '${getRoute(name)}',
+        route: '${route}',
         page: lazy(() => import('./${generatedName}/types-${name}')),
       }`;
     });

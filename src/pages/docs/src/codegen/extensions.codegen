@@ -25,6 +25,7 @@ module.exports = function() {
     .map(file => {
       const type = readFileSync(file, 'utf8');
       const name = getName(file);
+      const route = getRoute(name);
       const image = getPluginImage(name);
       const pluginRoot = getPackageRoot(name);
       const readme = resolve(pluginRoot, 'README.md');
@@ -56,34 +57,39 @@ module.exports = function() {
       this.addDependency(readme, { includedInParent: true });
       generateFile(
         `plugin-${name}`,
-        `
+        `// ${route}
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ContentPage, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
+import { PageContent, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
+
+const link = "${docRef(readme)}";
+const meta = ${JSON.stringify(plugin)};
+const html = ${content};
 
 export default () => (
-  <ContentPage>
+  <PageContent>
     <div className="plugin-info">
       <img src={require('../../assets/${image}')} />
       <h1>${name}</h1>
     </div>
     <Tabs titles={["Overview", "Types", "Info"]}>
-      <Markdown content={${content}} link="${docRef(readme)}" />
+      <Markdown content={html} link={link} />
       <TypeInfo>{${type}}</TypeInfo>
-      <PluginMeta {...${JSON.stringify(plugin)}} />
+      <PluginMeta {...meta} />
     </Tabs>
-  </ContentPage>
+  </PageContent>
 );`,
         'jsx',
       );
-      return [name, category];
+      return [name, category, route];
     })
     .sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]))
     .map(
-      ([name, category]) => `
+      ([name, category, route]) => `
 {
   id: '${name}',
-  route: '${getRoute(name)}',
+  route: '${route}',
+  link: '${route.replace('/:tab?', '')}',
   category: '${category}',
   page: lazy(() => import('./${generatedName}/plugin-${name}')),
 }`,

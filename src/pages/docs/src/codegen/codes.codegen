@@ -13,26 +13,30 @@ module.exports = function() {
     .map(file => {
       const { mdValue } = render(file, generated);
       const name = getName(file);
+      const route = getRoute(name);
       this.addDependency(file, { includedInParent: true });
       generateFile(
         `code-${name}`,
-        `
+        `// ${route}
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ContentPage, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
+import { PageContent, Markdown } from '../../scripts/components';
+
+const link = "${docRef(file)}";
+const html = ${mdValue};
 
 export default () => (
-  <ContentPage>
+  <PageContent>
     <Link to="/reference/codes" className="nav-link">Codes</Link> /
-    <Markdown content={${mdValue}} link="${docRef(file)}" />
-  </ContentPage>
+    <Markdown content={html} link={link} />
+  </PageContent>
 );`,
         'jsx',
       );
       return `
       {
         id: '${name}',
-        route: '${getRoute(name)}',
+        route: '${route}',
         page: lazy(() => import('./${generatedName}/code-${name}')),
       }`;
     });
