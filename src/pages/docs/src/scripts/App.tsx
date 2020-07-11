@@ -3,8 +3,6 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { routes } from './sitemap';
 import { Layout } from './layout';
 
-const NotFoundPage = React.lazy(() => import('../pages/NotFound'));
-
 export const App = () => (
   <BrowserRouter>
     <Layout>
@@ -12,10 +10,13 @@ export const App = () => (
         {routes}
         <Redirect exact from="/" to="/guidelines" />
         <Redirect exact from="/tutorials" to="/guidelines" />
+        <Redirect exact from="/tutorials/:id" to="/guidelines/tutorials/:id" />
+        <Redirect exact from="/reference/tooling/pilet" to="/tooling/build-pilet" />
+        <Redirect exact from="/reference/tooling/piral" to="/tooling/build-piral" />
         <Redirect exact from="/reference/extensions/:id?" to="/plugins/:id" />
         <Redirect exact from="/reference/plugins/:id?" to="/plugins/:id" />
         <Redirect exact from="/code/:id" to="/reference/codes/:id" />
-        <Route component={NotFoundPage} />
+        <Route component={React.lazy(() => import('../pages/NotFound'))} />
       </Switch>
     </Layout>
   </BrowserRouter>
