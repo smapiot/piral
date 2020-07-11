@@ -32,12 +32,13 @@ export const Layout: React.FC = ({ children }) => {
           <div className="version-info">
             {version && (
               <>
-                <i className="fas fa-code-branch" /> v{version}{' '}
+                <i className="fas fa-code-branch" />v{version}
               </>
             )}
             {updated && (
               <>
-                <i className="far fa-clock" /> Updated {updated}
+                <i className="far fa-clock" />
+                Updated {updated}
               </>
             )}
           </div>

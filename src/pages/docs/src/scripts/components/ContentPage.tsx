@@ -6,16 +6,8 @@ import { SectionMenu } from './SectionMenu';
 import { resolveSections } from '../sitemap';
 
 export const ContentPage: React.FC = ({ children }) => {
-  const { hash, pathname } = useLocation();
+  const { pathname } = useLocation();
   const sections = React.useMemo(() => resolveSections(pathname), [pathname]);
-
-  React.useEffect(() => {
-    const tid = setTimeout(() => {
-      const element = document.getElementById(hash.substr(1));
-      element?.scrollIntoView({ behavior: 'smooth', inline: 'nearest' });
-    }, 10);
-    return () => clearTimeout(tid);
-  }, [hash]);
 
   return (
     <Page>

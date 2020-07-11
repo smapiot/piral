@@ -12,6 +12,10 @@ div.content {
     overflow: hidden;
     height: calc(100vh - 10rem);
 
+    &:empty {
+      width: 0;
+    }
+
     @media (max-width: $tabletBrk) {
       display: none;
     }
@@ -27,6 +31,10 @@ div.content {
     order: 2;
     height: calc(100vh - 10rem);
 
+    &:empty {
+      width: 0;
+    }
+
     @media (max-width: $screenBrk) {
       display: none;
     }
@@ -35,6 +43,10 @@ div.content {
   .content-display {
     flex: 1;
     padding: 1.5rem;
+
+    @media (max-width: $tabletBrk) {
+      padding: 1.5rem 0.5rem;
+    }
   }
 }
 
@@ -78,10 +90,10 @@ div.content {
   flex: 1 0 250px;
   text-align: right;
   font-size: 0.8em;
-  color: white;
+  color: #ddd;
 
   i {
-    margin-left: 0.5rem;
+    margin: 0 0.5rem 0 1rem;
   }
 
   @media (max-width: $mobileBrk) {

@@ -1,4 +1,4 @@
-const maxResults = 5;
+const maxResults = 25;
 const maxKeywords = 6;
 
 function getBigrams(str: string) {

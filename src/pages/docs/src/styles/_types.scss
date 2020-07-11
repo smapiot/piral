@@ -1,6 +1,5 @@
 .type-info {
   border-left: 5px solid $color-green;
-  padding-left: 0.5em;
   margin-bottom: 0.5em;
 
   &.type-info-green {
@@ -64,20 +63,34 @@
 .type-title {
   cursor: pointer;
   background: #eee;
-  padding: 0.5em;
+  padding: 1em;
+
+  > b {
+    color: transparentize($color: black, $amount: 0.2);
+    font-size: 0.9em;
+  }
+
+  > h3 {
+    margin: 0.3em 0;
+  }
+
+  > span.block {
+    margin: 0.7em 0;
+  }
 }
 
 .type-details {
-  padding: 0.5em;
   overflow: hidden;
   transition: opacity 500ms ease;
 
   &.open {
+    padding: 0.5em;
     max-height: 100000;
     opacity: 1;
   }
 
   &.close {
+    padding: 0;
     max-height: 0;
     opacity: 0;
   }

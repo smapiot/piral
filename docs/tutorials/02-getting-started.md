@@ -125,6 +125,16 @@ With the `pilet new` command, a new pilet with pre-defined content is created. T
 
 If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 
+::: tip: Use NPM Initializers
+You can also leverage the NPM initializers for creating new pilets.
+
+```sh
+npm init pilet --target my-pilet --source ./my-app/dist/develop/my-app-1.0.0.tgz -y
+```
+
+Also here, if you drop the `-y` option additional settings will be presented to you in form of a quick survey.
+:::
+
 ### Pilet Setup Function
 
 There is a single function, which controls the configuration of a pilet - it is the `setup` method in the file `./src/index.tsx`. The scaffolding process will add the setup function with some configurations:

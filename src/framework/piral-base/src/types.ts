@@ -1,3 +1,6 @@
+/**
+ * Metadata for pilets using the v0 schema.
+ */
 export interface PiletMetadataV0 {
   /**
    * The name of the pilet, i.e., the package id.
@@ -33,7 +36,9 @@ export interface PiletMetadataV0 {
    */
   custom?: any;
 }
-
+/**
+ * Metadata for pilets using the v1 schema.
+ */
 export interface PiletMetadataV1 {
   /**
    * The name of the pilet, i.e., the package id.
