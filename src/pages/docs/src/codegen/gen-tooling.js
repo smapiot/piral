@@ -53,8 +53,5 @@ export default () => (
       }`;
     });
 
-  return `
-    const { lazy } = require('react');
-    module.exports = [${imports.join(', ')}];
-  `;
+  return imports;
 };

@@ -1,7 +1,16 @@
 const { readFileSync } = require('fs');
 const { extract } = require('keyword-extractor');
 const { render } = require('./markdown');
-const { getName, getCommands, getDocs, getQuestions, getSpecs, getTutorials, getCoreTypes, getCodes } = require('./paths');
+const {
+  getName,
+  getCommands,
+  getDocs,
+  getQuestions,
+  getSpecs,
+  getTutorials,
+  getCoreTypes,
+  getCodes,
+} = require('./paths');
 
 function normalize(keyword) {
   if (keyword.startsWith('```')) {
@@ -73,6 +82,19 @@ function findKeywords(sentence) {
 }
 
 module.exports = function() {
+  const FlexSearch = require('flexsearch');
+
+  const index = new FlexSearch({
+    doc: {
+      id: 'id',
+      field: ['title', 'cat', 'content'],
+    },
+  });
+  index.add([
+    // ... docs here
+  ]);
+  const exportedIndex = index.export();
+
   const commands = findKeywords(
     getCommands()
       .map(m => readFileSync(m, 'utf8'))
@@ -142,10 +164,13 @@ module.exports = function() {
       route: '/types',
     },
     ...codes.map(code => ({
-      keywords: [...code.result, {
-        count: 100,
-        keyword: code.name,
-      }],
+      keywords: [
+        ...code.result,
+        {
+          count: 100,
+          keyword: code.name,
+        },
+      ],
       title: code.meta.title,
       route: `/reference/codes/${code.name}`,
     })),

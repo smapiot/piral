@@ -1,0 +1,84 @@
+module.exports = function() {
+  const tutorials = require('./gen-tutorials').call(this).join(', ');
+  const plugins = require('./gen-plugins').call(this).join(', ');
+  const commands = require('./gen-tooling').call(this).join(', ');
+  const specification = require('./gen-specification').call(this).join(', ');
+  const documentation = require('./gen-references').call(this).join(', ');
+  const samples = require('./gen-samples').call(this).join(', ');
+  const questions = require('./gen-faq').call(this).join(', ');
+  const codes = require('./gen-codes').call(this).join(', ');
+  const types = require('./gen-types').call(this).join(', ');
+
+  return `
+const { lazy } = require('react');
+
+function populate(source, select) {
+  const results = [];
+
+  source.forEach(item => {
+    const title = select(item);
+    const [result] = results.filter(m => m.title === title);
+
+    if (result) {
+      result.links.push(item);
+    } else {
+      results.push({
+        title,
+        links: [item],
+      });
+    }
+  });
+
+  return results;
+}
+
+const tutorials = populate([${tutorials}], t => t.section);
+const plugins = populate([${plugins}], p => p.category);
+const commands = populate([${commands}], c => c.tool);
+const specification = [${specification}];
+const documentation = [${documentation}];
+const samples = [${samples}];
+const questions = [${questions}];
+const codes = [${codes}];
+const types = [${types}];
+
+module.exports = {
+  guidelines: [
+    ...tutorials,
+    {
+      title: 'Example',
+      links: samples,
+    },
+  ],
+  reference: [
+    {
+      title: 'Documentation',
+      links: documentation,
+    },
+    {
+      title: 'Specification',
+      links: specification,
+    },
+    {
+      title: 'FAQ',
+      links: questions,
+    },
+    {
+      title: 'Codes',
+      links: codes,
+    },
+  ],
+  tooling: [...commands],
+  plugins: [...plugins],
+  types: [
+    {
+      title: 'Framework',
+      links: types.filter(m => !m.id.endsWith('-utils')),
+    },
+    {
+      title: 'Utilities',
+      links: types.filter(m => m.id.endsWith('-utils')),
+    },
+  ],
+};`;
+};

@@ -1,21 +1,22 @@
-const { getQuestions, generateFile, getName, generated, generatedName } = require('./paths');
+const { getDocs, getReferences, getName, generated, generatedName, generateFile } = require('./paths');
 const { docRef, capitalize } = require('./utils');
 const { render } = require('./markdown');
 
 function getRoute(name) {
-  return (name && `/reference/faq/${name}`) || '';
+  return (name && `/reference/documentation/${name}`) || '';
 }
 
 module.exports = function() {
-  const questions = getQuestions();
+  const docs = [...getDocs(), ...getReferences()];
 
-  const imports = questions.map(file => {
-    const { mdValue } = render(file, generated);
+  const imports = docs.map(file => {
     const name = getName(file);
     const route = getRoute(name);
+    const { mdValue } = render(file, generated);
     this.addDependency(file, { includedInParent: true });
+
     generateFile(
-      `faq-${name}`,
+      `ref-${name}`,
       `// ${route}
 import * as React from 'react';
 import { PageContent, Markdown } from '../../scripts/components';
@@ -30,17 +31,15 @@ export default () => (
 );`,
       'jsx',
     );
+
     return `
     {
       id: '${name}',
       title: '${capitalize(name)}',
       route: '${route}',
-      page: lazy(() => import('./${generatedName}/faq-${name}')),
+      page: lazy(() => import('./${generatedName}/ref-${name}')),
     }`;
   });
 
-  return `
-    const { lazy } = require('react');
-    module.exports = [${imports.join(', ')}];
-  `;
+  return imports;
 };

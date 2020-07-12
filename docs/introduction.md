@@ -86,4 +86,6 @@ The following table compares the two from a out-of-the-box feature perspective.
 
 Both libraries are purely functional and do not provide any design. Thus the look and feel can be fully customized and designed in every aspect.
 
+::: tip: Add Missing Features
 A missing feature in `piral-core` can be also re-integrated by installing the respective plugin, e.g., `piral-dashboard` for providing dashboard capabilities.
+:::
