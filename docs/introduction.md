@@ -60,29 +60,31 @@ To help us see the commands in action we can also use a *global* version of the 
 
 Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-atom` are straight dependencies, common dependencies such as `react` are only peer referenced. This leaves many of the open choices up to the developer providing greater freedom.
 
-## Piral Core vs Piral
+## Piral Base vs Core vs Full
 
 The decision between `piral-core` and `piral` as the base package may not be simple. Our recommendation is to use `piral` when you are in doubt (or don't know what to do). If you have a very specific use case and want to customize the API for the pilets, as well as the communication with the backend as much as possible - then `piral-core` may be the right choice.
 
-The following table compares the two from a out-of-the-box feature perspective.
+Furthermore, even `piral-core` is not standalone, but is leveraging `piral-base` under the hood. `piral-base` is independent of React and only provides the basic Piral functionality such as an API for pilets, or the loading mechanism for pilets.
 
-| Feature             | Piral Core | Piral |
-|---------------------|------------|-------|
-| Breakpoints         | ️️️✔️        | ✔️    |
-| Error Handling      | ️️️✔️        | ✔️    |
-| Global State        | ️️️✔️        | ✔️    |
-| Pages / Routing     | ️️️✔️        | ✔️    |
-| Extension API       | ️️️✔️        | ✔️    |
-| Shared Data API     | ️️️✔️        | ✔️    |
-| Events API          | ️️️✔️        | ✔️    |
-| Dashboard           | ️️️❌        | ✔️    |
-| Language            | ️️️❌        | ✔️    |
-| Connector API       | ️️️❌        | ✔️    |
-| Notification API    | ️️️❌        | ✔️    |
-| Modal Dialog API    | ️️️❌        | ✔️    |
-| Menu API            | ️️️❌        | ✔️    |
-| Polyfills           | ❌        | ✔️    |
-| Translation API     | ❌        | ✔️    |
+The following table compares the three from a out-of-the-box feature perspective.
+
+| Feature          | Base  | Core  | Full |
+|------------------|-------|-------|------|
+| Breakpoints      | ️️️✔️     | ️️️✔️     | ✔️    |
+| Events API       | ️️️✔️     | ️️️✔️     | ✔️    |
+| Error Handling   | ️️️❌    | ️️️✔️     | ✔️    |
+| Global State     | ️️️❌    | ️️️✔️     | ✔️    |
+| Pages / Routing  | ️️️❌    | ️️️✔️     | ✔️    |
+| Extension API    | ️️️❌    | ️️️✔️     | ✔️    |
+| Shared Data API  | ️️️❌    | ️️️✔️     | ✔️    |
+| Dashboard        | ️️️❌    | ️️️❌    | ✔️    |
+| Language         | ️️️❌    | ️️️❌    | ✔️    |
+| Connector API    | ️️️❌    | ️️️❌    | ✔️    |
+| Notification API | ️️️❌    | ️️️❌    | ✔️    |
+| Modal Dialog API | ️️️❌    | ️️️❌    | ✔️    |
+| Menu API         | ️️️❌    | ️️️❌    | ✔️    |
+| Polyfills        | ️️️❌    | ❌    | ✔️    |
+| Translation API  | ️️️❌    | ❌    | ✔️    |
 
 Both libraries are purely functional and do not provide any design. Thus the look and feel can be fully customized and designed in every aspect.
 

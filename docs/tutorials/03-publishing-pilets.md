@@ -101,6 +101,12 @@ Back on the API key management page, all currently available API keys will be li
 
 Armed with the key and the name of the generated feed we can now go on to publish our created pilet.
 
+::: warning: Keep your API Key Secure
+The generated API key(s) should be treated as sensitive information. Anyone who is able to publish pilets potentially pushes code on your website, which is evaluated in the browsers of your users!
+
+By default, the API keys expire after 1 year. We encourage you to periodically roll the keys to minimize the risk of leaked keys.
+:::
+
 ## Publishing a Pilet to the Feed Service
 
 Publishing a pilet works with the `piral-cli`. There is also a possibility for uploading a pilet package directly to the feed via the management website, however, for future purposes (e.g., for use in a CI/CD pipeline or anything else that is remotely automated) the `piral-cli` should be preferred.

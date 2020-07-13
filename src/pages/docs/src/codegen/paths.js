@@ -14,6 +14,7 @@ const reference = resolve(docs, 'reference');
 const commands = resolve(docs, 'commands');
 const messages = resolve(docs, 'messages');
 const types = resolve(docs, 'types');
+const tools = resolve(docs, 'tools');
 const specs = resolve(docs, 'specs');
 
 const packages = {
@@ -51,7 +52,11 @@ function readReadme(dir) {
       break;
     }
 
-    results.push(resolve(dir, result[2]));
+    const name = result[2];
+
+    if (!name.endsWith('README.md')) {
+      results.push(resolve(dir, name));
+    }
   } while (true);
 
   return results;
@@ -98,6 +103,10 @@ function getReferences() {
 
 function getCommands() {
   return getDocsFrom(commands);
+}
+
+function getTools() {
+  return getDocsFrom(tools);
 }
 
 function getCodes() {
@@ -167,6 +176,7 @@ module.exports = {
   getQuestions,
   getReferences,
   getCommands,
+  getTools,
   getCodes,
   getPluginCategory,
   getPluginTypes,

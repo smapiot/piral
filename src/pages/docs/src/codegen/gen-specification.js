@@ -1,6 +1,7 @@
-const { getSpecs, generateFile, generatedName, generated, getName } = require('./paths');
-const { docRef, getTitle } = require('./utils');
+const { getSpecs, generated, getName } = require('./paths');
+const { getTitle } = require('./utils');
 const { render } = require('./markdown');
+const { generateStandardPage } = require('./pages');
 
 function getRoute(name) {
   return (name && `/reference/specifications/${name}`) || '';
@@ -21,31 +22,7 @@ module.exports = function() {
     };
 
     this.addDependency(file, { includedInParent: true });
-
-    generateFile(
-      `spec-${name}`,
-      `// ${JSON.stringify(pageMeta)}
-import * as React from 'react';
-import { PageContent, Markdown } from '../../scripts/components';
-
-const link = "${docRef(file)}";
-const html = ${mdValue};
-
-export default () => (
-  <PageContent>
-    <Markdown content={html} link={link} />
-  </PageContent>
-);`,
-      'jsx',
-    );
-
-    return `
-    {
-      id: '${name}',
-      title: '${title}',
-      route: '${route}',
-      page: lazy(() => import('./${generatedName}/spec-${name}')),
-    }`;
+    return generateStandardPage(name, pageMeta, `spec-${name}`, file, mdValue, route, title);
   });
 
   return imports;

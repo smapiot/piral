@@ -4,17 +4,27 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 > In general we will never break your Pilet API. Therefore, all of these changes below refer to the use of the Piral CLI for non-essential tasks or your Piral instance.
 
+## 0.11 to 1.0
+
+### Breaking Changes in 1.0
+
+None so far.
+
+### Deprecations
+
+1. The `extendApi` configuration option for the `createInstance` function is now called `plugins`
+
 ## 0.10 to 0.11
 
-**Breaking Changes in 0.11**
+### Breaking Changes in 0.11
 
 1. The `PiletApi` now originates from piral-base
 2. In pilets externals are now part of the root object in their package.json, no longer in piral
 3. Pilets are build by default using the `v1` schema (this can be changed via a command line flag `--schema`)
 
-**How to handle**
+Let's see how to handle these breaking changes.
 
-### 1) PiletApi
+#### 1) PiletApi
 
 Well, this is a pretty simple one. If you - for some reason - extended the `PiletApi` directly (i.e., not via the `PiletCustomApi` interface that comes from `piral-core`) then you'd need to change your `declare module` path.
 
@@ -26,7 +36,7 @@ declare module 'piral-base/lib/types' {
 
 But then again - in most cases you will not need to do anything.
 
-### 2) Externals
+#### 2) Externals
 
 The handling of externals was always split in two parts:
 
@@ -39,7 +49,7 @@ Since it is the classic behavior anyway to copy the externals to the `peerDepend
 
 In any other case upon `pilet upgrade` this is corrected / aligned anyway. There is also no functional consequence here that forces you to update and rebuild.
 
-### 3) Pilet Schema
+#### 3) Pilet Schema
 
 With 0.11 the interpretation of pilets changed. For backwards compatibility the old mode is still present and triggered if the feed service metadata does not contain a `requireRef` key per pilet.
 

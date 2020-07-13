@@ -1,5 +1,6 @@
 const { readFileSync } = require('fs');
-const { getCoreTypes, generatedName, generateFile } = require('./paths');
+const { getCoreTypes } = require('./paths');
+const { generateCustomPage } = require('./pages');
 
 function getRoute(name) {
   return (name && `/types/${name}`) || '';
@@ -8,42 +9,28 @@ function getRoute(name) {
 module.exports = function() {
   const files = getCoreTypes();
 
-  const imports = files
-    .map(file => {
-      const content = readFileSync(file, 'utf8');
-      const name = file
-        .split('/')
-        .pop()
-        .replace('.json', '');
-      const route = getRoute(name);
-      const pageMeta = {
-        link: route,
-        source: file,
-        title: name,
-      };
+  const imports = files.map(file => {
+    const body = readFileSync(file, 'utf8');
+    const name = file
+      .split('/')
+      .pop()
+      .replace('.json', '');
+    const route = getRoute(name);
+    const pageMeta = {
+      link: route,
+      source: file,
+      title: name,
+    };
+    const imports = `
+      import { TypeInfo } from '../../scripts/components';
+    `;
+    const content = `
+      <TypeInfo key="${name}">{${body}}</TypeInfo>
+    `;
 
-      this.addDependency(file, { includedInParent: true });
-
-      generateFile(
-        `types-${name}`,
-        `// ${JSON.stringify(pageMeta)}
-import * as React from 'react';
-import { PageContent, TypeInfo } from '../../scripts/components';
-
-export default () => (
-  <PageContent>
-    <TypeInfo key="${name}">{${content}}</TypeInfo>
-  </PageContent>
-);`,
-        'jsx',
-      );
-      return `
-      {
-        id: '${name}',
-        route: '${route}',
-        page: lazy(() => import('./${generatedName}/types-${name}')),
-      }`;
-    });
+    this.addDependency(file, { includedInParent: true });
+    return generateCustomPage(name, pageMeta, `types-${name}`, imports, '', content, route, name);
+  });
 
   return imports;
 };

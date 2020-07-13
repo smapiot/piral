@@ -1,26 +1,26 @@
-const { getCodes, getName, generated } = require('./paths');
+const { generated, getName, getTools } = require('./paths');
 const { render } = require('./markdown');
 const { generateStandardPage } = require('./pages');
 
 function getRoute(name) {
-  return (name && `/reference/codes/${name}`) || '';
+  return (name && `/tooling/${name}`) || '';
 }
 
 module.exports = function() {
-  const codes = getCodes();
+  const tools = getTools();
 
-  const imports = codes.map(file => {
-    const { mdValue } = render(file, generated);
+  const imports = tools.map(file => {
     const name = getName(file);
     const route = getRoute(name);
+    const { mdValue, meta = {} } = render(file, generated);
     const pageMeta = {
+      ...meta,
       link: route,
       source: file,
-      title: name,
     };
 
     this.addDependency(file, { includedInParent: true });
-    return generateStandardPage(name, pageMeta, `code-${name}`, file, mdValue, route, name);
+    return generateStandardPage(name, pageMeta, `tools-${name}`, file, mdValue, route, meta.title);
   });
 
   return imports;

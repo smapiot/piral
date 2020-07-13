@@ -30,7 +30,7 @@ This is the answer!
 
 Here are some tabs shown.
 
-```plain
+```plaintext
 === "Unix"
 ...source code on -nix systems
 === "Windows"
