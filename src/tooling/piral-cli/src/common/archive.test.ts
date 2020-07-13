@@ -1,4 +1,23 @@
 import { createTarball, unpackTarball, unpackGzTar } from './archive';
+import { Stream, Readable } from 'stream';
+
+class ReadableString extends Readable {
+  private sent = false
+
+  constructor(private str: string) {
+    super();
+  }
+
+  _read() {
+    if (!this.sent) {
+      this.push(Buffer.from(this.str));
+      this.sent = true
+    }
+    else {
+      this.push(null)
+    }
+  }
+}
 
 interface CreateOptions {
   cwd?: string;
@@ -44,10 +63,31 @@ jest.mock('tar', () => ({
     });
   },
   Parse: () => {
-    let stream = new ParseStream();
-    const writer = stream.getWriter();
-    writer.write('');
-    return stream;
+    return {
+      position: 0,
+      _stream: new Stream(),
+      _ended: false,
+      _streamEnd: () => {
+        this._ended = true;
+        console.log('_streamEnd');
+      },
+      process: (c: Buffer) => {
+        console.log('process');
+      },
+      _startEntry: (c: Buffer) => {
+        console.log('_startEntry');
+      },
+      on: (event: string, listener: (...args: any[]) => {}) => {
+        console.log(`on event: ${event}`);
+      },
+      once: (event: string, listener: (...args: any[]) => {}) => {
+        console.log(`once event: ${event}`);
+      },      
+      emit: (event: string | symbol, ...args: any[]) => {
+        console.log(`emit event: ${event.toString()}`);
+        return true;
+      },    
+    } as any;
   },
 }));
 
@@ -63,7 +103,12 @@ describe('Archive Module', () => {
   });
 
   it('unpack GZ TAR', async () => {
-
+    const contentStream = new ReadableString(JSON.stringify({
+      my_json_data: true
+    }));
+    await unpackGzTar(contentStream)
+    .then(files => console.log(`files: ${files}`))
+    .catch(err => console.log(`error: ${err.message}`))
     
   });
 });
