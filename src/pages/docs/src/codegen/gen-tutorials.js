@@ -13,13 +13,18 @@ module.exports = function() {
     .map((file, i) => {
       const name = getName(file);
       const route = getRoute(name);
-      const previous = getName(files[i - 1]);
-      const next = getName(files[i + 1]);
       const { mdValue, meta = {} } = render(file, generated);
+      const pageMeta = {
+        link: route,
+        source: file,
+        ...meta,
+      };
+
       this.addDependency(file, { includedInParent: true });
+
       generateFile(
         `tutorial-${name}`,
-        `// ${route}
+        `// ${JSON.stringify(pageMeta)}
 import * as React from 'react';
 import { Tutorial, Markdown } from '../../scripts/components';
 

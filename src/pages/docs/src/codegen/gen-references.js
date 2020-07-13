@@ -12,12 +12,19 @@ module.exports = function() {
   const imports = docs.map(file => {
     const name = getName(file);
     const route = getRoute(name);
+    const title = capitalize(name);
     const { mdValue } = render(file, generated);
+    const pageMeta = {
+      link: route,
+      source: file,
+      title,
+    };
+
     this.addDependency(file, { includedInParent: true });
 
     generateFile(
       `ref-${name}`,
-      `// ${route}
+      `// ${JSON.stringify(pageMeta)}
 import * as React from 'react';
 import { PageContent, Markdown } from '../../scripts/components';
 
@@ -35,7 +42,7 @@ export default () => (
     return `
     {
       id: '${name}',
-      title: '${capitalize(name)}',
+      title: '${title}',
       route: '${route}',
       page: lazy(() => import('./${generatedName}/ref-${name}')),
     }`;

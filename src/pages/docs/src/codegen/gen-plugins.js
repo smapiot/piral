@@ -54,10 +54,18 @@ module.exports = function() {
         '<h2 id="description">Description</h2>',
         mdValue.substr(mdValue.indexOf('</h1>') + 5),
       ].join('');
+      const pageMeta = {
+        link: route,
+        source: file,
+        category,
+        title: name,
+      };
+
       this.addDependency(readme, { includedInParent: true });
+
       generateFile(
         `plugin-${name}`,
-        `// ${route}
+        `// ${JSON.stringify(pageMeta)}
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { PageContent, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';

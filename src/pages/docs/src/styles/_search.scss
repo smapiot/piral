@@ -179,6 +179,16 @@
 
               > span {
                 display: block;
+
+                &.title {
+                  font-weight: bold;
+                  font-size: 1.1em;
+                }
+
+                &.keywords {
+                  font-size: 0.8em;
+                  color: #ccc;
+                }
               }
             }
           }

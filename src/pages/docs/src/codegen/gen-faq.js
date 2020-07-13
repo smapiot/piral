@@ -13,10 +13,18 @@ module.exports = function() {
     const { mdValue } = render(file, generated);
     const name = getName(file);
     const route = getRoute(name);
+    const title = capitalize(name);
+    const pageMeta = {
+      link: route,
+      source: file,
+      title,
+    };
+
     this.addDependency(file, { includedInParent: true });
+
     generateFile(
       `faq-${name}`,
-      `// ${route}
+      `// ${JSON.stringify(pageMeta)}
 import * as React from 'react';
 import { PageContent, Markdown } from '../../scripts/components';
 
@@ -33,7 +41,7 @@ export default () => (
     return `
     {
       id: '${name}',
-      title: '${capitalize(name)}',
+      title: '${title}',
       route: '${route}',
       page: lazy(() => import('./${generatedName}/faq-${name}')),
     }`;

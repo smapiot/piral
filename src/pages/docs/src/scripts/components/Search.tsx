@@ -1,43 +1,33 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import FlexSearch from 'flexsearch';
 
-const worker = new Worker('../search.ts');
+const index: any = FlexSearch.create({
+  doc: {
+    id: 'id',
+    field: ['content', 'keywords', 'title'],
+  },
+});
 
 function useSearch(open: boolean): [string, (value: string) => void, Array<any>] {
   const [input, setInput] = React.useState('');
   const [items, setItems] = React.useState([]);
+  const loading = React.useRef<Promise<void>>();
 
   React.useEffect(() => {
     if (open) {
       document.querySelector<HTMLInputElement>('#searchInput').focus();
+
+      if (!loading.current) {
+        loading.current = import('../../codegen/search.codegen').then(docs => index.import(docs, { serialize: false }));
+      }
     }
   }, [open, input]);
 
   React.useEffect(() => {
-    const handler = (ev: MessageEvent) => {
-      switch (ev.data.type) {
-        case 'load':
-          return import('../../codegen/search.codegen').then(pages =>
-            worker.postMessage({
-              type: 'data',
-              pages,
-            }),
-          );
-        case 'results':
-          return setItems(ev.data.results);
-      }
-    };
-    worker.addEventListener('message', handler);
-    return () => worker.removeEventListener('message', handler);
-  }, []);
-
-  React.useEffect(() => {
     const id = setTimeout(() => {
       if (input) {
-        worker.postMessage({
-          type: 'search',
-          input,
-        });
+        loading.current.then(() => setItems(index.search(input)));
       } else if (!items || items.length !== 0) {
         setItems([]);
       }
@@ -102,11 +92,11 @@ export const Search: React.FC = () => {
               </div>
               <ol className="search-result-list">
                 {items.map(item => (
-                  <li key={item.url} className="search-result-list-item">
-                    <Link to={item.url} onClick={closeSearch}>
+                  <li key={item.id} className="search-result-list-item">
+                    <Link to={item.link} onClick={closeSearch}>
                       <div>
                         <span className="title">{item.title}</span>
-                        <span className="url">{item.url}</span>
+                        <span className="url">{item.link}</span>
                         <span className="keywords">{item.keywords.join(', ')}</span>
                       </div>
                     </Link>

@@ -24,12 +24,20 @@ module.exports = function() {
       const name = getName(file);
       const route = getRoute(name);
       const { mdValue } = render(file, generated);
-      this.addDependency(file, { includedInParent: true });
       const tool = getType(file);
+      const pageMeta = {
+        link: route,
+        source: file,
+        title: name,
+        tool,
+      };
+
+      this.addDependency(file, { includedInParent: true });
+
 
       generateFile(
         `tooling-${name}`,
-        `// ${route}
+        `// ${JSON.stringify(pageMeta)}
 import * as React from 'react';
 import { PageContent, Markdown } from '../../scripts/components';
 

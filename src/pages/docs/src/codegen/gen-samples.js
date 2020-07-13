@@ -14,10 +14,17 @@ module.exports = function() {
       const name = getName(file);
       const route = getRoute(name);
       const { mdValue, meta = {} } = render(file, generated);
+      const pageMeta = {
+        link: route,
+        source: file,
+        ...meta,
+      };
+
       this.addDependency(file, { includedInParent: true });
+
       generateFile(
         `sample-${name}`,
-        `// ${route}
+        `// ${JSON.stringify(pageMeta)}
 import * as React from 'react';
 import { PageContent, Markdown } from '../../scripts/components';
 

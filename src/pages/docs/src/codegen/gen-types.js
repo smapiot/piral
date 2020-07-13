@@ -16,10 +16,17 @@ module.exports = function() {
         .pop()
         .replace('.json', '');
       const route = getRoute(name);
+      const pageMeta = {
+        link: route,
+        source: file,
+        title: name,
+      };
+
       this.addDependency(file, { includedInParent: true });
+
       generateFile(
         `types-${name}`,
-        `// ${route}
+        `// ${JSON.stringify(pageMeta)}
 import * as React from 'react';
 import { PageContent, TypeInfo } from '../../scripts/components';
 
