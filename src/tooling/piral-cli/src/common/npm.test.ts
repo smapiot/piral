@@ -60,7 +60,8 @@ jest.mock('fs', () => ({
   constants: {
     F_OK: 1,
   },
-  exists: (file: string, cb: (status: boolean) => void) => cb(!file.endsWith('package.json') && !(specialCase && file.endsWith('lerna.json'))),
+  exists: (file: string, cb: (status: boolean) => void) =>
+    cb(!file.endsWith('package.json') && !(specialCase && file.endsWith('lerna.json'))),
   existsSync: (file: string) => {
     return true;
   },
@@ -69,10 +70,8 @@ jest.mock('fs', () => ({
   },
   readFileSync: () => '',
   access: (path: string, mode: number, callback: (err: NodeJS.ErrnoException) => void) => {
-    if(path.includes('test')) 
-      return callback(null);
-    else
-      return callback(new Error('bla'));
+    if (path.includes('test')) return callback(null);
+    else return callback(new Error('bla'));
   },
 }));
 
@@ -233,7 +232,7 @@ describe('NPM Module', () => {
     specialCase = true;
     await detectMonorepo('./').then(result => {
       expect(result).toBeFalsy();
-    });    
+    });
     specialCase = false;
   });
 
