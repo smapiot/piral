@@ -27,6 +27,7 @@ import {
   getPackageVersion,
   isGitPackage,
 } from './npm';
+import { error } from 'console';
 
 jest.mock('child_process');
 
@@ -42,11 +43,14 @@ jest.mock('../external', () => ({
   },
 }));
 
+let specialCase = false;
+let wrongCase = false;
 const jsonValueString = JSON.stringify({ dependencies: { npm: { extraneous: true } } });
+const jsonValueStringWrong = JSON.stringify({ dependencies: {} });
 jest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
     return new Promise<void>((resolve, reject) => {
-      output?.write(jsonValueString, () => {});
+      output?.write(wrongCase ? jsonValueStringWrong : jsonValueString, () => {});
       resolve();
     });
   },
@@ -56,7 +60,7 @@ jest.mock('fs', () => ({
   constants: {
     F_OK: 1,
   },
-  exists: (file: string, cb: (status: boolean) => void) => cb(!file.endsWith('package.json')),
+  exists: (file: string, cb: (status: boolean) => void) => cb(!file.endsWith('package.json') && !(specialCase && file.endsWith('lerna.json'))),
   existsSync: (file: string) => {
     return true;
   },
@@ -64,13 +68,17 @@ jest.mock('fs', () => ({
     return callback(null, '');
   },
   readFileSync: () => '',
-  access: (path: string, mode: number, callback: any) => {
-    return callback(null);
+  access: (path: string, mode: number, callback: (err: NodeJS.ErrnoException) => void) => {
+    if(path.includes('test')) 
+      return callback(null);
+    else
+      return callback(new Error('bla'));
   },
 }));
 
 describe('NPM Module', () => {
   it('dissects a fully qualified name with latest correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@latest');
     expect(hadVersion).toBe(true);
     expect(version).toBe('latest');
@@ -79,6 +87,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a fully qualified name  with a specific version correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@1.2.3');
     expect(hadVersion).toBe(true);
     expect(version).toBe('1.2.3');
@@ -87,6 +96,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a simple name correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
@@ -95,6 +105,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a relative file name correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '../foo/bar');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
@@ -103,6 +114,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects an absolute file name correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '/foo/bar');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
@@ -111,6 +123,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a git SSH repo name correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'ssh://foo-bar.com/foo.git');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
@@ -119,6 +132,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a git HTTPS repo name correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'https://foo-bar.com/foo.git');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
@@ -127,6 +141,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a scoped name correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar');
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
@@ -135,6 +150,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a scoped fully qualified name with latest correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar@latest');
     expect(hadVersion).toBe(true);
     expect(version).toBe('latest');
@@ -143,6 +159,7 @@ describe('NPM Module', () => {
   });
 
   it('dissects a scoped fully qualified name  with a specific version correctly', async () => {
+    wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar@^1.x');
     expect(hadVersion).toBe(true);
     expect(version).toBe('^1.x');
@@ -151,78 +168,129 @@ describe('NPM Module', () => {
   });
 
   it('installs a package using the NPM command line tool without a target', async () => {
+    wrongCase = false;
     await installPackage('npm', 'foo', 'latest').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installPackage('npm', 'foo', 'latest').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the NPM command line tool without a version', async () => {
+    wrongCase = false;
     await installPackage('npm', 'foo').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installPackage('npm', 'foo').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Yarn command line tool without a version', async () => {
+    wrongCase = false;
     await installPackage('yarn', 'foo').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installPackage('yarn', 'foo').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Pnpm command line tool without a version', async () => {
+    wrongCase = false;
     await installPackage('pnpm', 'foo').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installPackage('pnpm', 'foo').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the NPM command line tool with some flag', async () => {
+    wrongCase = false;
     await installPackage('npm', 'foo', '1.3', '.', '--a=b').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('detectNpm finds package-lock.json', async () => {
     await detectNpm('test').then(result => expect(result).toBeTruthy());
+    await detectNpm('toast').then(result => expect(result).toBeFalsy());
   });
 
   it('detectPnpm finds nppm-lock.yaml', async () => {
     await detectPnpm('test').then(result => expect(result).toBeTruthy());
+    await detectPnpm('toast').then(result => expect(result).toBeFalsy());
   });
 
   it('detectYarn finds yarn.lock', async () => {
     await detectYarn('test').then(result => expect(result).toBeTruthy());
+    await detectYarn('toast').then(result => expect(result).toBeFalsy());
   });
 
   it('uses npm to verify whether a particular package is included in monorepo package', async () => {
+    wrongCase = false;
     await isMonorepoPackageRef('npm', './').then(result => expect(result).toBeTruthy());
+    wrongCase = true;
+    await isMonorepoPackageRef('npm', './').then(result => expect(result).toBeFalsy());
   });
 
   it('verfiies whether lerna config path is valid', async () => {
+    wrongCase = false;
     await detectMonorepo('./').then(result => {
-      console.log(`result: ${result}`);
       expect(result).toBeTruthy();
     });
+    wrongCase = true;
+    specialCase = true;
+    await detectMonorepo('./').then(result => {
+      expect(result).toBeFalsy();
+    });    
+    specialCase = false;
   });
 
   it('verfiies whether lerna bootstrap ran', async () => {
+    wrongCase = false;
     await bootstrapMonorepo().then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await bootstrapMonorepo().then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with npm client', async () => {
+    wrongCase = false;
     await installDependencies('npm').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installDependencies('npm').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with pnpm client', async () => {
+    wrongCase = false;
     await installDependencies('pnpm').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installDependencies('pnpm').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with yarn client', async () => {
+    wrongCase = false;
     await installDependencies('yarn').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await installDependencies('yarn').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('create npm package', async () => {
+    wrongCase = false;
     await createPackage().then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await createPackage().then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find npm tarball', async () => {
+    wrongCase = false;
     await findTarball('foo').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await findTarball('foo').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find latest version', async () => {
+    wrongCase = false;
     await findLatestVersion('foo').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await findLatestVersion('foo').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find specific version', async () => {
+    wrongCase = false;
     await findSpecificVersion('foo', '1.0.0').then(result => expect(result).toEqual(jsonValueString));
+    wrongCase = true;
+    await findSpecificVersion('foo', '1.0.0').then(result => expect(result).not.toEqual(jsonValueString));
   });
 
   it('check if package is local', () => {
