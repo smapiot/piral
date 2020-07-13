@@ -1,4 +1,4 @@
-import { Extend, ExtensionSlotProps, compare } from 'piral-core';
+import { PiralPlugin, ExtensionSlotProps, compare } from 'piral-core';
 import { Component, createElement } from 'preact';
 import { anyPropType } from './mount';
 import { createConverter } from './converter';
@@ -18,7 +18,7 @@ export interface PreactConfig {
 /**
  * Creates new Pilet API extensions for integrating Preact.
  */
-export function createPreactApi(config: PreactConfig = {}): Extend<PiletPreactApi> {
+export function createPreactApi(config: PreactConfig = {}): PiralPlugin<PiletPreactApi> {
   const { rootName = 'slot' } = config;
 
   class PreactExtension extends Component<ExtensionSlotProps> {

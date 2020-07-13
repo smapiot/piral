@@ -47,7 +47,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createNotificationsApi()],
+  plugins: [createNotificationsApi()],
   // ...
 });
 ```
@@ -59,7 +59,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createNotificationsApi({
+  plugins: [createNotificationsApi({
     defaultOptions: {
       type: 'warning',
     },

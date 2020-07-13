@@ -59,7 +59,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createReact15Api()],
+  plugins: [createReact15Api()],
   // ...
 });
 ```

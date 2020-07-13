@@ -60,7 +60,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createRiotApi()],
+  plugins: [createRiotApi()],
   // ...
 });
 ```

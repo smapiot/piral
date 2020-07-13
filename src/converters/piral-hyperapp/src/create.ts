@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { createHyperappElement } from './mount';
 import { createConverter } from './converter';
 import { PiletHyperappApi } from './types';
@@ -17,7 +17,7 @@ export interface HyperappConfig {
 /**
  * Creates new Pilet API extensions for the Hyperapp integration.
  */
-export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHyperappApi> {
+export function createHyperappApi(config: HyperappConfig = {}): PiralPlugin<PiletHyperappApi> {
   const { rootName = 'slot' } = config;
 
   return context => {

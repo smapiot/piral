@@ -102,7 +102,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createGqlApi()],
+  plugins: [createGqlApi()],
   // ...
 });
 ```
@@ -120,7 +120,7 @@ const client = setupGqlClient({
 
 const instance = createInstance({
   // important part
-  extendApi: [createGqlApi(client)],
+  plugins: [createGqlApi(client)],
   // ...
 });
 ```

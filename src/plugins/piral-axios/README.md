@@ -49,7 +49,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createAxiosApi()],
+  plugins: [createAxiosApi()],
   // ...
 });
 ```
@@ -61,7 +61,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createAxiosApi({
+  plugins: [createAxiosApi({
     baseURL: 'https://example.com/api/v1',
     headers: {
       authorization: 'Bearer ...',

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Provider } from 'urql';
-import { Extend, GlobalStateContext } from 'piral-core';
+import { PiralPlugin, GlobalStateContext } from 'piral-core';
 import { gqlQuery, gqlMutation, gqlSubscription } from './queries';
 import { setupGqlClient } from './setup';
 import { PiletGqlApi, UrqlClient, GqlOperationOptions } from './types';
@@ -49,7 +49,7 @@ function defaultGqlClient() {
  * Creates new Pilet API extensions for GraphQL.
  * @param client The specific urql client to be used, if any.
  */
-export function createGqlApi(client: UrqlClient = defaultGqlClient()): Extend<PiletGqlApi> {
+export function createGqlApi(client: UrqlClient = defaultGqlClient()): PiralPlugin<PiletGqlApi> {
   return context => {
     context.includeProvider(<Provider value={client} />);
 

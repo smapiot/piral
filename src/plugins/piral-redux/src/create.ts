@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { Provider, connect } from 'react-redux';
 import { createStore, StoreEnhancer, Reducer } from 'redux';
 import {
@@ -33,7 +33,7 @@ function defaultReducer<T>(state: T): T {
 /**
  * Creates new Pilet API extensions for creating a Redux state container.
  */
-export function createReduxApi(config: ReduxConfig = {}): Extend<PiletReduxApi> {
+export function createReduxApi(config: ReduxConfig = {}): PiralPlugin<PiletReduxApi> {
   const { reducer = defaultReducer, enhancer } = config;
   const otherReducers = {};
   const store = createStore(createReducer() as Reducer<any>, enhancer);

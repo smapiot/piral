@@ -1,4 +1,4 @@
-import { Extend, createInstance, PiralConfiguration } from 'piral-core';
+import { PiralPlugin, createInstance, PiralConfiguration } from 'piral-core';
 import { createStandardApi, PiralExtSettings } from 'piral-ext';
 
 /**
@@ -6,7 +6,7 @@ import { createStandardApi, PiralExtSettings } from 'piral-ext';
  * @param settings Customizes the standard plugin settings.
  * @param customApis The custom APIs to add.
  */
-export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Extend | Array<Extend> = []) {
+export function extendPiralApi(settings: PiralExtSettings = {}, customApis: PiralPlugin | Array<PiralPlugin> = []) {
   const extenders = Array.isArray(customApis) ? customApis : [customApis];
   return [...extenders, ...createStandardApi(settings)];
 }
@@ -19,6 +19,6 @@ export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Exte
 export function createPiral(config: PiralConfiguration = {}, settings?: PiralExtSettings) {
   return createInstance({
     ...config,
-    extendApi: extendPiralApi(settings, config.extendApi),
+    plugins: extendPiralApi(settings, config.plugins || config.extendApi),
   });
 }

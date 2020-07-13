@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { PiletElmApi } from './types';
 
@@ -16,7 +16,7 @@ export interface ElmConfig {
 /**
  * Creates new Pilet API extensions for integration of Elm.
  */
-export function createElmApi(config: ElmConfig = {}): Extend<PiletElmApi> {
+export function createElmApi(config: ElmConfig = {}): PiralPlugin<PiletElmApi> {
   const { selector = 'elm-extension' } = config;
 
   if ('customElements' in window) {

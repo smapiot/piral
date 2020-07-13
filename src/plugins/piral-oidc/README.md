@@ -82,7 +82,7 @@ const client = setupOidcClient({ clientId, ... });
 
 const instance = createInstance({
   // important part
-  extendApi: [createOidcApi(client)],
+  plugins: [createOidcApi(client)],
   // ...
 });
 ```
@@ -104,7 +104,7 @@ import { client } from './oidc';
 export function render() {
   renderInstance({
     // ...
-    extendApi: [createOidcApi(client)],
+    plugins: [createOidcApi(client)],
   });
 }
 
@@ -114,9 +114,9 @@ import { client } from './oidc';
 if (location.pathname !== '/auth') {
   client.token()
     .then(() => { import('./app').then(({ render }) => render()); })
-    .catch(reason => { 
+    .catch(reason => {
       // You may want to log your failed authentication attempts
-      // console.error(reason); 
+      // console.error(reason);
       client.login();
     });
 }
@@ -131,7 +131,7 @@ handle callbacks and routing for you. In order to use this, add a `appUrl` to th
 client configuration that points to your entry-point route, and then call `handleAuthentication()` in your index file.
 
 `handleAuthentication()` will return a promise that resolves to a boolean true/false
-value, when this is true, the application should call `render()`, when false, do nothing (this is a silent renew happening in the background). 
+value, when this is true, the application should call `render()`, when false, do nothing (this is a silent renew happening in the background).
 
 If the promise rejects, it is advised that the error is logged to an external logging service, as this indicates a user that could not gain entry into the application. Afterwards, call `logout()` or prompt the user for the next action.
 
@@ -152,7 +152,7 @@ import { client } from './oidc';
 export function render() {
   renderInstance({
     // ...
-    extendApi: [createOidcApi(client)],
+    plugins: [createOidcApi(client)],
   });
 }
 

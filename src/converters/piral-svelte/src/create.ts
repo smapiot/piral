@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { PiletSvelteApi } from './types';
 
@@ -16,7 +16,7 @@ export interface SvelteConfig {
 /**
  * Creates new Pilet API extensions for integration of Svelte.
  */
-export function createSvelteApi(config: SvelteConfig = {}): Extend<PiletSvelteApi> {
+export function createSvelteApi(config: SvelteConfig = {}): PiralPlugin<PiletSvelteApi> {
   const { selector = 'svelte-extension' } = config;
 
   if ('customElements' in window) {

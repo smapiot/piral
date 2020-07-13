@@ -1,6 +1,6 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { withApi, buildName, Extend, Dict } from 'piral-core';
+import { withApi, buildName, PiralPlugin, Dict } from 'piral-core';
 import { DefaultContainer, DefaultItem } from './default';
 import { PiletMenuApi, MenuSettings, MenuItemRegistration } from './types';
 
@@ -57,7 +57,7 @@ function getMenuItems(items: Array<InitialMenuItem>, defaultSettings: MenuSettin
 /**
  * Creates new Pilet API extensions for integration of menu items.
  */
-export function createMenuApi(config: MenuConfig = {}): Extend<PiletMenuApi> {
+export function createMenuApi(config: MenuConfig = {}): PiralPlugin<PiletMenuApi> {
   const { items = [], defaultSettings = {} } = config;
 
   return context => {

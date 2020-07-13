@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { withForm } from './withForm';
 import { PiletFormsApi } from './types';
 
@@ -11,7 +11,7 @@ export interface FormsConfig {}
 /**
  * Creates new Pilet API extensions for enhancing forms.
  */
-export function createFormsApi(config: FormsConfig = {}): Extend<PiletFormsApi> {
+export function createFormsApi(config: FormsConfig = {}): PiralPlugin<PiletFormsApi> {
   return context => {
     context.defineActions(actions);
 

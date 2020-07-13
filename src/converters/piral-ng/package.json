@@ -1,6 +1,6 @@
 {
   "name": "piral-ng",
-  "version": "0.11.7",
+  "version": "0.11.8",
   "description": "Plugin for integrating Angular components in Piral.",
   "keywords": [
     "piral",
@@ -41,12 +41,12 @@
     "@angular/core": "^8.0.0",
     "@angular/platform-browser": "^8.0.0",
     "@angular/platform-browser-dynamic": "^8.0.0",
-    "piral-core": "^0.11.7"
+    "piral-core": "^0.11.8"
   },
   "peerDependencies": {
     "@angular/core": "^6.0.0 || ^7.0.0 || ^8.0.0",
     "@angular/platform-browser": "^6.0.0 || ^7.0.0 || ^8.0.0",
     "@angular/platform-browser-dynamic": "^6.0.0 || ^7.0.0 || ^8.0.0",
-    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0"
+    "piral-core": "^1.0.0"
   }
 }

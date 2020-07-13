@@ -19,7 +19,7 @@ renderInstance({
       items: [...setupMenu(), ...setupFooter()],
     },
   },
-  extendApi: [createAuthApi(), createSearchApi()],
+  plugins: [createAuthApi(), createSearchApi()],
   requestPilets() {
     return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
       .then(res => res.json())

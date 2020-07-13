@@ -44,7 +44,7 @@ import * as React from 'react';
 import { renderInstance } from 'piral';
 
 renderInstance({
-  extendApi: [],
+  plugins: [],
   layout: {
     ErrorInfo: ({ type }) => (
       <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
@@ -60,7 +60,7 @@ In this case we added a configuration that determines how to extend the provided
 An API creator function (or plugin) has the following signature:
 
 ```ts
-interface ApiExtender<T> {
+interface PiletApiExtender<T> {
   /**
    * Extends the base API of a module with new functionality.
    * @param api The API created by the base layer.
@@ -70,13 +70,13 @@ interface ApiExtender<T> {
   (api: PiletApi, target: PiletMetadata): T;
 }
 
-interface Extend<T = Partial<PiletApi>> {
+interface PiralPlugin<T = Partial<PiletApi>> {
   /**
    * Extends the base API with a custom set of functionality to be used by modules.
    * @param context The global state context to be used.
    * @returns The extended API or a function to create the extended API for a specific target.
    */
-  (context: GlobalStateContext): T | ApiExtender<T>;
+  (context: GlobalStateContext): T | PiletApiExtender<T>;
 }
 ```
 
@@ -89,7 +89,7 @@ interface PiletTrackingApi {
   trackEvent(name: string): void;
 }
 
-function createTrackingApi(config: TrackingConfig = {}): Extend<PiletTrackingApi> {
+function createTrackingApi(config: TrackingConfig = {}): PiralPlugin<PiletTrackingApi> {
   return context => (api, target) => ({
     trackEvent(name) {
       // ...
@@ -148,7 +148,7 @@ import { renderInstance } from 'piral';
 import { createVueApi } from 'piral-vue';
 
 renderInstance({
-  extendApi: [createVueApi()],
+  plugins: [createVueApi()],
   layout: {
     ErrorInfo: ({ type }) => (
       <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>

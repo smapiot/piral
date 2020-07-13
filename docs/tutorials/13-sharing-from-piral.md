@@ -121,7 +121,7 @@ function createCustomApi() {
 }
 
 const instance = createInstance({
-   extendApi: [createCustomApi()],
+   plugins: [createCustomApi()],
 });
 ```
 

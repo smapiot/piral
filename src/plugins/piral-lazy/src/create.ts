@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Extend, withApi, HtmlComponent } from 'piral-core';
+import { PiralPlugin, withApi, HtmlComponent } from 'piral-core';
 import { PiletLazyApi, LazyDependencyLoader } from './types';
 
 interface DependencyCache {
@@ -9,7 +9,7 @@ interface DependencyCache {
   };
 }
 
-export function createLazyApi(): Extend<PiletLazyApi> {
+export function createLazyApi(): PiralPlugin<PiletLazyApi> {
   return context => {
     return api => {
       const cache: DependencyCache = {};

@@ -5,7 +5,7 @@ import {
   PiletRequester,
   ComponentsState,
   ErrorComponentsState,
-  Extend,
+  PiralPlugin,
   PiralInstance,
   PiralConfiguration,
   PiralExtSettings,
@@ -73,7 +73,7 @@ export interface SitelessOptions {
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
    */
-  plugins?: Array<Extend>;
+  plugins?: Array<PiralPlugin>;
 }
 
 export interface SitelessApi {
@@ -89,7 +89,7 @@ export interface SitelessApi {
   setErrors(errors: Partial<ErrorComponentsState>): void;
 }
 
-function createSitelessApi(): Extend<SitelessApi> {
+function createSitelessApi(): PiralPlugin<SitelessApi> {
   return context => ({
     setErrors(errors) {
       context.dispatch(state => ({
@@ -121,7 +121,7 @@ window.initializePiral = (requestPilets, selector = document.querySelector('#app
     loadPilet,
     middleware,
     requestPilets,
-    extendApi: [...plugins, createSitelessApi(), createLazyApi()],
+    plugins: [...plugins, createSitelessApi(), createLazyApi()],
     async: strategy,
     settings,
     state,
