@@ -13,18 +13,73 @@ import {
 } from '../common';
 
 export interface BuildPiletOptions {
+  /**
+   * Sets the name of the Piral instance.
+   */
   app?: string;
+
+  /**
+   * The source index file (e.g. index.tsx) for collecting all the information
+   * @example './src/index'
+   */
   entry?: string;
+
+  /**
+   * The target file of bundling.
+   * @example './dist/index.js'
+   */
   target?: string;
+
+  /**
+   * The cache directory for bundling.
+   */
   cacheDir?: string;
+
+  /**
+   * States if minifaction or other post-bundle transformations should be performed.
+   */
   minify?: boolean;
+
+  /**
+   * States if a detailed report should be created.
+   */
   detailedReport?: boolean;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * States if the target directory should be removed before building.
+   */
   fresh?: boolean;
+
+  /**
+   * States if source maps should be created for the bundles.
+   */
   sourceMaps?: boolean;
+
+  /**
+   * States if a content hash should be appended to the side-bundle files
+   */
   contentHash?: boolean;
+
+  /**
+   * States if tree shaking should be used when creating the bundle.
+   * (may reduce bundle size)
+   */
   scopeHoist?: boolean;
+
+  /**
+   * States if the node modules should be included for target transpilation
+   */
   optimizeModules?: boolean;
+
+  /**
+   * The schema to be used when bundling the pilets.
+   * @example 'v1'
+   */
   schemaVersion?: PiletSchemaVersion;
 }
 

@@ -196,6 +196,16 @@ describe('Piral-Core helpers module', () => {
     // Arrange
     process.env.DEBUG_PILET = 'localhost:1234';
     const setupMock = jest.fn();
+    window.fetch = jest.fn((_, options) =>
+      Promise.resolve({
+        text() {
+          return Promise.resolve('This is an example response');
+        },
+        json() {
+          return Promise.resolve(options);
+        },
+      }),
+    ) as any;
     const requestPilets = jest.fn(() => Promise.resolve(providedPilets));
     const globalContext = createMockContainer().context;
     const providedPilets: Array<Pilet> = [
@@ -234,7 +244,7 @@ describe('Piral-Core helpers module', () => {
     }
 
     // Assert
-    expect(hasFailed).toBeTruthy();
+    expect(hasFailed).toBeFalsy();
 
     if (wasUndefined) {
       process.env.DEBUG_PILET = undefined;
