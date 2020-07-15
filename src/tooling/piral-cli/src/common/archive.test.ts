@@ -101,14 +101,4 @@ describe('Archive Module', () => {
     await unpackTarball('./', 'foo.tgz').then(result => expect(result).toBeTruthy());
     await unpackTarball('./', 'foo2.tgz').catch(err => expect(err).toEqual(fileNotFoundError));
   });
-
-  it('unpack GZ TAR', async () => {
-    const contentStream = new ReadableString(JSON.stringify({
-      my_json_data: true
-    }));
-    await unpackGzTar(contentStream)
-    .then(files => console.log(`files: ${files}`))
-    .catch(err => console.log(`error: ${err.message}`))
-    
-  });
 });
