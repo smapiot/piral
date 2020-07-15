@@ -194,7 +194,7 @@ describe('Piral-Core helpers module', () => {
     const wasUndefined = process.env.DEBUG_PILET === undefined;
 
     // Arrange
-    process.env.DEBUG_PILET = 'localhost:1234';
+    process.env.DEBUG_PILET = 'on';
     const setupMock = jest.fn();
     window.fetch = jest.fn((_, options) =>
       Promise.resolve({
