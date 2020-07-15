@@ -95,17 +95,17 @@ Upon pressing the `Generate` button, a new API key will be created.
 
 Once the generation has completed, the generated key itself will be shown for the first - and last - time. Make sure to copy it to a secure location. If you lose the key, you should revoke it, such that also no one else will be able to use it.
 
-Back on the API key management page, all currently available API keys will be listed. It shows the information about the API keys and it allows to edit or revoke the API key.
-
-![API Key Management](../diagrams/api-key-management.png)
-
-Armed with the key and the name of the generated feed we can now go on to publish our created pilet.
-
 ::: warning: Keep your API Key Secure
 The generated API key(s) should be treated as sensitive information. Anyone who is able to publish pilets potentially pushes code on your website, which is evaluated in the browsers of your users!
 
 By default, the API keys expire after 1 year. We encourage you to periodically roll the keys to minimize the risk of leaked keys.
 :::
+
+Back on the API key management page, all currently available API keys will be listed. It shows the information about the API keys and it allows to edit or revoke the API key.
+
+![API Key Management](../diagrams/api-key-management.png)
+
+Armed with the key and the name of the generated feed we can now go on to publish our created pilet.
 
 ## Publishing a Pilet to the Feed Service
 

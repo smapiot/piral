@@ -21,7 +21,7 @@ export default () => (
     title: '${title}',
     link: '${link || route}',
     section: '${section}',
-    page: lazy(() => import('./${generatedName}/${targetFile}')),
+    page: lazy(() => import('./${generatedName}/${targetFile}.jsx')),
   }`;
 }
 
