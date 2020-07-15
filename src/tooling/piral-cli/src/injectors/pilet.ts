@@ -11,6 +11,8 @@ interface Pilet {
   requireRef?: string;
 }
 
+type Protocol = 'https' | 'http';
+
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
   api: string;
@@ -19,11 +21,13 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
-  private piletApi: string;
+  private port: number;
+  private protocol: Protocol;
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
-    this.piletApi = `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${config.api}`;
+    this.port = config.port;
+    this.protocol = config.ssl ? 'https' : 'http';
     const { pilets, api } = options;
     const cbs = {};
 
@@ -74,7 +78,7 @@ export default class PiletInjector implements KrasInjector {
     return {
       name: def.name,
       version: def.version,
-      link: `${this.piletApi}/${index}/${file}`,
+      link: `${this.protocol}://localhost:${this.port}${api}/${index}/${file}`,
       hash: bundler.bundle.hash,
       requireRef,
       noCache: true,
@@ -136,7 +140,7 @@ export default class PiletInjector implements KrasInjector {
     const indexHtml = readFileSync(target, 'utf8');
     
     // mechanism to inject server side debug piletApi config into piral emulator
-    const windowInjectionScript = `window['dbg:pilet-api'] = '${this.piletApi}';`;
+    const windowInjectionScript = `window['dbg:pilet-api'] = '${this.protocol}://localhost:${this.port}/$pilet-api';`;
     const findStr = `<script`;
     const replaceStr = `<script>/* Pilet Debugging Emulator Config Injection */${windowInjectionScript}</script><script`;
     const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);
