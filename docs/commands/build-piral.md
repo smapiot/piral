@@ -158,7 +158,7 @@ Tries to reduce bundle size by introducing tree shaking.
 Also includes the node modules for target transpilation.
 
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 ### `--no-optimize-modules`
 
@@ -166,7 +166,7 @@ Opposite of:
 Also includes the node modules for target transpilation.
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 ### `--type`
 

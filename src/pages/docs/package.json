@@ -33,6 +33,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
+    "flexsearch": "^0.6.32",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router": ">=5.0.0",
