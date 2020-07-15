@@ -32,7 +32,7 @@ export function setStandardEnvs(options: StandardEnvProps) {
   }
 
   if (options.debugPilet) {
-    process.env.DEBUG_PILET = config.piletApi;
+    process.env.DEBUG_PILET = 'on';
   } else {
     delete process.env.DEBUG_PILET;
   }
