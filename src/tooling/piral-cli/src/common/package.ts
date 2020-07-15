@@ -367,6 +367,7 @@ export async function retrievePiletsInfo(entryFile: string) {
       dev: packageInfo.devDependencies || {},
       peer: packageInfo.peerDependencies || {},
     },
+    scripts: packageInfo.scripts,
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root: dirname(packageJson),
   };

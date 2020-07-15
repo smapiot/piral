@@ -12,8 +12,8 @@ import {
   setLogLevel,
   logReset,
   createEmulatorPackage,
+  log,
   logInfo,
-  readJson,
   runScript,
 } from '../common';
 
@@ -122,6 +122,14 @@ export const buildPiralDefaults: BuildPiralOptions = {
   optimizeModules: false,
 };
 
+async function runLifecycle(root: string, script: string | undefined, type: string) {
+  if (script) {
+    log('generalDebug_0003', `Running "piral:postbuild" script for type=${type}...`);
+    await runScript(script, root);
+    log('generalDebug_0003', `Successfully "piral:postbuild" script for type=${type}...`);
+  }
+}
+
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
   const {
     entry = buildPiralDefaults.entry,
@@ -141,7 +149,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, root, ignored, externals } = await retrievePiletsInfo(entryFiles);
+  const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
@@ -151,9 +159,6 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     progress('Removing output directory ...');
     await removeDirectory(dest.outDir);
   }
-
-  const pckg = await readJson(root, 'package.json');
-  const { postPiralBuildDevelop, postPiralBuildRelease } = pckg.scripts;
 
   // everything except release -> build develop
   if (type !== 'release') {
@@ -183,13 +188,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       ignored,
     });
 
-    // run post piral build script if provided
-    if (postPiralBuildDevelop) {
-      progress(`Running 'postPiralBuildDevelop' script ...`);
-      logInfo(`Run: ${postPiralBuildDevelop}`);
-      await runScript(postPiralBuildDevelop, root);
-      logInfo(`Successfully ran 'postPiralBuildDevelop' script.`);
-    }
+    // run post piral build script if provided, more specific script takes precedent
+    const postBuildScript = scripts['piral:postbuild-develop'] || scripts['piral:postbuild'];
+    await runLifecycle(root, postBuildScript, "develop");
 
     const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
@@ -225,13 +226,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       ignored,
     });
 
-    // run post piral build script if provided
-    if (postPiralBuildRelease) {
-      progress(`Running 'postPiralBuildRelease' script ...`);
-      logInfo(`Run: ${postPiralBuildRelease}`);
-      await runScript(postPiralBuildRelease, root);
-      logInfo(`Successfully ran 'postPiralBuildRelease' script.`);
-    }
+    // run post piral build script if provided, more specific script takes precedent
+    const postBuildScript = scripts['piral:postbuild-release'] || scripts['piral:postbuild'];
+    await runLifecycle(root, postBuildScript, "release");
 
     logDone(`Files for publication available in "${outDir}".`);
     logReset();
