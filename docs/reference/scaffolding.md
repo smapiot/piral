@@ -31,8 +31,6 @@ We now run:
 pilet new ./myPiralAppShell/develop/myPiralAppShell-1.0.0.tgz --target myPilet
 ```
 
-
-
 This will scaffold a fresh new pilet. The crucial part is the first argument, which is the path to the tarballed piral instance.
 When scaffolding a new pilet you have to reference the app shell.
 
