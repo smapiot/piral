@@ -122,11 +122,15 @@ export const buildPiralDefaults: BuildPiralOptions = {
   optimizeModules: false,
 };
 
-async function runLifecycle(root: string, script: string | undefined, type: string) {
+async function runLifecycle(root: string, scripts: Record<string, string>, type: string) {
+  const script = scripts?.[type];
+  
   if (script) {
-    log('generalDebug_0003', `Running "piral:postbuild" script for type=${type}...`);
+    log('generalDebug_0003', `Running "${type}" ("${script}") ...`);
     await runScript(script, root);
-    log('generalDebug_0003', `Successfully "piral:postbuild" script for type=${type}...`);
+    log('generalDebug_0003', `Finished running "${type}".`);
+  } else {
+    log('generalDebug_0003', `No script for "${type}" found ...`);
   }
 }
 
@@ -188,9 +192,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       ignored,
     });
 
-    // run post piral build script if provided, more specific script takes precedent
-    const postBuildScript = scripts['piral:postbuild-develop'] || scripts['piral:postbuild'];
-    await runLifecycle(root, postBuildScript, "develop");
+    await runLifecycle(root, scripts, 'piral:postbuild');
+    await runLifecycle(root, scripts, 'piral:postbuild-emulator');
 
     const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
@@ -226,9 +229,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       ignored,
     });
 
-    // run post piral build script if provided, more specific script takes precedent
-    const postBuildScript = scripts['piral:postbuild-release'] || scripts['piral:postbuild'];
-    await runLifecycle(root, postBuildScript, "release");
+    await runLifecycle(root, scripts, 'piral:postbuild');
+    await runLifecycle(root, scripts, 'piral:postbuild-release');
 
     logDone(`Files for publication available in "${outDir}".`);
     logReset();
