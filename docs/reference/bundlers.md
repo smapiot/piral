@@ -1,6 +1,6 @@
 # Pluggable Bundlers
 
-The Piral CLI is the central tooling for Piral, but neither do you need to use it, nor does it try to reinvent the wheel. Instead, it leverages existing open-source software for doing its job.
+The Piral CLI is the central tooling for Piral, but neither do you need to use it nor does it try to reinvent the wheel. Instead, it leverages existing open-source software for doing its job.
 
 One of the covered areas is bundling, i.e., producing optimized assets from your source code for debugging or production purposes.
 
