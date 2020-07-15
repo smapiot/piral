@@ -17,9 +17,9 @@ To optimally work as a developer with your piral instance, and all of its contai
 As a developer of your piral instance, or your pilets, you are used to working with a web browser. And this is precisely the best place to get assisted by the Piral Inspector during the development or testing phase.
 
 We provide the Piral Inspector as an extension for the following browsers:
-- Google Chrome (>= v15)
-- Firefox (>= v15)
-- Opera (>= v15)
+- Google Chrome (>= v50)
+- Firefox (>= v50)
+- Opera (>= v50)
 
 
 ## Installation of add-on / extension
@@ -132,16 +132,15 @@ In the debug setting, the user can activate/deactivate the following options:
 ![DebugSettingsToolPiralInspector](../diagrams/piralinspector_tool_debugsettings.png)
 
 #### State Container Logging
-
-???
+Activates/Deactivates the logging of changes in the state container to the Developer Tools console.
 
 #### Load available Pilets
-
-????
+Activates/Deactivates the loading of the available Pilets.
+> This option is only available when the user is debugging a Pilet.
 
 #### Full refresh on change
-
-????
+Refreshes the current browser page in case there was a change in the debugged Pilet.
+> This option is only available when the user is debugging a Pilet.
 
 #### Visualize component origins
 Activates the option to visualize the origin of the modules as another icon in Piral instance section:
@@ -173,10 +172,10 @@ In case you chose a feed you have access to, the corresponding Pilets will be lo
 
 #### Bundle local Pilet and upload it
 First, you need to ```"Browse"``` to the Pilet package file and then ```"Upload"``` it.
-In case you uploaded a proper Pilet, it will be loaded and shown in the tile section and the list of available Pilets. Per default, the new Pilet will be active.
+In case you uploaded a proper Pilet, it will be loaded and shown in the tile section and the list of available Pilets. Per default, the new Pilet will be active, but will be given a random name.
+> The Pilet will be loaded into a temporary feed, and this feed (including the Pilets) will be removed when the predefined lifetime (default 60 minutes) expires.
 
 ![AddPiletsToolPiralInspector](../diagrams/piralinspector_tool_addpilets.png)
-
 
 ### Registered Routes
 This section shows all currently registered routes, and with a click on a single one, it will call the route.
