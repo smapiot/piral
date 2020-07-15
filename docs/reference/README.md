@@ -11,3 +11,4 @@ The available references:
 - [Error Handling](./errors.md)
 - [Articles and Posts](./articles.md)
 - [Migration](./migration.md)
+- [Scaffolding](./scaffolding.md)
