@@ -22,7 +22,7 @@ This will create a new app shell with the folder name myPiralAppShell. The name 
 piral build
 ```
 
-The generated tarball is now beeing located under *myPiralAppShell/dist/develop/*
+The generated tarball is now being located under *myPiralAppShell/dist/develop/*
 
 
 We now run:
