@@ -12,7 +12,9 @@ import {
   setLogLevel,
   logReset,
   createEmulatorPackage,
+  log,
   logInfo,
+  runScript,
 } from '../common';
 
 interface Destination {
@@ -120,6 +122,18 @@ export const buildPiralDefaults: BuildPiralOptions = {
   optimizeModules: false,
 };
 
+async function runLifecycle(root: string, scripts: Record<string, string>, type: string) {
+  const script = scripts?.[type];
+  
+  if (script) {
+    log('generalDebug_0003', `Running "${type}" ("${script}") ...`);
+    await runScript(script, root);
+    log('generalDebug_0003', `Finished running "${type}".`);
+  } else {
+    log('generalDebug_0003', `No script for "${type}" found ...`);
+  }
+}
+
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
   const {
     entry = buildPiralDefaults.entry,
@@ -139,7 +153,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, root, ignored, externals } = await retrievePiletsInfo(entryFiles);
+  const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
@@ -178,6 +192,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       ignored,
     });
 
+    await runLifecycle(root, scripts, 'piral:postbuild');
+    await runLifecycle(root, scripts, 'piral:postbuild-emulator');
+
     const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
     logDone(`Development package available in "${rootDir}".`);
@@ -211,6 +228,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       logLevel,
       ignored,
     });
+
+    await runLifecycle(root, scripts, 'piral:postbuild');
+    await runLifecycle(root, scripts, 'piral:postbuild-release');
 
     logDone(`Files for publication available in "${outDir}".`);
     logReset();
