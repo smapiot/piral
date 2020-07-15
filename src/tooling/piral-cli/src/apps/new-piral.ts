@@ -19,16 +19,59 @@ import {
 } from '../common';
 
 export interface NewPiralOptions {
+  /**
+   * Sets the path to the app's source HTML file.
+   */
   app?: string;
+
+  /**
+   * Sets the framework/library to use.
+   */
   framework?: Framework;
+
+  /**
+   * Sets the target directory where the generated files should be placed.
+   */
   target?: string;
+
+  /**
+   * The initial version that will also be written into the package.json
+   */
   version?: string;
+
+  /**
+   * Determines if files should be overwritten by the installation.
+   */
   forceOverwrite?: ForceOverwrite;
+
+  /**
+   * Determines the programming language for the new Piral instance. (e.g. 'ts')
+   */
   language?: PiletLanguage;
+
+  /**
+   * States if the npm dependecies should be installed when scaffolding.
+   */
   install?: boolean;
+
+  /**
+   * Sets the boilerplate template to be used when scaffolding.
+   */
   template?: TemplateType;
+
+  /**
+   * The log level that should be used within the scaffolding process.
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Sets the NPM client to be used when scaffolding. (e.g. 'yarn')
+   */
   npmClient?: NpmClientType;
+
+  /**
+   * Sets the default bundler to install. (e.g. 'parcel').
+   */
   bundler?: string;
 }
 
