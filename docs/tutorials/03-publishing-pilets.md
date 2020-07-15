@@ -65,7 +65,7 @@ Upon successful login the landing page of the feed service will be displayed.
 
 ### Create a Feed
 
-For creating a new feed, follow the link `Cerate Feed` on the right-hand side of the top menu.
+For creating a new feed, follow the link `Create Feed` on the right-hand side of the top menu.
 
 ![Creating a new feed](../diagrams/creating-feed.png)
 
