@@ -12,8 +12,8 @@ module.exports = function() {
   const imports = files.map(file => {
     const body = readFileSync(file, 'utf8');
     const name = file
-      .split("\\")
-      .join("/")
+      .split('\\')
+      .join('/')
       .split('/')
       .pop()
       .replace('.json', '');

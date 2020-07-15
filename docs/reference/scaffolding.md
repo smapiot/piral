@@ -2,7 +2,7 @@
 
 This section will help you with the process of creating fresh piral and pilet instances.
 
-### Get started
+### Get Started
 
 The simplest way to scaffold a piral project is to use the piral-cli by installing:
 
@@ -42,7 +42,7 @@ If you want more information about the scaffolding process you can simply increa
 piral new myPiralAppShell --log-level 5
 ```
 
-### Selecting a bundler
+### Selecting a Bundler
 
 When scaffolding a piral instance or pilets you can also specify the bundler:
 
