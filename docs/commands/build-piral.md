@@ -173,7 +173,7 @@ Also includes the node modules for target transpilation.
 Selects the target type of the build. "all" builds all target types.
 
 - Type: `string`
-- Choices: `"all"`, `"release"`, `"develop"`
+- Choices: `"all"`, `"release"`, `"emulator"`
 - Default: `"all"`
 
 ### `--base`

@@ -773,13 +773,13 @@ export function cannotFindFile_0046(file: string): QuickMessage {
  * have looked similar to:
  *
  * ```json
- * pilet new ../../my-app-shell/dist/develop/my-app-shell-1.0.0.tgz
+ * pilet new ../../my-app-shell/dist/emulator/my-app-shell-1.0.0.tgz
  * ```
  *
  * To run an upgrade in such a scenario a command such as
  *
  * ```sh
- * pilet upgrade ../../my-app-shell/dist/develop/my-app-shell-1.1.0.tgz
+ * pilet upgrade ../../my-app-shell/dist/emulator/my-app-shell-1.1.0.tgz
  * ```
  *
  * needs to be used.
