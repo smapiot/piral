@@ -23,7 +23,10 @@ export default class PiletInjector implements KrasInjector {
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
-    this.piletApi = `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${config.api}`;
+    // either take a full URI or make it an absolute path relative to the current origin
+    this.piletApi = /^https?:/.test(options.api)
+      ? options.api
+      : `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${options.api}`;
     const { pilets, api } = options;
     const cbs = {};
 
