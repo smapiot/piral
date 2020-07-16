@@ -19,11 +19,11 @@ More types of errors may be added my plugins. As an example, the `piral-forms` p
 
 ## Loading
 
-The loading error appears when loading of the app shell failed. As an example, if the pilet metadata cannot be retrieved successfully, the loading of the app shell failed (unless we handle this particular error specifically and fall back to, e.g., an empty set of pilets).
+The loading error appears when the loading of the app shell failed. As an example, if the pilet metadata cannot be retrieved successfully, the loading of the app shell failed (unless we handle this particular error specifically and fall back to, e.g., an empty set of pilets).
 
 It will always be shown as a blank page, thus we can not only style it like a page we may also need to add some layout to it.
 
-**Note**: In this layout we should not reference internal links. The loading error page is decoupled from the standard router. Instead, we should only include functionality to restart the application and / or report the error.
+**Note**: In this layout, we should not reference internal links. The loading error page is decoupled from the standard router. Instead, we should only include functionality to restart the application and / or report the error.
 
 *Example*: The pilet feed service is offline and the network exception is not handled in the initial request.
 
@@ -37,7 +37,7 @@ It will always be shown as a normal page, thus we can style it like a page.
 
 ## Not Found
 
-The not found error appears when a page could not been found. Specifically, if a wrong URL / route is used (e.g., `/foo` when no page or custom route for `/foo` is registered) we'll see this error.
+The not found error appears when a page could not be found. Specifically, if a wrong URL / route is used (e.g., `/foo` when no page or custom route for `/foo` is registered) we'll see this error.
 
 It will always be shown as a normal page, thus we can style it like a page.
 

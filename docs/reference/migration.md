@@ -20,7 +20,7 @@ None so far.
 
 1. The `PiletApi` now originates from piral-base
 2. In pilets externals are now part of the root object in their package.json, no longer in piral
-3. Pilets are build by default using the `v1` schema (this can be changed via a command line flag `--schema`)
+3. Pilets are built by default using the `v1` schema (this can be changed via a command-line flag `--schema`)
 
 Let's see how to handle these breaking changes.
 
@@ -34,11 +34,11 @@ declare module 'piral-base/lib/types' {
 }
 ```
 
-But then again - in most cases you will not need to do anything.
+But then again - in most cases, you will not need to do anything.
 
 #### 2) Externals
 
-The handling of externals was always split in two parts:
+The handling of externals was always split into two parts:
 
 1. Definition of the shared dependencies in the `externals` key of the `pilets` section within the *package.json* of the Piral instance.
 2. The `peerDependencies` in `externals` keys in the *package.json* of the pilets. The latter key is part of the `piral` section.
@@ -47,7 +47,7 @@ The second part was now changed. `externals` are no longer copied from the app s
 
 Since it is the classic behavior anyway to copy the externals to the `peerDependencies`, too, in most cases you'll not need to do anything here, too.
 
-In any other case upon `pilet upgrade` this is corrected / aligned anyway. There is also no functional consequence here that forces you to update and rebuild.
+In any other case upon `pilet upgrade`, this is corrected/aligned anyway. There is also no functional consequence here that forces you to update and rebuild.
 
 #### 3) Pilet Schema
 

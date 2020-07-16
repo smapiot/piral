@@ -43,15 +43,15 @@ The additional fields for a Piral instance package are as follows:
 }
 ```
 
-The `pilets` field is completely optional. The `app` field is necessary to signal the HTML file to be used as entry point to the Piral CLI. All paths are relative to the *package.json*.
+The `pilets` field is completely optional. The `app` field is necessary to signal the HTML file to be used as an entry point to the Piral CLI. All paths are relative to the *package.json*.
 
 The names in the list of `externals` need to be aligned with the names of the dependencies in the `dependencies` field. These dependencies will be available to pilets as `peerDependencies` (or "externals"). Furthermore, the Piral CLI will instruct these dependencies to be fully included in the app.
 
-The `preScaffold`, `postScaffold`, `preUpgrade`, and `postUpgrade` fields provide lifecycle hooks for the scaffolding and upgrading operations. The content is structurally equivalent to content inside NPM scripts.
+The `preScaffold`, `postScaffold`, `preUpgrade`, and `postUpgrade` fields provide lifecycle hooks for the scaffolding and upgrading operations. The content is structurally equivalent to the content inside NPM scripts.
 
 The lifecycle hooks are run in the following order:
 
-1. Pre-Scaffold is done after [optionally] creating the directory, but before anything else, e.g., the *tsconfig.json*, has been scaffolded.
+1. Pre-Scaffold is done after [optionally] creating the directory, but before anything else, e.g., the *tsconfig.json* has been scaffolded.
 2. Post-Scaffold is done right before the scaffold command is exited, i.e., after everything has been scaffolded and copied accordingly.
 3. Pre-Upgrade is done before anything is touched, i.e., right before the command will start moving things around.
 4. Post-Upgrade is done right after the new/updated Piral instance has been added and all files etc. have been touched.
@@ -60,7 +60,7 @@ The list of `files` contains paths to files relative to the `package.json` that 
 
 **Note**: Depending on the development model no special files may be wanted, e.g., in a monorepo workflow all essential configuration files such as an *.editorconfig* are already present in the repository's root directory.
 
-If a file is actually a folder then all the folder files are actually copied. For simple strings that means that all files from, e.g., `src/mocks` are copied to `src/mocks`. If `from` and `to` are specified then the files from `from` are copied to the directory specified in `to`. Note that by default this is shallow.
+If a file is actually a folder then all the folder files are copied. For simple strings that means that all files from, e.g., `src/mocks` are copied to `src/mocks`. If `from` and `to` are specified then the files from `from` are copied to the directory specified in `to`. Note that by default this is shallow.
 
 **Remark**: Besides specifying simple strings, where the relative path from the Piral instance is the same as the relative path from the pilet, the files can also be specified in form of an object containing the source relative path via `from` and the target relative path via `to`. Optionally, `deep` can be specified for directories, which may either be `true` or `false`.
 
