@@ -12,6 +12,7 @@ import {
   schemaKeys,
   fromKeys,
   bundlerKeys,
+  buildTypeKeys,
 } from './helpers';
 import {
   ToolCommand,
@@ -156,7 +157,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.buildPiralDefaults.optimizeModules)
-        .choices('type', ['all', 'release', 'develop'])
+        .choices('type', buildTypeKeys)
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', apps.buildPiralDefaults.type)
         .string('base')

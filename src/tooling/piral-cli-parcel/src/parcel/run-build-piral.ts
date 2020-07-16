@@ -7,7 +7,7 @@ async function run(
   root: string,
   piral: string,
   scopeHoist: boolean,
-  develop: boolean,
+  emulator: boolean,
   sourceMaps: boolean,
   contentHash: boolean,
   detailedReport: boolean,
@@ -24,10 +24,10 @@ async function run(
   await removeDirectory(cacheDir);
 
   setStandardEnvs({
-    production: !develop,
+    production: !emulator,
     root,
-    debugPiral: develop,
-    debugPilet: develop,
+    debugPiral: emulator,
+    debugPilet: emulator,
     piral,
     dependencies: externals,
   });
@@ -61,7 +61,7 @@ process.on('message', async msg => {
         process.cwd(),
         msg.piral,
         msg.scopeHoist,
-        msg.develop,
+        msg.emulator,
         msg.sourceMaps,
         msg.contentHash,
         msg.detailedReport,

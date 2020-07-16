@@ -136,21 +136,21 @@ describe('Build Piral Command', () => {
   });
 
   it(
-    'can create a develop build without files',
+    'can create an emulator build without files',
     async () => {
       const dir = scaffoldNewPiralInstance();
       let error = false;
 
       try {
         await buildPiral(dir, {
-          type: 'develop',
+          type: 'emulator',
         });
       } catch {
         error = true;
       }
 
       expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/develop/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
       expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
     },
     twoMinutes,
@@ -171,7 +171,7 @@ describe('Build Piral Command', () => {
       }
 
       expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/develop/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
     },
     twoMinutes,
@@ -198,7 +198,7 @@ describe('Build Piral Command', () => {
       }
 
       expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/develop/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
       expect(existsSync(resolve(dir, 'dist/release'))).toBeTruthy();
     },
     twoMinutes,
