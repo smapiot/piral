@@ -8,7 +8,7 @@ The Piral Feed Service API represents a RESTful API that is used for publishing 
 
 The Piral Feed Service API is usually implemented and available as part of a pilet feed service, which supports publishing or retrieving pilets. To allow the Piral CLI (or any other "standard" application) to publish pilets, a certain format needs to be specified. Likewise, a standard Piral instance should be capable of retrieving pilets for the user from a backend.
 
-Besides the core functionality of publishing and retrieving pilets, the Piral Feed Service API may also include an extended API conformance, which is used to provide alignment with some standard pilets e.g., for managing features or providing user information.
+Besides the core functionality of publishing and retrieving pilets, the Piral Feed Service API may also include extended API conformance, which is used to provide alignment with some standard pilets e.g., for managing features or providing user information.
 
 ## Conformance
 
@@ -24,7 +24,7 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 ## Core API Design
 
-The core API design includes everything that is necessary to publish pilets to the service handling the pilets or to retrieve them with a client. There is no (standardized) additional management (e.g., feature flags) in context with handling the pilets.
+The core API design includes everything necessary to publish pilets to the service handling the pilets or to retrieve them with a client. There is no (standardized) additional management (e.g., feature flags) in context with handling the pilets.
 
 Implementations that are Piral conform must implement at least the core API design. Throughout the specification, the officially supported online version of the feed service ([feed.piral.cloud](https://feed.piral.cloud)) is used as a reference example.
 
@@ -36,7 +36,7 @@ A pilet feed service must provide an endpoint for publishing a pilet. By default
 
 The endpoint needs to accept a `POST` request using basic authentication with an `Authorization` header. Other ways of authentication may be implemented as well. The value of the basic authentication is an API key that can be fully decided by the implementation. We recommend using a base64 encoded value here.
 
-The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tar ball (i.e., an NPM package). The content detail of this file is explained in the Pilet Specification (see references).
+The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tarball (i.e., an NPM package). The content detail of this file is explained in the Pilet Specification (see references).
 
 **Request**
 
@@ -80,7 +80,7 @@ GET /api/v1/pilet
 Content-Type: application/json
 ```
 
-Arbitrary headers and query parameters may be transported. The evaluation of these parameter is implementation specific and could be used for evaluation of feature flags or authorization purposes.
+Arbitrary headers and query parameters may be transported. The evaluation of these parameters is implementation-specific and could be used for evaluation of feature flags or authorization purposes.
 
 **Success Response**
 
@@ -117,7 +117,7 @@ The schema is written and defined using a TypeScript interface (see references).
 
 If you want to embed the JavaScript then you must follow the `PiletMetadataV1` interface and use `content` *instead* of an URL in `link`.
 
-If the `requireRef` field is used then `PiletMetadataV2` will be used implicitly. In this case the pilet is integrated via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
+If the `requireRef` field is used then `PiletMetadataV2` will be used implicitly. In this case, the pilet is integrated via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
 
 In `PiletMetadataV2` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
 
@@ -125,9 +125,9 @@ The `custom` field can be used to transport any custom data into your Piral inst
 
 **Error Response**
 
-This endpoint should always succeed. In case of urgent server issues a response with HTTP status code `500` has to be served.
+This endpoint should always succeed. In case of urgent server issues, a response with HTTP status code `500` has to be served.
 
-In any other case an empty `items` array is suitable to indicate that no pilets are to be served.
+In any other case, an empty `items` array is suitable to indicate that no pilets are to be served.
 
 ## Examples
 
@@ -235,9 +235,9 @@ An officially supported online version can be found at [piral.cloud](https://www
 
 The Feed Service API specification only deals with the `GET` and the `POST` endpoint for pilets. It does not deal with the features that use pilets or the model used by the feed service. It also does not deal with the API key management.
 
-We recommend using a model that distinguishes between **features** and **pilets**. A feature has multiple pilets, where every pilet has the same name, but a different version. A feature may select which pilet is active and under what conditions this pilet may be shown to an end user. The specific rules for each feature are also not part of this specification.
+We recommend using a model that distinguishes between **features** and **pilets**. A feature has multiple pilets, where every pilet has the same name, but a different version. A feature may select which pilet is active and under what conditions this pilet may be shown to an end-user. The specific rules for each feature are also not part of this specification.
 
-## Acknowledgements
+## Acknowledgments
 
 This specification was created by [smapiot](https://smapiot.com).
 
