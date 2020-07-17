@@ -1,5 +1,23 @@
 import { resolve } from 'path';
-import { findPackageVersion, findEntryModule, findPackageRoot } from './package';
+import {
+  findPackageVersion,
+  findEntryModule,
+  findPackageRoot,
+  getPiralPath,
+  readPiralPackage,
+  getPiralPackage,
+  getFileStats,
+  copyScaffoldingFiles,
+  copyPiralFiles,
+  getPiletsInfo,
+  retrievePiralRoot,
+  findDependencyVersion,
+  retrievePiletsInfo,
+  isValidDependency,
+  patchPiletPackage,
+  checkAppShellPackage,
+  retrievePiletData,
+} from './package';
 import { cliVersion } from './info';
 
 describe('CLI package module', () => {
@@ -41,5 +59,37 @@ describe('CLI package module', () => {
     const dir = process.cwd();
     const version = findPackageRoot('foo-bar-not-exist', dir);
     expect(version).toBeUndefined();
+  });
+
+  it('getPiletsInfo returns pilets information about provided piralInfo', () => {
+    const emptyPiletsInfo = {
+      files: [],
+      externals: [],
+      scripts: {},
+      validators: {},
+      devDependencies: {},
+      preScaffold: '',
+      postScaffold: '',
+      preUpgrade: '',
+      postUpgrade: '',
+    };
+    let result = getPiletsInfo({});
+    expect(result).toStrictEqual(emptyPiletsInfo);
+
+    const piralInfo = {
+      pilets: {
+        files: ['foo.tgz', 'foo2.tgz'],
+        externals: [],
+        scripts: {},
+        validators: {},
+        devDependencies: {},
+        preScaffold: '',
+        postScaffold: '',
+        preUpgrade: '',
+        postUpgrade: '',
+      },
+    };
+    result = getPiletsInfo(piralInfo);
+    expect(result).toStrictEqual(piralInfo.pilets);
   });
 });
