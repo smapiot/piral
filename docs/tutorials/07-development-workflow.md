@@ -12,11 +12,11 @@ Piral was created by following a SPA-first, serverless-first, and developer-firs
 
 A high developer convenience can be achieved by providing a seamless debugging experience together was an easy setup and pleasant tools. Ideally, all standard tools just work.
 
-The essential development workflow is displayed below. We start with the app shell, which should be implemented up to a degree where first pilets may be integrated. At some point a "pilet factory" mode is started.
+The essential development workflow is displayed below. We start with the app shell, which should be implemented up to a degree where some first pilets may be integrated. At some point, a "pilet factory" mode is started.
 
 ![Full Development Life Cycle](../diagrams/piral-dev-life-cycle.png)
 
-The important aspect of the diagram above is the deployment independence of each layer. Teams responsible for the different pilets can deploy independently of other teams. Obviously, in real life some feature constraints and other business values may impact the deployment independence, but technically there are no such constraints if well set up.
+The important aspect of the diagram above is the deployment independence of each layer. Teams responsible for the different pilets can deploy independently of other teams. In reality, some feature constraints and other business values may impact the deployment independence, but technically there are no such constraints if well set up.
 
 ## Video
 
@@ -26,15 +26,15 @@ We also have this tutorial available in form of a video.
 
 ## Setup Phase
 
-In the setup phase all the processes should be derived together with the team. While most of the team performs the onboarding to the desired tech stack (i.e., writing pilets, using React plus maybe others like GraphQL, Redux, Rx, ...) a smaller team takes care of creating an initial version of the app shell.
+In the setup phase, all the processes should be derived together with the team. While most of the team performs the onboarding to the desired tech stack (i.e., writing pilets, using React plus maybe others like GraphQL, Redux, Rx, ...) a smaller team takes care of creating an initial version of the app shell.
 
 > Scaffold the Piral instance using the Piral CLI.
 
 While creating the initial version of the app shell the corresponding pilet feed should be set up. While a custom feed service could be desirable in the long run our recommendation is to start at least with the [public feed service](https://feed.piral.cloud). Setting up a pilet feed and connecting the app shell to it can be done in no time.
 
-> Create a pilet feed in Piral feed service. Connect your app shell to it.
+> Create a pilet feed in the Piral feed service. Connect your app shell to it.
 
-Once the initial version of the app shell has been created it can be published as a package to start development of pilets. Additionally, the app should also be available in *some* environment (e.g., a development or staging environment).
+Once the initial version of the app shell has been created it can be published as a package to start the development of pilets. Additionally, the app should also be available in *some* environment (e.g., a development or staging environment).
 
 > Publish the NPM package of the app shell in a private NPM registry.
 
@@ -44,13 +44,13 @@ Our recommendation is to start with such functionality *within* the app shell an
 
 > Publish the first pilets to the created pilet feed.
 
-Having the first pilets successfully running within the Piral instance concludes the setup phase. At this point the whole app could be also published in a production environment.
+Having the first pilets successfully running within the Piral instance concludes the setup phase. At this point, the whole app could be also published in a production environment.
 
 > Publish the app shell.
 
 ## Feature Phase
 
-In the feature phase we scale the application by gathering requirements, developing pilets, and publishing them. Of course, bug fixes and enhancements to existing pilets will be also covered in this phase.
+In the feature phase, we scale the application by gathering requirements, developing pilets, and publishing them. Of course, bug fixes and enhancements to existing pilets will be also covered in this phase.
 
 > Build and publish more pilets.
 
@@ -58,13 +58,13 @@ Importantly, the role of feature flags (which are provided by the public feed se
 
 > Adjust feature flags to bring personalized experiences to your users.
 
-Also the Piral instance will see changes in this phase. Pilets may require additional functionality in this phase, which could mean
+Also, the Piral instance will see changes in this phase. Pilets may require additional functionality in this phase, which could mean
 
 - adding a new shared dependency,
 - exposing a new API,
 - changing how UX is done;
 
-or the app shell becomes more lightweight by outsourcing parts of itself into pilets (as described in the setup phase). In any case the whole UX is constantly improved.
+or the app shell becomes more lightweight by outsourcing parts of itself into pilets (as described in the setup phase). In any case, the whole UX is constantly improved.
 
 > Split more functionality of the app shell into pilets.
 
@@ -76,8 +76,8 @@ The way how pilets are written also contains many different aspects. One possibi
 
 Once the maintenance phase is reached only fixes to the pilets or the Piral instance should be published. Publishing any of these follows the same rules or processes in the feature phase.
 
-> Publish hot fixes to pilets or the app shell.
+> Publish hotfixes to pilets or the app shell.
 
-A bug fix may be necessary due to a bug, legal requirements, or a security update to a third-party dependency. Shared dependencies require only a central update (with  subsequent deployment) of the Piral instance. Dependencies contained in pilets require an update of the particular pilets.
+A bug fix may be necessary due to a bug, legal requirements, or a security update to a third-party dependency. Shared dependencies require only a central update (with a subsequent deployment) of the Piral instance. Dependencies contained in pilets require an update of the particular pilets.
 
-In the next part we will look in more detail at the secret sauce for development - the Piral CLI.
+In the next part, we will look in more detail at the secret sauce for development - the Piral CLI.
