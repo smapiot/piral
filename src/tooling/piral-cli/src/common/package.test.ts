@@ -14,11 +14,12 @@ import {
   findDependencyVersion,
   retrievePiletsInfo,
   isValidDependency,
-  patchPiletPackage,
   checkAppShellPackage,
   retrievePiletData,
 } from './package';
 import { cliVersion } from './info';
+import { PiletLanguage } from './enums';
+import { frameworkKeys } from '../helpers';
 
 describe('CLI package module', () => {
   it('findPackageVersion finds the current package version', async () => {
@@ -91,5 +92,23 @@ describe('CLI package module', () => {
     };
     result = getPiletsInfo(piralInfo);
     expect(result).toStrictEqual(piralInfo.pilets);
+  });
+
+  it('getPiralPackage returns piral package', () => {
+    let result = getPiralPackage('app', PiletLanguage.ts, '1.0.0', 'piral-base', 'npm');
+    expect(result.devDependencies['piral-cli-npm']).toEqual('1.0.0');
+    result = getPiralPackage('app', PiletLanguage.ts, '1.0.0', 'piral-base');
+    expect(result.devDependencies).not.toContain('piral-cli-npm');
+  });
+
+  it('retrievePiletData error cases', async () => {
+    await retrievePiletData('foo', '').catch((err) =>
+      expect(err).toStrictEqual(Error('[0011] Could not find a valid Piral instance.')),
+    );
+    await retrievePiletData('foo', 'sample-piral').catch((err) =>
+      expect(err).toStrictEqual(
+        Error('[0075] Cannot find the "package.json". You need a valid package.json for your pilet.'),
+      ),
+    );
   });
 });
