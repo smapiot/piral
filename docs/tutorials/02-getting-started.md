@@ -8,7 +8,7 @@ section: Getting Started
 
 # Getting Started
 
-This tutorial will guide us through the steps how to create our first pilet, which is executed within a basic application shell based on a Piral instance.
+This tutorial will guide us through the steps on how to create our first pilet, which is executed within a basic application shell based on a Piral instance.
 
 This quick start will show us how to
 
@@ -18,7 +18,7 @@ This quick start will show us how to
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/jHmzE1j64zo)
 
@@ -30,7 +30,7 @@ For completing the tutorials, the following general prerequisites must be met:
 
 ## Setting up the Tooling
 
-Piral comes with a powerful command line tool named `piral-cli`. The `piral-cli` supports developers in executing the most important tasks and can be installed with the following command:
+Piral comes with a powerful command-line tool named `piral-cli`. The `piral-cli` supports developers in executing the most important tasks and can be installed with the following command:
 
 ```sh
 # Install the Piral CLI
@@ -46,7 +46,7 @@ For executing this tutorial, the `piral-cli` in version 0.9.0 or later is requir
 
 A Piral instance builds the application shell and as such the foundation for executing pilets. All central and shared functions like layout, navigation menus or notification handling will be configured in the Piral instance.
 
-In the end the app shell is the foundation for the whole frontend. In the diagram below we see the app shell as the top layer, which may (later on) hold other shared libraries or the shared UI components. The modules are then build later.
+In the end, the app shell is the foundation for the whole frontend. In the diagram below we see that the app shell is the top layer, which may (later on) hold other shared libraries or the shared UI components. The modules are then built later.
 
 ![Anatomy of a modulith](../diagrams/modulith.png)
 
@@ -61,7 +61,7 @@ A Piral instance can be created using `piral-cli`. To scaffold a new application
 piral new --target my-app
 ```
 
-As result we will find in the folder `./my-app` the files for the newly created application shell.
+As a result, we will find in the folder `./my-app` the files for the newly created application shell.
 
 ::: tip: Use NPM Initializers
 In case you don't want to install the Piral CLI globally, you can also leverage the NPM initializer for this command.
@@ -86,20 +86,20 @@ When the build process is completed, the application shell can be opened locally
 
 If you need to change the port, on which the instance is exposed, you can select a custom port just by adding the flag `--port <port_number>` to the piral-cli command.
 
-At this point, the application shell shows an empty page, since there is currently no layout defined and no pilet loaded into the application shell. In the next section, we will create a pilet and load it the new application shell.
+At this point, the application shell shows an empty page, since there is currently no layout defined and no pilet loaded into the application shell. In the next section, we will create a pilet and load it into the new application shell.
 
 ### Create Package for the Application Shell
 
-To use the newly created Piral instance as application shell (or simply "app shell") for the development of pilets, we need to create an **NPM package**, which will be referenced within pilets. To create the package run the command:
+To use the newly created Piral instance as the application shell (or simply "app shell") for the development of pilets, we need to create an **NPM package**, which will be referenced within pilets. To create the package run the command:
 
 ```sh
 # Create an NPM package for the app shell
 piral build
 ```
 
-This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `develop` and `release`. The latter contains the files for publishing the app shell to some host later on, the former contains a development package.
+This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `develop` and `release`. The latter contains the files for publishing the app shell to some host later on. The former contains a development package.
 
-The development package is a tarball containing the application shell, in our case it will be named `my-app-1.0.0.tgz`. Usually the tarball will be published to a (private) NPM registry, so that all development teams will be able reference and use the same Piral instance for developing their pilets.
+The development package is a tarball containing the application shell, in our case, it will be named `my-app-1.0.0.tgz`. Usually, the tarball will be published to a (private) NPM registry, so that all development teams will be able to reference and use the same Piral instance for developing their pilets.
 
 ![Folder structure of the application shell](../diagrams/my-app-structure.png)
 
@@ -164,13 +164,13 @@ pilet debug
 
 When navigating to `http://localhost:1234`, the application shell will be started and the content of the pilet will be shown. Currently, "Welcome to Piral!' will be shown in the left top corner.
 
-**Remark:** Although our pilet has already the setup for a menu entry and showing a notification, those entities are not visible when starting the pilet. The reason for this is that for our current version of the application shell no menu and no support for notifications has been configured yet. Subsequent tutorials will guide us through configuring further functions of the application shell.
+**Remark:** Although our pilet has already the setup for a menu entry and showing a notification, those entities are not visible when starting the pilet. The reason for this is that for our current version of the application shell no menu and no support for notifications have been configured yet. Subsequent tutorials will guide us through configuring further functions of the application shell.
 
 ## Next Steps
 
 In this getting started tutorial, you have
 
-- Created an **Application Shell** based on Piral using command line tool, which comes with Piral
+- Created an **Application Shell** based on Piral using the command-line tool, which comes with Piral
 - Created a basic **pilet**, which is executed in the previously created application shell
 
 The next tutorial will describe how to upload a pilet to the community version of the **Piral Feed Service**.
