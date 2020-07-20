@@ -12,7 +12,7 @@ So far we almost exclusively used existing elements without deeply understanding
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/s8dYsd7eQPc)
 
@@ -20,13 +20,13 @@ We also have this tutorial available in form of a video.
 
 As described earlier a pilet is just a library compiled as an UMD module that exposes a function called `setup`. The `setup` function receives a special object that we like to call the *pilet API*. It is the API *created specifically for the pilet*. This allows the pilet to bring in new functionality to the application shell (called Piral instance).
 
-The application shell determines how the pilet API looks like. In Piral we already determine some common parts for the pilet API - things like an API to register pages, dashboard tiles, or modal dialogs. Furthermore, some convenience functions may also be included in the pilet API. For instance, in Piral we've added functions for handling the pilet's global state.
+The application shell determines how the pilet API looks like. In Piral we already determine some common parts for the pilet API - things like an API to register pages, dashboard tiles, or modal dialogs. Furthermore, some convenience functions may also be included in the pilet API. For instance, in Piral we've added functions for handling the pilets global state.
 
 Most APIs will be designed in a symmetric way, i.e., such that one call has a respective counter-part. An example is the "register" class of available API calls.
 
 ![Register and Unregister APIs](../diagrams/piral-api.svg)
 
-For every register method (e.g., to register a page) there is an unregister method. Usually, we will only require to use the register method, however, in special cases we may want to dynamically add (and then remove) some functionality.
+For every register method (e.g., to register a page) there is an unregister method. Usually, we will only require to use the register method. In some cases, however, we may want to dynamically add (and then remove) some functionality.
 
 ## The Provided API
 
@@ -36,7 +36,7 @@ As already mentioned the provided API is determined by the underlying applicatio
 
 Note that the API will also be passed on to all registered components as a prop named `piral`.
 
-The API contains functionality to be placed in the following categories:
+The API contains functions to be placed in the following categories:
 
 - Application shell components (tiles, pages, ...)
 - Sharing functionality with other pilets (extensions, data, events ...)
@@ -45,13 +45,13 @@ The API contains functionality to be placed in the following categories:
 
 While some functionality definitely needs to be used (e.g., `registerPage` for showing a page) other functionality is rather optional and may be skipped (or even disabled by the application shell) on purpose.
 
-**Remark:** The architecture of what functionality goes into which pilet, as well as what to be used (and where) of the pilet API is completely in your hands. Our recommendation is to make pilets as simple and lightweight as possible. Furthermore, we recommend using the pilet API only on few places, such that most of your code would actually be "Piral independent".
+**Remark:** The architecture of what functionality goes into which pilet, as well as what to be used (and where) of the pilet API is completely in your hands. Our recommendation is to make pilets as simple and lightweight as possible. Furthermore, we recommend using the pilet API only in few places, such that most of your code would be "Piral independent".
 
 ## Adding a Page
 
-While the pilet API gives us a powerful and flexible way to describe what to do with our pilet, it also leads to complexity. Alternatively, we could think of describing what pages (or components in general) to use in the *package.json*. While such a method may have some advantages, it will always miss the flexibility that we gain by using code to perform the registration.
+While the pilet API gives us a powerful and flexible way to describe what to do with our pilet, it also leads to complexity. Alternatively, we could think of describing what pages (or components in general) to use in the package.json. While such a method may have some advantages, it will always miss the flexibility that we gain by using code to perform the registration.
 
-Assuming we create a new pilet for the previously created application shell `my-app` we would end up with the following root module:
+Assuming we create a new pilet for the previously created application shell my-app we would end up with the following root module:
 
 ```ts
 import { PiletApi } from 'my-app';
@@ -117,7 +117,7 @@ Modern web applications are a combination of static assets (text, images, ...) w
 
 In Piral we wanted to make sure that data access is particularly simple. Obviously, our approach is not for everyone and so its neither mandatory nor exclusive - you can actually use whatever you prefer.
 
-Pilets have access to an auxiliary API called `createConnector`. This will create a data connector, which is a React higher-order component (HOC). A higher-order component can be used to wrap an existing component to give it additional functionality - in this case access to some target data.
+Pilets have access to an auxiliary API called `createConnector`. This will create a data connector, which is a React higher-order component (HOC). A higher-order component can be used to wrap an existing component to give it additional functionality - in this case, access to some target data.
 
 Let's see a simple example. We will now modify our page to include some posts received from an API:
 
@@ -168,6 +168,6 @@ export function setup(app: PiletApi) {
 
 The `connect` HOC can be used multiple times. It will lazy load[^1] the data. When the data has been loaded already the available data will be shown. Otherwise, a loading screen will display. This is a simple way to have the full data lifecycle covered in React without needing to spend any time implementing it.
 
-Next we will see how to customize the Pilet API from the Piral instance.
+Next, we will see how to customize the Pilet API from the Piral instance.
 
 [^1]: Lazy loading means that whenever the component is first mounted the connector will call the given connector function.

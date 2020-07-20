@@ -14,7 +14,7 @@ The **Piral** ecosystem offers the framework for building **microfrontend** solu
 
 ## Video
 
-We also have a quick introduction of Piral available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/ltTXWEwhSiY)
 
