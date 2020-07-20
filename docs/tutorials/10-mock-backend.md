@@ -50,7 +50,7 @@ The proxy injector is usually the last active injector. Any response of the prox
 
 ## Static Request Mocking
 
-Offline-first means that we will potentially not proxy from a local request to an online service. As such using the proxy injector is maybe not a good idea. Luckily, there are a couple of other injectors. Most notably, we have an HAR and a JSON injector. Both are actually based on JSON, however, while HAR is following the popular HAR specification, JSON is following a custom structure.
+Offline-first means that we will potentially not proxy from a local request to an online service. As such using the proxy injector is maybe not a good idea. Luckily, there are a couple of other injectors. Most notably, we have an HAR and a JSON injector. Both are based on JSON, however, while HAR is following the popular HAR specification, JSON is following a custom structure.
 
 The advantage of using the HAR injector lies in the capability of doing a real browser recording - then using this source as input for the backend mocking. Alternatively, the advantage of the JSON injector is the simplicity of this format.
 
@@ -104,12 +104,12 @@ The three parts of the function signature are:
 - `req` is the incoming request
 - `res` is a helper for building the outgoing response
 
-The function's result needs to be either `undefined` (representing not handled), a response object, or a `Promise` yielding `undefined` or a response object.
+The function's result needs to be either `undefined` (representing not handled), a response object or a `Promise` yielding `undefined` or a response object.
 
 The logic of a script injector can be as complex as required - even Node.js modules (either built-in, e.g., `fs` or retrieved via npm, e.g., `request`) can be used.
 
 ## Next Steps
 
-In this tutorial we have seen what the integrated proxy can do regarding offline-first development. By using [kras](https://github.com/FlorianRappl/kras) we ensure flexibility without having to modify code to distinguish between production and development.
+In this tutorial, we have seen what the integrated proxy can do regarding offline-first development. By using [kras](https://github.com/FlorianRappl/kras) we ensure flexibility without having to modify code to distinguish between production and development.
 
 If you are keen to see how you can improve initial loading performance by introducing server-side rendering, then the next tutorial may be the right one for you.
