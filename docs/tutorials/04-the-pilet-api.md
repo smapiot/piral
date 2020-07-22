@@ -20,7 +20,7 @@ We also have a video tutorial:
 
 As described earlier a pilet is just a library compiled as an UMD module that exposes a function called `setup`. The `setup` function receives a special object that we like to call the *pilet API*. It is the API *created specifically for the pilet*. This allows the pilet to bring in new functionality to the application shell (called Piral instance).
 
-The application shell determines how the pilet API looks like. In Piral we already determine some common parts for the pilet API - things like an API to register pages, dashboard tiles, or modal dialogs. Furthermore, some convenience functions may also be included in the pilet API. For instance, in Piral we've added functions for handling the pilets global state.
+The application shell determines how the pilet API looks like. In Piral we already determine some common parts for the pilet API - things like an API to register pages, dashboard tiles, or modal dialogs. Furthermore, some convenience functions may also be included in the pilet API. For instance, in Piral we've added functions for handling the pilet's global state.
 
 Most APIs will be designed in a symmetric way, i.e., such that one call has a respective counter-part. An example is the "register" class of available API calls.
 
@@ -51,7 +51,7 @@ While some functionality definitely needs to be used (e.g., `registerPage` for s
 
 While the pilet API gives us a powerful and flexible way to describe what to do with our pilet, it also leads to complexity. Alternatively, we could think of describing what pages (or components in general) to use in the package.json. While such a method may have some advantages, it will always miss the flexibility that we gain by using code to perform the registration.
 
-Assuming we create a new pilet for the previously created application shell my-app we would end up with the following root module:
+Assuming we create a new pilet for the previously created application shell `my-app` we would end up with the following root module:
 
 ```ts
 import { PiletApi } from 'my-app';

@@ -131,7 +131,7 @@ The diagram below shows how this works. Every pilet that uses import maps talks 
 
 That way you can safely use multiple versions of your dependencies. If you consolidate them you'll get a performance improvement. Otherwise, you'll get the performance penalty as usual, however, you gained the flexibility to independently choose your version.
 
-The effort to actually use import maps is quite low. The first step is to declare potentially shared dependencies via the pilets *package.json*:
+The effort to actually use import maps is quite low. The first step is to declare potentially shared dependencies via the pilet's *package.json*:
 
 ```json
 {
