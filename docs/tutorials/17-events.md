@@ -14,11 +14,11 @@ Wikipedia defines the term such that ...
 
 > [...] an event is an action or occurrence recognized by software, often originating asynchronously from the external environment, that may be handled by the software.
 
-If we need the information to be available also for future use (i.e., even to interested parties that are not listening right now) then the data store is a better option. UI fragments are best shared via the extension mechanism.
+If we need the information to be available also for future use (i.e., even to interested parties that are not listening right now) then the datastore is a better option. UI fragments are best shared via the extension mechanism.
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/dWVz0lOGIoI)
 
@@ -56,7 +56,7 @@ export function setup(app) {
 
 If both pilets are loaded we should see an output in the console of our browser after 5 seconds.
 
-**Remark**: The object used as second argument of `emit` is called the event args. This argument is passed on as-is. We recommend only passing on objects, as they are extensible and could be extended in the future without breaking on consumers.
+**Remark**: The object used as the second argument of `emit` is called the event args. This argument is passed on as-is. We recommend only passing on objects, as they are extensible and could be extended in the future without breaking on consumers.
 
 ## Known vs Unknown Events
 
@@ -88,10 +88,10 @@ We do not serialize the event args. Therefore, you are able to also transparent 
 
 ![DOM Custom Events](../diagrams/custom-events.png)
 
-While it could be possible to fake Piral events in practice it would be very hard to do. Under the hood Piral makes sure that the Piral events are properly packaged in a wrapper when being transported via a DOM custom event. The wrapper contains a special signature that is checked before distributing.
+While it could be possible to fake Piral events in practice it would be very hard to do. Under the hood, Piral makes sure that the Piral events are properly packaged in a wrapper when being transported via a DOM custom event. The wrapper contains a special signature that is checked before distributing.
 
 ## Conclusion
 
 Events are a great way to distribute information quickly among multiple subscribers. The Piral instance can also leverage events to inform pilets about certain changes.
 
-In the next tutorial we'll have a look on how to easily integrate authentication in Piral.
+In the next tutorial, we'll have a look at how to easily integrate authentication in Piral.

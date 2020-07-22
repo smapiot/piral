@@ -8,13 +8,13 @@ section: Details
 
 # Pilet Best Practices
 
-In general a pilet should be treated like a normal application, i.e., a sound architecture should be designed and followed. A core difference between a pilet and a normal application is the root module, which exports the `setup` function. The `setup` function receives the Pilet API and wires the components defined in the pilet together in such a way that they make sense from the app shell's perspective.
+In general, a pilet should be treated as a normal application, i.e., a sound architecture should be designed and followed. A core difference between a pilet and a normal application is the root module, which exports the `setup` function. The `setup` function receives the Pilet API and wires the components defined in the pilet together in such a way that they make sense from the app shell's perspective.
 
-Piral has been designed in such a way that its up to the user to decide how deep Piral should be integrated (or visible) in pilets. Our recommendation is to keep the connection shallow, i.e., to only reference Piral in the root module. Let's investigate some patterns we may want to follow.
+Piral has been designed in such a way that it's up to the user to decide how deep Piral should be integrated (or visible) in pilets. Our recommendation is to keep the connection shallow, i.e., to only reference Piral in the root module. Let's investigate some patterns we may want to follow.
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/OyPUm2ZwEkY)
 
@@ -154,21 +154,21 @@ This approach not only decouples Piral from the components defined in the pilet,
 
 ## Reducing the App Shell Dependency
 
-As part of the convenience coming with Piral, every component (e.g., a tile, a page, ...) retrieves the `PiletApi` object for the current pilet in form of a prop called `piral`. While using this prop may be super important and convenient (e.g., just use `piral.translate` to obtain a localized string), it also couples your component to the provided app shell.
+As part of the convenience coming with Piral, every component (e.g., a tile, a page, ...) retrieves the `PiletApi` object for the current pilet in the form of a property called `piral`. While using this property may be super important and convenient (e.g., just use `piral.translate` to obtain a localized string), it also couples your component to the provided app shell.
 
 We recommend keeping the dependency on the Piral instance as minimal as possible. This has the usual advantages:
 
 1. Your components are easier to test
 2. Your components are easier to share
 3. Your components communicate what they need
-4. Your pilet should be more resiliant against some API changes
+4. Your pilet should be more resilient against some API changes
 5. Your pilet may transfer to another technology more easily in the future
 
-In the best case the only file mentioning an import from your Piral instance is the `index.tsx` / root module of the pilet.
+In the best case, the only file mentioning an import from your Piral instance is the `index.tsx` / root module of the pilet.
 
 We've seen this approach already in the section above.
 
-Let's look at an example code. We assume that our initial code looks as follows:
+Let's look at the following example:
 
 ```jsx
 // root module: index.tsx
@@ -200,7 +200,7 @@ export const Menu: React.FC<MenuComponentProps> = ({ piral }) => (
 );
 ```
 
-As we can see every component uses other part(s) of the provided `PiletApi`. Wrapping these components in the root module leads to less coupling in the modules / components.
+As we can see every component uses other part(s) of the provided `PiletApi`. Wrapping these components in the root module leads to less coupling in the modules/components.
 
 After the refactoring the code looks as follows:
 
@@ -286,7 +286,7 @@ export default () => (
 );
 ```
 
-Again, things that would always be shown (e.g., menu items) should not be lazy loaded. Here, the overhead would be too much. On the contrary, items should as tiles, pages, modals, ... could all be candidates of bundle splitting.
+Again, things that would always be shown (e.g., menu items) should not be lazy-loaded. Here, the overhead would be too much. On the contrary, items should as tiles, pages, modals, ... could all be candidates of bundle splitting.
 
 ## Testing Extensions
 
@@ -331,6 +331,6 @@ The crucial part is that we do not only place the registration of our testing co
 
 ## Next Steps
 
-In this tutorial we reviewed a couple of strategies to develop pilets that provide a robust and flexible basis.
+In this tutorial, we reviewed a couple of strategies to develop pilets that provide a robust and flexible basis.
 
 Now that we know what could be a good approach of developing a pilet form a more architecture point of view, it's time to see what other capabilities we may want to use for getting work done efficiently.
