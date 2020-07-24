@@ -24,7 +24,7 @@ Does not open in case no modal dialog using the provided name is available (i.e.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `showModal` function from the Pilet API to show a modal dialog registered by any pilet. In case of a naming conflict the dialogs from the current pilet are preferred.
 
@@ -65,9 +65,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -145,6 +145,8 @@ declare module 'piral-modals/lib/types' {
 
 // now showModal("login", { required: true, common: true }) is strongly typed in pilets
 ```
+
+:::
 
 ## License
 

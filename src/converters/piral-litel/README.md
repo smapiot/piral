@@ -22,7 +22,7 @@ The name of the extension slot component to be used in LitElement components. Th
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromLitEl` function from the Pilet API to convert your LitElement components to components usable by your Piral instance.
 
@@ -43,9 +43,9 @@ Within LitElement components the Piral LitElement extension component can be use
 <litel-extension name="name-of-extension"></litel-extension>
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using LitElement with Piral is as simple as installing `piral-litel` and `lit-element`.
 
@@ -76,6 +76,8 @@ The `lit-element` and `@webcomponents/webcomponentsjs` packages should be shared
   }
 }
 ```
+
+:::
 
 ## Preparing Pilets
 

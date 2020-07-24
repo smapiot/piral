@@ -18,7 +18,7 @@ Transforms a standard Svelte component into a component that can be used in Pira
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromSvelte` function from the Pilet API to convert your Svelte components to components usable by your Piral instance.
 
@@ -39,9 +39,9 @@ Within Svelte components the Piral Svelte extension component can be used by ref
 <svelte-extension name="name-of-extension"></svelte-extension>
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using Svelte with Piral is as simple as installing `piral-svelte`. In the pilets using Svelte, `svelte` and `parcel-plugin-svelte` should be installed, too.
 
@@ -58,6 +58,8 @@ const instance = createInstance({
   // ...
 });
 ```
+
+:::
 
 ## Pilet Usage
 

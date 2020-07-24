@@ -8,17 +8,17 @@ section: Details
 
 # Piral Layout Setup
 
-So far we did not spent much time on setting up the Piral instance. In reality, a fair amount of time should be invested into setting up the Piral instance correctly. Primarily, this has nothing to do with Piral itself, but rather with standard things such as the used styling and the potential points of interaction with the user.
+So far we did not spend much time setting up the Piral instance. In reality, a fair amount of time should be invested in setting up the Piral instance correctly. Primarily, this has nothing to do with Piral itself, but rather with standard things such as the used styling and the potential points of interaction with the user.
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/u7XhTuf2hDQ)
 
 ## Layout Basics
 
-Coming up with a great layout is a good start for a supreme user experience. Before we start creating a large amount of pilets the application shell should be in a good shape.
+Coming up with a great layout is a good start for supreme user experience. Before we start creating a large number of pilets the application shell should be in a good shape.
 
 Let's recap how the layout was done in the scaffolding process:
 
@@ -39,9 +39,9 @@ renderInstance({
 
 We use a single property called `layout`, which expects an object with components that are used to represent various building blocks.
 
-The components allow to define the different parts of the application for visualization. For a dashboard we have a container (exposing the potential grid or any other mean of exposing the different tiles) and its tiles. If no special styling or definition should be considered the part does not need to be defined.
+The components allow us to define the different parts of the application for visualization. For a dashboard, we have a container (exposing the potential grid or any other means of exposing the different tiles) and its tiles. If no special styling or definition should be considered the part does not need to be defined.
 
-So what are the `MyDashboardContainer` and `MyDashboardTile` references? We need to define these somewhere. At the end they are just React components.
+So what are the `MyDashboardContainer` and `MyDashboardTile` references? We need to define these somewhere. In the end, they are just React components.
 
 For instance, the following definitions would be totally legit:
 
@@ -67,9 +67,7 @@ const MyDashboardTile: React.FC<DashboardTileProps> = ({ columns, rows, resizabl
 
 This will create a dashboard container with some title and a proper structure incl. some CSS classes for styling. Any React component (or way of creating React components for that matter) is valid.
 
-Besides the component-specific props (e.g., a tile receives its currently available number of `rows` and `columns`) we also get the standard `children` prop. The children of the dashboard container are the different tiles. The tiles themselves are rendered using the dashboard tile component above, where the pilet defined part is passed in as `children`.
-
-Now that we understand the fundamentals of the ...
+Besides the component-specific props (e.g., a tile receives its currently available number of `rows` and `columns`) we also get the standard `children` property. The children of the dashboard container are the different tiles. The tiles themselves are rendered using the dashboard tile component above, where the pilet defined part is passed in as `children`.
 
 ## Example Layout
 
@@ -147,7 +145,7 @@ const Layout = ({ children }) => (
 );
 ```
 
-Note that only the `children` are transported as props. For the layout the children represent the page's content. All the rest, e.g., the `Menu` we use from `piral`, which uses internally the parts we defined (e.g., the `MenuContainer`).
+Note that only the `children` are transported as props. For the layout, the children represent the page's content. All the rest, e.g., the `Menu` we use from `piral`, which uses internally the parts we defined (e.g., the `MenuContainer`).
 
 For the full example look at the [sample Piral instance layout definition](https://github.com/smapiot/piral/blob/master/src/samples/sample-piral/src/layout.tsx).
 

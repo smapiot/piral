@@ -22,7 +22,7 @@ The extension slot component to be used in Inferno components.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromInferno` function from the Pilet API to convert your Inferno components to components usable by your Piral instance.
 
@@ -43,9 +43,9 @@ Within Inferno components the Piral Inferno extension component can be used by r
 <InfernoExtension name="name-of-extension" />
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using Inferno with Piral is as simple as installing `piral-inferno` and `inferno`.
 
@@ -76,6 +76,8 @@ The `inferno` and `inferno-create-element` package should be shared with the pil
   }
 }
 ```
+
+:::
 
 ## License
 

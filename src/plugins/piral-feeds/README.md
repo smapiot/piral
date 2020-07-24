@@ -18,7 +18,7 @@ Returns a higher-order component for providing a `data` prop that reflects the c
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `createConnector` function from the Pilet API to create a global container managed data feed inside the Piral instance.
 
@@ -111,9 +111,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -134,6 +134,8 @@ const instance = createInstance({
 ```
 
 There are no options available.
+
+:::
 
 ## License
 

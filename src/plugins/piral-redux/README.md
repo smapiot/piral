@@ -18,7 +18,7 @@ This function returns the `connect` function known from React Redux - just appli
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 Use the function `createReduxStore` to obtain a store connector. The store connector is a higher-order component that wraps an existing component and removes the `state` and `dispatch` props. Instead, `state` will be "connected" to the created pilet store and `dispatch` allows modifying the state by calling the reducer with the provided action.
 
@@ -69,9 +69,9 @@ root.registerPage(
 );
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -92,6 +92,8 @@ const instance = createInstance({
 ```
 
 There are two options available. The `reducer` option allows us to define reducers that also access and manipulate the global state. The `enhancer` option allows us to pass in a custom store enhancer. For more details on enhancers please look at the [Redux documentation](https://read.reduxbook.com/markdown/part1/05-middleware-and-enhancers.html).
+
+:::
 
 ## License
 

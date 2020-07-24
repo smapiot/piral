@@ -1,0 +1,92 @@
+module.exports = function() {
+  const tutorials = require('./gen-tutorials').call(this).join(', ');
+  const plugins = require('./gen-plugins').call(this).join(', ');
+  const commands = require('./gen-commands').call(this).join(', ');
+  const specification = require('./gen-specification').call(this).join(', ');
+  const documentation = require('./gen-references').call(this).join(', ');
+  const samples = require('./gen-samples').call(this).join(', ');
+  const questions = require('./gen-faq').call(this).join(', ');
+  const codes = require('./gen-codes').call(this).join(', ');
+  const types = require('./gen-types').call(this).join(', ');
+  const tools = require('./gen-tools').call(this).join(', ');
+
+  return `
+const { lazy } = require('react');
+
+function populate(source) {
+  const results = [];
+
+  source.forEach(item => {
+    const title = item.section;
+    const [result] = results.filter(m => m.title === title);
+
+    if (result) {
+      result.links.push(item);
+    } else {
+      results.push({
+        title,
+        links: [item],
+      });
+    }
+  });
+
+  return results;
+}
+
+const tutorials = populate([${tutorials}]);
+const plugins = populate([${plugins}]);
+const commands = populate([${commands}]);
+const specification = [${specification}];
+const documentation = [${documentation}];
+const samples = [${samples}];
+const tools = [${tools}];
+const questions = [${questions}];
+const codes = [${codes}];
+const types = [${types}];
+
+module.exports = {
+  guidelines: [
+    ...tutorials,
+    {
+      title: 'Example',
+      links: samples,
+    },
+  ],
+  reference: [
+    {
+      title: 'Documentation',
+      links: documentation,
+    },
+    {
+      title: 'Specification',
+      links: specification,
+    },
+    {
+      title: 'FAQ',
+      links: questions,
+    },
+    {
+      title: 'Codes',
+      links: codes,
+    },
+  ],
+  tooling: [
+    ...commands,
+    {
+      title: 'Others',
+      links: tools,
+    },
+  ],
+  plugins: [...plugins],
+  types: [
+    {
+      title: 'Framework',
+      links: types.filter(m => !m.id.endsWith('-utils')),
+    },
+    {
+      title: 'Utilities',
+      links: types.filter(m => m.id.endsWith('-utils')),
+    },
+  ],
+};`;
+};

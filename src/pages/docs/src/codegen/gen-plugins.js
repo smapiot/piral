@@ -1,17 +1,9 @@
 const { resolve } = require('path');
 const { readFileSync } = require('fs');
-const {
-  getPluginTypes,
-  getName,
-  generateFile,
-  generated,
-  generatedName,
-  getPluginImage,
-  getPackageRoot,
-  getPluginCategory,
-} = require('./paths');
+const { getPluginTypes, getName, generated, getPluginImage, getPackageRoot, getPluginCategory } = require('./paths');
 const { render } = require('./markdown');
 const { docRef } = require('./utils');
+const { generatePage } = require('./pages');
 
 function getRoute(name) {
   return (name && `/plugins/${name}/:tab?`) || '';
@@ -26,6 +18,7 @@ module.exports = function() {
       const type = readFileSync(file, 'utf8');
       const name = getName(file);
       const route = getRoute(name);
+      const link = route.replace('/:tab?', '');
       const image = getPluginImage(name);
       const pluginRoot = getPackageRoot(name);
       const readme = resolve(pluginRoot, 'README.md');
@@ -54,49 +47,39 @@ module.exports = function() {
         '<h2 id="description">Description</h2>',
         mdValue.substr(mdValue.indexOf('</h1>') + 5),
       ].join('');
+      const pageMeta = {
+        link: route,
+        source: file,
+        category,
+        title: name,
+      };
+      const head = `
+        import { PageContent, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
+
+        const link = "${docRef(readme)}";
+        const meta = ${JSON.stringify(plugin)};
+        const html = ${content};
+      `;
+      const body = `
+        <PageContent>
+          <div className="plugin-info">
+            <img src={require('../../assets/${image}')} />
+            <h1>${name}</h1>
+          </div>
+          <Tabs titles={["Overview", "Types", "Info"]}>
+            <Markdown content={html} link={link} />
+            <TypeInfo>{${type}}</TypeInfo>
+            <PluginMeta {...meta} />
+          </Tabs>
+        </PageContent>
+      `;
+      const page = generatePage(name, pageMeta, `plugin-${name}`, head, body, route, name, category, link);
+
       this.addDependency(readme, { includedInParent: true });
-      generateFile(
-        `plugin-${name}`,
-        `// ${route}
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { PageContent, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
-
-const link = "${docRef(readme)}";
-const meta = ${JSON.stringify(plugin)};
-const html = ${content};
-
-export default () => (
-  <PageContent>
-    <div className="plugin-info">
-      <img src={require('../../assets/${image}')} />
-      <h1>${name}</h1>
-    </div>
-    <Tabs titles={["Overview", "Types", "Info"]}>
-      <Markdown content={html} link={link} />
-      <TypeInfo>{${type}}</TypeInfo>
-      <PluginMeta {...meta} />
-    </Tabs>
-  </PageContent>
-);`,
-        'jsx',
-      );
-      return [name, category, route];
+      return [name, category, page];
     })
     .sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]))
-    .map(
-      ([name, category, route]) => `
-{
-  id: '${name}',
-  route: '${route}',
-  link: '${route.replace('/:tab?', '')}',
-  category: '${category}',
-  page: lazy(() => import('./${generatedName}/plugin-${name}')),
-}`,
-    );
+    .map(([, , page]) => page);
 
-  return `
-    const { lazy } = require('react');
-    module.exports = [${imports.join(', ')}];
-  `;
+  return imports;
 };

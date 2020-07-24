@@ -22,7 +22,7 @@ The extension slot module to be used in Angular components. This is not really n
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromNg` function from the Pilet API to convert your Angular components to components usable by your Piral instance.
 
@@ -43,9 +43,9 @@ Within Angular components the Piral Angular extension component can be used by r
 <extension-component name="name-of-extension"></extension-component>
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular 2+.
 
@@ -106,6 +106,8 @@ The related packages should be shared with the pilets via the *package.json*:
 ```
 
 Depending on your Angular needs you'd want to share more packages.
+
+:::
 
 ## Injected Services
 

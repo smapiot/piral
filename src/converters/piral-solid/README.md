@@ -22,7 +22,7 @@ The extension slot component to be used in Solid components.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromSolid` function from the Pilet API to convert your Solid components to components usable by your Piral instance.
 
@@ -43,9 +43,9 @@ Within Solid components the Piral Solid extension component can be used by refer
 <SolidExtension name="name-of-extension" />
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using Solid with Piral is as simple as installing `piral-solid` and `solid-js`.
 
@@ -75,6 +75,8 @@ The `solid-js` and `solid-js/dom` packages should be shared with the pilets via 
   }
 }
 ```
+
+:::
 
 ## License
 

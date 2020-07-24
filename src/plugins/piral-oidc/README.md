@@ -22,7 +22,7 @@ Gets a promise for the currently authenticated user's open id claims. Rejects if
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `getAccessToken` function from the Pilet API. This returns a promise.
 
@@ -50,9 +50,9 @@ export async function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -135,7 +135,7 @@ value, when this is true, the application should call `render()`, when false, do
 
 If the promise rejects, it is advised that the error is logged to an external logging service, as this indicates a user that could not gain entry into the application. Afterwards, call `logout()` or prompt the user for the next action.
 
-```typescript
+```ts
 // module oidc.ts
 import { setupOidcClient } from 'piral-oidc';
 
@@ -172,6 +172,8 @@ client.handleAuthentication()
         client.logout();
     })
 ```
+
+:::
 
 ## License
 

@@ -8,7 +8,7 @@ section: Details
 
 # The Piral CLI
 
-The Piral CLI is a Node.js based command line tool that can be used to automate everything around a Piral instance, as well as around pilets.
+The Piral CLI is a Node.js based command-line tool that can be used to automate everything around a Piral instance, as well as around pilets.
 
 It is easy to customize and comes with batteries included. The Piral CLI comes with three different shell executables - a generic `pb` script ("Piral build"), `piral` for Piral instances, and `pilet` for pilets. Each executable holds a variety of commands which are passed in as the first argument.
 
@@ -52,7 +52,7 @@ Since the Piral CLI is extensible it provides all capabilities necessary to foll
 
 ## Local vs Global
 
-To simplify development a global installation of the Piral CLI makes sense. Nevertheless, we've made sure that global installation are unnecessary and less important by introducing a couple of important factors.
+To simplify development a global installation of the Piral CLI makes sense. Nevertheless, we've made sure that global installation is unnecessary and less important by introducing a couple of important factors.
 
 ### NPM Initializers
 
@@ -84,7 +84,7 @@ While the Piral CLI commands use command line arguments to determine the behavio
 
 ### Local First
 
-When you are within an NPM project folder structure and run a Piral CLI the local Piral CLI instance (if available) is taken. Right now there is no way to override this.
+When you are inside of an NPM project folder structure and run a Piral CLI the local Piral CLI instance (if available) is taken. Right now there is no way to override this.
 
 As far as Piral CLI plugins go, their integration is *always* a combination of the local ones found (preferred) plus the global ones available. There is no option to deactivate global plugins.
 
@@ -137,9 +137,9 @@ Besides `withCommand` we also see other possibilities. One option is to add cust
 
 ## Validations
 
-Piral validations are helpful to assert that the Piral CLI can work properly with the current Piral instance. While pilet validations share a similar goal, they tend to be much more domain specific.
+Piral validations are helpful to assert that the Piral CLI can work properly with the current Piral instance. While pilet validations share a similar goal, they tend to be much more domain-specific.
 
-As such, currently all (included) Piral validations have no options and are always active. In contrast, most pilet validations are by default in a more conservative mode - only spitting out suggestions as warnings or not running at all.
+As such, currently, all (included) Piral validations have no options and are always active. In contrast, most pilet validations are by default in a more conservative mode - only spitting out suggestions as warnings or not running at all.
 
 Running the validations is simple.
 
@@ -174,7 +174,7 @@ The pilet references dependencies starting with "a".
 };
 ```
 
-In the example above the new rule `no-dependencies-with-a` would be ignored by default. This is a great default value for the validation of a pilet.
+In the example above the new rule, `no-dependencies-with-a` would be ignored by default. This is a great default value for the validation of a pilet.
 
 The validation configuration of pilets is fully determined by the respective Piral instance. It will use the `validators` section of the `pilets` info. Repeating the same default for the rule above would look as follows (snippet):
 
@@ -200,12 +200,12 @@ Of course, if we want to use this particular rule we should give it a different 
 }
 ```
 
-The incoming option value should be checked. In case of an unknown value a warning should to be emitted. In such cases the default value should be the fallback.
+The incoming option value should be checked. In the case of an unknown value, a warning should be emitted. In such cases, the default value should be the fallback.
 
 **Remark**: The Piral CLI does not check if all listed validators really exist. Instead, only the ones that exist will be called.
 
 ## Next Steps
 
-In this tutorial we looked at the Piral CLI in more detail. Now that we know the areas where the Piral CLI helps us greatly we can make use of it more efficiently.
+In this tutorial, we looked at the Piral CLI in more detail. Now that we know the areas where the Piral CLI helps us greatly we can make use of it more efficiently.
 
 The next part of our tutorial series deals with best practices for writing pilets.

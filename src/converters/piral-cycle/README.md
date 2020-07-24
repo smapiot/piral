@@ -22,7 +22,7 @@ The extension slot component to be used in Cycle.js components.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromCycle` function from the Pilet API to convert your Cycle.js components to components usable by your Piral instance.
 
@@ -58,9 +58,9 @@ Within Cycle.js components the Piral Cycle.js extension component can be used by
 CycleExtension({ name: "name-of-extension" })
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 Using Cycle.js with Piral is as simple as installing `piral-cycle` and Cycle.js.
 
@@ -91,6 +91,8 @@ The `@cycle/run`, `@cycle/dom` and `xstream` packages should be shared with the 
   }
 }
 ```
+
+:::
 
 ## License
 

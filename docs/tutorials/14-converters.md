@@ -12,11 +12,11 @@ Piral already includes and uses React for UI purposes. The reasons to include a 
 
 [^1]: ... or a library in case of React
 
-React is not only popular enough to justify its use, it is also lightweight and super easy to test. With isomorphic rendering it also provides everything to present a full picture.
+React is not only popular enough to justify its use, but it is also lightweight and super easy to test. With isomorphic rendering, it also provides everything to present a full picture.
 
 Nevertheless, we are also aware that for legacy (i.e., migration) or future purposes other frameworks may play a role, too. Luckily, React also forms a great basis to allow **other frameworks to coexist and operate**.
 
-In this tutorial we'll see how easy it is to use other frameworks in Piral. We'll start with direct bundling, which can be done in any pilet without changing the app shell at all.
+In this tutorial, we'll see how easy it is to use other frameworks in Piral. We'll start with direct bundling, which can be done in any pilet without changing the app shell at all.
 
 ## Video
 
@@ -26,7 +26,7 @@ We also have this tutorial available in form of a video.
 
 ## Direct Bundling
 
-Out of the box Piral supports two kinds of components: React and vanilla JS. The latter is also called *foreign components*, which refers pretty much to non-React component.
+Out of the box, Piral supports two kinds of components: React and vanilla JS. The latter is also called *foreign components*, which refers pretty much to non-React components.
 
 Let's pretend we want to register a foreign component for rendering a certain page in a pilet:
 
@@ -109,7 +109,7 @@ export function setup(piral) {
 }
 ```
 
-Obviously, once we hit multiple pilets using Vue we may want to bring this functionality to the app shell.
+Once we hit multiple pilets using Vue we may want to bring this functionality to the app shell.
 
 ## General Working
 
@@ -159,7 +159,7 @@ export interface PiletVueApi {}
 
 In the boilerplate above `vue` (in the converter and the component `type`) should be replaced with the name of the converter. Furthermore, the structure of the `VueComponent` is completely free - as is its name. Just replace `...Vue...` with the name of the framework to include.
 
-For bringing a convenience / abstraction as described above (`fromVue`) we can just extend the API:
+For bringing a convenience/abstraction as described above (`fromVue`) we can just extend the API:
 
 ```ts
 export interface PiletVueApi {
@@ -185,7 +185,7 @@ export function createVueApi(config) {
 }
 ```
 
-After the plugin is finished it can be integrated in the Piral instance to be used by the pilets.
+After the plugin is finished it can be integrated into the Piral instance to be used by the pilets.
 
 ## Lifecycle
 
@@ -264,7 +264,7 @@ export function setup(piral) {
 }
 ```
 
-In most cases the `parent` (first argument) will not be used for the `update` function. In some cases it may be relevant.
+In most cases, the `parent` (first argument) will not be used for the `update` function. In some cases, it may be relevant.
 
 The idea is quite simple, components will always behave as follows for the lifetime of a *component instance*:
 
@@ -272,7 +272,7 @@ The idea is quite simple, components will always behave as follows for the lifet
 2. Update (never, once, or often)
 3. Unmount (once)
 
-The unmount will *always* happen when the application is still running. In case of closing the application the components are not unmounted. Thus, this method should not be used to make some API cleanup calls or similar. Use the standard DOM method for these cases.
+The unmount will *always* happen when the application is still running. In the case the application is closed, the components are not unmounted. Thus, this method should not be used to make some API cleanup calls or similar. Use the standard DOM method for these cases.
 
 ## Context
 
@@ -302,7 +302,7 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-This will actually project the React component for the extension named `my-extension-component` into the DOM element `container`.
+This will project the React component for the extension named `my-extension-component` into the DOM element `container`.
 
 Going beyond vanilla JS we see that this also works with our Vue example:
 
@@ -346,9 +346,9 @@ export function setup(piral) {
 
 Equipped with this setting a component called `extension-component` can be used from Vue, which will project the React component cleanly into the rendered UI.
 
-The way above apparently is only valid for Vue, however, the general concept remains the same. We'll need to provide a framework specific component that yields access to its underlying DOM element. Once we have this, we can simply call the `renderHtmlExtension` function.
+The way above apparently is only valid for Vue, however, the general concept remains the same. We'll need to provide a framework-specific component that yields access to its underlying DOM element. Once we have this, we can simply call the `renderHtmlExtension` function.
 
-In frameworks where such access is not possible (e.g., Elm) we can always fall back to web components as rescue.
+In frameworks where such access is not possible (e.g., Elm) we can always fall back to web components as a rescue.
 
 Dealing with a context may become crucial when using React functionality such as using the router for navigation.
 
@@ -373,9 +373,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-In the provided example the context is directly transported into the `mount` function. However, in most cases the `mount` function scope is not directly accessible, e.g., in the Vue components. In these cases we need to have a way to inject the context such that any child can access it.
+In the provided example the context is directly transported into the `mount` function. However, in most cases, the `mount` function scope is not directly accessible, e.g., in the Vue components. In these cases, we need to have a way to inject the context such that any child can access it.
 
-While most frameworks come with a way to do this nicely, some lack this ability. In these cases a communication via events may be appropriate.
+While most frameworks come with a way to do this nicely, some lack this ability. In these cases, a communication via events may be appropriate.
 
 By default, the `context` comes with two fields: `router` and `state`. While the former is the React Router context containing parts such as `history`, the latter is an `Atom<GlobalState>` to allow listening for global state changes.
 
@@ -383,4 +383,4 @@ By default, the `context` comes with two fields: `router` and `state`. While the
 
 Piral makes it easy to include cross-framework communication and integration. Using converters we can teach Piral how to convert any kind of component to a foreign component, which will be handled in a React component. The other way around is also possible. Here Piral uses efficient projections to render React components in any kind of DOM element.
 
-In the next tutorial we'll look at how dependencies can be shared in Piral. Besides the simple "implicit" way a couple of other options exist.
+In the next tutorial, we'll look at how dependencies can be shared in Piral. Besides the simple "implicit" way a couple of other options exist.

@@ -44,6 +44,7 @@
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "^5.0.0",
+    "flexsearch": "^0.6.32",
     "keyword-extractor": "0.0.17",
     "markdown-it": "^9.0.1",
     "markdown-it-abbr": "1.0.4",

@@ -26,7 +26,7 @@ Establishes a GraphQL subscription via the subscription host defined in the app 
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `query` function from the Pilet API to execute a GraphQL query against the defined GraphQL server.
 
@@ -85,7 +85,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
+
+::: summary: For Piral instance developers
 
 > For Piral instance developers
 
@@ -126,6 +128,8 @@ const instance = createInstance({
 ```
 
 **Note**: `piral-urql` plays nicely together with authentication providers such as `piral-adal`. As such authentication tokens are automatically inserted on queries, mutations, and when establishing subscriptions.
+
+:::
 
 ## License
 

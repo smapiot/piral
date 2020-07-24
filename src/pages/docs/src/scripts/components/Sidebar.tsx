@@ -11,9 +11,11 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({ childre
 
   return (
     <div className={`${className} sticky`} ref={container}>
-      <div className="scroller" ref={scroller}>
-        {children}
-      </div>
+      {React.Children.count(children) > 0 && (
+        <div className="scroller" ref={scroller}>
+          {children}
+        </div>
+      )}
     </div>
   );
 });

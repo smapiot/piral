@@ -20,7 +20,7 @@ Removes a tile from the app shell. This requires a named tile.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `registerTile` function from the Pilet API to add a new tile in the app shell.
 
@@ -55,9 +55,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -119,6 +119,8 @@ declare module 'piral-dashboard/lib/types' {
 
 // now registerTile(() => null, { category: 'general' }) is strongly typed in pilets
 ```
+
+:::
 
 ## License
 

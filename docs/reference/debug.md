@@ -1,6 +1,6 @@
 # Piral Instance Debugging
 
-The Piral instance comes with several special variables that are can be used when the app shell is either directly in debugging mode, or consumed via the development package ("emulator mode").
+The Piral instance comes with several special variables that can be used when the app shell is either directly in debugging mode or consumed via the development package ("emulator mode").
 
 ## Session Variables
 
@@ -11,6 +11,18 @@ The following session variables are actively used.
 | `dbg:hard-refresh` | `off`, `on` | Performs a hard reload when changes to the currently debugged pilet occur. | `off`   |
 | `dbg:load-pilets`  | `off`, `on` | Still loads all the "usual" pilets besides the debugged pilet.             | `off`   |
 | `dbg:view-state`   | `off`, `on` | Shows the state changes in the browser development console.                | `on`    |
+
+Changing a value is as simple as running the following code in the browser's console:
+
+```ts
+sessionStorage.setItem('dbg:load-pilets', 'on');
+```
+
+Remember that this is a *session* setting. Restarting the browser will reset the configured value.
+
+::: tip: Use the Piral Inspector
+The [Piral Inspector](https://github.com/smapiot/piral-inspector) browser extension can help you to set changing settings without needing to remember all the details listed here.
+:::
 
 ## Window Variables
 

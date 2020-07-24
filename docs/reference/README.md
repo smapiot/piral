@@ -5,8 +5,10 @@ We provide a detailed reference documentation incl. architecture details and fur
 The available references:
 
 - [Architecture](./architecture.md)
+- [Pluggable Bundlers](./bundlers.md)
 - [Package Metadata](./metadata.md)
 - [Debug Information](./debug.md)
 - [Error Handling](./errors.md)
 - [Articles and Posts](./articles.md)
 - [Migration](./migration.md)
+- [Scaffolding](./scaffolding.md)

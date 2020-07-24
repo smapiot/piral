@@ -8,11 +8,13 @@ section: Getting Started
 
 # Introduction
 
-Many modern backend system landscapes follow the architecture pattern of **microservices**, while the frontends are still mostly implemented as single applications, which integrate with the entire backend as a kind of monolithic solution. The **Piral** ecosystem offers the framework for building **microfrontend** solutions, which allows the creation of distributed web application reflecting the flexibility and modularized structure of a microservice backend.
+Many modern backend system landscapes follow the architecture pattern of **microservices**, while the frontends are still mostly implemented as single applications, which integrate with the entire backend as a kind of monolithic solution.
+
+The **Piral** ecosystem offers the framework for building **microfrontend** solutions, which allows the creation of distributed web applications reflecting the flexibility and modularized structure of a microservice backend.
 
 ## Video
 
-We also have a quick introduction of Piral available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/ltTXWEwhSiY)
 
@@ -38,6 +40,12 @@ The following tutorials will start with guidance for the first steps through to 
 
 ![Classic Frontend Monolith](../diagrams/overview.png)
 
-The diagram above illustrates the setup and process for developing with Piral. The prerequisites are fairly minimal and as developer you only need your favorite editor, a terminal, an Internet browser and Node.js installed. The **Piral instance** (application shell) and the **pilets** (feature modules) can be executed and debugged in the emulator on the local development machine.
+The diagram above illustrates the setup and process for developing with Piral. The prerequisites are fairly minimal and as a developer you only need your favorite editor, a terminal, an Internet browser and Node.js installed. The **Piral instance** (application shell) and the **pilets** (feature modules) can be executed and debugged in the emulator on the local development machine.
+
+::: tip: Piral without a Feed Service
+Strictly speaking, a feed service is not necessary. You could use anything from a hardcoded list to a dynamically updated JSON file for getting to know where your pilets are.
+
+Nevertheless, since we offer already a powerful feed service that is free for usual development workloads you can make use of a dynamic pilet feed right away.
+:::
 
 Let's get started with the first tutorial and enter the world of Piral!

@@ -20,7 +20,11 @@ Gets the currently active configuration.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
+
+Just use `defineConfigSchema` in your `setup` to define your configuration checker and the default values. Later you can access the retrieved configuration via `getCurrentConfig`.
+
+A quick example:
 
 ```ts
 export function setup(app: PiletApi) {
@@ -57,9 +61,11 @@ export function setup(app: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+Make sure you use `getCurrentConfig` *after* the configuration schema has been defined.
 
-> For Piral instance developers
+:::
+
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -80,6 +86,8 @@ const instance = createInstance({
 ```
 
 There are no options available.
+
+:::
 
 ## License
 
