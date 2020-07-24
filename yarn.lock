@@ -8878,9 +8878,9 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
 
-kras@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.11.0.tgz#c6d0717bd1c8687671f11a2595c6ee9cf4981785"
+kras@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.11.1.tgz#1542ea4c8bfd32791b512d7df170d49f5e05146e"
   dependencies:
     yargs "^15.3.1"
 
