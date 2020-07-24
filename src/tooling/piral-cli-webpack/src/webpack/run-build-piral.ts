@@ -8,7 +8,7 @@ import { defaultWebpackConfig } from '../constants';
 async function run(
   root: string,
   piral: string,
-  develop: boolean,
+  emulator: boolean,
   sourceMaps: boolean,
   contentHash: boolean,
   minify: boolean,
@@ -18,10 +18,10 @@ async function run(
   entryFiles: string,
 ) {
   setStandardEnvs({
-    production: !develop,
+    production: !emulator,
     root,
-    debugPiral: develop,
-    debugPilet: develop,
+    debugPiral: emulator,
+    debugPilet: emulator,
     piral,
     dependencies: externals,
   });
@@ -32,7 +32,7 @@ async function run(
     entryFiles,
     outDir,
     externals,
-    develop,
+    emulator,
     sourceMaps,
     contentHash,
     minify,
@@ -52,7 +52,7 @@ process.on('message', async msg => {
       const result = await run(
         process.cwd(),
         msg.piral,
-        msg.develop,
+        msg.emulator,
         msg.sourceMaps,
         msg.contentHash,
         msg.minify,

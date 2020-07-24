@@ -1,6 +1,6 @@
 import { dirname, basename, extname, join, resolve } from 'path';
-import { LogLevels, PiralBuildType } from '../types';
 import { callPiralBuild } from '../bundler';
+import { LogLevels, PiralBuildType } from '../types';
 import {
   retrievePiletsInfo,
   retrievePiralRoot,
@@ -12,8 +12,13 @@ import {
   setLogLevel,
   logReset,
   createEmulatorPackage,
+  log,
   logInfo,
+  runScript,
 } from '../common';
+
+const releaseName = 'release';
+const emulatorName = 'emulator';
 
 interface Destination {
   outDir: string;
@@ -37,18 +42,70 @@ function getDestination(entryFiles: string, target: string): Destination {
 }
 
 export interface BuildPiralOptions {
+  /**
+   * The location of the piral
+   */
   entry?: string;
+
+  /**
+   * Sets the target directory where the output of the bundling should be placed.
+   */
   target?: string;
+
+  /**
+   * Sets the cache directory for bundling.
+   */
   cacheDir?: string;
+
+  /**
+   * Sets the public URL (path) of the bundle.
+   */
   publicUrl?: string;
+
+  /**
+   * Performs minification or other post-bundle transformations.
+   */
   minify?: boolean;
+
+  /**
+   * States if a detailed report should be created when building the piral instance.
+   */
   detailedReport?: boolean;
+
+  /**
+   * Sets the log level to use.
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Performs a fresh build by removing the target directory first.
+   */
   fresh?: boolean;
+
+  /**
+   * Selects the target type of the build (e.g. 'release'). "all" builds all target types.
+   */
   type?: PiralBuildType;
+
+  /**
+   * Create associated source maps for the bundles.
+   */
   sourceMaps?: boolean;
+
+  /**
+   * Appends a hash to the side-bundle files.
+   */
   contentHash?: boolean;
+
+  /**
+   * States if tree shaking should be used when creating the bundle.
+   * (may reduce bundle size)
+   */
   scopeHoist?: boolean;
+
+  /**
+   * States if the node modules should be included for target transpilation
+   */
   optimizeModules?: boolean;
 }
 
@@ -67,6 +124,18 @@ export const buildPiralDefaults: BuildPiralOptions = {
   scopeHoist: false,
   optimizeModules: false,
 };
+
+async function runLifecycle(root: string, scripts: Record<string, string>, type: string) {
+  const script = scripts?.[type];
+
+  if (script) {
+    log('generalDebug_0003', `Running "${type}" ("${script}") ...`);
+    await runScript(script, root);
+    log('generalDebug_0003', `Finished running "${type}".`);
+  } else {
+    log('generalDebug_0003', `No script for "${type}" found ...`);
+  }
+}
 
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
   const {
@@ -87,7 +156,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, root, ignored, externals } = await retrievePiletsInfo(entryFiles);
+  const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
   const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
@@ -98,18 +167,18 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(dest.outDir);
   }
 
-  // everything except release -> build develop
-  if (type !== 'release') {
+  // everything except release -> build emulator
+  if (type !== releaseName) {
     progress('Starting build ...');
 
     // since we create this anyway let's just pretend we want to have it clean!
-    await removeDirectory(join(dest.outDir, 'develop'));
+    await removeDirectory(join(dest.outDir, emulatorName));
 
-    logInfo('Bundle emulator ...');
+    logInfo(`Bundle ${emulatorName} ...`);
     const { dir: outDir, name: outFile } = await callPiralBuild({
       root,
       piral: name,
-      develop: true,
+      emulator: true,
       optimizeModules,
       scopeHoist,
       sourceMaps,
@@ -120,11 +189,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       externals,
       publicUrl,
       outFile: dest.outFile,
-      outDir: join(dest.outDir, 'develop', 'app'),
+      outDir: join(dest.outDir, emulatorName, 'app'),
       entryFiles,
       logLevel,
       ignored,
     });
+
+    await runLifecycle(root, scripts, 'piral:postbuild');
+    await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);
 
     const rootDir = await createEmulatorPackage(root, outDir, outFile);
 
@@ -132,18 +204,18 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logReset();
   }
 
-  // everything except develop -> build release
-  if (type !== 'develop') {
+  // everything except emulator -> build release
+  if (type !== emulatorName) {
     progress('Starting build ...');
 
     // since we create this anyway let's just pretend we want to have it clean!
-    await removeDirectory(join(dest.outDir, 'release'));
+    await removeDirectory(join(dest.outDir, releaseName));
 
-    logInfo('Bundle release ...');
+    logInfo(`Bundle ${releaseName} ...`);
     const { dir: outDir } = await callPiralBuild({
       root,
       piral: name,
-      develop: false,
+      emulator: false,
       optimizeModules,
       scopeHoist,
       sourceMaps,
@@ -154,11 +226,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       externals,
       publicUrl,
       outFile: dest.outFile,
-      outDir: join(dest.outDir, 'release'),
+      outDir: join(dest.outDir, releaseName),
       entryFiles,
       logLevel,
       ignored,
     });
+
+    await runLifecycle(root, scripts, 'piral:postbuild');
+    await runLifecycle(root, scripts, `piral:postbuild-${releaseName}`);
 
     logDone(`Files for publication available in "${outDir}".`);
     logReset();

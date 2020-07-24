@@ -81,7 +81,7 @@ export interface WatchPiralParameters extends BaseBundleParameters {
 export interface BuildPiralParameters extends BaseBundleParameters {
   piral: string;
   scopeHoist: boolean;
-  develop: boolean;
+  emulator: boolean;
   sourceMaps: boolean;
   contentHash: boolean;
   detailedReport: boolean;
@@ -137,7 +137,7 @@ export type PiletSchemaVersion = 'none' | 'v0' | 'v1';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
-export type PiralBuildType = 'all' | 'release' | 'develop';
+export type PiralBuildType = 'all' | 'release' | 'emulator';
 
 export type TemplateType = 'default' | 'empty' | 'other';
 
