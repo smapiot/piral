@@ -20,7 +20,7 @@
     "build:page": "piral build src/pages/www/src/index.html --target dist/www/index.html --type release",
     "watch:page": "piral debug src/pages/www/src/index.html",
     "watch:siteless": "piral debug src/framework/siteless/src/index.html",
-    "build:siteless": "piral build src/framework/siteless/src/index.html --target dist/siteless/index.html --type release && cp dist/siteless/release/*.js src/framework/siteless/siteless.min.js && piral build src/framework/siteless/src/index.html --target dist/siteless/index.html --type develop",
+    "build:siteless": "piral build src/framework/siteless/src/index.html --target dist/siteless/index.html --type release && cp dist/siteless/release/*.js src/framework/siteless/siteless.min.js && piral build src/framework/siteless/src/index.html --target dist/siteless/index.html --type emulator",
     "watch:demo-cross": "piral debug src/samples/sample-cross-fx/src/index.html",
     "build:demo-cross": "piral build src/samples/sample-cross-fx/src/index.html --target dist/demo-cross/index.html",
     "watch:demo-core": "piral debug src/samples/sample-piral-core/src/index.html",
