@@ -10,7 +10,7 @@ function requestEmbeddedPilets(): Promise<Array<PiletMetadata>> {
 
 /**
  * Changes the configuration to accommodate for server-side-rendering.
- * In a nutshell, just changes the requestPilets to use the embedded
+ * This is achieved by telling the requestPilets method to use the embedded
  * pilets (or nothing).
  * @param config The existing configuration to augment, if anything.
  */
