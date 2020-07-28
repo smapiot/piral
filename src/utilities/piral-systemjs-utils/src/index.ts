@@ -3,7 +3,7 @@ import { PiletMetadata, extendSharedDependencies, AvailableDependencies } from '
 import { getImportMaps, convertToMetadata, appendImportMaps } from './utils';
 
 /**
- * A function to feed the existing shared dependencies into SystemJS
+ * Feeds the existing shared dependencies into SystemJS
  * for further use in the SystemJS powered pilets.
  * @param additionalDependencies More dependencies to register, if any.
  */
@@ -22,9 +22,9 @@ export function registerSharedDependencies(additionalDependencies: AvailableDepe
 }
 
 /**
- * A function to resolve a pilet from the given metadata using
- * SystemJS. The pilet must have been derived from the import maps.
- * @param meta The pilets metadata.
+ * Resolves a pilet from the given metadata using SystemJS.
+ * The pilet must have been derived from the import maps.
+ * @param meta The pilet's metadata.
  */
 export function loadPilet(meta: PiletMetadata): Promise<Pilet> {
   return System.import(meta.name)
@@ -46,9 +46,8 @@ export function loadPilet(meta: PiletMetadata): Promise<Pilet> {
 }
 
 /**
- * A function to resolve the pilets from specified the import maps.
+ * Resolves the pilets from the specified import maps.
  * Note that here all modules from the import maps are considered pilets.
- * Apply a filter if that is not desired.
  */
 export function requestPilets(): Promise<Array<PiletMetadata>> {
   return (System as any)

@@ -15,7 +15,7 @@ export interface PiralRenderBaseOptions {
    */
   layout?: Partial<ComponentsState>;
   /**
-   * Defines how the errors looks like.
+   * Defines how the errors look like.
    */
   errors?: Partial<ErrorComponentsState>;
 }

@@ -24,10 +24,10 @@ export interface PiralSsrExternalScript {
 export interface PiralSsrOptions {
   /**
    * Gets a pilet by its URL. Either via a request, or from some cache.
-   * If omitted only the metadata will be included. Pilets will still
-   * need to be retrieved remotely.
+   * If omitted, only the metadata will be included. Pilets will still be
+   * retrieved remotely.
    * @param url The URL of the pilet.
-   * @returns If false is returned the pilet will still be retrieved remotely.
+   * @returns If false is returned, the pilet will still be retrieved remotely.
    */
   getPilet?(url: string): MaybeAsync<string | false>;
   /**
