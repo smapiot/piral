@@ -4,6 +4,7 @@
 
 * Documentation cleanup
 * Renamed `extendApi` to `plugins` (keeping `extendApi` as deprecated)
+* Fixed hidden publishing pilet size limit and improved logging of axios errors (#294)
 
 ## 0.11.8 (July 9, 2020)
 

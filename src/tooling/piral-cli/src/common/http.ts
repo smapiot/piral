@@ -67,6 +67,7 @@ export function postFile(target: string, key: string, file: Buffer, ca?: Buffer)
         'user-agent': `piral-cli/http.node-${os}`,
       },
       httpsAgent,
+      maxContentLength: Infinity
     })
     .then(
       res => res.data || true,
@@ -77,6 +78,14 @@ export function postFile(target: string, key: string, file: Buffer, ca?: Buffer)
           const { data, statusText, status } = error.response;
           const message = getMessage(data);
           log('unsuccessfulHttpPost_0066', statusText, status, message || '');
+        } else if (error.isAxiosError) {
+          // axios initiated error: try to parse message from error object
+          let errorMessage: string = error.errno || 'Unknown Axios Error';
+          if (typeof error.toJSON === 'function') {
+            const errorObj: { message?: string } = error.toJSON();
+            errorMessage = errorObj?.message ?? errorMessage;
+          }
+          log('failedHttpPost_0065', errorMessage);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
