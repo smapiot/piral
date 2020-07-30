@@ -14,7 +14,7 @@ import { GlobalState, PiralDefineActions } from './state';
 export { PiletLoadingStrategy, PiletDependencyFetcher, PiletDependencyGetter, PiletRequester, AvailableDependencies };
 
 /**
- * The configuration for loading and using pilets.
+ * The configuration for loading the pilets of the Piral instance.
  */
 export interface PiralPiletConfiguration {
   /**
@@ -57,7 +57,7 @@ export interface PiralPiletConfiguration {
 }
 
 /**
- * The configuration for the global state container and its actions.
+ * The initial configuration of Piral's state container.
  */
 export interface PiralStateConfiguration {
   /**

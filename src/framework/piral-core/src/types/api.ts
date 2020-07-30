@@ -8,6 +8,9 @@ import { SharedData, DataStoreOptions } from './data';
 
 export { PiletApi, Pilet, PiletMetadata, EventEmitter };
 
+/**
+ * The props that every registered component obtains.
+ */
 export interface BaseComponentProps {
   /**
    * The currently used pilet API.
@@ -15,6 +18,9 @@ export interface BaseComponentProps {
   piral: PiletApi;
 }
 
+/**
+ * The props of an extension component.
+ */
 export interface ExtensionComponentProps<T> extends BaseComponentProps {
   /**
    * The provided parameters for showing the extension.
@@ -22,12 +28,21 @@ export interface ExtensionComponentProps<T> extends BaseComponentProps {
   params: T extends keyof PiralExtensionSlotMap ? PiralExtensionSlotMap[T] : T extends string ? any : T;
 }
 
+/**
+ * The props that every registered page component obtains.
+ */
 export interface RouteBaseProps<UrlParams = any, UrlState = any>
   extends RouteComponentProps<UrlParams, {}, UrlState>,
     BaseComponentProps {}
 
+/**
+ * The props used by a page component.
+ */
 export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
 
+/**
+ * The meta data registered for a page.
+ */
 export interface PiralPageMeta extends PiralCustomPageMeta {}
 
 /**
@@ -102,6 +117,12 @@ declare module 'piral-base/lib/types' {
   interface PiletApi extends PiletCustomApi, PiletCoreApi {}
 }
 
+/**
+ * Represents the dictionary of the loaded pilets and their APIs.
+ */
 export interface PiletsBag {
+  /**
+   * Gets the API of the respective pilet name.
+   */
   [name: string]: PiletApi;
 }
