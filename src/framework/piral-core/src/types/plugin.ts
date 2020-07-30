@@ -2,6 +2,9 @@ import { PiletApi } from './api';
 import { GlobalStateContext } from './state';
 import { PiletMetadata } from '../types';
 
+/**
+ * Defines the interface for extending an API.
+ */
 export interface ApiExtender<T> {
   /**
    * Extends the base API of a module with new functionality.
@@ -12,6 +15,9 @@ export interface ApiExtender<T> {
   (api: PiletApi, target: PiletMetadata): T;
 }
 
+/**
+ * Defines the interface for a Piral plugin.
+ */
 export interface Extend<T = Partial<PiletApi>> {
   /**
    * Extends the base API with a custom set of functionality to be used by modules.

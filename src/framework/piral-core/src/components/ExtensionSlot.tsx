@@ -4,6 +4,11 @@ import { useGlobalState } from '../hooks';
 import { defaultRender } from '../utils';
 import { ExtensionSlotProps } from '../types';
 
+/**
+ * The extension slot component to be used when the available
+ * extensions of a given name should be rendered at a specific
+ * location.
+ */
 export function ExtensionSlot<T extends string>({
   name,
   render = defaultRender,

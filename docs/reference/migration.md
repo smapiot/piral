@@ -8,7 +8,8 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 ### Breaking Changes in 1.0
 
-None so far.
+1. The `--type` flag of the Piral CLI changed values. `develop` has been renamed to `emulator`.
+2. The output of the emulator is no longer in the `[out]/develop` directory, but in `[out]/emulator`, where `[out]` refers to the output directory (usually *dist*).
 
 ### Deprecations
 
