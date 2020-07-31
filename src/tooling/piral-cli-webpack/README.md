@@ -33,6 +33,7 @@ Right now it includes:
 - `ts-loader`,
 - `html-webpack-plugin`,
 - `mini-css-extract-plugin`,
+- `optimize-css-assets-webpack-plugin`,
 - `terser-webpack-plugin`,
 - `webpack`, and
 - `webpack-dev-server`.

@@ -7568,9 +7568,9 @@ html-webpack-plugin@^4.2.0:
     tapable "^1.1.3"
     util.promisify "1.0.0"
 
-html5-entry-webpack-plugin@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.1.tgz#9c1c7a7bfb06b66dd88740488aaa3468cae62103"
+html5-entry-webpack-plugin@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.2.tgz#d3e8b604f112e5b419bff62ce1ed6a126b69730b"
   dependencies:
     cheerio "^1.0.0-rc.3"
     html-webpack-plugin "^4.2.0"
@@ -8884,6 +8884,13 @@ kras@^0.11.1:
   dependencies:
     yargs "^15.3.1"
 
+last-call-webpack-plugin@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/last-call-webpack-plugin/-/last-call-webpack-plugin-3.0.0.tgz#9742df0e10e3cf46e5c0381c2de90d3a7a2d7555"
+  dependencies:
+    lodash "^4.17.5"
+    webpack-sources "^1.1.0"
+
 lerna@^3.10.7:
   version "3.20.2"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.20.2.tgz#abf84e73055fe84ee21b46e64baf37b496c24864"
@@ -9098,7 +9105,7 @@ lodash.uniq@^4.2.0, lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.10:
+lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.10:
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
 
@@ -10431,6 +10438,13 @@ optimist@^0.6.1:
     minimist "~0.0.1"
     wordwrap "~0.0.2"
 
+optimize-css-assets-webpack-plugin@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/optimize-css-assets-webpack-plugin/-/optimize-css-assets-webpack-plugin-5.0.3.tgz#e2f1d4d94ad8c0af8967ebd7cf138dcb1ef14572"
+  dependencies:
+    cssnano "^4.1.10"
+    last-call-webpack-plugin "^3.0.0"
+
 optionator@^0.8.1:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/optionator/-/optionator-0.8.3.tgz#84fa1d036fe9d3c7e21d99884b601167ec8fb495"
@@ -10673,9 +10687,9 @@ parcel-bundler@^1.12.4:
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
 
-parcel-codegen-loader@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.1.tgz#c3230d71bef5cd639d1d24347000e771e8182201"
+parcel-codegen-loader@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.2.tgz#7b16a81597bccde52739cb5fedb5e37a9aa4c623"
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
@@ -10887,9 +10901,9 @@ pify@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
 
-pilet-webpack-plugin@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.1.tgz#10a4540f87822643967a18507776f48be4c86a7e"
+pilet-webpack-plugin@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.2.tgz#0285b14a85451ce70112a8f49a13cc6afe312b52"
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -10901,9 +10915,9 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
-piral-instance-webpack-plugin@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.1.tgz#6b65aa052f7a0dfcfdafe1ae22ea287c75f35913"
+piral-instance-webpack-plugin@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.2.tgz#40ad827bb93dd7ebd3228beacf8ab61ca7b39b45"
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"

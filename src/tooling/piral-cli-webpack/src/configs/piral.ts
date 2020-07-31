@@ -1,5 +1,6 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
+import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { Html5EntryWebpackPlugin } from 'html5-entry-webpack-plugin';
 import { PiralInstanceWebpackPlugin } from 'piral-instance-webpack-plugin';
 import { getRules, getPlugins, extensions, getVariables, getHmrEntry } from './common';
@@ -55,6 +56,7 @@ export async function getPiralConfig(
             ie8: true,
           },
         }),
+        new OptimizeCSSAssetsPlugin({}),
       ],
     },
 

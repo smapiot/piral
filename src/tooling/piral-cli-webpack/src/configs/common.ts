@@ -1,24 +1,13 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
 import { progress, logReset, log } from 'piral-cli/utils';
-import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize, Compiler, Plugin } from 'webpack';
+import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize, Plugin } from 'webpack';
 
 export const extensions = ['.ts', '.tsx', '.js', '.json'];
 
 export function getVariables(): Record<string, string> {
-  return [
-    'NODE_ENV',
-    'BUILD_TIME',
-    'BUILD_TIME_FULL',
-    'BUILD_PCKG_VERSION',
-    'BUILD_PCKG_NAME',
-    'SHARED_DEPENDENCIES',
-    'DEBUG_PIRAL',
-    'DEBUG_PILET',
-  ].reduce((prev, curr) => {
-    if (curr in process.env) {
-      prev[curr] = process.env[curr];
-    }
+  return Object.keys(process.env).reduce((prev, curr) => {
+    prev[curr] = process.env[curr];
     return prev;
   }, {});
 }
@@ -28,13 +17,13 @@ export function getHmrEntry(hmrPort: number) {
 }
 
 class HotModuleServerPlugin implements Plugin {
-  constructor(private hmrPort: number) {}
+  constructor(private hmrPort: number) { }
 
   apply(compiler) {
     const express = require('express');
     const app = express();
     app.use(require('webpack-hot-middleware')(compiler));
-    app.listen(this.hmrPort, () => {});
+    app.listen(this.hmrPort, () => { });
   }
 }
 

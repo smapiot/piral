@@ -13,4 +13,5 @@ function computePath() {
 
 declare let __webpack_public_path__: string;
 
-__webpack_public_path__ = computePath();
+const __bundleUrl__ = computePath();
+__webpack_public_path__ = __bundleUrl__;
