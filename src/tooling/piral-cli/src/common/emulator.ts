@@ -1,7 +1,8 @@
 import { join, resolve, relative } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from './package';
 import { createFileFromTemplateIfNotExists } from './template';
-import { coreExternals, cliVersion, filesTar, filesOnceTar } from './info';
+import { coreExternals, filesTar, filesOnceTar } from './constants';
+import { cliVersion } from './info';
 import { createPackage } from './npm';
 import { createDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';

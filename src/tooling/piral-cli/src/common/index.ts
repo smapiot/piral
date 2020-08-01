@@ -2,6 +2,7 @@ export * from './archive';
 export * from './browser';
 export * from './compatibility';
 export * from './config';
+export * from './constants';
 export * from './declaration';
 export * from './emulator';
 export * from './enums';

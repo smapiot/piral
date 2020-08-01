@@ -1,7 +1,7 @@
 import { generateDeclaration } from 'dets';
 import { dirname, basename, resolve } from 'path';
 import { progress, log } from './log';
-import { coreExternals } from './info';
+import { coreExternals } from './constants';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';

@@ -1,9 +1,10 @@
 import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
+import { cliVersion } from './info';
 import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
-import { cliVersion, coreExternals, filesTar, filesOnceTar } from './info';
 import { checkAppShellCompatibility } from './compatibility';
+import { coreExternals, filesTar, filesOnceTar } from './constants';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { PiletLanguage, ForceOverwrite } from './enums';

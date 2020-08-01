@@ -17,19 +17,4 @@ export const cliVersion = info.version;
 export const compatVersion = findCompatVersion(cliVersion);
 export const repositoryUrl = info.repository.url;
 export const isWindows = process.platform === 'win32';
-export const defaultCacheDir = '.cache';
 export const pathSeparator = isWindows ? ';' : ':';
-export const defaultRegistry = 'https://registry.npmjs.org/';
-export const filesTar = 'files';
-export const filesOnceTar = 'files_once';
-export const coreExternals = [
-  '@dbeining/react-atom',
-  '@libre/atom',
-  'history',
-  'react',
-  'react-dom',
-  'react-router',
-  'react-router-dom',
-  'tslib',
-  'path-to-regexp',
-];
