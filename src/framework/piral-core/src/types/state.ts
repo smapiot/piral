@@ -36,15 +36,24 @@ declare module './components' {
 
 export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
 
+/**
+ * The base type of registration how the pilet is registered in the global state context.
+ */
 export interface BaseRegistration {
   pilet: string;
 }
 
+/**
+ * A type of registration how the pilet is registered in the global state context.
+ */
 export interface PageRegistration extends BaseRegistration {
   component: WrappedComponent<PageComponentProps>;
   meta: PiralPageMeta;
 }
 
+/**
+ * A type of registration how the pilet is registered in the global state context if the pilet is created with an extension.
+ */
 export interface ExtensionRegistration extends BaseRegistration {
   component: WrappedComponent<ExtensionComponentProps<string>>;
   reference: any;

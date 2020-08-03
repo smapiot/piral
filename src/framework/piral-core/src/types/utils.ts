@@ -1,6 +1,8 @@
-import { PiralEventMap } from 'piral-base';
 import { PiralCustomEventMap } from './custom';
 
+/**
+ * A key value store that can be abstracted onto a storage solution (e.g. cookie).
+ */
 export interface PiralStorage {
   /**
    * Sets the value of an item.
@@ -21,6 +23,10 @@ export interface PiralStorage {
   removeItem(name: string): void;
 }
 
+/**
+ * Can be implemented by objects that allocate huge resources. The interface provides
+ * logic that enables the object to disposes these resources.
+ */
 export interface Disposable {
   /**
    * Disposes the created resource.
@@ -28,6 +34,9 @@ export interface Disposable {
   (): void;
 }
 
+/**
+ * Gets fired when a data item gets stored in piral.
+ */
 export interface PiralStoreDataEvent<TValue = any> {
   /**
    * The name of the item that was stored.
@@ -51,6 +60,9 @@ export interface PiralStoreDataEvent<TValue = any> {
   expires: number;
 }
 
+/**
+ * Gets fired when a pilet gets unloaded.
+ */
 export interface PiralUnloadPiletEvent {
   /**
    * The name of the pilet to be unloaded.
