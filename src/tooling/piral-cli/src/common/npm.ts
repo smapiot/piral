@@ -3,6 +3,7 @@ import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
 import { inspectPackage } from './inspect';
+import { coreExternals } from './constants';
 import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
@@ -371,4 +372,27 @@ export function getPackageVersion(
     case 'git':
       return getGitPackageVersion(sourceName);
   }
+}
+
+export function makeExternals(externals?: Array<string>) {
+  if (externals && Array.isArray(externals)) {
+    const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(
+      (prev, curr) => {
+        if (typeof curr === 'string') {
+          if (curr.startsWith('!')) {
+            prev[1].push(curr.substr(1));
+          } else {
+            prev[0].push(curr);
+          }
+        }
+
+        return prev;
+      },
+      [[], []],
+    );
+    const all = exclude.includes('*') ? include : [...include, ...coreExternals];
+    return all.filter((m, i, arr) => !exclude.includes(m) && arr.indexOf(m) === i);
+  }
+
+  return coreExternals;
 }

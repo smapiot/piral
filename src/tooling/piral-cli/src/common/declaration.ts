@@ -1,7 +1,7 @@
 import { generateDeclaration } from 'dets';
 import { dirname, basename, resolve } from 'path';
 import { progress, log } from './log';
-import { coreExternals } from './constants';
+import { makeExternals } from './npm';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
@@ -53,7 +53,7 @@ export async function createDeclaration(
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, externals } = await retrievePiletsInfo(entryFiles);
-  const allowedImports = [...externals, ...coreExternals];
+  const allowedImports = makeExternals(externals);
   const appFile = await readText(dirname(entryFiles), basename(entryFiles));
   const entryModules = await getEntryFiles(appFile, dirname(entryFiles));
   const files = await getAllFiles(entryModules);

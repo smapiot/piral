@@ -3,13 +3,13 @@ import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
+import { PiletLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
-import { coreExternals, filesTar, filesOnceTar } from './constants';
+import { filesTar, filesOnceTar } from './constants';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { PiletLanguage, ForceOverwrite } from './enums';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makeExternals } from './npm';
 
 function getDependencyVersion(
   name: string,
@@ -398,7 +398,7 @@ export async function patchPiletPackage(
     ...piralInfo.dependencies,
   };
   const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
-  const allExternals = [...externals, ...coreExternals];
+  const allExternals = makeExternals(externals);
   const scripts = newInfo
     ? {
         start: 'pilet debug',

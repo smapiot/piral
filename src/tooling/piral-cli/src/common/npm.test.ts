@@ -1,5 +1,3 @@
-import * as cp from 'child_process';
-import { Stream } from 'stream';
 import { resolve } from 'path';
 import {
   dissectPackageName,
@@ -26,8 +24,8 @@ import {
   getGitPackageVersion,
   getPackageVersion,
   isGitPackage,
+  makeExternals,
 } from './npm';
-import { error } from 'console';
 
 jest.mock('child_process');
 
@@ -360,12 +358,12 @@ describe('NPM Module', () => {
   });
 
   it('gets path to file package', () => {
-    let result = getFilePackageVersion('./test/foo.tgz', './');
+    const result = getFilePackageVersion('./test/foo.tgz', './');
     expect(result).toEqual('file:test/foo.tgz');
   });
 
   it('gets path to git package', () => {
-    let result = getGitPackageVersion('git+https://.foo.git');
+    const result = getGitPackageVersion('git+https://.foo.git');
     expect(result).toEqual('git+https://.foo.git');
   });
 
@@ -381,18 +379,106 @@ describe('NPM Module', () => {
   });
 
   it('gets path to git package', () => {
-    let result = getCurrentPackageDetails('./', './foo.tgz', null, 'file://foo.tgz', './');
+    const result = getCurrentPackageDetails('./', './foo.tgz', null, 'file://foo.tgz', './');
     result.then(([path, version]) => {
       expect(path).not.toBeUndefined();
     });
-    let result2 = getCurrentPackageDetails('./', './foo.tgz', null, 'git+https://.foo.git', './');
+    const result2 = getCurrentPackageDetails('./', './foo.tgz', null, 'git+https://.foo.git', './');
     result2.then(([path, version]) => {
       expect(path).not.toBeUndefined();
     });
-    let result3 = getCurrentPackageDetails('./', './foo.tgz', '1.0.0', 'latest', './');
+    const result3 = getCurrentPackageDetails('./', './foo.tgz', '1.0.0', 'latest', './');
     result3.then(([path, version]) => {
       expect(path).toEqual('./foo.tgz@latest');
       expect(version).toEqual('latest');
     });
+  });
+
+  it('makeExternals without externals returns coreExternals', () => {
+    const externals = makeExternals();
+    expect(externals).toEqual([
+      '@dbeining/react-atom',
+      '@libre/atom',
+      'history',
+      'react',
+      'react-dom',
+      'react-router',
+      'react-router-dom',
+      'tslib',
+      'path-to-regexp',
+    ]);
+  });
+
+  it('makeExternals with no externals returns coreExternals', () => {
+    const externals = makeExternals([]);
+    expect(externals).toEqual([
+      '@dbeining/react-atom',
+      '@libre/atom',
+      'history',
+      'react',
+      'react-dom',
+      'react-router',
+      'react-router-dom',
+      'tslib',
+      'path-to-regexp',
+    ]);
+  });
+
+  it('makeExternals with exclude coreExternals returns empty set', () => {
+    const externals = makeExternals(['!*']);
+    expect(externals).toEqual([]);
+  });
+
+  it('makeExternals with externals concats coreExternals', () => {
+    const externals = makeExternals(['foo', 'bar']);
+    expect(externals).toEqual([
+      'foo',
+      'bar',
+      '@dbeining/react-atom',
+      '@libre/atom',
+      'history',
+      'react',
+      'react-dom',
+      'react-router',
+      'react-router-dom',
+      'tslib',
+      'path-to-regexp',
+    ]);
+  });
+
+  it('makeExternals with external duplicate only reflects coreExternals', () => {
+    const externals = makeExternals(['react', 'foo']);
+    expect(externals).toEqual([
+      'react',
+      'foo',
+      '@dbeining/react-atom',
+      '@libre/atom',
+      'history',
+      'react-dom',
+      'react-router',
+      'react-router-dom',
+      'tslib',
+      'path-to-regexp',
+    ]);
+  });
+
+  it('makeExternals with explicit include and exclude', () => {
+    const externals = makeExternals(['react', 'react-calendar', '!history']);
+    expect(externals).toEqual([
+      'react',
+      'react-calendar',
+      '@dbeining/react-atom',
+      '@libre/atom',
+      'react-dom',
+      'react-router',
+      'react-router-dom',
+      'tslib',
+      'path-to-regexp',
+    ]);
+  });
+
+  it('makeExternals with all exclude and explicit include', () => {
+    const externals = makeExternals(['react', 'react-router-dom', '!*']);
+    expect(externals).toEqual(['react', 'react-router-dom']);
   });
 });

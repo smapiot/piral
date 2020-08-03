@@ -1,9 +1,9 @@
 import { join, resolve, relative } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from './package';
 import { createFileFromTemplateIfNotExists } from './template';
-import { coreExternals, filesTar, filesOnceTar } from './constants';
+import { filesTar, filesOnceTar } from './constants';
 import { cliVersion } from './info';
-import { createPackage } from './npm';
+import { createPackage, makeExternals } from './npm';
 import { createDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
@@ -21,9 +21,8 @@ const packageJson = 'package.json';
 
 export async function createEmulatorPackage(sourceDir: string, targetDir: string, targetFile: string) {
   const piralPkg = require(resolve(sourceDir, packageJson));
-  const externals: Array<string> = piralPkg.pilets?.externals ?? [];
   const files: Array<string | TemplateFileLocation> = piralPkg.pilets?.files ?? [];
-  const allExternals = [...externals, ...coreExternals];
+  const allExternals = makeExternals(piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
     allExternals.filter(isValidDependency).map(async name => ({
