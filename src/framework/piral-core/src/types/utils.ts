@@ -25,7 +25,7 @@ export interface PiralStorage {
 
 /**
  * Can be implemented by objects that allocate huge resources. The interface provides
- * logic that enables the object to disposes these resources.
+ * the logic that enables the object to dispose these resources.
  */
 export interface Disposable {
   /**
