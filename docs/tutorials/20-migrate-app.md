@@ -142,5 +142,8 @@ But your approach could also be more radical; essentially just taking the compon
 ## Conclusion
 
 Migrating to Piral is mostly simple and straight forward. Since Piral tries to be as easy and shallow to integrate as possible you can just leverage all the React components that you already have. We have some features to tackle this challenge:
+
 - Support for multiple bundlers (Webpack, Parcel)
 - for Webpack we have plugins to be seamlessly integrated into your existing build configuration
+
+In the next tutorial, we'll look at the different bundlers and when to choose what bundler.

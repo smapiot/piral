@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+/**
+ * The currently captured Promise state.
+ */
 export interface UsePromiseResult<T> {
   loading: boolean;
   data: T;

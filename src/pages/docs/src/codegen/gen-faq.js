@@ -1,5 +1,5 @@
 const { getQuestions, getName, generated, generatedName } = require('./paths');
-const { capitalize } = require('./utils');
+const { getTitle } = require('./utils');
 const { render } = require('./markdown');
 const { generateStandardPage } = require('./pages');
 
@@ -14,7 +14,7 @@ module.exports = function() {
     const { mdValue } = render(file, generated);
     const name = getName(file);
     const route = getRoute(name);
-    const title = capitalize(name);
+    const title = getTitle(name);
     const pageMeta = {
       link: route,
       source: file,

@@ -31,6 +31,7 @@
 
 ## Talks at Conferences
 
+- [Virtual Azure Community Day 2020, 07/2020](https://youtu.be/AtUKNsdnwBc)
 - [GAB Austria 2020, 05/2020](https://youtu.be/_q4JDrIMvlA)
 - [ReactConf Europe on YouTube, 02/2020](https://youtu.be/kG7gIF16cOk)
 - [c't webdev in Cologne, 02/2020](https://ctwebdev.de/programm.html)

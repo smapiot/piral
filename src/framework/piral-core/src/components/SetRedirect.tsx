@@ -2,6 +2,9 @@ import * as React from 'react';
 import { Redirect } from 'react-router';
 import { useAction, useSetter } from '../hooks';
 
+/**
+ * The props for the SetRedirect component.
+ */
 export interface SetRedirectProps {
   /**
    * The path of the seen route.
@@ -13,6 +16,9 @@ export interface SetRedirectProps {
   to: string;
 }
 
+/**
+ * The component capable of setting a global redirect route at mounting.
+ */
 export function SetRedirect({ from, to }: SetRedirectProps): React.ReactElement {
   const setRoute = useAction('setRoute');
   useSetter(() => setRoute(from, () => <Redirect to={to} />));
