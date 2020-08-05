@@ -3,7 +3,7 @@ import { log } from './log';
 export async function openBrowser(shouldOpen: boolean, port: number) {
   if (shouldOpen) {
     try {
-      const open = require('opn');
+      const open = require('open');
       await open(`http://localhost:${port}`, undefined);
     } catch (err) {
       log('failedToOpenBrowser_0070', err);
