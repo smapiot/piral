@@ -8,5 +8,6 @@ import rc = require('rc');
 import axios = require('axios');
 import mime = require('mime');
 import getPort = require('get-port');
+import open = require('open');
 
-export { logger, inquirer, glob, tar, FormData, rc, axios, mime, stripAnsi, getPort };
+export { logger, inquirer, glob, tar, FormData, rc, axios, mime, stripAnsi, getPort, open };
