@@ -8,6 +8,7 @@
 * Fixed hidden publishing pilet size limit and improved logging of axios errors (#294)
 * Fixed Webpack issue in pilets referencing stylesheets (#304)
 * Added `open` package dependency to ensure no errors when using `--open` CLI flag (#303)
+* Added more standard fields such as `description` to the emulator package
 
 ## 0.11.8 (July 9, 2020)
 
