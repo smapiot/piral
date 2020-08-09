@@ -3,9 +3,11 @@
 ## 1.0.0 (tbd)
 
 * Documentation cleanup
+* Allow upload of arbitrary pilet sizes in `pilet publish` (#294)
 * Renamed `extendApi` to `plugins` (keeping `extendApi` as deprecated)
 * Fixed hidden publishing pilet size limit and improved logging of axios errors (#294)
-* Added `open` package dependency to ensure no errors when using `--open` cli flag
+* Fixed Webpack issue in pilets referencing stylesheets (#304)
+* Added `open` package dependency to ensure no errors when using `--open` CLI flag (#303)
 
 ## 0.11.8 (July 9, 2020)
 

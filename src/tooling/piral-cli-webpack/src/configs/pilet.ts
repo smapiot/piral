@@ -46,7 +46,7 @@ export async function getPiletConfig(
     },
 
     module: {
-      rules: getRules(baseDir),
+      rules: getRules(baseDir, production, true),
     },
 
     optimization: {
