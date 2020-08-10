@@ -1,3 +1,4 @@
+import { PiralEventMap } from 'piral-base';
 import { PiralCustomEventMap } from './custom';
 
 /**
@@ -24,8 +25,7 @@ export interface PiralStorage {
 }
 
 /**
- * Can be implemented by objects that allocate huge resources. The interface provides
- * the logic that enables the object to dispose these resources.
+ * Can be implemented by functions to be used for disposal purposes.
  */
 export interface Disposable {
   /**
