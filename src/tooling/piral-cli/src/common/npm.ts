@@ -42,7 +42,7 @@ export function detectYarn(root: string) {
 
 export async function getLernaConfigPath(root: string) {
   log('generalDebug_0003', 'Trying to get the configuration file for Lerna ...');
-  const file = findFile(root, 'lerna.json');
+  const file = await findFile(root, 'lerna.json');
 
   if (file) {
     log('generalDebug_0003', `Found Lerna config in "${file}".`);
@@ -112,7 +112,7 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
 export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
   const c = require(`./clients/npm`);
   const details = await c.listPackage(refName, root);
-  return details?.dependencies[refName]?.extraneous ?? false;
+  return details?.dependencies?.[refName]?.extraneous ?? false;
 }
 
 export async function detectMonorepo(root: string) {
