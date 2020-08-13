@@ -52,7 +52,7 @@ export interface PageRegistration extends BaseRegistration {
 }
 
 /**
- * The interface modelling the registration of a pilet extension component.
+ * The interface modeling the registration of a pilet extension component.
  */
 export interface ExtensionRegistration extends BaseRegistration {
   component: WrappedComponent<ExtensionComponentProps<string>>;
