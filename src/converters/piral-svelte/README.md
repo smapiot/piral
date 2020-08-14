@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-svelte` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Svelte converter for any component registration, as well as a `fromSvelte` shortcut together with a `svelte-extension` web component.
+The set includes a Svelte converter for any component registration, as well as a `fromSvelte` shortcut together with a `svelte-extension` web component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 

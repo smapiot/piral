@@ -47,6 +47,7 @@ export interface PiralPageMeta extends PiralCustomPageMeta {}
 
 /**
  * Defines the Pilet API from piral-core.
+ * This interface will be consumed by pilet developers so that their pilet can interact with the piral instance.
  */
 export interface PiletCoreApi {
   /**
