@@ -37,28 +37,42 @@ export default class PiralInjector implements KrasInjector {
 
   setOptions() {}
 
-  sendResponse(path: string, target: string, dir: string, url: string, recursionDepth = 0): KrasResponse {
+  sendResponse(
+    path: string,
+    target: string,
+    publicFile: string,
+    dir: string,
+    url: string,
+    recursionDepth = 0,
+  ): KrasResponse {
     if (recursionDepth > maxRetrySendResponse) {
       return undefined;
     }
+    let filePath = '';
+    if (existsSync(target) && statSync(target).isFile()) {
+      filePath = target;
+    }
+    if (existsSync(publicFile) && statSync(publicFile).isFile()) {
+      filePath = publicFile;
+    }
 
-    if (!path || !existsSync(target) || !statSync(target).isFile()) {
+    if (!path || !filePath) {
       const { bundler } = this.config;
       const newTarget = join(bundler.bundle.dir, bundler.bundle.name);
-      return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
+      return this.sendResponse(bundler.bundle.name, newTarget, publicFile, dir, url, recursionDepth + 1);
     }
 
     return {
       injector: { name: this.name },
       headers: {
-        'content-type': mime.getType(target),
+        'content-type': mime.getType(filePath),
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',
         expires: '0',
       },
       status: { code: 200 },
       url,
-      content: readFileSync(target),
+      content: readFileSync(filePath),
     };
   }
 
@@ -67,8 +81,10 @@ export default class PiralInjector implements KrasInjector {
       const { bundler } = this.config;
       const path = req.url.substr(1);
       const dir = bundler.bundle.dir;
+      const root = bundler.bundle.root;
       const target = join(dir, path.split('?')[0]);
-      return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
+      const publicFile = join(root, 'public', path.split('?')[0]);
+      return bundler.ready().then(() => this.sendResponse(path, target, publicFile, dir, req.url));
     }
   }
 }

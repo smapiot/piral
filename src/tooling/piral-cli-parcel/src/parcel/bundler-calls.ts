@@ -12,7 +12,8 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
   let promise = Promise.resolve();
   const listeners: Array<BundleListener> = [];
   const bundle: BundleDetails = {
-    dir: cwd,
+    root: cwd,
+    dir: '',
     hash: '',
     name: '',
   };

@@ -127,9 +127,13 @@ export default class PiletInjector implements KrasInjector {
 
       return bundler?.ready().then(() => {
         const target = join(bundler.bundle.dir, rest.join('/'));
+        const publicDirectory = join(bundler.bundle.root, 'public', rest.join('/'));
 
         if (existsSync(target) && statSync(target).isFile()) {
           return this.sendFile(target, url);
+        }
+        if (existsSync(publicDirectory) && statSync(publicDirectory).isFile()) {
+          return this.sendFile(publicDirectory, url);
         }
       });
     }
@@ -137,7 +141,7 @@ export default class PiletInjector implements KrasInjector {
 
   sendIndexFile(target: string, url: string): KrasResponse {
     const indexHtml = readFileSync(target, 'utf8');
-    
+
     // mechanism to inject server side debug piletApi config into piral emulator
     const windowInjectionScript = `window['dbg:pilet-api'] = '${this.piletApi}';`;
     const findStr = `<script`;

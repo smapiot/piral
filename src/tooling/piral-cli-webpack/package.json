@@ -41,6 +41,7 @@
     "@types/terser-webpack-plugin": "^2.2.0",
     "@types/webpack": "^4.41.7",
     "@types/yargs": "^15.0.4",
+    "@types/webpack-env": "^1.15.2",
     "piral-cli": "^0.11.8",
     "typescript": "^3.8.3"
   },
@@ -49,6 +50,7 @@
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "8.1.0",
+    "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^3.4.2",
     "express": "^4.17.1",
     "file-loader": "^5.1.0",

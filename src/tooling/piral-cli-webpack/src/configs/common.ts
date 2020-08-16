@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
 import { HotModuleServerPlugin } from './HotModuleServerPlugin';
+import * as CopyPlugin from 'copy-webpack-plugin';
 
 function getStyleLoaders(production: boolean, pilet: boolean) {
   if (production && pilet) {
@@ -33,6 +34,9 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
+    }),
+    new CopyPlugin({
+      patterns: [{ from: 'public', to: './' }],
     }),
   ];
 

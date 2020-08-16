@@ -28,6 +28,7 @@ export enum LogLevels {
 }
 
 export interface BundleDetails {
+  root: string;
   dir: string;
   name: string;
   hash: string;
