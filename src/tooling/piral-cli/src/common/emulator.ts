@@ -54,7 +54,11 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   // patch the JSON relevant for th eproject
   await updateExistingJson(rootDir, packageJson, {
     name: piralPkg.name,
+    description: piralPkg.description,
     version: piralPkg.version,
+    license: piralPkg.license,
+    homepage: piralPkg.homepage,
+    keywords: piralPkg.keywords,
     pilets: {
       ...piralPkg.pilets,
       files: filesMap,
@@ -72,6 +76,13 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
       ...piralPkg.dependencies,
       ...externalDependencies,
     },
+    repository: piralPkg.repository,
+    bugs: piralPkg.bugs,
+    author: piralPkg.author,
+    contributors: piralPkg.contributors,
+    engines: piralPkg.engines,
+    cpu: piralPkg.cpu,
+    publishConfig: piralPkg.publishConfig,
   });
 
   await Promise.all([createDirectory(filesDir), createDirectory(filesOnceDir)]);

@@ -33,7 +33,7 @@ async function run(
     externals,
     piral,
     version,
-    true,
+    false,
     sourceMaps,
     contentHash,
     minify,

@@ -10,7 +10,7 @@ An example app based on `piral-core`.
 
 ## Description
 
-The sample shows the essential use of piral-core with a very simple layout and a variety of (integrated) pilets that use most of the core pilet API functions. Additionally, some  of the available (opt-in) plugins are shown, such as piral-ng (Angular API) and piral-vue (Vue API).
+The sample shows the essential use of piral-core with a very simple layout and a variety of (integrated) pilets that use most of the core pilet API functions. Additionally, some of the available (opt-in) plugins are shown, such as piral-ng (Angular API) and piral-vue (Vue API).
 
 ![Cross Framework Demo](../diagrams/demo-cross.png)
 
@@ -20,5 +20,5 @@ To show interaction between different frameworks extensions are used. Some links
 
 ## Links
 
-- [Demo Online](https://mife-demo.florian-rappl.de)
-- [Code on GitHub](https://github.com/FlorianRappl/piral-microfrontend-demo)
+- [Demo Online](https://demo-cross.piral.io)
+- [Code on GitHub](https://github.com/smapiot/piral/tree/master/src/samples/sample-cross-fx)

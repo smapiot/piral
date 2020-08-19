@@ -1,7 +1,18 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
 import { progress, logReset, log } from 'piral-cli/utils';
-import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize, Plugin } from 'webpack';
+import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
+import { HotModuleServerPlugin } from './HotModuleServerPlugin';
+
+function getStyleLoaders(production: boolean, pilet: boolean) {
+  if (production && pilet) {
+    return [require.resolve('./SheetLoader'), MiniCssExtractPlugin.loader];
+  } else if (production) {
+    return [MiniCssExtractPlugin.loader];
+  } else {
+    return ['style-loader'];
+  }
+}
 
 export const extensions = ['.ts', '.tsx', '.js', '.json'];
 
@@ -16,16 +27,6 @@ export function getHmrEntry(hmrPort: number) {
   return hmrPort ? [`webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`] : [];
 }
 
-class HotModuleServerPlugin implements Plugin {
-  constructor(private hmrPort: number) { }
-
-  apply(compiler) {
-    const express = require('express');
-    const app = express();
-    app.use(require('webpack-hot-middleware')(compiler));
-    app.listen(this.hmrPort, () => { });
-  }
-}
 
 export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, hmrPort?: number) {
   const otherPlugins = [
@@ -62,12 +63,8 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
   return plugins.concat(otherPlugins);
 }
 
-export function getStyleLoader() {
-  return process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader;
-}
-
-export function getRules(baseDir: string): Array<RuleSetRule> {
-  const styleLoader = getStyleLoader();
+export function getRules(baseDir: string, production: boolean, pilet: boolean): Array<RuleSetRule> {
+  const styleLoaders = getStyleLoaders(production, pilet);
   const nodeModules = resolve(baseDir, 'node_modules');
 
   return [
@@ -84,11 +81,11 @@ export function getRules(baseDir: string): Array<RuleSetRule> {
     },
     {
       test: /\.s[ac]ss$/i,
-      use: [styleLoader, 'css-loader', 'sass-loader'],
+      use: [...styleLoaders, 'css-loader', 'sass-loader'],
     },
     {
       test: /\.css$/i,
-      use: [styleLoader, 'css-loader'],
+      use: [...styleLoaders, 'css-loader'],
     },
     {
       test: /\.m?jsx?$/i,

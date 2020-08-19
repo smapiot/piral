@@ -43,7 +43,7 @@ export async function getPiralConfig(
     },
 
     module: {
-      rules: getRules(baseDir),
+      rules: getRules(baseDir, production, false),
     },
 
     optimization: {

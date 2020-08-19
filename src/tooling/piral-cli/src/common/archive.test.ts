@@ -33,14 +33,17 @@ interface ExtractOptions {
   keep: boolean;
 }
 
-jest.mock('path', () => ({
-  relative: (from: string, to: string) => {
-    return to;
-  },
-  resolve: (...pathSegments: string[]) => {
-    return pathSegments[1];
-  },
-}));
+jest.mock('path', () =>
+  // extend the auto mock of path
+  Object.assign(jest.genMockFromModule('path'), {
+    relative: (from: string, to: string) => {
+      return to;
+    },
+    resolve: (...pathSegments: string[]) => {
+      return pathSegments[1];
+    },
+  }),
+);
 
 const fileNotFoundError = 'File not found!';
 jest.mock('tar', () => ({

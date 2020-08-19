@@ -30,7 +30,7 @@ async function run(
     version,
     true,
     true,
-    false,
+    true,
     false,
   );
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
