@@ -1,3 +1,9 @@
+test
+test
+test
+
+
+
 [![Piral Logo](docs/assets/logo.png)](https://piral.io)
 
 # [Piral](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![Lerna](https://img.shields.io/badge/monorepo-lerna-cc00ff.svg)](https://lernajs.io/) [![Build Status](https://smapiot.visualstudio.com/piral/_apis/build/status/piral-CI?branchName=develop)](https://smapiot.visualstudio.com/piral/_build/latest?definitionId=10) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
