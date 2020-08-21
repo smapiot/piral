@@ -27,7 +27,6 @@ export function getHmrEntry(hmrPort: number) {
   return hmrPort ? [`webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`] : [];
 }
 
-
 export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, hmrPort?: number) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
@@ -66,18 +65,29 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
 export function getRules(baseDir: string, production: boolean, pilet: boolean): Array<RuleSetRule> {
   const styleLoaders = getStyleLoaders(production, pilet);
   const nodeModules = resolve(baseDir, 'node_modules');
+  const babelLoader = {
+    loader: 'babel-loader',
+    options: {
+      presets: ['@babel/preset-env', '@babel/preset-react'],
+    },
+  };
+  const tsLoader = {
+    loader: 'ts-loader',
+    options: {
+      transpileOnly: true,
+    },
+  };
+  const fileLoader = {
+    loader: 'file-loader',
+    options: {
+      esModule: false,
+    },
+  };
 
   return [
     {
       test: /\.(png|jpe?g|gif|bmp|avi|mp4|mp3|svg|ogg|webp|woff2?|eot|ttf|wav)$/i,
-      use: [
-        {
-          loader: 'file-loader',
-          options: {
-            esModule: false,
-          },
-        },
-      ],
+      use: [fileLoader],
     },
     {
       test: /\.s[ac]ss$/i,
@@ -89,26 +99,12 @@ export function getRules(baseDir: string, production: boolean, pilet: boolean): 
     },
     {
       test: /\.m?jsx?$/i,
-      use: [
-        {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-          },
-        },
-      ],
+      use: [babelLoader],
       exclude: nodeModules,
     },
     {
       test: /\.tsx?$/i,
-      use: [
-        {
-          loader: 'ts-loader',
-          options: {
-            transpileOnly: true,
-          },
-        },
-      ],
+      use: [babelLoader, tsLoader],
     },
     {
       test: /\.codegen$/i,

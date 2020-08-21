@@ -7,6 +7,7 @@
 * Renamed `extendApi` to `plugins` (keeping `extendApi` as deprecated)
 * Fixed hidden publishing pilet size limit and improved logging of axios errors (#294)
 * Fixed Webpack issue in pilets referencing stylesheets (#304)
+* Fixed Webpack issue not using Babel for TypeScript files (#310)
 * Added `open` package dependency to ensure no errors when using `--open` CLI flag (#303)
 * Added more standard fields such as `description` to the emulator package
 
