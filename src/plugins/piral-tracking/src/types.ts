@@ -1,4 +1,4 @@
-import 'piral-core';
+import type {} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiralCustomEventMap {

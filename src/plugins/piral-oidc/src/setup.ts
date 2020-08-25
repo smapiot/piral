@@ -1,8 +1,6 @@
 import { UserManager, Log } from 'oidc-client';
-import { OidcConfig, OidcClient, OidcProfile, OidcErrorType, LogLevel } from './types';
 import { OidcError } from './OidcError';
-
-const doesWindowLocationMatch = (targetUri: string) => window.location.pathname === new URL(targetUri).pathname;
+import { OidcConfig, OidcClient, OidcProfile, OidcErrorType, LogLevel } from './types';
 
 const logLevelToOidcMap = {
   [LogLevel.none]: 0,
@@ -12,9 +10,13 @@ const logLevelToOidcMap = {
   [LogLevel.debug]: 4,
 };
 
-const convertLogLevelToOidcClient = (level: LogLevel) => {
+function doesWindowLocationMatch(targetUri: string) {
+  return window.location.pathname === new URL(targetUri).pathname;
+}
+
+function convertLogLevelToOidcClient(level: LogLevel) {
   return logLevelToOidcMap[level];
-};
+}
 
 /**
  * Sets up a new client wrapping the oidc-client API.
@@ -30,9 +32,12 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     responseType,
     scopes,
     restrict = false,
+    parentName,
     appUri,
     logLevel,
   } = config;
+
+  const isMainWindow = () => parentName ? parentName === window.parent?.name : window === window.top;
 
   const userManager = new UserManager({
     authority: identityProviderUri,
@@ -55,7 +60,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
   }
 
   if (doesWindowLocationMatch(userManager.settings.post_logout_redirect_uri)) {
-    if (window === window.top) {
+    if (isMainWindow()) {
       userManager.signoutRedirectCallback();
     } else {
       userManager.signoutPopupCallback();
@@ -107,7 +112,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       if (
         (doesWindowLocationMatch(userManager.settings.silent_redirect_uri) ||
           doesWindowLocationMatch(userManager.settings.popup_redirect_uri)) &&
-        window !== window.top
+        !isMainWindow()
       ) {
         /*
          * This is a silent redirect frame. The correct behavior is to notify the parent of the updated user,
@@ -122,7 +127,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         return resolve(false);
       }
 
-      if (doesWindowLocationMatch(userManager.settings.redirect_uri) && window === window.top) {
+      if (doesWindowLocationMatch(userManager.settings.redirect_uri) && isMainWindow()) {
         try {
           await userManager.signinCallback();
         } catch (e) {

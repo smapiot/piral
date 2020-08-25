@@ -1,4 +1,4 @@
-import 'piral-core';
+import type {} from 'piral-core';
 import { Store, Action, Reducer, Dispatch, AnyAction } from 'redux';
 import { ComponentType, FC } from 'react';
 

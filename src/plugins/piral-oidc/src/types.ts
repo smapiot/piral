@@ -1,5 +1,5 @@
-import 'piral-core';
-import { Profile } from 'oidc-client';
+import type {} from 'piral-core';
+import type { Profile } from 'oidc-client';
 
 /**
  * Available configuration options for the OpenID Connect plugin.
@@ -13,6 +13,17 @@ export interface OidcConfig {
    * The client secret.
    */
   clientSecret?: string;
+  /**
+   * The name of the parent frame if the app is placed in an
+   * iframe.
+   *
+   * If undefined or an empty string is provided then no iframe
+   * (default behavior) is assumed.
+   *
+   * Note: This is necessary in order to avoid problems with
+   * the silent refresh when being used in an iframe.
+   */
+  parentName?: string;
   /**
    * The Uri pointing to the Identity Provider.
    */

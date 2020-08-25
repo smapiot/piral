@@ -1,4 +1,4 @@
-import 'piral-core';
+import type {} from 'piral-core';
 import { Client } from 'urql';
 
 declare module 'piral-core/lib/types/custom' {

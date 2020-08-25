@@ -1,4 +1,4 @@
-import 'piral-core';
+import type {} from 'piral-core';
 import { ComponentType, ChangeEvent, FC } from 'react';
 
 declare module 'piral-core/lib/types/custom' {

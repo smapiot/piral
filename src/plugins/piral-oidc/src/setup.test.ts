@@ -1,5 +1,4 @@
 import { UserManager } from 'oidc-client';
-
 import { setupOidcClient } from './setup';
 import { OidcClient, OidcConfig, OidcErrorType } from './types';
 
