@@ -115,9 +115,22 @@ export async function isMonorepoPackageRef(refName: string, root: string): Promi
   return details?.dependencies?.[refName]?.extraneous ?? false;
 }
 
-export async function detectMonorepo(root: string) {
+export type MonorepoKind = 'none' | 'lerna' | 'yarn';
+
+export async function detectMonorepo(root: string): Promise<MonorepoKind> {
   const file = await getLernaConfigPath(root);
-  return file !== undefined;
+
+  if (file !== undefined) {
+    return 'lerna';
+  }
+
+  const packageJson = await readJson(root, 'package.json');
+
+  if (Array.isArray(packageJson?.workspaces)) {
+    return 'yarn';
+  }
+
+  return 'none';
 }
 
 export function bootstrapMonorepo(target = '.') {

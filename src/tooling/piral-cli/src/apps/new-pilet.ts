@@ -198,9 +198,9 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      const isMonorepo = await detectMonorepo(root);
+      const monorepoKind = await detectMonorepo(root);
 
-      if (isMonorepo) {
+      if (monorepoKind === 'lerna') {
         await bootstrapMonorepo(root);
       } else {
         await installDependencies(npmClient, root);

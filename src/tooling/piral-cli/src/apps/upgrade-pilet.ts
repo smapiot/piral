@@ -128,9 +128,9 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     if (install) {
       progress(`Updating dependencies ...`);
-      const isMonorepo = await detectMonorepo(root);
+      const monorepoKind = await detectMonorepo(root);
 
-      if (isMonorepo) {
+      if (monorepoKind === 'lerna') {
         await bootstrapMonorepo(root);
       } else {
         await installDependencies(npmClient, root);
