@@ -45,25 +45,74 @@ export interface Tracker {
 }
 
 export interface PiralTrackEventEvent {
+  /**
+   * The name of the event.
+   */
   name: string;
+  /**
+   * The name of the pilet emitting the event, if any.
+   */
+  pilet?: string;
+  /**
+   * The properties to collect.
+   */
   properties: any;
+  /**
+   * The measurements to record.
+   */
   measurements: any;
 }
 
 export interface PiralTrackErrorEvent {
+  /**
+   * The error to report.
+   */
   error: any;
+  /**
+   * The name of the pilet emitting the event, if any.
+   */
+  pilet?: string;
+  /**
+   * The properties to collect.
+   */
   properties: any;
+  /**
+   * The measurements to record.
+   */
   measurements: any;
+  /**
+   * The severity level of the error to report.
+   */
   severityLevel: SeverityLevel;
 }
 
 export interface PiralTrackStartFrameEvent {
+  /**
+   * The name of the event.
+   */
   name: string;
+  /**
+   * The name of the pilet emitting the event, if any.
+   */
+  pilet?: string;
 }
 
 export interface PiralTrackEndFrameEvent {
+  /**
+   * The name of the event.
+   */
   name: string;
+  /**
+   * The name of the pilet emitting the event, if any.
+   */
+  pilet?: string;
+  /**
+   * The properties to collect.
+   */
   properties: any;
+  /**
+   * The measurements to record.
+   */
   measurements: any;
 }
 

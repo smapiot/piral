@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Provider } from 'urql';
-import { PiralPlugin, GlobalStateContext } from 'piral-core';
+import type { PiralPlugin, GlobalStateContext } from 'piral-core';
 import { gqlQuery, gqlMutation, gqlSubscription } from './queries';
 import { setupGqlClient } from './setup';
 import { PiletGqlApi, UrqlClient, GqlOperationOptions } from './types';

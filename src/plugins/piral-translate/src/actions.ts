@@ -1,4 +1,4 @@
-import { GlobalStateContext } from 'piral-core';
+import type { GlobalStateContext } from 'piral-core';
 import { Localizable } from './types';
 
 export function createActions(localizer: Localizable) {

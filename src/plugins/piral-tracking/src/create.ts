@@ -1,4 +1,4 @@
-import { PiralPlugin } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
 import { PiletTrackingApi, SeverityLevel } from './types';
 
 /**
@@ -10,16 +10,18 @@ export interface TrackingConfig {}
  * Creates the Pilet API extensions for tracking and telemetry.
  */
 export function createTrackingApi(config: TrackingConfig = {}): PiralPlugin<PiletTrackingApi> {
-  return () => api => ({
+  return () => (api, meta) => ({
     trackEvent(name, properties = {}, measurements = {}) {
       api.emit('track-event', {
         name,
+        pilet: meta.name,
         properties,
         measurements,
       });
     },
     trackError(error, properties = {}, measurements = {}, severityLevel = SeverityLevel.information) {
       api.emit('track-error', {
+        pilet: meta.name,
         error,
         properties,
         measurements,
@@ -29,10 +31,12 @@ export function createTrackingApi(config: TrackingConfig = {}): PiralPlugin<Pile
     trackFrame(name) {
       api.emit('track-frame-start', {
         name,
+        pilet: meta.name,
       });
       return (properties = {}, measurements = {}) =>
         api.emit('track-frame-end', {
           name,
+          pilet: meta.name,
           properties,
           measurements,
         });

@@ -46,7 +46,7 @@ export function createFeedsApi(config: FeedsConfig = {}): PiralPlugin<PiletFeeds
 
             if (typeof reducer === 'function') {
               connect[type] = (...args) => {
-                context.updateFeed(id, args, (data, item) => reducer(data, ...item));
+                context.updateFeed(id, args, (data, item) => reducer.call(connect, data, ...item));
               };
             }
           });

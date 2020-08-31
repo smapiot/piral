@@ -1,4 +1,4 @@
-import { PiralPlugin } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
 import { DefaultPicker } from './default';
