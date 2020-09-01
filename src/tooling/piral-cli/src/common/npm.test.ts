@@ -45,9 +45,10 @@ let specialCase = false;
 let wrongCase = false;
 const jsonValueString = JSON.stringify({ dependencies: { npm: { extraneous: true } } });
 const jsonValueStringWrong = JSON.stringify({ dependencies: {} });
+
 jest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(resolve => {
       output?.write(wrongCase ? jsonValueStringWrong : jsonValueString, () => {});
       resolve();
     });
@@ -58,18 +59,24 @@ jest.mock('fs', () => ({
   constants: {
     F_OK: 1,
   },
+  createReadStream() {
+    return undefined;
+  },
   exists: (file: string, cb: (status: boolean) => void) =>
     cb(!file.endsWith('package.json') && !(specialCase && file.endsWith('lerna.json'))),
   existsSync: (file: string) => {
     return true;
   },
   readFile: (file: string, type: string, callback: (err: NodeJS.ErrnoException, data: string) => void) => {
-    return callback(null, '');
+    return callback(undefined, '');
   },
   readFileSync: () => '',
   access: (path: string, mode: number, callback: (err: NodeJS.ErrnoException) => void) => {
-    if (path.includes('test')) return callback(null);
-    else return callback(new Error('bla'));
+    if (path.includes('test')) {
+      return callback(undefined);
+    } else {
+      return callback(new Error('bla'));
+    }
   },
 }));
 
@@ -221,20 +228,20 @@ describe('NPM Module', () => {
     await isMonorepoPackageRef('npm', './').then(result => expect(result).toBeFalsy());
   });
 
-  it('verfiies whether lerna config path is valid', async () => {
+  it('verifies whether lerna config path is valid', async () => {
     wrongCase = false;
     await detectMonorepo('./').then(result => {
-      expect(result).toBeTruthy();
+      expect(result).toBe('lerna');
     });
     wrongCase = true;
     specialCase = true;
     await detectMonorepo('./').then(result => {
-      expect(result).toBeFalsy();
+      expect(result).toBe('none');
     });
     specialCase = false;
   });
 
-  it('verfiies whether lerna bootstrap ran', async () => {
+  it('verifies whether lerna bootstrap ran', async () => {
     wrongCase = false;
     await bootstrapMonorepo().then(result => expect(result).toEqual(jsonValueString));
     wrongCase = true;
