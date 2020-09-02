@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-preact` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Preact converter for any component registration, as well as a `fromPreact` shortcut and a `PreactExtension` component.
+The set includes a Preact converter for any component registration, as well as a `fromPreact` shortcut and a `PreactExtension` component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 

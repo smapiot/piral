@@ -221,7 +221,7 @@ export interface PiletsLoading {
 }
 
 /**
- * The strategy for loading pilets.
+ * The strategy for how pilets are loaded at runtime.
  */
 export interface PiletLoadingStrategy {
   (options: LoadPiletsOptions, pilets: PiletsLoaded): PromiseLike<void>;
