@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.0.0 (tbd)
+## 0.12.0 (tbd)
 
 * Documentation cleanup
 * Allow upload of arbitrary pilet sizes in `pilet publish` (#294)
