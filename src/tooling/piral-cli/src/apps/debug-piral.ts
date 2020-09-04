@@ -15,13 +15,45 @@ import {
 } from '../common';
 
 export interface DebugPiralOptions {
+  /**
+   * Sets the path to the entry file.
+   */
   entry?: string;
+
+  /**
+   * Sets the port to use for the debug server.
+   */
   port?: number;
+
+  /**
+   * Sets the publicUrl to use.
+   * By default, the server is assumed to be at root "/".
+   */
   publicUrl?: string;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Sets if the (system default) browser should be auto-opened.
+   */
   open?: boolean;
+
+  /**
+   * Defines if hot module reloading (HMR) should be integrated for faster debugging.
+   */
   hmr?: boolean;
+
+  /**
+   * States if the node modules should be included for target transpilation
+   */
   optimizeModules?: boolean;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
   _?: Record<string, any>;
 }
 

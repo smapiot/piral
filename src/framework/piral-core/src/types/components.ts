@@ -1,8 +1,8 @@
-import { ComponentType } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { FirstParametersOf, UnionOf } from './common';
-import { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
-import { LayoutType } from './layout';
+import type { ComponentType } from 'react';
+import type { RouteComponentProps } from 'react-router';
+import type { FirstParametersOf, UnionOf } from './common';
+import type { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
+import type { LayoutType } from './layout';
 
 /**
  * Mapping of available component converters.

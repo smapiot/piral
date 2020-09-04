@@ -1,6 +1,6 @@
-import { PiletApi } from './api';
-import { GlobalStateContext } from './state';
-import { PiletMetadata } from '../types';
+import type { PiletApi } from './api';
+import type { GlobalStateContext } from './state';
+import type { PiletMetadata } from '../types';
 
 /**
  * Shape to be used by a Pilet API extension that requires other

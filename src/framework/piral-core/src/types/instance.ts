@@ -1,6 +1,6 @@
-import { PiletApi, PiletApiCreator, LoadPiletsOptions, EventEmitter } from 'piral-base';
-import { GlobalStateContext } from './state';
-import { LayoutBreakpoints } from './layout';
+import type { PiletApi, PiletApiCreator, LoadPiletsOptions, EventEmitter } from 'piral-base';
+import type { GlobalStateContext } from './state';
+import type { LayoutBreakpoints } from './layout';
 
 /**
  * The props of the Piral component.

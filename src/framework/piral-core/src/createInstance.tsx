@@ -3,7 +3,7 @@ import { getLocalDependencies, defaultApiCreator, defaultModuleRequester } from 
 import { createGlobalState, createActions, includeActions } from './state';
 import { createPiletOptions } from './helpers';
 import { createListener } from './utils';
-import { PiralConfiguration, PiralInstance } from './types';
+import type { PiralConfiguration, PiralInstance } from './types';
 
 /**
  * Creates a new PiralInstance component, which can be used for

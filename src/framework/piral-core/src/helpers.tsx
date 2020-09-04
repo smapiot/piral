@@ -8,7 +8,7 @@ import {
   PiletLoader,
 } from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
-import {
+import type {
   AvailableDependencies,
   Pilet,
   PiletRequester,

@@ -1,4 +1,4 @@
-import { Pilet, PiletApi } from './types';
+import type { Pilet, PiletApi } from './types';
 
 /**
  * Sets up the given pilet by calling the exported `setup` function

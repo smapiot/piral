@@ -1,7 +1,7 @@
 import { createDefaultLoader } from './loader';
 import { loadPilets, loadMetadata } from './load';
 import { createPilets, createPilet } from './aggregate';
-import { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
+import type { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
 
 function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModules: Array<Pilet>) {
   try {

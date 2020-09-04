@@ -1,5 +1,5 @@
-import { PiralEventMap } from 'piral-base';
-import { PiralCustomEventMap } from './custom';
+import type {} from 'piral-base';
+import type { PiralCustomEventMap } from './custom';
 
 export interface PiralStorage {
   /**

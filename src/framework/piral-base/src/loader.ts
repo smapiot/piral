@@ -1,7 +1,7 @@
 import { defaultFetchDependency } from './fetch';
 import { createEmptyModule, getDependencyResolver } from './utils';
 import { compileDependency, includeDependency } from './dependency';
-import {
+import type {
   AvailableDependencies,
   Pilet,
   PiletApp,

@@ -18,14 +18,51 @@ import {
 } from '../common';
 
 export interface DebugPiletOptions {
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Sets the paths to the entry modules.
+   */
   entry?: string | Array<string>;
+
+  /**
+   * Overrides the name of the app shell to use.
+   * By default the app is inferred from the package.json.
+   */
   app?: string;
+
+  /**
+   * Sets if the (system default) browser should be auto-opened.
+   */
   open?: boolean;
+
+  /**
+   * Sets the port to use for the debug server.
+   */
   port?: number;
+
+  /**
+   * Defines if hot module reloading (HMR) should be integrated for faster debugging.
+   */
   hmr?: boolean;
+
+  /**
+   * States if the node modules should be included for target transpilation
+   */
   optimizeModules?: boolean;
+
+  /**
+   * The schema to be used when bundling the pilets.
+   * @example 'v1'
+   */
   schemaVersion?: PiletSchemaVersion;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
   _?: Record<string, any>;
 }
 

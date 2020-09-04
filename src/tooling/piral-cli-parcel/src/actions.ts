@@ -35,6 +35,7 @@ export const debugPiral: DebugPiralBundlerDefinition = {
 
     const bundler = await callDynamic('debug-piral', {
       ...args,
+      _: {},
       cacheDir: cache,
       scopeHoist,
       autoInstall,
@@ -72,6 +73,8 @@ export const buildPiral: BuildPiralBundlerDefinition = {
 
     const bundler = await callStatic('build-piral', {
       ...args,
+      _: {},
+      cacheDir: cache,
       detailedReport,
       scopeHoist,
     });
@@ -106,6 +109,7 @@ export const debugPilet: DebugPiletBundlerDefinition = {
 
     const bundler = await callDynamic('debug-pilet', {
       ...args,
+      _: {},
       cacheDir: cache,
       scopeHoist,
       autoInstall,
@@ -136,6 +140,7 @@ export const buildPilet: BuildPiletBundlerDefinition = {
 
     const bundler = await callStatic('build-pilet', {
       ...args,
+      _: {},
       cacheDir: cache,
       detailedReport,
       scopeHoist,

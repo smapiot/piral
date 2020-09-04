@@ -5,6 +5,7 @@
 * Documentation cleanup
 * Allow upload of arbitrary pilet sizes in `pilet publish` (#294)
 * Renamed `extendApi` to `plugins` (keeping `extendApi` as deprecated)
+* Moved Parcel exclusive flags to `piral-cli-parcel`
 * Fixed hidden publishing pilet size limit and improved logging of axios errors (#294)
 * Fixed Webpack issue in pilets referencing stylesheets (#304)
 * Fixed Webpack issue not using Babel for TypeScript files (#310)

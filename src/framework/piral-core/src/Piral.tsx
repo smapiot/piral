@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StateContext } from './state';
 import { createInstance } from './createInstance';
 import { PiralView, Mediator, ResponsiveLayout } from './components';
-import { PortalProps } from './types';
+import type { PortalProps } from './types';
 
 /**
  * Represents the Piral app shell frame. Use this component together

@@ -77,7 +77,7 @@ describe('Piral CLI Bundler Module', () => {
     });
 
     await callPiletBuild({ root: undefined } as any, 'foo1');
-    expect(actions.buildPilet).toHaveBeenCalled();
+    expect(actions.buildPilet.run).toHaveBeenCalled();
   });
 
   it('setting the bundler with optimize modules calls optimize modules', async () => {
@@ -118,7 +118,7 @@ describe('Piral CLI Bundler Module', () => {
     });
 
     await callPiralBuild({ root: undefined } as any, 'foo2');
-    expect(actions.buildPiral).toHaveBeenCalled();
+    expect(actions.buildPiral.run).toHaveBeenCalled();
   });
 
   it('setting the bundler can resolve it properly for call pilet debug', async () => {
@@ -136,7 +136,7 @@ describe('Piral CLI Bundler Module', () => {
     });
 
     await callPiletDebug({ root: undefined } as any, 'foo3');
-    expect(actions.debugPilet).toHaveBeenCalled();
+    expect(actions.debugPilet.run).toHaveBeenCalled();
   });
 
   it('setting the bundler can resolve it properly for call piral debug', async () => {
@@ -154,7 +154,7 @@ describe('Piral CLI Bundler Module', () => {
     });
 
     await callPiralDebug({ root: undefined } as any, 'foo4');
-    expect(actions.debugPiral).toHaveBeenCalled();
+    expect(actions.debugPiral.run).toHaveBeenCalled();
   });
 
   it('setting the bundler can resolve it properly for call piral watch', async () => {
@@ -172,7 +172,7 @@ describe('Piral CLI Bundler Module', () => {
     });
 
     await callDebugPiralFromMonoRepo({ root: undefined } as any, 'foo5');
-    expect(actions.watchPiral).toHaveBeenCalled();
+    expect(actions.watchPiral.run).toHaveBeenCalled();
   });
 
   it('using a non-available bundler should fail', () => {

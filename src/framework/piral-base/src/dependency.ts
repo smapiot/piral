@@ -1,4 +1,4 @@
-import { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV1 } from './types';
+import type { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV1 } from './types';
 
 function requireModule(name: string, dependencies: AvailableDependencies) {
   const dependency = dependencies[name];
