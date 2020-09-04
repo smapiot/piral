@@ -116,6 +116,12 @@ For documentation on `piral-blazor` please consult the [package information](htt
 
 ---------------------------------------
 
+## Will piral-blazor work with Blazor Server instances?
+
+Indeed piral-blazor was created for WASM. What you could do for such a setup is using, e.g., iframes or HTML fragments (see https://docs.piral.io/guidelines/tutorials/19-migrate-ssr).
+
+---------------------------------------
+
 ## Can the feed connector initialize directly?
 
 If you want to have the data directly, e.g., before a page or another component is loaded then just use the `immediately` option.
@@ -125,5 +131,15 @@ Example:
 ```js
 const connect = createConnector({ /* usual options */, immediately: true });
 ```
+
+---------------------------------------
+
+## How can I use Next.js or Gastby?
+
+For your apps directly remember that these two are essentially SSR'ed frameworks (Next.js makes a Node.js process and Gatsby creates static pages). So overall, not really.
+
+You can, however, always include SSR'ed apps as described in https://docs.piral.io/guidelines/tutorials/19-migrate-ssr, which may not be what you have in mind.
+
+On the other hand, the React components can be used without restrictions. This excludes strange dependencies that require the Next.js or Gatsby build process.
 
 ---------------------------------------

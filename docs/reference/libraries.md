@@ -65,8 +65,22 @@ To help us see the commands in action we can also use a *global* version of the 
 
 Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-atom` are straight dependencies, common dependencies such as `react` are only peer referenced. This leaves many of the open choices up to the developer providing greater freedom.
 
+::: warning: Peer Dependencies
+You will need to pick (and reference) the versions of `react`, `react-dom`, `react-router`, and `react-router-dom`.
+:::
+
+We recommend using `piral-core` when you want to have more control what (versions of the) dependencies go in and how the API for the pilets look like.
+
 ## A Piral-Base Based Application
 
-Relying on `piral-base` we can build an application independent of React, state management or anything else - only with the loading and correct interpretation of pilets. This mode does not support *most* Piral plugins. However, the `piral-cli` and pilets in general are supported.
+Relying on `piral-base` we can build an application independent of React, state management or anything else - only with the loading and correct interpretation of pilets. This alone would not support *most* Piral plugins. However, the `piral-cli` and pilets in general are supported.
 
 The result could be a new framework that leverages Piral, but using, e.g., Angular instead of React.
+
+::: tip: Share tslib
+The `piral-base` package has a single dependency: `tslib`. Ideally, you set `importHelpers` to `true` in your *tsconfig.json* and share the dependency to `tslib` from your app shell.
+
+This way, all your pilets get a little bit smaller without any additional effort.
+:::
+
+`piral-base` can also make sense for React-based applications, where you want to define *exactly* how the pilet API looks like. Here, the only predefined thing is the loading mechanism of pilets (incl. their shape following the specification).

@@ -128,3 +128,11 @@ In general there is no limit on how many pilets can be provisioned for a single 
 If you feel like you need more advise don't hesitate to use the [community chat](https://gitter.im/piral-io/community).
 
 ---------------------------------------
+
+## Can a pilet act as an instance to open a portal inside a portal?
+
+You can run any code, so you could have an instance in an instance - yes. But usually, you'd want to have it more flat. There are things that support that flatness. Once you start creating hierarchies you'll soon have an unmaintainable project.
+
+What we see more often is that extensions are then used to include component (trees) from an *arbitrary number of pilets* in one (or more) pilets.
+
+---------------------------------------
