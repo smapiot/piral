@@ -1,15 +1,15 @@
 import { Argv, Arguments } from 'yargs';
 import { RuleRunner, PiletRuleContext, PiralRuleContext, Bundler, BundleDetails, LogLevels } from './common';
 
-export interface ToolCommandRunner<U> {
+export interface ToolCommandRunner<U = {}> {
   (args: Arguments<U>): void | Promise<void>;
 }
 
-export interface ToolCommandWrapper<U> {
+export interface ToolCommandWrapper<U = {}> {
   (args: Arguments<U>, runner: ToolCommandRunner<U>): void | Promise<void>;
 }
 
-export interface ToolCommandFlagsSetter<T> {
+export interface ToolCommandFlagsSetter<T = {}> {
   (argv: Argv<T>): Argv<T>;
 }
 
@@ -57,14 +57,12 @@ export interface BaseBundleParameters {
   root: string;
   optimizeModules: boolean;
   ignored: Array<string>;
+  _: Record<string, any>;
 }
 
 export interface DebugPiralParameters extends BaseBundleParameters {
   piral: string;
-  scopeHoist: boolean;
-  autoInstall: boolean;
   hmr: boolean;
-  cacheDir: string;
   externals: Array<string>;
   publicUrl: string;
   entryFiles: string;
@@ -80,13 +78,10 @@ export interface WatchPiralParameters extends BaseBundleParameters {
 
 export interface BuildPiralParameters extends BaseBundleParameters {
   piral: string;
-  scopeHoist: boolean;
   emulator: boolean;
   sourceMaps: boolean;
   contentHash: boolean;
-  detailedReport: boolean;
   minify: boolean;
-  cacheDir: string;
   externals: Array<string>;
   publicUrl: string;
   outFile: string;
@@ -97,10 +92,7 @@ export interface BuildPiralParameters extends BaseBundleParameters {
 
 export interface DebugPiletParameters extends BaseBundleParameters {
   piral: string;
-  scopeHoist: boolean;
-  autoInstall: boolean;
   hmr: boolean;
-  cacheDir: string;
   externals: Array<string>;
   targetDir: string;
   entryModule: string;
@@ -110,12 +102,9 @@ export interface DebugPiletParameters extends BaseBundleParameters {
 
 export interface BuildPiletParameters extends BaseBundleParameters {
   piral: string;
-  scopeHoist: boolean;
   sourceMaps: boolean;
   contentHash: boolean;
-  detailedReport: boolean;
   minify: boolean;
-  cacheDir: string;
   externals: Array<string>;
   targetDir: string;
   outFile: string;
@@ -125,12 +114,36 @@ export interface BuildPiletParameters extends BaseBundleParameters {
   version: PiletSchemaVersion;
 }
 
+export interface WatchPiralBundlerDefinition {
+  run(args: WatchPiralParameters): Promise<Bundler>;
+}
+
+export interface DebugPiralBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: DebugPiralParameters): Promise<Bundler>;
+}
+
+export interface BuildPiralBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: BuildPiralParameters): Promise<BundleDetails>;
+}
+
+export interface DebugPiletBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: DebugPiletParameters): Promise<Bundler>;
+}
+
+export interface BuildPiletBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: BuildPiletParameters): Promise<BundleDetails>;
+}
+
 export interface BundlerDefinition {
-  debugPiral(args: DebugPiralParameters): Promise<Bundler>;
-  watchPiral(args: WatchPiralParameters): Promise<Bundler>;
-  buildPiral(args: BuildPiralParameters): Promise<BundleDetails>;
-  debugPilet(args: DebugPiletParameters): Promise<Bundler>;
-  buildPilet(args: BuildPiletParameters): Promise<BundleDetails>;
+  debugPiral: DebugPiralBundlerDefinition;
+  watchPiral: WatchPiralBundlerDefinition;
+  buildPiral: BuildPiralBundlerDefinition;
+  debugPilet: DebugPiletBundlerDefinition;
+  buildPilet: BuildPiletBundlerDefinition;
 }
 
 export type PiletSchemaVersion = 'none' | 'v0' | 'v1';

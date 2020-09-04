@@ -1,6 +1,7 @@
 import * as webpack from 'webpack';
 import { resolve, basename, dirname } from 'path';
 import { EventEmitter } from 'events';
+import type { LogLevels } from 'piral-cli';
 
 interface BuildResult {
   outFile: string;
@@ -13,9 +14,27 @@ function getOutput(stats: webpack.Stats) {
   return resolve(outputPath, assets[0]);
 }
 
-export function runWebpack(wpConfig: webpack.Configuration) {
+function getPreset(logLevel: LogLevels): webpack.Stats.Preset {
+  switch (logLevel) {
+    case 0: //LogLevels.disabled
+      return 'none';
+    case 1: //LogLevels.error
+      return 'errors-only';
+    case 2: //LogLevels.warning
+      return 'errors-warnings';
+    case 4: //LogLevels.verbose
+    case 5: //LogLevels.debug
+      return 'verbose';
+    case 3: //LogLevels.info
+    default:
+      return 'normal';
+  }
+}
+
+export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels) {
   const eventEmitter = new EventEmitter();
   const outDir = wpConfig.output.path;
+  const preset = getPreset(logLevel);
   const mainBundle = {
     name: '',
     requireRef: undefined,
@@ -47,11 +66,7 @@ export function runWebpack(wpConfig: webpack.Configuration) {
           reject(err);
         } else {
           console.log(
-            stats.toString({
-              chunks: false,
-              colors: true,
-              usedExports: true,
-            }),
+            stats.toString(preset),
           );
 
           if (stats.hasErrors()) {

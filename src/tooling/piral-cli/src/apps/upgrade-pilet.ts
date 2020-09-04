@@ -13,8 +13,6 @@ import {
   installDependencies,
   getCurrentPackageDetails,
   checkAppShellPackage,
-  defaultCacheDir,
-  removeDirectory,
   setLogLevel,
   progress,
   fail,
@@ -57,7 +55,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   } = options;
   setLogLevel(logLevel);
   const root = resolve(baseDir, target);
-  const cache = resolve(root, defaultCacheDir);
   const valid = await checkExistingDirectory(root);
 
   if (!valid) {
@@ -143,7 +140,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       await runScript(postUpgrade, root);
     }
 
-    await removeDirectory(cache);
     logDone('Pilet upgraded successfully!');
   } else {
     fail('invalidPiletPackage_0041');

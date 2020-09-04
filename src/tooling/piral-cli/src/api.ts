@@ -15,7 +15,7 @@ import {
 } from './types';
 
 function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index: number) => void) {
-  for (let i = commands.all.length; i--; ) {
+  for (let i = commands.all.length; i--;) {
     const command = commands.all[i];
 
     if (command.name === commandName) {
@@ -32,6 +32,12 @@ export function withCommand<T, U>(command: ToolCommand<T, U>) {
 export function withoutCommand(commandName: string) {
   findAll(commandName, (_, i) => commands.all.splice(i, 1));
   return this;
+}
+
+function maybeWithFlags<T>(commandName: string, setter?: ToolCommandFlagsSetter<T>) {
+  if (typeof setter === 'function') {
+    withFlags(commandName, setter);
+  }
 }
 
 export function withFlags<T>(commandName: string, setter: ToolCommandFlagsSetter<T>) {
@@ -140,6 +146,11 @@ export function withBundler(name: string, actions: BundlerDefinition) {
       name,
       actions,
     });
+
+    maybeWithFlags('debug-piral', actions.debugPiral.flags);
+    maybeWithFlags('build-piral', actions.buildPiral.flags);
+    maybeWithFlags('debug-pilet', actions.debugPilet.flags);
+    maybeWithFlags('build-pilet', actions.buildPilet.flags);
   }
 
   return this;

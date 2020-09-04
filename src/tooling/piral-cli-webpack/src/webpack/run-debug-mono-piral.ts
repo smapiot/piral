@@ -1,3 +1,4 @@
+import type { LogLevels } from 'piral-cli';
 import { setStandardEnvs, progress, getFreePort, logReset } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -5,7 +6,7 @@ import { extendConfig } from '../helpers';
 import { getPiralConfig } from '../configs';
 import { defaultWebpackConfig } from '../constants';
 
-async function run(root: string, piral: string, hmr: boolean, externals: Array<string>, entryFiles: string) {
+async function run(root: string, piral: string, hmr: boolean, externals: Array<string>, entryFiles: string, logLevel: LogLevels) {
   progress(`Preparing supplied Piral instance ...`);
 
   const outDir = resolve(root, 'dist', 'app');
@@ -37,7 +38,7 @@ async function run(root: string, piral: string, hmr: boolean, externals: Array<s
     watch: true,
   });
 
-  const bundler = runWebpack(wpConfig);
+  const bundler = runWebpack(wpConfig, logLevel);
   const bundle = await bundler.bundle();
   logReset();
   return bundle;
@@ -46,7 +47,7 @@ async function run(root: string, piral: string, hmr: boolean, externals: Array<s
 process.on('message', async msg => {
   switch (msg.type) {
     case 'start':
-      const result = await run(process.cwd(), msg.piral, true, msg.externals, msg.entryFiles).catch(error => {
+      const result = await run(process.cwd(), msg.piral, true, msg.externals, msg.entryFiles, msg.logLevel).catch(error => {
         process.send({
           type: 'fail',
           error: error?.message,

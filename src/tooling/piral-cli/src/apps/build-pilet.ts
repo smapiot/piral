@@ -5,7 +5,6 @@ import {
   removeDirectory,
   findEntryModule,
   retrievePiletData,
-  defaultCacheDir,
   setLogLevel,
   progress,
   logDone,
@@ -31,19 +30,9 @@ export interface BuildPiletOptions {
   target?: string;
 
   /**
-   * The cache directory for bundling.
-   */
-  cacheDir?: string;
-
-  /**
    * States if minifaction or other post-bundle transformations should be performed.
    */
   minify?: boolean;
-
-  /**
-   * States if a detailed report should be created.
-   */
-  detailedReport?: boolean;
 
   /**
    * Sets the log level to use (1-5).
@@ -66,12 +55,6 @@ export interface BuildPiletOptions {
   contentHash?: boolean;
 
   /**
-   * States if tree shaking should be used when creating the bundle.
-   * (may reduce bundle size)
-   */
-  scopeHoist?: boolean;
-
-  /**
    * States if the node modules should be included for target transpilation
    */
   optimizeModules?: boolean;
@@ -81,19 +64,21 @@ export interface BuildPiletOptions {
    * @example 'v1'
    */
   schemaVersion?: PiletSchemaVersion;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
+  _?: Record<string, any>;
 }
 
 export const buildPiletDefaults: BuildPiletOptions = {
   entry: './src/index',
   target: './dist/index.js',
-  cacheDir: defaultCacheDir,
-  detailedReport: false,
   minify: true,
   logLevel: LogLevels.info,
   fresh: false,
   sourceMaps: true,
   contentHash: true,
-  scopeHoist: false,
   optimizeModules: false,
   schemaVersion: 'v1',
 };
@@ -102,17 +87,15 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const {
     entry = buildPiletDefaults.entry,
     target = buildPiletDefaults.target,
-    detailedReport = buildPiletDefaults.detailedReport,
-    cacheDir = buildPiletDefaults.cacheDir,
     minify = buildPiletDefaults.minify,
     sourceMaps = buildPiletDefaults.sourceMaps,
     contentHash = buildPiletDefaults.contentHash,
-    scopeHoist = buildPiletDefaults.scopeHoist,
     logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
     optimizeModules = buildPiletDefaults.optimizeModules,
     schemaVersion = buildPiletDefaults.schemaVersion,
     app,
+    _ = {},
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -121,7 +104,6 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const entryModule = await findEntryModule(entryFile, targetDir);
   const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
   const externals = Object.keys(peerDependencies);
-  const cache = resolve(root, cacheDir);
   const outDir = dirname(resolve(baseDir, target));
 
   if (fresh) {
@@ -129,20 +111,15 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await removeDirectory(outDir);
   }
 
-  await removeDirectory(cache);
-
   logInfo('Bundle pilet ...');
 
   await callPiletBuild({
     root,
     piral: appPackage.name,
     optimizeModules,
-    scopeHoist,
     sourceMaps,
     contentHash,
-    detailedReport,
     minify,
-    cacheDir: cache,
     externals,
     targetDir,
     outFile: basename(target),
@@ -151,6 +128,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     logLevel,
     version: schemaVersion,
     ignored,
+    _,
   });
 
   logDone('Pilet built successfully!');

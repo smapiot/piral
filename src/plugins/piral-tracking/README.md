@@ -96,6 +96,33 @@ const instance = createInstance({
 
 There are no options available.
 
+The integration of other trackers is done by listening to the events. Example for Application Insights:
+
+```js
+import { createInstance } from 'piral';
+import { createTrackingApi } from 'piral-tracking';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+
+const appInsights = new ApplicationInsights({
+  // ...
+});
+
+appInsights.loadAppInsights();
+
+const instance = createInstance({
+  plugins: [createTrackingApi()]
+});
+
+instance.on('track-event', evt => {
+  const name = evt.name;
+  const properties = {
+    ...evt.properties,
+    piletName: evt.pilet,
+  };
+  appInsights.trackEvent({ name, properties });
+});
+```
+
 :::
 
 ## Events

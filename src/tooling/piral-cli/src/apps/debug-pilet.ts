@@ -10,8 +10,6 @@ import {
   reorderInjectors,
   notifyServerOnline,
   findEntryModule,
-  defaultCacheDir,
-  removeDirectory,
   setLogLevel,
   progress,
   matchAny,
@@ -21,29 +19,22 @@ import {
 
 export interface DebugPiletOptions {
   logLevel?: LogLevels;
-  cacheDir?: string;
   entry?: string | Array<string>;
   app?: string;
-  fresh?: boolean;
   open?: boolean;
   port?: number;
-  scopeHoist?: boolean;
   hmr?: boolean;
-  autoInstall?: boolean;
   optimizeModules?: boolean;
   schemaVersion?: PiletSchemaVersion;
+  _?: Record<string, any>;
 }
 
 export const debugPiletDefaults: DebugPiletOptions = {
   logLevel: LogLevels.info,
-  cacheDir: defaultCacheDir,
   entry: './src/index',
-  fresh: false,
   open: false,
   port: 1234,
-  scopeHoist: false,
   hmr: true,
-  autoInstall: true,
   optimizeModules: false,
   schemaVersion: 'v1',
 };
@@ -70,6 +61,7 @@ async function getOrMakeAppDir({ emulator, piral, externals, appFile }: AppInfo,
       piral,
       entryFiles: appFile,
       logLevel,
+      _: {},
     });
     return dir;
   }
@@ -98,16 +90,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const {
     entry = debugPiletDefaults.entry,
     port = debugPiletDefaults.port,
-    cacheDir = debugPiletDefaults.cacheDir,
     open = debugPiletDefaults.open,
-    scopeHoist = debugPiletDefaults.scopeHoist,
     hmr = debugPiletDefaults.hmr,
-    autoInstall = debugPiletDefaults.autoInstall,
     logLevel = debugPiletDefaults.logLevel,
-    fresh = debugPiletDefaults.fresh,
     optimizeModules = debugPiletDefaults.optimizeModules,
     schemaVersion = debugPiletDefaults.schemaVersion,
     app,
+    _ = {},
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -137,14 +126,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         app,
       );
       const externals = Object.keys(peerDependencies);
-      const cache = resolve(root, cacheDir);
       const mocks = join(targetDir, 'mocks');
       const exists = await checkExistingDirectory(mocks);
-
-      if (fresh) {
-        progress('Removing output directory ...');
-        await removeDirectory(cache);
-      }
 
       if (exists) {
         if (krasConfig.directory === undefined) {
@@ -159,15 +142,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         piral: appPackage.name,
         optimizeModules,
         hmr,
-        scopeHoist,
-        autoInstall,
-        cacheDir: cache,
         externals,
         targetDir,
         entryModule,
         logLevel,
         version: schemaVersion,
         ignored,
+        _,
       });
 
       return {

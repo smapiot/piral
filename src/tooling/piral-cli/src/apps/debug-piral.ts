@@ -9,7 +9,6 @@ import {
   checkCliCompatibility,
   reorderInjectors,
   notifyServerOnline,
-  removeDirectory,
   setLogLevel,
   progress,
   log,
@@ -17,29 +16,22 @@ import {
 
 export interface DebugPiralOptions {
   entry?: string;
-  cacheDir?: string;
   port?: number;
   publicUrl?: string;
   logLevel?: LogLevels;
-  fresh?: boolean;
   open?: boolean;
-  scopeHoist?: boolean;
   hmr?: boolean;
-  autoInstall?: boolean;
   optimizeModules?: boolean;
+  _?: Record<string, any>;
 }
 
 export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
-  cacheDir: '.cache',
   port: 1234,
   publicUrl: '/',
   logLevel: LogLevels.info,
-  fresh: false,
   open: false,
-  scopeHoist: false,
   hmr: true,
-  autoInstall: true,
   optimizeModules: false,
 };
 
@@ -49,21 +41,17 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const {
     entry = debugPiralDefaults.entry,
     port = debugPiralDefaults.port,
-    cacheDir = debugPiralDefaults.cacheDir,
     open = debugPiralDefaults.open,
-    scopeHoist = debugPiralDefaults.scopeHoist,
     hmr = debugPiralDefaults.hmr,
-    autoInstall = debugPiralDefaults.autoInstall,
     publicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
-    fresh = debugPiralDefaults.fresh,
     optimizeModules = debugPiralDefaults.optimizeModules,
+    _ = {},
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
-  const cache = resolve(root, cacheDir);
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   await checkCliCompatibility(root);
@@ -88,24 +76,17 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
-  if (fresh) {
-    progress('Removing output directory ...');
-    await removeDirectory(cache);
-  }
-
   const bundler = await callPiralDebug({
     root,
     piral: name,
     optimizeModules,
     hmr,
-    scopeHoist,
-    autoInstall,
-    cacheDir: cache,
     externals,
     publicUrl,
     entryFiles,
     logLevel,
     ignored,
+    _,
   });
 
   const injectorConfig = {
