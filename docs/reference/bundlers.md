@@ -38,11 +38,25 @@ The provided actions need to fulfill the following interface:
 
 ```ts
 export interface BundlerDefinition {
-  debugPiral(args: DebugPiralParameters): Promise<Bundler>;
-  watchPiral(args: WatchPiralParameters): Promise<Bundler>;
-  buildPiral(args: BuildPiralParameters): Promise<BundleDetails>;
-  debugPilet(args: DebugPiletParameters): Promise<Bundler>;
-  buildPilet(args: BuildPiletParameters): Promise<BundleDetails>;
+  debugPiral: {
+    flags?: ToolCommandFlagsSetter;
+    run(args: DebugPiralParameters): Promise<Bundler>;
+  };
+  watchPiral: {
+    run(args: WatchPiralParameters): Promise<Bundler>;
+  };
+  buildPiral: {
+    flags?: ToolCommandFlagsSetter;
+    run(args: BuildPiralParameters): Promise<BundleDetails>;
+  };
+  debugPilet: {
+    flags?: ToolCommandFlagsSetter;
+    run(args: DebugPiletParameters): Promise<Bundler>;
+  };
+  buildPilet: {
+    flags?: ToolCommandFlagsSetter;
+    run(args: BuildPiletParameters): Promise<BundleDetails>;
+  };
 }
 ```
 
