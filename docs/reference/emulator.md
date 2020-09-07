@@ -37,6 +37,22 @@ The following props are created:
 - `piralCLI` (to containg the current version)
 - `devDependencies` (from `devDependencies`, `dependencies`, and `pilets.externals`)
 
+The `piralCLI` property determines if the given package contains *raw* sources or already *pre-bundled* sources. In the latter case we will directly start a server from `app`, in the former case a lightweight version of `piral debug` is applied to the sources.
+
+::: tip: Custom Emulator
+If you build your emulator package on your own incl. already pre-bundled sources, make sure to include the following snippet in your *package.json*:
+
+```json
+{
+  "piralCLI": {
+    "generated": true
+  }
+}
+```
+
+This makes sure to avoid running a `piral debug` on the sources.
+:::
+
 ## Declaration
 
 Usually, only the `PiletApi` and its used types are exported from the app shell.
