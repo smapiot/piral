@@ -2,6 +2,7 @@ import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
 import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
+import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import { HotModuleServerPlugin } from './HotModuleServerPlugin';
 
 function getStyleLoaders(production: boolean, pilet: boolean) {
@@ -33,6 +34,7 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
       filename: '[name].css',
       chunkFilename: '[id].css',
     }),
+    new ImportMapsWebpackPlugin(),
   ];
 
   if (showProgress) {

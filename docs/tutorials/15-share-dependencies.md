@@ -123,7 +123,7 @@ The rule of thumb for sharing the type declarations is: Everything exported top-
 
 The mechanism to share dependencies used in pilets is called "import maps". Import maps are also on the way to become [an official standard](https://wicg.github.io/import-maps/).
 
-Since Piral uses Parcel as bundler we rely on the Parcel plugin `parcel-plugin-import-maps`.
+If you are using Parcel as bundler via `piral-cli-parcel` you rely on the Parcel plugin `parcel-plugin-import-maps`. In case of Webpack the Webpack plugin `import-maps-webpack-plugin` is already integrated in the `piral-cli-webpack`.
 
 The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load it again. Otherwise, it will load the different resources.
 
@@ -191,7 +191,29 @@ export default () => (
 );
 ```
 
-The showcased use of `ready` works in all cases, however, sometimes you may want to delay loading until you need a resource. In these situations, it makes sense to use another variant of `ready`, which gets a single parameter as input data. If the parameter is a single string, it is interpreted as the package to look for. Alternatively, an array of package names can be passed in, too.
+The showcased use of `ready` works in all cases, however, sometimes you may want to delay loading until you need a resource.
+
+::: tip: Using with piral-lazy
+With the `piral-lazy` plugin the import maps are even easier to use.
+
+An example:
+
+```ts
+piral.defineDependency('lodash', () => require('importmap').ready('lodash'));
+const LazyPage = piral.fromLazy(() => import('./MyPage'), ['lodash']);
+piral.registerPage('/sample', LazyPage);
+```
+
+The major advantage is that this implicitly creates a lazy loaded page, which has all the right suspension defined by default.
+:::
+
+In these situations, it makes sense to use another variant of `ready`, which gets a single parameter as input data. If the parameter is a single string, it is interpreted as the package to look for.
+
+```ts
+require('importmap').ready('lodash')
+```
+
+Alternatively, an array of package names can be passed in, too.
 
 ## Conclusion
 

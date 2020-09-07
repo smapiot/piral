@@ -11,6 +11,7 @@
 * Fixed Webpack issue not using Babel for TypeScript files (#310)
 * Added `open` package dependency to ensure no errors when using `--open` CLI flag (#303)
 * Added more standard fields such as `description` to the emulator package
+* Added `import-map-webpack-plugin` to the `piral-cli-webpack`
 
 ## 0.11.8 (July 9, 2020)
 
