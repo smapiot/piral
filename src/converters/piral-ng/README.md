@@ -43,6 +43,18 @@ Within Angular components the Piral Angular extension component can be used by r
 <extension-component name="name-of-extension"></extension-component>
 ```
 
+Alternatively, if `piral-ng` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromNg } from 'piral-ng';
+import { AngularPage } from './AngularPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromNg(AngularPage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

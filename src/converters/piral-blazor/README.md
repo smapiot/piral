@@ -94,6 +94,21 @@ Within Blazor components the `Extension` component referenced from `Piral.Blazor
 <Extension name="name-of-extension" />
 ```
 
+Alternatively, if `piral-blazor` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { defineBlazorReferences, fromBlazor } from 'piral-blazor';
+
+export function setup(piral: PiletApi) {
+  defineBlazorReferences([
+    require.resolve('./My.Dependency.dll'),
+    require.resolve('./My.Components.dll'),
+  ])
+  piral.registerPage('/sample', fromBlazor('sample-page'));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

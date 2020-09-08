@@ -43,6 +43,18 @@ Within Mithril.js components the Piral Mithril.js extension component can be use
 <MithrilExtension name="name-of-extension" />
 ```
 
+Alternatively, if `piral-mithril` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromMithril } from 'piral-mithril';
+import { MithrilPage } from './MithrilPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromMithril(MithrilPage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

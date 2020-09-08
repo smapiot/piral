@@ -43,6 +43,18 @@ Within Ember.js components the Piral Ember.js extension component can be used by
 <ember-extension name="name-of-extension"></ember-extension>
 ```
 
+Alternatively, if `piral-ember` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromEmber } from 'piral-ember';
+import { Page } from './Page';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromEmber(Page));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

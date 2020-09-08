@@ -43,6 +43,18 @@ Within Preact components the Piral Preact extension component can be used by ref
 <PreactExtension name="name-of-extension" />
 ```
 
+Alternatively, if `piral-preact` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromPreact } from 'piral-preact';
+import { PreactPage } from './PreactPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromPreact(PreactPage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

@@ -43,6 +43,18 @@ Within LitElement components the Piral LitElement extension component can be use
 <litel-extension name="name-of-extension"></litel-extension>
 ```
 
+Alternatively, if `piral-litel` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromLitel } from 'piral-litel';
+import './LitElPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromLitel('my-page'));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

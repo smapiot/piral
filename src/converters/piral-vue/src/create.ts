@@ -1,8 +1,7 @@
 import { PiralPlugin, ExtensionSlotProps } from 'piral-core';
-import { Component } from 'vue';
-import { register } from './mount';
 import { createConverter } from './converter';
 import { PiletVueApi } from './types';
+import { createExtension } from './extension';
 
 /**
  * Available configuration options for the Vue plugin.
@@ -24,26 +23,7 @@ export interface VueConfig {
  * Creates new Pilet API extensions for integration of Vue.
  */
 export function createVueApi(config: VueConfig = {}): PiralPlugin<PiletVueApi> {
-  const { rootName = 'slot', selector = 'extension-component' } = config;
-
-  const VueExtension: Component<ExtensionSlotProps> = {
-    functional: false,
-    props: ['name', 'empty', 'render', 'params'],
-    inject: ['piral'],
-    render(createElement) {
-      return createElement(rootName);
-    },
-    mounted() {
-      this.piral.renderHtmlExtension(this.$el, {
-        empty: this.empty,
-        params: this.params,
-        render: this.render,
-        name: this.name,
-      });
-    },
-  };
-
-  register(selector, VueExtension);
+  const { rootName, selector } = config;
 
   return context => {
     const convert = createConverter(rootName);
@@ -57,7 +37,7 @@ export function createVueApi(config: VueConfig = {}): PiralPlugin<PiletVueApi> {
           captured,
         };
       },
-      VueExtension,
+      VueExtension: createExtension(rootName, selector),
     };
   };
 }

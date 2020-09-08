@@ -58,6 +58,18 @@ Within Cycle.js components the Piral Cycle.js extension component can be used by
 CycleExtension({ name: "name-of-extension" })
 ```
 
+Alternatively, if `piral-cycle` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromCycle } from 'piral-cycle';
+import { CyclePage } from './CyclePage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromCycle(CyclePage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

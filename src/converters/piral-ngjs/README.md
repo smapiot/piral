@@ -44,6 +44,20 @@ Within Angular.js components the Piral Angular.js extension component can be use
 <extension-component name="name-of-extension"></extension-component>
 ```
 
+Alternatively, if `piral-ngjs` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromNgjs, createNgjsExtension } from 'piral-ngjs';
+import { createAngularJsPage } from './AngularJsPage';
+
+export function setup(piral: PiletApi) {
+  const Extension = createNgjsExtension();
+  const AngularJsPage = createAngularJsPage(Extension.name);
+  piral.registerPage('/sample', fromNgjs(AngularJsPage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

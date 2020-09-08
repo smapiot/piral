@@ -1,7 +1,8 @@
-import { PiralPlugin } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
 import { loadEmberApp } from './load';
 import { createConverter } from './converter';
-import { PiletEmberApi } from './types';
+import { createExtension } from './extension';
+import type { PiletEmberApi } from './types';
 
 /**
  * Available configuration options for the Ember.js plugin.
@@ -18,33 +19,13 @@ export interface EmberConfig {
  * Creates Pilet API extensions for integrating Ember.js.
  */
 export function createEmberApi(config: EmberConfig = {}): PiralPlugin<PiletEmberApi> {
-  const { selector = 'ember-extension' } = config;
-
-  if ('customElements' in window) {
-    class EmberExtension extends HTMLElement {
-      connectedCallback() {
-        if (this.isConnected) {
-          this.dispatchEvent(
-            new CustomEvent('render-html', {
-              bubbles: true,
-              detail: {
-                target: this,
-                props: {
-                  name: this.getAttribute('name'),
-                },
-              },
-            }),
-          );
-        }
-      }
-    }
-
-    customElements.define(selector, EmberExtension);
-  }
+  const { selector } = config;
 
   return context => {
     const convert = createConverter();
     context.converters.ember = ({ App, opts }) => convert(App, opts);
+
+    createExtension(selector);
 
     return {
       fromEmber(App, opts) {

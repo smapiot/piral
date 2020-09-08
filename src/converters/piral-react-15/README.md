@@ -43,6 +43,18 @@ Within React v15 components the Piral React v15 extension component can be used 
 <React15Extension name="name-of-extension" />
 ```
 
+Alternatively, if `piral-react-15` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromReact15 } from 'piral-react-15';
+import { React15Page } from './React15Page';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromReact15(React15Page));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

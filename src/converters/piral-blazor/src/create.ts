@@ -1,7 +1,7 @@
-import { PiralPlugin } from 'piral-core';
-import { addReference } from './internal';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletBlazorApi } from './types';
+import { createDependencyLoader } from './dependencies';
+import type { PiletBlazorApi } from './types';
 
 /**
  * Available configuration options for the Blazor plugin.
@@ -18,32 +18,21 @@ export interface BlazorConfig {
  * Creates new Pilet API extensions for integration of Blazor.
  */
 export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBlazorApi> {
-  const { lazy = true } = config;
+  const { lazy } = config;
 
   return context => {
     const convert = createConverter(lazy);
     context.converters.blazor = ({ moduleName, args, dependency }) => convert(moduleName, dependency, args);
 
     return () => {
-      let dependency: () => Promise<any>;
+      const loader = createDependencyLoader(convert, lazy);
 
       return {
-        defineBlazorReferences(references) {
-          const load = () =>
-            Promise.all(
-              references.map(reference =>
-                fetch(reference)
-                  .then(res => res.blob())
-                  .then(addReference),
-              ),
-            );
-          let result = !lazy && convert.loader.then(load);
-          dependency = () => result || (result = load());
-        },
+        defineBlazorReferences: loader.defineBlazorReferences,
         fromBlazor(moduleName, args) {
           return {
             type: 'blazor',
-            dependency,
+            dependency: loader.getDependency(),
             moduleName,
             args,
           };

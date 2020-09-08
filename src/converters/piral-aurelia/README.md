@@ -43,6 +43,18 @@ Within Aurelia components the Piral Aurelia extension component can be used by r
 <extension-component name="name-of-extension"></extension-component>
 ```
 
+Alternatively, if `piral-aurelia` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromAurelia } from 'piral-aurelia';
+import { AureliaPage } from './AureliaPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromAurelia(AureliaPage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

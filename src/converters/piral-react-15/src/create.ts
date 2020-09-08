@@ -1,8 +1,7 @@
-import { PiralPlugin, ExtensionSlotProps, compare } from 'piral-core';
-import { createElement, Component } from 'react-15';
-import { anyPropType } from './mount';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletReact15Api } from './types';
+import { createExtension } from './extension';
+import type { PiletReact15Api } from './types';
 
 /**
  * Available configuration options for the React 15.x plugin.
@@ -19,31 +18,7 @@ export interface React15Config {
  * Creates Pilet API extensions for integrating React 15.x.
  */
 export function createReact15Api(config: React15Config = {}): PiralPlugin<PiletReact15Api> {
-  const { rootName = 'slot' } = config;
-
-  const React15Extension: any = class extends Component<ExtensionSlotProps> {
-    static contextTypes = {
-      piral: anyPropType,
-    };
-
-    private onRefChange = (element: HTMLElement) => {
-      if (element) {
-        const { piral } = this.context;
-        element.innerHTML = '';
-        piral.renderHtmlExtension(element, this.props);
-      }
-    };
-
-    shouldComponentUpdate(nextProps: ExtensionSlotProps) {
-      return !compare(this.props, nextProps);
-    }
-
-    render() {
-      return createElement(rootName, {
-        ref: this.onRefChange,
-      });
-    }
-  };
+  const { rootName } = config;
 
   return context => {
     const convert = createConverter();
@@ -56,7 +31,7 @@ export function createReact15Api(config: React15Config = {}): PiralPlugin<PiletR
           root,
         };
       },
-      React15Extension,
+      React15Extension: createExtension(rootName),
     };
   };
 }

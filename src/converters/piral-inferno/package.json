@@ -21,7 +21,8 @@
   "sideEffects": false,
   "files": [
     "lib",
-    "src"
+    "src",
+    "convert.js"
   ],
   "repository": {
     "type": "git",

@@ -24,7 +24,8 @@
   "files": [
     "infra.codegen",
     "lib",
-    "src"
+    "src",
+    "convert.js"
   ],
   "repository": {
     "type": "git",

@@ -44,6 +44,20 @@ Within Riot components the Piral Riot extension component can be used by referri
 <riot-extension name="name-of-extension"></riot-extension>
 ```
 
+Alternatively, if `piral-riot` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromRiot, createRiotExtension } from 'piral-riot';
+import { createRiotPage } from './page';
+
+export function setup(piral: PiletApi) {
+  const Extension = createRiotExtension(piral);
+  const RiotPage = createRiotPage(Extension);
+  piral.registerPage('/sample', fromRiot(RiotPage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

@@ -43,6 +43,18 @@ Within Hyperapp components the Piral Hyperapp extension component can be used by
 <HyperappExtension name="name-of-extension" />
 ```
 
+Alternatively, if `piral-hyperapp` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromHyperapp } from 'piral-hyperapp';
+import { HyperappPage } from './HyperappPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromHyperapp(HyperappPage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

@@ -39,6 +39,18 @@ Within Svelte components the Piral Svelte extension component can be used by ref
 <svelte-extension name="name-of-extension"></svelte-extension>
 ```
 
+Alternatively, if `piral-svelte` has not been added to the Piral instance you can install and use the package also from a pilet directly.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromSvelte } from 'piral-svelte';
+import SveltePage from './Page.svelte';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromSvelte(SveltePage));
+}
+```
+
 :::
 
 ::: summary: For Piral instance developers

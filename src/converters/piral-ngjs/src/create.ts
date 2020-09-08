@@ -1,7 +1,7 @@
-import * as angular from 'angular';
 import { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { PiletNgjsApi } from './types';
+import { createExtension } from './extension';
 
 /**
  * Available configuration options for the Angular.js plugin.
@@ -18,33 +18,8 @@ export interface NgjsConfig {
  * Creates the Pilet API extensions for Angular.js.
  */
 export function createNgjsApi(config: NgjsConfig = {}): PiralPlugin<PiletNgjsApi> {
-  const { rootName = 'slot' } = config;
-
-  const NgjsExtension = angular.module(`piralExtension`, []);
-  NgjsExtension.component('extensionComponent', {
-    template: `<${rootName}></${rootName}>`,
-    bindings: {
-      empty: '<',
-      params: '<',
-      render: '<',
-      name: '@',
-    },
-    controller: [
-      '$element',
-      'piral',
-      function($element, piral) {
-        this.$onInit = () => {
-          const container = $element[0].querySelector(rootName);
-          piral.renderHtmlExtension(container, {
-            empty: this.empty,
-            params: this.params,
-            render: this.render,
-            name: this.name,
-          });
-        };
-      },
-    ],
-  });
+  const { rootName } = config;
+  const NgjsExtension = createExtension(rootName);
 
   return context => {
     const convert = createConverter();
