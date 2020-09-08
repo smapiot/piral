@@ -75,6 +75,12 @@ export interface ExportedInterface {}
 
 The emulator declaration can also be built independently using the command `piral declaration`.
 
+::: tip: Piral Declaration Entry Point
+By default, the `piral declaration` command works against the current working directory. It looks for the closest *package.json* and retrieves the application's entry point via the `app` field. In case you want to specify this you can provide the entry point directly.
+
+The command `piral declaration path/to/entry` supports *.html*, *.js*, *.jsx*, *.ts*, and *.tsx* files as entry points.
+:::
+
 ## Virtual Packages
 
 Using the declaration technique a virtual package could be bundled, too.

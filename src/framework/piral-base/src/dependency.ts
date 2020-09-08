@@ -1,4 +1,4 @@
-import type { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV1 } from './types';
+import type { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV1, PiletMetadataBundle } from './types';
 
 function requireModule(name: string, dependencies: AvailableDependencies) {
   const dependency = dependencies[name];
@@ -83,27 +83,40 @@ declare global {
   }
 }
 
+function includeScript(piletName: string, depName: string, link: string, integrity?: string, dependencies?: AvailableDependencies) {
+  return new Promise<PiletApp>(resolve => {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = link;
+
+    if (integrity) {
+      s.crossOrigin = 'anonymous';
+      s.integrity = integrity;
+    }
+
+    window[depName] = getLocalRequire(dependencies);
+    s.onload = () => resolve(checkPiletAppAsync(piletName, s.app));
+    s.onerror = () => resolve(checkPiletApp(piletName));
+    document.body.appendChild(s);
+  });
+}
+
 /**
- * Includes the given script via its URL with a dependency resolution.
+ * Includes the given single pilet script via its URL with a dependency resolution.
  * @param meta The meta data of the dependency to include.
  * @param dependencies The globally available dependencies.
  * @returns The evaluated module.
  */
 export function includeDependency(meta: PiletMetadataV1, dependencies?: AvailableDependencies) {
-  return new Promise<PiletApp>(resolve => {
-    const rr = meta.requireRef;
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = meta.link;
+  return includeScript(meta.name, meta.requireRef, meta.link, meta.integrity, dependencies);
+}
 
-    if (meta.integrity) {
-      s.crossOrigin = 'anonymous';
-      s.integrity = meta.integrity;
-    }
-
-    window[rr] = getLocalRequire(dependencies);
-    s.onload = () => resolve(checkPiletAppAsync(meta.name, s.app));
-    s.onerror = () => resolve(checkPiletApp(meta.name));
-    document.body.appendChild(s);
-  });
+/**
+ * Includes the given bundle script via its URL with a dependency resolution.
+ * @param meta The meta data of the dependency to include.
+ * @param dependencies The globally available dependencies.
+ * @returns The evaluated module.
+ */
+export function includeBundle(meta: PiletMetadataBundle, dependencies?: AvailableDependencies) {
+  return includeScript(meta.name ?? '(bundle)', meta.bundle, meta.link, meta.integrity, dependencies);
 }

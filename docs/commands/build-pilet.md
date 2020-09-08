@@ -42,34 +42,27 @@ Sets the target file of bundling.
 - Type: `string`
 - Default: `"./dist/index.js"`
 
-### `--cache-dir`
-
-Sets the cache directory for bundling.
-
-- Type: `string`
-- Default: `".cache"`
-
-### `--detailed-report`
-
-Sets if a detailed report should be created.
-
-- Type: `boolean`
-- Default: `false`
-
-### `--no-detailed-report`
-
-Opposite of:
-Sets if a detailed report should be created.
-
-- Type: `boolean`
-- Default: `true`
-
 ### `--log-level`
 
 Sets the log level to use (1-5).
 
 - Type: `number`
 - Default: `3`
+
+### `--source-maps`
+
+Creates source maps for the bundles.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-source-maps`
+
+Opposite of:
+Creates source maps for the bundles.
+
+- Type: `boolean`
+- Default: `false`
 
 ### `--fresh`
 
@@ -101,21 +94,6 @@ Performs minification or other post-bundle transformations.
 - Type: `boolean`
 - Default: `false`
 
-### `--source-maps`
-
-Creates source maps for the bundles.
-
-- Type: `boolean`
-- Default: `true`
-
-### `--no-source-maps`
-
-Opposite of:
-Creates source maps for the bundles.
-
-- Type: `boolean`
-- Default: `false`
-
 ### `--content-hash`
 
 Appends the hash to the side-bundle files.
@@ -130,21 +108,6 @@ Appends the hash to the side-bundle files.
 
 - Type: `boolean`
 - Default: `false`
-
-### `--scope-hoist`
-
-Tries to reduce bundle size by introducing tree shaking.
-
-- Type: `boolean`
-- Default: `false`
-
-### `--no-scope-hoist`
-
-Opposite of:
-Tries to reduce bundle size by introducing tree shaking.
-
-- Type: `boolean`
-- Default: `true`
 
 ### `--optimize-modules`
 

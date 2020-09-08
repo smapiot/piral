@@ -5,7 +5,7 @@ import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
 import { PiletLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
-import { filesTar, filesOnceTar } from './constants';
+import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
@@ -276,7 +276,7 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
   const rootDir = join(baseDir, entry);
   log('generalDebug_0003', `Retrieving Piral root from "${rootDir}" ...`);
 
-  if (extname(rootDir) !== '.html') {
+  if (!declarationEntryExtensions.includes(extname(rootDir).toLowerCase())) {
     const packageName = basename(rootDir) === 'package.json' ? rootDir : join(rootDir, 'package.json');
     log('generalDebug_0003', `Trying to get entry point from "${packageName}".`);
     const exists = await checkExists(packageName);
