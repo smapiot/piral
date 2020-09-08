@@ -65,7 +65,6 @@ export async function createDeclaration(
   const allowedImports = makeExternals(externals);
   const entryModules = await getEntryModules(entryFiles);
   const files = await getAllFiles(entryModules);
-  console.log(name, root, externals, entryModules);
 
   progress('Bundling declaration file ...');
 
