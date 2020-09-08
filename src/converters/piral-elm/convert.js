@@ -1,5 +1,10 @@
 const { createConverter } = require('./lib/converter');
 const { createExtension } = require('./lib/extension');
 
-exports.fromElm = createConverter();
+const convert = createConverter();
+
+exports.fromElm = (main, captured) => ({
+  type: 'html',
+  component: convert(main, captured),
+});
 exports.createElmExtension = createExtension;

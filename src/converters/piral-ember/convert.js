@@ -1,5 +1,10 @@
 const { createConverter } = require('./lib/converter');
 const { createExtension } = require('./lib/extension');
 
-exports.fromEmber = createConverter();
+const convert = createConverter();
+
+exports.fromEmber = (App, opts) => ({
+  type: 'html',
+  component: convert(App, opts),
+});
 exports.createEmberExtension = createExtension;
