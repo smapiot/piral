@@ -1,5 +1,5 @@
-import { PiralEventMap } from 'piral-base';
-import { PiralCustomEventMap } from './custom';
+import type {} from 'piral-base';
+import type { PiralCustomEventMap } from './custom';
 
 /**
  * A key value store that can be abstracted onto a storage solution (e.g. cookie).

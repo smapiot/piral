@@ -1,4 +1,4 @@
-import { PiralCustomExtensionSlotMap } from './custom';
+import type { PiralCustomExtensionSlotMap } from './custom';
 
 /**
  * The mapping of the existing (known) extension slots.

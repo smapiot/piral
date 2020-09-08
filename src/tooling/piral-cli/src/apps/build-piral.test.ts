@@ -118,7 +118,7 @@ describe('Build Piral Command', () => {
   beforeEach(() => {
     setBundler({
       name: 'parcel',
-      actions: require('piral-cli-parcel/lib/actions'),
+      actions: require(resolve(__dirname, '../../../piral-cli-parcel/lib/actions')),
     });
   });
 

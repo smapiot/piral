@@ -1,6 +1,6 @@
 import { isfunc } from './utils';
 import { setupPilet } from './setup';
-import { Pilet, PiletApiCreator } from './types';
+import type { Pilet, PiletApiCreator } from './types';
 
 function checkCreateApi(createApi: PiletApiCreator) {
   if (!isfunc(createApi)) {

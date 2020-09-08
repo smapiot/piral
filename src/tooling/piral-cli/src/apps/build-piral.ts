@@ -7,7 +7,6 @@ import {
   removeDirectory,
   logDone,
   checkCliCompatibility,
-  defaultCacheDir,
   progress,
   setLogLevel,
   logReset,
@@ -53,11 +52,6 @@ export interface BuildPiralOptions {
   target?: string;
 
   /**
-   * Sets the cache directory for bundling.
-   */
-  cacheDir?: string;
-
-  /**
    * Sets the public URL (path) of the bundle.
    */
   publicUrl?: string;
@@ -66,11 +60,6 @@ export interface BuildPiralOptions {
    * Performs minification or other post-bundle transformations.
    */
   minify?: boolean;
-
-  /**
-   * States if a detailed report should be created when building the piral instance.
-   */
-  detailedReport?: boolean;
 
   /**
    * Sets the log level to use.
@@ -98,30 +87,26 @@ export interface BuildPiralOptions {
   contentHash?: boolean;
 
   /**
-   * States if tree shaking should be used when creating the bundle.
-   * (may reduce bundle size)
-   */
-  scopeHoist?: boolean;
-
-  /**
    * States if the node modules should be included for target transpilation
    */
   optimizeModules?: boolean;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
+  _?: Record<string, any>;
 }
 
 export const buildPiralDefaults: BuildPiralOptions = {
   entry: './',
   target: './dist',
   publicUrl: '/',
-  cacheDir: defaultCacheDir,
-  detailedReport: false,
   logLevel: LogLevels.info,
   fresh: false,
   minify: true,
   type: 'all',
   sourceMaps: true,
   contentHash: true,
-  scopeHoist: false,
   optimizeModules: false,
 };
 
@@ -142,22 +127,19 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     entry = buildPiralDefaults.entry,
     target = buildPiralDefaults.target,
     publicUrl = buildPiralDefaults.publicUrl,
-    detailedReport = buildPiralDefaults.detailedReport,
     logLevel = buildPiralDefaults.logLevel,
-    cacheDir = buildPiralDefaults.cacheDir,
     minify = buildPiralDefaults.minify,
     sourceMaps = buildPiralDefaults.sourceMaps,
     contentHash = buildPiralDefaults.contentHash,
-    scopeHoist = buildPiralDefaults.scopeHoist,
     fresh = buildPiralDefaults.fresh,
     type = buildPiralDefaults.type,
     optimizeModules = buildPiralDefaults.optimizeModules,
+    _ = {},
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
-  const cache = resolve(root, cacheDir);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
 
   await checkCliCompatibility(root);
@@ -180,12 +162,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       piral: name,
       emulator: true,
       optimizeModules,
-      scopeHoist,
       sourceMaps,
       contentHash,
-      detailedReport,
       minify: false,
-      cacheDir: cache,
       externals,
       publicUrl,
       outFile: dest.outFile,
@@ -193,6 +172,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       entryFiles,
       logLevel,
       ignored,
+      _,
     });
 
     await runLifecycle(root, scripts, 'piral:postbuild');
@@ -217,12 +197,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       piral: name,
       emulator: false,
       optimizeModules,
-      scopeHoist,
       sourceMaps,
       contentHash,
-      detailedReport,
       minify,
-      cacheDir: cache,
       externals,
       publicUrl,
       outFile: dest.outFile,
@@ -230,6 +207,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       entryFiles,
       logLevel,
       ignored,
+      _,
     });
 
     await runLifecycle(root, scripts, 'piral:postbuild');

@@ -12,6 +12,7 @@ module.exports = function() {
   const wasmDir = path.resolve(frameworkDir, 'wasm');
   const blazorBootFile = path.resolve(frameworkDir, 'blazor.boot.json');
 
+  !fs.existsSync(outDir) && fs.mkdirSync(outDir, { recursive: true });
   !fs.existsSync(frameworkDir) && fs.mkdirSync(frameworkDir);
   !fs.existsSync(binDir) && fs.mkdirSync(binDir);
   !fs.existsSync(wasmDir) && fs.mkdirSync(wasmDir);

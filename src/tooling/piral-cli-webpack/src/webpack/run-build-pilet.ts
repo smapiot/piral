@@ -1,4 +1,4 @@
-import { PiletSchemaVersion } from 'piral-cli';
+import type { PiletSchemaVersion, LogLevels } from 'piral-cli';
 import { setStandardEnvs } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -17,6 +17,7 @@ async function run(
   outFile: string,
   entryModule: string,
   version: PiletSchemaVersion,
+  logLevel: LogLevels,
 ) {
   setStandardEnvs({
     production: true,
@@ -42,7 +43,7 @@ async function run(
     watch: false,
   });
 
-  const bundler = runWebpack(wpConfig);
+  const bundler = runWebpack(wpConfig, logLevel);
   return await bundler.bundle();
 }
 
@@ -60,6 +61,7 @@ process.on('message', async msg => {
         msg.outFile,
         msg.entryModule,
         msg.version,
+        msg.logLevel,
       ).catch(error => {
         process.send({
           type: 'fail',

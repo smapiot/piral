@@ -1,35 +1,43 @@
 import { callDynamic, callStatic } from './webpack';
 import {
-  Bundler,
-  BundleDetails,
-  DebugPiralParameters,
-  WatchPiralParameters,
-  BuildPiralParameters,
-  DebugPiletParameters,
-  BuildPiletParameters,
+  DebugPiletBundlerDefinition,
+  DebugPiralBundlerDefinition,
+  BuildPiletBundlerDefinition,
+  BuildPiralBundlerDefinition,
+  WatchPiralBundlerDefinition,
 } from 'piral-cli';
 
-export async function debugPiral(args: DebugPiralParameters): Promise<Bundler> {
-  const bundler = await callDynamic('debug-piral', args);
-  return bundler;
-}
+export const debugPiral: DebugPiralBundlerDefinition = {
+  async run(args) {
+    const bundler = await callDynamic('debug-piral', args);
+    return bundler;
+  }
+};
 
-export async function watchPiral(args: WatchPiralParameters): Promise<Bundler> {
-  const bundler = await callStatic('debug-mono-piral', args);
-  return bundler;
-}
+export const watchPiral: WatchPiralBundlerDefinition = {
+  async run(args) {
+    const bundler = await callStatic('debug-mono-piral', args);
+    return bundler;
+  },
+};
 
-export async function buildPiral(args: BuildPiralParameters): Promise<BundleDetails> {
-  const bundler = await callStatic('build-piral', args);
-  return bundler.bundle;
-}
+export const buildPiral: BuildPiralBundlerDefinition = {
+  async run(args) {
+    const bundler = await callStatic('build-piral', args);
+    return bundler.bundle;
+  },
+};
 
-export async function debugPilet(args: DebugPiletParameters): Promise<Bundler> {
-  const bundler = await callDynamic('debug-pilet', args);
-  return bundler;
-}
+export const debugPilet: DebugPiletBundlerDefinition = {
+  async run(args) {
+    const bundler = await callDynamic('debug-pilet', args);
+    return bundler;
+  },
+};
 
-export async function buildPilet(args: BuildPiletParameters): Promise<BundleDetails> {
-  const bundler = await callStatic('build-pilet', args);
-  return bundler.bundle;
-}
+export const buildPilet: BuildPiletBundlerDefinition = {
+  async run(args) {
+    const bundler = await callStatic('build-pilet', args);
+    return bundler.bundle;
+  },
+};

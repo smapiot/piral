@@ -10,8 +10,6 @@ import {
   reorderInjectors,
   notifyServerOnline,
   findEntryModule,
-  defaultCacheDir,
-  removeDirectory,
   setLogLevel,
   progress,
   matchAny,
@@ -20,30 +18,60 @@ import {
 } from '../common';
 
 export interface DebugPiletOptions {
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
-  cacheDir?: string;
+
+  /**
+   * Sets the paths to the entry modules.
+   */
   entry?: string | Array<string>;
+
+  /**
+   * Overrides the name of the app shell to use.
+   * By default the app is inferred from the package.json.
+   */
   app?: string;
-  fresh?: boolean;
+
+  /**
+   * Sets if the (system default) browser should be auto-opened.
+   */
   open?: boolean;
+
+  /**
+   * Sets the port to use for the debug server.
+   */
   port?: number;
-  scopeHoist?: boolean;
+
+  /**
+   * Defines if hot module reloading (HMR) should be integrated for faster debugging.
+   */
   hmr?: boolean;
-  autoInstall?: boolean;
+
+  /**
+   * States if the node modules should be included for target transpilation
+   */
   optimizeModules?: boolean;
+
+  /**
+   * The schema to be used when bundling the pilets.
+   * @example 'v1'
+   */
   schemaVersion?: PiletSchemaVersion;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
+  _?: Record<string, any>;
 }
 
 export const debugPiletDefaults: DebugPiletOptions = {
   logLevel: LogLevels.info,
-  cacheDir: defaultCacheDir,
   entry: './src/index',
-  fresh: false,
   open: false,
   port: 1234,
-  scopeHoist: false,
   hmr: true,
-  autoInstall: true,
   optimizeModules: false,
   schemaVersion: 'v1',
 };
@@ -70,6 +98,7 @@ async function getOrMakeAppDir({ emulator, piral, externals, appFile }: AppInfo,
       piral,
       entryFiles: appFile,
       logLevel,
+      _: {},
     });
     return dir;
   }
@@ -98,16 +127,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const {
     entry = debugPiletDefaults.entry,
     port = debugPiletDefaults.port,
-    cacheDir = debugPiletDefaults.cacheDir,
     open = debugPiletDefaults.open,
-    scopeHoist = debugPiletDefaults.scopeHoist,
     hmr = debugPiletDefaults.hmr,
-    autoInstall = debugPiletDefaults.autoInstall,
     logLevel = debugPiletDefaults.logLevel,
-    fresh = debugPiletDefaults.fresh,
     optimizeModules = debugPiletDefaults.optimizeModules,
     schemaVersion = debugPiletDefaults.schemaVersion,
     app,
+    _ = {},
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -137,14 +163,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         app,
       );
       const externals = Object.keys(peerDependencies);
-      const cache = resolve(root, cacheDir);
       const mocks = join(targetDir, 'mocks');
       const exists = await checkExistingDirectory(mocks);
-
-      if (fresh) {
-        progress('Removing output directory ...');
-        await removeDirectory(cache);
-      }
 
       if (exists) {
         if (krasConfig.directory === undefined) {
@@ -159,15 +179,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         piral: appPackage.name,
         optimizeModules,
         hmr,
-        scopeHoist,
-        autoInstall,
-        cacheDir: cache,
         externals,
         targetDir,
         entryModule,
         logLevel,
         version: schemaVersion,
         ignored,
+        _,
       });
 
       return {

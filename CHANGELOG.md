@@ -1,15 +1,17 @@
 # Piral Changelog
 
-## 1.0.0 (tbd)
+## 0.12.0 (tbd)
 
 * Documentation cleanup
 * Allow upload of arbitrary pilet sizes in `pilet publish` (#294)
 * Renamed `extendApi` to `plugins` (keeping `extendApi` as deprecated)
+* Moved Parcel exclusive flags to `piral-cli-parcel`
 * Fixed hidden publishing pilet size limit and improved logging of axios errors (#294)
 * Fixed Webpack issue in pilets referencing stylesheets (#304)
 * Fixed Webpack issue not using Babel for TypeScript files (#310)
 * Added `open` package dependency to ensure no errors when using `--open` CLI flag (#303)
 * Added more standard fields such as `description` to the emulator package
+* Added `import-map-webpack-plugin` to the `piral-cli-webpack`
 
 ## 0.11.8 (July 9, 2020)
 

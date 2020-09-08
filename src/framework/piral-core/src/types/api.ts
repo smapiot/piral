@@ -1,10 +1,10 @@
-import { ReactElement } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { PiletApi, Pilet, PiletMetadata, EventEmitter } from 'piral-base';
-import { PiletCustomApi, PiralCustomPageMeta } from './custom';
-import { AnyComponent } from './components';
-import { ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
-import { SharedData, DataStoreOptions } from './data';
+import type { ReactElement } from 'react';
+import type { RouteComponentProps } from 'react-router';
+import type { PiletApi, Pilet, PiletMetadata, EventEmitter } from 'piral-base';
+import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
+import type { AnyComponent } from './components';
+import type { ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
+import type { SharedData, DataStoreOptions } from './data';
 
 export { PiletApi, Pilet, PiletMetadata, EventEmitter };
 

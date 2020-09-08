@@ -9,37 +9,61 @@ import {
   checkCliCompatibility,
   reorderInjectors,
   notifyServerOnline,
-  removeDirectory,
   setLogLevel,
   progress,
   log,
 } from '../common';
 
 export interface DebugPiralOptions {
+  /**
+   * Sets the path to the entry file.
+   */
   entry?: string;
-  cacheDir?: string;
+
+  /**
+   * Sets the port to use for the debug server.
+   */
   port?: number;
+
+  /**
+   * Sets the publicUrl to use.
+   * By default, the server is assumed to be at root "/".
+   */
   publicUrl?: string;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
-  fresh?: boolean;
+
+  /**
+   * Sets if the (system default) browser should be auto-opened.
+   */
   open?: boolean;
-  scopeHoist?: boolean;
+
+  /**
+   * Defines if hot module reloading (HMR) should be integrated for faster debugging.
+   */
   hmr?: boolean;
-  autoInstall?: boolean;
+
+  /**
+   * States if the node modules should be included for target transpilation
+   */
   optimizeModules?: boolean;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
+  _?: Record<string, any>;
 }
 
 export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
-  cacheDir: '.cache',
   port: 1234,
   publicUrl: '/',
   logLevel: LogLevels.info,
-  fresh: false,
   open: false,
-  scopeHoist: false,
   hmr: true,
-  autoInstall: true,
   optimizeModules: false,
 };
 
@@ -49,21 +73,17 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const {
     entry = debugPiralDefaults.entry,
     port = debugPiralDefaults.port,
-    cacheDir = debugPiralDefaults.cacheDir,
     open = debugPiralDefaults.open,
-    scopeHoist = debugPiralDefaults.scopeHoist,
     hmr = debugPiralDefaults.hmr,
-    autoInstall = debugPiralDefaults.autoInstall,
     publicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
-    fresh = debugPiralDefaults.fresh,
     optimizeModules = debugPiralDefaults.optimizeModules,
+    _ = {},
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
-  const cache = resolve(root, cacheDir);
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   await checkCliCompatibility(root);
@@ -88,24 +108,17 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
-  if (fresh) {
-    progress('Removing output directory ...');
-    await removeDirectory(cache);
-  }
-
   const bundler = await callPiralDebug({
     root,
     piral: name,
     optimizeModules,
     hmr,
-    scopeHoist,
-    autoInstall,
-    cacheDir: cache,
     externals,
     publicUrl,
     entryFiles,
     logLevel,
     ignored,
+    _,
   });
 
   const injectorConfig = {

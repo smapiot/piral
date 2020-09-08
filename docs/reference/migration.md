@@ -4,9 +4,9 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 > In general we will never break your Pilet API. Therefore, all of these changes below refer to the use of the Piral CLI for non-essential tasks or your Piral instance.
 
-## 0.11 to 1.0
+## 0.11 to 0.12
 
-### Breaking Changes in 1.0
+### Breaking Changes in 0.12
 
 1. The `--type` flag of the Piral CLI changed values. `develop` has been renamed to `emulator`.
 2. The output of the emulator is no longer in the `[out]/develop` directory, but in `[out]/emulator`, where `[out]` refers to the output directory (usually *dist*).

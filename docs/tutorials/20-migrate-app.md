@@ -128,6 +128,52 @@ Regarding the use of CSS in general: By default, Piral makes no restrictions on 
 
 Luckily, there are ways around this. The best practice here is to "namespace" our CSS, which is facilitated by usage of SASS or CSS-in-JS libraries. Pilets will need to give careful consideration to what "reset" or "normalization" libraries they're using, and microfrontends should decouple themselves from whatever CSS artifacts other pilets are exporting.
 
+## Create React App into App Shell
+
+This works pretty much out of the box if we install `piral-core` as a dependency for the runtime, and `parcel-codegen-loader` + `piral-instance-webpack-plugin` for the compilation.
+
+The Webpack configuration of CRA needs to be extended a bit:
+
+```js
+const webpack = require('webpack');
+const { PiralInstanceWebpackPlugin } = require('piral-instance-webpack-plugin');
+
+module.exports = {
+  // The Webpack config to use when compiling your react app for development or production.
+  webpack(config, env) {
+    const piralPkg = require('./package.json');
+    const EnvironmentPlugin = webpack.EnvironmentPlugin;
+
+    // Configure PiralInstanceWebpackPlugin
+    const excludedDependencies = ['piral', 'piral-core', 'piral-base', piralPkg.name];
+    const dependencies = piralPkg.pilets && piralPkg.pilets.externals ? piralPkg.pilets.externals : [];
+    const externals = dependencies.filter((m) => !excludedDependencies.includes(m));
+
+    config.plugins.push(new PiralInstanceWebpackPlugin({
+      name: piralPkg.name,
+      version: piralPkg.version,
+      debug: process.env.NODE_ENV !== 'production',
+      externals,
+    }));
+
+    // Configure parcel-codegen-loader.
+    config.module.rules.unshift({
+      test: /\.codegen$/i,
+      use: [
+        {
+          loader: 'parcel-codegen-loader',
+        }
+      ]
+    });
+
+    return config;
+  },
+  // ...
+};
+```
+
+Of course, we could also switch over to the `piral-cli` using, e.g., `piral-cli-webpack` at this point. Nevertheless, having this just working without much effort is certainly a great stepping stone.
+
 ## What about Next.js
 
 For this scenario, we assume that the application was created using the Next.js boilerplate. Again, under the hood this uses Webpack. The additional problems arise through custom parts like the Next.js router or the mixed client-side and server-side rendering.

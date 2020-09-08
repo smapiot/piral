@@ -165,3 +165,9 @@ const NotFound = props => <PiralError type="not_found" {...props} />;
 ```
 
 ---------------------------------------
+
+## What is the difference between pilet and a page?
+
+A pilet contains all the code of a microfrontend, which may include some pages. Essentially a page is nothing more than a component used via a routing rule. A pilet can contain (and register) as many components as it wants.
+
+---------------------------------------

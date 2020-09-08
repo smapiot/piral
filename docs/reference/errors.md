@@ -7,15 +7,19 @@ When a pilet crashes we will show a certain message (i.e., component) that can b
 We distinguish between a variety of errors. Currently, the following types of errors exist:
 
 - Loading
+- Extension
 - Page
 - Not Found
-- Feed
-- Tile
-- Menu
 
 More types of errors may be added my plugins. As an example, the `piral-forms` plugin also adds the following error:
 
 - Form
+
+Some other ones that are fairly common (i.e., included in `piral-ext`):
+
+- Feed
+- Tile
+- Menu
 
 ## Loading
 
@@ -26,6 +30,14 @@ It will always be shown as a blank page, thus we can not only style it like a pa
 **Note**: In this layout, we should not reference internal links. The loading error page is decoupled from the standard router. Instead, we should only include functionality to restart the application and / or report the error.
 
 *Example*: The pilet feed service is offline and the network exception is not handled in the initial request.
+
+## Extension
+
+The extension error appears when an extension crashes. As an example, if we crash during rendering of an extension then the error is shown.
+
+It will always be shown as the respective component containing the extension, which may be as prominent as a page or as little as a button.
+
+*Example*: The extension receives unexpected `params` and does not handle that gracefully.
 
 ## Page
 
