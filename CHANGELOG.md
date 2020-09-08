@@ -12,7 +12,7 @@
 * Added `open` package dependency to ensure no errors when using `--open` CLI flag (#303)
 * Added more standard fields such as `description` to the emulator package
 * Added `import-map-webpack-plugin` to the `piral-cli-webpack`
-* Added more flexibility to the `piral declaration` command
+* Added more flexibility to the `piral declaration` command (#316)
 
 ## 0.11.8 (July 9, 2020)
 
