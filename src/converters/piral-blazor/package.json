@@ -1,6 +1,6 @@
 {
   "name": "piral-blazor",
-  "version": "0.11.8",
+  "version": "0.12.0",
   "description": "Plugin for integrating Blazor components in Piral.",
   "keywords": [
     "piral",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/emscripten": "0.0.34",
-    "piral-core": "^0.11.8"
+    "piral-core": "^0.12.0"
   },
   "peerDependencies": {
     "piral-core": "^1.0.0"

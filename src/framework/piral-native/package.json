@@ -1,6 +1,6 @@
 {
   "name": "piral-native",
-  "version": "0.11.8",
+  "version": "0.12.0",
   "description": "The Piral framework for use in React Native.",
   "keywords": [
     "app",
@@ -51,7 +51,7 @@
     "react-native": ">=0.60.0"
   },
   "dependencies": {
-    "piral-core": "^0.11.8",
+    "piral-core": "^0.12.0",
     "react-router-dom": "5.2.0",
     "react-router-native": "5.2.0"
   }

@@ -1,6 +1,6 @@
 {
   "name": "piral-modals",
-  "version": "0.11.8",
+  "version": "0.12.0",
   "description": "Plugin for the display of modal dialogs in Piral.",
   "keywords": [
     "piral",
@@ -37,7 +37,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.11.8"
+    "piral-core": "^0.12.0"
   },
   "peerDependencies": {
     "piral-core": "^1.0.0"
