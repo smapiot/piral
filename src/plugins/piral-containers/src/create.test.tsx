@@ -41,7 +41,7 @@ describe('Piral-Containers create module', () => {
       },
       actions: {
         increment(dispatch) {
-          dispatch(state => ({
+          dispatch((state) => ({
             count: state.count + 1,
           }));
         },

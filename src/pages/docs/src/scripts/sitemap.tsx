@@ -71,13 +71,13 @@ function getRoutes(): [
 export function resolveSections(pathname: string) {
   return (
     Object.keys(resolvers)
-      .filter(path =>
+      .filter((path) =>
         matchPath(pathname, {
           exact: true,
           path,
         }),
       )
-      .map(m => resolvers[m])
+      .map((m) => resolvers[m])
       .shift() || []
   );
 }
@@ -85,13 +85,13 @@ export function resolveSections(pathname: string) {
 export function resolveNavigation(pathname: string) {
   return (
     Object.keys(navLinks)
-      .filter(path =>
+      .filter((path) =>
         matchPath(pathname, {
           exact: true,
           path,
         }),
       )
-      .map(m => navLinks[m])
+      .map((m) => navLinks[m])
       .shift() || []
   );
 }

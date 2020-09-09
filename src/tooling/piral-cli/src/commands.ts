@@ -30,7 +30,7 @@ function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolComma
     commands.push({
       ...command,
       name: command.name.replace(suffix, ''),
-      alias: command.alias.filter(n => n.endsWith(suffix)).map(n => n.replace(suffix, '')),
+      alias: command.alias.filter((n) => n.endsWith(suffix)).map((n) => n.replace(suffix, '')),
     });
   }
 }

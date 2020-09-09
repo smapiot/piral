@@ -33,7 +33,7 @@ const state = {
   },
 };
 
-(React as any).useMemo = cb => cb();
+(React as any).useMemo = (cb) => cb();
 
 const StubDashboard: React.FC = () => <div />;
 StubDashboard.displayName = 'StubDashboard';

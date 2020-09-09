@@ -11,9 +11,9 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     defineBlazorReferences(references) {
       const load = () =>
         Promise.all(
-          references.map(reference =>
+          references.map((reference) =>
             fetch(reference)
-              .then(res => res.blob())
+              .then((res) => res.blob())
               .then(addReference),
           ),
         );

@@ -16,7 +16,7 @@ export class WebAssemblyResourceLoader {
   constructor(readonly bootConfig: BootJsonData, readonly cacheIfUsed: Cache | null) {}
 
   loadResources(resources: ResourceList, url: (name: string) => string): LoadingResource[] {
-    return Object.keys(resources).map(name => this.loadResource(name, url(name), resources[name]));
+    return Object.keys(resources).map((name) => this.loadResource(name, url(name), resources[name]));
   }
 
   loadResource(name: string, url: string, contentHash: string): LoadingResource {
@@ -76,7 +76,7 @@ export class WebAssemblyResourceLoader {
     const cache = this.cacheIfUsed;
     if (cache) {
       const cachedRequests = await cache.keys();
-      const deletionPromises = cachedRequests.map(async cachedRequest => {
+      const deletionPromises = cachedRequests.map(async (cachedRequest) => {
         if (!(cachedRequest.url in this.usedCacheKeys)) {
           await cache.delete(cachedRequest);
         }

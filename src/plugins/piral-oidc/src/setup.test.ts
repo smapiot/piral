@@ -16,42 +16,15 @@ describe('Piral-Oidc setup module', () => {
     access_token: '123',
     expires_in: 100,
   };
-  const mockGetUser = jest
-    .fn()
-    .mockResolvedValue(user)
-    .mockName('getUser');
-  const mockSigninCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinCallback');
-  const mockSigninRedirectCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinRedirectCallback');
-  const mockSigninRedirect = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinRedirect');
-  const mockSigninSilent = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinSilent');
-  const mockSigninSilentCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinSilentCallback');
-  const mockSignoutRedirect = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signoutRedirect');
-  const mockSignoutRedirectCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signoutRedirectCallback');
-  const mockSignoutPopupCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signoutPopupCallback');
+  const mockGetUser = jest.fn().mockResolvedValue(user).mockName('getUser');
+  const mockSigninCallback = jest.fn().mockResolvedValue(undefined).mockName('signinCallback');
+  const mockSigninRedirectCallback = jest.fn().mockResolvedValue(undefined).mockName('signinRedirectCallback');
+  const mockSigninRedirect = jest.fn().mockResolvedValue(undefined).mockName('signinRedirect');
+  const mockSigninSilent = jest.fn().mockResolvedValue(undefined).mockName('signinSilent');
+  const mockSigninSilentCallback = jest.fn().mockResolvedValue(undefined).mockName('signinSilentCallback');
+  const mockSignoutRedirect = jest.fn().mockResolvedValue(undefined).mockName('signoutRedirect');
+  const mockSignoutRedirectCallback = jest.fn().mockResolvedValue(undefined).mockName('signoutRedirectCallback');
+  const mockSignoutPopupCallback = jest.fn().mockResolvedValue(undefined).mockName('signoutPopupCallback');
 
   const postLogoutRedirectUri = 'http://localhost:8000/post-logout';
   const redirectUri = 'http://localhost:8000/callback';
@@ -59,7 +32,7 @@ describe('Piral-Oidc setup module', () => {
 
   beforeAll(() => {
     //@ts-ignore
-    MockUserManager.mockImplementation(settings => {
+    MockUserManager.mockImplementation((settings) => {
       return {
         getUser: mockGetUser,
         settings: {

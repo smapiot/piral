@@ -13,7 +13,7 @@ import { useGlobalState, useDebounce, useActions, Disposable } from 'piral-core'
  */
 export function useSearch(delay?: number): [string, (value: string) => void] {
   const { setSearchInput, triggerSearch } = useActions();
-  const searchInput = useGlobalState(m => m.search.input);
+  const searchInput = useGlobalState((m) => m.search.input);
   const query = useDebounce(searchInput, delay);
   const cancel = useRef<Disposable>(undefined);
 

@@ -4,14 +4,14 @@ import { PiralModalsDialog, PiralModalsHost } from './components';
 import { OpenModalDialog, ModalRegistration } from './types';
 
 function closeAll(modals: Array<OpenModalDialog>) {
-  modals.forEach(m => m.close());
+  modals.forEach((m) => m.close());
 }
 
 function findModal(modals: Record<string, ModalRegistration>, name: string): ModalRegistration {
   if (name) {
     const [modal] = Object.keys(modals)
-      .filter(m => modals[m].name === name)
-      .map(m => modals[m]);
+      .filter((m) => modals[m].name === name)
+      .map((m) => modals[m]);
 
     return modal;
   }
@@ -20,11 +20,11 @@ function findModal(modals: Record<string, ModalRegistration>, name: string): Mod
 }
 
 export const Modals: React.FC = () => {
-  const modals = useGlobalState(s => s.registry.modals);
-  const dialogs = useGlobalState(s => s.modals);
+  const modals = useGlobalState((s) => s.registry.modals);
+  const dialogs = useGlobalState((s) => s.modals);
   const close = () => closeAll(dialogs);
   const children = dialogs
-    .map(n => {
+    .map((n) => {
       const reg = modals[n.name] || findModal(modals, n.alternative);
       const Component = reg && reg.component;
       const defaults = reg && reg.defaults;
@@ -42,7 +42,7 @@ export const Modals: React.FC = () => {
         )
       );
     })
-    .filter(m => !!m);
+    .filter((m) => !!m);
   const open = children.length > 0;
 
   return (

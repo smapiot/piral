@@ -38,19 +38,19 @@ export function createDefaultLoader(
 export function getDefaultLoader(getDependencies: PiletDependencyGetter, fetchDependency = defaultFetchDependency) {
   return (meta: PiletMetadata): Promise<Pilet> => {
     if (inBrowser && 'requireRef' in meta && meta.requireRef) {
-      return loadFrom(meta, getDependencies, deps => includeDependency(meta, deps));
+      return loadFrom(meta, getDependencies, (deps) => includeDependency(meta, deps));
     } else if (inBrowser && 'bundle' in meta && meta.bundle) {
-      return loadFrom(meta, getDependencies, deps => includeBundle(meta, deps));
+      return loadFrom(meta, getDependencies, (deps) => includeBundle(meta, deps));
     }
 
     const { name, link } = meta;
 
     if (link) {
-      return fetchDependency(link).then(content =>
-        loadFrom(meta, getDependencies, deps => compileDependency(name, content, link, deps)),
+      return fetchDependency(link).then((content) =>
+        loadFrom(meta, getDependencies, (deps) => compileDependency(name, content, link, deps)),
       );
     } else if ('content' in meta && meta.content) {
-      return loadFrom(meta, getDependencies, deps => compileDependency(name, meta.content, link, deps));
+      return loadFrom(meta, getDependencies, (deps) => compileDependency(name, meta.content, link, deps));
     } else {
       console.warn('Empty pilet found!', name, link);
     }

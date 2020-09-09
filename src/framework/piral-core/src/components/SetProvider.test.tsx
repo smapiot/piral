@@ -18,7 +18,7 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       includeProvider(provider) {
-        swap(state, s => ({
+        swap(state, (s) => ({
           ...s,
           providers: [...s.providers, provider],
         }));

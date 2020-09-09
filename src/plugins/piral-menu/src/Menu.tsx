@@ -4,10 +4,10 @@ import { PiralMenuContainer, PiralMenuItem } from './components';
 import { MenuProps } from './types';
 
 export const Menu: React.FC<MenuProps> = ({ type = 'general' }) => {
-  const menuItems = useGlobalState(s => s.registry.menuItems);
+  const menuItems = useGlobalState((s) => s.registry.menuItems);
   const renderItems = Object.keys(menuItems)
-    .filter(name => menuItems[name].settings.type === type)
-    .map(name => ({
+    .filter((name) => menuItems[name].settings.type === type)
+    .map((name) => ({
       name,
       Component: menuItems[name].component,
       meta: menuItems[name].settings,

@@ -15,7 +15,7 @@ export function updateFormState(
   initial: FormDataState,
   patch: Partial<FormDataState>,
 ) {
-  ctx.dispatch(state => {
+  ctx.dispatch((state) => {
     const newState = {
       ...initial,
       ...(state.forms[id] || {}),

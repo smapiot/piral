@@ -18,7 +18,7 @@ export function getDependencyResolver(
   globalDependencies = defaultGlobalDependencies,
   getLocalDependencies = defaultGetDependencies,
 ): PiletDependencyGetter {
-  return target => {
+  return (target) => {
     return getLocalDependencies(target) || globalDependencies;
   };
 }

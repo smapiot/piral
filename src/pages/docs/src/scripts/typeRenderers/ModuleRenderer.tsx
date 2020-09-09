@@ -12,5 +12,5 @@ function isExported(node: TiNode) {
 }
 
 export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ node, render }) => (
-  <>{(node.children || []).map(child => isExported(child) && <div key={child.id}>{render(child)}</div>)}</>
+  <>{(node.children || []).map((child) => isExported(child) && <div key={child.id}>{render(child)}</div>)}</>
 );

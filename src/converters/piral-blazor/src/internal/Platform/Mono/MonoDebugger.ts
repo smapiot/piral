@@ -19,7 +19,7 @@ export function attachDebuggerHotkey(resourceLoader: WebAssemblyResourceLoader) 
   hasReferencedPdbs = !!resourceLoader.bootConfig.resources.pdb;
 
   // Even if debugging isn't enabled, we register the hotkey so we can report why it's not enabled
-  document.addEventListener('keydown', evt => {
+  document.addEventListener('keydown', (evt) => {
     if (evt.shiftKey && (evt.metaKey || evt.altKey) && evt.code === 'KeyD') {
       if (!hasReferencedPdbs) {
         console.error('Cannot start debugging, because the application was not compiled with debugging enabled.');

@@ -63,7 +63,7 @@ export const FormPilet: SinglePilet = {
       },
       onSubmit(data) {
         console.log('Submitting simple data ...', data);
-        return new Promise(resolve =>
+        return new Promise((resolve) =>
           setTimeout(() => {
             resolve();
             console.log('Submitted simple data!', data);
@@ -81,7 +81,7 @@ export const FormPilet: SinglePilet = {
       },
       onSubmit(data) {
         console.log('Submitting async data ...', data);
-        return new Promise(resolve =>
+        return new Promise((resolve) =>
           setTimeout(() => {
             resolve();
             console.log('Submitted async data!', data);
@@ -89,7 +89,7 @@ export const FormPilet: SinglePilet = {
         );
       },
       loadData(props: PageComponentProps) {
-        return new Promise<SampleFormData>(resolve =>
+        return new Promise<SampleFormData>((resolve) =>
           setTimeout(
             () =>
               resolve({

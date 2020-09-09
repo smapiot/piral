@@ -3,7 +3,7 @@ import { loadPilets } from './load';
 describe('Loading Modules', () => {
   it('Fetching from empty source without any other option works', async () => {
     const fetcher = jest.fn(() => Promise.resolve([]));
-    const result = await loadPilets(fetcher, m => Promise.resolve<any>(m));
+    const result = await loadPilets(fetcher, (m) => Promise.resolve<any>(m));
     expect(result).toHaveLength(0);
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
@@ -19,7 +19,7 @@ describe('Loading Modules', () => {
       },
     ];
     const fetcher = jest.fn(() => Promise.resolve(apiResponse));
-    const result = await loadPilets(fetcher, m => Promise.resolve<any>(m));
+    const result = await loadPilets(fetcher, (m) => Promise.resolve<any>(m));
     expect(result).toHaveLength(1);
     expect(fetcher).toHaveBeenCalledTimes(1);
   });

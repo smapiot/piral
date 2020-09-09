@@ -18,7 +18,7 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       setComponent(name, comp) {
-        swap(state, s => ({
+        swap(state, (s) => ({
           ...s,
           components: {
             ...s.components,

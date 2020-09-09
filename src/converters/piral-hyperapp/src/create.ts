@@ -20,11 +20,11 @@ export interface HyperappConfig {
 export function createHyperappApi(config: HyperappConfig = {}): PiralPlugin<PiletHyperappApi> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.hyperapp = ({ root, state, actions }) => convert(root, state, actions);
 
-    return api => {
+    return (api) => {
       return {
         fromHyperapp(root, state, actions) {
           return {

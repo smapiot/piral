@@ -90,9 +90,9 @@ export interface SitelessApi {
 }
 
 function createSitelessApi(): PiralPlugin<SitelessApi> {
-  return context => ({
+  return (context) => ({
     setErrors(errors) {
-      context.dispatch(state => ({
+      context.dispatch((state) => ({
         ...state,
         errorComponents: {
           ...state.errorComponents,
@@ -101,7 +101,7 @@ function createSitelessApi(): PiralPlugin<SitelessApi> {
       }));
     },
     setLayout(components) {
-      context.dispatch(state => ({
+      context.dispatch((state) => ({
         ...state,
         components: {
           ...state.components,

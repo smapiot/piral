@@ -18,7 +18,7 @@ export const FunctionRenderer: React.FC<FunctionRendererProps> = ({ node, render
     description={node.signatures[0].comment}>
     <ul className="interface-map">
       {node.signatures.map(
-        child =>
+        (child) =>
           child.kind === TiKind.CallSignature && (
             <li key={child.id}>
               <span className="block">

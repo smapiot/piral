@@ -11,7 +11,7 @@ export const EnumerationRenderer: React.FC<EnumerationRendererProps> = ({ node }
   <Details color="orange" description={node.comment} kind={node.kindString} title={node.name}>
     <ul className="interface-map">
       {node.children.map(
-        child =>
+        (child) =>
           child.kind === TiKind.EnumerationMember && (
             <li key={child.id}>
               {child.comment && child.comment.shortText}

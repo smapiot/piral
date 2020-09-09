@@ -1,13 +1,13 @@
 export function getImportMaps() {
   return Object.getOwnPropertySymbols(System)
-    .map(sym => System[sym])
-    .filter(m => typeof m.imports !== 'undefined')
-    .map(m => m.imports)
+    .map((sym) => System[sym])
+    .filter((m) => typeof m.imports !== 'undefined')
+    .map((m) => m.imports)
     .pop();
 }
 
 export function convertToMetadata(importMaps: Record<string, string>) {
-  return Object.keys(importMaps).map(name => ({
+  return Object.keys(importMaps).map((name) => ({
     name,
     link: importMaps[name],
   }));

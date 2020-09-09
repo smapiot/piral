@@ -18,7 +18,7 @@ function extendOptions<T extends GqlOperationOptions>(context: GlobalStateContex
     },
   });
 
-  return Promise.all(headerPromises).then(newHeaders => {
+  return Promise.all(headerPromises).then((newHeaders) => {
     const headers = newHeaders.reduce((obj, header) => {
       if (typeof header === 'object' && header) {
         return {
@@ -50,19 +50,21 @@ function defaultGqlClient() {
  * @param client The specific urql client to be used, if any.
  */
 export function createGqlApi(client: UrqlClient = defaultGqlClient()): PiralPlugin<PiletGqlApi> {
-  return context => {
+  return (context) => {
     context.includeProvider(<Provider value={client} />);
 
     return {
       query(q, o = {}) {
-        return extendOptions(context, o).then(options => gqlQuery(client, q, options));
+        return extendOptions(context, o).then((options) => gqlQuery(client, q, options));
       },
       mutate(q, o = {}) {
-        return extendOptions(context, o).then(options => gqlMutation(client, q, options));
+        return extendOptions(context, o).then((options) => gqlMutation(client, q, options));
       },
       subscribe(q, subscriber, o = {}) {
-        const unsubscribe = extendOptions(context, o).then(options => gqlSubscription(client, q, subscriber, options));
-        return () => unsubscribe.then(cb => cb());
+        const unsubscribe = extendOptions(context, o).then((options) =>
+          gqlSubscription(client, q, subscriber, options),
+        );
+        return () => unsubscribe.then((cb) => cb());
       },
     };
   };

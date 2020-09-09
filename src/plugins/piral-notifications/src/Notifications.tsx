@@ -3,7 +3,7 @@ import { useGlobalState } from 'piral-core';
 import { PiralNotificationsToast, PiralNotificationsHost } from './components';
 
 export const Notifications: React.FC = () => {
-  const notifications = useGlobalState(s => s.notifications);
+  const notifications = useGlobalState((s) => s.notifications);
 
   return (
     <PiralNotificationsHost>

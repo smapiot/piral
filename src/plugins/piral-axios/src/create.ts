@@ -10,10 +10,10 @@ export type AxiosConfig = AxiosRequestConfig;
  * @param config The custom axios configuration, if any.
  */
 export function createAxiosApi(config: AxiosConfig = {}): PiralPlugin<PiletAxiosApi> {
-  return context => {
+  return (context) => {
     const axios = Axios.create(config);
 
-    axios.interceptors.request.use(config => {
+    axios.interceptors.request.use((config) => {
       const headerPromises: Array<Promise<any>> = [];
 
       context.emit('before-fetch', {
@@ -28,7 +28,7 @@ export function createAxiosApi(config: AxiosConfig = {}): PiralPlugin<PiletAxios
         },
       });
 
-      return Promise.all(headerPromises).then(newHeaders => {
+      return Promise.all(headerPromises).then((newHeaders) => {
         const headers = newHeaders.reduce((obj, header) => {
           if (typeof header === 'object' && header) {
             return {

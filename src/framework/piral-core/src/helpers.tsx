@@ -146,8 +146,8 @@ export function createPiletOptions({
         const updateTarget = initialTarget.replace('http', 'ws');
         const ws = new WebSocket(updateTarget);
         const appendix = fetch(initialTarget)
-          .then(res => res.json())
-          .then(item => (Array.isArray(item) ? item : [item]));
+          .then((res) => res.json())
+          .then((item) => (Array.isArray(item) ? item : [item]));
 
         ws.onmessage = ({ data }) => {
           const hardRefresh = sessionStorage.getItem('dbg:hard-refresh') === 'on';
@@ -155,7 +155,7 @@ export function createPiletOptions({
           if (!hardRefresh) {
             // standard setting is to just perform an inject
             const meta = JSON.parse(data);
-            loadPilet(meta).then(pilet => {
+            loadPilet(meta).then((pilet) => {
               try {
                 context.injectPilet(pilet);
                 setupPilet(pilet, createApi);
@@ -169,11 +169,11 @@ export function createPiletOptions({
         };
 
         return promise
-          .catch(err => {
+          .catch((err) => {
             console.error(`Requesting the pilets failed. We'll continue loading without pilets (DEBUG only).`, err);
             return [];
           })
-          .then(pilets => appendix.then(debugPilets => [...pilets, ...debugPilets]));
+          .then((pilets) => appendix.then((debugPilets) => [...pilets, ...debugPilets]));
       }
 
       return promise;

@@ -27,7 +27,7 @@ describe('App Actions Module', () => {
     const state = Atom.of({
       provider: undefined,
     });
-    const Provider = props => createElement('div', props);
+    const Provider = (props) => createElement('div', props);
     const ctx = createActions(state, createListener({}));
     includeProvider(ctx, createElement(Provider));
 
@@ -43,8 +43,8 @@ describe('App Actions Module', () => {
     const state = Atom.of({
       provider: undefined,
     });
-    const Provider1 = props => createElement('i', props);
-    const Provider2 = props => createElement('b', props);
+    const Provider1 = (props) => createElement('i', props);
+    const Provider2 = (props) => createElement('b', props);
     const ctx = createActions(state, createListener({}));
     includeProvider(ctx, createElement(Provider1));
     includeProvider(ctx, createElement(Provider2));
@@ -62,7 +62,7 @@ describe('App Actions Module', () => {
     const state = Atom.of({
       provider: undefined,
     });
-    const Provider = props => createElement('i', props, props.text, props.children);
+    const Provider = (props) => createElement('i', props, props.text, props.children);
     const ctx = createActions(state, createListener({}));
     includeProvider(ctx, createElement(Provider, { text: 'Icecream' }));
 
@@ -79,8 +79,8 @@ describe('App Actions Module', () => {
     const state = Atom.of({
       provider: undefined,
     });
-    const Provider1 = props => createElement('i', props, props.text, props.children);
-    const Provider2 = props => createElement('b', props, props.text, props.children);
+    const Provider1 = (props) => createElement('i', props, props.text, props.children);
+    const Provider2 = (props) => createElement('b', props, props.text, props.children);
     const ctx = createActions(state, createListener({}));
     includeProvider(ctx, createElement(Provider1, { text: 'Icecream' }));
     includeProvider(ctx, createElement(Provider2, { text: 'Chocolate' }));

@@ -113,7 +113,7 @@ export const layout: Partial<ComponentsState> = {
         type="search"
         required
         placeholder={translate('search')}
-        onChange={e => setValue(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
         value={value}
       />
     );

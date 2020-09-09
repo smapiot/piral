@@ -46,12 +46,12 @@ export function createConfigsApi(config: ConfigsConfig = {}): PiralPlugin<PiletC
     return proposedConfig;
   };
 
-  return ctx => (_, meta) => ({
+  return (ctx) => (_, meta) => ({
     defineConfigSchema(schema, defaultConfig) {
       const proposedConfig = readConfig(meta.name, defaultConfig);
       const current = validate(schema, proposedConfig, defaultConfig);
 
-      ctx.dispatch(state => ({
+      ctx.dispatch((state) => ({
         ...state,
         configs: {
           ...state.configs,
@@ -60,7 +60,7 @@ export function createConfigsApi(config: ConfigsConfig = {}): PiralPlugin<PiletC
       }));
     },
     getCurrentConfig() {
-      return ctx.readState(s => s.configs[meta.name]) ?? {};
+      return ctx.readState((s) => s.configs[meta.name]) ?? {};
     },
   });
 }

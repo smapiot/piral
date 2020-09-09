@@ -39,7 +39,7 @@ const Loader: React.FC<LoadingIndicatorProps> = () => (
 );
 
 const Sitemap: React.FC<RouteComponentProps> = () => {
-  const pages = useGlobalState(s => s.registry.pages);
+  const pages = useGlobalState((s) => s.registry.pages);
 
   return (
     <ul>
@@ -47,8 +47,8 @@ const Sitemap: React.FC<RouteComponentProps> = () => {
         <Link to="/">Go to /</Link>
       </li>
       {Object.keys(pages)
-        .map(url => url.replace(':id', `${~~(Math.random() * 1000)}`))
-        .map(url => (
+        .map((url) => url.replace(':id', `${~~(Math.random() * 1000)}`))
+        .map((url) => (
           <li key={url}>
             <Link to={url}>Go to {url}</Link>
           </li>
@@ -64,14 +64,14 @@ const Sitemap: React.FC<RouteComponentProps> = () => {
 };
 
 const Menu: React.FC = () => {
-  const menuItems = useGlobalState(s => s.registry.menuItems);
+  const menuItems = useGlobalState((s) => s.registry.menuItems);
 
   return (
     <ul className="app-nav">
       <li>
         <Link to="/">Home</Link>
       </li>
-      {Object.keys(menuItems).map(name => {
+      {Object.keys(menuItems).map((name) => {
         const item = menuItems[name];
 
         if (item.settings.type === 'general') {
@@ -93,7 +93,7 @@ const Menu: React.FC = () => {
 };
 
 const SearchResults: React.FC = () => {
-  const { loading, items } = useGlobalState(m => m.search.results);
+  const { loading, items } = useGlobalState((m) => m.search.results);
   return (
     <div className="search-results">
       {items.map((item, i) => (
@@ -117,18 +117,18 @@ const SearchForm: React.FC = () => {
   return (
     <form
       className="search"
-      onSubmit={ev => {
+      onSubmit={(ev) => {
         search(value, true);
         return ev.preventDefault();
       }}>
-      <input type="search" placeholder="Search" onChange={e => setValue(e.target.value)} value={value} />
+      <input type="search" placeholder="Search" onChange={(e) => setValue(e.target.value)} value={value} />
       <SearchResults />
     </form>
   );
 };
 
 const Notifications: React.FC = () => {
-  const notifications = useGlobalState(s => s.notifications);
+  const notifications = useGlobalState((s) => s.notifications);
 
   return (
     <div className="app-notifications">
@@ -150,7 +150,7 @@ const Notifications: React.FC = () => {
 };
 
 const Layout: React.FC = ({ children }) => {
-  const layout = useGlobalState(s => s.app.layout);
+  const layout = useGlobalState((s) => s.app.layout);
 
   return (
     <div className="app-container">
@@ -181,7 +181,7 @@ const instance = createInstance({
     createSearchApi(),
   ],
   requestPilets() {
-    return new Promise(resolve => setTimeout(() => resolve([]), 1000));
+    return new Promise((resolve) => setTimeout(() => resolve([]), 1000));
   },
 });
 

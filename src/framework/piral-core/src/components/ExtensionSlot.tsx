@@ -11,7 +11,7 @@ import { ExtensionSlotProps } from '../types';
  */
 export function ExtensionSlot<T extends string>(props: ExtensionSlotProps<T>) {
   const { name, render = defaultRender, empty, params } = props;
-  const extensions = useGlobalState(s => s.registry.extensions[name] || []);
+  const extensions = useGlobalState((s) => s.registry.extensions[name] || []);
   return render(
     extensions.length === 0 && isfunc(empty)
       ? [defaultRender(empty(), 'empty')]

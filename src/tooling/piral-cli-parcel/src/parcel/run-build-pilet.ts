@@ -54,7 +54,7 @@ async function run(
   return bundle.name;
 }
 
-process.on('message', async msg => {
+process.on('message', async (msg) => {
   switch (msg.type) {
     case 'start':
       const outPath = await run(
@@ -73,7 +73,7 @@ process.on('message', async msg => {
         msg.entryModule,
         msg.logLevel,
         msg.version,
-      ).catch(error => {
+      ).catch((error) => {
         process.send({
           type: 'fail',
           error: error?.message,

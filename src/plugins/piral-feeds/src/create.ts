@@ -13,10 +13,10 @@ export interface FeedsConfig {}
  * Creates new Pilet API extensions for supporting simplified data feed connections.
  */
 export function createFeedsApi(config: FeedsConfig = {}): PiralPlugin<PiletFeedsApi> {
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       feeds: {},
     }));
@@ -39,9 +39,9 @@ export function createFeedsApi(config: FeedsConfig = {}): PiralPlugin<PiletFeeds
             invalidate();
           }
 
-          const connect = (component => withFeed(component, options) as any) as FeedConnector<any>;
+          const connect = ((component) => withFeed(component, options) as any) as FeedConnector<any>;
 
-          Object.keys(options.reducers).forEach(type => {
+          Object.keys(options.reducers).forEach((type) => {
             const reducer = options.reducers[type];
 
             if (typeof reducer === 'function') {

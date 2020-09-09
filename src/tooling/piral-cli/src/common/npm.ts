@@ -17,24 +17,24 @@ function isProjectReference(name: string) {
 }
 
 export function detectPnpm(root: string) {
-  return new Promise(res => {
-    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, noPnpmLock => {
+  return new Promise((res) => {
+    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, (noPnpmLock) => {
       res(!noPnpmLock);
     });
   });
 }
 
 export function detectNpm(root: string) {
-  return new Promise(res => {
-    access(resolve(root, 'package-lock.json'), constants.F_OK, noPackageLock => {
+  return new Promise((res) => {
+    access(resolve(root, 'package-lock.json'), constants.F_OK, (noPackageLock) => {
       res(!noPackageLock);
     });
   });
 }
 
 export function detectYarn(root: string) {
-  return new Promise(res => {
-    access(resolve(root, 'yarn.lock'), constants.F_OK, noYarnLock => {
+  return new Promise((res) => {
+    access(resolve(root, 'yarn.lock'), constants.F_OK, (noYarnLock) => {
       res(!noYarnLock);
     });
   });
@@ -355,7 +355,7 @@ export async function getPackageName(root: string, name: string, type: PackageTy
     case 'git':
       const pj = await readJson(root, 'package.json');
       const dd = pj.devDependencies || {};
-      return Object.keys(dd).filter(dep => dd[dep] === name)[0];
+      return Object.keys(dd).filter((dep) => dd[dep] === name)[0];
     case 'registry':
       return name;
   }

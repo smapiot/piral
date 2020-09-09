@@ -10,7 +10,7 @@ function runPnpmProcess(args: Array<string>, target: string, output?: NodeJS.Wri
 }
 
 function convert(flags: Array<string>) {
-  return flags.map(flag => {
+  return flags.map((flag) => {
     switch (flag) {
       case '--no-save':
         // unfortunately no (https://github.com/pnpm/pnpm/issues/1237)

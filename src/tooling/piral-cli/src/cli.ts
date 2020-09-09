@@ -16,16 +16,16 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
     argv = argv.command(
       [buildCommand(command), ...command.alias],
       command.description,
-      argv => {
+      (argv) => {
         if (typeof command.flags === 'function') {
           return command.flags(argv);
         }
         return argv;
       },
-      args =>
+      (args) =>
         Promise.resolve(command.run(args)).then(
           () => process.exit(0),
-          err => {
+          (err) => {
             err && !err.logged && console.error(err.message);
             console.log('Codes Reference: https://docs.piral.io/code/search');
             process.exit(1);
@@ -34,8 +34,5 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
     );
   }
 
-  argv
-    .epilog('For more information, check out the documentation at https://docs.piral.io.')
-    .help()
-    .strict().argv;
+  argv.epilog('For more information, check out the documentation at https://docs.piral.io.').help().strict().argv;
 }

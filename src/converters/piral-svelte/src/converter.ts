@@ -28,7 +28,7 @@ export function createConverter() {
         });
       },
       update(_, data) {
-        Object.keys(data).forEach(key => {
+        Object.keys(data).forEach((key) => {
           instance[key] = data[key];
         });
       },

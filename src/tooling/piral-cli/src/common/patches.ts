@@ -8,7 +8,7 @@ export function installPatch(packageName: string, patch: (rootDir: string) => Pr
   if (packageName in patchMap) {
     const newPatch = patch;
     const oldPatch = patchMap[packageName];
-    patch = rootDir => oldPatch(rootDir).then(() => newPatch(rootDir));
+    patch = (rootDir) => oldPatch(rootDir).then(() => newPatch(rootDir));
   }
 
   patchMap[packageName] = patch;

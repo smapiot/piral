@@ -6,7 +6,7 @@ jest.mock('react');
 describe('Debounce Hook Module', () => {
   it('just returns initial value if nothing has been changed', () => {
     const usedEffect = jest.fn();
-    const usedState = jest.fn(value => [value]);
+    const usedState = jest.fn((value) => [value]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     const result = useDebounce('foo');
@@ -16,9 +16,9 @@ describe('Debounce Hook Module', () => {
   });
 
   it('invokes useEffect immediately, but does not set value immediately', () => {
-    const usedEffect = jest.fn(fn => fn());
+    const usedEffect = jest.fn((fn) => fn());
     const setValue = jest.fn();
-    const usedState = jest.fn(value => [value, setValue]);
+    const usedState = jest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     useDebounce('foo');
@@ -27,9 +27,9 @@ describe('Debounce Hook Module', () => {
 
   it('invokes useEffect immediately, but sets value immediately if 0', () => {
     jest.useFakeTimers();
-    const usedEffect = jest.fn(fn => fn());
+    const usedEffect = jest.fn((fn) => fn());
     const setValue = jest.fn();
-    const usedState = jest.fn(value => [value, setValue]);
+    const usedState = jest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     useDebounce('foo', 0);
@@ -39,9 +39,9 @@ describe('Debounce Hook Module', () => {
 
   it('invokes useEffect immediately, but sets value after wait time', () => {
     jest.useFakeTimers();
-    const usedEffect = jest.fn(fn => fn());
+    const usedEffect = jest.fn((fn) => fn());
     const setValue = jest.fn();
-    const usedState = jest.fn(value => [value, setValue]);
+    const usedState = jest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     expect(setValue).not.toHaveBeenCalled();
@@ -52,9 +52,9 @@ describe('Debounce Hook Module', () => {
 
   it('invokes useEffect immediately and resets timer if needed', () => {
     jest.useFakeTimers();
-    const usedEffect = jest.fn(fn => fn());
+    const usedEffect = jest.fn((fn) => fn());
     const setValue = jest.fn();
-    const usedState = jest.fn(value => [value, setValue]);
+    const usedState = jest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     expect(setValue).not.toHaveBeenCalled();

@@ -65,7 +65,7 @@ export async function removeAny(target: string) {
 
 export function removeDirectory(targetDir: string) {
   log('generalDebug_0003', `Removing the directory "${targetDir}" ...`);
-  return new Promise<void>((resolve, reject) => rimraf(targetDir, err => (err ? reject(err) : resolve())));
+  return new Promise<void>((resolve, reject) => rimraf(targetDir, (err) => (err ? reject(err) : resolve())));
 }
 
 export async function createDirectory(targetDir: string) {
@@ -84,7 +84,7 @@ export async function createDirectory(targetDir: string) {
   try {
     log('generalDebug_0003', `Trying to create "${targetDir}" in modern mode ...`);
     await new Promise((resolve, reject) => {
-      mkdir(targetDir, { recursive: true }, err => (err ? reject(err) : resolve()));
+      mkdir(targetDir, { recursive: true }, (err) => (err ? reject(err) : resolve()));
     });
     return true;
   } catch (e) {
@@ -115,7 +115,7 @@ export async function getEntryFiles(content: string, basePath: string) {
 }
 
 export function checkExists(target: string) {
-  return new Promise<boolean>(resolve => {
+  return new Promise<boolean>((resolve) => {
     if (target !== undefined) {
       exists(target, resolve);
     } else {
@@ -136,7 +136,7 @@ export async function checkExistingDirectory(target: string) {
 }
 
 export function checkIsDirectory(target: string) {
-  return new Promise<boolean>(resolve => {
+  return new Promise<boolean>((resolve) => {
     lstat(target, (err, stats) => {
       if (err) {
         resolve(extname(target) === '');
@@ -174,7 +174,7 @@ export async function matchAny(baseDir: string, patterns: Array<string>) {
   const matches: Array<string> = [];
   await Promise.all(
     patterns.map(
-      pattern =>
+      (pattern) =>
         new Promise<Array<string>>((resolve, reject) => {
           glob(
             pattern,
@@ -234,7 +234,7 @@ export async function createFileIfNotExists(
     await createDirectory(dirname(targetFile));
     log('generalDebug_0003', `Creating file "${targetFile}" ...`);
     await new Promise((resolve, reject) => {
-      writeFile(targetFile, content, 'utf8', err => (err ? reject(err) : resolve()));
+      writeFile(targetFile, content, 'utf8', (err) => (err ? reject(err) : resolve()));
     });
   }
 }
@@ -247,13 +247,13 @@ export async function updateExistingFile(targetDir: string, fileName: string, co
   if (exists) {
     log('generalDebug_0003', `Updating file "${targetFile}" ...`);
     await new Promise((resolve, reject) => {
-      writeFile(targetFile, content, 'utf8', err => (err ? reject(err) : resolve()));
+      writeFile(targetFile, content, 'utf8', (err) => (err ? reject(err) : resolve()));
     });
   }
 }
 
 export async function getHash(targetFile: string) {
-  return new Promise<string>(resolve => {
+  return new Promise<string>((resolve) => {
     readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(computeHash(c))));
   });
 }
@@ -269,7 +269,7 @@ export async function mergeWithJson<T>(targetDir: string, fileName: string, newC
 
 export async function readJson<T = any>(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
-  const content = await new Promise<string>(resolve => {
+  const content = await new Promise<string>((resolve) => {
     readFile(targetFile, 'utf8', (err, c) => (err ? resolve('') : resolve(c)));
   });
   return JSON.parse(content || '{}') as T;
@@ -282,7 +282,7 @@ export function writeJson<T = any>(targetDir: string, fileName: string, data: T,
 
 export function readBinary(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
-  return new Promise<Buffer>(resolve => {
+  return new Promise<Buffer>((resolve) => {
     readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(c)));
   });
 }
@@ -290,13 +290,13 @@ export function readBinary(targetDir: string, fileName: string) {
 export function writeText(targetDir: string, fileName: string, data: string) {
   const targetFile = join(targetDir, fileName);
   return new Promise<void>((resolve, reject) => {
-    writeFile(targetFile, data, 'utf8', err => (err ? reject() : resolve()));
+    writeFile(targetFile, data, 'utf8', (err) => (err ? reject() : resolve()));
   });
 }
 
 export function readText(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
-  return new Promise<string>(resolve => {
+  return new Promise<string>((resolve) => {
     readFile(targetFile, 'utf8', (err, c) => (err ? resolve(undefined) : resolve(c)));
   });
 }
@@ -312,7 +312,7 @@ export async function copy(source: string, target: string, forceOverwrite = Forc
   try {
     const flag = forceOverwrite === ForceOverwrite.yes ? 0 : constants.COPYFILE_EXCL;
     await new Promise((resolve, reject) => {
-      copyFile(source, target, flag, err => (err ? reject(err) : resolve()));
+      copyFile(source, target, flag, (err) => (err ? reject(err) : resolve()));
     });
     return true;
   } catch (e) {
@@ -339,7 +339,7 @@ export function remove(target: string) {
 
 export function removeFile(target: string) {
   return new Promise<void>((resolve, reject) => {
-    unlink(target, err => {
+    unlink(target, (err) => {
       if (err) {
         reject(err);
       } else {
@@ -371,7 +371,7 @@ export async function getSourceFiles(entry: string) {
   const dir = dirname(entry);
   log('generalDebug_0003', `Trying to get source files from "${dir}" ...`);
   const files = await matchFiles(dir, '**/*.?(jsx|tsx|js|ts)');
-  return files.map(path => {
+  return files.map((path) => {
     const directory = dirname(path);
     const name = basename(path);
 

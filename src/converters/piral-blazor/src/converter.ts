@@ -28,7 +28,7 @@ export function createConverter(lazy = true) {
         (loader || (loader = boot()))
           .then(dependency)
           .then(() => activate(moduleName, props))
-          .then(refId => {
+          .then((refId) => {
             if (state === 'fresh') {
               id = `${moduleName}-${refId}`;
               node = el.appendChild(root.querySelector(`#${id} > div`));
@@ -36,11 +36,11 @@ export function createConverter(lazy = true) {
               referenceId = refId;
             }
           })
-          .catch(err => console.error(err));
+          .catch((err) => console.error(err));
         dispose = attachEvents(
           el,
-          ev => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-          ev => ctx.router.history.push(ev.detail.to),
+          (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
+          (ev) => ctx.router.history.push(ev.detail.to),
         );
         state = 'fresh';
       },

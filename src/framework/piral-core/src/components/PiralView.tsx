@@ -4,10 +4,10 @@ import { PiralError, PiralRouter, PiralLoadingIndicator, PiralLayout, PiralDebug
 import { PiralRoutes } from './PiralRoutes';
 import { useGlobalState } from '../hooks';
 
-const NotFound: React.FC<RouteComponentProps> = props => <PiralError type="not_found" {...props} />;
+const NotFound: React.FC<RouteComponentProps> = (props) => <PiralError type="not_found" {...props} />;
 
 const PiralContent: React.FC = () => {
-  const { error, loading, layout } = useGlobalState(m => m.app);
+  const { error, loading, layout } = useGlobalState((m) => m.app);
 
   return error ? (
     <PiralError type="loading" error={error} />
@@ -20,10 +20,10 @@ const PiralContent: React.FC = () => {
   );
 };
 
-const Router = typeof window === 'undefined' ? props => <StaticRouter location="/" {...props} /> : PiralRouter;
+const Router = typeof window === 'undefined' ? (props) => <StaticRouter location="/" {...props} /> : PiralRouter;
 
 const PiralProvider: React.FC = ({ children }) => {
-  const provider = useGlobalState(m => m.provider) || React.Fragment;
+  const provider = useGlobalState((m) => m.provider) || React.Fragment;
   return React.createElement(provider, undefined, children);
 };
 

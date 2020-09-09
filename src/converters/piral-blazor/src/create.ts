@@ -20,7 +20,7 @@ export interface BlazorConfig {
 export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBlazorApi> {
   const { lazy } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter(lazy);
     context.converters.blazor = ({ moduleName, args, dependency }) => convert(moduleName, dependency, args);
 

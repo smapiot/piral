@@ -15,6 +15,6 @@ export function useSharedData(): Record<string, SharedDataItem>;
 export function useSharedData<R>(select: (source: Record<string, SharedDataItem>) => R): R;
 
 export function useSharedData<R>(s?: (source: Record<string, SharedDataItem>) => R) {
-  const select = s || (m => m);
-  return useGlobalState(s => select(s.data));
+  const select = s || ((m) => m);
+  return useGlobalState((s) => select(s.data));
 }

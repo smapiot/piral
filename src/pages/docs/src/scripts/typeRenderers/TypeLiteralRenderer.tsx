@@ -10,7 +10,7 @@ export interface TypeLiteralRendererProps {
 
 export const TypeLiteralRenderer: React.FC<TypeLiteralRendererProps> = ({ node, render }) => (
   <ul className="interface-map">
-    {(node.children || []).map(child =>
+    {(node.children || []).map((child) =>
       child.kind === TiKind.Property || child.kind === TiKind.Variable ? (
         <li key={child.id}>
           <span className="block">{child.comment && child.comment.shortText}</span>
@@ -39,12 +39,10 @@ export const TypeLiteralRenderer: React.FC<TypeLiteralRendererProps> = ({ node, 
             {child.name}: <TypeRenderer node={child.type} render={render} />
           </code>{' '}
         </li>
-      ) : (
-        undefined
-      ),
+      ) : undefined,
     )}
     {(node.signatures || []).map(
-      child =>
+      (child) =>
         child.kind === TiKind.CallSignature && (
           <li key={child.id}>
             <span className="block">{child.comment && child.comment.shortText}</span>
@@ -57,7 +55,7 @@ export const TypeLiteralRenderer: React.FC<TypeLiteralRendererProps> = ({ node, 
         ),
     )}
     {(node.indexSignature || []).map(
-      child =>
+      (child) =>
         child.kind === TiKind.IndexSignature && (
           <li key={child.id}>
             <span className="block">{child.comment && child.comment.shortText}</span>

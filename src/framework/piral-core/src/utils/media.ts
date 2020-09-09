@@ -11,7 +11,7 @@ const mm =
     : (q: string) => window.matchMedia(q);
 
 export function getCurrentLayout<T>(breakpoints: Array<string>, layouts: Array<T>, defaultLayout: T) {
-  const query = breakpoints.findIndex(q => mm(q).matches);
+  const query = breakpoints.findIndex((q) => mm(q).matches);
   const layout = layouts[query];
   return layout !== undefined ? layout : defaultLayout;
 }

@@ -25,7 +25,7 @@ function getSampleTranslations(language: string) {
 export function loadLanguage(language: string, data: LanguageData) {
   // Usually these languages / data could be retrieved from a
   // translation service that takes care of *all* translations
-  return new Promise<LanguageData>(resolve =>
+  return new Promise<LanguageData>((resolve) =>
     setTimeout(
       () =>
         // In this case we only fake the API access - for such static

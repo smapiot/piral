@@ -43,7 +43,7 @@ export function deactivate(moduleName: string, referenceId: string) {
 }
 
 export function addReference(blob: Blob) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     var reader = new FileReader();
     reader.onload = () => {
       const data = reader.result.toString().replace(/^data:.+;base64,/, '');

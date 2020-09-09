@@ -14,7 +14,7 @@ export const ConnectorPilet: SinglePilet = {
       () => new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 5000)),
     );
 
-    const DataView = connect(props => (
+    const DataView = connect((props) => (
       <ul>
         {props.data.map((item, i) => (
           <li key={i}>{item}</li>

@@ -1,7 +1,7 @@
 import { createListener } from './events';
 
 describe('Events Module', () => {
-  it('add and emit event', done => {
+  it('add and emit event', (done) => {
     const events = createListener(undefined);
     const mockCallback = jest.fn();
     events.on('init', mockCallback);
@@ -13,7 +13,7 @@ describe('Events Module', () => {
     }, 1);
   });
 
-  it('does only react to self events when different states', done => {
+  it('does only react to self events when different states', (done) => {
     const events1 = createListener({});
     const events2 = createListener({});
     const mockCallback = jest.fn();
@@ -26,7 +26,7 @@ describe('Events Module', () => {
     }, 1);
   });
 
-  it('does only react to self events when same state', done => {
+  it('does only react to self events when same state', (done) => {
     const events1 = createListener(undefined);
     const events2 = createListener(undefined);
     const mockCallback = jest.fn();
@@ -49,7 +49,7 @@ describe('Events Module', () => {
     events.off('init', jest.fn());
   });
 
-  it('should not be possible to emit after event removed', done => {
+  it('should not be possible to emit after event removed', (done) => {
     const events = createListener(undefined);
     const mockCallback = jest.fn();
     events.on('init', mockCallback);

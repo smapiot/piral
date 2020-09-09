@@ -40,7 +40,7 @@ async function run(
 
 let bundler;
 
-process.on('message', async msg => {
+process.on('message', async (msg) => {
   const root = process.cwd();
 
   switch (msg.type) {
@@ -67,7 +67,7 @@ process.on('message', async msg => {
         msg.targetDir,
         msg.entryModule,
         msg.logLevel,
-      ).catch(error => {
+      ).catch((error) => {
         process.send({
           type: 'fail',
           error: error?.message,
@@ -75,7 +75,7 @@ process.on('message', async msg => {
       });
 
       if (bundler) {
-        bundler.on('bundled', async bundle => {
+        bundler.on('bundled', async (bundle) => {
           const requireRef = await postProcess(bundle, msg.version, false);
 
           if (msg.hmr) {

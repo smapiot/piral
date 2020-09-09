@@ -4,7 +4,7 @@ import { PiralRuleContext } from '../types';
 
 function hasSubdirectories(target: string) {
   if (statSync(target).isDirectory()) {
-    return readdirSync(target).some(name => statSync(join(target, name)).isDirectory());
+    return readdirSync(target).some((name) => statSync(join(target, name)).isDirectory());
   }
 
   return false;
@@ -15,7 +15,7 @@ export type Options = void;
 /**
  * Checks that the files defined for pilet scaffolding are valid.
  */
-export default function(context: PiralRuleContext, options: Options = undefined) {
+export default function (context: PiralRuleContext, options: Options = undefined) {
   const { files } = context.info;
 
   if (!Array.isArray(files)) {
@@ -27,7 +27,7 @@ The scaffolding files in pilets.files are invalid.
 `,
     );
   } else {
-    const invalidFileTypes = files.filter(file => {
+    const invalidFileTypes = files.filter((file) => {
       if (typeof file === 'string') {
         return false;
       } else if (file && typeof file.from === 'string' && typeof file.to === 'string') {
@@ -36,7 +36,7 @@ The scaffolding files in pilets.files are invalid.
 
       return true;
     });
-    const validFileRefs = files.filter(file => !invalidFileTypes.includes(file));
+    const validFileRefs = files.filter((file) => !invalidFileTypes.includes(file));
     const ignoredFiles = ['.gitignore', '.npmignore'];
 
     if (invalidFileTypes.length > 0) {

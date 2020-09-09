@@ -23,7 +23,7 @@ function renderComponent<TKey extends keyof ErrorComponentsState>(
   return <Component {...(props as any)} />;
 }
 
-export const SwitchErrorInfo: React.FC<ErrorInfoProps> = props => {
-  const components = useGlobalState(m => m.errorComponents);
+export const SwitchErrorInfo: React.FC<ErrorInfoProps> = (props) => {
+  const components = useGlobalState((m) => m.errorComponents);
   return renderComponent(components, props);
 };

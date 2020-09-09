@@ -25,7 +25,7 @@ function streamToFile(source: Stream, target: string) {
   const dest = createWriteStream(target);
   return new Promise<Array<string>>((resolve, reject) => {
     source.pipe(dest);
-    source.on('error', err => reject(err));
+    source.on('error', (err) => reject(err));
     dest.on('finish', () => resolve([target]));
   });
 }
@@ -40,16 +40,13 @@ export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>
       },
       httpsAgent,
     })
-    .then(res => {
-      const rid = Math.random()
-        .toString(36)
-        .split('.')
-        .pop();
+    .then((res) => {
+      const rid = Math.random().toString(36).split('.').pop();
       const target = join(tmpdir(), `pilet_${rid}.tgz`);
       log('generalDebug_0003', `Writing the downloaded file to "${target}".`);
       return streamToFile(res.data, target);
     })
-    .catch(error => {
+    .catch((error) => {
       log('failedHttpGet_0068', error.message);
       return [];
     });
@@ -67,11 +64,11 @@ export function postFile(target: string, key: string, file: Buffer, ca?: Buffer)
         'user-agent': `piral-cli/http.node-${os}`,
       },
       httpsAgent,
-      maxContentLength: Infinity
+      maxContentLength: Infinity,
     })
     .then(
-      res => res.data || true,
-      error => {
+      (res) => res.data || true,
+      (error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx

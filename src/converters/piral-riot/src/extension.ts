@@ -1,7 +1,10 @@
 import type { PiletApi, ExtensionSlotProps } from 'piral-core';
 import type { RiotComponentShell } from 'riot';
 
-export function createExtension(api: PiletApi, extensionName = 'riot-extension'): RiotComponentShell<ExtensionSlotProps> {
+export function createExtension(
+  api: PiletApi,
+  extensionName = 'riot-extension',
+): RiotComponentShell<ExtensionSlotProps> {
   return {
     name: extensionName,
     template() {
@@ -19,5 +22,5 @@ export function createExtension(api: PiletApi, extensionName = 'riot-extension')
         },
       };
     },
-  }
+  };
 }

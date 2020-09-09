@@ -50,7 +50,7 @@ export const watchPiral: WatchPiralBundlerDefinition = {
     const bundler = await callStatic('debug-mono-piral', args);
     return bundler;
   },
-}
+};
 
 export const buildPiral: BuildPiralBundlerDefinition = {
   flags(argv) {
@@ -80,7 +80,7 @@ export const buildPiral: BuildPiralBundlerDefinition = {
     });
 
     return bundler.bundle;
-  }
+  },
 };
 
 export const debugPilet: DebugPiletBundlerDefinition = {
@@ -116,7 +116,7 @@ export const debugPilet: DebugPiletBundlerDefinition = {
     });
 
     return bundler;
-  }
+  },
 };
 
 export const buildPilet: BuildPiletBundlerDefinition = {
@@ -147,5 +147,5 @@ export const buildPilet: BuildPiletBundlerDefinition = {
     });
 
     return bundler.bundle;
-  }
+  },
 };

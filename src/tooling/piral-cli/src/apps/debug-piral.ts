@@ -138,5 +138,5 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   await krasServer.start();
   openBrowser(open, port);
-  await new Promise(resolve => krasServer.on('close', resolve));
+  await new Promise((resolve) => krasServer.on('close', resolve));
 }

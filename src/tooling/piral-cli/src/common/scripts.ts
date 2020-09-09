@@ -30,7 +30,7 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
     cp.stderr.pipe(error, opt);
 
     cp.on('error', () => reject(new Error(error.value)));
-    cp.on('close', code => (code === 0 ? resolve() : reject(new Error(error.value))));
+    cp.on('close', (code) => (code === 0 ? resolve() : reject(new Error(error.value))));
   });
 }
 
@@ -48,7 +48,7 @@ function sanitizeCmdArgs(args: Array<string>) {
   // For the moment, it's fixed by simply wrapping each arg in OS specific quotation marks.
   const quote = isWindows ? '"' : "'";
 
-  return args.map(arg => {
+  return args.map((arg) => {
     let result = arg.trim();
 
     if (/\s/.test(result)) {

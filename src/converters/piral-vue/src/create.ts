@@ -25,7 +25,7 @@ export interface VueConfig {
 export function createVueApi(config: VueConfig = {}): PiralPlugin<PiletVueApi> {
   const { rootName, selector } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter(rootName);
     context.converters.vue = ({ root, captured }) => convert(root, captured);
 

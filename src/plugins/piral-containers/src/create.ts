@@ -12,10 +12,10 @@ export interface ContainersConfig {}
  * Creates new Pilet API extensions for supporting pilet global state containers.
  */
 export function createContainersApi(config: ContainersConfig = {}): PiralPlugin<PiletContainersApi> {
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       containers: {},
     }));
@@ -34,12 +34,12 @@ export function createContainersApi(config: ContainersConfig = {}): PiralPlugin<
           const cb = (dispatch: StateDispatcher<any>) => context.replaceState(id, dispatch);
           context.createState(id, options.state);
 
-          Object.keys(options.actions).forEach(key => {
+          Object.keys(options.actions).forEach((key) => {
             const action = options.actions[key];
             actions[key] = (...args) => action.call(api, cb, ...args);
           });
 
-          return component => withPiletState(component, id, actions) as any;
+          return (component) => withPiletState(component, id, actions) as any;
         },
       };
     };

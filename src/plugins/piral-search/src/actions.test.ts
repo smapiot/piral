@@ -294,7 +294,7 @@ describe('Search Action Module', () => {
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
-    await (state.registry.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch((m) => m);
   });
 
   it('stops existing search', async () => {
@@ -313,7 +313,7 @@ describe('Search Action Module', () => {
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
-    await (state.registry.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch((m) => m);
     expect(cancel).toHaveBeenCalledTimes(0);
   });
 
@@ -334,7 +334,7 @@ describe('Search Action Module', () => {
     ctx.defineActions(createSearchActions());
     const dispose = ctx.triggerSearch();
     dispose();
-    await (state.registry.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch((m) => m);
     expect(cancel).toHaveBeenCalledTimes(1);
   });
 
@@ -354,7 +354,7 @@ describe('Search Action Module', () => {
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
-    await (state.registry.searchProviders as any).foo.search().catch(m => m);
+    await (state.registry.searchProviders as any).foo.search().catch((m) => m);
     expect(console.warn).toHaveBeenCalled();
   });
 

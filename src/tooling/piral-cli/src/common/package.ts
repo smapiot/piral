@@ -47,11 +47,11 @@ async function getMatchingFiles(
     log('generalDebug_0003', `Matching in directory "${sourcePath}".`);
     const pattern = deep ? '**/*' : '*';
     const files = await matchFiles(sourcePath, pattern);
-    return files.map(file => ({
+    return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(targetPath, relative(sourcePath, file)),
     }));
-  } else if (globPatternStartIndicators.some(m => from.indexOf(m) !== -1)) {
+  } else if (globPatternStartIndicators.some((m) => from.indexOf(m) !== -1)) {
     log('generalDebug_0003', `Matching using glob "${sourcePath}".`);
     const files = await matchFiles(source, from);
     const parts = sourcePath.split('/');
@@ -59,7 +59,7 @@ async function getMatchingFiles(
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
 
-      if (globPatternStartIndicators.some(m => part.indexOf(m) !== -1)) {
+      if (globPatternStartIndicators.some((m) => part.indexOf(m) !== -1)) {
         parts.splice(i, parts.length - i);
         break;
       }
@@ -68,7 +68,7 @@ async function getMatchingFiles(
     const relRoot = parts.join('/');
     const tarRoot = resolve(target, to);
 
-    return files.map(file => ({
+    return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(tarRoot, relative(relRoot, file)),
     }));
@@ -172,7 +172,7 @@ async function getAvailableFiles(root: string, name: string, tarBall: string) {
   log('generalDebug_0003', `Get matching files from "${source}".`);
   const base = resolve(source, tarBall);
   const files = await matchFiles(base, '**/*');
-  return files.map(file => ({
+  return files.map((file) => ({
     sourcePath: file,
     targetPath: resolve(root, relative(base, file)),
   }));
@@ -181,7 +181,7 @@ async function getAvailableFiles(root: string, name: string, tarBall: string) {
 export async function getFileStats(root: string, name: string) {
   const files = await getAvailableFiles(root, name, filesTar);
   return await Promise.all(
-    files.map(async file => {
+    files.map(async (file) => {
       const { sourcePath, targetPath } = file;
       const sourceHash = await getHash(sourcePath);
       log('generalDebug_0003', `Obtained hash from "${sourcePath}": ${sourceHash}`);
@@ -206,7 +206,7 @@ async function copyFiles(
     const exists = await checkExists(sourcePath);
 
     if (exists) {
-      const overwrite = originalFiles.some(m => m.path === targetPath && !m.changed);
+      const overwrite = originalFiles.some((m) => m.path === targetPath && !m.changed);
       const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
       await copy(sourcePath, targetPath, force);
     } else {

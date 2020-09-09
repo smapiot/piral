@@ -10,8 +10,6 @@ export class MemoryStream extends Writable {
   }
 
   get value() {
-    return Buffer.concat(this._buffers)
-      .toString('utf8')
-      .replace(/\s+$/, '');
+    return Buffer.concat(this._buffers).toString('utf8').replace(/\s+$/, '');
   }
 }

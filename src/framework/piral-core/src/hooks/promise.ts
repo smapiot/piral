@@ -23,8 +23,8 @@ export function usePromise<T>(promise: () => Promise<T>) {
     let cancelled = false;
 
     promise().then(
-      data => !cancelled && setResult({ data, error: undefined, loading: false }),
-      error => !cancelled && setResult({ data: undefined, error, loading: false }),
+      (data) => !cancelled && setResult({ data, error: undefined, loading: false }),
+      (error) => !cancelled && setResult({ data: undefined, error, loading: false }),
     );
 
     return () => {

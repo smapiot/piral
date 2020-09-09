@@ -48,7 +48,7 @@ const jsonValueStringWrong = JSON.stringify({ dependencies: {} });
 
 jest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       output?.write(wrongCase ? jsonValueStringWrong : jsonValueString, () => {});
       resolve();
     });
@@ -173,69 +173,71 @@ describe('NPM Module', () => {
 
   it('installs a package using the NPM command line tool without a target', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo', 'latest').then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('npm', 'foo', 'latest').then(result => expect(result).not.toEqual(jsonValueString));
+    await installPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the NPM command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo').then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('npm', 'foo').then(result => expect(result).not.toEqual(jsonValueString));
+    await installPackage('npm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Yarn command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('yarn', 'foo').then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('yarn', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('yarn', 'foo').then(result => expect(result).not.toEqual(jsonValueString));
+    await installPackage('yarn', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Pnpm command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('pnpm', 'foo').then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('pnpm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('pnpm', 'foo').then(result => expect(result).not.toEqual(jsonValueString));
+    await installPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the NPM command line tool with some flag', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then(result => expect(result).toEqual(jsonValueString));
+    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then(result => expect(result).not.toEqual(jsonValueString));
+    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
+      expect(result).not.toEqual(jsonValueString),
+    );
   });
 
   it('detectNpm finds package-lock.json', async () => {
-    await detectNpm('test').then(result => expect(result).toBeTruthy());
-    await detectNpm('toast').then(result => expect(result).toBeFalsy());
+    await detectNpm('test').then((result) => expect(result).toBeTruthy());
+    await detectNpm('toast').then((result) => expect(result).toBeFalsy());
   });
 
   it('detectPnpm finds nppm-lock.yaml', async () => {
-    await detectPnpm('test').then(result => expect(result).toBeTruthy());
-    await detectPnpm('toast').then(result => expect(result).toBeFalsy());
+    await detectPnpm('test').then((result) => expect(result).toBeTruthy());
+    await detectPnpm('toast').then((result) => expect(result).toBeFalsy());
   });
 
   it('detectYarn finds yarn.lock', async () => {
-    await detectYarn('test').then(result => expect(result).toBeTruthy());
-    await detectYarn('toast').then(result => expect(result).toBeFalsy());
+    await detectYarn('test').then((result) => expect(result).toBeTruthy());
+    await detectYarn('toast').then((result) => expect(result).toBeFalsy());
   });
 
   it('uses npm to verify whether a particular package is included in monorepo package', async () => {
     wrongCase = false;
-    await isMonorepoPackageRef('npm', './').then(result => expect(result).toBeTruthy());
+    await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeTruthy());
     wrongCase = true;
-    await isMonorepoPackageRef('npm', './').then(result => expect(result).toBeFalsy());
+    await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeFalsy());
   });
 
   it('verifies whether lerna config path is valid', async () => {
     wrongCase = false;
-    await detectMonorepo('./').then(result => {
+    await detectMonorepo('./').then((result) => {
       expect(result).toBe('lerna');
     });
     wrongCase = true;
     specialCase = true;
-    await detectMonorepo('./').then(result => {
+    await detectMonorepo('./').then((result) => {
       expect(result).toBe('none');
     });
     specialCase = false;
@@ -243,58 +245,58 @@ describe('NPM Module', () => {
 
   it('verifies whether lerna bootstrap ran', async () => {
     wrongCase = false;
-    await bootstrapMonorepo().then(result => expect(result).toEqual(jsonValueString));
+    await bootstrapMonorepo().then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await bootstrapMonorepo().then(result => expect(result).not.toEqual(jsonValueString));
+    await bootstrapMonorepo().then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with npm client', async () => {
     wrongCase = false;
-    await installDependencies('npm').then(result => expect(result).toEqual(jsonValueString));
+    await installDependencies('npm').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('npm').then(result => expect(result).not.toEqual(jsonValueString));
+    await installDependencies('npm').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with pnpm client', async () => {
     wrongCase = false;
-    await installDependencies('pnpm').then(result => expect(result).toEqual(jsonValueString));
+    await installDependencies('pnpm').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('pnpm').then(result => expect(result).not.toEqual(jsonValueString));
+    await installDependencies('pnpm').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with yarn client', async () => {
     wrongCase = false;
-    await installDependencies('yarn').then(result => expect(result).toEqual(jsonValueString));
+    await installDependencies('yarn').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('yarn').then(result => expect(result).not.toEqual(jsonValueString));
+    await installDependencies('yarn').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('create npm package', async () => {
     wrongCase = false;
-    await createPackage().then(result => expect(result).toEqual(jsonValueString));
+    await createPackage().then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await createPackage().then(result => expect(result).not.toEqual(jsonValueString));
+    await createPackage().then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find npm tarball', async () => {
     wrongCase = false;
-    await findTarball('foo').then(result => expect(result).toEqual(jsonValueString));
+    await findTarball('foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await findTarball('foo').then(result => expect(result).not.toEqual(jsonValueString));
+    await findTarball('foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find latest version', async () => {
     wrongCase = false;
-    await findLatestVersion('foo').then(result => expect(result).toEqual(jsonValueString));
+    await findLatestVersion('foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await findLatestVersion('foo').then(result => expect(result).not.toEqual(jsonValueString));
+    await findLatestVersion('foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find specific version', async () => {
     wrongCase = false;
-    await findSpecificVersion('foo', '1.0.0').then(result => expect(result).toEqual(jsonValueString));
+    await findSpecificVersion('foo', '1.0.0').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await findSpecificVersion('foo', '1.0.0').then(result => expect(result).not.toEqual(jsonValueString));
+    await findSpecificVersion('foo', '1.0.0').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('check if package is local', () => {
@@ -355,13 +357,13 @@ describe('NPM Module', () => {
   it('retrieve package name', () => {
     let result = getPackageName('./', 'foo', 'file');
     expect(result).toBeInstanceOf(Promise);
-    result.then(message => expect(message).toBeUndefined());
+    result.then((message) => expect(message).toBeUndefined());
     result = getPackageName('./', 'foo', 'git');
     expect(result).toBeInstanceOf(Promise);
-    result.then(message => expect(message).toBeUndefined());
+    result.then((message) => expect(message).toBeUndefined());
     result = getPackageName('./', 'foo', 'registry');
     expect(result).toBeInstanceOf(Promise);
-    result.then(name => expect(name).toEqual('foo'));
+    result.then((name) => expect(name).toEqual('foo'));
   });
 
   it('gets path to file package', () => {

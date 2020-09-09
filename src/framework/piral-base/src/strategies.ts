@@ -6,7 +6,7 @@ import type { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoad
 function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModules: Array<Pilet>) {
   try {
     for (const oldModule of oldModules) {
-      const [newModule] = newModules.filter(m => m.name === oldModule.name);
+      const [newModule] = newModules.filter((m) => m.name === oldModule.name);
 
       if (newModule) {
         newModules.splice(newModules.indexOf(newModule), 1);
@@ -38,18 +38,18 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
     } = options;
     const loader = loadMetadata(fetchPilets);
 
-    return createPilets(createApi, pilets).then(allModules => {
+    return createPilets(createApi, pilets).then((allModules) => {
       if (async && allModules.length > 0) {
         cb(undefined, [...allModules]);
       }
 
-      const followUp = loader.then(metadata => {
-        const promises = metadata.map(m =>
-          loadPilet(m).then(mod => {
-            const available = pilets.filter(m => m.name === mod.name).length === 0;
+      const followUp = loader.then((metadata) => {
+        const promises = metadata.map((m) =>
+          loadPilet(m).then((mod) => {
+            const available = pilets.filter((m) => m.name === mod.name).length === 0;
 
             if (available) {
-              return createPilet(createApi, mod).then(newModule => {
+              return createPilet(createApi, mod).then((newModule) => {
                 allModules.push(newModule);
 
                 if (async) {
@@ -108,9 +108,9 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
   } = options;
 
   return loadPilets(fetchPilets, loadPilet)
-    .then(newModules => evalAll(createApi, pilets, newModules))
-    .then(modules => cb(undefined, modules))
-    .catch(error => cb(error, []));
+    .then((newModules) => evalAll(createApi, pilets, newModules))
+    .then((modules) => cb(undefined, modules))
+    .catch((error) => cb(error, []));
 }
 
 /**
@@ -121,7 +121,7 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
 export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   const { createApi, pilets = [] } = options;
   return evalAll(createApi, pilets, []).then(
-    modules => cb(undefined, modules),
-    err => cb(err, []),
+    (modules) => cb(undefined, modules),
+    (err) => cb(err, []),
   );
 }

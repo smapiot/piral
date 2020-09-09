@@ -2,7 +2,7 @@ import { createTarball, unpackTarball, unpackGzTar } from './archive';
 import { Stream, Readable } from 'stream';
 
 class ReadableString extends Readable {
-  private sent = false
+  private sent = false;
 
   constructor(private str: string) {
     super();
@@ -11,10 +11,9 @@ class ReadableString extends Readable {
   _read() {
     if (!this.sent) {
       this.push(Buffer.from(this.str));
-      this.sent = true
-    }
-    else {
-      this.push(null)
+      this.sent = true;
+    } else {
+      this.push(null);
     }
   }
 }
@@ -85,23 +84,23 @@ jest.mock('tar', () => ({
       },
       once: (event: string, listener: (...args: any[]) => {}) => {
         console.log(`once event: ${event}`);
-      },      
+      },
       emit: (event: string | symbol, ...args: any[]) => {
         console.log(`emit event: ${event.toString()}`);
         return true;
-      },    
+      },
     } as any;
   },
 }));
 
 describe('Archive Module', () => {
   it('create tarball', async () => {
-    await createTarball('./', './target', 'foo.txt').then(result => expect(result).toBeTruthy());
-    await createTarball('./', './target', 'foo2.tgz').catch(err => expect(err).toEqual(fileNotFoundError));
+    await createTarball('./', './target', 'foo.txt').then((result) => expect(result).toBeTruthy());
+    await createTarball('./', './target', 'foo2.tgz').catch((err) => expect(err).toEqual(fileNotFoundError));
   });
 
   it('unpack tarball', async () => {
-    await unpackTarball('./', 'foo.tgz').then(result => expect(result).toBeTruthy());
-    await unpackTarball('./', 'foo2.tgz').catch(err => expect(err).toEqual(fileNotFoundError));
+    await unpackTarball('./', 'foo.tgz').then((result) => expect(result).toBeTruthy());
+    await unpackTarball('./', 'foo2.tgz').catch((err) => expect(err).toEqual(fileNotFoundError));
   });
 });

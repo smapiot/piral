@@ -4,7 +4,7 @@ import { createGlobalState } from './createGlobalState';
 import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout } from '../components';
 
 describe('Create Global State Module', () => {
-  window.matchMedia = jest.fn(q => ({ matches: false })) as any;
+  window.matchMedia = jest.fn((q) => ({ matches: false })) as any;
 
   it('global state works with language as empty string', () => {
     const globalState = createGlobalState({});

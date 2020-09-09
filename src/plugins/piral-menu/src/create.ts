@@ -60,10 +60,10 @@ function getMenuItems(items: Array<InitialMenuItem>, defaultSettings: MenuSettin
 export function createMenuApi(config: MenuConfig = {}): PiralPlugin<PiletMenuApi> {
   const { items = [], defaultSettings = {} } = config;
 
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       components: {
         MenuContainer: DefaultContainer,

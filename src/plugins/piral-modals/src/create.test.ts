@@ -2,7 +2,7 @@ import { Atom, swap } from '@dbeining/react-atom';
 import { createElement, SFC } from 'react';
 import { createModalsApi } from './create';
 
-const StubComponent: SFC = props => createElement('div', props);
+const StubComponent: SFC = (props) => createElement('div', props);
 StubComponent.displayName = 'StubComponent';
 
 function createMockContainer() {
@@ -51,7 +51,7 @@ describe('Create Modals API Extensions', () => {
     const api = (createModalsApi()(container.context) as any)(container.api, moduleMetadata);
     const close = api.showModal('my-modal');
     close();
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(container.context.openModal).toHaveBeenCalled();
     expect(container.context.closeModal).toHaveBeenCalled();
   });

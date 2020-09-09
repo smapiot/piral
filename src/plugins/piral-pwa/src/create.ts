@@ -10,7 +10,7 @@ export function createPwaApi(client = setupPwaClient()): PiralPlugin<PiletPwaApi
   return () => {
     return {
       showAppNotification(title, options) {
-        return client.use(m => useNotification(m, () => m.showNotification(title, options)));
+        return client.use((m) => useNotification(m, () => m.showNotification(title, options)));
       },
     };
   };

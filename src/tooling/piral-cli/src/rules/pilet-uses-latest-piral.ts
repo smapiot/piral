@@ -6,7 +6,7 @@ export type Options = 'suggest' | 'required' | 'ignore';
 /**
  * Checks if the used Piral instance is used at its latest version.
  */
-export default async function(context: PiletRuleContext, options: Options = 'suggest') {
+export default async function (context: PiletRuleContext, options: Options = 'suggest') {
   if (options !== 'ignore') {
     const { name, version } = context.data.appPackage;
     const demanded = (context.devDependencies && context.devDependencies[name]) || '';

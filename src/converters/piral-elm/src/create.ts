@@ -20,7 +20,7 @@ export interface ElmConfig {
 export function createElmApi(config: ElmConfig = {}): PiralPlugin<PiletElmApi> {
   const { selector } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.elm = ({ main, captured }) => convert(main, captured);
 

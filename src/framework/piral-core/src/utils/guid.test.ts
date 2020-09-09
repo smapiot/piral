@@ -14,7 +14,7 @@ describe('Guid Utility Module', () => {
 
   it('Generates a guid with the right structure', () => {
     const guid = generateId();
-    const partLengths = guid.split('-').map(m => m.length);
+    const partLengths = guid.split('-').map((m) => m.length);
     expect(partLengths.length).toBe(5);
     expect(partLengths[0]).toBe(8);
     expect(partLengths[1]).toBe(4);

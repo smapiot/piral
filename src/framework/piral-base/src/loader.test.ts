@@ -45,7 +45,7 @@ describe('Standard Module Loader', () => {
   it('loading a dependency free link-module should work', async () => {
     console.error = jest.fn();
     console.warn = jest.fn();
-    const dependencyRequest = jest.fn(src => Promise.resolve(src));
+    const dependencyRequest = jest.fn((src) => Promise.resolve(src));
     const loadPilet = getDefaultLoader(() => ({}), dependencyRequest);
     const result = await loadPilet({
       link: 'module.exports = { setup: function () {} }',
@@ -62,7 +62,7 @@ describe('Standard Module Loader', () => {
   it('loading a link-module with dependencies should work', async () => {
     console.error = jest.fn();
     console.warn = jest.fn();
-    const dependencyRequest = jest.fn(src => Promise.resolve(src.length > 1 ? src : ''));
+    const dependencyRequest = jest.fn((src) => Promise.resolve(src.length > 1 ? src : ''));
     const loadPilet = getDefaultLoader(() => ({}), dependencyRequest);
     const result = await loadPilet({
       link: 'module.exports = { setup: function () {} }',

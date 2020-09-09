@@ -20,11 +20,11 @@ export interface AureliaConfig {
 export function createAureliaApi(config: AureliaConfig = {}): PiralPlugin<PiletAureliaApi> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.aurelia = ({ root }) => convert(root);
 
-    return api => {
+    return (api) => {
       const AureliaExtension = createExtension(api, rootName);
 
       return {

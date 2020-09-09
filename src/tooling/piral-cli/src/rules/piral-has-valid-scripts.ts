@@ -5,7 +5,7 @@ export type Options = void;
 /**
  * Checks that the scripts defined for pilets are valid.
  */
-export default function(context: PiralRuleContext, options: Options = undefined) {
+export default function (context: PiralRuleContext, options: Options = undefined) {
   const { scripts } = context.info;
 
   if (typeof scripts !== 'object') {
@@ -17,7 +17,7 @@ The scripts in pilets.scripts are invalid.
 `,
     );
   } else {
-    const invalidScripts = Object.keys(scripts).filter(key => typeof scripts[key] !== 'string');
+    const invalidScripts = Object.keys(scripts).filter((key) => typeof scripts[key] !== 'string');
 
     if (invalidScripts.length > 0) {
       context.error(

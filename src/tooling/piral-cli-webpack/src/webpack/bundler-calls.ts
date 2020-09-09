@@ -17,7 +17,7 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
     name: '',
   };
   const setPending = () => {
-    promise = new Promise(done => {
+    promise = new Promise((done) => {
       const f = () => {
         done();
         bundler.off(f);
@@ -40,7 +40,7 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
       listeners.splice(listeners.indexOf(cb), 1);
     },
     emit(args: any) {
-      [...listeners].forEach(cb => cb(args));
+      [...listeners].forEach((cb) => cb(args));
     },
     ready() {
       return promise;

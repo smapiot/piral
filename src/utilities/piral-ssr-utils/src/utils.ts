@@ -7,9 +7,7 @@ const getBundleUrlExport = 'exports.getBundleURL=';
 const bundleUrlDecl = `var ${bundleUrl}=`;
 
 function sha256(x: string) {
-  return createHash('sha256')
-    .update(x, 'utf8')
-    .digest('hex');
+  return createHash('sha256').update(x, 'utf8').digest('hex');
 }
 
 /**
@@ -55,7 +53,7 @@ export function loadPilets(
   getPilet: (url: string) => MaybeAsync<string | false> = () => false,
 ) {
   return Promise.all(
-    metadata.map(async pilet => {
+    metadata.map(async (pilet) => {
       const originalContent = 'content' in pilet && pilet.content ? pilet.content : await getPilet(pilet.link);
 
       if (typeof originalContent === 'string') {

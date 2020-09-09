@@ -16,7 +16,7 @@ export const Pilet2: SinglePilet = {
 
     const connect = piral.createConnector({
       initialize() {
-        return new Promise<Array<string>>(resolve => setTimeout(() => resolve(['one', 'two', 'three']), 2000));
+        return new Promise<Array<string>>((resolve) => setTimeout(() => resolve(['one', 'two', 'three']), 2000));
       },
       connect(cb) {
         let i = 0;

@@ -51,7 +51,7 @@ export class DefaultLoader extends Loader {
    * @return A Promise for an array of loaded modules.
    */
   loadAllModules(ids) {
-    return Promise.all(ids.map(id => this.loadModule(id)));
+    return Promise.all(ids.map((id) => this.loadModule(id)));
   }
 
   /**
@@ -60,7 +60,7 @@ export class DefaultLoader extends Loader {
    * @return A Promise for a TemplateRegistryEntry containing the template.
    */
   loadTemplate(url) {
-    return fetch(url).then(res => res.json());
+    return fetch(url).then((res) => res.json());
   }
 
   /**
@@ -69,7 +69,7 @@ export class DefaultLoader extends Loader {
    * @return A Promise for text content.
    */
   loadText(url) {
-    return fetch(url).then(res => res.text());
+    return fetch(url).then((res) => res.text());
   }
 
   /**

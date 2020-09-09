@@ -113,7 +113,7 @@ function readFileContent(src: string) {
 
 function writeFileContent(src: string, content: string) {
   return new Promise<void>((resolve, reject) =>
-    writeFile(src, content, 'utf8', err => (err ? reject(err) : resolve())),
+    writeFile(src, content, 'utf8', (err) => (err ? reject(err) : resolve())),
   );
 }
 
@@ -127,7 +127,7 @@ async function applySourceMapShift(sourceFile: string, lineOffset = 1): Promise<
     sourceRoot: incomingSourceMap.sourceRoot,
   });
 
-  consumer.eachMapping(m => {
+  consumer.eachMapping((m) => {
     // skip invalid (not-connected) mapping
     // refs: https://github.com/mozilla/source-map/blob/182f4459415de309667845af2b05716fcf9c59ad/lib/source-map-generator.js#L268-L275
     if (m.originalLine > 0 && m.originalColumn >= 0 && m.source) {

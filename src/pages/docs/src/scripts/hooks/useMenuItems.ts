@@ -13,7 +13,7 @@ export type MenuItems = Array<MenuItem>;
 function extractMenuItems(sections: NodeListOf<HTMLElement>, active: HTMLElement): MenuItems {
   const items: Array<MenuItem> = [];
 
-  Array.prototype.forEach.call(sections, section => {
+  Array.prototype.forEach.call(sections, (section) => {
     let level = +section.localName.substr(1, 1) - 1;
     let last: MenuItem = {
       active: false,
@@ -87,7 +87,7 @@ export function useMenuItems(current: HTMLElement) {
       return () => document.removeEventListener('scroll', handler);
     }
 
-    return () => { };
+    return () => {};
   }, [current]);
 
   return items;

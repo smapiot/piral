@@ -12,7 +12,7 @@ export function mountPreact<T extends BaseComponentProps>(
 ) {
   const contextTypes = {};
 
-  ['piral', ...Object.keys(ctx)].forEach(key => {
+  ['piral', ...Object.keys(ctx)].forEach((key) => {
     contextTypes[key] = anyPropType;
   });
 

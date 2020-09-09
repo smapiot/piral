@@ -23,7 +23,7 @@ function createMockContainer() {
         swap(state, update);
       },
       initialize(loading, error, modules) {
-        swap(state, state => ({
+        swap(state, (state) => ({
           ...state,
           app: {
             ...state.app,

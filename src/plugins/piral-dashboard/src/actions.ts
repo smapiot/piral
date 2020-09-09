@@ -2,7 +2,7 @@ import { withKey, withoutKey, GlobalStateContext } from 'piral-core';
 import { TileRegistration } from './types';
 
 export function registerTile(ctx: GlobalStateContext, name: string, value: TileRegistration) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
@@ -12,7 +12,7 @@ export function registerTile(ctx: GlobalStateContext, name: string, value: TileR
 }
 
 export function unregisterTile(ctx: GlobalStateContext, name: string) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,

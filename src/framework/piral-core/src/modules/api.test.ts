@@ -4,7 +4,7 @@ import { createCoreApi, initializeApi } from './api';
 
 jest.mock('../hooks');
 
-const StubComponent: SFC = props => createElement('div', props);
+const StubComponent: SFC = (props) => createElement('div', props);
 StubComponent.displayName = 'StubComponent';
 
 const moduleMetadata = {
@@ -67,7 +67,7 @@ describe('API Module', () => {
 
   it('createCoreApi read data by its name', () => {
     const container = createMockContainer();
-    container.context.readDataValue = jest.fn(name => name);
+    container.context.readDataValue = jest.fn((name) => name);
     const api = createCoreApi(container.context)(container.api, moduleMetadata);
     const result = api.getData('foo');
     expect(result).toBe('foo');

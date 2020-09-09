@@ -10,7 +10,7 @@ export function createActions(config: SearchActionsConfig = {}) {
   const { emptyTrigger = false, filter = defaultFilter } = config;
   return {
     setSearchInput(ctx: GlobalStateContext, input: string) {
-      ctx.dispatch(state => ({
+      ctx.dispatch((state) => ({
         ...state,
         search: {
           ...state.search,
@@ -19,8 +19,8 @@ export function createActions(config: SearchActionsConfig = {}) {
       }));
     },
     triggerSearch(ctx: GlobalStateContext, query?: string, immediate = false): Disposable {
-      const providers = ctx.readState(state => state.registry.searchProviders);
-      const { input, results } = ctx.readState(state => state.search);
+      const providers = ctx.readState((state) => state.registry.searchProviders);
+      const { input, results } = ctx.readState((state) => state.search);
       const { loading } = results;
 
       if (query === undefined) {
@@ -29,7 +29,7 @@ export function createActions(config: SearchActionsConfig = {}) {
 
       if (input !== query || !loading) {
         const selectedProviders = filter(query, Object.keys(providers));
-        const providerKeys = selectedProviders.filter(m => !providers[m].onlyImmediate || immediate);
+        const providerKeys = selectedProviders.filter((m) => !providers[m].onlyImmediate || immediate);
         const acceptQuery = emptyTrigger || !!query;
         const load = acceptQuery && providerKeys.length > 0;
         ctx.resetSearchResults(query, load);
@@ -42,13 +42,13 @@ export function createActions(config: SearchActionsConfig = {}) {
             immediate,
           };
 
-          providerKeys.forEach(key => {
+          providerKeys.forEach((key) => {
             const provider = providers[key];
             provider.search(opts).then(
-              results => {
+              (results) => {
                 active && ctx.appendSearchResults(results, --searchCount === 0);
               },
-              ex => {
+              (ex) => {
                 console.warn(ex);
                 active && --searchCount === 0 && ctx.appendSearchResults([], true);
               },
@@ -57,18 +57,18 @@ export function createActions(config: SearchActionsConfig = {}) {
 
           return () => {
             active = false;
-            providerKeys.forEach(key => providers[key].cancel());
+            providerKeys.forEach((key) => providers[key].cancel());
             ctx.appendSearchResults([], load);
           };
         } else if (!query) {
-          selectedProviders.forEach(key => providers[key].clear());
+          selectedProviders.forEach((key) => providers[key].clear());
         }
       }
 
       return () => {};
     },
     resetSearchResults(ctx: GlobalStateContext, input: string, loading: boolean) {
-      ctx.dispatch(state => ({
+      ctx.dispatch((state) => ({
         ...state,
         search: {
           input,
@@ -80,7 +80,7 @@ export function createActions(config: SearchActionsConfig = {}) {
       }));
     },
     appendSearchResults(ctx: GlobalStateContext, items: Array<ReactChild>, done: boolean) {
-      ctx.dispatch(state => ({
+      ctx.dispatch((state) => ({
         ...state,
         search: {
           ...state.search,
@@ -92,7 +92,7 @@ export function createActions(config: SearchActionsConfig = {}) {
       }));
     },
     prependSearchResults(ctx: GlobalStateContext, items: Array<ReactChild>, done: boolean) {
-      ctx.dispatch(state => ({
+      ctx.dispatch((state) => ({
         ...state,
         search: {
           ...state.search,
@@ -104,7 +104,7 @@ export function createActions(config: SearchActionsConfig = {}) {
       }));
     },
     registerSearchProvider(ctx: GlobalStateContext, name: string, value: SearchProviderRegistration) {
-      ctx.dispatch(state => ({
+      ctx.dispatch((state) => ({
         ...state,
         registry: {
           ...state.registry,
@@ -113,7 +113,7 @@ export function createActions(config: SearchActionsConfig = {}) {
       }));
     },
     unregisterSearchProvider(ctx: GlobalStateContext, name: string) {
-      ctx.dispatch(state => ({
+      ctx.dispatch((state) => ({
         ...state,
         registry: {
           ...state.registry,

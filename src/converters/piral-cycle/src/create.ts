@@ -20,11 +20,11 @@ export interface CycleConfig {
 export function createCycleApi(config: CycleConfig = {}): PiralPlugin<PiletCycleApi> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.cycle = ({ root }) => convert(root);
 
-    return api => ({
+    return (api) => ({
       fromCycle(root) {
         return {
           type: 'cycle',

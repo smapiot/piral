@@ -14,12 +14,12 @@ jest.mock('piral-core/lib/hooks/globalState', () => ({
   },
 }));
 
-(React as any).useMemo = cb => cb();
+(React as any).useMemo = (cb) => cb();
 
 describe('Extended Error Info Component for Forms', () => {
   it('renders the switch-case in the form error case', () => {
     const { DefaultErrorInfo } = piralCore;
     const node = mount(<DefaultErrorInfo type="form" error="foo" />);
-    expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
+    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
   });
 });

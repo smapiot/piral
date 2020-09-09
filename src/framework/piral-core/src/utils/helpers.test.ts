@@ -119,23 +119,23 @@ describe('Helpers Module', () => {
   });
 
   it('excludeOn works with an existing array', () => {
-    const result = excludeOn([1, 2, 3], x => x === 2);
+    const result = excludeOn([1, 2, 3], (x) => x === 2);
     expect(result).toEqual([1, 3]);
   });
 
   it('excludeOn works without an existing array', () => {
-    const result = excludeOn(undefined, x => x === 2);
+    const result = excludeOn(undefined, (x) => x === 2);
     expect(result).toEqual([]);
   });
 
   it('excludeOn ignores non-existing item', () => {
-    const result = excludeOn([1, 2, 3], x => x === 4);
+    const result = excludeOn([1, 2, 3], (x) => x === 4);
     expect(result).toEqual([1, 2, 3]);
   });
 
   it('excludeOn does not modify the original', () => {
     const original = [1, 2, 3];
-    const result = excludeOn(original, x => x === 2);
+    const result = excludeOn(original, (x) => x === 2);
     expect(result).not.toBe(original);
   });
 

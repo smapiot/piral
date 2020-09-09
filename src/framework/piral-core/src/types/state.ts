@@ -4,7 +4,12 @@ import type { Atom } from '@dbeining/react-atom';
 import type { Dict, Without } from './common';
 import type { LayoutType } from './layout';
 import type { SharedDataItem, DataStoreTarget } from './data';
-import type { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
+import type {
+  PiralCustomActions,
+  PiralCustomState,
+  PiralCustomRegistryState,
+  PiralCustomComponentsState,
+} from './custom';
 import type {
   PiletMetadata,
   EventEmitter,

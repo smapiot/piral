@@ -96,7 +96,7 @@ export const Pilet1: SinglePilet = {
         <p>
           IF YOU ARE IN AN ADVENTUROUS MOOD TRY{' '}
           <a
-            onClick={e => {
+            onClick={(e) => {
               piral.unregisterPage('/example2');
               e.preventDefault();
             }}

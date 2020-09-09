@@ -11,8 +11,8 @@ export const SearchPilet: SinglePilet = {
   hash: '428',
   setup(piral) {
     piral.registerSearchProvider(
-      q =>
-        new Promise(resolve =>
+      (q) =>
+        new Promise((resolve) =>
           setTimeout(
             () =>
               resolve([
@@ -36,7 +36,7 @@ export const SearchPilet: SinglePilet = {
     );
 
     piral.registerSearchProvider(
-      q => new Promise(resolve => setTimeout(() => resolve([<div>Another result ({q.query})</div>]), 3500)),
+      (q) => new Promise((resolve) => setTimeout(() => resolve([<div>Another result ({q.query})</div>]), 3500)),
       {
         onClear() {
           console.log('Cleared...');
@@ -45,7 +45,7 @@ export const SearchPilet: SinglePilet = {
     );
 
     piral.registerSearchProvider(
-      q => new Promise(resolve => setTimeout(() => resolve([<div>ONLY WHEN ENTER: ({q.query})</div>]), 100)),
+      (q) => new Promise((resolve) => setTimeout(() => resolve([<div>ONLY WHEN ENTER: ({q.query})</div>]), 100)),
       {
         onlyImmediate: true,
       },

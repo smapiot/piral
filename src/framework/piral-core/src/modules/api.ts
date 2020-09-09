@@ -58,14 +58,14 @@ export function initializeApi(target: PiletMetadata, context: GlobalStateContext
 }
 
 export function mergeApis(api: PiletApi, extenders: Array<PiletApiExtender<Partial<PiletApi>>>, target: PiletMetadata) {
-  const frags = extenders.map(extender => extender(api, target));
+  const frags = extenders.map((extender) => extender(api, target));
   __assign(api, ...frags);
   return api;
 }
 
 export function createExtenders(context: GlobalStateContext, apis: Array<PiralPlugin>) {
   const creators: Array<PiralPlugin> = [...apis.filter(isfunc), createCoreApi];
-  return creators.map(c => {
+  return creators.map((c) => {
     const ctx = c(context);
 
     if (isfunc(ctx)) {
@@ -80,7 +80,7 @@ export function createExtenders(context: GlobalStateContext, apis: Array<PiralPl
 
 export function defaultApiCreator(context: GlobalStateContext, apis: Array<PiralPlugin>): PiletApiCreator {
   const extenders = createExtenders(context, apis);
-  return target => {
+  return (target) => {
     const api = initializeApi(target, context);
     context.apis[target.name] = api;
     return mergeApis(api, extenders, target);

@@ -37,7 +37,7 @@ export interface PwaConfig {
  */
 export function setupPwaClient(config: PwaConfig = {}) {
   const {
-    onUpdate = apply => apply(),
+    onUpdate = (apply) => apply(),
     onUpdated = () => window.location.reload(),
     scope,
     notifications,
@@ -48,11 +48,11 @@ export function setupPwaClient(config: PwaConfig = {}) {
     Notification.requestPermission();
   }
 
-  const sw = new Promise<ServiceWorkerRegistration>(resolve => {
+  const sw = new Promise<ServiceWorkerRegistration>((resolve) => {
     if ('serviceWorker' in navigator) {
       let shouldInstall = install;
 
-      window.addEventListener('beforeinstallprompt', ev => {
+      window.addEventListener('beforeinstallprompt', (ev) => {
         ev.preventDefault();
 
         if (shouldInstall) {
@@ -80,10 +80,10 @@ export function setupPwaClient(config: PwaConfig = {}) {
 
   const client: PwaClient = {
     use(action) {
-      return sw.then(reg => reg && action(reg));
+      return sw.then((reg) => reg && action(reg));
     },
     update() {
-      sw.then(reg => reg && reg.update());
+      sw.then((reg) => reg && reg.update());
     },
   };
 
@@ -138,7 +138,7 @@ export function setupPwaClient(config: PwaConfig = {}) {
     }
   };
 
-  client.use(reg => {
+  client.use((reg) => {
     handleUpdating(reg);
     reg.onupdatefound = () => handleUpdating(reg);
   });
