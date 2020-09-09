@@ -24,7 +24,7 @@ Gets the translations defined in the pilet.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `setTranslations` function from the Pilet API to set predefined translation snippets.
 
@@ -70,9 +70,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -87,7 +87,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createLocaleApi()],
+  plugins: [createLocaleApi()],
   // ...
 });
 ```
@@ -111,7 +111,7 @@ const localizer = setupLocalizer({
 
 const instance = createInstance({
   // important part
-  extendApi: [createLocaleApi(localizer)],
+  plugins: [createLocaleApi(localizer)],
   // ...
 });
 ```
@@ -133,6 +133,8 @@ const localizer = setupLocalizer({
 ```
 
 The function `getUserLocale` retrieves either the cookie with name `_culture` or local storage value for key `locale`. In any case either the first found language or ultimately `en` is used as a fallback.
+
+:::
 
 ## License
 

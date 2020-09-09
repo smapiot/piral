@@ -1,3 +1,4 @@
+import type { LogLevels } from 'piral-cli';
 import { setStandardEnvs } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -8,7 +9,7 @@ import { defaultWebpackConfig } from '../constants';
 async function run(
   root: string,
   piral: string,
-  develop: boolean,
+  emulator: boolean,
   sourceMaps: boolean,
   contentHash: boolean,
   minify: boolean,
@@ -16,12 +17,13 @@ async function run(
   publicUrl: string,
   outDir: string,
   entryFiles: string,
+  logLevel: LogLevels,
 ) {
   setStandardEnvs({
-    production: !develop,
+    production: !emulator,
     root,
-    debugPiral: develop,
-    debugPilet: develop,
+    debugPiral: emulator,
+    debugPilet: emulator,
     piral,
     dependencies: externals,
   });
@@ -32,7 +34,7 @@ async function run(
     entryFiles,
     outDir,
     externals,
-    develop,
+    emulator,
     sourceMaps,
     contentHash,
     minify,
@@ -42,7 +44,7 @@ async function run(
     watch: false,
   });
 
-  const bundler = runWebpack(wpConfig);
+  const bundler = runWebpack(wpConfig, logLevel);
   return bundler.bundle();
 }
 
@@ -52,7 +54,7 @@ process.on('message', async msg => {
       const result = await run(
         process.cwd(),
         msg.piral,
-        msg.develop,
+        msg.emulator,
         msg.sourceMaps,
         msg.contentHash,
         msg.minify,
@@ -60,6 +62,7 @@ process.on('message', async msg => {
         msg.publicUrl,
         msg.outDir,
         msg.entryFiles,
+        msg.logLevel,
       ).catch(error => {
         process.send({
           type: 'fail',

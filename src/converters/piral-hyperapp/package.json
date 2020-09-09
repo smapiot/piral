@@ -21,7 +21,8 @@
   "sideEffects": false,
   "files": [
     "lib",
-    "src"
+    "src",
+    "convert.js"
   ],
   "repository": {
     "type": "git",
@@ -41,6 +42,6 @@
   },
   "peerDependencies": {
     "hyperapp": "^1.0.0",
-    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0"
+    "piral-core": "^1.0.0"
   }
 }

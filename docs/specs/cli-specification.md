@@ -2,7 +2,7 @@
 
 ## Abstract
 
-The Piral CLI is a command line tool, which offers a rich feature set to allow building application shells for Microfrontend solutions. The application shell can be used as a host and an emulator for smaller applications (known as Microfrontends). As part of the Piral framework we call those small applications *pilets*. In addition, the Piral CLI is capable of generating valid NPM packages, which can be published to the Piral Feed Service.
+The Piral CLI is a command-line tool, which offers a rich feature set to allow building application shells for Microfrontend solutions. The application shell can be used as a host and an emulator for smaller applications (known as Microfrontends). As part of the Piral framework, we call those small applications *pilets*. In addition, the Piral CLI is capable of generating valid NPM packages, which can be published to the Piral Feed Service.
 
 ## Introduction
 
@@ -63,7 +63,7 @@ For running the Piral instance in emulation mode, the set of relevant environmen
 | Environment Variable  | Purpose                             | Example            |
 |:----------------------|:------------------------------------|:-------------------|
 | `NODE_ENV`            | Indicate the target environment.    | `development`      |
-| `DEBUG_PILET`         | Injects pilet from development API. | `/$pilet-api`      |
+| `DEBUG_PILET`         | Indicate emulator environment.      | `on`               |
 | `DEBUG_PIRAL`         | Provides debug API for inspection.  | `1.0`              |
 | `SHARED_DEPENDENCIES` | Allow exposing shared dependencies. | `react,react-dom`  |
 

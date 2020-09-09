@@ -3,6 +3,7 @@ import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
 import { inspectPackage } from './inspect';
+import { coreExternals } from './constants';
 import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
@@ -41,7 +42,7 @@ export function detectYarn(root: string) {
 
 export async function getLernaConfigPath(root: string) {
   log('generalDebug_0003', 'Trying to get the configuration file for Lerna ...');
-  const file = findFile(root, 'lerna.json');
+  const file = await findFile(root, 'lerna.json');
 
   if (file) {
     log('generalDebug_0003', `Found Lerna config in "${file}".`);
@@ -111,12 +112,25 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
 export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
   const c = require(`./clients/npm`);
   const details = await c.listPackage(refName, root);
-  return details?.dependencies[refName]?.extraneous ?? false;
+  return details?.dependencies?.[refName]?.extraneous ?? false;
 }
 
-export async function detectMonorepo(root: string) {
+export type MonorepoKind = 'none' | 'lerna' | 'yarn';
+
+export async function detectMonorepo(root: string): Promise<MonorepoKind> {
   const file = await getLernaConfigPath(root);
-  return file !== undefined;
+
+  if (file !== undefined) {
+    return 'lerna';
+  }
+
+  const packageJson = await readJson(root, 'package.json');
+
+  if (Array.isArray(packageJson?.workspaces)) {
+    return 'yarn';
+  }
+
+  return 'none';
 }
 
 export function bootstrapMonorepo(target = '.') {
@@ -371,4 +385,27 @@ export function getPackageVersion(
     case 'git':
       return getGitPackageVersion(sourceName);
   }
+}
+
+export function makeExternals(externals?: Array<string>) {
+  if (externals && Array.isArray(externals)) {
+    const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(
+      (prev, curr) => {
+        if (typeof curr === 'string') {
+          if (curr.startsWith('!')) {
+            prev[1].push(curr.substr(1));
+          } else {
+            prev[0].push(curr);
+          }
+        }
+
+        return prev;
+      },
+      [[], []],
+    );
+    const all = exclude.includes('*') ? include : [...include, ...coreExternals];
+    return all.filter((m, i, arr) => !exclude.includes(m) && arr.indexOf(m) === i);
+  }
+
+  return coreExternals;
 }

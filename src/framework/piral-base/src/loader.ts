@@ -1,7 +1,7 @@
 import { defaultFetchDependency } from './fetch';
 import { createEmptyModule, getDependencyResolver } from './utils';
-import { compileDependency, includeDependency } from './dependency';
-import {
+import { compileDependency, includeDependency, includeBundle } from './dependency';
+import type {
   AvailableDependencies,
   Pilet,
   PiletApp,
@@ -39,6 +39,8 @@ export function getDefaultLoader(getDependencies: PiletDependencyGetter, fetchDe
   return (meta: PiletMetadata): Promise<Pilet> => {
     if (inBrowser && 'requireRef' in meta && meta.requireRef) {
       return loadFrom(meta, getDependencies, deps => includeDependency(meta, deps));
+    } else if (inBrowser && 'bundle' in meta && meta.bundle) {
+      return loadFrom(meta, getDependencies, deps => includeBundle(meta, deps));
     }
 
     const { name, link } = meta;
@@ -50,7 +52,7 @@ export function getDefaultLoader(getDependencies: PiletDependencyGetter, fetchDe
     } else if ('content' in meta && meta.content) {
       return loadFrom(meta, getDependencies, deps => compileDependency(name, meta.content, link, deps));
     } else {
-      console.warn('Empty pilet found!', name);
+      console.warn('Empty pilet found!', name, link);
     }
 
     return Promise.resolve(createEmptyModule(meta));

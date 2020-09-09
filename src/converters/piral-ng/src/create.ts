@@ -1,7 +1,7 @@
-import { Extend } from 'piral-core';
-import { Component, ElementRef, Input, Inject, enableProdMode } from '@angular/core';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletNgApi } from './types';
+import { createExtension } from './extension';
+import type { PiletNgApi } from './types';
 
 /**
  * Available configuration options for the Angular plugin.
@@ -27,38 +27,15 @@ export interface NgConfig {
 /**
  * Creates the Pilet API extensions for Angular.
  */
-export function createNgApi(config: NgConfig = {}): Extend<PiletNgApi> {
-  const { rootName = 'slot', selector = 'extension-component', selectId } = config;
-  const template = `<${rootName}></${rootName}>`;
-
-  @Component({
-    selector,
-    template,
-  })
-  class NgExtension {
-    @Input('name') public name: string;
-    @Input('params') public params: object;
-
-    constructor(private elRef: ElementRef<HTMLElement>, @Inject('piral') private piral: any) {}
-
-    ngAfterContentInit() {
-      this.piral.renderHtmlExtension(this.elRef.nativeElement, {
-        name: this.name,
-        params: this.params,
-      });
-    }
-  }
-
-  if (process.env.ENV === 'production') {
-    enableProdMode();
-  }
+export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
+  const { rootName, selector, selectId } = config;
 
   return context => {
     const convert = createConverter(selectId);
     context.converters.ng = ({ component }) => convert(component);
 
     return {
-      NgExtension,
+      NgExtension: createExtension(rootName, selector),
       fromNg(component) {
         return {
           type: 'ng',

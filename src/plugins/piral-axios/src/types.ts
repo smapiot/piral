@@ -1,4 +1,4 @@
-import 'piral-core';
+import type {} from 'piral-core';
 import { AxiosInstance } from 'axios';
 
 declare module 'piral-core/lib/types/custom' {

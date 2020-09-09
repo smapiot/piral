@@ -18,7 +18,7 @@ Gets the currently authenticated user's token or `undefined` if no user is authe
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `getAccessToken` function from the Pilet API. This returns a promise.
 
@@ -35,9 +35,9 @@ export async function setup(piral: PiletApi) {
 
 Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -56,7 +56,7 @@ const client = setupOAuth2Client({ clientId, ... });
 
 const instance = createInstance({
   // important part
-  extendApi: [createOAuth2Api(client)],
+  plugins: [createOAuth2Api(client)],
   // ...
 });
 ```
@@ -78,7 +78,7 @@ import { client } from './oauth2';
 export function render() {
   renderInstance({
     // ...
-    extendApi: [createOAuth2Api(client)],
+    plugins: [createOAuth2Api(client)],
   });
 }
 
@@ -95,6 +95,8 @@ if (location.pathname !== '/auth') {
 ```
 
 This way we evaluate the current path and act accordingly. Note that the actually used path may be different for your application.
+
+:::
 
 ## License
 

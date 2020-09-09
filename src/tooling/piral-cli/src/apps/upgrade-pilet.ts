@@ -13,8 +13,6 @@ import {
   installDependencies,
   getCurrentPackageDetails,
   checkAppShellPackage,
-  defaultCacheDir,
-  removeDirectory,
   setLogLevel,
   progress,
   fail,
@@ -57,7 +55,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   } = options;
   setLogLevel(logLevel);
   const root = resolve(baseDir, target);
-  const cache = resolve(root, defaultCacheDir);
   const valid = await checkExistingDirectory(root);
 
   if (!valid) {
@@ -128,9 +125,9 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     if (install) {
       progress(`Updating dependencies ...`);
-      const isMonorepo = await detectMonorepo(root);
+      const monorepoKind = await detectMonorepo(root);
 
-      if (isMonorepo) {
+      if (monorepoKind === 'lerna') {
         await bootstrapMonorepo(root);
       } else {
         await installDependencies(npmClient, root);
@@ -143,7 +140,6 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       await runScript(postUpgrade, root);
     }
 
-    await removeDirectory(cache);
     logDone('Pilet upgraded successfully!');
   } else {
     fail('invalidPiletPackage_0041');

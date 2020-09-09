@@ -46,7 +46,7 @@ const Layout: React.FC = ({ children }) => (
 );
 
 const instance = createInstance({
-  extendApi: [
+  plugins: [
     createLazyApi(),
     createVueApi(),
     createNgApi(),

@@ -27,8 +27,15 @@ const PiralProvider: React.FC = ({ children }) => {
   return React.createElement(provider, undefined, children);
 };
 
+/**
+ * The props for the PiralView component.
+ */
 export interface PiralViewProps {}
 
+/**
+ * The component responsible for the generic view of the application.
+ * This includes the global providers, the used Router, the current content and some convenience.
+ */
 export const PiralView: React.FC<PiralViewProps> = ({ children }) => (
   <PiralProvider>
     <Router>

@@ -1,6 +1,6 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { buildName, withApi, Extend, Dict } from 'piral-core';
+import { buildName, withApi, PiralPlugin, Dict } from 'piral-core';
 import { DefaultTile, DefaultContainer } from './default';
 import { PiletDashboardApi, TilePreferences, BareTileComponentProps, TileRegistration } from './types';
 
@@ -56,7 +56,7 @@ function getTiles(items: Array<InitialTile>, defaultPreferences: TilePreferences
 /**
  * Creates the Pilet API extension for activating dashboard support.
  */
-export function createDashboardApi(config: DashboardConfig = {}): Extend<PiletDashboardApi> {
+export function createDashboardApi(config: DashboardConfig = {}): PiralPlugin<PiletDashboardApi> {
   const { tiles = [], defaultPreferences = {} } = config;
 
   return context => {

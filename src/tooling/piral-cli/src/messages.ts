@@ -527,7 +527,7 @@ export function invalidPiletTarget_0040(): QuickMessage {
  * contains an object with additional fields.
  *
  * @see
- * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/reference#pilets---package-definition)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/metadata#pilets---package-definition)
  *
  * @example
  * Your pilet's package.json may look similar to the following snippet:
@@ -576,7 +576,7 @@ export function invalidPiletPackage_0041(): QuickMessage {
  * should contain (among others) a field `name` pointing to the Piral instance to use.
  *
  * @see
- * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/reference#pilets---package-definition)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/metadata#pilets---package-definition)
  *
  * @example
  * If your Piral instance is called `my-piral` then the package.json may look similar to
@@ -616,7 +616,7 @@ export function invalidPiletPackage_0042(): QuickMessage {
  * - The Piral instance's name is invalid (e.g., due to a typo)
  *
  * @see
- * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/reference#pilets---package-definition)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/metadata#pilets---package-definition)
  * - [Node Modules Loading](https://nodejs.org/api/modules.html#modules_loading_from_node_modules_folders)
  *
  * @example
@@ -773,13 +773,13 @@ export function cannotFindFile_0046(file: string): QuickMessage {
  * have looked similar to:
  *
  * ```json
- * pilet new ../../my-app-shell/dist/develop/my-app-shell-1.0.0.tgz
+ * pilet new ../../my-app-shell/dist/emulator/my-app-shell-1.0.0.tgz
  * ```
  *
  * To run an upgrade in such a scenario a command such as
  *
  * ```sh
- * pilet upgrade ../../my-app-shell/dist/develop/my-app-shell-1.1.0.tgz
+ * pilet upgrade ../../my-app-shell/dist/emulator/my-app-shell-1.1.0.tgz
  * ```
  *
  * needs to be used.
@@ -850,7 +850,7 @@ export function gitLatestForUpgradeMissing_0051(): QuickMessage {
  * - Disk failures
  *
  * @see
- * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/reference#piral-instance---package-definition)
+ * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/metadata#piral-instance---package-definition)
  *
  * @example
  * The primary example hits when a dev dependency was specified that is otherwise not given.
@@ -911,7 +911,7 @@ export function cannotResolveVersion_0052(name: string): QuickMessage {
  * - Disk failures
  *
  * @see
- * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/reference#piral-instance---package-definition)
+ * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/metadata#piral-instance---package-definition)
  *
  * @example
  * The primary example hits when a dev dependency was specified that is otherwise not given.
@@ -1613,7 +1613,7 @@ export function entryFileMissing_0077(): QuickMessage {
  * current project then change the settings in your Piral instance configuration.
  *
  * @see
- * - [Validation](https://docs.piral.io/tutorials/08-the-piral-cli#validations)
+ * - [Validation](https://docs.piral.io/guidelines/tutorials/08-the-piral-cli#validations)
  *
  * @example
  * ...
@@ -1638,7 +1638,7 @@ export function validationFailed_0080(errors: number): QuickMessage {
  * current project then change the settings in your Piral instance configuration.
  *
  * @see
- * - [Validation](https://docs.piral.io/tutorials/08-the-piral-cli#validations)
+ * - [Validation](https://docs.piral.io/guidelines/tutorials/08-the-piral-cli#validations)
  *
  * @example
  * ...
@@ -1660,7 +1660,7 @@ export function validationWarned_0081(warnings: number): QuickMessage {
  * current project then change the settings in your Piral instance configuration.
  *
  * @see
- * - [Validation](https://docs.piral.io/tutorials/08-the-piral-cli#validations)
+ * - [Validation](https://docs.piral.io/guidelines/tutorials/08-the-piral-cli#validations)
  *
  * @example
  * ...
@@ -1864,7 +1864,7 @@ export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<
  *
  * @see
  * - [Parcel](https://parceljs.org)
- * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example
  * Use the following command to make the parcel bundler available:
@@ -1894,7 +1894,7 @@ export function bundlerMissing_0072(bundlerName: string, installed: Array<string
  *
  * @see
  * - [Parcel](https://parceljs.org)
- * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example
  * Use the following command to make the parcel bundler available:
@@ -1924,7 +1924,7 @@ export function defaultBundlerMissing_0073(): QuickMessage {
  *
  * @see
  * - [Parcel](https://parceljs.org)
- * - [Pluggable bundlers](https://docs.piral.io/reference/pluggable-bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example
  * Use the following command to make the parcel bundler available:

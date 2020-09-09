@@ -1,7 +1,13 @@
-import { PiralCustomExtensionSlotMap } from './custom';
+import type { PiralCustomExtensionSlotMap } from './custom';
 
+/**
+ * The mapping of the existing (known) extension slots.
+ */
 export interface PiralExtensionSlotMap extends PiralCustomExtensionSlotMap {}
 
+/**
+ * The basic props for defining an extension slot.
+ */
 export interface BaseExtensionSlotProps<TName, TParams> {
   /**
    * Defines what should be rendered when no components are available
@@ -24,7 +30,7 @@ export interface BaseExtensionSlotProps<TName, TParams> {
 }
 
 /**
- * Props for defining an extension slot.
+ * The props for defining an extension slot.
  */
 export type ExtensionSlotProps<K = string> = BaseExtensionSlotProps<
   K extends string ? K : string,

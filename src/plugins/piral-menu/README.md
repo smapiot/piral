@@ -20,7 +20,7 @@ Removes a menu item from the app shell. This requires a named menu item.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `registerMenu` function from the Pilet API to add a new menu item in the app shell.
 
@@ -55,9 +55,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -72,7 +72,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createMenuApi()],
+  plugins: [createMenuApi()],
   // ...
 });
 ```
@@ -84,7 +84,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createMenuApi({
+  plugins: [createMenuApi({
     defaultSettings: {
       type: 'admin',
     },
@@ -127,6 +127,8 @@ declare module 'piral-menu/lib/types' {
 
 // now registerMenu(() => null, { type: 'left-footer' }) is strongly typed in pilets
 ```
+
+:::
 
 ## License
 

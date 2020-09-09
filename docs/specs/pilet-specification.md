@@ -8,7 +8,7 @@ A pilet is a small module that delivers additional functionality to a Piral inst
 
 A Piral instance alone only provides the shell for dynamically integrated modules called *pilets*. A pilet should be rather small and as atomic as possible. It could be bound to perform a certain task and / or to be delivered to certain users only.
 
-At its core a pilet is just a JavaScript library that exports at least a single function which is used by a Piral instance. This allows the pilet to integrate the provided functionality when called by the Piral instance.
+At its core, a pilet is just a JavaScript library that exports at least a single function that is used by a Piral instance. This allows the pilet to integrate the provided functionality when called by the Piral instance.
 
 ## Conformance
 
@@ -40,7 +40,7 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 ## Package Layout
 
-The layout of a pilet package is a standard gzipped tarball (file extension *tgz*) that matches the NPM package layout. In the root folder of the *tgz* file we also have the same `package.json` file. This file can - in addition to the standard NPM keys - contain special Piral related keys. The special keys are described in further details in the "Package Keys" section of this document.
+The layout of a pilet package is a standard gzipped tarball (file extension *tgz*) that matches the NPM package layout. In the root folder of the *tgz* file we also have the same `package.json` file. This file can - in addition to the standard NPM keys - contain special Piral related keys. The special keys are described in further detail in the "Package Keys" section of this document.
 
 The `main` key of the `package.json` has to point to a folder that has to contain all the assets shipped with the pilet. The assets must be linked from a JavaScript file that is either the *root JS file* or has been linked (directly or indirectly) by the *root JS file*. The *root JS file* is either directly named in the `main` key (e.g., `dist/example.js` would relate to the `dist` folder with *root JS file* `example.js`) or indirectly by just pointing to a folder (e.g., `dist/example` would relate to the `dist/example` folder with *root JS file* `index.js`).
 
@@ -56,11 +56,11 @@ The *root JS file* contains the root module, which is the first module loaded wh
 
 ### UMD Creation
 
-For proper bundling of the JS files the UMD specification should be followed. The following parts are all relevant for the created bundle.
+For proper bundling of the JS files, the UMD specification should be followed. The following parts are all relevant for the created bundle.
 
 1. Wrap the content of the bundle in an IIFE.
-2. Define a module resolver (A) inside that uses a local `require` (B) as potential fallback. The local module resolver (B) will be passed in by Piral for the root module only.
-3. If a global `require` (C) is given prefer this as fallback. Otherwise, define it in the end with the defined module resolver (A).
+2. Define a module resolver (A) inside that uses a local `require` (B) as a potential fallback. The local module resolver (B) will be passed in by Piral for the root module only.
+3. If a global `require` (C) is given prefer this as the fallback. Otherwise, define it in the end with the defined module resolver (A).
 4. Work through the bundled modules using the module resolver (A) for resolving dependencies.
 
 *Remark*: As global `require` (C) a `window.pr_...` function should be used that is generated (and valid) for the current bundle only.
@@ -77,9 +77,9 @@ The dynamic splitting of the single bundle into multiple files needs to adhere t
 6. Attach the `resolve` handler to the `onload` event
 7. Append the `script` element to the `document.head`
 
-The URL for the script has to be retrieved by the relative script URL combined with the root URL from the currently executing script. At the time of writing multiple ways exist to derive this root URL, each one with its own advantages and disadvantages.
+The URL for the script has to be retrieved by the relative script URL combined with the root URL from the currently executing script. At the time of writing, multiple ways exist to derive this root URL, each one with its own advantages and disadvantages.
 
-The most robust way to derive the global script URL is by taking the a slice of the stack trace generated for an `Error` instance.
+The most robust way to derive the global script URL is by taking a slice of the stack trace generated for an `Error` instance.
 
 The following algorithm works quite reliably:
 
@@ -89,7 +89,7 @@ The following algorithm works quite reliably:
    1. Getting the `stack`
    2. Matching the `string` against `(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+` globally
    3. Obtaining the base URL from the match
-   4. Otherwise just return `/`
+   4. Otherwise, just return `/`
 
 The script for the partial resource has to be loaded from the same base URL as the currently running script.
 
@@ -117,15 +117,15 @@ The `description` property is a standard NPM field that is optional for a pilet.
 
 The property describes the contents and functionality of the given pilet.
 
-By default the `description` is left blank.
+By default, the `description` is left blank.
 
 ### `author`
 
 The `author` property is a standard NPM field that is optional for a pilet.
 
-The property contains information about the author in form of a string or an object containing properties such as `name`, `email`, and `url`. The string's format can be either a simple string or an email string (format: `name <email>`).
+The property contains information about the author in the form of a string or an object containing properties such as `name`, `email`, and `url`. The string's format can be either a simple string or an email string (format: `name <email>`).
 
-By default the `author` is `(unknown)`.
+By default, the `author` is `(unknown)`.
 
 ### `license`
 
@@ -133,7 +133,7 @@ The `license` property is a standard NPM field that is optional for a pilet.
 
 The property reflects the license used for distributing the given pilet.
 
-By default the `license` is set to `ISC`, which is equivalent to MIT and NPM's default.
+By default, the `license` is set to `ISC`, which is equivalent to MIT and NPM's default.
 
 ### `peerDependencies`
 
@@ -141,7 +141,7 @@ The `peerDependencies` property is a standard NPM field that is optional for a p
 
 The property contains information about the used shared dependencies that have to be supplied from the Piral instance. A feed service or Piral instance may reject the Pilet in case of unmatched shared dependencies.
 
-By default the `peerDependencies` are set to an empty record `{}`, i.e., no peer dependencies.
+By default, the `peerDependencies` are set to an empty record `{}`, i.e., no peer dependencies.
 
 ### `dependencies`
 
@@ -151,7 +151,7 @@ The property contains information about the used direct dependencies that are su
 
 All direct dependencies should be split from the bundle to allow potential sharing with other pilets. In case of very small direct dependencies directly bundling them into the root module is acceptable.
 
-By default the `dependencies` are set to an empty record `{}`, i.e., no dependencies.
+By default, the `dependencies` are set to an empty record `{}`, i.e., no dependencies.
 
 ### `main`
 
@@ -159,7 +159,7 @@ The `main` property is a standard NPM field that is optional for a pilet.
 
 The field is used to help determine where the root module is located. It is strongly encouraged to *always* set this value to a path leading explicitly or implicitly to the root module.
 
-By default the `main` is not set to an empty string.
+By default, the `main` is not set to an empty string.
 
 The order of the search for the root module using the value of `main` (hereafter named `main`) is performed as follows:
 
@@ -176,19 +176,19 @@ The `preview` property is a custom NPM field that is optional for a pilet.
 
 The property contains a boolean value indicating whether the current pilet should be released as a preview independent of the information gathered from the semantic versioning.
 
-This allows a pilet feed service to selectively increment preview versions of the same pilet. In case of a non-conflicting prerelease derived from semantic versioning the `preview` field wins.
+This allows a pilet feed service to selectively increment preview versions of the same pilet. In case of a non-conflicting prerelease derived from semantic versioning, the `preview` field wins.
 
-By default the `preview` field is set to `false`.
+By default, the `preview` field is set to `false`.
 
 ### `custom`
 
 The `custom` property is a custom NPM field that is optional for a pilet.
 
-The property can contain any value. The content of this field is transported the feed service to the Piral instance.
+The property can contain any value. The content of this field is transported from the feed service to the Piral instance.
 
-This allow the client (or special feed service implementation) to receive (and forward) some additional data about the pilet.
+This allows the client (or special feed service implementation) to receive (and forward) some additional data about the pilet.
 
-By default the `custom` field is set to `null` and thus will not be forwarded.
+By default, the `custom` field is set to `null` and thus will not be forwarded.
 
 ## Root Module Layout
 
@@ -340,7 +340,7 @@ Importantly, the code above still takes a global `require` function if available
 
 **Remark**: The initial comment is a pilet marker. If left out version 0 should be inferred by the pilet feed service. In the provided example version 0 is explicitly marked.
 
-The internal structure and wrapper is bundler specific. The one shown is generated by Parcel.
+The internal structure and wrapper are bundler specific. The one shown is generated by Parcel.
 
 The final package for this Pilet can be created using `npm` (or the Piral CLI for that matter) using `npm pack`.
 
@@ -350,7 +350,7 @@ Not all assets should be packed into a pilet. Videos and larger (or in general p
 
 The maximum specified file size of a pilet is 16 MB. Anything larger is potentially not supported by the used feed service.
 
-## Acknowledgements
+## Acknowledgments
 
 This specification was created by [smapiot](https://smapiot.com).
 

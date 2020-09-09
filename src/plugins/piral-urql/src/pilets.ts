@@ -1,4 +1,4 @@
-import { PiletMetadata } from 'piral-base';
+import type { PiletMetadata } from 'piral-base';
 import { gqlQuery } from './queries';
 import { UrqlClient } from './types';
 

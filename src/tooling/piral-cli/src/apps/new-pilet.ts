@@ -33,15 +33,58 @@ import {
 } from '../common';
 
 export interface NewPiletOptions {
+  /**
+   * The package registry to use for resolving the specified Piral app.
+   */
   registry?: string;
+
+  /**
+   * The target directory for scaffolding. By default, the current directory.
+   */
   target?: string;
+
+  /**
+   * The source package containing a Piral instance for templating the scaffold process.
+   */
   source?: string;
+
+  /**
+   * Determines if files should be overwritten by the scaffolding.
+   */
   forceOverwrite?: ForceOverwrite;
+
+  /**
+   * Determines the programming language for the new pilet.
+   * @example 'ts'
+   */
   language?: PiletLanguage;
+
+  /**
+   * States if the npm dependencies should be installed when scaffolding.
+   */
   install?: boolean;
+
+  /**
+   * Sets the boilerplate template to be used when scaffolding.
+   * @example 'empty'
+   */
   template?: TemplateType;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * The NPM client to be used when scaffolding.
+   * @example 'yarn'
+   */
   npmClient?: NpmClientType;
+
+  /**
+   * Sets the default bundler to install.
+   * @example 'parcel'
+   */
   bundler?: string;
 }
 
@@ -155,9 +198,9 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      const isMonorepo = await detectMonorepo(root);
+      const monorepoKind = await detectMonorepo(root);
 
-      if (isMonorepo) {
+      if (monorepoKind === 'lerna') {
         await bootstrapMonorepo(root);
       } else {
         await installDependencies(npmClient, root);

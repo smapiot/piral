@@ -1,7 +1,7 @@
-import * as m from 'mithril';
-import { Extend } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletMithrilApi } from './types';
+import { createExtension } from './extension';
+import type { PiletMithrilApi } from './types';
 
 /**
  * Available configuration options for the Mithril.js plugin.
@@ -17,8 +17,8 @@ export interface MithrilConfig {
 /**
  * Creates new Pilet API extensions for integrating Mithril.js.
  */
-export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithrilApi> {
-  const { rootName = 'slot' } = config;
+export function createMithrilApi(config: MithrilConfig = {}): PiralPlugin<PiletMithrilApi> {
+  const { rootName } = config;
 
   return context => {
     const convert = createConverter();
@@ -32,14 +32,7 @@ export function createMithrilApi(config: MithrilConfig = {}): Extend<PiletMithri
           captured,
         };
       },
-      MithrilExtension: {
-        oncreate(vnode) {
-          api.renderHtmlExtension(vnode.dom, vnode.attrs);
-        },
-        view() {
-          return m(rootName);
-        },
-      },
+      MithrilExtension: createExtension(api, rootName),
     });
   };
 }

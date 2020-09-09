@@ -27,7 +27,7 @@ We also have this tutorial available in form of a video.
 
 ## Available Methods and Hooks
 
-Inside a React component that is rendered from your Piral instance you'll have the following options.
+Inside a React component that is rendered from your Piral instance, you'll have the following options.
 
 For connecting to the global state we recommend using the `useGlobalState` hook. This comes with the ability to select what should be checked for changes.
 
@@ -88,7 +88,7 @@ const AppLoadingIndicator = () => {
 };
 ```
 
-This hook will return *all* available actions as an object. We can use object destructoring (as seen above) to provide an easy way of accessing the interesting actions.
+This hook will return *all* available actions as an object. We can use object destructuring (as seen above) to provide an easy way of accessing the interesting actions.
 
 ## Custom Actions
 
@@ -212,4 +212,4 @@ The `PiralCustomState` interface is the top-level of the state.
 
 Custom actions and state management is simple in Piral. The most important actions are `dispatch` and `defineActions`. The `useGlobalState` and `useAction` hooks may be used to connect to the state container or obtain some action in a React component.
 
-In the next tutorial we'll have a look on how to use events to communicate between pilets, or distribute information from the Piral instance.
+In the next tutorial, we'll have a look at how to use events to communicate between pilets or distribute information from the Piral instance.

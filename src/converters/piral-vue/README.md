@@ -22,7 +22,7 @@ The extension slot component to be used in Vue components. This is not really ne
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromVue` function from the Pilet API to convert your Vue components to components usable by your Piral instance.
 
@@ -43,9 +43,21 @@ Within Vue components the Piral Vue extension component can be used by referring
 <extension-component name="name-of-extension"></extension-component>
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-vue` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromVue } from 'piral-vue';
+import VuePage from './Page.vue';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromVue(VuePage));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Vue with Piral is as simple as installing `piral-vue` and `vue`.
 
@@ -59,7 +71,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createVueApi()],
+  plugins: [createVueApi()],
   // ...
 });
 ```
@@ -75,6 +87,8 @@ The `vue` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
+
+:::
 
 ## License
 

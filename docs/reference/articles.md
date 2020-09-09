@@ -7,6 +7,7 @@
 
 ## Blog Posts
 
+- [State of Microfrontends, dev.to, 06/2020](https://dev.to/florianrappl/state-of-microfrontends-1j3p)
 - [Cross-Framework Communication, Bits and Pieces, 04/2020](https://blog.bitsrc.io/cross-framework-components-8439d58342e5)
 - [Communication between Micro Frontends, Bits and Pieces, 03/2020](https://blog.bitsrc.io/communication-between-micro-frontends-67a745c6cfbe)
 - [Publishing Frontend Features, dev.to, 03/2020](https://dev.to/florianrappl/publishing-frontend-features-like-a-greek-god-31li)
@@ -30,6 +31,7 @@
 
 ## Talks at Conferences
 
+- [Virtual Azure Community Day 2020, 07/2020](https://youtu.be/AtUKNsdnwBc)
 - [GAB Austria 2020, 05/2020](https://youtu.be/_q4JDrIMvlA)
 - [ReactConf Europe on YouTube, 02/2020](https://youtu.be/kG7gIF16cOk)
 - [c't webdev in Cologne, 02/2020](https://ctwebdev.de/programm.html)
@@ -37,4 +39,5 @@
 
 ## Talks at Meetups
 
+- [Munich .NET Meetup, 05/2020](https://www.youtube.com/watch?v=IGVQoCzCtR4)
 - [Microsoft Developer Meetup Regensburg (German), 11/2019](https://www.youtube.com/watch?v=YlDwwxDTGxY)

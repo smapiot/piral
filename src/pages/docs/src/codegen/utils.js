@@ -20,6 +20,8 @@ function capitalize(str) {
   switch (str) {
     case 'api':
       return 'API';
+    case 'cli':
+      return 'CLI';
     default:
       return str[0].toUpperCase() + str.substr(1);
   }

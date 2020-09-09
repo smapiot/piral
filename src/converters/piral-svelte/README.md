@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-svelte` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Svelte converter for any component registration, as well as a `fromSvelte` shortcut together with a `svelte-extension` web component.
+The set includes a Svelte converter for any component registration, as well as a `fromSvelte` shortcut together with a `svelte-extension` web component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -18,7 +18,7 @@ Transforms a standard Svelte component into a component that can be used in Pira
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromSvelte` function from the Pilet API to convert your Svelte components to components usable by your Piral instance.
 
@@ -39,9 +39,21 @@ Within Svelte components the Piral Svelte extension component can be used by ref
 <svelte-extension name="name-of-extension"></svelte-extension>
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-svelte` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromSvelte } from 'piral-svelte';
+import SveltePage from './Page.svelte';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromSvelte(SveltePage));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Svelte with Piral is as simple as installing `piral-svelte`. In the pilets using Svelte, `svelte` and `parcel-plugin-svelte` should be installed, too.
 
@@ -54,10 +66,12 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createSvelteApi()],
+  plugins: [createSvelteApi()],
   // ...
 });
 ```
+
+:::
 
 ## Pilet Usage
 

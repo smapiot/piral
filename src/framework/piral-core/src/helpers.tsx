@@ -8,7 +8,7 @@ import {
   PiletLoader,
 } from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
-import {
+import type {
   AvailableDependencies,
   Pilet,
   PiletRequester,
@@ -136,8 +136,8 @@ export function createPiletOptions({
 
       // if we run against the debug pilet API (emulator build only)
       if (process.env.DEBUG_PILET !== undefined) {
-        // the DEBUG_PILET env should point to an API address used as a proxy
-        const piletApi = process.env.DEBUG_PILET;
+        // the window['dbg:pilet-api'] should point to an API address used as a proxy, fall back to '/$pilet-api' if unavailable
+        const piletApi = window['dbg:pilet-api'] || '/$pilet-api';
         // either take a full URI or make it an absolute path relative to the current origin
         const initialTarget = /^https?:/.test(piletApi)
           ? piletApi

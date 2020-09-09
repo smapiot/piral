@@ -1,14 +1,15 @@
 import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
+import { cliVersion } from './info';
 import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
-import { cliVersion, coreExternals, filesTar, filesOnceTar } from './info';
+import { PiletLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
+import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { PiletLanguage, ForceOverwrite } from './enums';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makeExternals } from './npm';
 
 function getDependencyVersion(
   name: string,
@@ -275,7 +276,7 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
   const rootDir = join(baseDir, entry);
   log('generalDebug_0003', `Retrieving Piral root from "${rootDir}" ...`);
 
-  if (extname(rootDir) !== '.html') {
+  if (!declarationEntryExtensions.includes(extname(rootDir).toLowerCase())) {
     const packageName = basename(rootDir) === 'package.json' ? rootDir : join(rootDir, 'package.json');
     log('generalDebug_0003', `Trying to get entry point from "${packageName}".`);
     const exists = await checkExists(packageName);
@@ -367,6 +368,7 @@ export async function retrievePiletsInfo(entryFile: string) {
       dev: packageInfo.devDependencies || {},
       peer: packageInfo.peerDependencies || {},
     },
+    scripts: packageInfo.scripts,
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root: dirname(packageJson),
   };
@@ -396,7 +398,7 @@ export async function patchPiletPackage(
     ...piralInfo.dependencies,
   };
   const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
-  const allExternals = [...externals, ...coreExternals];
+  const allExternals = makeExternals(externals);
   const scripts = newInfo
     ? {
         start: 'pilet debug',

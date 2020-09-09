@@ -1,6 +1,6 @@
 import * as actions from './actions';
 import { ComponentType, isValidElement, ReactElement } from 'react';
-import { Extend, GlobalStateContext, withApi, defaultRender } from 'piral-core';
+import { PiralPlugin, GlobalStateContext, withApi, defaultRender } from 'piral-core';
 import { DefaultHost, DefaultToast } from './default';
 import { PiletNotificationsApi, NotificationOptions, OpenNotification, BareNotificationProps } from './types';
 
@@ -96,7 +96,7 @@ function getNotifications(
 /**
  * Creates new Pilet API extensions for showing notifications.
  */
-export function createNotificationsApi(config: NotificationsConfig = {}): Extend<PiletNotificationsApi> {
+export function createNotificationsApi(config: NotificationsConfig = {}): PiralPlugin<PiletNotificationsApi> {
   const { defaultOptions = {}, selectId = () => `${~~(Math.random() * 10000)}`, messages = [] } = config;
 
   return context => {

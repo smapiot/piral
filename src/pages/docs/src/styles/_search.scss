@@ -3,16 +3,17 @@
   justify-content: flex-end;
   width: 30rem;
 
-  @media (max-width: $mobileBrk) {
-    display: none;
-  }
-
   @media (max-width: $desktopBrk) {
     width: 23rem;
   }
 
+  @media (max-width: $mobileBrk) {
+    width: 1rem;
+  }
+
   .search-overlay {
     position: fixed;
+    z-index: 1;
     top: 0;
     left: 0;
     width: 0;
@@ -23,6 +24,15 @@
   }
 
   &[data-active=true] {
+    @media (max-width: $mobileBrk) {
+      width: 100%;
+      position: absolute;
+      padding: 1rem;
+      top: 0;
+      left: 0;
+      box-sizing: border-box;
+    }
+
     .search-overlay {
       width: 100%;
       height: 100%;
@@ -35,6 +45,10 @@
 
       .search-form {
         color: black;
+
+        @media (max-width: $mobileBrk) {
+          width: 100%;
+        }
       }
 
       button[type=reset][data-active=true] {
@@ -49,12 +63,20 @@
 
         .search-scroll {
           max-height: 75vh;
+
+          @media (max-width: $mobileBrk) {
+            max-height: 90vh;
+          }
         }
       }
 
       input {
         background: white;
         text-align: left;
+
+        @media (max-width: $mobileBrk) {
+          padding: 0 44px;
+        }
       }
     }
   }
@@ -64,6 +86,7 @@
   }
 
   .search-details {
+    z-index: 1;
     width: 10rem;
     transition: width 250ms cubic-bezier(0.1, 0.7, 0.1, 1);
     position: relative;
@@ -91,6 +114,10 @@
       border: 0;
       outline: 0;
       -webkit-tap-highlight-color: transparent;
+
+      &::placeholder {
+        color: #ccc;
+      }
     }
 
     label {
@@ -100,6 +127,23 @@
     .search-icon {
       top: 6px;
       left: 10px;
+    }
+
+    @media (max-width: $mobileBrk) {
+      width: 0;
+
+      label {
+        pointer-events: all;
+      }
+
+      input {
+        padding: 0;
+      }
+
+      .search-icon {
+        top: 8px;
+        left: -2rem;
+      }
     }
 
     .reset-icon {
@@ -173,6 +217,16 @@
 
               > span {
                 display: block;
+
+                &.title {
+                  font-weight: bold;
+                  font-size: 1.1em;
+                }
+
+                &.keywords {
+                  font-size: 0.8em;
+                  color: #ccc;
+                }
               }
             }
           }

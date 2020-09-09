@@ -1,13 +1,23 @@
-import { ComponentType } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { FirstParametersOf, UnionOf } from './common';
-import { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
-import { LayoutType } from './layout';
+import type { ComponentType } from 'react';
+import type { RouteComponentProps } from 'react-router';
+import type { FirstParametersOf, UnionOf } from './common';
+import type { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
+import type { LayoutType } from './layout';
 
+/**
+ * Mapping of available component converters.
+ */
 export interface ComponentConverters<TProps> extends PiralCustomComponentConverters<TProps> {
+  /**
+   * Converts the HTML component to a framework-independent component.
+   * @param component The vanilla JavaScript component to be converted.
+   */
   html(component: HtmlComponent<TProps>): ForeignComponent<TProps>;
 }
 
+/**
+ * Definition of a vanilla JavaScript component.
+ */
 export interface HtmlComponent<TProps> {
   /**
    * Renders a component into the provided element using the given props and context.
@@ -19,10 +29,16 @@ export interface HtmlComponent<TProps> {
   type: 'html';
 }
 
+/**
+ * The context to be transported into the generic components.
+ */
 export interface ComponentContext {
   router: RouteComponentProps;
 }
 
+/**
+ * Generic definition of a framework-independent component.
+ */
 export interface ForeignComponent<TProps> {
   /**
    * Called when the component is mounted.
@@ -45,6 +61,9 @@ export interface ForeignComponent<TProps> {
   unmount?(element: HTMLElement): void;
 }
 
+/**
+ * Possible shapes for a component.
+ */
 export type AnyComponent<T> = ComponentType<T> | FirstParametersOf<ComponentConverters<T>>;
 
 /**
@@ -113,20 +132,53 @@ export interface UnknownErrorInfoProps {
   error: any;
 }
 
+/**
+ * Map of all error types to their respective props.
+ */
 export interface Errors extends PiralCustomErrors {
+  /**
+   * The props type for an extension error.
+   */
   extension: ExtensionErrorInfoProps;
+  /**
+   * The props type for a loading error.
+   */
   loading: LoadingErrorInfoProps;
+  /**
+   * The props type for a page error.
+   */
   page: PageErrorInfoProps;
+  /**
+   * The props type for a not found error.
+   */
   not_found: NotFoundErrorInfoProps;
+  /**
+   * The props type for an unknown error.
+   */
   unknown: UnknownErrorInfoProps;
 }
 
+/**
+ * The props for the ErrorInfo component.
+ */
 export type ErrorInfoProps = UnionOf<Errors>;
 
+/**
+ * The props of a Loading indicator component.
+ */
 export interface LoadingIndicatorProps {}
 
+/**
+ * The props of a Layout component.
+ */
 export interface LayoutProps {
+  /**
+   * The currently selected layout type.
+   */
   currentLayout: LayoutType;
 }
 
+/**
+ * The props of a Router component.
+ */
 export interface RouterProps {}

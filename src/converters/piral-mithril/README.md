@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-mithril` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Mithril.js converter for any component registration, as well as a `fromMithril` shortcut and a `MithrilExtension` component.
+The set includes a Mithril.js converter for any component registration, as well as a `fromMithril` shortcut and a `MithrilExtension` component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -22,7 +22,7 @@ The extension slot component to be used in Mithril.js component.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromMithril` function from the Pilet API to convert your Mithril.js components to components usable by your Piral instance.
 
@@ -43,9 +43,21 @@ Within Mithril.js components the Piral Mithril.js extension component can be use
 <MithrilExtension name="name-of-extension" />
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-mithril` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromMithril } from 'piral-mithril';
+import { MithrilPage } from './MithrilPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromMithril(MithrilPage));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Mithril.js with Piral is as simple as installing `piral-mithril` and `mithril`.
 
@@ -59,7 +71,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createMithrilApi()],
+  plugins: [createMithrilApi()],
   // ...
 });
 ```
@@ -75,6 +87,8 @@ The `mithril` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
+
+:::
 
 ## License
 

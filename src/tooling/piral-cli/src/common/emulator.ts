@@ -1,8 +1,9 @@
 import { join, resolve, relative } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from './package';
 import { createFileFromTemplateIfNotExists } from './template';
-import { coreExternals, cliVersion, filesTar, filesOnceTar } from './info';
-import { createPackage } from './npm';
+import { filesTar, filesOnceTar } from './constants';
+import { cliVersion } from './info';
+import { createPackage, makeExternals } from './npm';
 import { createDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
@@ -20,9 +21,8 @@ const packageJson = 'package.json';
 
 export async function createEmulatorPackage(sourceDir: string, targetDir: string, targetFile: string) {
   const piralPkg = require(resolve(sourceDir, packageJson));
-  const externals: Array<string> = piralPkg.pilets?.externals ?? [];
   const files: Array<string | TemplateFileLocation> = piralPkg.pilets?.files ?? [];
-  const allExternals = [...externals, ...coreExternals];
+  const allExternals = makeExternals(piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
     allExternals.filter(isValidDependency).map(async name => ({
@@ -54,7 +54,11 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   // patch the JSON relevant for th eproject
   await updateExistingJson(rootDir, packageJson, {
     name: piralPkg.name,
+    description: piralPkg.description,
     version: piralPkg.version,
+    license: piralPkg.license,
+    homepage: piralPkg.homepage,
+    keywords: piralPkg.keywords,
     pilets: {
       ...piralPkg.pilets,
       files: filesMap,
@@ -72,6 +76,13 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
       ...piralPkg.dependencies,
       ...externalDependencies,
     },
+    repository: piralPkg.repository,
+    bugs: piralPkg.bugs,
+    author: piralPkg.author,
+    contributors: piralPkg.contributors,
+    engines: piralPkg.engines,
+    cpu: piralPkg.cpu,
+    publishConfig: piralPkg.publishConfig,
   });
 
   await Promise.all([createDirectory(filesDir), createDirectory(filesOnceDir)]);

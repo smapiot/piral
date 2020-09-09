@@ -1,12 +1,11 @@
 import { generateDeclaration } from 'dets';
-import { dirname, basename, resolve } from 'path';
+import { dirname, basename, resolve, extname } from 'path';
 import { progress, log } from './log';
-import { coreExternals } from './info';
+import { makeExternals } from './npm';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
+import { entryModuleExtensions, piralBaseRoot } from './constants';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
-
-const piralBaseRoot = 'piral-base/lib/types';
 
 function findPiralBaseApi(root: string) {
   try {
@@ -44,6 +43,16 @@ async function getAllFiles(entryModules: Array<string>) {
   return files;
 }
 
+async function getEntryModules(entryFiles: string) {
+  if (!entryModuleExtensions.includes(extname(entryFiles).toLowerCase())) {
+    const appFile = await readText(dirname(entryFiles), basename(entryFiles));
+    const entryModules = await getEntryFiles(appFile, dirname(entryFiles));
+    return entryModules;
+  }
+
+  return [entryFiles];
+}
+
 export async function createDeclaration(
   baseDir: string,
   entry: string,
@@ -53,9 +62,8 @@ export async function createDeclaration(
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, externals } = await retrievePiletsInfo(entryFiles);
-  const allowedImports = [...externals, ...coreExternals];
-  const appFile = await readText(dirname(entryFiles), basename(entryFiles));
-  const entryModules = await getEntryFiles(appFile, dirname(entryFiles));
+  const allowedImports = makeExternals(externals);
+  const entryModules = await getEntryModules(entryFiles);
   const files = await getAllFiles(entryModules);
 
   progress('Bundling declaration file ...');

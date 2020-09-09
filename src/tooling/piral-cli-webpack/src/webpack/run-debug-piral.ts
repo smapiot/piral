@@ -1,3 +1,4 @@
+import type { LogLevels } from 'piral-cli';
 import { setStandardEnvs, getFreePort } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -12,6 +13,7 @@ async function run(
   externals: Array<string>,
   publicUrl: string,
   entryFiles: string,
+  logLevel: LogLevels,
 ) {
   setStandardEnvs({
     root,
@@ -39,7 +41,7 @@ async function run(
     watch: true,
   });
 
-  return runWebpack(wpConfig);
+  return runWebpack(wpConfig, logLevel);
 }
 
 let bundler;
@@ -61,7 +63,7 @@ process.on('message', async msg => {
 
       break;
     case 'start':
-      bundler = await run(root, msg.piral, msg.hmr, msg.externals, msg.publicUrl, msg.entryFiles).catch(error => {
+      bundler = await run(root, msg.piral, msg.hmr, msg.externals, msg.publicUrl, msg.entryFiles, msg.logLevel).catch(error => {
         process.send({
           type: 'fail',
           error: error?.message,

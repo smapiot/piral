@@ -1,4 +1,4 @@
-import { PiletMetadata, AvailableDependencies, PiletDependencyGetter } from './types';
+import type { PiletMetadata, AvailableDependencies, PiletDependencyGetter } from './types';
 
 const defaultGlobalDependencies: AvailableDependencies = {};
 const defaultGetDependencies: PiletDependencyGetter = () => false;

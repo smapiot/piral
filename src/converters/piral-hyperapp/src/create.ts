@@ -1,7 +1,7 @@
-import { Extend } from 'piral-core';
-import { createHyperappElement } from './mount';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletHyperappApi } from './types';
+import { createExtension } from './extension';
+import type { PiletHyperappApi } from './types';
 
 /**
  * Available configuration options for the Hyperapp plugin.
@@ -17,21 +17,14 @@ export interface HyperappConfig {
 /**
  * Creates new Pilet API extensions for the Hyperapp integration.
  */
-export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHyperappApi> {
-  const { rootName = 'slot' } = config;
+export function createHyperappApi(config: HyperappConfig = {}): PiralPlugin<PiletHyperappApi> {
+  const { rootName } = config;
 
   return context => {
     const convert = createConverter();
     context.converters.hyperapp = ({ root, state, actions }) => convert(root, state, actions);
 
     return api => {
-      const HyperappExtension = props =>
-        createHyperappElement(rootName, {
-          oncreate(element: HTMLElement) {
-            api.renderHtmlExtension(element, props);
-          },
-        });
-
       return {
         fromHyperapp(root, state, actions) {
           return {
@@ -41,7 +34,7 @@ export function createHyperappApi(config: HyperappConfig = {}): Extend<PiletHype
             actions,
           };
         },
-        HyperappExtension,
+        HyperappExtension: createExtension(api, rootName),
       };
     };
   };

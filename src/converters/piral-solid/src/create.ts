@@ -1,6 +1,7 @@
-import { Extend } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletSolidApi } from './types';
+import { createExtension } from './extension';
+import type { PiletSolidApi } from './types';
 
 /**
  * Available configuration options for the Solid plugin.
@@ -16,8 +17,8 @@ export interface SolidConfig {
 /**
  * Creates new Pilet API extensions for integration of Solid.
  */
-export function createSolidApi(config: SolidConfig = {}): Extend<PiletSolidApi> {
-  const { rootName = 'slot' } = config;
+export function createSolidApi(config: SolidConfig = {}): PiralPlugin<PiletSolidApi> {
+  const { rootName } = config;
 
   return context => {
     const convert = createConverter();
@@ -30,11 +31,7 @@ export function createSolidApi(config: SolidConfig = {}): Extend<PiletSolidApi> 
           root,
         };
       },
-      SolidExtension(props) {
-        const element = document.createElement(rootName);
-        setTimeout(() => api.renderHtmlExtension(element, props), 0);
-        return element as any;
-      },
+      SolidExtension: createExtension(api, rootName),
     });
   };
 }

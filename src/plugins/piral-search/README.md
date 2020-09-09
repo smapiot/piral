@@ -22,7 +22,7 @@ Removes a search provider from the app shell. This requires a named search provi
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `registerSearchProvider` function from the Pilet API to add a new search provider in the app shell.
 
@@ -57,9 +57,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -74,7 +74,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createSearchApi()],
+  plugins: [createSearchApi()],
   // ...
 });
 ```
@@ -86,7 +86,7 @@ For example:
 ```jsx
 const instance = createInstance({
   // important part
-  extendApi: [createSearchApi({
+  plugins: [createSearchApi({
     query: '!help',
     results: [
       <div>
@@ -97,6 +97,8 @@ const instance = createInstance({
   // ...
 });
 ```
+
+:::
 
 ## License
 

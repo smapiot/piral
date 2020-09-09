@@ -45,4 +45,9 @@ describe('Externals module', () => {
     const tar = externals.tar;
     expect(tar).not.toBeUndefined();
   });
+
+  it('exports the open module', () => {
+    const open = externals.open;
+    expect(open).not.toBeUndefined();
+  });
 });

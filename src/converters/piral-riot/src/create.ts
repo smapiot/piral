@@ -1,6 +1,7 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { PiletRiotApi } from './types';
+import { createExtension } from './extension';
 
 /**
  * Available configuration options for the Riot.js plugin.
@@ -16,8 +17,8 @@ export interface RiotConfig {
 /**
  * Creates new Pilet API extensions for integrating Riot.js.
  */
-export function createRiotApi(config: RiotConfig = {}): Extend<PiletRiotApi> {
-  const { extensionName = 'riot-extension' } = config;
+export function createRiotApi(config: RiotConfig = {}): PiralPlugin<PiletRiotApi> {
+  const { extensionName } = config;
 
   return context => {
     const convert = createConverter();
@@ -31,24 +32,7 @@ export function createRiotApi(config: RiotConfig = {}): Extend<PiletRiotApi> {
           captured,
         };
       },
-      RiotExtension: {
-        name: extensionName,
-        template() {
-          return {
-            mount(element, scope) {
-              api.renderHtmlExtension(element, scope.props);
-            },
-            update() {},
-            unmount() {},
-            createDOM() {
-              return this;
-            },
-            clone() {
-              return this;
-            },
-          };
-        },
-      },
+      RiotExtension: createExtension(api, extensionName),
     });
   };
 }

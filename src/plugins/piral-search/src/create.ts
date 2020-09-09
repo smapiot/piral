@@ -1,6 +1,6 @@
 import { isfunc } from 'piral-base';
 import { ReactChild, isValidElement, createElement } from 'react';
-import { buildName, Extend, Dict, withApi, PiletApi, GlobalStateContext } from 'piral-core';
+import { buildName, PiralPlugin, Dict, withApi, PiletApi, GlobalStateContext } from 'piral-core';
 import { createActions } from './actions';
 import { DefaultContainer, DefaultInput, DefaultResult } from './default';
 import {
@@ -106,7 +106,7 @@ function wrapResults(
 /**
  * Creates new Pilet API extensions for search and filtering.
  */
-export function createSearchApi(config: SearchConfig = {}): Extend<PiletSearchApi> {
+export function createSearchApi(config: SearchConfig = {}): PiralPlugin<PiletSearchApi> {
   const { providers = [], results = [], query = '', ...actionConfig } = config;
 
   return context => {

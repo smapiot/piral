@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { setupPwaClient } from './setup';
 import { useNotification } from './utils';
 import { PiletPwaApi } from './types';
@@ -6,7 +6,7 @@ import { PiletPwaApi } from './types';
 /**
  * Creates new Pilet API extensions for PWA support.
  */
-export function createPwaApi(client = setupPwaClient()): Extend<PiletPwaApi> {
+export function createPwaApi(client = setupPwaClient()): PiralPlugin<PiletPwaApi> {
   return () => {
     return {
       showAppNotification(title, options) {

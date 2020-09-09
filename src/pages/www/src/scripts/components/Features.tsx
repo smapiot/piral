@@ -38,7 +38,7 @@ export const Features: React.FC = () => (
           Extensibility is built-in to give you the freedom to choose what you need.
           <br /> We provide already a rich set of plugins to help you get started.
         </p>
-        <a href="https://docs.piral.io/reference/plugins" className="btn atlas-cta cta-blue">
+        <a href="https://docs.piral.io/plugins" className="btn atlas-cta cta-blue">
           Available Plugins
         </a>
       </Feature>

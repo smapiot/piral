@@ -23,6 +23,10 @@
     "dependencies.codegen",
     "dependencies.codegen.native.js"
   ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/smapiot"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smapiot/piral.git"

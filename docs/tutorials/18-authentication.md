@@ -19,9 +19,9 @@ The two aspects can be implemented very easily, however, for convenience we've a
 
 ## Setup without Plugins
 
-Piral is nothing more than a plain React application. Thus it can be adjusted and used like a standard React application. This allows Piral to leverage any existing JavaScript library for the integration of authentication.
+Piral is nothing more than a plain React application. Thus it can be adjusted and used as a standard React application. This allows Piral to leverage any existing JavaScript library for the integration of authentication.
 
-Let's see an example using Microsoft's popular MSAL library.
+Let's see an example using Microsoft's popular [MSAL library](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-overview).
 
 In our app entry point we define a lazy loading app schema that is sensitive to `/auth`:
 
@@ -96,7 +96,7 @@ export function logout() {
 }
 ```
 
-All we do here is to expose functionality of the MSAL library. The rest of the application (e.g., `App.tsx` or `Landing.tsx`) are standard React components with or without Piral.
+All we do here is to expose the functionality of the MSAL library. The rest of the application (e.g., `App.tsx` or `Landing.tsx`) are standard React components with or without Piral.
 
 Other parts of the application can now use the `auth` module for obtaining user information. One example would be `fetch.ts`, which is used by all API calls.
 
@@ -167,7 +167,7 @@ import { Layout } from './layout/UserLayout';
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 const instance = createInstance({
-  extendApi: [createAdalApi(client)],
+  plugins: [createAdalApi(client)],
   requestPilets,
 });
 
@@ -191,7 +191,7 @@ So far we've seen that using a plugin such as `piral-adal`, `piral-oidc`, or oth
 
 Sometimes, however, we already want digested user information. Here, Piral struggles to provide a generic solution that "just works". Piral cannot possibly know how your backend or user structure looks like. Instead, Piral assumes that this information is provided somehow.
 
-`piral-auth` is an optional plugin that solves exactly that. What this plugin adds to the Pilet API is a `geUser` function. The information returned from this function is set in the Piral instance.
+`piral-auth` is an optional plugin that solves exactly that. What this plugin adds to the Pilet API is a `getUser` function. The information returned from this function is set in the Piral instance.
 
 Usually, the user information is set already when creating the Piral instance:
 
@@ -209,7 +209,7 @@ const NotFound = React.lazy(() => import('./pages/NotFound'));
 const account = client.account();
 
 const instance = createInstance({
-  extendApi: [createAdalApi(client), createAuthApi({
+  plugins: [createAdalApi(client), createAuthApi({
     user: {
       id: account.userName,
       firstName: account.name.split(' ').shift(),
@@ -234,7 +234,7 @@ In scenarios where the user information changes during the lifetime of the appli
 // ...
 
 const instance = createInstance({
-  extendApi: [createAdalApi(client), createAuthApi()],
+  plugins: [createAdalApi(client), createAuthApi()],
   requestPilets,
 });
 
@@ -250,8 +250,8 @@ By default, the `createAuthApi` call starts with no user.
 
 ## Conclusion
 
-Realizing authentication in Piral works exactly the same as in any other React or JS web app. The enhanced possibilities of providing HTTP middleware or a strongly typed API for the pilets can be leveraged quite easily.
+Realizing authentication in Piral works the same as in any other React or JS web app. The enhanced possibilities of providing HTTP middleware or a strongly typed API for the pilets can be leveraged quite easily.
 
 Piral makes it quite easy to integrate any desired authentication flow in your app.
 
-In the next tutorial we'll have a look on how to migrate existing server-based websites to be fully delivered in pilets.
+In the next tutorial, we'll have a look at how to migrate existing server-based websites to be fully delivered in pilets.

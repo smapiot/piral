@@ -22,7 +22,7 @@ The extension slot component to be used in React 15.x components.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromReact15` function from the Pilet API to convert your React v15 components to components usable by your Piral instance.
 
@@ -43,9 +43,21 @@ Within React v15 components the Piral React v15 extension component can be used 
 <React15Extension name="name-of-extension" />
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-react-15` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromReact15 } from 'piral-react-15';
+import { React15Page } from './React15Page';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromReact15(React15Page));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using React v15 with Piral is as simple as installing `piral-react-15` and `react-15`.
 
@@ -59,7 +71,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createReact15Api()],
+  plugins: [createReact15Api()],
   // ...
 });
 ```
@@ -75,6 +87,8 @@ The `react-15` package (or whatever alias you've chosen) should be shared with t
   }
 }
 ```
+
+:::
 
 ## License
 

@@ -8,11 +8,11 @@ section: Details
 
 # Sharing Between Pilets
 
-Pilets provide a great way to develop and release business functionality in isolation. However, in the real world we may want to mix functionalities. As such one team should be responsible for a functionality that is shown as a dedicated page, while another team cares about a subfunctionality that may appear on dedicated pages, but also in general or other components.
+Pilets provide a great way to develop and release business functionality in isolation. However, in the real world, we may want to mix functionalities. As such one team should be responsible for a functionality that is shown as a dedicated page, while another team cares about a sub functionality that may appear on dedicated pages, but also in general or other components.
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/EIXtih5_M3M)
 
@@ -20,7 +20,7 @@ We also have this tutorial available in form of a video.
 
 Data from one pilet can be shared with other pilets via the `setData` and `getData` methods of the pilet API. The only thing to know is the name of the data item. It should be as unique as possible as overwriting is not allowed. Thus, the first one writing data will "own" (i.e., have the right to modify) it.
 
-As a best practice the data should be already initialized as soon as possible in the `setup` function.
+As a best practice, the data should be already initialized as soon as possible in the `setup` function.
 
 ```ts
 export function setup(piral: PiletApi) {
@@ -75,9 +75,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-While sharing functions is definitely possible, we do not necessarily recommend it for multiple reasons. Usually, you do not want to risk not having the function available. Even worse, it may be available, but different than expected. In any case, sharing only the code may be more what you are after. For these scenarios we recommend publishing the function(s) in a dedicated package, which may be shared via the app shell (i.e., shared dependency) or bundled in the pilets when needed.
+While sharing functions is possible, we do not necessarily recommend it for multiple reasons. Usually, you do not want to risk not having the function available. Even worse, it may be available, but different than expected. In any case, sharing only the code may be more what you are after. For these scenarios we recommend publishing the function(s) in a dedicated package, which may be shared via the app shell (i.e., shared dependency) or bundled in the pilets when needed.
 
-Most likely, however, it is not the function you are after, but a functionality coupled to a specific rendering. For these cases we recommend sharing components.
+Most likely, however, it is not the function you are after, but a functionality coupled to a specific rendering. For these cases, we recommend sharing components.
 
 ## Components
 
@@ -129,11 +129,11 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-At the end the `piral.Extension` component marks the extension slot, i.e., the place where the shared components of the respective extension container (referred by the `name` prop) should be rendered. The `params` prop allows us to forward the parameters to the shared components.
+In the end the `piral.Extension` component marks the extension slot, i.e., the place where the shared components of the respective extension container (referred by the `name` prop) should be rendered. The `params` prop allows us to forward the parameters to the shared components.
 
-**Remark**: The extension (or to be more specific, the shared component) can also be used within the pilet that defines it.
+**Remark**: The extension (or to be more specific the shared component) can also be used within the pilet that defines it.
 
-As already mentioned there may be `0`, `1`, or multiple components in the extension container. This can also change over time - the extension slot would then re-render. In the special case of `0` components we can define a fallback that should render. Otherwise, nothing will be shown.
+As already mentioned, there may be `0`, `1`, or multiple components in the extension container. This can also change over time - the extension slot would then re-render. In the special case of `0` components, we can define a fallback that should render. Otherwise, nothing will be shown.
 
 ```jsx
 export function setup(piral: PiletApi) {
@@ -175,9 +175,9 @@ The following diagram illustrates this.
 
 ![Page transitions without registered extensions](../diagrams/page-transitions-no-ext.png)
 
-Using extensions we can finally also share components from pilets to pilets. The mechanism allows to specify what components you want to see displayed. This enables many scenarios, e.g., to render a specific extension always when certain data is available, or to avoid using a link determined by another pilet for linking.
+Using extensions we can finally also share components between pilets. The mechanism allows you to specify what components you want to see displayed. This enables many scenarios, e.g., to render a specific extension always when certain data is available, or to avoid using a link determined by another pilet for linking.
 
-Instead, we can loosely couple to an extension that determines where to link to. The following diagram shows some of these possibilities.
+Instead, we can loosely couple the extensions. The following diagram shows some of these possibilities.
 
 ![Page transitions with registered extensions](../diagrams/page-transitions-with-ext.png)
 
@@ -185,6 +185,6 @@ Importantly, the sharing will always be indirect, i.e., the name of the owning p
 
 ## Conclusion
 
-Sharing fragments between pilets is a fundamental part of what makes Piral different. In Piral authors of pilets should never think "then I get this particular piece of functionality from *that* pilet", but instead "then I use a piece of functionality provided *if* available".
+Sharing fragments between pilets is a fundamental part of what makes Piral different. The authors of pilets should never think "then I get this particular piece of functionality from *that* pilet", but instead "then I use a piece of functionality provided *if* available".
 
-In the next tutorial we look at how functionality and data can be provided from the Piral instance to the pilets.
+In the next tutorial, we look at how functionality and data can be provided from the Piral instance to the pilets.

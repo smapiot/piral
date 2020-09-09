@@ -1,43 +1,33 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import FlexSearch from 'flexsearch';
 
-const worker = new Worker('../search.ts');
+const index: any = FlexSearch.create({
+  doc: {
+    id: 'id',
+    field: ['content', 'keywords', 'title'],
+  },
+});
 
 function useSearch(open: boolean): [string, (value: string) => void, Array<any>] {
   const [input, setInput] = React.useState('');
   const [items, setItems] = React.useState([]);
+  const loading = React.useRef<Promise<void>>();
 
   React.useEffect(() => {
     if (open) {
       document.querySelector<HTMLInputElement>('#searchInput').focus();
+
+      if (!loading.current) {
+        loading.current = import('../../codegen/search.codegen').then(docs => index.import(docs, { serialize: false }));
+      }
     }
   }, [open, input]);
 
   React.useEffect(() => {
-    const handler = (ev: MessageEvent) => {
-      switch (ev.data.type) {
-        case 'load':
-          return import('../../codegen/search.codegen').then(pages =>
-            worker.postMessage({
-              type: 'data',
-              pages,
-            }),
-          );
-        case 'results':
-          return setItems(ev.data.results);
-      }
-    };
-    worker.addEventListener('message', handler);
-    return () => worker.removeEventListener('message', handler);
-  }, []);
-
-  React.useEffect(() => {
     const id = setTimeout(() => {
       if (input) {
-        worker.postMessage({
-          type: 'search',
-          input,
-        });
+        loading.current.then(() => setItems(index.search(input)));
       } else if (!items || items.length !== 0) {
         setItems([]);
       }
@@ -52,10 +42,10 @@ export const Search: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [input, setInput, items] = useSearch(open);
   const closeSearch = () => setOpen(false);
-  const openSearch = (e: React.SyntheticEvent) => {
+  const openSearch = React.useCallback((e: React.SyntheticEvent) => {
     e.preventDefault();
     setOpen(true);
-  };
+  }, []);
 
   return (
     <div className="search-dialog" data-active={open}>
@@ -74,7 +64,7 @@ export const Search: React.FC = () => {
             autoComplete="off"
             spellCheck="false"
           />
-          <label className="icon search-icon">
+          <label className="icon search-icon" onClick={openSearch}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="search-magnify-icon">
               <path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z" />
             </svg>
@@ -102,11 +92,11 @@ export const Search: React.FC = () => {
               </div>
               <ol className="search-result-list">
                 {items.map(item => (
-                  <li key={item.url} className="search-result-list-item">
-                    <Link to={item.url} onClick={closeSearch}>
+                  <li key={item.id} className="search-result-list-item">
+                    <Link to={item.link} onClick={closeSearch}>
                       <div>
                         <span className="title">{item.title}</span>
-                        <span className="url">{item.url}</span>
+                        <span className="url">{item.link}</span>
                         <span className="keywords">{item.keywords.join(', ')}</span>
                       </div>
                     </Link>

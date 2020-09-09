@@ -1,9 +1,17 @@
 import { ForceOverwrite, PiletLanguage } from './common/enums';
-import { TemplateType, Framework, NpmClientType, PiletSchemaVersion, PiletPublishSource } from './types';
+import {
+  TemplateType,
+  Framework,
+  NpmClientType,
+  PiletSchemaVersion,
+  PiletPublishSource,
+  PiralBuildType,
+} from './types';
 
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'none'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const templateTypeKeys: Array<TemplateType> = ['default', 'empty'];
+export const buildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
 export const bundlerKeys: Array<string> = ['none', 'parcel', 'webpack'];
 export const frameworkKeys: Array<Framework> = ['piral', 'piral-core', 'piral-base'];

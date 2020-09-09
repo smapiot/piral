@@ -42,34 +42,12 @@ Sets the target directory or file of bundling.
 - Type: `string`
 - Default: `"./dist"`
 
-### `--cache-dir`
-
-Sets the cache directory for bundling.
-
-- Type: `string`
-- Default: `".cache"`
-
 ### `--public-url`
 
 Sets the public URL (path) of the bundle.
 
 - Type: `string`
 - Default: `"/"`
-
-### `--detailed-report`
-
-Sets if a detailed report should be created.
-
-- Type: `boolean`
-- Default: `false`
-
-### `--no-detailed-report`
-
-Opposite of:
-Sets if a detailed report should be created.
-
-- Type: `boolean`
-- Default: `true`
 
 ### `--log-level`
 
@@ -138,21 +116,6 @@ Appends the hash to the side-bundle files.
 - Type: `boolean`
 - Default: `false`
 
-### `--scope-hoist`
-
-Tries to reduce bundle size by introducing tree shaking.
-
-- Type: `boolean`
-- Default: `false`
-
-### `--no-scope-hoist`
-
-Opposite of:
-Tries to reduce bundle size by introducing tree shaking.
-
-- Type: `boolean`
-- Default: `true`
-
 ### `--optimize-modules`
 
 Also includes the node modules for target transpilation.
@@ -173,7 +136,7 @@ Also includes the node modules for target transpilation.
 Selects the target type of the build. "all" builds all target types.
 
 - Type: `string`
-- Choices: `"all"`, `"release"`, `"develop"`
+- Choices: `"all"`, `"release"`, `"emulator"`
 - Default: `"all"`
 
 ### `--base`

@@ -1,5 +1,6 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
+import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { PiletSchemaVersion } from 'piral-cli';
 import { PiletWebpackPlugin } from 'pilet-webpack-plugin';
 import { join } from 'path';
@@ -45,7 +46,7 @@ export async function getPiletConfig(
     },
 
     module: {
-      rules: getRules(baseDir),
+      rules: getRules(baseDir, production, true),
     },
 
     optimization: {
@@ -59,8 +60,12 @@ export async function getPiletConfig(
             output: {
               comments: /^@pilet/,
             },
+            mangle: {
+              reserved: ['__bundleUrl__'],
+            },
           },
         }),
+        new OptimizeCSSAssetsPlugin({}),
       ],
     },
 

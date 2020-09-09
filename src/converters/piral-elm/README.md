@@ -18,7 +18,7 @@ Transforms a standard Elm component into a component that can be used in Piral, 
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromElm` function from the Pilet API to convert your Elm components to components usable by your Piral instance.
 
@@ -39,9 +39,21 @@ Within Elm components the Piral Elm extension component can be used by referring
 <elm-extension name="name-of-extension"></elm-extension>
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-elm` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromElm } from 'piral-elm';
+import Elm from './Page.elm';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromElm(Elm.Page));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Elm with Piral is as simple as installing `piral-elm`.
 
@@ -54,10 +66,12 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createElmApi()],
+  plugins: [createElmApi()],
   // ...
 });
 ```
+
+:::
 
 ## Pilet Usage
 

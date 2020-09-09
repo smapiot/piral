@@ -305,6 +305,7 @@
   pre,
   table,
   ul {
+    word-break: break-word;
     margin-bottom: 1em;
     margin-top: 0;
   }
@@ -552,6 +553,7 @@
     overflow-x: auto;
     color: #333;
     background: #f8f8f8;
+    word-break: break-word;
   }
 
   .hljs-comment,

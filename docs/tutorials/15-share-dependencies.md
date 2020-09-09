@@ -8,7 +8,7 @@ section: Details
 
 # Sharing Dependencies
 
-Sharing dependencies is one of the selling points of Piral. The key, however, is not to *overshare*, i.e., to share too much. With every shared dependency a certain burden / debt is included. If too many dependencies are shared, the dependency management will become too complicated and eventually collapse.
+Sharing dependencies is one of the selling points of Piral. The key, however, is not to *overshare*, i.e., to share too much. With every shared dependency a certain burden/debt is included. If too many dependencies are shared, the dependency management will become too complicated and eventually collapse.
 
 Our recommendation is to keep the sharing of dependencies from the app shell as practical as possible.
 
@@ -86,7 +86,7 @@ By default, we do not recommend exporting functionality from the app shell. A Pi
 
 ## Type Declarations
 
-While the explicit way is great for flexibility it comes with one caveat: For this kind of sharing types are not automatically inferred and generated. As a result, we need to place additional typings for our offerings.
+While the explicit way is great for gaining flexibility it comes with one caveat: For this kind of sharing types are not automatically inferred and generated. As a result, we need to place additional typings for our offerings.
 
 By specifying the `typings` field in the *package.json* of the Piral instance we can tell Piral where the *.d.ts* files describing our app shell exports are placed.
 
@@ -115,7 +115,7 @@ declare module 'my-app-shell' {
 }
 ```
 
-**Important**: These are just type declarations. We could, of course, declare some module like `foo-bar`, however, if that is indeed used in a pilet the build will potentially fail. As long as no module with the given name really exists the bundler will not be able to resolve it - independent of what TypeScript assumes.
+**Important**: These are just type-declarations. We could, of course, declare a module like `foo-bar`, however, if that is indeed used in a pilet the build will potentially fail. As long as no module with the given name really exists the bundler will not be able to resolve it - independent of what TypeScript assumes.
 
 The rule of thumb for sharing the type declarations is: Everything exported top-level will be associated with the app shell, everything exported from an explicitly declared module will be associated with that module.
 
@@ -123,7 +123,7 @@ The rule of thumb for sharing the type declarations is: Everything exported top-
 
 The mechanism to share dependencies used in pilets is called "import maps". Import maps are also on the way to become [an official standard](https://wicg.github.io/import-maps/).
 
-Since Piral uses Parcel as bundler we rely on the Parcel plugin `parcel-plugin-import-maps`.
+If you are using Parcel as bundler via `piral-cli-parcel` you rely on the Parcel plugin `parcel-plugin-import-maps`. In case of Webpack the Webpack plugin `import-maps-webpack-plugin` is already integrated in the `piral-cli-webpack`.
 
 The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load it again. Otherwise, it will load the different resources.
 
@@ -172,7 +172,7 @@ export function setup(app: PiletApi) {
 }
 ```
 
-At this point you can use the shared resource (like any other dependency) in your code.
+At this point, you can use the shared resource (like any other dependency) in your code.
 
 ```jsx
 // MyPage.tsx
@@ -191,10 +191,32 @@ export default () => (
 );
 ```
 
-The showcased use of `ready` works in all cases, however, sometimes you may want to delay loading until you actually need a resource. In these situations it makes sense to use another variant of `ready`, which gets a single parameter as input data. If the parameter is a single string, it is interpreted as the package to look for. Alternatively, an array of package names can be passed in, too.
+The showcased use of `ready` works in all cases, however, sometimes you may want to delay loading until you need a resource.
+
+::: tip: Using with piral-lazy
+With the `piral-lazy` plugin the import maps are even easier to use.
+
+An example:
+
+```ts
+piral.defineDependency('lodash', () => require('importmap').ready('lodash'));
+const LazyPage = piral.fromLazy(() => import('./MyPage'), ['lodash']);
+piral.registerPage('/sample', LazyPage);
+```
+
+The major advantage is that this implicitly creates a lazy loaded page, which has all the right suspension defined by default.
+:::
+
+In these situations, it makes sense to use another variant of `ready`, which gets a single parameter as input data. If the parameter is a single string, it is interpreted as the package to look for.
+
+```ts
+require('importmap').ready('lodash')
+```
+
+Alternatively, an array of package names can be passed in, too.
 
 ## Conclusion
 
-Sharing dependencies in Piral is an important aspect that can be controlled in simple ways. Piral understands itself here as a guide and tool. Sharing all dependencies is certainly not helpful and should be avoided. On the other hand sharing no dependency will in most cases not be beneficial, too. Finding a good "middle" way will take time.
+Sharing dependencies in Piral is an important aspect that can be controlled in simple ways. Piral understands itself here as a guide and tool. Sharing all dependencies is certainly not helpful and should be avoided. On the other hand, sharing no dependency will in most cases not be beneficial, too. Finding a good "middle" way will take time.
 
-The most effective sharing comes by extending the Pilet API. One crucial aspect is that some sharing will be centralized in Piral's state container. In the next tutorial you'll learn how to use Piral's state container with (custom) actions.
+The most effective sharing comes by extending the Pilet API. One crucial aspect is that some sharing will be centralized in Piral's state container. In the next tutorial, you'll learn how to use Piral's state container with (custom) actions.

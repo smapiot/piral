@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-ember` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes a Ember.js converter for any component registration, as well as a `fromEmber` shortcut and a `EmberExtension` component.
+The set includes an Ember.js converter for any component registration, as well as a `fromEmber` shortcut and a `EmberExtension` component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -22,7 +22,7 @@ Transforms a standard Ember.js component into a component that can be used in Pi
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromEmber` function from the Pilet API to convert your Ember.js components to components usable by your Piral instance.
 
@@ -43,9 +43,21 @@ Within Ember.js components the Piral Ember.js extension component can be used by
 <ember-extension name="name-of-extension"></ember-extension>
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-ember` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromEmber } from 'piral-ember';
+import { Page } from './Page';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromEmber(Page));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Ember.js with Piral is as simple as installing `piral-ember` and `ember-source`.
 
@@ -58,10 +70,12 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createEmberApi()],
+  plugins: [createEmberApi()],
   // ...
 });
 ```
+
+:::
 
 ## License
 

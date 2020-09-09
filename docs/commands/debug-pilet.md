@@ -42,34 +42,12 @@ Sets the port of the local development server.
 - Type: `number`
 - Default: `1234`
 
-### `--cache-dir`
-
-Sets the cache directory for bundling.
-
-- Type: `string`
-- Default: `".cache"`
-
 ### `--log-level`
 
 Sets the log level to use (1-5).
 
 - Type: `number`
 - Default: `3`
-
-### `--fresh`
-
-Resets the cache before starting the debug mode.
-
-- Type: `boolean`
-- Default: `false`
-
-### `--no-fresh`
-
-Opposite of:
-Resets the cache before starting the debug mode.
-
-- Type: `boolean`
-- Default: `true`
 
 ### `--open`
 
@@ -86,21 +64,6 @@ Opens the pilet directly in the browser.
 - Type: `boolean`
 - Default: `true`
 
-### `--scope-hoist`
-
-Tries to reduce bundle size by introducing tree shaking.
-
-- Type: `boolean`
-- Default: `false`
-
-### `--no-scope-hoist`
-
-Opposite of:
-Tries to reduce bundle size by introducing tree shaking.
-
-- Type: `boolean`
-- Default: `true`
-
 ### `--hmr`
 
 Activates Hot Module Reloading (HMR).
@@ -112,21 +75,6 @@ Activates Hot Module Reloading (HMR).
 
 Opposite of:
 Activates Hot Module Reloading (HMR).
-
-- Type: `boolean`
-- Default: `false`
-
-### `--autoinstall`
-
-Automatically installs missing Node.js packages.
-
-- Type: `boolean`
-- Default: `true`
-
-### `--no-autoinstall`
-
-Opposite of:
-Automatically installs missing Node.js packages.
 
 - Type: `boolean`
 - Default: `false`

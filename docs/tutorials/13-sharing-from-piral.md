@@ -8,13 +8,13 @@ section: Details
 
 # Sharing From Piral
 
-Sharing data between pilets is certainly one use case, however, the more important one is distributing information from the app shell to the modules. A Piral instance can easily distribute information among the pilets in multiple ways. In this tutorial we go over these ways.
+Sharing data between pilets is certainly one use case, however, the more important one is distributing information from the app shell to the modules. A Piral instance can easily distribute information among the pilets in multiple ways. In this tutorial, we go over these ways.
 
 Depending on what we want to share one way or another may be applicable.
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/UToVUmG5aFI)
 
@@ -47,7 +47,7 @@ This way is our recommendation for core libraries (e.g., `react`, `react-dom`, .
 
 We can also use the global state for sharing information. However, since pilets have no direct access to the global data store we need to choose a proper location first. One possibility is to use the `data` section, which is already exposed via the `getData` / `setData` Pilet APIs.
 
-This reduces the effort to actually setting the data state. We have a couple of options.
+This reduces the effort to set the data state. We have a couple of options.
 
 First, we could just use the "root" pilet, which is a pilet always given for the Piral instance itself. This pilet is retrieved from the created Piral instance object.
 
@@ -77,7 +77,7 @@ const MyComponentInPiral = () => {
 };
 ```
 
-Besides the possibility of using the action we can also just initialize the state properly when we create the Piral instance object.
+Besides the possibility of using the action, we can also just initialize the state properly when we create the Piral instance object.
 
 ```ts
 const instance = createInstance({
@@ -121,7 +121,7 @@ function createCustomApi() {
 }
 
 const instance = createInstance({
-   extendApi: [createCustomApi()],
+   plugins: [createCustomApi()],
 });
 ```
 
@@ -133,7 +133,7 @@ export function setup(app: PiletApi) {
 }
 ```
 
-Obviously, the API can be much more dynamic and powerful (e.g., even coupling to the global state context) depending on the exact needs.
+The API can be much more dynamic and powerful (e.g., even coupling to the global state context) depending on the exact needs.
 
 This way is our recommendation for dynamic data and functions that require protection. Besides building convenience wrappers around the global state container it can also leverage pilet specific behavior.
 

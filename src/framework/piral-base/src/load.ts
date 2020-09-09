@@ -1,5 +1,5 @@
 import { isfunc } from './utils';
-import { Pilet, PiletRequester, PiletLoader } from './types';
+import type { Pilet, PiletRequester, PiletLoader } from './types';
 
 function checkFetchPilets(fetchPilets: PiletRequester) {
   if (!isfunc(fetchPilets)) {

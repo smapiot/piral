@@ -11,26 +11,26 @@ section: Getting Started
 A working Piral system requires the following components:
 
 1. A functional frontend (referred to as "application shell" or "Piral instance")
-2. A backend / service delivering the pilets (referred to as "Feed Service")
-3. A way to publish / integrate the created pilets, such that they can be delivered by the feed service
+2. A backend/service delivering the pilets (referred to as "Feed Service")
+3. A way to publish/integrate the created pilets, such that they can be delivered by the feed service
 
 In terms of microfrontends, that's as minimal as it can be. Most solutions require special servers or modifications to infrastructure.
 
-We designed Piral to be as simple as possible, while remaining as flexible and powerful as possible. The SPA-first approach removes any need for a server. With Piral you can go serverless if you want to.
+We designed Piral to be as simple as possible while remaining as flexible and powerful as possible. The SPA-first approach removes any need for a server. With Piral you can go serverless if you want to.
 
 ## Video
 
-We also have this tutorial available in form of a video.
+We also have a video tutorial:
 
 @[youtube](https://youtu.be/2MlcqG-UCbA)
 
 ## Piral Cloud Services
 
-In this spirit we provide a free[^1] community edition of the service that you can use for providing the **feed service**, as well as a way to publish your pilets. This leaves you at the task of creating a Piral instance.
+In this spirit, we provide a free[^1] community edition of the service that you can use for providing the **feed service**, as well as a way to publish your pilets. This leaves you at the task of creating a Piral instance.
 
-**Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification we also have published a Node.js sample implementation at GitHub (https://github.com/smapiot/sample-pilet-service). The sample implementation can also be installed or run locally very easily.
+**Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification, we also have published a Node.js sample implementation at GitHub (https://github.com/smapiot/sample-pilet-service). The sample implementation can also be installed or run locally very easily.
 
-The service can be found at [piral.cloud](https://www.piral.cloud). Registration is possible by using a Microsoft Account to log into the service. We do not need any personal data besides the email / account id, which is provided after your approval.
+The service can be found at [piral.cloud](https://www.piral.cloud). Registration is possible by using a Microsoft Account to log into the service. We do not need any personal data besides the email/account id, which is provided after your approval.
 
 For our tutorials, we will utilize the community edition of the feed service.
 
@@ -38,7 +38,7 @@ For our tutorials, we will utilize the community edition of the feed service.
 
 ## Overview
 
-In the Getting Started tutorial, we covered already the creation of a Piral instance and its first pilet. This tutorial will guide us through the steps how to publish our first pilet to the feed service and fetch it subsequently into the Piral instance.
+In the Getting Started tutorial, we covered already the creation of a Piral instance and its first pilet. This tutorial will guide us through the steps on how to publish our first pilet to the feed service and fetch it subsequently into the Piral instance.
 
 This quick start will show us how to
 
@@ -49,11 +49,11 @@ This quick start will show us how to
 
 ## Prerequisites
 
-We assume that a Piral instance and a pilet is available as prerequisite for this tutorial. If not, please follow the getting started tutorial.
+We assume that a Piral instance and a pilet is available as prerequisites for this tutorial. If not, please follow the getting started tutorial.
 
 ## Creating a Feed in the Piral Feed Service
 
-For publishing (or retrieving) pilets you will need a feed. A feed is like a container or folder, which contains a set of pilets. This section describes how to setup a feed for serving pilets.
+For publishing (or retrieving) pilets you will need a feed. A feed is like a container or a folder, which contains a set of pilets. This section describes how to set up a feed for serving pilets.
 
 ### Access to the Feed Service
 
@@ -65,7 +65,7 @@ Upon successful login the landing page of the feed service will be displayed.
 
 ### Create a Feed
 
-For creating a new feed, follow the link `Cerate Feed` on the right-hand side of the top menu.
+For creating a new feed, follow the link `Create Feed` on the right-hand side of the top menu.
 
 ![Creating a new feed](../diagrams/creating-feed.png)
 
@@ -75,7 +75,7 @@ When you are done, just press `CREATE` and wait for the operation to complete. Y
 
 ![Feed Overview](../diagrams/feed-overview.png)
 
-In our case we will see at least the feed, which we just have created.
+In our case, we will see at least the feed, which we just have created.
 
 ## Obtain an API Key
 
@@ -83,7 +83,7 @@ Before we can publish our first pilet to our newly created feed, we need to obta
 
 ### Create an API Key
 
-To see al list of all available API keys, invoke the link `Manage API Keys` or press the "key" icon on the right-hand side of the the feed bar of the current feed. As we did not create an API key, the list will be empty.
+To see al list of all available API keys, invoke the link `Manage API Keys` or press the "key" icon on the right-hand side of the feed bar of the current feed. As we did not create an API key, the list will be empty.
 
 By clicking the `Generate API Key` button we can provide all necessary information for generating our first API key.
 
@@ -94,6 +94,12 @@ Upon pressing the `Generate` button, a new API key will be created.
 ![The Generated API Key](../diagrams/generated-key.png)
 
 Once the generation has completed, the generated key itself will be shown for the first - and last - time. Make sure to copy it to a secure location. If you lose the key, you should revoke it, such that also no one else will be able to use it.
+
+::: warning: Keep your API Key Secure
+The generated API key(s) should be treated as sensitive information. Anyone who is able to publish pilets potentially pushes code on your website, which is evaluated in the browsers of your users!
+
+By default, the API keys expire after 1 year. We encourage you to periodically roll the keys to minimize the risk of leaked keys.
+:::
 
 Back on the API key management page, all currently available API keys will be listed. It shows the information about the API keys and it allows to edit or revoke the API key.
 
@@ -107,9 +113,9 @@ Publishing a pilet works with the `piral-cli`. There is also a possibility for u
 
 ### Publish a Pilet
 
-For this tutorial we will use the pilet (named `my-pilet`), which we have created in the previous tutorial. We want to push the pilet to our feed `my-tutorial-feed` using the generated API key.
+For this tutorial, we will use the pilet (named `my-pilet`), which we have created in the previous tutorial. We want to push the pilet to our feed `my-tutorial-feed` using the generated API key.
 
-Since your feed will have a different name, just replace the name of the feed with your chosen name. When navigating to the "Manage Pilets" view for your feed, you will find the entire url on the bottom of the page.
+Since your feed will have a different name, just replace the name of the feed with your chosen name. When navigating to the "Manage Pilets" view for your feed, you will find the entire URL on the bottom of the page.
 
 For publishing the pilet navigate to the folder of the pilet and invoke the following command:
 

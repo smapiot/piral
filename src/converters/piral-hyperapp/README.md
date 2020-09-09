@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-hyperapp` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Hyperapp converter for any component registration, as well as a `fromHyperapp` shortcut and a `HyperappExtension` component.
+The set includes a Hyperapp converter for any component registration, as well as a `fromHyperapp` shortcut and a `HyperappExtension` component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -22,7 +22,7 @@ The extension slot component to be used in Hyperapp apps.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromHyperapp` function from the Pilet API to convert your Hyperapp components to components usable by your Piral instance.
 
@@ -43,9 +43,21 @@ Within Hyperapp components the Piral Hyperapp extension component can be used by
 <HyperappExtension name="name-of-extension" />
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-hyperapp` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromHyperapp } from 'piral-hyperapp';
+import { HyperappPage } from './HyperappPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', fromHyperapp(HyperappPage));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Hyperapp with Piral is as simple as installing `piral-hyperapp` and `hyperapp`.
 
@@ -59,7 +71,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createHyperappApi()],
+  plugins: [createHyperappApi()],
   // ...
 });
 ```
@@ -75,6 +87,8 @@ The `hyperapp` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
+
+:::
 
 ## License
 

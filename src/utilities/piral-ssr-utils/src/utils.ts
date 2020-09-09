@@ -61,9 +61,9 @@ export function loadPilets(
       if (typeof originalContent === 'string') {
         return {
           custom: pilet.custom,
-          hash: 'requireRef' in pilet ? pilet.integrity : pilet.hash,
+          hash: 'requireRef' in pilet || 'bundle' in pilet ? pilet.integrity : pilet.hash,
           name: pilet.name,
-          version: pilet.version,
+          version: 'version' in pilet ? pilet.version : '',
           content: modifyUrlReferences(originalContent, pilet.link),
         };
       }

@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import { buildName, Extend } from 'piral-core';
+import { buildName, PiralPlugin } from 'piral-core';
 import { withFeed } from './withFeed';
 import { createFeedOptions } from './utils';
 import { PiletFeedsApi, FeedConnector } from './types';
@@ -12,7 +12,7 @@ export interface FeedsConfig {}
 /**
  * Creates new Pilet API extensions for supporting simplified data feed connections.
  */
-export function createFeedsApi(config: FeedsConfig = {}): Extend<PiletFeedsApi> {
+export function createFeedsApi(config: FeedsConfig = {}): PiralPlugin<PiletFeedsApi> {
   return context => {
     context.defineActions(actions);
 
@@ -46,7 +46,7 @@ export function createFeedsApi(config: FeedsConfig = {}): Extend<PiletFeedsApi> 
 
             if (typeof reducer === 'function') {
               connect[type] = (...args) => {
-                context.updateFeed(id, args, (data, item) => reducer(data, ...item));
+                context.updateFeed(id, args, (data, item) => reducer.call(connect, data, ...item));
               };
             }
           });

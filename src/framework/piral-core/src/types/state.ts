@@ -1,11 +1,11 @@
-import { ComponentType, ReactPortal } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { Atom } from '@dbeining/react-atom';
-import { Dict, Without } from './common';
-import { LayoutType } from './layout';
-import { SharedDataItem, DataStoreTarget } from './data';
-import { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
-import {
+import type { ComponentType, ReactPortal } from 'react';
+import type { RouteComponentProps } from 'react-router';
+import type { Atom } from '@dbeining/react-atom';
+import type { Dict, Without } from './common';
+import type { LayoutType } from './layout';
+import type { SharedDataItem, DataStoreTarget } from './data';
+import type { PiralCustomActions, PiralCustomState, PiralCustomRegistryState, PiralCustomComponentsState } from './custom';
+import type {
   PiletMetadata,
   EventEmitter,
   Pilet,
@@ -15,7 +15,7 @@ import {
   PiletsBag,
   PiralPageMeta,
 } from './api';
-import {
+import type {
   ComponentConverters,
   LoadingIndicatorProps,
   ErrorInfoProps,
@@ -36,15 +36,24 @@ declare module './components' {
 
 export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
 
+/**
+ * The base type for pilet component registration in the global state context.
+ */
 export interface BaseRegistration {
   pilet: string;
 }
 
+/**
+ * The interface modeling the registration of a pilet page component.
+ */
 export interface PageRegistration extends BaseRegistration {
   component: WrappedComponent<PageComponentProps>;
   meta: PiralPageMeta;
 }
 
+/**
+ * The interface modeling the registration of a pilet extension component.
+ */
 export interface ExtensionRegistration extends BaseRegistration {
   component: WrappedComponent<ExtensionComponentProps<string>>;
   reference: any;

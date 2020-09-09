@@ -12,15 +12,15 @@ Piral comes with the following features:
 - Independent development and deployment
 - CLI tool
 
-The primary target framework of Piral is React, but due to the secondary ("foreign") API any framework that can be attached to the DOM can be used.
+The primary target framework of Piral is React, but due to the secondary ("foreign") API, any framework that can be attached to the DOM can be used.
 
 Let's check our list against common checklists for microfrontends.
 
 ✔️ **Implementation, complexity, and integration**
 
-> The process is simple and doesn't require to learn new complex skills or framework.
+> The process is simple and doesn't require learning new complex skills or other frameworks.
 
-Indeed Piral works in a standard configuration by relying only on the NPM eco system and proper bundling. Our CLI ships with the best bundling configuration, but if you have custom needs you can use any other bundler or bundling configuration.
+Indeed Piral works in a standard configuration by relying only on the NPM ecosystem and proper bundling. Our CLI ships with the best bundling configuration, but if you have custom needs you can use any other bundler or bundling configuration.
 
 ✔️ **Code isolation and separation of concerns**
 
@@ -32,13 +32,13 @@ A pilet is sandboxed from the main application. It cannot crash the main applica
 
 > Each microfrontend is deployed and managed separately to prevent downtime and reduce deployment time.
 
-A pilet is deployed to a dedicated service or feed independently of the main application, which may be hosted on a CDN. The deployment and release cycle of each pilet is completely independent from each other and the main application.
+A pilet is deployed to a dedicated service or feed independently of the main application, which may be hosted on a CDN. The deployment and release cycle of each pilet is completely independent of each other and the main application.
 
 ✔️ **Support different technologies**
 
 > We can use different technologies: React, Angular; and the same one with different versions.
 
-Even though Piral supports this way we strongly recommend avoiding multiple technologies within one application. Nevertheless, its all possible since every Pilet can package up any module. Furthermore, Piral has two APIs for bringing in components; one with the already packaged version of React and a generic API providing a "naked" DOM node to host any framework.
+Even though Piral supports this way we strongly recommend avoiding multiple technologies within one application. Nevertheless, it is all possible since every Pilet can package up any module. Furthermore, Piral has two APIs for bringing in components; one with the already packaged version of React and a generic API providing a "naked" DOM node to host any framework.
 
 ✔️ **Cross-browser compatibility**
 
@@ -50,11 +50,11 @@ Piral itself tries to be as reachable as possible. Currently, the minimum requir
 
 > Browser strategically reloads to prevent memory pollution, network saturation, among others.
 
-One reason for Piral's design is to cache as much as possible. In the full framework we also make use of GraphQL to leverage live data feeds (subscriptions) and request batching to gain more efficiency.
+One reason for Piral's design is to cache as much as possible. In the full framework, we also make use of GraphQL to leverage live data feeds (subscriptions) and request batching to gain more efficiency.
 
 ## Alternative Solutions
 
-We think that Piral hits a sweep spot that makes development easy and fun, while making applications robust, flexible, and efficient. Nevertheless, some of the alternatives to Piral are.
+We think that Piral hits a sweet spot that makes development easy and fun while making applications robust, flexible, and efficient. Nevertheless, some of the alternatives to Piral are.
 
 | Feature              | Piral  | Single SPA | Web Components | Mosaic   | Luigi   |
 |----------------------|--------|------------|----------------|----------|---------|
@@ -79,7 +79,7 @@ We think that Piral hits a sweep spot that makes development easy and fun, while
 
 (explanation of these features below)
 
-While some of the alternatives focus on multi-frameworks (i.e., having multiple runtimes in the same application) Piral tries to be efficient without having too strong restrictions on the developer. Obviously, React is preferred, however, if one really feels the need there is also an escape hatch to register full components based on a DOM node given by Piral. As such any framework that attaches to a DOM node can be used.
+While some of the alternatives focus on multi-frameworks (i.e., having multiple runtimes in the same application) Piral tries to be efficient without having too strong restrictions on the developer. React is preferred, however, if one feels the need there is also an escape hatch to register full components based on a DOM node given by Piral. As such any framework that attaches to a DOM node can be used.
 
 Piral tries to minimize the work required for setting up a microfrontend by not doing a microfrontend. Instead, modules are used, which are independent of a particular backend service. In the end, Piral is not trying to dictate how to cut your architecture, domain model, or available development resources, but rather giving you a toolbox to boost your productivity.
 
@@ -101,7 +101,7 @@ There are more alternatives, which have not been listed for brevity. Some of the
 
 ## Feature Explanation
 
-**Available CLI**: Is there a CLI that makes common task, incl. scaffolding, building, publishing, ... available?
+**Available CLI**: Is there a CLI that makes common tasks, incl. scaffolding, building, publishing, ... available?
 
 **Free Tooling Choice**: Does the CLI need to be used or can it be replaced?
 
@@ -121,9 +121,9 @@ There are more alternatives, which have not been listed for brevity. Some of the
 
 **Free Deployments**: Is the CI/CD pipeline out of the box (i.e., with the initial set up) fully decoupled that app shell and all modules can be deployed independently
 
-**Free Development**: Is the development out of the box (i.e., with the initial set up) free to choose between monorepo, single repo, shared repo etc. - and still works offline first?
+**Free Development**: Is the development out of the box (i.e., with the initial set up) free to choose between monorepo, single repo, shared repo, etc. - and still works offline first?
 
-**Form Management**: Is a form management (full form lifecycle) included out of the box?
+**Form Management**: Is form management (full form lifecycle) included out of the box?
 
 **Global State** Is a global state container included out of the box?
 
@@ -133,9 +133,9 @@ There are more alternatives, which have not been listed for brevity. Some of the
 
 **TypeScript Support**: Is the project written in TypeScript and brings an always up-to-date d.ts?
 
-**Stitching Location**: Where is the primary use case / stitching location?
+**Stitching Location**: Where is the primary use case/stitching location?
 
-**Decoupled Sharing**: Are aggregator components available that enable a decoupled way of sharing components that is resiliant?
+**Decoupled Sharing**: Are aggregator components available that enable a decoupled way of sharing components that are resilient?
 
 ## Further Reading
 

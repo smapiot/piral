@@ -1,3 +1,6 @@
+/**
+ * Metadata for pilets using the v0 schema.
+ */
 export interface PiletMetadataV0 {
   /**
    * The name of the pilet, i.e., the package id.
@@ -34,6 +37,9 @@ export interface PiletMetadataV0 {
   custom?: any;
 }
 
+/**
+ * Metadata for pilets using the v1 schema.
+ */
 export interface PiletMetadataV1 {
   /**
    * The name of the pilet, i.e., the package id.
@@ -63,9 +69,36 @@ export interface PiletMetadataV1 {
 }
 
 /**
+ * Metadata for pilets using the bundle schema.
+ */
+export interface PiletMetadataBundle {
+  /**
+   * The name of the bundle pilet, i.e., the package id.
+   */
+  name?: string;
+  /**
+   * The link for retrieving the bundle content of the pilet.
+   */
+  link: string;
+  /**
+   * The reference name for the global bundle-shared require.
+   */
+  bundle: string;
+  /**
+   * The computed integrity of the pilet. Will be used to set the
+   * integrity value of the script.
+   */
+  integrity?: string;
+  /**
+   * Optionally provides some custom metadata for the pilet.
+   */
+  custom?: any;
+}
+
+/**
  * Describes the metadata transported by a pilet.
  */
-export type PiletMetadata = PiletMetadataV0 | PiletMetadataV1;
+export type PiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetadataBundle;
 
 /**
  * Defines the API accessible from pilets.
@@ -216,7 +249,7 @@ export interface PiletsLoading {
 }
 
 /**
- * The strategy for loading pilets.
+ * The strategy for how pilets are loaded at runtime.
  */
 export interface PiletLoadingStrategy {
   (options: LoadPiletsOptions, pilets: PiletsLoaded): PromiseLike<void>;

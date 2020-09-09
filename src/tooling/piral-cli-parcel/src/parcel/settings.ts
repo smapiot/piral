@@ -1,4 +1,4 @@
-import { defaultCacheDir } from 'piral-cli/utils';
+import { defaultCacheDir } from './constants';
 import { ParcelConfig } from '../types';
 
 export function extendConfig(options: ParcelConfig): ParcelConfig {

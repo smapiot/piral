@@ -1,4 +1,4 @@
-import {
+import type {
   PiletRequester,
   PiletDependencyFetcher,
   PiletDependencyGetter,
@@ -7,12 +7,15 @@ import {
   Pilet,
   AvailableDependencies,
 } from 'piral-base';
-import { NestedPartial } from './common';
-import { Extend } from './plugin';
-import { GlobalState, PiralDefineActions } from './state';
+import type { NestedPartial } from './common';
+import type { PiralPlugin } from './plugin';
+import type { GlobalState, PiralDefineActions } from './state';
 
 export { PiletLoadingStrategy, PiletDependencyFetcher, PiletDependencyGetter, PiletRequester, AvailableDependencies };
 
+/**
+ * The configuration for loading the pilets of the Piral instance.
+ */
 export interface PiralPiletConfiguration {
   /**
    * The callback for defining how a dependency will be fetched.
@@ -44,10 +47,18 @@ export interface PiralPiletConfiguration {
   /**
    * Optionally provides a function to extend the API creator with some additional
    * functionality.
+   * @deprecated Use plugins instead.
    */
-  extendApi?: Extend | Array<Extend>;
+  extendApi?: PiralPlugin | Array<PiralPlugin>;
+  /**
+   * Extends the Piral instance with additional capabilities.
+   */
+  plugins?: PiralPlugin | Array<PiralPlugin>;
 }
 
+/**
+ * The initial configuration of Piral's state container.
+ */
 export interface PiralStateConfiguration {
   /**
    * Optionally, sets up the initial state of the application 📦.
@@ -59,4 +70,7 @@ export interface PiralStateConfiguration {
   actions?: PiralDefineActions;
 }
 
+/**
+ * The configuration to be used in the Piral instance.
+ */
 export type PiralConfiguration = PiralPiletConfiguration & PiralStateConfiguration;

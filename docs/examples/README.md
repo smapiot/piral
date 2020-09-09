@@ -8,6 +8,9 @@ The provided examples are not properly designed (as in styled). Styling can be f
 
 The following examples are currently available:
 
-- [Introduction](./01-introduction.md) - an introduction into the development with Piral
+- [Webshop](./bare-shop.md)
+- [Piral Core](./demo-core.md)
+- [Cross Framework](./demo-cross.md)
+- [Full Piral](./demo-full.md)
 
 Please don't hesitate to send us feedback regarding the examples and suggestions for additional samples.

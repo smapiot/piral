@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import { buildName, Extend, StateDispatcher } from 'piral-core';
+import { buildName, PiralPlugin, StateDispatcher } from 'piral-core';
 import { withPiletState } from './withPiletState';
 import { PiletContainersApi } from './types';
 
@@ -11,7 +11,7 @@ export interface ContainersConfig {}
 /**
  * Creates new Pilet API extensions for supporting pilet global state containers.
  */
-export function createContainersApi(config: ContainersConfig = {}): Extend<PiletContainersApi> {
+export function createContainersApi(config: ContainersConfig = {}): PiralPlugin<PiletContainersApi> {
   return context => {
     context.defineActions(actions);
 

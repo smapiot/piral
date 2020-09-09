@@ -7,25 +7,37 @@ When a pilet crashes we will show a certain message (i.e., component) that can b
 We distinguish between a variety of errors. Currently, the following types of errors exist:
 
 - Loading
+- Extension
 - Page
 - Not Found
-- Feed
-- Tile
-- Menu
 
 More types of errors may be added my plugins. As an example, the `piral-forms` plugin also adds the following error:
 
 - Form
 
+Some other ones that are fairly common (i.e., included in `piral-ext`):
+
+- Feed
+- Tile
+- Menu
+
 ## Loading
 
-The loading error appears when loading of the app shell failed. As an example, if the pilet metadata cannot be retrieved successfully, the loading of the app shell failed (unless we handle this particular error specifically and fall back to, e.g., an empty set of pilets).
+The loading error appears when the loading of the app shell failed. As an example, if the pilet metadata cannot be retrieved successfully, the loading of the app shell failed (unless we handle this particular error specifically and fall back to, e.g., an empty set of pilets).
 
 It will always be shown as a blank page, thus we can not only style it like a page we may also need to add some layout to it.
 
-**Note**: In this layout we should not reference internal links. The loading error page is decoupled from the standard router. Instead, we should only include functionality to restart the application and / or report the error.
+**Note**: In this layout, we should not reference internal links. The loading error page is decoupled from the standard router. Instead, we should only include functionality to restart the application and / or report the error.
 
 *Example*: The pilet feed service is offline and the network exception is not handled in the initial request.
+
+## Extension
+
+The extension error appears when an extension crashes. As an example, if we crash during rendering of an extension then the error is shown.
+
+It will always be shown as the respective component containing the extension, which may be as prominent as a page or as little as a button.
+
+*Example*: The extension receives unexpected `params` and does not handle that gracefully.
 
 ## Page
 
@@ -37,7 +49,7 @@ It will always be shown as a normal page, thus we can style it like a page.
 
 ## Not Found
 
-The not found error appears when a page could not been found. Specifically, if a wrong URL / route is used (e.g., `/foo` when no page or custom route for `/foo` is registered) we'll see this error.
+The not found error appears when a page could not be found. Specifically, if a wrong URL / route is used (e.g., `/foo` when no page or custom route for `/foo` is registered) we'll see this error.
 
 It will always be shown as a normal page, thus we can style it like a page.
 

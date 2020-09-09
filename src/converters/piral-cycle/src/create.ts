@@ -1,7 +1,7 @@
-import { Extend } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
+import { createExtension } from './extension';
 import { createConverter } from './converter';
-import { PiletCycleApi } from './types';
-import { h } from '@cycle/dom';
+import type { PiletCycleApi } from './types';
 
 /**
  * Available configuration options for the Cycle.js plugin.
@@ -17,8 +17,8 @@ export interface CycleConfig {
 /**
  * Creates new Pilet API extensions for integration of Cycle.
  */
-export function createCycleApi(config: CycleConfig = {}): Extend<PiletCycleApi> {
-  const { rootName = 'slot' } = config;
+export function createCycleApi(config: CycleConfig = {}): PiralPlugin<PiletCycleApi> {
+  const { rootName } = config;
 
   return context => {
     const convert = createConverter();
@@ -31,17 +31,7 @@ export function createCycleApi(config: CycleConfig = {}): Extend<PiletCycleApi> 
           root,
         };
       },
-      CycleExtension(props) {
-        return h(rootName, {
-          hook: {
-            insert: vnode => {
-              if (vnode.elm instanceof HTMLElement) {
-                api.renderHtmlExtension(vnode.elm, props);
-              }
-            },
-          },
-        });
-      },
+      CycleExtension: createExtension(api, rootName),
     });
   };
 }

@@ -1,4 +1,4 @@
-import { Extend } from 'piral-core';
+import { PiralPlugin } from 'piral-core';
 import { FetchConfig } from './config';
 import { httpFetch } from './fetch';
 import { PiletFetchApi } from './types';
@@ -7,7 +7,7 @@ import { PiletFetchApi } from './types';
  * Creates new Pilet API extensions for fetch.
  * @param config The custom fetch configuration, if any.
  */
-export function createFetchApi(config: FetchConfig = {}): Extend<PiletFetchApi> {
+export function createFetchApi(config: FetchConfig = {}): PiralPlugin<PiletFetchApi> {
   return context => {
     return {
       fetch<T>(path, options: any = {}) {

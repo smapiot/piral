@@ -26,7 +26,7 @@ Starts a tracking frame. The frame can be ended via the returned callback.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `trackEvent` function from the Pilet API to track a custom event with an arbitrary definition.
 
@@ -72,9 +72,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -89,12 +89,41 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createTrackingApi()],
+  plugins: [createTrackingApi()],
   // ...
 });
 ```
 
 There are no options available.
+
+The integration of other trackers is done by listening to the events. Example for Application Insights:
+
+```js
+import { createInstance } from 'piral';
+import { createTrackingApi } from 'piral-tracking';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+
+const appInsights = new ApplicationInsights({
+  // ...
+});
+
+appInsights.loadAppInsights();
+
+const instance = createInstance({
+  plugins: [createTrackingApi()]
+});
+
+instance.on('track-event', evt => {
+  const name = evt.name;
+  const properties = {
+    ...evt.properties,
+    piletName: evt.pilet,
+  };
+  appInsights.trackEvent({ name, properties });
+});
+```
+
+:::
 
 ## Events
 

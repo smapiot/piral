@@ -14,7 +14,7 @@ Represents an Axios instance already configured for use in the app shell.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `axios` object from the Pilet API to communicate with your backend. This instance has advantages over creating a fresh instance from Axios.
 
@@ -30,11 +30,11 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-For details on using Axios, see the [Axios documentation]().
+For details on using Axios, see the [Axios documentation](https://github.com/axios/axios#axios-api).
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -49,7 +49,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createAxiosApi()],
+  plugins: [createAxiosApi()],
   // ...
 });
 ```
@@ -61,7 +61,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createAxiosApi({
+  plugins: [createAxiosApi({
     baseURL: 'https://example.com/api/v1',
     headers: {
       authorization: 'Bearer ...',
@@ -72,6 +72,8 @@ const instance = createInstance({
 ```
 
 **Note**: `piral-axios` plays nicely together with authentication providers such as `piral-adal`. As such authentication tokens are automatically inserted on requests to the base URL.
+
+:::
 
 ## License
 

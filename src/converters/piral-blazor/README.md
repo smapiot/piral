@@ -4,7 +4,7 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-blazor` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Blazor loader and converter for any component registration, as well as a `fromBlazor` shortcut together with some Blazor component coming in the `Piral.Blazor.Utils` NuGet package.
+The set includes a Blazor loader and converter for any component registration, as well as a `fromBlazor` shortcut together with some Blazor component coming in the `Piral.Blazor.Utils` NuGet package.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -70,7 +70,7 @@ There is only a single argument, which refers to the name of the exposed Blazor 
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromBlazor` function from the Pilet API to convert your Blazor components to components usable by your Piral instance.
 
@@ -94,9 +94,24 @@ Within Blazor components the `Extension` component referenced from `Piral.Blazor
 <Extension name="name-of-extension" />
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-blazor` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { defineBlazorReferences, fromBlazor } from 'piral-blazor';
+
+export function setup(piral: PiletApi) {
+  defineBlazorReferences([
+    require.resolve('./My.Dependency.dll'),
+    require.resolve('./My.Components.dll'),
+  ])
+  piral.registerPage('/sample', fromBlazor('sample-page'));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Blazor with Piral is as simple as installing `piral-blazor`.
 
@@ -109,7 +124,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createBlazorApi()],
+  plugins: [createBlazorApi()],
   // ...
 });
 ```
@@ -117,6 +132,8 @@ const instance = createInstance({
 This will automatically download and include the necessary binary files for providing Blazor WASM support. The binary files will be taken from the `Piral.Blazor.Core` NuGet package.
 
 By default, the latest version of the `Piral.Blazor.Core` NuGet package is downloaded. To change this set the `PIRAL_BLAZOR_VERSION` environment variable to the desired version.
+
+:::
 
 ## License
 

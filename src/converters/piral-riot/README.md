@@ -22,7 +22,7 @@ The extension slot component to be used in Riot.js component.
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `fromRiot` function from the Pilet API to convert your Riot.js components to components usable by your Piral instance.
 
@@ -44,9 +44,23 @@ Within Riot components the Piral Riot extension component can be used by referri
 <riot-extension name="name-of-extension"></riot-extension>
 ```
 
-## Setup and Bootstrapping
+Alternatively, if `piral-riot` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
-> For Piral instance developers
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromRiot, createRiotExtension } from 'piral-riot';
+import { createRiotPage } from './page';
+
+export function setup(piral: PiletApi) {
+  const Extension = createRiotExtension(piral);
+  const RiotPage = createRiotPage(Extension);
+  piral.registerPage('/sample', fromRiot(RiotPage));
+}
+```
+
+:::
+
+::: summary: For Piral instance developers
 
 Using Riot.js with Piral is as simple as installing `piral-riot` and `riot`.
 
@@ -60,7 +74,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createRiotApi()],
+  plugins: [createRiotApi()],
   // ...
 });
 ```
@@ -76,6 +90,8 @@ The `riot` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
+
+:::
 
 ## License
 

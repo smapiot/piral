@@ -1,6 +1,6 @@
 import { isfunc } from './utils';
 import { standardStrategy } from './strategies';
-import { LoadPiletsOptions, Pilet, PiletsLoading } from './types';
+import type { LoadPiletsOptions, Pilet, PiletsLoading } from './types';
 
 export function startLoadingPilets(options: LoadPiletsOptions) {
   const state = {

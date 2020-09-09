@@ -14,7 +14,7 @@ Shows a notification inside the app shell. The notification can be permanent (to
 
 ## Usage
 
-> For authors of pilets
+::: summary: For pilet authors
 
 You can use the `showNotification` function from the Pilet API to show a notification within the Piral instance.
 
@@ -30,9 +30,9 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-## Setup and Bootstrapping
+:::
 
-> For Piral instance developers
+::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
@@ -47,7 +47,7 @@ The integration looks like:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createNotificationsApi()],
+  plugins: [createNotificationsApi()],
   // ...
 });
 ```
@@ -59,7 +59,7 @@ For example:
 ```ts
 const instance = createInstance({
   // important part
-  extendApi: [createNotificationsApi({
+  plugins: [createNotificationsApi({
     defaultOptions: {
       type: 'warning',
     },
@@ -109,6 +109,8 @@ declare module 'piral-notifications/lib/types' {
 
 // now showNotification("...", { actions: [] }) works, too
 ```
+
+:::
 
 ## License
 
