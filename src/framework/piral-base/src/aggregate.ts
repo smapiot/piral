@@ -22,8 +22,7 @@ export function createPilets(createApi: PiletApiCreator, pilets: Array<Pilet>) {
 
   if (checkCreateApi(createApi)) {
     for (const pilet of pilets) {
-      const api = createApi(pilet);
-      promises.push(setupPilet(pilet, api));
+      promises.push(setupPilet(pilet, createApi));
     }
   }
 
@@ -40,8 +39,7 @@ export function createPilet(createApi: PiletApiCreator, pilet: Pilet) {
   const promises: Array<Promise<void> | void> = [];
 
   if (checkCreateApi(createApi)) {
-    const api = createApi(pilet);
-    promises.push(setupPilet(pilet, api));
+    promises.push(setupPilet(pilet, createApi));
   }
 
   return Promise.all(promises).then(() => pilet);

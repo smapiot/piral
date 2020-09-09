@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Pilet } from 'piral-core';
+import { SinglePilet } from 'piral-core';
 
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorPilet: Pilet = {
+export const ConnectorPilet: SinglePilet = {
   content: '',
   name: 'Connector Module',
   version: '1.0.0',

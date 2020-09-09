@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Pilet } from 'piral-core';
+import { SinglePilet } from 'piral-core';
 
 /**
  * Shows the usage of another module, here with a
  * feed connector.
  */
-export const Pilet2: Pilet = {
+export const Pilet2: SinglePilet = {
   content: '',
   name: 'Sample Module',
   version: '1.0.0',

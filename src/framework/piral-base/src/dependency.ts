@@ -22,7 +22,7 @@ function checkPiletApp(name: string, app?: PiletApp): PiletApp {
   }
 
   return {
-    setup() {},
+    setup() { },
   };
 }
 

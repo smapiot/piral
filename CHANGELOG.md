@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.0.0 (tbd)
+
+* Added support for bundle script entry (#315)
+
 ## 0.12.0 (September 9, 2020)
 
 * Documentation cleanup

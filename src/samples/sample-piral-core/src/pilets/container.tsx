@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pilet } from 'piral-core';
+import { SinglePilet } from 'piral-core';
 import { TileComponentProps } from 'piral-dashboard';
 
 const MyTile: React.FC<{ count: number; increment(): void }> = ({ count, increment }) => (
@@ -14,7 +14,7 @@ const MyTile: React.FC<{ count: number; increment(): void }> = ({ count, increme
 /**
  * Shows an advanced usage of the global state container.
  */
-export const ContainerPilet: Pilet = {
+export const ContainerPilet: SinglePilet = {
   content: '',
   name: 'Container Module',
   version: '1.0.0',

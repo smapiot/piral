@@ -4,10 +4,10 @@ import { compileDependency, includeDependency, includeBundle } from './dependenc
 import type {
   AvailableDependencies,
   Pilet,
-  PiletApp,
   PiletMetadata,
   PiletDependencyGetter,
   PiletDependencyFetcher,
+  PiletApp,
 } from './types';
 
 const inBrowser = typeof document !== 'undefined';
@@ -20,7 +20,7 @@ function loadFrom(
   const dependencies = {
     ...(getDependencies(meta) || {}),
   };
-  return loader(dependencies).then(app => ({
+  return loader(dependencies).then((app: any) => ({
     ...app,
     ...meta,
   }));

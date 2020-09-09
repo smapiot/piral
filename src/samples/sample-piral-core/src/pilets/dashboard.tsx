@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Pilet } from 'piral-core';
+import { SinglePilet } from 'piral-core';
 
 /**
  * Shows the possibility of extending default functionality (e.g., the dashboard)
  * with an extension defined by a module.
  */
-export const DashboardPilet: Pilet = {
+export const DashboardPilet: SinglePilet = {
   content: '',
   name: 'Dashboard Module',
   version: '1.0.0',

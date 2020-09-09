@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageComponentProps, Pilet } from 'piral-core';
+import { PageComponentProps, SinglePilet } from 'piral-core';
 import { FormProps } from 'piral-forms';
 
 interface SampleFormData {
@@ -10,7 +10,7 @@ interface SampleFormData {
 /**
  * Shows a form.
  */
-export const FormPilet: Pilet = {
+export const FormPilet: SinglePilet = {
   content: '',
   name: 'Form Module',
   version: '1.0.0',

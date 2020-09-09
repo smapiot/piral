@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Pilet } from 'piral-core';
+import { SinglePilet } from 'piral-core';
 
 /**
  * Shows a custom search registration.
  */
-export const SearchPilet: Pilet = {
+export const SearchPilet: SinglePilet = {
   content: '',
   name: 'Search Module',
   version: '1.0.0',

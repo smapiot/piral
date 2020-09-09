@@ -6,6 +6,7 @@ import {
   getDependencyResolver,
   getDefaultLoader,
   PiletLoader,
+  setupPilet,
 } from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
 import type {
@@ -156,9 +157,8 @@ export function createPiletOptions({
             const meta = JSON.parse(data);
             loadPilet(meta).then(pilet => {
               try {
-                const newApi = createApi(pilet);
                 context.injectPilet(pilet);
-                pilet.setup(newApi);
+                setupPilet(pilet, createApi);
               } catch (error) {
                 console.error(error);
               }

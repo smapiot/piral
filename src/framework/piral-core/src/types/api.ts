@@ -1,12 +1,12 @@
 import type { ReactElement } from 'react';
 import type { RouteComponentProps } from 'react-router';
-import type { PiletApi, Pilet, PiletMetadata, EventEmitter } from 'piral-base';
+import type { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet } from 'piral-base';
 import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
 import type { AnyComponent } from './components';
 import type { ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
 
-export { PiletApi, Pilet, PiletMetadata, EventEmitter };
+export { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet };
 
 /**
  * The props that every registered component obtains.
