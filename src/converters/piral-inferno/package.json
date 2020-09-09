@@ -44,6 +44,6 @@
   "peerDependencies": {
     "inferno": "^7.0.0",
     "inferno-create-element": "^7.0.0",
-    "piral-core": "^1.0.0"
+    "piral-core": "0.12.x || 1.x"
   }
 }
