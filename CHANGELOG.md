@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.12.0 (tbd)
+## 0.12.0 (September 9, 2020)
 
 * Documentation cleanup
 * Allow upload of arbitrary pilet sizes in `pilet publish` (#294)
