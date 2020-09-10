@@ -9,6 +9,7 @@ module.exports = function() {
   const codes = require('./gen-codes').call(this).join(', ');
   const types = require('./gen-types').call(this).join(', ');
   const tools = require('./gen-tools').call(this).join(', ');
+  const bundlers = require('./gen-bundlers').call(this).join(', ');
 
   return `
 const { lazy } = require('react');
@@ -40,6 +41,7 @@ const specification = [${specification}];
 const documentation = [${documentation}];
 const samples = [${samples}];
 const tools = [${tools}];
+const bundlers = [${bundlers}];
 const questions = [${questions}];
 const codes = [${codes}];
 const types = [${types}];
@@ -72,6 +74,10 @@ module.exports = {
   ],
   tooling: [
     ...commands,
+    {
+      title: 'Piral CLI - Bundlers',
+      links: bundlers
+    },
     {
       title: 'Others',
       links: tools,
