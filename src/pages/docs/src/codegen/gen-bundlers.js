@@ -10,9 +10,11 @@ module.exports = function() {
   const bundlers = getBundlers();
 
   const imports = bundlers.map(file => {
-    const name = getName(file);
-    const route = getRoute(name);
+
     const { mdValue, meta = {} } = render(file, generated);
+    const nameToUse = meta.title.split(' ')[0];
+    const name = getName(file);
+    const route = getRoute(nameToUse);
     const pageMeta = {
       ...meta,
       link: route,
@@ -20,7 +22,7 @@ module.exports = function() {
     };
 
     this.addDependency(file, { includedInParent: true });
-    return generateStandardPage(name, pageMeta, `bundlers-${name}`, file, mdValue, route, meta.title);
+    return generateStandardPage(nameToUse, pageMeta, `bundlers-${nameToUse}`, file, mdValue, route, meta.title);
   });
   return imports;
 };
