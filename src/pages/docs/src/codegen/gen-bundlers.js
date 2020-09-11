@@ -3,7 +3,7 @@ const { render } = require('./markdown');
 const { generateStandardPage } = require('./pages');
 
 function getRoute(name) {
-  return (name && `/bundlers/${name}`) || '';
+  return (name && `/tooling/${name}`) || '';
 }
 
 module.exports = function() {
@@ -12,8 +12,8 @@ module.exports = function() {
   const imports = bundlers.map(file => {
 
     const { mdValue, meta = {} } = render(file, generated);
-    const nameToUse = meta.title.split(' ')[0];
-    const name = getName(file);
+    const pathElements = file.split('\\').length;
+    const nameToUse = file.split('\\')[pathElements - 2];
     const route = getRoute(nameToUse);
     const pageMeta = {
       ...meta,
@@ -22,7 +22,7 @@ module.exports = function() {
     };
 
     this.addDependency(file, { includedInParent: true });
-    return generateStandardPage(nameToUse, pageMeta, `bundlers-${nameToUse}`, file, mdValue, route, meta.title);
+    return generateStandardPage(nameToUse, pageMeta, `bundlers-${nameToUse}`, file, mdValue, route, nameToUse);
   });
   return imports;
 };
