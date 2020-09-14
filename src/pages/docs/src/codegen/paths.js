@@ -112,8 +112,8 @@ function getTools() {
 function getBundlers() {
 
   const toolingRoot = resolve(packagesRoot, 'tooling');
-  const webpackRoot = resolve(resolve(toolingRoot, 'piral-cli-webpack'));
-  const parcelRoot = resolve(resolve(toolingRoot, 'piral-cli-parcel'));
+  const webpackRoot = resolve(toolingRoot, 'piral-cli-webpack');
+  const parcelRoot = resolve(toolingRoot, 'piral-cli-parcel');
 
   return [
     resolve(webpackRoot, 'README.md'),
