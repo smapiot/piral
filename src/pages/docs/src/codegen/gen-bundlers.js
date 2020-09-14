@@ -1,6 +1,7 @@
 const { generated, getName, getBundlers } = require('./paths');
 const { render } = require('./markdown');
-const { generateStandardPage } = require('./pages');
+const { generateStandardPage, generatePage } = require('./pages');
+const { docRef } = require('./utils');
 const { sep } = require('path');
 
 function getRoute(name) {
@@ -23,16 +24,35 @@ module.exports = function() {
 
     const { mdValue, meta = {} } = render(file, generated);
     const pathElements = getPathElements(file);
-    const nameToUse = pathElements[pathElements.length - 2];
-    const route = getRoute(nameToUse);
+    const name = pathElements[pathElements.length - 2];
+    const route = getRoute(name);
     const pageMeta = {
       ...meta,
       link: route,
       source: file,
     };
 
+    const content = [
+      '`',
+      mdValue.substr(mdValue.indexOf('</h1>') + 5),
+    ].join('');
+
+    const head = `
+      import { PageContent, Markdown, } from '../../scripts/components';
+
+      const link = "${docRef(file)}";
+      const html = ${content};
+    `;
+
+    const body = `
+      <PageContent>
+        <h1>${name}</h1>
+        <Markdown content={html} link={link} />
+      </PageContent>
+    `;
+
     this.addDependency(file, { includedInParent: true });
-    return generateStandardPage(nameToUse, pageMeta, `bundlers-${nameToUse}`, file, mdValue, route, nameToUse);
+    return generatePage(name, pageMeta, `bundlers-${name}`, head, body, route, name);
   });
   return imports;
 };
