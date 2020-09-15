@@ -237,8 +237,8 @@ export interface SignInRedirectParams {
 
 /** Result that is returned from the handleAuthentication function */
 export interface AuthenticationResult {
-  /** Whether or not the authentication check was successful */
-  isAuthenticated: boolean;
+  /** Whether or not the application should be rendered */
+  shouldRender: boolean;
   /** The request state that is returned from any callbacks.
    * This will only be populated if a callback method is called.
    */

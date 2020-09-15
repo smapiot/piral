@@ -128,7 +128,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
           return reject(new OidcError(OidcErrorType.oidcCallback, e));
         }
         return resolve({
-            isAuthenticated: false,
+            shouldRender: false,
             state: user?.state
         });
       }
@@ -148,15 +148,15 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
           Log.debug(`Redirecting to ${appUri} due to appUri being configured.`);
           window.location.href = appUri;
           return resolve({
-              isAuthenticated: false,
-              state: user?.state
+            shouldRender: false,
+            state: user?.state
           });
         }
 
         /* If appUri is not configured, we let the user decide what to do after getting a session. */
         return resolve({
-            isAuthenticated: true,
-            state: user?.state
+          shouldRender: true,
+          state: user?.state
         });
       }
 
@@ -168,7 +168,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       return retrieveToken()
         .then((token) => {
           if (token) {
-            return resolve({ isAuthenticated: true });
+            return resolve({ shouldRender: true });
           } else {
             /* We should never get into this state, retrieveToken() should reject if there is no token */
             return reject(new OidcError(OidcErrorType.invalidToken));
@@ -185,7 +185,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
              * to the user's configured redirectUri.
              */
             await userManager.signinRedirect(signInRedirectParams);
-            return resolve({ isAuthenticated: false });
+            return resolve({ shouldRender: false });
           }
 
           /*

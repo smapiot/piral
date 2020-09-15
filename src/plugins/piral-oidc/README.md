@@ -131,7 +131,7 @@ handle callbacks and routing for you. In order to use this, add a `appUrl` to th
 client configuration that points to your entry-point route, and then call `handleAuthentication()` in your index file.
 
 `handleAuthentication()` will return a promise that resolves to an `AuthenticationResult`
-When `result.isAuthenticated` is true, the application should call `render()`, when false, do nothing (this is a silent renew happening in the background).
+When `result.shouldRender` is true, the application should call `render()`, when false, do nothing (this is a silent renew happening in the background).
 
 If the promise rejects, it is advised that the error is logged to an external logging service, as this indicates a user that could not gain entry into the application. Afterwards, call `logout()` or prompt the user for the next action.
 
@@ -161,8 +161,8 @@ import { client } from './oidc';
 import { loggingService } from './your/logging/service';
 
 client.handleAuthentication()
-    .then(async ({ isAuthenticated }) => {
-        if (isAuthenticated) {
+    .then(async ({ shouldRender }) => {
+        if (shouldRender) {
             const render = await import('./app');
             render();
         }
@@ -206,10 +206,10 @@ export const client = setupOidcClient({
 import { client } from './oidc';
 
 client.handleAuthentication()
-  .then(async ({ isAuthenticated, state }) => {
+  .then(async ({ shouldRender, state }) => {
     if (state?.finalRedirectUri) {
       location.href = state.finalRedirectUri;
-    } else if (isAuthenticated) {
+    } else if (shouldRender) {
       const render = await import('./app');
       render();
     }
