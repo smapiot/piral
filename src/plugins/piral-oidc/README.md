@@ -130,8 +130,8 @@ A convenience method named `handleAuthentication()` was added to the `oidcClient
 handle callbacks and routing for you. In order to use this, add a `appUrl` to the
 client configuration that points to your entry-point route, and then call `handleAuthentication()` in your index file.
 
-`handleAuthentication()` will return a promise that resolves to a boolean true/false
-value, when this is true, the application should call `render()`, when false, do nothing (this is a silent renew happening in the background).
+`handleAuthentication()` will return a promise that resolves to an `AuthenticationResult`
+When `result.isAuthenticated` is true, the application should call `render()`, when false, do nothing (this is a silent renew happening in the background).
 
 If the promise rejects, it is advised that the error is logged to an external logging service, as this indicates a user that could not gain entry into the application. Afterwards, call `logout()` or prompt the user for the next action.
 
@@ -161,8 +161,8 @@ import { client } from './oidc';
 import { loggingService } from './your/logging/service';
 
 client.handleAuthentication()
-    .then(async (shouldRender) => {
-        if (shouldRender) {
+    .then(async ({ isAuthenticated }) => {
+        if (isAuthenticated) {
             const render = await import('./app');
             render();
         }
@@ -172,6 +172,50 @@ client.handleAuthentication()
         client.logout();
     })
 ```
+
+### Retaining state between sign in request and the callback
+You can pass the `setupOidcClient` function `signInRedirectParams` which will be passed
+to the signInRedirect method.
+
+After properly signing in, the `state` param will be available when the callback method is finally
+reached. This can be used to do things such as redirecting to an originally visited URL that
+can no longer be referenced due to jumping between your app and the auth pages.
+
+```ts
+// module oidc.ts
+import { setupOidcClient } from 'piral-oidc';
+
+declare module 'piral-oidc/lib/types' {
+  // this interface determines the state type on the redirect params
+  interface PiralCustomRedirectState {
+    finalRedirectUri: string;
+  }
+}
+
+export const client = setupOidcClient({
+  redirectUrl: location.origin + '/auth',
+  postLogoutUrl: location.origin + '/logout',
+  signInRedirectParams: {
+    state: {
+      finalRedirectUri: location.href
+    }
+  }
+});
+
+// index.ts
+import { client } from './oidc';
+
+client.handleAuthentication()
+  .then(async ({ isAuthenticated, state }) => {
+    if (state?.finalRedirectUri) {
+      location.href = state.finalRedirectUri;
+    } else if (isAuthenticated) {
+      const render = await import('./app');
+      render();
+    }
+  });
+```
+
 
 :::
 

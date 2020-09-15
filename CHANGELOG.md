@@ -21,6 +21,7 @@
 * Added more standard fields such as `description` to the emulator package
 * Added `import-map-webpack-plugin` to the `piral-cli-webpack`
 * Added more flexibility to the `piral declaration` command (#316)
+* Added ability to set and retrieve state when signing in using `piral-oidc`
 
 ## 0.11.8 (July 9, 2020)
 

@@ -34,6 +34,10 @@ export interface OidcConfig {
    */
   redirectUri?: string;
   /**
+   * Query params that will be passed to the sign in redirect
+   */
+  signInRedirectParams?: SignInRedirectParams;
+  /**
    * The Uri to which the Identity provider should redirect
    * after a logout. By default the origin is used.
    */
@@ -112,6 +116,12 @@ export enum LogLevel {
 export interface PiralCustomOidcProfile {}
 
 /**
+ * This interface is used to determine the retained `state` value
+ * between the signin request and signin callback
+ */
+export interface PiralCustomRedirectState {}
+
+/**
  * The defined OIDC profile.
  */
 export type OidcProfile = PiralCustomOidcProfile & Profile;
@@ -144,7 +154,7 @@ export interface OidcClient {
    * an authentication failure manually, it is also advised to log this error to a logging service,
    * as no users will be be authorized to enter the application.
    */
-  handleAuthentication(): Promise<boolean>;
+  handleAuthentication(): Promise<AuthenticationResult>;
   /**
    * Retrieves the current user profile.
    */
@@ -214,4 +224,23 @@ export enum OidcErrorType {
  */
 export interface PiralOidcError extends Error {
   type: Readonly<OidcErrorType>;
+}
+
+export interface SignInRedirectParams {
+  /**
+   * Values used to maintain state between the sign in request and the callback.
+   * These will be available on the result from the handleAuthentication function
+   * successfully authenticates from a callback state.
+   */
+  state?: PiralCustomRedirectState;
+}
+
+/** Result that is returned from the handleAuthentication function */
+export interface AuthenticationResult {
+  /** Whether or not the authentication check was successful */
+  isAuthenticated: boolean;
+  /** The request state that is returned from any callbacks.
+   * This will only be populated if a callback method is called.
+   */
+  state?: PiralCustomRedirectState;
 }
