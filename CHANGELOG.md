@@ -7,6 +7,7 @@
 * Fixed `addEventListener` usage for `piral-native`
 * Fixed vulnerable dependency (GHSA-w7rc-rwvf-8q5r)
 * Fixed vulnerable dependency (CVE-2020-7720)
+* Added ability to set and retrieve state when signing in using `piral-oidc` (#318)
 
 ## 0.12.0 (September 9, 2020)
 
@@ -21,7 +22,6 @@
 * Added more standard fields such as `description` to the emulator package
 * Added `import-map-webpack-plugin` to the `piral-cli-webpack`
 * Added more flexibility to the `piral declaration` command (#316)
-* Added ability to set and retrieve state when signing in using `piral-oidc`
 
 ## 0.11.8 (July 9, 2020)
 
