@@ -5,6 +5,8 @@
 * Added support for bundle script entry (#315)
 * Improved typings for the converter plugins `convert` submodule
 * Fixed `addEventListener` usage for `piral-native`
+* Fixed vulnerable dependency (GHSA-w7rc-rwvf-8q5r)
+* Fixed vulnerable dependency (CVE-2020-7720)
 
 ## 0.12.0 (September 9, 2020)
 
