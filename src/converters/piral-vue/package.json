@@ -23,6 +23,8 @@
   "files": [
     "lib",
     "src",
+    "convert.d.ts",
+    "convert.ts",
     "convert.js"
   ],
   "repository": {
@@ -33,7 +35,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc convert.ts --skipLibCheck --declaration",
     "typedoc": "typedoc --json ../../../docs/types/piral-vue.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
