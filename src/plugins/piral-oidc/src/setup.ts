@@ -1,6 +1,6 @@
-import { UserManager, Log } from 'oidc-client';
+import { User, UserManager, Log } from 'oidc-client';
 import { OidcError } from './OidcError';
-import { OidcConfig, OidcClient, OidcProfile, OidcErrorType, LogLevel } from './types';
+import { OidcConfig, OidcClient, OidcProfile, OidcErrorType, LogLevel, AuthenticationResult } from './types';
 
 const logLevelToOidcMap = {
   [LogLevel.none]: 0,
@@ -28,6 +28,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     clientSecret,
     identityProviderUri,
     redirectUri = `${location.origin}/auth`,
+    signInRedirectParams,
     postLogoutRedirectUri = location.origin,
     responseType,
     scopes,
@@ -107,8 +108,10 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     });
   };
 
-  const handleAuthentication = (): Promise<boolean> =>
+  const handleAuthentication = (): Promise<AuthenticationResult> =>
     new Promise(async (resolve, reject) => {
+      /** The user that is resolved when finishing the callback  */
+      let user: User;
       if (
         (doesWindowLocationMatch(userManager.settings.silent_redirect_uri) ||
           doesWindowLocationMatch(userManager.settings.popup_redirect_uri)) &&
@@ -120,16 +123,19 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
          * to update the parent. This is usually due to a timeout from a network error.
          */
         try {
-          await userManager.signinSilentCallback();
+          user = await userManager.signinSilentCallback();
         } catch (e) {
           return reject(new OidcError(OidcErrorType.oidcCallback, e));
         }
-        return resolve(false);
+        return resolve({
+            shouldRender: false,
+            state: user?.state
+        });
       }
 
       if (doesWindowLocationMatch(userManager.settings.redirect_uri) && isMainWindow()) {
         try {
-          await userManager.signinCallback();
+          user = await userManager.signinCallback();
         } catch (e) {
           /*
            * Failing to handle a sign-in callback is non-recoverable. The user is expected to call `logout()`, after
@@ -141,11 +147,17 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         if (appUri) {
           Log.debug(`Redirecting to ${appUri} due to appUri being configured.`);
           window.location.href = appUri;
-          return resolve(false);
+          return resolve({
+            shouldRender: false,
+            state: user?.state
+          });
         }
 
         /* If appUri is not configured, we let the user decide what to do after getting a session. */
-        return resolve(true);
+        return resolve({
+          shouldRender: true,
+          state: user?.state
+        });
       }
 
       /*
@@ -156,9 +168,9 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       return retrieveToken()
         .then((token) => {
           if (token) {
-            return resolve(true);
+            return resolve({ shouldRender: true });
           } else {
-            /* We should never get into this state, retireveToken() should reject if there is no token */
+            /* We should never get into this state, retrieveToken() should reject if there is no token */
             return reject(new OidcError(OidcErrorType.invalidToken));
           }
         })
@@ -172,8 +184,8 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
              * The resolve shouldn't matter, as `signinRedirect` will redirect the browser location
              * to the user's configured redirectUri.
              */
-            await userManager.signinRedirect();
-            return resolve(false);
+            await userManager.signinRedirect(signInRedirectParams);
+            return resolve({ shouldRender: false });
           }
 
           /*
@@ -187,7 +199,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
 
   return {
     login() {
-      return userManager.signinRedirect();
+      return userManager.signinRedirect(signInRedirectParams);
     },
     logout() {
       return userManager.signoutRedirect();
@@ -204,6 +216,6 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       }
     },
     token: retrieveToken,
-    account: retrieveProfile,
+    account: retrieveProfile
   };
 }
