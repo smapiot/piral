@@ -4,6 +4,7 @@
 
 * Added support for bundle script entry (#315)
 * Improved typings for the converter plugins `convert` submodule
+* Fixed `addEventListener` usage for `piral-native`
 
 ## 0.12.0 (September 9, 2020)
 
