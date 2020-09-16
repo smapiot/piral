@@ -185,13 +185,6 @@ can no longer be referenced due to jumping between your app and the auth pages.
 // module oidc.ts
 import { setupOidcClient } from 'piral-oidc';
 
-declare module 'piral-oidc/lib/types' {
-  // this interface determines the state type on the redirect params
-  interface PiralCustomRedirectState {
-    finalRedirectUri: string;
-  }
-}
-
 export const client = setupOidcClient({
   redirectUrl: location.origin + '/auth',
   postLogoutUrl: location.origin + '/logout',

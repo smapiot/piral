@@ -116,12 +116,6 @@ export enum LogLevel {
 export interface PiralCustomOidcProfile {}
 
 /**
- * This interface is used to determine the retained `state` value
- * between the signin request and signin callback
- */
-export interface PiralCustomRedirectState {}
-
-/**
  * The defined OIDC profile.
  */
 export type OidcProfile = PiralCustomOidcProfile & Profile;
@@ -232,7 +226,7 @@ export interface SignInRedirectParams {
    * These will be available on the result from the handleAuthentication function
    * successfully authenticates from a callback state.
    */
-  state?: PiralCustomRedirectState;
+  state?: any;
 }
 
 /** Result that is returned from the handleAuthentication function */
@@ -242,5 +236,5 @@ export interface AuthenticationResult {
   /** The request state that is returned from any callbacks.
    * This will only be populated if a callback method is called.
    */
-  state?: PiralCustomRedirectState;
+  state?: any;
 }
