@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 1.0.0 (tbd)
+
+* Updated `piral-jest-utils` with functionality (#186)
+* Updated support for Blazor 3.2.0 forward in `piral-blazor` (#224)
+
 ## 0.12.1 (September 17, 2020)
 
 * Added support for bundle script entry (#315)
