@@ -100,7 +100,7 @@ function wrapResults(
   context: GlobalStateContext,
 ): Array<ReactChild> {
   const results = Array.isArray(result) ? result : [result];
-  return results.map(item => toChild(item, api, context));
+  return results.map((item) => toChild(item, api, context));
 }
 
 /**
@@ -109,10 +109,10 @@ function wrapResults(
 export function createSearchApi(config: SearchConfig = {}): PiralPlugin<PiletSearchApi> {
   const { providers = [], results = [], query = '', ...actionConfig } = config;
 
-  return context => {
+  return (context) => {
     context.defineActions(createActions(actionConfig));
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       components: {
         SearchContainer: DefaultContainer,
@@ -150,9 +150,9 @@ export function createSearchApi(config: SearchConfig = {}): PiralPlugin<PiletSea
             id,
             createSearchRegistration(
               pilet,
-              q =>
+              (q) =>
                 Promise.resolve(provider(q, api)).then(
-                  results => wrapResults(results, api, context),
+                  (results) => wrapResults(results, api, context),
                   () => [],
                 ),
               settings,

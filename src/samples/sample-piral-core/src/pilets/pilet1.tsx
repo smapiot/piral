@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pilet, ErrorInfoProps } from 'piral-core';
+import { SinglePilet } from 'piral-core';
 
 /**
  * Shows the general usage of the `setup` function together
@@ -7,7 +7,7 @@ import { Pilet, ErrorInfoProps } from 'piral-core';
  * Also registeres some custom error page handlers. For details
  * on this, see DashboardModule.
  */
-export const Pilet1: Pilet = {
+export const Pilet1: SinglePilet = {
   content: '',
   name: 'Example Module',
   version: '1.0.0',
@@ -96,7 +96,7 @@ export const Pilet1: Pilet = {
         <p>
           IF YOU ARE IN AN ADVENTUROUS MOOD TRY{' '}
           <a
-            onClick={e => {
+            onClick={(e) => {
               piral.unregisterPage('/example2');
               e.preventDefault();
             }}

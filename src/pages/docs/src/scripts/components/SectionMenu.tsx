@@ -23,11 +23,11 @@ export const SectionMenu: React.FC<SectionMenuProps> = ({ sections }) => {
 
   return (
     <Sidebar className="section-nav" ref={container}>
-      {sections.map(section => (
+      {sections.map((section) => (
         <React.Fragment key={section.title}>
           <div className="section-nav-title">{section.title}</div>
           <ul className="section-nav-list">
-            {section.links.map(link => (
+            {section.links.map((link) => (
               <li key={link.id}>
                 <NavLink to={link.link || link.route}>{link.title || link.id}</NavLink>
               </li>

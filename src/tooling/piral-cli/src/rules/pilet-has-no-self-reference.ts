@@ -6,7 +6,7 @@ export type Options = 'ignore' | 'active';
 /**
  * Checks if the used Piral instance is not referenced in the code.
  */
-export default async function(context: PiletRuleContext, options: Options = 'ignore') {
+export default async function (context: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
     const { name } = context.data.appPackage;
     const names = ['piral', 'piral-core', 'piral-base', name];

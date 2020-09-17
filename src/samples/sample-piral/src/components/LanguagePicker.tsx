@@ -16,7 +16,7 @@ export const LanguagePicker: React.FC<LanguagesPickerProps> = ({ selected, avail
         <LanguageIcon language={language} />
       </div>
       <ul className={open ? 'open' : 'closed'}>
-        {available.map(lang => (
+        {available.map((lang) => (
           <li key={lang} onClick={() => setLanguage(lang)}>
             <LanguageIcon language={lang} /> <span>{translate(lang)}</span>
           </li>

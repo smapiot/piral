@@ -35,7 +35,7 @@ export function attachToEventDelegator(eventDelegator: EventDelegator) {
   // We need to respond to clicks on <a> elements *after* the EventDelegator has finished
   // running its simulated bubbling process so that we can respect any preventDefault requests.
   // So instead of registering our own native event, register using the EventDelegator.
-  eventDelegator.notifyAfterClick(event => {
+  eventDelegator.notifyAfterClick((event) => {
     if (!hasEnabledNavigationInterception) {
       return;
     }

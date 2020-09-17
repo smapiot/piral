@@ -31,5 +31,5 @@ export function loadMetadata(fetchPilets: PiletRequester) {
  * @returns A promise leading to the evaluated pilets.
  */
 export function loadPilets(fetchPilets: PiletRequester, loadPilet: PiletLoader): Promise<Array<Pilet>> {
-  return loadMetadata(fetchPilets).then(pilets => Promise.all(pilets.map(loadPilet)));
+  return loadMetadata(fetchPilets).then((pilets) => Promise.all(pilets.map(loadPilet)));
 }

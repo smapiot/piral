@@ -8,7 +8,7 @@ function mockLocalStorage<T>(mockObj: T) {
 function mockCookieStorage(initialValue = '') {
   const doc = { cookie: initialValue };
   (document as any).__defineGetter__('cookie', () => doc.cookie);
-  (document as any).__defineSetter__('cookie', value => {
+  (document as any).__defineSetter__('cookie', (value) => {
     doc.cookie = value;
   });
   return doc;

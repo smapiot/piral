@@ -20,11 +20,11 @@ export interface RiotConfig {
 export function createRiotApi(config: RiotConfig = {}): PiralPlugin<PiletRiotApi> {
   const { extensionName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.riot = ({ component, captured }) => convert(component, captured);
 
-    return api => ({
+    return (api) => ({
       fromRiot(component, captured) {
         return {
           type: 'riot',

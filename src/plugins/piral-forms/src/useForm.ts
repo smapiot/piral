@@ -36,7 +36,7 @@ function updateData<TFormData>(
 
   if (isfunc(onChange)) {
     Promise.resolve(onChange(newData))
-      .then(data => {
+      .then((data) => {
         const updatedData = { ...newData, ...data };
         updateState(id, state, {
           currentData: updatedData,
@@ -44,7 +44,7 @@ function updateData<TFormData>(
           error: undefined,
         });
       })
-      .catch(error =>
+      .catch((error) =>
         updateState(id, state, {
           error,
         }),
@@ -73,7 +73,7 @@ function submitData<TFormData>(
           submitting: false,
         }),
       )
-      .catch(error =>
+      .catch((error) =>
         updateState(id, state, {
           error,
           changed: true,
@@ -135,7 +135,7 @@ export function useForm<TFormData>(
 ) {
   const { silent, message } = options;
   const [id] = useState(existingId || generateId);
-  const state = useGlobalState(m => m.forms[id] || createDefaultState(initialData));
+  const state = useGlobalState((m) => m.forms[id] || createDefaultState(initialData));
   const updateState = useAction('updateFormState');
   usePrompt(!silent && state.changed, history, message);
   useEffect(() => {

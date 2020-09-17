@@ -12,17 +12,17 @@ export interface FormsConfig {}
  * Creates new Pilet API extensions for enhancing forms.
  */
 export function createFormsApi(config: FormsConfig = {}): PiralPlugin<PiletFormsApi> {
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       forms: {},
     }));
 
     return {
       createForm(options) {
-        return component => withForm(component, options);
+        return (component) => withForm(component, options);
       },
     };
   };

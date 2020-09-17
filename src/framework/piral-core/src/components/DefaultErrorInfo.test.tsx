@@ -15,14 +15,14 @@ const state = {
   errorComponents: {},
 };
 
-const StubErrorInfo: React.FC = props => <div />;
+const StubErrorInfo: React.FC = (props) => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
 describe('Default Error Info Component', () => {
   it('renders the switch-case in the loading error case', () => {
     const node = mount(<DefaultErrorInfo type="loading" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
+    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
   });
 
   it('renders the switch-case in the not_found error case', () => {
@@ -35,7 +35,7 @@ describe('Default Error Info Component', () => {
       />,
     );
     expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
+    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
   });
 
   it('renders the switch-case in the page error case', () => {
@@ -49,7 +49,7 @@ describe('Default Error Info Component', () => {
       />,
     );
     expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere(n => n.key() === 'default_error').length).toBe(1);
+    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
   });
 
   it('renders the react fragment in the default case', () => {
@@ -60,6 +60,6 @@ describe('Default Error Info Component', () => {
     ];
     const node = mount(<DefaultErrorInfo type="extension" error="foo" />);
     expect(node.find(StubErrorInfo).length).toBe(1);
-    expect(node.findWhere(n => n.key() === 'default_error').length).toBe(0);
+    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(0);
   });
 });

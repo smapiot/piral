@@ -1,11 +1,11 @@
-import { setupPilet } from './setup';
+import { setupSinglePilet } from './setup';
 
 describe('Setting up Modules', () => {
   it('works if setup is available', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
     const api = {};
-    setupPilet(
+    setupSinglePilet(
       {
         setup: setupMock,
       } as any,
@@ -19,7 +19,7 @@ describe('Setting up Modules', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
     const api = {};
-    setupPilet(
+    setupSinglePilet(
       {
         setup(api) {
           setupMock(api);
@@ -37,7 +37,7 @@ describe('Setting up Modules', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
     const api = {};
-    setupPilet({} as any, api);
+    setupSinglePilet({} as any, api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
   });
@@ -46,7 +46,7 @@ describe('Setting up Modules', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
     const api = {};
-    setupPilet(undefined as any, api);
+    setupSinglePilet(undefined as any, api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
   });
@@ -55,7 +55,7 @@ describe('Setting up Modules', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
     const api = {};
-    setupPilet((() => {}) as any, api);
+    setupSinglePilet((() => {}) as any, api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
   });

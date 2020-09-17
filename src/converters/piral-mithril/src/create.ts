@@ -20,11 +20,11 @@ export interface MithrilConfig {
 export function createMithrilApi(config: MithrilConfig = {}): PiralPlugin<PiletMithrilApi> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.mithril = ({ component, captured }) => convert(component, captured);
 
-    return api => ({
+    return (api) => ({
       fromMithril(component, captured) {
         return {
           type: 'mithril',

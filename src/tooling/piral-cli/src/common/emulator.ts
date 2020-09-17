@@ -25,7 +25,7 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   const allExternals = makeExternals(piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
-    allExternals.filter(isValidDependency).map(async name => ({
+    allExternals.filter(isValidDependency).map(async (name) => ({
       name,
       version: await findDependencyVersion(piralPkg, sourceDir, name),
     })),
@@ -41,8 +41,8 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   const filesOnceDir = resolve(rootDir, filesOnceTar);
 
   const filesMap = files
-    .map(file => (typeof file === 'string' ? { from: file, to: file } : file))
-    .map(file => ({
+    .map((file) => (typeof file === 'string' ? { from: file, to: file } : file))
+    .map((file) => ({
       ...file,
       to: file.to.replace(/\\/g, '/'),
       from: join('files', file.from).replace(/\\/g, '/'),
@@ -91,14 +91,14 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   await copyScaffoldingFiles(
     sourceDir,
     filesDir,
-    files.filter(m => typeof m === 'string' || !m.once),
+    files.filter((m) => typeof m === 'string' || !m.once),
   );
 
   // also to avoid information loss we should store the once-only files separately
   await copyScaffoldingFiles(
     sourceDir,
     filesOnceDir,
-    files.filter(m => typeof m !== 'string' && m.once),
+    files.filter((m) => typeof m !== 'string' && m.once),
   );
 
   // we just want to make sure that "files" mentioned in the original package.json are respected in the package
@@ -131,9 +131,9 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   // cleanup
   await Promise.all(
     names
-      .filter(name => !name.endsWith('.tgz'))
-      .map(name => resolve(rootDir, name))
-      .map(file => removeAny(file)),
+      .filter((name) => !name.endsWith('.tgz'))
+      .map((name) => resolve(rootDir, name))
+      .map((file) => removeAny(file)),
   );
 
   return rootDir;

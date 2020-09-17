@@ -99,10 +99,10 @@ function getNotifications(
 export function createNotificationsApi(config: NotificationsConfig = {}): PiralPlugin<PiletNotificationsApi> {
   const { defaultOptions = {}, selectId = () => `${~~(Math.random() * 10000)}`, messages = [] } = config;
 
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       components: {
         NotificationsHost: DefaultHost,
@@ -112,7 +112,7 @@ export function createNotificationsApi(config: NotificationsConfig = {}): PiralP
       notifications: getNotifications(context, messages, defaultOptions),
     }));
 
-    return api => ({
+    return (api) => ({
       showNotification(content, customOptions) {
         const component =
           typeof content === 'string'

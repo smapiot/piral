@@ -22,8 +22,8 @@ renderInstance({
   plugins: [createAuthApi(), createSearchApi()],
   requestPilets() {
     return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
-      .then(res => res.json())
-      .then(res => res.items);
+      .then((res) => res.json())
+      .then((res) => res.items);
   },
   layout,
   errors,

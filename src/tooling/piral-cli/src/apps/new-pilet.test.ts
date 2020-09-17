@@ -39,7 +39,7 @@ describe('New Pilet Command', () => {
     // Assert
     expect(result).toBeUndefined();
   });
-  
+
   it('should scaffold without creating npmrc file', async () => {
     jest.setTimeout(60000);
     const dir = createTempDir();

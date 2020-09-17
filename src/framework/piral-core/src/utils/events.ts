@@ -17,7 +17,7 @@ export function createListener(state: any): EventEmitter {
       return this;
     },
     off(type, callback) {
-      const [listener] = eventListeners.filter(m => m[0] === callback);
+      const [listener] = eventListeners.filter((m) => m[0] === callback);
 
       if (listener) {
         document.body.removeEventListener(nameOf(type), listener[1]);

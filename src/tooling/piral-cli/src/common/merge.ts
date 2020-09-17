@@ -45,12 +45,12 @@ function mergeObject(target: any, source: any) {
   const destination = {};
 
   if (isMergeableObject(target)) {
-    Object.keys(target).forEach(key => {
+    Object.keys(target).forEach((key) => {
       destination[key] = cloneIfNecessary(target[key]);
     });
   }
 
-  Object.keys(source).forEach(key => {
+  Object.keys(source).forEach((key) => {
     if (!isMergeableObject(source[key]) || !target[key]) {
       destination[key] = cloneIfNecessary(source[key]);
     } else {

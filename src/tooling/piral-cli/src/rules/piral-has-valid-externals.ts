@@ -5,7 +5,7 @@ export type Options = void;
 /**
  * Checks that the externals to be used in pilets are valid.
  */
-export default function(context: PiralRuleContext, options: Options = undefined) {
+export default function (context: PiralRuleContext, options: Options = undefined) {
   const { externals } = context.info;
 
   if (!Array.isArray(externals)) {
@@ -17,8 +17,8 @@ The shared dependencies in pilets.external are invalid.
 `,
     );
   } else {
-    const invalidDepTypes = externals.filter(ext => typeof ext !== 'string');
-    const invalidDepRefs = externals.filter(ext => typeof ext === 'string' && !context.dependencies[ext]);
+    const invalidDepTypes = externals.filter((ext) => typeof ext !== 'string');
+    const invalidDepRefs = externals.filter((ext) => typeof ext === 'string' && !context.dependencies[ext]);
 
     if (invalidDepTypes.length > 0) {
       context.error(

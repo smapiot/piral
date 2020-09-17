@@ -20,7 +20,7 @@ export interface LitElConfig {
 export function createLitElApi(config: LitElConfig = {}): PiralPlugin<PiletLitElApi> {
   const { selector } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.litel = ({ elementName }) => convert(elementName);
 

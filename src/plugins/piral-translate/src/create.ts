@@ -50,10 +50,10 @@ export function setupLocalizer(config: LocaleConfig = {}): Localizable {
  * @param localizer The specific localizer to be used, if any.
  */
 export function createLocaleApi(localizer: Localizable = setupLocalizer()): PiralPlugin<PiletLocaleApi> {
-  return context => {
+  return (context) => {
     context.defineActions(createActions(localizer));
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       components: {
         ...state.components,

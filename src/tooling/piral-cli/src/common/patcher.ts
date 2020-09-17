@@ -36,7 +36,7 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
   log('generalDebug_0003', `Patching files in "${staticPath}" ...`);
   const folderNames = await getFileNames(staticPath);
   return Promise.all(
-    folderNames.map(async folderName => {
+    folderNames.map(async (folderName) => {
       if (!ignoredPackages.includes(folderName)) {
         const rootName = resolve(staticPath, folderName);
         const isDirectory = await checkIsDirectory(rootName);

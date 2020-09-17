@@ -34,12 +34,7 @@ describe('withFeed Module', () => {
     const Component: any = withFeed(StubComponent, options);
     const node = mount(<Component />);
     expect(node.find(StubLoader).length).toBe(0);
-    expect(
-      node
-        .find(StubComponent)
-        .first()
-        .prop('data'),
-    ).toEqual([1, 2, 3]);
+    expect(node.find(StubComponent).first().prop('data')).toEqual([1, 2, 3]);
   });
 
   it('shows the error if the feed errored', () => {
@@ -50,18 +45,8 @@ describe('withFeed Module', () => {
     expect(node.find(StubLoader).length).toBe(0);
     expect(node.find(StubComponent).length).toBe(0);
     expect(node.find(StubErrorInfo).length).toBe(1);
-    expect(
-      node
-        .find(StubErrorInfo)
-        .first()
-        .prop('type'),
-    ).toBe('feed');
-    expect(
-      node
-        .find(StubErrorInfo)
-        .first()
-        .prop('error'),
-    ).toBe('my-error');
+    expect(node.find(StubErrorInfo).first().prop('type')).toBe('feed');
+    expect(node.find(StubErrorInfo).first().prop('error')).toBe('my-error');
   });
 
   it('calls the load inside useEffect', () => {

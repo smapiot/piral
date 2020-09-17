@@ -106,7 +106,7 @@ describe('Piral-Base strategies module', () => {
       createApi: createMockApi,
       pilets: pilets,
       fetchPilets: jest.fn(() => Promise.resolve(pilets)),
-      loadPilet: jest.fn(m => Promise.resolve(m as any)),
+      loadPilet: jest.fn((m) => Promise.resolve(m as any)),
       fetchDependency: jest.fn(),
       dependencies: jest.fn(),
       getDependencies: jest.fn(),
@@ -114,7 +114,7 @@ describe('Piral-Base strategies module', () => {
 
     // Act
     await blazingStrategy(loadingOptions, callbackMock);
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert
     expect(setupMock).toHaveBeenCalledTimes(pilets.length);
@@ -144,7 +144,7 @@ describe('Piral-Base strategies module', () => {
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
       fetchPilets: jest.fn(() => Promise.resolve(pilets)),
-      loadPilet: jest.fn(m => Promise.resolve(m as any)),
+      loadPilet: jest.fn((m) => Promise.resolve(m as any)),
       fetchDependency: jest.fn(),
       dependencies: jest.fn(),
       getDependencies: jest.fn(),
@@ -152,7 +152,7 @@ describe('Piral-Base strategies module', () => {
 
     // Act
     await blazingStrategy(loadingOptions, callbackMock);
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert
     expect(setupMock).toHaveBeenCalledTimes(2);
@@ -171,7 +171,7 @@ describe('Piral-Base strategies module', () => {
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
       fetchPilets: jest.fn(() => Promise.resolve(pilets)),
-      loadPilet: jest.fn(m => Promise.resolve(m as any)),
+      loadPilet: jest.fn((m) => Promise.resolve(m as any)),
       fetchDependency: jest.fn(),
       dependencies: jest.fn(),
       getDependencies: jest.fn(),

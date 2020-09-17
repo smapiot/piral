@@ -2,7 +2,7 @@ import { appendItem, excludeOn, withKey, withoutKey } from '../utils';
 import { PageRegistration, ExtensionRegistration, GlobalStateContext } from '../types';
 
 export function registerPage(ctx: GlobalStateContext, name: string, value: PageRegistration) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
@@ -12,7 +12,7 @@ export function registerPage(ctx: GlobalStateContext, name: string, value: PageR
 }
 
 export function unregisterPage(ctx: GlobalStateContext, name: string) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
@@ -22,7 +22,7 @@ export function unregisterPage(ctx: GlobalStateContext, name: string) {
 }
 
 export function registerExtension(ctx: GlobalStateContext, name: string, value: ExtensionRegistration) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
@@ -32,14 +32,14 @@ export function registerExtension(ctx: GlobalStateContext, name: string, value: 
 }
 
 export function unregisterExtension(ctx: GlobalStateContext, name: string, reference: any) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
       extensions: withKey(
         state.registry.extensions,
         name,
-        excludeOn(state.registry.extensions[name], m => m.reference === reference),
+        excludeOn(state.registry.extensions[name], (m) => m.reference === reference),
       ),
     },
   }));

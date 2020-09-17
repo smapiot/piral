@@ -14,13 +14,13 @@ export function useDynamicLanguage(
     const current = getTranslations(selected);
     selectLanguage(undefined);
     load(selected, current).then(
-      result => {
+      (result) => {
         if (active) {
           setTranslations(selected, result);
           selectLanguage(selected);
         }
       },
-      err => console.error(err),
+      (err) => console.error(err),
     );
     return () => (active = false);
   }, [selected]);
@@ -30,6 +30,6 @@ export function useDynamicLanguage(
 
 export function useTranslate() {
   const { translate } = useActions();
-  useGlobalState(m => m.language.selected);
+  useGlobalState((m) => m.language.selected);
   return translate;
 }

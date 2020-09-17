@@ -6,10 +6,10 @@ export interface CycleExtension {
 }
 
 export function createExtension(api: PiletApi, rootName = 'slot'): CycleExtension {
-  return props =>
+  return (props) =>
     h(rootName, {
       hook: {
-        insert: vnode => {
+        insert: (vnode) => {
           if (vnode.elm instanceof HTMLElement) {
             api.renderHtmlExtension(vnode.elm, props);
           }

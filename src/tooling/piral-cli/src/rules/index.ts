@@ -15,8 +15,8 @@ function getRules<T extends RuleContext>(target: 'pilet' | 'piral') {
       } else {
         resolve(
           files
-            .filter(name => name.startsWith(prefix) && name.endsWith('.js'))
-            .map(fileName => {
+            .filter((name) => name.startsWith(prefix) && name.endsWith('.js'))
+            .map((fileName) => {
               log('generalDebug_0003', `Including module "${fileName}" ...`);
               const run = require(`./${fileName}`).default;
               const name = fileName.substr(prefix.length).replace(/\.js$/, '');

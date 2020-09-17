@@ -97,7 +97,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
 
   if (flow === 'code') {
     client.code.getToken(location.href).then(
-      token => (currentToken = token),
+      (token) => (currentToken = token),
       () => {},
     );
 
@@ -110,7 +110,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         return Promise.resolve(currentToken.accessToken);
       }
 
-      return currentToken.refresh().then(refreshedToken => {
+      return currentToken.refresh().then((refreshedToken) => {
         currentToken = refreshedToken;
         return currentToken.accessToken;
       });
@@ -127,7 +127,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         if (!restrict) {
           req.setHeaders(
             retrieveToken().then(
-              token => token && { Authorization: `Bearer ${token}` },
+              (token) => token && { Authorization: `Bearer ${token}` },
               () => undefined,
             ),
           );
@@ -137,7 +137,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
     };
   } else {
     client.token.getToken(location.href).then(
-      token => {
+      (token) => {
         const opener = window.opener;
         if (opener && typeof opener[callbackName] === 'function') {
           opener[callbackName](token);
@@ -157,7 +157,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         return Promise.resolve(currentToken.accessToken);
       }
 
-      return new Promise<string>(res => {
+      return new Promise<string>((res) => {
         window[callbackName] = (token: ClientOAuth2.Token) => {
           currentToken = token;
           res(currentToken.accessToken);
@@ -177,7 +177,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         if (!restrict) {
           req.setHeaders(
             retrieveToken().then(
-              token => token && { Authorization: `Bearer ${token}` },
+              (token) => token && { Authorization: `Bearer ${token}` },
               () => undefined,
             ),
           );

@@ -16,42 +16,15 @@ describe('Piral-Oidc setup module', () => {
     access_token: '123',
     expires_in: 100,
   };
-  const mockGetUser = jest
-    .fn()
-    .mockResolvedValue(user)
-    .mockName('getUser');
-  const mockSigninCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinCallback');
-  const mockSigninRedirectCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinRedirectCallback');
-  const mockSigninRedirect = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinRedirect');
-  const mockSigninSilent = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinSilent');
-  const mockSigninSilentCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signinSilentCallback');
-  const mockSignoutRedirect = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signoutRedirect');
-  const mockSignoutRedirectCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signoutRedirectCallback');
-  const mockSignoutPopupCallback = jest
-    .fn()
-    .mockResolvedValue(undefined)
-    .mockName('signoutPopupCallback');
+  const mockGetUser = jest.fn().mockResolvedValue(user).mockName('getUser');
+  const mockSigninCallback = jest.fn().mockResolvedValue(undefined).mockName('signinCallback');
+  const mockSigninRedirectCallback = jest.fn().mockResolvedValue(undefined).mockName('signinRedirectCallback');
+  const mockSigninRedirect = jest.fn().mockResolvedValue(undefined).mockName('signinRedirect');
+  const mockSigninSilent = jest.fn().mockResolvedValue(undefined).mockName('signinSilent');
+  const mockSigninSilentCallback = jest.fn().mockResolvedValue(undefined).mockName('signinSilentCallback');
+  const mockSignoutRedirect = jest.fn().mockResolvedValue(undefined).mockName('signoutRedirect');
+  const mockSignoutRedirectCallback = jest.fn().mockResolvedValue(undefined).mockName('signoutRedirectCallback');
+  const mockSignoutPopupCallback = jest.fn().mockResolvedValue(undefined).mockName('signoutPopupCallback');
 
   const postLogoutRedirectUri = 'http://localhost:8000/post-logout';
   const redirectUri = 'http://localhost:8000/callback';
@@ -59,7 +32,7 @@ describe('Piral-Oidc setup module', () => {
 
   beforeAll(() => {
     //@ts-ignore
-    MockUserManager.mockImplementation(settings => {
+    MockUserManager.mockImplementation((settings) => {
       return {
         getUser: mockGetUser,
         settings: {
@@ -232,7 +205,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = new URL(redirectUri);
       expect(mockSigninSilentCallback).toBeCalledTimes(0);
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(mockSigninSilentCallback).toBeCalledTimes(1);
       expect(mockSigninCallback).toBeCalledTimes(0);
       expect(shouldRender).toBe(false);
@@ -243,7 +216,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = new URL(redirectUri);
       expect(mockSigninCallback).toBeCalledTimes(0);
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(mockSigninSilentCallback).toBeCalledTimes(0);
       expect(mockSigninCallback).toBeCalledTimes(1);
       expect(shouldRender).toBe(false);
@@ -270,7 +243,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = url;
       expect(window.location.href).not.toBe(appUri);
-      const shouldRender = await secondClient.handleAuthentication();
+      const { shouldRender } = await secondClient.handleAuthentication();
       expect(window.location.href).not.toBe(appUri);
       expect(shouldRender).toBe(true);
     });
@@ -279,7 +252,7 @@ describe('Piral-Oidc setup module', () => {
       const url = new URL(appUri);
       //@ts-ignore
       window.location = url;
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(shouldRender).toBe(true);
     });
 
@@ -289,7 +262,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = url;
       expect(mockSigninRedirect).toBeCalledTimes(0);
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(mockSigninRedirect).toBeCalledTimes(1);
       expect(shouldRender).toBe(false);
     });

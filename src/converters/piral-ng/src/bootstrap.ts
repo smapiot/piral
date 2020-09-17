@@ -29,8 +29,8 @@ function startup<T>(context: any, props: T, BootstrapModule: any, node: HTMLElem
 
   return platform
     .bootstrapModule(BootstrapModule)
-    .catch(err => console.log(err))
-    .then(bootstrapModule => {
+    .catch((err) => console.log(err))
+    .then((bootstrapModule) => {
       node.removeAttribute('id');
       return bootstrapModule;
     });

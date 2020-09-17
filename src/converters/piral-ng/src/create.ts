@@ -30,7 +30,7 @@ export interface NgConfig {
 export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
   const { rootName, selector, selectId } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter(selectId);
     context.converters.ng = ({ component }) => convert(component);
 

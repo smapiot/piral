@@ -6,7 +6,14 @@ import { extendConfig } from '../helpers';
 import { getPiralConfig } from '../configs';
 import { defaultWebpackConfig } from '../constants';
 
-async function run(root: string, piral: string, hmr: boolean, externals: Array<string>, entryFiles: string, logLevel: LogLevels) {
+async function run(
+  root: string,
+  piral: string,
+  hmr: boolean,
+  externals: Array<string>,
+  entryFiles: string,
+  logLevel: LogLevels,
+) {
   progress(`Preparing supplied Piral instance ...`);
 
   const outDir = resolve(root, 'dist', 'app');
@@ -44,15 +51,17 @@ async function run(root: string, piral: string, hmr: boolean, externals: Array<s
   return bundle;
 }
 
-process.on('message', async msg => {
+process.on('message', async (msg) => {
   switch (msg.type) {
     case 'start':
-      const result = await run(process.cwd(), msg.piral, true, msg.externals, msg.entryFiles, msg.logLevel).catch(error => {
-        process.send({
-          type: 'fail',
-          error: error?.message,
-        });
-      });
+      const result = await run(process.cwd(), msg.piral, true, msg.externals, msg.entryFiles, msg.logLevel).catch(
+        (error) => {
+          process.send({
+            type: 'fail',
+            error: error?.message,
+          });
+        },
+      );
 
       if (result) {
         process.send({

@@ -17,7 +17,7 @@ export interface ResponsiveLayoutProps {
  * The component capable of identifying and switching the currently used layout.
  */
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ breakpoints = defaultBreakpoints, children }) => {
-  const current = useGlobalState(m => m.app.layout) || 'desktop';
+  const current = useGlobalState((m) => m.app.layout) || 'desktop';
   const changeTo = useAction('changeLayout');
   const selected = useMedia(breakpoints, defaultLayouts, current);
 

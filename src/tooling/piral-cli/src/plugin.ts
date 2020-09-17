@@ -20,7 +20,7 @@ function isDirectory(dir: string) {
 }
 
 function listDirectory(rootDir: string) {
-  return new Promise<Array<string>>(resolve => {
+  return new Promise<Array<string>>((resolve) => {
     readdir(rootDir, (_, files) => resolve(files || []));
   });
 }
@@ -46,7 +46,7 @@ function isScope(name: string) {
 
 async function fillPlugins(candidates: Array<string>, plugins: Array<string>) {
   await Promise.all(
-    candidates.map(async path => {
+    candidates.map(async (path) => {
       if (await isPluginDirectory(path)) {
         plugins.push(path);
       }
@@ -59,17 +59,17 @@ async function getAllPlugins(rootDir: string): Promise<Array<string>> {
     log('generalDebug_0003', `Getting plugins from dir "${rootDir}" ...`);
     const pluginPaths = await listDirectory(rootDir);
     const plugins: Array<string> = [];
-    const nested = pluginPaths.filter(isScope).map(m => join(rootDir, m));
+    const nested = pluginPaths.filter(isScope).map((m) => join(rootDir, m));
 
     await Promise.all([
       fillPlugins(
-        pluginPaths.filter(isPlugin).map(m => join(rootDir, m)),
+        pluginPaths.filter(isPlugin).map((m) => join(rootDir, m)),
         plugins,
       ),
-      ...nested.map(async path => {
+      ...nested.map(async (path) => {
         const files = await listDirectory(path);
         await fillPlugins(
-          files.filter(isPlugin).map(m => join(path, m)),
+          files.filter(isPlugin).map((m) => join(path, m)),
           plugins,
         );
       }),

@@ -138,7 +138,7 @@ export class EventDelegator {
 
     // Special case for navigation interception
     if (evt.type === 'click') {
-      this.afterClickCallbacks.forEach(callback => callback(evt as MouseEvent));
+      this.afterClickCallbacks.forEach((callback) => callback(evt as MouseEvent));
     }
   }
 
@@ -273,7 +273,7 @@ interface EventHandlerInfo {
 
 function toLookup(items: string[]): { [key: string]: boolean } {
   const result = {};
-  items.forEach(value => {
+  items.forEach((value) => {
     result[value] = true;
   });
   return result;

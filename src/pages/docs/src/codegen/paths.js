@@ -109,6 +109,18 @@ function getTools() {
   return getDocsFrom(tools);
 }
 
+function getBundlers() {
+
+  const toolingRoot = resolve(packagesRoot, 'tooling');
+  const webpackRoot = resolve(toolingRoot, 'piral-cli-webpack');
+  const parcelRoot = resolve(toolingRoot, 'piral-cli-parcel');
+
+  return [
+    resolve(webpackRoot, 'README.md'),
+    resolve(parcelRoot, 'README.md')
+  ];
+}
+
 function getCodes() {
   return getDocsFrom(messages);
 }
@@ -177,6 +189,7 @@ module.exports = {
   getReferences,
   getCommands,
   getTools,
+  getBundlers,
   getCodes,
   getPluginCategory,
   getPluginTypes,

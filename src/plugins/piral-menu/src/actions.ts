@@ -2,7 +2,7 @@ import { withKey, withoutKey, GlobalStateContext } from 'piral-core';
 import { MenuItemRegistration } from './types';
 
 export function registerMenuItem(ctx: GlobalStateContext, name: string, value: MenuItemRegistration) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
@@ -12,7 +12,7 @@ export function registerMenuItem(ctx: GlobalStateContext, name: string, value: M
 }
 
 export function unregisterMenuItem(ctx: GlobalStateContext, name: string) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,

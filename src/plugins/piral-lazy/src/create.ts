@@ -10,8 +10,8 @@ interface DependencyCache {
 }
 
 export function createLazyApi(): PiralPlugin<PiletLazyApi> {
-  return context => {
-    return api => {
+  return (context) => {
+    return (api) => {
       const cache: DependencyCache = {};
       const getDependency = (name: string) => {
         const dep = cache[name];
@@ -36,11 +36,7 @@ export function createLazyApi(): PiralPlugin<PiletLazyApi> {
           };
         },
         fromLazy(load, deps = []) {
-          return lazy(() =>
-            Promise.all(deps.map(getDependency))
-              .then(load)
-              .then(wrapComponent),
-          );
+          return lazy(() => Promise.all(deps.map(getDependency)).then(load).then(wrapComponent));
         },
       };
     };

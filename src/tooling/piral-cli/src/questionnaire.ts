@@ -24,7 +24,7 @@ function getCommandData(retrieve: any) {
       return this;
     },
     swap(name: string, swapper: (flag: Flag) => Flag) {
-      const [flag] = instructions.filter(m => m.name === name);
+      const [flag] = instructions.filter((m) => m.name === name);
       const newFlag = swapper(flag || { name });
 
       if (!flag) {
@@ -36,44 +36,44 @@ function getCommandData(retrieve: any) {
       return this;
     },
     choices(name: string, choices: Array<any>) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'string',
         values: choices,
       }));
     },
     string(name: string) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'string',
       }));
     },
     boolean(name: string) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'boolean',
       }));
     },
     describe(name: string, value: string) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         describe: value,
       }));
     },
     default(name: string, value: any) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         default: value,
       }));
     },
     number(name: string) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'number',
       }));
     },
     demandOption(name: string) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         required: true,
       }));
@@ -114,14 +114,14 @@ function getType(flag: Flag) {
 }
 
 export function runQuestionnaire(commandName: string, ignoredInstructions = ['base', 'log-level']) {
-  const [command] = commands.all.filter(m => m.name === commandName);
+  const [command] = commands.all.filter((m) => m.name === commandName);
   const acceptAll = argv.y === true;
   const instructions = getCommandData(command.flags);
   const questions = instructions
-    .filter(instruction => !ignoredInstructions.includes(instruction.name))
-    .filter(instruction => !acceptAll || (instruction.default === undefined && instruction.required))
-    .filter(instruction => argv[instruction.name] === undefined)
-    .map(instruction => ({
+    .filter((instruction) => !ignoredInstructions.includes(instruction.name))
+    .filter((instruction) => !acceptAll || (instruction.default === undefined && instruction.required))
+    .filter((instruction) => argv[instruction.name] === undefined)
+    .map((instruction) => ({
       name: instruction.name,
       default: instruction.values ? instruction.values.indexOf(instruction.default) : instruction.default,
       message: instruction.describe,
@@ -130,7 +130,7 @@ export function runQuestionnaire(commandName: string, ignoredInstructions = ['ba
       validate: instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true,
     }));
 
-  return inquirer.prompt(questions).then(answers => {
+  return inquirer.prompt(questions).then((answers) => {
     const parameters: any = {};
 
     for (const instruction of instructions) {

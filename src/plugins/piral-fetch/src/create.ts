@@ -8,7 +8,7 @@ import { PiletFetchApi } from './types';
  * @param config The custom fetch configuration, if any.
  */
 export function createFetchApi(config: FetchConfig = {}): PiralPlugin<PiletFetchApi> {
-  return context => {
+  return (context) => {
     return {
       fetch<T>(path, options: any = {}) {
         const originalHeaders = options.headers || {};
@@ -26,7 +26,7 @@ export function createFetchApi(config: FetchConfig = {}): PiralPlugin<PiletFetch
         });
 
         return Promise.all(headerPromises)
-          .then(newHeaders => {
+          .then((newHeaders) => {
             const headers = newHeaders.reduce((obj, header) => {
               if (typeof header === 'object' && header) {
                 return {
@@ -43,7 +43,7 @@ export function createFetchApi(config: FetchConfig = {}): PiralPlugin<PiletFetch
               headers,
             };
           })
-          .then(options => httpFetch<T>(config, path, options));
+          .then((options) => httpFetch<T>(config, path, options));
       },
     };
   };

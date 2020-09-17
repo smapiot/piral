@@ -88,7 +88,7 @@ Following is a short guide on how to make a valid Pull Request.
    project so that you can grab any changes and bring them into your local copy.
 
    ```sh
-   git remote add upstream git@github.com:smapiopt/piral.git
+   git remote add upstream git@github.com:smapiot/piral.git
    ```
 
    You now have two remotes for this project on disk:

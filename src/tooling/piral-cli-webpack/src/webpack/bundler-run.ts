@@ -49,7 +49,7 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
         eventEmitter.emit('buildStart');
       });
 
-      compiler.hooks.done.tap('piral-cli', stats => {
+      compiler.hooks.done.tap('piral-cli', (stats) => {
         mainBundle.name = getOutput(stats);
         mainBundle.requireRef = stats.compilation.outputOptions?.jsonpFunction?.replace('_chunks', '');
         mainBundle.entryAsset.hash = stats.hash;
@@ -65,9 +65,7 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
           console.error(err);
           reject(err);
         } else {
-          console.log(
-            stats.toString(preset),
-          );
+          console.log(stats.toString(preset));
 
           if (stats.hasErrors()) {
             reject(stats.toJson());

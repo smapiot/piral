@@ -53,7 +53,7 @@ describe('Piral-Containers actions module', () => {
       q: true,
     };
     createState(context, 'foo', initialData);
-    replaceState(context, 'foo', state => updatedData);
+    replaceState(context, 'foo', (state) => updatedData);
     const state: any = deref(context.state);
     expect(state.containers.foo).toEqual({
       ...initialData,
@@ -70,7 +70,7 @@ describe('Piral-Containers actions module', () => {
       bar: 42,
     };
     createState(context, 'foo', initialData);
-    replaceState(context, 'foo', state => updatedData);
+    replaceState(context, 'foo', (state) => updatedData);
     const state: any = deref(context.state);
     expect(state.containers.foo).toEqual({
       ...initialData,
@@ -84,7 +84,7 @@ describe('Piral-Containers actions module', () => {
       bar: 'qxz',
     };
     createState(context, 'foo', initialData);
-    replaceState(context, 'foo', state => state);
+    replaceState(context, 'foo', (state) => state);
     const state: any = deref(context.state);
     expect(state.containers.foo).toEqual(initialData);
   });

@@ -4,13 +4,13 @@ function retrieveToken(msalInstance: UserAgentApplication, auth: AuthenticationP
   if (msalInstance.getAccount()) {
     return msalInstance
       .acquireTokenSilent(auth)
-      .then(response => response.accessToken)
-      .catch(err => {
+      .then((response) => response.accessToken)
+      .catch((err) => {
         if (err.name === 'InteractionRequiredAuthError') {
           return msalInstance
             .acquireTokenPopup(auth)
-            .then(response => response.accessToken)
-            .catch(err => Promise.reject(err && err.message));
+            .then((response) => response.accessToken)
+            .catch((err) => Promise.reject(err && err.message));
         }
 
         console.error(err);
@@ -147,7 +147,7 @@ export function setupAdalClient(config: AdalConfig): AdalClient {
       if (!restrict) {
         req.setHeaders(
           retrieveToken(msalInstance, tokenRequest).then(
-            token =>
+            (token) =>
               token && {
                 Authorization: `Bearer ${token}`,
               },

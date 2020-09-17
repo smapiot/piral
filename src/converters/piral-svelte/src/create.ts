@@ -20,7 +20,7 @@ export interface SvelteConfig {
 export function createSvelteApi(config: SvelteConfig = {}): PiralPlugin<PiletSvelteApi> {
   const { selector } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.svelte = ({ Component, captured }) => convert(Component, captured);
 

@@ -15,7 +15,7 @@ export const buildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
 export const bundlerKeys: Array<string> = ['none', 'parcel', 'webpack'];
 export const frameworkKeys: Array<Framework> = ['piral', 'piral-core', 'piral-base'];
-export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter(m => typeof ForceOverwrite[m] === 'number');
+export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter((m) => typeof ForceOverwrite[m] === 'number');
 
 export function valueOfForceOverwrite(key: string): ForceOverwrite {
   for (const forceOverwriteKey of forceOverwriteKeys) {
@@ -37,7 +37,7 @@ export function keyOfForceOverwrite(value: ForceOverwrite) {
   return forceOverwriteKeys[0];
 }
 
-export const piletLanguageKeys = Object.keys(PiletLanguage).filter(m => typeof PiletLanguage[m] === 'number');
+export const piletLanguageKeys = Object.keys(PiletLanguage).filter((m) => typeof PiletLanguage[m] === 'number');
 
 export function valueOfPiletLanguage(key: string): PiletLanguage {
   for (const piletLanguageKey of piletLanguageKeys) {

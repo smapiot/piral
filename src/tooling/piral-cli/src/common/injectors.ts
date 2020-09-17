@@ -27,6 +27,6 @@ export function notifyServerOnline(bundlers: Array<Bundler>, api: string | false
     logInfo(`${liveIcon}  Running at ${chalk.bold(address)}`);
     logInfo(`${settingsIcon}  Manage via ${chalk.bold(address + api)}`);
     logReset();
-    bundlers.forEach(bundler => bundler.start());
+    bundlers.forEach((bundler) => bundler.start());
   };
 }

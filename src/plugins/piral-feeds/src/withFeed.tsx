@@ -7,7 +7,7 @@ export function withFeed<TData, TItem, TProps>(
   Component: React.ComponentType<TProps & FeedConnectorProps<TData>>,
   options: ConnectorDetails<TData, TItem>,
 ) {
-  const FeedView: React.FC<TProps> = props => {
+  const FeedView: React.FC<TProps> = (props) => {
     const [loaded, data, error] = useFeed(options);
 
     if (!loaded) {

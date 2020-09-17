@@ -5,8 +5,4 @@ export interface TutorialProps {
   meta?: any;
 }
 
-export const Tutorial: React.FC<TutorialProps> = ({ children }) => (
-  <PageContent>
-    {children}
-  </PageContent>
-);
+export const Tutorial: React.FC<TutorialProps> = ({ children }) => <PageContent>{children}</PageContent>;

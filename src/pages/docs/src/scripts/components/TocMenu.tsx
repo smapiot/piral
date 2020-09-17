@@ -5,14 +5,14 @@ import { Sidebar } from './Sidebar';
 import { MenuItems, useMenuItems, useHash } from '../hooks';
 
 function c(...items: Array<string | boolean | number>) {
-  return items.filter(item => !!item).join(' ');
+  return items.filter((item) => !!item).join(' ');
 }
 
 function renderMenuItems(items: MenuItems, level = 1) {
   if (items.length > 0) {
     return (
       <ul className="toc-list">
-        {items.map(item => (
+        {items.map((item) => (
           <li key={item.href} className={c(item.active && 'active')}>
             <Link className={c(`level-${level}`, item.children.length && 'children')} to={item.href}>
               {item.title}

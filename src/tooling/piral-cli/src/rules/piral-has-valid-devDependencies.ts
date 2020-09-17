@@ -5,7 +5,7 @@ export type Options = void;
 /**
  * Checks that devDependencies declared for pilet scaffolding are valid.
  */
-export default function(context: PiralRuleContext, options: Options = undefined) {
+export default function (context: PiralRuleContext, options: Options = undefined) {
   const { devDependencies } = context.info;
 
   if (typeof devDependencies !== 'object') {
@@ -22,10 +22,10 @@ The scripts in pilets.devDependencies are invalid.
       ...context.devDependencies,
     };
     const invalidDevDepsTypes = Object.keys(devDependencies)
-      .map(m => devDependencies[m])
-      .filter(m => typeof m !== 'string' && m !== true);
+      .map((m) => devDependencies[m])
+      .filter((m) => typeof m !== 'string' && m !== true);
     const invalidDevDepsRefs = Object.keys(devDependencies).filter(
-      m => devDependencies[m] === true && !allDependencies[m],
+      (m) => devDependencies[m] === true && !allDependencies[m],
     );
 
     if (invalidDevDepsTypes.length > 0) {

@@ -27,7 +27,7 @@ function checkPiletApp(name: string, app?: PiletApp): PiletApp {
 }
 
 function checkPiletAppAsync(name: string, app?: PiletApp | Promise<PiletApp>): Promise<PiletApp> {
-  return Promise.resolve(app).then(resolvedApp => checkPiletApp(name, resolvedApp));
+  return Promise.resolve(app).then((resolvedApp) => checkPiletApp(name, resolvedApp));
 }
 
 function getLocalRequire(dependencies: AvailableDependencies = {}) {
@@ -83,8 +83,14 @@ declare global {
   }
 }
 
-function includeScript(piletName: string, depName: string, link: string, integrity?: string, dependencies?: AvailableDependencies) {
-  return new Promise<PiletApp>(resolve => {
+function includeScript(
+  piletName: string,
+  depName: string,
+  link: string,
+  integrity?: string,
+  dependencies?: AvailableDependencies,
+) {
+  return new Promise<PiletApp>((resolve) => {
     const s = document.createElement('script');
     s.async = true;
     s.src = link;

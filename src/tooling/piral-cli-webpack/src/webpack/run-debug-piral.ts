@@ -46,7 +46,7 @@ async function run(
 
 let bundler;
 
-process.on('message', async msg => {
+process.on('message', async (msg) => {
   const root = process.cwd();
 
   switch (msg.type) {
@@ -63,12 +63,14 @@ process.on('message', async msg => {
 
       break;
     case 'start':
-      bundler = await run(root, msg.piral, msg.hmr, msg.externals, msg.publicUrl, msg.entryFiles, msg.logLevel).catch(error => {
-        process.send({
-          type: 'fail',
-          error: error?.message,
-        });
-      });
+      bundler = await run(root, msg.piral, msg.hmr, msg.externals, msg.publicUrl, msg.entryFiles, msg.logLevel).catch(
+        (error) => {
+          process.send({
+            type: 'fail',
+            error: error?.message,
+          });
+        },
+      );
 
       if (bundler) {
         bundler.on('bundled', () => {

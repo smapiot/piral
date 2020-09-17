@@ -22,7 +22,7 @@ interface PortalRendererProps {
 }
 
 const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
-  const children = useGlobalState(m => m.portals[id] || []);
+  const children = useGlobalState((m) => m.portals[id] || []);
   return defaultRender(children);
 };
 
@@ -80,7 +80,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
     return (
       <div
         data-portal-id={$portalId}
-        ref={node => {
+        ref={(node) => {
           this.current = node;
         }}
       />

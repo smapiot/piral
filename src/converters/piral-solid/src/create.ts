@@ -20,11 +20,11 @@ export interface SolidConfig {
 export function createSolidApi(config: SolidConfig = {}): PiralPlugin<PiletSolidApi> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.solid = ({ root }) => convert(root);
 
-    return api => ({
+    return (api) => ({
       fromSolid(root) {
         return {
           type: 'solid',

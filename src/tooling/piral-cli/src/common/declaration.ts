@@ -34,10 +34,10 @@ function findDeclaredTypings(root: string) {
 async function getAllFiles(entryModules: Array<string>) {
   const files: Array<string> = [];
   const pattern = '**/+(*.ts|*.tsx|*.js|*.jsx)';
-  const allFiles = await Promise.all(entryModules.map(m => matchFiles(dirname(m), pattern)));
+  const allFiles = await Promise.all(entryModules.map((m) => matchFiles(dirname(m), pattern)));
 
   for (const found of allFiles) {
-    files.push(...found.filter(file => !files.includes(file)));
+    files.push(...found.filter((file) => !files.includes(file)));
   }
 
   return files;

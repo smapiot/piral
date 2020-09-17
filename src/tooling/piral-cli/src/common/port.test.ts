@@ -17,8 +17,8 @@ jest.mock('../external', () => ({
 
 describe('Port Module', () => {
   it('getFreePort with and without preferred port', async () => {
-    await getFreePort().then(result => expect(defaultPort));
-    await getFreePort(9999).then(result => expect(9999));
-    await getFreePort(99999).catch(err => expect(err).toEqual(error));
+    await getFreePort().then((result) => expect(defaultPort));
+    await getFreePort(9999).then((result) => expect(9999));
+    await getFreePort(99999).catch((err) => expect(err).toEqual(error));
   });
 });

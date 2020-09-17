@@ -3,7 +3,7 @@ import { useOnScreenVisible } from './onScreenVisible';
 
 jest.mock('react');
 
-(React as any).useState = result => [result, jest.fn()];
+(React as any).useState = (result) => [result, jest.fn()];
 
 function mockIntersectionObserver() {
   const instances = [];

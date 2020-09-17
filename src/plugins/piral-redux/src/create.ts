@@ -88,7 +88,7 @@ export function createReduxApi(config: ReduxConfig = {}): PiralPlugin<PiletRedux
     };
   }
 
-  return context => {
+  return (context) => {
     context.includeProvider(provider);
 
     return (_, meta) => ({
@@ -105,8 +105,8 @@ export function createReduxApi(config: ReduxConfig = {}): PiralPlugin<PiletRedux
           name,
           action,
         });
-        return component =>
-          connect<{}, {}, ReduxConnectorComponentProps, PiralReduxState>(state => ({ state: state.stores[name] }), {
+        return (component) =>
+          connect<{}, {}, ReduxConnectorComponentProps, PiralReduxState>((state) => ({ state: state.stores[name] }), {
             dispatch,
           })(component) as any;
       },

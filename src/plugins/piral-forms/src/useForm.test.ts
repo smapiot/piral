@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as piralCore from 'piral-core';
 import { useForm } from './useForm';
 
-(React as any).useState = jest.fn(idOrFn => [typeof idOrFn === 'function' ? idOrFn() : idOrFn]);
-(React as any).useEffect = jest.fn(cb => cb());
+(React as any).useState = jest.fn((idOrFn) => [typeof idOrFn === 'function' ? idOrFn() : idOrFn]);
+(React as any).useEffect = jest.fn((cb) => cb());
 
 describe('Form Hook Module', () => {
   it('Returns the current data and not changed initially', () => {
@@ -344,7 +344,7 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    const onChange = jest.fn(data => Promise.resolve(data));
+    const onChange = jest.fn((data) => Promise.resolve(data));
     (piralCore as any).usePrompt = promptFake;
     (piralCore as any).useAction = actionFake;
     (piralCore as any).useGlobalState = (select: any) =>
@@ -383,7 +383,7 @@ describe('Form Hook Module', () => {
     const promptFake = jest.fn();
     const setStateFake = jest.fn();
     const actionFake = jest.fn(() => setStateFake);
-    const onChange = jest.fn(data => Promise.reject('my error'));
+    const onChange = jest.fn((data) => Promise.reject('my error'));
     (piralCore as any).usePrompt = promptFake;
     (piralCore as any).useAction = actionFake;
     (piralCore as any).useGlobalState = (select: any) =>
@@ -411,7 +411,7 @@ describe('Form Hook Module', () => {
     const actionFake = jest.fn(() => setStateFake);
     (piralCore as any).usePrompt = promptFake;
     (piralCore as any).useAction = actionFake;
-    (React as any).useEffect = jest.fn(cb => cb()());
+    (React as any).useEffect = jest.fn((cb) => cb()());
     (piralCore as any).useGlobalState = (select: any) =>
       select({
         forms: {},

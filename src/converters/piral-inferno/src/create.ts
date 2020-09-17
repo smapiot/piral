@@ -20,7 +20,7 @@ export interface InfernoConfig {
 export function createInfernoApi(config: InfernoConfig = {}): PiralPlugin<PiletInfernoApi> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.inferno = ({ root }) => convert(root);
 

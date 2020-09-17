@@ -21,7 +21,7 @@ export interface EmberConfig {
 export function createEmberApi(config: EmberConfig = {}): PiralPlugin<PiletEmberApi> {
   const { selector } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.ember = ({ App, opts }) => convert(App, opts);
 

@@ -15,7 +15,7 @@ import {
 } from './types';
 
 function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index: number) => void) {
-  for (let i = commands.all.length; i--;) {
+  for (let i = commands.all.length; i--; ) {
     const command = commands.all[i];
 
     if (command.name === commandName) {
@@ -46,9 +46,9 @@ export function withFlags<T>(commandName: string, setter: ToolCommandFlagsSetter
   } else if (typeof setter !== 'function') {
     log('apiArgumentInvalid_0201', 'setter', 'flags');
   } else {
-    findAll(commandName, command => {
-      const current = command.flags || (x => x);
-      command.flags = argv => current(setter(argv));
+    findAll(commandName, (command) => {
+      const current = command.flags || ((x) => x);
+      command.flags = (argv) => current(setter(argv));
     });
   }
 
@@ -61,9 +61,9 @@ export function wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<
   } else if (typeof wrapper !== 'function') {
     log('apiArgumentInvalid_0201', 'wrapper', 'command');
   } else {
-    findAll(commandName, command => {
+    findAll(commandName, (command) => {
       const current = command.run;
-      command.run = args => wrapper(args, current);
+      command.run = (args) => wrapper(args, current);
     });
   }
 

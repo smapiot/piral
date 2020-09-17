@@ -11,12 +11,12 @@ import { useSharedData } from './sharedData';
 
 describe('SharedData Module', () => {
   it('selects the corresponding value', () => {
-    const a = useSharedData(m => m.a);
+    const a = useSharedData((m) => m.a);
     expect(a).toBe('foo');
   });
 
   it('selects the non-available value', () => {
-    const c = useSharedData(m => m.c);
+    const c = useSharedData((m) => m.c);
     expect(c).toBe(undefined);
   });
 

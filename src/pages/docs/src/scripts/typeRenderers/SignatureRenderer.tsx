@@ -14,7 +14,7 @@ export const SignatureRenderer: React.FC<SignatureRendererProps> = ({ node, rend
     <TypeParameterRenderer args={node.typeParameter} render={render} />
     {brackets[0]}
     {withSep(
-      (node.parameters || []).map(p => (
+      (node.parameters || []).map((p) => (
         <span key={p.id}>
           {p.name}: <TypeRenderer node={p.type} render={render} />
         </span>

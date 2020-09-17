@@ -30,13 +30,13 @@ export default class PiletInjector implements KrasInjector {
     const { pilets, api } = options;
     const cbs = {};
 
-    core.on('user-connected', e => {
+    core.on('user-connected', (e) => {
       if (e.target === '*' && e.url === api.substr(1)) {
         cbs[e.id] = (msg: string) => e.ws.send(msg);
       }
     });
 
-    core.on('user-disconnected', e => {
+    core.on('user-disconnected', (e) => {
       delete cbs[e.id];
     });
 
@@ -137,7 +137,7 @@ export default class PiletInjector implements KrasInjector {
 
   sendIndexFile(target: string, url: string): KrasResponse {
     const indexHtml = readFileSync(target, 'utf8');
-    
+
     // mechanism to inject server side debug piletApi config into piral emulator
     const windowInjectionScript = `window['dbg:pilet-api'] = '${this.piletApi}';`;
     const findStr = `<script`;

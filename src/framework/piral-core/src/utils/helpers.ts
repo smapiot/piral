@@ -18,7 +18,7 @@ export function appendItems<T>(items: Array<T>, newItems: Array<T>) {
 }
 
 export function excludeItem<T>(items: Array<T>, item: T) {
-  return (items || []).filter(m => m !== item);
+  return (items || []).filter((m) => m !== item);
 }
 
 export function includeItem<T>(items: Array<T>, item: T) {
@@ -59,7 +59,7 @@ export function removeNested<T, U = any>(obj: T, predicate: (item: U) => boolean
 }
 
 export function excludeOn<T>(items: Array<T>, predicate: (item: T) => boolean) {
-  return (items || []).filter(m => !predicate(m));
+  return (items || []).filter((m) => !predicate(m));
 }
 
 export function updateKey<T, TKey extends keyof T>(obj: T, key: TKey, value: T[TKey]): T {

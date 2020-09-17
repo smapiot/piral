@@ -12,15 +12,15 @@ jest.mock('react', () => {
   return {
     createContext: jest.fn(),
     useContext: () => ({ state }),
-    useState: v => [v, jest.fn()],
-    useMemo: f => f(),
-    useLayoutEffect: f => f(),
+    useState: (v) => [v, jest.fn()],
+    useMemo: (f) => f(),
+    useLayoutEffect: (f) => f(),
   };
 });
 
 describe('GlobalState Hook Module', () => {
   it('selects key from state', () => {
-    const result = useGlobalState(m => (m as any).foo);
+    const result = useGlobalState((m) => (m as any).foo);
     expect(result).toBe(5);
   });
 
@@ -36,12 +36,12 @@ describe('GlobalState Hook Module', () => {
   });
 
   it('selects nested values', () => {
-    const result = useGlobalState(m => (m as any).bar.qxz);
+    const result = useGlobalState((m) => (m as any).bar.qxz);
     expect(result).toBe('hello');
   });
 
   it('selection works against array members', () => {
-    const result = useGlobalState(m => (m as any).list[2]);
+    const result = useGlobalState((m) => (m as any).list[2]);
     expect(result).toBe(3);
   });
 });

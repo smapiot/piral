@@ -2,14 +2,14 @@ import { updateKey } from '../utils';
 import { DataStoreTarget, GlobalStateContext } from '../types';
 
 export function resetData(ctx: GlobalStateContext) {
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     data: {},
   }));
 }
 
 export function readDataItem(ctx: GlobalStateContext, key: string) {
-  return ctx.readState(state => state.data[key]);
+  return ctx.readState((state) => state.data[key]);
 }
 
 export function readDataValue(ctx: GlobalStateContext, key: string) {
@@ -34,7 +34,7 @@ export function writeDataItem(
         target,
         expires,
       };
-  ctx.dispatch(state => ({
+  ctx.dispatch((state) => ({
     ...state,
     data: updateKey(state.data, key, data),
   }));

@@ -7,8 +7,8 @@ export function withPiletState<TState, TAction, TProps>(
   id: string,
   actions: TAction,
 ) {
-  const StateView: React.FC<TProps> = props => {
-    const state = useGlobalState(s => s.containers[id]);
+  const StateView: React.FC<TProps> = (props) => {
+    const state = useGlobalState((s) => s.containers[id]);
     return <Component state={state} actions={actions} {...props} />;
   };
   StateView.displayName = `StateView_${id}`;

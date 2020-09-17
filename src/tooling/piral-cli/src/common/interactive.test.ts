@@ -12,10 +12,10 @@ jest.mock('../external', () => ({
 
 describe('Interactive Module', () => {
   it('prompts for a selection', async () => {
-    await promptSelect('Really?', [answer, 'No, not really'], answer).then(result => expect(result).toEqual(answer));
+    await promptSelect('Really?', [answer, 'No, not really'], answer).then((result) => expect(result).toEqual(answer));
   });
 
   it('prompts for a confirmation', async () => {
-    await promptConfirm('Really?', true).then(result => expect(result).toBeTruthy());
+    await promptConfirm('Really?', true).then((result) => expect(result).toBeTruthy());
   });
 });

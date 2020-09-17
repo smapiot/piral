@@ -2,10 +2,7 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
 function toKey(title: string) {
-  return title
-    .toLowerCase()
-    .split(' ')
-    .join('-');
+  return title.toLowerCase().split(' ').join('-');
 }
 
 function findKey(keys: Array<string>, tab: string) {

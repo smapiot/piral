@@ -22,7 +22,7 @@ describe('Rules Module', () => {
   });
 
   it('runRules with/without rules', async () => {
-    await runRules([], {} as any, {}).then(result => expect(result).toBeUndefined());
-    await runRules([rule], {} as any, { test: {} }).then(result => expect(result).toBeUndefined());
+    await runRules([], {} as any, {}).then((result) => expect(result).toBeUndefined());
+    await runRules([rule], {} as any, { test: {} }).then((result) => expect(result).toBeUndefined());
   });
 });

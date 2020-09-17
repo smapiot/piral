@@ -8,7 +8,7 @@ import { ErrorInfoProps } from '../types';
  * Leverage the default one by registration of respective extensions using
  * the "error" name.
  */
-export const DefaultErrorInfo: React.FC<ErrorInfoProps> = props => (
+export const DefaultErrorInfo: React.FC<ErrorInfoProps> = (props) => (
   <ExtensionSlot name="error" params={props} empty={() => <SwitchErrorInfo key="default_error" {...props} />} />
 );
 DefaultErrorInfo.displayName = 'DefaultErrorInfo';

@@ -12,7 +12,7 @@ function shuffle(ids: Array<string>) {
 }
 
 export const Testimonials: React.FC = () => {
-  const [selectedIds] = React.useState(() => shuffle(testimonials.map(t => t.id)));
+  const [selectedIds] = React.useState(() => shuffle(testimonials.map((t) => t.id)));
 
   return (
     <div className="container container-section">
@@ -22,8 +22,8 @@ export const Testimonials: React.FC = () => {
     */}
       <div className="testimonials">
         {testimonials
-          .filter(t => selectedIds.indexOf(t.id) !== -1)
-          .map(t => (
+          .filter((t) => selectedIds.indexOf(t.id) !== -1)
+          .map((t) => (
             <Testimonial key={t.id} firstName={t.firstName} lastName={t.lastName} phrase={t.phrase} face={t.face} />
           ))}
       </div>

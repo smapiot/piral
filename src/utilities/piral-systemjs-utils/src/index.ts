@@ -16,7 +16,7 @@ export function registerSharedDependencies(additionalDependencies: AvailableDepe
       return prev;
     }, {}),
   );
-  depNames.forEach(name => {
+  depNames.forEach((name) => {
     System.set(`app:${name}`, deps[name]);
   });
 }
@@ -28,11 +28,11 @@ export function registerSharedDependencies(additionalDependencies: AvailableDepe
  */
 export function loadPilet(meta: PiletMetadata): Promise<Pilet> {
   return System.import(meta.name)
-    .catch(err => {
+    .catch((err) => {
       console.error('Could not load the pilet.', meta, err);
       return {};
     })
-    .then(moduleContent => ({
+    .then((moduleContent) => ({
       ...meta,
       ...moduleContent,
     }))
@@ -50,8 +50,5 @@ export function loadPilet(meta: PiletMetadata): Promise<Pilet> {
  * Note that here all modules from the import maps are considered pilets.
  */
 export function requestPilets(): Promise<Array<PiletMetadata>> {
-  return (System as any)
-    .prepareImport()
-    .then(getImportMaps)
-    .then(convertToMetadata);
+  return (System as any).prepareImport().then(getImportMaps).then(convertToMetadata);
 }

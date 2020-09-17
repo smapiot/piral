@@ -4,15 +4,15 @@ import { withClass } from './utils';
 
 export const User: React.FC = () => {
   const [open, setOpen] = React.useState(false);
-  const currentUser = useGlobalState(m => m.user);
-  const menuItems = useGlobalState(m => m.registry.menuItems);
-  const itemNames = Object.keys(menuItems).filter(m => menuItems[m].settings.type === 'user');
+  const currentUser = useGlobalState((m) => m.user);
+  const menuItems = useGlobalState((m) => m.registry.menuItems);
+  const itemNames = Object.keys(menuItems).filter((m) => menuItems[m].settings.type === 'user');
   const container = React.useRef<HTMLDivElement>(undefined);
   const image = currentUser ? require('../images/male.png') : require('../images/female.png');
   const items = itemNames.length > 0 && (
     <>
       <li className="sep" />
-      {itemNames.map(name => {
+      {itemNames.map((name) => {
         const Component = menuItems[name].component;
         return <Component key={name} />;
       })}

@@ -16,7 +16,7 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       state,
-      destroyPortal: id => {},
+      destroyPortal: (id) => {},
     } as any,
   };
 }
@@ -34,7 +34,7 @@ jest.mock('../hooks');
   destroyPortal: jest.fn(),
 });
 
-const StubErrorInfo: React.FC = props => <div />;
+const StubErrorInfo: React.FC = (props) => <div />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
 const StubComponent: React.FC<{ shouldCrash?: boolean }> = ({ shouldCrash }) => {
@@ -50,12 +50,7 @@ describe('withApi Module', () => {
     const api: any = {};
     const Component = withApi({}, StubComponent, api, 'feed');
     const node = mount(<Component />);
-    expect(
-      node
-        .find(StubComponent)
-        .first()
-        .prop('piral'),
-    ).toBe(api);
+    expect(node.find(StubComponent).first().prop('piral')).toBe(api);
   });
 
   it('is protected against a component crash', () => {
@@ -63,12 +58,7 @@ describe('withApi Module', () => {
     const api: any = {};
     const Component = withApi({}, StubComponent, api, 'feed');
     const node = mount(<Component shouldCrash />);
-    expect(
-      node
-        .find(StubErrorInfo)
-        .first()
-        .prop('type'),
-    ).toBe('feed');
+    expect(node.find(StubErrorInfo).first().prop('type')).toBe('feed');
   });
 
   it('reports to console.error when an error is hit', () => {
@@ -86,7 +76,7 @@ describe('withApi Module', () => {
   it('Wraps component of type object', () => {
     const api: any = {};
     const converters: ComponentConverters<any> = {
-      html: component => {
+      html: (component) => {
         return component.component;
       },
     };
@@ -105,7 +95,7 @@ describe('withApi Module', () => {
   it('Wraps component which is object == null.', () => {
     const api: any = {};
     const converters: ComponentConverters<any> = {
-      html: component => {
+      html: (component) => {
         return component.component;
       },
     };

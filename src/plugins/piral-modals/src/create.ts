@@ -50,10 +50,10 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
 export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletModalsApi> {
   const { dialogs = [] } = config;
 
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       components: {
         ModalsHost: DefaultHost,

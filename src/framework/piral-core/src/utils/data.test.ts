@@ -53,7 +53,7 @@ describe('Data Module', () => {
   });
 
   it('createDataOptions can be used with anything like a function', () => {
-    const options = createDataOptions(function() {} as any);
+    const options = createDataOptions(function () {} as any);
     expect(options).toEqual({
       target: 'memory',
     });

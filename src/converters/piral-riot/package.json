@@ -22,6 +22,8 @@
   "files": [
     "lib",
     "src",
+    "convert.d.ts",
+    "convert.ts",
     "convert.js"
   ],
   "repository": {
@@ -32,7 +34,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc convert.ts --skipLibCheck --declaration",
     "typedoc": "typedoc --json ../../../docs/types/piral-riot.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
@@ -41,7 +43,7 @@
     "riot": "^4.7.2"
   },
   "peerDependencies": {
-    "piral-core": "^1.0.0",
+    "piral-core": "0.12.x || 1.x",
     "riot": "^4.0.0"
   }
 }

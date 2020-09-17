@@ -20,7 +20,7 @@ function getPiletMainPath(data: PackageData, files: PackageFiles) {
     'index.js',
     'dist/index.js',
   ];
-  return paths.map(filePath => `${packageRoot}${filePath}`).filter(filePath => !!files[filePath])[0];
+  return paths.map((filePath) => `${packageRoot}${filePath}`).filter((filePath) => !!files[filePath])[0];
 }
 
 export interface PiletPackageData extends PackageData {
@@ -28,11 +28,11 @@ export interface PiletPackageData extends PackageData {
 }
 
 export function inspectPackage(stream: NodeJS.ReadableStream): Promise<PackageData> {
-  return unpackGzTar(stream).then(files => getPackageJson(files));
+  return unpackGzTar(stream).then((files) => getPackageJson(files));
 }
 
 export function inspectPilet(stream: NodeJS.ReadableStream): Promise<PiletPackageData> {
-  return unpackGzTar(stream).then(files => {
+  return unpackGzTar(stream).then((files) => {
     const data = getPackageJson(files);
     const path = getPiletMainPath(data, files);
     const root = dirname(path);

@@ -96,9 +96,19 @@ export interface PiletMetadataBundle {
 }
 
 /**
+ * The metadata response for a single pilet.
+ */
+export type SinglePiletMetadata = PiletMetadataV0 | PiletMetadataV1;
+
+/**
+ * The metadata response for a multi pilet.
+ */
+export type MultiPiletMetadata = PiletMetadataBundle;
+
+/**
  * Describes the metadata transported by a pilet.
  */
-export type PiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetadataBundle;
+export type PiletMetadata = SinglePiletMetadata | MultiPiletMetadata;
 
 /**
  * Defines the API accessible from pilets.
@@ -154,7 +164,7 @@ export interface EventEmitter {
 /**
  * The pilet app, i.e., the functional exports.
  */
-export interface PiletApp {
+export interface SinglePiletApp {
   /**
    * Integrates the evaluated pilet into the application.
    * @param api The API to access the application.
@@ -168,6 +178,22 @@ export interface PiletApp {
 }
 
 /**
+ * The pilet app, i.e., the functional exports.
+ */
+export interface MultiPiletApp {
+  /**
+   * Integrates the evaluated pilet into the application.
+   * @param api The API to access the application.
+   */
+  setup(apiFactory: PiletApiCreator): void | Promise<void>;
+}
+
+/**
+ * The application's entry point exported by a pilet.
+ */
+export type PiletApp = SinglePiletApp | MultiPiletApp;
+
+/**
  * Defines the exports of a pilet.
  */
 export interface PiletExports {
@@ -175,9 +201,19 @@ export interface PiletExports {
 }
 
 /**
+ * An evaluated single pilet.
+ */
+export type SinglePilet = SinglePiletApp & SinglePiletMetadata;
+
+/**
+ * An evaluated multi pilet.
+ */
+export type MultiPilet = MultiPiletApp & MultiPiletMetadata;
+
+/**
  * An evaluated pilet, i.e., a full pilet: functionality and metadata.
  */
-export type Pilet = PiletApp & PiletMetadata;
+export type Pilet = SinglePilet | MultiPilet;
 
 /**
  * The callback to fetch a JS content from an URL.

@@ -2,7 +2,7 @@ import { Atom, swap } from '@dbeining/react-atom';
 import { createElement, SFC } from 'react';
 import { createDashboardApi } from './create';
 
-const StubComponent: SFC = props => createElement('div', props);
+const StubComponent: SFC = (props) => createElement('div', props);
 StubComponent.displayName = 'StubComponent';
 
 function createMockContainer() {

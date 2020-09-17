@@ -1,5 +1,14 @@
 # Piral Changelog
 
+## 0.12.1 (tbd)
+
+* Added support for bundle script entry (#315)
+* Improved typings for the converter plugins `convert` submodule
+* Fixed `addEventListener` usage for `piral-native`
+* Fixed vulnerable dependency (GHSA-w7rc-rwvf-8q5r)
+* Fixed vulnerable dependency (CVE-2020-7720)
+* Added ability to set and retrieve state when signing in using `piral-oidc` (#318)
+
 ## 0.12.0 (September 9, 2020)
 
 * Documentation cleanup

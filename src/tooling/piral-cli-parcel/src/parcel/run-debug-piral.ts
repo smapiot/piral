@@ -39,7 +39,7 @@ async function run(
 
 let bundler;
 
-process.on('message', async msg => {
+process.on('message', async (msg) => {
   const root = process.cwd();
 
   switch (msg.type) {
@@ -67,7 +67,7 @@ process.on('message', async msg => {
         msg.publicUrl,
         msg.entryFiles,
         msg.logLevel,
-      ).catch(error => {
+      ).catch((error) => {
         process.send({
           type: 'fail',
           error: error?.message,

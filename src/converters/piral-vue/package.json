@@ -23,6 +23,8 @@
   "files": [
     "lib",
     "src",
+    "convert.d.ts",
+    "convert.ts",
     "convert.js"
   ],
   "repository": {
@@ -33,7 +35,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc convert.ts --skipLibCheck --declaration",
     "typedoc": "typedoc --json ../../../docs/types/piral-vue.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
@@ -42,7 +44,7 @@
     "vue": "^2.6.10"
   },
   "peerDependencies": {
-    "piral-core": "^1.0.0",
+    "piral-core": "0.12.x || 1.x",
     "vue": "^2.0.0"
   }
 }

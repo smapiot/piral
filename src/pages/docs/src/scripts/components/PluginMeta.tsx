@@ -44,7 +44,7 @@ export const PluginMeta: React.FC<PluginMetaProps> = ({
       </p>
       <h4>Keywords</h4>
       <ul className="keywords">
-        {keywords.map(keyword => (
+        {keywords.map((keyword) => (
           <li key={keyword}>{keyword}</li>
         ))}
       </ul>
@@ -55,7 +55,7 @@ export const PluginMeta: React.FC<PluginMetaProps> = ({
             <>
               <p>The package comes with the following dependencies:</p>
               <ul className="keywords">
-                {dependencyNames.map(name => (
+                {dependencyNames.map((name) => (
                   <li key={name}>
                     <b>{name}</b>: {dependencies[name]}
                   </li>
@@ -67,7 +67,7 @@ export const PluginMeta: React.FC<PluginMetaProps> = ({
             <>
               <p>The package was developed using the following dependencies:</p>
               <ul className="keywords">
-                {devDependencyNames.map(name => (
+                {devDependencyNames.map((name) => (
                   <li key={name}>
                     <b>{name}</b>: {devDependencies[name]}
                   </li>

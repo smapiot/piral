@@ -15,7 +15,7 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       setRoute(name, comp) {
-        swap(state, s => ({
+        swap(state, (s) => ({
           ...s,
           routes: {
             ...s.routes,

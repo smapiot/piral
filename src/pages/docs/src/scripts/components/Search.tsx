@@ -19,7 +19,9 @@ function useSearch(open: boolean): [string, (value: string) => void, Array<any>]
       document.querySelector<HTMLInputElement>('#searchInput').focus();
 
       if (!loading.current) {
-        loading.current = import('../../codegen/search.codegen').then(docs => index.import(docs, { serialize: false }));
+        loading.current = import('../../codegen/search.codegen').then((docs) =>
+          index.import(docs, { serialize: false }),
+        );
       }
     }
   }, [open, input]);
@@ -55,7 +57,7 @@ export const Search: React.FC = () => {
           <input
             value={input}
             id="searchInput"
-            onChange={evt => setInput(evt.currentTarget.value)}
+            onChange={(evt) => setInput(evt.currentTarget.value)}
             onFocus={openSearch}
             aria-label="Search"
             placeholder="Search"
@@ -91,7 +93,7 @@ export const Search: React.FC = () => {
                 {!input.length ? 'Type to start searching' : `${items.length} matching documents`}
               </div>
               <ol className="search-result-list">
-                {items.map(item => (
+                {items.map((item) => (
                   <li key={item.id} className="search-result-list-item">
                     <Link to={item.link} onClick={closeSearch}>
                       <div>

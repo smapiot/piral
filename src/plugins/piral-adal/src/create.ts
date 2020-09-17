@@ -6,7 +6,7 @@ import { PiralAdalApi } from './types';
  * Creates new Pilet API extensions for the integration of MSAL.
  */
 export function createAdalApi(client: AdalClient): PiralPlugin<PiralAdalApi> {
-  return context => {
+  return (context) => {
     context.on('before-fetch', client.extendHeaders);
 
     return {

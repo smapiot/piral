@@ -9,14 +9,15 @@ export class WebAssemblyConfigLoader {
     const configFiles = await Promise.all(
       (bootConfigResult.bootConfig.config || [])
         .filter(
-          name => name === 'appsettings.json' || name === `appsettings.${bootConfigResult.applicationEnvironment}.json`,
+          (name) =>
+            name === 'appsettings.json' || name === `appsettings.${bootConfigResult.applicationEnvironment}.json`,
         )
-        .map(async name => ({ name, content: await getConfigBytes(name) })),
+        .map(async (name) => ({ name, content: await getConfigBytes(name) })),
     );
 
     window['Blazor']._internal.getConfig = (dotNetFileName: System_String): System_Object | undefined => {
       const fileName = BINDING.conv_string(dotNetFileName);
-      const resolvedFile = configFiles.find(f => f.name === fileName);
+      const resolvedFile = configFiles.find((f) => f.name === fileName);
       return resolvedFile ? BINDING.js_typed_array_to_array(resolvedFile.content) : undefined;
     };
 

@@ -21,7 +21,7 @@ export function createNgjsApi(config: NgjsConfig = {}): PiralPlugin<PiletNgjsApi
   const { rootName } = config;
   const NgjsExtension = createExtension(rootName);
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.ngjs = ({ name, root }) => convert(name, root);
 

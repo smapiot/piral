@@ -1,23 +1,33 @@
 import type { PiletApi, ExtensionSlotProps } from 'piral-core';
 import type { RiotComponentShell } from 'riot';
+import type { TemplateChunk } from '@riotjs/dom-bindings';
 
-export function createExtension(api: PiletApi, extensionName = 'riot-extension'): RiotComponentShell<ExtensionSlotProps> {
+export function createExtension(
+  api: PiletApi,
+  extensionName = 'riot-extension',
+): RiotComponentShell<ExtensionSlotProps> {
   return {
     name: extensionName,
     template() {
-      return {
+      const templateChunk: TemplateChunk = {
         mount(element, scope) {
           api.renderHtmlExtension(element, scope.props);
+          return templateChunk;
         },
-        update() {},
-        unmount() {},
+        update() {
+          return templateChunk;
+        },
+        unmount() {
+          return templateChunk;
+        },
         createDOM() {
-          return this;
+          return templateChunk;
         },
         clone() {
-          return this;
+          return templateChunk;
         },
       };
+      return templateChunk;
     },
-  }
+  };
 }

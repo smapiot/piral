@@ -19,7 +19,7 @@ const logger = (() => {
 
 // unfortunately, Parcel's support for verbose logging on Windows is broken
 if (isWindows) {
-  logger.verbose = function(message: string) {
+  logger.verbose = function (message: string) {
     if (this.logLevel < 4) {
       return;
     }

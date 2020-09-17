@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Pilet } from 'piral-core';
+import { SinglePilet } from 'piral-core';
 
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorPilet: Pilet = {
+export const ConnectorPilet: SinglePilet = {
   content: '',
   name: 'Connector Module',
   version: '1.0.0',
@@ -14,7 +14,7 @@ export const ConnectorPilet: Pilet = {
       () => new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 5000)),
     );
 
-    const DataView = connect(props => (
+    const DataView = connect((props) => (
       <ul>
         {props.data.map((item, i) => (
           <li key={i}>{item}</li>

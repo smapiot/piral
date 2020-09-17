@@ -50,12 +50,16 @@
     "jest": "^25.0.0",
     "jest-cli": "^25.0.0",
     "lerna": "^3.10.7",
-    "prettier": "^1.16.4",
+    "prettier": "^2.1.1",
     "ts-jest": "^25.0.0",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "^0.17.0",
-    "typescript": "^3.5.2"
+    "typescript": "^4.0.2"
+  },
+  "resolutions": {
+    "node-fetch": "2.6.1",
+    "node-forge": "0.10.0"
   }
 }

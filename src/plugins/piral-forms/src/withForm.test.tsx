@@ -84,7 +84,7 @@ describe('withForm Module', () => {
     const usedForm = jest.fn(() => ({
       submit() {},
     }));
-    const usePromise = jest.fn(fn => {
+    const usePromise = jest.fn((fn) => {
       fn();
       return {
         loading: false,
@@ -106,7 +106,7 @@ describe('withForm Module', () => {
     const usedForm = jest.fn(() => ({
       submit() {},
     }));
-    const usePromise = jest.fn(fn => {
+    const usePromise = jest.fn((fn) => {
       const data = fn();
       return {
         loading: false,

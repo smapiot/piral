@@ -20,7 +20,7 @@ export interface React15Config {
 export function createReact15Api(config: React15Config = {}): PiralPlugin<PiletReact15Api> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.react15 = ({ root }) => convert(root);
 

@@ -11,7 +11,7 @@ export const ObjectLiteralRenderer: React.FC<ObjectLiteralRendererProps> = ({ no
   <Details color="red" kind={node.kindString} description={node.comment} title={node.name}>
     <ul className="interface-map">
       {node.children.map(
-        child =>
+        (child) =>
           child.kind === TiKind.Variable && (
             <li key={child.id}>
               <code>

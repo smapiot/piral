@@ -11,7 +11,7 @@ export const debugPiral: DebugPiralBundlerDefinition = {
   async run(args) {
     const bundler = await callDynamic('debug-piral', args);
     return bundler;
-  }
+  },
 };
 
 export const watchPiral: WatchPiralBundlerDefinition = {

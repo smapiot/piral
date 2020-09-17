@@ -59,10 +59,10 @@ function getTiles(items: Array<InitialTile>, defaultPreferences: TilePreferences
 export function createDashboardApi(config: DashboardConfig = {}): PiralPlugin<PiletDashboardApi> {
   const { tiles = [], defaultPreferences = {} } = config;
 
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       components: {
         DashboardTile: DefaultTile,

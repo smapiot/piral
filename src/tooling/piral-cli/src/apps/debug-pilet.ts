@@ -117,7 +117,7 @@ function checkSanity(pilets: Array<AppInfo>) {
       return log('piletMultiDebugAppShellVersions_0302', previous.appVersion, current.appVersion);
     } else if (previous.externals.length !== current.externals.length) {
       return log('piletMultiDebugExternalsDifferent_0303', previous.externals, current.externals);
-    } else if (previous.externals.some(m => !current.externals.includes(m))) {
+    } else if (previous.externals.some((m) => !current.externals.includes(m))) {
       return log('piletMultiDebugExternalsDifferent_0303', previous.externals, current.externals);
     }
   }
@@ -154,7 +154,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   const pilets = await Promise.all(
-    allEntries.map(async entry => {
+    allEntries.map(async (entry) => {
       const entryFile = join(baseDir, entry);
       const targetDir = dirname(entryFile);
       const entryModule = await findEntryModule(entryFile, targetDir);
@@ -240,12 +240,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   krasServer.on(
     'open',
     notifyServerOnline(
-      pilets.map(p => p.bundler),
+      pilets.map((p) => p.bundler),
       krasConfig.api,
     ),
   );
 
   await krasServer.start();
   openBrowser(open, port);
-  await new Promise(resolve => krasServer.on('close', resolve));
+  await new Promise((resolve) => krasServer.on('close', resolve));
 }

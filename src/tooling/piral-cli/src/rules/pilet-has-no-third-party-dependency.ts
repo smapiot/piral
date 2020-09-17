@@ -5,7 +5,7 @@ export type Options = 'ignore' | 'active';
 /**
  * Checks that no other (third-party) dependencies are bundled in.
  */
-export default function(context: PiletRuleContext, options: Options = 'ignore') {
+export default function (context: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
     const dependencies = Object.keys(context.dependencies);
 

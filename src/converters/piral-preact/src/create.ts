@@ -20,7 +20,7 @@ export interface PreactConfig {
 export function createPreactApi(config: PreactConfig = {}): PiralPlugin<PiletPreactApi> {
   const { rootName } = config;
 
-  return context => {
+  return (context) => {
     const convert = createConverter();
     context.converters.preact = ({ root }) => convert(root);
 

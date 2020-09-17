@@ -1841,7 +1841,7 @@ export function failedToOpenBrowser_0070(error: string): QuickMessage {
  * ```
  */
 export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<string>): QuickMessage {
-  const s = schemas.map(m => `"${m}"`).join(', ');
+  const s = schemas.map((m) => `"${m}"`).join(', ');
   return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Available schemas: ${s}.`];
 }
 
@@ -1874,7 +1874,7 @@ export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<
  * ```
  */
 export function bundlerMissing_0072(bundlerName: string, installed: Array<string>): QuickMessage {
-  const s = installed.map(m => `"${m}"`).join(', ');
+  const s = installed.map((m) => `"${m}"`).join(', ');
   return [LogLevels.error, '0072', `Cannot find bundler "${bundlerName}". Installed bundlers: ${s}.`];
 }
 

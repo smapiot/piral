@@ -139,7 +139,7 @@ function addScriptTagsToDocument(resourceLoader: WebAssemblyResourceLoader) {
   // not a 'fetch') and isn't controllable by the developer (so they can't put in their own cache-busting
   // querystring). So, to find out the exact URL we have to search the boot manifest.
   const dotnetJsResourceName = Object.keys(resourceLoader.bootConfig.resources.runtime).filter(
-    n => n.startsWith('dotnet.') && n.endsWith('.js'),
+    (n) => n.startsWith('dotnet.') && n.endsWith('.js'),
   )[0];
   const scriptElem = document.createElement('script');
   scriptElem.src = `_framework/wasm/${dotnetJsResourceName}`;
@@ -181,9 +181,9 @@ function createEmscriptenModuleInstance(
   const module = {} as typeof Module;
   const suppressMessages = ['DEBUGGING ENABLED'];
 
-  module.print = line => suppressMessages.indexOf(line) < 0 && console.log(line);
+  module.print = (line) => suppressMessages.indexOf(line) < 0 && console.log(line);
 
-  module.printErr = line => {
+  module.printErr = (line) => {
     console.error(line);
   };
   module.preRun = [];
@@ -194,9 +194,12 @@ function createEmscriptenModuleInstance(
   const dotnetWasmResourceName = 'dotnet.wasm';
   const assembliesBeingLoaded = resourceLoader.loadResources(
     resources.assembly,
-    filename => `_framework/_bin/${filename}`,
+    (filename) => `_framework/_bin/${filename}`,
   );
-  const pdbsBeingLoaded = resourceLoader.loadResources(resources.pdb || {}, filename => `_framework/_bin/${filename}`);
+  const pdbsBeingLoaded = resourceLoader.loadResources(
+    resources.pdb || {},
+    (filename) => `_framework/_bin/${filename}`,
+  );
   const wasmBeingLoaded = resourceLoader.loadResource(
     /* name */ dotnetWasmResourceName,
     /* url */ `_framework/wasm/${dotnetWasmResourceName}`,
@@ -229,8 +232,8 @@ function createEmscriptenModuleInstance(
     // Fetch the assemblies and PDBs in the background, telling Mono to wait until they are loaded
     // Mono requires the assembly filenames to have a '.dll' extension, so supply such names regardless
     // of the extensions in the URLs. This allows loading assemblies with arbitrary filenames.
-    assembliesBeingLoaded.forEach(r => addResourceAsAssembly(r, changeExtension(r.name, '.dll')));
-    pdbsBeingLoaded.forEach(r => addResourceAsAssembly(r, r.name));
+    assembliesBeingLoaded.forEach((r) => addResourceAsAssembly(r, changeExtension(r.name, '.dll')));
+    pdbsBeingLoaded.forEach((r) => addResourceAsAssembly(r, r.name));
 
     // Wire-up callbacks for satellite assemblies. Blazor will call these as part of the application
     // startup sequence to load satellite assemblies for the application's culture.
@@ -243,16 +246,16 @@ function createEmscriptenModuleInstance(
       if (satelliteResources) {
         const resourcePromises = Promise.all(
           culturesToLoad
-            .filter(culture => satelliteResources.hasOwnProperty(culture))
-            .map(culture =>
-              resourceLoader.loadResources(satelliteResources[culture], fileName => `_framework/_bin/${fileName}`),
+            .filter((culture) => satelliteResources.hasOwnProperty(culture))
+            .map((culture) =>
+              resourceLoader.loadResources(satelliteResources[culture], (fileName) => `_framework/_bin/${fileName}`),
             )
             .reduce((previous, next) => previous.concat(next), new Array<LoadingResource>())
-            .map(async resource => (await resource.response).arrayBuffer()),
+            .map(async (resource) => (await resource.response).arrayBuffer()),
         );
 
         return BINDING.js_to_mono_obj(
-          resourcePromises.then(resourcesToLoad => {
+          resourcePromises.then((resourcesToLoad) => {
             if (resourcesToLoad.length) {
               window['Blazor']._internal.readSatelliteAssemblies = () => {
                 const array = BINDING.mono_obj_array_new(resourcesToLoad.length);
@@ -297,7 +300,7 @@ function createEmscriptenModuleInstance(
 
     try {
       // Wait for the data to be loaded and verified
-      const dataBuffer = await dependency.response.then(r => r.arrayBuffer());
+      const dataBuffer = await dependency.response.then((r) => r.arrayBuffer());
 
       // Load it into the Mono runtime
       const data = new Uint8Array(dataBuffer);
@@ -400,7 +403,7 @@ async function compileWasmModule(wasmResource: LoadingResource, imports: any): P
 
   // If that's not available or fails (e.g., due to incorrect content-type header),
   // fall back to ArrayBuffer instantiation
-  const arrayBuffer = await wasmResource.response.then(r => r.arrayBuffer());
+  const arrayBuffer = await wasmResource.response.then((r) => r.arrayBuffer());
   const arrayBufferResult = await WebAssembly.instantiate(arrayBuffer, imports);
   return arrayBufferResult.instance;
 }

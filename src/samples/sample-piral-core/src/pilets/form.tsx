@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageComponentProps, Pilet } from 'piral-core';
+import { PageComponentProps, SinglePilet } from 'piral-core';
 import { FormProps } from 'piral-forms';
 
 interface SampleFormData {
@@ -10,7 +10,7 @@ interface SampleFormData {
 /**
  * Shows a form.
  */
-export const FormPilet: Pilet = {
+export const FormPilet: SinglePilet = {
   content: '',
   name: 'Form Module',
   version: '1.0.0',
@@ -63,7 +63,7 @@ export const FormPilet: Pilet = {
       },
       onSubmit(data) {
         console.log('Submitting simple data ...', data);
-        return new Promise(resolve =>
+        return new Promise((resolve) =>
           setTimeout(() => {
             resolve();
             console.log('Submitted simple data!', data);
@@ -81,7 +81,7 @@ export const FormPilet: Pilet = {
       },
       onSubmit(data) {
         console.log('Submitting async data ...', data);
-        return new Promise(resolve =>
+        return new Promise((resolve) =>
           setTimeout(() => {
             resolve();
             console.log('Submitted async data!', data);
@@ -89,7 +89,7 @@ export const FormPilet: Pilet = {
         );
       },
       loadData(props: PageComponentProps) {
-        return new Promise<SampleFormData>(resolve =>
+        return new Promise<SampleFormData>((resolve) =>
           setTimeout(
             () =>
               resolve({

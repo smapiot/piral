@@ -119,7 +119,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       await copyScaffoldingFiles(
         getPiralPath(root, sourceName),
         root,
-        files.filter(m => typeof m === 'string' || !m.once),
+        files.filter((m) => typeof m === 'string' || !m.once),
       );
     }
 

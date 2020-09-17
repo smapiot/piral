@@ -18,17 +18,17 @@ export interface AuthConfig {
 export function createAuthApi(config: AuthConfig = {}): PiralPlugin<PiralAuthApi> {
   const { user } = config;
 
-  return context => {
+  return (context) => {
     context.defineActions(actions);
 
-    context.dispatch(state => ({
+    context.dispatch((state) => ({
       ...state,
       user,
     }));
 
     return {
       getUser() {
-        return context.readState(state => state.user);
+        return context.readState((state) => state.user);
       },
     };
   };

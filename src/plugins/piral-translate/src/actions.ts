@@ -4,7 +4,7 @@ import { Localizable } from './types';
 export function createActions(localizer: Localizable) {
   return {
     selectLanguage(ctx: GlobalStateContext, selected: string) {
-      ctx.dispatch(state => {
+      ctx.dispatch((state) => {
         localizer.language = selected;
         return {
           ...state,
@@ -35,7 +35,7 @@ export function createActions(localizer: Localizable) {
     getTranslations(ctx: GlobalStateContext, language: string) {
       return {
         global: localizer.messages[language],
-        locals: Object.keys(ctx.apis).map(name => ({
+        locals: Object.keys(ctx.apis).map((name) => ({
           name,
           value: ctx.apis[name].getTranslations()[language],
         })),

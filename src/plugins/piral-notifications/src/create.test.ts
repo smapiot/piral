@@ -26,7 +26,7 @@ describe('Create Notifications API Extensions', () => {
     const api = (createNotificationsApi()(container.context) as any)(container.api);
     const close = api.showNotification('my notification');
     close();
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(container.context.openNotification).toHaveBeenCalled();
     expect(container.context.closeNotification).toHaveBeenCalled();
   });

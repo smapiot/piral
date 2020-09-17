@@ -66,8 +66,8 @@ const instance = createInstance({
   ],
   requestPilets() {
     return fetch('https://feed.piral.cloud/api/v1/pilet/cross-fx')
-      .then(res => res.json())
-      .then(res => res.items);
+      .then((res) => res.json())
+      .then((res) => res.items);
   },
 });
 
