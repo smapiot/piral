@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.12.1 (tbd)
+## 0.12.1 (September 17, 2020)
 
 * Added support for bundle script entry (#315)
 * Improved typings for the converter plugins `convert` submodule
