@@ -6,7 +6,6 @@ import {
   getDependencyResolver,
   getDefaultLoader,
   PiletLoader,
-  setupPilet,
 } from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
 import type {
@@ -70,27 +69,15 @@ export function createPiletOptions({
 
   // if we build the debug version of piral (debug and emulator build)
   if (process.env.DEBUG_PIRAL !== undefined) {
-    // the DEBUG_PIRAL env should contain the Piral CLI compatibility version
-    window['dbg:piral'] = {
-      debug: 'v0',
-      instance: {
-        name: process.env.BUILD_PCKG_NAME,
-        version: process.env.BUILD_PCKG_VERSION,
-        dependencies: process.env.SHARED_DEPENDENCIES,
-        context,
-      },
-      build: {
-        date: process.env.BUILD_TIME_FULL,
-        cli: process.env.PIRAL_CLI_VERSION,
-        compat: process.env.DEBUG_PIRAL,
-      },
-      pilets: {
-        createApi,
-        getDependencies,
-        loadPilet,
-        requestPilets,
-      },
-    };
+    const { installPiralDebug } = require('piral-debug-utils');
+
+    installPiralDebug({
+      context,
+      createApi,
+      getDependencies,
+      loadPilet,
+      requestPilets,
+    });
 
     // we watch the state container for changes
     addChangeHandler(context.state, 'debugging', ({ current, previous }) => {
@@ -120,64 +107,22 @@ export function createPiletOptions({
   }
 
   if (process.env.DEBUG_PILET !== undefined) {
-    // check if pilets should be loaded
-    const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
-    const noPilets = () => Promise.resolve([]);
-    requestPilets = loadPilets ? requestPilets : noPilets;
+    const { withEmulatorPilets } = require('piral-debug-utils');
+
+    requestPilets = withEmulatorPilets(requestPilets, {
+      inject: context.injectPilet,
+      createApi,
+      loadPilet,
+    });
   }
 
   return {
     strategy,
-    getDependencies,
-    dependencies: globalDependencies,
-    pilets: availablePilets,
     loadPilet,
-    fetchPilets() {
-      const promise = requestPilets();
-
-      // if we run against the debug pilet API (emulator build only)
-      if (process.env.DEBUG_PILET !== undefined) {
-        // the window['dbg:pilet-api'] should point to an API address used as a proxy, fall back to '/$pilet-api' if unavailable
-        const piletApi = window['dbg:pilet-api'] || '/$pilet-api';
-        // either take a full URI or make it an absolute path relative to the current origin
-        const initialTarget = /^https?:/.test(piletApi)
-          ? piletApi
-          : `${location.origin}${piletApi[0] === '/' ? '' : '/'}${piletApi}`;
-        const updateTarget = initialTarget.replace('http', 'ws');
-        const ws = new WebSocket(updateTarget);
-        const appendix = fetch(initialTarget)
-          .then((res) => res.json())
-          .then((item) => (Array.isArray(item) ? item : [item]));
-
-        ws.onmessage = ({ data }) => {
-          const hardRefresh = sessionStorage.getItem('dbg:hard-refresh') === 'on';
-
-          if (!hardRefresh) {
-            // standard setting is to just perform an inject
-            const meta = JSON.parse(data);
-            loadPilet(meta).then((pilet) => {
-              try {
-                context.injectPilet(pilet);
-                setupPilet(pilet, createApi);
-              } catch (error) {
-                console.error(error);
-              }
-            });
-          } else {
-            location.reload();
-          }
-        };
-
-        return promise
-          .catch((err) => {
-            console.error(`Requesting the pilets failed. We'll continue loading without pilets (DEBUG only).`, err);
-            return [];
-          })
-          .then((pilets) => appendix.then((debugPilets) => [...pilets, ...debugPilets]));
-      }
-
-      return promise;
-    },
     createApi,
+    getDependencies,
+    pilets: availablePilets,
+    fetchPilets: requestPilets,
+    dependencies: globalDependencies,
   };
 }

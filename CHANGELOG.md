@@ -4,6 +4,7 @@
 
 * Updated `piral-jest-utils` with functionality (#186)
 * Updated support for Blazor 3.2.0 forward in `piral-blazor` (#224)
+* Extracted `piral-debug-utils` to make the debugging helpers more flexible
 
 ## 0.12.1 (September 17, 2020)
 
