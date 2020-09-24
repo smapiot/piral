@@ -12,9 +12,11 @@ export function useMedia<T>(queries: Array<string>, values: Array<T>, defaultVal
   const [value, update] = useState(match);
 
   useEffect(() => {
-    const handler = () => update(match);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+    if (typeof document !== 'undefined') {
+      const handler = () => update(match);
+      window.addEventListener('resize', handler);
+      return () => window.removeEventListener('resize', handler);
+    }
   }, []);
 
   return value;

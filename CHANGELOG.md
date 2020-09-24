@@ -2,7 +2,18 @@
 
 ## 1.0.0 (tbd)
 
+* Updated `piral-jest-utils` with functionality (#186)
+* Updated support for Blazor 3.2.0 forward in `piral-blazor` (#224)
+* Extracted `piral-debug-utils` to make the debugging helpers more flexible
+
+## 0.12.1 (September 17, 2020)
+
 * Added support for bundle script entry (#315)
+* Improved typings for the converter plugins `convert` submodule
+* Fixed `addEventListener` usage for `piral-native`
+* Fixed vulnerable dependency (GHSA-w7rc-rwvf-8q5r)
+* Fixed vulnerable dependency (CVE-2020-7720)
+* Added ability to set and retrieve state when signing in using `piral-oidc` (#318)
 
 ## 0.12.0 (September 9, 2020)
 

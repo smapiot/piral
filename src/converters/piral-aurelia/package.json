@@ -1,6 +1,6 @@
 {
   "name": "piral-aurelia",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "Plugin for integrating Aurelia components in Piral.",
   "keywords": [
     "piral",
@@ -22,6 +22,8 @@
   "files": [
     "lib",
     "src",
+    "convert.d.ts",
+    "convert.ts",
     "convert.js"
   ],
   "repository": {
@@ -32,7 +34,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc convert.ts --skipLibCheck --declaration",
     "typedoc": "typedoc --json ../../../docs/types/piral-aurelia.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
@@ -43,7 +45,7 @@
     "aurelia-pal-browser": "1.8.1",
     "aurelia-templating-binding": "1.5.3",
     "aurelia-templating-resources": "1.12.0",
-    "piral-core": "^0.12.0"
+    "piral-core": "^0.12.1"
   },
   "peerDependencies": {
     "aurelia-event-aggregator": "^1.0.0",

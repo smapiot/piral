@@ -205,7 +205,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = new URL(redirectUri);
       expect(mockSigninSilentCallback).toBeCalledTimes(0);
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(mockSigninSilentCallback).toBeCalledTimes(1);
       expect(mockSigninCallback).toBeCalledTimes(0);
       expect(shouldRender).toBe(false);
@@ -216,7 +216,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = new URL(redirectUri);
       expect(mockSigninCallback).toBeCalledTimes(0);
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(mockSigninSilentCallback).toBeCalledTimes(0);
       expect(mockSigninCallback).toBeCalledTimes(1);
       expect(shouldRender).toBe(false);
@@ -243,7 +243,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = url;
       expect(window.location.href).not.toBe(appUri);
-      const shouldRender = await secondClient.handleAuthentication();
+      const { shouldRender } = await secondClient.handleAuthentication();
       expect(window.location.href).not.toBe(appUri);
       expect(shouldRender).toBe(true);
     });
@@ -252,7 +252,7 @@ describe('Piral-Oidc setup module', () => {
       const url = new URL(appUri);
       //@ts-ignore
       window.location = url;
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(shouldRender).toBe(true);
     });
 
@@ -262,7 +262,7 @@ describe('Piral-Oidc setup module', () => {
       //@ts-ignore
       window.location = url;
       expect(mockSigninRedirect).toBeCalledTimes(0);
-      const shouldRender = await client.handleAuthentication();
+      const { shouldRender } = await client.handleAuthentication();
       expect(mockSigninRedirect).toBeCalledTimes(1);
       expect(shouldRender).toBe(false);
     });

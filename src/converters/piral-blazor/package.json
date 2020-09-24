@@ -1,6 +1,6 @@
 {
   "name": "piral-blazor",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "Plugin for integrating Blazor components in Piral.",
   "keywords": [
     "piral",
@@ -25,6 +25,8 @@
     "infra.codegen",
     "lib",
     "src",
+    "convert.d.ts",
+    "convert.ts",
     "convert.js"
   ],
   "repository": {
@@ -35,7 +37,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc convert.ts --skipLibCheck --declaration",
     "typedoc": "typedoc --json ../../../docs/types/piral-blazor.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
@@ -46,7 +48,7 @@
   },
   "devDependencies": {
     "@types/emscripten": "0.0.34",
-    "piral-core": "^0.12.0"
+    "piral-core": "^0.12.1"
   },
   "peerDependencies": {
     "piral-core": "0.12.x || 1.x"
