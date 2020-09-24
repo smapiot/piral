@@ -13,6 +13,9 @@ module.exports = function() {
   });
 
   const allDocs = readdirSync(generated)
+    .filter(g => {
+      return g.includes('autogen');
+    })
     .map(name => readFileSync(resolve(generated, name), 'utf8'))
     .map(raw => {
       const { source, link, ...meta } = JSON.parse(

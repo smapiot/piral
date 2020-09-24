@@ -1,6 +1,6 @@
 const { generated, getName, getBundlers } = require('./paths');
 const { render } = require('./markdown');
-const { generateStandardPage, generatePage } = require('./pages');
+const { generatePage } = require('./pages');
 const { docRef } = require('./utils');
 const { sep } = require('path');
 
