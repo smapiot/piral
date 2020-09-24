@@ -34,6 +34,7 @@ module.exports = function() {
 
     const content = [
       '`',
+      `<h1><code>${name}</code></h1>`,
       mdValue.substr(mdValue.indexOf('</h1>') + 5),
     ].join('');
 
@@ -46,7 +47,6 @@ module.exports = function() {
 
     const body = `
       <PageContent>
-        <h1>${name}</h1>
         <Markdown content={html} link={link} />
       </PageContent>
     `;
