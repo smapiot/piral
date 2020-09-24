@@ -10,6 +10,7 @@ module.exports = function() {
   const types = require('./gen-types').call(this).join(', ');
   const tools = require('./gen-tools').call(this).join(', ');
   const bundlers = require('./gen-bundlers').call(this).join(', ');
+  const overviews = require('./gen-overview-page').call(this).join(', ');
 
   return `
 const { lazy } = require('react');
@@ -42,6 +43,7 @@ const documentation = [${documentation}];
 const samples = [${samples}];
 const tools = [${tools}];
 const bundlers = [${bundlers}];
+const overviews = [${overviews}];
 const questions = [${questions}];
 const codes = [${codes}];
 const types = [${types}];
@@ -83,7 +85,13 @@ module.exports = {
       links: tools,
     },
   ],
-  plugins: [...plugins],
+  plugins: [
+    {
+      title: 'Overview',
+      links: overviews,
+    },
+    ...plugins
+    ],
   types: [
     {
       title: 'Framework',

@@ -1,5 +1,6 @@
 export * from './ContentPage';
 export * from './Markdown';
+export * from './ImageCard'
 export * from './PageContent';
 export * from './PageContext';
 export * from './PluginMeta';
