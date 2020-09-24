@@ -21,19 +21,19 @@ module.exports = function() {
           .shift()
           .substr(3),
       );
-      if(source === '' || source === undefined || source === null) {
-        return {};
+      if(source) {
+        const content = readFileSync(source, 'utf8');
+
+        return {
+          ...meta,
+          id: link,
+          keywords: getTopKeywords(content),
+          link,
+          content,
+        };
       }
 
-      const content = readFileSync(source, 'utf8');
-
-      return {
-        ...meta,
-        id: link,
-        keywords: getTopKeywords(content),
-        link,
-        content,
-      };
+      return {};
     });
 
   index.add(allDocs);
