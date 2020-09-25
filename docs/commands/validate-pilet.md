@@ -77,6 +77,12 @@ Checks that no other (third-party) dependencies are bundled in.
 
 **Options**: `'ignore' | 'active'`
 
+### `stays-small`
+
+Checks if the main bundle of the pilet is not exceeding a given threshold.
+
+**Options**: `number`
+
 ### `uses-latest-piral`
 
 Checks if the used Piral instance is used at its latest version.
