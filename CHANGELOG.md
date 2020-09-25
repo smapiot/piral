@@ -6,6 +6,7 @@
 * Updated support for Blazor 3.2.0 forward in `piral-blazor` (#224)
 * Extracted `piral-debug-utils` to make the debugging helpers more flexible
 * Added the `pilet-stays-small` validator (#323)
+* Added `piral-cli-webpack/extend-config` helper module
 
 ## 0.12.1 (September 17, 2020)
 
