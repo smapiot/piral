@@ -91,7 +91,7 @@ interface PiletApiResponse {
   items: Array<PiletMetadata>;
 }
 
-interface PiletMetadataV1 {
+interface PiletMetadataV0 {
   name: string;
   version: string;
   content?: string;
@@ -101,7 +101,7 @@ interface PiletMetadataV1 {
   custom?: any;
 }
 
-interface PiletMetadataV2 {
+interface PiletMetadataV1 {
   name: string;
   version: string;
   link: string;
@@ -110,16 +110,16 @@ interface PiletMetadataV2 {
   custom?: any;
 }
 
-type PiletMetadata = PiletMetadataV1 | PiletMetadataV2;
+type PiletMetadata = PiletMetadataV0 | PiletMetadataV1;
 ```
 
 The schema is written and defined using a TypeScript interface (see references).
 
-If you want to embed the JavaScript then you must follow the `PiletMetadataV1` interface and use `content` *instead* of an URL in `link`.
+If you want to embed the JavaScript then you must follow the `PiletMetadataV0` interface and use `content` *instead* of an URL in `link`.
 
-If the `requireRef` field is used then `PiletMetadataV2` will be used implicitly. In this case, the pilet is integrated via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
+If the `requireRef` field is used then `PiletMetadataV1` will be used implicitly. In this case, the pilet is integrated via a `currentScript`-based mechanism. The `requireRef` describes the name of the global require function, which must be pilet specific and should be unique across all pilets. For more information on the `requireRef` have a look at the pilet specification.
 
-In `PiletMetadataV2` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
+In `PiletMetadataV1` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
 
 The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
 
