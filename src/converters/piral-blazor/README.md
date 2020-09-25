@@ -4,7 +4,13 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-blazor` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes a Blazor loader and converter for any component registration, as well as a `fromBlazor` shortcut together with some Blazor component coming in the `Piral.Blazor.Utils` NuGet package.
+The set includes a Blazor (WASM) loader and converter for any component registration, as well as a `fromBlazor` shortcut together with some Blazor component coming in the `Piral.Blazor.Utils` NuGet package.
+
+::: warning: Only for Blazor WASM
+The Blazor integration is for the client-side framework Blazor, also known as Blazor WASM.
+
+If you want to use Blazor Server we recommend using one of the ways of including a server-side rendered application as a pilet. More infos can be found at [in our migration tutorial for SSR applications](https://docs.piral.io/guidelines/tutorials/19-migrate-ssr).
+:::
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
@@ -12,8 +18,7 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 As Blazor is quite a special technology (since its based on WebAssembly) there are some very special things to follow for integration. The result, however, could be worth it. As Piral gives you here a truly unique and wonderful way of building your application - modular, distributed, and with the fastest possible Blazor startup time!
 
-**Important**:
-We recommend building pilets for `piral-blazor` exclusively with the official template.
+**Important**: We recommend building pilets for `piral-blazor` exclusively with the official template.
 
 The template can be installed using the `dotnet` CLI:
 
@@ -51,8 +56,23 @@ Exposing components looks like:
         counter++;
     }
 }
-
 ```
+
+## Architecture
+
+Blazor with Piral works from two sides. We have the app shell's side and the side of the microfrontends. This package allows to connect both sides, by placing a set of shared functionality in the app shell.
+
+![Architecture Diagram](https://raw.githubusercontent.com/smapiot/piral/documentation/docs/diagrams/blazor-architecture.png)
+
+The diagram has the following pieces:
+
+1. Your app shell using `piral`, which needs to reference the `piral-blazor` plugin. Effectively, this will download and use the `Piral.Blazor.Core` NuGet package at build-time to include the common libraries.
+2. The TypeScript file in your Blazor pilets. That file will export the `setup` function to define which Blazor components to register / use in your app shell.
+3. The Blazor code in your Blazor pilets using the shared library `Piral.Blazor.Utils` for some convenience functions. This code will define all the Blazor components that can be registered / used in the pilet.
+
+Naturally, you can add other dependencies to your Blazor pilet, too. These can be other npm packages for extending the JS part. Usually, however, you will add more NuGet packages to enhance your Blazor code.
+
+## API
 
 The following functions are brought to the Pilet API.
 
