@@ -94,6 +94,13 @@ Sets the type of the source to use for publishing.
 - Choices: `"local"`, `"remote"`, `"npm"`
 - Default: `"local"`
 
+### `--fields`
+
+Sets additional fields to be included in the feed service request.
+
+- Type: `options`
+- Default: `{}`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

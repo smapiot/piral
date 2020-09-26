@@ -38,6 +38,8 @@ The endpoint needs to accept a `POST` request using basic authentication with an
 
 The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tarball (i.e., an NPM package). The content detail of this file is explained in the Pilet Specification (see references).
 
+Other entries besides `file` may be used, too. These can be determined by implementation dependent requirements. The `piral-cli` supports filling these fields via the `--fields[field]` flag, followed by a value, e.g., `--fields.tag next`.
+
 **Request**
 
 Consider the following example:

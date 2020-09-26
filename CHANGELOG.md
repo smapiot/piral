@@ -7,6 +7,7 @@
 * Extracted `piral-debug-utils` to make the debugging helpers more flexible
 * Added the `pilet-stays-small` validator (#323)
 * Added `piral-cli-webpack/extend-config` helper module
+* Added `--fields` options to the `pilet publish` command
 
 ## 0.12.1 (September 17, 2020)
 
