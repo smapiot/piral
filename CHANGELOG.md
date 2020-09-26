@@ -6,6 +6,7 @@
 * Added the `pilet-stays-small` validator (#323)
 * Added `piral-cli-webpack/extend-config` helper module
 * Added `--fields` options to the `pilet publish` command
+* Added `validators` to the *.piralrc* configuration
 
 ## 0.12.1 (September 17, 2020)
 

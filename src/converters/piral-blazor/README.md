@@ -72,6 +72,8 @@ The diagram has the following pieces:
 
 Naturally, you can add other dependencies to your Blazor pilet, too. These can be other npm packages for extending the JS part. Usually, however, you will add more NuGet packages to enhance your Blazor code.
 
+This [Munich .NET Meetup video recording](https://www.youtube.com/watch?v=IGVQoCzCtR4) gives you a lot of details on the used architecture.
+
 ## API
 
 The following functions are brought to the Pilet API.

@@ -1,7 +1,7 @@
-import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules } from '../common';
+import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules, config } from '../common';
 import { setLogLevel, progress, log, checkCliCompatibility } from '../common';
 import { getPiralRules } from '../rules';
-import { LogLevels } from '../types';
+import { LogLevels, PiralRuleContext } from '../types';
 
 export interface ValidatPiralOptions {
   entry?: string;
@@ -17,6 +17,7 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
   const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
+
   const rules = await getPiralRules();
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { root, dependencies, ignored: _, ...info } = await retrievePiletsInfo(entryFiles);
@@ -25,12 +26,12 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
 
   await checkCliCompatibility(root);
 
-  await runRules(rules, {
+  const context: PiralRuleContext = {
     error(message) {
       errors.push(log('generalError_0002', message));
     },
     warning(message) {
-      warnings.push(log('generalVerbose_0004', message));
+      warnings.push(log('generalWarning_0001', message));
     },
     logLevel,
     entry: entryFiles,
@@ -39,7 +40,9 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
     peerDependencies: dependencies.peer,
     root,
     info,
-  });
+  };
+
+  await runRules(rules, context, config.validators);
 
   ruleSummary(errors, warnings);
 }

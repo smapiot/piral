@@ -38,6 +38,9 @@ The additional fields for a Piral instance package are as follows:
     },
     "devDependencies": {
       "prettier": "^1.16.4"
+    },
+    "validators": {
+      "stays-small": -30
     }
   }
 }
@@ -74,6 +77,8 @@ The determined `scripts` provide an easy way to extend the scripts section of th
 **Remark**: The difference between the `devDependencies` (format like in the *package.json* - names with semver constraints) and the `externals` (just names, no version constraints) is explained fairly simple: every name mentioned in `externals` needs to be also present in the provided Piral instance (i.e., needs to occur in `dependencies` with a semver constraint), however, the `devDependencies` for a pilet do not need to be present in the Piral instance at all - thus specifying the semver constraint is necessary.
 
 In addition to the standard specification using a string for the version, the dependencies listed in the `devDependencies` can also be marked as `true`. Such a `devDependencies` entry will then use the version of the dependency as specified in either the `dependencies` or `devDependencies` of the Piral instance. If no such entry can be found, it will fall back to `"latest"`.
+
+The `validators` field is used to properly assert pilets. There are many validators included in `piral-cli`. Additionally, new validators can be added via CLI plugins. For options on the given `validators` see the `pilet validate` command.
 
 ## Pilets - Package Definition
 

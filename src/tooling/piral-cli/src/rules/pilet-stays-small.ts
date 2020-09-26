@@ -44,8 +44,17 @@ function getFileSizeInKB(path: string) {
 
 /**
  * Checks if the main bundle of the pilet is not exceeding a given threshold.
+ * The pilet must have been built beforehand for this validation to be conclusive.
+ *
+ * Negative values yield a warning if the absolute size in kB is exceeded.
+ *
+ * Positive values yield an error if the absolute size in kB is exceeded.
+ *
+ * A value of 0 turns this validation off.
+ *
+ * By default, a pilet's main bundle exceeding 50 kB will result in a warning.
  */
-export default async function (context: PiletRuleContext, options: Options = 50) {
+export default async function (context: PiletRuleContext, options: Options = -50) {
   if (options !== 0 && typeof options === 'number') {
     const maxSize = Math.abs(options);
     const { main } = context.data.appPackage;
