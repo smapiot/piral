@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.12.2 (tbd)
+## 0.12.2 (September 28, 2020)
 
 * Extracted `piral-debug-utils` to make the debugging helpers more flexible
 * Added the `pilet-stays-small` validator (#323)
