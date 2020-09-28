@@ -489,6 +489,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('from', fromKeys)
         .describe('from', 'Sets the type of the source to use for publishing.')
         .default('from', apps.publishPiletDefaults.from)
+        .option('fields', undefined)
+        .describe('fields', 'Sets additional fields to be included in the feed service request.')
+        .default('fields', apps.publishPiletDefaults.fields)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
@@ -504,6 +507,7 @@ const allCommands: Array<ToolCommand<any>> = [
         fresh: args.fresh as boolean,
         from: args.from as PiletPublishSource,
         schemaVersion: args.schema as PiletSchemaVersion,
+        fields: args.fields as Record<string, string>,
       });
     },
   },

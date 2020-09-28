@@ -52,10 +52,20 @@ export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>
     });
 }
 
-export function postFile(target: string, key: string, file: Buffer, ca?: Buffer): Promise<object | boolean> {
+export function postFile(
+  target: string,
+  key: string,
+  file: Buffer,
+  fields: Record<string, string> = {},
+  ca?: Buffer,
+): Promise<object | boolean> {
   const form = new FormData();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
+
+  Object.keys(fields).forEach(key => form.append(key, fields[key]));
+
   form.append('file', file, 'pilet.tgz');
+
   return axios.default
     .post(target, form, {
       headers: {
@@ -78,10 +88,12 @@ export function postFile(target: string, key: string, file: Buffer, ca?: Buffer)
         } else if (error.isAxiosError) {
           // axios initiated error: try to parse message from error object
           let errorMessage: string = error.errno || 'Unknown Axios Error';
+
           if (typeof error.toJSON === 'function') {
             const errorObj: { message?: string } = error.toJSON();
             errorMessage = errorObj?.message ?? errorMessage;
           }
+
           log('failedHttpPost_0065', errorMessage);
         } else if (error.request) {
           // The request was made but no response was received

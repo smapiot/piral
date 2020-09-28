@@ -21,7 +21,8 @@
   },
   "files": [
     "lib",
-    "src"
+    "src",
+    "extend-config.js"
   ],
   "funding": {
     "type": "github",

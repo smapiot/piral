@@ -9,6 +9,7 @@ export interface PiralCliConfig {
   npmClient?: NpmClientType;
   bundler?: string;
   piletApi?: string;
+  validators?: Record<string, any>;
 }
 
 export const config: PiralCliConfig = rc('piral', {
@@ -43,4 +44,8 @@ export const config: PiralCliConfig = rc('piral', {
    * Selects the default pilet API path to use.
    */
   piletApi: '/$pilet-api',
+  /**
+   * Sets the validators configuration for a Piral instance.
+   */
+  validators: {},
 });

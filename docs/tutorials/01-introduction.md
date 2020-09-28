@@ -45,7 +45,9 @@ The diagram above illustrates the setup and process for developing with Piral. T
 ::: tip: Piral without a Feed Service
 Strictly speaking, a feed service is not necessary. You could use anything from a hardcoded list to a dynamically updated JSON file for getting to know where your pilets are.
 
-Nevertheless, since we offer already a powerful feed service that is free for usual development workloads you can make use of a dynamic pilet feed right away.
+Ultimately, you could even embed pilets directly, or reference them without going to a feed service at all. While we don't agree that this makes sense for most users, it could be a great way to get started.
+
+Nevertheless, since we offer already a powerful [feed service](https://www.piral.cloud) that is free for usual development workloads you can make use of a dynamic pilet feed right away. If you need to run your own feed service then have a look at our [sample implementation using Node.js](https://github.com/smapiot/sample-pilet-service).
 :::
 
 Let's get started with the first tutorial and enter the world of Piral!

@@ -1,12 +1,20 @@
 # Piral Changelog
 
+## 0.12.2 (tbd)
+
+* Extracted `piral-debug-utils` to make the debugging helpers more flexible
+* Added the `pilet-stays-small` validator (#323)
+* Added `piral-cli-webpack/extend-config` helper module
+* Added `--fields` options to the `pilet publish` command
+* Added `validators` to the *.piralrc* configuration
+
 ## 0.12.1 (September 17, 2020)
 
-* Added support for bundle script entry (#315)
 * Improved typings for the converter plugins `convert` submodule
 * Fixed `addEventListener` usage for `piral-native`
 * Fixed vulnerable dependency (GHSA-w7rc-rwvf-8q5r)
 * Fixed vulnerable dependency (CVE-2020-7720)
+* Added support for bundle script entry (#315)
 * Added ability to set and retrieve state when signing in using `piral-oidc` (#318)
 
 ## 0.12.0 (September 9, 2020)
