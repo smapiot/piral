@@ -155,6 +155,8 @@ This will automatically download and include the necessary binary files for prov
 
 By default, the latest version of the `Piral.Blazor.Core` NuGet package is downloaded. To change this set the `PIRAL_BLAZOR_VERSION` environment variable to the desired version.
 
+Alternatively, you can also use a local version of the `Piral.Blazor.Core` NuGet package. For this, set the `PIRAL_BLAZOR_LOCAL_NUPKG` environment variable to the (absolute) path of the NuGet package.
+
 :::
 
 ## License
