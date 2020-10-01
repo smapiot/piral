@@ -58,18 +58,21 @@ module.exports = function() {
   const displayName = 'All Plugins';
 
   const head = `
-    import { ImageCard } from '../../scripts/components';
+    import { ImageCard, PageContent } from '../../scripts/components';
   `;
 
   const body = `
-    <>
+      <PageContent>
+        <div className="plugin-info">
+          <h1>Plugins Overview</h1>
+        </div>
       ${fragments.map(
         fragment => `
-          <h2 className="plugin">${fragment.category} Plugins</h2>
+          <h2 id="${fragment.category.toLowerCase()}" className="plugin">${fragment.category} Plugins</h2>
           <div className="boxes title-cards">${fragment.children.join('')}</div>
         `,
       ).join('')}
-    </>
+    </PageContent>
   `;
 
   const rendered = generatePage(pluginName, { link: route }, pluginName, head, body, route, displayName);
