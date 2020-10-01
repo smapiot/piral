@@ -137,6 +137,12 @@ function getCommandData(retrieve) {
         values: choices.map(printValue),
       }));
     },
+    option(name) {
+      return this.swap(name, flag => ({
+        ...flag,
+        type: 'options',
+      }));
+    },
     string(name) {
       return this.swap(name, flag => ({
         ...flag,

@@ -26,6 +26,7 @@ export interface PublishPiletOptions {
   cert?: string;
   schemaVersion?: PiletSchemaVersion;
   from?: PiletPublishSource;
+  fields?: Record<string, string>;
 }
 
 export const publishPiletDefaults: PublishPiletOptions = {
@@ -37,6 +38,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
   logLevel: LogLevels.info,
   schemaVersion: 'v1',
   from: 'local',
+  fields: {},
 };
 
 async function getFiles(
@@ -90,6 +92,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     from = publishPiletDefaults.from,
     schemaVersion = publishPiletDefaults.schemaVersion,
     cert = config.cert ?? publishPiletDefaults.cert,
+    fields = publishPiletDefaults.fields,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -126,7 +129,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
     if (content) {
       progress(`Publishing "%s" ...`, file, url);
-      const result = await postFile(url, apiKey, content, ca);
+      const result = await postFile(url, apiKey, content, fields, ca);
 
       if (result) {
         successfulUploads.push(file);

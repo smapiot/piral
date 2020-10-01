@@ -77,6 +77,12 @@ Checks that no other (third-party) dependencies are bundled in.
 
 **Options**: `'ignore' | 'active'`
 
+### `stays-small`
+
+Checks if the main bundle of the pilet is not exceeding a given threshold. The pilet must have been built beforehand for this validation to be conclusive. Negative values yield a warning if the absolute size in kB is exceeded. Positive values yield an error if the absolute size in kB is exceeded. A value of 0 turns this validation off. By default, a pilet's main bundle exceeding 50 kB will result in a warning.
+
+**Options**: `number`
+
 ### `uses-latest-piral`
 
 Checks if the used Piral instance is used at its latest version.

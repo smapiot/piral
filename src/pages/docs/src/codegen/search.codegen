@@ -21,15 +21,19 @@ module.exports = function() {
           .shift()
           .substr(3),
       );
-      const content = readFileSync(source, 'utf8');
+      if(source) {
+        const content = readFileSync(source, 'utf8');
 
-      return {
-        ...meta,
-        id: link,
-        keywords: getTopKeywords(content),
-        link,
-        content,
-      };
+        return {
+          ...meta,
+          id: link,
+          keywords: getTopKeywords(content),
+          link,
+          content,
+        };
+      }
+
+      return {};
     });
 
   index.add(allDocs);

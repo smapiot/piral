@@ -23,6 +23,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
+
   const rules = await getPiletRules();
   const entryFile = join(baseDir, entry);
   const target = dirname(entryFile);
@@ -43,7 +44,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
       errors.push(log('generalError_0002', message));
     },
     warning(message) {
-      warnings.push(log('generalVerbose_0004', message));
+      warnings.push(log('generalWarning_0001', message));
     },
     logLevel,
     entry: entryFile,
@@ -55,5 +56,6 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   };
 
   await runRules(rules, context, validators);
+
   ruleSummary(errors, warnings);
 }
