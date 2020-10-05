@@ -47,6 +47,11 @@ export interface DebugPiralOptions {
   hmr?: boolean;
 
   /**
+   * Sets the bundler to use for building, if any specific.
+   */
+  bundlerName?: string;
+
+  /**
    * States if the node modules should be included for target transpilation
    */
   optimizeModules?: boolean;
@@ -79,6 +84,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
     _ = {},
+    bundlerName,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -108,18 +114,21 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
-  const bundler = await callPiralDebug({
-    root,
-    piral: name,
-    optimizeModules,
-    hmr,
-    externals,
-    publicUrl,
-    entryFiles,
-    logLevel,
-    ignored,
-    _,
-  });
+  const bundler = await callPiralDebug(
+    {
+      root,
+      piral: name,
+      optimizeModules,
+      hmr,
+      externals,
+      publicUrl,
+      entryFiles,
+      logLevel,
+      ignored,
+      _,
+    },
+    bundlerName,
+  );
 
   const injectorConfig = {
     active: true,

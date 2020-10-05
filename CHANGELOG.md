@@ -4,6 +4,7 @@
 
 * Updated support for Blazor 3.2.0 forward in `piral-blazor` (#224)
 * Improved the check on `pilet update` to consider `dependencies` (#327)
+* Added `--bundler` flag for switching the bundler (#328)
 
 ## 0.12.2 (September 28, 2020)
 

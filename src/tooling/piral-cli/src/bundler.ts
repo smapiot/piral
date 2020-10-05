@@ -1,3 +1,4 @@
+import { availableBundlers } from './helpers';
 import {
   installPackage,
   cliVersion,
@@ -87,6 +88,10 @@ async function prepareModules(args: BaseBundleParameters) {
 
 export function setBundler(bundler: QualifiedBundler) {
   bundlers.push(bundler);
+
+  if (!availableBundlers.includes(bundler.name)) {
+    availableBundlers.push(bundler.name);
+  }
 }
 
 export async function callPiralDebug(args: DebugPiralParameters, bundlerName?: string): Promise<Bundler> {

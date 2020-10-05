@@ -82,6 +82,11 @@ export interface BuildPiralOptions {
   sourceMaps?: boolean;
 
   /**
+   * Sets the bundler to use for building, if any specific.
+   */
+  bundlerName?: string;
+
+  /**
    * Appends a hash to the side-bundle files.
    */
   contentHash?: boolean;
@@ -135,6 +140,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     type = buildPiralDefaults.type,
     optimizeModules = buildPiralDefaults.optimizeModules,
     _ = {},
+    bundlerName,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -157,23 +163,26 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(join(dest.outDir, emulatorName));
 
     logInfo(`Bundle ${emulatorName} ...`);
-    const { dir: outDir, name: outFile } = await callPiralBuild({
-      root,
-      piral: name,
-      emulator: true,
-      optimizeModules,
-      sourceMaps,
-      contentHash,
-      minify: false,
-      externals,
-      publicUrl,
-      outFile: dest.outFile,
-      outDir: join(dest.outDir, emulatorName, 'app'),
-      entryFiles,
-      logLevel,
-      ignored,
-      _,
-    });
+    const { dir: outDir, name: outFile } = await callPiralBuild(
+      {
+        root,
+        piral: name,
+        emulator: true,
+        optimizeModules,
+        sourceMaps,
+        contentHash,
+        minify: false,
+        externals,
+        publicUrl,
+        outFile: dest.outFile,
+        outDir: join(dest.outDir, emulatorName, 'app'),
+        entryFiles,
+        logLevel,
+        ignored,
+        _,
+      },
+      bundlerName,
+    );
 
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);
@@ -192,23 +201,26 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(join(dest.outDir, releaseName));
 
     logInfo(`Bundle ${releaseName} ...`);
-    const { dir: outDir } = await callPiralBuild({
-      root,
-      piral: name,
-      emulator: false,
-      optimizeModules,
-      sourceMaps,
-      contentHash,
-      minify,
-      externals,
-      publicUrl,
-      outFile: dest.outFile,
-      outDir: join(dest.outDir, releaseName),
-      entryFiles,
-      logLevel,
-      ignored,
-      _,
-    });
+    const { dir: outDir } = await callPiralBuild(
+      {
+        root,
+        piral: name,
+        emulator: false,
+        optimizeModules,
+        sourceMaps,
+        contentHash,
+        minify,
+        externals,
+        publicUrl,
+        outFile: dest.outFile,
+        outDir: join(dest.outDir, releaseName),
+        entryFiles,
+        logLevel,
+        ignored,
+        _,
+      },
+      bundlerName,
+    );
 
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${releaseName}`);

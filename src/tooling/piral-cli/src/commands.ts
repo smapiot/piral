@@ -1,5 +1,6 @@
 import * as apps from './apps';
 import {
+  availableBundlers,
   forceOverwriteKeys,
   keyOfForceOverwrite,
   valueOfForceOverwrite,
@@ -79,6 +80,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.debugPiralDefaults.optimizeModules)
+        .choices('bundler', availableBundlers)
+        .describe('bundler', 'Sets the bundler to use.')
+        .default('bundler', availableBundlers[0])
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -90,6 +94,7 @@ const allCommands: Array<ToolCommand<any>> = [
         hmr: args.hmr as boolean,
         optimizeModules: args.optimizeModules as boolean,
         publicUrl: args.publicUrl as string,
+        bundlerName: args.bundler as string,
         logLevel: args.logLevel as LogLevels,
         open: args.open as boolean,
         _: args,
@@ -136,6 +141,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('type', buildTypeKeys)
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', apps.buildPiralDefaults.type)
+        .choices('bundler', availableBundlers)
+        .describe('bundler', 'Sets the bundler to use.')
+        .default('bundler', availableBundlers[0])
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -145,6 +153,7 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         publicUrl: args.publicUrl as string,
+        bundlerName: args.bundler as string,
         minify: args.minify as boolean,
         fresh: args.fresh as boolean,
         contentHash: args.contentHash as boolean,
@@ -231,7 +240,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('npm-client', apps.newPiralDefaults.npmClient)
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
-        .default('bundler', apps.newPiralDefaults.bundler)
+        .default('bundler', apps.newPiralDefaults.bundlerName)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -248,7 +257,7 @@ const allCommands: Array<ToolCommand<any>> = [
         template: args.template as TemplateType,
         logLevel: args.logLevel as LogLevels,
         npmClient: args.npmClient as NpmClientType,
-        bundler: args.bundler as string,
+        bundlerName: args.bundler as string,
       });
     },
   },
@@ -347,6 +356,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
         .default('schema', apps.debugPiletDefaults.schemaVersion)
+        .choices('bundler', availableBundlers)
+        .describe('bundler', 'Sets the bundler to use.')
+        .default('bundler', availableBundlers[0])
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -358,6 +370,7 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         port: args.port as number,
         hmr: args.hmr as boolean,
+        bundlerName: args.bundler as string,
         optimizeModules: args.optimizeModules as boolean,
         app: args.app as string,
         logLevel: args.logLevel as LogLevels,
@@ -404,6 +417,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when bundling the pilets.')
         .default('schema', apps.buildPiletDefaults.schemaVersion)
+        .choices('bundler', availableBundlers)
+        .describe('bundler', 'Sets the bundler to use.')
+        .default('bundler', availableBundlers[0])
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -416,6 +432,7 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         minify: args.minify as boolean,
         contentHash: args.contentHash as boolean,
+        bundlerName: args.bundler as string,
         sourceMaps: args.sourceMaps as boolean,
         optimizeModules: args.optimizeModules as boolean,
         fresh: args.fresh as boolean,
@@ -550,7 +567,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('npm-client', apps.newPiletDefaults.npmClient)
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
-        .default('bundler', apps.newPiletDefaults.bundler)
+        .default('bundler', apps.newPiletDefaults.bundlerName)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -566,7 +583,7 @@ const allCommands: Array<ToolCommand<any>> = [
         install: args.install as boolean,
         template: args.template as TemplateType,
         npmClient: args.npmClient as NpmClientType,
-        bundler: args.bundler as string,
+        bundlerName: args.bundler as string,
       });
     },
   },

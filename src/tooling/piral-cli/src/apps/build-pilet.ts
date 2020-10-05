@@ -50,6 +50,11 @@ export interface BuildPiletOptions {
   sourceMaps?: boolean;
 
   /**
+   * Sets the bundler to use for building, if any specific.
+   */
+  bundlerName?: string;
+
+  /**
    * States if a content hash should be appended to the side-bundle files
    */
   contentHash?: boolean;
@@ -94,8 +99,9 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     fresh = buildPiletDefaults.fresh,
     optimizeModules = buildPiletDefaults.optimizeModules,
     schemaVersion = buildPiletDefaults.schemaVersion,
-    app,
     _ = {},
+    bundlerName,
+    app,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -113,23 +119,26 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   logInfo('Bundle pilet ...');
 
-  await callPiletBuild({
-    root,
-    piral: appPackage.name,
-    optimizeModules,
-    sourceMaps,
-    contentHash,
-    minify,
-    externals,
-    targetDir,
-    outFile: basename(target),
-    outDir,
-    entryModule,
-    logLevel,
-    version: schemaVersion,
-    ignored,
-    _,
-  });
+  await callPiletBuild(
+    {
+      root,
+      piral: appPackage.name,
+      optimizeModules,
+      sourceMaps,
+      contentHash,
+      minify,
+      externals,
+      targetDir,
+      outFile: basename(target),
+      outDir,
+      entryModule,
+      logLevel,
+      version: schemaVersion,
+      ignored,
+      _,
+    },
+    bundlerName,
+  );
 
   logDone('Pilet built successfully!');
 }

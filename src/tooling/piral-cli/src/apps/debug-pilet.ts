@@ -50,6 +50,11 @@ export interface DebugPiletOptions {
   hmr?: boolean;
 
   /**
+   * Sets the bundler to use for building, if any specific.
+   */
+  bundlerName?: string;
+
+  /**
    * States if the node modules should be included for target transpilation
    */
   optimizeModules?: boolean;
@@ -132,8 +137,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     logLevel = debugPiletDefaults.logLevel,
     optimizeModules = debugPiletDefaults.optimizeModules,
     schemaVersion = debugPiletDefaults.schemaVersion,
-    app,
     _ = {},
+    bundlerName,
+    app,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -174,19 +180,22 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         krasConfig.sources.push(mocks);
       }
 
-      const bundler = await callPiletDebug({
-        root,
-        piral: appPackage.name,
-        optimizeModules,
-        hmr,
-        externals,
-        targetDir,
-        entryModule,
-        logLevel,
-        version: schemaVersion,
-        ignored,
-        _,
-      });
+      const bundler = await callPiletDebug(
+        {
+          root,
+          piral: appPackage.name,
+          optimizeModules,
+          hmr,
+          externals,
+          targetDir,
+          entryModule,
+          logLevel,
+          version: schemaVersion,
+          ignored,
+          _,
+        },
+        bundlerName,
+      );
 
       return {
         emulator,

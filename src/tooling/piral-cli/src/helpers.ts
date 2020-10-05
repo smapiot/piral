@@ -14,6 +14,7 @@ export const templateTypeKeys: Array<TemplateType> = ['default', 'empty'];
 export const buildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
 export const bundlerKeys: Array<string> = ['none', 'parcel', 'webpack'];
+export const availableBundlers: Array<string> = [];
 export const frameworkKeys: Array<Framework> = ['piral', 'piral-core', 'piral-base'];
 export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter((m) => typeof ForceOverwrite[m] === 'number');
 
