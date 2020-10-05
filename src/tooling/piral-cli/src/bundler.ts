@@ -53,11 +53,7 @@ function checkDefaultBundler(bundler: QualifiedBundler) {
 
 function checkCustomBundler(bundler: QualifiedBundler, bundlerName: string) {
   if (!bundler?.actions) {
-    fail(
-      'bundlerMissing_0072',
-      bundlerName,
-      bundlers.map((b) => b.name),
-    );
+    fail('bundlerMissing_0072', bundlerName, availableBundlers);
   }
 
   return bundler;
@@ -73,9 +69,11 @@ async function findBundler(root: string, bundlerName?: string) {
     await installDefaultBundler(root);
     const [bundler] = bundlers;
     return checkDefaultBundler(bundler);
-  } else {
-    return defaultBundler;
+  } else if (bundlers.length > 1) {
+    log('bundlerUnspecified_0075', availableBundlers);
   }
+
+  return defaultBundler;
 }
 
 async function prepareModules(args: BaseBundleParameters) {

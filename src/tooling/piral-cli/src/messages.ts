@@ -1853,8 +1853,8 @@ export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Parcel bundler is used. Alternatives
- * include Webpack and Rollup.
+ * is a powerful concept. By default, the Webpack bundler is used. Alternatives
+ * include Parcel and Rollup.
  *
  * In case where multiple bundlers are installed the first one is picked. This
  * may not be what you want. In this scenario you can override the selection by
@@ -1863,6 +1863,7 @@ export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<
  * bundler missing error appears.
  *
  * @see
+ * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
@@ -1886,13 +1887,14 @@ export function bundlerMissing_0072(bundlerName: string, installed: Array<string
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Parcel bundler is used. Alternatives
- * include Webpack and Rollup.
+ * is a powerful concept. By default, the Webpack bundler is used. Alternatives
+ * include Parcel and Rollup.
  *
  * In case where no bundler is installed and the default bundler could not be
  * successfully installed this error is shown.
  *
  * @see
+ * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
@@ -1923,6 +1925,7 @@ export function defaultBundlerMissing_0073(): QuickMessage {
  * line. These are formatted according to the currently used bundler.
  *
  * @see
+ * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
@@ -1935,6 +1938,40 @@ export function defaultBundlerMissing_0073(): QuickMessage {
  */
 export function bundlingFailed_0074(error: string): QuickMessage {
   return [LogLevels.error, '0074', `The bundling process failed: ${error || 'Invalid input.'}`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * No bundler has been specified even though multiple are available.
+ *
+ * @abstract
+ * Piral allows you to set up your own tooling for building and debugging. This
+ * is a powerful concept. By default, the Webpack bundler is used. Alternatives
+ * include Parcel and Rollup.
+ *
+ * In case where multiple bundlers are installed the first one is picked. This
+ * may not be what you want. In this scenario you can explicitly set the bundler
+ * to use by providing a bundler name (e.g., "parcel").
+ *
+ * The warning is shown when there are multiple bundlers available, but none has
+ * been explicitly demanded. Since the chosen bundler may be installation
+ * dependent we recommend setting the bundler explicitly.
+ *
+ * @see
+ * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ *
+ * @example
+ * Use the following command to explicitly choose the Parcel bundler:
+ *
+ * ```sh
+ * piral build --bundler parcel
+ * ```
+ */
+export function bundlerUnspecified_0075(available: Array<string>): QuickMessage {
+  const s = available.map((m) => `"${m}"`).join(', ');
+  return [LogLevels.warning, '0075', `No bundler has been specified even though multiple are available. Choices: ${s}.`];
 }
 
 /**
