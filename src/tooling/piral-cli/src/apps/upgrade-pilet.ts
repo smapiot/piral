@@ -63,7 +63,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
   const npmClient = await determineNpmClient(root, options.npmClient);
   const pckg = await readJson(root, 'package.json');
-  const { devDependencies = {}, piral } = pckg;
+  const { devDependencies = {}, dependencies = {}, piral } = pckg;
 
   if (piral && typeof piral === 'object') {
     const sourceName = piral.name;
@@ -72,7 +72,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       fail('invalidPiletPackage_0042');
     }
 
-    const currentVersion = devDependencies[sourceName];
+    const currentVersion = devDependencies[sourceName] ?? dependencies[sourceName];
 
     if (!currentVersion || typeof currentVersion !== 'string') {
       fail('invalidPiralReference_0043');

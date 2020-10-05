@@ -1,9 +1,9 @@
 # Piral Changelog
 
-## 1.0.0 (tbd)
+## 0.12.3 (tbd)
 
-* Updated `piral-jest-utils` with functionality (#186)
 * Updated support for Blazor 3.2.0 forward in `piral-blazor` (#224)
+* Improved the check on `pilet update` to consider `dependencies` (#327)
 
 ## 0.12.2 (September 28, 2020)
 

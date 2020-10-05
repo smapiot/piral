@@ -449,6 +449,9 @@ export async function patchPiletPackage(
     piral,
     devDependencies,
     peerDependencies,
+    dependencies: {
+      [name]: undefined,
+    },
     scripts,
   });
   log('generalDebug_0003', `Succesfully patched the package.json.`);
