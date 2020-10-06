@@ -60,3 +60,36 @@ const connect = createConnector({
 The HOC is unaffected by this. Once the data updates the view is re-rendered.
 
 ---------------------------------------
+
+## How to get shared with updates?
+
+The `getData` API is used to get the *current* snapshot of a shared data item. In order to avoid race conditions and to stay up to date we recommend a dual approach, where the `store-data` event is used for being informed about updates, while initializing the state via `getData`.
+
+In React this could be achieved via the `useState` and `useEffect` hooks:
+
+```jsx
+function useSharedData(name) {
+  const [state, setState] = React.useState(() => api.getData(name));
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.name === name) {
+        setState(e.value);
+      }
+    };
+    api.on('store-data', handler);
+    return api.off('store-data', handler);
+  }, []);
+  return state;
+}
+```
+
+This will always have the right value:
+
+```jsx
+const ShowCurrent = () => {
+  const username = useSharedData('username');
+  return <b>{username}</b>;
+};
+```
+
+---------------------------------------

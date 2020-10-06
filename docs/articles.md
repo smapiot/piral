@@ -7,6 +7,7 @@
 
 ## Blog Posts
 
+- [How Micro Frontends are being Implemented in 2020: A Survey, Bits and Pieces, 09/2020](https://blog.bitsrc.io/microfrontends-survey-evaluation-d2af7eade306)
 - [State of Microfrontends, dev.to, 06/2020](https://dev.to/florianrappl/state-of-microfrontends-1j3p)
 - [Cross-Framework Communication, Bits and Pieces, 04/2020](https://blog.bitsrc.io/cross-framework-components-8439d58342e5)
 - [Communication between Micro Frontends, Bits and Pieces, 03/2020](https://blog.bitsrc.io/communication-between-micro-frontends-67a745c6cfbe)
