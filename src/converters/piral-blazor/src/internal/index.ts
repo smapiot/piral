@@ -1,7 +1,7 @@
 import './globals';
 import { setPlatform } from './Environment';
 import { Pointer } from './Platform/Platform';
-import { navigationManager } from './Services/NavigationManager';
+import { navigationManager, navigateTo } from './Services/NavigationManager';
 import { BootJsonData, BootConfigResult } from './Platform/BootConfig';
 import { monoPlatform } from './Platform/Mono/MonoPlatform';
 import { WebAssemblyResourceLoader } from './Platform/WebAssemblyResourceLoader';
@@ -120,7 +120,12 @@ export async function initialize(data: BootJsonData) {
   });
 
   Object.assign(window['Blazor']._internal, {
-    navigationManager,
+    navigateTo,
+    navigationManager: {
+      ...navigationManager,
+      getUnmarshalledBaseURI: () => BINDING.js_string_to_mono_string(navigationManager.getBaseURI()),
+      getUnmarshalledLocationHref: () => BINDING.js_string_to_mono_string(navigationManager.getLocationHref())
+    },
     attachRootComponentToElement,
     renderBatch(browserRendererId: number, batchAddress: Pointer) {
       renderBatch(browserRendererId, new SharedMemoryRenderBatch(batchAddress));
@@ -130,7 +135,7 @@ export async function initialize(data: BootJsonData) {
   const bootConfigResult = new BootConfigResult(data);
 
   const [resourceLoader] = await Promise.all([
-    WebAssemblyResourceLoader.initAsync(bootConfigResult.bootConfig),
+    WebAssemblyResourceLoader.initAsync(bootConfigResult.bootConfig, {}),
     WebAssemblyConfigLoader.initAsync(bootConfigResult),
   ]);
 

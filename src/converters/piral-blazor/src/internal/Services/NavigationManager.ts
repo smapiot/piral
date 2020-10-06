@@ -12,8 +12,8 @@ export const navigationManager = {
   listenForNavigationEvents,
   enableNavigationInterception,
   navigateTo,
-  getBaseURI: () => BINDING.js_string_to_mono_string(document.baseURI),
-  getLocationHref: () => BINDING.js_string_to_mono_string(location.href),
+  getBaseURI: () => document.baseURI,
+  getLocationHref: () => location.href,
 };
 
 function listenForNavigationEvents(callback: (uri: string, intercepted: boolean) => Promise<void>) {
@@ -80,7 +80,7 @@ export function navigateTo(uri: string, forceLoad: boolean, replace: boolean = f
   } else if (forceLoad && location.href === uri) {
     // Force-loading the same URL you're already on requires special handling to avoid
     // triggering browser-specific behavior issues.
-    // For details about what this fixes and why, see https://github.com/aspnet/AspNetCore/pull/10839
+    // For details about what this fixes and why, see https://github.com/dotnet/aspnetcore/pull/10839
     const temporaryUri = uri + '?';
     history.replaceState(null, '', temporaryUri);
     location.replace(uri);

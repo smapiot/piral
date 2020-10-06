@@ -1,12 +1,42 @@
 import { attachDebuggerHotkey, hasDebuggingEnabled } from './MonoDebugger';
 import { WebAssemblyResourceLoader, LoadingResource } from '../WebAssemblyResourceLoader';
 import { Platform, System_Array, Pointer, System_Object, System_String } from '../Platform';
+import { loadTimezoneData } from './TimezoneDataFile';
+import { WebAssemblyBootResourceType } from '../WebAssemblyStartOptions';
+
+declare const Module: EmscriptenModule;
 
 let mono_string_get_utf8: (managedString: System_String) => Pointer;
 let mono_wasm_add_assembly: (name: string, heapAddress: number, length: number) => void;
 const appBinDirName = 'appBinDir';
 const uint64HighOrderShift = Math.pow(2, 32);
 const maxSafeNumberHighPart = Math.pow(2, 21) - 1; // The high-order int32 from Number.MAX_SAFE_INTEGER
+
+// Memory access helpers
+// The implementations are exactly equivalent to what the global getValue(addr, type) function does,
+// except without having to parse the 'type' parameter, and with less risk of mistakes at the call site
+function getValueI16(ptr: number) {
+  return Module.HEAP16[ptr >> 1];
+}
+function getValueI32(ptr: number) {
+  return Module.HEAP32[ptr >> 2];
+}
+function getValueFloat(ptr: number) {
+  return Module.HEAPF32[ptr >> 2];
+}
+function getValueU64(ptr: number) {
+  // There is no Module.HEAPU64, and Module.getValue(..., 'i64') doesn't work because the implementation
+  // treats 'i64' as being the same as 'i32'. Also we must take care to read both halves as unsigned.
+  const heapU32Index = ptr >> 2;
+  const highPart = Module.HEAPU32[heapU32Index + 1];
+  if (highPart > maxSafeNumberHighPart) {
+    throw new Error(
+      `Cannot read uint64 with high order part ${highPart}, because the result would exceed Number.MAX_SAFE_INTEGER.`,
+    );
+  }
+
+  return highPart * uint64HighOrderShift + Module.HEAPU32[heapU32Index];
+}
 
 export const monoPlatform: Platform = {
   start: function start(resourceLoader: WebAssemblyResourceLoader) {
@@ -46,12 +76,12 @@ export const monoPlatform: Platform = {
 
   toUint8Array: function toUint8Array(array: System_Array<any>): Uint8Array {
     const dataPtr = getArrayDataPointer(array);
-    const length = Module.getValue(dataPtr, 'i32');
+    const length = getValueI32(dataPtr);
     return new Uint8Array(Module.HEAPU8.buffer, dataPtr + 4, length);
   },
 
   getArrayLength: function getArrayLength(array: System_Array<any>): number {
-    return Module.getValue(getArrayDataPointer(array), 'i32');
+    return getValueI32(getArrayDataPointer(array));
   },
 
   getArrayEntryPtr: function getArrayEntryPtr<TPtr extends Pointer>(
@@ -70,34 +100,23 @@ export const monoPlatform: Platform = {
   },
 
   readInt16Field: function readHeapInt16(baseAddress: Pointer, fieldOffset?: number): number {
-    return Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i16');
+    return getValueI16(((baseAddress as any) as number) + (fieldOffset || 0));
   },
 
   readInt32Field: function readHeapInt32(baseAddress: Pointer, fieldOffset?: number): number {
-    return Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i32');
+    return getValueI32(((baseAddress as any) as number) + (fieldOffset || 0));
   },
 
   readUint64Field: function readHeapUint64(baseAddress: Pointer, fieldOffset?: number): number {
-    // Module.getValue(..., 'i64') doesn't work because the implementation treats 'i64' as
-    // being the same as 'i32'. Also we must take care to read both halves as unsigned.
-    const address = ((baseAddress as any) as number) + (fieldOffset || 0);
-    const heapU32Index = address >> 2;
-    const highPart = Module.HEAPU32[heapU32Index + 1];
-    if (highPart > maxSafeNumberHighPart) {
-      throw new Error(
-        `Cannot read uint64 with high order part ${highPart}, because the result would exceed Number.MAX_SAFE_INTEGER.`,
-      );
-    }
-
-    return highPart * uint64HighOrderShift + Module.HEAPU32[heapU32Index];
+    return getValueU64(((baseAddress as any) as number) + (fieldOffset || 0));
   },
 
   readFloatField: function readHeapFloat(baseAddress: Pointer, fieldOffset?: number): number {
-    return Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'float');
+    return getValueFloat(((baseAddress as any) as number) + (fieldOffset || 0));
   },
 
   readObjectField: function readHeapObject<T extends System_Object>(baseAddress: Pointer, fieldOffset?: number): T {
-    return (Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i32') as any) as T;
+    return (getValueI32(((baseAddress as any) as number) + (fieldOffset || 0)) as any) as T;
   },
 
   readStringField: function readHeapObject(
@@ -105,7 +124,7 @@ export const monoPlatform: Platform = {
     fieldOffset?: number,
     readBoolValueAsString?: boolean,
   ): string | null {
-    const fieldValue = Module.getValue(((baseAddress as any) as number) + (fieldOffset || 0), 'i32');
+    const fieldValue = getValueI32(((baseAddress as any) as number) + (fieldOffset || 0));
     if (fieldValue === 0) {
       return null;
     }
@@ -141,15 +160,32 @@ function addScriptTagsToDocument(resourceLoader: WebAssemblyResourceLoader) {
   const dotnetJsResourceName = Object.keys(resourceLoader.bootConfig.resources.runtime).filter(
     (n) => n.startsWith('dotnet.') && n.endsWith('.js'),
   )[0];
+  const dotnetJsContentHash = resourceLoader.bootConfig.resources.runtime[dotnetJsResourceName];
   const scriptElem = document.createElement('script');
   scriptElem.src = `_framework/wasm/${dotnetJsResourceName}`;
   scriptElem.defer = true;
 
   // For consistency with WebAssemblyResourceLoader, we only enforce SRI if caching is allowed
   if (resourceLoader.bootConfig.cacheBootResources) {
-    const contentHash = resourceLoader.bootConfig.resources.runtime[dotnetJsResourceName];
-    scriptElem.integrity = contentHash;
+    scriptElem.integrity = dotnetJsContentHash;
     scriptElem.crossOrigin = 'anonymous';
+  }
+
+  // Allow overriding the URI from which the dotnet.*.js file is loaded
+  if (resourceLoader.startOptions.loadBootResource) {
+    const resourceType: WebAssemblyBootResourceType = 'dotnetjs';
+    const customSrc = resourceLoader.startOptions.loadBootResource(
+      resourceType,
+      dotnetJsResourceName,
+      scriptElem.src,
+      dotnetJsContentHash,
+    );
+    if (typeof customSrc === 'string') {
+      scriptElem.src = customSrc;
+    } else if (customSrc) {
+      // Since we must load this via a <script> tag, it's only valid to supply a URI (and not a Request, say)
+      throw new Error(`For a ${resourceType} resource, custom loaders must supply a URI string.`);
+    }
   }
 
   document.body.appendChild(scriptElem);
@@ -178,16 +214,19 @@ function createEmscriptenModuleInstance(
   onError: (reason?: any) => void,
 ) {
   const resources = resourceLoader.bootConfig.resources;
-  const module = {} as typeof Module;
+  const module = (window['Module'] || {}) as typeof Module;
   const suppressMessages = ['DEBUGGING ENABLED'];
 
   module.print = (line) => suppressMessages.indexOf(line) < 0 && console.log(line);
 
   module.printErr = (line) => {
+    // If anything writes to stderr, treat it as a critical exception. The underlying runtime writes
+    // to stderr if a truly critical problem occurs outside .NET code. Note that .NET unhandled
+    // exceptions also reach this, but via a different code path - see dotNetCriticalError below.
     console.error(line);
   };
-  module.preRun = [];
-  module.postRun = [];
+  module.preRun = module.preRun || [];
+  module.postRun = module.postRun || [];
   (module as any).preloadPlugins = [];
 
   // Begin loading the .dll/.pdb/.wasm files, but don't block here. Let other loading processes run in parallel.
@@ -195,19 +234,33 @@ function createEmscriptenModuleInstance(
   const assembliesBeingLoaded = resourceLoader.loadResources(
     resources.assembly,
     (filename) => `_framework/_bin/${filename}`,
+    'assembly',
   );
   const pdbsBeingLoaded = resourceLoader.loadResources(
     resources.pdb || {},
     (filename) => `_framework/_bin/${filename}`,
+    'pdb',
   );
   const wasmBeingLoaded = resourceLoader.loadResource(
     /* name */ dotnetWasmResourceName,
     /* url */ `_framework/wasm/${dotnetWasmResourceName}`,
     /* hash */ resourceLoader.bootConfig.resources.runtime[dotnetWasmResourceName],
+    /* type */ 'dotnetwasm',
   );
 
+  const dotnetTimeZoneResourceName = 'dotnet.timezones.dat';
+  let timeZoneResource: LoadingResource | undefined;
+  if (resourceLoader.bootConfig.resources.runtime.hasOwnProperty(dotnetTimeZoneResourceName)) {
+    timeZoneResource = resourceLoader.loadResource(
+      dotnetTimeZoneResourceName,
+      `_framework/wasm/${dotnetTimeZoneResourceName}`,
+      resourceLoader.bootConfig.resources.runtime[dotnetTimeZoneResourceName],
+      'timezonedata',
+    );
+  }
+
   // Override the mechanism for fetching the main wasm file so we can connect it to our cache
-  (module as any).instantiateWasm = (imports, successCallback): WebAssembly.Exports => {
+  module.instantiateWasm = (imports, successCallback): Emscripten.WebAssemblyExports => {
     (async () => {
       let compiledInstance: WebAssembly.Instance;
       try {
@@ -219,21 +272,28 @@ function createEmscriptenModuleInstance(
       }
       successCallback(compiledInstance);
     })();
-    return {}; // No exports
+    return []; // No exports
   };
 
   module.preRun.push(() => {
     // By now, emscripten should be initialised enough that we can capture these methods for later use
-    mono_wasm_add_assembly = Module.cwrap('mono_wasm_add_assembly', null, ['string', 'number', 'number']);
-    mono_string_get_utf8 = Module.cwrap('mono_wasm_string_get_utf8', 'number', ['number']);
-
+    mono_wasm_add_assembly = cwrap('mono_wasm_add_assembly', null, ['string', 'number', 'number']);
+    mono_string_get_utf8 = cwrap('mono_wasm_string_get_utf8', 'number', ['number']);
     MONO.loaded_files = [];
+
+    if (timeZoneResource) {
+      loadTimezone(timeZoneResource);
+    }
 
     // Fetch the assemblies and PDBs in the background, telling Mono to wait until they are loaded
     // Mono requires the assembly filenames to have a '.dll' extension, so supply such names regardless
     // of the extensions in the URLs. This allows loading assemblies with arbitrary filenames.
     assembliesBeingLoaded.forEach((r) => addResourceAsAssembly(r, changeExtension(r.name, '.dll')));
     pdbsBeingLoaded.forEach((r) => addResourceAsAssembly(r, r.name));
+
+    window['Blazor']._internal.dotNetCriticalError = (message: System_String) => {
+      module.printErr(BINDING.conv_string(message) || '(null)');
+    };
 
     // Wire-up callbacks for satellite assemblies. Blazor will call these as part of the application
     // startup sequence to load satellite assemblies for the application's culture.
@@ -248,7 +308,11 @@ function createEmscriptenModuleInstance(
           culturesToLoad
             .filter((culture) => satelliteResources.hasOwnProperty(culture))
             .map((culture) =>
-              resourceLoader.loadResources(satelliteResources[culture], (fileName) => `_framework/_bin/${fileName}`),
+              resourceLoader.loadResources(
+                satelliteResources[culture],
+                (fileName) => `_framework/_bin/${fileName}`,
+                'assembly',
+              ),
             )
             .reduce((previous, next) => previous.concat(next), new Array<LoadingResource>())
             .map(async (resource) => (await resource.response).arrayBuffer()),
@@ -285,8 +349,9 @@ function createEmscriptenModuleInstance(
     resourceLoader.purgeUnusedCacheEntriesAsync(); // Don't await - it's fine to run in background
 
     MONO.mono_wasm_setenv('MONO_URI_DOTNETRELATIVEORABSOLUTE', 'true');
-    const load_runtime = Module.cwrap('mono_wasm_load_runtime', null, ['string', 'number']);
-    load_runtime(appBinDirName, hasDebuggingEnabled() ? 1 : 0);
+    const load_runtime = cwrap('mono_wasm_load_runtime', null, ['string', 'number']);
+    // -1 enables debugging with logging disabled. 0 disables debugging entirely.
+    load_runtime(appBinDirName, hasDebuggingEnabled() ? -1 : 0);
     MONO.mono_wasm_runtime_ready();
     attachInteropInvoker();
     onReady();
@@ -296,7 +361,7 @@ function createEmscriptenModuleInstance(
 
   async function addResourceAsAssembly(dependency: LoadingResource, loadAsName: string) {
     const runDependencyId = `blazor:${dependency.name}`;
-    Module.addRunDependency(runDependencyId);
+    addRunDependency(runDependencyId);
 
     try {
       // Wait for the data to be loaded and verified
@@ -314,7 +379,7 @@ function createEmscriptenModuleInstance(
       return;
     }
 
-    Module.removeRunDependency(runDependencyId);
+    removeRunDependency(runDependencyId);
   }
 }
 
@@ -385,6 +450,17 @@ function attachInteropInvoker(): void {
       ) as string;
     },
   });
+}
+
+async function loadTimezone(timeZoneResource: LoadingResource): Promise<void> {
+  const runDependencyId = `blazor:timezonedata`;
+  addRunDependency(runDependencyId);
+
+  const request = await timeZoneResource.response;
+  const arrayBuffer = await request.arrayBuffer();
+  loadTimezoneData(arrayBuffer);
+
+  removeRunDependency(runDependencyId);
 }
 
 async function compileWasmModule(wasmResource: LoadingResource, imports: any): Promise<WebAssembly.Instance> {
