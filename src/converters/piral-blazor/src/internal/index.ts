@@ -19,6 +19,7 @@ export const eventNames = {
 };
 
 const coreLib = 'Piral.Blazor.Core';
+const eventParents: Array<HTMLElement> = [];
 
 function isRooted(target: HTMLElement) {
   let parent = target.parentElement;
@@ -34,6 +35,18 @@ function isRooted(target: HTMLElement) {
   return false;
 }
 
+function findTarget(target: HTMLElement = document.body) {
+  if (eventParents.length === 0) {
+    return target;
+  } else if (target === document.body) {
+    return eventParents[0];
+  } else {
+    return target;
+  }
+}
+
+// tslint:disable:no-string-literal
+
 export function activate(moduleName: string, props: any) {
   return DotNet.invokeMethodAsync<string>(coreLib, 'Activate', moduleName, props);
 }
@@ -44,7 +57,7 @@ export function deactivate(moduleName: string, referenceId: string) {
 
 export function addReference(blob: Blob) {
   return new Promise((resolve) => {
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = () => {
       const data = reader.result.toString().replace(/^data:.+;base64,/, '');
       DotNet.invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', data).then(resolve);
@@ -62,9 +75,11 @@ export function attachEvents(
   render: (ev: CustomEvent) => void,
   navigate: (ev: CustomEvent) => void,
 ) {
+  eventParents.push(host);
   host.addEventListener(eventNames.render, render, false);
   host.addEventListener(eventNames.navigate, navigate, false);
   return () => {
+    eventParents.splice(eventParents.indexOf(host), 1);
     host.removeEventListener(eventNames.render, render, false);
     host.removeEventListener(eventNames.navigate, navigate, false);
   };
@@ -87,7 +102,8 @@ export async function initialize(data: BootJsonData) {
 
   Object.assign(window['Blazor'], {
     platform,
-    emitRenderEvent(target: HTMLElement, name: string) {
+    emitRenderEvent(source: HTMLElement, name: string) {
+      const target = findTarget(source);
       const eventInit = {
         bubbles: true,
         detail: {
@@ -107,12 +123,14 @@ export async function initialize(data: BootJsonData) {
         });
       delayEmit();
     },
-    emitNavigateEvent(target: HTMLElement, to: string) {
-      target.dispatchEvent(
+    emitNavigateEvent(source: HTMLElement, to: string, replace = false, state?: any) {
+      findTarget(source).dispatchEvent(
         new CustomEvent(eventNames.navigate, {
           bubbles: true,
           detail: {
             to,
+            replace,
+            state,
           },
         }),
       );
@@ -124,7 +142,7 @@ export async function initialize(data: BootJsonData) {
     navigationManager: {
       ...navigationManager,
       getUnmarshalledBaseURI: () => BINDING.js_string_to_mono_string(navigationManager.getBaseURI()),
-      getUnmarshalledLocationHref: () => BINDING.js_string_to_mono_string(navigationManager.getLocationHref())
+      getUnmarshalledLocationHref: () => BINDING.js_string_to_mono_string(navigationManager.getLocationHref()),
     },
     attachRootComponentToElement,
     renderBatch(browserRendererId: number, batchAddress: Pointer) {

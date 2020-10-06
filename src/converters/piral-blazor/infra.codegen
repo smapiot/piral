@@ -11,7 +11,7 @@ function readSourceFromBuffer(buffer, outDir) {
       if (err) {
         reject(err);
       } else {
-        zip.on('entry', entry => {
+        zip.on('entry', (entry) => {
           const file = entry.fileName;
           const dir = path.dirname(file);
 
@@ -41,15 +41,16 @@ function readSourceFromBuffer(buffer, outDir) {
 }
 
 function generateModule(blazorBootFile) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
+    // we introduce an artificial delay here for slower FS esp. in WSL
     setTimeout(() => {
       const content = fs.readFileSync(blazorBootFile, 'utf8');
       resolve(`module.exports = ${content};`);
-    }, 100);
+    }, 50);
   });
 }
 
-module.exports = function() {
+module.exports = function () {
   const version = process.env.PIRAL_BLAZOR_VERSION || '';
   const localFile = process.env.PIRAL_BLAZOR_LOCAL_NUPKG;
   const outDir = this.options.outDir;
@@ -63,15 +64,21 @@ module.exports = function() {
   !fs.existsSync(binDir) && fs.mkdirSync(binDir);
   !fs.existsSync(wasmDir) && fs.mkdirSync(wasmDir);
 
-  if (localFile && fs.existsSync(localFile)) {
-    const content = fs.readFileSync(localFile);
+  if (localFile) {
+    if (!fs.existsSync(localFile)) {
+      throw new Error(
+        `The file provided via env. variable "PIRAL_BLAZOR_LOCAL_NUPKG" cannot be found: "${localFile}".`,
+      );
+    }
 
-    return readSourceFromBuffer(content, outDir)
-      .then(() => generateModule(blazorBootFile));
+    const content = fs.readFileSync(localFile);
+    return readSourceFromBuffer(content, outDir).then(() => generateModule(blazorBootFile));
   }
+
+  console.log(`Downloading Piral.Blazor.Core@${version || 'latest'} from NuGet ...`);
 
   return axios
     .get(`https://www.nuget.org/api/v2/package/Piral.Blazor.Core/${version}`, { responseType: 'arraybuffer' })
-    .then(res => readSourceFromBuffer(res.data, outDir))
+    .then((res) => readSourceFromBuffer(res.data, outDir))
     .then(() => generateModule(blazorBootFile));
 };

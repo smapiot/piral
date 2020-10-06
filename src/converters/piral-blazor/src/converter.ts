@@ -40,7 +40,10 @@ export function createConverter(lazy = true) {
         dispose = attachEvents(
           el,
           (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-          (ev) => ctx.router.history.push(ev.detail.to),
+          (ev) =>
+            ev.detail.replace
+              ? ctx.router.history.replace(ev.detail.to, ev.detail.store)
+              : ctx.router.history.push(ev.detail.to, ev.detail.state),
         );
         state = 'fresh';
       },

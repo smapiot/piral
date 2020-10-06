@@ -1,5 +1,7 @@
-import { resetScrollAfterNextBatch } from '../Rendering/Renderer';
 import { EventDelegator } from '../Rendering/EventDelegator';
+
+// tslint:disable:no-string-literal
+// tslint:disable:no-null-keyword
 
 let hasEnabledNavigationInterception = false;
 let hasRegisteredNavigationEventListeners = false;
@@ -53,9 +55,11 @@ export function attachToEventDelegator(eventDelegator: EventDelegator) {
     // We must explicitly check if it has an 'href' attribute, because if it doesn't, the result might be null or an empty string depending on the browser
     const anchorTarget = findClosestAncestor(event.target as Element | null, 'A') as HTMLAnchorElement | null;
     const hrefAttributeName = 'href';
+
     if (anchorTarget && anchorTarget.hasAttribute(hrefAttributeName)) {
       const targetAttributeValue = anchorTarget.getAttribute('target');
       const opensInSameFrame = !targetAttributeValue || targetAttributeValue === '_self';
+
       if (!opensInSameFrame) {
         return;
       }
@@ -65,7 +69,7 @@ export function attachToEventDelegator(eventDelegator: EventDelegator) {
 
       if (isWithinBaseUriSpace(absoluteHref)) {
         event.preventDefault();
-        performInternalNavigation(absoluteHref, true);
+        performInternalNavigation(anchorTarget, absoluteHref, true);
       }
     }
   });
@@ -76,7 +80,7 @@ export function navigateTo(uri: string, forceLoad: boolean, replace: boolean = f
 
   if (!forceLoad && isWithinBaseUriSpace(absoluteUri)) {
     // It's an internal URL, so do client-side navigation
-    performInternalNavigation(absoluteUri, false, replace);
+    performInternalNavigation(document.body, absoluteUri, false, replace);
   } else if (forceLoad && location.href === uri) {
     // Force-loading the same URL you're already on requires special handling to avoid
     // triggering browser-specific behavior issues.
@@ -92,19 +96,18 @@ export function navigateTo(uri: string, forceLoad: boolean, replace: boolean = f
   }
 }
 
-function performInternalNavigation(absoluteInternalHref: string, interceptedLink: boolean, replace: boolean = false) {
+function performInternalNavigation(
+  target: HTMLElement,
+  absoluteInternalHref: string,
+  interceptedLink: boolean,
+  replace: boolean = false,
+) {
   // Since this was *not* triggered by a back/forward gesture (that goes through a different
   // code path starting with a popstate event), we don't want to preserve the current scroll
   // position, so reset it.
   // To avoid ugly flickering effects, we don't want to change the scroll position until the
   // we render the new page. As a best approximation, wait until the next batch.
-  resetScrollAfterNextBatch();
-
-  if (!replace) {
-    history.pushState(null, /* ignored title */ '', absoluteInternalHref);
-  } else {
-    history.replaceState(null, /* ignored title */ '', absoluteInternalHref);
-  }
+  window['Blazor'].emitNavigateEvent(target, absoluteInternalHref, replace);
   notifyLocationChanged(interceptedLink);
 }
 

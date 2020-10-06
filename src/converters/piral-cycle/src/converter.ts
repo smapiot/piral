@@ -1,14 +1,14 @@
 import { BaseComponentProps, ForeignComponent } from 'piral-core';
+import { makeDOMDriver } from '@cycle/dom';
 import run, { MatchingMain, Main } from '@cycle/run';
 import xs from 'xstream';
 import { PiralDomDrivers } from './types';
-import { makeDOMDriver } from '@cycle/dom';
 
 export function createConverter() {
   return <TProps extends BaseComponentProps, M extends MatchingMain<PiralDomDrivers<TProps>, M>>(
     main: M,
   ): ForeignComponent<TProps> => {
-    let props$ = xs.create<TProps>();
+    const props$ = xs.create<TProps>();
     let dispose = () => {};
 
     return {
