@@ -13,15 +13,13 @@ function getRoute(name) {
  * @param filePath The path in form of a string
  */
 function getPathElements(filePath) {
-
   return filePath.split(sep);
 }
 
-module.exports = function() {
+module.exports = function () {
   const bundlers = getBundlers();
 
-  const imports = bundlers.map(file => {
-
+  const imports = bundlers.map((file) => {
     const { mdValue, meta = {} } = render(file, generated);
     const pathElements = getPathElements(file);
     const name = pathElements[pathElements.length - 2];
@@ -32,11 +30,7 @@ module.exports = function() {
       source: file,
     };
 
-    const content = [
-      '`',
-      `<h1><code>${name}</code></h1>`,
-      mdValue.substr(mdValue.indexOf('</h1>') + 5),
-    ].join('');
+    const content = ['`', `<h1><code>${name}</code></h1>`, mdValue.substr(mdValue.indexOf('</h1>') + 5)].join('');
 
     const head = `
       import { PageContent, Markdown, } from '../../scripts/components';

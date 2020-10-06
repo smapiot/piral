@@ -1,3 +1,7 @@
+---
+title: Libraries
+---
+
 # Libraries
 
 Piral consists of several libraries that can also be used independently.

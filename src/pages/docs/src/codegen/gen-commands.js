@@ -16,10 +16,10 @@ function getType(file) {
   }
 }
 
-module.exports = function() {
+module.exports = function () {
   const commands = getCommands();
 
-  const imports = commands.map(file => {
+  const imports = commands.map((file) => {
     const name = getName(file);
     const route = getRoute(name);
     const { mdValue } = render(file, generated);

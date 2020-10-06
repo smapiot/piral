@@ -1,3 +1,7 @@
+---
+title: Instance Debugging
+---
+
 # Piral Instance Debugging
 
 The Piral instance comes with several special variables that can be used when the app shell is either directly in debugging mode or consumed via the development package ("emulator mode").

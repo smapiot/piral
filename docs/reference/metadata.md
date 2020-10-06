@@ -1,3 +1,7 @@
+---
+title: Package Metadata
+---
+
 # Piral Package Metadata
 
 The Piral CLI uses the *package.json* file for retrieving useful information. This includes - in case of a pilet - the specific Piral instance to use, or (from a Piral instance) the shared dependencies to be used in pilets.

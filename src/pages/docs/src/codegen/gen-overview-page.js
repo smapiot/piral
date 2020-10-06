@@ -3,11 +3,10 @@ const { basename, resolve } = require('path');
 const { getPluginTypes, getPluginImage, getPluginCategory } = require('./paths');
 const { generatePage } = require('./pages');
 
-module.exports = function() {
-
+module.exports = function () {
   const categories = [];
   const fragments = [];
-  const children = getPluginTypes().map(file => {
+  const children = getPluginTypes().map((file) => {
     const name = basename(file).replace('.json', '');
     const image = getPluginImage(name);
     let dest = '';
@@ -17,7 +16,7 @@ module.exports = function() {
     try {
       dest = resolve(__dirname, '..', '..', '..', '..', 'plugins', name, 'package.json');
       data = JSON.parse(readFileSync(dest, 'utf8'));
-    } catch(e) {
+    } catch (e) {
       dest = resolve(__dirname, '..', '..', '..', '..', 'converters', name, 'package.json');
       data = JSON.parse(readFileSync(dest, 'utf8'));
     }
@@ -32,12 +31,11 @@ module.exports = function() {
           image={require('../../assets/${image}')}
           description="${data.description}"
           title="${data.name}"
-        />`
+        />`,
     };
   });
 
   for (const child of children) {
-
     const index = categories.indexOf(child.category);
 
     if (index === -1) {
@@ -51,7 +49,7 @@ module.exports = function() {
     }
   }
 
-  fragments.sort((a, b) => a.category > b.category ? 1 : -1);
+  fragments.sort((a, b) => (a.category > b.category ? 1 : -1));
 
   const route = '/plugins/overview';
   const pluginName = 'overview';
@@ -66,16 +64,18 @@ module.exports = function() {
         <div className="plugin-info">
           <h1>Plugins Overview</h1>
         </div>
-      ${fragments.map(
-        fragment => `
+      ${fragments
+        .map(
+          (fragment) => `
           <h2 id="${fragment.category.toLowerCase()}" className="plugin">${fragment.category} Plugins</h2>
           <div className="boxes title-cards">${fragment.children.join('')}</div>
         `,
-      ).join('')}
+        )
+        .join('')}
     </PageContent>
   `;
 
   const rendered = generatePage(pluginName, { link: route }, pluginName, head, body, route, displayName);
 
-  return [ rendered ];
+  return [rendered];
 };

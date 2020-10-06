@@ -9,12 +9,12 @@ function getRoute(name) {
   return (name && `/plugins/${name}/:tab?`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const files = getPluginTypes();
   const standardPeerDeps = ['piral-core', 'react', 'react-dom', 'react-router', 'react-router-dom'];
 
   const imports = files
-    .map(file => {
+    .map((file) => {
       const type = readFileSync(file, 'utf8');
       const name = getName(file);
       const route = getRoute(name);
@@ -25,7 +25,7 @@ module.exports = function() {
       const packageJson = resolve(pluginRoot, 'package.json');
       const plugin = require(packageJson);
       const category = getPluginCategory(plugin);
-      const peerDepNames = Object.keys(plugin.peerDependencies || {}).filter(m => !standardPeerDeps.includes(m));
+      const peerDepNames = Object.keys(plugin.peerDependencies || {}).filter((m) => !standardPeerDeps.includes(m));
       const peerDependencies =
         peerDepNames.length > 0
           ? `
@@ -33,7 +33,7 @@ module.exports = function() {
             <p>The plugin has some peer dependencies that need to be installed.</p>
             <p>Install the following packages to resolve the peer dependencies correctly - if not yet available on your project.</p>
             ${peerDepNames
-              .map(peerDep => `<p>Install ${peerDep}:</p><pre><code>npm i ${peerDep}</code></pre>`)
+              .map((peerDep) => `<p>Install ${peerDep}:</p><pre><code>npm i ${peerDep}</code></pre>`)
               .join('')}
           `
           : '';

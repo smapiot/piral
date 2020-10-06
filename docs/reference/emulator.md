@@ -1,4 +1,8 @@
-# Emulator
+---
+title: Emulator Package
+---
+
+# Emulator Package
 
 To make developing pilets as easy and intuitive as possible the app shell can be packaged to serve as an emulator.
 

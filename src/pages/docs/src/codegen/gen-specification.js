@@ -7,18 +7,19 @@ function getRoute(name) {
   return (name && `/reference/specifications/${name}`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const specs = getSpecs();
 
-  const imports = specs.map(file => {
-    const { mdValue } = render(file, generated);
+  const imports = specs.map((file) => {
+    const { mdValue, meta = {} } = render(file, generated);
     const title = getTitle(file);
     const name = getName(file);
     const route = getRoute(name);
     const pageMeta = {
+      title,
+      ...meta,
       link: route,
       source: file,
-      title,
     };
 
     this.addDependency(file, { includedInParent: true });
