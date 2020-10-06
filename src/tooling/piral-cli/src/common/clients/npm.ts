@@ -30,6 +30,13 @@ export async function createPackage(target = '.', ...flags: Array<string>) {
   return ms.value;
 }
 
+export async function publishPackage(target = '.', file = '*.tgz', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['publish', file, ...flags], target, ms);
+  log('generalDebug_0003', `NPM publish result: ${ms.value}`);
+  return ms.value;
+}
+
 export async function findSpecificVersion(packageName: string, version: string) {
   const ms = new MemoryStream();
   await runNpmProcess(['show', packageName, 'version', `--tag ${version}`], '.', ms);

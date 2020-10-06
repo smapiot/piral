@@ -100,7 +100,7 @@ function getScriptHead(version: PiletSchemaVersion, prName: string) {
     case 'v1': // currentScript
       return `${piletMarker}1(${prName})\n${initializer}${insertScript}`;
     default:
-      log('invalidSchemaVersion_0071', version, ['v0', 'v1']);
+      log('invalidSchemaVersion_0171', version, ['v0', 'v1']);
       return getScriptHead('v0', prName);
   }
 }

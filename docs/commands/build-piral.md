@@ -139,6 +139,14 @@ Selects the target type of the build. "all" builds all target types.
 - Choices: `"all"`, `"release"`, `"emulator"`
 - Default: `"all"`
 
+### `--bundler`
+
+Sets the bundler to use.
+
+- Type: `string`
+- Choices: ``
+- Default: `undefined`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

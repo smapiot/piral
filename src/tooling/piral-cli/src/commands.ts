@@ -166,6 +166,45 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'publish-piral',
+    alias: ['release-piral', 'release'],
+    description: 'Publishes Piral instance build artifacts.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the previously used output directory to publish.',
+          default: apps.publishPiralDefaults.source,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.publishPiralDefaults.logLevel)
+        .choices('type', buildTypeKeys)
+        .describe('type', 'Selects the target type to publish. "all" publishes all target types.')
+        .default('type', apps.publishPiralDefaults.type)
+        .string('provider')
+        .describe('provider', 'Sets the provider for publishing the release assets.')
+        .default('provider', apps.publishPiralDefaults.provider)
+        .option('fields', undefined)
+        .describe('fields', 'Sets additional fields to be included in the feed service request.')
+        .default('fields', apps.publishPiralDefaults.fields)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .demandOption('url');
+    },
+    run(args) {
+      return apps.publishPiral(args.base as string, {
+        source: args.source as string,
+        logLevel: args.logLevel as LogLevels,
+        type: args.type as PiralBuildType,
+        provider: args.provider as string,
+        fields: args.fields as Record<string, string>,
+      });
+    },
+  },
+  {
     name: 'declaration-piral',
     alias: ['declare-piral', 'declaration-portal', 'declare-portal'],
     description: 'Creates the declaration file for a Piral instance.',

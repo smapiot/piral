@@ -1780,6 +1780,82 @@ export function toolingIncompatible_0101(piralVersion: string, cliVersion: strin
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * The provided output directory could not be found.
+ *
+ * @abstract
+ * The `piral publish` command only works with a valid output directory. Make
+ * sure to provide the same directory that you used for `piral build`.
+ *
+ * Make sure to run `piral build` before running `piral publish`.
+ *
+ * @example
+ * The following command first removes the output directory, then starts the build,
+ * and finally publishes the emulator to NPM.
+ *
+ * ```sh
+ * rm -rf dist
+ * piral build --target dist
+ * piral publish dist --type emulator
+ * ```
+ */
+export function publishDirectoryMissing_0110(directory: string): QuickMessage {
+  return [LogLevels.error, '0110', `The provided output directory "${directory}" could not be found.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Could not find exactly one *.tgz file.
+ *
+ * @abstract
+ * The `piral publish --type emulator` command only works if a single *.tgz
+ * file is found in the "emulator" subdirectory of the provided output directory.
+ *
+ * Make sure to run `piral build` before running `piral publish`.
+ *
+ * @example
+ * The following command first removes the output directory, then starts the build,
+ * and finally publishes the emulator to NPM.
+ *
+ * ```sh
+ * rm -rf dist
+ * piral build --target dist
+ * piral publish dist --type emulator
+ * ```
+ */
+export function publishEmulatorFilesUnexpected_0111(directory: string): QuickMessage {
+  return [LogLevels.error, '0111', `The directory "${directory}" should have exaxtly one *.tgz file.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The "xcopy" provider requires a "--fields.target" argument.
+ *
+ * @abstract
+ * The `piral publish --type release` command requires the selection of a suitable
+ * provider for running successfully. The "xcopy" provider just copies the sources from
+ * the output directory (source) to a specified target directory.
+ *
+ * Make sure to supply the target directory via the `--fields.target` command line flag.
+ *
+ * @example
+ * The following command would specify `/temp/dest` as target directory:
+ *
+ * ```sh
+ * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * ```
+ */
+export function publishXcopyMissingTarget_0112(): QuickMessage {
+  return [LogLevels.error, '0112', `The "xcopy" provider requires a "--fields.target" argument.`];
+}
+
+/**
  * @kind Warning
  *
  * @summary
@@ -1807,8 +1883,8 @@ export function toolingIncompatible_0101(piralVersion: string, cliVersion: strin
  * pilet debug --open
  * ```
  */
-export function failedToOpenBrowser_0070(error: string): QuickMessage {
-  return [LogLevels.error, '0070', `Unexpected error while opening in browser: ${error}.`];
+export function failedToOpenBrowser_0170(error: string): QuickMessage {
+  return [LogLevels.error, '0170', `Unexpected error while opening in browser: ${error}.`];
 }
 
 /**
@@ -1840,9 +1916,9 @@ export function failedToOpenBrowser_0070(error: string): QuickMessage {
  * pilet build --schema v0
  * ```
  */
-export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<string>): QuickMessage {
+export function invalidSchemaVersion_0171(schemaVersion: string, schemas: Array<string>): QuickMessage {
   const s = schemas.map((m) => `"${m}"`).join(', ');
-  return [LogLevels.warning, '0071', `Found invalid pilet schema version "${schemaVersion}". Available schemas: ${s}.`];
+  return [LogLevels.warning, '0171', `Found invalid pilet schema version "${schemaVersion}". Available schemas: ${s}.`];
 }
 
 /**
@@ -1874,9 +1950,9 @@ export function invalidSchemaVersion_0071(schemaVersion: string, schemas: Array<
  * npm i piral-cli-parcel --save-dev
  * ```
  */
-export function bundlerMissing_0072(bundlerName: string, installed: Array<string>): QuickMessage {
+export function bundlerMissing_0172(bundlerName: string, installed: Array<string>): QuickMessage {
   const s = installed.map((m) => `"${m}"`).join(', ');
-  return [LogLevels.error, '0072', `Cannot find bundler "${bundlerName}". Installed bundlers: ${s}.`];
+  return [LogLevels.error, '0172', `Cannot find bundler "${bundlerName}". Installed bundlers: ${s}.`];
 }
 
 /**
@@ -1905,8 +1981,8 @@ export function bundlerMissing_0072(bundlerName: string, installed: Array<string
  * npm i piral-cli-parcel --save-dev
  * ```
  */
-export function defaultBundlerMissing_0073(): QuickMessage {
-  return [LogLevels.error, '0073', `Cannot find a default bundler.`];
+export function defaultBundlerMissing_0173(): QuickMessage {
+  return [LogLevels.error, '0173', `Cannot find a default bundler.`];
 }
 
 /**
@@ -1936,8 +2012,8 @@ export function defaultBundlerMissing_0073(): QuickMessage {
  * npm i piral-cli-parcel --save-dev
  * ```
  */
-export function bundlingFailed_0074(error: string): QuickMessage {
-  return [LogLevels.error, '0074', `The bundling process failed: ${error || 'Invalid input.'}`];
+export function bundlingFailed_0174(error: string): QuickMessage {
+  return [LogLevels.error, '0174', `The bundling process failed: ${error || 'Invalid input.'}`];
 }
 
 /**
@@ -1969,9 +2045,13 @@ export function bundlingFailed_0074(error: string): QuickMessage {
  * piral build --bundler parcel
  * ```
  */
-export function bundlerUnspecified_0075(available: Array<string>): QuickMessage {
+export function bundlerUnspecified_0175(available: Array<string>): QuickMessage {
   const s = available.map((m) => `"${m}"`).join(', ');
-  return [LogLevels.warning, '0075', `No bundler has been specified even though multiple are available. Choices: ${s}.`];
+  return [
+    LogLevels.warning,
+    '0175',
+    `No bundler has been specified even though multiple are available. Choices: ${s}.`,
+  ];
 }
 
 /**
