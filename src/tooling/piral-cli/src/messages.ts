@@ -2235,7 +2235,7 @@ export function pluginCouldNotBeLoaded_0205(pluginPath: string, ex: any): QuickM
  *
  * @abstract
  * This warning indicates that a Piral CLI bundler plugin is not working as intended.
- * Usually, * you should not see this as a user, but rather as a developer testing a
+ * Usually, you should not see this as a user, but rather as a developer testing a
  * Piral CLI plugin before publishing it.
  *
  * If you see this warning as a user make sure to file an issue at the relevant plugin's
@@ -2249,6 +2249,32 @@ export function pluginCouldNotBeLoaded_0205(pluginPath: string, ex: any): QuickM
  */
 export function apiBundlerInvalid_0206(name: string): QuickMessage {
   return [LogLevels.warning, '0206', `Invalid argument for "${name}" - skipped bundler.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An invalid value for the given argument was supplied.
+ *
+ * @abstract
+ * This warning indicates that a Piral CLI release provider plugin is not working as
+ * intended.
+ *
+ * Usually, you should not see this as a user, but rather as a developer testing a
+ * Piral CLI plugin before publishing it.
+ *
+ * If you see this warning as a user make sure to file an issue at the relevant plugin's
+ * repository or issue tracker.
+ *
+ * @see
+ * - [Semantic Versioning](https://semver.org)
+ *
+ * @example
+ * ...
+ */
+export function apiReleaseProviderInvalid_0207(name: string): QuickMessage {
+  return [LogLevels.warning, '0207', `Invalid argument for "${name}" - skipped bundler.`];
 }
 
 /**
