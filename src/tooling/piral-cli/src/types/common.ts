@@ -95,4 +95,5 @@ export interface PiletRuleContext extends RuleContext {
 export interface PiralData {
   appFile: string;
   appPackage: any;
+  piletPackage: any;
 }

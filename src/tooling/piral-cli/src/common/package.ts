@@ -480,9 +480,9 @@ export async function retrievePiletData(target: string, app?: string) {
   }
 
   const root = dirname(packageJson);
-  const packageContent = require(packageJson);
+  const piletPackage = require(packageJson);
   const appPackage = findPackage(
-    app || (packageContent.piral && packageContent.piral.name) || Object.keys(packageContent.devDependencies),
+    app || (piletPackage.piral && piletPackage.piral.name) || Object.keys(piletPackage.devDependencies),
     target,
   );
   const appFile: string = appPackage && appPackage.app;
@@ -494,11 +494,12 @@ export async function retrievePiletData(target: string, app?: string) {
   const emulator = checkAppShellPackage(appPackage);
 
   return {
-    dependencies: packageContent.dependencies || {},
-    devDependencies: packageContent.devDependencies || {},
-    peerDependencies: packageContent.peerDependencies || {},
-    ignored: checkArrayOrUndefined(packageContent, 'preservedDependencies'),
+    dependencies: piletPackage.dependencies || {},
+    devDependencies: piletPackage.devDependencies || {},
+    peerDependencies: piletPackage.peerDependencies || {},
+    ignored: checkArrayOrUndefined(piletPackage, 'preservedDependencies'),
     appFile,
+    piletPackage,
     appPackage,
     emulator,
     root,
