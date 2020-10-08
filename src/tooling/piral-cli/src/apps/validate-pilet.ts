@@ -4,8 +4,19 @@ import { getPiletRules } from '../rules';
 import { PiletRuleContext, LogLevels } from '../types';
 
 export interface ValidatPiletOptions {
+  /**
+   * Sets the root module of the pilet.
+   */
   entry?: string;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Overrides the Piral instance used as validation blueprint for the pilet.
+   */
   app?: string;
 }
 

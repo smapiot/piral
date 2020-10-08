@@ -1,4 +1,5 @@
-import { basename, resolve } from 'path';
+import { resolve } from 'path';
+import { publishArtifacts } from '../release';
 import { LogLevels, PiralBuildType } from '../types';
 import {
   setLogLevel,
@@ -9,39 +10,41 @@ import {
   logReset,
   publishPackage,
   matchFiles,
-  copy,
 } from '../common';
 
 export interface PublishPiralOptions {
+  /**
+   * The source folder, which was the target folder of `piral build`.
+   */
   source?: string;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * The additional fields to supply for the provider.
+   */
   fields?: Record<string, string>;
+
+  /**
+   * The provider to use for publishing the release artifacts.
+   */
   provider?: string;
+
+  /**
+   * The type of publish.
+   */
   type?: PiralBuildType;
 }
 
 export const publishPiralDefaults: PublishPiralOptions = {
   source: './dist',
   logLevel: LogLevels.info,
-  type: 'emulator',
-  provider: 'xcopy',
+  type: 'all',
+  provider: 'none',
   fields: {},
-};
-
-interface ReleaseProvider {
-  (files: Array<string>, args: Record<string, string>): Promise<void>;
-}
-
-const providers: Record<string, ReleaseProvider> = {
-  async xcopy(files, args) {
-    const { target } = args;
-
-    if (!target) {
-      fail('publishXcopyMissingTarget_0112');
-    }
-
-    await Promise.all(files.map(async (file) => copy(file, resolve(target, basename(file)))));
-  },
 };
 
 async function publishEmulator(baseDir: string, source: string, args: Record<string, string> = {}) {
@@ -67,7 +70,7 @@ async function publishEmulator(baseDir: string, source: string, args: Record<str
   await publishPackage(directory, file, flags);
 }
 
-async function publishRelease(baseDir: string, source: string, provider: string, args: Record<string, string> = {}) {
+async function publishRelease(baseDir: string, source: string, providerName: string, args: Record<string, string> = {}) {
   const type = 'release';
   const directory = resolve(baseDir, source, type);
   const exists = await checkExists(directory);
@@ -77,6 +80,7 @@ async function publishRelease(baseDir: string, source: string, provider: string,
   }
 
   const files = await matchFiles(directory, '**/*');
+  await publishArtifacts(providerName, files, args);
 }
 
 export async function publishPiral(baseDir = process.cwd(), options: PublishPiralOptions = {}) {

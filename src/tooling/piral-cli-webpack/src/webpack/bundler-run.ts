@@ -34,7 +34,7 @@ function getPreset(logLevel: LogLevels): webpack.Stats.Preset {
 export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels) {
   const eventEmitter = new EventEmitter();
   const outDir = wpConfig.output.path;
-  const preset = getPreset(logLevel);
+  const preset = webpack.Stats.presetToOptions(getPreset(logLevel));
   const mainBundle = {
     name: '',
     requireRef: undefined,
@@ -65,10 +65,13 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
           console.error(err);
           reject(err);
         } else {
-          console.log(stats.toString(preset));
+          console.log(stats.toString({
+            ...preset,
+            colors: true,
+          }));
 
           if (stats.hasErrors()) {
-            reject(stats.toJson());
+            reject(stats.toJson(preset));
           } else {
             const file = getOutput(stats);
             resolve({

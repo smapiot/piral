@@ -17,10 +17,35 @@ import {
 } from '../common';
 
 export interface UpgradePiralOptions {
+  /**
+   * The version of Piral to upgrade to.
+   */
   version?: string;
+
+  /**
+   * The target Piral instance for upgrading. This is the root
+   * directory of the app shell, i.e., where the package.json is
+   * stored.
+   */
   target?: string;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Defines if the dependencies should be installed, too.
+   * If the option is disabled, only the package.json is
+   * modified, but nothing is installed yet.
+   */
   install?: boolean;
+
+  /**
+   * Defines the used NPM client. By default, "npm" is used
+   * if no other client is autodetected. The autodetection
+   * works against Lerna, PNPM, and Yarn.
+   */
   npmClient?: NpmClientType;
 }
 

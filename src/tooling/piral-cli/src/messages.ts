@@ -1856,6 +1856,34 @@ export function publishXcopyMissingTarget_0112(): QuickMessage {
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * The given release provider could not be found.
+ *
+ * @abstract
+ * The `piral publish --type release` command requires the selection of a suitable
+ * provider for running successfully. The available providers can be extended via
+ * plugins for the `piral-cli` command-line tooling.
+ *
+ * If a given provider cannot be found we get the error message incl. the list of
+ * available providers. If that happens to be inaccurate check if your Node modules
+ * have been installed correctly. If in doubt, remove the `node_modules` folder and
+ * reinstall your dependencies.
+ *
+ * @example
+ * The following command uses the in-built "xcopy" provider for releasing to a local directory.
+ *
+ * ```sh
+ * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * ```
+ */
+export function publishProviderMissing_0113(providerName: string, availableProviders: Array<string>): QuickMessage {
+  const s = availableProviders.map((m) => `"${m}"`).join(', ');
+  return [LogLevels.error, '0113', `The release provider "${providerName}" is invalid. Available: ${s}.`];
+}
+
+/**
  * @kind Warning
  *
  * @summary

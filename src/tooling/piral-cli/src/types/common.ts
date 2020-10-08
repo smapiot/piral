@@ -41,6 +41,10 @@ export interface Bundler {
   ready(): Promise<void>;
 }
 
+export interface ReleaseProvider {
+  (files: Array<string>, args: Record<string, string>): Promise<void>;
+}
+
 export interface TemplateFileLocation {
   from: string;
   to: string;

@@ -18,14 +18,54 @@ import {
 } from '../common';
 
 export interface PublishPiletOptions {
+  /**
+   * Sets the root module's path to use as source starting point when
+   * used with `--fresh`, otherwise expects source to be a path leading
+   * to a `*.tgz` file.
+   */
   source?: string;
+
+  /**
+   * Sets the URL of the feed service to deploy to.
+   */
   url?: string;
+
+  /**
+   * Sets the API key to use.
+   */
   apiKey?: string;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Specifies if the pilet should be built before publishing.
+   * If yes, then the tarball is created from fresh build artifacts.
+   */
   fresh?: boolean;
+
+  /**
+   * Defines a custom certificate for the feed service.
+   */
   cert?: string;
+
+  /**
+   * Sets the schema version of the pilet. Usually, the default one should be picked.
+   */
   schemaVersion?: PiletSchemaVersion;
+
+  /**
+   * Changing the publish source makes it possible to publish pilets that have
+   * been stored on non-local paths, e.g., when a pilet was already published to
+   * an NPM feed.
+   */
   from?: PiletPublishSource;
+
+  /**
+   * Places additional fields that should be posted to the feed service.
+   */
   fields?: Record<string, string>;
 }
 

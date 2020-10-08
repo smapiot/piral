@@ -1,6 +1,7 @@
 import * as apps from './apps';
 import {
   availableBundlers,
+  availableReleaseProviders,
   forceOverwriteKeys,
   keyOfForceOverwrite,
   valueOfForceOverwrite,
@@ -183,7 +184,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('type', buildTypeKeys)
         .describe('type', 'Selects the target type to publish. "all" publishes all target types.')
         .default('type', apps.publishPiralDefaults.type)
-        .string('provider')
+        .choices('provider', availableReleaseProviders)
         .describe('provider', 'Sets the provider for publishing the release assets.')
         .default('provider', apps.publishPiralDefaults.provider)
         .option('fields', undefined)

@@ -47,14 +47,15 @@ Selects the target type to publish. "all" publishes all target types.
 
 - Type: `string`
 - Choices: `"all"`, `"release"`, `"emulator"`
-- Default: `"emulator"`
+- Default: `"all"`
 
 ### `--provider`
 
 Sets the provider for publishing the release assets.
 
 - Type: `string`
-- Default: `"xcopy"`
+- Choices: `"none"`, `"xcopy"`
+- Default: `"none"`
 
 ### `--fields`
 
