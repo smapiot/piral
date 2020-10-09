@@ -1644,29 +1644,7 @@ export function validationFailed_0080(errors: number): QuickMessage {
  * ...
  */
 export function validationWarned_0081(warnings: number): QuickMessage {
-  return [LogLevels.warning, '0081', `Validation suceeded with ${warnings} warning(s).`];
-}
-
-/**
- * @kind Info
- *
- * @summary
- * The validation process succeeded.
- *
- * @abstract
- * The validation found no warnings or errors.
- *
- * If the performed validations are incorrectly placed or inappropriate for the
- * current project then change the settings in your Piral instance configuration.
- *
- * @see
- * - [Validation](https://docs.piral.io/guidelines/tutorials/08-the-piral-cli#validations)
- *
- * @example
- * ...
- */
-export function validationSuccess_0082(): QuickMessage {
-  return [LogLevels.info, '0082', `Validation successfully.`];
+  return [LogLevels.warning, '0081', `Validation succeeded with ${warnings} warning(s).`];
 }
 
 /**
