@@ -24,6 +24,7 @@ export function createConverter(lazy = true) {
     return {
       mount(el, data, ctx) {
         const props = { ...args, ...data };
+        el.setAttribute('data-blazor-pilet-root', 'true');
 
         (loader || (loader = boot()))
           .then(dependency)
@@ -48,6 +49,7 @@ export function createConverter(lazy = true) {
         state = 'fresh';
       },
       unmount(el) {
+        el.removeAttribute('data-blazor-pilet-root');
         dispose();
 
         if (state === 'mounted') {

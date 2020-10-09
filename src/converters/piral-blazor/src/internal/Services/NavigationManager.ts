@@ -3,7 +3,7 @@ import { EventDelegator } from '../Rendering/EventDelegator';
 // tslint:disable:no-string-literal
 // tslint:disable:no-null-keyword
 
-let hasEnabledNavigationInterception = false;
+let hasEnabledNavigationInterception = true;
 let hasRegisteredNavigationEventListeners = false;
 
 // Will be initialized once someone registers
@@ -13,6 +13,7 @@ let notifyLocationChangedCallback: ((uri: string, intercepted: boolean) => Promi
 export const navigationManager = {
   listenForNavigationEvents,
   enableNavigationInterception,
+  disableNavigationInterception,
   navigateTo,
   getBaseURI: () => document.baseURI,
   getLocationHref: () => location.href,
@@ -29,6 +30,10 @@ function listenForNavigationEvents(callback: (uri: string, intercepted: boolean)
   window.addEventListener('popstate', () => notifyLocationChanged(false));
 }
 
+function disableNavigationInterception() {
+  hasEnabledNavigationInterception = false;
+}
+
 function enableNavigationInterception() {
   hasEnabledNavigationInterception = true;
 }
@@ -38,7 +43,13 @@ export function attachToEventDelegator(eventDelegator: EventDelegator) {
   // running its simulated bubbling process so that we can respect any preventDefault requests.
   // So instead of registering our own native event, register using the EventDelegator.
   eventDelegator.notifyAfterClick((event) => {
-    if (!hasEnabledNavigationInterception) {
+    if (!hasEnabledNavigationInterception || !(event.target instanceof HTMLElement)) {
+      return;
+    }
+
+    const anc = event.target.closest('[data-blazor-pilet-root], [data-portal-id]');
+
+    if (!(anc instanceof HTMLElement) || !anc.dataset.blazorPiletRoot) {
       return;
     }
 
@@ -102,12 +113,8 @@ function performInternalNavigation(
   interceptedLink: boolean,
   replace: boolean = false,
 ) {
-  // Since this was *not* triggered by a back/forward gesture (that goes through a different
-  // code path starting with a popstate event), we don't want to preserve the current scroll
-  // position, so reset it.
-  // To avoid ugly flickering effects, we don't want to change the scroll position until the
-  // we render the new page. As a best approximation, wait until the next batch.
-  window['Blazor'].emitNavigateEvent(target, absoluteInternalHref, replace);
+  const path = getRelativeUri(absoluteInternalHref);
+  window['Blazor'].emitNavigateEvent(target, path, replace);
   notifyLocationChanged(interceptedLink);
 }
 
@@ -128,9 +135,17 @@ function findClosestAncestor(element: Element | null, tagName: string) {
   return !element ? null : element.tagName === tagName ? element : findClosestAncestor(element.parentElement, tagName);
 }
 
+function getBaseUri() {
+  // TODO: Might baseURI really be null?
+  return toBaseUriWithTrailingSlash(document.baseURI);
+}
+
+function getRelativeUri(href: string) {
+    return href.substr(getBaseUri().length);
+}
+
 function isWithinBaseUriSpace(href: string) {
-  const baseUriWithTrailingSlash = toBaseUriWithTrailingSlash(document.baseURI!); // TODO: Might baseURI really be null?
-  return href.startsWith(baseUriWithTrailingSlash);
+  return href.startsWith(getBaseUri());
 }
 
 function toBaseUriWithTrailingSlash(baseUri: string) {

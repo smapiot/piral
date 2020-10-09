@@ -27,6 +27,7 @@ import {
 import { applyCaptureIdToElement } from './ElementReferenceCapture';
 import { EventFieldInfo } from './EventFieldInfo';
 import { dispatchEvent } from './RendererEventDispatcher';
+import { attachToEventDelegator } from '../Services/NavigationManager';
 
 const selectValuePropname = '_blazorSelectValue';
 const sharedTemplateElemForParsing = document.createElement('template');
@@ -49,6 +50,8 @@ export class BrowserRenderer {
     this.eventDelegator = new EventDelegator((event, eventHandlerId, eventArgs, eventFieldInfo) => {
       raiseEvent(event, this.browserRendererId, eventHandlerId, eventArgs, eventFieldInfo);
     });
+
+    attachToEventDelegator(this.eventDelegator);
   }
 
   public attachRootComponentToLogicalElement(componentId: number, element: LogicalElement): void {
