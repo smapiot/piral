@@ -8,8 +8,19 @@ export interface PackPiletOptions {
 }
 
 export const packPiletDefaults: PackPiletOptions = {
+  /**
+   * Sets the source directory for creating the NPM package.
+   */
   source: '.',
+
+  /**
+   * Sets the target directory for storing the tarball.
+   */
   target: '.',
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel: LogLevels.info,
 };
 

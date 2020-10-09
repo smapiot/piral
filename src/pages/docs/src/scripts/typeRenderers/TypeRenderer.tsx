@@ -58,7 +58,7 @@ export const TypeRenderer: React.FC<TypeRendererProps> = ({ node, render }) => {
       return (
         <>
           {withSep(
-            node.types.map((t) => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
+            (node.types || []).map((t) => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
             ' & ',
           )}
         </>
@@ -67,7 +67,7 @@ export const TypeRenderer: React.FC<TypeRendererProps> = ({ node, render }) => {
       return (
         <>
           {withSep(
-            node.types.map((t) => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
+            (node.types || []).map((t) => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
             ' | ',
           )}
         </>
@@ -94,7 +94,7 @@ export const TypeRenderer: React.FC<TypeRendererProps> = ({ node, render }) => {
         <span>
           [
           {withSep(
-            node.elements.map((t) => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
+            (node.elements || []).map((t) => <TypeRenderer render={render} node={t} key={keyOf(t)} />),
             ', ',
           )}
           ]

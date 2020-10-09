@@ -1,3 +1,7 @@
+---
+title: Error Handling
+---
+
 # Error Handling
 
 We make sure to sandbox every pilet, such that errors in a pilet will never have a destructive influence on the whole app shell or other pilets.

@@ -6,10 +6,10 @@ function getRoute(name) {
   return (name && `/tooling/${name}`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const tools = getTools();
 
-  const imports = tools.map(file => {
+  const imports = tools.map((file) => {
     const name = getName(file);
     const route = getRoute(name);
     const { mdValue, meta = {} } = render(file, generated);

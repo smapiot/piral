@@ -1,3 +1,4 @@
+import { availableBundlers } from './helpers';
 import {
   installPackage,
   cliVersion,
@@ -44,7 +45,7 @@ async function installDefaultBundler(root: string) {
 
 function checkDefaultBundler(bundler: QualifiedBundler) {
   if (!bundler?.actions) {
-    fail('defaultBundlerMissing_0073');
+    fail('defaultBundlerMissing_0173');
   }
 
   return bundler;
@@ -52,11 +53,7 @@ function checkDefaultBundler(bundler: QualifiedBundler) {
 
 function checkCustomBundler(bundler: QualifiedBundler, bundlerName: string) {
   if (!bundler?.actions) {
-    fail(
-      'bundlerMissing_0072',
-      bundlerName,
-      bundlers.map((b) => b.name),
-    );
+    fail('bundlerMissing_0172', bundlerName, availableBundlers);
   }
 
   return bundler;
@@ -72,9 +69,11 @@ async function findBundler(root: string, bundlerName?: string) {
     await installDefaultBundler(root);
     const [bundler] = bundlers;
     return checkDefaultBundler(bundler);
-  } else {
-    return defaultBundler;
+  } else if (bundlers.length > 1) {
+    log('bundlerUnspecified_0175', availableBundlers);
   }
+
+  return defaultBundler;
 }
 
 async function prepareModules(args: BaseBundleParameters) {
@@ -87,30 +86,34 @@ async function prepareModules(args: BaseBundleParameters) {
 
 export function setBundler(bundler: QualifiedBundler) {
   bundlers.push(bundler);
+
+  if (!availableBundlers.includes(bundler.name)) {
+    availableBundlers.push(bundler.name);
+  }
 }
 
 export async function callPiralDebug(args: DebugPiralParameters, bundlerName?: string): Promise<Bundler> {
   const bundler = await findBundler(args.root, bundlerName);
   await prepareModules(args);
-  return await bundler.actions.debugPiral.run(args).catch((err) => fail('bundlingFailed_0074', err));
+  return await bundler.actions.debugPiral.run(args).catch((err) => fail('bundlingFailed_0174', err));
 }
 
 export async function callPiletDebug(args: DebugPiletParameters, bundlerName?: string): Promise<Bundler> {
   const bundler = await findBundler(args.root, bundlerName);
   await prepareModules(args);
-  return await bundler.actions.debugPilet.run(args).catch((err) => fail('bundlingFailed_0074', err));
+  return await bundler.actions.debugPilet.run(args).catch((err) => fail('bundlingFailed_0174', err));
 }
 
 export async function callPiralBuild(args: BuildPiralParameters, bundlerName?: string): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
   await prepareModules(args);
-  return await bundler.actions.buildPiral.run(args).catch((err) => fail('bundlingFailed_0074', err));
+  return await bundler.actions.buildPiral.run(args).catch((err) => fail('bundlingFailed_0174', err));
 }
 
 export async function callPiletBuild(args: BuildPiletParameters, bundlerName?: string): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
   await prepareModules(args);
-  return await bundler.actions.buildPilet.run(args).catch((err) => fail('bundlingFailed_0074', err));
+  return await bundler.actions.buildPilet.run(args).catch((err) => fail('bundlingFailed_0174', err));
 }
 
 export async function callDebugPiralFromMonoRepo(
@@ -119,6 +122,6 @@ export async function callDebugPiralFromMonoRepo(
 ): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
   await prepareModules(args);
-  const { bundle } = await bundler.actions.watchPiral.run(args).catch((err) => fail('bundlingFailed_0074', err));
+  const { bundle } = await bundler.actions.watchPiral.run(args).catch((err) => fail('bundlingFailed_0174', err));
   return bundle;
 }

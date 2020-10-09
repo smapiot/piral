@@ -6,17 +6,17 @@ function getRoute(name) {
   return (name && `/guidelines/examples/${name}`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const files = getSamples();
 
-  const imports = files.map(file => {
+  const imports = files.map((file) => {
     const name = getName(file);
     const route = getRoute(name);
     const { mdValue, meta = {} } = render(file, generated);
     const pageMeta = {
+      ...meta,
       link: route,
       source: file,
-      ...meta,
     };
 
     this.addDependency(file, { includedInParent: true });

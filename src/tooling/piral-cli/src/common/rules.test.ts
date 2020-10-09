@@ -1,4 +1,5 @@
 import { ruleSummary, runRules } from './rules';
+import chalk from 'chalk';
 
 const rule = {
   run: jest.fn(),
@@ -14,7 +15,7 @@ describe('Rules Module', () => {
 
     let consoleSpy = jest.spyOn(console, 'log');
     ruleSummary([], []);
-    expect(consoleSpy).toHaveBeenCalledWith('[0082] Validation successfully.');
+    expect(consoleSpy).toHaveBeenCalledWith(`✨  ${chalk.green.bold('Validation successful. No errors or warnings.')}`);
 
     jest.clearAllMocks();
     ruleSummary([], ['Warning!']);

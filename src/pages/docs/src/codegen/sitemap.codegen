@@ -1,9 +1,10 @@
-module.exports = function() {
+module.exports = function () {
   const tutorials = require('./gen-tutorials').call(this).join(', ');
   const plugins = require('./gen-plugins').call(this).join(', ');
   const commands = require('./gen-commands').call(this).join(', ');
+  const general = require('./gen-general').call(this).join(', ');
+  const technical = require('./gen-technical').call(this).join(', ');
   const specification = require('./gen-specification').call(this).join(', ');
-  const documentation = require('./gen-references').call(this).join(', ');
   const samples = require('./gen-samples').call(this).join(', ');
   const questions = require('./gen-faq').call(this).join(', ');
   const codes = require('./gen-codes').call(this).join(', ');
@@ -39,7 +40,8 @@ const tutorials = populate([${tutorials}]);
 const plugins = populate([${plugins}]);
 const commands = populate([${commands}]);
 const specification = [${specification}];
-const documentation = [${documentation}];
+const general = [${general}];
+const technical = [${technical}];
 const samples = [${samples}];
 const tools = [${tools}];
 const bundlers = [${bundlers}];
@@ -58,8 +60,12 @@ module.exports = {
   ],
   reference: [
     {
-      title: 'Documentation',
-      links: documentation,
+      title: 'Technical',
+      links: technical,
+    },
+    {
+      title: 'General',
+      links: general,
     },
     {
       title: 'Specification',

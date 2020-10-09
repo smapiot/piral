@@ -3,6 +3,7 @@ export * from './build-piral';
 export * from './new-piral';
 export * from './upgrade-piral';
 export * from './declaration-piral';
+export * from './publish-piral';
 export * from './validate-piral';
 export * from './new-pilet';
 export * from './upgrade-pilet';

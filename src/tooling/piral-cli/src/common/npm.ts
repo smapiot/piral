@@ -153,6 +153,11 @@ export function installPackage(
   return c.installPackage(packageRef, target, ...flags);
 }
 
+export function publishPackage(target = '.', file = '*.tgz', flags: Array<string> = []): Promise<string> {
+  const c = require(`./clients/npm`);
+  return c.publishPackage(target, file, ...flags);
+}
+
 export function createPackage(target = '.'): Promise<string> {
   const c = require(`./clients/npm`);
   return c.createPackage(target);

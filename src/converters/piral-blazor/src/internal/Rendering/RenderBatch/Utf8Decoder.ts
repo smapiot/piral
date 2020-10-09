@@ -7,7 +7,6 @@ export const decodeUtf8: (bytes: Uint8Array) => string = nativeDecoder
 /* !
 Logic in decodeImpl is derived from fast-text-encoding
 https://github.com/samthor/fast-text-encoding
-
 License for fast-text-encoding: Apache 2.0
 https://github.com/samthor/fast-text-encoding/blob/master/LICENSE
 */

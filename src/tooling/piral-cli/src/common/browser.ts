@@ -6,7 +6,7 @@ export async function openBrowser(shouldOpen: boolean, port: number) {
     try {
       await open(`http://localhost:${port}`, undefined);
     } catch (err) {
-      log('failedToOpenBrowser_0070', err);
+      log('failedToOpenBrowser_0170', err);
     }
   }
 }

@@ -6,17 +6,12 @@ function getRoute(name) {
   return (name && `/types/${name}`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const files = getCoreTypes();
 
-  const imports = files.map(file => {
+  const imports = files.map((file) => {
     const body = readFileSync(file, 'utf8');
-    const name = file
-      .split('\\')
-      .join('/')
-      .split('/')
-      .pop()
-      .replace('.json', '');
+    const name = file.split('\\').join('/').split('/').pop().replace('.json', '');
     const route = getRoute(name);
     const pageMeta = {
       link: route,

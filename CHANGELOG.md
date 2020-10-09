@@ -1,5 +1,15 @@
 # Piral Changelog
 
+## 0.12.3 (tbd)
+
+* Updated support for Blazor 3.2.1 forward in `piral-blazor` (#224)
+* Improved the check on `pilet update` to consider `dependencies` (#327)
+* Fixed duplicated error message codes in the Piral CLI
+* Fixed `pilet validate` taking wrong `main` field (#329)
+* Added improved documentation on loading strategies
+* Added `--bundler` flag for switching the bundler (#328)
+* Added the `piral publish` command with extensibility
+
 ## 0.12.2 (September 28, 2020)
 
 * Extracted `piral-debug-utils` to make the debugging helpers more flexible

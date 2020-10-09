@@ -1,3 +1,7 @@
+---
+title: Migration Instructions
+---
+
 # Instructions for Migration
 
 Starting with the release of 0.11 we encourage everyone to read this before migrating.

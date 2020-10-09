@@ -132,6 +132,14 @@ Sets the schema to be used when bundling the pilets.
 - Choices: `"v0"`, `"v1"`, `"none"`
 - Default: `"v1"`
 
+### `--bundler`
+
+Sets the bundler to use.
+
+- Type: `string`
+- Choices: ``
+- Default: `undefined`
+
 ### `--app`
 
 Sets the name of the Piral instance.

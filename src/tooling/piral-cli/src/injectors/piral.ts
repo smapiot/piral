@@ -48,10 +48,12 @@ export default class PiralInjector implements KrasInjector {
       return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
     }
 
+    const type = mime.getType(target) ?? 'application/octet-stream';
+
     return {
       injector: { name: this.name },
       headers: {
-        'content-type': mime.getType(target),
+        'content-type': type,
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',
         expires: '0',

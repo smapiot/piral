@@ -41,6 +41,10 @@ export interface Bundler {
   ready(): Promise<void>;
 }
 
+export interface ReleaseProvider {
+  (files: Array<string>, args: Record<string, string>): Promise<void>;
+}
+
 export interface TemplateFileLocation {
   from: string;
   to: string;
@@ -91,4 +95,5 @@ export interface PiletRuleContext extends RuleContext {
 export interface PiralData {
   appFile: string;
   appPackage: any;
+  piletPackage: any;
 }

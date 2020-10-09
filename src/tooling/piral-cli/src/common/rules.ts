@@ -1,4 +1,4 @@
-import { fail, log } from './log';
+import { fail, log, logDone } from './log';
 import { RuleContext, Rule } from '../types';
 
 export function ruleSummary(errors: Array<string>, warnings: Array<string>) {
@@ -7,7 +7,7 @@ export function ruleSummary(errors: Array<string>, warnings: Array<string>) {
   } else if (warnings.length > 0) {
     log('validationWarned_0081', warnings.length);
   } else {
-    log('validationSuccess_0082');
+    logDone('Validation successful. No errors or warnings.');
   }
 }
 

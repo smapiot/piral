@@ -101,6 +101,14 @@ Also includes the node modules for target transpilation.
 - Type: `boolean`
 - Default: `true`
 
+### `--bundler`
+
+Sets the bundler to use.
+
+- Type: `string`
+- Choices: ``
+- Default: `undefined`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.

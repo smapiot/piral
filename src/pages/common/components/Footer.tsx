@@ -15,7 +15,7 @@ export const Footer: React.FC = () => (
         <div>
           <FooterMenu title="Piral Universe">
             <li>
-              <a href="https://piral.io" target="_blank">
+              <a href="https://www.piral.io" target="_blank">
                 Homepage
               </a>
             </li>
@@ -30,7 +30,7 @@ export const Footer: React.FC = () => (
               </a>
             </li>
             <li>
-              <a href="https://piral.cloud" target="_blank">
+              <a href="https://www.piral.cloud" target="_blank">
                 Cloud Services
               </a>
             </li>

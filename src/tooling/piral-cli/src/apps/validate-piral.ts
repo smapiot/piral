@@ -4,7 +4,14 @@ import { getPiralRules } from '../rules';
 import { LogLevels, PiralRuleContext } from '../types';
 
 export interface ValidatPiralOptions {
+  /**
+   * Sets the root directory containing the Piral instance's project.json.
+   */
   entry?: string;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
 }
 

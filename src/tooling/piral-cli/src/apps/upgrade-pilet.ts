@@ -28,11 +28,40 @@ import {
 } from '../common';
 
 export interface UpgradePiletOptions {
+  /**
+   * The version of the app shell to upgrade to.
+   */
   version?: string;
+
+  /**
+   * The target pilet for upgrading. This is the root directory
+   * of the pilet, i.e., where the package.json is stored.
+   */
   target?: string;
+
+  /**
+   * Defines if files can be overwritten by scaffolding
+   * template files, if available.
+   */
   forceOverwrite?: ForceOverwrite;
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
+
+  /**
+   * Defines if the dependencies should be installed, too.
+   * If the option is disabled, only the package.json is
+   * modified, but nothing is installed yet.
+   */
   install?: boolean;
+
+  /**
+   * Defines the used NPM client. By default, "npm" is used
+   * if no other client is autodetected. The autodetection
+   * works against Lerna, PNPM, and Yarn.
+   */
   npmClient?: NpmClientType;
 }
 
@@ -63,7 +92,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
   const npmClient = await determineNpmClient(root, options.npmClient);
   const pckg = await readJson(root, 'package.json');
-  const { devDependencies = {}, piral } = pckg;
+  const { devDependencies = {}, dependencies = {}, piral } = pckg;
 
   if (piral && typeof piral === 'object') {
     const sourceName = piral.name;
@@ -72,7 +101,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       fail('invalidPiletPackage_0042');
     }
 
-    const currentVersion = devDependencies[sourceName];
+    const currentVersion = devDependencies[sourceName] ?? dependencies[sourceName];
 
     if (!currentVersion || typeof currentVersion !== 'string') {
       fail('invalidPiralReference_0043');

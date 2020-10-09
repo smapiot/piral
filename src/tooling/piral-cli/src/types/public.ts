@@ -1,5 +1,13 @@
 import { Argv, Arguments } from 'yargs';
-import { RuleRunner, PiletRuleContext, PiralRuleContext, Bundler, BundleDetails, LogLevels } from './common';
+import {
+  RuleRunner,
+  PiletRuleContext,
+  PiralRuleContext,
+  Bundler,
+  BundleDetails,
+  LogLevels,
+  ReleaseProvider,
+} from './common';
 
 export interface ToolCommandRunner<U = {}> {
   (args: Arguments<U>): void | Promise<void>;
@@ -39,6 +47,7 @@ export interface CliPluginApi {
   withPiletRule(ruleName: string, runner: RuleRunner<PiletRuleContext>): CliPluginApi;
   withPatcher(packageName: string, patch: PackagePatcher): CliPluginApi;
   withBundler(bundlerName: string, bundler: BundlerDefinition): CliPluginApi;
+  withReleaseProvider(providerName: string, provider: ReleaseProvider): CliPluginApi;
 }
 
 export interface CliPlugin {

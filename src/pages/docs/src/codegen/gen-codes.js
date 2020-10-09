@@ -6,10 +6,10 @@ function getRoute(name) {
   return (name && `/reference/codes/${name}`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const codes = getCodes();
 
-  const imports = codes.map(file => {
+  const imports = codes.map((file) => {
     const { mdValue } = render(file, generated);
     const name = getName(file);
     const route = getRoute(name);

@@ -2,9 +2,25 @@ import { setLogLevel, logDone, createDeclaration, ForceOverwrite } from '../comm
 import { LogLevels } from '../types';
 
 export interface DeclarationPiralOptions {
+  /**
+   * The entry of the piral solution.
+   */
   entry?: string;
+
+  /**
+   * The target directory where the d.ts will be created.
+   */
   target?: string;
+
+  /**
+   * Specifies ff the target d.ts would be overwrwitten.
+   */
   forceOverwrite?: ForceOverwrite;
+
+
+  /**
+   * Sets the log level to use (1-5).
+   */
   logLevel?: LogLevels;
 }
 

@@ -85,7 +85,7 @@ export interface NewPiletOptions {
    * Sets the default bundler to install.
    * @example 'parcel'
    */
-  bundler?: string;
+  bundlerName?: string;
 }
 
 export const newPiletDefaults: NewPiletOptions = {
@@ -98,7 +98,7 @@ export const newPiletDefaults: NewPiletOptions = {
   template: 'default',
   logLevel: LogLevels.info,
   npmClient: undefined,
-  bundler: 'none',
+  bundlerName: 'none',
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -111,7 +111,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     install = newPiletDefaults.install,
     template = newPiletDefaults.template,
     logLevel = newPiletDefaults.logLevel,
-    bundler = newPiletDefaults.bundler,
+    bundlerName = newPiletDefaults.bundlerName,
   } = options;
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
@@ -185,7 +185,7 @@ always-auth=true`,
 
     progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler });
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs

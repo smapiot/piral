@@ -7,10 +7,10 @@ function getRoute(name) {
   return (name && `/reference/faq/${name}`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const questions = getQuestions();
 
-  const imports = questions.map(file => {
+  const imports = questions.map((file) => {
     const { mdValue } = render(file, generated);
     const name = getName(file);
     const route = getRoute(name);

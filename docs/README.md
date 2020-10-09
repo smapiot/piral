@@ -8,12 +8,13 @@ Piral is open-source software. We try to make everything as transparent and cont
 
 ## Available Content
 
-- [Features and Alternatives](./features.md)
+- [Articles and Posts](./articles.md)
 - [Browser Compatibility](./browsers.md)
+- [Features and Alternatives](./features.md)
 - [Project History](./history.md)
-- [Detailed documentation](./reference/README.md)
+- [Detailed Documentation](./reference/README.md)
 - [Specifications](./specs/README.md)
-- [Command reference](./commands/README.md)
+- [Command Reference](./commands/README.md)
 - [Tutorials](./tutorials/README.md)
 - [Examples](./examples/README.md)
 - [Questions & Answers](./questions/README.md)

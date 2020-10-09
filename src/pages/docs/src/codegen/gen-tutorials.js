@@ -7,10 +7,10 @@ function getRoute(name) {
   return (name && `/guidelines/tutorials/${name}`) || '';
 }
 
-module.exports = function() {
+module.exports = function () {
   const files = getTutorials();
 
-  const imports = files.map(file => {
+  const imports = files.map((file) => {
     const name = getName(file);
     const route = getRoute(name);
     const { mdValue, meta = {} } = render(file, generated);

@@ -112,7 +112,8 @@ export default class PiletInjector implements KrasInjector {
 
   sendFile(target: string, url: string): KrasResponse {
     const content = readFileSync(target);
-    return this.sendContent(content, mime.getType(target), url);
+    const type = mime.getType(target) ?? 'application/octet-stream';
+    return this.sendContent(content, type, url);
   }
 
   sendResponse(path: string, url: string): KrasResponse {

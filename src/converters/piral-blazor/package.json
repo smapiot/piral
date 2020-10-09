@@ -42,12 +42,13 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@dotnet/jsinterop": "3.1.5",
+    "@dotnet/jsinterop": "3.1.8",
     "axios": "^0.19.2",
     "yauzl": "^2.10.0"
   },
   "devDependencies": {
-    "@types/emscripten": "0.0.34",
+    "@types/emscripten": "^1.39.3",
+    "@types/jsdom": "11.0.6",
     "piral-core": "^0.12.2"
   },
   "peerDependencies": {

@@ -3,9 +3,56 @@ const yauzl = require('yauzl');
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function() {
+const prefix = 'staticwebassets/';
+
+function readSourceFromBuffer(buffer, outDir) {
+  return new Promise((resolve, reject) => {
+    yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zip) => {
+      if (err) {
+        reject(err);
+      } else {
+        zip.on('entry', (entry) => {
+          const file = entry.fileName;
+          const dir = path.dirname(file);
+
+          if (dir.startsWith(prefix)) {
+            const target = path.resolve(outDir, file.substring(prefix.length));
+            zip.openReadStream(entry, (err, rs) => {
+              if (err) {
+                reject(err);
+              } else {
+                const ws = fs.createWriteStream(target);
+                rs.on('end', () => {
+                  ws.close();
+                  zip.readEntry();
+                });
+                rs.pipe(ws);
+              }
+            });
+          } else {
+            zip.readEntry();
+          }
+        });
+        zip.on('end', resolve);
+        zip.readEntry();
+      }
+    });
+  });
+}
+
+function generateModule(blazorBootFile) {
+  return new Promise((resolve) => {
+    // we introduce an artificial delay here for slower FS esp. in WSL
+    setTimeout(() => {
+      const content = fs.readFileSync(blazorBootFile, 'utf8');
+      resolve(`module.exports = ${content};`);
+    }, 50);
+  });
+}
+
+module.exports = function () {
   const version = process.env.PIRAL_BLAZOR_VERSION || '';
-  const prefix = 'staticwebassets/';
+  const localFile = process.env.PIRAL_BLAZOR_LOCAL_NUPKG;
   const outDir = this.options.outDir;
   const frameworkDir = path.resolve(outDir, '_framework');
   const binDir = path.resolve(frameworkDir, '_bin');
@@ -17,45 +64,21 @@ module.exports = function() {
   !fs.existsSync(binDir) && fs.mkdirSync(binDir);
   !fs.existsSync(wasmDir) && fs.mkdirSync(wasmDir);
 
+  if (localFile) {
+    if (!fs.existsSync(localFile)) {
+      throw new Error(
+        `The file provided via env. variable "PIRAL_BLAZOR_LOCAL_NUPKG" cannot be found: "${localFile}".`,
+      );
+    }
+
+    const content = fs.readFileSync(localFile);
+    return readSourceFromBuffer(content, outDir).then(() => generateModule(blazorBootFile));
+  }
+
+  console.log(`Downloading Piral.Blazor.Core@${version || 'latest'} from NuGet ...`);
+
   return axios
     .get(`https://www.nuget.org/api/v2/package/Piral.Blazor.Core/${version}`, { responseType: 'arraybuffer' })
-    .then(res => res.data)
-    .then(
-      buffer =>
-        new Promise((resolve, reject) => {
-          yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zip) => {
-            if (err) {
-              reject(err);
-            } else {
-              zip.on('entry', entry => {
-                const file = entry.fileName;
-                const dir = path.dirname(file);
-
-                if (dir.startsWith(prefix)) {
-                  const target = path.resolve(outDir, file.substring(prefix.length));
-                  zip.openReadStream(entry, (err, rs) => {
-                    if (err) {
-                      reject(err);
-                    } else {
-                      const ws = fs.createWriteStream(target);
-                      rs.on('end', () => {
-                        ws.close();
-                        zip.readEntry();
-                      });
-                      rs.pipe(ws);
-                    }
-                  });
-                } else {
-                  zip.readEntry();
-                }
-              });
-              zip.on('end', function() {
-                const config = fs.readFileSync(blazorBootFile, 'utf8');
-                resolve(`module.exports = ${config};`);
-              });
-              zip.readEntry();
-            }
-          });
-        }),
-    );
+    .then((res) => readSourceFromBuffer(res.data, outDir))
+    .then(() => generateModule(blazorBootFile));
 };

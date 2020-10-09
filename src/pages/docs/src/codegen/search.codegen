@@ -4,7 +4,7 @@ const { readFileSync, readdirSync } = require('fs');
 const { generated } = require('./paths');
 const { getTopKeywords } = require('./keywords');
 
-module.exports = function() {
+module.exports = function () {
   const index = new FlexSearch({
     doc: {
       id: 'id',
@@ -13,15 +13,10 @@ module.exports = function() {
   });
 
   const allDocs = readdirSync(generated)
-    .map(name => readFileSync(resolve(generated, name), 'utf8'))
-    .map(raw => {
-      const { source, link, ...meta } = JSON.parse(
-        raw
-          .split('\n')
-          .shift()
-          .substr(3),
-      );
-      if(source) {
+    .map((name) => readFileSync(resolve(generated, name), 'utf8'))
+    .map((raw) => {
+      const { source, link, ...meta } = JSON.parse(raw.split('\n').shift().substr(3));
+      if (source) {
         const content = readFileSync(source, 'utf8');
 
         return {
