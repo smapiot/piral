@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.12.3 (tbd)
+## 0.12.3 (October 10, 2020)
 
 * Updated support for Blazor 3.2.1 forward in `piral-blazor` (#224)
 * Improved the check on `pilet update` to consider `dependencies` (#327)
