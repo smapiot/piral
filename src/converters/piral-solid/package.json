@@ -1,6 +1,6 @@
 {
   "name": "piral-solid",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "Plugin for integrating Solid components in Piral.",
   "keywords": [
     "piral",
@@ -39,7 +39,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.12.2",
+    "piral-core": "^0.12.3",
     "solid-js": "^0.18.7"
   },
   "peerDependencies": {
