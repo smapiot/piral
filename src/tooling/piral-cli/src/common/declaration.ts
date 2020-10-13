@@ -1,11 +1,12 @@
 import { generateDeclaration } from 'dets';
 import { dirname, basename, resolve, extname } from 'path';
-import { progress, log } from './log';
+import { progress, log, logWarn, logVerbose, logInfo } from './log';
 import { makeExternals } from './npm';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { entryModuleExtensions, piralBaseRoot } from './constants';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
+import { LogLevels } from '../types';
 
 function findPiralBaseApi(root: string) {
   try {
@@ -58,6 +59,7 @@ export async function createDeclaration(
   entry: string,
   target: string,
   forceOverwrite: ForceOverwrite,
+  logLevel: LogLevels,
 ) {
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
@@ -81,6 +83,21 @@ export async function createDeclaration(
         },
       ],
       imports: allowedImports,
+      logLevel,
+      logger: {
+        error(message) {
+          throw new Error(message);
+        },
+        info(message) {
+          logInfo(message);
+        },
+        verbose(message) {
+          logVerbose(message);
+        },
+        warn(message) {
+          logWarn(message);
+        },
+      },
     });
 
     progress('Writing declaration file ...');

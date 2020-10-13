@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.12.4 (tbd)
+
+* Updated `dets` to use CLI logging levels
+
 ## 0.12.3 (October 10, 2020)
 
 * Updated support for Blazor 3.2.1 forward in `piral-blazor` (#224)
