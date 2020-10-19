@@ -6097,10 +6097,10 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-dets@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.8.1.tgz#38a9b62041671e0425c6f5cae39c0b69321eecf6"
-  integrity sha512-srW0UR3we7lk2d84XC8dpg633MV7GzrNXwczdRLmd3fmsyckhjpioBSbjTgoySfpfimT7j+ZlY9ORiSgW5VnMQ==
+dets@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.9.0.tgz#1265338e77bd52cb994bb6bb9b335b6e7a8b3af7"
+  integrity sha512-t9FiQdNj2ytxP9d2i416wyT+RxcD7X1G8+9WXiZuoq3hEwN26Ehsc8lIFqYL2qzBSH+/e3BCa1mXA3j2Ij8bCg==
   dependencies:
     yargs "^15.4.1"
 
