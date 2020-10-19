@@ -10,6 +10,7 @@ import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makeExternals } from './npm';
+import { deepMerge } from './merge';
 
 function getDependencyVersion(
   name: string,
@@ -257,6 +258,7 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
     postScaffold = '',
     preUpgrade = '',
     postUpgrade = '',
+    packageOverrides = {},
   } = piralInfo.pilets || {};
 
   return {
@@ -269,6 +271,7 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
     postScaffold,
     preUpgrade,
     postUpgrade,
+    packageOverrides,
   };
 }
 
@@ -388,7 +391,7 @@ export async function patchPiletPackage(
   newInfo?: { language: PiletLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
-  const { externals, ...info } = getPiletsInfo(piralInfo);
+  const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const piral = {
     comment: 'Keep this section to use the Piral CLI.',
     name,
@@ -445,7 +448,7 @@ export async function patchPiletPackage(
     }
   }
 
-  await updateExistingJson(root, 'package.json', {
+  const packageContent = deepMerge(packageOverrides, {
     piral,
     devDependencies,
     peerDependencies,
@@ -454,6 +457,8 @@ export async function patchPiletPackage(
     },
     scripts,
   });
+
+  await updateExistingJson(root, 'package.json', packageContent);
   log('generalDebug_0003', `Succesfully patched the package.json.`);
 }
 

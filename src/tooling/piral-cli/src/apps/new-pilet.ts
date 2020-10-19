@@ -185,7 +185,6 @@ always-auth=true`,
 
     progress(`Taking care of templating ...`);
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs
@@ -195,6 +194,8 @@ always-auth=true`,
       // just with a different target; not a created directory, but the root
       await copyScaffoldingFiles(getPiralPath(root, packageName), root, files);
     }
+
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
 
     if (install) {
       progress(`Installing dependencies ...`);

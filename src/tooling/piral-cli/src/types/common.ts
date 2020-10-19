@@ -58,6 +58,7 @@ export interface PiletsInfo {
   devDependencies: Record<string, string | true>;
   scripts: Record<string, string>;
   validators: Record<string, any>;
+  packageOverrides: Record<string, any>;
   preScaffold: string;
   postScaffold: string;
   preUpgrade: string;
