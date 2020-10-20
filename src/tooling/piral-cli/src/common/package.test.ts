@@ -71,6 +71,7 @@ describe('CLI package module', () => {
       devDependencies: {},
       preScaffold: '',
       postScaffold: '',
+      packageOverrides: {},
       preUpgrade: '',
       postUpgrade: '',
     };
@@ -85,6 +86,7 @@ describe('CLI package module', () => {
         validators: {},
         devDependencies: {},
         preScaffold: '',
+        packageOverrides: {},
         postScaffold: '',
         preUpgrade: '',
         postUpgrade: '',
