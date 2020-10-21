@@ -3,6 +3,9 @@
 ## 0.12.4 (tbd)
 
 * Updated `dets` to use CLI logging levels
+* Added `piral-cli-webpack5` to support bundling with Webpack 5 (#313)
+* Added the `packageOverrides` field to override *package.json* values of pilets (#330)
+* Added special tagged comments for additional modifications of the `PiletApi` (#332)
 
 ## 0.12.3 (October 10, 2020)
 

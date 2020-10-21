@@ -184,15 +184,17 @@ always-auth=true`,
     }
 
     progress(`Taking care of templating ...`);
+
     await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs
-      await copyPiralFiles(root, packageName, ForceOverwrite.yes);
+      await copyPiralFiles(root, packageName, piralInfo, ForceOverwrite.yes);
     } else {
       // otherwise, we perform the same action as in the emulator creation
       // just with a different target; not a created directory, but the root
-      await copyScaffoldingFiles(getPiralPath(root, packageName), root, files);
+      const packageRoot = getPiralPath(root, packageName);
+      await copyScaffoldingFiles(packageRoot, root, files, piralInfo);
     }
 
     await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
