@@ -1,18 +1,18 @@
 [![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
 
-# [Piral CLI Webpack](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-cli-webpack.svg?style=flat)](https://www.npmjs.com/package/piral-cli-webpack) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral CLI Webpack5](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-cli-webpack5.svg?style=flat)](https://www.npmjs.com/package/piral-cli-webpack5) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This plugin enables using [Webpack v4](https://webpack.js.org) as the bundler for Piral instances and pilets.
+This plugin enables using [Webpack v5](https://webpack.js.org) as the bundler for Piral instances and pilets.
 
 ## Installation
 
 Use your favorite NPM client for the installation:
 
 ```sh
-npm i piral-cli-webpack --save-dev
+npm i piral-cli-webpack5 --save-dev
 ```
 
-**Note**: The plugin has to be installed to tell the `piral-cli` to use Webpack v4 as the default bundler.
+**Note**: The plugin has to be installed to tell the `piral-cli` to use Webpack v5 as the default bundler.
 
 ## Using
 
