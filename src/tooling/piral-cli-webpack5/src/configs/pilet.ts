@@ -55,7 +55,6 @@ export async function getPiletConfig(
         new TerserPlugin({
           extractComments: false,
           terserOptions: {
-            warnings: false,
             ie8: true,
             output: {
               comments: /^@pilet/,

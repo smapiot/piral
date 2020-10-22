@@ -11,7 +11,7 @@ interface BuildResult {
 function getOutput(stats: webpack.Stats) {
   const { outputPath, entrypoints } = stats.toJson();
   const assets = entrypoints.main.assets;
-  return resolve(outputPath, assets[0]);
+  return resolve(outputPath, assets[0].name);
 }
 
 function getPreset(logLevel: LogLevels) {

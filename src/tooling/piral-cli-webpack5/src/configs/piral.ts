@@ -32,7 +32,7 @@ export async function getPiralConfig(
     output: {
       publicPath,
       path: dist,
-      filename: `index.${contentHash ? '[hash].' : ''}js`,
+      filename: `index.${contentHash ? '[contenthash].' : ''}js`,
       chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
     },
 
@@ -50,7 +50,6 @@ export async function getPiralConfig(
         new TerserPlugin({
           extractComments: false,
           terserOptions: {
-            warnings: false,
             ie8: true,
           },
         }),
