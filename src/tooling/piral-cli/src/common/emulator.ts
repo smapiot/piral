@@ -110,7 +110,7 @@ export async function createEmulatorPackage(
   await copyScaffoldingFiles(sourceDir, rootDir, piralPkg.files ?? []);
 
   // actually including this one hints that the app shell should have been included - which is forbidden
-  await createFileFromTemplateIfNotExists('other', 'piral', targetDir, 'index.js', ForceOverwrite.yes, {
+  await createFileFromTemplateIfNotExists('piral', targetDir, 'index.js', ForceOverwrite.yes, {
     name: piralPkg.name,
     outFile: targetFile,
   });

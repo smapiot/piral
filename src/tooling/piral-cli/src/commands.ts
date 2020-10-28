@@ -8,7 +8,6 @@ import {
   keyOfPiletLanguage,
   piletLanguageKeys,
   valueOfPiletLanguage,
-  templateTypeKeys,
   frameworkKeys,
   clientTypeKeys,
   schemaKeys,
@@ -21,7 +20,6 @@ import {
   ListCommands,
   NpmClientType,
   LogLevels,
-  TemplateType,
   PiralBuildType,
   PiletPublishSource,
   PiletSchemaVersion,
@@ -243,7 +241,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['create-piral', 'scaffold-piral', 'setup-piral'],
     description: 'Creates a new Piral instance by adding all files and changes to the current project.',
     arguments: ['[target]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('target', {
           type: 'string',
@@ -259,6 +258,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('install')
         .describe('install', 'Already performs the installation of its NPM dependencies.')
         .default('install', apps.newPiralDefaults.install)
+        .string('registry')
+        .describe('registry', 'Sets the package registry to use for resolving the dependencies.')
+        .default('registry', apps.newPiralDefaults.registry)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.newPiralDefaults.logLevel)
@@ -271,8 +273,8 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new Piral instance.')
         .default('language', keyOfPiletLanguage(apps.newPiralDefaults.language))
-        .choices('template', templateTypeKeys)
-        .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
+        .string('template')
+        .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiralDefaults.template)
         .choices('npm-client', clientTypeKeys)
         .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
@@ -280,6 +282,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
         .default('bundler', apps.newPiralDefaults.bundlerName)
+        .option('vars', undefined)
+        .describe('vars', 'Sets additional variables to be used when scaffolding.')
+        .default('vars', apps.newPiralDefaults.variables)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -290,13 +295,15 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         framework: args.framework,
         version: args.tag as string,
+        registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
         language: valueOfPiletLanguage(args.language as string),
         install: args.install as boolean,
-        template: args.template as TemplateType,
+        template: args.template as string,
         logLevel: args.logLevel as LogLevels,
         npmClient: args.npmClient as NpmClientType,
         bundlerName: args.bundler as string,
+        variables: args.vars as Record<string, string>,
       });
     },
   },
@@ -572,7 +579,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['create-pilet', 'scaffold-pilet', 'scaffold', 'new', 'create'],
     description: 'Scaffolds a new pilet for a specified Piral instance.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',
@@ -598,15 +606,18 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('language', piletLanguageKeys)
         .describe('language', 'Determines the programming language for the new pilet.')
         .default('language', keyOfPiletLanguage(apps.newPiletDefaults.language))
-        .choices('template', templateTypeKeys)
-        .describe('template', 'Sets the boilerplate template to be used when scaffolding.')
-        .default('template', templateTypeKeys[0])
+        .string('template')
+        .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
+        .default('template', apps.newPiletDefaults.template)
         .choices('npm-client', clientTypeKeys)
         .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
         .default('npm-client', apps.newPiletDefaults.npmClient)
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
         .default('bundler', apps.newPiletDefaults.bundlerName)
+        .option('vars', undefined)
+        .describe('vars', 'Sets additional variables to be used when scaffolding.')
+        .default('vars', apps.newPiletDefaults.variables)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -620,9 +631,10 @@ const allCommands: Array<ToolCommand<any>> = [
         language: valueOfPiletLanguage(args.language as string),
         logLevel: args.logLevel as LogLevels,
         install: args.install as boolean,
-        template: args.template as TemplateType,
+        template: args.template as string,
         npmClient: args.npmClient as NpmClientType,
         bundlerName: args.bundler as string,
+        variables: args.vars as Record<string, string>,
       });
     },
   },

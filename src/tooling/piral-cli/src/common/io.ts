@@ -219,7 +219,7 @@ export function matchFiles(baseDir: string, pattern: string) {
 export async function createFileIfNotExists(
   targetDir: string,
   fileName: string,
-  content: string,
+  content: Buffer | string,
   forceOverwrite = ForceOverwrite.no,
 ) {
   const targetFile = join(targetDir, fileName);
@@ -233,9 +233,12 @@ export async function createFileIfNotExists(
   ) {
     await createDirectory(dirname(targetFile));
     log('generalDebug_0003', `Creating file "${targetFile}" ...`);
-    await new Promise((resolve, reject) => {
-      writeFile(targetFile, content, 'utf8', (err) => (err ? reject(err) : resolve()));
-    });
+
+    if (typeof content === 'string') {
+      await writeText(targetDir, fileName, content);
+    } else {
+      await writeBinary(targetDir, fileName, content);
+    }
   }
 }
 
@@ -275,11 +278,6 @@ export async function readJson<T = any>(targetDir: string, fileName: string) {
   return JSON.parse(content || '{}') as T;
 }
 
-export function writeJson<T = any>(targetDir: string, fileName: string, data: T, beautify = false) {
-  const content = beautify ? JSON.stringify(data, undefined, 2) : JSON.stringify(data);
-  return writeText(targetDir, fileName, content);
-}
-
 export function readBinary(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
   return new Promise<Buffer>((resolve) => {
@@ -287,17 +285,27 @@ export function readBinary(targetDir: string, fileName: string) {
   });
 }
 
-export function writeText(targetDir: string, fileName: string, data: string) {
-  const targetFile = join(targetDir, fileName);
-  return new Promise<void>((resolve, reject) => {
-    writeFile(targetFile, data, 'utf8', (err) => (err ? reject() : resolve()));
-  });
-}
-
 export function readText(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
   return new Promise<string>((resolve) => {
     readFile(targetFile, 'utf8', (err, c) => (err ? resolve(undefined) : resolve(c)));
+  });
+}
+
+export function writeJson<T = any>(targetDir: string, fileName: string, data: T, beautify = false) {
+  const content = beautify ? JSON.stringify(data, undefined, 2) : JSON.stringify(data);
+  return writeText(targetDir, fileName, content);
+}
+
+export function writeText(targetDir: string, fileName: string, content: string) {
+  const data = Buffer.from(content, 'utf8');
+  return writeBinary(targetDir, fileName, data);
+}
+
+export function writeBinary(targetDir: string, fileName: string, data: Buffer) {
+  const targetFile = join(targetDir, fileName);
+  return new Promise<void>((resolve, reject) => {
+    writeFile(targetFile, data, (err) => (err ? reject(err) : resolve()));
   });
 }
 

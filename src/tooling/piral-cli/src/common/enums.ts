@@ -4,7 +4,7 @@ export enum ForceOverwrite {
   yes,
 }
 
-export enum PiletLanguage {
+export enum SourceLanguage {
   ts,
   js,
 }

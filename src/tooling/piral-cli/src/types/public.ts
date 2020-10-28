@@ -161,8 +161,6 @@ export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
 export type PiralBuildType = 'all' | 'release' | 'emulator';
 
-export type TemplateType = 'default' | 'empty' | 'other';
-
 export type PackageType = 'registry' | 'file' | 'git';
 
 export type NpmClientType = 'npm' | 'yarn' | 'pnpm';

@@ -3,7 +3,7 @@ import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
-import { PiletLanguage, ForceOverwrite } from './enums';
+import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
@@ -135,7 +135,7 @@ export function readPiralPackage(root: string, name: string) {
 
 export function getPiralPackage(
   app: string,
-  language: PiletLanguage,
+  language: SourceLanguage,
   version: string,
   framework: Framework,
   bundler?: string,
@@ -424,7 +424,7 @@ export async function patchPiletPackage(
   name: string,
   version: string,
   piralInfo: any,
-  newInfo?: { language: PiletLanguage; bundler: string },
+  newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
   const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
