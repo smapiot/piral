@@ -2,7 +2,7 @@ import { argv } from 'yargs';
 import { inquirer } from './external';
 import { commands } from './commands';
 
-type FlagType = 'string' | 'number' | 'boolean';
+type FlagType = 'string' | 'number' | 'boolean' | 'object';
 
 interface Flag {
   name: string;
@@ -34,6 +34,13 @@ function getCommandData(retrieve: any) {
       }
 
       return this;
+    },
+    option(name: string) {
+      return this.swap(name, (flag) => ({
+        ...flag,
+        value: {},
+        type: 'object',
+      }));
     },
     choices(name: string, choices: Array<any>) {
       return this.swap(name, (flag) => ({
@@ -121,6 +128,7 @@ export function runQuestionnaire(commandName: string, ignoredInstructions = ['ba
     .filter((instruction) => !ignoredInstructions.includes(instruction.name))
     .filter((instruction) => !acceptAll || (instruction.default === undefined && instruction.required))
     .filter((instruction) => argv[instruction.name] === undefined)
+    .filter((instruction) => instruction.type !== 'object')
     .map((instruction) => ({
       name: instruction.name,
       default: instruction.values ? instruction.values.indexOf(instruction.default) : instruction.default,
