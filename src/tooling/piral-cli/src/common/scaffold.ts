@@ -1,8 +1,9 @@
 import { join, dirname, resolve, basename } from 'path';
-import { installDependencies } from './clients/npm';
+import { installPackage } from './clients/npm';
 import { ForceOverwrite, SourceLanguage } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
 import { Framework } from '../types';
+import { log, fail } from './log';
 
 interface TemplateFile {
   path: string;
@@ -15,7 +16,7 @@ async function getTemplateFiles(
   root: string,
   data: Record<string, any>,
 ): Promise<Array<TemplateFile>> {
-  await installDependencies(__dirname, templatePackageName, '--registry', registry);
+  await installPackage(templatePackageName, __dirname, '--registry', registry);
   const templateRunner = require(templatePackageName);
 
   if (typeof templateRunner === 'function') {
@@ -23,7 +24,10 @@ async function getTemplateFiles(
   } else if ('default' in templateRunner && typeof templateRunner.default === 'function') {
     return await templateRunner.default(root, data);
   } else {
-    //TODO log warning
+    fail(
+      'generalError_0002',
+      `The provided template package "${templatePackageName}" does not export a template factory function.`,
+    );
   }
 
   return [];
@@ -36,10 +40,10 @@ function writeFiles(root: string, files: Array<TemplateFile>, forceOverwrite: Fo
     files
       .filter((file) => {
         if (typeof file.path !== 'string') {
-          //TODO warn due to invalid path
+          log('generalWarning_0001', `The supplied file path ("${file.path}") is not a string. Skipping.`);
           return false;
         } else if (typeof file.content === 'undefined') {
-          //TODO warn due to invalid content
+          log('generalWarning_0001', `The file "${file.path}" did not specify any content. Skipping.`);
           return false;
         }
 
@@ -67,6 +71,16 @@ function getTemplatePackageName(type: 'piral' | 'pilet', template: string) {
   return template;
 }
 
+function getLanguageName(language: SourceLanguage) {
+  switch (language) {
+    case SourceLanguage.js:
+      return 'js';
+    case SourceLanguage.ts:
+    default:
+      return 'ts';
+  }
+}
+
 export async function scaffoldPiralSourceFiles(
   template: string,
   registry: string,
@@ -85,7 +99,7 @@ export async function scaffoldPiralSourceFiles(
   const files = await getTemplateFiles(templatePackageName, registry, root, {
     ...variables,
     src,
-    language,
+    language: getLanguageName(language),
     packageName,
   });
 
@@ -109,7 +123,7 @@ export async function scaffoldPiletSourceFiles(
   const files = await getTemplateFiles(templatePackageName, registry, root, {
     ...variables,
     src,
-    language,
+    language: getLanguageName(language),
     sourceName,
   });
 

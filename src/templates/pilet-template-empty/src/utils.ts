@@ -7,7 +7,7 @@ export interface TemplateFile {
 }
 
 function fillTemplate(name: string, data: any = {}) {
-  const path = resolve(__dirname, '..', '..', 'templates', `${name}.ejs`);
+  const path = resolve(__dirname, '..', 'templates', `${name}.ejs`);
   return new Promise<string>((resolve, reject) => {
     renderFile(path, data, (err, str) => {
       if (err) {

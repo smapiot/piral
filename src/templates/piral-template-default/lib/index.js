@@ -23,7 +23,7 @@ function default_1(root, args) {
         };
         switch (packageName) {
             case 'piral-core': {
-                files.push(utils_1.getFileFromTemplate('.', 'piral-core', 'index.html', data), utils_1.getFileFromTemplate(mocksDir, 'piral', 'backend.js', data));
+                files.push(utils_1.getFileFromTemplate(srcDir, 'piral-core', 'index.html', data), utils_1.getFileFromTemplate(mocksDir, 'piral', 'backend.js', data));
                 switch (language) {
                     case 'js':
                         files.push(utils_1.getFileFromTemplate(srcDir, 'piral-core', 'index.jsx', data));
@@ -49,14 +49,14 @@ function default_1(root, args) {
                 break;
             case 'piral':
             default: {
-                files.push(utils_1.getFileFromTemplate(srcDir, 'piral', 'index.html', data), utils_1.getFileFromTemplate(mocksDir, 'piral', 'backend.js', data), utils_1.getFileFromTemplate(srcDir, 'piral', 'style.scss', data));
+                files.push(utils_1.getFileFromTemplate(srcDir, 'piral', 'index.html', data), utils_1.getFileFromTemplate(srcDir, 'piral', 'style.scss', data), utils_1.getFileFromTemplate(mocksDir, 'piral', 'backend.js', data));
                 switch (language) {
                     case 'js':
                         files.push(utils_1.getFileFromTemplate(srcDir, 'piral', 'layout.jsx', data), utils_1.getFileFromTemplate(srcDir, 'piral', 'index.jsx', data));
                         break;
                     case 'ts':
                     default:
-                        files.push(utils_1.getFileFromTemplate(srcDir, 'piral', 'tsconfig.json', data), utils_1.getFileFromTemplate(srcDir, 'piral', 'layout.tsx', data), utils_1.getFileFromTemplate(srcDir, 'piral', 'index.tsx', data));
+                        files.push(utils_1.getFileFromTemplate('.', 'piral', 'tsconfig.json', data), utils_1.getFileFromTemplate(srcDir, 'piral', 'layout.tsx', data), utils_1.getFileFromTemplate(srcDir, 'piral', 'index.tsx', data));
                         break;
                 }
                 break;

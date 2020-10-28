@@ -13,7 +13,7 @@ exports.getLanguageExtension = exports.getFileFromTemplate = void 0;
 const path_1 = require("path");
 const ejs_1 = require("ejs");
 function fillTemplate(name, data = {}) {
-    const path = path_1.resolve(__dirname, '..', '..', 'templates', `${name}.ejs`);
+    const path = path_1.resolve(__dirname, '..', 'templates', `${name}.ejs`);
     return new Promise((resolve, reject) => {
         ejs_1.renderFile(path, data, (err, str) => {
             if (err) {

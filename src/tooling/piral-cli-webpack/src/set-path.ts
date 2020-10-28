@@ -13,5 +13,6 @@ function computePath() {
 
 declare let __webpack_public_path__: string;
 
+// tslint:disable-next-line:variable-name
 const __bundleUrl__ = computePath();
 __webpack_public_path__ = __bundleUrl__;

@@ -7,6 +7,9 @@
 * Added the `packageOverrides` field to override *package.json* values of pilets (#330)
 * Added special tagged comments for additional modifications of the `PiletApi` (#332)
 * Added `piral-breadcrumbs` for bringing managing breadcrumbs
+* Added templating system for scaffolding Piral instances and pilets
+* Added Piral instance templates `@smapiot/piral-template-default` and `@smapiot/piral-template-empty`
+* Added pilet templates `@smapiot/pilet-template-default` and `@smapiot/pilet-template-empty`
 
 ## 0.12.3 (October 10, 2020)
 

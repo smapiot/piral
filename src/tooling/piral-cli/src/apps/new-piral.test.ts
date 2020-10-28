@@ -2,11 +2,26 @@ import { mkdtempSync, existsSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
 import { newPiral } from './new-piral';
-import { PiletLanguage } from '../common';
+import { SourceLanguage } from '../common';
 
 function createTempDir() {
   return mkdtempSync(join(tmpdir(), 'piral-tests-new-piral-'));
 }
+
+jest.mock('../common/clients/npm', () => {
+  const original = jest.requireActual('../common/clients/npm');
+
+  return {
+    ...original,
+    installPackage: (...args) => {
+      if (args[0].startsWith('@smapiot/')) {
+        return Promise.resolve();
+      } else {
+        return original.installPackage(...args);
+      }
+    },
+  };
+});
 
 describe('New Piral Command', () => {
   it('scaffolding in an empty directory works', async () => {
@@ -26,7 +41,7 @@ describe('New Piral Command', () => {
     jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
-      language: PiletLanguage.js,
+      language: SourceLanguage.js,
       install: false,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
