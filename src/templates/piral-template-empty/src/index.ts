@@ -62,7 +62,6 @@ export default async function (root: string, args: TemplateArgs) {
       files.push(
         getFileFromTemplate(srcDir, 'piral', 'index.html', data),
         getFileFromTemplate(mocksDir, 'piral', 'backend.js', data),
-        getFileFromTemplate(srcDir, 'piral', 'style.scss', data),
       );
 
       switch (language) {
@@ -76,7 +75,6 @@ export default async function (root: string, args: TemplateArgs) {
         default:
           files.push(
             getFileFromTemplate(srcDir, 'piral', 'tsconfig.json', data),
-            getFileFromTemplate(srcDir, 'piral', 'layout.tsx', data),
             getFileFromTemplate(srcDir, 'piral', 'index.tsx', data),
           );
           break;

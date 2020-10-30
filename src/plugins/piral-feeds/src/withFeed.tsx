@@ -13,7 +13,7 @@ export function withFeed<TData, TItem, TProps>(
     if (!loaded) {
       return <PiralLoadingIndicator />;
     } else if (data) {
-      return <Component data={data} {...props} />;
+      return <Component {...props} data={data} />;
     } else {
       return <PiralError type="feed" error={error} />;
     }
