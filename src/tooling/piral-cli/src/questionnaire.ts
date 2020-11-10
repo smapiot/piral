@@ -120,12 +120,18 @@ function getType(flag: Flag) {
   }
 }
 
-export function runQuestionnaire(commandName: string, ignoredInstructions = ['base', 'log-level']) {
+export type IgnoredInstructions = Array<string> | Record<string, string>;
+
+export function runQuestionnaire(
+  commandName: string,
+  ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
+) {
   const [command] = commands.all.filter((m) => m.name === commandName);
   const acceptAll = argv.y === true;
   const instructions = getCommandData(command.flags);
+  const ignored = Array.isArray(ignoredInstructions) ? ignoredInstructions : Object.keys(ignoredInstructions);
   const questions = instructions
-    .filter((instruction) => !ignoredInstructions.includes(instruction.name))
+    .filter((instruction) => !ignored.includes(instruction.name))
     .filter((instruction) => !acceptAll || (instruction.default === undefined && instruction.required))
     .filter((instruction) => argv[instruction.name] === undefined)
     .filter((instruction) => instruction.type !== 'object')
@@ -142,9 +148,9 @@ export function runQuestionnaire(commandName: string, ignoredInstructions = ['ba
     const parameters: any = {};
 
     for (const instruction of instructions) {
-      const value = answers[instruction.name] ?? argv[instruction.name];
-      parameters[instruction.name] =
-        value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
+      const name = instruction.name;
+      const value = answers[name] ?? ignoredInstructions[name] ?? argv[name];
+      parameters[name] = value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
     }
 
     return command.run(parameters);
