@@ -25,6 +25,7 @@ export interface ToolCommand<T = any, U = any> {
   name: string;
   description: string;
   arguments: Array<string>;
+  survey?: boolean;
   flags?: ToolCommandFlagsSetter<T>;
   alias: Array<string>;
   run: ToolCommandRunner<U>;
