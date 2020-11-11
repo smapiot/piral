@@ -2,12 +2,26 @@ import { join, dirname, resolve, basename } from 'path';
 import { installPackage } from './clients/npm';
 import { ForceOverwrite, SourceLanguage } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
-import { Framework } from '../types';
 import { log, fail } from './log';
+import { Framework } from '../types';
 
 interface TemplateFile {
   path: string;
   content: Buffer | string;
+}
+
+function getTemplatePackage(templatePackageName: string) {
+  const idx = templatePackageName.indexOf('@');
+  const normalizedName = idx > 0 ? templatePackageName.substr(0, idx) : templatePackageName;
+
+  try {
+    return require(normalizedName);
+  } catch {
+    fail(
+      'generalError_0002',
+      `Could not find the given template "${templatePackageName}". Package "${normalizedName}" could not be resolved.`,
+    );
+  }
 }
 
 async function getTemplateFiles(
@@ -17,7 +31,7 @@ async function getTemplateFiles(
   data: Record<string, any>,
 ): Promise<Array<TemplateFile>> {
   await installPackage(templatePackageName, __dirname, '--registry', registry);
-  const templateRunner = require(templatePackageName);
+  const templateRunner = getTemplatePackage(templatePackageName);
 
   if (typeof templateRunner === 'function') {
     return await templateRunner(root, data);
@@ -29,8 +43,6 @@ async function getTemplateFiles(
       `The provided template package "${templatePackageName}" does not export a template factory function.`,
     );
   }
-
-  return [];
 }
 
 function writeFiles(root: string, files: Array<TemplateFile>, forceOverwrite: ForceOverwrite) {
