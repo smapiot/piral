@@ -1,6 +1,6 @@
-import { argv } from 'yargs';
 import { inquirer } from './external';
 import { commands } from './commands';
+import { ToolCommand } from './types';
 
 type FlagType = 'string' | 'number' | 'boolean' | 'object';
 
@@ -122,18 +122,18 @@ function getType(flag: Flag) {
 
 export type IgnoredInstructions = Array<string> | Record<string, string>;
 
-export function runQuestionnaire(
-  commandName: string,
+export function runQuestionnaireFor(
+  command: ToolCommand<any, any>,
+  args: Record<string, any>,
   ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
 ) {
-  const [command] = commands.all.filter((m) => m.name === commandName);
-  const acceptAll = argv.y === true;
+  const acceptAll = args.y === true;
   const instructions = getCommandData(command.flags);
   const ignored = Array.isArray(ignoredInstructions) ? ignoredInstructions : Object.keys(ignoredInstructions);
   const questions = instructions
     .filter((instruction) => !ignored.includes(instruction.name))
     .filter((instruction) => !acceptAll || (instruction.default === undefined && instruction.required))
-    .filter((instruction) => argv[instruction.name] === undefined)
+    .filter((instruction) => args[instruction.name] === undefined)
     .filter((instruction) => instruction.type !== 'object')
     .map((instruction) => ({
       name: instruction.name,
@@ -149,10 +149,19 @@ export function runQuestionnaire(
 
     for (const instruction of instructions) {
       const name = instruction.name;
-      const value = answers[name] ?? ignoredInstructions[name] ?? argv[name];
+      const value = answers[name] ?? ignoredInstructions[name] ?? args[name];
       parameters[name] = value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
     }
 
     return command.run(parameters);
   });
+}
+
+export function runQuestionnaire(
+  commandName: string,
+  ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
+) {
+  const { argv } = require('yargs');
+  const [command] = commands.all.filter((m) => m.name === commandName);
+  return runQuestionnaireFor(command, argv, ignoredInstructions);
 }
