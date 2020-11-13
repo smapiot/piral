@@ -1,8 +1,8 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { Html5EntryWebpackPlugin } from 'html5-entry-webpack-plugin';
-import { PiralInstanceWebpackPlugin } from 'piral-instance-webpack-plugin';
+import { html5EntryWebpackConfigEnchancer } from 'html5-entry-webpack-config-enchancer';
+import { piralInstanceWebpackConfigEnchancer } from 'piral-instance-webpack-config-enchancer';
 import { getRules, getPlugins, extensions, getVariables, getHmrEntry } from './common';
 
 export async function getPiralConfig(
@@ -22,7 +22,18 @@ export async function getPiralConfig(
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
 
-  return {
+  const enchance = (options) =>
+    [
+      html5EntryWebpackConfigEnchancer({}),
+      piralInstanceWebpackConfigEnchancer({
+        name,
+        version,
+        externals,
+        variables: getVariables(),
+      }),
+    ].reduceRight((acc, val) => val(acc), options);
+
+  return enchance({
     devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
 
     mode: develop ? 'development' : 'production',
@@ -57,19 +68,6 @@ export async function getPiralConfig(
       ],
     },
 
-    plugins: getPlugins(
-      [
-        new Html5EntryWebpackPlugin(),
-        new PiralInstanceWebpackPlugin({
-          name,
-          version,
-          externals,
-          variables: getVariables(),
-        }),
-      ],
-      progress,
-      production,
-      hmr,
-    ),
-  };
+    plugins: getPlugins([], progress, production, hmr),
+  });
 }

@@ -2,7 +2,7 @@ import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { PiletSchemaVersion } from 'piral-cli';
-import { PiletWebpackPlugin } from 'pilet-webpack-plugin';
+import { piletWebpackConfigEnchancer } from 'pilet-webpack-config-enchancer';
 import { join } from 'path';
 import { getRules, getPlugins, extensions, getVariables } from './common';
 
@@ -25,7 +25,16 @@ export async function getPiletConfig(
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
 
-  return {
+  const enchance = piletWebpackConfigEnchancer({
+    name,
+    piral,
+    version,
+    externals,
+    schema,
+    variables: getVariables(),
+  });
+
+  return enchance({
     devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
 
     mode: develop ? 'development' : 'production',
@@ -68,19 +77,6 @@ export async function getPiletConfig(
       ],
     },
 
-    plugins: getPlugins(
-      [
-        new PiletWebpackPlugin({
-          name,
-          piral,
-          version,
-          externals,
-          schema,
-          variables: getVariables(),
-        }),
-      ],
-      progress,
-      production,
-    ),
-  };
+    plugins: getPlugins([], progress, production),
+  });
 }
