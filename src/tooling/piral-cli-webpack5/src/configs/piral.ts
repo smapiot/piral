@@ -22,7 +22,7 @@ export async function getPiralConfig(
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
 
-  const enchance = (options) =>
+  const enhance = (options) =>
     [
       html5EntryWebpackConfigEnhancer({}),
       piralInstanceWebpackConfigEnhancer({
@@ -33,7 +33,7 @@ export async function getPiralConfig(
       }),
     ].reduceRight((acc, val) => val(acc), options);
 
-  return enchance({
+  return enhance({
     devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
 
     mode: develop ? 'development' : 'production',

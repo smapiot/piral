@@ -25,7 +25,7 @@ export async function getPiletConfig(
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
 
-  const enchance = piletWebpackConfigEnhancer({
+  const enhance = piletWebpackConfigEnhancer({
     name,
     piral,
     version,
@@ -34,7 +34,7 @@ export async function getPiletConfig(
     variables: getVariables(),
   });
 
-  return enchance({
+  return enhance({
     devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
 
     mode: develop ? 'development' : 'production',
