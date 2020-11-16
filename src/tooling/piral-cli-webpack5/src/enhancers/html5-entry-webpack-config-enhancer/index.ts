@@ -24,7 +24,7 @@ export const html5EntryWebpackConfigEnhancer = (options: Html5EntryWebpackPlugin
     if (!entries.length) throw new Error('Template entries expected to be not empty');
 
     setEntries(compilerOptions, template, entries as [string, ...string[]]);
-    // plugins.forEach(plugin => plugin.apply(compiler));
+
     compilerOptions.plugins = [...compilerOptions.plugins, ...plugins];
   }
 

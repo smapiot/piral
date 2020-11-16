@@ -25,7 +25,6 @@ export const piralInstanceWebpackConfigEnhancer = (options: PiralInstanceWebpack
 
   setEnvironment(variables);
 
-  // plugins.forEach((plugin) => plugin.apply(compiler));
   compilerOptions.plugins = [...(compilerOptions.plugins || []), ...plugins];
 
   return compilerOptions;

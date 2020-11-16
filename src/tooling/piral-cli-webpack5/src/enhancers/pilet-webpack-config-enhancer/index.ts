@@ -70,10 +70,8 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
     );
   }
 
-  // FIXME: this is a really bad idea, making finding the source of configuration nearly impossible
   setEnvironment(variables);
 
-  // plugins.forEach((plugin) => plugin.apply(compiler));
   compilerOptions.plugins = [...compilerOptions.plugins, ...plugins];
 
   const current = compilerOptions.externals;
@@ -88,7 +86,6 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
     const reset = environment !== 'production' ? `delete ${jsonpFunction}_chunks;` : '';
     compilerOptions.output.auxiliaryComment = {
       commonjs2: `\nfunction define(d,k){${reset}(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
-      //   commonjs2: `\nfunction define(d,k){${reset}(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(x=>x)));}define.amd=!0;`,
     } as any;
   }
 
@@ -97,8 +94,6 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
     : current
     ? [current, ...externals]
     : externals;
-
-  console.log(compilerOptions);
 
   return compilerOptions;
 };
