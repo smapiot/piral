@@ -1,8 +1,8 @@
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { html5EntryWebpackConfigEnchancer } from 'html5-entry-webpack-config-enchancer';
-import { piralInstanceWebpackConfigEnchancer } from 'piral-instance-webpack-config-enchancer';
+import { html5EntryWebpackConfigEnhancer } from '../enhancers/html5-entry-webpack-config-enhancer';
+import { piralInstanceWebpackConfigEnhancer } from '../enhancers/piral-instance-webpack-config-enhancer';
 import { getRules, getPlugins, extensions, getVariables, getHmrEntry } from './common';
 
 export async function getPiralConfig(
@@ -24,8 +24,8 @@ export async function getPiralConfig(
 
   const enchance = (options) =>
     [
-      html5EntryWebpackConfigEnchancer({}),
-      piralInstanceWebpackConfigEnchancer({
+      html5EntryWebpackConfigEnhancer({}),
+      piralInstanceWebpackConfigEnhancer({
         name,
         version,
         externals,
