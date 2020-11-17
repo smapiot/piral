@@ -11,6 +11,7 @@
 * Added Piral instance templates `@smapiot/piral-template-default` and `@smapiot/piral-template-empty`
 * Added pilet templates `@smapiot/pilet-template-default` and `@smapiot/pilet-template-empty`
 * Added `survey` option to Piral CLI commands
+* Added option for using pilets v1 with `crossorigin` attribute (#335)
 
 ## 0.12.3 (October 10, 2020)
 

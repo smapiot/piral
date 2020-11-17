@@ -228,6 +228,18 @@ export interface PiletDependencyFetcher {
 }
 
 /**
+ * Additional configuration options for the default loader.
+ */
+export interface DefaultLoaderConfig {
+  /**
+   * Sets the cross-origin attribute of potential script tags.
+   * For pilets v1 this may be useful. Otherwise, only pilets that
+   * have an integrity defined will be set to "anonymous".
+   */
+  crossOrigin?: string;
+}
+
+/**
  * The creator function for the pilet API.
  */
 export interface PiletApiCreator {
@@ -316,6 +328,10 @@ export interface LoadPiletsOptions {
    * helpful when debugging or in SSR scenarios.
    */
   pilets?: Array<Pilet>;
+  /**
+   * Optionally, configures the default loader.
+   */
+  config?: DefaultLoaderConfig;
   /**
    * Optionally, defines how to load a pilet.
    */

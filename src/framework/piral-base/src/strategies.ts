@@ -33,8 +33,9 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
       dependencies,
       getDependencies,
       createApi,
+      config,
       pilets = [],
-      loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency),
+      loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency, config),
     } = options;
     const loader = loadMetadata(fetchPilets);
 
@@ -103,8 +104,9 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
     dependencies,
     getDependencies,
     createApi,
+    config,
     pilets = [],
-    loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency),
+    loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency, config),
   } = options;
 
   return loadPilets(fetchPilets, loadPilet)

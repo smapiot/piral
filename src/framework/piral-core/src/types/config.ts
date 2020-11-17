@@ -6,6 +6,7 @@ import type {
   PiletLoader,
   Pilet,
   AvailableDependencies,
+  DefaultLoaderConfig,
 } from 'piral-base';
 import type { NestedPartial } from './common';
 import type { PiralPlugin } from './plugin';
@@ -33,6 +34,10 @@ export interface PiralPiletConfiguration {
    * Function to define how to load a pilet given its metadata.
    */
   loadPilet?: PiletLoader;
+  /**
+   * Optionally, configures the default loader.
+   */
+  config?: DefaultLoaderConfig;
   /**
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.
