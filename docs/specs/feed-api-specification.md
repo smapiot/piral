@@ -248,6 +248,6 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 ## References
 
 - [RFC2119](https://tools.ietf.org/html/rfc2119)
-- [Pilet Specification](https://docs.piral.io/reference/specifications/pilet)
+- [Pilet Specification](https://docs.piral.io/reference/specifications/pilet-specification)
 - [TypeScript Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
 - [Subresource Integrity](https://www.w3.org/TR/SRI/)
