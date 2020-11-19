@@ -37,7 +37,7 @@ export interface PiralPiletConfiguration {
   /**
    * Optionally, configures the default loader.
    */
-  config?: DefaultLoaderConfig;
+  loaderConfig?: DefaultLoaderConfig;
   /**
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.

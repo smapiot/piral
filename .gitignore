@@ -7,6 +7,7 @@ src/packages/*/lib
 src/pages/*/lib
 src/plugins/*/lib
 src/samples/*/lib
+src/templates/*/lib
 src/tooling/*/lib
 src/utilities/*/lib
 __generated__
