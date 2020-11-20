@@ -91,6 +91,7 @@ export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletMod
             component: withApi(context.converters, arg, api, 'modal'),
             defaults,
           });
+          return () => api.unregisterModal(name);
         },
         unregisterModal(name) {
           const id = buildName(pilet, name);

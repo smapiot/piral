@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Dict, WrappedComponent, BaseComponentProps, AnyComponent, BaseRegistration } from 'piral-core';
+import { Dict, WrappedComponent, BaseComponentProps, AnyComponent, BaseRegistration, RegistrationDisposer } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletDashboardApi {}
@@ -134,13 +134,13 @@ export interface PiletDashboardApi {
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(name: string, Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): void;
+  registerTile(name: string, Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): RegistrationDisposer;
   /**
    * Registers a tile for predefined tile components.
    * @param Component The component to be rendered within the Dashboard.
    * @param preferences The optional preferences to be supplied to the Dashboard for the tile.
    */
-  registerTile(Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): void;
+  registerTile(Component: AnyComponent<TileComponentProps>, preferences?: TilePreferences): RegistrationDisposer;
   /**
    * Unregisters a tile known by the given name.
    * Only previously registered tiles can be unregistered.

@@ -94,6 +94,7 @@ export function createMenuApi(config: MenuConfig = {}): PiralPlugin<PiletMenuApi
             component: withApi(context.converters, arg, api, 'menu'),
             settings: getSettings(defaultSettings, settings),
           });
+          return () => api.unregisterMenu(name);
         },
         unregisterMenu(name) {
           const id = buildName(pilet, name);

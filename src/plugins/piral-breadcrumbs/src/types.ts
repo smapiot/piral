@@ -1,5 +1,5 @@
 import { ComponentType, ReactChild } from 'react';
-import { Dict, BaseRegistration } from 'piral-core';
+import { Dict, BaseRegistration, RegistrationDisposer } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletBreadcrumbsApi {}
@@ -88,14 +88,14 @@ export interface PiletBreadcrumbsApi {
    * Registers a breadcrumb with the provided settings.
    * @param settings The settings for configuring the breadcrumb.
    */
-  registerBreadcrumb(settings: BreadcrumbSettings): void;
+  registerBreadcrumb(settings: BreadcrumbSettings): RegistrationDisposer;
   /**
    * Registers a named breadcrumb with the provided settings.
    * The name has to be unique within the current pilet.
    * @param name The name of the breadcrumb.
    * @param settings The settings for configuring the breadcrumb.
    */
-  registerBreadcrumb(name: string, settings: BreadcrumbSettings): void;
+  registerBreadcrumb(name: string, settings: BreadcrumbSettings): RegistrationDisposer;
   /**
    * Unregisters a breadcrumb known by the given name.
    * Only previously registered tiles can be unregistered.

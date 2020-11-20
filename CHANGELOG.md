@@ -3,6 +3,7 @@
 ## 0.12.4 (tbd)
 
 * Updated `dets` to use CLI logging levels
+* Extended all `register...` APIs to return disposers (#336) 
 * Added `piral-cli-webpack5` to support bundling with Webpack 5 (#313)
 * Added the `packageOverrides` field to override *package.json* values of pilets (#330)
 * Added special tagged comments for additional modifications of the `PiletApi` (#332)

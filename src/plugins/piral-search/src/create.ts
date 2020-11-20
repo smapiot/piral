@@ -158,6 +158,7 @@ export function createSearchApi(config: SearchConfig = {}): PiralPlugin<PiletSea
               settings,
             ),
           );
+          return () => api.unregisterSearchProvider(name);
         },
         unregisterSearchProvider(name) {
           const id = buildName(pilet, name);
