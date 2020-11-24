@@ -99,7 +99,7 @@ If you want to customize the styling (which you should) make sure to register co
 You can customize the options available when showing another notification.
 
 ```ts
-import 'piral-notifications';
+import type {} from 'piral-notifications';
 
 declare module 'piral-notifications/lib/types' {
   interface PiralCustomNotificationOptions {

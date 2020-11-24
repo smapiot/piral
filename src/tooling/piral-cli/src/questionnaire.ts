@@ -1,8 +1,8 @@
-import { argv } from 'yargs';
 import { inquirer } from './external';
 import { commands } from './commands';
+import { ToolCommand } from './types';
 
-type FlagType = 'string' | 'number' | 'boolean';
+type FlagType = 'string' | 'number' | 'boolean' | 'object';
 
 interface Flag {
   name: string;
@@ -34,6 +34,13 @@ function getCommandData(retrieve: any) {
       }
 
       return this;
+    },
+    option(name: string) {
+      return this.swap(name, (flag) => ({
+        ...flag,
+        value: {},
+        type: 'object',
+      }));
     },
     choices(name: string, choices: Array<any>) {
       return this.swap(name, (flag) => ({
@@ -113,14 +120,21 @@ function getType(flag: Flag) {
   }
 }
 
-export function runQuestionnaire(commandName: string, ignoredInstructions = ['base', 'log-level']) {
-  const [command] = commands.all.filter((m) => m.name === commandName);
-  const acceptAll = argv.y === true;
+export type IgnoredInstructions = Array<string> | Record<string, string>;
+
+export function runQuestionnaireFor(
+  command: ToolCommand<any, any>,
+  args: Record<string, any>,
+  ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
+) {
+  const acceptAll = args.y === true;
   const instructions = getCommandData(command.flags);
+  const ignored = Array.isArray(ignoredInstructions) ? ignoredInstructions : Object.keys(ignoredInstructions);
   const questions = instructions
-    .filter((instruction) => !ignoredInstructions.includes(instruction.name))
+    .filter((instruction) => !ignored.includes(instruction.name))
     .filter((instruction) => !acceptAll || (instruction.default === undefined && instruction.required))
-    .filter((instruction) => argv[instruction.name] === undefined)
+    .filter((instruction) => args[instruction.name] === undefined)
+    .filter((instruction) => instruction.type !== 'object')
     .map((instruction) => ({
       name: instruction.name,
       default: instruction.values ? instruction.values.indexOf(instruction.default) : instruction.default,
@@ -134,11 +148,20 @@ export function runQuestionnaire(commandName: string, ignoredInstructions = ['ba
     const parameters: any = {};
 
     for (const instruction of instructions) {
-      const value = answers[instruction.name] ?? argv[instruction.name];
-      parameters[instruction.name] =
-        value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
+      const name = instruction.name;
+      const value = answers[name] ?? ignoredInstructions[name] ?? args[name];
+      parameters[name] = value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
     }
 
     return command.run(parameters);
   });
+}
+
+export function runQuestionnaire(
+  commandName: string,
+  ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
+) {
+  const { argv } = require('yargs');
+  const [command] = commands.all.filter((m) => m.name === commandName);
+  return runQuestionnaireFor(command, argv, ignoredInstructions);
 }

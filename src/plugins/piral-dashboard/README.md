@@ -109,7 +109,7 @@ const instance = createInstance({
 You can customize the available tiles and their options.
 
 ```ts
-import 'piral-dashboard';
+import type {} from 'piral-dashboard';
 
 declare module 'piral-dashboard/lib/types' {
   interface PiralCustomTilePreferences {

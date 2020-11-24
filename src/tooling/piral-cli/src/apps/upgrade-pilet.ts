@@ -137,20 +137,18 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     progress(`Taking care of templating ...`);
 
-    await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
-
     if (isEmulator) {
       // in the emulator case we get the files from the contained tarball
-      await copyPiralFiles(root, sourceName, forceOverwrite, originalFiles);
+      await copyPiralFiles(root, sourceName, piralInfo, forceOverwrite, originalFiles);
     } else {
       // otherwise, we perform the same action as in the emulator creation
       // just with a different target; not a created directory, but the root
-      await copyScaffoldingFiles(
-        getPiralPath(root, sourceName),
-        root,
-        files.filter((m) => typeof m === 'string' || !m.once),
-      );
+      const packageRoot = getPiralPath(root, sourceName);
+      const notOnceFiles = files.filter((m) => typeof m === 'string' || !m.once);
+      await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo);
     }
+
+    await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
 
     if (install) {
       progress(`Updating dependencies ...`);

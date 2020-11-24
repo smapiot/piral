@@ -93,6 +93,7 @@ export function createDashboardApi(config: DashboardConfig = {}): PiralPlugin<Pi
             component: withApi(context.converters, arg, api, 'tile'),
             preferences: getPreferences(defaultPreferences, preferences),
           });
+          return () => api.unregisterTile(name);
         },
         unregisterTile(name) {
           const id = buildName(pilet, name);

@@ -1,5 +1,5 @@
-import { WrappedComponent, Dict, BaseComponentProps, AnyComponent, BaseRegistration } from 'piral-core';
 import { ComponentType } from 'react';
+import { WrappedComponent, Dict, BaseComponentProps, AnyComponent, BaseRegistration, RegistrationDisposer } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletMenuApi {}
@@ -117,13 +117,13 @@ export interface PiletMenuApi {
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(name: string, Component: AnyComponent<MenuComponentProps>, settings?: MenuSettings): void;
+  registerMenu(name: string, Component: AnyComponent<MenuComponentProps>, settings?: MenuSettings): RegistrationDisposer;
   /**
    * Registers a menu item for a predefined menu component.
    * @param Component The component to be rendered within the menu.
    * @param settings The optional configuration for the menu item.
    */
-  registerMenu(Component: AnyComponent<MenuComponentProps>, settings?: MenuSettings): void;
+  registerMenu(Component: AnyComponent<MenuComponentProps>, settings?: MenuSettings): RegistrationDisposer;
   /**
    * Unregisters a menu item known by the given name.
    * Only previously registered menu items can be unregistered.

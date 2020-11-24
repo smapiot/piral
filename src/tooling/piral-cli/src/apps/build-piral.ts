@@ -187,7 +187,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);
 
-    const rootDir = await createEmulatorPackage(root, outDir, outFile);
+    const rootDir = await createEmulatorPackage(root, outDir, outFile, logLevel);
 
     logDone(`Development package available in "${rootDir}".`);
     logReset();

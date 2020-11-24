@@ -17,7 +17,6 @@ export interface DeclarationPiralOptions {
    */
   forceOverwrite?: ForceOverwrite;
 
-
   /**
    * Sets the log level to use (1-5).
    */
@@ -39,6 +38,6 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
     logLevel = declarationPiralDefaults.logLevel,
   } = options;
   setLogLevel(logLevel);
-  await createDeclaration(baseDir, entry, target, forceOverwrite);
+  await createDeclaration(baseDir, entry, target, forceOverwrite, logLevel);
   logDone(`Declaration created successfully in "${target}"!`);
 }

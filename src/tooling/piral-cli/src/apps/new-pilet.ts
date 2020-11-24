@@ -1,8 +1,8 @@
 import { resolve, basename } from 'path';
-import { LogLevels, TemplateType, NpmClientType } from '../types';
+import { LogLevels, NpmClientType } from '../types';
 import {
   ForceOverwrite,
-  PiletLanguage,
+  SourceLanguage,
   createDirectory,
   createFileIfNotExists,
   defaultRegistry,
@@ -57,7 +57,7 @@ export interface NewPiletOptions {
    * Determines the programming language for the new pilet.
    * @example 'ts'
    */
-  language?: PiletLanguage;
+  language?: SourceLanguage;
 
   /**
    * States if the npm dependencies should be installed when scaffolding.
@@ -68,7 +68,7 @@ export interface NewPiletOptions {
    * Sets the boilerplate template to be used when scaffolding.
    * @example 'empty'
    */
-  template?: TemplateType;
+  template?: string;
 
   /**
    * Sets the log level to use (1-5).
@@ -86,6 +86,11 @@ export interface NewPiletOptions {
    * @example 'parcel'
    */
   bundlerName?: string;
+
+  /**
+   * Places additional variables that should used when scaffolding.
+   */
+  variables?: Record<string, string>;
 }
 
 export const newPiletDefaults: NewPiletOptions = {
@@ -93,12 +98,13 @@ export const newPiletDefaults: NewPiletOptions = {
   registry: defaultRegistry,
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
-  language: PiletLanguage.ts,
+  language: SourceLanguage.ts,
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
   npmClient: undefined,
   bundlerName: 'none',
+  variables: {},
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -112,6 +118,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     template = newPiletDefaults.template,
     logLevel = newPiletDefaults.logLevel,
     bundlerName = newPiletDefaults.bundlerName,
+    variables = newPiletDefaults.variables,
   } = options;
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
@@ -184,17 +191,20 @@ always-auth=true`,
     }
 
     progress(`Taking care of templating ...`);
-    await scaffoldPiletSourceFiles(template, language, root, packageName, forceOverwrite);
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
+
+    await scaffoldPiletSourceFiles(template, registry, language, root, packageName, forceOverwrite, variables);
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs
-      await copyPiralFiles(root, packageName, ForceOverwrite.yes);
+      await copyPiralFiles(root, packageName, piralInfo, ForceOverwrite.yes);
     } else {
       // otherwise, we perform the same action as in the emulator creation
       // just with a different target; not a created directory, but the root
-      await copyScaffoldingFiles(getPiralPath(root, packageName), root, files);
+      const packageRoot = getPiralPath(root, packageName);
+      await copyScaffoldingFiles(packageRoot, root, files, piralInfo);
     }
+
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
 
     if (install) {
       progress(`Installing dependencies ...`);

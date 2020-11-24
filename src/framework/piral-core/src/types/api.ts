@@ -19,6 +19,16 @@ export interface BaseComponentProps {
 }
 
 /**
+ * The shape of an implicit unregister function.
+ */
+export interface RegistrationDisposer {
+  /**
+   * Cleans up the previous registration.
+   */
+  (): void;
+}
+
+/**
  * The props of an extension component.
  */
 export interface ExtensionComponentProps<T> extends BaseComponentProps {
@@ -72,7 +82,7 @@ export interface PiletCoreApi {
    * @param Component The component to render the page.
    * @param meta The optional metadata to use.
    */
-  registerPage(route: string, Component: AnyComponent<PageComponentProps>, meta?: PiralPageMeta): void;
+  registerPage(route: string, Component: AnyComponent<PageComponentProps>, meta?: PiralPageMeta): RegistrationDisposer;
   /**
    * Unregisters the page identified by the given route.
    * @param route The route that was previously registered.
@@ -89,7 +99,7 @@ export interface PiletCoreApi {
     name: TName extends string ? TName : string,
     Component: AnyComponent<ExtensionComponentProps<TName>>,
     defaults?: TName,
-  ): void;
+  ): RegistrationDisposer;
   /**
    * Unregisters a global extension component.
    * Only previously registered extension components can be unregistered.

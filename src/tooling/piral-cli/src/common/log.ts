@@ -24,8 +24,9 @@ if (isWindows) {
       return;
     }
 
-    let currDate = new Date();
+    const currDate = new Date();
     message = `[${currDate.toLocaleTimeString()}]: ${message}`;
+
     if (this.logLevel > 4) {
       if (!this.logFile) {
         // the critical line is the filename; it must not contain colons!

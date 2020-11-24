@@ -3,13 +3,14 @@ import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
 import { getDevDependencies } from './language';
-import { PiletLanguage, ForceOverwrite } from './enums';
+import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles, getFileNames } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makeExternals } from './npm';
+import { deepMerge } from './merge';
 
 function getDependencyVersion(
   name: string,
@@ -134,7 +135,7 @@ export function readPiralPackage(root: string, name: string) {
 
 export function getPiralPackage(
   app: string,
-  language: PiletLanguage,
+  language: SourceLanguage,
   version: string,
   framework: Framework,
   bundler?: string,
@@ -160,7 +161,7 @@ export function getPiralPackage(
   };
 }
 
-async function getAvailableFiles(root: string, name: string, tarBall: string) {
+async function getAvailableFiles(root: string, name: string, tarBall: string): Promise<Array<FileDescriptor>> {
   const source = getPiralPath(root, name);
   log('generalDebug_0003', `Checking if "files.tar" exists in "${source}" ...`);
   const exists = await checkExists(resolve(source, `${tarBall}.tar`));
@@ -219,18 +220,53 @@ export async function copyScaffoldingFiles(
   source: string,
   target: string,
   files: Array<string | TemplateFileLocation>,
+  piralInfo?: any
 ) {
   log('generalDebug_0003', `Copying the scaffolding files ...`);
+  const allFiles: Array<FileDescriptor> = [];
 
   for (const file of files) {
     const subfiles = await getMatchingFiles(source, target, file);
-    await copyFiles(subfiles, ForceOverwrite.yes, []);
+    allFiles.push(...subfiles);
+  }
+
+  if (piralInfo) {
+    await extendPackageOverridesFromTemplateFragment(target, piralInfo, allFiles);
+  }
+
+  await copyFiles(allFiles, ForceOverwrite.yes, []);
+}
+
+async function extendPackageOverridesFromTemplateFragment(root: string, piralInfo: any, files: Array<FileDescriptor>) {
+  const packageTarget = resolve(root, 'package.json');
+
+  for (let i = files.length; i--; ) {
+    const file = files[i];
+
+    if (file.targetPath === packageTarget) {
+      const fragment = await readJson(dirname(file.sourcePath), basename(file.sourcePath));
+      files.splice(i, 1);
+
+      if (!piralInfo.pilets) {
+        piralInfo.pilets = {};
+      }
+
+      if (!piralInfo.pilets.packageOverrides) {
+        piralInfo.pilets.packageOverrides = {};
+      }
+
+      piralInfo.pilets.packageOverrides = {
+        ...piralInfo.pilets.packageOverrides,
+        ...fragment,
+      };
+    }
   }
 }
 
 export async function copyPiralFiles(
   root: string,
   name: string,
+  piralInfo: any,
   forceOverwrite: ForceOverwrite,
   originalFiles?: Array<FileInfo>,
 ) {
@@ -243,6 +279,7 @@ export async function copyPiralFiles(
     originalFiles = [];
   }
 
+  await extendPackageOverridesFromTemplateFragment(root, piralInfo, files);
   await copyFiles(files, forceOverwrite, originalFiles);
 }
 
@@ -257,6 +294,7 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
     postScaffold = '',
     preUpgrade = '',
     postUpgrade = '',
+    packageOverrides = {},
   } = piralInfo.pilets || {};
 
   return {
@@ -269,6 +307,7 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
     postScaffold,
     preUpgrade,
     postUpgrade,
+    packageOverrides,
   };
 }
 
@@ -385,10 +424,10 @@ export async function patchPiletPackage(
   name: string,
   version: string,
   piralInfo: any,
-  newInfo?: { language: PiletLanguage; bundler: string },
+  newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
-  const { externals, ...info } = getPiletsInfo(piralInfo);
+  const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const piral = {
     comment: 'Keep this section to use the Piral CLI.',
     name,
@@ -445,7 +484,7 @@ export async function patchPiletPackage(
     }
   }
 
-  await updateExistingJson(root, 'package.json', {
+  const packageContent = deepMerge(packageOverrides, {
     piral,
     devDependencies,
     peerDependencies,
@@ -454,6 +493,8 @@ export async function patchPiletPackage(
     },
     scripts,
   });
+
+  await updateExistingJson(root, 'package.json', packageContent);
   log('generalDebug_0003', `Succesfully patched the package.json.`);
 }
 

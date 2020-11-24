@@ -1,8 +1,8 @@
 import { resolve, basename } from 'path';
-import { LogLevels, TemplateType, Framework, NpmClientType } from '../types';
+import { LogLevels, Framework, NpmClientType } from '../types';
 import {
   ForceOverwrite,
-  PiletLanguage,
+  SourceLanguage,
   installPackage,
   updateExistingJson,
   getPiralPackage,
@@ -16,9 +16,15 @@ import {
   fail,
   progress,
   determineNpmClient,
+  defaultRegistry,
 } from '../common';
 
 export interface NewPiralOptions {
+  /**
+   * The package registry to use for resolving the specified Piral app.
+   */
+  registry?: string;
+
   /**
    * Sets the path to the app's source HTML file.
    */
@@ -47,7 +53,7 @@ export interface NewPiralOptions {
   /**
    * Determines the programming language for the new Piral instance. (e.g. 'ts')
    */
-  language?: PiletLanguage;
+  language?: SourceLanguage;
 
   /**
    * States if the npm dependecies should be installed when scaffolding.
@@ -57,7 +63,7 @@ export interface NewPiralOptions {
   /**
    * Sets the boilerplate template to be used when scaffolding.
    */
-  template?: TemplateType;
+  template?: string;
 
   /**
    * The log level that should be used within the scaffolding process.
@@ -73,25 +79,33 @@ export interface NewPiralOptions {
    * Sets the default bundler to install. (e.g. 'parcel').
    */
   bundlerName?: string;
+
+  /**
+   * Places additional variables that should used when scaffolding.
+   */
+  variables?: Record<string, string>;
 }
 
 export const newPiralDefaults: NewPiralOptions = {
   app: './src/index.html',
+  registry: defaultRegistry,
   framework: 'piral',
   target: '.',
   version: 'latest',
   forceOverwrite: ForceOverwrite.no,
-  language: PiletLanguage.ts,
+  language: SourceLanguage.ts,
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
   npmClient: undefined,
   bundlerName: 'none',
+  variables: {},
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
   const {
     app = newPiralDefaults.app,
+    registry = newPiralDefaults.registry,
     framework = newPiralDefaults.framework,
     target = newPiralDefaults.target,
     version = newPiralDefaults.version,
@@ -101,6 +115,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     template = newPiralDefaults.template,
     logLevel = newPiralDefaults.logLevel,
     bundlerName = newPiralDefaults.bundlerName,
+    variables = newPiralDefaults.variables,
   } = options;
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
@@ -130,6 +145,18 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       ),
     );
 
+    if (registry !== newPiralDefaults.registry) {
+      progress(`Setting up NPM registry (%s) ...`, registry);
+
+      await createFileIfNotExists(
+        root,
+        '.npmrc',
+        `registry=${registry}
+always-auth=true`,
+        forceOverwrite,
+      );
+    }
+
     await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework, bundlerName));
 
     progress(`Installing NPM package ${packageRef} ...`);
@@ -138,7 +165,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     progress(`Taking care of templating ...`);
 
-    await scaffoldPiralSourceFiles(template, language, root, app, framework, forceOverwrite);
+    await scaffoldPiralSourceFiles(template, registry, language, root, app, framework, forceOverwrite, variables);
 
     if (install) {
       progress(`Installing dependencies ...`);

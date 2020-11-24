@@ -16,6 +16,13 @@ export async function installDependencies(target = '.', ...flags: Array<string>)
   return ms.value;
 }
 
+export async function unpackPackage(packageRef: string, target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['pack', packageRef, ...flags], target, ms);
+  log('generalDebug_0003', `NPM (un)pack result: ${ms.value}`);
+  return ms.value;
+}
+
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runNpmProcess(['install', packageRef, ...flags], target, ms);

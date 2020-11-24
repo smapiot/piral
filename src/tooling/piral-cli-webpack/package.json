@@ -1,12 +1,14 @@
 {
   "name": "piral-cli-webpack",
   "version": "0.12.3",
-  "description": "Provides debug and build capabilities for pilets and Piral instances using Webpack.",
+  "description": "Provides debug and build capabilities for pilets and Piral instances using Webpack v4.",
   "keywords": [
     "piral-cli",
     "piral",
     "plugin",
     "webpack",
+    "webpack4",
+    "webpack-4",
     "build",
     "debug",
     "bundle"

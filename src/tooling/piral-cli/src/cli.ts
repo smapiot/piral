@@ -1,4 +1,6 @@
 import * as yargs from 'yargs';
+import { detailed } from 'yargs-parser';
+import { runQuestionnaireFor } from './questionnaire';
 import { ToolCommand } from './types';
 
 let argv = yargs;
@@ -17,20 +19,37 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
       [buildCommand(command), ...command.alias],
       command.description,
       (argv) => {
+        if (command.survey) {
+          argv = argv
+            .boolean('y')
+            .describe('y', 'Skips the survey by falling back to the default values.')
+            .default('y', false);
+        }
+
         if (typeof command.flags === 'function') {
           return command.flags(argv);
         }
         return argv;
       },
-      (args) =>
-        Promise.resolve(command.run(args)).then(
+      (args) => {
+        const runCommand = () => {
+          if (command.survey) {
+            const result = detailed(process.argv).argv;
+            return runQuestionnaireFor(command, result);
+          } else {
+            return Promise.resolve(command.run(args));
+          }
+        };
+
+        return runCommand().then(
           () => process.exit(0),
           (err) => {
             err && !err.logged && console.error(err.message);
             console.log('Codes Reference: https://docs.piral.io/code/search');
             process.exit(1);
           },
-        ),
+        );
+      },
     );
   }
 

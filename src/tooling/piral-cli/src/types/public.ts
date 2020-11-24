@@ -25,6 +25,7 @@ export interface ToolCommand<T = any, U = any> {
   name: string;
   description: string;
   arguments: Array<string>;
+  survey?: boolean;
   flags?: ToolCommandFlagsSetter<T>;
   alias: Array<string>;
   run: ToolCommandRunner<U>;
@@ -160,8 +161,6 @@ export type PiletSchemaVersion = 'none' | 'v0' | 'v1';
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
 export type PiralBuildType = 'all' | 'release' | 'emulator';
-
-export type TemplateType = 'default' | 'empty' | 'other';
 
 export type PackageType = 'registry' | 'file' | 'git';
 

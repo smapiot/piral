@@ -23,6 +23,7 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
           meta,
           component: withApi(context.converters, arg, api, 'page'),
         });
+        return () => api.unregisterPage(route);
       },
       unregisterPage(route) {
         context.unregisterPage(route);
@@ -34,6 +35,7 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
           reference: arg,
           defaults,
         });
+        return () => api.unregisterExtension(name, arg);
       },
       unregisterExtension(name, arg) {
         context.unregisterExtension(name as string, arg);

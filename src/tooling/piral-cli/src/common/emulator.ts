@@ -7,7 +7,7 @@ import { createPackage, makeExternals } from './npm';
 import { createDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
-import { TemplateFileLocation } from '../types';
+import { LogLevels, TemplateFileLocation } from '../types';
 import {
   createDirectory,
   removeDirectory,
@@ -19,7 +19,12 @@ import {
 
 const packageJson = 'package.json';
 
-export async function createEmulatorPackage(sourceDir: string, targetDir: string, targetFile: string) {
+export async function createEmulatorPackage(
+  sourceDir: string,
+  targetDir: string,
+  targetFile: string,
+  logLevel: LogLevels,
+) {
   const piralPkg = require(resolve(sourceDir, packageJson));
   const files: Array<string | TemplateFileLocation> = piralPkg.pilets?.files ?? [];
   const allExternals = makeExternals(piralPkg.pilets?.externals);
@@ -105,13 +110,13 @@ export async function createEmulatorPackage(sourceDir: string, targetDir: string
   await copyScaffoldingFiles(sourceDir, rootDir, piralPkg.files ?? []);
 
   // actually including this one hints that the app shell should have been included - which is forbidden
-  await createFileFromTemplateIfNotExists('other', 'piral', targetDir, 'index.js', ForceOverwrite.yes, {
+  await createFileFromTemplateIfNotExists('piral', targetDir, 'index.js', ForceOverwrite.yes, {
     name: piralPkg.name,
     outFile: targetFile,
   });
 
   // generate the associated index.d.ts
-  await createDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes);
+  await createDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
   // since things like .gitignore are not properly treated by NPM we pack the files (for standard and once only)
   await Promise.all([

@@ -103,7 +103,7 @@ const instance = createInstance({
 You can customize the available dialogs and their options.
 
 ```ts
-import 'piral-menu';
+import type {} from 'piral-menu';
 
 declare module 'piral-menu/lib/types' {
   interface PiralCustomMenuSettings {

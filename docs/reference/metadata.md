@@ -45,6 +45,14 @@ The additional fields for a Piral instance package are as follows:
     },
     "validators": {
       "stays-small": -30
+    },
+    "packageOverrides": {
+      "browserslist": [
+        "defaults",
+        "not IE 11",
+        "not IE_Mob 11",
+        "maintained node versions"
+      ]
     }
   }
 }
@@ -83,6 +91,14 @@ The determined `scripts` provide an easy way to extend the scripts section of th
 In addition to the standard specification using a string for the version, the dependencies listed in the `devDependencies` can also be marked as `true`. Such a `devDependencies` entry will then use the version of the dependency as specified in either the `dependencies` or `devDependencies` of the Piral instance. If no such entry can be found, it will fall back to `"latest"`.
 
 The `validators` field is used to properly assert pilets. There are many validators included in `piral-cli`. Additionally, new validators can be added via CLI plugins. For options on the given `validators` see the `pilet validate` command.
+
+The `packageOverrides` field is used to determine additional properties to merge into the *package.json* of pilets when **scaffolding**. This will not be used while upgrading. The idea here is to provide some initial values which go beyond the standard template.
+
+::: tip: Use a package.json fragment
+Besides specifying additional fields for the *package.json* in the `packageOverrides` field you can also include a *package.json* file in the `files` section. If the target is indeed identical to the pilet's *package.json* then this will not be overwritten, but rather just be merged.
+
+The merging happens *after* the initial project scaffolding, but *before* the critical pilet pieces (e.g., the dev dependency to the app shell) are applied.
+:::
 
 ## Pilets - Package Definition
 

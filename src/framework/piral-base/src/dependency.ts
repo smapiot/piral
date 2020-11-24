@@ -89,6 +89,7 @@ function includeScript(
   link: string,
   integrity?: string,
   dependencies?: AvailableDependencies,
+  crossOrigin?: string,
 ) {
   return new Promise<PiletApp>((resolve) => {
     const s = document.createElement('script');
@@ -96,8 +97,10 @@ function includeScript(
     s.src = link;
 
     if (integrity) {
-      s.crossOrigin = 'anonymous';
+      s.crossOrigin = crossOrigin || 'anonymous';
       s.integrity = integrity;
+    } else if (crossOrigin) {
+      s.crossOrigin = crossOrigin;
     }
 
     window[depName] = getLocalRequire(dependencies);
@@ -111,18 +114,20 @@ function includeScript(
  * Includes the given single pilet script via its URL with a dependency resolution.
  * @param meta The meta data of the dependency to include.
  * @param dependencies The globally available dependencies.
+ * @param crossOrigin The override for the cross-origin attribute.
  * @returns The evaluated module.
  */
-export function includeDependency(meta: PiletMetadataV1, dependencies?: AvailableDependencies) {
-  return includeScript(meta.name, meta.requireRef, meta.link, meta.integrity, dependencies);
+export function includeDependency(meta: PiletMetadataV1, dependencies?: AvailableDependencies, crossOrigin?: string) {
+  return includeScript(meta.name, meta.requireRef, meta.link, meta.integrity, dependencies, crossOrigin);
 }
 
 /**
  * Includes the given bundle script via its URL with a dependency resolution.
  * @param meta The meta data of the dependency to include.
  * @param dependencies The globally available dependencies.
+ * @param crossOrigin The override for the cross-origin attribute.
  * @returns The evaluated module.
  */
-export function includeBundle(meta: PiletMetadataBundle, dependencies?: AvailableDependencies) {
-  return includeScript(meta.name ?? '(bundle)', meta.bundle, meta.link, meta.integrity, dependencies);
+export function includeBundle(meta: PiletMetadataBundle, dependencies?: AvailableDependencies, crossOrigin?: string) {
+  return includeScript(meta.name ?? '(bundle)', meta.bundle, meta.link, meta.integrity, dependencies, crossOrigin);
 }

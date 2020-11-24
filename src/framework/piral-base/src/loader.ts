@@ -7,6 +7,7 @@ import type {
   PiletMetadata,
   PiletDependencyGetter,
   PiletDependencyFetcher,
+  DefaultLoaderConfig,
   PiletApp,
 } from './types';
 
@@ -30,17 +31,22 @@ export function createDefaultLoader(
   dependencies?: AvailableDependencies,
   getDependencies?: PiletDependencyGetter,
   fetchDependency?: PiletDependencyFetcher,
+  config?: DefaultLoaderConfig,
 ) {
   const getDeps = getDependencyResolver(dependencies, getDependencies);
-  return getDefaultLoader(getDeps, fetchDependency);
+  return getDefaultLoader(getDeps, fetchDependency, config);
 }
 
-export function getDefaultLoader(getDependencies: PiletDependencyGetter, fetchDependency = defaultFetchDependency) {
+export function getDefaultLoader(
+  getDependencies: PiletDependencyGetter,
+  fetchDependency = defaultFetchDependency,
+  config: DefaultLoaderConfig = {},
+) {
   return (meta: PiletMetadata): Promise<Pilet> => {
     if (inBrowser && 'requireRef' in meta && meta.requireRef) {
-      return loadFrom(meta, getDependencies, (deps) => includeDependency(meta, deps));
+      return loadFrom(meta, getDependencies, (deps) => includeDependency(meta, deps, config.crossOrigin));
     } else if (inBrowser && 'bundle' in meta && meta.bundle) {
-      return loadFrom(meta, getDependencies, (deps) => includeBundle(meta, deps));
+      return loadFrom(meta, getDependencies, (deps) => includeBundle(meta, deps, config.crossOrigin));
     }
 
     const { name, link } = meta;

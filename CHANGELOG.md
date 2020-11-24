@@ -1,5 +1,19 @@
 # Piral Changelog
 
+## 0.12.4 (tbd)
+
+* Updated `dets` to use CLI logging levels
+* Extended all `register...` APIs to return disposers (#336) 
+* Added `piral-cli-webpack5` to support bundling with Webpack 5 (#313)
+* Added the `packageOverrides` field to override *package.json* values of pilets (#330)
+* Added special tagged comments for additional modifications of the `PiletApi` (#332)
+* Added `piral-breadcrumbs` for bringing managing breadcrumbs
+* Added templating system for scaffolding Piral instances and pilets
+* Added Piral instance templates `@smapiot/piral-template-default` and `@smapiot/piral-template-empty`
+* Added pilet templates `@smapiot/pilet-template-default` and `@smapiot/pilet-template-empty`
+* Added `survey` option to Piral CLI commands
+* Added option for using pilets v1 with `crossorigin` attribute (#335)
+
 ## 0.12.3 (October 10, 2020)
 
 * Updated support for Blazor 3.2.1 forward in `piral-blazor` (#224)

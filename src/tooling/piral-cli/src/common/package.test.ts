@@ -3,23 +3,12 @@ import {
   findPackageVersion,
   findEntryModule,
   findPackageRoot,
-  getPiralPath,
-  readPiralPackage,
   getPiralPackage,
-  getFileStats,
-  copyScaffoldingFiles,
-  copyPiralFiles,
   getPiletsInfo,
-  retrievePiralRoot,
-  findDependencyVersion,
-  retrievePiletsInfo,
-  isValidDependency,
-  checkAppShellPackage,
   retrievePiletData,
 } from './package';
 import { cliVersion } from './info';
-import { PiletLanguage } from './enums';
-import { frameworkKeys } from '../helpers';
+import { SourceLanguage } from './enums';
 
 describe('CLI package module', () => {
   it('findPackageVersion finds the current package version', async () => {
@@ -71,6 +60,7 @@ describe('CLI package module', () => {
       devDependencies: {},
       preScaffold: '',
       postScaffold: '',
+      packageOverrides: {},
       preUpgrade: '',
       postUpgrade: '',
     };
@@ -85,6 +75,7 @@ describe('CLI package module', () => {
         validators: {},
         devDependencies: {},
         preScaffold: '',
+        packageOverrides: {},
         postScaffold: '',
         preUpgrade: '',
         postUpgrade: '',
@@ -95,9 +86,9 @@ describe('CLI package module', () => {
   });
 
   it('getPiralPackage returns piral package', () => {
-    let result = getPiralPackage('app', PiletLanguage.ts, '1.0.0', 'piral-base', 'npm');
+    let result = getPiralPackage('app', SourceLanguage.ts, '1.0.0', 'piral-base', 'npm');
     expect(result.devDependencies['piral-cli-npm']).toEqual('1.0.0');
-    result = getPiralPackage('app', PiletLanguage.ts, '1.0.0', 'piral-base');
+    result = getPiralPackage('app', SourceLanguage.ts, '1.0.0', 'piral-base');
     expect(result.devDependencies).not.toContain('piral-cli-npm');
   });
 

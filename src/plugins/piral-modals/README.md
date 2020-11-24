@@ -128,7 +128,7 @@ If you want to customize the styling (which you should) make sure to register co
 You can customize the available dialogs and their options.
 
 ```ts
-import 'piral-modals';
+import type {} from 'piral-modals';
 
 declare module 'piral-modals/lib/types' {
   // interface shared across all dialogs defined in PiralCustomModalsMap
