@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.12.4 (tbd)
+## 0.12.4 (November 24, 2020)
 
 * Updated `dets` to use CLI logging levels
 * Extended all `register...` APIs to return disposers (#336) 
