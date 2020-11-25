@@ -41,5 +41,8 @@
   "devDependencies": {
     "@types/systemjs": "^6.1.0",
     "piral-core": "^0.12.4"
+  },
+  "peerDependencies": {
+    "piral-core": "0.12.x || 1.x"
   }
 }

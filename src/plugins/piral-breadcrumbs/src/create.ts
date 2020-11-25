@@ -1,6 +1,6 @@
 import * as ptr from 'path-to-regexp';
 import * as actions from './actions';
-import { buildName, PiralPlugin, Dict, appendItem } from 'piral-core';
+import { buildName, PiralPlugin, Dict } from 'piral-core';
 import { DefaultBreadbrumbItem, DefaultBreadcrumbsContainer } from './default';
 import { PiletBreadcrumbsApi, BreadcrumbSettings, BreadcrumbRegistration } from './types';
 

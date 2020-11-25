@@ -44,8 +44,6 @@
     "piral-core": "^0.12.4"
   },
   "peerDependencies": {
-    "piral-core": "^0.9.0 || ^0.10.0 || ^0.11.0",
-    "react": ">= 16.8.0",
-    "react-dom": ">= 16.8.0"
+    "piral-core": "0.12.x || 1.x"
   }
 }

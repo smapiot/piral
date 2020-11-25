@@ -37,10 +37,10 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@types/react": "^16.8.1",
-    "@types/react-router": "^5.0.0",
-    "path-to-regexp": "1.8.0",
     "piral-core": "^0.12.4"
+  },
+  "dependencies": {
+    "path-to-regexp": "^1.8.0"
   },
   "peerDependencies": {
     "piral-core": "0.12.x || 1.x"
