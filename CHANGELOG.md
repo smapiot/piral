@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.0.0 (tbd)
+
+* Fixed HMR in `piral-cli-webpack5` when running `piral debug`
+
 ## 0.12.4 (November 24, 2020)
 
 * Updated `dets` to use CLI logging levels

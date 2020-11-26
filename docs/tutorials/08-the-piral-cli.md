@@ -158,7 +158,7 @@ module.exports = function (cliApi) {
     if (options !== 'ignore') {
       const dependencies = Object
         .keys(context.dependencies)
-        .some(m => m.startsWith('a'));
+        .filter(m => m.startsWith('a'));
 
       if (dependencies.length > 0) {
         context.error(
