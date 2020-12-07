@@ -36,7 +36,7 @@ export default class PiletInjector implements KrasInjector {
       ? options.api
       : `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${options.api}`;
 
-    this.remotePiletsPromise = this.loadRemoteFeed(this.config.feed);
+
     const { pilets, api } = options;
     const cbs = {};
 
@@ -60,22 +60,6 @@ export default class PiletInjector implements KrasInjector {
         }
       }),
     );
-  }
-
-  async loadRemoteFeed(feed: string): Promise<PiletMetaData[]> {
-    try {
-      const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed)
-
-      if (Array.isArray(response.data)) {
-        return response.data;
-      } else if (Array.isArray(response.data?.items)) {
-        return response.data.items;
-      } else {
-        return [response.data];
-      }
-    } catch (e) {
-      log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
-    }
   }
 
   get active() {
@@ -112,15 +96,31 @@ export default class PiletInjector implements KrasInjector {
   }
 
   async getMeta() {
-    const { pilets } = this.config;
+    const { pilets, feed } = this.config;
 
     const localPilets = pilets.map((_, i) => this.getMetaOf(i));
-    const mergedPilets = this.mergePilets(localPilets, await this.remotePiletsPromise);
+    const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
 
     if (mergedPilets.length === 1) {
       return JSON.stringify(mergedPilets[0]);
     }
     return JSON.stringify(mergedPilets);
+  }
+
+  async loadRemoteFeed(feed: string): Promise<PiletMetaData[]> {
+    try {
+      const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed)
+
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else if (Array.isArray(response.data?.items)) {
+        return response.data.items;
+      } else {
+        return [response.data];
+      }
+    } catch (e) {
+      log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
+    }
   }
 
   mergePilets(localPilets: PiletMetaData[], remotePilets: PiletMetaData[]) {
