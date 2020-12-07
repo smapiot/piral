@@ -27,7 +27,6 @@ interface PiletMetaData {
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
   private piletApi: string;
-  private remotePiletsPromise: Promise<PiletMetaData[]>;
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
