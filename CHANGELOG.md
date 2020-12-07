@@ -4,11 +4,12 @@
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
 * Updated to use React 17 (#312)
+* Adding `feed` parameter to `piral debug`
 
 ## 0.12.4 (November 24, 2020)
 
 * Updated `dets` to use CLI logging levels
-* Extended all `register...` APIs to return disposers (#336) 
+* Extended all `register...` APIs to return disposers (#336)
 * Added `piral-cli-webpack5` to support bundling with Webpack 5 (#313)
 * Added the `packageOverrides` field to override *package.json* values of pilets (#330)
 * Added special tagged comments for additional modifications of the `PiletApi` (#332)

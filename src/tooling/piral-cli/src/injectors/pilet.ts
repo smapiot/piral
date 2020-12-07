@@ -1,9 +1,12 @@
 import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration } from 'kras';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { mime } from '../external';
 import { Bundler } from '../types';
+import { log } from '../common/log';
+import * as http from 'http';
+import * as https from 'https';
 
 interface Pilet {
   bundler: Bundler;
@@ -15,11 +18,18 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
   api: string;
   app: string;
+  feed?: string;
+}
+
+interface PiletMetaData {
+  name?: string
+  [key: string]: unknown;
 }
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
   private piletApi: string;
+  private remotePiletsPromise: Promise<PiletMetaData[]>;
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
@@ -27,6 +37,8 @@ export default class PiletInjector implements KrasInjector {
     this.piletApi = /^https?:/.test(options.api)
       ? options.api
       : `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${options.api}`;
+
+    this.remotePiletsPromise = this.loadRemoteFeed(this.config.feed);
     const { pilets, api } = options;
     const cbs = {};
 
@@ -50,6 +62,48 @@ export default class PiletInjector implements KrasInjector {
         }
       }),
     );
+  }
+
+  loadRemoteFeed(feed: string): Promise<PiletMetaData[]> {
+    return new Promise((resolve) => {
+
+      if (!/^https?:/.test(feed)) {
+        log('generalWarning_0001', 'Feed must be an absolute URL.');
+        resolve();
+      }
+
+      const h = feed.startsWith('https') ? https : http;
+
+      h.get(feed, res => {
+        res.setEncoding("utf8");
+        let body = "";
+        res.on("data", data => {
+          body += data;
+        })
+        res.on("end", () => {
+          try {
+            const remoteFeedContent: { items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData = JSON.parse(body);
+
+            let remotePilets = [];
+            if (Array.isArray(remoteFeedContent)) {
+              remotePilets = remoteFeedContent;
+            } else if (Array.isArray(remoteFeedContent?.items)) {
+              remotePilets = remoteFeedContent.items;
+            } else {
+              remotePilets = [remoteFeedContent];
+            }
+
+            resolve(remotePilets);
+          } catch {
+            log('generalWarning_0001', `Invalid JSON received from ${feed}.`);
+            resolve();
+          }
+        })
+      }).on('error', (e) => {
+        log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
+        resolve();
+      });
+    });
   }
 
   get active() {
@@ -85,14 +139,27 @@ export default class PiletInjector implements KrasInjector {
     };
   }
 
-  getMeta() {
+  async getMeta() {
     const { pilets } = this.config;
 
-    if (pilets.length === 1) {
-      return JSON.stringify(this.getMetaOf(0));
+    const localPilets = pilets.map((_, i) => this.getMetaOf(i));
+    const mergedPilets = this.mergePilets(localPilets, await this.remotePiletsPromise);
+
+    if (mergedPilets.length === 1) {
+      return JSON.stringify(mergedPilets[0]);
+    }
+    return JSON.stringify(mergedPilets);
+  }
+
+  mergePilets(localPilets: PiletMetaData[], remotePilets: PiletMetaData[]) {
+    if (!remotePilets) {
+      return localPilets;
     }
 
-    return JSON.stringify(pilets.map((_, i) => this.getMetaOf(i)));
+    var names = new Set(localPilets.map(pilet => pilet.name));
+    var merged = [...localPilets, ...remotePilets.filter(pilet => pilet.name !== undefined && !names.has(pilet.name))];
+
+    return merged;
   }
 
   sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
@@ -116,9 +183,9 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, type, url);
   }
 
-  sendResponse(path: string, url: string): KrasResponse {
+  async sendResponse(path: string, url: string): Promise<KrasResult> {
     if (!path) {
-      const content = this.getMeta();
+      const content = await this.getMeta();
       return this.sendContent(content, 'application/json', url);
     } else {
       const { pilets } = this.config;
