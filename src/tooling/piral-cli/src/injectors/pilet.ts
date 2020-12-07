@@ -2,11 +2,9 @@ import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
-import { mime } from '../external';
+import { axios, mime } from '../external';
 import { Bundler } from '../types';
 import { log } from '../common/log';
-import * as http from 'http';
-import * as https from 'https';
 
 interface Pilet {
   bundler: Bundler;
@@ -64,46 +62,20 @@ export default class PiletInjector implements KrasInjector {
     );
   }
 
-  loadRemoteFeed(feed: string): Promise<PiletMetaData[]> {
-    return new Promise((resolve) => {
+  async loadRemoteFeed(feed: string): Promise<PiletMetaData[]> {
+    try {
+      const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed)
 
-      if (!/^https?:/.test(feed)) {
-        log('generalWarning_0001', 'Feed must be an absolute URL.');
-        resolve();
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else if (Array.isArray(response.data?.items)) {
+        return response.data.items;
+      } else {
+        return [response.data];
       }
-
-      const h = feed.startsWith('https') ? https : http;
-
-      h.get(feed, res => {
-        res.setEncoding("utf8");
-        let body = "";
-        res.on("data", data => {
-          body += data;
-        })
-        res.on("end", () => {
-          try {
-            const remoteFeedContent: { items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData = JSON.parse(body);
-
-            let remotePilets = [];
-            if (Array.isArray(remoteFeedContent)) {
-              remotePilets = remoteFeedContent;
-            } else if (Array.isArray(remoteFeedContent?.items)) {
-              remotePilets = remoteFeedContent.items;
-            } else {
-              remotePilets = [remoteFeedContent];
-            }
-
-            resolve(remotePilets);
-          } catch {
-            log('generalWarning_0001', `Invalid JSON received from ${feed}.`);
-            resolve();
-          }
-        })
-      }).on('error', (e) => {
-        log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
-        resolve();
-      });
-    });
+    } catch (e) {
+      log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
+    }
   }
 
   get active() {
