@@ -1,6 +1,6 @@
-import { User, UserManager, Log } from 'oidc-client';
+import { Log, User, UserManager } from 'oidc-client';
 import { OidcError } from './OidcError';
-import { OidcConfig, OidcClient, OidcProfile, OidcErrorType, LogLevel, AuthenticationResult } from './types';
+import { AuthenticationResult, LogLevel, OidcClient, OidcConfig, OidcErrorType, OidcProfile } from './types';
 
 const logLevelToOidcMap = {
   [LogLevel.none]: 0,
@@ -36,6 +36,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     parentName,
     appUri,
     logLevel,
+    userStore
   } = config;
 
   const isMainWindow = () => (parentName ? parentName === window.parent?.name : window === window.top);
@@ -50,6 +51,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     client_secret: clientSecret,
     response_type: responseType,
     scope: scopes?.join(' '),
+    userStore: userStore
   });
 
   if (logLevel !== undefined) {
