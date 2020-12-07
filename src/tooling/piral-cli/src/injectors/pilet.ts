@@ -106,7 +106,11 @@ export default class PiletInjector implements KrasInjector {
     return JSON.stringify(mergedPilets);
   }
 
-  async loadRemoteFeed(feed: string): Promise<PiletMetaData[]> {
+  async loadRemoteFeed(feed?: string): Promise<PiletMetaData[]> {
+    if(!feed) {
+      return;
+    }
+
     try {
       const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed)
 
