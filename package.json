@@ -61,6 +61,7 @@
   },
   "resolutions": {
     "node-fetch": "2.6.1",
-    "node-forge": "0.10.0"
+    "node-forge": "0.10.0",
+    "highlight.js": "10.4.1"
   }
 }
