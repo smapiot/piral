@@ -411,7 +411,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
         .string('feed')
-        .describe('feed', 'Sets the url of a pilet feed to be used to include locally missing pilets from.');
+        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.');
     },
     run(args) {
       return apps.debugPilet(args.base as string, {

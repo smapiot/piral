@@ -19,7 +19,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   feed?: string;
 }
 
-interface PiletMetaData {
+interface PiletMetadata {
   name?: string;
   [key: string]: unknown;
 }
@@ -95,45 +95,44 @@ export default class PiletInjector implements KrasInjector {
 
   async getMeta() {
     const { pilets, feed } = this.config;
-
     const localPilets = pilets.map((_, i) => this.getMetaOf(i));
     const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
 
     if (mergedPilets.length === 1) {
       return JSON.stringify(mergedPilets[0]);
     }
+
     return JSON.stringify(mergedPilets);
   }
 
-  async loadRemoteFeed(feed?: string): Promise<PiletMetaData[]> {
-    if (!feed) {
-      return;
-    }
-
-    try {
-      const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed);
-
-      if (Array.isArray(response.data)) {
-        return response.data;
-      } else if (Array.isArray(response.data?.items)) {
-        return response.data.items;
-      } else {
-        return [response.data];
+  async loadRemoteFeed(feed?: string): Promise<Array<PiletMetadata>> {
+    if (feed) {
+      try {
+        const response = await axios.default.get<{ items?: Array<PiletMetadata> } | Array<PiletMetadata> | PiletMetadata>(feed);
+  
+        if (Array.isArray(response.data)) {
+          return response.data;
+        } else if (Array.isArray(response.data?.items)) {
+          return response.data.items;
+        } else {
+          return [response.data];
+        }
+      } catch (e) {
+        log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
       }
-    } catch (e) {
-      log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
     }
+
   }
 
-  mergePilets(localPilets: PiletMetaData[], remotePilets: PiletMetaData[]) {
+  mergePilets(localPilets: Array<PiletMetadata>, remotePilets: Array<PiletMetadata>) {
     if (!remotePilets) {
       return localPilets;
     }
 
-    var names = new Set(localPilets.map((pilet) => pilet.name));
-    var merged = [
+    const names = localPilets.map((pilet) => pilet.name);
+    const merged = [
       ...localPilets,
-      ...remotePilets.filter((pilet) => pilet.name !== undefined && !names.has(pilet.name)),
+      ...remotePilets.filter((pilet) => pilet.name !== undefined && !names.includes(pilet.name)),
     ];
 
     return merged;
