@@ -20,7 +20,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 }
 
 interface PiletMetaData {
-  name?: string
+  name?: string;
   [key: string]: unknown;
 }
 
@@ -34,7 +34,6 @@ export default class PiletInjector implements KrasInjector {
     this.piletApi = /^https?:/.test(options.api)
       ? options.api
       : `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${options.api}`;
-
 
     const { pilets, api } = options;
     const cbs = {};
@@ -107,12 +106,12 @@ export default class PiletInjector implements KrasInjector {
   }
 
   async loadRemoteFeed(feed?: string): Promise<PiletMetaData[]> {
-    if(!feed) {
+    if (!feed) {
       return;
     }
 
     try {
-      const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed)
+      const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed);
 
       if (Array.isArray(response.data)) {
         return response.data;
@@ -131,8 +130,11 @@ export default class PiletInjector implements KrasInjector {
       return localPilets;
     }
 
-    var names = new Set(localPilets.map(pilet => pilet.name));
-    var merged = [...localPilets, ...remotePilets.filter(pilet => pilet.name !== undefined && !names.has(pilet.name))];
+    var names = new Set(localPilets.map((pilet) => pilet.name));
+    var merged = [
+      ...localPilets,
+      ...remotePilets.filter((pilet) => pilet.name !== undefined && !names.has(pilet.name)),
+    ];
 
     return merged;
   }

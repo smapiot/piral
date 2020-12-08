@@ -68,7 +68,7 @@ export interface DebugPiletOptions {
   /**
    * The url of a pilet feed used to include locally missing pilets.
    */
-  feed?: string
+  feed?: string;
 
   /**
    * Additional arguments for a specific bundler.
@@ -145,7 +145,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     _ = {},
     bundlerName,
     app,
-    feed
+    feed,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -242,7 +242,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     app: appDir,
     handle: ['/', api],
     api,
-    feed
+    feed,
   };
 
   krasConfig.map['/'] = '';

@@ -62,7 +62,7 @@ export function postFile(
   const form = new FormData();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
 
-  Object.keys(fields).forEach(key => form.append(key, fields[key]));
+  Object.keys(fields).forEach((key) => form.append(key, fields[key]));
 
   form.append('file', file, 'pilet.tgz');
 

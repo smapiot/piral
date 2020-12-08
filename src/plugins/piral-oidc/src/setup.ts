@@ -36,7 +36,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     parentName,
     appUri,
     logLevel,
-    userStore
+    userStore,
   } = config;
 
   const isMainWindow = () => (parentName ? parentName === window.parent?.name : window === window.top);
@@ -51,7 +51,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     client_secret: clientSecret,
     response_type: responseType,
     scope: scopes?.join(' '),
-    userStore: userStore
+    userStore: userStore,
   });
 
   if (logLevel !== undefined) {
@@ -130,8 +130,8 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
           return reject(new OidcError(OidcErrorType.oidcCallback, e));
         }
         return resolve({
-            shouldRender: false,
-            state: user?.state
+          shouldRender: false,
+          state: user?.state,
         });
       }
 
@@ -151,14 +151,14 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
           window.location.href = appUri;
           return resolve({
             shouldRender: false,
-            state: user?.state
+            state: user?.state,
           });
         }
 
         /* If appUri is not configured, we let the user decide what to do after getting a session. */
         return resolve({
           shouldRender: true,
-          state: user?.state
+          state: user?.state,
         });
       }
 
@@ -218,6 +218,6 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       }
     },
     token: retrieveToken,
-    account: retrieveProfile
+    account: retrieveProfile,
   };
 }

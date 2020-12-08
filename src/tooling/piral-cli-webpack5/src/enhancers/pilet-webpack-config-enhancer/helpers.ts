@@ -9,7 +9,7 @@ export function getVariables(name: string, version: string, env: string): Record
 }
 
 export function setEnvironment(variables: Record<string, string>) {
-  Object.keys(variables).forEach(key => (process.env[key] = variables[key]));
+  Object.keys(variables).forEach((key) => (process.env[key] = variables[key]));
 }
 
 export function getDefineVariables(variables: Record<string, string>) {

@@ -65,10 +65,12 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
           console.error(err);
           reject(err);
         } else {
-          console.log(stats.toString({
-            ...preset,
-            colors: true,
-          }));
+          console.log(
+            stats.toString({
+              ...preset,
+              colors: true,
+            }),
+          );
 
           if (stats.hasErrors()) {
             reject(stats.toJson(preset));

@@ -4,7 +4,8 @@
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
 * Updated to use React 17 (#312)
-* Adding `feed` parameter to `pilet debug`
+* Exposed `userStore` as an option for `piral-oidc` (#345)
+* Added `feed` parameter to `pilet debug`
 
 ## 0.12.4 (November 24, 2020)
 
