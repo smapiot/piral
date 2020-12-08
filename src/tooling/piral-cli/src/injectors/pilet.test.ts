@@ -67,19 +67,19 @@ describe('Piral-CLI piral injector', () => {
     expect(res).not.toBeUndefined();
   });
 
-  it('PiletInjector can send reponse and fails with invalid path', () => {
+  it('PiletInjector can send response and fails with invalid path', async () => {
     // Arrange
     const core = new EventEmitter();
     const injector = new PiletInjector(optionsMock, configMock, core);
 
     // Act
-    const res = injector.sendResponse('some/nice/invalid/path', 'localhost:1234');
+    const res = await injector.sendResponse('some/nice/invalid/path', 'localhost:1234');
 
     // Assert
     expect(res).toBeUndefined();
   });
 
-  it('PiletInjector wont crash on mocked request', () => {
+  it('PiletInjector wont crash on mocked request', async () => {
     // Arrange
     const optionsMock = {
       pilets: [],
@@ -100,7 +100,7 @@ describe('Piral-CLI piral injector', () => {
     };
 
     // Act
-    const res = injector.handle(request);
+    const res = await injector.handle(request);
 
     // Assert
     expect(res).toBeUndefined();

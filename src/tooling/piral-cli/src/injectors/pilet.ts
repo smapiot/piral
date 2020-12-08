@@ -1,9 +1,10 @@
 import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration } from 'kras';
-import { mime } from '../external';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
+import { axios, mime } from '../external';
 import { Bundler } from '../types';
+import { log } from '../common/log';
 
 interface Pilet {
   bundler: Bundler;
@@ -15,6 +16,12 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
   api: string;
   app: string;
+  feed?: string;
+}
+
+interface PiletMetaData {
+  name?: string
+  [key: string]: unknown;
 }
 
 export default class PiletInjector implements KrasInjector {
@@ -27,6 +34,8 @@ export default class PiletInjector implements KrasInjector {
     this.piletApi = /^https?:/.test(options.api)
       ? options.api
       : `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${options.api}`;
+
+
     const { pilets, api } = options;
     const cbs = {};
 
@@ -85,14 +94,47 @@ export default class PiletInjector implements KrasInjector {
     };
   }
 
-  getMeta() {
-    const { pilets } = this.config;
+  async getMeta() {
+    const { pilets, feed } = this.config;
 
-    if (pilets.length === 1) {
-      return JSON.stringify(this.getMetaOf(0));
+    const localPilets = pilets.map((_, i) => this.getMetaOf(i));
+    const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
+
+    if (mergedPilets.length === 1) {
+      return JSON.stringify(mergedPilets[0]);
+    }
+    return JSON.stringify(mergedPilets);
+  }
+
+  async loadRemoteFeed(feed?: string): Promise<PiletMetaData[]> {
+    if(!feed) {
+      return;
     }
 
-    return JSON.stringify(pilets.map((_, i) => this.getMetaOf(i)));
+    try {
+      const response = await axios.default.get<{ items?: PiletMetaData[] } | PiletMetaData[] | PiletMetaData>(feed)
+
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else if (Array.isArray(response.data?.items)) {
+        return response.data.items;
+      } else {
+        return [response.data];
+      }
+    } catch (e) {
+      log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
+    }
+  }
+
+  mergePilets(localPilets: PiletMetaData[], remotePilets: PiletMetaData[]) {
+    if (!remotePilets) {
+      return localPilets;
+    }
+
+    var names = new Set(localPilets.map(pilet => pilet.name));
+    var merged = [...localPilets, ...remotePilets.filter(pilet => pilet.name !== undefined && !names.has(pilet.name))];
+
+    return merged;
   }
 
   sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
@@ -116,9 +158,9 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, type, url);
   }
 
-  sendResponse(path: string, url: string): KrasResponse {
+  async sendResponse(path: string, url: string): Promise<KrasResult> {
     if (!path) {
-      const content = this.getMeta();
+      const content = await this.getMeta();
       return this.sendContent(content, 'application/json', url);
     } else {
       const { pilets } = this.config;

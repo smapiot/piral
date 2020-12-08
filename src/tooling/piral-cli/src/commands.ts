@@ -409,7 +409,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .string('feed')
+        .describe('feed', 'Sets the url of a pilet feed to be used to include locally missing pilets from.');
     },
     run(args) {
       return apps.debugPilet(args.base as string, {
@@ -422,6 +424,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args.logLevel as LogLevels,
         open: args.open as boolean,
         schemaVersion: args.schema as PiletSchemaVersion,
+        feed: args.feed as string,
         _: args,
       });
     },
