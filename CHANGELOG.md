@@ -3,9 +3,10 @@
 ## 1.0.0 (tbd)
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
+* Fixed issue ignoring `--log-level` in the initializers
 * Updated to use React 17 (#312)
-* Exposed `userStore` as an option for `piral-oidc` (#345)
-* Added `feed` parameter to `pilet debug`
+* Added `feed` parameter to `pilet debug` (#344)
+* Added `userStore` as an option for `piral-oidc` (#345)
 
 ## 0.12.4 (November 24, 2020)
 
