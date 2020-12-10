@@ -4,6 +4,7 @@
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
 * Fixed issue ignoring `--log-level` in the initializers
+* Fixed shared submodule dependencies in `peerDependencies` (#342)
 * Updated to use React 17 (#312)
 * Added `feed` parameter to `pilet debug` (#344)
 * Added `userStore` as an option for `piral-oidc` (#345)

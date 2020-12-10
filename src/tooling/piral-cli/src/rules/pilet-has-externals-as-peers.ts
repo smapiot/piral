@@ -1,5 +1,5 @@
 import { PiletRuleContext } from '../types';
-import { getPiletsInfo, getSourceFiles } from '../common';
+import { getPiletsInfo, getSourceFiles, isValidDependency } from '../common';
 
 export type Options = 'ignore' | 'active' | 'only-used';
 
@@ -10,7 +10,7 @@ export default async function (context: PiletRuleContext, options: Options = 'ig
   if (options !== 'ignore') {
     const { externals } = getPiletsInfo(context.data.appPackage);
     const markedExternals = Object.keys(context.peerDependencies);
-    const missingExternals = externals.filter((ext) => !markedExternals.includes(ext));
+    const missingExternals = externals.filter((ext) => !markedExternals.includes(ext) && isValidDependency(ext));
 
     if (options === 'only-used' && missingExternals.length > 0) {
       const testers = missingExternals.map((ext) => ({
