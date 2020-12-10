@@ -41,7 +41,7 @@ declare module 'piral-core/lib/types/custom' {
 
 export interface BreadcrumbsContainerProps {}
 
-export interface BreadcrumbItemProps extends Omit<BreadcrumbSettings, "title"> {
+export interface BreadcrumbItemProps extends Omit<BreadcrumbSettings, 'title'> {
   /**
    * Determins if the breadcrumb is the current page.
    */
@@ -75,7 +75,7 @@ export interface BreadcrumbSettings extends PiralCustomBreadcrumbSettings {
   /**
    * The title of the breadcrumb.
    */
-  title: ReactChild,
+  title: ReactChild;
 }
 
 export interface BreadcrumbRegistration extends BaseRegistration {

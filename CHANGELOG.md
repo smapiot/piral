@@ -3,13 +3,16 @@
 ## 1.0.0 (tbd)
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
+* Fixed issue ignoring `--log-level` in the initializers
+* Fixed shared submodule dependencies in `peerDependencies` (#342)
 * Updated to use React 17 (#312)
-* Fixed shared submodule peerDependencies
+* Added `feed` parameter to `pilet debug` (#344)
+* Added `userStore` as an option for `piral-oidc` (#345)
 
 ## 0.12.4 (November 24, 2020)
 
 * Updated `dets` to use CLI logging levels
-* Extended all `register...` APIs to return disposers (#336) 
+* Extended all `register...` APIs to return disposers (#336)
 * Added `piral-cli-webpack5` to support bundling with Webpack 5 (#313)
 * Added the `packageOverrides` field to override *package.json* values of pilets (#330)
 * Added special tagged comments for additional modifications of the `PiletApi` (#332)

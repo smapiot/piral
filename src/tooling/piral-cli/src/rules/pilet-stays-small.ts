@@ -6,14 +6,7 @@ import { PiletRuleContext } from '../types';
 export type Options = number;
 
 async function getPiletMainPath(main: string, baseDir: string) {
-  const paths = [
-    main,
-    `dist/${main}`,
-    `${main}/index.js`,
-    `dist/${main}/index.js`,
-    'index.js',
-    'dist/index.js',
-  ];
+  const paths = [main, `dist/${main}`, `${main}/index.js`, `dist/${main}/index.js`, 'index.js', 'dist/index.js'];
 
   for (const path of paths) {
     const filePath = resolve(baseDir, path);

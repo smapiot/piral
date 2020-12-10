@@ -1,5 +1,13 @@
 import { ReactChild, ComponentType, ReactElement } from 'react';
-import { Dict, Disposable, PiletApi, BaseRegistration, AnyComponent, BaseComponentProps, RegistrationDisposer } from 'piral-core';
+import {
+  Dict,
+  Disposable,
+  PiletApi,
+  BaseRegistration,
+  AnyComponent,
+  BaseComponentProps,
+  RegistrationDisposer,
+} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletSearchApi {}

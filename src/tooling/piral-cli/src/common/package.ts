@@ -220,7 +220,7 @@ export async function copyScaffoldingFiles(
   source: string,
   target: string,
   files: Array<string | TemplateFileLocation>,
-  piralInfo?: any
+  piralInfo?: any,
 ) {
   log('generalDebug_0003', `Copying the scaffolding files ...`);
   const allFiles: Array<FileDescriptor> = [];

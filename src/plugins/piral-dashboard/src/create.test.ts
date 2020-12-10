@@ -48,7 +48,7 @@ describe('Create Dashboard API Extensions', () => {
     expect(container.context.unregisterTile).toHaveBeenCalledTimes(1);
     expect(container.context.unregisterTile.mock.calls[0][0]).toBe(container.context.registerTile.mock.calls[0][0]);
   });
-  
+
   it('createDashboardApi can dispose a registered tile', () => {
     const container = createMockContainer();
     container.context.registerTile = jest.fn();
@@ -61,7 +61,7 @@ describe('Create Dashboard API Extensions', () => {
     expect(container.context.unregisterTile).toHaveBeenCalledTimes(1);
     expect(container.context.unregisterTile.mock.calls[0][0]).toBe(container.context.registerTile.mock.calls[0][0]);
   });
-  
+
   it('createDashboardApi can dispose an anonymous tile', () => {
     const container = createMockContainer();
     container.context.registerTile = jest.fn();
