@@ -67,10 +67,10 @@ As a result, we will find in the folder `./my-app` the files for the newly creat
 In case you don't want to install the Piral CLI globally, you can also leverage the NPM initializer for this command.
 
 ```sh
-npm init piral-instance --target my-app -y
+npm init piral-instance --target my-app --defaults
 ```
 
-The NPM initializer comes with a quick survey going over the options. Specifying `-y` will take the default values.
+The NPM initializer comes with a quick survey going over the options. Specifying `--defaults` will take the default values.
 :::
 
 ### Run the Application Shell
@@ -138,10 +138,10 @@ If you navigate into the folder `my-pilet`, you'll find the files for the newly 
 You can also leverage the NPM initializers for creating new pilets.
 
 ```sh
-npm init pilet --target my-pilet --source ./my-app/dist/develop/my-app-1.0.0.tgz -y
+npm init pilet --target my-pilet --source ./my-app/dist/develop/my-app-1.0.0.tgz --defaults
 ```
 
-Also here, if you drop the `-y` option additional settings will be presented to you in form of a quick survey.
+Also here, if you drop the `--defaults` option additional settings will be presented to you in form of a quick survey.
 :::
 
 ### Pilet Setup Function
