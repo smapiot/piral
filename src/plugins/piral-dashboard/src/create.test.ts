@@ -13,6 +13,10 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       defineActions() {},
+      converters: {},
+      readState() {
+        return undefined;
+      },
       state,
       dispatch(update) {
         swap(state, update);
