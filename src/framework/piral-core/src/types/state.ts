@@ -126,7 +126,7 @@ export interface RegistryState extends PiralCustomRegistryState {
   /**
    * The registered wrappers for any component.
    */
-  wrappers: Dict<ComponentType>;
+  wrappers: Dict<ComponentType<any>>;
 }
 
 export type ErrorComponentsState = {

@@ -48,7 +48,7 @@ StubComponent.displayName = 'StubComponent';
 describe('withApi Module', () => {
   it('wraps a component and forwards the API as piral', () => {
     const api: any = {};
-    const Component = withApi({}, StubComponent, api, 'feed');
+    const Component = withApi({ converters: { }} as any, StubComponent, api, 'feed' as any);
     const node = mount(<Component />);
     expect(node.find(StubComponent).first().prop('piral')).toBe(api);
   });
@@ -56,7 +56,7 @@ describe('withApi Module', () => {
   it('is protected against a component crash', () => {
     console.error = jest.fn();
     const api: any = {};
-    const Component = withApi({}, StubComponent, api, 'feed');
+    const Component = withApi({ converters: { }} as any, StubComponent, api, 'feed' as any);
     const node = mount(<Component shouldCrash />);
     expect(node.find(StubErrorInfo).first().prop('type')).toBe('feed');
   });
@@ -68,7 +68,7 @@ describe('withApi Module', () => {
         name: 'my pilet',
       },
     };
-    const Component = withApi({}, StubComponent, api, 'feed');
+    const Component = withApi({ converters: { }} as any, StubComponent, api, 'feed' as any);
     mount(<Component shouldCrash />);
     expect(console.error).toHaveBeenCalled();
   });
@@ -81,7 +81,7 @@ describe('withApi Module', () => {
       },
     };
     const context = createMockContainer();
-    const Component = withApi(converters, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
+    const Component = withApi({ converters } as any, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
 
     const node = mount(
       <StateContext.Provider value={context.context}>
@@ -100,7 +100,7 @@ describe('withApi Module', () => {
       },
     };
     const context = createMockContainer();
-    const Component = withApi(converters, null, api, 'unknown');
+    const Component = withApi({ converters } as any, null, api, 'unknown');
 
     const node = mount(
       <StateContext.Provider value={context.context}>
