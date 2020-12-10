@@ -31,6 +31,7 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
     registry: {
       extensions: {},
       pages: {},
+      wrappers: {},
     },
     routes: {},
     data: {},

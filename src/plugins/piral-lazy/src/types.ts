@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { ComponentType, LazyExoticComponent } from 'react';
 import { FirstParametersOf, ComponentConverters } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -29,5 +29,5 @@ export interface PiletLazyApi {
    * @param deps The optional names of the dependencies to load beforehand.
    * @returns The lazy loading component.
    */
-  fromLazy<T>(cb: LazyComponentLoader<T>, deps?: Array<string>): FC<T>;
+  fromLazy<T>(cb: LazyComponentLoader<T>, deps?: Array<string>): LazyExoticComponent<ComponentType<T>>;
 }

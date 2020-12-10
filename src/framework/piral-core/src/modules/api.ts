@@ -21,7 +21,7 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
         context.registerPage(route, {
           pilet,
           meta,
-          component: withApi(context.converters, arg, api, 'page'),
+          component: withApi(context, arg, api, 'page'),
         });
         return () => api.unregisterPage(route);
       },
@@ -31,7 +31,7 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
       registerExtension(name, arg, defaults) {
         context.registerExtension(name as string, {
           pilet,
-          component: withApi(context.converters, arg, api, 'extension'),
+          component: withApi(context, arg, api, 'extension'),
           reference: arg,
           defaults,
         });

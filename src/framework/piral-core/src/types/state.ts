@@ -123,6 +123,10 @@ export interface RegistryState extends PiralCustomRegistryState {
    * The registered extension components for extension slots.
    */
   extensions: Dict<Array<ExtensionRegistration>>;
+  /**
+   * The registered wrappers for any component.
+   */
+  wrappers: Dict<ComponentType>;
 }
 
 export type ErrorComponentsState = {

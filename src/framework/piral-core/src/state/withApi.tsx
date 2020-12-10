@@ -13,6 +13,7 @@ import {
   PiletApi,
   BaseComponentProps,
   ComponentContext,
+  GlobalStateContext,
 } from '../types';
 
 let portalIdBase = 123456;
@@ -154,11 +155,12 @@ function wrapComponent<T>(
 }
 
 export function withApi<TProps>(
-  converters: ComponentConverters<TProps & BaseComponentProps>,
+  context: GlobalStateContext,
   component: AnyComponent<TProps & BaseComponentProps>,
   piral: PiletApi,
   errorType: keyof Errors,
 ) {
+  const converters = context.converters;
   return wrapComponent<TProps>(converters, component, piral, {
     onError(error) {
       console.error(piral, error);
