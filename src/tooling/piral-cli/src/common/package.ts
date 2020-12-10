@@ -438,6 +438,7 @@ export async function patchPiletPackage(
   };
   const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
   const allExternals = makeExternals(externals);
+  const validExternalDependencies = allExternals.filter(isValidDependency);
   const scripts = newInfo
     ? {
         start: 'pilet debug',
@@ -447,7 +448,7 @@ export async function patchPiletPackage(
       }
     : info.scripts;
   const peerDependencies = {
-    ...allExternals.reduce((deps, name) => {
+    ...validExternalDependencies.reduce((deps, name) => {
       deps[name] = '*';
       return deps;
     }, {}),
@@ -462,7 +463,7 @@ export async function patchPiletPackage(
       deps[name] = getDependencyVersion(name, info.devDependencies, piralDependencies);
       return deps;
     }, {}),
-    ...allExternals.filter(isValidDependency).reduce((deps, name) => {
+    ...validExternalDependencies.reduce((deps, name) => {
       const version = piralDependencies[name];
 
       if (version || newInfo) {
