@@ -44,7 +44,7 @@
     "react-dom-15": "npm:react-dom@15"
   },
   "peerDependencies": {
-    "piral-core": "0.12.x || 1.x",
+    "piral-core": "1.x",
     "react-15": "*",
     "react-dom-15": "*"
   }

@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
-    "piral-core": "0.12.x || 1.x"
+    "piral-core": "1.x"
   },
   "dependencies": {
     "subscriptions-transport-ws": "^0.9.16",

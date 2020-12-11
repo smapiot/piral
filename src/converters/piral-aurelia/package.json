@@ -54,6 +54,6 @@
     "aurelia-pal-browser": "^1.0.0",
     "aurelia-templating-binding": "^1.0.0",
     "aurelia-templating-resources": "^1.0.0",
-    "piral-core": "0.12.x || 1.x"
+    "piral-core": "1.x"
   }
 }
