@@ -22,6 +22,7 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
         if (command.survey) {
           argv = argv
             .boolean('y')
+            .alias('y', 'defaults')
             .describe('y', 'Skips the survey by falling back to the default values.')
             .default('y', false);
         }

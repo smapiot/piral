@@ -1,6 +1,6 @@
 {
   "name": "piral-landing-page",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "private": true,
   "description": "The landing page for Piral.",
   "keywords": [
@@ -30,5 +30,9 @@
   "scripts": {
     "build": "echo \"No build yet.\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   }
 }

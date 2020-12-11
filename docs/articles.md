@@ -5,6 +5,16 @@
 - [web und mobile, 05/2020](https://www.webundmobile.de/hefte_data_2527642.html)
 - [dotnetpro, 08/2019](https://www.dotnetpro.de/frontend/weg-monolithen-1723779.html)
 
+## Available Videos
+
+- [The Next Frontier: Microfrontends!](https://www.youtube.com/watch?v=AtUKNsdnwBc)
+- [Microfrontends on Azure](https://www.youtube.com/watch?v=_q4JDrIMvlA)
+- [Microfrontends with Blazor](https://www.youtube.com/watch?v=npff2NjVXEE)
+- [Microfrontends with React](https://www.youtube.com/watch?v=kG7gIF16cOk)
+- [Axiom on Microfrontends](https://www.youtube.com/watch?v=u6v8wSzifPc)
+- [Introduction to Piral Inspector](https://www.youtube.com/watch?v=8CE7_X01NmM)
+- [Piral Community Standup](https://www.youtube.com/watch?v=ZzqnE7XO6Tk&list=PLQ9i8GS-LNXkG1bDpT54XxOTisyRh3Rin)
+
 ## Blog Posts
 
 - [How Micro Frontends are being Implemented in 2020: A Survey, Bits and Pieces, 09/2020](https://blog.bitsrc.io/microfrontends-survey-evaluation-d2af7eade306)

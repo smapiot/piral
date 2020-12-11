@@ -1,4 +1,4 @@
-import { isfunc, Pilet, PiletApiCreator, PiletLoader, PiletMetadata, PiletRequester, setupPilet } from 'piral-base';
+import { isfunc, Pilet, PiletApiCreator, PiletLoader, PiletRequester, setupPilet } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
   createApi: PiletApiCreator;

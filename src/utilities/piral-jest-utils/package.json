@@ -1,6 +1,6 @@
 {
   "name": "piral-jest-utils",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "description": "Utilities for testing pilets with jest.",
   "keywords": [
     "piral",
@@ -34,6 +34,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.12.3"
+    "piral-core": "^0.12.4"
   }
 }

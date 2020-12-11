@@ -66,6 +66,11 @@ export interface DebugPiletOptions {
   schemaVersion?: PiletSchemaVersion;
 
   /**
+   * The URL of a pilet feed used to include locally missing pilets.
+   */
+  feed?: string;
+
+  /**
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
@@ -140,6 +145,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     _ = {},
     bundlerName,
     app,
+    feed,
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -236,6 +242,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     app: appDir,
     handle: ['/', api],
     api,
+    feed,
   };
 
   krasConfig.map['/'] = '';

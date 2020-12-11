@@ -3,7 +3,6 @@ import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { Atom } from '@dbeining/react-atom';
 import { withApi } from './withApi';
-import { ComponentConverters } from '../types';
 import { StateContext } from '../state';
 
 function createMockContainer() {
@@ -12,6 +11,10 @@ function createMockContainer() {
   });
   return {
     context: {
+      converters: { },
+      readState() {
+        return undefined;
+      },
       on: jest.fn(),
       off: jest.fn(),
       emit: jest.fn(),
@@ -48,7 +51,8 @@ StubComponent.displayName = 'StubComponent';
 describe('withApi Module', () => {
   it('wraps a component and forwards the API as piral', () => {
     const api: any = {};
-    const Component = withApi({}, StubComponent, api, 'feed');
+    const { context } = createMockContainer();
+    const Component = withApi(context, StubComponent, api, 'feed' as any);
     const node = mount(<Component />);
     expect(node.find(StubComponent).first().prop('piral')).toBe(api);
   });
@@ -56,7 +60,8 @@ describe('withApi Module', () => {
   it('is protected against a component crash', () => {
     console.error = jest.fn();
     const api: any = {};
-    const Component = withApi({}, StubComponent, api, 'feed');
+    const { context } = createMockContainer();
+    const Component = withApi(context, StubComponent, api, 'feed' as any);
     const node = mount(<Component shouldCrash />);
     expect(node.find(StubErrorInfo).first().prop('type')).toBe('feed');
   });
@@ -68,23 +73,24 @@ describe('withApi Module', () => {
         name: 'my pilet',
       },
     };
-    const Component = withApi({}, StubComponent, api, 'feed');
+    const { context } = createMockContainer();
+    const Component = withApi(context, StubComponent, api, 'feed' as any);
     mount(<Component shouldCrash />);
     expect(console.error).toHaveBeenCalled();
   });
 
   it('Wraps component of type object', () => {
     const api: any = {};
-    const converters: ComponentConverters<any> = {
+    const { context } = createMockContainer();
+    context.converters = {
       html: (component) => {
         return component.component;
       },
     };
-    const context = createMockContainer();
-    const Component = withApi(converters, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
+    const Component = withApi(context, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
 
     const node = mount(
-      <StateContext.Provider value={context.context}>
+      <StateContext.Provider value={context}>
         <Component />
       </StateContext.Provider>,
     );
@@ -94,16 +100,16 @@ describe('withApi Module', () => {
 
   it('Wraps component which is object == null.', () => {
     const api: any = {};
-    const converters: ComponentConverters<any> = {
+    const { context } = createMockContainer();
+    context.converters = {
       html: (component) => {
         return component.component;
       },
     };
-    const context = createMockContainer();
-    const Component = withApi(converters, null, api, 'unknown');
+    const Component = withApi(context, null, api, 'unknown');
 
     const node = mount(
-      <StateContext.Provider value={context.context}>
+      <StateContext.Provider value={context}>
         <Component />
       </StateContext.Provider>,
     );

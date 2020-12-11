@@ -1,8 +1,20 @@
 # Piral Changelog
 
-## 0.12.4 (tbd)
+## 1.0.0 (tbd)
+
+* Fixed HMR in `piral-cli-webpack5` when running `piral debug`
+* Fixed issue ignoring `--log-level` in the initializers
+* Fixed shared submodule dependencies in `peerDependencies` (#341)
+* Updated to use React 17 (#312)
+* Updated `withApi` to use `context` instead of `converters`
+* Added `feed` parameter to `pilet debug` (#344)
+* Added `userStore` as an option for `piral-oidc` (#345)
+* Added `wrappers` to enable central component transformations
+
+## 0.12.4 (November 24, 2020)
 
 * Updated `dets` to use CLI logging levels
+* Extended all `register...` APIs to return disposers (#336)
 * Added `piral-cli-webpack5` to support bundling with Webpack 5 (#313)
 * Added the `packageOverrides` field to override *package.json* values of pilets (#330)
 * Added special tagged comments for additional modifications of the `PiletApi` (#332)
@@ -11,6 +23,7 @@
 * Added Piral instance templates `@smapiot/piral-template-default` and `@smapiot/piral-template-empty`
 * Added pilet templates `@smapiot/pilet-template-default` and `@smapiot/pilet-template-empty`
 * Added `survey` option to Piral CLI commands
+* Added option for using pilets v1 with `crossorigin` attribute (#335)
 
 ## 0.12.3 (October 10, 2020)
 

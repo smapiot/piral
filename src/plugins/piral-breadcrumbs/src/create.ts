@@ -62,7 +62,7 @@ export function createBreadcrumbsApi(config: DashboardConfig = {}): PiralPlugin<
       },
     }));
 
-    return (_, target) => {
+    return (api, target) => {
       const pilet = target.name;
       let next = 0;
 
@@ -79,6 +79,7 @@ export function createBreadcrumbsApi(config: DashboardConfig = {}): PiralPlugin<
             matcher: getMatcher(settings),
             settings,
           });
+          return () => api.unregisterBreadcrumb(name);
         },
         unregisterBreadcrumb(name) {
           const id = buildName(pilet, name);

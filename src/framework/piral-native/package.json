@@ -1,6 +1,6 @@
 {
   "name": "piral-native",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "description": "The Piral framework for use in React Native.",
   "keywords": [
     "app",
@@ -39,19 +39,19 @@
   },
   "devDependencies": {
     "@types/history": "^4.7.2",
-    "@types/react": "^16.8.1",
-    "@types/react-router": "^5.0.0",
-    "@types/react-router-dom": "^5.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.6",
     "@types/react-router-native": "^5.1.0",
-    "react": "^16.8.1",
-    "react-native": "^0.62.2"
+    "react": "^17.0.1",
+    "react-native": "^0.63.3"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-native": ">=0.60.0"
   },
   "dependencies": {
-    "piral-core": "^0.12.3",
+    "piral-core": "^0.12.4",
     "react-router-dom": "5.2.0",
     "react-router-native": "5.2.0"
   }

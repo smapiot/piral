@@ -141,7 +141,7 @@ function getBaseUri() {
 }
 
 function getRelativeUri(href: string) {
-    return href.substr(getBaseUri().length);
+  return href.substr(getBaseUri().length);
 }
 
 function isWithinBaseUriSpace(href: string) {

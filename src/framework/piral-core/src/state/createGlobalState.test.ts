@@ -25,6 +25,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},
@@ -51,6 +52,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},
@@ -81,6 +83,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},
@@ -106,6 +109,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},
@@ -134,6 +138,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},
@@ -162,6 +167,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},
@@ -196,6 +202,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},
@@ -229,6 +236,7 @@ describe('Create Global State Module', () => {
       registry: {
         extensions: {},
         pages: {},
+        wrappers: {},
       },
       modules: [],
       portals: {},

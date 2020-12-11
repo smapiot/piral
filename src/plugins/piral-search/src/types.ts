@@ -1,5 +1,13 @@
 import { ReactChild, ComponentType, ReactElement } from 'react';
-import { Dict, Disposable, PiletApi, BaseRegistration, AnyComponent, BaseComponentProps } from 'piral-core';
+import {
+  Dict,
+  Disposable,
+  PiletApi,
+  BaseRegistration,
+  AnyComponent,
+  BaseComponentProps,
+  RegistrationDisposer,
+} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletSearchApi {}
@@ -170,13 +178,13 @@ export interface PiletSearchApi {
    * @param provider The callback to be used for searching.
    * @param settings The optional settings for the search provider.
    */
-  registerSearchProvider(name: string, provider: SearchProvider, settings?: SearchSettings): void;
+  registerSearchProvider(name: string, provider: SearchProvider, settings?: SearchSettings): RegistrationDisposer;
   /**
    * Registers a search provider to respond to search queries.
    * @param provider The callback to be used for searching.
    * @param settings The optional settings for the search provider.
    */
-  registerSearchProvider(provider: SearchProvider, settings?: SearchSettings): void;
+  registerSearchProvider(provider: SearchProvider, settings?: SearchSettings): RegistrationDisposer;
   /**
    * Unregisters a search provider known by the given name.
    * Only previously registered search providers can be unregistered.

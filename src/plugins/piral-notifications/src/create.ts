@@ -38,6 +38,10 @@ export interface NotificationsConfig {
   messages?: Array<InitialNotification>;
 }
 
+function isElement(element: any): element is ReactElement<any, any> {
+  return isValidElement(element);
+}
+
 function toComponent(component: NotificationContent) {
   if (typeof component === 'string') {
     const text = component;
@@ -114,13 +118,13 @@ export function createNotificationsApi(config: NotificationsConfig = {}): PiralP
 
     return (api) => ({
       showNotification(content, customOptions) {
-        const component =
+        const Component =
           typeof content === 'string'
             ? content
-            : isValidElement(content)
+            : isElement(content)
             ? content
-            : withApi(context.converters, content as any, api, 'extension');
-        const notification = createNotification(context, selectId(), component, defaultOptions, customOptions);
+            : withApi(context, content, api, 'extension');
+        const notification = createNotification(context, selectId(), Component, defaultOptions, customOptions);
         context.openNotification(notification);
         return notification.close;
       },

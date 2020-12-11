@@ -89,7 +89,7 @@ function toChild(content: SearchResultType, api: PiletApi, context: GlobalStateC
   if (typeof content === 'string' || isValidElement(content)) {
     return content;
   } else {
-    const component = withApi(context.converters, content, api, 'extension');
+    const component = withApi(context, content, api, 'extension');
     return createElement(component);
   }
 }
@@ -158,6 +158,7 @@ export function createSearchApi(config: SearchConfig = {}): PiralPlugin<PiletSea
               settings,
             ),
           );
+          return () => api.unregisterSearchProvider(name);
         },
         unregisterSearchProvider(name) {
           const id = buildName(pilet, name);

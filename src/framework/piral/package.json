@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -40,21 +40,21 @@
   "devDependencies": {
     "@dbeining/react-atom": "^4.0.0",
     "@types/fluent": "^0.11.0",
-    "@types/history": "^4.7.2",
-    "@types/react": "^16.8.1",
-    "@types/react-router": "^5.0.0",
-    "@types/react-router-dom": "^5.0.0"
+    "@types/history": "^4.7.8",
+    "@types/react": "^17.0.0",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.6"
   },
   "dependencies": {
     "core-js": "3.6.4",
     "current-script-polyfill": "^1.0.0",
-    "piral-core": "^0.12.3",
-    "piral-ext": "^0.12.3",
+    "piral-core": "^0.12.4",
+    "piral-ext": "^0.12.4",
     "promise-polyfill": "^8.1.0",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "react-router": ">=5.0.0",
-    "react-router-dom": ">=5.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "url-polyfill": "^1.1.5",
     "whatwg-fetch": "^3.0.0"
   },

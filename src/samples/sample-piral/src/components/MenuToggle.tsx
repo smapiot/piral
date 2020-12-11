@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withRouter } from 'react-router';
 import { withClass } from './utils';
 
-export const MenuToggle = withRouter(({ history }) => {
+export const MenuToggle: React.ComponentType = withRouter(({ history }) => {
   const [active, setActive] = React.useState(false);
 
   React.useEffect(() => {

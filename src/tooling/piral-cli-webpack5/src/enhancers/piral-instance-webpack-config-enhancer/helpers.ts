@@ -15,7 +15,7 @@ export function getVariables(
 }
 
 export function setEnvironment(variables: Record<string, boolean | string>) {
-  Object.keys(variables).forEach(key => (process.env[key] = String(variables[key])));
+  Object.keys(variables).forEach((key) => (process.env[key] = String(variables[key])));
 }
 
 export function getDefineVariables(variables: Record<string, boolean | string>) {

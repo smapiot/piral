@@ -1,5 +1,13 @@
 import { ComponentType } from 'react';
-import { Dict, WrappedComponent, BaseComponentProps, BaseRegistration, Disposable, AnyComponent } from 'piral-core';
+import {
+  Dict,
+  WrappedComponent,
+  BaseComponentProps,
+  BaseRegistration,
+  Disposable,
+  AnyComponent,
+  RegistrationDisposer,
+} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletModalsApi {}
@@ -159,7 +167,7 @@ export interface PiletModalsApi {
     name: T extends string ? T : string,
     Component: AnyComponent<ModalComponentProps<T>>,
     defaults?: ModalOptions<T>,
-  ): void;
+  ): RegistrationDisposer;
   /**
    * Unregisters a modal by its name.
    * @param name The name that was previously registered.
