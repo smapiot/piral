@@ -56,7 +56,7 @@ module.exports = function (hash, moduleMap, options) {
     var cb = function (err, updatedModules) {
       if (err) return handleError(err);
 
-      if (!updatedModules) {
+      if (!updatedModules || !updatedModules.length) {
         if (options.warn) {
           console.warn('[HMR] Cannot find update (Full reload needed)');
           console.warn('[HMR] (Probably because of restarting the server)');
