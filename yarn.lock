@@ -9683,12 +9683,12 @@ klona@^2.0.4:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.4.tgz#7bb1e3affb0cb8624547ef7e8f6708ea2e39dfc0"
   integrity sha512-ZRbnvdg/NxqzC7L9Uyqzf4psi1OM4Cuc+sJAkQPjO6XkQIJTNbfK2Rsmbw8fx1p2mkZdp2FZYo2+LwXYY/uwIA==
 
-kras@^0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.11.1.tgz#1542ea4c8bfd32791b512d7df170d49f5e05146e"
-  integrity sha512-SQfnQMUn8PMAp6YwT9WfL+AnU77xWYqw3MdkcsxFz4myzhtjx/NkiyNb3+nOYqykNVlzOP/iq8vf6wqYUYfXkg==
+kras@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.12.1.tgz#15e389e1463cfd0d442d2f6e81f361994328e61a"
+  integrity sha512-i/y35jKtqEXExcEVo+zZeU7DIJYkmC2D/QBDkCFyN5B/U0zpkxUR9dOobGTYGJdHmzcN4Yk3cpDcgOYVa/yHIQ==
   dependencies:
-    yargs "^15.3.1"
+    yargs "^15.4.1"
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
