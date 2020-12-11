@@ -34,6 +34,8 @@ describe('Rule pilet-has-externals-as-peers', () => {
     bar: '*',
     '@foo/bar': '*',
   };
+  const peerModules = ['foo/sub', '@foo/bar/sub'];
+
   function createContext(externals: string[]): PiletRuleContext {
     return {
       data: {
@@ -44,10 +46,12 @@ describe('Rule pilet-has-externals-as-peers', () => {
         },
       },
       peerDependencies,
+      peerModules,
       entry: 'test-entry',
       error,
     } as any;
   }
+
   const peerExternals = [...Object.keys(peerDependencies), 'foo/sub', '@foo/bar/sub'];
   const moreExternals = [...peerExternals, 'foo-bar', 'foo-bar/sub', '@foo-bar/2k', '@foo-bar/2k/sub'];
   const contextNotMissingExternals = createContext(peerExternals);

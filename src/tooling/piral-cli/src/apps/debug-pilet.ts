@@ -170,11 +170,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       const entryFile = join(baseDir, entry);
       const targetDir = dirname(entryFile);
       const entryModule = await findEntryModule(entryFile, targetDir);
-      const { peerDependencies, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(
+      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(
         targetDir,
         app,
       );
-      const externals = Object.keys(peerDependencies);
+      const externals = [...Object.keys(peerDependencies), ...peerModules];
       const mocks = join(targetDir, 'mocks');
       const exists = await checkExistingDirectory(mocks);
 

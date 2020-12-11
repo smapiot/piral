@@ -454,6 +454,7 @@ export async function patchPiletPackage(
     }, {}),
     [name]: `*`,
   };
+  const peerModules = allExternals.filter(m => !validExternalDependencies.includes(m));
   const devDependencies = {
     ...Object.keys(typeDependencies).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || typeDependencies[name];
@@ -489,6 +490,7 @@ export async function patchPiletPackage(
     piral,
     devDependencies,
     peerDependencies,
+    peerModules,
     dependencies: {
       [name]: undefined,
     },
@@ -539,6 +541,7 @@ export async function retrievePiletData(target: string, app?: string) {
     dependencies: piletPackage.dependencies || {},
     devDependencies: piletPackage.devDependencies || {},
     peerDependencies: piletPackage.peerDependencies || {},
+    peerModules: piletPackage.peerModules || [],
     ignored: checkArrayOrUndefined(piletPackage, 'preservedDependencies'),
     appFile,
     piletPackage,
