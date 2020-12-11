@@ -115,6 +115,31 @@ Each version has its own pros and cons.
 
 ---------------------------------------
 
+## How can multiple layouts be used?
+
+There are multiple ways to do that. If you already know the routes to use a different layout you could do the following:
+
+1. Specify the components for the layouts (e.g., `DefaultLayout` and `LoginLayout`).
+2. Use `<SetComponent name="Layout" component={DefaultLayout} />` to define the standard layout.
+3. Use a `Route` to hook into the routes where you want to change the layout, e.g., `<Route path="/login" exact component={SwitchToLoginLayout} />`.
+
+The following definition for the `SwitchToLoginLayout` may work:
+
+```jsx
+const SwitchToLoginLayout = () => {
+  const context = React.useContext(StateContext);
+  React.useEffect(() => {
+    context.setComponent("Layout", LoginLayout);
+    return () => context.setComponent("Layout", DefaultLayout);
+  }, []);
+  return null;
+};
+```
+
+This will swap the layouts on changing to the selected routes.
+
+---------------------------------------
+
 ## Why are components from other frameworks just contained in boxes?
 
 Potentially, you are just looking at the "cross-framework demo" that we set up. In order to illustrate Piral's cross-framework's abilities best we placed all components on a dashboard in form of single tiles. These tiles are represented in form of these "boxes".
