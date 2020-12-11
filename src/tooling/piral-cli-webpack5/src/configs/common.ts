@@ -26,7 +26,9 @@ export function getVariables(): Record<string, string> {
 
 export function getHmrEntry(hmrPort: number): [] | [string] {
   return hmrPort
-    ? [`piral-cli-webpack5/webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`]
+    ? [
+        `piral-cli-webpack5/src/webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`,
+      ]
     : [];
 }
 

@@ -24,7 +24,6 @@
   "files": [
     "lib",
     "src",
-    "webpack-hot-middleware",
     "extend-config.js"
   ],
   "funding": {
