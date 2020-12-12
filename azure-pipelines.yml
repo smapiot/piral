@@ -81,7 +81,7 @@ stages:
   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)'), eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')))
   
   jobs:
-  - job: PreReleasePackages
+  - deployment: PreReleasePackages
     displayName: PreRelease Piral Packages
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
@@ -122,7 +122,7 @@ stages:
               Arguments: ci:prerelease
               customEndpoint: DefaultNpmConnection
 
-  - job: ReleasePackages
+  - deployment: ReleasePackages
     displayName: Release Piral Packages
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
@@ -171,7 +171,7 @@ stages:
               Arguments: ci:release
               customEndpoint: DefaultNpmConnection
 
-  - job: PreReleaseDemoCross
+  - deployment: PreReleaseDemoCross
     displayName: PreRelease Demo CrossFx Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
@@ -213,7 +213,7 @@ stages:
               command: custom
               customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
   
-  - job: ReleaseDemoCross
+  - deployment: ReleaseDemoCross
     displayName: Release Demo CrossFx Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
@@ -252,7 +252,7 @@ stages:
               command: custom
               customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
 
-  - job: PreReleaseDemoFull
+  - deployment: PreReleaseDemoFull
     displayName: PreRelease Demo Full Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
@@ -294,7 +294,7 @@ stages:
               command: custom
               customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag next
 
-  - job: ReleaseDemoFull
+  - deployment: ReleaseDemoFull
     displayName: Release Demo Full Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
@@ -333,7 +333,7 @@ stages:
               command: custom
               customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag latest
 
-  - job: PreReleaseSiteless
+  - deployment: PreReleaseSiteless
     displayName: PreRelease Siteless Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
@@ -375,7 +375,7 @@ stages:
               command: custom
               customCommand: publish dist/siteless/emulator/siteless.tgz --tag next
 
-  - job: ReleaseSiteless
+  - deployment: ReleaseSiteless
     displayName: Release Siteless Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
