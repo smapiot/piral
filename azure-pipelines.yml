@@ -111,8 +111,11 @@ stages:
               targetType: inline
               script: >-
                 git config --global user.email "releases@piral.io"
+
                 git config --global user.name "Piral Release Bot"
+
                 git checkout $(previewBranch)
+
                 git checkout -- .
           - task: Yarn@2
             displayName: Prerelease Packages
@@ -152,11 +155,17 @@ stages:
               targetType: inline
               script: >-
                 git config --global user.email "releases@piral.io"
+
                 git config --global user.name "Piral Release Bot"
+
                 git remote rm origin
+
                 git remote add origin https://$(githubPersonalAccessToken)@github.com/smapiot/piral.git
+
                 git fetch origin
+
                 git checkout $(releaseBranch)
+
                 git checkout -- .
           - task: Yarn@2
             displayName: Update Release Date
@@ -201,9 +210,13 @@ stages:
               targetType: inline
               script: >-
                 ORIGVER=`yarn --silent ci:version`
+
                 VERSION="$ORIGVER-pre.$(previewId)"
+
                 sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-cross-fx/package.json
+
                 yarn build:demo-cross --type emulator
+
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
           - task: Npm@1
             displayName: Publish CrossFx@next
@@ -243,6 +256,7 @@ stages:
               targetType: inline
               script: >-
                 yarn build:demo-cross --type emulator
+
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
           - task: Npm@1
             displayName: Publish CrossFx@latest
@@ -282,9 +296,13 @@ stages:
               targetType: inline
               script: >-
                 ORIGVER=`yarn --silent ci:version`
+
                 VERSION="$ORIGVER-pre.$(previewId)"
+
                 sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-piral/package.json
+
                 yarn build:demo-full --type emulator
+
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
           - task: Npm@1
             displayName: Publish Full@next
@@ -324,6 +342,7 @@ stages:
               targetType: inline
               script: >-
                 yarn build:demo-full --type emulator
+                
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
           - task: Npm@1
             displayName: Publish Full@latest
@@ -363,9 +382,13 @@ stages:
               targetType: inline
               script: >-
                 ORIGVER=`yarn --silent ci:version`
+
                 VERSION="$ORIGVER-pre.$(previewId)"
+
                 sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/framework/siteless/package.json
+
                 yarn build:siteless
+                
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
           - task: Npm@1
             displayName: Publish Siteless@next
@@ -405,6 +428,7 @@ stages:
               targetType: inline
               script: >-
                 yarn build:siteless
+
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
           - task: Npm@1
             displayName: Publish Siteless@latest
@@ -471,7 +495,7 @@ stages:
 - stage: DeployDemos
   displayName: Deploy Demos
   dependsOn: Build
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], variables['releaseBranch']), eq(variables['Build.SourceBranchName'], variables['previewBranch'])))
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['releaseBranch']))
   
   jobs:
   - deployment: DeployCoreDemo
