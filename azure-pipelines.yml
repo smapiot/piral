@@ -41,13 +41,9 @@ stages:
       inputs:
         Arguments: install
     - task: Yarn@2
-      displayName: Setup Repository
+      displayName: Assemble Packages
       inputs:
         Arguments: setup
-    - task: Yarn@2
-      displayName: Build Packages
-      inputs:
-        Arguments: build
     - task: Yarn@2
       displayName: Build Core Demo
       inputs:
