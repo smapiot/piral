@@ -63,7 +63,7 @@
     "express": "^4.17.1",
     "file-loader": "^6.1.1",
     "html-entities": "^1.2.0",
-    "html-webpack-plugin": "^4.2.0",
+    "html-webpack-plugin": "next",
     "html5-entry-webpack-plugin": "^0.6.4",
     "import-maps-webpack-plugin": "^0.6.4",
     "mini-css-extract-plugin": "^1.1.1",
