@@ -74,12 +74,12 @@ stages:
 - stage: Release
   displayName: Release Packages
   dependsOn: Build
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)'), eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], $(releaseBranch)), eq(variables['Build.SourceBranchName'], $(previewBranch))))
   
   jobs:
   - deployment: PreReleasePackages
     displayName: PreRelease Piral Packages
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(previewBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -120,7 +120,7 @@ stages:
 
   - deployment: ReleasePackages
     displayName: Release Piral Packages
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(releaseBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -169,7 +169,7 @@ stages:
 
   - deployment: PreReleaseDemoCross
     displayName: PreRelease Demo CrossFx Package
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(previewBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -211,7 +211,7 @@ stages:
   
   - deployment: ReleaseDemoCross
     displayName: Release Demo CrossFx Package
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(releaseBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -250,7 +250,7 @@ stages:
 
   - deployment: PreReleaseDemoFull
     displayName: PreRelease Demo Full Package
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(previewBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -292,7 +292,7 @@ stages:
 
   - deployment: ReleaseDemoFull
     displayName: Release Demo Full Package
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(releaseBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -331,7 +331,7 @@ stages:
 
   - deployment: PreReleaseSiteless
     displayName: PreRelease Siteless Package
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(previewBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -373,7 +373,7 @@ stages:
 
   - deployment: ReleaseSiteless
     displayName: Release Siteless Package
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
+    condition: eq(variables['Build.SourceBranchName'], $(releaseBranch))
     pool:
       vmImage: $(agentName)
     environment: 'registry-npmjs-org'
@@ -413,7 +413,7 @@ stages:
 - stage: DeployPages
   displayName: Deploy Pages
   dependsOn: Build
-  condition: and(succeeded(), or(or(eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)'), eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')), eq(variables['Build.SourceBranch'], 'refs/heads/documentation')))
+  condition: and(succeeded(), or(or(eq(variables['Build.SourceBranchName'], $(releaseBranch)), eq(variables['Build.SourceBranchName'], $(previewBranch))), eq(variables['Build.SourceBranchName'], 'documentation')))
   
   jobs:
   - deployment: DeployLandingPage
@@ -469,7 +469,7 @@ stages:
 - stage: DeployDemos
   displayName: Deploy Demos
   dependsOn: Build
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)'), eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], $(releaseBranch)), eq(variables['Build.SourceBranchName'], $(previewBranch))))
   
   jobs:
   - deployment: DeployCoreDemo
