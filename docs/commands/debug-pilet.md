@@ -123,3 +123,10 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
+
+### `--feed`
+
+Sets the URL of a pilet feed for including remote pilets.
+
+- Type: `string`
+- Default: `undefined`
