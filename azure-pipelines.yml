@@ -86,7 +86,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -127,7 +127,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -176,7 +176,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -218,7 +218,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -257,7 +257,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -299,7 +299,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -338,7 +338,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -380,7 +380,7 @@ stages:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
       name: $(buildImage)
-    environment: 'registry.npmjs.org'
+    environment: 'registry-npmjs-org'
     strategy:
       runOnce:
         deploy:
@@ -424,7 +424,7 @@ stages:
     displayName: Deploy Piral Landing Page
     pool:
       name: $(buildImage)
-    environment: 'www.piral.io'
+    environment: 'www-piral-io'
     strategy:
       runOnce:
         deploy:
@@ -449,7 +449,7 @@ stages:
     displayName: Deploy Piral Documentation Page
     pool:
       name: $(buildImage)
-    environment: 'docs.piral.io'
+    environment: 'docs-piral-io'
     strategy:
       runOnce:
         deploy:
@@ -480,7 +480,7 @@ stages:
     displayName: Deploy Piral Core Demo
     pool:
       name: $(buildImage)
-    environment: 'demo-core.piral.io'
+    environment: 'demo-core-piral-io'
     strategy:
       runOnce:
         deploy:
@@ -505,7 +505,7 @@ stages:
     displayName: Deploy Piral Cross Demo
     pool:
       name: $(buildImage)
-    environment: 'demo-cross.piral.io'
+    environment: 'demo-cross-piral-io'
     strategy:
       runOnce:
         deploy:
@@ -530,7 +530,7 @@ stages:
     displayName: Deploy Piral Full Demo
     pool:
       name: $(buildImage)
-    environment: 'demo-full.piral.io'
+    environment: 'demo-full-piral-io'
     strategy:
       runOnce:
         deploy:
