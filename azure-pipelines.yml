@@ -70,8 +70,8 @@ stages:
       displayName: Test Code
       inputs:
         Arguments: test
-    - publish: $(System.DefaultWorkingDirectory)
-      artifact: 'code'
+    - publish: $(System.DefaultWorkingDirectory)/dist
+      artifact: 'dist'
 
 - stage: Release
   displayName: Release Packages
@@ -89,14 +89,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -105,6 +98,18 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: setup
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Configure Git
             inputs:
@@ -133,14 +138,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -149,6 +147,18 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: setup
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Configure Git
             inputs:
@@ -188,14 +198,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -204,6 +207,14 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build CrossFx Emulator
             inputs:
@@ -218,11 +229,12 @@ stages:
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          - task: Npm@1
+          - task: Bash@3
             displayName: Publish CrossFx@next
             inputs:
-              command: custom
-              customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
+              targetType: inline
+              script: >-
+                npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
   
   - deployment: ReleaseDemoCross
     displayName: Release Demo CrossFx Package
@@ -234,14 +246,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -250,6 +255,14 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build CrossFx Emulator
             inputs:
@@ -258,11 +271,12 @@ stages:
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          - task: Npm@1
+          - task: Bash@3
             displayName: Publish CrossFx@latest
             inputs:
-              command: custom
-              customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
+              targetType: inline
+              script: >-
+                npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
 
   - deployment: PreReleaseDemoFull
     displayName: PreRelease Demo Full Package
@@ -274,14 +288,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -290,6 +297,14 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Full Emulator
             inputs:
@@ -304,11 +319,12 @@ stages:
                 yarn build:demo-full --type emulator
 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          - task: Npm@1
+          - task: Bash@3
             displayName: Publish Full@next
             inputs:
-              command: custom
-              customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag next
+              targetType: inline
+              script: >-
+                npm publish dist/demo-full/emulator/sample-full.tgz --tag next
 
   - deployment: ReleaseDemoFull
     displayName: Release Demo Full Package
@@ -320,14 +336,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -336,6 +345,14 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Full Emulator
             inputs:
@@ -344,11 +361,12 @@ stages:
                 yarn build:demo-full --type emulator
                 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          - task: Npm@1
+          - task: Bash@3
             displayName: Publish Full@latest
             inputs:
-              command: custom
-              customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag latest
+              targetType: inline
+              script: >-
+                npm publish dist/demo-full/emulator/sample-full.tgz --tag latest
 
   - deployment: PreReleaseSiteless
     displayName: PreRelease Siteless Package
@@ -360,14 +378,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -376,6 +387,14 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Siteless
             inputs:
@@ -390,11 +409,12 @@ stages:
                 yarn build:siteless
                 
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-          - task: Npm@1
+          - task: Bash@3
             displayName: Publish Siteless@next
             inputs:
-              command: custom
-              customCommand: publish dist/siteless/emulator/siteless.tgz --tag next
+              targetType: inline
+              script: >-
+                npm publish dist/siteless/emulator/siteless.tgz --tag next
 
   - deployment: ReleaseSiteless
     displayName: Release Siteless Package
@@ -406,14 +426,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
+          - checkout: self
           - task: NodeTool@0
             displayName: Use Node $(nodeVersion)
             inputs:
@@ -422,6 +435,14 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Siteless
             inputs:
@@ -430,11 +451,12 @@ stages:
                 yarn build:siteless
 
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-          - task: Npm@1
+          - task: Bash@3
             displayName: Publish Siteless@latest
             inputs:
-              command: custom
-              customCommand: publish dist/siteless/emulator/siteless.tgz --tag latest
+              targetType: inline
+              script: >-
+                npm publish dist/siteless/emulator/siteless.tgz --tag latest
 
 - stage: DeployPages
   displayName: Deploy Pages
@@ -453,8 +475,8 @@ stages:
           steps:
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
+              artifact: 'dist'
+              path: $(System.DefaultWorkingDirectory)/dist
           - task: sftpupload@1
             displayName: Upload Landing Page
             inputs:
@@ -478,8 +500,8 @@ stages:
           steps:
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
+              artifact: 'dist'
+              path: $(System.DefaultWorkingDirectory)/dist
           - task: sftpupload@1
             displayName: Upload Documentation Page
             inputs:
@@ -509,8 +531,8 @@ stages:
           steps:
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
+              artifact: 'dist'
+              path: $(System.DefaultWorkingDirectory)/dist
           - task: sftpupload@1
             displayName: Upload Core Demo
             inputs:
@@ -534,8 +556,8 @@ stages:
           steps:
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
+              artifact: 'dist'
+              path: $(System.DefaultWorkingDirectory)/dist
           - task: sftpupload@1
             displayName: Upload CrossFx Demo
             inputs:
@@ -559,8 +581,8 @@ stages:
           steps:
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifact: 'code'
-              path: $(System.DefaultWorkingDirectory)
+              artifact: 'dist'
+              path: $(System.DefaultWorkingDirectory)/dist
           - task: sftpupload@1
             displayName: Upload Core Demo
             inputs:
