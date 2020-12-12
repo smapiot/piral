@@ -9,7 +9,7 @@ variables:
 - group: piral-deployment-variables
 - name: previewId
   value: $(Build.BuildId)
-- name: buildImage
+- name: agentName
   value: 'ubuntu-latest'
 - name: releaseBranch
   value: 'master'
@@ -26,7 +26,7 @@ stages:
   - job: BuildCode
     displayName: Verify and Build Code
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     steps:
     - task: NodeTool@0
       displayName: Use Node $(nodeVersion)
@@ -85,7 +85,7 @@ stages:
     displayName: PreRelease Piral Packages
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -126,7 +126,7 @@ stages:
     displayName: Release Piral Packages
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -175,7 +175,7 @@ stages:
     displayName: PreRelease Demo CrossFx Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -217,7 +217,7 @@ stages:
     displayName: Release Demo CrossFx Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -256,7 +256,7 @@ stages:
     displayName: PreRelease Demo Full Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -298,7 +298,7 @@ stages:
     displayName: Release Demo Full Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -337,7 +337,7 @@ stages:
     displayName: PreRelease Siteless Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(previewBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -379,7 +379,7 @@ stages:
     displayName: Release Siteless Package
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/$(releaseBranch)')
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'registry-npmjs-org'
     strategy:
       runOnce:
@@ -423,7 +423,7 @@ stages:
   - deployment: DeployLandingPage
     displayName: Deploy Piral Landing Page
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'www-piral-io'
     strategy:
       runOnce:
@@ -448,7 +448,7 @@ stages:
   - deployment: DeployDocumentationPage
     displayName: Deploy Piral Documentation Page
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'docs-piral-io'
     strategy:
       runOnce:
@@ -479,7 +479,7 @@ stages:
   - deployment: DeployCoreDemo
     displayName: Deploy Piral Core Demo
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'demo-core-piral-io'
     strategy:
       runOnce:
@@ -504,7 +504,7 @@ stages:
   - deployment: DeployCrossDemo
     displayName: Deploy Piral Cross Demo
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'demo-cross-piral-io'
     strategy:
       runOnce:
@@ -529,7 +529,7 @@ stages:
   - deployment: DeployFullDemo
     displayName: Deploy Piral Full Demo
     pool:
-      name: $(buildImage)
+      vmImage: $(agentName)
     environment: 'demo-full-piral-io'
     strategy:
       runOnce:
