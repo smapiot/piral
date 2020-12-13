@@ -233,10 +233,11 @@ stages:
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          - task: Yarn@2
+          - task: Npm@1
             displayName: Release Packages
             inputs:
-              Arguments: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next --access public
+              command: custom
+              customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
               customEndpoint: DefaultNpmConnection
   
   - deployment: ReleaseDemoCross
@@ -278,10 +279,11 @@ stages:
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          - task: Yarn@2
+          - task: Npm@1
             displayName: Release Packages
             inputs:
-              Arguments: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --access public
+              command: custom
+              customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseDemoFull
@@ -329,10 +331,11 @@ stages:
                 yarn build:demo-full --type emulator
 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          - task: Yarn@2
+          - task: Npm@1
             displayName: Release Packages
             inputs:
-              Arguments: publish dist/demo-full/emulator/sample-full.tgz --tag next --access public
+              command: custom
+              customCommand: publish dist/demo-full/emulator/sample-full.tgz
               customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseDemoFull
@@ -374,10 +377,11 @@ stages:
                 yarn build:demo-full --type emulator
                 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          - task: Yarn@2
+          - task: Npm@1
             displayName: Release Packages
             inputs:
-              Arguments: publish dist/demo-full/emulator/sample-full.tgz --tag latest --access public
+              command: custom
+              customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseSiteless
@@ -425,10 +429,11 @@ stages:
                 yarn build:siteless
                 
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-          - task: Yarn@2
+          - task: Npm@1
             displayName: Release Packages
             inputs:
-              Arguments: publish dist/siteless/emulator/siteless.tgz --tag next --access public
+              command: custom
+              customCommand: publish dist/siteless/emulator/siteless.tgz --tag next
               customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseSiteless
@@ -470,10 +475,11 @@ stages:
                 yarn build:siteless
 
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-          - task: Yarn@2
+          - task: Npm@1
             displayName: Release Packages
             inputs:
-              Arguments: publish dist/siteless/emulator/siteless.tgz --tag latest --access public
+              command: custom
+              customCommand: publish dist/siteless/emulator/siteless.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
 - stage: DeployPages
