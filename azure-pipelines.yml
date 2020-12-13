@@ -236,7 +236,7 @@ stages:
           - task: Yarn@2
             displayName: Release Packages
             inputs:
-              Arguments: ci:publish-pckg dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
+              Arguments: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
               customEndpoint: DefaultNpmConnection
   
   - deployment: ReleaseDemoCross
@@ -281,7 +281,7 @@ stages:
           - task: Yarn@2
             displayName: Release Packages
             inputs:
-              Arguments: ci:publish-pckg dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
+              Arguments: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseDemoFull
@@ -332,7 +332,7 @@ stages:
           - task: Yarn@2
             displayName: Release Packages
             inputs:
-              Arguments: ci:publish-pckg dist/demo-full/emulator/sample-full.tgz --tag next
+              Arguments: publish dist/demo-full/emulator/sample-full.tgz --tag next
               customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseDemoFull
@@ -377,7 +377,7 @@ stages:
           - task: Yarn@2
             displayName: Release Packages
             inputs:
-              Arguments: ci:publish-pckg dist/demo-full/emulator/sample-full.tgz --tag latest
+              Arguments: publish dist/demo-full/emulator/sample-full.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseSiteless
@@ -428,7 +428,7 @@ stages:
           - task: Yarn@2
             displayName: Release Packages
             inputs:
-              Arguments: ci:publish-pckg dist/siteless/emulator/siteless.tgz --tag next
+              Arguments: publish dist/siteless/emulator/siteless.tgz --tag next
               customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseSiteless
@@ -473,7 +473,7 @@ stages:
           - task: Yarn@2
             displayName: Release Packages
             inputs:
-              Arguments: ci:publish-pckg dist/siteless/emulator/siteless.tgz --tag latest
+              Arguments: publish dist/siteless/emulator/siteless.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
 - stage: DeployPages
