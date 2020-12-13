@@ -265,7 +265,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.newPiralDefaults.logLevel)
         .string('tag')
-        .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
+        .describe('tag', 'Sets the tag or version of the package to install. By default, this uses the version of the CLI.')
         .default('tag', apps.newPiralDefaults.version)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the installation.')

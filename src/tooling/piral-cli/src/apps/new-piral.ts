@@ -17,6 +17,7 @@ import {
   progress,
   determineNpmClient,
   defaultRegistry,
+  cliVersion,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -91,7 +92,7 @@ export const newPiralDefaults: NewPiralOptions = {
   registry: defaultRegistry,
   framework: 'piral',
   target: '.',
-  version: 'latest',
+  version: cliVersion,
   forceOverwrite: ForceOverwrite.no,
   language: SourceLanguage.ts,
   install: true,

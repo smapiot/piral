@@ -233,12 +233,11 @@ stages:
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          - task: Bash@3
-            displayName: Publish CrossFx@next
+          - task: Yarn@2
+            displayName: Release Packages
             inputs:
-              targetType: inline
-              script: >-
-                npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
+              Arguments: ci:publish-pckg dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
+              customEndpoint: DefaultNpmConnection
   
   - deployment: ReleaseDemoCross
     displayName: Release Demo CrossFx Package
@@ -279,12 +278,11 @@ stages:
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          - task: Bash@3
-            displayName: Publish CrossFx@latest
+          - task: Yarn@2
+            displayName: Release Packages
             inputs:
-              targetType: inline
-              script: >-
-                npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
+              Arguments: ci:publish-pckg dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
+              customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseDemoFull
     displayName: PreRelease Demo Full Package
@@ -331,12 +329,11 @@ stages:
                 yarn build:demo-full --type emulator
 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          - task: Bash@3
-            displayName: Publish Full@next
+          - task: Yarn@2
+            displayName: Release Packages
             inputs:
-              targetType: inline
-              script: >-
-                npm publish dist/demo-full/emulator/sample-full.tgz --tag next
+              Arguments: ci:publish-pckg dist/demo-full/emulator/sample-full.tgz --tag next
+              customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseDemoFull
     displayName: Release Demo Full Package
@@ -377,12 +374,11 @@ stages:
                 yarn build:demo-full --type emulator
                 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          - task: Bash@3
-            displayName: Publish Full@latest
+          - task: Yarn@2
+            displayName: Release Packages
             inputs:
-              targetType: inline
-              script: >-
-                npm publish dist/demo-full/emulator/sample-full.tgz --tag latest
+              Arguments: ci:publish-pckg dist/demo-full/emulator/sample-full.tgz --tag latest
+              customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseSiteless
     displayName: PreRelease Siteless Package
@@ -429,12 +425,11 @@ stages:
                 yarn build:siteless
                 
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-          - task: Bash@3
-            displayName: Publish Siteless@next
+          - task: Yarn@2
+            displayName: Release Packages
             inputs:
-              targetType: inline
-              script: >-
-                npm publish dist/siteless/emulator/siteless.tgz --tag next
+              Arguments: ci:publish-pckg dist/siteless/emulator/siteless.tgz --tag next
+              customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseSiteless
     displayName: Release Siteless Package
@@ -475,12 +470,11 @@ stages:
                 yarn build:siteless
 
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-          - task: Bash@3
-            displayName: Publish Siteless@latest
+          - task: Yarn@2
+            displayName: Release Packages
             inputs:
-              targetType: inline
-              script: >-
-                npm publish dist/siteless/emulator/siteless.tgz --tag latest
+              Arguments: ci:publish-pckg dist/siteless/emulator/siteless.tgz --tag latest
+              customEndpoint: DefaultNpmConnection
 
 - stage: DeployPages
   displayName: Deploy Pages
