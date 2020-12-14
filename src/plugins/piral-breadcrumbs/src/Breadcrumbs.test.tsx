@@ -16,7 +16,7 @@ jest.mock('react-router', () => ({
       pathname: '/example',
     };
   },
-  useParams() {
+  useRouteMatch() {
     return {};
   },
 }));
