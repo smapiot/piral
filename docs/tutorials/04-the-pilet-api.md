@@ -124,13 +124,15 @@ Let's see a simple example. We will now modify our page to include some posts re
 ```jsx
 import * as React from 'react';
 
-export interface MyPageProps {
-  data: Array<{
+export interface Post {
     id: number;
     userId: number;
     title: string;
     body: string;
-  }>;
+}
+
+export interface MyPageProps {
+  data: Array<Post>;
 }
 
 export const MyPage: React.FC<MyPageProps> = ({ data }) => (
@@ -154,13 +156,13 @@ Obviously, we could introduce some functionality and separate it, but this is so
 
 ```ts
 import { PiletApi } from 'my-app';
-import { MyPage } from './MyPage';
+import { MyPage, Post } from './MyPage';
 import { MyPageMenu } from './MyPageMenu';
 
 const apiUrl = 'https://jsonplaceholder.typicode.com/posts';
 
 export function setup(app: PiletApi) {
-  const connect = app.createConnector(() => fetch(apiUrl).then(res => res.json()));
+  const connect = app.createConnector<Array<Post>>(() => fetch(apiUrl).then(res => res.json()));
   app.registerMenu(MyPageMenu);
   app.registerPage('/my-page', connect(MyPage));
 }
