@@ -11,6 +11,6 @@ Piral comes with a VS Code extension that's available at the official [marketpla
 - Lets you execute all relevant piral-cli commands right from VS Code
 - Provides you with information about your current piral workspace
 
-::: warning: Under Development
+::: warning: Under development
 This plugin is currently beeing developed
 :::

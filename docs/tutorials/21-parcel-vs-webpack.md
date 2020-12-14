@@ -15,7 +15,7 @@ Piral wants to give you as much freedom as possible. Therefore, the `piral-cli` 
 
 But quite often we get asked "which one to choose". If you don't make any choice then Piral will choose for you. Right now **Webpack** is picked as the default bundler.
 
-::: tip: Changing the Default Bundler
+::: tip: Changing the default bundler
 
 Using a `.piralrc` file in your home directory you can set what default should be used. If you prefer to use **Parcel** as your default bundler then simply provide the following content:
 
@@ -44,7 +44,7 @@ Example for a *package.json* (fragment):
 
 In the case above **Webpack** is chosen as the default bundler.
 
-::: warning: Multiple Bundlers
+::: warning: Multiple bundlers
 
 In theory the Piral CLI supports multiple installed bundlers. However, in practice the handling if neither advised nor recommended. Make sure to install only a single Piral CLI plugin providing a bundler integration.
 

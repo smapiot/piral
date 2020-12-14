@@ -42,7 +42,7 @@ The following tutorials will start with guidance for the first steps through to 
 
 The diagram above illustrates the setup and process for developing with Piral. The prerequisites are fairly minimal and as a developer you only need your favorite editor, a terminal, an Internet browser and Node.js installed. The **Piral instance** (application shell) and the **pilets** (feature modules) can be executed and debugged in the emulator on the local development machine.
 
-::: tip: Piral without a Feed Service
+::: tip: Piral without a feed service
 Strictly speaking, a feed service is not necessary. You could use anything from a hardcoded list to a dynamically updated JSON file for getting to know where your pilets are.
 
 Ultimately, you could even embed pilets directly, or reference them without going to a feed service at all. While we don't agree that this makes sense for most users, it could be a great way to get started.

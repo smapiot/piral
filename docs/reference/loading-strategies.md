@@ -48,7 +48,7 @@ The `blazingStrategy` is just an instance constructed by the `createProgressiveS
 
 Alternatively, the `syncStrategy` can help if all pilets have been loaded already, but still need to be run (i.e., calling the `setup` function). It could be used for special purposes, e.g., SSR or specific builds of the Piral instance. This strategy ignores the fetcher and only considers the already given pilets.
 
-::: tip: Place Pilets in `window`
+::: tip: Place pilets in `window`
 A very simple way of optimizing first-render performance is to place the pilets code in a global `script` tag injected into the HTML. This way, the pilets can be retrieved synchronously, allowing the use of the `syncStrategy` for evaluation.
 
 While this could be a quick win in many scenarios, the long-term (and much more scalable) solution is to use server-side generated bundles or individual scripts.

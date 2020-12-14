@@ -176,7 +176,7 @@ The pilet references dependencies starting with "a".
 
 In the example above the new rule, `no-dependencies-with-a` would be ignored by default. This is a great default value for the validation of a pilet.
 
-::: tip: Validator Configuration
+::: tip: Validator configuration
 While the validation rules for pilets are determined by the *package.json* of its app shell, the validation rules for a Piral instance are determined by the (potentially local) *.piralrc* file.
 
 The code below shows the configuration section for the validation of pilets in the *package.json* of a Piral instance.

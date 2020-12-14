@@ -63,7 +63,7 @@ piral new --target my-app
 
 As a result, we will find in the folder `./my-app` the files for the newly created application shell.
 
-::: tip: Use NPM Initializers
+::: tip: Use NPM initializers
 In case you don't want to install the Piral CLI globally, you can also leverage the NPM initializer for this command.
 
 ```sh
@@ -99,7 +99,7 @@ piral build
 
 This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `emulator` and `release`. The latter contains the files for publishing the app shell to some host later on. The former contains a *emulator package*.
 
-::: tip: Only Build the Emulator
+::: tip: Only build the emulator
 The previously used command builds both, `release` and `emulator`. If you only want, e.g., the emulator package you can use the `--type` flag:
 
 ```sh
@@ -134,7 +134,7 @@ With the `pilet new` command, a new pilet with pre-defined content is created. T
 
 If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 
-::: tip: Use NPM Initializers
+::: tip: Use NPM initializers
 You can also leverage the NPM initializers for creating new pilets.
 
 ```sh

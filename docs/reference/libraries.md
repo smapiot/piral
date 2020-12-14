@@ -34,7 +34,7 @@ The following table compares the three from an out-of-the-box feature perspectiv
 
 Both libraries are purely functional and do not provide any design. Thus the look and feel can be fully customized and designed in every aspect.
 
-::: tip: Add Missing Features
+::: tip: Add missing features
 A missing feature in `piral-core` can be also re-integrated by installing the respective plugin, e.g., `piral-dashboard` for providing dashboard capabilities.
 :::
 
@@ -69,7 +69,7 @@ To help us see the commands in action we can also use a *global* version of the 
 
 Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-atom` are straight dependencies, common dependencies such as `react` are only peer referenced. This leaves many of the open choices up to the developer providing greater freedom.
 
-::: warning: Peer Dependencies
+::: warning: Peer dependencies
 You will need to pick (and reference) the versions of `react`, `react-dom`, `react-router`, and `react-router-dom`.
 :::
 

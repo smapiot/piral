@@ -43,7 +43,7 @@ The following props are created:
 
 The `piralCLI` property determines if the given package contains *raw* sources or already *pre-bundled* sources. In the latter case we will directly start a server from `app`, in the former case a lightweight version of `piral debug` is applied to the sources.
 
-::: tip: Custom Emulator
+::: tip: Custom emulator
 If you build your emulator package on your own incl. already pre-bundled sources, make sure to include the following snippet in your *package.json*:
 
 ```json
@@ -79,7 +79,7 @@ export interface ExportedInterface {}
 
 The emulator declaration can also be built independently using the command `piral declaration`.
 
-::: tip: Piral Declaration Entry Point
+::: tip: Piral declaration entry point
 By default, the `piral declaration` command works against the current working directory. It looks for the closest *package.json* and retrieves the application's entry point via the `app` field. In case you want to specify this you can provide the entry point directly.
 
 The command `piral declaration path/to/entry` supports *.html*, *.js*, *.jsx*, *.ts*, and *.tsx* files as entry points.
@@ -114,7 +114,7 @@ const instance = createInstance({
 
 This allows importing things from the `my-virtual-package` dependency in a pilet at runtime.
 
-::: warning: Use Real Packages
+::: warning: Use real packages
 The downside is that some bundlers may have a problem with the virtual package. For instance, Parcel likes to resolve real paths first, and will complain if a package cannot be found.
 
 We therefore recommend using only real packages. In a monorepo the cost of maintenance is negligible and they are much more flexible, introduce less magic, and could be reused.

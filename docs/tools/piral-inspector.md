@@ -197,7 +197,7 @@ First, you need to "Browse" to the pilet package file and then "Upload" it.
 
 In case you uploaded a proper pilet, it will be loaded and shown in the tile section and the list of available pilets. Per default, the new pilet will be active, but will be given a random name.
 
-::: warning: Temporary Feed
+::: warning: Temporary feed
 The pilet will be loaded into a temporary feed, and this feed (including the pilets) will be removed when the predefined lifetime (by default 60 minutes) expires.
 :::
 
