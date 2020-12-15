@@ -171,14 +171,20 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
       progress(`Publishing "%s" ...`, file, url);
       const result = await postFile(url, apiKey, content, fields, ca);
 
-      if (result) {
+      if (result.success) {
         successfulUploads.push(file);
 
-        if (result !== true) {
+        if (result.response) {
           log('httpPostResponse_0067', result);
         }
 
         progress(`Published successfully!`);
+      } else if (result.status === 402) {
+        log('failedToUploadPayment_0161', result.response);
+      } else if (result.status === 409) {
+        log('failedToUploadVersion_0162', result.response);
+      } else if (result.status === 413) {
+        log('failedToUploadSize_0163', result.response);
       } else {
         log('failedToUpload_0062', fileName);
       }

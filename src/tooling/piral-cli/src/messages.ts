@@ -1269,6 +1269,90 @@ export function failedHttpGet_0068(error: string): QuickMessage {
 }
 
 /**
+ * @kind Warning
+ *
+ * @summary
+ * The HTTP post request was reported to be unsuccessful. The server indicated
+ * that some payment is required before this pilet can be published.
+ *
+ * @abstract
+ * While submitting the HTTP get request an error was reported.
+ * 
+ * Potentially, the server returned some more indicative error message. In this
+ * case read it carefully to know what version was already published.
+ * 
+ * In any case only the documentation of the corresponding feed service can be
+ * conclusive how this can be resolved. Presumably, some payment of some fee
+ * is necessary to publish pilets.
+ */
+export function failedToUploadPayment_0161(response: any): QuickMessage {
+  const content = typeof response !== 'string' ? JSON.stringify(response, undefined, 2) : response;
+  return [LogLevels.warning, '0161', `Failed to publish pilet due to missing payment: ${content}.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The HTTP post request was reported to be unsuccessful. The server indicated
+ * that the same version of this pilet was already published.
+ *
+ * @abstract
+ * While submitting the HTTP get request an error was reported.
+ * 
+ * Potentially, the server returned some more indicative error message. In this
+ * case read it carefully to know what version was already published.
+ * 
+ * In any case you need to change the version to continue. You can do that by
+ * editing the "version" field in the pilet's package.json or using `npm version`.
+ *
+ * @example
+ * If you already published the pilet, e.g., via
+ * 
+ * ```sh
+ * pilet publish --api-key ... --url ...
+ * ```
+ * 
+ * then doing this again without any change should result in this error.
+ * 
+ * Now we can patch-upgrade the version of the pilet:
+ * 
+ * ```sh
+ * npm version patch
+ * ```
+ * 
+ * And try the `pilet publish` command again. This time it should just work.
+ */
+export function failedToUploadVersion_0162(response: any): QuickMessage {
+  const content = typeof response !== 'string' ? JSON.stringify(response, undefined, 2) : response;
+  return [LogLevels.warning, '0162', `Failed to publish pilet. The version was already published: ${content}.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The HTTP post request was reported to be unsuccessful. The server indicated
+ * that the size of the pilet was too large.
+ *
+ * @abstract
+ * While submitting the HTTP get request an error was reported.
+ * 
+ * Potentially, the server returned some more indicative error message. In this
+ * case read it carefully to know how much the limit was exceeded.
+ * 
+ * In any case the pilet must be somehow trimmed down. Most often, the size is
+ * dominantly determined by some external packages that are referened. Use a
+ * page such as bundlephobia.com or some IDE tools to find out which packages
+ * are to blame. Also tools such as the Webpack or Parcel bundle analyzer can
+ * be helpful to determine the source of the bundle size.
+ */
+export function failedToUploadSize_0163(response: any): QuickMessage {
+  const content = typeof response !== 'string' ? JSON.stringify(response, undefined, 2) : response;
+  return [LogLevels.warning, '0163', `Failed to upload pilet. The pilet is too large: ${content}.`];
+}
+
+/**
  * @kind Error
  *
  * @summary

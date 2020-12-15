@@ -72,41 +72,69 @@ jest.mock('axios', () => ({
 describe('HTTP Module', () => {
   it('postFile form posts a file successfully should be ok', async () => {
     const result = await postFile(apiUrl, '123', Buffer.from('example'));
-    expect(result).toBeTruthy();
+    expect(result).toEqual({
+      response: undefined,
+      status: 200,
+      success: true,
+    });
   });
 
   it('postFile form fails to post file should be false', async () => {
     const result = await postFile(apiUrl, '124', Buffer.from('example'));
-    expect(result).toBeFalsy();
+    expect(result).toEqual({
+      response: '',
+      status: 401,
+      success: false,
+    });
   });
 
   it('postFile form not found to post file should be false', async () => {
     const result = await postFile('http://sample.com/', '', Buffer.from('example'));
-    expect(result).toBeFalsy();
+    expect(result).toEqual({
+      response: '',
+      status: 404,
+      success: false,
+    });
   });
 
   it('postFile call results in error request', async () => {
     errorRequest = true;
     const result = await postFile('http://sample.com/', '', Buffer.from('example'));
-    expect(result).toBeFalsy();
+    expect(result).toEqual({
+      response: undefined,
+      status: 500,
+      success: false,
+    });
     errorRequest = false;
   });
 
   it('postFile call results in error other', async () => {
     errorOther = true;
     const result = await postFile('http://sample.com/', '', Buffer.from('example'));
-    expect(result).toBeFalsy();
+    expect(result).toEqual({
+      response: undefined,
+      status: 500,
+      success: false,
+    });
     errorOther = false;
   });
 
   it('postFile call results in error response', async () => {
     errorResponse = true;
     let result = await postFile('http://sample.com/', '', Buffer.from('example'));
-    expect(result).toBeFalsy();
+    expect(result).toEqual({
+      response: 'This component is not available anymore.',
+      status: 410,
+      success: false,
+    });
     errorResponse = false;
     errorResponse2 = true;
     result = await postFile('http://sample.com/', '', Buffer.from('example'));
-    expect(result).toBeFalsy();
+    expect(result).toEqual({
+      response: 'This component is not available anymore.',
+      status: 410,
+      success: false,
+    });
     errorResponse2 = false;
   });
 
