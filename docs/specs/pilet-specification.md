@@ -135,6 +135,14 @@ The property reflects the license used for distributing the given pilet.
 
 By default, the `license` is set to `ISC`, which is equivalent to MIT and NPM's default.
 
+### `piral`
+
+The `piral` property is a non-standard field that is optional for a pilet, but may be necessary to determine the related (primary) Piral instance for debugging or validating the pilet.
+
+The property contains a `comment` field for info purposes, as well as a `name` field to define the name of the package containing the emulator of the Piral instance. Other fields may be added, too.
+
+By default, the `piral` is considered undefined, i.e., no primary Piral instance given.
+
 ### `peerDependencies`
 
 The `peerDependencies` property is a standard NPM field that is optional for a pilet.
@@ -142,6 +150,16 @@ The `peerDependencies` property is a standard NPM field that is optional for a p
 The property contains information about the used shared dependencies that have to be supplied from the Piral instance. A feed service or Piral instance may reject the Pilet in case of unmatched shared dependencies.
 
 By default, the `peerDependencies` are set to an empty record `{}`, i.e., no peer dependencies.
+
+### `peerModules`
+
+The `peerModules` property is a non-standard field that is optional for a pilet.
+
+The property contains the names of all peer modules. A peer module is a full module qualifier that leads to the module of a package. For instance, the package `react-dom` comes with a module `react-dom/server`. While `react-dom` is a valid peer dependency, it is not a valid peer module. In contrast, `react-dom/server` is a valid peer module, but not a valid peer dependency.
+
+Like the `peerDependencies` this property defines shared modules that have to be supplied from the Piral instance. A feed service or Piral instance may reject the Pilet in case of unmatched shared modules.
+
+By default, the `peerModules` are set to an empty array `[]`, i.e., no peer modules.
 
 ### `dependencies`
 
