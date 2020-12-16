@@ -55,7 +55,7 @@ function extractMenuItems(sections: NodeListOf<HTMLElement>, active: HTMLElement
   return items;
 }
 
-function seen(offset: number, position: number, height: number, scrollHeight: number last: boolean) {
+function seen(offset: number, position: number, height: number, scrollHeight: number, last: boolean) {
   const value = offset - position;
   return value < 15 || (last && value + scrollHeight - offset < height - 15);
 }
