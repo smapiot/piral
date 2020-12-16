@@ -6,6 +6,7 @@
 * Fixed issue ignoring `--log-level` in the initializers
 * Fixed shared submodule dependencies in `peerDependencies` (#341)
 * Updated to use React 17 (#312)
+* Updated the project CI to use Piral Pipelines with YAML
 * Updated `withApi` to use `context` instead of `converters`
 * Updated `piral-jest-utils` package for Jest mocking (#186)
 * Added `feed` parameter to `pilet debug` (#344)
