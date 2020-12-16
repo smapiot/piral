@@ -125,7 +125,13 @@ pilet publish --fresh --url https://feed.piral.cloud/api/v1/pilet/my-tutorial-fe
 
 The `--fresh` flag tells the Piral CLI to invoke a fresh build and do everything from building up to packaging the pilet. Without this flag, we would already need a packaged pilet ready for publishing.
 
-### Check the Pilet upload in the Feed Service
+::: warning: One publish per version
+The official feed service only takes one pilet per name + version combination. This is considered a feature, as pilets are served by their name using a version. Therefore, if you want to update / republish the pilet, make sure to update the version first.
+
+To update the version of a pilet either change the `version` key in its *package.json* or run `npm version` (e.g., `npm version patch`).
+:::
+
+### Check the Pilet Upload in the Feed Service
 
 The feed service allows you to view and manage available pilets. To view all published pilets invoke the `Manage Pilets` link of the corresponding feed, in our case `my-tutorial-feed`.
 
@@ -137,7 +143,7 @@ The view shows further information about the published pilets and provides funct
 
 Now that the pilet is available via the feed Service, we just need to configure our Piral instance to pull the pilets from the created feed. We need to modify the `index.tsx` file in the `./src` folder of the Piral instance. The path to the newly created feed needs to be specified, in our case:
 
-```javascript
+```js
 const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed';
 ```
 

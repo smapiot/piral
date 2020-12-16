@@ -2,9 +2,9 @@
 
 # [Piral Jest Utils](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-jest-utils.svg?style=flat)](https://www.npmjs.com/package/piral-jest-utils) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is a utility library that can be used for testing pilets.
+This is an opinionated utility library that can be used for testing Piral instances and pilets.
 
-What `piral-jest-utils` offers are utilities and mocks that make testing of pilets very easy. From simple unit tests to complete functional tests.
+What `piral-jest-utils` offers are utilities and mocks that make testing Piral instances and pilets with Jest very easy. From simple unit tests to complete functional tests.
 
 ## Installation
 
@@ -26,53 +26,49 @@ npm i --save-dev piral-jest-utils
 
 The simplest setup is to use the module system, you may also choose to create a setup file if needed.
 
-### Module System
-
-In your *package.json* under the jest configuration section create a `setupFiles` array and add `piral-jest-utils` to the array.
+Add the following script to your *package.json*:
 
 ```json
 {
-  "jest": {
-    "setupFiles": ["piral-jest-utils"]
-  }
+  "scripts": {
+    "test": "jest --passWithNoTests"
+  },
 }
 ```
 
-If you already have a `setupFiles` attribute you can also append `piral-jest-utils` to the array.
-
-```json
-{
-  "jest": {
-    "setupFiles": ["./test/setup.js", "piral-jest-utils"]
-  }
-}
-```
-
-### Setup File
-
-Alternatively, you can create a new setup file which then requires this module or add the `require` statement to an existing setup file.
+Add a new file *jest.config.js* next to the *package.json*:
 
 ```js
-import 'piral-jest-utils';
-// or
-require('piral-jest-utils');
+module.exports = require('piral-jest-utils').default;
 ```
 
-Add that file to your `setupFiles` array:
-
-```json
-"jest": {
-  "setupFiles": [
-    "./test/setup.js"
-  ]
-}
-```
+You can now add tests in your `src` folder. Every file sufficed with `.test.js` or `.test.ts` will be considered.
 
 ## Usage
 
-The utilities should be used as follows.
+If you want to add more directories (other than `src`) then you'll need to extend the configuration.
 
-(tbd)
+The easiest way is to use the `extendConfig` function. Change the *jest.config.js* to look as follows:
+
+```js
+const { extendConfig } = require('piral-jest-utils');
+module.exports = extendConfig({
+  roots: ['foo/', 'bar/'],
+});
+```
+
+This would add the `foo/` and `bar/` directories, too.
+
+By default, `*.css` and `*.scss` files will be handled via an identity mapper mock. Likewise, most asset files are handled via a mock. If you want to provide new mocks or change mocks use the `moduleNameMapper` property:
+
+```js
+const { extendConfig } = require('piral-jest-utils');
+module.exports = extendConfig({
+  moduleNameMapper: {
+    '\\.(ico|mp3|mp4)$': require.resolve('piral-jest-utils/lib/file.mock.js'),
+  },
+});
+```
 
 ## License
 

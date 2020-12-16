@@ -61,9 +61,19 @@ In case of a successful upload, the HTTP response code has to be `200`. The exac
 
 **Error Response**
 
-In case of a failed authentication, the HTTP response status code has to be `401`. In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. The error message should be transported via the status text.
+In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. This is also true if, e.g., the `name` does not match an expected format.
 
-The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
+In case of a failed authentication, the HTTP response status code has to be `401`.
+
+In case of an app-store like feed service the feed may reject pilets in case of missing fees. In such scenarios the response should be `402`.
+
+In case of accepted authentication, but insufficient rights the HTTP response status code has to be `403`.
+
+In case of an existing entry (name and version are already there) the HTTP status has to be `409`.
+
+In case where a pilet exceeds the limits defined by the feed service (e.g., pilet is 18 MB but the feed only accepts up to 16 MB) the HTTP status has to be `413`.
+
+The error message should be transported via the status text. The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
 
 ### Retrieving Pilets (User Facing)
 
