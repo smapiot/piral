@@ -7,6 +7,7 @@
 * Fixed shared submodule dependencies in `peerDependencies` (#341)
 * Updated to use React 17 (#312)
 * Updated `withApi` to use `context` instead of `converters`
+* Updated `piral-jest-utils` package for Jest mocking (#186)
 * Added `feed` parameter to `pilet debug` (#344)
 * Added `userStore` as an option for `piral-oidc` (#345)
 * Added `wrappers` to enable central component transformations
