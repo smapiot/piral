@@ -55,9 +55,9 @@ function extractMenuItems(sections: NodeListOf<HTMLElement>, active: HTMLElement
   return items;
 }
 
-function seen(offset: number, position: number, height: number, last: boolean) {
+function seen(offset: number, position: number, height: number, scrollHeight: number, last: boolean) {
   const value = offset - position;
-  return value < 15 || (last && value < height);
+  return value < 15 || (last && value + scrollHeight - offset < height - 15);
 }
 
 export function useMenuItems(current: HTMLElement) {
@@ -71,10 +71,11 @@ export function useMenuItems(current: HTMLElement) {
       const handler = () => {
         const position = document.documentElement.scrollTop;
         const height = document.documentElement.clientHeight;
+        const scrollHeight = document.documentElement.scrollHeight;
         const length = sections.length;
         const newActive =
           Array.prototype.filter
-            .call(sections, (section, i) => seen(section.offsetTop, position, height, i + 1 === length))
+            .call(sections, (section, i) => seen(section.offsetTop, position, height, scrollHeight, i + 1 === length))
             .pop() || sections[0];
 
         if (active !== newActive) {
