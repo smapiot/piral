@@ -138,7 +138,7 @@ If you navigate into the folder `my-pilet`, you'll find the files for the newly 
 You can also leverage the NPM initializers for creating new pilets.
 
 ```sh
-npm init pilet --target my-pilet --source ./my-app/dist/develop/my-app-1.0.0.tgz --defaults
+npm init pilet --target my-pilet --source ./my-app/dist/emulator/my-app-1.0.0.tgz --defaults
 ```
 
 Also here, if you drop the `--defaults` option additional settings will be presented to you in form of a quick survey.
