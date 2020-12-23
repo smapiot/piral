@@ -60,10 +60,7 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
       })
       .then((pilets) =>
         appendix.then((debugPilets) => {
-          const piletNames = debugPilets.reduce((piletNames, debugPilet) => {
-            piletNames.push(debugPilet.name);
-            return piletNames;
-          }, []);
+          const piletNames = debugPilets.map(pilet => pilet.name);
           return pilets.filter((pilet) => piletNames.indexOf(pilet.name) === -1).concat(debugPilets);
         }),
       );
