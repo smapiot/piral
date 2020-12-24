@@ -82,9 +82,6 @@ export default class PiletInjector implements KrasInjector {
     const { bundler, root, requireRef } = pilets[index];
     const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
     const file = bundler.bundle.name.replace(/^\//, '');
-    if (!file) {
-      return {};
-    }
     return {
       name: def.name,
       version: def.version,
