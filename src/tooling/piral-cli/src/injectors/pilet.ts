@@ -165,17 +165,18 @@ export default class PiletInjector implements KrasInjector {
     const pilet = pilets[+index];
     const bundler = pilet?.bundler;
 
-    await bundler?.ready();
-
     if (!path) {
+      await bundler?.ready();
       const content = await this.getMeta();
       return this.sendContent(content, 'application/json', url);
     } else {
-      const target = join(bundler.bundle.dir, rest.join('/'));
+      return bundler?.ready().then(() => {
+        const target = join(bundler.bundle.dir, rest.join('/'));
 
-      if (existsSync(target) && statSync(target).isFile()) {
-        return this.sendFile(target, url);
-      }
+        if (existsSync(target) && statSync(target).isFile()) {
+          return this.sendFile(target, url);
+        }
+      });
     }
   }
 
