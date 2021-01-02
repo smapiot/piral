@@ -85,6 +85,10 @@ npm init pilet
 
 This will guide us through the available options. Afterward, we should check if everything is fine and remove potentially redundant entries in the *package.json*. For instance, we may see multiple entries for `react` or `react-dom`. Here, the entries that have been added to the `devDependencies` should remain, while others should be removed.
 
+::: warning: Use the right Piral instance
+It is quite important to choose a suitable Piral instance, otherwise debugging is either not possible or not as desired. If you don't have a Piral instance available yet, just go with `piral-sample`. It is our demo and gives you parts such as a dashboard or a menu most app shells will contain.
+:::
+
 **Important**: If the standard *index.css* is still in the *src* folder then the `pilet debug` and `pilet build` commands should be explicitly pointed to the *index.tsx* (or *index.jsx*) file.
 
 Example:
@@ -112,7 +116,7 @@ export function setup(app: PiletApi) {
 }
 ```
 
-* Finally, we can test out the pilet - first by running `yarn start` and then by trying the unit tests. Here, potentially some work on migrating away from the React scripts needs to be spent.
+* Finally, we can test out the pilet - first by running `npm start` and then by trying the unit tests. Here, potentially some work on migrating away from the React scripts needs to be spent.
 
 For an example of this [see our sample on GitHub](https://github.com/piral-samples/pilet-cra-migration).
 
