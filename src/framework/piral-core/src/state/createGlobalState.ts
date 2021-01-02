@@ -5,10 +5,12 @@ import { GlobalState, NestedPartial } from '../types';
 
 function extend<T>(defaultState: T, customState: NestedPartial<T>) {
   for (const key of Object.keys(customState)) {
-    const value = customState[key];
-    const original = defaultState[key];
-    const nested = typeof original === 'object' && typeof value === 'object';
-    defaultState[key] = nested ? extend(original, value) : value;
+    if (customState.hasOwnProperty(key)) {
+      const value = customState[key];
+      const original = defaultState[key];
+      const nested = typeof original === 'object' && typeof value === 'object';
+      defaultState[key] = nested ? extend(original, value) : value;
+    }
   }
 
   return defaultState;

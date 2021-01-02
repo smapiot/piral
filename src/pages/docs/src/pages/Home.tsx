@@ -39,32 +39,32 @@ export default () => (
           <h4>All Activities</h4>
           <ul className="badges">
             <li>
-              <a href="https://dev.to/t/piral" target="_blank">
+              <a href="https://dev.to/t/piral" target="_blank" rel="noopener">
                 <img src="https://img.shields.io/badge/piral-blog-brightgreen" alt="Blog Posts" />
               </a>
             </li>
             <li>
-              <a href="https://www.npmjs.com/package/piral-cli" target="_blank">
+              <a href="https://www.npmjs.com/package/piral-cli" target="_blank" rel="noopener">
                 <img src="https://img.shields.io/npm/dm/piral-cli" alt="NPM Monthly Downloads" />
               </a>
             </li>
             <li>
-              <a href="https://github.com/smapiot/piral/issues/" target="_blank">
+              <a href="https://github.com/smapiot/piral/issues/" target="_blank" rel="noopener">
                 <img src="https://img.shields.io/github/issues/smapiot/piral.svg" alt="Piral GitHub Issues" />
               </a>
             </li>
             <li>
-              <a href="https://github.com/smapiot/piral/pull/" target="_blank">
+              <a href="https://github.com/smapiot/piral/pull/" target="_blank" rel="noopener">
                 <img src="https://img.shields.io/github/issues-pr/smapiot/piral.svg" alt="Piral GitHub Pull Requests" />
               </a>
             </li>
             <li>
-              <a href="https://github.com/smapiot/piral/releases/" target="_blank">
+              <a href="https://github.com/smapiot/piral/releases/" target="_blank" rel="noopener">
                 <img src="https://img.shields.io/github/tag/smapiot/piral.svg" alt="Piral GitHub Releases" />
               </a>
             </li>
             <li>
-              <a href="https://gitter.im/piral-io/community" target="_blank">
+              <a href="https://gitter.im/piral-io/community" target="_blank" rel="noopener">
                 <img src="https://badges.gitter.im/gitterHQ/gitter.png" alt="Piral Gitter Chat" />
               </a>
             </li>
@@ -136,7 +136,7 @@ export default () => (
         <code className="hljs language-sh">npm start</code>
       </pre>
       <p>
-        There should be a server running at <a href="http://localhost:1234">localhost:1234</a>. Make sure everything
+        There should be a server running at <a href="http://localhost:1234" rel="noopener">localhost:1234</a>. Make sure everything
         looks good!
       </p>
       <p>If everything looks great it's time to build the application:</p>
@@ -178,7 +178,7 @@ export default () => (
         <code className="hljs language-sh">npm start</code>
       </pre>
       <p>
-        Again, we can access this at <a href="http://localhost:1234">localhost:1234</a>.
+        Again, we can access this at <a href="http://localhost:1234" rel="noopener">localhost:1234</a>.
       </p>
       <p>
         Ideally, this should look as before, however, with the difference that the application now contains an
@@ -215,17 +215,17 @@ export default () => (
       <p>Below you'll find a list of some articles and starters.</p>
       <ul>
         <li>
-          <a href={urls.bitdev} target="_blank">
+          <a href={urls.bitdev} target="_blank" rel="noopener">
             Bits and Pieces, 11/2019
           </a>
         </li>
         <li>
-          <a href={urls.devto} target="_blank">
+          <a href={urls.devto} target="_blank" rel="noopener">
             dev.to, 11/2019
           </a>
         </li>
         <li>
-          <a href={urls.logrocket} target="_blank">
+          <a href={urls.logrocket} target="_blank" rel="noopener">
             Logrocket, 02/2019
           </a>
         </li>
