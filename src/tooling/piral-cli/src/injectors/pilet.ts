@@ -160,15 +160,16 @@ export default class PiletInjector implements KrasInjector {
   }
 
   async sendResponse(path: string, url: string): Promise<KrasResult> {
+    const { pilets } = this.config;
+    const [index, ...rest] = path.split('/');
+    const pilet = pilets[+index];
+    const bundler = pilet?.bundler;
+
     if (!path) {
+      await bundler?.ready();
       const content = await this.getMeta();
       return this.sendContent(content, 'application/json', url);
     } else {
-      const { pilets } = this.config;
-      const [index, ...rest] = path.split('/');
-      const pilet = pilets[+index];
-      const bundler = pilet?.bundler;
-
       return bundler?.ready().then(() => {
         const target = join(bundler.bundle.dir, rest.join('/'));
 
