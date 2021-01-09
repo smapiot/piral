@@ -6,7 +6,7 @@ export class HotModuleServerPlugin implements WebpackPluginInstance {
   apply(compiler: Compiler) {
     const express = require('express');
     const app = express();
-    app.use(require('../../src/webpack-hot-middleware/middleware')(compiler));
+    app.use(require('../../../src/webpack-hot-middleware/middleware')(compiler));
     app.listen(this.hmrPort, () => {});
   }
 }
