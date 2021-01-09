@@ -1,4 +1,4 @@
-import { DefinePlugin } from 'webpack';
+import { Configuration, DefinePlugin } from 'webpack';
 import { setEnvironment, getDefineVariables, getVariables } from './helpers';
 
 export interface PiralInstanceWebpackPluginOptions {
@@ -8,7 +8,9 @@ export interface PiralInstanceWebpackPluginOptions {
   variables?: Record<string, boolean | string>;
 }
 
-export const piralInstanceWebpackConfigEnhancer = (options: PiralInstanceWebpackPluginOptions) => (compilerOptions) => {
+export const piralInstanceWebpackConfigEnhancer = (options: PiralInstanceWebpackPluginOptions) => (
+  compilerOptions: Configuration,
+) => {
   const { name, version, externals } = options;
   const environment = process.env.NODE_ENV || 'development';
   const variables = {

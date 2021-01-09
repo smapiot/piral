@@ -35,7 +35,7 @@ Right now it includes:
 - `piral-instance-webpack-plugin`,
 - `pilet-webpack-plugin`,
 - `html5-entry-webpack-plugin`,
-- `import-map-webpack-plugin`,
+- `import-maps-webpack-plugin`,
 - `html-webpack-plugin`,
 - `mini-css-extract-plugin`,
 - `optimize-css-assets-webpack-plugin`,

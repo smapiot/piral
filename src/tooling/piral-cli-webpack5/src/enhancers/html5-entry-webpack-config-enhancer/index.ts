@@ -1,4 +1,5 @@
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import { Configuration } from 'webpack';
 import { load } from 'cheerio';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
@@ -6,7 +7,9 @@ import { getTemplates, extractParts, setEntries } from './helpers';
 
 export interface Html5EntryWebpackPluginOptions extends Omit<HtmlWebpackPlugin.Options, 'templateContent'> {}
 
-export const html5EntryWebpackConfigEnhancer = (options: Html5EntryWebpackPluginOptions) => (compilerOptions) => {
+export const html5EntryWebpackConfigEnhancer = (options: Html5EntryWebpackPluginOptions) => (
+  compilerOptions: Configuration,
+) => {
   const entry = compilerOptions.entry;
   const [template] = getTemplates(entry);
 
