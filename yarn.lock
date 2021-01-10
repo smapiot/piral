@@ -2542,10 +2542,17 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/cheerio@*", "@types/cheerio@0.22.21":
+"@types/cheerio@*":
   version "0.22.21"
   resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.21.tgz#5e37887de309ba11b2e19a6e14cad7874b31a8a3"
   integrity sha512-aGI3DfswwqgKPiEOTaiHV2ZPC9KEhprpgEbJnv0fZl3SGX0cGgEva1126dGrMC6AJM6v/aihlUgJn9M5DbDZ/Q==
+  dependencies:
+    "@types/node" "*"
+
+"@types/cheerio@^0.22.21":
+  version "0.22.23"
+  resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.23.tgz#74bcfee9c5ee53f619711dca953a89fe5cfa4eb4"
+  integrity sha512-QfHLujVMlGqcS/ePSf3Oe5hK3H8wi/yN2JYuxSB1U10VvW1fO3K8C+mURQesFYS1Hn7lspOsTT75SKq/XtydQg==
   dependencies:
     "@types/node" "*"
 
@@ -8158,10 +8165,10 @@ html-webpack-plugin@next:
     pretty-error "^2.1.1"
     tapable "2.0.0"
 
-html5-entry-webpack-plugin@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.4.tgz#584f752e8dd0a551859f7d8369992c9cbfef3ada"
-  integrity sha512-R7F9o5x0s0B4QNgEOmEalaX4lvv+DZnLHX/MtWOJAfvAby42ROo5oZJkP4BE0PTl0DhIMkwWg6nP4v7EjTHDEQ==
+html5-entry-webpack-plugin@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.5.tgz#a7c8c965a6f027f5efeaa8d761436a9025ec4c3a"
+  integrity sha512-lLKmXD1vdbR8TAvAbrPUqvzUSzLpXg6BCM4raYEu4dToVDzeiic/SnqcOghDPHS0svqW0Qz4tegh62DfhXZAwQ==
   dependencies:
     cheerio "^1.0.0-rc.3"
     html-webpack-plugin "^4.2.0"
@@ -8355,10 +8362,10 @@ import-local@^3.0.2:
     pkg-dir "^4.2.0"
     resolve-cwd "^3.0.0"
 
-import-maps-webpack-plugin@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/import-maps-webpack-plugin/-/import-maps-webpack-plugin-0.6.4.tgz#5dc1b3f347435707982f5f2612169cc568e150e0"
-  integrity sha512-rELQ+MTC/P/8pHT2Aw0T6irp/ujkverWBMdUuNAyPJ7ul/q5g0+lIz4H1TYfvgUyUOYq+HLOgu8CVmmj30sgjA==
+import-maps-webpack-plugin@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/import-maps-webpack-plugin/-/import-maps-webpack-plugin-0.6.5.tgz#f2fe4fa85119e3bafc71061ea3f9ad8a58915ac8"
+  integrity sha512-lXunSHiScO7DP3Qi4zFC9I4RMM1wEO+fFnuSOXqU0IDTMNQ2ZEChK+5IIjapNGJin+71Zpu5+dDGGFjupzUBfg==
   dependencies:
     webpack-virtual-modules "^0.3.0"
 
@@ -11890,10 +11897,10 @@ parcel-bundler@^1.12.4:
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
 
-parcel-codegen-loader@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.4.tgz#795140505a27b4c49fd7fa6b04a8cca7515ac6d5"
-  integrity sha512-JwJotZopr/pbpZxukelJe9JR0P5MOaYqbFjx3wwRsNf6bspvvAYjDCeyfeeBrBzTswQ8U2waebY97vCLe4y9HQ==
+parcel-codegen-loader@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.5.tgz#e14207e73313a2a7fe2faec0cdce3568ab54b9b0"
+  integrity sha512-i1S2NTCa7L0BqHniD8Z5xrjGYQxx7atL1xoJJEPykYxFXzDkIIecTxzSTKNYIko5U+mrKf0kAqAuMKSdWvR3og==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
@@ -12155,10 +12162,10 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-pilet-webpack-plugin@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.4.tgz#a4514d7d28e67b748b79f3017a31606873b120dc"
-  integrity sha512-v84uNaaEyeyF2DZuvteXw0Te4TEEyGAKV/bhgrAmqUq4pguduglE04K+Bm2IV3BxkLRudG755NLiQOsY8HVMQg==
+pilet-webpack-plugin@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.5.tgz#3c593ab527a847ee728dc6bca3ad46ff78b2bb3e"
+  integrity sha512-HS6xPtAfXM8Qrb0XWEp1ltjDDf5dyyT67DuecPdNcaCS/CdS5JQ5f3T5b6qZOuX5ubFQn5BV5BkQlBVE8OZ6cA==
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -12172,10 +12179,10 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-piral-instance-webpack-plugin@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.4.tgz#d51c698434f053ecd69f0fff17a7d705b90c5b9c"
-  integrity sha512-pIvG3ZAggl/kpS5ByStcBr8L2yXQ9juhz9P5eW/XUBzZ7202PabKEBZALRhla8GgLL+wWerwCWDsxRhxxpEh0A==
+piral-instance-webpack-plugin@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.5.tgz#bbfe88b6e3fdb0dea001f44c1b4fc0a802fe2ee1"
+  integrity sha512-mrLP/ma79GGqUpYl1Dj3znG9uCfDPftVnElHv6nKRR78N0w84e6RFv7pTNgU5SU1bUhT/MqZdEhGhsYvh/TOYA==
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"

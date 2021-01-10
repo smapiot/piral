@@ -18,23 +18,27 @@ export function isLocal(path: string) {
   return false;
 }
 
-export function extractParts(content: CheerioStatic) {
-  const sheets = content('link[href]')
-    .filter((_, e) => isLocal(e.attribs.href))
+export function extractParts(content: cheerio.Selector) {
+  const sheets = content('link[href][rel=stylesheet]')
+    .filter((_, e) => e.type === 'tag' && isLocal(e.attribs.href))
     .remove()
     .toArray();
   const scripts = content('script[src]')
-    .filter((_, e) => isLocal(e.attribs.src))
+    .filter((_, e) => e.type === 'tag' && isLocal(e.attribs.src))
     .remove()
     .toArray();
   const files: Array<string> = [];
 
   for (const sheet of sheets) {
-    files.push(sheet.attribs.href);
+    if (sheet.type === 'tag') {
+      files.push(sheet.attribs.href);
+    }
   }
 
   for (const script of scripts) {
-    files.push(script.attribs.src);
+    if (script.type === 'tag') {
+      files.push(script.attribs.src);
+    }
   }
 
   return files;
