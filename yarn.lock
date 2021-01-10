@@ -8165,10 +8165,10 @@ html-webpack-plugin@next:
     pretty-error "^2.1.1"
     tapable "2.0.0"
 
-html5-entry-webpack-plugin@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.5.tgz#a7c8c965a6f027f5efeaa8d761436a9025ec4c3a"
-  integrity sha512-lLKmXD1vdbR8TAvAbrPUqvzUSzLpXg6BCM4raYEu4dToVDzeiic/SnqcOghDPHS0svqW0Qz4tegh62DfhXZAwQ==
+html5-entry-webpack-plugin@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.6.tgz#35ad08a84c99ee60aacb3d7ebac9251285220bb0"
+  integrity sha512-fn6KM1A6ImNbdxBEKcg5Ddg0iJourvR2MYGLNnCa/85woMwBxN6aiJQWopL5MnCY0dwvLxd9Jvtq665RX0G9GQ==
   dependencies:
     cheerio "^1.0.0-rc.3"
     html-webpack-plugin "^4.2.0"
@@ -8362,10 +8362,10 @@ import-local@^3.0.2:
     pkg-dir "^4.2.0"
     resolve-cwd "^3.0.0"
 
-import-maps-webpack-plugin@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/import-maps-webpack-plugin/-/import-maps-webpack-plugin-0.6.5.tgz#f2fe4fa85119e3bafc71061ea3f9ad8a58915ac8"
-  integrity sha512-lXunSHiScO7DP3Qi4zFC9I4RMM1wEO+fFnuSOXqU0IDTMNQ2ZEChK+5IIjapNGJin+71Zpu5+dDGGFjupzUBfg==
+import-maps-webpack-plugin@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/import-maps-webpack-plugin/-/import-maps-webpack-plugin-0.6.6.tgz#a0f4560661437762889d583955c25c16e3819279"
+  integrity sha512-pxuYteHRKtFjBmIqZ0vBSKEVrNU6tuiamVJBzn1RL+qppboqFDIBXTHkQAhpRkznbcCBgUgy+sucHlidfxoaWw==
   dependencies:
     webpack-virtual-modules "^0.3.0"
 
@@ -11897,10 +11897,10 @@ parcel-bundler@^1.12.4:
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
 
-parcel-codegen-loader@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.5.tgz#e14207e73313a2a7fe2faec0cdce3568ab54b9b0"
-  integrity sha512-i1S2NTCa7L0BqHniD8Z5xrjGYQxx7atL1xoJJEPykYxFXzDkIIecTxzSTKNYIko5U+mrKf0kAqAuMKSdWvR3og==
+parcel-codegen-loader@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.6.tgz#bc039d7f296fb1d6984246acb22db7214261ddfb"
+  integrity sha512-BDxZ2CsafDqW7gxIxaUFmsEvzhp/0BhT3HaztjjLFJ594GEzaEUGbW7Hkl3URf3C0+ZxjERKYRRAsfsSxMhpTQ==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
@@ -12162,10 +12162,10 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-pilet-webpack-plugin@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.5.tgz#3c593ab527a847ee728dc6bca3ad46ff78b2bb3e"
-  integrity sha512-HS6xPtAfXM8Qrb0XWEp1ltjDDf5dyyT67DuecPdNcaCS/CdS5JQ5f3T5b6qZOuX5ubFQn5BV5BkQlBVE8OZ6cA==
+pilet-webpack-plugin@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.6.tgz#3885e0e1e0a6932af3945ddb47336d9994494452"
+  integrity sha512-tzgp2NuSFUvchcdX13/3HrBH1201x+EuaTdRdR6FDdSZfAsgXJHHCwEjxnm1khuchBD83bEC7+vxA49VEDvyEg==
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -12179,10 +12179,10 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-piral-instance-webpack-plugin@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.5.tgz#bbfe88b6e3fdb0dea001f44c1b4fc0a802fe2ee1"
-  integrity sha512-mrLP/ma79GGqUpYl1Dj3znG9uCfDPftVnElHv6nKRR78N0w84e6RFv7pTNgU5SU1bUhT/MqZdEhGhsYvh/TOYA==
+piral-instance-webpack-plugin@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.6.tgz#488587933c5bc95a2708a6a5b431360bc7b9a713"
+  integrity sha512-FSi7Bf7TH584GzfkX83gCiFxzOqLV/ZWFSfa7uGQGHDDFdTEhe1OYbCJvAMCW2eIobpMnIUmCDp0FrROU2/qAA==
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"
