@@ -66,6 +66,8 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     includeActions(context, actions);
   }
 
+  context.options = options;
+
   return {
     ...events,
     createApi,

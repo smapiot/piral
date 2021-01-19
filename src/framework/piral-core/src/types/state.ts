@@ -1,6 +1,7 @@
 import type { ComponentType, ReactPortal } from 'react';
 import type { RouteComponentProps } from 'react-router';
 import type { Atom } from '@dbeining/react-atom';
+import type { LoadPiletsOptions } from 'piral-base';
 import type { Dict, Without } from './common';
 import type { LayoutType } from './layout';
 import type { SharedDataItem, DataStoreTarget } from './data';
@@ -323,4 +324,8 @@ export interface GlobalStateContext extends PiralActions, EventEmitter {
    * The available component converters.
    */
   converters: ComponentConverters<any>;
+  /**
+   * The initial options.
+   */
+  options: LoadPiletsOptions;
 }

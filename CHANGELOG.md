@@ -9,6 +9,7 @@
 * Updated the project CI to use Piral Pipelines with YAML
 * Updated `withApi` to use `context` instead of `converters`
 * Updated `piral-jest-utils` package for Jest mocking (#186)
+* Added `piral-update` as a plugin to integrate auto update
 * Added `feed` parameter to `pilet debug` (#344)
 * Added `userStore` as an option for `piral-oidc` (#345)
 * Added `wrappers` to enable central component transformations
