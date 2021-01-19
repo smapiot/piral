@@ -18,15 +18,15 @@ export function isLocal(path: string) {
   return false;
 }
 
-export function extractParts(content: CheerioStatic) {
-  const sheets = content('link[href]')
-    .filter((_, e) => isLocal(e.attribs.href))
+export function extractParts(content: cheerio.Root) {
+  const sheets = content('link[href][rel=stylesheet]')
+    .filter((_, e: cheerio.TagElement) => isLocal(e.attribs.href))
     .remove()
-    .toArray();
+    .toArray() as Array<cheerio.TagElement>;
   const scripts = content('script[src]')
-    .filter((_, e) => isLocal(e.attribs.src))
+    .filter((_, e: cheerio.TagElement) => isLocal(e.attribs.src))
     .remove()
-    .toArray();
+    .toArray() as Array<cheerio.TagElement>;
   const files: Array<string> = [];
 
   for (const sheet of sheets) {

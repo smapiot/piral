@@ -6,6 +6,17 @@ export function createActions(localizer: Localizable) {
     selectLanguage(ctx: GlobalStateContext, selected: string) {
       ctx.dispatch((state) => {
         localizer.language = selected;
+        const previousLanguage = state.language.selected;
+        const currentLanguage = selected;
+
+        // emit this event *after* we changed the state container
+        setTimeout(() => {
+          ctx.emit('select-language', {
+            previousLanguage,
+            currentLanguage,
+          });
+        }, 0);
+
         return {
           ...state,
           language: {

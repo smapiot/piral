@@ -1,9 +1,8 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { resolve } from 'path';
 import { progress, logReset, log } from 'piral-cli/utils';
-import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize, WebpackPluginInstance } from 'webpack';
+import { RuleSetRule, ProgressPlugin, WebpackPluginInstance, Configuration } from 'webpack';
 import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
-import { HotModuleServerPlugin } from './HotModuleServerPlugin';
 
 function getStyleLoaders(production: boolean, pilet: boolean) {
   if (production && pilet) {
@@ -15,6 +14,10 @@ function getStyleLoaders(production: boolean, pilet: boolean) {
   }
 }
 
+export type ConfigEnhancer = (config: Configuration) => Configuration;
+
+export type DefaultConfiguration = [Configuration, ConfigEnhancer];
+
 export const extensions = ['.ts', '.tsx', '.js', '.json'];
 
 export function getVariables(): Record<string, string> {
@@ -24,15 +27,7 @@ export function getVariables(): Record<string, string> {
   }, {});
 }
 
-export function getHmrEntry(hmrPort: number): [] | [string] {
-  return hmrPort
-    ? [
-        `piral-cli-webpack5/src/webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`,
-      ]
-    : [];
-}
-
-export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, hmrPort?: number) {
+export function getPlugins(plugins: Array<any>, showProgress: boolean) {
   const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -54,11 +49,6 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
         }
       }),
     );
-  }
-
-  if (hmrPort) {
-    otherPlugins.push(new HotModuleReplacementPlugin());
-    otherPlugins.push(new HotModuleServerPlugin(hmrPort));
   }
 
   return plugins.concat(otherPlugins);

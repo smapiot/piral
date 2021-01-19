@@ -1,4 +1,5 @@
-import { BannerPlugin, DefinePlugin, WebpackPluginInstance } from 'webpack';
+import { join } from 'path';
+import { Configuration, BannerPlugin, DefinePlugin, WebpackPluginInstance } from 'webpack';
 import { setEnvironment, getDefineVariables, getVariables } from './helpers';
 
 export interface PiletWebpackConfigEnhancerOptions {
@@ -46,7 +47,9 @@ function getExternals(piral: string) {
   ];
 }
 
-export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOptions) => (compilerOptions) => {
+export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOptions) => (
+  compilerOptions: Configuration,
+) => {
   const environment = process.env.NODE_ENV || 'development';
   const { name, version, piral, externals = getExternals(piral), schema } = options;
   const shortName = name.replace(/\W/gi, '');
@@ -56,6 +59,10 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
     ...options.variables,
   };
   const plugins: WebpackPluginInstance[] = [new DefinePlugin(getDefineVariables(variables))];
+
+  if (Array.isArray(compilerOptions.entry)) {
+    compilerOptions.entry.unshift(join(__dirname, '..', '..', 'set-path'));
+  }
 
   if (schema !== 'none') {
     const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
