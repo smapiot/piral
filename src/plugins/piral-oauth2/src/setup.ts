@@ -99,6 +99,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
   });
   let currentToken: ClientOAuth2.Token;
   let retrieveToken: () => Promise<string>;
+  let getLoginUri: () => string;
 
   if (flow === 'code') {
     client.code.getToken(location.href).then(
@@ -120,6 +121,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         return currentToken.accessToken;
       });
     };
+    getLoginUri = () => client.code.getUri();
   } else {
     client.token.getToken(location.href).then(
       (token) => {
@@ -150,11 +152,12 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         window.open(client.token.getUri());
       });
     };
+    getLoginUri = () => client.token.getUri();
   }
 
   return {
     login() {
-      window.location.href = client.token.getUri();
+      window.location.href = getLoginUri();
     },
     logout() {
       currentToken = undefined;
