@@ -96,7 +96,7 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
   }
 
   if (schema === 'v1') {
-    const reset = environment !== 'production' ? `delete ${jsonpFunction}_chunks;` : '';
+    const reset = `delete window.webpackChunk${jsonpFunction};`;
     compilerOptions.output.auxiliaryComment = {
       commonjs2: `\nfunction define(d,k){${reset}(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
     } as any;
