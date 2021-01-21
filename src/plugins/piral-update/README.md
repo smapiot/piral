@@ -78,6 +78,39 @@ const instance = createInstance({
 });
 ```
 
+Additionally, you'll need to define an `UpdateDialog` component. This component can be as simple as:
+
+```jsx
+const layout = {
+  UpdateDialog: ({ onApprove, onReject }) => (
+    <div>
+      <p>
+        <b>New update ready!</b>
+      </p>
+      <button onClick={onReject}>Skip</button>
+      <button onClick={onApprove}>Install</button>
+    </div>
+  ),
+  // ...
+};
+```
+
+To integrate the full update dialog you'll need to mention it in your page layout.
+
+```jsx
+import { UpdateDialog } from "piral-update";
+
+const layout = {
+  Layout: ({ children }) => (
+    <div>
+      <UpdateDialog />
+      <div className="container">{children}</div>
+    </div>
+  ),
+  // ...
+};
+```
+
 The most important strategies are already available in helpers.
 
 If you want to check **periodically** you can use the `checkPeriodically` helper factory:

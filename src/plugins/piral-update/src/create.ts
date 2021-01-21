@@ -27,6 +27,10 @@ export function createUpdateApi(config: UpdateConfig = {}): PiralPlugin<PiletUpd
         UpdateDialog: DefaultUpdateDialog,
         ...state.components,
       },
+      registry: {
+        ...state.registry,
+        updatability: {},
+      },
       updatability: {
         active: false,
         lastHash: undefined,

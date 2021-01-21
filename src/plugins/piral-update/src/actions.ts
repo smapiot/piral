@@ -27,8 +27,8 @@ export function rejectUpdate(ctx: GlobalStateContext) {
 export function approveUpdate(ctx: GlobalStateContext) {
   const pilets = ctx.readState((s) => s.updatability.target);
 
-  for (const pilet of pilets) {
-    ctx.options.loadPilet(pilet).then((pilet) => {
+  for (const meta of pilets) {
+    ctx.options.loadPilet(meta).then((pilet) => {
       try {
         ctx.injectPilet(pilet);
         setupPilet(pilet, ctx.options.createApi);
@@ -53,20 +53,22 @@ export function checkForUpdates(ctx: GlobalStateContext, pilets: Array<PiletMeta
     const target = pilets.filter((pilet) => !blocked.includes(pilet.name));
     const active = ask.length > 0;
 
-    ctx.dispatch((state) => ({
-      ...state,
-      updatability: {
-        active,
-        lastHash,
-        target,
-      },
-    }));
+    ctx.dispatch((state) => {
+      // no need to ask for approval
+      if (!active) {
+        // automatically start the update in the next cycle
+        setTimeout(ctx.approveUpdate, 0);
+      }
 
-    // no need to ask for approval
-    if (!active) {
-      // automatically start the update in the next cycle
-      setTimeout(ctx.approveUpdate, 0);
-    }
+      return {
+        ...state,
+        updatability: {
+          active,
+          lastHash: checkHash,
+          target,
+        },
+      };
+    });
   }
 }
 
