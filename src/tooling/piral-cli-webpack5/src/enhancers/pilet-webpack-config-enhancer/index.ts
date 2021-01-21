@@ -60,8 +60,14 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
   };
   const plugins: WebpackPluginInstance[] = [new DefinePlugin(getDefineVariables(variables))];
 
-  if (Array.isArray(compilerOptions.entry)) {
-    compilerOptions.entry.unshift(join(__dirname, '..', '..', 'set-path'));
+  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
+    const setPath = join(__dirname, '..', '..', 'set-path');
+
+    if (Array.isArray(compilerOptions.entry)) {
+      compilerOptions.entry.unshift(setPath);
+    } else if (Array.isArray(compilerOptions.entry.main)) {
+      compilerOptions.entry.main.unshift(setPath);
+    }
   }
 
   if (schema !== 'none') {
