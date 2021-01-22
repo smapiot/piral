@@ -103,7 +103,7 @@ export interface CheckPiralEventFactoryOptions {
  * @param options The options to create the listener.
  */
 export function checkPiralEvent(options: CheckPiralEventFactoryOptions): ListenCallback {
-  const { name, available } = options;
+  const { name, available = () => true } = options;
 
   return (notify, context) => {
     context.on(name, (e) => {
