@@ -4,6 +4,12 @@
 
 This is plugin that only has a peer dependency to `piral-core`. What `piral-dashboard` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
+## Why and When
+
+Many portal and tool applications come with a dashboard view that easily allows getting an overview over the most interesting pieces of functionality and information. This plugin allows creating dashboard pages that contain components registered as "tiles". The layout and behavior of these can be fully configured. The standard options include variable rows, columns, and resize properties.
+
+Alternatives: Use extensions to define this generically without the need for a plugin. Place each dashboard in its own extension slot registering components dynamically for these.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.
@@ -102,6 +108,19 @@ const instance = createInstance({
   })],
   // ...
 });
+```
+
+To fully integrate the dashboard the `Dashboard` component can be used. It can be part of a page or a page itself:
+
+```jsx
+<SetRoute path="/" component={Dashboard} />
+```
+
+The `Dashboard` component also comes with a prop called `filter`, which might be handy together with custom options for actually using multiple dashboards.
+
+```jsx
+<SetRoute path="/dashboard1" component={props => <Dashboard {...props} filter={tile => tile.preferences.category === 'self'} />} />
+<SetRoute path="/dashboard2" component={props => <Dashboard {...props} filter={tile => tile.preferences.category === 'group'} />} />
 ```
 
 ### Customizing

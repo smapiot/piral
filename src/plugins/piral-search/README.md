@@ -6,6 +6,10 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-se
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+In many cases the frontend should provide an extensive search functionality. If this search can or should also work in context-sensitive ways (e.g., depending on which microfrontends are loaded different search options are used or available) then this plugin might be useful. It allows pilets to register search providers which can handle search queries.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

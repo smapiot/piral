@@ -6,6 +6,12 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-fe
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+Making HTTP requests is one of the most important aspects of a modern SPA. Even though `fetch` works in all browsers important information such as the user's token may be missing when making the request. This library integrates `fetch` directly with the token middleware (if any) to properly communicate with the backend.
+
+Alternatives: Communicate tokens or other basic information via events or the shared data store or require use of another pilet API to retrieve it (e.g., `getUser` from `piral-auth`).
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

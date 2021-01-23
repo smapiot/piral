@@ -8,6 +8,19 @@ The set includes a `fromLazy` shortcut.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance. We recommend integrating `piral-lazy` when you think about an opt-in for *any* third-party framework (e.g., `piral-vue`, `piral-ng`, ...).
 
+## Why and When
+
+Lazy loading of data or other dependencies can be crucial in more complex scenarios. It should not be necessary to include everything in one load to bring a pilet or components of it to live.
+
+`piral-lazy` allows defining generic dependencies that will be loaded *before* loading / using a component. The provided helpers which are exposed via the pilet API give you the power to
+
+1. define new dependencies (given by a unique name and a loader function) and
+2. rely on defined dependencies before actually loading / trying to render a component.
+
+If your pilets use lazy loading in some way then `piral-lazy` may be the right choice. Also, if your pilets are too large and could benefit from further resource sharing and lazy loading then this plugin could be helpful. `piral-lazy` remains framework agnostic and thus works beyond React.
+
+Alternative: Just define / use what is there out of the box. By using `React.lazy` together with bundle splitting most of the things may be already properly transported. Remember that you could also lazy load context that provide your dependencies - thus making `React.lazy` a single solution (if your framework is "React").
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

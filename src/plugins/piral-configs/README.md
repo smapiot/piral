@@ -6,6 +6,17 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-co
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+For whitelabel products and generic applications configuration may be applied to the frontend. This could also be used as further personalization on a user-defined basis. In any case the `piral-configs` plugin provides two ways to fully leverage frontend configuration:
+
+1. Each pilet can define how it can be configured and what default values to apply.
+2. Injected configuration is validated against the configuration schema. Different values are only applied if they fit into the schema.
+
+This plugin does not make any statement how the configuration is retrieved. Usually, it will be loaded from the backend when the application starts, but you could also go for something like storing the information in `localStorage` or having a pre-determined configuration embedded in your application. The door is open.
+
+Alternatives: Pilets can ready configuration values from the global data store or state container. They are responsible for evaluating these values and falling back to another value.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

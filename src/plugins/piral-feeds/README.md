@@ -6,6 +6,22 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-fe
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+A standard scenario that needs to be covered by most applications is:
+
+1. Don't load data in the beginning, but just when a component requiring this data should be shown
+2. When the component should be shown read data from the backend - in the meantime showing a loading spinner
+3. When data was received from backend actually show the component with the provided data
+4. When data was updated (e.g., by having a `WebSocket` connection to the backend) the shown component updates its information, data
+5. When data was manipulated (e.g., by submitting a `PUT` or `POST` to the backend) the data is updated, too and the shown component updates
+
+Quite often, this simple scenario involves quite some code and ceremony to be reliable. The whole scenario (lazy load of data, update management on the data) is what call a "data feed" or short "feed" (not to confuse with Pilet Feed service, which is the service provisioning the pilets).
+
+`piral-feeds` is an abstraction over the state management. The abstraction is exposed to be used by pilets with the pilet API. It allows creating a connector that returns a higher-order component capable of connecting any React (view) component to the data management.
+
+Alternatives: Expose your own state management solution to the pilets such that they can work directly on it. Or leave it to pilets to manage lazy loading and state management on their own.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

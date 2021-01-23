@@ -4,6 +4,12 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-modals` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core` to easily trigger the display of modal dialogs from pilets.
 
+## Why and When
+
+If you have modal dialogs on your page that `piral-modals` gives you a nice abstraction over registering components for them. These items will be stored in the global state container and will be filtered on a given dialog name. Thus the plugin makes only sense if you want to have consistent dialog management.
+
+Alternative: You could simply use an event to trigger opening a dialog. The event could transport a React component which would then be globally used. Alternatively, each pilet would come up with its own dialog design and management system.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

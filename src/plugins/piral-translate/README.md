@@ -4,6 +4,12 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-translate` brings to the table is a set of Pilet API extensions that is used by `piral`. The set features a simple yet sufficient translation system.
 
+## Why and When
+
+One of the key non-functional requirements of many applications is to be localizable. While this area contains many parts such as potential conversion of currency, number formats etc., one elementary part is the translation of labels and text fragments. There are many solutions out there, but `piral-translate` brings a quite simplified model to the table that works in a distributed way, yet is simple and allows going from proof of concept (language snippets included in the pilets) to massive application later on (language snippets gathered from a dedicated service).
+
+Alternatives: Use a library such as `i18next` as a shared library. Choose one that makes working with your content authors or translation team easier.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

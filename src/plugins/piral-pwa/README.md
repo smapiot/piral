@@ -6,6 +6,12 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-pw
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+A progressive web app (PWA) is the next step in the evolution of web applications. Quite naturally, a microfrontend solution should also be capable of being turned into a PWA. To use some of the PWA capabilities from pilets without further checks the pilet API has been extended with some PWA specific functions. The most important part of this plugin, however, is to fully integrate the `ServiceWorker` into the app shell.
+
+Alternatives: Set up a `ServiceWorker` yourself or use a known library (e.g., WorkBox) or bundler plugin to do this for you.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

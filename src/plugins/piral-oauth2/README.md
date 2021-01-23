@@ -8,6 +8,12 @@ The set includes the `getAccessToken` API to retrieve the current user's access 
 
 By default, these Pilet API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+If you are using authorization with an OAuth 2 provider then `piral-oauth2` might be a useful plugin. It uses the `client-oauth2` library under the hood and exposes token functionality in common HTTP mechanisms (e.g., using `fetch` or a library such as `axios`). Pilets can get the currently available token via the pilet API.
+
+Alternatives: Use a plugin that is specific to your method of authentication (e.g., `piral-auth` for generic user management, `piral-adal` for Microsoft, `piral-oidc` for generic OpenID Connect, etc.) or just a library.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

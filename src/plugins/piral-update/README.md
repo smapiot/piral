@@ -6,6 +6,14 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-up
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+By default, Piral does not update your pilets *at runtime*. As such a user that wants to get an updated pilet will always need to refresh the application (e.g., by pressing F5). There is a reason for this out of the box behavior: Automatic updates may have unintended side-effects and are therefore problematic.
+
+Example scenario: A pilet comes with a form where the user can enter information and submit it. If a user is already half-way through the form (entering a lot of information) and an update for this pilet would come up, the pilet would be unloaded and loaded again with the updated content. This process would destroy the form and all the information already entered by the user. Sure, there are ways to "store and restore" the form's data, however, quite often these techniques are not used (as the given scenario is not anticipated).
+
+`piral-update` comes with extensions to the pilet API that allow communicating update behavior from the pilets to the app shell. If you think these are sufficient and provide a good safety net then you can make your application more dynamic using this plugin. It's quite cool, but in most cases not really needed.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.
