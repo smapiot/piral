@@ -196,3 +196,9 @@ const NotFound = props => <PiralError type="not_found" {...props} />;
 A pilet contains all the code of a microfrontend, which may include some pages. Essentially a page is nothing more than a component used via a routing rule. A pilet can contain (and register) as many components as it wants.
 
 ---------------------------------------
+
+## Can Piral be used in HIPAA compliant applications?
+
+Yes definitely. There is nothing in Piral that would violate HIPAA. For HIPAA compliance of our official [feed service](https://feed.piral.cloud), see the questions there.
+
+---------------------------------------
