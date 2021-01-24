@@ -2,10 +2,12 @@ import { addChangeHandler } from '@dbeining/react-atom';
 import {
   PiletApiCreator,
   LoadPiletsOptions,
+  CustomSpecLoaders,
   DefaultLoaderConfig,
   PiletDependencyFetcher,
   getDependencyResolver,
   getDefaultLoader,
+  extendLoader,
   PiletLoader,
 } from 'piral-base';
 import { globalDependencies, getLocalDependencies } from './modules';
@@ -52,6 +54,7 @@ export interface PiletOptionsConfig {
   strategy: PiletLoadingStrategy;
   requestPilets: PiletRequester;
   loaderConfig?: DefaultLoaderConfig;
+  loaders?: CustomSpecLoaders;
   loadPilet: PiletLoader;
   context: GlobalStateContext;
 }
@@ -65,10 +68,11 @@ export function createPiletOptions({
   loaderConfig,
   loadPilet,
   strategy,
+  loaders,
   requestPilets,
 }: PiletOptionsConfig): LoadPiletsOptions {
   getDependencies = getDependencyResolver(globalDependencies, getDependencies);
-  loadPilet = loadPilet ?? getDefaultLoader(getDependencies, fetchDependency, loaderConfig);
+  loadPilet = extendLoader(loadPilet ?? getDefaultLoader(getDependencies, fetchDependency, loaderConfig), loaders);
 
   // if we build the debug version of piral (debug and emulator build)
   if (process.env.DEBUG_PIRAL !== undefined) {

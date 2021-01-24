@@ -38,6 +38,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     loaderConfig,
     async = false,
     loadPilet,
+    loaders,
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
@@ -48,11 +49,12 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   const root = createApi({
     name: 'root',
     version: process.env.BUILD_PCKG_VERSION || '1.0.0',
-    hash: '',
+    spec: '',
   });
   const options = createPiletOptions({
     context,
     createApi,
+    loaders,
     loadPilet,
     availablePilets,
     fetchDependency,

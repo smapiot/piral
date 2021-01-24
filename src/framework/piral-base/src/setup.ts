@@ -1,4 +1,4 @@
-import type { PiletApi, PiletApiCreator, SinglePilet, MultiPilet, Pilet } from './types';
+import type { PiletApi, PiletApiCreator, SinglePilet, MultiPilet, Pilet, PiralUnloadPiletEvent } from './types';
 
 /**
  * Sets up the given single pilet by calling the exported `setup`
@@ -8,9 +8,22 @@ import type { PiletApi, PiletApiCreator, SinglePilet, MultiPilet, Pilet } from '
  */
 export function setupSinglePilet(app: SinglePilet, api: PiletApi) {
   try {
-    return app.setup(api);
+    const result = app.setup(api);
+
+    if (typeof app.teardown === 'function') {
+      const evtName = 'unload-pilet';
+      const handler = (e: PiralUnloadPiletEvent) => {
+        if (e.name === app.name) {
+          api.off(evtName, handler);
+          app.teardown(api);
+        }
+      };
+      api.on(evtName, handler);
+    }
+
+    return result;
   } catch (e) {
-    console.error(`Error while setting up ${app && app.name}.`, e);
+    console.error(`Error while setting up ${app?.name}.`, e);
   }
 }
 
@@ -24,7 +37,7 @@ export function setupMultiPilet(app: MultiPilet, apiFactory: PiletApiCreator) {
   try {
     return app.setup(apiFactory);
   } catch (e) {
-    console.error(`Error while setting up ${app && app.name}.`, e);
+    console.error(`Error while setting up ${app?.name}.`, e);
   }
 }
 

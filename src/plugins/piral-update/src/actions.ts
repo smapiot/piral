@@ -2,13 +2,33 @@ import { setupPilet } from 'piral-base';
 import { withKey, GlobalStateContext, PiletMetadata } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
+function getPiletHash(pilet: PiletMetadata) {
+  if ('link' in pilet) {
+    return {
+      name: pilet.name || '',
+      link: pilet.link || '',
+    };
+  } else if ('hash' in pilet) {
+    return {
+      name: pilet.name || '',
+      hash: pilet.hash || '',
+    };
+  } else if ('version' in pilet) {
+    return {
+      name: pilet.name || '',
+      version: pilet.version || '',
+    };
+  } else {
+    return {
+      name: pilet['name'] || '',
+    };
+  }
+}
+
 function computePiletHash(pilets: Array<PiletMetadata>) {
   return JSON.stringify(
     pilets
-      .map((pilet) => ({
-        name: pilet.name || '',
-        link: pilet.link || '',
-      }))
+      .map(getPiletHash)
       .sort((a, b) => a.name.localeCompare(b.name)),
   );
 }

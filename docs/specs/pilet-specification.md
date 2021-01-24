@@ -242,15 +242,58 @@ where the `PiletMetadata` interface refers to
 
 ```ts
 interface PiletMetadata {
+  /**
+   * Name of the pilet
+   */
   name: string;
+  /**
+   * Version of the pilet
+   */
   version: string;
-  link: string;
-  hash: string;
+  /**
+   * Content of the pilet (v:0)
+   */
+  content?: string;
+  /**
+   * Link to the pilet entry script
+   */
+  link?: string;
+  /**
+   * Bundled pilet global reference
+   */
+  bundle?: string;
+  /**
+   * Checksum of the pilet (v:0)
+   */
+  hash?: string;
+  /**
+   * Pilet global reference (v:1)
+   */
+  requireRef?: string;
+  /**
+   * Checksum of the pilet (v:1)
+   */
+  integrity?: string;
+  /**
+   * Local caching rule (v:0)
+   */
+  noCache?: boolean | string;
+  /**
+   * Specification of the pilet for evaluation
+   */
+  spec?: string;
+  /**
+   * Custom metadata
+   */
   custom?: any;
+  /**
+   * Configuration metadata
+   */
+  config?: Record<string, any>;
 }
 ```
 
-to indicate the metadata of the current pilet.
+to indicate the metadata of the current pilet. Which parts are actually available must be determined by the feed service in combination with the used version of the pilet. The version of the pilet must be fully given by a so-called *spec version marker*, which is specified in the next section.
 
 The remaining parts of the Pilet API are defined by the Piral instance. While `piral-core` and the Piral plugins add quite some functionality here, these APIs are not part of the base Piral API that is framework agnostic.
 
@@ -270,10 +313,13 @@ it will automatically parse that line as a pilet spec version marker. The syntax
 
 Right now the following values for `<version-number>` exist:
 
-- `0`: Initial specification.
-- `1`: Extended specification.
+- `0`: Initial specification (marker is optional).
+- `1`: Extended specification (marker is required).
+- `x`: Custom specification (marker is required).
 
-All specifications are backwards compatible, i.e., evaluating a `v:1` pilet with a `v:0` Piral instance should work.
+All official (i.e., numbered) specifications are backwards compatible, i.e., evaluating a `v:1` pilet with a `v:0` Piral instance should work.
+
+The `v:x` specification was introduced to allow custom formats to work besides official formats. Custom formats are not constraint by any compatibility requirements.
 
 ### `v:0`
 
@@ -288,6 +334,12 @@ All specifications are backwards compatible, i.e., evaluating a `v:1` pilet with
 - Exports to `document.currentScript.app`.
 - Supports transport via `link`.
 - Requires a single argument declaring the global require reference.
+
+### `v:x`
+
+- Evaluation will be done by the application in a custom specified manner.
+- The metadata is fully determined by the custom specification.
+- Optionally uses a single argument to indicate the custom type transported via the `spec` field.
 
 ## Examples
 

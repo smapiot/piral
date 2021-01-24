@@ -6,6 +6,7 @@ import type {
   PiletLoader,
   Pilet,
   AvailableDependencies,
+  CustomSpecLoaders,
   DefaultLoaderConfig,
 } from 'piral-base';
 import type { NestedPartial } from './common';
@@ -34,6 +35,10 @@ export interface PiralPiletConfiguration {
    * Function to define how to load a pilet given its metadata.
    */
   loadPilet?: PiletLoader;
+  /**
+   * Optionally, defines loaders for custom specifications.
+   */
+  loaders?: CustomSpecLoaders;
   /**
    * Optionally, configures the default loader.
    */

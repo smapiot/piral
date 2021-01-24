@@ -1,4 +1,4 @@
-import { createDefaultLoader } from './loader';
+import { createDefaultLoader, extendLoader } from './loader';
 import { loadPilets, loadMetadata } from './load';
 import { createPilets, createPilet } from './aggregate';
 import type { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
@@ -36,8 +36,10 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
       config,
       pilets = [],
       loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency, config),
+      loaders,
     } = options;
     const loader = loadMetadata(fetchPilets);
+    const loadSingle = extendLoader(loadPilet, loaders);
 
     return createPilets(createApi, pilets).then((allModules) => {
       if (async && allModules.length > 0) {
@@ -46,7 +48,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
 
       const followUp = loader.then((metadata) => {
         const promises = metadata.map((m) =>
-          loadPilet(m).then((mod) => {
+          loadSingle(m).then((mod) => {
             const available = pilets.filter((m) => m.name === mod.name).length === 0;
 
             if (available) {
@@ -107,9 +109,10 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
     config,
     pilets = [],
     loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency, config),
+    loaders,
   } = options;
-
-  return loadPilets(fetchPilets, loadPilet)
+  const loadSingle = extendLoader(loadPilet, loaders);
+  return loadPilets(fetchPilets, loadSingle)
     .then((newModules) => evalAll(createApi, pilets, newModules))
     .then((modules) => cb(undefined, modules))
     .catch((error) => cb(error, []));
