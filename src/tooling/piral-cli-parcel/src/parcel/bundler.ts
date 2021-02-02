@@ -65,7 +65,9 @@ export function gatherJsBundles(
       if (childBundle.name.endsWith('.js.map')) {
         source.map = childBundle.name;
       } else if (childBundle.name.endsWith('.css')) {
-        source.css = childBundle.name;
+        if (childBundle.totalSize > 0) {
+          source.css = childBundle.name;
+        }
       }
     }
 

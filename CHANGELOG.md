@@ -5,6 +5,7 @@
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
 * Fixed issue ignoring `--log-level` in the initializers
 * Fixed shared submodule dependencies in `peerDependencies` (#341)
+* Fixed lazy loading of stylesheets in pilets using `piral-cli-parcel` (#360)
 * Updated to use React 17 (#312)
 * Updated the project CI to use Piral Pipelines with YAML
 * Updated `withApi` to use `context` instead of `converters`
