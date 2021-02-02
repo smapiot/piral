@@ -8,10 +8,11 @@ import type {
   AvailableDependencies,
   CustomSpecLoaders,
   DefaultLoaderConfig,
+  PiletApiCreator,
 } from 'piral-base';
 import type { NestedPartial } from './common';
 import type { PiralPlugin } from './plugin';
-import type { GlobalState, PiralDefineActions } from './state';
+import type { GlobalState, GlobalStateContext, PiralDefineActions } from './state';
 
 export { PiletLoadingStrategy, PiletDependencyFetcher, PiletDependencyGetter, PiletRequester, AvailableDependencies };
 
@@ -64,6 +65,22 @@ export interface PiralPiletConfiguration {
    * Extends the Piral instance with additional capabilities.
    */
   plugins?: PiralPlugin | Array<PiralPlugin>;
+  /**
+   * Optionally overrides the API factory. By default the `defaultApiFactory`
+   * function is used.
+   */
+  apiFactory?: PiletApiFactory;
+}
+
+/**
+ * Defines an API creation factory.
+ */
+export interface PiletApiFactory {
+  /**
+   * @param context The global state context.
+   * @param apis The different APIs to consider.
+   */
+  (context: GlobalStateContext, apis: Array<PiralPlugin>): PiletApiCreator;
 }
 
 /**

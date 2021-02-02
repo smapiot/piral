@@ -13,6 +13,7 @@
 * Added `feed` parameter to `pilet debug` (#344)
 * Added `userStore` as an option for `piral-oidc` (#345)
 * Added `wrappers` to enable central component transformations
+* Added `apiFactory` option for overriding API creation in `createInstance`
 
 ## 0.12.4 (November 24, 2020)
 

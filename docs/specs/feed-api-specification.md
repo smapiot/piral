@@ -111,6 +111,7 @@ interface PiletMetadataV0 {
   hash: string;
   noCache?: boolean | string;
   custom?: any;
+  config?: Record<string, any>;
 }
 
 interface PiletMetadataV1 {
@@ -120,6 +121,7 @@ interface PiletMetadataV1 {
   requireRef: string;
   integrity?: string;
   custom?: any;
+  config?: Record<string, any>;
 }
 
 type PiletMetadata = PiletMetadataV0 | PiletMetadataV1;
@@ -134,6 +136,8 @@ If the `requireRef` field is used then `PiletMetadataV1` will be used implicitly
 In `PiletMetadataV1` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
 
 The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
+
+The `config` field can be used to transport frontend configuration to be leveraged by the specific pilet. This can be helpful to obtain things that should be easily configurable or changeable such as colors, frontend API keys (e.g., for Google Maps), or specific behavior.
 
 **Error Response**
 

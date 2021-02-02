@@ -1,5 +1,5 @@
 import { blazingStrategy, standardStrategy, isfunc } from 'piral-base';
-import { getLocalDependencies, defaultApiCreator, defaultModuleRequester } from './modules';
+import { getLocalDependencies, defaultApiFactory, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, includeActions } from './state';
 import { createPiletOptions } from './helpers';
 import { createListener } from './utils';
@@ -39,13 +39,14 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     async = false,
     loadPilet,
     loaders,
+    apiFactory = defaultApiFactory,
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
   const context = createActions(globalState, events);
   const definedPlugins = plugins || extendApi || [];
   const usedPlugins = Array.isArray(definedPlugins) ? definedPlugins : [definedPlugins];
-  const createApi = defaultApiCreator(context, usedPlugins);
+  const createApi = apiFactory(context, usedPlugins);
   const root = createApi({
     name: 'root',
     version: process.env.BUILD_PCKG_VERSION || '1.0.0',
