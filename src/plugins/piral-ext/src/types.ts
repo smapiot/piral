@@ -9,25 +9,25 @@ export interface PiralExtSettings {
   /**
    * Customizes the locale config.
    */
-  locale?: Localizable;
+  locale?: Localizable | false;
   /**
    * Customizes the dashboard config.
    */
-  dashboard?: DashboardConfig;
+  dashboard?: DashboardConfig | false;
   /**
    * Customizes the menu config.
    */
-  menu?: MenuConfig;
+  menu?: MenuConfig | false;
   /**
    * Customizes the notifications config.
    */
-  notifications?: NotificationsConfig;
+  notifications?: NotificationsConfig | false;
   /**
    * Customizes the modals config.
    */
-  modals?: ModalsConfig;
+  modals?: ModalsConfig | false;
   /**
    * Customizes the feeds config.
    */
-  feeds?: FeedsConfig;
+  feeds?: FeedsConfig | false;
 }

@@ -15,6 +15,7 @@
 * Added `userStore` as an option for `piral-oidc` (#345)
 * Added `wrappers` to enable central component transformations
 * Added `apiFactory` option for overriding API creation in `createInstance`
+* Changed frontend libraries to be available in ESM format
 
 ## 0.12.4 (November 24, 2020)
 

@@ -1,3 +1,4 @@
+import { __assign } from 'tslib';
 import { blazingStrategy, standardStrategy, isfunc } from 'piral-base';
 import { getLocalDependencies, defaultApiFactory, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, includeActions } from './state';
@@ -71,11 +72,10 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
 
   context.options = options;
 
-  return {
-    ...events,
+  return __assign(events, {
     createApi,
     context,
     root,
     options,
-  };
+  });
 }
