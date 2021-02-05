@@ -102,7 +102,7 @@ This explicit setting is also useful when the original *index.js* should be kept
 
 At this point, we only need to take care of wiring everything up in the `setup` function of our new index file. Example:
 
-```tsx
+```jsx
 import "./index.css";
 import * as React from "react";
 import { PiletApi } from "sample-piral";
