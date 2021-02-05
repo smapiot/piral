@@ -124,3 +124,5 @@ module.exports = function (config) {
 ## Conclusion
 
 Choosing the right bundler is less about technical possibilities and more about convenience and efficiency. Piral has the two arguably most popular bundlers available out of the box.
+
+In the next tutorial, we'll look at using more low-level packages from Piral, namely `piral-core` and `piral-base`.
