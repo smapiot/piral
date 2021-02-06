@@ -14,10 +14,12 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
+  "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "sideEffects": false,
   "files": [
+    "esm",
     "lib",
     "src",
     "dependencies.codegen",
@@ -35,7 +37,9 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "yarn build:commonjs && yarn build:esnext",
+    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
+    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

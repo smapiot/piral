@@ -10,6 +10,16 @@ src/samples/*/lib
 src/templates/*/lib
 src/tooling/*/lib
 src/utilities/*/lib
+src/converters/*/esm
+src/framework/*/esm
+src/initializers/*/esm
+src/packages/*/esm
+src/pages/*/esm
+src/plugins/*/esm
+src/samples/*/esm
+src/templates/*/esm
+src/tooling/*/esm
+src/utilities/*/esm
 __generated__
 
 # OS files
