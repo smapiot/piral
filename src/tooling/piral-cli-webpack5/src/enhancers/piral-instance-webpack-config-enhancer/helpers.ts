@@ -11,8 +11,8 @@ export function getVariables(
     BUILD_PCKG_VERSION: version,
     BUILD_PCKG_NAME: name,
     SHARED_DEPENDENCIES: externals.join(','),
-    DEBUG_PIRAL: undefined,
-    DEBUG_PILET: undefined,
+    DEBUG_PIRAL: '',
+    DEBUG_PILET: '',
   };
 }
 

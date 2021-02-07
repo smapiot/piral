@@ -75,7 +75,7 @@ export function createPiletOptions({
   loadPilet = extendLoader(loadPilet ?? getDefaultLoader(getDependencies, fetchDependency, loaderConfig), loaders);
 
   // if we build the debug version of piral (debug and emulator build)
-  if (process.env.DEBUG_PIRAL !== undefined) {
+  if (process.env.DEBUG_PIRAL) {
     const { installPiralDebug } = require('piral-debug-utils');
 
     installPiralDebug({
@@ -113,7 +113,7 @@ export function createPiletOptions({
     });
   }
 
-  if (process.env.DEBUG_PILET !== undefined) {
+  if (process.env.DEBUG_PILET) {
     const { withEmulatorPilets } = require('piral-debug-utils');
 
     requestPilets = withEmulatorPilets(requestPilets, {
