@@ -4,6 +4,16 @@ import { log } from './log';
 import { isWindows } from './info';
 import { MemoryStream } from './MemoryStream';
 
+function resolveWinPath(specialFolder: string, subPath: string): string | undefined {
+  const basePath = process.env[specialFolder];
+
+  if (basePath) {
+    return resolve(basePath, subPath);
+  }
+
+  return undefined;
+}
+
 export function runScript(script: string, cwd = process.cwd(), output: NodeJS.WritableStream = process.stdout) {
   const bin = resolve('./node_modules/.bin');
   const sep = isWindows ? ';' : ':';
@@ -15,7 +25,13 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
   if (isWindows) {
     // on windows we sometimes may see a strange behavior,
     // see https://github.com/smapiot/piral/issues/192
-    env.PATH = ['%AppData%\\npm', '%ProgramFiles%\\nodejs', '%ProgramFiles(x86)%\\nodejs', env.PATH].join(sep);
+    const newPaths = [
+      resolveWinPath('AppData', 'npm'),
+      resolveWinPath('ProgramFiles', 'nodejs'),
+      resolveWinPath('ProgramFiles(x86)', 'nodejs'),
+      ...env.PATH.split(';'),
+    ];
+    env.PATH = newPaths.filter(Boolean).join(sep);
   }
 
   return new Promise<void>((resolve, reject) => {
