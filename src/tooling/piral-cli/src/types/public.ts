@@ -21,6 +21,10 @@ export interface ToolCommandFlagsSetter<T = {}> {
   (argv: Argv<T>): Argv<T>;
 }
 
+export interface SelectCommands {
+  (commands: ListCommands): Array<ToolCommand<any>>;
+}
+
 export interface ToolCommand<T = any, U = any> {
   name: string;
   description: string;

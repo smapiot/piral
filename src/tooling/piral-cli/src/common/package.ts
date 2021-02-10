@@ -559,15 +559,26 @@ export async function retrievePiletData(target: string, app?: string) {
 export async function findEntryModule(entryFile: string, target: string) {
   const entry = basename(entryFile);
   const files = await getFileNames(target);
+  const preferences = ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs', '.esm', '.es', '.es6', '.html'];
+  const results = [];
   log('generalDebug_0003', `Found ${files.length} potential entry points in "${target}".`);
 
   for (const file of files) {
     const ext = extname(file);
+    const fullPath = join(target, file);
 
-    if (file === entry || file.replace(ext, '') === entry) {
-      return join(target, file);
+    if (file === entry) {
+      return fullPath;
+    } else if (file.replace(ext, '') === entry) {
+      const prefIndex = preferences.indexOf(ext);
+
+      if (prefIndex !== -1) {
+        results[prefIndex] = fullPath;
+      } else {
+        results[preferences.length] = fullPath;
+      }
     }
   }
 
-  return entryFile;
+  return results.filter(Boolean).shift() || entryFile;
 }
