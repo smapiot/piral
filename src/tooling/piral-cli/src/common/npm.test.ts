@@ -63,7 +63,7 @@ jest.mock('fs', () => ({
     return undefined;
   },
   exists: (file: string, cb: (status: boolean) => void) =>
-    cb(!file.endsWith('package.json') && !(specialCase && file.endsWith('lerna.json'))),
+    cb(!file.endsWith('package.json') && !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock')))),
   existsSync: (file: string) => {
     return true;
   },
@@ -220,7 +220,9 @@ describe('NPM Module', () => {
 
   it('detectYarn finds yarn.lock', async () => {
     await detectYarn('test').then((result) => expect(result).toBeTruthy());
+    specialCase = true;
     await detectYarn('toast').then((result) => expect(result).toBeFalsy());
+    specialCase = false;
   });
 
   it('uses npm to verify whether a particular package is included in monorepo package', async () => {
