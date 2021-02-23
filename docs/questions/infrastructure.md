@@ -64,3 +64,14 @@ Our feed service is reliable up to a certain degree. For the free community edit
 We will not shut down the free community edition. Also any planned changes to the infrastructure will be announced ahead of time (at least two weeks).
 
 ---------------------------------------
+
+## How to pass environment specific variables to Piral instance?
+
+There are multiple options:
+
+1. Rebuild and hard-wire for each environment (e.g., resolve env variables during build).
+2. Take values from index.html and change index.html dynamically per environment (e.g., via env variables or via some server settings). You could also post-build this per environment (one general bundle build across all environments, but then one more lightweight post-build per environment), but this is most efficient with a server (e.g., express) that just manipulates the index.html on the fly before sending it back.
+3. Take a convention, e.g., if your app sits on app.example.com then it will on the fly use feed.examples.com. If then (in another env) you use app-stage.example.com it would automatically determine feed-stage.example.com. The beauty of this approach is that it is implicit, the downside is that you need to be aware of your convention and teach the frontend about it.
+4. Likewise, you could have a path-based redirect on your server. So just use /feed for your feed and proxy/feed to https://wherever-your-feed-is.com/... in the backend. The advantage here is that this gives you flexibility per env, but has a higher infrastructure cost. Another benefit is that there is for sure no CORS issue.
+
+All other options are usually variations of this.
