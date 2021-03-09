@@ -75,3 +75,17 @@ There are multiple options:
 4. Likewise, you could have a path-based redirect on your server. So just use /feed for your feed and proxy/feed to https://wherever-your-feed-is.com/... in the backend. The advantage here is that this gives you flexibility per env, but has a higher infrastructure cost. Another benefit is that there is for sure no CORS issue.
 
 All other options are usually variations of this.
+
+---------------------------------------
+
+## What can be done to improve reliability and performance?
+
+Besides the normal infrastructure scaling recommendations (e.g. horizontal scaling) you can leverage caching to reduce the amount of communication required with the feed service. Since all the pilet files are static, those should be able to be cached forever. Similarly, the list of pilets to be loaded shouldn't change very often, so that can be cached for a while, too.
+
+In addition there are a couple of recommendations for the app shell to pilet relation:
+
+- Treat the app shell's APIs ("pilet API") super carefully. Don't bring them in too early and make sure to remove them gracefully (e.g., not by removing, but keeping at least a stub).
+- Be careful in dependency management. Update the shared dependencies only if you conclude that is possible without much problem. Also here, don't bring in too many shared dependencies if you don't want to get stuck on their versions. Pilets can still declare and share dependencies for efficiency; the shared dependencies of the app shell are just one way.
+- In general the more "dependent" your pilets are on the app shell (e.g., that the app shell delivers a specific dependency or API) the less flexible your solution becomes. As an example, if your pilets would only depend on the core set of, e.g., piral-core (such as registerPage) then they could be used with any app shell. This makes them super flexible. In reality, of course, you will always depend on a few assumptions - as this will make your integration quite seamless from the user's perspective.
+
+---------------------------------------
