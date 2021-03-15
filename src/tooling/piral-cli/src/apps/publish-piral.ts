@@ -88,6 +88,11 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     provider = publishPiralDefaults.provider,
   } = options;
   setLogLevel(logLevel);
+
+  if (type === 'emulator-sources') {
+    fail('publishEmulatorSourcesInvalid_0114');
+  }
+  
   progress('Reading configuration ...');
 
   if (type !== 'release') {

@@ -131,6 +131,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('source-maps')
         .describe('source-maps', 'Create associated source maps for the bundles.')
         .default('source-maps', apps.buildPiralDefaults.sourceMaps)
+        .boolean('subdir')
+        .describe('subdir', `Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".`)
+        .default('subdir', apps.buildPiralDefaults.subdir)
         .boolean('content-hash')
         .describe('content-hash', 'Appends the hash to the side-bundle files.')
         .default('content-hash', apps.buildPiralDefaults.contentHash)
@@ -155,6 +158,7 @@ const allCommands: Array<ToolCommand<any>> = [
         bundlerName: args.bundler as string,
         minify: args.minify as boolean,
         fresh: args.fresh as boolean,
+        subdir: args.subdir as boolean,
         contentHash: args['content-hash'] as boolean,
         sourceMaps: args['source-maps'] as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
@@ -527,7 +531,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['post-pilet', 'publish'],
     description: 'Publishes a pilet package to a pilet feed.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',

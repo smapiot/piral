@@ -1946,6 +1946,28 @@ export function publishProviderMissing_0113(providerName: string, availableProvi
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * The "emulator-sources" type is not supported for publishing.
+ *
+ * @abstract
+ * The `piral publish` command only works with the emulator or release output types.
+ *
+ * @example
+ * The following command uses the in-built "xcopy" provider for releasing to a local directory.
+ *
+ * ```sh
+ * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * ```
+ * 
+ * The type is "release".
+ */
+export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
+  return [LogLevels.error, '0114', `The command "publish" cannot be done with "--type emulator-sources". Use another type instead.`];
+}
+
+/**
  * @kind Warning
  *
  * @summary

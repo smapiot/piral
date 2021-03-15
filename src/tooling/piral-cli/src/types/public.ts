@@ -164,7 +164,7 @@ export type PiletSchemaVersion = 'none' | 'v0' | 'v1';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
-export type PiralBuildType = 'all' | 'release' | 'emulator';
+export type PiralBuildType = 'all' | 'release' | 'emulator' | 'emulator-sources';
 
 export type PackageType = 'registry' | 'file' | 'git';
 
