@@ -2,7 +2,15 @@
 
 # [Piral PWA](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-pwa.svg?style=flat)](https://www.npmjs.com/package/piral-pwa) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is a plugin that only has a peer dependency to `piral-core`. What `piral-pwa` brings to the table is a simple way to expose your application as a PWA with the capability to use offline storage for pilets, too.
+This is a plugin that has a peer dependency to `piral-core` and **requires** `parcel-bundler` to work.
+
+::: warning: Only use with Parcel
+
+Most likely this plugin will only work with `piral-cli-parcel` as it depends on a codegen that assumes Parcel is in charge of bundling. If you need something similar for Webpack have a look [here](https://webpack.js.org/guides/progressive-web-application/), or even better [here](https://github.com/NekR/offline-plugin).
+
+:::
+
+What `piral-pwa` brings to the table is a simple way to expose your application as a PWA with the capability to use offline storage for pilets, too.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 

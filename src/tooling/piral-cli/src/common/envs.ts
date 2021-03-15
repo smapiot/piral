@@ -1,6 +1,5 @@
 import { join } from 'path';
 import { log } from './log';
-import { config } from './config';
 import { pathSeparator, cliVersion, compatVersion } from './info';
 import { StandardEnvProps } from '../types';
 
