@@ -50,6 +50,6 @@
   },
   "peerDependencies": {
     "angular": "^1.7.0",
-    "piral-core": "1.x"
+    "piral-core": "0.13.x"
   }
 }

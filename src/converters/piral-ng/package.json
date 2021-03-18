@@ -55,6 +55,6 @@
     "@angular/core": "^6.0.0 || ^7.0.0 || ^8.0.0",
     "@angular/platform-browser": "^6.0.0 || ^7.0.0 || ^8.0.0",
     "@angular/platform-browser-dynamic": "^6.0.0 || ^7.0.0 || ^8.0.0",
-    "piral-core": "1.x"
+    "piral-core": "0.13.x"
   }
 }

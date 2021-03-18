@@ -41,6 +41,6 @@
     "piral-base": "^0.12.4"
   },
   "peerDependencies": {
-    "piral-base": "0.12.x || 1.x"
+    "piral-base": "0.12.x || 0.13.x"
   }
 }

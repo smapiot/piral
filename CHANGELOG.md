@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.0.0 (tbd)
+## 0.13.0 (tbd)
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
 * Fixed issue ignoring `--log-level` in the initializers
@@ -11,13 +11,13 @@
 * Updated `withApi` to use `context` instead of `converters`
 * Updated `piral-jest-utils` package for Jest mocking (#186)
 * Updated Piral CLI path resolution for Windows (#192)
+* Updated frontend libraries to be available in ESM format, too
 * Added `piral-update` as a plugin to integrate auto update
 * Added `feed` parameter to `pilet debug` (#344)
 * Added `userStore` as an option for `piral-oidc` (#345)
 * Added `wrappers` to enable central component transformations
 * Added `apiFactory` option for overriding API creation in `createInstance`
 * Added option `emulator-sources` to the `type` parameter of the `piral build` command
-* Changed frontend libraries to be available in ESM format
 
 ## 0.12.4 (November 24, 2020)
 
