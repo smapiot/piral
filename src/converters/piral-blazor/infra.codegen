@@ -1,84 +1,62 @@
-const axios = require('axios');
-const yauzl = require('yauzl');
 const fs = require('fs');
 const path = require('path');
 
-const prefix = 'staticwebassets/';
-
-function readSourceFromBuffer(buffer, outDir) {
-  return new Promise((resolve, reject) => {
-    yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zip) => {
-      if (err) {
-        reject(err);
-      } else {
-        zip.on('entry', (entry) => {
-          const file = entry.fileName;
-          const dir = path.dirname(file);
-
-          if (dir.startsWith(prefix)) {
-            const target = path.resolve(outDir, file.substring(prefix.length));
-            zip.openReadStream(entry, (err, rs) => {
-              if (err) {
-                reject(err);
-              } else {
-                const ws = fs.createWriteStream(target);
-                rs.on('end', () => {
-                  ws.close();
-                  zip.readEntry();
-                });
-                rs.pipe(ws);
-              }
-            });
-          } else {
-            zip.readEntry();
-          }
-        });
-        zip.on('end', resolve);
-        zip.readEntry();
-      }
-    });
-  });
+function generateModule(blazorBootFile) {
+  const content = fs.readFileSync(blazorBootFile, 'utf8');
+  return `module.exports = ${content};`;
 }
 
-function generateModule(blazorBootFile) {
-  return new Promise((resolve) => {
-    // we introduce an artificial delay here for slower FS esp. in WSL
-    setTimeout(() => {
-      const content = fs.readFileSync(blazorBootFile, 'utf8');
-      resolve(`module.exports = ${content};`);
-    }, 50);
-  });
+function copyFileSync(source, target) {
+  var targetFile = target;
+
+  // If target is a directory, a new file with the same name will be created
+  if (fs.existsSync(target)) {
+    if (fs.lstatSync(target).isDirectory()) {
+      targetFile = path.join(target, path.basename(source));
+    }
+  }
+
+  fs.writeFileSync(targetFile, fs.readFileSync(source));
+}
+
+function copyFolderRecursiveSync(source, target) {
+  var files = [];
+
+  // Check if folder needs to be created or integrated
+  var targetFolder = path.join(target, path.basename(source));
+  if (!fs.existsSync(targetFolder)) {
+    fs.mkdirSync(targetFolder);
+  }
+
+  // Copy
+  if (fs.lstatSync(source).isDirectory()) {
+    files = fs.readdirSync(source);
+    files.forEach(function (file) {
+      var curSource = path.join(source, file);
+      if (fs.lstatSync(curSource).isDirectory()) {
+        copyFolderRecursiveSync(curSource, targetFolder);
+      } else {
+        copyFileSync(curSource, targetFolder);
+      }
+    });
+  }
 }
 
 module.exports = function () {
-  const version = process.env.PIRAL_BLAZOR_VERSION || '';
-  const localFile = process.env.PIRAL_BLAZOR_LOCAL_NUPKG;
   const outDir = this.options.outDir;
-  const frameworkDir = path.resolve(outDir, '_framework');
-  const binDir = path.resolve(frameworkDir, '_bin');
-  const wasmDir = path.resolve(frameworkDir, 'wasm');
-  const blazorBootFile = path.resolve(frameworkDir, 'blazor.boot.json');
+  const blazorBootFile = path.resolve(outDir, '_framework', 'blazor.boot.json');
 
   !fs.existsSync(outDir) && fs.mkdirSync(outDir, { recursive: true });
-  !fs.existsSync(frameworkDir) && fs.mkdirSync(frameworkDir);
-  !fs.existsSync(binDir) && fs.mkdirSync(binDir);
-  !fs.existsSync(wasmDir) && fs.mkdirSync(wasmDir);
 
-  if (localFile) {
-    if (!fs.existsSync(localFile)) {
-      throw new Error(
-        `The file provided via env. variable "PIRAL_BLAZOR_LOCAL_NUPKG" cannot be found: "${localFile}".`,
-      );
-    }
+  try {
+    const blazorPackagePath = require.resolve('blazor/package.json');
+    const blazorBaseDir = path.dirname(blazorPackagePath);
+    const frameworkDir = path.resolve(blazorBaseDir, 'wwwroot', '_framework');
 
-    const content = fs.readFileSync(localFile);
-    return readSourceFromBuffer(content, outDir).then(() => generateModule(blazorBootFile));
+    copyFolderRecursiveSync(frameworkDir, outDir);
+
+    return generateModule(blazorBootFile);
+  } catch (err) {
+    throw new Error('The blazor package was not found. Make sure to install it via `npm i blazor`.');
   }
-
-  console.log(`Downloading Piral.Blazor.Core@${version || 'latest'} from NuGet ...`);
-
-  return axios
-    .get(`https://www.nuget.org/api/v2/package/Piral.Blazor.Core/${version}`, { responseType: 'arraybuffer' })
-    .then((res) => readSourceFromBuffer(res.data, outDir))
-    .then(() => generateModule(blazorBootFile));
 };
