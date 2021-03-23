@@ -1,6 +1,35 @@
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { initialize, activate, deactivate, attachEvents } from './interop';
 
+const globalEventNames = [
+  'abort',
+  'blur',
+  'change',
+  'error',
+  'focus',
+  'load',
+  'loadend',
+  'loadstart',
+  'mouseenter',
+  'mouseleave',
+  'progress',
+  'reset',
+  'scroll',
+  'submit',
+  'unload',
+  'DOMNodeInsertedIntoDocument',
+  'DOMNodeRemovedFromDocument',
+  'click',
+  'dblclick',
+  'mousedown',
+  'mousemove',
+  'mouseup',
+];
+
+function dispatchToRoot(event: Event) {
+  document.querySelector('#blazor-root').dispatchEvent(new Event(event.type, event));
+}
+
 export function createConverter(lazy = true) {
   const bootConfig = require('../infra.codegen');
   const boot = () => initialize(bootConfig);
@@ -26,6 +55,8 @@ export function createConverter(lazy = true) {
         const props = { ...args, ...data };
         el.setAttribute('data-blazor-pilet-root', 'true');
 
+        globalEventNames.forEach((eventName) => el.addEventListener(eventName, dispatchToRoot));
+
         (loader || (loader = boot()))
           .then(dependency)
           .then(() => activate(moduleName, props))
@@ -49,6 +80,7 @@ export function createConverter(lazy = true) {
         state = 'fresh';
       },
       unmount(el) {
+        globalEventNames.forEach((eventName) => el.removeEventListener(eventName, dispatchToRoot));
         el.removeAttribute('data-blazor-pilet-root');
         dispose();
 
