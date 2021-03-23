@@ -5,7 +5,7 @@ export const eventNames = {
 
 const coreLib = 'Piral.Blazor.Core';
 const eventParents: Array<HTMLElement> = [];
-let blazorRootElement: HTMLElement = null;
+const blazorRootId = 'blazor-root';
 
 const globalEventNames = [
   'abort',
@@ -33,15 +33,14 @@ const globalEventNames = [
 ];
 
 function dispatchToRoot(event: Event) {
-  if (!blazorRootElement) blazorRootElement = document.querySelector('#blazor-root');
-  blazorRootElement.dispatchEvent(new Event(event.type, event));
+  document.getElementById(blazorRootId)?.dispatchEvent(new Event(event.type, event));
 }
 
 function isRooted(target: HTMLElement) {
   let parent = target.parentElement;
 
   while (parent) {
-    if (parent.id === 'blazor-root') {
+    if (parent.id === blazorRootId) {
       return true;
     }
 
