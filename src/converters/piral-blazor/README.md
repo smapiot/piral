@@ -133,7 +133,7 @@ export function setup(piral: PiletApi) {
 
 In this case, you'll also have to install the `blazor` package. `piral-blazor` will use this under the hood to access the Blazor libraries.
 
-It should be noted that to maximize compatibility, the version of the `blazor` package should be identical to the version of Blazor you want to use. (e.g. use `blazor@3.2.1` for Blazor v3.2.1).
+To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g. `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
 
 :::
 
@@ -156,7 +156,7 @@ const instance = createInstance({
 ```
 `piral-blazor` will use `blazor` under the hood to access the Blazor libraries.
 
-It should be noted that to maximize compatibility, the version of the `blazor` package should be identical to the version of Blazor you want to use. (e.g. use `blazor@3.2.1` for Blazor v3.2.1).
+To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g. `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
 
 :::
 
