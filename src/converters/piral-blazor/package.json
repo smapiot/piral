@@ -57,6 +57,7 @@
     "piral-core": "^0.12.4"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x"
+    "piral-core": "0.13.x",
+    "blazor": "*"
   }
 }
