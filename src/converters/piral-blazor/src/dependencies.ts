@@ -1,4 +1,4 @@
-import { addReference } from './internal';
+import { addReference } from './interop';
 import type { createConverter } from './converter';
 
 export function createDependencyLoader(convert: ReturnType<typeof createConverter>, lazy = true) {
