@@ -5,6 +5,37 @@ export const eventNames = {
 
 const coreLib = 'Piral.Blazor.Core';
 const eventParents: Array<HTMLElement> = [];
+let blazorRootElement: HTMLElement = null;
+
+const globalEventNames = [
+  'abort',
+  'blur',
+  'change',
+  'error',
+  'focus',
+  'load',
+  'loadend',
+  'loadstart',
+  'mouseenter',
+  'mouseleave',
+  'progress',
+  'reset',
+  'scroll',
+  'submit',
+  'unload',
+  'DOMNodeInsertedIntoDocument',
+  'DOMNodeRemovedFromDocument',
+  'click',
+  'dblclick',
+  'mousedown',
+  'mousemove',
+  'mouseup',
+];
+
+function dispatchToRoot(event: Event) {
+  if (!blazorRootElement) blazorRootElement = document.querySelector('#blazor-root');
+  blazorRootElement.dispatchEvent(new Event(event.type, event));
+}
 
 function isRooted(target: HTMLElement) {
   let parent = target.parentElement;
@@ -63,6 +94,14 @@ function emitNavigateEvent(source: HTMLElement, to: string, replace = false, sta
       },
     }),
   );
+}
+
+export function addGlobalEventListeners(el: HTMLElement) {
+  globalEventNames.forEach((eventName) => el.addEventListener(eventName, dispatchToRoot));
+}
+
+export function removeGlobalEventListeners(el: HTMLElement) {
+  globalEventNames.forEach((eventName) => el.removeEventListener(eventName, dispatchToRoot));
 }
 
 export function activate(moduleName: string, props: any) {
