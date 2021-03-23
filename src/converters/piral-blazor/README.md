@@ -2,7 +2,7 @@
 
 # [Piral Blazor](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-blazor.svg?style=flat)](https://www.npmjs.com/package/piral-blazor) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is a plugin that only has a peer dependency to `piral-core`. What `piral-blazor` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
+This is a plugin that has a peer dependency to `piral-core` and `blazor`. What `piral-blazor` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
 The set includes a Blazor (WASM) loader and converter for any component registration, as well as a `fromBlazor` shortcut together with some Blazor component coming in the `Piral.Blazor.Utils` NuGet package.
 
@@ -66,7 +66,7 @@ Blazor with Piral works from two sides. We have the app shell's side and the sid
 
 The diagram has the following pieces:
 
-1. Your app shell using `piral`, which needs to reference the `piral-blazor` plugin. Effectively, this will download and use the `Piral.Blazor.Core` NuGet package at build-time to include the common libraries.
+1. Your app shell using `piral`, which needs to reference the `piral-blazor` plugin. Effectively, this will use the `blazor` package at build-time to include the Blazor libraries. Additionally, it uses `Piral.Blazor.Core` to be able to reference the defined Blazor components.
 2. The TypeScript file in your Blazor pilets. That file will export the `setup` function to define which Blazor components to register / use in your app shell.
 3. The Blazor code in your Blazor pilets using the shared library `Piral.Blazor.Utils` for some convenience functions. This code will define all the Blazor components that can be registered / used in the pilet.
 
@@ -131,11 +131,15 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+In this case, you'll also have to install the `blazor` package. `piral-blazor` will use this under the hood to access the Blazor libraries.
+
+It should be noted that to maximize compatibility, the version of the `blazor` package should be identical to the version of Blazor you want to use. (e.g. use `blazor@3.2.1` for Blazor v3.2.1).
+
 :::
 
 ::: summary: For Piral instance developers
 
-Using Blazor with Piral is as simple as installing `piral-blazor`.
+Using Blazor with Piral is as simple as installing the `piral-blazor` and `blazor` packages.
 
 ```ts
 import { createBlazorApi } from 'piral-blazor';
@@ -150,12 +154,9 @@ const instance = createInstance({
   // ...
 });
 ```
+`piral-blazor` will use `blazor` under the hood to access the Blazor libraries.
 
-This will automatically download and include the necessary binary files for providing Blazor WASM support. The binary files will be taken from the `Piral.Blazor.Core` NuGet package.
-
-By default, the latest version of the `Piral.Blazor.Core` NuGet package is downloaded. To change this set the `PIRAL_BLAZOR_VERSION` environment variable to the desired version.
-
-Alternatively, you can also use a local version of the `Piral.Blazor.Core` NuGet package. For this, set the `PIRAL_BLAZOR_LOCAL_NUPKG` environment variable to the (absolute) path of the NuGet package.
+It should be noted that to maximize compatibility, the version of the `blazor` package should be identical to the version of Blazor you want to use. (e.g. use `blazor@3.2.1` for Blazor v3.2.1).
 
 :::
 
