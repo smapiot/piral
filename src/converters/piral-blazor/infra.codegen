@@ -1,9 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-function generateModule(blazorBootFile) {
-  const content = fs.readFileSync(blazorBootFile, 'utf8');
-  return `module.exports = ${content};`;
+function generateModule(scriptUrl) {
+  return `module.exports = ${JSON.stringify(scriptUrl)};`;
 }
 
 function copyFileSync(source, target) {
@@ -44,7 +43,6 @@ function copyFolderRecursiveSync(source, target) {
 
 module.exports = function () {
   const outDir = this.options.outDir;
-  const blazorBootFile = path.resolve(outDir, '_framework', 'blazor.boot.json');
 
   !fs.existsSync(outDir) && fs.mkdirSync(outDir, { recursive: true });
 
@@ -55,7 +53,7 @@ module.exports = function () {
 
     copyFolderRecursiveSync(frameworkDir, outDir);
 
-    return generateModule(blazorBootFile);
+    return generateModule('_framework/blazor.webassembly.js');
   } catch (err) {
     throw new Error('The blazor package was not found. Make sure to install it via `npm i blazor`.');
   }

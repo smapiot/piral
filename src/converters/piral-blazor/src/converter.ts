@@ -1,5 +1,5 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { initialize, activate, deactivate, attachEvents } from './internal';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { initialize, activate, deactivate, attachEvents } from './interop';
 
 export function createConverter(lazy = true) {
   const bootConfig = require('../infra.codegen');
