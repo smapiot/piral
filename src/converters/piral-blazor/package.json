@@ -1,6 +1,6 @@
 {
   "name": "piral-blazor",
-  "version": "0.12.4",
+  "version": "0.13.0",
   "description": "Plugin for integrating Blazor components in Piral.",
   "keywords": [
     "piral",
@@ -46,12 +46,11 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-blazor.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": { },
   "devDependencies": {
-    "piral-core": "^0.12.4"
+    "piral-core": "^0.13.0"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x",
-    "blazor": "*"
+    "blazor": "*",
+    "piral-core": "0.13.x"
   }
 }
