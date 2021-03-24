@@ -8,6 +8,12 @@ The set includes the `getUser` API to retrieve the user, login / logout function
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+Authentication is a basic need of almost every application. This plugin just stores given user information in the central store and makes this information available to all pilets via the pilet API. How to get this user information and where specific authorization (e.g., in form of a token) is stored is up to the application owner. Thus this plugin should only be used in combination with other mechanisms.
+
+Alternatives: Use a plugin that is specific to your method of authentication (e.g., `piral-adal` for Microsoft, `piral-oauth2` for generic OAuth 2, `piral-oidc` for generic OpenID Connect etc.) or just a library.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

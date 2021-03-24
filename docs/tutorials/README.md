@@ -28,5 +28,7 @@ The following tutorials are currently available:
 18. [Authentication](./18-authentication.md) - and how to use authentication with Piral.
 19. [Migration of SSR Applications](./19-migrate-ssr.md) - discusses options for migration of existing websites.
 20. [Migration of Existing Applications](./20-migrate-app.md) - illustrates how existing applications can be migrated.
+21. [Parcel vs Webpack](./21-parcel-vs-webpack.md) - goes into details of the available bundlers.
+22. [Core and Base](./22-core-and-base.md) - discusses other framework packages and when they should be used.
 
 Please don't hesitate to send us feedback regarding the tutorials and suggestions for additional topics.

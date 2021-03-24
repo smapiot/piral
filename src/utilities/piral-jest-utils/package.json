@@ -15,9 +15,11 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
+  "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
+    "esm",
     "lib",
     "src"
   ],
@@ -29,11 +31,23 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "yarn build:commonjs && yarn build:esnext",
+    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
+    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-jest-utils.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
+  "dependencies": {
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
+    "enzyme": "^3.11.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^25.0.0",
+    "jest-cli": "^25.0.0",
+    "ts-jest": "^25.0.0"
+  },
   "devDependencies": {
+    "@types/enzyme": "^3.1.18",
+    "@types/jest": "^25.0.0",
     "piral-core": "^0.12.4"
   }
 }

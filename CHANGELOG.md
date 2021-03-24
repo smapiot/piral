@@ -1,9 +1,29 @@
 # Piral Changelog
 
+## 0.13.0 (tbd)
+
+* Fixed HMR in `piral-cli-webpack5` when running `piral debug`
+* Fixed issue ignoring `--log-level` in the initializers
+* Fixed shared submodule dependencies in `peerDependencies` (#341)
+* Fixed lazy loading of stylesheets in pilets using `piral-cli-parcel` (#360)
+* Updated `kras` with improved web socket reliability (#364)
+* Updated to use React 17 (#312)
+* Updated the project CI to use Piral Pipelines with YAML
+* Updated `withApi` to use `context` instead of `converters`
+* Updated `piral-jest-utils` package for Jest mocking (#186)
+* Updated Piral CLI path resolution for Windows (#192)
+* Updated frontend libraries to be available in ESM format, too
+* Added `piral-update` as a plugin to integrate auto update
+* Added `feed` parameter to `pilet debug` (#344)
+* Added `userStore` as an option for `piral-oidc` (#345)
+* Added `wrappers` to enable central component transformations
+* Added `apiFactory` option for overriding API creation in `createInstance`
+* Added option `emulator-sources` to the `type` parameter of the `piral build` command
+
 ## 0.12.4 (November 24, 2020)
 
 * Updated `dets` to use CLI logging levels
-* Extended all `register...` APIs to return disposers (#336) 
+* Extended all `register...` APIs to return disposers (#336)
 * Added `piral-cli-webpack5` to support bundling with Webpack 5 (#313)
 * Added the `packageOverrides` field to override *package.json* values of pilets (#330)
 * Added special tagged comments for additional modifications of the `PiletApi` (#332)

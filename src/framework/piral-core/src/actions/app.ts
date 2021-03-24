@@ -36,7 +36,7 @@ export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {
     modules: replaceOrAddItem(state.modules, pilet, (m) => m.name === pilet.name),
     registry: removeNested<RegistryState, BaseRegistration>(state.registry, (m) => m.pilet === pilet.name),
   }));
-
+  
   ctx.emit('unload-pilet', {
     name: pilet.name,
   });

@@ -6,6 +6,12 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-co
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+State management is important. While plugins such as `piral-redux` bring in an additional kind of state container they also allow using this state container in pilets. `piral-containers` makes the global app state container accessible by all pilets. Using `piral-containers` every pilet can create its own states within the global store.
+
+Alternatives: Leave every pilet to decide and bundle their own state management. A lightweight, framework-agnostic alternative would be [unistore](https://github.com/developit/unistore).
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

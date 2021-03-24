@@ -1,4 +1,5 @@
-import { BannerPlugin, DefinePlugin, WebpackPluginInstance } from 'webpack';
+import { join } from 'path';
+import { Configuration, BannerPlugin, DefinePlugin, WebpackPluginInstance } from 'webpack';
 import { setEnvironment, getDefineVariables, getVariables } from './helpers';
 
 export interface PiletWebpackConfigEnhancerOptions {
@@ -46,7 +47,9 @@ function getExternals(piral: string) {
   ];
 }
 
-export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOptions) => (compilerOptions) => {
+export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOptions) => (
+  compilerOptions: Configuration,
+) => {
   const environment = process.env.NODE_ENV || 'development';
   const { name, version, piral, externals = getExternals(piral), schema } = options;
   const shortName = name.replace(/\W/gi, '');
@@ -56,6 +59,16 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
     ...options.variables,
   };
   const plugins: WebpackPluginInstance[] = [new DefinePlugin(getDefineVariables(variables))];
+
+  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
+    const setPath = join(__dirname, '..', '..', 'set-path');
+
+    if (Array.isArray(compilerOptions.entry)) {
+      compilerOptions.entry.unshift(setPath);
+    } else if (Array.isArray(compilerOptions.entry.main)) {
+      compilerOptions.entry.main.unshift(setPath);
+    }
+  }
 
   if (schema !== 'none') {
     const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
@@ -83,7 +96,7 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
   }
 
   if (schema === 'v1') {
-    const reset = environment !== 'production' ? `delete ${jsonpFunction}_chunks;` : '';
+    const reset = `delete window.webpackChunk${jsonpFunction};`;
     compilerOptions.output.auxiliaryComment = {
       commonjs2: `\nfunction define(d,k){${reset}(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
     } as any;

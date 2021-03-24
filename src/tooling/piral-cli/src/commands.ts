@@ -91,10 +91,10 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         port: args.port as number,
         hmr: args.hmr as boolean,
-        optimizeModules: args.optimizeModules as boolean,
-        publicUrl: args.publicUrl as string,
+        optimizeModules: args['optimize-modules'] as boolean,
+        publicUrl: args['public-url'] as string,
         bundlerName: args.bundler as string,
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         _: args,
       });
@@ -131,6 +131,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('source-maps')
         .describe('source-maps', 'Create associated source maps for the bundles.')
         .default('source-maps', apps.buildPiralDefaults.sourceMaps)
+        .boolean('subdir')
+        .describe('subdir', `Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".`)
+        .default('subdir', apps.buildPiralDefaults.subdir)
         .boolean('content-hash')
         .describe('content-hash', 'Appends the hash to the side-bundle files.')
         .default('content-hash', apps.buildPiralDefaults.contentHash)
@@ -151,14 +154,15 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.buildPiral(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
-        publicUrl: args.publicUrl as string,
+        publicUrl: args['public-url'] as string,
         bundlerName: args.bundler as string,
         minify: args.minify as boolean,
         fresh: args.fresh as boolean,
-        contentHash: args.contentHash as boolean,
-        sourceMaps: args.sourceMaps as boolean,
-        optimizeModules: args.optimizeModules as boolean,
-        logLevel: args.logLevel as LogLevels,
+        subdir: args.subdir as boolean,
+        contentHash: args['content-hash'] as boolean,
+        sourceMaps: args['source-maps'] as boolean,
+        optimizeModules: args['optimize-modules'] as boolean,
+        logLevel: args['log-level'] as LogLevels,
         type: args.type as PiralBuildType,
         _: args,
       });
@@ -195,7 +199,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.publishPiral(args.base as string, {
         source: args.source as string,
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
         type: args.type as PiralBuildType,
         provider: args.provider as string,
         fields: args.fields as Record<string, string>,
@@ -231,8 +235,8 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.declarationPiral(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
-        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
-        logLevel: args.logLevel as LogLevels,
+        forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
+        logLevel: args['log-level'] as LogLevels,
       });
     },
   },
@@ -265,7 +269,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.newPiralDefaults.logLevel)
         .string('tag')
-        .describe('tag', 'Sets the tag or version of the package to install. By default, it is "latest".')
+        .describe('tag', 'Sets the tag or version of the package to install. By default, this uses the version of the CLI.')
         .default('tag', apps.newPiralDefaults.version)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the installation.')
@@ -296,12 +300,12 @@ const allCommands: Array<ToolCommand<any>> = [
         framework: args.framework,
         version: args.tag as string,
         registry: args.registry as string,
-        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
         language: valueOfPiletLanguage(args.language as string),
         install: args.install as boolean,
         template: args.template as string,
-        logLevel: args.logLevel as LogLevels,
-        npmClient: args.npmClient as NpmClientType,
+        logLevel: args['log-level'] as LogLevels,
+        npmClient: args['npm-client'] as NpmClientType,
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
       });
@@ -338,10 +342,10 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.upgradePiral(args.base as string, {
         target: args.target as string,
-        version: args.targetVersion as string,
-        logLevel: args.logLevel as LogLevels,
+        version: args['target-version'] as string,
+        logLevel: args['log-level'] as LogLevels,
         install: args.install as boolean,
-        npmClient: args.npmClient as NpmClientType,
+        npmClient: args['npm-client'] as NpmClientType,
       });
     },
   },
@@ -367,7 +371,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.validatePiral(args.base as string, {
         entry: args.entry as string,
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
       });
     },
   },
@@ -409,7 +413,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .string('feed')
+        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.');
     },
     run(args) {
       return apps.debugPilet(args.base as string, {
@@ -417,11 +423,12 @@ const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         hmr: args.hmr as boolean,
         bundlerName: args.bundler as string,
-        optimizeModules: args.optimizeModules as boolean,
+        optimizeModules: args['optimize-modules'] as boolean,
         app: args.app as string,
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         schemaVersion: args.schema as PiletSchemaVersion,
+        feed: args.feed as string,
         _: args,
       });
     },
@@ -477,12 +484,12 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         minify: args.minify as boolean,
-        contentHash: args.contentHash as boolean,
+        contentHash: args['content-hash'] as boolean,
         bundlerName: args.bundler as string,
-        sourceMaps: args.sourceMaps as boolean,
-        optimizeModules: args.optimizeModules as boolean,
+        sourceMaps: args['source-maps'] as boolean,
+        optimizeModules: args['optimize-modules'] as boolean,
         fresh: args.fresh as boolean,
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
         schemaVersion: args.schema as PiletSchemaVersion,
         app: args.app as string,
         _: args,
@@ -515,7 +522,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.packPilet(args.base as string, {
         source: args.source as string,
         target: args.target as string,
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
       });
     },
   },
@@ -524,7 +531,8 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['post-pilet', 'publish'],
     description: 'Publishes a pilet package to a pilet feed.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',
@@ -563,10 +571,10 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.publishPilet(args.base as string, {
         source: args.source as string,
-        apiKey: args.apiKey as string,
+        apiKey: args['api-key'] as string,
         url: args.url as string,
-        logLevel: args.logLevel as LogLevels,
-        cert: args.caCert as string,
+        logLevel: args['log-level'] as LogLevels,
+        cert: args['ca-cert'] as string,
         fresh: args.fresh as boolean,
         from: args.from as PiletPublishSource,
         schemaVersion: args.schema as PiletSchemaVersion,
@@ -627,12 +635,12 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         source: args.source as string,
         registry: args.registry as string,
-        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
         language: valueOfPiletLanguage(args.language as string),
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
         install: args.install as boolean,
         template: args.template as string,
-        npmClient: args.npmClient as NpmClientType,
+        npmClient: args['npm-client'] as NpmClientType,
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
       });
@@ -672,11 +680,11 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.upgradePilet(args.base as string, {
         target: args.target as string,
-        version: args.targetVersion as string,
-        logLevel: args.logLevel as LogLevels,
-        forceOverwrite: valueOfForceOverwrite(args.forceOverwrite as string),
+        version: args['target-version'] as string,
+        logLevel: args['log-level'] as LogLevels,
+        forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
         install: args.install as boolean,
-        npmClient: args.npmClient as NpmClientType,
+        npmClient: args['npm-client'] as NpmClientType,
       });
     },
   },
@@ -704,7 +712,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.validatePilet(args.base as string, {
         entry: args.entry as string,
-        logLevel: args.logLevel as LogLevels,
+        logLevel: args['log-level'] as LogLevels,
         app: args.app as string,
       });
     },

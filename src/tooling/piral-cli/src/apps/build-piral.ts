@@ -10,14 +10,16 @@ import {
   progress,
   setLogLevel,
   logReset,
-  createEmulatorPackage,
+  createEmulatorSources,
   log,
   logInfo,
   runScript,
+  packageEmulator,
 } from '../common';
 
 const releaseName = 'release';
 const emulatorName = 'emulator';
+const emulatorSourcesName = 'emulator-sources';
 
 interface Destination {
   outDir: string;
@@ -67,6 +69,11 @@ export interface BuildPiralOptions {
   logLevel?: LogLevels;
 
   /**
+   * Places the build's output in an appropriate subdirectory (e.g., "emulator").
+   */
+  subdir?: boolean;
+
+  /**
    * Performs a fresh build by removing the target directory first.
    */
   fresh?: boolean;
@@ -110,6 +117,7 @@ export const buildPiralDefaults: BuildPiralOptions = {
   fresh: false,
   minify: true,
   type: 'all',
+  subdir: true,
   sourceMaps: true,
   contentHash: true,
   optimizeModules: false,
@@ -136,6 +144,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     minify = buildPiralDefaults.minify,
     sourceMaps = buildPiralDefaults.sourceMaps,
     contentHash = buildPiralDefaults.contentHash,
+    subdir = buildPiralDefaults.subdir,
     fresh = buildPiralDefaults.fresh,
     type = buildPiralDefaults.type,
     optimizeModules = buildPiralDefaults.optimizeModules,
@@ -144,6 +153,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
+  const useSubdir = type === 'all' || subdir;
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
   const dest = getDestination(entryFiles, resolve(baseDir, target));
@@ -157,10 +167,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   // everything except release -> build emulator
   if (type !== releaseName) {
-    progress('Starting build ...');
+    const targetDir = useSubdir ? join(dest.outDir, emulatorName) : dest.outDir;
+    progress('Starting emulator build ...');
 
     // since we create this anyway let's just pretend we want to have it clean!
-    await removeDirectory(join(dest.outDir, emulatorName));
+    await removeDirectory(targetDir);
 
     logInfo(`Bundle ${emulatorName} ...`);
     const { dir: outDir, name: outFile } = await callPiralBuild(
@@ -175,7 +186,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         externals,
         publicUrl,
         outFile: dest.outFile,
-        outDir: join(dest.outDir, emulatorName, 'app'),
+        outDir: join(targetDir, 'app'),
         entryFiles,
         logLevel,
         ignored,
@@ -187,18 +198,25 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);
 
-    const rootDir = await createEmulatorPackage(root, outDir, outFile, logLevel);
+    const rootDir = await createEmulatorSources(root, outDir, outFile, logLevel);
 
-    logDone(`Development package available in "${rootDir}".`);
+    if (type !== emulatorSourcesName) {
+      await packageEmulator(rootDir);
+      logDone(`Emulator sources available in "${rootDir}".`);
+    } else {
+      logDone(`Emulator package available in "${rootDir}".`);
+    }
+
     logReset();
   }
 
-  // everything except emulator -> build release
-  if (type !== emulatorName) {
-    progress('Starting build ...');
+  // everything except emulator and emulator-soruces -> build release
+  if (type !== emulatorName && type !== emulatorSourcesName) {
+    const targetDir = useSubdir ? join(dest.outDir, releaseName) : dest.outDir;
+    progress('Starting release build ...');
 
     // since we create this anyway let's just pretend we want to have it clean!
-    await removeDirectory(join(dest.outDir, releaseName));
+    await removeDirectory(targetDir);
 
     logInfo(`Bundle ${releaseName} ...`);
     const { dir: outDir } = await callPiralBuild(
@@ -213,7 +231,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         externals,
         publicUrl,
         outFile: dest.outFile,
-        outDir: join(dest.outDir, releaseName),
+        outDir: targetDir,
         entryFiles,
         logLevel,
         ignored,

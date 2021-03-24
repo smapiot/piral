@@ -21,10 +21,10 @@ describe('CLI package module', () => {
     expect(version).toBe('latest');
   });
 
-  it('findEntryModule finds the implicit index.html', async () => {
+  it('findEntryModule finds the implicit index.tsx', async () => {
     const dir = resolve(process.cwd(), 'src', 'samples', 'sample-piral', 'src');
     const version = await findEntryModule('index', dir);
-    expect(version).toBe(resolve(dir, 'index.html'));
+    expect(version).toBe(resolve(dir, 'index.tsx'));
   });
 
   it('findEntryModule finds the explicit index.tsx', async () => {

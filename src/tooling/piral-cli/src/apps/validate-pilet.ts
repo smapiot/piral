@@ -42,6 +42,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     dependencies,
     peerDependencies,
     devDependencies,
+    peerModules,
     root,
     ignored: _0,
     emulator: _1,
@@ -62,6 +63,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     dependencies,
     devDependencies,
     peerDependencies,
+    peerModules,
     root,
     data,
   };

@@ -11,11 +11,13 @@ export function getVariables(
     BUILD_PCKG_VERSION: version,
     BUILD_PCKG_NAME: name,
     SHARED_DEPENDENCIES: externals.join(','),
+    DEBUG_PIRAL: '',
+    DEBUG_PILET: '',
   };
 }
 
 export function setEnvironment(variables: Record<string, boolean | string>) {
-  Object.keys(variables).forEach(key => (process.env[key] = String(variables[key])));
+  Object.keys(variables).forEach((key) => (process.env[key] = String(variables[key])));
 }
 
 export function getDefineVariables(variables: Record<string, boolean | string>) {

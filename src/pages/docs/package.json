@@ -33,17 +33,17 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "react-router": ">=5.0.0",
-    "react-router-dom": ">=5.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "stickyfilljs": "^2.1.0"
   },
   "devDependencies": {
-    "@types/react": "^16.8.2",
-    "@types/react-dom": "^16.8.0",
-    "@types/react-router": "^5.0.0",
-    "@types/react-router-dom": "^5.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.6",
     "flexsearch": "^0.6.32",
     "keyword-extractor": "0.0.17",
     "markdown-it": "^9.0.1",

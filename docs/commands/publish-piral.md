@@ -70,11 +70,3 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
-
-### `--url`
-
-No description available.
-
-- Type: `undefined`
-- Default: `undefined`
-- **Caution: This flag is required!**

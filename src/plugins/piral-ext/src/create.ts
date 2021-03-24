@@ -11,12 +11,21 @@ import { PiralExtSettings } from './types';
  * @param settings Customizes the standard plugin settings.
  */
 export function createStandardApi(settings: PiralExtSettings = {}) {
+  const {
+    locale = undefined,
+    dashboard = undefined,
+    menu = undefined,
+    notifications = undefined,
+    modals = undefined,
+    feeds = undefined,
+  } = settings;
+
   return [
-    createLocaleApi(settings.locale),
-    createDashboardApi(settings.dashboard),
-    createMenuApi(settings.menu),
-    createNotificationsApi(settings.notifications),
-    createModalsApi(settings.modals),
-    createFeedsApi(settings.feeds),
-  ];
+    locale !== false && createLocaleApi(locale),
+    dashboard !== false && createDashboardApi(dashboard),
+    menu !== false && createMenuApi(menu),
+    notifications !== false && createNotificationsApi(notifications),
+    modals !== false && createModalsApi(modals),
+    feeds !== false && createFeedsApi(feeds),
+  ].filter(Boolean);
 }

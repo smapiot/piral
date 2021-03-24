@@ -16,10 +16,11 @@ export const Testimonials: React.FC = () => {
 
   return (
     <div className="container container-section">
-      {/*
       <h2>Testimonials</h2>
-      <p>Our aim is to build the best microfrontend framework. We always try to get the best user experience.</p>
-    */}
+      <p>
+        Our aim is to build the best microfrontend framework. We always try to provide an optimal experience by
+        listening to our users. Any feedback appreciated!
+      </p>
       <div className="testimonials">
         {testimonials
           .filter((t) => selectedIds.indexOf(t.id) !== -1)

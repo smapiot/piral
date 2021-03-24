@@ -13,6 +13,7 @@ import {
   PiletApi,
   BaseComponentProps,
   ComponentContext,
+  GlobalStateContext,
 } from '../types';
 
 let portalIdBase = 123456;
@@ -25,6 +26,8 @@ const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
   const children = useGlobalState((m) => m.portals[id] || []);
   return defaultRender(children);
 };
+
+const DefaultWrapper: React.FC = (props) => <>{props.children}</>;
 
 interface ForeignComponentContainerProps<T> {
   $portalId: string;
@@ -92,11 +95,14 @@ function wrapReactComponent<T>(
   Component: React.ComponentType<T & BaseComponentProps>,
   stasisOptions: ErrorBoundaryOptions<T>,
   piral: PiletApi,
+  Wrapper: React.ComponentType<any>,
 ): React.ComponentType<T> {
   return (props: T) => (
-    <ErrorBoundary {...stasisOptions} renderProps={props}>
-      <Component {...props} piral={piral} />
-    </ErrorBoundary>
+    <Wrapper {...props} piral={piral}>
+      <ErrorBoundary {...stasisOptions} renderProps={props}>
+        <Component {...props} piral={piral} />
+      </ErrorBoundary>
+    </Wrapper>
   );
 }
 
@@ -104,27 +110,29 @@ function wrapForeignComponent<T>(
   component: ForeignComponent<T & BaseComponentProps>,
   stasisOptions: ErrorBoundaryOptions<T>,
   piral: PiletApi,
+  Wrapper: React.ComponentType<any>,
 ): React.ComponentType<T> {
   return (props: T) => {
     const { destroyPortal } = useActions();
     const [id] = React.useState(() => (portalIdBase++).toString(26));
     const router = React.useContext(__RouterContext);
     const { state } = React.useContext(StateContext);
+    const innerProps = { ...props, piral };
 
-    React.useEffect(() => {
-      return () => destroyPortal(id);
-    }, []);
+    React.useEffect(() => () => destroyPortal(id), []);
 
     return (
-      <ErrorBoundary {...stasisOptions} renderProps={props}>
-        <PortalRenderer id={id} />
-        <ForeignComponentContainer
-          innerProps={{ ...props, piral }}
-          $portalId={id}
-          $component={component}
-          $context={{ router, state }}
-        />
-      </ErrorBoundary>
+      <Wrapper {...innerProps}>
+        <ErrorBoundary {...stasisOptions} renderProps={props}>
+          <PortalRenderer id={id} />
+          <ForeignComponentContainer
+            innerProps={innerProps}
+            $portalId={id}
+            $component={component}
+            $context={{ router, state }}
+          />
+        </ErrorBoundary>
+      </Wrapper>
     );
   };
 }
@@ -137,6 +145,7 @@ function wrapComponent<T>(
   converters: ComponentConverters<T & BaseComponentProps>,
   component: AnyComponent<T & BaseComponentProps>,
   piral: PiletApi,
+  Wrapper: React.ComponentType<any>,
   stasisOptions: ErrorBoundaryOptions<T>,
 ) {
   if (!component) {
@@ -147,19 +156,23 @@ function wrapComponent<T>(
 
   if (typeof component === 'object' && isNotExotic(component)) {
     const result = convertComponent(converters[component.type], component);
-    return wrapForeignComponent<T>(result, stasisOptions, piral);
+    return wrapForeignComponent<T>(result, stasisOptions, piral, Wrapper);
   }
 
-  return wrapReactComponent<T>(component, stasisOptions, piral);
+  return wrapReactComponent<T>(component, stasisOptions, piral, Wrapper);
 }
 
 export function withApi<TProps>(
-  converters: ComponentConverters<TProps & BaseComponentProps>,
+  context: GlobalStateContext,
   component: AnyComponent<TProps & BaseComponentProps>,
   piral: PiletApi,
   errorType: keyof Errors,
+  wrapperType: string = errorType,
 ) {
-  return wrapComponent<TProps>(converters, component, piral, {
+  const converters = context.converters;
+  const Wrapper = context.readState((m) => m.registry.wrappers[wrapperType]) || DefaultWrapper;
+
+  return wrapComponent<TProps>(converters, component, piral, Wrapper, {
     onError(error) {
       console.error(piral, error);
     },

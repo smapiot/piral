@@ -91,10 +91,9 @@ Determines the programming language for the new pilet.
 
 ### `--template`
 
-Sets the boilerplate template to be used when scaffolding.
+Sets the boilerplate template package to be used when scaffolding.
 
 - Type: `string`
-- Choices: `"default"`, `"empty"`
 - Default: `"default"`
 
 ### `--npm-client`
@@ -110,8 +109,15 @@ Sets the NPM client to be used when scaffolding.
 Sets the default bundler to install.
 
 - Type: `string`
-- Choices: `"none"`, `"parcel"`, `"webpack"`
+- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`
 - Default: `"none"`
+
+### `--vars`
+
+Sets additional variables to be used when scaffolding.
+
+- Type: `options`
+- Default: `{}`
 
 ### `--base`
 

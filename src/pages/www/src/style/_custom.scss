@@ -84,6 +84,26 @@ img {
   flex-wrap: wrap;
   flex-direction: row;
 
+  &.companies {
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 2em;
+
+    div {
+      margin: 0.3em;
+
+      img {
+        filter: grayscale(50%);
+        opacity: 0.8;
+
+        &:hover {
+          filter: grayscale(0%);
+          opacity: 1;
+        }
+      }
+    }
+  }
+
   .cell {
     box-sizing: border-box;
     flex: 0 0 33.3333333333%;
@@ -325,6 +345,7 @@ img {
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-evenly;
+  margin-top: 2em;
 }
 
 .testimonial {

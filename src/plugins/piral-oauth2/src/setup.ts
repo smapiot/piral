@@ -63,6 +63,10 @@ export interface OAuth2Client {
    */
   token(): Promise<string>;
   /**
+   * Checks if the user is currently logged in.
+   */
+  account(): boolean;
+  /**
    * Extends the headers of the provided request.
    */
   extendHeaders(req: OAuth2Request): void;
@@ -94,6 +98,8 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
     scopes,
   });
   let currentToken: ClientOAuth2.Token;
+  let retrieveToken: () => Promise<string>;
+  let getLoginUri: () => string;
 
   if (flow === 'code') {
     client.code.getToken(location.href).then(
@@ -101,7 +107,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
       () => {},
     );
 
-    const retrieveToken = () => {
+    retrieveToken = () => {
       if (!currentToken) {
         return Promise.reject('Not logged in. Please call `login()` to retrieve a token.');
       }
@@ -115,26 +121,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         return currentToken.accessToken;
       });
     };
-
-    return {
-      login() {
-        window.location.href = client.code.getUri();
-      },
-      logout() {
-        currentToken = undefined;
-      },
-      extendHeaders(req) {
-        if (!restrict) {
-          req.setHeaders(
-            retrieveToken().then(
-              (token) => token && { Authorization: `Bearer ${token}` },
-              () => undefined,
-            ),
-          );
-        }
-      },
-      token: retrieveToken,
-    };
+    getLoginUri = () => client.code.getUri();
   } else {
     client.token.getToken(location.href).then(
       (token) => {
@@ -148,7 +135,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
       () => {},
     );
 
-    const retrieveToken = () => {
+    retrieveToken = () => {
       if (!currentToken) {
         return Promise.reject('Not logged in. Please call `login()` to retrieve a token.');
       }
@@ -165,25 +152,29 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
         window.open(client.token.getUri());
       });
     };
-
-    return {
-      login() {
-        window.location.href = client.token.getUri();
-      },
-      logout() {
-        currentToken = undefined;
-      },
-      extendHeaders(req) {
-        if (!restrict) {
-          req.setHeaders(
-            retrieveToken().then(
-              (token) => token && { Authorization: `Bearer ${token}` },
-              () => undefined,
-            ),
-          );
-        }
-      },
-      token: retrieveToken,
-    };
+    getLoginUri = () => client.token.getUri();
   }
+
+  return {
+    login() {
+      window.location.href = getLoginUri();
+    },
+    logout() {
+      currentToken = undefined;
+    },
+    extendHeaders(req) {
+      if (!restrict) {
+        req.setHeaders(
+          retrieveToken().then(
+            (token) => token && { Authorization: `Bearer ${token}` },
+            () => undefined,
+          ),
+        );
+      }
+    },
+    account() {
+      return !!currentToken;
+    },
+    token: retrieveToken,
+  };
 }

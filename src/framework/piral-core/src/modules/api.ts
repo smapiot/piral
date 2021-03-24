@@ -21,7 +21,7 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
         context.registerPage(route, {
           pilet,
           meta,
-          component: withApi(context.converters, arg, api, 'page'),
+          component: withApi(context, arg, api, 'page'),
         });
         return () => api.unregisterPage(route);
       },
@@ -31,7 +31,7 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
       registerExtension(name, arg, defaults) {
         context.registerExtension(name as string, {
           pilet,
-          component: withApi(context.converters, arg, api, 'extension'),
+          component: withApi(context, arg, api, 'extension'),
           reference: arg,
           defaults,
         });
@@ -41,7 +41,8 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
         context.unregisterExtension(name as string, arg);
       },
       renderHtmlExtension(element, props) {
-        renderInDom(context, element, ExtensionSlot, props);
+        const id = renderInDom(context, element, ExtensionSlot, props);
+        return () => context.destroyPortal(id);
       },
       Extension: ExtensionSlot,
     };
@@ -66,7 +67,7 @@ export function mergeApis(api: PiletApi, extenders: Array<PiletApiExtender<Parti
 }
 
 export function createExtenders(context: GlobalStateContext, apis: Array<PiralPlugin>) {
-  const creators: Array<PiralPlugin> = [...apis.filter(isfunc), createCoreApi];
+  const creators: Array<PiralPlugin> = [createCoreApi, ...apis.filter(isfunc)];
   return creators.map((c) => {
     const ctx = c(context);
 
@@ -80,7 +81,7 @@ export function createExtenders(context: GlobalStateContext, apis: Array<PiralPl
   });
 }
 
-export function defaultApiCreator(context: GlobalStateContext, apis: Array<PiralPlugin>): PiletApiCreator {
+export function defaultApiFactory(context: GlobalStateContext, apis: Array<PiralPlugin>): PiletApiCreator {
   const extenders = createExtenders(context, apis);
   return (target) => {
     const api = initializeApi(target, context);

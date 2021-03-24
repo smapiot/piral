@@ -61,9 +61,19 @@ In case of a successful upload, the HTTP response code has to be `200`. The exac
 
 **Error Response**
 
-In case of a failed authentication, the HTTP response status code has to be `401`. In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. The error message should be transported via the status text.
+In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. This is also true if, e.g., the `name` does not match an expected format.
 
-The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
+In case of a failed authentication, the HTTP response status code has to be `401`.
+
+In case of an app-store like feed service the feed may reject pilets in case of missing fees. In such scenarios the response should be `402`.
+
+In case of accepted authentication, but insufficient rights the HTTP response status code has to be `403`.
+
+In case of an existing entry (name and version are already there) the HTTP status has to be `409`.
+
+In case where a pilet exceeds the limits defined by the feed service (e.g., pilet is 18 MB but the feed only accepts up to 16 MB) the HTTP status has to be `413`.
+
+The error message should be transported via the status text. The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
 
 ### Retrieving Pilets (User Facing)
 
@@ -101,6 +111,7 @@ interface PiletMetadataV0 {
   hash: string;
   noCache?: boolean | string;
   custom?: any;
+  config?: Record<string, any>;
 }
 
 interface PiletMetadataV1 {
@@ -110,6 +121,7 @@ interface PiletMetadataV1 {
   requireRef: string;
   integrity?: string;
   custom?: any;
+  config?: Record<string, any>;
 }
 
 type PiletMetadata = PiletMetadataV0 | PiletMetadataV1;
@@ -124,6 +136,8 @@ If the `requireRef` field is used then `PiletMetadataV1` will be used implicitly
 In `PiletMetadataV1` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
 
 The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
+
+The `config` field can be used to transport frontend configuration to be leveraged by the specific pilet. This can be helpful to obtain things that should be easily configurable or changeable such as colors, frontend API keys (e.g., for Google Maps), or specific behavior.
 
 **Error Response**
 

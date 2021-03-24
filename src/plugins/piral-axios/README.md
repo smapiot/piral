@@ -4,6 +4,14 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-axios` brings to the table is a single Pilet API extension called `axios` that is used by `piral`. Axios is a library for making HTTP requests.
 
+## Why and When
+
+Making HTTP requests is one of the most important aspects of a modern SPA. While standard mechanisms like `fetch` can be used without any library (excluding polyfills for older browsers) they lack convenience. Among the most popular libraries for HTTP requests is `axios`. It works in Node.js and the browser.
+
+This library brings axios in as a shared library with a pre-configured instance being available on the pilet API.
+
+Alternatives: Just share `axios` or any HTTP library of your choice as a shared dependency. Communicate tokens or other basic information via events or the shared data store or require use of another pilet API to retrieve it (e.g., `getUser` from `piral-auth`).
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

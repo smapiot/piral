@@ -1,10 +1,9 @@
-import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { PiletSchemaVersion } from 'piral-cli';
-import { piletWebpackConfigEnhancer } from '../enhancers/pilet-webpack-config-enhancer';
 import { join } from 'path';
-import { getRules, getPlugins, extensions, getVariables } from './common';
+import { PiletSchemaVersion } from 'piral-cli';
+import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration } from './common';
+import { piletWebpackConfigEnhancer } from '../enhancers/pilet-webpack-config-enhancer';
 
 export async function getPiletConfig(
   baseDir: string,
@@ -20,7 +19,7 @@ export async function getPiletConfig(
   minimize = true,
   publicPath = '/',
   progress = false,
-): Promise<webpack.Configuration> {
+): Promise<DefaultConfiguration> {
   const production = !develop;
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
@@ -34,49 +33,52 @@ export async function getPiletConfig(
     variables: getVariables(),
   });
 
-  return enhance({
-    devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
+  return [
+    {
+      devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
 
-    mode: develop ? 'development' : 'production',
+      mode: develop ? 'development' : 'production',
 
-    entry: {
-      main: [join(__dirname, '..', 'set-path'), template],
-    },
+      entry: {
+        main: [template],
+      },
 
-    output: {
-      publicPath,
-      path: dist,
-      filename,
-      chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
-    },
+      output: {
+        publicPath,
+        path: dist,
+        filename,
+        chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
+      },
 
-    resolve: {
-      extensions,
-    },
+      resolve: {
+        extensions,
+      },
 
-    module: {
-      rules: getRules(baseDir, production, true),
-    },
+      module: {
+        rules: getRules(baseDir, production, true),
+      },
 
-    optimization: {
-      minimize,
-      minimizer: [
-        new TerserPlugin({
-          extractComments: false,
-          terserOptions: {
-            ie8: true,
-            output: {
-              comments: /^@pilet/,
+      optimization: {
+        minimize,
+        minimizer: [
+          new TerserPlugin({
+            extractComments: false,
+            terserOptions: {
+              ie8: true,
+              output: {
+                comments: /^@pilet/,
+              },
+              mangle: {
+                reserved: ['__bundleUrl__'],
+              },
             },
-            mangle: {
-              reserved: ['__bundleUrl__'],
-            },
-          },
-        }),
-        new OptimizeCSSAssetsPlugin({}),
-      ],
-    },
+          }),
+          new OptimizeCSSAssetsPlugin({}),
+        ],
+      },
 
-    plugins: getPlugins([], progress, production),
-  });
+      plugins: getPlugins([], progress),
+    },
+    enhance,
+  ];
 }

@@ -135,6 +135,14 @@ The property reflects the license used for distributing the given pilet.
 
 By default, the `license` is set to `ISC`, which is equivalent to MIT and NPM's default.
 
+### `piral`
+
+The `piral` property is a non-standard field that is optional for a pilet, but may be necessary to determine the related (primary) Piral instance for debugging or validating the pilet.
+
+The property contains a `comment` field for info purposes, as well as a `name` field to define the name of the package containing the emulator of the Piral instance. Other fields may be added, too.
+
+By default, the `piral` is considered undefined, i.e., no primary Piral instance given.
+
 ### `peerDependencies`
 
 The `peerDependencies` property is a standard NPM field that is optional for a pilet.
@@ -142,6 +150,16 @@ The `peerDependencies` property is a standard NPM field that is optional for a p
 The property contains information about the used shared dependencies that have to be supplied from the Piral instance. A feed service or Piral instance may reject the Pilet in case of unmatched shared dependencies.
 
 By default, the `peerDependencies` are set to an empty record `{}`, i.e., no peer dependencies.
+
+### `peerModules`
+
+The `peerModules` property is a non-standard field that is optional for a pilet.
+
+The property contains the names of all peer modules. A peer module is a full module qualifier that leads to the module of a package. For instance, the package `react-dom` comes with a module `react-dom/server`. While `react-dom` is a valid peer dependency, it is not a valid peer module. In contrast, `react-dom/server` is a valid peer module, but not a valid peer dependency.
+
+Like the `peerDependencies` this property defines shared modules that have to be supplied from the Piral instance. A feed service or Piral instance may reject the Pilet in case of unmatched shared modules.
+
+By default, the `peerModules` are set to an empty array `[]`, i.e., no peer modules.
 
 ### `dependencies`
 
@@ -224,15 +242,58 @@ where the `PiletMetadata` interface refers to
 
 ```ts
 interface PiletMetadata {
+  /**
+   * Name of the pilet
+   */
   name: string;
+  /**
+   * Version of the pilet
+   */
   version: string;
-  link: string;
-  hash: string;
+  /**
+   * Content of the pilet (v:0)
+   */
+  content?: string;
+  /**
+   * Link to the pilet entry script
+   */
+  link?: string;
+  /**
+   * Bundled pilet global reference
+   */
+  bundle?: string;
+  /**
+   * Checksum of the pilet (v:0)
+   */
+  hash?: string;
+  /**
+   * Pilet global reference (v:1)
+   */
+  requireRef?: string;
+  /**
+   * Checksum of the pilet (v:1)
+   */
+  integrity?: string;
+  /**
+   * Local caching rule (v:0)
+   */
+  noCache?: boolean | string;
+  /**
+   * Specification of the pilet for evaluation
+   */
+  spec?: string;
+  /**
+   * Custom metadata
+   */
   custom?: any;
+  /**
+   * Configuration metadata
+   */
+  config?: Record<string, any>;
 }
 ```
 
-to indicate the metadata of the current pilet.
+to indicate the metadata of the current pilet. Which parts are actually available must be determined by the feed service in combination with the used version of the pilet. The version of the pilet must be fully given by a so-called *spec version marker*, which is specified in the next section.
 
 The remaining parts of the Pilet API are defined by the Piral instance. While `piral-core` and the Piral plugins add quite some functionality here, these APIs are not part of the base Piral API that is framework agnostic.
 
@@ -252,10 +313,13 @@ it will automatically parse that line as a pilet spec version marker. The syntax
 
 Right now the following values for `<version-number>` exist:
 
-- `0`: Initial specification.
-- `1`: Extended specification.
+- `0`: Initial specification (marker is optional).
+- `1`: Extended specification (marker is required).
+- `x`: Custom specification (marker is required).
 
-All specifications are backwards compatible, i.e., evaluating a `v:1` pilet with a `v:0` Piral instance should work.
+All official (i.e., numbered) specifications are backwards compatible, i.e., evaluating a `v:1` pilet with a `v:0` Piral instance should work.
+
+The `v:x` specification was introduced to allow custom formats to work besides official formats. Custom formats are not constraint by any compatibility requirements.
 
 ### `v:0`
 
@@ -270,6 +334,12 @@ All specifications are backwards compatible, i.e., evaluating a `v:1` pilet with
 - Exports to `document.currentScript.app`.
 - Supports transport via `link`.
 - Requires a single argument declaring the global require reference.
+
+### `v:x`
+
+- Evaluation will be done by the application in a custom specified manner.
+- The metadata is fully determined by the custom specification.
+- Optionally uses a single argument to indicate the custom type transported via the `spec` field.
 
 ## Examples
 

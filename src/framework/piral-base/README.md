@@ -20,7 +20,59 @@ More information can be found in our [documentation at the Piral website](https:
 
 By default, the loading of pilets assumes standard metadata. In general, however, the `loadPilet` option allows to bring in other ways.
 
+### Full Loader Override
+
 One example of using `loadPilet` to extend Piral beyond its initial capabilities is to use SystemJS for loading the pilets.
+
+```js
+startLoadingPilets({
+  // ...
+  loadPilet(meta) {
+    return System.import(meta.name)
+      .catch((err) => {
+        // error
+        return {};
+      })
+      .then((moduleContent) => ({
+        ...meta,
+        ...moduleContent,
+      }))
+      .then((pilet: Pilet) => {
+        if (typeof pilet.setup !== 'function') {
+          pilet.setup = () => {};
+        }
+
+        return pilet;
+      });
+  },
+});
+```
+
+Another example is to define loader overrides using the `spec` identifier.
+
+### Spec-Specific Loader Overrides
+
+The `loaders` option can be passed in an object where the spec to override is provided as key:
+
+```js
+startLoadingPilets({
+  // ...
+  loaders: {
+    'esm': (meta) => {
+      // ...
+      return pilet;
+    },
+    'systemjs': (meta) => {
+      // ...
+      return pilet;
+    }
+  },
+});
+```
+
+The spec key is defined by the API response via the `spec` field. This is mostly used with custom specified pilet formats indicated via the `v:x` version marker. A version marker such as `//@pilet v:x(esm)` would lead to use the `esm` override given as an example above.
+
+The two options, `loadPilet` and `loaders` are not exclusive. The `loadPilet` option defines the default, while `loaders` define spec-dependent overrides.
 
 ## License
 

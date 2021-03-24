@@ -18,10 +18,16 @@ function getStyleLoaders(production: boolean, pilet: boolean) {
 export const extensions = ['.ts', '.tsx', '.js', '.json'];
 
 export function getVariables(): Record<string, string> {
-  return Object.keys(process.env).reduce((prev, curr) => {
-    prev[curr] = process.env[curr];
-    return prev;
-  }, {});
+  return Object.keys(process.env).reduce(
+    (prev, curr) => {
+      prev[curr] = process.env[curr];
+      return prev;
+    },
+    {
+      DEBUG_PIRAL: '',
+      DEBUG_PILET: '',
+    },
+  );
 }
 
 export function getHmrEntry(hmrPort: number) {

@@ -1,5 +1,5 @@
 import type {} from 'piral-core';
-import type { Profile } from 'oidc-client';
+import type { Profile, StateStore } from 'oidc-client';
 
 /**
  * Available configuration options for the OpenID Connect plugin.
@@ -67,6 +67,12 @@ export interface OidcConfig {
    * Defaults to Log.DEBUG in development NODE_ENV.
    */
   logLevel?: LogLevel;
+
+  /**
+   * The store where user information will be placed after authentication succeeds
+   * This defaults to oidc-client's WebStorageStateStore, using sessionStorage as the internal store
+   */
+  userStore?: OidcStore;
 }
 
 /**
@@ -238,3 +244,6 @@ export interface AuthenticationResult {
    */
   state?: any;
 }
+
+/** An expected interface type for oidc-client to store its user state. */
+export interface OidcStore extends StateStore {}

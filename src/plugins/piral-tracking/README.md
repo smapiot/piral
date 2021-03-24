@@ -8,6 +8,14 @@ The set includes the `track...` APIs to be used in pilets for using a set of ana
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+Quite often somebody is interested how a particular action was done. Which button was clicked? How far was the webpage scrolled? The tracker tools are among the standard reportoire to cover these questions. The problem in a distributed context is "how to reach them"? Should every microfrontend come up with their own tracking solution?
+
+Usually, the answer to this should be **no**. This plugin gives you an abstraction that can be used with almost *any* tracking solution. The abstraction allows each pilet to use a common API to track.
+
+Alternatives: Use your preferred tracking application standalone.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

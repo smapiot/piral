@@ -12,9 +12,9 @@ Many applications have been already written and do not play well with the concep
 
 In this tutorial, we'll cover some of these options and show their required effort, as well as where they excel and what they don't cover.
 
-::: tip: Using Piral Converters
+::: tip: Using Piral converters
 Piral comes with a lot of converters that may help you to use existing frontend code as pilets.
-Check out the [Converters Page](https://docs.piral.io/plugins) to see the list of supported converters.
+Check out the [converters page](https://docs.piral.io/plugins) to see the list of supported converters.
 :::
 
 ## Available Options

@@ -19,7 +19,7 @@ import {
 
 const packageJson = 'package.json';
 
-export async function createEmulatorPackage(
+export async function createEmulatorSources(
   sourceDir: string,
   targetDir: string,
   targetFile: string,
@@ -127,6 +127,10 @@ export async function createEmulatorPackage(
   // ... and remove the directory
   await Promise.all([removeDirectory(filesDir), removeDirectory(filesOnceDir)]);
 
+  return rootDir;
+}
+
+export async function packageEmulator(rootDir: string) {
   // finally package everything up
   await createPackage(rootDir);
 
@@ -140,6 +144,4 @@ export async function createEmulatorPackage(
       .map((name) => resolve(rootDir, name))
       .map((file) => removeAny(file)),
   );
-
-  return rootDir;
 }

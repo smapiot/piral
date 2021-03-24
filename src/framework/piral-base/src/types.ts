@@ -1,7 +1,7 @@
 /**
- * Metadata for pilets using the v0 schema.
+ * Basic metadata for pilets using the v0 schema.
  */
-export interface PiletMetadataV0 {
+export interface PiletMetadataV0Base {
   /**
    * The name of the pilet, i.e., the package id.
    */
@@ -11,19 +11,33 @@ export interface PiletMetadataV0 {
    */
   version: string;
   /**
-   * The content of the pilet. If the content is not available
-   * the link will be used (unless caching has been activated).
+   * Optionally provides the version of the specification for this pilet.
    */
-  content?: string;
-  /**
-   * The link for retrieving the content of the pilet.
-   */
-  link?: string;
+  spec?: 'v0';
   /**
    * The computed hash value of the pilet's content. Should be
    * accurate to allow caching.
    */
   hash: string;
+  /**
+   * Optionally provides some custom metadata for the pilet.
+   */
+  custom?: any;
+  /**
+   * Optionally provides some configuration to be used in the pilet.
+   */
+  config?: Record<string, any>;
+}
+
+/**
+ * Metadata for pilets using the v0 schema with a content.
+ */
+export interface PiletMetadataV0Content extends PiletMetadataV0Base {
+  /**
+   * The content of the pilet. If the content is not available
+   * the link will be used (unless caching has been activated).
+   */
+  content: string;
   /**
    * If available indicates that the pilet should not be cached.
    * In case of a string this is interpreted as the expiration time
@@ -31,11 +45,22 @@ export interface PiletMetadataV0 {
    * required or set.
    */
   noCache?: boolean | string;
-  /**
-   * Optionally provides some custom metadata for the pilet.
-   */
-  custom?: any;
 }
+
+/**
+ * Metadata for pilets using the v0 schema with a link.
+ */
+export interface PiletMetadataV0Link extends PiletMetadataV0Base {
+  /**
+   * The link for retrieving the content of the pilet.
+   */
+  link: string;
+}
+
+/**
+ * Metadata for pilets using the v0 schema.
+ */
+export type PiletMetadataV0 = PiletMetadataV0Content | PiletMetadataV0Link;
 
 /**
  * Metadata for pilets using the v1 schema.
@@ -49,6 +74,10 @@ export interface PiletMetadataV1 {
    * The version of the pilet. Should be semantically versioned.
    */
   version: string;
+  /**
+   * Optionally provides the version of the specification for this pilet.
+   */
+  spec?: 'v1';
   /**
    * The link for retrieving the content of the pilet.
    */
@@ -66,6 +95,33 @@ export interface PiletMetadataV1 {
    * Optionally provides some custom metadata for the pilet.
    */
   custom?: any;
+  /**
+   * Optionally provides some configuration to be used in the pilet.
+   */
+  config?: Record<string, any>;
+}
+
+export interface PiletMetadataVx {
+  /**
+   * The name of the pilet, i.e., the package id.
+   */
+  name: string;
+  /**
+   * The version of the pilet. Should be semantically versioned.
+   */
+  version: string;
+  /**
+   * Provides an identifier for the custom specification.
+   */
+  spec: string;
+  /**
+   * Optionally provides some custom metadata for the pilet.
+   */
+  custom?: any;
+  /**
+   * Optionally provides some configuration to be used in the pilet.
+   */
+  config?: Record<string, any>;
 }
 
 /**
@@ -76,6 +132,10 @@ export interface PiletMetadataBundle {
    * The name of the bundle pilet, i.e., the package id.
    */
   name?: string;
+  /**
+   * Optionally provides the version of the specification for this pilet.
+   */
+  spec?: 'v1';
   /**
    * The link for retrieving the bundle content of the pilet.
    */
@@ -98,7 +158,7 @@ export interface PiletMetadataBundle {
 /**
  * The metadata response for a single pilet.
  */
-export type SinglePiletMetadata = PiletMetadataV0 | PiletMetadataV1;
+export type SinglePiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetadataVx;
 
 /**
  * The metadata response for a multi pilet.
@@ -121,9 +181,20 @@ export interface PiletApi extends EventEmitter {
 }
 
 /**
+ * Gets fired when a pilet gets unloaded.
+ */
+export interface PiralUnloadPiletEvent {
+  /**
+   * The name of the pilet to be unloaded.
+   */
+  name: string;
+}
+
+/**
  * The map of known Piral app shell events.
  */
 export interface PiralEventMap {
+  'unload-pilet': PiralUnloadPiletEvent;
   [custom: string]: any;
 }
 
@@ -311,6 +382,11 @@ export interface PiletLoader {
 }
 
 /**
+ * Defines the spec identifiers for custom loading.
+ */
+export type CustomSpecLoaders = Record<string, PiletLoader>;
+
+/**
  * The options for loading pilets.
  */
 export interface LoadPiletsOptions {
@@ -333,9 +409,13 @@ export interface LoadPiletsOptions {
    */
   config?: DefaultLoaderConfig;
   /**
-   * Optionally, defines how to load a pilet.
+   * Optionally, defines the default way how to load a pilet.
    */
   loadPilet?: PiletLoader;
+  /**
+   * Optionally, defines loaders for custom specifications.
+   */
+  loaders?: CustomSpecLoaders;
   /**
    * The callback for defining how a dependency will be fetched.
    */

@@ -91,6 +91,7 @@ export interface PiralRuleContext extends RuleContext {
 
 export interface PiletRuleContext extends RuleContext {
   data: PiralData;
+  peerModules: Array<string>;
 }
 
 export interface PiralData {

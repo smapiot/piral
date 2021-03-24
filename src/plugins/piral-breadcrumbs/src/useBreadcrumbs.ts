@@ -1,12 +1,12 @@
 import { useGlobalState } from 'piral-core';
 import { BreadcrumbRegistration } from './types';
 
-function getExact(breadcrumbs: Array<BreadcrumbRegistration>, path: string) {
+function getExact(breadcrumbs: Array<BreadcrumbRegistration>, path: string): BreadcrumbRegistration {
   const [bc] = breadcrumbs.filter((m) => m.matcher.test(path));
   return bc;
 }
 
-function getClosest(breadcrumbs: Array<BreadcrumbRegistration>, path: string) {
+function getClosest(breadcrumbs: Array<BreadcrumbRegistration>, path: string): BreadcrumbRegistration {
   const segments = path.split('/');
 
   while (segments.length > 1) {

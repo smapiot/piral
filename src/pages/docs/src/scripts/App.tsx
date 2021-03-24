@@ -3,8 +3,18 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { routes } from './sitemap';
 import { Layout } from './layout';
 
+function getBasename() {
+  const [, version] = location.pathname.split('/');
+
+  if (version && /^\d+\.\d+\.\d+$/.test(version)) {
+    return `/${version}`;
+  }
+
+  return undefined;
+}
+
 export const App = () => (
-  <BrowserRouter>
+  <BrowserRouter basename={getBasename()}>
     <Layout>
       <Switch>
         {routes}

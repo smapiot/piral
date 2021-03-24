@@ -32,12 +32,8 @@ export function detectNpm(root: string) {
   });
 }
 
-export function detectYarn(root: string) {
-  return new Promise((res) => {
-    access(resolve(root, 'yarn.lock'), constants.F_OK, (noYarnLock) => {
-      res(!noYarnLock);
-    });
-  });
+export async function detectYarn(root: string) {
+  return !!(await findFile(root, 'yarn.lock'));
 }
 
 export async function getLernaConfigPath(root: string) {

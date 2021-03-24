@@ -32,13 +32,13 @@ export const PluginMeta: React.FC<PluginMetaProps> = ({
       <p>{author}</p>
       <h4>Homepage</h4>
       <p>
-        <a href={homepage} target="_blank">
+        <a href={homepage} target="_blank" rel="noopener">
           {homepage}
         </a>
       </p>
       <h4>License</h4>
       <p>
-        <a href={`https://opensource.org/licenses/${license}`} target="_blank">
+        <a href={`https://opensource.org/licenses/${license}`} target="_blank" rel="noopener">
           {license}
         </a>
       </p>

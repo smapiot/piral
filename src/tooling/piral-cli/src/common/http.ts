@@ -8,13 +8,19 @@ import { axios, FormData } from '../external';
 
 const os = platform();
 
-function getMessage(body: string) {
-  if (body) {
+function getMessage(body: string | { message?: string }) {
+  if (typeof body === 'string') {
     try {
       const content = JSON.parse(body);
       return content.message;
     } catch (ex) {
       return body;
+    }
+  } else if (body && typeof body === 'object') {
+    if ('message' in body) {
+      return body.message;
+    } else {
+      return JSON.stringify(body);
     }
   }
 
@@ -52,17 +58,23 @@ export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>
     });
 }
 
+export interface PostFileResult {
+  status: number;
+  success: boolean;
+  response?: object;
+}
+
 export function postFile(
   target: string,
   key: string,
   file: Buffer,
   fields: Record<string, string> = {},
   ca?: Buffer,
-): Promise<object | boolean> {
+): Promise<PostFileResult> {
   const form = new FormData();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
 
-  Object.keys(fields).forEach(key => form.append(key, fields[key]));
+  Object.keys(fields).forEach((key) => form.append(key, fields[key]));
 
   form.append('file', file, 'pilet.tgz');
 
@@ -77,14 +89,23 @@ export function postFile(
       maxContentLength: Infinity,
     })
     .then(
-      (res) => res.data || true,
+      (res) => ({
+        status: res.status,
+        success: true,
+        response: res.data,
+      }),
       (error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           const { data, statusText, status } = error.response;
-          const message = getMessage(data);
-          log('unsuccessfulHttpPost_0066', statusText, status, message || '');
+          const message = getMessage(data) || '';
+          log('unsuccessfulHttpPost_0066', statusText, status, message);
+          return {
+            status,
+            success: false,
+            response: message,
+          };
         } else if (error.isAxiosError) {
           // axios initiated error: try to parse message from error object
           let errorMessage: string = error.errno || 'Unknown Axios Error';
@@ -95,6 +116,11 @@ export function postFile(
           }
 
           log('failedHttpPost_0065', errorMessage);
+          return {
+            status: 500,
+            success: false,
+            response: errorMessage,
+          };
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -105,7 +131,11 @@ export function postFile(
           log('failedHttpPost_0065', error.message);
         }
 
-        return false;
+        return {
+          status: 500,
+          success: false,
+          response: undefined,
+        };
       },
     );
 }

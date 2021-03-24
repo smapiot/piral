@@ -11,7 +11,7 @@ function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.Writ
 
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runNpmProcess(['install', ...flags], target, ms);
+  await runNpmProcess(['install', '--legacy-peer-deps', ...flags], target, ms);
   log('generalDebug_0003', `NPM install dependencies result: ${ms.value}`);
   return ms.value;
 }
@@ -25,7 +25,7 @@ export async function unpackPackage(packageRef: string, target = '.', ...flags: 
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runNpmProcess(['install', packageRef, ...flags], target, ms);
+  await runNpmProcess(['install', packageRef, '--legacy-peer-deps', ...flags], target, ms);
   log('generalDebug_0003', `NPM install package result: ${ms.value}`);
   return ms.value;
 }
@@ -46,7 +46,7 @@ export async function publishPackage(target = '.', file = '*.tgz', ...flags: Arr
 
 export async function findSpecificVersion(packageName: string, version: string) {
   const ms = new MemoryStream();
-  await runNpmProcess(['show', packageName, 'version', `--tag ${version}`], '.', ms);
+  await runNpmProcess(['show', packageName, 'version', '--tag', version], '.', ms);
   log('generalDebug_0003', `NPM show result: ${ms.value}`);
   return ms.value;
 }
@@ -62,7 +62,7 @@ export async function listPackage(packageRef: string, target = '.', ...flags: Ar
   const ms = new MemoryStream();
 
   try {
-    await runNpmProcess(['ls', packageRef, '--json', '--depth 0', ...flags], target, ms);
+    await runNpmProcess(['ls', packageRef, '--json', '--depth', '0', ...flags], target, ms);
   } catch (e) {
     log('generalDebug_0003', `NPM ls packageRef error: ${e}`);
   }

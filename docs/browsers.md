@@ -17,7 +17,7 @@ The following browsers are supported by `piral`.
 
 All browsers not listed here are not tested and should be considered incompatible except browsers that are based on the Chromium (or Blink) engine.
 
-::: tip: Pilet Schema
+::: tip: Pilet schema
 The pilet schema v1 is the default. Nothing needs to be done for compatibility here.
 
 If you are built your pilet using an earlier (pre 0.10) version of Piral then v0 was used. A rebuild may be necessary.
@@ -36,7 +36,7 @@ Framework polyfills:
 - fetch API
 - `document.currentScript`
 
-::: tip: Included Polyfills
+::: tip: Included polyfills
 The `piral` package also includes a set of pre-bundled polyfills. You can just import `piral/polyfills` to get all polyfills usually necessary to run your application.
 
 The set of offered polyfills also included `core-js/stable` (standard JS API polyfills) and `regenerator-runtime/runtime` (`async` / `await` state machinery).

@@ -21,6 +21,10 @@ export interface ToolCommandFlagsSetter<T = {}> {
   (argv: Argv<T>): Argv<T>;
 }
 
+export interface SelectCommands {
+  (commands: ListCommands): Array<ToolCommand<any>>;
+}
+
 export interface ToolCommand<T = any, U = any> {
   name: string;
   description: string;
@@ -160,7 +164,7 @@ export type PiletSchemaVersion = 'none' | 'v0' | 'v1';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
-export type PiralBuildType = 'all' | 'release' | 'emulator';
+export type PiralBuildType = 'all' | 'release' | 'emulator' | 'emulator-sources';
 
 export type PackageType = 'registry' | 'file' | 'git';
 

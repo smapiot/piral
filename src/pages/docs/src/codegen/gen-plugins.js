@@ -42,7 +42,7 @@ module.exports = function () {
         '`',
         '<h2 id="installation">Installation</h2>',
         '<p>Add the plugin to your Piral instance by running:</p>',
-        `<pre><code>npm i ${name}</code></pre>`,
+        `<pre><code>npm i ${plugin.name}</code></pre>`,
         peerDependencies,
         '<h2 id="description">Description</h2>',
         mdValue.substr(mdValue.indexOf('</h1>') + 5),

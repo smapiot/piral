@@ -65,6 +65,13 @@ Already performs the installation of its NPM dependencies.
 - Type: `boolean`
 - Default: `false`
 
+### `--registry`
+
+Sets the package registry to use for resolving the dependencies.
+
+- Type: `string`
+- Default: `"https://registry.npmjs.org/"`
+
 ### `--log-level`
 
 Sets the log level to use (1-5).
@@ -97,10 +104,9 @@ Determines the programming language for the new Piral instance.
 
 ### `--template`
 
-Sets the boilerplate template to be used when scaffolding.
+Sets the boilerplate template package to be used when scaffolding.
 
 - Type: `string`
-- Choices: `"default"`, `"empty"`
 - Default: `"default"`
 
 ### `--npm-client`
@@ -116,8 +122,15 @@ Sets the NPM client to be used when scaffolding.
 Sets the default bundler to install.
 
 - Type: `string`
-- Choices: `"none"`, `"parcel"`, `"webpack"`
+- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`
 - Default: `"none"`
+
+### `--vars`
+
+Sets additional variables to be used when scaffolding.
+
+- Type: `options`
+- Default: `{}`
 
 ### `--base`
 

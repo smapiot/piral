@@ -8,6 +8,14 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 > In general we will never break your Pilet API. Therefore, all of these changes below refer to the use of the Piral CLI for non-essential tasks or your Piral instance.
 
+## 0.12 to 0.13
+
+### Breaking Changes in 0.13
+
+1. The `withApi` API of the `piral-core` package changed its first argument. Instead of the `context.converters` it now expects the full `context`. This may break some plugins that used that internally.
+2. The `piral` package now comes with React 17 as a dependency. This is (in almost all practical cases) backwards compatible so it should not represent an issue. If you really want to stay on React 16 then use the `piral-core` and `piral-ext` packages instead of the full `piral` package. `piral-core` still has a peer dependency to React - allowing versions 16 or 17.
+3. For full compatibility with NPM v7 the `peerDependencies` in pilets will only contain valid package names. Therefore, submodule externals (e.g. `foo/bar`) will be placed in a new section called `peerModules`, which is not evaluated by NPM but picked up by the Piral CLI.
+
 ## 0.11 to 0.12
 
 ### Breaking Changes in 0.12

@@ -6,6 +6,12 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-re
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+Piral comes with an integrated state management. There is no need to use this for your own purposes, but you could use it. If you don't want to use it the chance that you actually want to use the popular `redux` library is quite high. Now, every pilet could come up with its own state management system, however, sharing this kind of library makes sense. Potentially what makes even more sense is having a single store, where all pilets would get a fraction of it. As such states could even be shared and the complexity of knowing what's happening in the application is reduced to monitoring a single store.
+
+Alternatives: Use the integrated state management. Just expose `redux` and `react-redux` as shared dependencies.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

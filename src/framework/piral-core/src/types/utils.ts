@@ -60,19 +60,8 @@ export interface PiralStoreDataEvent<TValue = any> {
   expires: number;
 }
 
-/**
- * Gets fired when a pilet gets unloaded.
- */
-export interface PiralUnloadPiletEvent {
-  /**
-   * The name of the pilet to be unloaded.
-   */
-  name: string;
-}
-
 declare module 'piral-base/lib/types' {
   interface PiralEventMap extends PiralCustomEventMap {
     'store-data': PiralStoreDataEvent;
-    'unload-pilet': PiralUnloadPiletEvent;
   }
 }

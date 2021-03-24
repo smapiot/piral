@@ -21,6 +21,10 @@ function createMockContainer() {
       on: jest.fn(),
       off: jest.fn(),
       emit: jest.fn(),
+      converters: {},
+      readState() {
+        return undefined;
+      },
     } as any,
     api: {} as any,
   };

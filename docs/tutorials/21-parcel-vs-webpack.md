@@ -15,7 +15,7 @@ Piral wants to give you as much freedom as possible. Therefore, the `piral-cli` 
 
 But quite often we get asked "which one to choose". If you don't make any choice then Piral will choose for you. Right now **Webpack** is picked as the default bundler.
 
-::: tip: Changing the Default Bundler
+::: tip: Changing the default bundler
 
 Using a `.piralrc` file in your home directory you can set what default should be used. If you prefer to use **Parcel** as your default bundler then simply provide the following content:
 
@@ -44,7 +44,7 @@ Example for a *package.json* (fragment):
 
 In the case above **Webpack** is chosen as the default bundler.
 
-::: warning: Multiple Bundlers
+::: warning: Multiple bundlers
 
 In theory the Piral CLI supports multiple installed bundlers. However, in practice the handling if neither advised nor recommended. Make sure to install only a single Piral CLI plugin providing a bundler integration.
 
@@ -86,6 +86,18 @@ Due to the anticipated configuration need we think that
 
 This fits very well in migration scenarios or when particular build / bundle steps need to be followed. It also simplifies use / migration of frameworks using Stencil or Next.js.
 
+## Benchmark
+
+Taking our standard Piral instance template we can build it once with every bundler.
+
+| Bundler      | Time Emulator Build | Time Release Build | Size Emulator | Size Release |
+| ------------ | ------------------- | ------------------ | ------------- | ------------ |
+| Parcel       | 15.1 s              | 9.7 s              | 2.02 MB       | 553 KB       |
+| Webpack (v4) | 8.3 s               | 5.8 s              | 2.16 MB       | 215 KB       |
+| Webpack (v5) | 9.2 s               | 9.5 s              | 1.37 MB       | 211 KB       |
+
+The times have been taken on a MacBook Pro (2019) with 16 GB RAM and a Core i7 2.2 GHz processor. As you can see the performance is almost identical, but the release size may differ by quite a bit. If this is the most interesting number for you then Webpack may be the better choice for your Piral instance.
+
 ## Pilet vs Piral Instance
 
 There is no need to use the same bundler for a Piral instance and its pilets. Each development team can decide on their own which bundler to use.
@@ -124,3 +136,5 @@ module.exports = function (config) {
 ## Conclusion
 
 Choosing the right bundler is less about technical possibilities and more about convenience and efficiency. Piral has the two arguably most popular bundlers available out of the box.
+
+In the next tutorial, we'll look at using more low-level packages from Piral, namely `piral-core` and `piral-base`.

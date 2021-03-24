@@ -108,8 +108,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
-  const { peerDependencies, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
-  const externals = Object.keys(peerDependencies);
+  const { peerDependencies, peerModules, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
+  const externals = [...Object.keys(peerDependencies), ...peerModules];
   const outDir = dirname(resolve(baseDir, target));
 
   if (fresh) {

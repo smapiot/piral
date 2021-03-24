@@ -33,7 +33,7 @@ function printAlias(aliases) {
     return 'No aliases available.';
   }
 
-  return aliases.map(alias => `- \`${alias}\``).join(nl);
+  return aliases.map((alias) => `- \`${alias}\``).join(nl);
 }
 
 function printValue(value) {
@@ -47,7 +47,7 @@ function printValue(value) {
 function readValidatorOptions(content) {
   const head = 'export type Options = ';
   const lines = content.split('\n');
-  const [line] = lines.filter(m => m.startsWith(head));
+  const [line] = lines.filter((m) => m.startsWith(head));
   const value = line.substr(head.length);
   const options = value.substr(0, value.indexOf(';'));
 
@@ -69,13 +69,13 @@ function readValidatorDescription(content) {
           index: j,
           found: j < i && m.startsWith('/**'),
         }))
-        .filter(m => m.found)
-        .map(m => m.index)
+        .filter((m) => m.found)
+        .map((m) => m.index)
         .reverse();
       const end = i - 1;
       return lines
         .filter((_, j) => j > start && j < end)
-        .map(m => m.substr(2))
+        .map((m) => m.substr(2))
         .join('')
         .trim();
     }
@@ -88,8 +88,11 @@ function readValidators() {
   const baseDir = resolve(__dirname, validationFolder);
 
   return readdirSync(baseDir)
-    .filter(file => file.endsWith('.ts') && (file.startsWith('pilet-') || file.startsWith('piral-')))
-    .map(file => {
+    .filter(
+      (file) =>
+        file.endsWith('.ts') && !file.endsWith('.test.ts') && (file.startsWith('pilet-') || file.startsWith('piral-')),
+    )
+    .map((file) => {
       const path = resolve(baseDir, file);
       const content = readFileSync(path, 'utf8');
       return {
@@ -119,7 +122,7 @@ function getCommandData(retrieve) {
       return this;
     },
     swap(name, swapper) {
-      const [flag] = data.flags.filter(m => m.name === name);
+      const [flag] = data.flags.filter((m) => m.name === name);
       const newFlag = swapper(flag || { name });
 
       if (!flag) {
@@ -131,50 +134,50 @@ function getCommandData(retrieve) {
       return this;
     },
     choices(name, choices) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'string',
         values: choices.map(printValue),
       }));
     },
     option(name) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'options',
       }));
     },
     string(name) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'string',
       }));
     },
     boolean(name) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'boolean',
       }));
     },
     describe(name, value) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         describe: value,
       }));
     },
     default(name, value) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         default: printValue(value),
       }));
     },
     number(name) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         type: 'number',
       }));
     },
     demandOption(name) {
-      return this.swap(name, flag => ({
+      return this.swap(name, (flag) => ({
         ...flag,
         required: true,
       }));
@@ -195,7 +198,7 @@ function details(args) {
 
   return args
     .map(
-      arg => `### \`${arg.name}\`
+      (arg) => `### \`${arg.name}\`
 
 ${arg.describe || 'No description available.'}
 
@@ -260,12 +263,12 @@ ${details(positionals)}
 
 ## Flags
 
-${details(flags.map(flag => ({ ...flag, name: `--${flag.name}` })))}
+${details(flags.map((flag) => ({ ...flag, name: `--${flag.name}` })))}
 `;
 
   if (['validate-piral', 'validate-pilet'].includes(command.name)) {
     const [target] = command.name.split('-').reverse();
-    const currentValidators = validators.filter(m => m.target === target);
+    const currentValidators = validators.filter((m) => m.target === target);
     return `${content}
 ## Validators
 

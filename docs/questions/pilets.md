@@ -136,3 +136,21 @@ You can run any code, so you could have an instance in an instance - yes. But us
 What we see more often is that extensions are then used to include component (trees) from an *arbitrary number of pilets* in one (or more) pilets.
 
 ---------------------------------------
+
+## Can pilets have their own routing?
+
+Yes, definitely. In this pattern you'd register the pages with a prefix, e.g., `/my-prefix/*` and then handle all the routing within that prefix yourself.
+
+---------------------------------------
+
+## Can a pilet contain its own application?
+
+A pilet is essentially its own application - just that you can expose more than just one root component. Here, the idea would follow up on the routing question asked beforehand. You just define a prefix, register the page with it, and handle everything within that page as if it would be an independent SPA.
+
+---------------------------------------
+
+## Can pilets work standalone?
+
+No, pilets require an app shell (Piral instance) to work. A pilet is just a library - so it does not offer anything to just run. You can, however, create lightweight app shells to host pilets. This way pilets run standalone.
+
+---------------------------------------

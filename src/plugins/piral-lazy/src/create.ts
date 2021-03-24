@@ -13,6 +13,7 @@ export function createLazyApi(): PiralPlugin<PiletLazyApi> {
   return (context) => {
     return (api) => {
       const cache: DependencyCache = {};
+
       const getDependency = (name: string) => {
         const dep = cache[name];
 
@@ -25,7 +26,7 @@ export function createLazyApi(): PiralPlugin<PiletLazyApi> {
         return dep.result ?? (dep.result = dep.loader());
       };
       const wrapComponent = <T>(comp: HtmlComponent<T>) => ({
-        default: withApi(context.converters, comp, api, 'unknown'),
+        default: withApi(context, comp, api, 'unknown'),
       });
 
       return {

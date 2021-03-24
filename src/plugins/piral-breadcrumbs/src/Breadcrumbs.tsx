@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useLocation, useRouteMatch } from 'react-router';
 import { PiralBreadcrumbsContainer, PiralBreadcrumbItem } from './components';
 import { useBreadcrumbs } from './useBreadcrumbs';
 
 export const Breadcrumbs: React.FC = () => {
   const location = useLocation();
-  const params = useParams();
   const breadcrumbs = useBreadcrumbs(location.pathname);
   const currentIndex = breadcrumbs.length - 1;
+  const current = breadcrumbs[currentIndex];
+  const { params } = useRouteMatch(current?.settings.path ?? '/');
 
   const children = breadcrumbs.map(({ settings }, i) => {
     const { title, path, ...props } = settings;

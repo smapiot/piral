@@ -88,12 +88,12 @@ Used environment variables:
 
 Some special fields of the `package.json` are used to switch on some building features.
 
-| Key                   | Purpose                             | Example            |
-|:----------------------|:------------------------------------|:-------------------|
-| `app`                 | Path to the root page to use.       | `"src/index.html"` |
-| `peerDependencies`    | Indicates skipped dependencies.     | `{ "react": "*" }` |
-| `externals`           | Names of additional externals.      | `[ "reactstrap" ]` |
-| `piral`.`name`        | Name of the Piral instance.         | `"sample-piral"`   |
+| Key                   | Purpose                             | Example                  |
+|:----------------------|:------------------------------------|:-------------------------|
+| `app`                 | Path to the root page to use.       | `"src/index.html"`       |
+| `peerDependencies`    | Indicates skipped dependencies.     | `{ "react": "*" }`       |
+| `peerModules`         | Names of additional shared modules. | `[ "react-dom/server" ]` |
+| `piral`.`name`        | Name of the Piral instance.         | `"sample-piral"`         |
 
 ### Schema Versions
 

@@ -3,7 +3,7 @@ import { Framework, NpmClientType, PiletSchemaVersion, PiletPublishSource, Piral
 
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'none'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
-export const buildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator'];
+export const buildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator', 'emulator-sources'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
 export const bundlerKeys: Array<string> = ['none', 'parcel', 'webpack', 'webpack5'];
 export const availableBundlers: Array<string> = [];

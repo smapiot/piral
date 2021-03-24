@@ -9,6 +9,8 @@ import type {
   PiletDependencyFetcher,
   DefaultLoaderConfig,
   PiletApp,
+  PiletLoader,
+  CustomSpecLoaders,
 } from './types';
 
 const inBrowser = typeof document !== 'undefined';
@@ -25,6 +27,24 @@ function loadFrom(
     ...app,
     ...meta,
   }));
+}
+
+export function extendLoader(fallback: PiletLoader, specLoaders: CustomSpecLoaders | undefined): PiletLoader {
+  if (typeof specLoaders === 'object' && specLoaders) {
+    return (meta) => {
+      if (typeof meta.spec === 'string') {
+        const loaderOverride = specLoaders[meta.spec];
+
+        if (typeof loaderOverride === 'function') {
+          return loaderOverride(meta);
+        }
+      }
+
+      return fallback(meta);
+    };
+  }
+
+  return fallback;
 }
 
 export function createDefaultLoader(
@@ -49,16 +69,19 @@ export function getDefaultLoader(
       return loadFrom(meta, getDependencies, (deps) => includeBundle(meta, deps, config.crossOrigin));
     }
 
-    const { name, link } = meta;
+    const name = meta.name;
 
-    if (link) {
+    if ('link' in meta && meta.link) {
+      const link = meta.link;
+
       return fetchDependency(link).then((content) =>
         loadFrom(meta, getDependencies, (deps) => compileDependency(name, content, link, deps)),
       );
     } else if ('content' in meta && meta.content) {
-      return loadFrom(meta, getDependencies, (deps) => compileDependency(name, meta.content, link, deps));
+      const content = meta.content;
+      return loadFrom(meta, getDependencies, (deps) => compileDependency(name, content, undefined, deps));
     } else {
-      console.warn('Empty pilet found!', name, link);
+      console.warn('Empty pilet found!', name);
     }
 
     return Promise.resolve(createEmptyModule(meta));

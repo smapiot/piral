@@ -63,14 +63,14 @@ piral new --target my-app
 
 As a result, we will find in the folder `./my-app` the files for the newly created application shell.
 
-::: tip: Use NPM Initializers
+::: tip: Use NPM initializers
 In case you don't want to install the Piral CLI globally, you can also leverage the NPM initializer for this command.
 
 ```sh
-npm init piral-instance --target my-app -y
+npm init piral-instance --target my-app --defaults
 ```
 
-The NPM initializer comes with a quick survey going over the options. Specifying `-y` will take the default values.
+The NPM initializer comes with a quick survey going over the options. Specifying `--defaults` will take the default values.
 :::
 
 ### Run the Application Shell
@@ -99,7 +99,7 @@ piral build
 
 This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `emulator` and `release`. The latter contains the files for publishing the app shell to some host later on. The former contains a *emulator package*.
 
-::: tip: Only Build the Emulator
+::: tip: Only build the emulator
 The previously used command builds both, `release` and `emulator`. If you only want, e.g., the emulator package you can use the `--type` flag:
 
 ```sh
@@ -134,14 +134,14 @@ With the `pilet new` command, a new pilet with pre-defined content is created. T
 
 If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 
-::: tip: Use NPM Initializers
+::: tip: Use NPM initializers
 You can also leverage the NPM initializers for creating new pilets.
 
 ```sh
-npm init pilet --target my-pilet --source ./my-app/dist/develop/my-app-1.0.0.tgz -y
+npm init pilet --target my-pilet --source ./my-app/dist/emulator/my-app-1.0.0.tgz --defaults
 ```
 
-Also here, if you drop the `-y` option additional settings will be presented to you in form of a quick survey.
+Also here, if you drop the `--defaults` option additional settings will be presented to you in form of a quick survey.
 :::
 
 ### Pilet Setup Function

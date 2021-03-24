@@ -1,5 +1,12 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { initialize, activate, deactivate, attachEvents } from './internal';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import {
+  initialize,
+  activate,
+  deactivate,
+  attachEvents,
+  addGlobalEventListeners,
+  removeGlobalEventListeners,
+} from './interop';
 
 export function createConverter(lazy = true) {
   const bootConfig = require('../infra.codegen');
@@ -26,6 +33,8 @@ export function createConverter(lazy = true) {
         const props = { ...args, ...data };
         el.setAttribute('data-blazor-pilet-root', 'true');
 
+        addGlobalEventListeners(el);
+
         (loader || (loader = boot()))
           .then(dependency)
           .then(() => activate(moduleName, props))
@@ -49,6 +58,7 @@ export function createConverter(lazy = true) {
         state = 'fresh';
       },
       unmount(el) {
+        removeGlobalEventListeners(el);
         el.removeAttribute('data-blazor-pilet-root');
         dispose();
 

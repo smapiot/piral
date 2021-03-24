@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Banner, Capabilities, Features, GitHubCat, Technologies, Testimonials } from './components';
+import { Banner, Capabilities, Features, GitHubCat, Technologies, Testimonials, Companies } from './components';
 import { Footer } from '../../../common/components/Footer';
 
 export const App: React.FC = () => (
@@ -9,8 +9,8 @@ export const App: React.FC = () => (
     <Capabilities />
     <Features />
     <Testimonials />
+    <Companies />
     <Technologies />
-    {/*<Companies />*/}
     <Footer />
   </>
 );

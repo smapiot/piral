@@ -136,7 +136,7 @@ describe('Build Piral Command', () => {
   });
 
   it(
-    'can create an emulator build without files',
+    'can create an emulator build without files in default subdir',
     async () => {
       const dir = scaffoldNewPiralInstance();
       let error = false;
@@ -151,13 +151,63 @@ describe('Build Piral Command', () => {
 
       expect(error).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
     },
     twoMinutes,
   );
 
   it(
-    'can create a release build',
+    'can create an emulator build without files in explicit subdir',
+    async () => {
+      const dir = scaffoldNewPiralInstance();
+      let error = false;
+
+      try {
+        await buildPiral(dir, {
+          type: 'emulator',
+          subdir: true,
+        });
+      } catch {
+        error = true;
+      }
+
+      expect(error).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+    },
+    twoMinutes,
+  );
+
+  it(
+    'can create an emulator build without files in no subdir',
+    async () => {
+      const dir = scaffoldNewPiralInstance();
+      let error = false;
+
+      try {
+        await buildPiral(dir, {
+          type: 'emulator',
+          subdir: false,
+        });
+      } catch {
+        error = true;
+      }
+
+      expect(error).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+      expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+    },
+    twoMinutes,
+  );
+
+  it(
+    'can create a release build in implicit subdir',
     async () => {
       const dir = scaffoldNewPiralInstance();
       let error = false;
@@ -172,7 +222,57 @@ describe('Build Piral Command', () => {
 
       expect(error).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
+      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+    },
+    twoMinutes,
+  );
+
+  it(
+    'can create a release build in explicit subdir',
+    async () => {
+      const dir = scaffoldNewPiralInstance();
+      let error = false;
+
+      try {
+        await buildPiral(dir, {
+          type: 'release',
+          subdir: true,
+        });
+      } catch {
+        error = true;
+      }
+
+      expect(error).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
+      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+    },
+    twoMinutes,
+  );
+
+  it(
+    'can create a release build in no subdir',
+    async () => {
+      const dir = scaffoldNewPiralInstance();
+      let error = false;
+
+      try {
+        await buildPiral(dir, {
+          type: 'release',
+          subdir: false,
+        });
+      } catch {
+        error = true;
+      }
+
+      expect(error).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeFalsy();
+      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeTruthy();
     },
     twoMinutes,
   );

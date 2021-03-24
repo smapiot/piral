@@ -1,16 +1,7 @@
 import { resolve } from 'path';
 import { publishArtifacts } from '../release';
 import { LogLevels, PiralBuildType } from '../types';
-import {
-  setLogLevel,
-  progress,
-  checkExists,
-  fail,
-  logDone,
-  logReset,
-  publishPackage,
-  matchFiles,
-} from '../common';
+import { setLogLevel, progress, checkExists, fail, logDone, logReset, publishPackage, matchFiles } from '../common';
 
 export interface PublishPiralOptions {
   /**
@@ -70,7 +61,12 @@ async function publishEmulator(baseDir: string, source: string, args: Record<str
   await publishPackage(directory, file, flags);
 }
 
-async function publishRelease(baseDir: string, source: string, providerName: string, args: Record<string, string> = {}) {
+async function publishRelease(
+  baseDir: string,
+  source: string,
+  providerName: string,
+  args: Record<string, string> = {},
+) {
   const type = 'release';
   const directory = resolve(baseDir, source, type);
   const exists = await checkExists(directory);
@@ -92,6 +88,11 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     provider = publishPiralDefaults.provider,
   } = options;
   setLogLevel(logLevel);
+
+  if (type === 'emulator-sources') {
+    fail('publishEmulatorSourcesInvalid_0114');
+  }
+  
   progress('Reading configuration ...');
 
   if (type !== 'release') {

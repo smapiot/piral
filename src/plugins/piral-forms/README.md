@@ -6,6 +6,19 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-fo
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
+## Why and When
+
+Quite often the management of forms is rather cumbersome. A form consists of multiple states, such as
+
+1. initial data loading (may be static / empty),
+2. handling of input (valid / invalid),
+3. submission of forms (in flight processing)
+4. (potentially async) handling of rejected forms (frontend was OK but backend complains)
+
+Full libraries such as [Formik](https://formik.org/) can be used to tackle (at least parts of) this problem, too, but `piral-forms` represents a very lightweight approach just leveraging what's there already and exposing it via the pilet API.
+
+Alternatives: Use known libraries exposed as shared libraries or rely on pilets to come up with their own solutions.
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

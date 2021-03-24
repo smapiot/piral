@@ -1,5 +1,13 @@
 import { ComponentType } from 'react';
-import { Dict, WrappedComponent, BaseComponentProps, BaseRegistration, Disposable, AnyComponent, RegistrationDisposer } from 'piral-core';
+import {
+  Dict,
+  WrappedComponent,
+  BaseComponentProps,
+  BaseRegistration,
+  Disposable,
+  AnyComponent,
+  RegistrationDisposer,
+} from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletModalsApi {}

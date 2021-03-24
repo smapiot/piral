@@ -127,7 +127,7 @@ export function runQuestionnaireFor(
   args: Record<string, any>,
   ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
 ) {
-  const acceptAll = args.y === true;
+  const acceptAll = args.y === true || args.defaults === true;
   const instructions = getCommandData(command.flags);
   const ignored = Array.isArray(ignoredInstructions) ? ignoredInstructions : Object.keys(ignoredInstructions);
   const questions = instructions

@@ -39,15 +39,16 @@
     "docgen": "yarn docgen:cli && yarn docgen:codes && yarn docgen:types",
     "ci:version": "node tools/changelog-version.js",
     "ci:version-update": "yarn ci:version --update && git add CHANGELOG.md && git commit -m UpdateReleaseDate",
-    "ci:docs": "yarn docgen && yarn build:docs && git checkout -- .",
+    "ci:copy-docs": "cp -r ./dist/docs/release ./dist/docs/tmp && mv ./dist/docs/tmp ./dist/docs/release/$(yarn --silent ci:version)",
+    "ci:docs": "yarn docgen && yarn build:docs && yarn ci:copy-docs && git checkout -- .",
     "ci:prerelease": "lerna publish $(yarn --silent ci:version)-pre.$BUILD_BUILDID --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
-    "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish"
+    "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --message '[skip ci] publish %s'"
   },
   "devDependencies": {
     "@types/enzyme": "^3.1.18",
     "@types/jest": "^25.0.0",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.9.1",
+    "enzyme": "^3.11.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
     "jest": "^25.0.0",
     "jest-cli": "^25.0.0",
     "lerna": "^3.10.7",
@@ -60,7 +61,10 @@
     "typescript": "^4.0.2"
   },
   "resolutions": {
+    "highlight.js": "10.4.1",
+    "is-svg": "4.2.2",
     "node-fetch": "2.6.1",
-    "node-forge": "0.10.0"
+    "node-forge": "0.10.0",
+    "ssri": "8.0.1"
   }
 }

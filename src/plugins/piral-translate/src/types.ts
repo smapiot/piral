@@ -24,6 +24,10 @@ declare module 'piral-core/lib/types/custom' {
     };
   }
 
+  interface PiralCustomEventMap {
+    'select-language': PiralSelectLanguageEvent;
+  }
+
   interface PiralCustomActions {
     /**
      * Changes the selected language.
@@ -57,6 +61,17 @@ declare module 'piral-core/lib/types/custom' {
      */
     LanguagesPicker: ComponentType<LanguagesPickerProps>;
   }
+}
+
+export interface PiralSelectLanguageEvent {
+  /**
+   * Gets the previously selected language.
+   */
+  previousLanguage: string;
+  /**
+   * Gets the currently selected language.
+   */
+  currentLanguage: string;
 }
 
 export interface LanguagesPickerProps {

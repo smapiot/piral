@@ -28,7 +28,7 @@ We also have a video tutorial:
 
 In this spirit, we provide a free[^1] community edition of the service that you can use for providing the **feed service**, as well as a way to publish your pilets. This leaves you at the task of creating a Piral instance.
 
-**Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification, we also have published a Node.js sample implementation at GitHub (https://github.com/smapiot/sample-pilet-service). The sample implementation can also be installed or run locally very easily.
+**Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification, we also have published a Node.js sample implementation at GitHub ([https://github.com/smapiot/sample-pilet-service](https://github.com/smapiot/sample-pilet-service)). The sample implementation can also be installed or run locally very easily.
 
 The service can be found at [piral.cloud](https://www.piral.cloud). Registration is possible by using a Microsoft Account to log into the service. We do not need any personal data besides the email/account id, which is provided after your approval.
 
@@ -95,7 +95,7 @@ Upon pressing the `Generate` button, a new API key will be created.
 
 Once the generation has completed, the generated key itself will be shown for the first - and last - time. Make sure to copy it to a secure location. If you lose the key, you should revoke it, such that also no one else will be able to use it.
 
-::: warning: Keep your API Key Secure
+::: warning: Keep your API key secure
 The generated API key(s) should be treated as sensitive information. Anyone who is able to publish pilets potentially pushes code on your website, which is evaluated in the browsers of your users!
 
 By default, the API keys expire after 1 year. We encourage you to periodically roll the keys to minimize the risk of leaked keys.
@@ -125,7 +125,13 @@ pilet publish --fresh --url https://feed.piral.cloud/api/v1/pilet/my-tutorial-fe
 
 The `--fresh` flag tells the Piral CLI to invoke a fresh build and do everything from building up to packaging the pilet. Without this flag, we would already need a packaged pilet ready for publishing.
 
-### Check the Pilet upload in the Feed Service
+::: warning: One publish per version
+The official feed service only takes one pilet per name + version combination. This is considered a feature, as pilets are served by their name using a version. Therefore, if you want to update / republish the pilet, make sure to update the version first.
+
+To update the version of a pilet either change the `version` key in its *package.json* or run `npm version` (e.g., `npm version patch`).
+:::
+
+### Check the Pilet Upload in the Feed Service
 
 The feed service allows you to view and manage available pilets. To view all published pilets invoke the `Manage Pilets` link of the corresponding feed, in our case `my-tutorial-feed`.
 
@@ -137,7 +143,7 @@ The view shows further information about the published pilets and provides funct
 
 Now that the pilet is available via the feed Service, we just need to configure our Piral instance to pull the pilets from the created feed. We need to modify the `index.tsx` file in the `./src` folder of the Piral instance. The path to the newly created feed needs to be specified, in our case:
 
-```javascript
+```js
 const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed';
 ```
 

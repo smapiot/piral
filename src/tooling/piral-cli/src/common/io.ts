@@ -83,7 +83,7 @@ export async function createDirectory(targetDir: string) {
 
   try {
     log('generalDebug_0003', `Trying to create "${targetDir}" in modern mode ...`);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       mkdir(targetDir, { recursive: true }, (err) => (err ? reject(err) : resolve()));
     });
     return true;
@@ -175,7 +175,7 @@ export async function matchAny(baseDir: string, patterns: Array<string>) {
   await Promise.all(
     patterns.map(
       (pattern) =>
-        new Promise<Array<string>>((resolve, reject) => {
+        new Promise<void>((resolve, reject) => {
           glob(
             pattern,
             {
@@ -249,7 +249,7 @@ export async function updateExistingFile(targetDir: string, fileName: string, co
 
   if (exists) {
     log('generalDebug_0003', `Updating file "${targetFile}" ...`);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       writeFile(targetFile, content, 'utf8', (err) => (err ? reject(err) : resolve()));
     });
   }
@@ -319,7 +319,7 @@ export async function copy(source: string, target: string, forceOverwrite = Forc
 
   try {
     const flag = forceOverwrite === ForceOverwrite.yes ? 0 : constants.COPYFILE_EXCL;
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       copyFile(source, target, flag, (err) => (err ? reject(err) : resolve()));
     });
     return true;
