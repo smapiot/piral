@@ -1,12 +1,6 @@
-import type { ForeignComponent, BaseComponentProps } from 'piral-core';
-import {
-  initialize,
-  activate,
-  deactivate,
-  attachEvents,
-  addGlobalEventListeners,
-  removeGlobalEventListeners,
-} from './interop';
+import type { BaseComponentProps, ForeignComponent } from 'piral-core';
+import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
+import { activate, deactivate, initialize } from './interop';
 
 export function createConverter(lazy = true) {
   const bootConfig = require('../infra.codegen');

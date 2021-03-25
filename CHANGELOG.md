@@ -1,8 +1,8 @@
 # Piral Changelog
 
-## 1.0.0 (tbd)
+## 0.13.1 (tbd)
 
-* (nothing yet)
+* Implemented handling for navigation in `piral-blazor`
 
 ## 0.13.0 (March 24, 2021)
 
