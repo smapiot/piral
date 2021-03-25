@@ -1,3 +1,5 @@
+import { isInternalNavigation, performInternalNavigation } from './navigation';
+
 export const eventNames = {
   render: 'render-blazor-extension',
   navigate: 'navigate-blazor',
@@ -32,8 +34,11 @@ const globalEventNames = [
   'mouseup',
 ];
 
-function dispatchToRoot(event: Event) {
-  document.getElementById(blazorRootId)?.dispatchEvent(new Event(event.type, event));
+function dispatchToRoot(event: any) {
+  isInternalNavigation(event) && performInternalNavigation(event);
+
+  let eventClone = new event.constructor(event.type, event);
+  document.getElementById(blazorRootId)?.dispatchEvent(eventClone);
 }
 
 function isRooted(target: HTMLElement) {
