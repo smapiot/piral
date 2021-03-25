@@ -4,6 +4,10 @@
 
 * (nothing yet)
 
+## 0.13.1 (March 25, 2021)
+
+* Implemented handling for navigation in `piral-blazor`
+
 ## 0.13.0 (March 24, 2021)
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
