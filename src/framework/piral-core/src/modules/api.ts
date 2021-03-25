@@ -41,7 +41,8 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
         context.unregisterExtension(name as string, arg);
       },
       renderHtmlExtension(element, props) {
-        renderInDom(context, element, ExtensionSlot, props);
+        const id = renderInDom(context, element, ExtensionSlot, props);
+        return () => context.destroyPortal(id);
       },
       Extension: ExtensionSlot,
     };

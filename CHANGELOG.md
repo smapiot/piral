@@ -1,6 +1,10 @@
 # Piral Changelog
 
-## 0.13.0 (tbd)
+## 1.0.0 (tbd)
+
+* (nothing yet)
+
+## 0.13.0 (March 24, 2021)
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`
 * Fixed issue ignoring `--log-level` in the initializers

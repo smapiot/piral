@@ -1,6 +1,6 @@
 {
   "name": "@smapiot/pilet-template-default",
-  "version": "0.12.4",
+  "version": "0.13.0",
   "description": "Official scaffolding template for pilets: 'default'.",
   "keywords": [
     "piral-cli",

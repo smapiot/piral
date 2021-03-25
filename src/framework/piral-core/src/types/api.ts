@@ -5,6 +5,7 @@ import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
 import type { AnyComponent } from './components';
 import type { ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
+import type { Disposable } from './utils';
 
 export { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet };
 
@@ -120,8 +121,9 @@ export interface PiletCoreApi {
    * Renders an extension in a plain DOM component.
    * @param element The DOM element or shadow root as a container for rendering the extension.
    * @param props The extension's rendering props.
+   * @return The disposer to clear the extension.
    */
-  renderHtmlExtension<TName>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<TName>): void;
+  renderHtmlExtension<TName>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<TName>): Disposable;
 }
 
 declare module 'piral-base/lib/types' {
