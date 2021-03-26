@@ -9,14 +9,11 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       return dependency;
     },
     defineBlazorReferences(references) {
-      const load = () =>
-        Promise.all(
-          references.map((reference) =>
-            fetch(reference)
-              .then((res) => res.blob())
-              .then(addReference),
-          ),
-        );
+      const load = async () => {
+        for (const reference of references) {
+          await addReference(reference);
+        }
+      };
       let result = !lazy && convert.loader.then(load);
       dependency = () => result || (result = load());
     },

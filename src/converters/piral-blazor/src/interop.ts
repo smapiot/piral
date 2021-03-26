@@ -10,15 +10,8 @@ export function deactivate(moduleName: string, referenceId: string) {
   return window['DotNet'].invokeMethodAsync<string>(coreLib, 'Deactivate', moduleName, referenceId);
 }
 
-export function addReference(blob: Blob) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const data = reader.result.toString().replace(/^data:.+;base64,/, '');
-      window['DotNet'].invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', data).then(resolve);
-    };
-    reader.readAsDataURL(blob);
-  });
+export function addReference(url: string) {
+  return window['DotNet'].invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', url);
 }
 
 export function removeReference(name: string) {
