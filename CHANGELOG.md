@@ -3,6 +3,8 @@
 ## 0.13.1 (tbd)
 
 * Implemented handling for navigation in `piral-blazor`
+* Updated development dependencies
+* Updated `tslib` to v2
 
 ## 0.13.0 (March 24, 2021)
 

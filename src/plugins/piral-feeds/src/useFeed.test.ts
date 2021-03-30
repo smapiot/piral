@@ -1,9 +1,22 @@
 import * as React from 'react';
-import * as piralCore from 'piral-core';
-import { useFeed } from './useFeed';
+
+const useGlobalState = jest.fn();
+const loadAction = jest.fn();
+const useAction = jest.fn(() => loadAction);
+
+jest.mock('piral-core', () => ({
+  ...jest.requireActual('piral-core'),
+  useGlobalState,
+  useAction,
+}));
 
 describe('Feed Hook Module', () => {
+  beforeEach(() => {
+    loadAction.mockReset();
+  });
+
   it('Does not load if its already loaded', () => {
+    const { useFeed } = require('./useFeed');
     const pseudoState = {
       feeds: {
         foo: {
@@ -14,10 +27,9 @@ describe('Feed Hook Module', () => {
         },
       },
     };
-    const loadAction = jest.fn();
     const usedEffect = jest.fn();
-    (piralCore as any).useGlobalState = (select: any) => select(pseudoState);
-    (piralCore as any).useAction = () => loadAction;
+    useGlobalState.mockImplementation((select: any) => select(pseudoState));
+
     (React as any).useEffect = usedEffect;
     const [loaded, data, error] = useFeed({
       id: 'foo',
@@ -30,6 +42,7 @@ describe('Feed Hook Module', () => {
   });
 
   it('Does not load if its already loading', () => {
+    const { useFeed } = require('./useFeed');
     const pseudoState = {
       feeds: {
         foo: {
@@ -40,10 +53,9 @@ describe('Feed Hook Module', () => {
         },
       },
     };
-    const loadAction = jest.fn();
     const usedEffect = jest.fn();
-    (piralCore as any).useGlobalState = (select: any) => select(pseudoState);
-    (piralCore as any).useAction = () => loadAction;
+    useGlobalState.mockImplementation((select: any) => select(pseudoState));
+
     (React as any).useEffect = usedEffect;
     const [loaded, data, error] = useFeed({
       id: 'foo',
@@ -56,6 +68,7 @@ describe('Feed Hook Module', () => {
   });
 
   it('Triggers load if its not loading', () => {
+    const { useFeed } = require('./useFeed');
     const pseudoState = {
       feeds: {
         foo: {
@@ -66,10 +79,9 @@ describe('Feed Hook Module', () => {
         },
       },
     };
-    const loadAction = jest.fn();
     const usedEffect = jest.fn();
-    (piralCore as any).useGlobalState = (select: any) => select(pseudoState);
-    (piralCore as any).useAction = () => loadAction;
+    useGlobalState.mockImplementation((select: any) => select(pseudoState));
+
     (React as any).useEffect = usedEffect;
     const [loaded, data, error] = useFeed({
       id: 'foo',

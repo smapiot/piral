@@ -22,7 +22,9 @@ export function useDynamicLanguage(
       },
       (err) => console.error(err),
     );
-    return () => (active = false);
+    return () => {
+      active = false;
+    };
   }, [selected]);
 
   return [selected, setSelected];

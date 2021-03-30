@@ -57,7 +57,7 @@
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
     "ansi-html": "0.0.7",
-    "babel-loader": "8.1.0",
+    "babel-loader": "^8.1.0",
     "cheerio": "^1.0.0-rc.3",
     "css-loader": "^5.0.0",
     "express": "^4.17.1",

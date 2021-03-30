@@ -49,7 +49,7 @@
     "aurelia-history-browser": "1.4.0",
     "aurelia-pal-browser": "1.8.1",
     "aurelia-templating-binding": "1.5.3",
-    "aurelia-templating-resources": "1.12.0",
+    "aurelia-templating-resources": "1.13.1",
     "piral-core": "^0.13.0"
   },
   "peerDependencies": {

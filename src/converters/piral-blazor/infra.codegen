@@ -1,28 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
-function generateModule(scriptUrl) {
-  return `module.exports = ${JSON.stringify(scriptUrl)};`;
-}
-
 function copyFileSync(source, target) {
-  var targetFile = target;
+  let targetFile = target;
 
   // If target is a directory, a new file with the same name will be created
-  if (fs.existsSync(target)) {
-    if (fs.lstatSync(target).isDirectory()) {
-      targetFile = path.join(target, path.basename(source));
-    }
+  if (fs.existsSync(target) && fs.lstatSync(target).isDirectory()) {
+    targetFile = path.join(target, path.basename(source));
   }
 
   fs.writeFileSync(targetFile, fs.readFileSync(source));
 }
 
 function copyFolderRecursiveSync(source, target) {
-  var files = [];
+  const files = [];
 
   // Check if folder needs to be created or integrated
-  var targetFolder = path.join(target, path.basename(source));
+  const targetFolder = path.join(target, path.basename(source));
+
   if (!fs.existsSync(targetFolder)) {
     fs.mkdirSync(targetFolder);
   }
@@ -30,8 +25,9 @@ function copyFolderRecursiveSync(source, target) {
   // Copy
   if (fs.lstatSync(source).isDirectory()) {
     files = fs.readdirSync(source);
-    files.forEach(function (file) {
-      var curSource = path.join(source, file);
+    files.forEach((file) => {
+      const curSource = path.join(source, file);
+
       if (fs.lstatSync(curSource).isDirectory()) {
         copyFolderRecursiveSync(curSource, targetFolder);
       } else {
@@ -53,7 +49,7 @@ module.exports = function () {
 
     copyFolderRecursiveSync(frameworkDir, outDir);
 
-    return generateModule('_framework/blazor.webassembly.js');
+    return `module.exports = ${JSON.stringify('_framework/blazor.webassembly.js')};`;
   } catch (err) {
     throw new Error('The blazor package was not found. Make sure to install it via `npm i blazor`.');
   }
