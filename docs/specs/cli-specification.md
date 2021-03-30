@@ -95,6 +95,13 @@ Some special fields of the `package.json` are used to switch on some building fe
 | `peerModules`         | Names of additional shared modules. | `[ "react-dom/server" ]` |
 | `piral`.`name`        | Name of the Piral instance.         | `"sample-piral"`         |
 
+Additionally, some feed servers may implement a bit more here. For instance, the official Piral Cloud Feed Service supports the following keys in the `package.json`:
+
+| Key                   | Purpose                             | Example                              |
+|:----------------------|:------------------------------------|:-------------------------------------|
+| `piletRules`          | Feature flag rules to follow.       | `{ ... }`                            |
+| `piletDependencies`   | The shared dependencies to load.    | `{ "r": "http://example.com/r.js" }` |
+
 ### Schema Versions
 
 The Piral supports specifying different mechanisms for loading pilets. To allow versioning of a pilet's loading mechanism, we use a special header line in the output bundle. If the first line starts with a comment such as `//@pilet`, it will be treated as the pilet schema version indicator.

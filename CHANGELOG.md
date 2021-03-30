@@ -5,6 +5,7 @@
 * Implemented handling for navigation in `piral-blazor`
 * Updated development dependencies
 * Updated `tslib` to v2
+* Added optional `dependencies` to pilet metadata
 
 ## 0.13.0 (March 24, 2021)
 
