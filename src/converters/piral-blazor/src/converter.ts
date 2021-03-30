@@ -2,9 +2,9 @@ import type { BaseComponentProps, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
 import { activate, deactivate, initialize } from './interop';
 
-export function createConverter(lazy = true) {
+export function createConverter(publicPath: string | undefined, lazy: boolean) {
   const bootConfig = require('../infra.codegen');
-  const boot = () => initialize(bootConfig);
+  const boot = () => initialize(bootConfig, publicPath);
   const root = document.body.appendChild(document.createElement('div'));
   let loader = !lazy && boot();
 
