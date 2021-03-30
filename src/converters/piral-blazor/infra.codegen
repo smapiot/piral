@@ -13,7 +13,7 @@ function copyFileSync(source, target) {
 }
 
 function copyFolderRecursiveSync(source, target) {
-  const files = [];
+  let files = [];
 
   // Check if folder needs to be created or integrated
   const targetFolder = path.join(target, path.basename(source));
@@ -51,6 +51,6 @@ module.exports = function () {
 
     return `module.exports = ${JSON.stringify('_framework/blazor.webassembly.js')};`;
   } catch (err) {
-    throw new Error('The blazor package was not found. Make sure to install it via `npm i blazor`.');
+    throw new Error(`The blazor package was not found. Make sure to install it via "npm i blazor". ${err}`);
   }
 };
