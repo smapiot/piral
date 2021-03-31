@@ -111,6 +111,71 @@ Additionally, its easier to use existing code or share this component with exist
 
 But normally our components (e.g., pages) will not stay so simple, right?
 
+## Extensions
+
+By far the most powerful concept that comes with Piral is the possibility of introducing "extension components". The mechanism for this is straight forward:
+
+1. Components that can be extended with children / components from other pilets host an extension slot (giving it a name and passing in some data)
+2. Pilets that want to integrate into some extension slot register an extension using the name of the slot
+
+Importantly, there is no guarantee that the slot or any components for it exist. While the slot has properties that allow, e.g., defining a fallback if no components are available, the extension components will never know that they are not actively needed.
+
+Also keep in mind that the slot name is **not** bound to a single pilet. Any pilet may reuse a slot name and therefore there is also no guarantee that some props are always provided. Its up to the extension component to check that given props satisfy an expected data model. In case of a mismatch, the component should error out gracefully.
+
+Let's see this in practice:
+
+```ts
+import * as React from 'react';
+import { PiletApi, ExtensionComponentProps } from 'my-app';
+
+// Expected props
+interface MyExtensionParams {
+  id: string;
+  items: Array<number>;
+}
+
+const MyExtension: React.FC<ExtensionComponentProps<MyExtensionParams>> = ({ params }) => {
+  // Check passed in params
+  if (typeof params.id !== 'string') {
+    return null;
+  }
+
+  if (!Array.isArray(items) || items.some(m => typeof m !== 'number')) {
+    return null;
+  }
+
+  return (
+    <>
+      {/* ... */}
+    </>
+  );
+};
+
+export function setup(app: PiletApi) {
+  app.registerExtension('extension-slot-name', MyExtension);
+}
+```
+
+As far as creating an extension slot goes we can use the Pilet API to get access to the `Extension` component.
+
+The easiest example for this is:
+
+```jsx
+export function setup(app: PiletApi) {
+  app.registerPage('/example', () => {
+    return (
+      <>
+        <h1>Example Page</h1>
+        <p>Below we list the extensions registered for "extension-slot-name".</p>
+        <app.Extension name="extension-slot-name" />
+      </>
+    )
+  });
+}
+```
+
+For non-React applications extension slots can be created using the `renderHtmlExtension` function. This one takes an HTML container element and the extension slot props (`ExtensionSlotProps`) as arguments. It returns a disposer function that should be used when the extension is unmounted.
+
 ## What about Data
 
 Modern web applications are a combination of static assets (text, images, ...) with dynamic data (usually coming from an API). These are not your daddy's websites anymore - they are live and closer to normal applications in every metric.
