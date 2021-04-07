@@ -48,7 +48,7 @@ export function setupPwaClient(config: PwaConfig = {}) {
     Notification.requestPermission();
   }
 
-  const sw = new Promise<ServiceWorkerRegistration>((resolve) => {
+  const sw = new Promise<ServiceWorkerRegistration | void>((resolve) => {
     if ('serviceWorker' in navigator) {
       let shouldInstall = install;
 

@@ -120,7 +120,7 @@ Alternatively, if `piral-blazor` has not been added to the Piral instance you ca
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { defineBlazorReferences, fromBlazor } from 'piral-blazor';
+import { defineBlazorReferences, fromBlazor } from 'piral-blazor/convert';
 
 export function setup(piral: PiletApi) {
   defineBlazorReferences([

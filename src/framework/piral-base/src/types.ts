@@ -27,6 +27,10 @@ export interface PiletMetadataV0Base {
    * Optionally provides some configuration to be used in the pilet.
    */
   config?: Record<string, any>;
+  /**
+   * Additional shared dependency script files.
+   */
+  dependencies?: Record<string, string>;
 }
 
 /**
@@ -99,6 +103,10 @@ export interface PiletMetadataV1 {
    * Optionally provides some configuration to be used in the pilet.
    */
   config?: Record<string, any>;
+  /**
+   * Additional shared dependency script files.
+   */
+  dependencies?: Record<string, string>;
 }
 
 export interface PiletMetadataVx {
@@ -122,6 +130,10 @@ export interface PiletMetadataVx {
    * Optionally provides some configuration to be used in the pilet.
    */
   config?: Record<string, any>;
+  /**
+   * Additional shared dependency script files.
+   */
+  dependencies?: Record<string, string>;
 }
 
 /**
@@ -153,6 +165,10 @@ export interface PiletMetadataBundle {
    * Optionally provides some custom metadata for the pilet.
    */
   custom?: any;
+  /**
+   * Additional shared dependency script files.
+   */
+  dependencies?: Record<string, string>;
 }
 
 /**

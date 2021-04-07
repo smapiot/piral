@@ -59,8 +59,7 @@ function findTarget(target: HTMLElement = document.body) {
 
 function dispatchToRoot(event: any) {
   isInternalNavigation(event) && performInternalNavigation(event);
-
-  let eventClone = new event.constructor(event.type, event);
+  const eventClone = new event.constructor(event.type, event);
   document.getElementById(blazorRootId)?.dispatchEvent(eventClone);
 }
 

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import * as piralCore from 'piral-core';
-import { useSearch } from './useSearch';
 
 const state = {
   search: {
@@ -11,19 +9,25 @@ const state = {
   },
 };
 
-(piralCore as any).useGlobalState = (select: any) => select(state);
-
-(piralCore as any).useDebounce = (value) => value;
-
 const availableActions = {
   setSearchInput: jest.fn(),
   triggerSearch: jest.fn(),
 };
 
-(piralCore as any).useActions = () => availableActions;
+const useGlobalState = jest.fn((select: any) => select(state));
+const useActions = jest.fn(() => availableActions);
+const useDebounce = jest.fn((value) => value);
+
+jest.mock('piral-core', () => ({
+  ...jest.requireActual('piral-core'),
+  useGlobalState,
+  useDebounce,
+  useActions,
+}));
 
 describe('Search Hook Module', () => {
   it('just returns current input value', () => {
+    const { useSearch } = require('./useSearch');
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = (current) => ({ current });
@@ -32,6 +36,7 @@ describe('Search Hook Module', () => {
   });
 
   it('sets the value using the action', () => {
+    const { useSearch } = require('./useSearch');
     const usedEffect = jest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = (current) => ({ current });
@@ -42,6 +47,7 @@ describe('Search Hook Module', () => {
   });
 
   it('triggers the search without immediate mode', () => {
+    const { useSearch } = require('./useSearch');
     const usedEffect = jest.fn((fn) => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = (current) => ({ current });
@@ -51,6 +57,7 @@ describe('Search Hook Module', () => {
   });
 
   it('cancels the current search', () => {
+    const { useSearch } = require('./useSearch');
     const usedEffect = jest.fn((fn) => fn());
     const cancel = jest.fn();
     (React as any).useEffect = usedEffect;

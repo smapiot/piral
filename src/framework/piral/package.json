@@ -55,7 +55,7 @@
     "@types/react-router-dom": "^5.1.6"
   },
   "dependencies": {
-    "core-js": "3.6.4",
+    "core-js": "^3.6.4",
     "current-script-polyfill": "^1.0.0",
     "piral-core": "^0.13.0",
     "piral-ext": "^0.13.0",

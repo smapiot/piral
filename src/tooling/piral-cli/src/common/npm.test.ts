@@ -70,6 +70,7 @@ jest.mock('fs', () => ({
   readFile: (file: string, type: string, callback: (err: NodeJS.ErrnoException, data: string) => void) => {
     return callback(undefined, '');
   },
+  realpathSync: () => ({}),
   readFileSync: () => '',
   access: (path: string, mode: number, callback: (err: NodeJS.ErrnoException) => void) => {
     if (path.includes('test')) {

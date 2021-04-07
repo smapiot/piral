@@ -1,5 +1,12 @@
 import type { ForeignComponent } from 'piral-core';
 
+declare global {
+  interface Window {
+    Blazor: any;
+    DotNet: any;
+  }
+}
+
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletBlazorApi {}
 

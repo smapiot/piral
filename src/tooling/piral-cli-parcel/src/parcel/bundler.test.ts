@@ -1,6 +1,7 @@
 import { postProcess } from './bundler';
 
 jest.mock('fs', () => ({
+  realpathSync: () => ({}),
   readFile(_name: string, _enc: string, cb: Function) {
     cb(undefined, readContent);
   },

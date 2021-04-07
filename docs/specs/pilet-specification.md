@@ -290,6 +290,10 @@ interface PiletMetadata {
    * Configuration metadata
    */
   config?: Record<string, any>;
+  /**
+   * Additional shared dependency script files
+   */
+  dependencies?: Record<string, string>;
 }
 ```
 

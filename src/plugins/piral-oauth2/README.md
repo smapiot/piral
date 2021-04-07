@@ -102,6 +102,28 @@ if (location.pathname !== '/auth') {
 
 This way we evaluate the current path and act accordingly. Note that the actually used path may be different for your application.
 
+The chosen OAuth 2 flow makes a difference. The example above works fine with the `implicit` flow (default). If you want to use the `code` flow then the integration looks a bit different.
+
+Example integration using the `code` flow:
+
+```ts
+// index.ts
+import { client } from './oauth2';
+
+if (location.pathname !== '/auth') {
+  client.login();
+} else {
+  client.token().then(
+    // all good we are logged in
+    () => import('./app').then(({ render }) => render()),
+    // something went bad, we should show some error
+    () => import('./error').then(({ render }) => render()),
+  );
+}
+```
+
+The code flow will automatically return from `/auth` to `/` once authenticated. Therefore, the application's routing does not have to consider `/auth`, which can remain a special path.
+
 :::
 
 ## License

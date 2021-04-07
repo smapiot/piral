@@ -112,6 +112,7 @@ interface PiletMetadataV0 {
   noCache?: boolean | string;
   custom?: any;
   config?: Record<string, any>;
+  dependencies?: Record<string, string>;
 }
 
 interface PiletMetadataV1 {
@@ -122,6 +123,7 @@ interface PiletMetadataV1 {
   integrity?: string;
   custom?: any;
   config?: Record<string, any>;
+  dependencies?: Record<string, string>;
 }
 
 type PiletMetadata = PiletMetadataV0 | PiletMetadataV1;
@@ -138,6 +140,8 @@ In `PiletMetadataV1` the role of `hash` is replaced by an optional `integrity` f
 The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
 
 The `config` field can be used to transport frontend configuration to be leveraged by the specific pilet. This can be helpful to obtain things that should be easily configurable or changeable such as colors, frontend API keys (e.g., for Google Maps), or specific behavior.
+
+The `dependencies` field can be used to provide a list of scripts that should be loaded before running the pilet. The idea is that these script can live on a CDN (and thus be cached efficiently) and could be potentially shared (i.e., multiple pilets using the same scripts will only load the script once).
 
 **Error Response**
 

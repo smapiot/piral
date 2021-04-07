@@ -4,6 +4,10 @@ import { createPilets, createPilet } from './aggregate';
 import type { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
 
 function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModules: Array<Pilet>) {
+  if (!Array.isArray(oldModules)) {
+    return Promise.reject(`The existing pilets must be passed as an array.`);
+  }
+
   try {
     for (const oldModule of oldModules) {
       const [newModule] = newModules.filter((m) => m.name === oldModule.name);
