@@ -8,10 +8,10 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     getDependency() {
       return dependency;
     },
-    defineBlazorReferences(references) {
+    defineBlazorReferences(references, options?) {
       const load = async () => {
         for (const reference of references) {
-          await addReference(reference);
+          await addReference(reference, options);
         }
       };
       let result = !lazy && convert.loader.then(load);

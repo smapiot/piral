@@ -27,8 +27,8 @@ export function deactivate(moduleName: string, referenceId: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'Deactivate', moduleName, referenceId);
 }
 
-export function addReference(url: string) {
-  return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', url);
+export function addReference(url: string, options?: any) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', url, options);
 }
 
 export function removeReference(name: string) {
