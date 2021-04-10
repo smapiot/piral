@@ -6,26 +6,26 @@ describe('Notifications Actions Module', () => {
   it('openNotification prepends a new notification', () => {
     const state = Atom.of({
       foo: 5,
-      notifications: ['b'],
+      notifications: [{ id: 'b' }],
     });
     const ctx = createActions(state, createListener({}));
-    openNotification(ctx, 'a');
+    openNotification(ctx, { id: 'a' });
     expect(deref(state)).toEqual({
       foo: 5,
-      notifications: ['a', 'b'],
+      notifications: [{ id: 'a' }, { id: 'b' }],
     });
   });
 
   it('closeNotification removes an existing notification', () => {
     const state = Atom.of({
       foo: 5,
-      notifications: ['a', 'b', 'c'],
+      notifications: [{ id: 'a' }, { id: 'b' }, { id: 'c' }],
     });
     const ctx = createActions(state, createListener({}));
-    closeNotification(ctx, 'b');
+    closeNotification(ctx, { id: 'b' });
     expect(deref(state)).toEqual({
       foo: 5,
-      notifications: ['a', 'c'],
+      notifications: [{ id: 'a' }, { id: 'c' }],
     });
   });
 });

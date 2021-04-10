@@ -35,26 +35,26 @@ describe('Modals Actions Module', () => {
   it('openModal adds a new modal', () => {
     const state = Atom.of({
       foo: 5,
-      modals: ['b'],
+      modals: [{ id: 'b' }],
     });
     const ctx = createActions(state, createListener({}));
-    openModal(ctx, 'a');
+    openModal(ctx, { id: 'a' });
     expect(deref(state)).toEqual({
       foo: 5,
-      modals: ['a', 'b'],
+      modals: [{ id: 'a' }, { id: 'b' }],
     });
   });
 
   it('closeModal removes an existing modal', () => {
     const state = Atom.of({
       foo: 5,
-      modals: ['a', 'b', 'c'],
+      modals: [{ id: 'a' }, { id: 'b' }, { id: 'c' }],
     });
     const ctx = createActions(state, createListener({}));
-    closeModal(ctx, 'b');
+    closeModal(ctx, { id: 'b' });
     expect(deref(state)).toEqual({
       foo: 5,
-      modals: ['a', 'c'],
+      modals: [{ id: 'a' }, { id: 'c' }],
     });
   });
 });
