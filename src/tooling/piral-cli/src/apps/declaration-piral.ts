@@ -1,4 +1,4 @@
-import { setLogLevel, logDone, createDeclaration, ForceOverwrite } from '../common';
+import { setLogLevel, logDone, createPiralDeclaration, ForceOverwrite } from '../common';
 import { LogLevels } from '../types';
 
 export interface DeclarationPiralOptions {
@@ -38,6 +38,6 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
     logLevel = declarationPiralDefaults.logLevel,
   } = options;
   setLogLevel(logLevel);
-  await createDeclaration(baseDir, entry, target, forceOverwrite, logLevel);
+  await createPiralDeclaration(baseDir, entry, target, forceOverwrite, logLevel);
   logDone(`Declaration created successfully in "${target}"!`);
 }

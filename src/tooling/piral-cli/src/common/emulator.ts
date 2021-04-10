@@ -4,7 +4,7 @@ import { createFileFromTemplateIfNotExists } from './template';
 import { filesTar, filesOnceTar } from './constants';
 import { cliVersion } from './info';
 import { createPackage, makeExternals } from './npm';
-import { createDeclaration } from './declaration';
+import { createPiralDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
 import { LogLevels, TemplateFileLocation } from '../types';
@@ -116,7 +116,7 @@ export async function createEmulatorSources(
   });
 
   // generate the associated index.d.ts
-  await createDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
+  await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
   // since things like .gitignore are not properly treated by NPM we pack the files (for standard and once only)
   await Promise.all([

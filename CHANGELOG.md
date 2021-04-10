@@ -6,6 +6,7 @@
 * Updated development dependencies
 * Updated `tslib` to v2
 * Added optional `dependencies` to pilet metadata
+* Added option to generate declarations for pilets
 
 ## 0.13.0 (March 24, 2021)
 
