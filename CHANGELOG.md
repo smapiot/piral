@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.13.2 (tbd)
+
+* Fixed potential issue for `piral debug` in Firefox
+
 ## 0.13.1 (April 13, 2021)
 
 * Fixed closing notifications after modifications in `piral-notifications`

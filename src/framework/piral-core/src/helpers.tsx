@@ -95,16 +95,20 @@ export function createPiletOptions({
 
         if (infos) {
           // Chrome, Firefox, ... (full capability)
-          const action = infos.split('\n')[7].replace(/^\s+at\s+(Atom\.|Object\.)?/, '');
-          console.group(
-            `%c Piral State Change %c ${new Date().toLocaleTimeString()}`,
-            'color: gray; font-weight: lighter;',
-            'color: black; font-weight: bold;',
-          );
-          console.log('%c Previous', `color: #9E9E9E; font-weight: bold`, previous);
-          console.log('%c Action', `color: #03A9F4; font-weight: bold`, action);
-          console.log('%c Next', `color: #4CAF50; font-weight: bold`, current);
-          console.groupEnd();
+          const lastLine = infos.split('\n')[7];
+
+          if (lastLine) {
+            const action = lastLine.replace(/^\s+at\s+(Atom\.|Object\.)?/, '');
+            console.group(
+              `%c Piral State Change %c ${new Date().toLocaleTimeString()}`,
+              'color: gray; font-weight: lighter;',
+              'color: black; font-weight: bold;',
+            );
+            console.log('%c Previous', `color: #9E9E9E; font-weight: bold`, previous);
+            console.log('%c Action', `color: #03A9F4; font-weight: bold`, action);
+            console.log('%c Next', `color: #4CAF50; font-weight: bold`, current);
+            console.groupEnd();
+          }
         } else {
           // IE 11, ... (does not know colors etc.)
           console.log('Changed state', previous, current);
