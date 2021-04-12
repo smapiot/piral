@@ -3,6 +3,7 @@
 ## 0.13.2 (tbd)
 
 * Fixed potential issue for `piral debug` in Firefox
+* Fixed limited request length for publishing pilets (#375)
 
 ## 0.13.1 (April 13, 2021)
 

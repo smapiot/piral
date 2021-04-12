@@ -87,6 +87,7 @@ export function postFile(
       },
       httpsAgent,
       maxContentLength: Infinity,
+      maxBodyLength: Infinity,
     })
     .then(
       (res) => ({
