@@ -2,20 +2,7 @@ import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
 import { createDependencyLoader } from './lib/dependencies';
 
-function computePath() {
-  try {
-    throw new Error();
-  } catch (t) {
-    const e = ('' + t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-    if (e) {
-      return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^\/]+$/, '$1') + '/';
-    }
-  }
-
-  return '/';
-}
-
-const convert = createConverter(computePath(), true);
+const convert = createConverter(true);
 const loader = createDependencyLoader(convert);
 
 export interface BlazorConverter {

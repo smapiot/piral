@@ -2,7 +2,7 @@ import { emitRenderEvent, emitNavigateEvent } from './events';
 
 const coreLib = 'Piral.Blazor.Core';
 
-function createBlazorStarter(publicPath?: string) {
+function createBlazorStarter(publicPath: string) {
   if (publicPath) {
     const baseElement =
       document.head.querySelector('base') || document.head.appendChild(document.createElement('base'));
@@ -17,6 +17,19 @@ function createBlazorStarter(publicPath?: string) {
   }
 
   return () => window.Blazor.start();
+}
+
+function computePath() {
+  try {
+    throw new Error();
+  } catch (t) {
+    const e = ('' + t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+    if (e) {
+      return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^\/]+$/, '$1') + '/';
+    }
+  }
+
+  return '/';
 }
 
 export function activate(moduleName: string, props: any) {
@@ -35,7 +48,7 @@ export function removeReference(name: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'UnloadComponentsFromLibrary', name);
 }
 
-export function initialize(scriptUrl: string, publicPath?: string) {
+export function initialize(scriptUrl: string, publicPath: string) {
   return new Promise((resolve, reject) => {
     const startBlazor = createBlazorStarter(publicPath);
     const script = document.createElement('script');
@@ -54,4 +67,9 @@ export function initialize(scriptUrl: string, publicPath?: string) {
 
     document.body.appendChild(script);
   });
+}
+
+export function createBootLoader(scriptUrl: string) {
+  const publicPath = computePath();
+  return () => initialize(scriptUrl, publicPath);
 }
