@@ -21,7 +21,7 @@ export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBla
   const { lazy } = config;
 
   return (context) => {
-    const convert = createConverter(undefined, lazy);
+    const convert = createConverter(lazy);
     context.converters.blazor = ({ moduleName, args, dependency }) => convert(moduleName, dependency, args);
 
     return () => {

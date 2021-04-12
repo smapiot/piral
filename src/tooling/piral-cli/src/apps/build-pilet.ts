@@ -9,6 +9,8 @@ import {
   progress,
   logDone,
   logInfo,
+  createPiletDeclaration,
+  ForceOverwrite,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -33,6 +35,11 @@ export interface BuildPiletOptions {
    * States if minifaction or other post-bundle transformations should be performed.
    */
   minify?: boolean;
+
+  /**
+   * Indicates if a declaration file should be generated.
+   */
+  declaration?: boolean;
 
   /**
    * Sets the log level to use (1-5).
@@ -86,6 +93,7 @@ export const buildPiletDefaults: BuildPiletOptions = {
   contentHash: true,
   optimizeModules: false,
   schemaVersion: 'v1',
+  declaration: true,
 };
 
 export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOptions = {}) {
@@ -99,6 +107,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     fresh = buildPiletDefaults.fresh,
     optimizeModules = buildPiletDefaults.optimizeModules,
     schemaVersion = buildPiletDefaults.schemaVersion,
+    declaration = buildPiletDefaults.declaration,
     _ = {},
     bundlerName,
     app,
@@ -108,7 +117,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const entryFile = join(baseDir, entry);
   const targetDir = dirname(entryFile);
   const entryModule = await findEntryModule(entryFile, targetDir);
-  const { peerDependencies, peerModules, root, appPackage, ignored } = await retrievePiletData(targetDir, app);
+  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored } = await retrievePiletData(
+    targetDir,
+    app,
+  );
   const externals = [...Object.keys(peerDependencies), ...peerModules];
   const outDir = dirname(resolve(baseDir, target));
 
@@ -139,6 +151,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     },
     bundlerName,
   );
+
+  if (declaration) {
+    await createPiletDeclaration(piletPackage.name, root, entryModule, externals, outDir, ForceOverwrite.yes, logLevel);
+  }
 
   logDone('Pilet built successfully!');
 }
