@@ -4,6 +4,7 @@
 
 * Fixed closing notifications after modifications in `piral-notifications`
 * Fixed closing modal dialogs after modifications in `piral-modals`
+* Fixed issue preventing rendering of Mithril in `piral-mithril`
 * Implemented handling for navigation in `piral-blazor`
 * Updated development dependencies
 * Updated `tslib` to v2
