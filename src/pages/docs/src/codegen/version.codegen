@@ -1,0 +1,6 @@
+const { getChangelogVersion } = require('../../../../../tools/changelog-version');
+
+module.exports = function () {
+  const version = getChangelogVersion();
+  return `module.exports = ${JSON.stringify(version)}`;
+};
