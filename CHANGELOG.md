@@ -4,6 +4,7 @@
 
 * Fixed potential issue for `piral debug` in Firefox
 * Fixed limited request length for publishing pilets (#375)
+* Updated the `piral-blazor` to accept precomputed IDs from the C# bridge
 
 ## 0.13.1 (April 13, 2021)
 
