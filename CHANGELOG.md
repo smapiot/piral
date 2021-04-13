@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.13.1 (tbd)
+## 0.13.1 (April 13, 2021)
 
 * Fixed closing notifications after modifications in `piral-notifications`
 * Fixed closing modal dialogs after modifications in `piral-modals`
