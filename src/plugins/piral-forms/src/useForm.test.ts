@@ -1,18 +1,29 @@
 import * as React from 'react';
-import * as piralCore from 'piral-core';
-import { useForm } from './useForm';
 
 (React as any).useState = jest.fn((idOrFn) => [typeof idOrFn === 'function' ? idOrFn() : idOrFn]);
 (React as any).useEffect = jest.fn((cb) => cb());
 
+const useGlobalState = jest.fn();
+const usePrompt = jest.fn();
+const setStateFake = jest.fn();
+const useAction = jest.fn(() => setStateFake);
+
+const piralCore = jest.mock('piral-core', () => ({
+  ...jest.requireActual('piral-core'),
+  useGlobalState,
+  usePrompt,
+  useAction,
+}));
+
 describe('Form Hook Module', () => {
+  beforeEach(() => {
+    setStateFake.mockReset();
+  });
+
   it('Returns the current data and not changed initially', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+    const { useForm } = require('./useForm');
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {
           foo: {
@@ -23,7 +34,9 @@ describe('Form Hook Module', () => {
             error: undefined,
           },
         },
-      });
+      }),
+    );
+
     const options = {
       wait: false,
       silent: false,
@@ -42,15 +55,13 @@ describe('Form Hook Module', () => {
   });
 
   it('Generates a new id if the old one is not provided', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+    const { useForm } = require('./useForm');
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {},
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -69,16 +80,14 @@ describe('Form Hook Module', () => {
   });
 
   it('Submit with no changed data does nothing', () => {
+    const { useForm } = require('./useForm');
     const onSubmit = jest.fn(() => Promise.resolve());
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {},
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -97,13 +106,10 @@ describe('Form Hook Module', () => {
   });
 
   it('Submit with changed data submits successfully', () => {
+    const { useForm } = require('./useForm');
     const onSubmit = jest.fn(() => Promise.resolve());
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {
           foo: {
@@ -118,7 +124,8 @@ describe('Form Hook Module', () => {
             error: undefined,
           },
         },
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -141,13 +148,10 @@ describe('Form Hook Module', () => {
   });
 
   it('Submit with changed data running into an error', () => {
+    const { useForm } = require('./useForm');
     const onSubmit = jest.fn(() => Promise.reject('My error'));
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {
           foo: {
@@ -162,7 +166,8 @@ describe('Form Hook Module', () => {
             error: undefined,
           },
         },
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -183,15 +188,13 @@ describe('Form Hook Module', () => {
   });
 
   it('Sets new data on changeForm', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+    const { useForm } = require('./useForm');
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {},
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -232,15 +235,13 @@ describe('Form Hook Module', () => {
   });
 
   it('Sets new data on setFormData', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+    const { useForm } = require('./useForm');
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {},
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -280,12 +281,9 @@ describe('Form Hook Module', () => {
   });
 
   it('Resets changes to initial data', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+    const { useForm } = require('./useForm');
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {
           id: {
@@ -301,7 +299,8 @@ describe('Form Hook Module', () => {
             error: undefined,
           },
         },
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -341,13 +340,10 @@ describe('Form Hook Module', () => {
   });
 
   it('onChange should be triggered with full data set', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
+    const { useForm } = require('./useForm');
     const onChange = jest.fn((data) => Promise.resolve(data));
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {
           id: {
@@ -363,7 +359,8 @@ describe('Form Hook Module', () => {
             error: undefined,
           },
         },
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -380,16 +377,14 @@ describe('Form Hook Module', () => {
   });
 
   it('onChange which fails should be handled gracefully', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
+    const { useForm } = require('./useForm');
     const onChange = jest.fn((data) => Promise.reject('my error'));
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
-    (piralCore as any).useGlobalState = (select: any) =>
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {},
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,
@@ -406,16 +401,14 @@ describe('Form Hook Module', () => {
   });
 
   it('cleanup sets active to false', () => {
-    const promptFake = jest.fn();
-    const setStateFake = jest.fn();
-    const actionFake = jest.fn(() => setStateFake);
-    (piralCore as any).usePrompt = promptFake;
-    (piralCore as any).useAction = actionFake;
+    const { useForm } = require('./useForm');
     (React as any).useEffect = jest.fn((cb) => cb()());
-    (piralCore as any).useGlobalState = (select: any) =>
+
+    useGlobalState.mockImplementation((select: any) =>
       select({
         forms: {},
-      });
+      }),
+    );
     const options = {
       wait: false,
       silent: false,

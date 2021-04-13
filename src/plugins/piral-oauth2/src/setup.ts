@@ -1,11 +1,13 @@
 import * as ClientOAuth2 from 'client-oauth2';
+import { createOAuth2MemoryPersistence } from './utils';
+import { OAuth2Persistence } from './types';
 
 /**
- * Available configuration options for the OAuth 2.0 plugin.
+ * Available configuration options for the OAuth 2 plugin.
  */
 export interface OAuth2Config {
   /**
-   * The id of the client. Required for the setup of OAuth 2.0.
+   * The id of the client. Required for the setup of OAuth 2.
    */
   clientId: string;
   /**
@@ -26,11 +28,16 @@ export interface OAuth2Config {
    */
   redirectUri?: string;
   /**
+   * The return path to use in case of the "code" flow. By default the
+   * path will be set to "/".
+   */
+  returnPath?: string;
+  /**
    * The scopes to be used.
    */
   scopes?: Array<string>;
   /**
-   * The OAuth 2.0 authorization flow type to be used.
+   * The OAuth 2 authorization flow type to be used.
    */
   flow?: 'implicit' | 'code';
   /**
@@ -39,6 +46,10 @@ export interface OAuth2Config {
    * Otherwise, the client is responsive to the `before-fetch` event.
    */
   restrict?: boolean;
+  /**
+   * Optional persistence layer for OAuth 2. By default nothing is stored.
+   */
+  persist?: OAuth2Persistence;
 }
 
 export interface OAuth2Request {
@@ -88,6 +99,8 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
     scopes = [],
     flow,
     restrict = false,
+    returnPath = '/',
+    persist = createOAuth2MemoryPersistence(),
   } = config;
   const client = new ClientOAuth2({
     clientId,
@@ -101,56 +114,79 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
   let retrieveToken: () => Promise<string>;
   let getLoginUri: () => string;
 
-  if (flow === 'code') {
-    client.code.getToken(location.href).then(
-      (token) => (currentToken = token),
-      () => {},
-    );
+  const setCurrentToken = (token: ClientOAuth2.Token) => {
+    persist.save({
+      accessToken: token.accessToken,
+      data: token.data,
+      refreshToken: token.refreshToken,
+    });
 
-    retrieveToken = () => {
+    currentToken = token;
+  };
+
+  const retrieve = (init: Promise<void>, refresh: () => Promise<ClientOAuth2.Token>) => {
+    return init.then(() => {
       if (!currentToken) {
         return Promise.reject('Not logged in. Please call `login()` to retrieve a token.');
       }
 
       if (!currentToken.expired()) {
-        return Promise.resolve(currentToken.accessToken);
+        return currentToken.accessToken;
       }
 
-      return currentToken.refresh().then((refreshedToken) => {
-        currentToken = refreshedToken;
+      return refresh().then((refreshedToken) => {
+        setCurrentToken(refreshedToken);
         return currentToken.accessToken;
       });
+    });
+  };
+
+  const initialize = (load: () => Promise<ClientOAuth2.Token>) => {
+    const info = persist.load();
+
+    if (info) {
+      currentToken = client.createToken(info.accessToken, info.refreshToken, info.data);
+      return Promise.resolve();
+    } else {
+      return load().then(
+        (token) => {
+          const opener = window.opener;
+
+          setCurrentToken(token);
+
+          if (opener && typeof opener[callbackName] === 'function') {
+            opener[callbackName](token);
+            window.close();
+          }
+        },
+        () => {},
+      );
+    }
+  };
+
+  if (flow === 'code') {
+    const init = initialize(() => {
+      const url = location.href;
+      history.replaceState(undefined, undefined, returnPath);
+      return client.code.getToken(url);
+    });
+
+    retrieveToken = () => {
+      return retrieve(init, () => currentToken.refresh());
     };
     getLoginUri = () => client.code.getUri();
   } else {
-    client.token.getToken(location.href).then(
-      (token) => {
-        const opener = window.opener;
-        if (opener && typeof opener[callbackName] === 'function') {
-          opener[callbackName](token);
-          window.close();
-        }
-        currentToken = token;
-      },
-      () => {},
-    );
+    const init = initialize(() => client.token.getToken(location.href));
 
     retrieveToken = () => {
-      if (!currentToken) {
-        return Promise.reject('Not logged in. Please call `login()` to retrieve a token.');
-      }
-
-      if (!currentToken.expired()) {
-        return Promise.resolve(currentToken.accessToken);
-      }
-
-      return new Promise<string>((res) => {
-        window[callbackName] = (token: ClientOAuth2.Token) => {
-          currentToken = token;
-          res(currentToken.accessToken);
-        };
-        window.open(client.token.getUri());
-      });
+      return retrieve(
+        init,
+        () =>
+          new Promise<ClientOAuth2.Token>((resolve) => {
+            window[callbackName] = resolve;
+            window.open(client.token.getUri());
+          }),
+      );
     };
     getLoginUri = () => client.token.getUri();
   }

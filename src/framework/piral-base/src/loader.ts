@@ -1,6 +1,6 @@
 import { defaultFetchDependency } from './fetch';
 import { createEmptyModule, getDependencyResolver } from './utils';
-import { compileDependency, includeDependency, includeBundle } from './dependency';
+import { compileDependency, includeDependency, includeBundle, includeScriptDependency } from './dependency';
 import type {
   AvailableDependencies,
   Pilet,
@@ -14,19 +14,37 @@ import type {
 } from './types';
 
 const inBrowser = typeof document !== 'undefined';
+const depContext = {};
+
+function loadSharedDependencies(sharedDependencies: Record<string, string> | undefined) {
+  if (sharedDependencies && typeof sharedDependencies === 'object') {
+    const sharedDependencyNames = Object.keys(sharedDependencies);
+
+    return Promise.all(
+      sharedDependencyNames.map((name) => {
+        return depContext[name] || (depContext[name] = includeScriptDependency(sharedDependencies[name]));
+      }),
+    );
+  }
+
+  return Promise.resolve();
+}
 
 function loadFrom(
   meta: PiletMetadata,
   getDependencies: PiletDependencyGetter,
-  loader: (dependencies: AvailableDependencies) => Promise<PiletApp>,
+  loadPilet: (dependencies: AvailableDependencies) => Promise<PiletApp>,
 ): Promise<Pilet> {
   const dependencies = {
     ...(getDependencies(meta) || {}),
   };
-  return loader(dependencies).then((app: any) => ({
-    ...app,
-    ...meta,
-  }));
+
+  return loadSharedDependencies(meta.dependencies)
+    .then(() => loadPilet(dependencies))
+    .then((app: any) => ({
+      ...app,
+      ...meta,
+    }));
 }
 
 export function extendLoader(fallback: PiletLoader, specLoaders: CustomSpecLoaders | undefined): PiletLoader {

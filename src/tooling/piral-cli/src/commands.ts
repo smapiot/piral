@@ -461,6 +461,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('minify')
         .describe('minify', 'Performs minification or other post-bundle transformations.')
         .default('minify', apps.buildPiletDefaults.minify)
+        .boolean('declaration')
+        .describe('declaration', 'Creates a declaration file for the pilet.')
+        .default('declaration', apps.buildPiletDefaults.declaration)
         .boolean('content-hash')
         .describe('content-hash', 'Appends the hash to the side-bundle files.')
         .default('content-hash', apps.buildPiletDefaults.contentHash)
@@ -486,6 +489,7 @@ const allCommands: Array<ToolCommand<any>> = [
         minify: args.minify as boolean,
         contentHash: args['content-hash'] as boolean,
         bundlerName: args.bundler as string,
+        declaration: args.declaration as boolean,
         sourceMaps: args['source-maps'] as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
         fresh: args.fresh as boolean,

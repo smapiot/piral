@@ -47,8 +47,8 @@
   "devDependencies": {
     "@types/enzyme": "^3.1.18",
     "@types/jest": "^25.0.0",
-    "enzyme": "^3.11.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
+    "enzyme": "^3.11.0",
     "jest": "^25.0.0",
     "jest-cli": "^25.0.0",
     "lerna": "^3.10.7",
@@ -61,10 +61,11 @@
     "typescript": "^4.0.2"
   },
   "resolutions": {
-    "highlight.js": "10.4.1",
-    "is-svg": "4.2.2",
+    "highlight.js": "10.7.1",
+    "is-svg": "4.3.1",
     "node-fetch": "2.6.1",
     "node-forge": "0.10.0",
-    "ssri": "8.0.1"
+    "ssri": "8.0.1",
+    "tslib": "2.1.0"
   }
 }

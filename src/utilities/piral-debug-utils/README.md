@@ -32,7 +32,7 @@ Usually, we'd guard it to make it only accessible under development conditions.
 
 ```js
 // if we build the debug version of piral (debug and emulator build)
-if (process.env.DEBUG_PIRAL !== undefined) {
+if (process.env.DEBUG_PIRAL) {
   const { installPiralDebug } = require('piral-debug-utils');
 
   installPiralDebug({
@@ -51,7 +51,7 @@ Usually, we'd guard it to make it only accessible under emulator conditions.
 
 ```js
 // if we want to change `fetchPilets` (for an emulator) of the LoadPiletsOptions
-if (process.env.DEBUG_PILET !== undefined) {
+if (process.env.DEBUG_PILET) {
   const { withEmulatorPilets } = require('piral-debug-utils');
 
   fetchPilets = withEmulatorPilets(fetchPilets, {

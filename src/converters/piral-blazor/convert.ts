@@ -2,16 +2,16 @@ import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
 import { createDependencyLoader } from './lib/dependencies';
 
-const convert = createConverter();
+const convert = createConverter(true);
 const loader = createDependencyLoader(convert);
 
 export interface BlazorConverter {
-  (...params: Parameters<typeof convert>): HtmlComponent<any>;
+  (moduleName: string, args?: Record<string, any>): HtmlComponent<any>;
 }
 
-export const fromBlazor: BlazorConverter = (moduleName, dependency, args) => ({
+export const fromBlazor: BlazorConverter = (moduleName, args) => ({
   type: 'html',
-  component: convert(moduleName, dependency, args),
+  component: convert(moduleName, loader.getDependency(), args),
 });
 
 export const defineBlazorReferences = loader.defineBlazorReferences;

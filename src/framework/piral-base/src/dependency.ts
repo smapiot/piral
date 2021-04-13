@@ -91,7 +91,22 @@ function includeScript(
   dependencies?: AvailableDependencies,
   crossOrigin?: string,
 ) {
-  return new Promise<PiletApp>((resolve) => {
+  window[depName] = getLocalRequire(dependencies);
+  return includeScriptDependency(link, integrity, crossOrigin).then(
+    (s) => checkPiletAppAsync(piletName, s.app),
+    () => checkPiletApp(piletName),
+  );
+}
+
+/**
+ * Includes a dependency as a script.
+ * @param link The link to the script.
+ * @param integrity The integrity for the script, if any.
+ * @param crossOrigin Defines if cross-origin should be used.
+ * @returns The script element.
+ */
+export function includeScriptDependency(link: string, integrity?: string, crossOrigin?: string) {
+  return new Promise<HTMLScriptElement>((resolve, reject) => {
     const s = document.createElement('script');
     s.async = true;
     s.src = link;
@@ -103,9 +118,8 @@ function includeScript(
       s.crossOrigin = crossOrigin;
     }
 
-    window[depName] = getLocalRequire(dependencies);
-    s.onload = () => resolve(checkPiletAppAsync(piletName, s.app));
-    s.onerror = () => resolve(checkPiletApp(piletName));
+    s.onload = () => resolve(s);
+    s.onerror = () => reject();
     document.body.appendChild(s);
   });
 }

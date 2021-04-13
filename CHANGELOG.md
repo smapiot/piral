@@ -1,5 +1,16 @@
 # Piral Changelog
 
+## 0.13.1 (tbd)
+
+* Fixed closing notifications after modifications in `piral-notifications`
+* Fixed closing modal dialogs after modifications in `piral-modals`
+* Fixed issue preventing rendering of Mithril in `piral-mithril`
+* Implemented handling for navigation in `piral-blazor`
+* Updated development dependencies
+* Updated `tslib` to v2
+* Added optional `dependencies` to pilet metadata
+* Added option to generate declarations for pilets
+
 ## 0.13.0 (March 24, 2021)
 
 * Fixed HMR in `piral-cli-webpack5` when running `piral debug`

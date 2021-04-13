@@ -27,6 +27,13 @@ export interface ModalsConfig {
    * The initial modal dialogs.
    */
   dialogs?: Array<InitialModalDialog>;
+  /**
+   * Defines how the next ID for the key is selected.
+   * By default a random number is used.
+   *
+   * @param name The name of the modal dialog.
+   */
+  selectId?(name: string): string;
 }
 
 function getModalDialogs(dialogs: Array<InitialModalDialog>) {
@@ -48,7 +55,7 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
  * Creates new Pilet API extensions for support modal dialogs.
  */
 export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletModalsApi> {
-  const { dialogs = [] } = config;
+  const { dialogs = [], selectId = (name) => `${name}-${~~(Math.random() * 10000)}` } = config;
 
   return (context) => {
     context.defineActions(actions);
@@ -71,10 +78,12 @@ export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletMod
       const pilet = target.name;
 
       return {
-        showModal(name, options) {
+        showModal(simpleName, options) {
+          const name = buildName(pilet, simpleName);
           const dialog = {
-            name: buildName(pilet, name),
-            alternative: name,
+            id: selectId(name),
+            name,
+            alternative: simpleName,
             options,
             close() {
               setTimeout(() => context.closeModal(dialog), 0);

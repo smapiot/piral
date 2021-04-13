@@ -1,4 +1,4 @@
-import * as m from 'mithril';
+import { m } from 'mithril';
 import type { PiletApi } from 'piral-core';
 
 export function createExtension(api: PiletApi, rootName = 'slot') {

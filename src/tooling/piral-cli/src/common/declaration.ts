@@ -1,4 +1,4 @@
-import { generateDeclaration } from 'dets';
+import { DeclOptions, generateDeclaration, createExcludePlugin, Logger } from 'dets';
 import { dirname, basename, resolve, extname } from 'path';
 import { progress, log, logWarn, logVerbose, logInfo } from './log';
 import { makeExternals } from './npm';
@@ -54,7 +54,67 @@ async function getEntryModules(entryFiles: string) {
   return [entryFiles];
 }
 
-export async function createDeclaration(
+function createLogger(): Logger {
+  return {
+    error(message) {
+      throw new Error(message);
+    },
+    info(message) {
+      logInfo(message);
+    },
+    verbose(message) {
+      logVerbose(message);
+    },
+    warn(message) {
+      logWarn(message);
+    },
+  };
+}
+
+async function createDeclarationFile(
+  options: DeclOptions,
+  source: string,
+  target: string,
+  forceOverwrite: ForceOverwrite,
+) {
+  progress('Bundling declaration file ...');
+
+  try {
+    const result = generateDeclaration(options);
+
+    progress('Writing declaration file ...');
+    await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
+  } catch (ex) {
+    log('declarationCouldNotBeGenerated_0076', source, ex);
+  }
+}
+
+export async function createPiletDeclaration(
+  name: string,
+  root: string,
+  entry: string,
+  allowedImports: Array<string>,
+  target: string,
+  forceOverwrite: ForceOverwrite,
+  logLevel: LogLevels,
+) {
+  const files = await getAllFiles([entry]);
+  const types = findDeclaredTypings(root);
+  const options: DeclOptions = {
+    name,
+    root,
+    files,
+    types: [...types, ...files],
+    plugins: [createExcludePlugin([name])],
+    apis: [],
+    imports: allowedImports,
+    logLevel,
+    logger: createLogger(),
+  };
+  return await createDeclarationFile(options, root, target, forceOverwrite);
+}
+
+export async function createPiralDeclaration(
   baseDir: string,
   entry: string,
   target: string,
@@ -67,42 +127,20 @@ export async function createDeclaration(
   const allowedImports = makeExternals(externals);
   const entryModules = await getEntryModules(entryFiles);
   const files = await getAllFiles(entryModules);
-
-  progress('Bundling declaration file ...');
-
-  try {
-    const result = generateDeclaration({
-      name,
-      root,
-      files,
-      types: findDeclaredTypings(root),
-      apis: [
-        {
-          file: findPiralBaseApi(root),
-          name: 'PiletApi',
-        },
-      ],
-      imports: allowedImports,
-      logLevel,
-      logger: {
-        error(message) {
-          throw new Error(message);
-        },
-        info(message) {
-          logInfo(message);
-        },
-        verbose(message) {
-          logVerbose(message);
-        },
-        warn(message) {
-          logWarn(message);
-        },
+  const options: DeclOptions = {
+    name,
+    root,
+    files,
+    types: findDeclaredTypings(root),
+    apis: [
+      {
+        file: findPiralBaseApi(root),
+        name: 'PiletApi',
       },
-    });
-
-    progress('Writing declaration file ...');
-    await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
-  } catch (ex) {
-    log('declarationCouldNotBeGenerated_0076', baseDir, ex);
-  }
+    ],
+    imports: allowedImports,
+    logLevel,
+    logger: createLogger(),
+  };
+  return await createDeclarationFile(options, baseDir, target, forceOverwrite);
 }

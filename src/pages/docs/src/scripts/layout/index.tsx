@@ -6,7 +6,7 @@ import { Loader } from '../../../../common/components/Loader';
 import { ScrollToTop } from '../../../../common/components/ScrollToTop';
 
 const updated = process.env.BUILD_TIME;
-const version = process.env.BUILD_PCKG_VERSION;
+const version = require('../../codegen/version.codegen');
 
 export const Layout: React.FC = ({ children }) => {
   const [active, setActive] = React.useState(false);

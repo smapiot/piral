@@ -40,7 +40,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "jsonschema": "1.2.6"
+    "jsonschema": "^1.4.0"
   },
   "devDependencies": {
     "piral-core": "^0.13.0"
