@@ -36,17 +36,6 @@ export interface BlazorComponent {
 }
 
 /**
- * Additional options when defining the blazor references
- */
-export interface BlazorReferencesOptions {
-  /**
-   * Whether to include the Blazor components marked with the `@page`
-   * directive. Omitting this option will exclude the pages.
-   */
-  includePages?: boolean;
-}
-
-/**
  * Defines the provided set of Blazor Pilet API extensions.
  */
 export interface PiletBlazorApi {
@@ -55,9 +44,8 @@ export interface PiletBlazorApi {
    * their URLs.
    *
    * @param referenceUrls The URLs pointing to the different DLLs to include.
-   * @param options Optional options when defining the blazor references.
    */
-  defineBlazorReferences(referenceUrls: Array<string>, options?: BlazorReferencesOptions): void;
+  defineBlazorReferences(referenceUrls: Array<string>): void;
   /**
    * Wraps a Blazor module for use in Piral.
    *
