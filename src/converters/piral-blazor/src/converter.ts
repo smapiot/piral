@@ -34,7 +34,7 @@ export function createConverter(lazy: boolean) {
           .then(() => activate(moduleName, props))
           .then((refId) => {
             if (state === 'fresh') {
-              id = `${moduleName}-${refId}`;
+              id = refId;
               node = el.appendChild(root.querySelector(`#${id} > div`));
               state = 'mounted';
               referenceId = refId;
