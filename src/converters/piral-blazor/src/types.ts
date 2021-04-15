@@ -51,13 +51,16 @@ export interface BlazorReferencesOptions {
  */
 export interface PiletBlazorApi {
   /**
-   * Defines the additional libraries to Blazor via their URLs.
+   * Defines the additional libraries (and their symbols) to Blazor via
+   * their URLs.
+   *
    * @param referenceUrls The URLs pointing to the different DLLs to include.
    * @param options Optional options when defining the blazor references.
    */
   defineBlazorReferences(referenceUrls: Array<string>, options?: BlazorReferencesOptions): void;
   /**
    * Wraps a Blazor module for use in Piral.
+   *
    * @param moduleName The name of the exposed Blazor component.
    * @param args The optional props to use as arguments for the Blazor component.
    * @returns The Piral Blazor component.

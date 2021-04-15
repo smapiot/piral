@@ -1,7 +1,14 @@
 # Piral Changelog
 
-## 0.13.1 (tbd)
+## 0.13.2 (tbd)
 
+* Fixed potential issue for `piral debug` in Firefox
+
+## 0.13.1 (April 13, 2021)
+
+* Fixed closing notifications after modifications in `piral-notifications`
+* Fixed closing modal dialogs after modifications in `piral-modals`
+* Fixed issue preventing rendering of Mithril in `piral-mithril`
 * Implemented handling for navigation in `piral-blazor`
 * Updated development dependencies
 * Updated `tslib` to v2

@@ -4513,10 +4513,10 @@ blank-object@^1.0.1:
   resolved "https://registry.yarnpkg.com/blank-object/-/blank-object-1.0.2.tgz#f990793fbe9a8c8dd013fb3219420bec81d5f4b9"
   integrity sha1-+ZB5P76ajI3QE/syGUIL7IHV9Lk=
 
-blazor@3.2.1-pre.20210331.1:
-  version "3.2.1-pre.20210331.1"
-  resolved "https://registry.yarnpkg.com/blazor/-/blazor-3.2.1-pre.20210331.1.tgz#8426cf33d840ee3840a4cd91443398727af69d22"
-  integrity sha512-GzPntAxP9T2w8Qg7mHwqcaldyRCZe3OBmmcr8MOKpwYP1i9bx7n+o4nbv8boOgJfJ7dMHbWBgG+Ojo72oZaF9g==
+blazor@3.2.1-pre.20210413.2:
+  version "3.2.1-pre.20210413.2"
+  resolved "https://registry.yarnpkg.com/blazor/-/blazor-3.2.1-pre.20210413.2.tgz#e638789a69397b18571e1189f1f6871f8fadd695"
+  integrity sha512-2W5wHQJoHTmtbLddoJ2H/St1bYJQrzgkoqNIpcaihUOxRSb/ghm6dCXNIVHk7tHv0M3pByavtG7ynRB8gWxEMQ==
 
 block-stream@*:
   version "0.0.9"

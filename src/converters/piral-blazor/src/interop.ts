@@ -40,12 +40,12 @@ export function deactivate(moduleName: string, referenceId: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'Deactivate', moduleName, referenceId);
 }
 
-export function addReference(url: string, options?: any) {
-  return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', url, options);
+export async function loadResource(url: string) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', url);
 }
 
-export function removeReference(name: string) {
-  return window.DotNet.invokeMethodAsync(coreLib, 'UnloadComponentsFromLibrary', name);
+export async function loadResourceWithSymbol(dllUrl: string, pdbUrl: string) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsWithSymbolsFromLibrary', dllUrl, pdbUrl);
 }
 
 export function initialize(scriptUrl: string, publicPath: string) {

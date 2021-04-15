@@ -99,6 +99,10 @@ export interface ModalErrorInfoProps {
 
 export interface OpenModalDialog {
   /**
+   * Gets the ID of the modal to open. For tracking its state.
+   */
+  id: string;
+  /**
    * Specifies the fully qualified name of the dialog to show.
    */
   name: string;

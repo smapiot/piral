@@ -1,4 +1,4 @@
-import * as m from 'mithril';
+import * as mithril from 'mithril';
 import { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { Component } from './types';
 
@@ -9,9 +9,9 @@ export function createConverter() {
   ): ForeignComponent<TProps> => {
     return {
       mount(el, props, ctx) {
-        m.mount(el, {
+        mithril.mount(el, {
           view: () =>
-            m(component, {
+            mithril.m(component, {
               ...captured,
               ...ctx,
               ...props,
@@ -19,9 +19,9 @@ export function createConverter() {
         });
       },
       update(el, props, ctx) {
-        m.mount(el, {
+        mithril.mount(el, {
           view: () =>
-            m(component, {
+            mithril.m(component, {
               ...captured,
               ...ctx,
               ...props,
@@ -30,7 +30,7 @@ export function createConverter() {
       },
       unmount(el) {
         // tslint:disable-next-line:no-null-keyword
-        m.mount(el, null);
+        mithril.mount(el, null);
       },
     };
   };

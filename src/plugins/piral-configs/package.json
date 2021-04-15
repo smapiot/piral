@@ -1,6 +1,6 @@
 {
   "name": "piral-configs",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Plugin for dynamic configurations of pilets in Piral.",
   "keywords": [
     "piral",
@@ -43,7 +43,7 @@
     "jsonschema": "^1.4.0"
   },
   "devDependencies": {
-    "piral-core": "^0.13.0"
+    "piral-core": "^0.13.1"
   },
   "peerDependencies": {
     "piral-core": "0.13.x"
