@@ -4,11 +4,10 @@ import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
 import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import { HotModuleServerPlugin } from './HotModuleServerPlugin';
+import SheetPlugin from './sheetPlugin';
 
-function getStyleLoaders(production: boolean, pilet: boolean) {
-  if (production && pilet) {
-    return [require.resolve('./SheetLoader'), MiniCssExtractPlugin.loader];
-  } else if (production) {
+function getStyleLoaders(production: boolean) {
+  if (production) {
     return [MiniCssExtractPlugin.loader];
   } else {
     return ['style-loader'];
@@ -34,7 +33,7 @@ export function getHmrEntry(hmrPort: number) {
   return hmrPort ? [`webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`] : [];
 }
 
-export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, hmrPort?: number) {
+export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, pilet: boolean, hmrPort?: number) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -65,13 +64,17 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
 
   if (production) {
     otherPlugins.push(new optimize.OccurrenceOrderPlugin(true));
+
+    if (pilet) {
+      otherPlugins.push(new SheetPlugin())
+    }
   }
 
   return plugins.concat(otherPlugins);
 }
 
-export function getRules(baseDir: string, production: boolean, pilet: boolean): Array<RuleSetRule> {
-  const styleLoaders = getStyleLoaders(production, pilet);
+export function getRules(baseDir: string, production: boolean): Array<RuleSetRule> {
+  const styleLoaders = getStyleLoaders(production);
   const nodeModules = resolve(baseDir, 'node_modules');
   const babelLoader = {
     loader: 'babel-loader',

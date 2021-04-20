@@ -55,7 +55,7 @@ export async function getPiletConfig(
       },
 
       module: {
-        rules: getRules(baseDir, production, true),
+        rules: getRules(baseDir, production),
       },
 
       optimization: {
@@ -77,7 +77,7 @@ export async function getPiletConfig(
         ],
       },
 
-      plugins: getPlugins([], progress),
+      plugins: getPlugins([], progress, production, true),
     },
     enhance,
   ];
