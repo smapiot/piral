@@ -4,7 +4,7 @@ import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
 import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import { HotModuleServerPlugin } from './HotModuleServerPlugin';
-import SheetPlugin from './sheetPlugin';
+import SheetPlugin from './SheetPlugin';
 
 function getStyleLoaders(production: boolean) {
   if (production) {
