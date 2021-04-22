@@ -55,7 +55,7 @@ export async function getPiralConfig(
       },
 
       module: {
-        rules: getRules(baseDir, production, false),
+        rules: getRules(baseDir, production),
       },
 
       optimization: {
@@ -71,7 +71,7 @@ export async function getPiralConfig(
         ],
       },
 
-      plugins: getPlugins([], progress),
+      plugins: getPlugins([], progress, production, false),
     },
     enhance,
   ];

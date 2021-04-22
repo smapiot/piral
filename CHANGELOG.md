@@ -3,6 +3,9 @@
 ## 0.13.2 (tbd)
 
 * Fixed potential issue for `piral debug` in Firefox
+* Fixed limited request length for publishing pilets (#375)
+* Updated the `piral-blazor` to accept precomputed IDs from the C# bridge
+* Switched to a plugin based stylesheet linking in `piral-cli-webpack` and `piral-cli-webpack5`
 
 ## 0.13.1 (April 13, 2021)
 

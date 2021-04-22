@@ -73,6 +73,7 @@
     "terser-webpack-plugin": "^2.3.5",
     "ts-loader": "^7.0.2",
     "webpack": "^4.42.0",
-    "webpack-hot-middleware": "^2.25.0"
+    "webpack-hot-middleware": "^2.25.0",
+    "webpack-inject-plugin": "^1.5.5"
   }
 }
