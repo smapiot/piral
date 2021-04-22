@@ -1,6 +1,7 @@
 import type { BaseComponentProps, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
 import { activate, deactivate, createBootLoader } from './interop';
+import { BlazorOptions } from './types';
 
 export function createConverter(lazy: boolean) {
   const bootConfig = require('../infra.codegen');
@@ -15,6 +16,7 @@ export function createConverter(lazy: boolean) {
     moduleName: string,
     dependency: () => Promise<void>,
     args: Record<string, any>,
+    options?: BlazorOptions,
   ): ForeignComponent<TProps> => {
     let id: string;
     let referenceId: string;
