@@ -15,6 +15,16 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
+/**
+ * Additional options for the Blazor component
+ */
+export interface BlazorOptions {
+  /**
+   * The root path where resources are located
+   */
+  resourcePathRoot?: string;
+}
+
 export interface BlazorComponent {
   /**
    * The name of the Blazor module to render.
@@ -33,6 +43,10 @@ export interface BlazorComponent {
    * The type of the Blazor component.
    */
   type: 'blazor';
+  /**
+   * Additional options for the Blazor component.
+   */
+  options?: BlazorOptions;
 }
 
 /**
@@ -54,4 +68,10 @@ export interface PiletBlazorApi {
    * @returns The Piral Blazor component.
    */
   fromBlazor(moduleName: string, args?: Record<string, any>): BlazorComponent;
+  /**
+   * Defines the additional options to be shared by all Blazor components.
+   *
+   * @param options The options for the Blazor components.
+   */
+  defineBlazorOptions(options: BlazorOptions): void;
 }
