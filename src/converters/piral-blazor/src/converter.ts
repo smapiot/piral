@@ -3,6 +3,26 @@ import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } fro
 import { activate, deactivate, createBootLoader } from './interop';
 import { BlazorOptions } from './types';
 
+function prefixMediaSources(component: Element, prefix: string) {
+  const prefixAttributeValue = (el, attr) => el.setAttribute(attr, prefix + el.getAttribute(attr));
+
+  const ruleSet = [
+    { attribute: 'src', selector: 'img, embed, video > source, video > track, audio > source' },
+    { attribute: 'srcset', selector: 'picture > source' },
+  ];
+
+  for (const { attribute, selector } of ruleSet) {
+    Array.from(component.querySelectorAll(selector))
+      .filter((el) => el.hasAttribute(attribute) && !el.getAttribute(attribute).match(/^https?:/))
+      .forEach((el) => prefixAttributeValue(el, attribute));
+  }
+}
+
+function project(component: Element, destination: Element, options: BlazorOptions): Element {
+  options?.resourcePathRoot && prefixMediaSources(component, options.resourcePathRoot);
+  return destination.appendChild(component);
+}
+
 export function createConverter(lazy: boolean) {
   const bootConfig = require('../infra.codegen');
   const boot = createBootLoader(bootConfig);
@@ -37,7 +57,8 @@ export function createConverter(lazy: boolean) {
           .then((refId) => {
             if (state === 'fresh') {
               id = refId;
-              node = el.appendChild(root.querySelector(`#${id} > div`));
+              const component = root.querySelector('#' + id + ' > div');
+              node = project(component, el, options) as HTMLElement;
               state = 'mounted';
               referenceId = refId;
             }

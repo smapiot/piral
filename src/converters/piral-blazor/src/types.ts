@@ -19,6 +19,10 @@ declare module 'piral-core/lib/types/custom' {
  * Additional options for the Blazor component
  */
 export interface BlazorOptions {
+  /**
+   * The root path where resources are located
+   */
+  resourcePathRoot?: string;
 }
 
 export interface BlazorComponent {
