@@ -3,15 +3,15 @@ import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } fro
 import { activate, deactivate, createBootLoader } from './interop';
 import { BlazorOptions } from './types';
 
+const mediaRules = [
+  { attribute: 'src', selector: 'img, embed, video > source, video > track, audio > source' },
+  { attribute: 'srcset', selector: 'picture > source' },
+];
+
 function prefixMediaSources(component: Element, prefix: string) {
   const prefixAttributeValue = (el, attr) => el.setAttribute(attr, prefix + el.getAttribute(attr));
 
-  const ruleSet = [
-    { attribute: 'src', selector: 'img, embed, video > source, video > track, audio > source' },
-    { attribute: 'srcset', selector: 'picture > source' },
-  ];
-
-  for (const { attribute, selector } of ruleSet) {
+  for (const { attribute, selector } of mediaRules) {
     Array.from(component.querySelectorAll(selector))
       .filter((el) => el.hasAttribute(attribute) && !el.getAttribute(attribute).match(/^https?:/))
       .forEach((el) => prefixAttributeValue(el, attribute));
