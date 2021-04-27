@@ -1,6 +1,6 @@
 {
   "name": "piral-containers",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "Plugin for creating a pilet state container in Piral.",
   "keywords": [
     "piral",
@@ -41,7 +41,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.13.1"
+    "piral-core": "^0.13.2"
   },
   "peerDependencies": {
     "piral-core": "0.13.x"

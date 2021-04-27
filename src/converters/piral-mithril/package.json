@@ -1,6 +1,6 @@
 {
   "name": "piral-mithril",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "Plugin for integrating Mithril.js components in Piral.",
   "keywords": [
     "piral",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "mithril": "2.0.4",
-    "piral-core": "^0.13.1"
+    "piral-core": "^0.13.2"
   },
   "peerDependencies": {
     "mithril": "^2.0.0",
