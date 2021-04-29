@@ -44,6 +44,10 @@ module.exports = require('piral-jest-utils').default;
 
 You can now add tests in your `src` folder. Every file sufficed with `.test.js` or `.test.ts` will be considered.
 
+## Example
+
+Have a look [here](https://github.com/piral-samples/piral-microfrontend-demo/tree/master/team-red) for an example on how `piral-jest-utils` can be used for testing pilets.
+
 ## Usage
 
 If you want to add more directories (other than `src`) then you'll need to extend the configuration.
