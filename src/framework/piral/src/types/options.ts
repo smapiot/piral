@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral-core';
 import { PiralExtSettings } from 'piral-ext';
 
@@ -18,6 +18,16 @@ export interface PiralRenderBaseOptions {
    * Defines how the errors look like.
    */
   errors?: Partial<ErrorComponentsState>;
+  /**
+   * Defines the path of the dashboard. By default
+   * this is the landing page path.
+   * @default "/"
+   */
+  dashboardPath?: string;
+  /**
+   * Puts in additional children for the <Piral> element.
+   */
+  piralChildren?: ReactNode;
 }
 
 /**

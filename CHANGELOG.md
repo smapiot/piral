@@ -2,7 +2,7 @@
 
 ## 0.13.3 (tbd)
 
-* Nothing yet
+* Added `dashboardPath` and `piralChildren` as options for `renderInstance`
 
 ## 0.13.2 (April 27, 2021)
 
