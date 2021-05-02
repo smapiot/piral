@@ -1,6 +1,10 @@
 # Piral Changelog
 
-## 0.13.2 (tbd)
+## 0.13.3 (tbd)
+
+* Nothing yet
+
+## 0.13.2 (April 27, 2021)
 
 * Fixed potential issue for `piral debug` in Firefox
 * Fixed limited request length for publishing pilets (#375)
