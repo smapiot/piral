@@ -3,6 +3,7 @@
 ## 0.13.3 (tbd)
 
 * Added `dashboardPath` and `piralChildren` as options for `renderInstance`
+* Updated used chunk hash length for Webpack
 
 ## 0.13.2 (April 27, 2021)
 
