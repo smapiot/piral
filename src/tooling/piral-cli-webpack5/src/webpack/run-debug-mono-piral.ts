@@ -21,7 +21,7 @@ async function run(
   setStandardEnvs({
     piral,
     dependencies: externals,
-    production: true,
+    production: false,
     debugPiral: true,
     debugPilet: true,
     root,
