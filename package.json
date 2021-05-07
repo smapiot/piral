@@ -65,6 +65,7 @@
     "is-svg": "4.3.1",
     "node-fetch": "2.6.1",
     "node-forge": "0.10.0",
+    "underscore": "1.12.1",
     "ssri": "8.0.1",
     "tslib": "2.1.0"
   }
