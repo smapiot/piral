@@ -5,6 +5,7 @@
 * Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`
 * Added `dashboardPath` and `piralChildren` as options for `renderInstance`
 * Updated used chunk hash length for Webpack
+* Replaced `node-sass` with `sass`
 
 ## 0.13.2 (April 27, 2021)
 
