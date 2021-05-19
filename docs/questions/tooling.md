@@ -86,3 +86,20 @@ In such cases please find out what you use and which polyfill (additionally to `
 Finally, in cases where you target more modern browsers feel free to remove `piral/polyfills` from your imports. The intention of this module is not to cover all cases, but to cover the most important ones.
 
 ---------------------------------------
+
+## How can I debug with HTTPS?
+
+The debug server middleware `kras` can be configured freely. One option is to use a `.krasrc` file like:
+
+```json
+{
+  "ssl": {
+    "cert": "node_modules/kras/cert/server.crt",
+    "key": "node_modules/kras/cert/server.key"
+  }
+}
+```
+
+This example uses `kras`'s default certificate. It will / should not be trusted on your machine. You can also create your own (or use your own) trusted certificates. In this case just set the given paths accordingly.
+
+---------------------------------------

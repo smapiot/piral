@@ -162,6 +162,10 @@ function wrapComponent<T>(
   return wrapReactComponent<T>(component, stasisOptions, piral, Wrapper);
 }
 
+function getWrapper(wrappers: Record<string, React.ComponentType<any>>, wrapperType: string) {
+  return wrappers[wrapperType] || wrappers['*'] || DefaultWrapper;
+}
+
 export function withApi<TProps>(
   context: GlobalStateContext,
   component: AnyComponent<TProps & BaseComponentProps>,
@@ -170,7 +174,7 @@ export function withApi<TProps>(
   wrapperType: string = errorType,
 ) {
   const converters = context.converters;
-  const Wrapper = context.readState((m) => m.registry.wrappers[wrapperType]) || DefaultWrapper;
+  const Wrapper = context.readState((m) => getWrapper(m.registry.wrappers, wrapperType));
 
   return wrapComponent<TProps>(converters, component, piral, Wrapper, {
     onError(error) {
