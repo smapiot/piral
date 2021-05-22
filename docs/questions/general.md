@@ -1,3 +1,7 @@
+---
+title: General Questions
+---
+
 # General
 
 ## What's the motivation behind Piral?

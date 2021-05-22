@@ -1,3 +1,7 @@
+---
+title: Piral Architecture
+---
+
 # Piral Architecture
 
 Overall, Piral can be considered a cure for the common frontend monolith. The frontend monolith describes an architecture where the backend is nicely split into different modules (called services), but the frontend is communicating directly to all these services effectively aggregating the backend split into one giant codebase.

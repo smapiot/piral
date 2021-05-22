@@ -1,3 +1,7 @@
+---
+title: Plugin Questions
+---
+
 # Plugins
 
 ## Do you support Angular (2+)?

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FooterMenu } from './FooterMenu';
+import '../styles/_footer.scss';
 
 const year = new Date().getFullYear();
 

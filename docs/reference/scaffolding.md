@@ -1,3 +1,7 @@
+---
+title: Scaffolding
+---
+
 # Scaffolding
 
 This section will help you with the process of creating fresh piral and pilet instances.

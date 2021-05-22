@@ -1,23 +1,70 @@
-const { resolve } = require('path');
-const { readFileSync } = require('fs');
-const { getPluginTypes, getName, generated, getPluginImage, getPackageRoot, getPluginCategory } = require('./paths');
-const { render } = require('./markdown');
-const { docRef } = require('./utils');
-const { generatePage } = require('./pages');
+const { resolve, relative } = require('path');
+const { readFileSync, readdirSync, existsSync } = require('fs');
+const { render, docRef, generated, generatePage, getName, getDocsFrom } = require('piral-docs-tools');
 
-function getRoute(name) {
-  return (name && `/plugins/${name}/:tab?`) || '';
+const categoryPrefix = 'plugin-';
+const packagesRoot = resolve(__dirname, '../../../..');
+const assetsPath = resolve(__dirname, '..', 'assets');
+const packages = {
+  plugins: getPackages('plugins'),
+  converters: getPackages('converters'),
+  framework: getPackages('framework'),
+  utilities: getPackages('utilities'),
+  tooling: getPackages('tooling'),
+};
+const standardPeerDeps = ['piral-core', 'react', 'react-dom', 'react-router', 'react-router-dom'];
+const pluginPackages = [...packages.plugins, ...packages.converters];
+
+function getPackageRoot(packageName) {
+  for (const key of Object.keys(packages)) {
+    if (packages[key].includes(packageName)) {
+      return resolve(packagesRoot, key, packageName);
+    }
+  }
 }
 
-module.exports = function () {
-  const files = getPluginTypes();
-  const standardPeerDeps = ['piral-core', 'react', 'react-dom', 'react-router', 'react-router-dom'];
+function getCategory(keywords) {
+  return keywords
+    .filter((keyword) => keyword.startsWith(categoryPrefix))
+    .map((keyword) => keyword.substr(categoryPrefix.length))[0];
+}
+
+function getPluginCategory(plugin) {
+  return getCategory(plugin.keywords);
+}
+
+function getPackages(dirName) {
+  const dir = resolve(packagesRoot, dirName);
+  return readdirSync(dir).filter((name) => existsSync(resolve(dir, name, 'package.json')));
+}
+
+function isPluginType(fileName) {
+  return pluginPackages.some((name) => fileName.endsWith(`${name}.json`));
+}
+
+function getPluginTypes(docsFolder) {
+  const types = resolve(docsFolder, 'types');
+  return getDocsFrom(types, /\.json$/).filter((file) => !file.endsWith('piral-ext.json') && isPluginType(file));
+}
+
+function getPluginImage(name) {
+  const rest = name.replace('piral-', '');
+  const hasImage = existsSync(resolve(__dirname, '..', 'assets', 'extensions', `${rest}.png`));
+  return hasImage ? `extensions/${rest}.png` : 'top-extensions.png';
+}
+
+function getRoute(basePath, name) {
+  return (name && `${basePath}/${name}/:tab?`) || '';
+}
+
+module.exports = function (basePath, docsFolder) {
+  const files = getPluginTypes(docsFolder);
 
   const imports = files
     .map((file) => {
       const type = readFileSync(file, 'utf8');
       const name = getName(file);
-      const route = getRoute(name);
+      const route = getRoute(basePath, name);
       const link = route.replace('/:tab?', '');
       const image = getPluginImage(name);
       const pluginRoot = getPackageRoot(name);
@@ -63,7 +110,7 @@ module.exports = function () {
       const body = `
         <PageContent>
           <div className="plugin-info">
-            <img src={require('../../assets/${image}')} />
+            <img src={require('${relative(generated, assetsPath)}/${image}')} />
             <h1>${name}</h1>
           </div>
           <Tabs titles={["Overview", "Types", "Info"]}>

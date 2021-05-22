@@ -1,3 +1,7 @@
+---
+title: Infrastructure Questions
+---
+
 # Infrastructure
 
 ## What do I need to run Piral?

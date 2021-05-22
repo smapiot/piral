@@ -1,9 +1,13 @@
-const { getCommands, generated, getName } = require('./paths');
-const { render } = require('./markdown');
-const { generateStandardPage } = require('./pages');
+const { resolve } = require('path');
+const { render, generated, generateStandardPage, getName, getDocsFrom } = require('piral-docs-tools');
 
-function getRoute(name) {
-  return (name && `/tooling/${name}`) || '';
+function getCommands(docsFolder) {
+  const commands = resolve(docsFolder, 'commands');
+  return getDocsFrom(commands);
+}
+
+function getRoute(basePath, name) {
+  return (name && `${basePath}/${name}`) || '';
 }
 
 function getType(file) {
@@ -16,12 +20,12 @@ function getType(file) {
   }
 }
 
-module.exports = function () {
-  const commands = getCommands();
+module.exports = function (basePath, docsFolder, options) {
+  const commands = getCommands(docsFolder);
 
   const imports = commands.map((file) => {
     const name = getName(file);
-    const route = getRoute(name);
+    const route = getRoute(basePath, name);
     const { mdValue } = render(file, generated);
     const tool = getType(file);
     const pageMeta = {

@@ -1,3 +1,7 @@
+---
+title: Piral CLI Specification
+---
+
 # Piral CLI Specification
 
 ## Abstract

@@ -1,11 +1,19 @@
-const { generated, getName, getBundlers } = require('./paths');
-const { render } = require('./markdown');
-const { generatePage } = require('./pages');
-const { docRef } = require('./utils');
-const { sep } = require('path');
+const { sep, resolve } = require('path');
+const { render, generatePage, docRef, generated, readme } = require('piral-docs-tools');
 
-function getRoute(name) {
-  return (name && `/tooling/${name}`) || '';
+function getBundlers() {
+  const toolingRoot = resolve(__dirname, '../../../../tooling');
+  const webpackRoot = resolve(toolingRoot, 'piral-cli-webpack');
+  const parcelRoot = resolve(toolingRoot, 'piral-cli-parcel');
+
+  return [
+    resolve(webpackRoot, readme),
+    resolve(parcelRoot, readme)
+  ];
+}
+
+function getRoute(basePath, name) {
+  return (name && `${basePath}/${name}`) || '';
 }
 
 /**
@@ -16,14 +24,14 @@ function getPathElements(filePath) {
   return filePath.split(sep);
 }
 
-module.exports = function () {
+module.exports = function (basePath) {
   const bundlers = getBundlers();
 
   const imports = bundlers.map((file) => {
     const { mdValue, meta = {} } = render(file, generated);
     const pathElements = getPathElements(file);
     const name = pathElements[pathElements.length - 2];
-    const route = getRoute(name);
+    const route = getRoute(basePath, name);
     const pageMeta = {
       ...meta,
       link: route,
