@@ -206,3 +206,36 @@ A pilet contains all the code of a microfrontend, which may include some pages. 
 Yes definitely. There is nothing in Piral that would violate HIPAA. For HIPAA compliance of our official [feed service](https://feed.piral.cloud), see the questions there.
 
 ---------------------------------------
+
+## How to wrap all MF components?
+
+A Piral instance can be configured with "wrappers". These are middleware components that will host registered components (like the ones coming from the microfrontends).
+
+Simple example:
+
+```jsx
+renderInstance({
+  layout,
+  errors,
+  state: {
+    registry: {
+      wrappers: {
+        tile: ({ piral, children }) => (
+          <div data-foo={piral.meta.name}>{children}</div>
+        ),
+      },
+    },
+  },
+  requestPilets() {
+    return fetch(feedUrl)
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+})
+```
+
+Wrappers are applied on basis of component registrations, so you'd need to define one (or the same) wrapper for all types of component registrations (`extension`, `page`, `tile`, ...).
+
+There is also the special fallback wrapper `*`, which is used if no specific wrapper is available.
+
+---------------------------------------
