@@ -53,6 +53,7 @@
     "jest-cli": "^25.0.0",
     "lerna": "^3.10.7",
     "prettier": "^2.1.1",
+    "sass": "^1.34.0",
     "ts-jest": "^25.0.0",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
