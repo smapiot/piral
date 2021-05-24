@@ -12,7 +12,7 @@ Use your favorite NPM client for the installation:
 npm i piral-cli-parcel --save-dev
 ```
 
-**Note**: If you don't install any bundler for use in `piral-cli` then `piral-cli-parcel` will be automatically installed for you.
+**Note**: If you don't install any bundler for use in `piral-cli` then `piral-cli-parcel` won't be automatically installed for you.
 
 ## Using
 
