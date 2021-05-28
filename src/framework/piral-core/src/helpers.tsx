@@ -128,6 +128,7 @@ export function createPiletOptions({
   }
 
   return {
+    config: loaderConfig,
     strategy,
     loadPilet,
     createApi,
