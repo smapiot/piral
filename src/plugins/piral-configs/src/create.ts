@@ -58,6 +58,8 @@ export function createConfigsApi(config: ConfigsConfig = {}): PiralPlugin<PiletC
           [meta.name]: current,
         },
       }));
+
+      return current;
     },
     getCurrentConfig() {
       return ctx.readState((s) => s.configs[meta.name]) ?? {};
