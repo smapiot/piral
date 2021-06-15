@@ -46,7 +46,7 @@ Sets the log level to use (1-5).
 Selects the target type to publish. "all" publishes all target types.
 
 - Type: `string`
-- Choices: `"all"`, `"release"`, `"emulator"`
+- Choices: `"all"`, `"release"`, `"emulator"`, `"emulator-sources"`
 - Default: `"all"`
 
 ### `--provider`
