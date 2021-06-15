@@ -1,6 +1,7 @@
 import { Atom, deref } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
+import { createActions } from 'piral-core';
 import { registerModal, unregisterModal, openModal, closeModal } from './actions';
-import { createActions, createListener } from 'piral-core';
 
 describe('Modals Actions Module', () => {
   it('registerModal and unregisterModal', () => {

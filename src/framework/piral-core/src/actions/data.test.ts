@@ -1,6 +1,6 @@
 import { Atom, deref, swap } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
 import { readDataItem, readDataValue, resetData, tryWriteDataItem, writeDataItem } from './data';
-import { createListener } from '../utils';
 
 describe('Data Actions Module', () => {
   it('readDataItem reads the current item', () => {

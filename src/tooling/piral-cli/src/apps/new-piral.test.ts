@@ -85,7 +85,7 @@ describe('New Piral Command', () => {
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'src/index.ts'))).toBeTruthy();
-    expect(existsSync(resolve(dir, 'src/index.html'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
   });

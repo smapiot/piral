@@ -2,7 +2,7 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
-import { getDevDependencies } from './language';
+import { getDependencies, getDevDependencies } from './language';
 import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
@@ -140,10 +140,16 @@ export function getPiralPackage(
   framework: Framework,
   bundler?: string,
 ) {
+  // take default packages only if piral-core
+  const packages = framework !== 'piral-core' ? {} : undefined;
+  // take default dev packages only if not piral-base
   const typings = framework === 'piral-base' ? {} : undefined;
   const devDependencies = {
     ...getDevDependencies(language, typings),
     'piral-cli': `${version}`,
+  };
+  const dependencies = {
+    ...getDependencies(language, packages),
   };
 
   if (bundler && bundler !== 'none') {
@@ -157,6 +163,7 @@ export function getPiralPackage(
       build: 'piral build',
     },
     pilets: getPiletsInfo({}),
+    dependencies,
     devDependencies,
   };
 }

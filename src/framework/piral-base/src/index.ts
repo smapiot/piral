@@ -1,4 +1,6 @@
+export * from './api';
 export * from './create';
+export * from './events';
 export * from './load';
 export * from './loader';
 export * from './setup';

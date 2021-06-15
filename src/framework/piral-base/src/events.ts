@@ -1,4 +1,4 @@
-import { EventEmitter } from '../types';
+import { EventEmitter } from './types';
 
 export type EventListeners = Array<[any, any]>;
 
@@ -6,7 +6,13 @@ function nameOf(type: string | number) {
   return `piral-${type}`;
 }
 
-export function createListener(state: any): EventEmitter {
+/**
+ * Creates a new Piral app shell event emitter.
+ * Uses a custom event dispatcher with a state for usage control.
+ * @param state The optional state object to identify the instance.
+ * @returns The event emitter.
+ */
+export function createListener(state: any = {}): EventEmitter {
   const eventListeners: EventListeners = [];
 
   return {

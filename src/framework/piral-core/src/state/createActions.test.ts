@@ -1,5 +1,5 @@
+import { createListener } from 'piral-base';
 import { createActions, includeActions } from './createActions';
-import { createListener } from '../utils';
 
 jest.mock('../actions', () => ({
   a(arg) {
