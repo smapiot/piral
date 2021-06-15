@@ -20,8 +20,10 @@ export interface PiletConfigsApi {
    * Defines the available configuration options for the pilet.
    * @param schema The schema to use for allowing configurations.
    * @param defaultConfig The default configuration to use.
+   * @returns The current configuration, which may be either the
+   * default configuration or an override.
    */
-  defineConfigSchema<T = any>(schema: Schema, defaultConfig?: T): void;
+  defineConfigSchema<T = any>(schema: Schema, defaultConfig?: T): T;
   /**
    * Gets the currently available configuration.
    */

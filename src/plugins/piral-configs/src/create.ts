@@ -49,7 +49,7 @@ export function createConfigsApi(config: ConfigsConfig = {}): PiralPlugin<PiletC
   return (ctx) => (_, meta) => ({
     defineConfigSchema(schema, defaultConfig) {
       const proposedConfig = readConfig(meta.name, defaultConfig);
-      const current = validate(schema, proposedConfig, defaultConfig);
+      const current = proposedConfig ? validate(schema, proposedConfig, defaultConfig) : defaultConfig;
 
       ctx.dispatch((state) => ({
         ...state,
