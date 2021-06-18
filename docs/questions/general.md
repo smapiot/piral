@@ -60,7 +60,7 @@ Piral was created with microfrontend architectures relying on heavy client-side 
 
 Nevertheless, for a couple of reasons you may want to offer a non-JS (or progressive) version of your application. You may want to offer enhanced SEO capabilities. You may want to reduce initial loading / rendering time. You may want to give non-JS users a bit more capabilities than just stating "Sorry - you need to enable JavaScript". We hear you loud and clear.
 
-Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../guidelines/server-side-rendering.md).
+Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../tutorials/11-server-side-rendering.md).
 
 ---------------------------------------
 

@@ -115,7 +115,7 @@ You don't need to use them, but they can be quite helpful. For instance, on `__P
 
 ### Configuration of the Provided Options
 
-The parameters for the generated service worker can be configured, too. All in all this follows the options known from Webpack's [offline-plugin](https://github.com/NekR/offline-plugin), see [options](https://github.com/NekR/offline-plugin/blob/main/docs/options.md) for explanations.
+The parameters for the generated service worker can be configured, too. All in all this follows the options known from Webpack's [offline-plugin](https://github.com/NekR/offline-plugin), see [options](https://github.com/NekR/offline-plugin/blob/master/docs/options.md) for explanations.
 
 In a nutshell, in order to use the options you'll need a file called `.pwarc` in the root directory of your application (i.e., next to your `package.json`).
 

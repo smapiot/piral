@@ -82,6 +82,7 @@ To execute the created Piral instance, navigate to the directory `my-app` and ru
 piral debug
 ```
 
+<!-- markdown-link-check-disable-next-line -->
 When the build process is completed, the application shell can be opened locally in a browser. The output of the debug process shows the local address, which is usually http://localhost:1234.
 
 If you need to change the port, on which the instance is exposed, you can select a custom port just by adding the flag `--port <port_number>` to the piral-cli command.

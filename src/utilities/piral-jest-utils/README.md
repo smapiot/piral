@@ -46,7 +46,7 @@ You can now add tests in your `src` folder. Every file sufficed with `.test.js` 
 
 ## Example
 
-Have a look [here](https://github.com/piral-samples/piral-microfrontend-demo/tree/main/team-red) for an example on how `piral-jest-utils` can be used for testing pilets.
+Have a look [here](https://github.com/piral-samples/piral-microfrontend-demo/tree/master/team-red) for an example on how `piral-jest-utils` can be used for testing pilets.
 
 ## Usage
 

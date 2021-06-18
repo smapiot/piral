@@ -75,6 +75,7 @@ export const MyPage: React.FC = () => (
 );
 ```
 
+<!-- markdown-link-check-disable-next-line -->
 Running this code will not result in anything fancy. We can now go to http://localhost:1234/my-page for seeing the page. On the landing page (dashboard) or in the menu we do not see any entry. We may want to link the page somehow.
 
 ## Linking the Page

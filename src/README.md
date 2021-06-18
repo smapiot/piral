@@ -21,7 +21,7 @@ For development you need to have the following software installed:
 
 - Git must be set up to clone / work with the repository
 - Node.js with NPM (for instructions see [Node.js website](https://nodejs.org/en/))
-- Lerna, see [official website](https://lernajs.io)
+- Lerna, see [official website](https://lerna.js.org)
 - Yarn, see [official website](https://yarnpkg.com/lang/en/)
 - Obviously, you'll also need a proper command line terminal
 
@@ -55,7 +55,8 @@ yarn watch:demo-full
 
 in the workspace.
 
-This will open a development server sitting at `http://localhost:1234`. Right now the Piral CLI is just a tiny wrapper around Parcel :rocket:.
+<!-- markdown-link-check-disable-next-line -->
+This will open a development server sitting at http://localhost:1234. Right now the Piral CLI is just a tiny wrapper around Parcel :rocket:.
 
 ### Simple Development Tools
 

@@ -44,8 +44,8 @@ This quick start will show us how to
 
 1. Creating a **Feed** in the feed service
 2. Create an **API Key** required for publishing the pilet
-2. **Publish a pilet** to the feed service
-3. **Configure the Piral Instance** to fetch pilets from the feed service
+3. **Publish a pilet** to the feed service
+4. **Configure the Piral Instance** to fetch pilets from the feed service
 
 ## Prerequisites
 
@@ -158,5 +158,3 @@ In this tutorial, you have
 - Configured the application shell to **load pilets from a feed**
 
 The next tutorial will describe the **Pilet API** in more detail.
-
-
