@@ -73,7 +73,7 @@
     "aurelia-pal-browser": "^1.8.1",
     "aurelia-templating-binding": "^1.5.3",
     "aurelia-templating-resources": "^1.12.0",
-    "blazor": "3.2.1-pre.20210413.2",
+    "blazor": "^5.0.0",
     "core-js": "^2.5.7",
     "hyperapp": "^1.2.10",
     "inferno": "^7.3.2",
