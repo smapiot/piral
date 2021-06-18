@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Jest Utils](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-jest-utils.svg?style=flat)](https://www.npmjs.com/package/piral-jest-utils) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Jest Utils](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-jest-utils.svg?style=flat)](https://www.npmjs.com/package/piral-jest-utils) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is an opinionated utility library that can be used for testing Piral instances and pilets.
 
@@ -46,7 +46,7 @@ You can now add tests in your `src` folder. Every file sufficed with `.test.js` 
 
 ## Example
 
-Have a look [here](https://github.com/piral-samples/piral-microfrontend-demo/tree/master/team-red) for an example on how `piral-jest-utils` can be used for testing pilets.
+Have a look [here](https://github.com/piral-samples/piral-microfrontend-demo/tree/main/team-red) for an example on how `piral-jest-utils` can be used for testing pilets.
 
 ## Usage
 

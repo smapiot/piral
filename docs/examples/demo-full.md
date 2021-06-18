@@ -21,4 +21,4 @@ The sample pilets are all available in our sample pilets repository on GitHub. E
 ## Links
 
 - [Demo Online](https://demo-full.piral.io)
-- [Code on GitHub](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral)
+- [Code on GitHub](https://github.com/smapiot/piral/tree/main/src/samples/sample-piral)

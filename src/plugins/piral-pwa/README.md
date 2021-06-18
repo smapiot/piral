@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral PWA](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-pwa.svg?style=flat)](https://www.npmjs.com/package/piral-pwa) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral PWA](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-pwa.svg?style=flat)](https://www.npmjs.com/package/piral-pwa) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that has a peer dependency to `piral-core` and **requires** `parcel-bundler` to work.
 
@@ -115,7 +115,7 @@ You don't need to use them, but they can be quite helpful. For instance, on `__P
 
 ### Configuration of the Provided Options
 
-The parameters for the generated service worker can be configured, too. All in all this follows the options known from Webpack's [offline-plugin](https://github.com/NekR/offline-plugin), see [options](https://github.com/NekR/offline-plugin/blob/master/docs/options.md) for explanations.
+The parameters for the generated service worker can be configured, too. All in all this follows the options known from Webpack's [offline-plugin](https://github.com/NekR/offline-plugin), see [options](https://github.com/NekR/offline-plugin/blob/main/docs/options.md) for explanations.
 
 In a nutshell, in order to use the options you'll need a file called `.pwarc` in the root directory of your application (i.e., next to your `package.json`).
 

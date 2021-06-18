@@ -82,4 +82,4 @@ The versioning is fully managed via the *CHANGELOG.md* file. If you make a chang
 
 Changes to `develop` will always result in a preview build (pre-release) of the packages. For the pre-release the latest version from the *CHANGELOG.md* is used. In addition the build id is added to make the pre-release unique and easy to identify.
 
-When merging into master the latest version block of the *CHANGELOG.md* will be changed to contain the current release date.
+When merging into main the latest version block of the *CHANGELOG.md* will be changed to contain the current release date.
