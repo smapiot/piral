@@ -5,6 +5,8 @@ import { useAction, useGlobalState, compare, generateId } from 'piral-core';
 import { usePrompt } from './usePrompt';
 import { FormProps, InputFormOptions, FormDataState } from './types';
 
+const defaultMessage = 'Are you sure you want to discard the form data?';
+
 interface StateUpdater {
   (id: string, state: FormDataState, patch: Partial<FormDataState>): void;
 }
@@ -133,7 +135,7 @@ export function useForm<TFormData>(
   options: InputFormOptions<TFormData, any>,
   existingId?: string,
 ) {
-  const { silent, message } = options;
+  const { silent, message = defaultMessage } = options;
   const [id] = useState(existingId || generateId);
   const state = useGlobalState((m) => m.forms[id] || createDefaultState(initialData));
   const updateState = useAction('updateFormState');

@@ -4,9 +4,9 @@ import { PiralLoadingIndicator, PiralError, usePromise } from 'piral-core';
 import { useForm } from './useForm';
 import { InputFormOptions, FormProps } from './types';
 
-export function withForm<TFormData, TProps>(
+export function withForm<TFormData, TRequiredProps, TProps extends TRequiredProps>(
   Component: React.ComponentType<TProps & FormProps<TFormData>>,
-  options: InputFormOptions<TFormData, TProps>,
+  options: InputFormOptions<TFormData, TRequiredProps>,
 ): React.FC<TProps> {
   const FormView: React.FC<TProps & RouteComponentProps & { initialData: TFormData }> = (props) => {
     const formProps = useForm(props.initialData, props.history, options);

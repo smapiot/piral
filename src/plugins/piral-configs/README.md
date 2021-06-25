@@ -96,19 +96,6 @@ const instance = createInstance({
 });
 ```
 
-Since the dependency package `jsonschema` uses `url` the bundler potentially needs to know how to handle this scenario.
-
-For Webpack v5+ using `piral-cli-webpack5` you could include this dependency resolution via the following *webpack.config.js*:
-
-```js
-module.exports = config => {
-  config.resolve.fallback = { "url": false };
-  return config;
-};
-```
-
-Other bundlers such as Webpack v4 or Parcel v1 just work out of the box.
-
 There are no options available.
 
 :::
