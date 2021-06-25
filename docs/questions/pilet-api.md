@@ -97,3 +97,23 @@ const ShowCurrent = () => {
 ```
 
 ---------------------------------------
+
+## What's a good place for customizations?
+
+Let's say you have a customization for `piral-menu`:
+
+```ts
+import 'piral-menu';
+
+declare module 'piral-menu/lib/types' {
+  interface PiralCustomMenuTypes {
+    'left-footer': 'left-footer';
+  }
+}
+```
+
+A good place for this would be either the *index.tsx* of your app shell, or some reachable file from this module, e.g., a *types.ts* that contains your shared types.
+
+The *.d.ts* that is generated for the pilets should pick up the typings as long as they are well reachable within your application.
+
+---------------------------------------
