@@ -1,9 +1,8 @@
-import { join, dirname, basename, resolve } from 'path';
+import { dirname, basename, resolve, relative } from 'path';
 import { LogLevels, PiletSchemaVersion } from '../types';
 import { callPiletBuild } from '../bundler';
 import {
   removeDirectory,
-  findEntryModule,
   retrievePiletData,
   setLogLevel,
   progress,
@@ -11,6 +10,8 @@ import {
   logInfo,
   createPiletDeclaration,
   ForceOverwrite,
+  matchAny,
+  fail,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -114,9 +115,14 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
-  const entryFile = join(baseDir, entry);
-  const targetDir = dirname(entryFile);
-  const entryModule = await findEntryModule(entryFile, targetDir);
+  const allEntries = await matchAny(baseDir, [entry]);
+
+  if (allEntries.length === 0) {
+    fail('entryFileMissing_0077');
+  }
+
+  const entryModule = allEntries.shift();
+  const targetDir = dirname(entryModule);
   const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored } = await retrievePiletData(
     targetDir,
     app,
@@ -143,7 +149,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       targetDir,
       outFile: basename(target),
       outDir,
-      entryModule,
+      entryModule: `./${relative(root, entryModule)}`,
       logLevel,
       version: schemaVersion,
       ignored,

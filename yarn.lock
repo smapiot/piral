@@ -4559,10 +4559,10 @@ blank-object@^1.0.1:
   resolved "https://registry.yarnpkg.com/blank-object/-/blank-object-1.0.2.tgz#f990793fbe9a8c8dd013fb3219420bec81d5f4b9"
   integrity sha1-+ZB5P76ajI3QE/syGUIL7IHV9Lk=
 
-blazor@3.2.1-pre.20210413.2:
-  version "3.2.1-pre.20210413.2"
-  resolved "https://registry.yarnpkg.com/blazor/-/blazor-3.2.1-pre.20210413.2.tgz#e638789a69397b18571e1189f1f6871f8fadd695"
-  integrity sha512-2W5wHQJoHTmtbLddoJ2H/St1bYJQrzgkoqNIpcaihUOxRSb/ghm6dCXNIVHk7tHv0M3pByavtG7ynRB8gWxEMQ==
+blazor@5.0.0-pre.20210622.1:
+  version "5.0.0-pre.20210622.1"
+  resolved "https://registry.yarnpkg.com/blazor/-/blazor-5.0.0-pre.20210622.1.tgz#d0502a816a619a98d5881e635565469cc64f0775"
+  integrity sha512-xbJSMfo2/+qoS6TDtQnRYoN7XV8o3lBQHuHXytOErLGiSEgQ0KlxuMBAD/lPt5DMjkQ0fi4yS6u3M6eplAGXHw==
 
 bluebird@^3.1.1, bluebird@^3.5.1, bluebird@^3.5.3, bluebird@^3.5.5:
   version "3.7.2"

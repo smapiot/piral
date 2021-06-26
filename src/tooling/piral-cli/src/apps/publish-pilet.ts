@@ -71,8 +71,8 @@ export interface PublishPiletOptions {
 
 export const publishPiletDefaults: PublishPiletOptions = {
   source: '*.tgz',
-  url: '',
-  apiKey: '',
+  url: undefined,
+  apiKey: undefined,
   fresh: false,
   cert: undefined,
   logLevel: LogLevels.info,

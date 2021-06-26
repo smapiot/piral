@@ -19,6 +19,13 @@ function fillTemplate(name: string, data: any = {}) {
   });
 }
 
+export function getPackageJsonWithSource(targetDir: string, fileName: string) {
+  return Promise.resolve({
+    content: Buffer.from(`{"source":"${join(targetDir, fileName)}"}`, 'utf8'),
+    path: 'package.json',
+  });
+}
+
 export async function getFileFromTemplate(targetDir: string, fileName: string, data?: any): Promise<TemplateFile> {
   const content = await fillTemplate(`pilet-${fileName}`, data);
   return {

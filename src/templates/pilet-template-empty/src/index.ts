@@ -1,5 +1,5 @@
 import { resolve, relative } from 'path';
-import { getFileFromTemplate, TemplateFile } from './utils';
+import { getFileFromTemplate, getPackageJsonWithSource, TemplateFile } from './utils';
 
 export interface TemplateArgs {
   language?: string;
@@ -18,11 +18,15 @@ export default async function (root: string, args: TemplateArgs) {
 
   switch (language) {
     case 'js':
-      files.push(getFileFromTemplate(srcDir, 'index.jsx', data));
+      files.push(getFileFromTemplate(srcDir, 'index.jsx', data), getPackageJsonWithSource(srcDir, 'index.jsx'));
       break;
     case 'ts':
     default:
-      files.push(getFileFromTemplate('.', 'tsconfig.json', data), getFileFromTemplate(srcDir, 'index.tsx', data));
+      files.push(
+        getFileFromTemplate('.', 'tsconfig.json', data),
+        getFileFromTemplate(srcDir, 'index.tsx', data),
+        getPackageJsonWithSource(srcDir, 'index.tsx'),
+      );
       break;
   }
 

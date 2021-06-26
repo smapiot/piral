@@ -78,13 +78,18 @@ export function postFile(
 
   form.append('file', file, 'pilet.tgz');
 
+  const headers: Record<string, string> = {
+    ...form.getHeaders(),
+    'user-agent': `piral-cli/http.node-${os}`,
+  };
+
+  if (key) {
+    headers.authorization = `Basic ${key}`;
+  }
+
   return axios.default
     .post(target, form, {
-      headers: {
-        ...form.getHeaders(),
-        authorization: `Basic ${key}`,
-        'user-agent': `piral-cli/http.node-${os}`,
-      },
+      headers,
       httpsAgent,
       maxContentLength: Infinity,
       maxBodyLength: Infinity,
