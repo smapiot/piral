@@ -126,7 +126,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   const {
     source = publishPiletDefaults.source,
     url = config.url ?? publishPiletDefaults.url,
-    apiKey = config.apiKey ?? publishPiletDefaults.apiKey,
+    apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiletDefaults.apiKey,
     fresh = publishPiletDefaults.fresh,
     logLevel = publishPiletDefaults.logLevel,
     from = publishPiletDefaults.from,

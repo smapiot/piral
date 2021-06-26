@@ -3,6 +3,7 @@
 ## 0.13.3 (tbd)
 
 * Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`
+- Added support for `apiKeys` in `.piralrc` file
 * Added `dashboardPath` and `piralChildren` as options for `renderInstance`
 * Updated used chunk hash length for Webpack
 * Replaced `node-sass` with `sass`
