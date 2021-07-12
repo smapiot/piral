@@ -1,3 +1,7 @@
+---
+title: Scaffolding
+---
+
 # Scaffolding
 
 This section will help you with the process of creating fresh piral and pilet instances.
@@ -54,5 +58,5 @@ Possible choices are `"none"`, `"parcel"` or `"webpack"`. The bundler can also b
 
 ## Related Resources
 
-- [new-piral]([https://docs.piral.io/tooling/new-piral](https://docs.piral.io/tooling/new-piral))
-- [new-pilet]([https://docs.piral.io/tooling/new-piral](https://docs.piral.io/tooling/new-pilet))
+- [new-piral](https://docs.piral.io/tooling/new-piral)
+- [new-pilet](https://docs.piral.io/tooling/new-pilet)

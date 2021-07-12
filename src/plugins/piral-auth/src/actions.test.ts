@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { createListener, createActions } from 'piral-core';
+import { createListener } from 'piral-base';
+import { createActions } from 'piral-core';
 import { setUser } from './actions';
 
 describe('Auth Actions Module', () => {

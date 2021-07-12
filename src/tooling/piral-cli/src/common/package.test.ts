@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import {
   findPackageVersion,
-  findEntryModule,
   findPackageRoot,
   getPiralPackage,
   getPiletsInfo,
@@ -19,24 +18,6 @@ describe('CLI package module', () => {
   it('findPackageVersion falls back to latest', async () => {
     const version = await findPackageVersion(process.cwd(), 'foo-bar-not-exists');
     expect(version).toBe('latest');
-  });
-
-  it('findEntryModule finds the implicit index.tsx', async () => {
-    const dir = resolve(process.cwd(), 'src', 'samples', 'sample-piral', 'src');
-    const version = await findEntryModule('index', dir);
-    expect(version).toBe(resolve(dir, 'index.tsx'));
-  });
-
-  it('findEntryModule finds the explicit index.tsx', async () => {
-    const dir = resolve(process.cwd(), 'src', 'samples', 'sample-piral', 'src');
-    const version = await findEntryModule('index.tsx', dir);
-    expect(version).toBe(resolve(dir, 'index.tsx'));
-  });
-
-  it('findEntryModule does not find anything and returns original', async () => {
-    const dir = resolve(process.cwd(), 'src', 'samples', 'sample-piral', 'src');
-    const version = await findEntryModule('app.js', dir);
-    expect(version).toBe('app.js');
   });
 
   it('findPackageRoot correctly resolves the package root of parcel-bundler', () => {

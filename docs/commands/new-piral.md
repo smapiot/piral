@@ -81,10 +81,10 @@ Sets the log level to use (1-5).
 
 ### `--tag`
 
-Sets the tag or version of the package to install. By default, it is "latest".
+Sets the tag or version of the package to install. By default, this uses the version of the CLI.
 
 - Type: `string`
-- Default: `"latest"`
+- Default: `"0.13.2"`
 
 ### `--force-overwrite`
 

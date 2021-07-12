@@ -2,7 +2,7 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
-import { getDevDependencies } from './language';
+import { getDependencies, getDevDependencies } from './language';
 import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
@@ -140,10 +140,16 @@ export function getPiralPackage(
   framework: Framework,
   bundler?: string,
 ) {
+  // take default packages only if piral-core
+  const packages = framework !== 'piral-core' ? {} : undefined;
+  // take default dev packages only if not piral-base
   const typings = framework === 'piral-base' ? {} : undefined;
   const devDependencies = {
     ...getDevDependencies(language, typings),
     'piral-cli': `${version}`,
+  };
+  const dependencies = {
+    ...getDependencies(language, packages),
   };
 
   if (bundler && bundler !== 'none') {
@@ -157,6 +163,7 @@ export function getPiralPackage(
       build: 'piral build',
     },
     pilets: getPiletsInfo({}),
+    dependencies,
     devDependencies,
   };
 }
@@ -554,31 +561,4 @@ export async function retrievePiletData(target: string, app?: string) {
     emulator,
     root,
   };
-}
-
-export async function findEntryModule(entryFile: string, target: string) {
-  const entry = basename(entryFile);
-  const files = await getFileNames(target);
-  const preferences = ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs', '.esm', '.es', '.es6', '.html'];
-  const results = [];
-  log('generalDebug_0003', `Found ${files.length} potential entry points in "${target}".`);
-
-  for (const file of files) {
-    const ext = extname(file);
-    const fullPath = join(target, file);
-
-    if (file === entry) {
-      return fullPath;
-    } else if (file.replace(ext, '') === entry) {
-      const prefIndex = preferences.indexOf(ext);
-
-      if (prefIndex !== -1) {
-        results[prefIndex] = fullPath;
-      } else {
-        results[preferences.length] = fullPath;
-      }
-    }
-  }
-
-  return results.filter(Boolean).shift() || entryFile;
 }

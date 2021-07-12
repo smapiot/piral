@@ -1,4 +1,4 @@
-import { join, dirname, resolve } from 'path';
+import { join, dirname, resolve, relative } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import { callDebugPiralFromMonoRepo, callPiletDebug } from '../bundler';
 import { LogLevels, PiletSchemaVersion } from '../types';
@@ -9,7 +9,6 @@ import {
   openBrowser,
   reorderInjectors,
   notifyServerOnline,
-  findEntryModule,
   setLogLevel,
   progress,
   matchAny,
@@ -154,7 +153,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${baseDir}".`);
-  const allEntries = multi ? await matchAny(baseDir, entryList) : entryList;
+
+  const allEntries = await matchAny(baseDir, entryList);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (krasConfig.sources === undefined) {
@@ -166,10 +166,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   const pilets = await Promise.all(
-    allEntries.map(async (entry) => {
-      const entryFile = join(baseDir, entry);
-      const targetDir = dirname(entryFile);
-      const entryModule = await findEntryModule(entryFile, targetDir);
+    allEntries.map(async (entryModule) => {
+      const targetDir = dirname(entryModule);
       const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(
         targetDir,
         app,
@@ -194,7 +192,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           hmr,
           externals,
           targetDir,
-          entryModule,
+          entryModule: `./${relative(root, entryModule)}`,
           logLevel,
           version: schemaVersion,
           ignored,

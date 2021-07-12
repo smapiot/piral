@@ -14,11 +14,12 @@ The `piral-cli` tool can be extended using existing bundler plugins. By default,
 
 Officially, there are the following plugins available:
 
-- [piral-cli-webpack](https://www.npmjs.com/package/piral-cli-webpack) for bringing support for Webpack
+- [piral-cli-webpack](https://www.npmjs.com/package/piral-cli-webpack) for bringing support for Webpack (v4)
+- [piral-cli-webpack5](https://www.npmjs.com/package/piral-cli-webpack5) for bringing support for Webpack (v5)
 - [piral-cli-parcel](https://www.npmjs.com/package/piral-cli-parcel) for bringing support for Parcel
 
 ::: question: Can the Piral CLI work without a bundler?
-Indeed it can, even though the default bundler plugin would be installed when a bundler would be required.
+Indeed it can, even though the default bundler plugin would be installed when a bundler is required.
 :::
 
 ## Providing a Bundler Plugin

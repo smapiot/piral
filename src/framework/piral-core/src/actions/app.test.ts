@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { Atom, deref } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
 import { changeLayout, includeProvider } from './app';
-import { createListener } from '../utils';
 import { createActions } from '../state';
 import { mount } from 'enzyme';
 

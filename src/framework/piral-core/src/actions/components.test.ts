@@ -1,7 +1,7 @@
 import { Atom, deref } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
 import { registerExtension, registerPage, unregisterExtension, unregisterPage } from './components';
 import { createActions } from '../state';
-import { createListener } from '../utils';
 
 describe('Components Actions Module', () => {
   it('registerExtension and unregisterExtension', () => {

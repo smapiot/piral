@@ -36,8 +36,8 @@ export function getHmrEntry(hmrPort: number) {
 export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, pilet: boolean, hmrPort?: number) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
+      filename: '[name].[hash:6].css',
+      chunkFilename: '[id].[hash:6].css',
     }),
     new ImportMapsWebpackPlugin(),
   ];

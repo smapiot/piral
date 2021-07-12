@@ -1,3 +1,7 @@
+---
+title: Browser Compatibility
+---
+
 # Browser Compatibility
 
 ## Compatibility Table

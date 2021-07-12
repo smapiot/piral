@@ -1,9 +1,9 @@
-import { isfunc, PiletApiCreator } from 'piral-base';
+import { isfunc, PiletApiCreator, PiletApiExtender, initializeApi, mergeApis } from 'piral-base';
 import { __assign } from 'tslib';
 import { withApi } from '../state';
 import { ExtensionSlot } from '../components';
 import { createDataOptions, getDataExpiration, renderInDom } from '../utils';
-import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, PiralPlugin, PiletApiExtender } from '../types';
+import { GlobalStateContext, PiletCoreApi, PiralPlugin } from '../types';
 
 export function createCoreApi(context: GlobalStateContext): PiletApiExtender<PiletCoreApi> {
   return (api, target) => {
@@ -47,23 +47,6 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
       Extension: ExtensionSlot,
     };
   };
-}
-
-export function initializeApi(target: PiletMetadata, context: GlobalStateContext) {
-  return {
-    on: context.on,
-    off: context.off,
-    emit: context.emit,
-    meta: {
-      ...target,
-    },
-  } as PiletApi;
-}
-
-export function mergeApis(api: PiletApi, extenders: Array<PiletApiExtender<Partial<PiletApi>>>, target: PiletMetadata) {
-  const frags = extenders.map((extender) => extender(api, target));
-  __assign(api, ...frags);
-  return api;
 }
 
 export function createExtenders(context: GlobalStateContext, apis: Array<PiralPlugin>) {

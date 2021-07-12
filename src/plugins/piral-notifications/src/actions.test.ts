@@ -1,6 +1,7 @@
 import { Atom, deref } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
+import { createActions } from 'piral-core';
 import { openNotification, closeNotification } from './actions';
-import { createActions, createListener } from 'piral-core';
 
 describe('Notifications Actions Module', () => {
   it('openNotification prepends a new notification', () => {

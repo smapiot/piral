@@ -28,7 +28,9 @@ export const Companies: React.FC = () => (
       <Company image={require('../../assets/c_rb.png')} title="Reed Business" />
       <Company image={require('../../assets/c_sm.png')} title="smapiot" />
       <Company image={require('../../assets/c_sp.png')} title="SalesPad" />
+      <Company image={require('../../assets/c_ww.png')} title="Wiener Wohnen" />
       <Company image={require('../../assets/c_zg.png')} title="ZEISS Group" />
     </div>
+    <p>Just contact us if you are using Piral and want to include your logo in the list above.</p>
   </div>
 );

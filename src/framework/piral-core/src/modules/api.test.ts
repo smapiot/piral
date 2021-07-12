@@ -1,6 +1,5 @@
-import * as hooks from '../hooks';
 import { createElement, FC } from 'react';
-import { createCoreApi, initializeApi } from './api';
+import { createCoreApi } from './api';
 
 jest.mock('../hooks');
 
@@ -36,16 +35,6 @@ function createApi(container) {
 }
 
 describe('API Module', () => {
-  it('createCoreApi pluginMeta returns the metadata', () => {
-    const container = createMockContainer();
-    const api = initializeApi(moduleMetadata, container.context);
-    expect(api.meta).toEqual({
-      name: moduleMetadata.name,
-      version: moduleMetadata.version,
-      hash: moduleMetadata.hash,
-    });
-  });
-
   it('createCoreApi can register and unregister a page', () => {
     const container = createMockContainer();
     container.context.registerPage = jest.fn();

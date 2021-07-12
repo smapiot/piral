@@ -43,14 +43,14 @@ Enhancements or general suggestions are tracked as [GitHub issues](https://guide
 
 The central repository holds two main branches with an infinite lifetime:
 
-- **master**
+- **main**
 - **develop**
 
-We consider `master` to be the main branch where the source code always reflects a production-ready state, and `develop` to be the main branch where the source code always reflects a state with the latest delivered changes for the next release. When the source code in the `develop` branch reaches a stable point and is ready to be released, all of the changes should be merged back into master. Therefore, each time when changes are merged back into master, this is a new production release.
+We consider `main` to be the main branch where the source code always reflects a production-ready state, and `develop` to be the main branch where the source code always reflects a state with the latest delivered changes for the next release. When the source code in the `develop` branch reaches a stable point and is ready to be released, all of the changes should be merged back into main. Therefore, each time when changes are merged back into main, this is a new production release.
 
 ### Supporting Branches
 
-Next to the main branches `master` and `develop`, our development model uses a few of supporting branches to aid parallel development between team members, ease tracking of features and to assist in quickly fixing live production problems. Unlike the main branches, these branches always have a limited life time, since they will be removed eventually.
+Next to the main branches `main` and `develop`, our development model uses a few of supporting branches to aid parallel development between team members, ease tracking of features and to assist in quickly fixing live production problems. Unlike the main branches, these branches always have a limited life time, since they will be removed eventually.
 
 The two main different types of branches we may use are:
 
@@ -63,19 +63,19 @@ Create a branch **from** `develop` which must merge back **into** `develop`.
 
 Naming convention:
 
-- anything except `master`, `develop`, `release/*`, or `hotfix/*`
+- anything except `main`, `develop`, `release/*`, or `hotfix/*`
 - preferred `feature/{issue-id}-{issue-description}`, e.g., `feature/#123-add-foo`
 
 #### Creating a Hotfix Branch
 
-Create a branch **from** `master` which must merge back **into** either `master` and / or `develop`. While a *real* hotfix will apply to both immediately, a simple fix will just be applied to `develop`.
+Create a branch **from** `main` which must merge back **into** either `main` and / or `develop`. While a *real* hotfix will apply to both immediately, a simple fix will just be applied to `develop`.
 
 Naming convention:
 
 - `hotfix/{new-patch-version}`, e.g., `hotfix/1.2.1`
 - `hotfix/{issue-id}-{issue-description}`, e.g., `hotfix/#123-fixed-foo-undefined`
 
-Hotfix branches are normally created from the `master` branch (especially if they are applied to both `master` and `develop`, otherwise creating the branch from `develop` may be okay as well). For example, say version 1.2 is the current production release running live and causing troubles due to a severe bug. But changes on develop are yet unstable.
+Hotfix branches are normally created from the `main` branch (especially if they are applied to both `main` and `develop`, otherwise creating the branch from `develop` may be okay as well). For example, say version 1.2 is the current production release running live and causing troubles due to a severe bug. But changes on develop are yet unstable.
 
 ## Pull Request Process
 

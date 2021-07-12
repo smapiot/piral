@@ -32,12 +32,12 @@ export async function getFileFromTemplate(
   };
 }
 
-export function getLanguageExtension(language: string) {
+export function getLanguageExtension(language: string, isJsx = true) {
   switch (language) {
     case 'js':
-      return '.jsx';
+      return isJsx ? '.jsx' : '.js';
     case 'ts':
     default:
-      return '.tsx';
+      return isJsx ? '.tsx' : '.ts';
   }
 }

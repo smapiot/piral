@@ -1,6 +1,7 @@
 import { Atom, deref } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
+import { createActions } from 'piral-core';
 import { registerBreadcrumb, unregisterBreadcrumb } from './actions';
-import { createActions, createListener } from 'piral-core';
 
 describe('Breadcrumbs Actions Module', () => {
   it('registerBreadcrumb and unregisterBreadcrumb', () => {

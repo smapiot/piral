@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Siteless](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/siteless.svg?style=flat)](https://www.npmjs.com/package/siteless)
+# [Siteless](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/siteless.svg?style=flat)](https://www.npmjs.com/package/siteless)
 
 `siteless` is the most painless way of building microfrontends today. All using established technologies such as React and Piral.
 

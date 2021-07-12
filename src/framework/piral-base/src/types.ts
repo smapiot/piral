@@ -451,3 +451,17 @@ export interface LoadPiletsOptions {
    */
   strategy?: PiletLoadingStrategy;
 }
+
+/**
+ * Shape to be used by a Pilet API extension that requires other
+ * APIs or some metadata to work properly.
+ */
+ export interface PiletApiExtender<T> {
+  /**
+   * Extends the base API of a module with new functionality.
+   * @param api The API created by the base layer.
+   * @param target The target the API is created for.
+   * @returns The extended API.
+   */
+  (api: PiletApi, target: PiletMetadata): T;
+}

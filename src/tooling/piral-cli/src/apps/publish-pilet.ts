@@ -71,8 +71,8 @@ export interface PublishPiletOptions {
 
 export const publishPiletDefaults: PublishPiletOptions = {
   source: '*.tgz',
-  url: '',
-  apiKey: '',
+  url: undefined,
+  apiKey: undefined,
   fresh: false,
   cert: undefined,
   logLevel: LogLevels.info,
@@ -126,7 +126,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   const {
     source = publishPiletDefaults.source,
     url = config.url ?? publishPiletDefaults.url,
-    apiKey = config.apiKey ?? publishPiletDefaults.apiKey,
+    apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiletDefaults.apiKey,
     fresh = publishPiletDefaults.fresh,
     logLevel = publishPiletDefaults.logLevel,
     from = publishPiletDefaults.from,

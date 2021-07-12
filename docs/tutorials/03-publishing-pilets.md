@@ -44,8 +44,8 @@ This quick start will show us how to
 
 1. Creating a **Feed** in the feed service
 2. Create an **API Key** required for publishing the pilet
-2. **Publish a pilet** to the feed service
-3. **Configure the Piral Instance** to fetch pilets from the feed service
+3. **Publish a pilet** to the feed service
+4. **Configure the Piral Instance** to fetch pilets from the feed service
 
 ## Prerequisites
 
@@ -123,6 +123,12 @@ For publishing the pilet navigate to the folder of the pilet and invoke the foll
 pilet publish --fresh --url https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed --api-key <your-api-key>
 ```
 
+::: tip: Use the .piralrc file
+If you don't want to provide the API key via the command line you could also create a *.piralrc* next to the *package.json* and place the `apiKey` in this file. Just make sure to **not** commit this file as it contains sensitive information.
+
+You can find more information about the Piral CLI configuration [in one of the next chapters](https://docs.piral.io/guidelines/tutorials/08-the-piral-cli).
+:::
+
 The `--fresh` flag tells the Piral CLI to invoke a fresh build and do everything from building up to packaging the pilet. Without this flag, we would already need a packaged pilet ready for publishing.
 
 ::: warning: One publish per version
@@ -158,5 +164,3 @@ In this tutorial, you have
 - Configured the application shell to **load pilets from a feed**
 
 The next tutorial will describe the **Pilet API** in more detail.
-
-

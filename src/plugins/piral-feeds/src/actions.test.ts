@@ -1,5 +1,6 @@
 import { Atom, deref } from '@dbeining/react-atom';
-import { createActions, createListener } from 'piral-core';
+import { createListener } from 'piral-base';
+import { createActions } from 'piral-core';
 import { destroyFeed, createFeed, loadedFeed, updateFeed, loadFeed } from './actions';
 
 describe('Feeds Actions Module', () => {

@@ -147,7 +147,7 @@ const Layout = ({ children }) => (
 
 Note that only the `children` are transported as props. For the layout, the children represent the page's content. All the rest, e.g., the `Menu` we use from `piral`, which uses internally the parts we defined (e.g., the `MenuContainer`).
 
-For the full example look at the [sample Piral instance layout definition](https://github.com/smapiot/piral/blob/master/src/samples/sample-piral/src/layout.tsx).
+For the full example look at the [sample Piral instance layout definition](https://github.com/smapiot/piral/blob/main/src/samples/sample-piral/src/layout.tsx).
 
 ## Sharing Layouts
 

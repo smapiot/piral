@@ -1,0 +1,13 @@
+import * as React from "react";
+import { render } from "react-dom";
+import { createInstance, Piral } from "piral-core";
+
+const instance = createInstance({
+  requestPilets() {
+    return fetch("https://feed.piral.cloud/api/v1/pilet/empty")
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+});
+
+render(<Piral instance={instance} />, document.querySelector("#app"));

@@ -13,7 +13,7 @@ async function run(root: string, piral: string, externals: Array<string>, entryF
   setStandardEnvs({
     piral,
     dependencies: externals,
-    production: true,
+    production: false,
     debugPiral: true,
     debugPilet: true,
     root,

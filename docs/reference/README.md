@@ -5,6 +5,7 @@ We provide a detailed reference documentation incl. architecture details and fur
 The available references:
 
 - [Architecture](./architecture.md)
+- [Layout and Error Components](./components.md)
 - [Libraries](./libraries.md)
 - [Loading Strategies](./loading-strategies.md)
 - [Pluggable Bundlers](./bundlers.md)
