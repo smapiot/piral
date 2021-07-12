@@ -1,4 +1,4 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://raw.githubusercontent.com/smapiot/piral/master/docs/assets/logo.png)](https://piral.io)
 
 # [Piral Cross Frameworks Sample](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE)
 
