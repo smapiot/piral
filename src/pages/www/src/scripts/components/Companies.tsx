@@ -22,7 +22,10 @@ export const Companies: React.FC = () => (
       <Company image={require('../../assets/c_an.png')} title="Axinom" />
       <Company image={require('../../assets/c_at.png')} title="Apptio" />
       <Company image={require('../../assets/c_cc.png')} title="CHC" />
+      <Company image={require('../../assets/c_gs.png')} title="GoSecure" />
       <Company image={require('../../assets/c_hg.png')} title="Hoffmann Group" />
+      <Company image={require('../../assets/c_ic.png')} title="inContact" />
+      <Company image={require('../../assets/c_nd.png')} title="Nando's" />
       <Company image={require('../../assets/c_lw.png')} title="Lilwonders" />
       <Company image={require('../../assets/c_pw.png')} title="proWIN" />
       <Company image={require('../../assets/c_rb.png')} title="Reed Business" />
