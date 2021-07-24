@@ -13,7 +13,7 @@ export function mountVue<T extends BaseComponentProps>(
       ...ctx,
     },
     render() {
-      return h(root, {
+      return h(root as any, {
         ...captured,
         ...props,
       });
