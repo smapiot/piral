@@ -3,6 +3,7 @@
 ## 0.13.3 (tbd)
 
 * Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`
+* Fixed conflicting import for `piral-cli-parcel` in `piral-breadcrumbs` (#385)
 * Added support for `apiKeys` in `.piralrc` file
 * Added support for more flexible entry module resolution to `pilet build`
 * Added `dashboardPath` and `piralChildren` as options for `renderInstance`
