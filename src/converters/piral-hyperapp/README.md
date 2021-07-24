@@ -47,7 +47,7 @@ Alternatively, if `piral-hyperapp` has not been added to the Piral instance you 
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromHyperapp } from 'piral-hyperapp';
+import { fromHyperapp } from 'piral-hyperapp/convert';
 import { HyperappPage } from './HyperappPage';
 
 export function setup(piral: PiletApi) {

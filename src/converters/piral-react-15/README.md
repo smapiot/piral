@@ -47,7 +47,7 @@ Alternatively, if `piral-react-15` has not been added to the Piral instance you 
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromReact15 } from 'piral-react-15';
+import { fromReact15 } from 'piral-react-15/convert';
 import { React15Page } from './React15Page';
 
 export function setup(piral: PiletApi) {

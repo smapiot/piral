@@ -48,7 +48,7 @@ Alternatively, if `piral-riot` has not been added to the Piral instance you can 
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromRiot, createRiotExtension } from 'piral-riot';
+import { fromRiot, createRiotExtension } from 'piral-riot/convert';
 import { createRiotPage } from './page';
 
 export function setup(piral: PiletApi) {

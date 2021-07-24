@@ -47,7 +47,7 @@ Alternatively, if `piral-ember` has not been added to the Piral instance you can
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromEmber } from 'piral-ember';
+import { fromEmber } from 'piral-ember/convert';
 import { Page } from './Page';
 
 export function setup(piral: PiletApi) {

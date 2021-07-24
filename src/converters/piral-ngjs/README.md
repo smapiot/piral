@@ -48,7 +48,7 @@ Alternatively, if `piral-ngjs` has not been added to the Piral instance you can 
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromNgjs, createNgjsExtension } from 'piral-ngjs';
+import { fromNgjs, createNgjsExtension } from 'piral-ngjs/convert';
 import { createAngularJsPage } from './AngularJsPage';
 
 export function setup(piral: PiletApi) {

@@ -1,7 +1,7 @@
 {
-  "name": "piral-vue",
+  "name": "piral-vue-3",
   "version": "0.13.2",
-  "description": "Plugin for integrating Vue@2 components in Piral.",
+  "description": "Plugin for integrating Vue@3 components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -46,10 +46,10 @@
   },
   "devDependencies": {
     "piral-core": "^0.13.2",
-    "vue": "^2.6.10"
+    "vue": "^3.0.0"
   },
   "peerDependencies": {
     "piral-core": "0.13.x",
-    "vue": "^2.0.0"
+    "vue": "^3.0.0"
   }
 }

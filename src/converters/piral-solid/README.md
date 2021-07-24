@@ -47,7 +47,7 @@ Alternatively, if `piral-solid` has not been added to the Piral instance you can
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromSolid } from 'piral-solid';
+import { fromSolid } from 'piral-solid/convert';
 import { SolidPage } from './SolidPage';
 
 export function setup(piral: PiletApi) {

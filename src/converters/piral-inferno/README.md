@@ -47,7 +47,7 @@ Alternatively, if `piral-inferno` has not been added to the Piral instance you c
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromInferno } from 'piral-inferno';
+import { fromInferno } from 'piral-inferno/convert';
 import { InfernoPage } from './InfernoPage';
 
 export function setup(piral: PiletApi) {

@@ -6,6 +6,7 @@
 * Added support for `apiKeys` in `.piralrc` file
 * Added support for more flexible entry module resolution to `pilet build`
 * Added `dashboardPath` and `piralChildren` as options for `renderInstance`
+* Added new optional convert plugin `piral-vue-3` covering Vue@3
 * Updated used chunk hash length for Webpack
 * Replaced `node-sass` with `sass`
 * Renamed `master` branch to `main`

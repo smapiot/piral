@@ -43,7 +43,7 @@ Alternatively, if `piral-svelte` has not been added to the Piral instance you ca
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromSvelte } from 'piral-svelte';
+import { fromSvelte } from 'piral-svelte/convert';
 import SveltePage from './Page.svelte';
 
 export function setup(piral: PiletApi) {

@@ -47,7 +47,7 @@ Alternatively, if `piral-ng` has not been added to the Piral instance you can in
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromNg } from 'piral-ng';
+import { fromNg } from 'piral-ng/convert';
 import { AngularPage } from './AngularPage';
 
 export function setup(piral: PiletApi) {

@@ -93,3 +93,49 @@ In addition there are a couple of recommendations for the app shell to pilet rel
 - In general the more "dependent" your pilets are on the app shell (e.g., that the app shell delivers a specific dependency or API) the less flexible your solution becomes. As an example, if your pilets would only depend on the core set of, e.g., piral-core (such as registerPage) then they could be used with any app shell. This makes them super flexible. In reality, of course, you will always depend on a few assumptions - as this will make your integration quite seamless from the user's perspective.
 
 ---------------------------------------
+
+## Can I use it with nx workspaces?
+
+The answer is *yes*, but some updates are required:
+
+1. Nx workspaces uses single *package.json* policy, however for pilet and piral build it is required for each app, so it is needed to add package json to each pilet and piral root code. It is possible to generate it on the fly while building, in this case it will be needed to write your own nx executor - "generate-package-json". Nx has the function `createPackageJson` in internal utilities, so it could be used on the base of nx executor ("generate-package-json"), however, it will be needed to update the result of this function according Piral and pilet needs.
+2. It will be needed to write custom commands in nx workspace file to build pilets and the Piral instance (it is also possible to use nx executor for this case, however, writing these commands in *workspace.json* is also ok).
+
+Here is the example of commands in *workspace.json* for `pilet build` and `piral build`.
+
+`pilet build`:
+
+```json
+{
+  // ...
+  "executor": "@nrwl/workspace:run-commands",
+  "options": {
+    "commands": [
+      "nx run microfrontends-setup:generate-package-json --isPilet",
+      "cd apps/microfrontends/setup && yarn install",
+      "pilet build --base ${PWD}/apps/microfrontends/setup --target \"../../../dist/apps/microfrontends/setup/index.js\" --bundler webpack --fresh"
+    ],
+    "parallel": false
+  }
+}
+```
+
+`piral build`:
+
+```json
+{
+  // ...
+  "executor": "@nrwl/workspace:run-commands",
+  "options": {
+    "commands": [
+      "nx run piral-shell:generate-package-json",
+      "piral build apps/piral-shell --target \"./dist/apps/piral-shell\" --bundler webpack"
+    ],
+    "parallel": false
+  }
+}
+```
+
+*Note*: In `pilet build` commands comparing with `piral build` commands it is needed to install to install *node_modules*, that is because we pass `--base` parameter and use the pilet's app root directory and not the workspace root directory as in `piral build` command. That's because of internal build script of pilet - it could not resolve some dependency if the `--base` is workspace root and the source is some nested folder, however, for `piral build` it's fine.
+
+---------------------------------------

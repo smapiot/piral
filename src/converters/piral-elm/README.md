@@ -43,7 +43,7 @@ Alternatively, if `piral-elm` has not been added to the Piral instance you can i
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromElm } from 'piral-elm';
+import { fromElm } from 'piral-elm/convert';
 import Elm from './Page.elm';
 
 export function setup(piral: PiletApi) {

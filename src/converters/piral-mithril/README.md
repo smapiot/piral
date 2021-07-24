@@ -47,7 +47,7 @@ Alternatively, if `piral-mithril` has not been added to the Piral instance you c
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromMithril } from 'piral-mithril';
+import { fromMithril } from 'piral-mithril/convert';
 import { MithrilPage } from './MithrilPage';
 
 export function setup(piral: PiletApi) {

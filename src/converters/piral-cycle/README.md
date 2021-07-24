@@ -62,7 +62,7 @@ Alternatively, if `piral-cycle` has not been added to the Piral instance you can
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromCycle } from 'piral-cycle';
+import { fromCycle } from 'piral-cycle/convert';
 import { CyclePage } from './CyclePage';
 
 export function setup(piral: PiletApi) {

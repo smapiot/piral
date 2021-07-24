@@ -47,7 +47,7 @@ Alternatively, if `piral-litel` has not been added to the Piral instance you can
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromLitel } from 'piral-litel';
+import { fromLitel } from 'piral-litel/convert';
 import './LitElPage';
 
 export function setup(piral: PiletApi) {

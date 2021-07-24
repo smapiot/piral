@@ -47,7 +47,7 @@ Alternatively, if `piral-preact` has not been added to the Piral instance you ca
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromPreact } from 'piral-preact';
+import { fromPreact } from 'piral-preact/convert';
 import { PreactPage } from './PreactPage';
 
 export function setup(piral: PiletApi) {

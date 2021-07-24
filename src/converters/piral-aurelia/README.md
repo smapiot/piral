@@ -47,7 +47,7 @@ Alternatively, if `piral-aurelia` has not been added to the Piral instance you c
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromAurelia } from 'piral-aurelia';
+import { fromAurelia } from 'piral-aurelia/convert';
 import { AureliaPage } from './AureliaPage';
 
 export function setup(piral: PiletApi) {
