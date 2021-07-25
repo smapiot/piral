@@ -17,6 +17,12 @@ This plugin does not make any statement how the configuration is retrieved. Usua
 
 Alternatives: Pilets can ready configuration values from the global data store or state container. They are responsible for evaluating these values and falling back to another value.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/mrf886cnBRk)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

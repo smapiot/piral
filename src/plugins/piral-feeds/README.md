@@ -22,6 +22,12 @@ Quite often, this simple scenario involves quite some code and ceremony to be re
 
 Alternatives: Expose your own state management solution to the pilets such that they can work directly on it. Or leave it to pilets to manage lazy loading and state management on their own.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/eW5EGlTDaec)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

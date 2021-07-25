@@ -16,6 +16,12 @@ Usually, the answer to this should be **no**. This plugin gives you an abstracti
 
 Alternatives: Use your preferred tracking application standalone.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/wCNflOoXS2c)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

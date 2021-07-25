@@ -12,6 +12,12 @@ Many applications use breadcrumbs, which are UI indicators of the current page a
 
 Alternatives: Get the registered pages and come up with a set of conventions and rules to build the breadcrumbs dynamically without requiring explicit registration.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/G7FJeNR-g28)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

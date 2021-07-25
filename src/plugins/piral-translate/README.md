@@ -10,6 +10,12 @@ One of the key non-functional requirements of many applications is to be localiz
 
 Alternatives: Use a library such as `i18next` as a shared library. Choose one that makes working with your content authors or translation team easier.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/Hh-CrOTDSnA)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

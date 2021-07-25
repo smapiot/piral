@@ -19,6 +19,12 @@ Full libraries such as [Formik](https://formik.org/) can be used to tackle (at l
 
 Alternatives: Use known libraries exposed as shared libraries or rely on pilets to come up with their own solutions.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/C17D-jGJ41g)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

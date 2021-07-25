@@ -10,6 +10,12 @@ If you have navigation items on your page that `piral-menu` gives you a nice abs
 
 Alternative: You could simply use dedicated extension slots for each navigation items. The downside of this approach is the discoverability and the type safety.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/9biswaIhX7Y)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

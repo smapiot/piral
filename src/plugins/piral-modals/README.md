@@ -10,6 +10,12 @@ If you have modal dialogs on your page that `piral-modals` gives you a nice abst
 
 Alternative: You could simply use an event to trigger opening a dialog. The event could transport a React component which would then be globally used. Alternatively, each pilet would come up with its own dialog design and management system.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/gZt7Ic1BHNA)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

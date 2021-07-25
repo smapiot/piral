@@ -10,6 +10,12 @@ Quite often you'll want to show notifications (such as errors, special events, i
 
 Alternatives: Browsers also allow to use the system's native notification API. This usually comes with the service worker / PWA modes, but could be used by pilets, too. Another way is to leave every pilet at defining its own notification system.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/zpipf0qrDA4)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

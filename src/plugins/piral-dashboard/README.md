@@ -10,6 +10,12 @@ Many portal and tool applications come with a dashboard view that easily allows 
 
 Alternatives: Use extensions to define this generically without the need for a plugin. Place each dashboard in its own extension slot registering components dynamically for these.
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/ycZLPRaoLAQ)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.

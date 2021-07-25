@@ -12,6 +12,12 @@ State management is important. While plugins such as `piral-redux` bring in an a
 
 Alternatives: Leave every pilet to decide and bundle their own state management. A lightweight, framework-agnostic alternative would be [unistore](https://github.com/developit/unistore).
 
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/SOY_8temoEE)
+
 ## Documentation
 
 The following functions are brought to the Pilet API.
