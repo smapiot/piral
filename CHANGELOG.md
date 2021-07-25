@@ -9,6 +9,7 @@
 * Added `dashboardPath` and `piralChildren` as options for `renderInstance`
 * Added new optional convert plugin `piral-vue-3` covering Vue@3
 * Updated used chunk hash length for Webpack
+* Updated `piral-ng` to support all (current) versions of Angular
 * Replaced `node-sass` with `sass`
 * Renamed `master` branch to `main`
 

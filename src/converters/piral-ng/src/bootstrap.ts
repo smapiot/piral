@@ -35,6 +35,11 @@ function setComponentSelector(component: any, id: string) {
 
   if (annotation && !annotation.selector) {
     annotation.selector = `#${id}`;
+  } else if (process.env.NODE_ENV === 'development') {
+    console.error(
+      '[piral-ng] No annotations found on the component. Check if `@NgComponent` has been applied on your component.',
+      component,
+    );
   }
 }
 
@@ -142,9 +147,10 @@ export function bootstrapModule<T extends BaseComponentProps>(
   node.id = sanatize(id);
 
   if (annotation) {
-    const providers = annotation.providers || [];
-    const declarations = annotation.declarations || [];
-    const [component] = annotation.bootstrap || [];
+    const def = [];
+    const providers = annotation.providers || def;
+    const declarations = annotation.declarations || def;
+    const [component] = annotation.bootstrap || def;
     annotation.providers = [
       ...providers,
       {
@@ -157,13 +163,23 @@ export function bootstrapModule<T extends BaseComponentProps>(
     if (component) {
       setComponentSelector(component, node.id);
       annotation.bootstrap = [component];
+    } else if (process.env.NODE_ENV === 'development') {
+      console.error(
+        '[piral-ng] No component found to render. Check if `bootstrap` has been set on your module.',
+        BootstrapModule,
+      );
     }
+  } else if (process.env.NODE_ENV === 'development') {
+    console.error(
+      '[piral-ng] No annotations found on the module. Check if `@NgModule` has been applied on your module.',
+      BootstrapModule,
+    );
   }
 
   return startup(context, props, BootstrapModule, node);
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   // May be used later for something useful. Right now only debugging output.
   const versionHandlers = {
     legacy() {
