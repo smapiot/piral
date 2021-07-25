@@ -1,3 +1,4 @@
+import type { NgModule } from '@angular/core';
 import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { createExtension } from './extension';
@@ -22,16 +23,20 @@ export interface NgConfig {
    * By default a random number is used in conjunction with a `ng-` prefix.
    */
   selectId?(): string;
+  /**
+   * Defines the module options to apply when bootstrapping a component.
+   */
+  moduleOptions?: Omit<NgModule, 'boostrap'>;
 }
 
 /**
  * Creates the Pilet API extensions for Angular.
  */
 export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
-  const { rootName, selector, selectId } = config;
+  const { rootName, selector, selectId, moduleOptions } = config;
 
   return (context) => {
-    const convert = createConverter(selectId);
+    const convert = createConverter(selectId, moduleOptions);
     context.converters.ng = ({ component }) => convert(component);
 
     return {
