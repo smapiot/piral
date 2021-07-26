@@ -1,4 +1,4 @@
-import { NgModule, NgModuleRef, NgZone, Provider, VERSION } from '@angular/core';
+import { NgModule, NgModuleRef, NgZone, StaticProvider, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BaseComponentProps } from 'piral-core';
@@ -12,7 +12,7 @@ function sanatize(id: string) {
   return id.replace(/\W/g, '_');
 }
 
-function getPlatformProps(context: any, props: any) {
+function getPlatformProps(context: any, props: any): Array<StaticProvider> {
   return [
     { provide: 'Props', useValue: props },
     { provide: 'Context', useValue: context },
@@ -33,8 +33,10 @@ function setComponentSelector(component: any, id: string) {
   const annotations = getAnnotations(component);
   const annotation = annotations[0];
 
-  if (annotation && !annotation.selector) {
-    annotation.selector = `#${id}`;
+  if (annotation) {
+    if (!annotation.selector) {
+      annotation.selector = `#${id}`;
+    }
   } else if (process.env.NODE_ENV === 'development') {
     console.error(
       '[piral-ng] No annotations found on the component. Check if `@NgComponent` has been applied on your component.',
@@ -113,7 +115,7 @@ export function bootstrapComponent<T extends BaseComponentProps>(
   moduleOptions: Omit<NgModule, 'boostrap'>,
 ): Promise<void | NgModuleRef<any>> {
   const { piral } = props;
-  const piralProvider: Provider = {
+  const piralProvider: StaticProvider = {
     provide: 'piral',
     useValue: piral,
   };
