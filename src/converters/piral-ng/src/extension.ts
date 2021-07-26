@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, Inject, enableProdMode } from '@angular/core';
+import { Component, ElementRef, Input, Inject } from '@angular/core';
 
-export function createExtension(rootName = 'slot', selector = 'extension-component'): any {
+export function createExtension(rootName: string, selector: string): any {
   const template = `<${rootName}></${rootName}>`;
 
   @Component({
@@ -19,10 +19,6 @@ export function createExtension(rootName = 'slot', selector = 'extension-compone
         params: this.params,
       });
     }
-  }
-
-  if (process.env.ENV === 'production') {
-    enableProdMode();
   }
 
   return NgExtension;

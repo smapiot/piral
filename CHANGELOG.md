@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.13.4 (tbd)
+
+* Fixed usage of `process.env.ENV` in `piral-ng`
+* Improved converter plugins to allow more flexible pilet-embedded usage
+
 ## 0.13.3 (July 28, 2021)
 
 * Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`

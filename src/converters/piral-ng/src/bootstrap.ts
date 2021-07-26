@@ -1,4 +1,4 @@
-import { NgModule, NgModuleRef, NgZone, StaticProvider, VERSION } from '@angular/core';
+import { enableProdMode, NgModule, NgModuleRef, NgZone, StaticProvider, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BaseComponentProps } from 'piral-core';
@@ -66,6 +66,10 @@ function startup<T>(context: any, props: T, BootstrapModule: any, node: HTMLElem
   // @ts-ignore
   NgZone.isInAngularZone = () => window.Zone.current._properties[zoneIdentifier] === true;
 
+  if (process.env.NODE_ENV === 'production') {
+    enableProdMode();
+  }
+
   return platform
     .bootstrapModule(BootstrapModule)
     .catch((err) => console.log(err))
@@ -93,16 +97,17 @@ export function bootstrap<T extends BaseComponentProps>(
   node: HTMLElement,
   id: string,
   moduleOptions: Omit<NgModule, 'boostrap'>,
+  NgExtension: any,
 ) {
   const annotations = getAnnotations(moduleOrComponent);
   const annotation = annotations[0];
 
   if (annotation && annotation.bootstrap) {
     // usually contains things like imports, exports, declarations, ...
-    return bootstrapModule(context, props, moduleOrComponent, node, id);
+    return bootstrapModule(context, props, moduleOrComponent, node, id, NgExtension);
   } else {
     // usually contains things like selector, template or templateUrl, changeDetection, ...
-    return bootstrapComponent(context, props, moduleOrComponent, node, id, moduleOptions);
+    return bootstrapComponent(context, props, moduleOrComponent, node, id, moduleOptions, NgExtension);
   }
 }
 
@@ -113,6 +118,7 @@ export function bootstrapComponent<T extends BaseComponentProps>(
   node: HTMLElement,
   id: string,
   moduleOptions: Omit<NgModule, 'boostrap'>,
+  NgExtension: any,
 ): Promise<void | NgModuleRef<any>> {
   const { piral } = props;
   const piralProvider: StaticProvider = {
@@ -126,7 +132,7 @@ export function bootstrapComponent<T extends BaseComponentProps>(
     ...moduleOptions,
     imports: spread([BrowserModule], moduleOptions.imports),
     providers: spread([piralProvider], moduleOptions.providers),
-    declarations: spread([component, piral.NgExtension], moduleOptions.declarations),
+    declarations: spread([component, NgExtension], moduleOptions.declarations),
     bootstrap: [component],
   })
   class BootstrapModule {
@@ -142,6 +148,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
   BootstrapModule: any,
   node: HTMLElement,
   id: string,
+  NgExtension: any,
 ): Promise<void | NgModuleRef<any>> {
   const { piral } = props;
   const annotations = getAnnotations(BootstrapModule);
@@ -160,7 +167,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
         useValue: piral,
       },
     ];
-    annotation.declarations = [...declarations, piral.NgExtension];
+    annotation.declarations = [...declarations, NgExtension];
 
     if (component) {
       setComponentSelector(component, node.id);
