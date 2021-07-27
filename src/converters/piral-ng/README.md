@@ -43,6 +43,12 @@ Within Angular components the Piral Angular extension component can be used by r
 <extension-component name="name-of-extension"></extension-component>
 ```
 
+For specifying `params` you may use data binding. Example:
+
+```html
+<extension-component name="foo" [params]="{ foo: 2, bar: 'hello' }"></extension-component>
+```
+
 Alternatively, if `piral-ng` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
@@ -87,6 +93,8 @@ export class AngularPage {
 
 ::: warning: Don't use `templateUrl`
 In many Angular projects you still find `templateUrl`, which would be transformed to a `template` by the Angular CLI during build. If you want to achieve the same using, e.g., Webpack, then use a custom loader such as [angularjs-template-loader](https://www.npmjs.com/package/angularjs-template-loader).
+
+The same issue applies to `styleUrls`, which should be replaced by `styles`.
 :::
 
 If you don't want to inline the `template` then just `require` the contents, e.g.,
@@ -112,16 +120,6 @@ import 'core-js/es/reflect';
 import 'core-js/stable/reflect';
 import 'core-js/features/reflect';
 import 'zone.js';
-```
-
-Furthermore, switching on the production mode may be useful.
-
-```ts
-import { enableProdMode } from '@angular/core';
-
-if (process.env.NODE_ENV === 'production') {
-  enableProdMode();
-}
 ```
 
 For the setup itself you'll need to import `createNgApi` from the `piral-ng` package.
@@ -166,17 +164,17 @@ Depending on your Angular needs you'd want to share more packages.
 
 Depending on the mounted component different services are injected. the following table lists the names of the injected services per component type.
 
-| Component | Props            | Piral   | Context   |
-|-----------|------------------|---------|-----------|
-| Tile      | `TileProps`      | `Piral` | `Context` |
-| Page      | `PageProps`      | `Piral` | `Context` |
-| Modal     | `ModalProps`     | `Piral` | `Context` |
-| Extension | `ExtensionProps` | `Piral` | `Context` |
-| Menu      | `MenuProps`      | `Piral` | `Context` |
+| Component | Props   | Piral   | Context   |
+|-----------|---------|---------|-----------|
+| Tile      | `Props` | `Piral` | `Context` |
+| Page      | `Props` | `Piral` | `Context` |
+| Modal     | `Props` | `Piral` | `Context` |
+| Extension | `Props` | `Piral` | `Context` |
+| Menu      | `Props` | `Piral` | `Context` |
 
 To use such a service the `@Inject` decorator should be used with the explicit name.
 
-The following code snippet illustrates the injection of the `TileProps` service into a sample tile component.
+The following code snippet illustrates the injection of the `Props` service into a sample tile component.
 
 ```ts
 @Component({
@@ -187,7 +185,7 @@ The following code snippet illustrates the injection of the `TileProps` service 
   `,
 })
 export class SampleTileComponent {
-  constructor(@Inject('TileProps') public props: TileComponentProps<any>) {}
+  constructor(@Inject('Props') public props: TileComponentProps<any>) {}
 }
 ```
 
@@ -212,12 +210,6 @@ The basic dependencies look as follows:
   "rxjs": "^5.0",
   "zone.js": "~0.9"
 }
-```
-
-Since Angular 2 does not know about `slot` you'll need to change the `rootName`. The element is up to you, one possibility is to choose a plain `div`:
-
-```js
-createNgApi({ rootName: 'div' })
 ```
 
 ### Angular 3

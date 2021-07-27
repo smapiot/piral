@@ -1,16 +1,21 @@
 import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
-import { createExtension } from './lib/extension';
-
-const convert = createConverter();
 
 export interface InfernoConverter {
-  (...params: Parameters<typeof convert>): HtmlComponent<any>;
+  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
 }
 
-export const fromInferno: InfernoConverter = (root) => ({
-  type: 'html',
-  component: convert(root),
-});
+export function createInfernoConverter(...params: Parameters<typeof createConverter>) {
+  const convert = createConverter(...params);
+  const Extension = convert.Extension;
+  const from: InfernoConverter = (root) => ({
+    type: 'html',
+    component: convert(root),
+  });
 
-export const createInfernoExtension = createExtension;
+  return { from, Extension };
+}
+
+const { from: fromInferno, Extension: InfernoExtension } = createInfernoConverter();
+
+export { fromInferno, InfernoExtension };

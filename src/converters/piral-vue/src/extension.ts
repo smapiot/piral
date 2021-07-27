@@ -2,7 +2,7 @@ import type { ExtensionSlotProps } from 'piral-core';
 import type { Component } from 'vue';
 import { register } from './mount';
 
-export function createExtension(rootName = 'slot', selector = 'extension-component'): Component<ExtensionSlotProps> {
+export function createExtension(rootName: string, selector: string): Component<ExtensionSlotProps> {
   const VueExtension: Component<ExtensionSlotProps> = {
     functional: false,
     props: ['name', 'empty', 'render', 'params'],

@@ -1,32 +1,18 @@
-import { PiralPlugin } from 'piral-core';
-import { createConverter } from './converter';
-import { PiletVue3Api } from './types';
-import { createExtension } from './extension';
+import type { PiralPlugin } from 'piral-core';
+import { createConverter, Vue3ConverterOptions } from './converter';
+import type { PiletVue3Api } from './types';
 
 /**
  * Available configuration options for the Vue@3 plugin.
  */
-export interface Vue3Config {
-  /**
-   * Defines the name of the extension component.
-   * @default extension-component
-   */
-  selector?: string;
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
-}
+export interface Vue3Config extends Vue3ConverterOptions {}
 
 /**
  * Creates new Pilet API extensions for integration of Vue@3.
  */
 export function createVue3Api(config: Vue3Config = {}): PiralPlugin<PiletVue3Api> {
-  const { rootName, selector } = config;
-
   return (context) => {
-    const convert = createConverter(rootName, selector);
+    const convert = createConverter(config);
     context.converters.vue3 = ({ root, captured }) => convert(root, captured);
 
     return {
@@ -37,7 +23,7 @@ export function createVue3Api(config: Vue3Config = {}): PiralPlugin<PiletVue3Api
           captured,
         };
       },
-      Vue3Extension: createExtension(rootName),
+      Vue3Extension: convert.Extension,
     };
   };
 }

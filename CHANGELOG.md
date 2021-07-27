@@ -1,9 +1,10 @@
 # Piral Changelog
 
-## 0.13.4 (tbd)
+## 0.14.0 (tbd)
 
 * Fixed usage of `process.env.ENV` in `piral-ng`
 * Improved converter plugins to allow more flexible pilet-embedded usage
+* Added `experimental` branch for `canary` releases
 
 ## 0.13.3 (July 28, 2021)
 

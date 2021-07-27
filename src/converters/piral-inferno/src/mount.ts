@@ -1,6 +1,6 @@
 import { render, ComponentType, Component } from 'inferno';
 import { createElement } from 'inferno-create-element';
-import { BaseComponentProps } from 'piral-core';
+import type { BaseComponentProps } from 'piral-core';
 
 // tslint:disable-next-line:no-null-keyword
 export const anyPropType = () => null;

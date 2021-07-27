@@ -1,4 +1,4 @@
-export function createExtension(selector = 'elm-extension') {
+export function createExtension(selector: string): any {
   if ('customElements' in window) {
     class ElmExtension extends HTMLElement {
       connectedCallback() {
@@ -20,4 +20,6 @@ export function createExtension(selector = 'elm-extension') {
 
     customElements.define(selector, ElmExtension);
   }
+  
+  return selector;
 }

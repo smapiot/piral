@@ -22,7 +22,7 @@ export function excludeItem<T>(items: Array<T>, item: T) {
 }
 
 export function includeItem<T>(items: Array<T>, item: T) {
-  return prependItem(excludeItem(items, item), item);
+  return appendItem(excludeItem(items, item), item);
 }
 
 export function replaceOrAddItem<T>(items: Array<T>, item: T, predicate: (item: T) => boolean) {

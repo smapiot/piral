@@ -1,16 +1,21 @@
 import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
-import { createExtension } from './lib/extension';
-
-const convert = createConverter();
 
 export interface Vue3Converter {
-  (...params: Parameters<typeof convert>): HtmlComponent<any>;
+  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
 }
 
-export const fromVue3: Vue3Converter = (root, captured) => ({
-  type: 'html',
-  component: convert(root, captured),
-});
+export function createVue3Converter(...params: Parameters<typeof createConverter>) {
+  const convert = createConverter(...params);
+  const Extension = convert.Extension;
+  const from: Vue3Converter = (root, captured) => ({
+    type: 'html',
+    component: convert(root, captured),
+  });
 
-export const createVue3Extension = createExtension;
+  return { from, Extension };
+}
+
+const { from: fromVue3, Extension: Vue3Extension } = createVue3Converter();
+
+export { fromVue3, Vue3Extension };

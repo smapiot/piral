@@ -1,8 +1,8 @@
-import { NgModuleRef, NgModule } from '@angular/core';
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { NgModule } from '@angular/core';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { createExtension } from './extension';
 import { enqueue } from './queue';
-import { bootstrap } from './bootstrap';
+import { bootstrap, NgModuleInt } from './bootstrap';
 
 let next = ~~(Math.random() * 10000);
 
@@ -12,11 +12,6 @@ export interface NgConverterOptions {
    * @default extension-component
    */
   selector?: string;
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
   /**
    * Defines how the next ID for mounting is selected.
    * By default a random number is used in conjunction with a `ng-` prefix.
@@ -29,15 +24,10 @@ export interface NgConverterOptions {
 }
 
 export function createConverter(config: NgConverterOptions = {}) {
-  const {
-    selectId = () => `ng-${next++}`,
-    moduleOptions = {},
-    rootName = 'slot',
-    selector = 'extension-component',
-  } = config;
-  const Extension = createExtension(rootName, selector);
+  const { selectId = () => `ng-${next++}`, moduleOptions = {}, selector = 'extension-component' } = config;
+  const Extension = createExtension(selector);
   const convert = <TProps extends BaseComponentProps>(component: any): ForeignComponent<TProps> => {
-    let result: Promise<void | NgModuleRef<any>> = Promise.resolve();
+    let result: Promise<void | NgModuleInt> = Promise.resolve();
     let active = true;
 
     return {
@@ -47,7 +37,7 @@ export function createConverter(config: NgConverterOptions = {}) {
       },
       unmount() {
         active = false;
-        result.then((ngMod) => ngMod && ngMod.destroy());
+        result.then((ngMod) => ngMod && !ngMod._destroyed && ngMod.destroy());
       },
     };
   };

@@ -1,32 +1,18 @@
-import { PiralPlugin, ExtensionSlotProps } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletVueApi } from './types';
-import { createExtension } from './extension';
+import type { PiletVueApi } from './types';
 
 /**
  * Available configuration options for the Vue plugin.
  */
-export interface VueConfig {
-  /**
-   * Defines the name of the extension component.
-   * @default extension-component
-   */
-  selector?: string;
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
-}
+export interface VueConfig {}
 
 /**
  * Creates new Pilet API extensions for integration of Vue.
  */
 export function createVueApi(config: VueConfig = {}): PiralPlugin<PiletVueApi> {
-  const { rootName, selector } = config;
-
   return (context) => {
-    const convert = createConverter(rootName);
+    const convert = createConverter(config);
     context.converters.vue = ({ root, captured }) => convert(root, captured);
 
     return {
@@ -37,7 +23,7 @@ export function createVueApi(config: VueConfig = {}): PiralPlugin<PiletVueApi> {
           captured,
         };
       },
-      VueExtension: createExtension(rootName, selector),
+      VueExtension: convert.Extension,
     };
   };
 }

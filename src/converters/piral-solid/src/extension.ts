@@ -1,10 +1,20 @@
-import type { PiletApi, ExtensionSlotProps } from 'piral-core';
+import type { ExtensionSlotProps } from 'piral-core';
 import type { Component } from 'solid-js';
 
-export function createExtension(api: PiletApi, rootName = 'slot'): Component<ExtensionSlotProps> {
+export function createExtension(rootName: string): Component<ExtensionSlotProps> {
   return (props) => {
     const element = document.createElement(rootName);
-    setTimeout(() => api.renderHtmlExtension(element, props), 0);
+    setTimeout(() => {
+      element.dispatchEvent(
+        new CustomEvent('render-html', {
+          bubbles: true,
+          detail: {
+            target: element,
+            props,
+          },
+        }),
+      );
+    }, 0);
     return element as any;
   };
 }

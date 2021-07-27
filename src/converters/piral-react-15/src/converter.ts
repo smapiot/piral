@@ -1,8 +1,19 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { ComponentType } from 'react-15';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { ComponentType } from 'react-15';
+import { createExtension } from './extension';
 import { mountReact15, unmountReact15 } from './mount';
 
-export function createConverter() {
+export interface React15ConverterOptions {
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
+
+export function createConverter(config: React15ConverterOptions = {}) {
+  const { rootName = 'slot' } = config;
+  const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => {
     return {
       mount(el, props, ctx) {
@@ -16,6 +27,6 @@ export function createConverter() {
       },
     };
   };
-
+  convert.Extension = Extension;
   return convert;
 }

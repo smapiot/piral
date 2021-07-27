@@ -1,11 +1,9 @@
 import { Component, ElementRef, Input, Inject } from '@angular/core';
 
-export function createExtension(rootName: string, selector: string): any {
-  const template = `<${rootName}></${rootName}>`;
-
+export function createExtension(selector: string): any {
   @Component({
     selector,
-    template,
+    template: '',
   })
   class NgExtension {
     @Input('name') public name: string;

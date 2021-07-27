@@ -1,30 +1,19 @@
 import type { PiralPlugin } from 'piral-core';
-import { createConverter } from './converter';
-import { createExtension } from './extension';
+import { createConverter, ElmConverterOptions } from './converter';
 import type { PiletElmApi } from './types';
 
 /**
  * Available configuration options for the Elm plugin.
  */
-export interface ElmConfig {
-  /**
-   * Defines the name of the extension component.
-   * @default elm-extension
-   */
-  selector?: string;
-}
+export interface ElmConfig extends ElmConverterOptions {}
 
 /**
  * Creates new Pilet API extensions for integration of Elm.
  */
 export function createElmApi(config: ElmConfig = {}): PiralPlugin<PiletElmApi> {
-  const { selector } = config;
-
   return (context) => {
-    const convert = createConverter();
+    const convert = createConverter(config);
     context.converters.elm = ({ main, captured }) => convert(main, captured);
-
-    createExtension(selector);
 
     return {
       fromElm(main, captured) {
@@ -34,7 +23,7 @@ export function createElmApi(config: ElmConfig = {}): PiralPlugin<PiletElmApi> {
           main,
         };
       },
-      ElmExtension: selector,
+      ElmExtension: convert.Extension,
     };
   };
 }

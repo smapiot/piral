@@ -1,4 +1,4 @@
-export function createExtension(selector = 'ember-extension') {
+export function createExtension(selector: string) {
   if ('customElements' in window) {
     class EmberExtension extends HTMLElement {
       connectedCallback() {
@@ -20,4 +20,6 @@ export function createExtension(selector = 'ember-extension') {
 
     customElements.define(selector, EmberExtension);
   }
+
+  return selector;
 }

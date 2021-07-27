@@ -1,7 +1,9 @@
 import { enableProdMode, NgModule, NgModuleRef, NgZone, StaticProvider, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { BaseComponentProps } from 'piral-core';
+import type { BaseComponentProps } from 'piral-core';
+
+export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const version = `v${VERSION.major || VERSION.full.split('.')[0]}`;
@@ -12,10 +14,11 @@ function sanatize(id: string) {
   return id.replace(/\W/g, '_');
 }
 
-function getPlatformProps(context: any, props: any): Array<StaticProvider> {
+function getPlatformProps(context: any, props: BaseComponentProps): Array<StaticProvider> {
   return [
     { provide: 'Props', useValue: props },
     { provide: 'Context', useValue: context },
+    { provide: 'piral', useValue: props.piral },
   ];
 }
 
@@ -34,9 +37,7 @@ function setComponentSelector(component: any, id: string) {
   const annotation = annotations[0];
 
   if (annotation) {
-    if (!annotation.selector) {
-      annotation.selector = `#${id}`;
-    }
+    annotation.selector = `#${id}`;
   } else if (process.env.NODE_ENV === 'development') {
     console.error(
       '[piral-ng] No annotations found on the component. Check if `@NgComponent` has been applied on your component.',
@@ -53,9 +54,8 @@ function spread<T>(items: Array<T>, more: Array<T> | undefined): Array<T> {
   return items;
 }
 
-function startup<T>(context: any, props: T, BootstrapModule: any, node: HTMLElement) {
-  const values = getPlatformProps(context, props);
-  const platform = platformBrowserDynamic(values);
+function startup(BootstrapModule: any, node: HTMLElement): Promise<void | NgModuleInt> {
+  const platform = platformBrowserDynamic();
   const zoneIdentifier = `piral-ng:${node.id}`;
 
   // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
@@ -73,7 +73,7 @@ function startup<T>(context: any, props: T, BootstrapModule: any, node: HTMLElem
   return platform
     .bootstrapModule(BootstrapModule)
     .catch((err) => console.log(err))
-    .then((bootstrapModule) => {
+    .then((bootstrapModule: NgModuleInt) => {
       node.removeAttribute('id');
 
       if (bootstrapModule) {
@@ -119,19 +119,15 @@ export function bootstrapComponent<T extends BaseComponentProps>(
   id: string,
   moduleOptions: Omit<NgModule, 'boostrap'>,
   NgExtension: any,
-): Promise<void | NgModuleRef<any>> {
-  const { piral } = props;
-  const piralProvider: StaticProvider = {
-    provide: 'piral',
-    useValue: piral,
-  };
+) {
+  const providers = getPlatformProps(context, props);
   node.id = sanatize(id);
   setComponentSelector(component, node.id);
 
   @NgModule({
     ...moduleOptions,
     imports: spread([BrowserModule], moduleOptions.imports),
-    providers: spread([piralProvider], moduleOptions.providers),
+    providers: spread(providers, moduleOptions.providers),
     declarations: spread([component, NgExtension], moduleOptions.declarations),
     bootstrap: [component],
   })
@@ -139,7 +135,7 @@ export function bootstrapComponent<T extends BaseComponentProps>(
     constructor() {}
   }
 
-  return startup(context, props, BootstrapModule, node);
+  return startup(BootstrapModule, node);
 }
 
 export function bootstrapModule<T extends BaseComponentProps>(
@@ -149,8 +145,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
   node: HTMLElement,
   id: string,
   NgExtension: any,
-): Promise<void | NgModuleRef<any>> {
-  const { piral } = props;
+) {
   const annotations = getAnnotations(BootstrapModule);
   const annotation = annotations[0];
   node.id = sanatize(id);
@@ -160,13 +155,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
     const providers = annotation.providers || def;
     const declarations = annotation.declarations || def;
     const [component] = annotation.bootstrap || def;
-    annotation.providers = [
-      ...providers,
-      {
-        provide: 'piral',
-        useValue: piral,
-      },
-    ];
+    annotation.providers = [...providers, ...getPlatformProps(context, props)];
     annotation.declarations = [...declarations, NgExtension];
 
     if (component) {
@@ -185,7 +174,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
     );
   }
 
-  return startup(context, props, BootstrapModule, node);
+  return startup(BootstrapModule, node);
 }
 
 if (process.env.NODE_ENV === 'development') {

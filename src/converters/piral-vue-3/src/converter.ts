@@ -1,9 +1,24 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { Component, App } from 'vue';
 import { createExtension } from './extension';
 import { mountVue } from './mount';
 
-export function createConverter(rootName = 'slot', selector = 'extension-component') {
+export interface Vue3ConverterOptions {
+  /**
+   * Defines the name of the extension component.
+   * @default extension-component
+   */
+  selector?: string;
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
+
+export function createConverter(config: Vue3ConverterOptions = {}) {
+  const { rootName = 'slot', selector = 'extension-component' } = config;
+  const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(
     root: Component<TProps>,
     captured?: Record<string, any>,
@@ -31,5 +46,6 @@ export function createConverter(rootName = 'slot', selector = 'extension-compone
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

@@ -1,7 +1,18 @@
 import * as Riot from 'riot';
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { createExtension } from './extension';
 
-export function createConverter() {
+export interface RiotConverterOptions {
+  /**
+   * Defines the name of the Riot extension element.
+   * @default riot-extension
+   */
+  extensionName?: string;
+}
+
+export function createConverter(config: RiotConverterOptions = {}) {
+  const { extensionName = 'riot-extension' } = config;
+  const Extension = createExtension(extensionName);
   const convert = <TProps extends BaseComponentProps>(
     component: Riot.RiotComponentShell<TProps>,
     captured?: Record<string, any>,
@@ -11,6 +22,17 @@ export function createConverter() {
 
     return {
       mount(el, props, ctx) {
+        const { piral } = props;
+
+        el.addEventListener(
+          'render-html',
+          (ev: CustomEvent) => {
+            ev.stopPropagation();
+            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+          },
+          false,
+        );
+
         app = mountApp(el, {
           ...captured,
           ...ctx,
@@ -23,5 +45,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

@@ -1,30 +1,19 @@
 import type { PiralPlugin } from 'piral-core';
-import { createConverter } from './converter';
-import { createExtension } from './extension';
+import { createConverter, SvelteConverterOptions } from './converter';
 import type { PiletSvelteApi } from './types';
 
 /**
  * Available configuration options for the Svelte plugin.
  */
-export interface SvelteConfig {
-  /**
-   * Defines the name of the extension component.
-   * @default svelte-extension
-   */
-  selector?: string;
-}
+export interface SvelteConfig extends SvelteConverterOptions {}
 
 /**
  * Creates new Pilet API extensions for integration of Svelte.
  */
 export function createSvelteApi(config: SvelteConfig = {}): PiralPlugin<PiletSvelteApi> {
-  const { selector } = config;
-
   return (context) => {
-    const convert = createConverter();
+    const convert = createConverter(config);
     context.converters.svelte = ({ Component, captured }) => convert(Component, captured);
-
-    createExtension(selector);
 
     return {
       fromSvelte(Component, captured) {
@@ -34,7 +23,7 @@ export function createSvelteApi(config: SvelteConfig = {}): PiralPlugin<PiletSve
           captured,
         };
       },
-      SvelteExtension: selector,
+      SvelteExtension: convert.Extension,
     };
   };
 }

@@ -1,27 +1,18 @@
 import type { PiralPlugin } from 'piral-core';
-import { createConverter } from './converter';
-import { createExtension } from './extension';
+import { createConverter, PreactConverterOptions } from './converter';
 import type { PiletPreactApi } from './types';
 
 /**
  * Available configuration options for the Preact plugin.
  */
-export interface PreactConfig {
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
-}
+export interface PreactConfig extends PreactConverterOptions {}
 
 /**
  * Creates new Pilet API extensions for integrating Preact.
  */
 export function createPreactApi(config: PreactConfig = {}): PiralPlugin<PiletPreactApi> {
-  const { rootName } = config;
-
   return (context) => {
-    const convert = createConverter();
+    const convert = createConverter(config);
     context.converters.preact = ({ root }) => convert(root);
 
     return {
@@ -31,7 +22,7 @@ export function createPreactApi(config: PreactConfig = {}): PiralPlugin<PiletPre
           root,
         };
       },
-      PreactExtension: createExtension(rootName),
+      PreactExtension: convert.Extension,
     };
   };
 }

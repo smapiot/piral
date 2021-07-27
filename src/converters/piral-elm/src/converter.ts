@@ -1,18 +1,30 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { ElmModule } from './types';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { createExtension } from './extension';
+import type { ElmModule } from './types';
 
-export function createConverter() {
+export interface ElmConverterOptions {
+  /**
+   * Defines the name of the extension component.
+   * @default elm-extension
+   */
+  selector?: string;
+}
+
+export function createConverter(config: ElmConverterOptions = {}) {
+  const { selector = 'elm-extension' } = config;
+  const Extension = createExtension(selector);
   const convert = <TProps extends BaseComponentProps>(
     main: ElmModule<TProps>,
     captured?: Record<string, any>,
   ): ForeignComponent<TProps> => {
     return {
-      mount(parent, data, ctx) {
-        const node = parent.appendChild(document.createElement('div'));
-        parent.addEventListener(
+      mount(el, props, ctx) {
+        const { piral } = props;
+        const node = el.appendChild(document.createElement('div'));
+        el.addEventListener(
           'render-html',
           (ev: CustomEvent) => {
-            const { piral } = data;
+            ev.stopPropagation();
             piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
           },
           false,
@@ -22,7 +34,7 @@ export function createConverter() {
           flags: {
             ...captured,
             ...ctx,
-            ...data,
+            ...props,
           },
         });
       },
@@ -31,5 +43,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

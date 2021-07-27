@@ -1,17 +1,25 @@
 import { h, VNode } from '@cycle/dom';
-import type { PiletApi, ExtensionSlotProps } from 'piral-core';
+import type { ExtensionSlotProps } from 'piral-core';
 
 export interface CycleExtension {
   (props: ExtensionSlotProps<unknown>): VNode;
 }
 
-export function createExtension(api: PiletApi, rootName = 'slot'): CycleExtension {
+export function createExtension(rootName: string): CycleExtension {
   return (props) =>
     h(rootName, {
       hook: {
         insert: (vnode) => {
           if (vnode.elm instanceof HTMLElement) {
-            api.renderHtmlExtension(vnode.elm, props);
+            vnode.elm.dispatchEvent(
+              new CustomEvent('render-html', {
+                bubbles: true,
+                detail: {
+                  target: vnode.elm,
+                  props,
+                },
+              }),
+            );
           }
         },
       },

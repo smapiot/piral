@@ -1,7 +1,20 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { EmberInstance, EmberModule } from './types';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { createExtension } from './extension';
+import type { EmberInstance, EmberModule } from './types';
 
-export function createConverter() {
+export interface EmberConverterOptions {
+  /**
+   * Defines the name of the extension component.
+   * @default ember-extension
+   */
+  selector?: string;
+}
+
+export function createConverter(config: EmberConverterOptions = {}) {
+  const { selector = 'ember-extension' } = config;
+
+  const Extension = createExtension(selector);
+
   const convert = <TProps extends BaseComponentProps>(
     App: EmberModule<TProps>,
     opts: any,
@@ -10,10 +23,11 @@ export function createConverter() {
 
     return {
       mount(rootElement, props, ctx) {
+        const { piral } = props;
         rootElement.addEventListener(
           'render-html',
           (ev: CustomEvent) => {
-            const { piral } = props;
+            ev.stopPropagation();
             piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
           },
           false,
@@ -38,5 +52,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

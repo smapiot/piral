@@ -1,4 +1,4 @@
-export function createExtension(selector = 'svelte-extension') {
+export function createExtension(selector: string) {
   if ('customElements' in window) {
     class SvelteExtension extends HTMLElement {
       connectedCallback() {
@@ -20,4 +20,6 @@ export function createExtension(selector = 'svelte-extension') {
 
     customElements.define(selector, SvelteExtension);
   }
+
+  return selector;
 }

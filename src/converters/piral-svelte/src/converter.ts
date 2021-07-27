@@ -1,7 +1,18 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { SvelteComponentInstance, SvelteModule } from './types';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { createExtension } from './extension';
+import type { SvelteComponentInstance, SvelteModule } from './types';
 
-export function createConverter() {
+export interface SvelteConverterOptions {
+  /**
+   * Defines the name of the extension component.
+   * @default svelte-extension
+   */
+  selector?: string;
+}
+
+export function createConverter(config: SvelteConverterOptions = {}) {
+  const { selector = 'svelte-extension' } = config;
+  const Extension = createExtension(selector);
   const convert = <TProps extends BaseComponentProps>(
     Component: SvelteModule<TProps>,
     captured?: Record<string, any>,
@@ -10,10 +21,11 @@ export function createConverter() {
 
     return {
       mount(parent, data, ctx) {
+        const { piral } = data;
         parent.addEventListener(
           'render-html',
           (ev: CustomEvent) => {
-            const { piral } = data;
+            ev.stopPropagation();
             piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
           },
           false,
@@ -39,5 +51,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

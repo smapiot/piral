@@ -1,27 +1,18 @@
 import type { PiralPlugin } from 'piral-core';
-import { createConverter } from './converter';
-import { createExtension } from './extension';
+import { createConverter, React15ConverterOptions } from './converter';
 import type { PiletReact15Api } from './types';
 
 /**
  * Available configuration options for the React 15.x plugin.
  */
-export interface React15Config {
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
-}
+export interface React15Config extends React15ConverterOptions {}
 
 /**
  * Creates Pilet API extensions for integrating React 15.x.
  */
 export function createReact15Api(config: React15Config = {}): PiralPlugin<PiletReact15Api> {
-  const { rootName } = config;
-
   return (context) => {
-    const convert = createConverter();
+    const convert = createConverter(config);
     context.converters.react15 = ({ root }) => convert(root);
 
     return {
@@ -31,7 +22,7 @@ export function createReact15Api(config: React15Config = {}): PiralPlugin<PiletR
           root,
         };
       },
-      React15Extension: createExtension(rootName),
+      React15Extension: convert.Extension,
     };
   };
 }
