@@ -569,8 +569,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('fields', apps.publishPiletDefaults.fields)
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.')
-        .demandOption('url');
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
       return apps.publishPilet(args.base as string, {

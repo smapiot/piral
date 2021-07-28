@@ -1,3 +1,7 @@
+---
+title: Pilet Questions
+---
+
 # Pilets
 
 ## One pilet is rather large - can I make it smaller?

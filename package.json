@@ -16,8 +16,8 @@
     "bootstrap": "lerna clean --yes && lerna bootstrap",
     "setup": "yarn bootstrap",
     "build": "lerna run build",
-    "build:docs": "piral build src/pages/docs/src/index.html --target dist/docs/index.html --type release",
-    "watch:docs": "piral debug src/pages/docs/src/index.html",
+    "build:docs": "lerna run build:docs --stream",
+    "watch:docs": "lerna run watch:docs --stream",
     "build:page": "piral build src/pages/www/src/index.html --target dist/www/index.html --type release",
     "watch:page": "piral debug src/pages/www/src/index.html",
     "watch:siteless": "piral debug src/framework/siteless/src/index.html",
@@ -53,6 +53,7 @@
     "jest-cli": "^25.0.0",
     "lerna": "^3.10.7",
     "prettier": "^2.1.1",
+    "sass": "^1.34.0",
     "ts-jest": "^25.0.0",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
@@ -61,11 +62,16 @@
     "typescript": "^4.0.2"
   },
   "resolutions": {
+    "glob-parent": "5.1.2",
     "highlight.js": "10.7.1",
     "is-svg": "4.3.1",
     "node-fetch": "2.6.1",
     "node-forge": "0.10.0",
+    "normalize-url": "4.5.1",
+    "underscore": "1.12.1",
     "ssri": "8.0.1",
-    "tslib": "2.1.0"
+    "trim-newlines": "3.0.1",
+    "tslib": "2.1.0",
+    "ws": "7.4.6"
   }
 }

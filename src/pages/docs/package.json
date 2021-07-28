@@ -15,8 +15,6 @@
   "author": "smapiot",
   "homepage": "https://docs.piral.io",
   "license": "MIT",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "src"
@@ -29,38 +27,12 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "echo \"No build yet.\"",
+    "build:docs": "piral-docs build",
+    "watch:docs": "piral-docs watch",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "stickyfilljs": "^2.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-router": "^5.1.8",
-    "@types/react-router-dom": "^5.1.6",
-    "flexsearch": "^0.6.32",
-    "keyword-extractor": "0.0.17",
-    "markdown-it": "^9.0.1",
-    "markdown-it-abbr": "1.0.4",
-    "markdown-it-anchor": "5.2.4",
-    "markdown-it-container": "3.0.0",
-    "markdown-it-emoji": "1.4.0",
-    "markdown-it-footnote": "3.0.2",
-    "markdown-it-front-matter": "0.1.2",
-    "markdown-it-highlightjs": "3.4.0",
-    "markdown-it-mark": "2.0.0",
-    "markdown-it-replace-link": "1.1.0",
-    "markdown-it-smartarrows": "1.0.1",
-    "markdown-it-sub": "1.0.0",
-    "markdown-it-sup": "1.0.0",
-    "markdown-it-video": "0.6.3",
-    "sass": "^1.17.0",
-    "yaml": "^1.6.0"
+    "piral-docs-tools": "0.5.1"
   }
 }

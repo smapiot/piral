@@ -170,29 +170,106 @@ export async function findFile(topDir: string, fileName: string): Promise<string
   return path;
 }
 
+interface AnyPattern {
+  original: string;
+  patterns: Array<string>;
+}
+
+function matchPattern(baseDir: string, pattern: string) {
+  return new Promise<Array<string>>((resolve, reject) => {
+    glob(
+      pattern,
+      {
+        cwd: baseDir,
+        nodir: true,
+      },
+      (err, files) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(files);
+        }
+      },
+    );
+  });
+}
+
+async function matchAnyPattern(baseDir: string, pattern: AnyPattern) {
+  const matches = await Promise.all(pattern.patterns.map((pattern) => matchPattern(baseDir, pattern)));
+
+  return {
+    pattern: pattern.original,
+    results: matches.reduce((agg, curr) => [...agg, ...curr], []),
+  };
+}
+
+const preferences = ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs', '.esm', '.es', '.es6', '.html'];
+
 export async function matchAny(baseDir: string, patterns: Array<string>) {
   const matches: Array<string> = [];
+  const exts = preferences.map((s) => s.substr(1)).join(',');
+  const allPatterns = patterns.reduce<Array<AnyPattern>>((agg, curr) => {
+    const patterns = [];
+
+    if (/[a-zA-Z0-9\-]+$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
+      patterns.push(curr, `${curr}.{${exts}}`, `${curr}/package.json`);
+    } else if (curr.endsWith('/')) {
+      patterns.push(`${curr}index.{${exts}}`, `${curr}package.json`);
+    } else {
+      patterns.push(curr);
+    }
+
+    agg.push({ original: curr, patterns });
+    return agg;
+  }, []);
+
   await Promise.all(
-    patterns.map(
-      (pattern) =>
-        new Promise<void>((resolve, reject) => {
-          glob(
-            pattern,
-            {
-              cwd: baseDir,
-            },
-            (err, files) => {
-              if (err) {
-                reject(err);
+    allPatterns.map((patterns) =>
+      matchAnyPattern(baseDir, patterns).then(async ({ results, pattern }) => {
+        if (!results.length) {
+          //TODO emit warning
+        } else {
+          log('generalDebug_0003', `Found ${results.length} potential entry points in "${pattern}".`);
+          // only take first / primary result
+          const firstResult = results[0];
+          const fileName = basename(firstResult);
+
+          if (fileName === 'package.json') {
+            log('generalDebug_0003', `Entry point is a "package.json" and needs further inspection.`);
+            const targetDir = dirname(firstResult);
+            const { source } = await readJson(targetDir, fileName);
+
+            if (typeof source === 'string') {
+              log('generalDebug_0003', `Found a "source" field with value "${source}".`);
+              const target = resolve(targetDir, source);
+              const exists = await checkExists(target);
+
+              if (exists) {
+                log('generalDebug_0003', `Taking existing target as "${target}".`);
+                matches.push(target);
               } else {
-                matches.push(...files);
-                resolve();
+                log('generalDebug_0003', `Source target "${target}" does not exist. Skipped.`);
               }
-            },
-          );
-        }),
+            } else {
+              log('generalDebug_0003', `No "source" field found. Trying combinations in "src".`);
+              const files = await matchPattern(baseDir, `src/index.{${exts}}`);
+
+              if (files.length > 0) {
+                log('generalDebug_0003', `Found a result; taking "${files[0]}".`);
+                matches.push(files[0]);
+              } else {
+                log('generalDebug_0003', `Found no results in "src". Skipped.`);
+              }
+            }
+          } else {
+            log('generalDebug_0003', `Entry point result is "${firstResult}".`);
+            matches.push(firstResult);
+          }
+        }
+      }),
     ),
   );
+
   return matches;
 }
 

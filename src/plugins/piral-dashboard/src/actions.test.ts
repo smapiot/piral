@@ -1,6 +1,7 @@
 import { Atom, deref } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
+import { createActions } from 'piral-core';
 import { registerTile, unregisterTile } from './actions';
-import { createActions, createListener } from 'piral-core';
 
 describe('Dashboard Actions Module', () => {
   it('registerTile and unregisterTile', () => {

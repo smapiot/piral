@@ -14,12 +14,15 @@ export function createInstanceElement(
   instance?: PiralInstance,
   layout?: Partial<ComponentsState>,
   errors?: Partial<ErrorComponentsState>,
+  dashboardPath = '/',
+  piralChildren?: React.ReactNode,
 ): React.ReactElement {
   return (
     <Piral instance={instance}>
       <SetLayout layout={layout} />
       <SetErrors errors={errors} />
-      <SetRoute path="/" component={Dashboard} />
+      <SetRoute path={dashboardPath} component={Dashboard} />
+      {piralChildren}
     </Piral>
   );
 }

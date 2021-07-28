@@ -1,3 +1,7 @@
+---
+title: Tooling Questions
+---
+
 # Tooling
 
 ## Why custom tooling?
@@ -84,5 +88,75 @@ While syntax constructs (e.g., `async` / `await`) should be transpiled fine, the
 In such cases please find out what you use and which polyfill (additionally to `piral/polyfills`) is required.
 
 Finally, in cases where you target more modern browsers feel free to remove `piral/polyfills` from your imports. The intention of this module is not to cover all cases, but to cover the most important ones.
+
+---------------------------------------
+
+## How can I debug with HTTPS?
+
+The debug server middleware `kras` can be configured freely. One option is to use a `.krasrc` file like:
+
+```json
+{
+  "ssl": {
+    "cert": "node_modules/kras/cert/server.crt",
+    "key": "node_modules/kras/cert/server.key"
+  }
+}
+```
+
+This example uses `kras`'s default certificate. It will / should not be trusted on your machine. You can also create your own (or use your own) trusted certificates. In this case just set the given paths accordingly.
+
+---------------------------------------
+
+## Is it possible to debug multiple pilets?
+
+Yes it is. The command `pilet debug` supports multiple arguments and also wildcards:
+
+```sh
+pilet debug ./src/pilet1/src/index.tsx ./src/pilet2/src/index.tsx
+```
+
+or
+
+```sh
+pilet debug ./src/*-pilet/src/index.tsx
+```
+
+or even a combination of the two
+
+```sh
+pilet debug ./src/company-pilets/*/src/index.tsx ./src/external-pilets/*/src/index.tsx
+```
+
+can be run.
+
+---------------------------------------
+
+## How to detect if a package is a pilet?
+
+In the *package.json* there should be an entry under `piral`, pointing to the app shell.
+
+Using this information one could construct, e.g., a special string for debugging all pilets in a monorepo:
+
+```sh
+#!/bin/bash
+source=""; \
+yarn workspaces --json info \
+| jsonpp \
+| jq '.data|to_entries|map(.value.location)|.[]' \
+| tr -d \"  \
+| ( \
+  while read workspace; do \
+    package="${workspace}/package.json"; \
+    isPilet=`jq 'select(.piral)' "$package"`; \
+    if [[ ! -z "$isPilet" ]]; then \
+      root="${workspace}/src/index.tsx"; \
+      source="${source} ${root}";
+    fi \
+  done && \
+  echo "pilet debug $source"; \
+  pilet debug $source \
+);
+```
 
 ---------------------------------------

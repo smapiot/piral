@@ -1,3 +1,7 @@
+---
+title: Articles About Piral
+---
+
 # Articles About Piral
 
 ## Magazine Articles
@@ -17,6 +21,8 @@
 
 ## Blog Posts
 
+- [Switching up your Spotify experience with microfrontends and Blazor , dev.to, 05/2021](https://dev.to/dantederuwe/switching-up-your-spotify-experience-with-microfrontends-and-blazor-4k72)
+- [My experiences creating a Netflix clone using microfrontends, dev.to, 03/2021](https://dev.to/dantederuwe/my-experiences-creating-a-netflix-clone-using-microfrontends-1n46)
 - [How Micro Frontends are being Implemented in 2020: A Survey, Bits and Pieces, 09/2020](https://blog.bitsrc.io/microfrontends-survey-evaluation-d2af7eade306)
 - [State of Microfrontends, dev.to, 06/2020](https://dev.to/florianrappl/state-of-microfrontends-1j3p)
 - [Cross-Framework Communication, Bits and Pieces, 04/2020](https://blog.bitsrc.io/cross-framework-components-8439d58342e5)
@@ -45,7 +51,7 @@
 - [Virtual Azure Community Day 2020, 07/2020](https://youtu.be/AtUKNsdnwBc)
 - [GAB Austria 2020, 05/2020](https://youtu.be/_q4JDrIMvlA)
 - [ReactConf Europe on YouTube, 02/2020](https://youtu.be/kG7gIF16cOk)
-- [c't webdev in Cologne, 02/2020](https://ctwebdev.de/programm.html)
+- [c't webdev in Cologne, 02/2020](https://ctwebdev.de/2020.html#slot-ViIHfktB10EBEEjEnzFE)
 - [O'Reilly Software Architecture Conference in Berlin, 11/2019](https://conferences.oreilly.com/software-architecture/sa-eu/public/schedule/detail/78683)
 
 ## Talks at Meetups

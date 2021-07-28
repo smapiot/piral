@@ -1,3 +1,7 @@
+---
+title: Testimonials
+---
+
 # Testimonials
 
 A collection of some statements from community members regarding Piral as a framework for microfrontends.

@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Forms](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-forms.svg?style=flat)](https://www.npmjs.com/package/piral-forms) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Forms](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-forms.svg?style=flat)](https://www.npmjs.com/package/piral-forms) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-forms` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core` for exposing enhanced form capabilities.
 
@@ -18,6 +18,12 @@ Quite often the management of forms is rather cumbersome. A form consists of mul
 Full libraries such as [Formik](https://formik.org/) can be used to tackle (at least parts of) this problem, too, but `piral-forms` represents a very lightweight approach just leveraging what's there already and exposing it via the pilet API.
 
 Alternatives: Use known libraries exposed as shared libraries or rely on pilets to come up with their own solutions.
+
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/C17D-jGJ41g)
 
 ## Documentation
 

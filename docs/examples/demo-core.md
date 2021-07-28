@@ -21,4 +21,4 @@ The shown connectors display how simple an interactive data feed can be connecte
 ## Links
 
 - [Demo Online](https://demo-core.piral.io)
-- [Code on GitHub](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral-core)
+- [Code on GitHub](https://github.com/smapiot/piral/tree/main/src/samples/sample-piral-core)

@@ -18,8 +18,8 @@ render(app, document.querySelector('#app'));
 ```
  */
 export function getAppInstance(config: PiralConfiguration = {}, options: PiralRenderBaseOptions = {}) {
-  const { settings, layout, errors } = options;
+  const { settings, layout, errors, dashboardPath, piralChildren } = options;
   const instance = createPiral(config, settings);
-  const app = createInstanceElement(instance, layout, errors);
+  const app = createInstanceElement(instance, layout, errors, dashboardPath, piralChildren);
   return { instance, app };
 }

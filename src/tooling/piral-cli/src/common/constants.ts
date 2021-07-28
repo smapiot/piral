@@ -3,7 +3,7 @@ export const filesTar = 'files';
 export const filesOnceTar = 'files_once';
 export const piralBaseRoot = 'piral-base/lib/types';
 export const entryModuleExtensions = ['.ts', '.tsx', '.js', '.jsx'];
-export const declarationEntryExtensions = ['.html', ...entryModuleExtensions];
+export const declarationEntryExtensions = ['.html', '.pug', ...entryModuleExtensions];
 export const coreExternals = [
   '@dbeining/react-atom',
   '@libre/atom',

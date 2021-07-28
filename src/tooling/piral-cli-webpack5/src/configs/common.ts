@@ -29,8 +29,8 @@ export function getVariables(): Record<string, string> {
 export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, pilet: boolean) {
   const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
+      filename: '[name].[hash:6].css',
+      chunkFilename: '[id].[hash:6].css',
     }) as any,
     new ImportMapsWebpackPlugin(),
   ];

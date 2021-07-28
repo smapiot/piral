@@ -34,8 +34,8 @@ export async function getPiralConfig(
     output: {
       publicPath,
       path: dist,
-      filename: `index.${contentHash ? '[hash].' : ''}js`,
-      chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
+      filename: `index.${contentHash ? '[hash:6].' : ''}js`,
+      chunkFilename: contentHash ? '[chunkhash:6].js' : undefined,
     },
 
     resolve: {

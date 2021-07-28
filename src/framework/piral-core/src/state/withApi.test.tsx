@@ -11,9 +11,13 @@ function createMockContainer() {
   });
   return {
     context: {
-      converters: { },
-      readState() {
-        return undefined;
+      converters: {},
+      readState(cb) {
+        return cb({
+          registry: {
+            wrappers: {},
+          },
+        });
       },
       on: jest.fn(),
       off: jest.fn(),

@@ -1,5 +1,18 @@
 # Piral Changelog
 
+## 0.13.3 (tbd)
+
+* Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`
+* Fixed conflicting import for `piral-cli-parcel` in `piral-breadcrumbs` (#385)
+* Added support for `apiKeys` in `.piralrc` file
+* Added support for more flexible entry module resolution to `pilet build`
+* Added `dashboardPath` and `piralChildren` as options for `renderInstance`
+* Added new optional convert plugin `piral-vue-3` covering Vue@3
+* Updated used chunk hash length for Webpack
+* Updated `piral-ng` to support all (current) versions of Angular
+* Replaced `node-sass` with `sass`
+* Renamed `master` branch to `main`
+
 ## 0.13.2 (April 27, 2021)
 
 * Fixed potential issue for `piral debug` in Firefox
@@ -163,7 +176,7 @@
 * Added support for Yarn and Pnpm (#203)
 * Added optional `--cacert` flag to `pilet publish` command (#204)
 * Fixed `NODE_ENV` mode of the emulator (#207)
-* Added `getProfile()` to [piral-oidc](./src/packages/piral-oidc/README.md) (#210)
+* Added `getProfile()` to [piral-oidc](./src/plugins/piral-oidc/README.md) (#210)
 * Switched to relative paths for local Piral references
 * Added new package `siteless` for painless microfrontends
 * Added `reducers` option to `piral-feeds`

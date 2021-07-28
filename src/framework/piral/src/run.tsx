@@ -17,8 +17,23 @@ runInstance((app, selector) => render(app, document.querySelector(selector)));
 ```
  */
 export function runInstance(runner: PiralRunner, options: PiralRenderOptions = {}) {
-  const { selector = '#app', settings, layout, errors, middleware = noChange, ...config } = options;
-  const { app, instance } = getAppInstance(middleware(config), { settings, layout, errors });
+  const {
+    selector = '#app',
+    settings,
+    layout,
+    piralChildren,
+    dashboardPath,
+    errors,
+    middleware = noChange,
+    ...config
+  } = options;
+  const { app, instance } = getAppInstance(middleware(config), {
+    settings,
+    layout,
+    errors,
+    dashboardPath,
+    piralChildren,
+  });
   runner(app, selector);
   return instance;
 }

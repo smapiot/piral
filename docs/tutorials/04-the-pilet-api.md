@@ -75,6 +75,7 @@ export const MyPage: React.FC = () => (
 );
 ```
 
+<!-- markdown-link-check-disable-next-line -->
 Running this code will not result in anything fancy. We can now go to http://localhost:1234/my-page for seeing the page. On the landing page (dashboard) or in the menu we do not see any entry. We may want to link the page somehow.
 
 ## Linking the Page
@@ -120,7 +121,7 @@ By far the most powerful concept that comes with Piral is the possibility of int
 
 Importantly, there is no guarantee that the slot or any components for it exist. While the slot has properties that allow, e.g., defining a fallback if no components are available, the extension components will never know that they are not actively needed.
 
-Also keep in mind that the slot name is **not** bound to a single pilet. Any pilet may reuse a slot name and therefore there is also no guarantee that some props are always provided. Its up to the extension component to check that given props satisfy an expected data model. In case of a mismatch, the component should error out gracefully.
+Also keep in mind that the slot name is **not** bound to a single pilet. Any pilet may reuse a slot name and therefore there is also no guarantee that some props are always provided. It's up to the extension component to check that given props satisfy an expected data model. In case of a mismatch, the component should error out gracefully.
 
 Let's see this in practice:
 
@@ -180,7 +181,7 @@ For non-React applications extension slots can be created using the `renderHtmlE
 
 Modern web applications are a combination of static assets (text, images, ...) with dynamic data (usually coming from an API). These are not your daddy's websites anymore - they are live and closer to normal applications in every metric.
 
-In Piral we wanted to make sure that data access is particularly simple. Obviously, our approach is not for everyone and so its neither mandatory nor exclusive - you can actually use whatever you prefer.
+In Piral we wanted to make sure that data access is particularly simple. Obviously, our approach is not for everyone and so it's neither mandatory nor exclusive - you can actually use whatever you prefer.
 
 Pilets have access to an auxiliary API called `createConnector`. This will create a data connector, which is a React higher-order component (HOC). A higher-order component can be used to wrap an existing component to give it additional functionality - in this case, access to some target data.
 

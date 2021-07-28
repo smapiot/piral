@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Ng](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-ng.svg?style=flat)](https://www.npmjs.com/package/piral-ng) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Ng](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-ng.svg?style=flat)](https://www.npmjs.com/package/piral-ng) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-ng` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
@@ -47,15 +47,59 @@ Alternatively, if `piral-ng` has not been added to the Piral instance you can in
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { fromNg } from 'piral-ng';
+import { fromNg } from 'piral-ng/convert';
 import { AngularPage } from './AngularPage';
 
 export function setup(piral: PiletApi) {
   piral.registerPage('/sample', fromNg(AngularPage));
 }
 ```
-
 :::
+
+For components, such as the `AngularPage` a `template` should be specified.
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  template: `
+    <div class="page">
+      <h3>Angular Page: {{ counter }}</h3>
+      <button (click)="increment()">Increment</button>
+      <button (click)="decrement()">Decrement</button>
+    </div>
+  `,
+})
+export class AngularPage {
+  public counter = 0;
+
+  constructor() {}
+
+  increment() {
+    this.counter += 1;
+  }
+
+  decrement() {
+    this.counter -= 1;
+  }
+}
+```
+
+::: warning: Don't use `templateUrl`
+In many Angular projects you still find `templateUrl`, which would be transformed to a `template` by the Angular CLI during build. If you want to achieve the same using, e.g., Webpack, then use a custom loader such as [angularjs-template-loader](https://www.npmjs.com/package/angularjs-template-loader).
+:::
+
+If you don't want to inline the `template` then just `require` the contents, e.g.,
+
+```js
+// ...
+@Component({
+  template: require('./AngularPage.html'),
+})
+export class AngularPage { /* ... */ }
+```
+
+where you may need to tell your bundler how to treat these HTML files (i.e., transform these references to strings directly in the bundle).
 
 ::: summary: For Piral instance developers
 
@@ -64,13 +108,10 @@ The provided library only brings API extensions for pilets to a Piral instance. 
 The following polyfills / vendor libs should be imported *before* any other package.
 
 ```ts
-import '@angular/platform-browser';
-import '@angular/platform-browser-dynamic';
-import '@angular/core';
-import '@angular/common';
-import '@angular/http';
-import '@core-js/es7/reflect';
-import 'zone.js/dist/zone';
+import 'core-js/es/reflect';
+import 'core-js/stable/reflect';
+import 'core-js/features/reflect';
+import 'zone.js';
 ```
 
 Furthermore, switching on the production mode may be useful.
@@ -147,6 +188,210 @@ The following code snippet illustrates the injection of the `TileProps` service 
 })
 export class SampleTileComponent {
   constructor(@Inject('TileProps') public props: TileComponentProps<any>) {}
+}
+```
+
+## Angular Versions
+
+This plugin works with all versions of Angular (right now 2 - 12). Support for Angular.js (also known as Angular 1) is given via `piral-ngjs`.
+
+### Angular 2
+
+Angular 2 works with some configuration (see below) even though the usage of annotations is slightly different in `piral-ng`.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^2",
+  "@angular/compiler": "^2",
+  "@angular/core": "^2",
+  "@angular/platform-browser": "^2",
+  "@angular/platform-browser-dynamic": "^2",
+  "core-js": "^3.15.2",
+  "rxjs": "^5.0",
+  "zone.js": "~0.9"
+}
+```
+
+Since Angular 2 does not know about `slot` you'll need to change the `rootName`. The element is up to you, one possibility is to choose a plain `div`:
+
+```js
+createNgApi({ rootName: 'div' })
+```
+
+### Angular 3
+
+Was never released. Not covered.
+
+### Angular 4
+
+Angular 4 works even though the usage of annotations is slightly different in `piral-ng`.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^4",
+  "@angular/compiler": "^4",
+  "@angular/core": "^4",
+  "@angular/platform-browser": "^4",
+  "@angular/platform-browser-dynamic": "^4",
+  "core-js": "^3.15.2",
+  "rxjs": "^5.0.0",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 5
+
+Angular 5 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^4",
+  "@angular/compiler": "^4",
+  "@angular/core": "^4",
+  "@angular/platform-browser": "^4",
+  "@angular/platform-browser-dynamic": "^4",
+  "core-js": "^3.15.2",
+  "rxjs": "^5.0.0",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 6
+
+Angular 6 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^6",
+  "@angular/compiler": "^6",
+  "@angular/core": "^6",
+  "@angular/platform-browser": "^6",
+  "@angular/platform-browser-dynamic": "^6",
+  "core-js": "^3.15.2",
+  "rxjs": "^6.0.0",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 7
+
+Angular 7 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^6",
+  "@angular/compiler": "^6",
+  "@angular/core": "^6",
+  "@angular/platform-browser": "^6",
+  "@angular/platform-browser-dynamic": "^6",
+  "core-js": "^3.15.2",
+  "rxjs": "^6.0.0",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 8
+
+Angular 8 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^8",
+  "@angular/compiler": "^8",
+  "@angular/core": "^8",
+  "@angular/platform-browser": "^8",
+  "@angular/platform-browser-dynamic": "^8",
+  "core-js": "^3.15.2",
+  "rxjs": "^6.0.0",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 9
+
+Angular 9 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^9",
+  "@angular/compiler": "^9",
+  "@angular/core": "^9",
+  "@angular/platform-browser": "^9",
+  "@angular/platform-browser-dynamic": "^9",
+  "core-js": "^3.15.2",
+  "rxjs": "~6.4",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 10
+
+Angular 10 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^10",
+  "@angular/compiler": "^10",
+  "@angular/core": "^10",
+  "@angular/platform-browser": "^10",
+  "@angular/platform-browser-dynamic": "^10",
+  "core-js": "^3.15.2",
+  "rxjs": "~6.4",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 11
+
+Angular 11 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^11",
+  "@angular/compiler": "^11",
+  "@angular/core": "^11",
+  "@angular/platform-browser": "^11",
+  "@angular/platform-browser-dynamic": "^11",
+  "core-js": "^3.15.2",
+  "rxjs": "~6.4",
+  "zone.js": "~0.9"
+}
+```
+
+### Angular 12
+
+Angular 12 just works.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^12",
+  "@angular/compiler": "^12",
+  "@angular/core": "^12",
+  "@angular/platform-browser": "^12",
+  "@angular/platform-browser-dynamic": "^12",
+  "core-js": "^3.15.2",
+  "rxjs": "~6.4",
+  "zone.js": "~0.9"
 }
 ```
 

@@ -94,6 +94,21 @@ Performs minification or other post-bundle transformations.
 - Type: `boolean`
 - Default: `false`
 
+### `--declaration`
+
+Creates a declaration file for the pilet.
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-declaration`
+
+Opposite of:
+Creates a declaration file for the pilet.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--content-hash`
 
 Appends the hash to the side-bundle files.

@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://raw.githubusercontent.com/smapiot/piral/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Cross Frameworks Sample](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE)
+# [Piral Cross Frameworks Sample](https://piral.io) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE)
 
 The sample application should demonstrate you the use of multiple frameworks in the context of Piral. Piral is referenced via `piral-core`. The pilets are not served from any backend, but are provided out of the box.
 

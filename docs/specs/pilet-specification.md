@@ -1,3 +1,7 @@
+---
+title: Pilet Package Specification
+---
+
 # Pilet Package Specification
 
 ## Abstract

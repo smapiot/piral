@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-    - master
+    - main
     - develop
     - documentation
 
@@ -12,7 +12,7 @@ variables:
 - name: agentName
   value: 'ubuntu-latest'
 - name: releaseBranch
-  value: 'master'
+  value: 'main'
 - name: previewBranch
   value: 'develop'
 - name: documentBranch

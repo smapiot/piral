@@ -24,6 +24,7 @@ What kras brings to the table:
 - Replying with predefined fixes responses
 - Scripted response to HTTP requests
 
+<!-- markdown-link-check-disable-next-line -->
 All these capabilities can be used by routing through the development server (usually running at *http://localhost:1234*).
 
 ![Middleware at the development server](../diagrams/kras-middleware.png)
@@ -32,6 +33,7 @@ The diagram above illustrates the relationship between the development server, t
 
 ## Mock Server Management
 
+<!-- markdown-link-check-disable-next-line -->
 When you start a debugging session you'll end up seeing a message about the mock server management address, usually [http://localhost:1234/manage-mock-server](http://localhost:1234/manage-mock-server). This URL can be used to see what kras has recorded so far and how kras is configured.
 
 The screenshot below shows the kras management website:
@@ -44,6 +46,7 @@ We can use the configuration to set up kras in such a way that we enable / confi
 
 ## Request Proxying
 
+<!-- markdown-link-check-disable-next-line -->
 The request proxying can be set up by a simple mapping, e.g., placing `/posts` to `https://jsonplaceholder.typicode.com/posts` will - if no other injector intercepts the request - forward requests from `http://localhost:1234/posts` to `https://jsonplaceholder.typicode.com/posts`. Likewise, `http://localhost:1234/posts/1` would be forwarded to `https://jsonplaceholder.typicode.com/posts/1`.
 
 The proxy injector is usually the last active injector. Any response of the proxy (e.g., a not found 404) will still lead to a response from this injector. Thus when the proxy injector is active (and captures some request) it is the last used injector.

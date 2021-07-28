@@ -1,3 +1,7 @@
+---
+title: Features and Alternatives
+---
+
 # Features and Alternatives
 
 ## Core Features

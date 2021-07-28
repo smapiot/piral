@@ -1,3 +1,7 @@
+---
+title: General Questions
+---
+
 # General
 
 ## What's the motivation behind Piral?
@@ -32,7 +36,7 @@ While `piral` is build on top of `piral-core`, `piral-core` is itself build on t
 
 A Piral instance requires the following things:
 
-1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral))
+1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/main/src/samples/sample-piral))
 2. A backend service to provision the pilets (you can use our available [feed service](https://www.piral.cloud))
 3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) NPM feed or a Git repository
 
@@ -56,7 +60,7 @@ Piral was created with microfrontend architectures relying on heavy client-side 
 
 Nevertheless, for a couple of reasons you may want to offer a non-JS (or progressive) version of your application. You may want to offer enhanced SEO capabilities. You may want to reduce initial loading / rendering time. You may want to give non-JS users a bit more capabilities than just stating "Sorry - you need to enable JavaScript". We hear you loud and clear.
 
-Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../guidelines/server-side-rendering.md).
+Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../tutorials/11-server-side-rendering.md).
 
 ---------------------------------------
 
@@ -200,5 +204,38 @@ A pilet contains all the code of a microfrontend, which may include some pages. 
 ## Can Piral be used in HIPAA compliant applications?
 
 Yes definitely. There is nothing in Piral that would violate HIPAA. For HIPAA compliance of our official [feed service](https://feed.piral.cloud), see the questions there.
+
+---------------------------------------
+
+## How to wrap all MF components?
+
+A Piral instance can be configured with "wrappers". These are middleware components that will host registered components (like the ones coming from the microfrontends).
+
+Simple example:
+
+```jsx
+renderInstance({
+  layout,
+  errors,
+  state: {
+    registry: {
+      wrappers: {
+        tile: ({ piral, children }) => (
+          <div data-foo={piral.meta.name}>{children}</div>
+        ),
+      },
+    },
+  },
+  requestPilets() {
+    return fetch(feedUrl)
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+})
+```
+
+Wrappers are applied on basis of component registrations, so you'd need to define one (or the same) wrapper for all types of component registrations (`extension`, `page`, `tile`, ...).
+
+There is also the special fallback wrapper `*`, which is used if no specific wrapper is available.
 
 ---------------------------------------

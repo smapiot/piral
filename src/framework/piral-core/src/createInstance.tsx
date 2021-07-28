@@ -1,9 +1,8 @@
 import { __assign } from 'tslib';
-import { blazingStrategy, standardStrategy, isfunc } from 'piral-base';
+import { blazingStrategy, standardStrategy, createListener, isfunc } from 'piral-base';
 import { getLocalDependencies, defaultApiFactory, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, includeActions } from './state';
 import { createPiletOptions } from './helpers';
-import { createListener } from './utils';
 import type { PiralConfiguration, PiralInstance } from './types';
 
 /**

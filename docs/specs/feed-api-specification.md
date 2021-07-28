@@ -1,3 +1,7 @@
+---
+title: Piral Feed Service API Specification
+---
+
 # Piral Feed Service API Specification
 
 ## Abstract

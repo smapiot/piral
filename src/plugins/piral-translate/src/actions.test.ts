@@ -1,6 +1,7 @@
 import { Atom, deref } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
+import { createActions as ca } from 'piral-core';
 import { createActions } from './actions';
-import { createActions as ca, createListener } from 'piral-core';
 
 describe('Translation Action Module', () => {
   it('selectLanguage changes the current language', () => {

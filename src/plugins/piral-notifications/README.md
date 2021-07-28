@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Notifications](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-notifications.svg?style=flat)](https://www.npmjs.com/package/piral-notifications) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Notifications](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-notifications.svg?style=flat)](https://www.npmjs.com/package/piral-notifications) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-notifications` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core` to show notifications triggered by pilets in your Piral instance.
 
@@ -9,6 +9,12 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-no
 Quite often you'll want to show notifications (such as errors, special events, information material, etc.) in a non-obtrusive toast notification (or some other way). The `piral-notifications` plugin helps you to do exactly that. It provides a simple component that you can place in your layout. Together with your styling rules the notifications are then managed by the plugin. Each pilet can open as many notifications as it wants. Notifications may decay over time or stay on the screen until closed.
 
 Alternatives: Browsers also allow to use the system's native notification API. This usually comes with the service worker / PWA modes, but could be used by pilets, too. Another way is to leave every pilet at defining its own notification system.
+
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/zpipf0qrDA4)
 
 ## Documentation
 

@@ -1,6 +1,6 @@
 import { Atom, swap } from '@dbeining/react-atom';
+import { createListener } from 'piral-base';
 import { createAdalApi } from './create';
-import { createListener } from 'piral-core';
 
 function createMockContainer() {
   const state = Atom.of({});

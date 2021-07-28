@@ -1,7 +1,7 @@
 {
   "name": "piral-vue",
   "version": "0.13.2",
-  "description": "Plugin for integrating Vue components in Piral.",
+  "description": "Plugin for integrating Vue@2 components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",

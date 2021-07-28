@@ -119,11 +119,11 @@ export interface FormProps<TFormData> {
   changeForm(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void;
 }
 
-export interface FormCreator<TFormData, TProps> {
+export interface FormCreator<TFormData, TRequiredProps> {
   /**
    * Form function for wrapping a component.
    */
-  (component: ComponentType<TProps & FormProps<TFormData>>): FC<TProps>;
+   <TProps extends TRequiredProps>(component: ComponentType<TProps & FormProps<TFormData>>): FC<TProps>;
 }
 
 /**
@@ -174,5 +174,5 @@ export interface PiletFormsApi {
    * Creates an input form for tracking user input intelligently.
    * @param options The options for creating the form.
    */
-  createForm<TFormData, TProps = any>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
+  createForm<TFormData, TProps = {}>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
 }
