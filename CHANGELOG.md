@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.13.3 (tbd)
+## 0.13.3 (July 28, 2021)
 
 * Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`
 * Fixed conflicting import for `piral-cli-parcel` in `piral-breadcrumbs` (#385)
