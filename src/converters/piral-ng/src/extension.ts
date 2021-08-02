@@ -21,7 +21,7 @@ export function createExtension(rootName = 'slot', selector = 'extension-compone
     }
   }
 
-  if (process.env.ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     enableProdMode();
   }
 

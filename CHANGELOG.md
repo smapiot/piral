@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.13.4 (tbd)
+
+* Fixed issue with pilet scaffolding templates on Windows
+* Fixed usage of `process.env.ENV` in `piral-ng`
+* Added `experimental` branch for `canary` releases
+
 ## 0.13.3 (July 28, 2021)
 
 * Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`

@@ -17,13 +17,14 @@ import {
 } from '../types';
 
 let portalIdBase = 123456;
+const none = [];
 
 interface PortalRendererProps {
   id: string;
 }
 
 const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
-  const children = useGlobalState((m) => m.portals[id] || []);
+  const children = useGlobalState((m) => m.portals[id]) || none;
   return defaultRender(children);
 };
 
@@ -39,6 +40,10 @@ interface ForeignComponentContainerProps<T> {
 class ForeignComponentContainer<T> extends React.Component<ForeignComponentContainerProps<T>> {
   private current?: HTMLElement;
   private previous?: HTMLElement;
+
+  private setNode = (node: HTMLDivElement) => {
+    this.current = node;
+  };
 
   componentDidMount() {
     const node = this.current;
@@ -79,15 +84,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
   render() {
     const { $portalId } = this.props;
-
-    return (
-      <div
-        data-portal-id={$portalId}
-        ref={(node) => {
-          this.current = node;
-        }}
-      />
-    );
+    return <div data-portal-id={$portalId} ref={this.setNode} />;
   }
 }
 
@@ -111,30 +108,26 @@ function wrapForeignComponent<T>(
   stasisOptions: ErrorBoundaryOptions<T>,
   piral: PiletApi,
   Wrapper: React.ComponentType<any>,
-): React.ComponentType<T> {
-  return (props: T) => {
+) {
+  return React.memo((props: T) => {
     const { destroyPortal } = useActions();
-    const [id] = React.useState(() => (portalIdBase++).toString(26));
-    const router = React.useContext(__RouterContext);
     const { state } = React.useContext(StateContext);
-    const innerProps = { ...props, piral };
+    const router = React.useContext(__RouterContext);
+    const id = React.useMemo(() => (portalIdBase++).toString(26), none);
+    const context = React.useMemo(() => ({ router, state }), [router, state]);
+    const innerProps = React.useMemo(() => ({ ...props, piral }), [props]);
 
-    React.useEffect(() => () => destroyPortal(id), []);
+    React.useEffect(() => () => destroyPortal(id), none);
 
     return (
       <Wrapper {...innerProps}>
         <ErrorBoundary {...stasisOptions} renderProps={props}>
           <PortalRenderer id={id} />
-          <ForeignComponentContainer
-            innerProps={innerProps}
-            $portalId={id}
-            $component={component}
-            $context={{ router, state }}
-          />
+          <ForeignComponentContainer innerProps={innerProps} $portalId={id} $component={component} $context={context} />
         </ErrorBoundary>
       </Wrapper>
     );
-  };
+  });
 }
 
 function isNotExotic(component: any): component is object {

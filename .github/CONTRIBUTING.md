@@ -45,8 +45,25 @@ The central repository holds two main branches with an infinite lifetime:
 
 - **main**
 - **develop**
+- **experimental**
+- **documentation**
 
 We consider `main` to be the main branch where the source code always reflects a production-ready state, and `develop` to be the main branch where the source code always reflects a state with the latest delivered changes for the next release. When the source code in the `develop` branch reaches a stable point and is ready to be released, all of the changes should be merged back into main. Therefore, each time when changes are merged back into main, this is a new production release.
+
+The **experimental** branch is a special branch for an upcoming release that is unclear in scope and functionality. Releases from this branch should be considered unstable and might never reach production. No hotfixes or minor updates will be first-pushed to this branch. Instead, only (experimental) new features are (potentially exclusively) added to this branch.
+
+The **documentation** branch is used for updates and fixes to the currently live (i.e., `main`-build) documentation.
+
+The following table gives an overview:
+
+| Branch Name   | Builds Documentation | NPM Release / Tag | Version Suffix |
+| ------------- | -------------------- | ----------------- | -------------- |
+| main          | yes                  | latest            | (none)         |
+| develop       | no                   | next              | pre            |
+| experimental  | no                   | canary            | unstable       |
+| documentation | yes                  | (none)            | (none)         |
+
+If you don't know what to do - use `develop` as target for pull requests.
 
 ### Supporting Branches
 
