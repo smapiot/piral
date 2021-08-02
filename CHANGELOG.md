@@ -2,8 +2,13 @@
 
 ## 0.14.0 (tbd)
 
-* Fixed usage of `process.env.ENV` in `piral-ng`
 * Improved converter plugins to allow more flexible pilet-embedded usage
+
+## 0.13.4 (August 2, 2021)
+
+* Fixed issue with pilet scaffolding templates on Windows
+* Fixed usage of `process.env.ENV` in `piral-ng`
+* Fixed selecting scaffolding templates with version specifier
 * Added `experimental` branch for `canary` releases
 
 ## 0.13.3 (July 28, 2021)

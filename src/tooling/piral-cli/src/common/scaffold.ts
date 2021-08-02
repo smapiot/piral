@@ -11,7 +11,7 @@ interface TemplateFile {
 }
 
 function getTemplatePackage(templatePackageName: string) {
-  const idx = templatePackageName.indexOf('@');
+  const idx = templatePackageName.indexOf('@', 1);
   const normalizedName = idx > 0 ? templatePackageName.substr(0, idx) : templatePackageName;
 
   try {
