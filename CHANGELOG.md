@@ -4,6 +4,7 @@
 
 * Fixed issue with pilet scaffolding templates on Windows
 * Fixed usage of `process.env.ENV` in `piral-ng`
+* Fixed selecting scaffolding templates with version specifier
 * Added `experimental` branch for `canary` releases
 
 ## 0.13.3 (July 28, 2021)
