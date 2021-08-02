@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.13.4 (tbd)
+## 0.13.4 (August 2, 2021)
 
 * Fixed issue with pilet scaffolding templates on Windows
 * Fixed usage of `process.env.ENV` in `piral-ng`
