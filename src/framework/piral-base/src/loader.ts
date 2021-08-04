@@ -16,6 +16,19 @@ import type {
 const inBrowser = typeof document !== 'undefined';
 const depContext = {};
 
+function getBasePath(link: string) {
+  if (link) {
+    const idx = link.lastIndexOf('/');
+    return link.substr(0, idx + 1);
+  }
+
+  return link;
+}
+
+function setBasePath(meta: PiletMetadata, link: string) {
+  meta.basePath = getBasePath(link);
+}
+
 function loadSharedDependencies(sharedDependencies: Record<string, string> | undefined) {
   if (sharedDependencies && typeof sharedDependencies === 'object') {
     const sharedDependencyNames = Object.keys(sharedDependencies);
@@ -82,8 +95,10 @@ export function getDefaultLoader(
 ) {
   return (meta: PiletMetadata): Promise<Pilet> => {
     if (inBrowser && 'requireRef' in meta && meta.requireRef) {
+      setBasePath(meta, meta.link);
       return loadFrom(meta, getDependencies, (deps) => includeDependency(meta, deps, config.crossOrigin));
     } else if (inBrowser && 'bundle' in meta && meta.bundle) {
+      setBasePath(meta, meta.link);
       return loadFrom(meta, getDependencies, (deps) => includeBundle(meta, deps, config.crossOrigin));
     }
 
@@ -91,7 +106,7 @@ export function getDefaultLoader(
 
     if ('link' in meta && meta.link) {
       const link = meta.link;
-
+      setBasePath(meta, link);
       return fetchDependency(link).then((content) =>
         loadFrom(meta, getDependencies, (deps) => compileDependency(name, content, link, deps)),
       );

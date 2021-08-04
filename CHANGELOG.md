@@ -2,7 +2,10 @@
 
 ## 0.14.0 (tbd)
 
-* Improved converter plugins to allow more flexible pilet-embedded usage
+* Improved converter plugins to allow more flexible pilet embedded usage
+* Fixed explicit declaration via state of `LanguagesPicker` component
+* Added `getCurrentLanguage` to pilet API from `piral-translate`
+* Added runtime pilet metadata `basePath`
 
 ## 0.13.4 (August 2, 2021)
 

@@ -184,7 +184,9 @@ export type MultiPiletMetadata = PiletMetadataBundle;
 /**
  * Describes the metadata transported by a pilet.
  */
-export type PiletMetadata = SinglePiletMetadata | MultiPiletMetadata;
+export type PiletMetadata = (SinglePiletMetadata | MultiPiletMetadata) & {
+  basePath?: string;
+};
 
 /**
  * Defines the API accessible from pilets.
@@ -456,7 +458,7 @@ export interface LoadPiletsOptions {
  * Shape to be used by a Pilet API extension that requires other
  * APIs or some metadata to work properly.
  */
- export interface PiletApiExtender<T> {
+export interface PiletApiExtender<T> {
   /**
    * Extends the base API of a module with new functionality.
    * @param api The API created by the base layer.
