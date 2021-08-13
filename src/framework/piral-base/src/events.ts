@@ -1,4 +1,4 @@
-import { EventEmitter } from './types';
+import type { EventEmitter } from './types';
 
 export type EventListeners = Array<[any, any]>;
 

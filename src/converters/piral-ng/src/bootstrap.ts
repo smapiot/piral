@@ -1,7 +1,8 @@
-import { enableProdMode, NgModule, NgModuleRef, NgZone, StaticProvider, VERSION } from '@angular/core';
+import { enableProdMode, Pipe, PipeTransform, NgModule, NgModuleRef, NgZone, StaticProvider } from '@angular/core';
+import { APP_BASE_HREF, VERSION } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import type { BaseComponentProps } from 'piral-core';
+import type { BaseComponentProps, ComponentContext, PiletApi } from 'piral-core';
 
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 
@@ -14,12 +15,25 @@ function sanatize(id: string) {
   return id.replace(/\W/g, '_');
 }
 
-function getPlatformProps(context: any, props: BaseComponentProps): Array<StaticProvider> {
+function getComponentProps(props: BaseComponentProps): Array<StaticProvider> {
   return [
     { provide: 'Props', useValue: props },
-    { provide: 'Context', useValue: context },
     { provide: 'piral', useValue: props.piral },
+    { provide: APP_BASE_HREF, useValue: '/' },
   ];
+}
+
+function createPipe(piral: PiletApi) {
+  const { basePath = '/' } = piral.meta;
+
+  @Pipe({ name: 'resourceUrl' })
+  class ResourceUrlPipe implements PipeTransform {
+    transform(value: string): string {
+      return basePath + value;
+    }
+  }
+
+  return ResourceUrlPipe;
 }
 
 function getAnnotations(component: any) {
@@ -54,8 +68,8 @@ function spread<T>(items: Array<T>, more: Array<T> | undefined): Array<T> {
   return items;
 }
 
-function startup(BootstrapModule: any, node: HTMLElement): Promise<void | NgModuleInt> {
-  const platform = platformBrowserDynamic();
+function startup(BootstrapModule: any, context: ComponentContext, node: HTMLElement): Promise<void | NgModuleInt> {
+  const platform = platformBrowserDynamic([{ provide: 'Context', useValue: context }]);
   const zoneIdentifier = `piral-ng:${node.id}`;
 
   // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
@@ -65,10 +79,6 @@ function startup(BootstrapModule: any, node: HTMLElement): Promise<void | NgModu
   // - https://github.com/angular/angular/blob/a14dc2d7a4821a19f20a9547053a5734798f541e/packages/core/src/zone/ng_zone.ts#L257
   // @ts-ignore
   NgZone.isInAngularZone = () => window.Zone.current._properties[zoneIdentifier] === true;
-
-  if (process.env.NODE_ENV === 'production') {
-    enableProdMode();
-  }
 
   return platform
     .bootstrapModule(BootstrapModule)
@@ -112,7 +122,7 @@ export function bootstrap<T extends BaseComponentProps>(
 }
 
 export function bootstrapComponent<T extends BaseComponentProps>(
-  context: any,
+  context: ComponentContext,
   props: T,
   component: any,
   node: HTMLElement,
@@ -120,7 +130,8 @@ export function bootstrapComponent<T extends BaseComponentProps>(
   moduleOptions: Omit<NgModule, 'boostrap'>,
   NgExtension: any,
 ) {
-  const providers = getPlatformProps(context, props);
+  const providers = getComponentProps(props);
+  const ResourceUrlPipe = createPipe(props.piral);
   node.id = sanatize(id);
   setComponentSelector(component, node.id);
 
@@ -128,18 +139,18 @@ export function bootstrapComponent<T extends BaseComponentProps>(
     ...moduleOptions,
     imports: spread([BrowserModule], moduleOptions.imports),
     providers: spread(providers, moduleOptions.providers),
-    declarations: spread([component, NgExtension], moduleOptions.declarations),
+    declarations: spread([component, NgExtension, ResourceUrlPipe], moduleOptions.declarations),
     bootstrap: [component],
   })
   class BootstrapModule {
     constructor() {}
   }
 
-  return startup(BootstrapModule, node);
+  return startup(BootstrapModule, context, node);
 }
 
 export function bootstrapModule<T extends BaseComponentProps>(
-  context: any,
+  context: ComponentContext,
   props: T,
   BootstrapModule: any,
   node: HTMLElement,
@@ -147,18 +158,16 @@ export function bootstrapModule<T extends BaseComponentProps>(
   NgExtension: any,
 ) {
   const annotations = getAnnotations(BootstrapModule);
+  const ResourceUrlPipe = createPipe(props.piral);
   const annotation = annotations[0];
   node.id = sanatize(id);
 
   if (annotation) {
-    const def = [];
-    const providers = annotation.providers || def;
-    const declarations = annotation.declarations || def;
-    const [component] = annotation.bootstrap || def;
-    annotation.providers = [...providers, ...getPlatformProps(context, props)];
-    annotation.declarations = [...declarations, NgExtension];
+    annotation.providers = spread(getComponentProps(props), annotation.providers);
+    annotation.declarations = spread([NgExtension, ResourceUrlPipe], annotation.declarations);
 
-    if (component) {
+    if (Array.isArray(annotation.boostrap) && annotation.bootstrap.length > 0) {
+      const [component] = annotation.bootstrap;
       setComponentSelector(component, node.id);
       annotation.bootstrap = [component];
     } else if (process.env.NODE_ENV === 'development') {
@@ -174,7 +183,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
     );
   }
 
-  return startup(BootstrapModule, node);
+  return startup(BootstrapModule, context, node);
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -211,4 +220,8 @@ if (process.env.NODE_ENV === 'development') {
 
   const handler = getVersionHandler(versions) || versionHandlers.unknown;
   handler();
+}
+
+if (process.env.NODE_ENV === 'production') {
+  enableProdMode();
 }

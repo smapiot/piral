@@ -12,6 +12,7 @@ import {
   ForceOverwrite,
   matchAny,
   fail,
+  config,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -93,7 +94,7 @@ export const buildPiletDefaults: BuildPiletOptions = {
   sourceMaps: true,
   contentHash: true,
   optimizeModules: false,
-  schemaVersion: 'v1',
+  schemaVersion: config.schemaVersion,
   declaration: true,
 };
 

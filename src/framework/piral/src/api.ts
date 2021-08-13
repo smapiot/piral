@@ -19,6 +19,6 @@ export function extendPiralApi(settings: PiralExtSettings = {}, customApis: Pira
 export function createPiral(config: PiralConfiguration = {}, settings?: PiralExtSettings) {
   return createInstance({
     ...config,
-    plugins: extendPiralApi(settings, config.plugins || config.extendApi),
+    plugins: extendPiralApi(settings, config.plugins),
   });
 }

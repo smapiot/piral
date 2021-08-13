@@ -91,12 +91,12 @@ export interface SitelessApi {
 
 function createSitelessApi(): PiralPlugin<SitelessApi> {
   return (context) => ({
-    setErrors(errors) {
+    setErrors(errorComponents) {
       context.dispatch((state) => ({
         ...state,
         errorComponents: {
           ...state.errorComponents,
-          ...errors,
+          ...errorComponents,
         },
       }));
     },

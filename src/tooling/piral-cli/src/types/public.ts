@@ -160,7 +160,7 @@ export interface BundlerDefinition {
   buildPilet: BuildPiletBundlerDefinition;
 }
 
-export type PiletSchemaVersion = 'none' | 'v0' | 'v1';
+export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 

@@ -76,7 +76,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
   fresh: false,
   cert: undefined,
   logLevel: LogLevels.info,
-  schemaVersion: 'v1',
+  schemaVersion: config.schemaVersion,
   from: 'local',
   fields: {},
 };

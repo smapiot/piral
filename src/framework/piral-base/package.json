@@ -1,6 +1,6 @@
 {
   "name": "piral-base",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "The base library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -42,6 +42,10 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "tslib": "^2.1.0"
+    "tslib": "^2.1.0",
+    "systemjs": "^6.10.2"
+  },
+  "devDependencies": {
+    "@types/systemjs": "^6.1.1"
   }
 }

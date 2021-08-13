@@ -1,7 +1,7 @@
-import type { PiletApp, AvailableDependencies, PiletExports, PiletMetadataV1, PiletMetadataBundle } from './types';
+import type { PiletApp, PiletExports, PiletMetadataV1, PiletMetadataBundle } from './types';
 
-function requireModule(name: string, dependencies: AvailableDependencies) {
-  const dependency = dependencies[name];
+function requireModule(name: string) {
+  const dependency = System.get(name);
 
   if (!dependency) {
     const error = new Error(`Cannot find module '${name}'`);
@@ -30,28 +30,21 @@ function checkPiletAppAsync(name: string, app?: PiletApp | Promise<PiletApp>): P
   return Promise.resolve(app).then((resolvedApp) => checkPiletApp(name, resolvedApp));
 }
 
-function getLocalRequire(dependencies: AvailableDependencies = {}) {
-  return (moduleName: string) => requireModule(moduleName, dependencies);
-}
-
 /**
  * Compiles the given content from a generic dependency.
  * @param name The name of the dependency to compile.
  * @param content The content of the dependency to compile.
  * @param link The optional link to the dependency.
- * @param dependencies The globally available dependencies.
  * @returns The evaluated dependency.
  */
-export function evalDependency(name: string, content: string, link = '', dependencies?: AvailableDependencies) {
+export function evalDependency(name: string, content: string, link = '') {
   const mod = {
     exports: {},
   } as PiletExports;
-  const require = getLocalRequire(dependencies);
-
   try {
     const sourceUrl = link && `\n//# sourceURL=${link}`;
     const importer = new Function('module', 'exports', 'require', content + sourceUrl);
-    importer(mod, mod.exports, require);
+    importer(mod, mod.exports, requireModule);
   } catch (e) {
     console.error(`Error while evaluating ${name}.`, e);
   }
@@ -64,16 +57,14 @@ export function evalDependency(name: string, content: string, link = '', depende
  * @param name The name of the dependency to compile.
  * @param content The content of the dependency to compile.
  * @param link The optional link to the dependency.
- * @param dependencies The globally available dependencies.
  * @returns The evaluated module.
  */
 export function compileDependency(
   name: string,
   content: string,
   link = '',
-  dependencies?: AvailableDependencies,
 ): Promise<PiletApp> {
-  const app = evalDependency(name, content, link, dependencies);
+  const app = evalDependency(name, content, link);
   return checkPiletAppAsync(name, app);
 }
 
@@ -83,15 +74,8 @@ declare global {
   }
 }
 
-function includeScript(
-  piletName: string,
-  depName: string,
-  link: string,
-  integrity?: string,
-  dependencies?: AvailableDependencies,
-  crossOrigin?: string,
-) {
-  window[depName] = getLocalRequire(dependencies);
+function includeScript(piletName: string, depName: string, link: string, integrity?: string, crossOrigin?: string) {
+  window[depName] = requireModule;
   return includeScriptDependency(link, integrity, crossOrigin).then(
     (s) => checkPiletAppAsync(piletName, s.app),
     () => checkPiletApp(piletName),
@@ -127,21 +111,19 @@ export function includeScriptDependency(link: string, integrity?: string, crossO
 /**
  * Includes the given single pilet script via its URL with a dependency resolution.
  * @param meta The meta data of the dependency to include.
- * @param dependencies The globally available dependencies.
  * @param crossOrigin The override for the cross-origin attribute.
  * @returns The evaluated module.
  */
-export function includeDependency(meta: PiletMetadataV1, dependencies?: AvailableDependencies, crossOrigin?: string) {
-  return includeScript(meta.name, meta.requireRef, meta.link, meta.integrity, dependencies, crossOrigin);
+export function includeDependency(meta: PiletMetadataV1, crossOrigin?: string) {
+  return includeScript(meta.name, meta.requireRef, meta.link, meta.integrity, crossOrigin);
 }
 
 /**
  * Includes the given bundle script via its URL with a dependency resolution.
  * @param meta The meta data of the dependency to include.
- * @param dependencies The globally available dependencies.
  * @param crossOrigin The override for the cross-origin attribute.
  * @returns The evaluated module.
  */
-export function includeBundle(meta: PiletMetadataBundle, dependencies?: AvailableDependencies, crossOrigin?: string) {
-  return includeScript(meta.name ?? '(bundle)', meta.bundle, meta.link, meta.integrity, dependencies, crossOrigin);
+export function includeBundle(meta: PiletMetadataBundle, crossOrigin?: string) {
+  return includeScript(meta.name ?? '(bundle)', meta.bundle, meta.link, meta.integrity, crossOrigin);
 }

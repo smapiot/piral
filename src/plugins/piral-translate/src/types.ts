@@ -1,4 +1,4 @@
-import type {} from 'piral-core';
+import type { Disposable } from 'piral-core';
 import { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
@@ -120,6 +120,15 @@ export interface LocalizationMessages {
 }
 
 export interface PiletLocaleApi {
+  /**
+   * Gets the currently selected language directly.
+   */
+  getCurrentLanguage(): string;
+  /**
+   * Gets the currently selected language in a callback that is also invoked when the
+   * selected language changes. Returns a disposable to stop the notifications.
+   */
+  getCurrentLanguage(cb: (currently: string) => void): Disposable;
   /**
    * Translates the given tag (using the optional variables) into a string using the current language.
    * The used template can contain placeholders in form of `{{variableName}}`.

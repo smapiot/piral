@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 $bg-color: #fff;
 $basic-dark-color: #56aa1c;
 $border-width: 4px;
@@ -144,8 +146,8 @@ ul.app-nav {
     border-right-color: $basic-dark-color;
     border-top-color: rgba($basic-dark-color, 0);
     border-left-color: rgba($basic-dark-color, 0);
-    top: ($main-spinner-dimensions - $small-spinner-dimensions) / 2;
-    left: ($main-spinner-dimensions - $small-spinner-dimensions) / 2;
+    top: math.div($main-spinner-dimensions - $small-spinner-dimensions, 2);
+    left: math.div($main-spinner-dimensions - $small-spinner-dimensions, 2);
     animation: anti-rotate-animation 0.85s linear 0s infinite;
   }
 }

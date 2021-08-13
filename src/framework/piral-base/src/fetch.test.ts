@@ -1,4 +1,4 @@
-import { defaultFetchDependency } from './fetch';
+import { fetchDependency } from './fetch';
 
 const mockResponse = 'This is an example response';
 
@@ -21,7 +21,7 @@ describe('fetch Helper Module', () => {
   });
 
   it('fetches the given URL correctly', async () => {
-    const response = await defaultFetchDependency('http://example.com/foo');
+    const response = await fetchDependency('http://example.com/foo');
     expect(response).toBe(mockResponse);
   });
 });
