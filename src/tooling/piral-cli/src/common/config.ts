@@ -1,5 +1,5 @@
 import { rc } from '../external';
-import { NpmClientType } from '../types';
+import { NpmClientType, PiletSchemaVersion } from '../types';
 
 export interface PiralCliConfig {
   /**
@@ -37,6 +37,10 @@ export interface PiralCliConfig {
    * Sets the validators configuration for a Piral instance.
    */
   validators?: Record<string, any>;
+  /**
+   * Sets the schema version to be used for pilets.
+   */
+  schemaVersion?: PiletSchemaVersion;
 }
 
 export const config: PiralCliConfig = rc('piral', {
@@ -48,4 +52,5 @@ export const config: PiralCliConfig = rc('piral', {
   bundler: 'webpack',
   piletApi: '/$pilet-api',
   validators: {},
+  schemaVersion: 'v2',
 });

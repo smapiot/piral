@@ -1,7 +1,7 @@
 import { ForceOverwrite, SourceLanguage } from './common/enums';
 import { Framework, NpmClientType, PiletSchemaVersion, PiletPublishSource, PiralBuildType } from './types';
 
-export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'none'];
+export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'v2', 'none'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const buildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator', 'emulator-sources'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];

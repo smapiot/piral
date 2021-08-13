@@ -101,6 +101,8 @@ function getScriptHead(version: PiletSchemaVersion, prName: string) {
       return `${piletMarker}0\n${initializer}`;
     case 'v1': // currentScript
       return `${piletMarker}1(${prName})\n${initializer}${insertScript}`;
+    case 'v2': // SystemJS
+    return `${piletMarker}2\n${initializer}`;
     default:
       log('invalidSchemaVersion_0171', version, ['v0', 'v1']);
       return getScriptHead('v0', prName);

@@ -82,7 +82,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   port: 1234,
   hmr: true,
   optimizeModules: false,
-  schemaVersion: 'v1',
+  schemaVersion: config.schemaVersion,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');

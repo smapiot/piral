@@ -109,6 +109,55 @@ export class AngularPage { /* ... */ }
 
 where you may need to tell your bundler how to treat these HTML files (i.e., transform these references to strings directly in the bundle).
 
+As an alternative, consider using Webpack with the `@ngtools/webpack` library. This allows you have a *webpack.config.js* like:
+
+```js
+const { AngularWebpackPlugin } = require('@ngtools/webpack');
+const CopyPlugin = require("copy-webpack-plugin");
+const { resolve } = require("path");
+
+module.exports = (config) => {
+  config.module.rules.filter(m => m.test.toString() === /\.css$/i.toString()).forEach(m => {
+    m.exclude = /\.component.css$/i;
+  });
+
+  config.module.rules.filter(m => m.test.toString() === /\.s[ac]ss$/i.toString()).forEach(m => {
+    m.exclude = /\.component.s[ac]ss$/i;
+  });
+
+  const ruleIndex = config.module.rules.findIndex(m => m.test.toString() === /\.tsx?$/i.toString());
+
+  config.module.rules.splice(ruleIndex, 1,
+    {
+      test: /\.[jt]sx?$/,
+      loader: '@ngtools/webpack',
+    },
+    {
+      test: /\.component.css$/i,
+      use: ["to-string-loader", "css-loader?esModule=false"],
+    },
+    {
+      test: /\.component.s[ac]ss$/i,
+      use: ["to-string-loader", "css-loader?esModule=false", "sass-loader"],
+    });
+
+  config.plugins.push(
+    new AngularWebpackPlugin({
+      tsconfig: 'tsconfig.json',
+      jitMode: true,
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: resolve(__dirname, "src/assets") },
+      ],
+    }),
+  )
+
+
+  return config;
+};
+```
+
 ::: summary: For Piral instance developers
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular 2+.
@@ -195,7 +244,7 @@ This plugin works with all versions of Angular (right now 2 - 12). Support for A
 
 ### Angular 2
 
-Angular 2 works with some configuration (see below) even though the usage of annotations is slightly different in `piral-ng`.
+Angular 2 works with some configuration (see below) even though the usage of annotations (internally) is slightly different in `piral-ng`.
 
 The basic dependencies look as follows:
 
@@ -218,7 +267,7 @@ Was never released. Not covered.
 
 ### Angular 4
 
-Angular 4 works even though the usage of annotations is slightly different in `piral-ng`.
+Angular 4 works even though the usage of annotations (internally) is slightly different in `piral-ng`.
 
 The basic dependencies look as follows:
 
@@ -237,7 +286,7 @@ The basic dependencies look as follows:
 
 ### Angular 5
 
-Angular 5 just works.
+In general, Angular 5 seems to work.
 
 The basic dependencies look as follows:
 
@@ -256,7 +305,7 @@ The basic dependencies look as follows:
 
 ### Angular 6
 
-Angular 6 just works.
+In general, Angular 6 seems to work.
 
 The basic dependencies look as follows:
 
@@ -275,7 +324,7 @@ The basic dependencies look as follows:
 
 ### Angular 7
 
-Angular 7 just works.
+In general, Angular 7 seems to work.
 
 The basic dependencies look as follows:
 
@@ -294,7 +343,7 @@ The basic dependencies look as follows:
 
 ### Angular 8
 
-Angular 8 just works.
+In general, Angular 8 seems to work and is **supported**.
 
 The basic dependencies look as follows:
 
@@ -313,7 +362,7 @@ The basic dependencies look as follows:
 
 ### Angular 9
 
-Angular 9 just works.
+In general, Angular 9 seems to work and is **supported**.
 
 The basic dependencies look as follows:
 
@@ -332,7 +381,7 @@ The basic dependencies look as follows:
 
 ### Angular 10
 
-Angular 10 just works.
+In general, Angular 10 seems to work and is **supported**.
 
 The basic dependencies look as follows:
 
@@ -351,7 +400,7 @@ The basic dependencies look as follows:
 
 ### Angular 11
 
-Angular 11 just works.
+In general, Angular 11 seems to work and is **supported**.
 
 The basic dependencies look as follows:
 
@@ -370,7 +419,7 @@ The basic dependencies look as follows:
 
 ### Angular 12
 
-Angular 12 just works.
+In general, Angular 12 seems to work and is **supported**.
 
 The basic dependencies look as follows:
 

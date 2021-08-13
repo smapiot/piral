@@ -1,5 +1,7 @@
-import 'core-js/es7/reflect';
-import 'zone.js/dist/zone';
+import 'core-js/es/reflect';
+import 'core-js/stable/reflect';
+import 'core-js/features/reflect';
+import 'zone.js/dist/zone.js';
 import '@webcomponents/webcomponentsjs/webcomponents-loader';
 import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
 import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
