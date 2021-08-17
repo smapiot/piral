@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.13.5 (tbd)
+## 0.13.5 (August 17, 2021)
 
 * Fixed explicit declaration via state of `LanguagesPicker` component
 * Updated outdated `piral-cli-weback` and `piral-cli-webpack5` dependencies
