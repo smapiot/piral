@@ -30,7 +30,6 @@ async function run(
 
   const otherConfigPath = resolve(root, defaultWebpackConfig);
   const baseConfig = await getPiralConfig(
-    root,
     entryFiles,
     outDir,
     externals,

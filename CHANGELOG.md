@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.13.5 (tbd)
+
+* Fixed explicit declaration via state of `LanguagesPicker` component
+* Updated outdated `piral-cli-weback` and `piral-cli-webpack5` dependencies
+* Improved `piral-cli-webpack` and `piral-cli-webpack5` loader resolution
+* Added `getCurrentLanguage` to pilet API from `piral-translate`
+
 ## 0.13.4 (August 2, 2021)
 
 * Fixed issue with pilet scaffolding templates on Windows

@@ -27,7 +27,6 @@ async function run(
 
   const otherConfigPath = resolve(root, defaultWebpackConfig);
   const baseConfig = await getPiletConfig(
-    root,
     entryModule,
     outDir,
     outFile,
