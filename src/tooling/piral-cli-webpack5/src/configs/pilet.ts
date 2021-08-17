@@ -1,12 +1,10 @@
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { join } from 'path';
 import { PiletSchemaVersion } from 'piral-cli';
 import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration } from './common';
 import { piletWebpackConfigEnhancer } from '../enhancers/pilet-webpack-config-enhancer';
 
 export async function getPiletConfig(
-  baseDir: string,
   template: string,
   dist: string,
   filename: string,
@@ -55,7 +53,7 @@ export async function getPiletConfig(
       },
 
       module: {
-        rules: getRules(baseDir, production),
+        rules: getRules(production),
       },
 
       optimization: {

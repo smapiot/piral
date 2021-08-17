@@ -7,7 +7,6 @@ import { join } from 'path';
 import { getRules, getPlugins, extensions, getVariables } from './common';
 
 export async function getPiletConfig(
-  baseDir: string,
   template: string,
   dist: string,
   filename: string,
@@ -46,7 +45,7 @@ export async function getPiletConfig(
     },
 
     module: {
-      rules: getRules(baseDir, production),
+      rules: getRules(production),
     },
 
     optimization: {
@@ -82,7 +81,7 @@ export async function getPiletConfig(
       ],
       progress,
       production,
-      true
+      true,
     ),
   };
 }

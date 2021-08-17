@@ -6,7 +6,6 @@ import { PiralInstanceWebpackPlugin } from 'piral-instance-webpack-plugin';
 import { getRules, getPlugins, extensions, getVariables, getHmrEntry } from './common';
 
 export async function getPiralConfig(
-  baseDir: string,
   template: string,
   dist: string,
   externals: Array<string>,
@@ -43,7 +42,7 @@ export async function getPiralConfig(
     },
 
     module: {
-      rules: getRules(baseDir, production),
+      rules: getRules(production),
     },
 
     optimization: {
