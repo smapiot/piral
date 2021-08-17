@@ -7,7 +7,6 @@ import { piralInstanceWebpackConfigEnhancer } from '../enhancers/piral-instance-
 import { hmrWebpackConfigEnhancer } from '../enhancers/hmr-webpack-config-enhancer';
 
 export async function getPiralConfig(
-  baseDir: string,
   template: string,
   dist: string,
   externals: Array<string>,
@@ -55,7 +54,7 @@ export async function getPiralConfig(
       },
 
       module: {
-        rules: getRules(baseDir, production),
+        rules: getRules(production),
       },
 
       optimization: {
