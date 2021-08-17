@@ -75,7 +75,7 @@ export async function getPiletConfig(
           piral,
           version,
           externals,
-          schema,
+          schema: schema as any,
           variables: getVariables(),
         }),
       ],

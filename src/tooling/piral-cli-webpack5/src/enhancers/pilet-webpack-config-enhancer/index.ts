@@ -18,7 +18,7 @@ export interface PiletWebpackConfigEnhancerOptions {
   /**
    * The schema version. By default, v1 is used.
    */
-  schema?: 'v0' | 'v1' | 'none';
+  schema?: 'v0' | 'v1' | 'v2' | 'none';
   /**
    * The shared dependencies. By default, these are read from the
    * Piral instance.
@@ -58,7 +58,7 @@ export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOp
     ...getVariables(name, version, environment),
     ...options.variables,
   };
-  const plugins: WebpackPluginInstance[] = [new DefinePlugin(getDefineVariables(variables))];
+  const plugins: Array<WebpackPluginInstance> = [new DefinePlugin(getDefineVariables(variables))];
 
   if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
     const setPath = join(__dirname, '..', '..', 'set-path');
