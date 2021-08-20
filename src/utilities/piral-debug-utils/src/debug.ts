@@ -1,20 +1,153 @@
-import { isfunc, AvailableDependencies, PiletApiCreator, PiletLoader, PiletRequester } from 'piral-base';
-
-export interface DebuggerOptions {
-  createApi: PiletApiCreator;
-  loadPilet: PiletLoader;
-  requestPilets: PiletRequester;
-  context?: any;
-  getDependencies(): AvailableDependencies;
-  onChange?(cb: (previous: any, current: any) => void): void;
-}
+import { isfunc } from 'piral-base';
+import { DebugTracker } from './DebugTracker';
+import { VisualizationWrapper } from './VisualizationWrapper';
+import { DebuggerOptions } from './types';
 
 export function installPiralDebug(options: DebuggerOptions) {
   const { context, onChange, ...pilets } = options;
+  const selfSource = 'piral-debug-api';
+  const debugApiVersion = 'v1';
+  const settings = {
+    viewState: {
+      value: sessionStorage.getItem('dbg:view-state') !== 'off',
+      type: 'boolean',
+      label: 'State container logging',
+    },
+    loadPilets: {
+      value: sessionStorage.getItem('dbg:load-pilets') === 'on',
+      type: 'boolean',
+      label: 'Load available pilets',
+    },
+    hardRefresh: {
+      value: sessionStorage.getItem('dbg:hard-refresh') === 'on',
+      type: 'boolean',
+      label: 'Full refresh on change',
+    },
+    viewOrigins: {
+      value: sessionStorage.getItem('dbg:view-origins') === 'on',
+      type: 'boolean',
+      label: 'Visualize component origins',
+    },
+  };
+  const events = [];
 
-  // the DEBUG_PIRAL env should contain the Piral CLI compatibility version
-  window['dbg:piral'] = {
-    debug: 'v0',
+  const sendMessage = (content: any) => {
+    window.postMessage(
+      {
+        content,
+        source: selfSource,
+        version: debugApiVersion,
+      },
+      '*',
+    );
+  };
+
+  const sendCurrentPilets = (pilets: Array<any>) => {
+    sendMessage({
+      type: 'pilets',
+      pilets: pilets.map((pilet) => ({
+        name: pilet.name,
+        version: pilet.version,
+        disabled: !!pilet.disabled,
+      })),
+    });
+  };
+
+  const sendCurrentContainer = (state: any) => {
+    sendMessage({
+      type: 'container',
+      container: JSON.parse(JSON.stringify(state)),
+    });
+  };
+
+  const sendCurrentRoutes = (pages: Record<string, any>, routes: Record<string, any>) => {
+    const registeredRoutes = Object.keys(pages);
+    const componentRoutes = Object.keys(routes);
+    sendMessage({
+      type: 'routes',
+      routes: [...componentRoutes, ...registeredRoutes],
+    });
+  };
+
+  const setSetting = (setting: { value: any }, key: string, value: any) => {
+    setting.value = value;
+    sessionStorage.setItem(key, JSON.stringify(value ? 'on' : 'off'));
+  };
+
+  const updateSettings = (values: Record<string, any>) => {
+    setSetting(settings.viewState, 'dbg:view-state', values.viewState);
+    setSetting(settings.loadPilets, 'dbg:load-pilets', values.loadPilets);
+    setSetting(settings.hardRefresh, 'dbg:hard-refresh', values.hardRefresh);
+    setSetting(settings.viewOrigins, 'dbg:view-origins', values.viewOrigins);
+
+    sendMessage({
+      settings,
+      type: 'settings',
+    });
+  };
+
+  const togglePilet = (name: string) => {
+    const pilet: any = context.readState((state) => state.modules).find((m) => m.name === name);
+
+    if (pilet.disabled) {
+      try {
+        const { createApi } = options;
+        const newApi = createApi(pilet);
+        context.injectPilet(pilet.original);
+        pilet.original.setup(newApi);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      context.injectPilet({ name, disabled: true, original: pilet } as any);
+    }
+  };
+
+  const removePilet = (name: string) => {
+    context.injectPilet({ name } as any);
+    context.dispatch((state) => ({
+      ...state,
+      modules: state.modules.filter((m) => m.name !== name),
+    }));
+  };
+
+  const appendPilet = (meta: any) => {
+    const { createApi, loadPilet } = options;
+    loadPilet(meta).then((pilet) => {
+      try {
+        const newApi = createApi(pilet);
+        context.injectPilet(pilet);
+        pilet.setup(newApi as any);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  };
+
+  const toggleVisualize = () => {
+    context.dispatch((s) => ({
+      ...s,
+      $debug: {
+        ...s.$debug,
+        visualize: !s.$debug.visualize,
+      },
+    }));
+  };
+
+  const goToRoute = (route: string) => {
+    context.dispatch((s) => ({
+      ...s,
+      $debug: {
+        ...s.$debug,
+        route,
+      },
+    }));
+  };
+
+  const eventDispatcher = document.body.dispatchEvent;
+
+  const debugApi = {
+    debug: debugApiVersion,
     instance: {
       name: process.env.BUILD_PCKG_NAME,
       version: process.env.BUILD_PCKG_VERSION,
@@ -29,11 +162,115 @@ export function installPiralDebug(options: DebuggerOptions) {
     pilets,
   };
 
+  const start = () => {
+    const registeredRoutes = context.readState((state) => Object.keys(state.registry.pages));
+    const componentRoutes = context.readState((state) => Object.keys(state.routes));
+    const routes = [...componentRoutes, ...registeredRoutes];
+    const container = JSON.parse(JSON.stringify(context.readState((s) => s)));
+    const pilets = context
+      .readState((m) => m.modules)
+      .map((pilet: any) => ({
+        name: pilet.name,
+        version: pilet.version,
+        disabled: pilet.disabled,
+      }));
+
+    sendMessage({
+      type: 'available',
+      name: debugApi.instance.name,
+      version: debugApi.instance.version,
+      kind: debugApiVersion,
+      capabilities: ['events', 'container', 'routes', 'pilets', 'settings'],
+      state: {
+        routes,
+        pilets,
+        container,
+        settings,
+        events,
+      },
+    });
+  };
+
+  document.body.dispatchEvent = function (ev: CustomEvent) {
+    if (ev.type.startsWith('piral-')) {
+      events.unshift({
+        id: events.length.toString(),
+        name: ev.type.replace('piral-', ''),
+        args: ev.detail.arg,
+        time: Date.now(),
+      });
+
+      sendMessage({
+        events,
+        type: 'events',
+      });
+    }
+
+    return eventDispatcher.call(this, ev);
+  };
+
+  context.dispatch((s) => ({
+    ...s,
+    $debug: {
+      visualize: false,
+      route: undefined,
+    },
+    components: {
+      ...s.components,
+      Debug: DebugTracker,
+    },
+    registry: {
+      ...s.registry,
+      wrappers: {
+        ...s.registry.wrappers,
+        '*': VisualizationWrapper,
+      },
+    },
+  }));
+
+  window.addEventListener('storage', (event) => {
+    if (event.storageArea === sessionStorage) {
+      // potentially updated settings unknowingly
+      settings.viewState.value = sessionStorage.getItem('dbg:view-state') !== 'off';
+      settings.loadPilets.value = sessionStorage.getItem('dbg:load-pilets') === 'on';
+      settings.hardRefresh.value = sessionStorage.getItem('dbg:hard-refresh') === 'on';
+      settings.viewOrigins.value = sessionStorage.getItem('dbg:view-origins') === 'on';
+
+      sendMessage({
+        settings,
+        type: 'settings',
+      });
+    }
+  });
+
+  window.addEventListener('message', (event) => {
+    const { source, version, content } = event.data;
+
+    if (source !== selfSource && version === debugApiVersion) {
+      switch (content.type) {
+        case 'init':
+          return start();
+        case 'update-settings':
+          return updateSettings(content.settings);
+        case 'append-pilet':
+          return appendPilet(content.meta);
+        case 'remove-pilet':
+          return removePilet(content.name);
+        case 'toggle-pilet':
+          return togglePilet(content.name);
+        case 'emit-event':
+          return context.emit(content.name, content.args);
+        case 'goto-route':
+          return goToRoute(content.route);
+        case 'visualize-all':
+          return toggleVisualize();
+      }
+    }
+  });
+
   if (isfunc(onChange)) {
     onChange((previous, current) => {
-      const viewState = sessionStorage.getItem('dbg:view-state') !== 'off';
-
-      if (viewState) {
+      if (settings.viewState) {
         const infos = new Error().stack;
 
         if (infos) {
@@ -57,6 +294,19 @@ export function installPiralDebug(options: DebuggerOptions) {
           console.log('Changed state', previous, current);
         }
       }
+
+      if (current.modules !== previous.modules) {
+        sendCurrentPilets(current.modules);
+      }
+
+      if (current.registry.pages !== previous.registry.pages || current.routes !== previous.routes) {
+        sendCurrentRoutes(current.registry.pages, current.routes);
+      }
+
+      sendCurrentContainer(current);
     });
   }
+
+  window['dbg:piral'] = debugApi;
+  start();
 }
