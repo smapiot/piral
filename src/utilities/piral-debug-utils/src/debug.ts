@@ -71,14 +71,20 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   const setSetting = (setting: { value: any }, key: string, value: any) => {
     setting.value = value;
-    sessionStorage.setItem(key, JSON.stringify(value ? 'on' : 'off'));
+    sessionStorage.setItem(key, value ? 'on' : 'off');
   };
 
   const updateSettings = (values: Record<string, any>) => {
+    const prev = settings.viewOrigins.value;
     setSetting(settings.viewState, 'dbg:view-state', values.viewState);
     setSetting(settings.loadPilets, 'dbg:load-pilets', values.loadPilets);
     setSetting(settings.hardRefresh, 'dbg:hard-refresh', values.hardRefresh);
     setSetting(settings.viewOrigins, 'dbg:view-origins', values.viewOrigins);
+    const curr = settings.viewOrigins.value;
+
+    if (prev !== curr) {
+      updateVisualize(curr);
+    }
 
     sendMessage({
       settings,
@@ -129,7 +135,23 @@ export function installPiralDebug(options: DebuggerOptions) {
       ...s,
       $debug: {
         ...s.$debug,
-        visualize: !s.$debug.visualize,
+        visualize: {
+          ...s.$debug.visualize,
+          force: !s.$debug.visualize.force,
+        },
+      },
+    }));
+  };
+
+  const updateVisualize = (active: boolean) => {
+    context.dispatch((s) => ({
+      ...s,
+      $debug: {
+        ...s.$debug,
+        visualize: {
+          ...s.$debug.visualize,
+          active,
+        },
       },
     }));
   };
@@ -212,7 +234,10 @@ export function installPiralDebug(options: DebuggerOptions) {
   context.dispatch((s) => ({
     ...s,
     $debug: {
-      visualize: false,
+      visualize: {
+        active: settings.viewOrigins.value,
+        force: false,
+      },
       route: undefined,
     },
     components: {
@@ -230,15 +255,12 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   window.addEventListener('storage', (event) => {
     if (event.storageArea === sessionStorage) {
-      // potentially updated settings unknowingly
-      settings.viewState.value = sessionStorage.getItem('dbg:view-state') !== 'off';
-      settings.loadPilets.value = sessionStorage.getItem('dbg:load-pilets') === 'on';
-      settings.hardRefresh.value = sessionStorage.getItem('dbg:hard-refresh') === 'on';
-      settings.viewOrigins.value = sessionStorage.getItem('dbg:view-origins') === 'on';
-
-      sendMessage({
-        settings,
-        type: 'settings',
+      // potentially unknowingly updated settings
+      updateSettings({
+        viewState: sessionStorage.getItem('dbg:view-state') !== 'off',
+        loadPilets: sessionStorage.getItem('dbg:load-pilets') === 'on',
+        hardRefresh: sessionStorage.getItem('dbg:hard-refresh') === 'on',
+        viewOrigins: sessionStorage.getItem('dbg:view-origins') === 'on',
       });
     }
   });

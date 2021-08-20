@@ -5,11 +5,12 @@ import { BaseComponentProps, useGlobalState } from 'piral-core';
 interface VisualizerProps {
   pilet: string;
   force: boolean;
+  active: boolean;
 }
 
 const moduleColor = {};
 
-const Visualizer: React.FC<VisualizerProps> = ({ pilet, force }) => {
+const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
   const colors = [
     '#001F3F',
     '#0074D9',
@@ -31,23 +32,13 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force }) => {
     () => moduleColor[pilet] || (moduleColor[pilet] = colors[Object.keys(moduleColor).length % colors.length]),
     [pilet],
   );
-  const active = force || sessionStorage.getItem('dbg:view-origins') === 'on';
 
   React.useEffect(() => {
-    let sibling = container.current && container.current.nextElementSibling;
+    let sibling = container.current && (container.current.nextElementSibling as HTMLElement);
 
     if (sibling && active) {
       const style = container.current.style;
       const target = container.current.parentNode;
-      const observer = new MutationObserver(() => {
-        const newSibling = container.current.nextElementSibling;
-
-        if (newSibling !== sibling) {
-          sibling = newSibling;
-          sibling.addEventListener('mouseover', mouseIn);
-          sibling.addEventListener('mouseout', mouseOut);
-        }
-      });
 
       const mouseIn = () => {
         style.display = 'block';
@@ -65,18 +56,42 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force }) => {
       const mouseOut = () => {
         style.display = 'none';
       };
+      const append = () => {
+        if (!force) {
+          sibling.addEventListener('mouseover', mouseIn);
+          sibling.addEventListener('mouseout', mouseOut);
+        } else {
+          mouseIn();
+        }
+      };
+      const remove = () => {
+        if (!force) {
+          sibling.removeEventListener('mouseover', mouseIn);
+          sibling.removeEventListener('mouseout', mouseOut);
+        } else {
+          mouseOut();
+        }
+      };
 
-      sibling.addEventListener('mouseover', mouseIn);
-      sibling.addEventListener('mouseout', mouseOut);
+      const observer = new MutationObserver(() => {
+        const newSibling = container.current.nextElementSibling as HTMLElement;
+
+        if (newSibling !== sibling) {
+          remove();
+          sibling = newSibling;
+          append();
+        }
+      });
+
+      append();
       observer.observe(target, { childList: true });
 
       return () => {
-        sibling.removeEventListener('mouseover', mouseIn);
-        sibling.removeEventListener('mouseout', mouseOut);
+        remove();
         observer.disconnect();
       };
     }
-  }, [location.key, active]);
+  }, [location.key, active, force]);
 
   if (active) {
     const rect: React.CSSProperties = {
@@ -102,7 +117,7 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force }) => {
 
     return (
       <div style={rect} ref={container}>
-        <div style={info} title={pilet} />
+        <div style={info}>{pilet}</div>
       </div>
     );
   }
@@ -112,10 +127,10 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force }) => {
 };
 
 export const VisualizationWrapper: React.FC<BaseComponentProps> = ({ piral, children }) => {
-  const forced = useGlobalState((m) => m.$debug.visualize);
+  const { active, force } = useGlobalState((m) => m.$debug.visualize);
   return (
     <>
-      <Visualizer pilet={piral.meta.name} force={forced} />
+      <Visualizer pilet={piral.meta.name} force={force} active={active} />
       {children}
     </>
   );

@@ -12,7 +12,10 @@ export interface DebuggerOptions {
 
 export interface PiralDebugState {
   $debug: {
-    visualize: boolean;
+    visualize: {
+      force: boolean;
+      active: boolean;
+    };
     route: string;
   };
 }
