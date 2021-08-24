@@ -1,0 +1,93 @@
+@import '../../../../node_modules/piral-docs-tools/src/styles/variables';
+
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 40%);
+  z-index: 101;
+
+  .search {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1em;
+    width: 40em;
+    max-width: 100%;
+    height: 50em;
+    max-height: 100%;
+    box-sizing: border-box;
+    margin: auto;
+  }
+
+  .search-input {
+    position: relative;
+    width: 100%;
+
+    input[type=search], input[type=text] {
+      background: #fdfdfd;
+      padding: 1rem 2.5rem 1rem 1rem;
+      border: none;
+      box-sizing: border-box;
+      width: 100%;
+      color: #333
+    }
+
+    i {
+      position: absolute;
+      color: #333;
+      top: 0;
+      bottom: 0;
+      right: 0.8em;
+      margin: auto;
+      height: 1em;
+    }
+  }
+
+  .search-results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: $color-secondary;
+    color: #fff;
+
+    li {
+      display: block;
+      padding: 1em;
+
+      span {
+        display: block;
+      }
+
+      .title {
+        font-weight: bold;
+      }
+
+      .url {
+        font-size: 0.6em;
+        color: #bbb;
+      }
+
+      .keywords {
+        font-size: 0.9em;
+        color: #eee;
+        margin-top: 0.2em;
+      }
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+  }
+}

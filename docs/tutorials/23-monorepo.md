@@ -210,7 +210,7 @@ This may take a while. To make the output more "interactive" you could use `--st
 
 Now may be a good time for your first commit. So make sure to also add a *.gitignore* file. The following content is appropriate for now, but you can (and should) anything that makes sense for your repository:
 
-```plain
+```plaintext
 node_modules
 dist
 ```
