@@ -2,7 +2,7 @@
 
 footer {
   padding: 1em;
-  background: $color-secondary;
+  background: $docs-color-secondary;
 }
 
 footer .footer {
@@ -18,14 +18,14 @@ footer .footer {
     & > div {
       flex: 1;
 
-      @media (max-width: $tabletBrk) {
+      @media (max-width: $docs-tablet-brk) {
         &:first-child {
           flex: 1 100%;
         }
       }
     }
 
-    @media (min-width: $mobileBrk) {
+    @media (min-width: $docs-mobile-brk) {
       flex-direction: row;
     }
   }
@@ -34,7 +34,7 @@ footer .footer {
     margin-top: 3rem;
     padding-left: 1em;
 
-    @media (min-width: $tabletBrk) {
+    @media (min-width: $docs-tablet-brk) {
       &:first-child {
         margin-top: 1rem;
       }
@@ -60,7 +60,7 @@ footer .footer {
           text-decoration: none;
 
           &:hover {
-            color: $color-primary;
+            color: $docs-color-primary;
           }
         }
       }
@@ -78,11 +78,11 @@ footer .footer {
 
 
     .fa.fa-heart {
-      color: $color-heart;
+      color: $docs-color-heart;
       padding: 0 0.2em;
     }
 
-    @media (min-width: $mobileBrk) {
+    @media (min-width: $docs-mobile-brk) {
       text-align: center;
     }
   }

@@ -54,7 +54,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    background: $color-secondary;
+    background: $docs-color-secondary;
     color: #fff;
 
     li {
@@ -86,7 +86,7 @@
       text-decoration: none;
 
       &:hover {
-        color: $color-primary;
+        color: $docs-color-primary;
       }
     }
   }

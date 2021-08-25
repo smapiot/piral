@@ -32,6 +32,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-docs-tools": "0.5.1"
+    "piral-docs-tools": "0.10.1"
   }
 }
