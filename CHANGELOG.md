@@ -3,7 +3,7 @@
 ## 0.13.6 (tbd)
 
 * Fixed issue with CSS imports in pilets when using Webpack (#403)
-* Improved documentation
+* Improved documentation (#395)
 
 ## 0.13.5 (August 17, 2021)
 

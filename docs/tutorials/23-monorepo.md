@@ -382,3 +382,5 @@ lerna run start --scope foo-pilet --stream
 ## Conclusion
 
 Setting up a monorepo with Piral requires some additional knowledge. Nevertheless, using the right steps and keeping an eye on things such as versioning, `dependencies` and `devDependencies` it is possible to come up with a decent solution that scales really well. What we did not cover is the CI/CD aspect, which will certainly be more complex to implement correctly than in the independent repositories case.
+
+In the next tutorial, we'll look at a set of useful patterns to implement agile frontends using extension components.
