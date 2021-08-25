@@ -4,6 +4,7 @@
 
 * Fixed issue with CSS imports in pilets when using Webpack (#403)
 * Improved documentation (#395)
+* Improved `piral-debug-utils` with new architecture (#397)
 
 ## 0.13.5 (August 17, 2021)
 
