@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.13.6 (tbd)
+
+* Fixed issue with CSS imports in pilets when using Webpack (#403)
+* Improved documentation
+
 ## 0.13.5 (August 17, 2021)
 
 * Fixed explicit declaration via state of `LanguagesPicker` component

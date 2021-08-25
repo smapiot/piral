@@ -5,6 +5,8 @@ import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import { HotModuleServerPlugin } from './HotModuleServerPlugin';
 import SheetPlugin from './SheetPlugin';
 
+const piletCss = 'main.css';
+
 function getStyleLoaders(production: boolean) {
   if (production) {
     return [MiniCssExtractPlugin.loader];
@@ -41,7 +43,7 @@ export function getPlugins(
 ) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
-      filename: '[name].[hash:6].css',
+      filename: pilet ? piletCss : '[name].[hash:6].css',
       chunkFilename: '[id].[hash:6].css',
     }),
     new ImportMapsWebpackPlugin(),
@@ -71,7 +73,7 @@ export function getPlugins(
     otherPlugins.push(new optimize.OccurrenceOrderPlugin(true));
 
     if (pilet) {
-      otherPlugins.push(new SheetPlugin());
+      otherPlugins.push(new SheetPlugin(piletCss));
     }
   }
 
