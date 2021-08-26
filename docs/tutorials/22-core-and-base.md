@@ -158,3 +158,5 @@ Now `AppLayout` could be defined to be exactly an app shell layout like you've b
 ## Conclusion
 
 Depending on your application it makes sense to use `piral-core` or even `piral-base`. While `piral` is fully opinionated, the lower-level packages don't come with batteries included. Nevertheless, the modular layout of Piral makes it possible to get everything just in as you need - and want - to.
+
+In the next tutorial, we'll look at how to set up a monorepo for your microfrontends with Piral.

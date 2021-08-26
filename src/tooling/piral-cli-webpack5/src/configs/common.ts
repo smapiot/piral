@@ -4,6 +4,8 @@ import { RuleSetRule, ProgressPlugin, WebpackPluginInstance, Configuration } fro
 import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import SheetPlugin from './SheetPlugin';
 
+const piletCss = 'main.css';
+
 function getStyleLoaders(production: boolean) {
   if (production) {
     return [MiniCssExtractPlugin.loader];
@@ -28,7 +30,7 @@ export function getVariables(): Record<string, string> {
 export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, pilet: boolean) {
   const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
-      filename: '[name].[fullhash:6].css',
+      filename: pilet ? piletCss : '[name].[fullhash:6].css',
       chunkFilename: '[id].[chunkhash:6].css',
     }) as any,
     new ImportMapsWebpackPlugin(),
@@ -50,7 +52,7 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
   }
 
   if (production && pilet) {
-    otherPlugins.push(new SheetPlugin());
+    otherPlugins.push(new SheetPlugin(piletCss) as any);
   }
 
   return plugins.concat(otherPlugins);

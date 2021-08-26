@@ -10717,10 +10717,20 @@ markdown-it-anchor@^7.1.0:
   resolved "https://registry.yarnpkg.com/markdown-it-anchor/-/markdown-it-anchor-7.1.0.tgz#30fb21497bf59e83ff4d1ddc052d821962e2489e"
   integrity sha512-loQggrwsIkkP7TOrESvmYkV2ikbQNNKhHcWyqC7/C2CmfHl1tkUizJJU8C5aGgg7J6oXVQJx17gk7i47tNn/lQ==
 
+markdown-it-attrs@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-attrs/-/markdown-it-attrs-4.0.0.tgz#eadae3ea0c7d17c5e83b98a4ec95a47f4e4960f5"
+  integrity sha512-uLjtdCmhhmL3BuZsReYkFxk74qKjj5ahe34teBpOCJ4hYZZl7/ftLyXWLowngC2moRkbLEvKwN/7TMwbhbHE/A==
+
 markdown-it-container@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/markdown-it-container/-/markdown-it-container-3.0.0.tgz#1d19b06040a020f9a827577bb7dbf67aa5de9a5b"
   integrity sha512-y6oKTq4BB9OQuY/KLfk/O3ysFhB3IMYoIWhGJEidXt1NQFocFK2sA2t0NYZAMyMShAGL6x5OPIbrmXPIqaN9rw==
+
+markdown-it-div@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-div/-/markdown-it-div-1.1.0.tgz#779c07a2313a36e59afd54c39907f9bc87c1ab20"
+  integrity sha512-Vz1T8cPG4sRofn5VlwiGMpy7AyhizbBZcFmvVDf/mlDgF7Mt6QqjPhc/nLlLYB3EANkJfO4kym7R6SZ7RhGvCQ==
 
 markdown-it-emoji@^2.0.0:
   version "2.0.0"
@@ -12593,17 +12603,19 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-piral-docs-tools@0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/piral-docs-tools/-/piral-docs-tools-0.5.1.tgz#07383b313f0a2965abf6e874bd44afc53664269e"
-  integrity sha512-OujnSbvlbebECpzm0MEPiAYeo32YfmW4k1W/gNOedffkWCKZSrHh3CumGXmWSQQ5+TgVNOh+eX5yeqtAAhZjfA==
+piral-docs-tools@0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/piral-docs-tools/-/piral-docs-tools-0.10.1.tgz#461147a7c2c7fb62e1078462d21c016f89de82fd"
+  integrity sha512-/UyWC8h/8r9Vx32fnqCa8X/FV20JJQKDkuUAca7EE0V2spMvC+7imvXKlsHWTN6nNSoza3cRiS6XK3xbkzFZ8w==
   dependencies:
     flexsearch "^0.6.32"
     keyword-extractor "0.0.19"
     markdown-it "^12.0.6"
     markdown-it-abbr "^1.0.4"
     markdown-it-anchor "^7.1.0"
+    markdown-it-attrs "^4.0.0"
     markdown-it-container "^3.0.0"
+    markdown-it-div "^1.1.0"
     markdown-it-emoji "^2.0.0"
     markdown-it-footnote "^3.0.2"
     markdown-it-front-matter "^0.2.3"

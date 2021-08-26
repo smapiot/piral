@@ -209,7 +209,7 @@ const allCommands: Array<ToolCommand<any>> = [
   {
     name: 'declaration-piral',
     alias: ['declare-piral', 'declaration-portal', 'declare-portal'],
-    description: 'Creates the declaration file for a Piral instance.',
+    description: 'Creates the TypeScript declaration file (index.d.ts) for a Piral instance.',
     arguments: ['[source]'],
     flags(argv) {
       return argv
@@ -225,7 +225,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.declarationPiralDefaults.logLevel)
         .choices('force-overwrite', forceOverwriteKeys)
-        .describe('force-overwrite', 'Determines if files should be overwritten by the declaration.')
+        .describe('force-overwrite', 'Determines if files should be overwritten by the command.')
         .default('force-overwrite', keyOfForceOverwrite(apps.declarationPiralDefaults.forceOverwrite))
         .string('base')
         .default('base', process.cwd())

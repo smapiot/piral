@@ -1,7 +1,7 @@
 import { createPiletOptions, PiletOptionsConfig, extendSharedDependencies, setSharedDependencies } from './helpers';
 import { globalDependencies } from './modules';
-import { PiletMetadata, Pilet, AvailableDependencies } from 'piral-base';
-import { Atom, swap } from '@dbeining/react-atom';
+import { PiletMetadata, AvailableDependencies } from 'piral-base';
+import { Atom, swap, deref } from '@dbeining/react-atom';
 
 function createMockApi(meta: PiletMetadata) {
   return {
@@ -14,7 +14,13 @@ function createMockApi(meta: PiletMetadata) {
 
 function createMockContainer() {
   const state = Atom.of({
+    registry: {
+      pages: {},
+      wrappers: {},
+    },
+    routes: {},
     components: {},
+    modules: [],
   });
   return {
     context: {
@@ -22,6 +28,12 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       state,
+      dispatch(cb) {
+        swap(state, cb);
+      },
+      readState(cb) {
+        return cb(deref(state));
+      },
       setComponent(name, comp) {
         swap(state, (s) => ({
           ...s,
@@ -73,7 +85,7 @@ describe('Piral-Core helpers module', () => {
     // Arrange
     const setupMock = jest.fn();
     const globalContext = createMockContainer().context;
-    const providedPilets: Array<Pilet> = [
+    const providedPilets: Array<any> = [
       {
         setup: setupMock,
         hash: '12g',
@@ -113,7 +125,7 @@ describe('Piral-Core helpers module', () => {
     // Arrange
     const setupMock = jest.fn();
     const globalContext = createMockContainer().context;
-    const providedPilets: Array<Pilet> = [
+    const providedPilets: Array<any> = [
       {
         setup: setupMock,
         hash: '12g',
@@ -153,7 +165,7 @@ describe('Piral-Core helpers module', () => {
     const setupMock = jest.fn();
     const requestPilets = jest.fn(() => Promise.resolve(providedPilets));
     const globalContext = createMockContainer().context;
-    const providedPilets: Array<Pilet> = [
+    const providedPilets: Array<any> = [
       {
         setup: setupMock,
         hash: '12g',
@@ -208,7 +220,7 @@ describe('Piral-Core helpers module', () => {
     ) as any;
     const requestPilets = jest.fn(() => Promise.resolve(providedPilets));
     const globalContext = createMockContainer().context;
-    const providedPilets: Array<Pilet> = [
+    const providedPilets: Array<any> = [
       {
         setup: setupMock,
         hash: '12g',
