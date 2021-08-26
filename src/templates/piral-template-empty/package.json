@@ -1,6 +1,6 @@
 {
   "name": "@smapiot/piral-template-empty",
-  "version": "0.13.5",
+  "version": "0.13.6",
   "description": "Official scaffolding template for Piral instances: 'empty'.",
   "keywords": [
     "piral-cli",
