@@ -40,33 +40,33 @@ button {
 }
 
 .cta-green {
-  background: $color-primary;
-  color: $color-secondary;
+  background: $docs-color-primary;
+  color: $docs-color-secondary;
 
   &:hover {
-    color: $color-secondary;
-    background: lighten($color-primary, 40%);
+    color: $docs-color-secondary;
+    background: lighten($docs-color-primary, 40%);
   }
 }
 
 .cta-blue {
   margin: 1.5rem 0;
-  background: $color-secondary;
+  background: $docs-color-secondary;
   color: #fff;
 
   &:hover {
     color: #fff;
-    background: lighten($color-secondary, 20%);
+    background: lighten($docs-color-secondary, 20%);
   }
 }
 
 .cta-ghost {
-  border: 2px solid $color-secondary !important;
-  color: $color-secondary;
+  border: 2px solid $docs-color-secondary !important;
+  color: $docs-color-secondary;
 
   &:hover {
     color: #fff;
-    background: lighten($color-secondary, 20%);
+    background: lighten($docs-color-secondary, 20%);
   }
 }
 
@@ -114,7 +114,7 @@ img {
     padding-right: 15px;
     padding-left: 15px;
 
-    @media (max-width: $tabletBrk) {
+    @media (max-width: $docs-tablet-brk) {
       flex: 0 0 100%;
       max-width: 100%;
     }
@@ -172,11 +172,11 @@ img {
     margin: 1.5rem 0;
   }
 
-  @media (max-width: $mobileBrk) {
+  @media (max-width: $docs-mobile-brk) {
     padding: 4rem 2rem;
   }
 
-  @media (max-width: $mobileBrk) {
+  @media (max-width: $docs-mobile-brk) {
     h1 {
         font-size: 3.6rem;
     }
@@ -194,13 +194,13 @@ img {
   padding: 0;
 
   &.intro {
-    background: $color-primary;
-    background: linear-gradient(168deg, #fff 40%, $color-primary 0);
+    background: $docs-color-primary;
+    background: linear-gradient(168deg, #fff 40%, $docs-color-primary 0);
   }
 
   &.outro {
     background: #fff;
-    background: linear-gradient(168deg, $color-primary 60%, #fff 0);
+    background: linear-gradient(168deg, $docs-color-primary 60%, #fff 0);
   }
 
   .container {
@@ -224,7 +224,7 @@ img {
       padding-right: 15px;
       padding-left: 15px;
 
-      @media (max-width: $tabletBrk) {
+      @media (max-width: $docs-tablet-brk) {
         flex: 1;
         max-width: 100%;
       }
@@ -235,7 +235,7 @@ img {
     text-align: right;
     flex-direction: row-reverse;
 
-    @media (max-width: $tabletBrk) {
+    @media (max-width: $docs-tablet-brk) {
       text-align: center;
       flex-direction: column-reverse;
     }
@@ -245,7 +245,7 @@ img {
     text-align: left;
     flex-direction: row;
 
-    @media (max-width: $tabletBrk) {
+    @media (max-width: $docs-tablet-brk) {
       text-align: center;
       flex-direction: column-reverse;
     }
@@ -262,7 +262,7 @@ img {
 }
 
 .copyright {
-  background: $color-secondary;
+  background: $docs-color-secondary;
   padding: 2rem 3rem;
 
   .social-media {
@@ -275,13 +275,13 @@ img {
       margin-left: 1rem !important;
 
       i {
-        color: $color-secondary;
+        color: $docs-color-secondary;
         font-size: 1.2rem;
         line-height: 40px;
       }
 
       &:hover {
-        background: $color-primary;
+        background: $docs-color-primary;
 
         i {
           color: #fff;
@@ -291,11 +291,11 @@ img {
   }
 
   .imprint {
-    color: $color-primary;
+    color: $docs-color-primary;
   }
 
   .fa-heart {
-    color: $color-heart;
+    color: $docs-color-heart;
   }
 }
 
@@ -313,8 +313,8 @@ img {
 
 .github-corner {
   svg {
-    fill: $color-primary;
-    color: $color-secondary;
+    fill: $docs-color-primary;
+    color: $docs-color-secondary;
     position: absolute;
     top: 0;
     border: 0;
@@ -355,7 +355,7 @@ img {
   box-sizing: content-box;
 
   .testimonial-item {
-    background: $color-secondary;
+    background: $docs-color-secondary;
     padding: 1.5rem 2rem;
     display: flex;
     flex-wrap: wrap;
@@ -404,7 +404,7 @@ img {
         width: 100%;
         display: block;
         height: 1px;
-        background: $color-primary;
+        background: $docs-color-primary;
       }
 
       .testimonial-item-face {
@@ -419,7 +419,7 @@ img {
 
         &:last-child {
           padding-left: 0.5em;
-          color: $color-primary;
+          color: $docs-color-primary;
         }
       }
     }
