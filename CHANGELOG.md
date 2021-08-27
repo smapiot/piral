@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.13.6 (tbd)
+## 0.13.6 (August 27, 2021)
 
 * Fixed issue with CSS imports in pilets when using Webpack (#403)
 * Improved documentation (#395)
