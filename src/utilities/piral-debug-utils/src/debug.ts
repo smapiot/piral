@@ -292,7 +292,7 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   if (isfunc(onChange)) {
     onChange((previous, current) => {
-      if (settings.viewState) {
+      if (settings.viewState.value) {
         const infos = new Error().stack;
 
         if (infos) {
