@@ -76,10 +76,11 @@ stages:
     - publish: $(System.DefaultWorkingDirectory)/dist
       artifact: 'dist'
 
-- stage: Release
+- stage: CanaryRelease
+
   displayName: Release Packages
   dependsOn: Build
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], variables['releaseBranch']), eq(variables['Build.SourceBranchName'], variables['previewBranch']), eq(variables['Build.SourceBranchName'], variables['canaryBranch'])))
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['canaryBranch']))
 
   jobs:
   - deployment: CanaryReleasePackages
@@ -131,6 +132,13 @@ stages:
               Arguments: ci:canary
               customEndpoint: DefaultNpmConnection
 
+- stage: PreviewRelease
+
+  displayName: Release Packages
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['previewBranch']))
+
+  jobs:
   - deployment: PreReleasePackages
     displayName: PreRelease Piral Packages
     condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
@@ -180,6 +188,117 @@ stages:
               Arguments: ci:prerelease
               customEndpoint: DefaultNpmConnection
 
+  - deployment: PreReleaseDemoCross
+    displayName: PreRelease Demo CrossFx Package
+    condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
+    pool:
+      vmImage: $(agentName)
+    environment: 'registry-npmjs-org'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: NodeTool@0
+            displayName: Use Node $(nodeVersion)
+            inputs:
+              versionSpec: $(nodeVersion)
+          - task: YarnInstaller@2
+            displayName: Install Yarn
+            inputs:
+              checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: setup
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
+          - task: Bash@3
+            displayName: Build CrossFx Emulator
+            inputs:
+              targetType: inline
+              script: >-
+                ORIGVER=`yarn --silent ci:version`
+
+                VERSION="$ORIGVER-pre.$(previewId)"
+
+                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-cross-fx/package.json
+
+                yarn build:demo-cross --type emulator
+
+                mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
+          - task: Npm@1
+            displayName: Release Packages
+            inputs:
+              command: custom
+              customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
+              customEndpoint: DefaultNpmConnection
+
+  - deployment: PreReleaseDemoFull
+    displayName: PreRelease Demo Full Package
+    condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
+    pool:
+      vmImage: $(agentName)
+    environment: 'registry-npmjs-org'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: NodeTool@0
+            displayName: Use Node $(nodeVersion)
+            inputs:
+              versionSpec: $(nodeVersion)
+          - task: YarnInstaller@2
+            displayName: Install Yarn
+            inputs:
+              checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: setup
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
+          - task: Bash@3
+            displayName: Build Full Emulator
+            inputs:
+              targetType: inline
+              script: >-
+                ORIGVER=`yarn --silent ci:version`
+
+                VERSION="$ORIGVER-pre.$(previewId)"
+
+                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-piral/package.json
+
+                yarn build:demo-full --type emulator
+
+                mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
+          - task: Npm@1
+            displayName: Release Packages
+            inputs:
+              command: custom
+              customCommand: publish dist/demo-full/emulator/sample-full.tgz
+              customEndpoint: DefaultNpmConnection
+
+- stage: Release
+
+  displayName: Release Packages
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['releaseBranch']))
+
+  jobs:
   - deployment: ReleasePackages
     displayName: Release Piral Packages
     condition: eq(variables['Build.SourceBranchName'], variables['releaseBranch'])
@@ -239,58 +358,12 @@ stages:
             inputs:
               Arguments: ci:release
               customEndpoint: DefaultNpmConnection
-
-  - deployment: PreReleaseDemoCross
-    displayName: PreRelease Demo CrossFx Package
-    condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
-    pool:
-      vmImage: $(agentName)
-    environment: 'registry-npmjs-org'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - checkout: self
-          - task: NodeTool@0
-            displayName: Use Node $(nodeVersion)
-            inputs:
-              versionSpec: $(nodeVersion)
-          - task: YarnInstaller@2
-            displayName: Install Yarn
-            inputs:
-              checkLatest: true
-          - task: Yarn@2
-            displayName: Install Dependencies
-            inputs:
-              Arguments: install
-          - task: Yarn@2
-            displayName: Assemble Packages
-            inputs:
-              Arguments: setup
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
           - task: Bash@3
-            displayName: Build CrossFx Emulator
+            displayName: Update Documentation Branch
             inputs:
               targetType: inline
               script: >-
-                ORIGVER=`yarn --silent ci:version`
-
-                VERSION="$ORIGVER-pre.$(previewId)"
-
-                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-cross-fx/package.json
-
-                yarn build:demo-cross --type emulator
-
-                mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          - task: Npm@1
-            displayName: Release Packages
-            inputs:
-              command: custom
-              customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next
-              customEndpoint: DefaultNpmConnection
+                git push origin $(documentBranch)
 
   - deployment: ReleaseDemoCross
     displayName: Release Demo CrossFx Package
@@ -341,58 +414,6 @@ stages:
             inputs:
               command: custom
               customCommand: publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest
-              customEndpoint: DefaultNpmConnection
-
-  - deployment: PreReleaseDemoFull
-    displayName: PreRelease Demo Full Package
-    condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
-    pool:
-      vmImage: $(agentName)
-    environment: 'registry-npmjs-org'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - checkout: self
-          - task: NodeTool@0
-            displayName: Use Node $(nodeVersion)
-            inputs:
-              versionSpec: $(nodeVersion)
-          - task: YarnInstaller@2
-            displayName: Install Yarn
-            inputs:
-              checkLatest: true
-          - task: Yarn@2
-            displayName: Install Dependencies
-            inputs:
-              Arguments: install
-          - task: Yarn@2
-            displayName: Assemble Packages
-            inputs:
-              Arguments: setup
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
-          - task: Bash@3
-            displayName: Build Full Emulator
-            inputs:
-              targetType: inline
-              script: >-
-                ORIGVER=`yarn --silent ci:version`
-
-                VERSION="$ORIGVER-pre.$(previewId)"
-
-                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-piral/package.json
-
-                yarn build:demo-full --type emulator
-
-                mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          - task: Npm@1
-            displayName: Release Packages
-            inputs:
-              command: custom
-              customCommand: publish dist/demo-full/emulator/sample-full.tgz
               customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseDemoFull
@@ -446,58 +467,6 @@ stages:
               customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
-  - deployment: PreReleaseSiteless
-    displayName: PreRelease Siteless Package
-    condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
-    pool:
-      vmImage: $(agentName)
-    environment: 'registry-npmjs-org'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - checkout: self
-          - task: NodeTool@0
-            displayName: Use Node $(nodeVersion)
-            inputs:
-              versionSpec: $(nodeVersion)
-          - task: YarnInstaller@2
-            displayName: Install Yarn
-            inputs:
-              checkLatest: true
-          - task: Yarn@2
-            displayName: Install Dependencies
-            inputs:
-              Arguments: install
-          - task: Yarn@2
-            displayName: Assemble Packages
-            inputs:
-              Arguments: setup
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
-              customEndpoint: DefaultNpmConnection
-          - task: Bash@3
-            displayName: Build Siteless
-            inputs:
-              targetType: inline
-              script: >-
-                ORIGVER=`yarn --silent ci:version`
-
-                VERSION="$ORIGVER-pre.$(previewId)"
-
-                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/framework/siteless/package.json
-
-                yarn build:siteless
-
-                mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-          - task: Npm@1
-            displayName: Release Packages
-            inputs:
-              command: custom
-              customCommand: publish dist/siteless/emulator/siteless.tgz --tag next
-              customEndpoint: DefaultNpmConnection
-
   - deployment: ReleaseSiteless
     displayName: Release Siteless Package
     condition: eq(variables['Build.SourceBranchName'], variables['releaseBranch'])
@@ -549,10 +518,10 @@ stages:
               customCommand: publish dist/siteless/emulator/siteless.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
-- stage: DeployPages
-  displayName: Deploy Pages
+- stage: DeployHomepage
+  displayName: Deploy Page
   dependsOn: Build
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], variables['releaseBranch']), eq(variables['Build.SourceBranchName'], variables['documentBranch'])))
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['releaseBranch']))
 
   jobs:
   - deployment: DeployLandingPage
@@ -580,6 +549,12 @@ stages:
               username: $(ftpUsername)
               password: $(ftpPassword)
 
+- stage: DeployDocumentation
+  displayName: Deploy Documentation
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['documentBranch']))
+
+  jobs:
   - deployment: DeployDocumentationPage
     displayName: Deploy Piral Documentation Page
     pool:
