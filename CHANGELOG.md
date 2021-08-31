@@ -5,6 +5,11 @@
 * Improved converter plugins to allow more flexible pilet embedded usage
 * Added runtime pilet metadata `basePath`
 
+## 0.13.7 (tbd)
+
+* Fixed disabling logging of view state changes (#404)
+* Improved documentation CI/CD
+
 ## 0.13.6 (August 27, 2021)
 
 * Fixed issue with CSS imports in pilets when using Webpack (#403)

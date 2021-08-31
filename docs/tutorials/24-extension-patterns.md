@@ -236,7 +236,7 @@ api.registerPage('/template/:id', ({ match, piral }) => {
 })
 ```
 
-Here, we use the previous definition of `getItem`, which inspects the React Node and returns an object with its information such as the `templateId`. We only the render the one extension component where the metadata fits the expectation. The expectation is in this example given by the route's parameter, but it could be coming from anywhere.
+Here, we use the previous definition of `getItem`, which inspects the React Node and returns an object with its information such as the `templateId`. We only render the one extension component where the metadata fits the expectation. The expectation is in this example given by the route's parameter, but it could be coming from anywhere.
 
 The dynamic selection pattern and the catalogue pattern can also be expanded with the action placeholder pattern. In this case, you'd have two extensions instead of one. The first extension would carry the information for the catalogue, while the second extension would have a unique extension slot name, which would be shared via the first extension component's metadata.
 
@@ -244,7 +244,7 @@ The dynamic selection pattern and the catalogue pattern can also be expanded wit
 
 So far we've seen that an extension slot can (and should) provide data that is useful to be shown in the current position. For instance, on a machine details page the data available for the machine would be passed into the extension slot - just to give all registered extension components *as much information* as we can.
 
-But what happens in the other way round? Let's say we have another microfrotend that is located somewhere else (e.g., billing information) and suddenly wants to show data from the machine overview? Implementing the call to the machine overview API would violate the determined domain boundaries. Potentially, the data has also already been retrieved from the microfrontend that deals with machines.
+But what happens in the other way round? Let's say we have another microfrontend that is located somewhere else (e.g., billing information) and suddenly wants to show data from the machine overview? Implementing the call to the machine overview API would violate the determined domain boundaries. Potentially, the data has also already been retrieved from the microfrontend that deals with machines.
 
 To deal with that we can register an extension component in the machine microfrontend:
 
