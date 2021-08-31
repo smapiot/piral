@@ -5,7 +5,7 @@
 * Improved converter plugins to allow more flexible pilet embedded usage
 * Added runtime pilet metadata `basePath`
 
-## 0.13.7 (tbd)
+## 0.13.7 (September 1, 2021)
 
 * Fixed disabling logging of view state changes (#404)
 * Improved documentation CI/CD
