@@ -363,7 +363,7 @@ stages:
             inputs:
               targetType: inline
               script: >-
-                git push origin $(documentBranch)
+                git push origin $(releaseBranch):$(documentBranch)
 
   - deployment: ReleaseDemoCross
     displayName: Release Demo CrossFx Package
