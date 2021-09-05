@@ -1,4 +1,4 @@
-function decycle(object: Record<string, any>) {
+export function decycle(object: Record<string, any>) {
   const objects = [];
   const paths = [];
 

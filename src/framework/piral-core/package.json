@@ -22,6 +22,12 @@
     "esm",
     "lib",
     "src",
+    "debug-pilet.ts",
+    "debug-piral.ts",
+    "debug-pilet.d.ts",
+    "debug-piral.d.ts",
+    "debug-pilet.js",
+    "debug-piral.js",
     "dependencies.codegen",
     "dependencies.codegen.native.js"
   ],
@@ -37,7 +43,8 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
+    "build:convert": "tsc debug-pilet.ts debug-piral.ts --skipLibCheck --declaration",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",

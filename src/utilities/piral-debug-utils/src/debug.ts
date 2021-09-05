@@ -1,37 +1,56 @@
-import { isfunc } from 'piral-base';
 import { DebugTracker } from './DebugTracker';
 import { VisualizationWrapper } from './VisualizationWrapper';
+import { ExtensionCatalogue } from './ExtensionCatalogue';
+import { decycle } from './decycle';
+import { setState, initialSettings } from './state';
 import { DebuggerOptions } from './types';
-import { setState } from './state';
 
 export function installPiralDebug(options: DebuggerOptions) {
-  const { injectPilet, getGlobalState, getRoutes, getPilets, setPilets, fireEvent, integrate, onChange, ...pilets } =
-    options;
+  const {
+    injectPilet,
+    getGlobalState,
+    getExtensions,
+    getRoutes,
+    getPilets,
+    setPilets,
+    fireEvent,
+    integrate,
+    dependencies,
+    createApi,
+    loadPilet,
+  } = options;
+  const events = [];
+  const legacyBrowser = !new Error().stack;
+  const excludedRoutes = [initialSettings.cataloguePath];
   const selfSource = 'piral-debug-api';
   const debugApiVersion = 'v1';
   const settings = {
     viewState: {
-      value: sessionStorage.getItem('dbg:view-state') !== 'off',
+      value: initialSettings.viewState,
       type: 'boolean',
       label: 'State container logging',
     },
     loadPilets: {
-      value: sessionStorage.getItem('dbg:load-pilets') === 'on',
+      value: initialSettings.loadPilets,
       type: 'boolean',
       label: 'Load available pilets',
     },
     hardRefresh: {
-      value: sessionStorage.getItem('dbg:hard-refresh') === 'on',
+      value: initialSettings.hardRefresh,
       type: 'boolean',
       label: 'Full refresh on change',
     },
     viewOrigins: {
-      value: sessionStorage.getItem('dbg:view-origins') === 'on',
+      value: initialSettings.viewOrigins,
       type: 'boolean',
       label: 'Visualize component origins',
     },
+    extensionCatalogue: {
+      value: initialSettings.extensionCatalogue,
+      type: 'boolean',
+      label: 'Enable extension catalogue',
+    },
   };
-  const events = [];
 
   const sendMessage = (content: any) => {
     window.postMessage(
@@ -42,33 +61,6 @@ export function installPiralDebug(options: DebuggerOptions) {
       },
       '*',
     );
-  };
-
-  const sendCurrentPilets = (pilets: Array<any>) => {
-    sendMessage({
-      type: 'pilets',
-      pilets: pilets.map((pilet) => ({
-        name: pilet.name,
-        version: pilet.version,
-        disabled: !!pilet.disabled,
-      })),
-    });
-  };
-
-  const sendCurrentContainer = (state: any) => {
-    sendMessage({
-      type: 'container',
-      container: decycle(state),
-    });
-  };
-
-  const sendCurrentRoutes = (pages: Record<string, any>, routes: Record<string, any>) => {
-    const registeredRoutes = Object.keys(pages);
-    const componentRoutes = Object.keys(routes);
-    sendMessage({
-      type: 'routes',
-      routes: [...componentRoutes, ...registeredRoutes],
-    });
   };
 
   const setSetting = (setting: { value: any }, key: string, value: any) => {
@@ -82,6 +74,7 @@ export function installPiralDebug(options: DebuggerOptions) {
     setSetting(settings.loadPilets, 'dbg:load-pilets', values.loadPilets);
     setSetting(settings.hardRefresh, 'dbg:hard-refresh', values.hardRefresh);
     setSetting(settings.viewOrigins, 'dbg:view-origins', values.viewOrigins);
+    setSetting(settings.extensionCatalogue, 'dbg:extension-catalogue', values.extensionCatalogue);
     const curr = settings.viewOrigins.value;
 
     if (prev !== curr) {
@@ -171,12 +164,17 @@ export function installPiralDebug(options: DebuggerOptions) {
       cli: process.env.PIRAL_CLI_VERSION,
       compat: process.env.DEBUG_PIRAL,
     },
-    pilets,
+    pilets: {
+      dependencies,
+      loadPilet,
+      createApi,
+    },
   };
 
   const start = () => {
     const container = decycle(getGlobalState());
-    const routes = getRoutes();
+    const routes = getRoutes().filter((r) => !excludedRoutes.includes(r));
+    const extensions = getExtensions();
     const pilets = getPilets().map((pilet: any) => ({
       name: pilet.name,
       version: pilet.version,
@@ -188,13 +186,14 @@ export function installPiralDebug(options: DebuggerOptions) {
       name: debugApi.instance.name,
       version: debugApi.instance.version,
       kind: debugApiVersion,
-      capabilities: ['events', 'container', 'routes', 'pilets', 'settings'],
+      capabilities: ['events', 'container', 'routes', 'pilets', 'settings', 'extensions'],
       state: {
         routes,
         pilets,
         container,
         settings,
         events,
+        extensions,
       },
     });
   };
@@ -217,19 +216,8 @@ export function installPiralDebug(options: DebuggerOptions) {
     return eventDispatcher.call(this, ev);
   };
 
-  setState((s) => ({
-    ...s,
-    visualize: {
-      active: settings.viewOrigins.value,
-      force: false,
-    },
-    route: undefined,
-  }));
-
-  integrate(DebugTracker, VisualizationWrapper);
-
   window.addEventListener('storage', (event) => {
-    if (event.storageArea === sessionStorage) {
+    if (!legacyBrowser && event.storageArea === sessionStorage) {
       // potentially unknowingly updated settings
       updateSettings({
         viewState: sessionStorage.getItem('dbg:view-state') !== 'off',
@@ -265,8 +253,17 @@ export function installPiralDebug(options: DebuggerOptions) {
     }
   });
 
-  if (isfunc(onChange)) {
-    onChange((previous, current) => {
+  integrate({
+    components: {
+      Debug: DebugTracker,
+    },
+    routes: {
+      [initialSettings.cataloguePath]: ExtensionCatalogue,
+    },
+    wrappers: {
+      '*': VisualizationWrapper,
+    },
+    onChange(previous, current, changed) {
       if (settings.viewState.value) {
         const infos = new Error().stack;
 
@@ -292,17 +289,37 @@ export function installPiralDebug(options: DebuggerOptions) {
         }
       }
 
-      if (current.modules !== previous.modules) {
-        sendCurrentPilets(current.modules);
+      if (changed.pilets) {
+        sendMessage({
+          type: 'pilets',
+          pilets: getPilets().map((pilet: any) => ({
+            name: pilet.name,
+            version: pilet.version,
+            disabled: !!pilet.disabled,
+          })),
+        });
       }
 
-      if (current.registry.pages !== previous.registry.pages || current.routes !== previous.routes) {
-        sendCurrentRoutes(current.registry.pages, current.routes);
+      if (changed.pages) {
+        sendMessage({
+          type: 'routes',
+          routes: getRoutes().filter((r) => !excludedRoutes.includes(r)),
+        });
       }
 
-      sendCurrentContainer(current);
-    });
-  }
+      if (changed.extensions) {
+        sendMessage({
+          type: 'extensions',
+          routes: getExtensions(),
+        });
+      }
+
+      sendMessage({
+        type: 'container',
+        container: decycle(getGlobalState()),
+      });
+    },
+  });
 
   window['dbg:piral'] = debugApi;
   start();

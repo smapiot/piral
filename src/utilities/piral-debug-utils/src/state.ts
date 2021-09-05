@@ -1,9 +1,22 @@
 import { useState, useEffect } from 'react';
 
+export const initialSettings = {
+  viewState: sessionStorage.getItem('dbg:view-state') !== 'off',
+  loadPilets: sessionStorage.getItem('dbg:load-pilets') === 'on',
+  hardRefresh: sessionStorage.getItem('dbg:hard-refresh') === 'on',
+  viewOrigins: sessionStorage.getItem('dbg:view-origins') === 'on',
+  extensionCatalogue: sessionStorage.getItem('dbg:extension-catalogue') !== 'off',
+  cataloguePath: '/$debug-extension-catalogue',
+};
+
 export interface PiralDebugState {
   visualize: {
-    force: boolean;
     active: boolean;
+    force: boolean;
+  };
+  catalogue: {
+    active: boolean;
+    path: string;
   };
   route: string;
 }
@@ -12,8 +25,12 @@ const listeners: Array<() => void> = [];
 
 let state: PiralDebugState = {
   visualize: {
-    active: false,
+    active: initialSettings.viewOrigins,
     force: false,
+  },
+  catalogue: {
+    active: initialSettings.extensionCatalogue,
+    path: initialSettings.cataloguePath,
   },
   route: undefined,
 };
@@ -23,13 +40,12 @@ export function setState(dispatch: (arg: PiralDebugState) => PiralDebugState) {
 
   if (newState !== state) {
     state = newState;
+    listeners.forEach((listener) => listener());
   }
 }
 
 export function getState() {
-  return {
-    ...state,
-  };
+  return state;
 }
 
 export function subscribe<T>(select: (arg: PiralDebugState) => T, notify: (state: T) => void) {
@@ -55,6 +71,6 @@ export function subscribe<T>(select: (arg: PiralDebugState) => T, notify: (state
 
 export function useDebugState<T>(select: (arg: PiralDebugState) => T) {
   const [state, setState] = useState(() => select(getState()));
-  useEffect(() => subscribe<T>(select, setState), [select]);
+  useEffect(() => subscribe(select, setState), []);
   return state;
 }
