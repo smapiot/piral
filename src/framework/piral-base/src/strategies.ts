@@ -34,7 +34,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
   return (options, cb) => {
     const {
       fetchPilets,
-      dependencies,
+      dependencies = {},
       createApi,
       config,
       pilets = [],
@@ -107,7 +107,7 @@ export function asyncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): Pro
 export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   const {
     fetchPilets,
-    dependencies,
+    dependencies = {},
     createApi,
     config,
     pilets = [],
@@ -128,7 +128,7 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
  * considers the already given pilets.
  */
 export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
-  const { createApi, dependencies, pilets = [] } = options;
+  const { createApi, dependencies = {}, pilets = [] } = options;
   return registerDependencies(dependencies).then(() =>
     evalAll(createApi, pilets, []).then(
       (modules) => cb(undefined, modules),

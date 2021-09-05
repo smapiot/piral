@@ -10,6 +10,10 @@ function renderComponent<TKey extends keyof ErrorComponentsState>(
   const name = props.type;
   const Component = components[name];
 
+  if (process.env.NODE_ENV === 'development') {
+    React.useEffect(() => console.error('[dev-info] An error occurred in the Piral instance.', props), []);
+  }
+
   if (!Component) {
     const Unknown = components.unknown;
 
