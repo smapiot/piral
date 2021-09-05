@@ -73,6 +73,7 @@
     "sass-loader": "^10.0.3",
     "source-map-loader": "^1.1.1",
     "style-loader": "^2.0.0",
+    "systemjs-webpack-interop": "^2.3.7",
     "terser-webpack-plugin": "^5.0.0",
     "ts-loader": "^8.0.6",
     "webpack": "^5.1.3",

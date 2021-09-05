@@ -28,8 +28,11 @@ export async function getPiletConfig(
     version,
     externals,
     schema,
+    filename,
     variables: getVariables(),
   });
+
+  const entryName = filename.replace(/\.js$/i, '');
 
   return [
     {
@@ -37,14 +40,16 @@ export async function getPiletConfig(
 
       mode: develop ? 'development' : 'production',
 
+      target: 'web',
+
       entry: {
-        main: [template],
+        [entryName]: [template],
       },
 
       output: {
         publicPath,
         path: dist,
-        filename,
+        filename: '[name].js',
         chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
       },
 
