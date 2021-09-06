@@ -38,6 +38,6 @@ describe('Util Foreign.', () => {
     } as any;
     const element = document.createElement('div') as HTMLDivElement;
     var result = renderInDom(context, element, DefaultLoadingIndicator, {});
-    expect(result).toBeUndefined();
+    expect(result).toBe('root');
   });
 });
