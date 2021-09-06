@@ -87,6 +87,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     fields = publishPiralDefaults.fields,
     provider = publishPiralDefaults.provider,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
 
   if (type === 'emulator-sources') {
@@ -97,14 +98,14 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
 
   if (type !== 'release') {
     progress('Publishing emulator package ...');
-    await publishEmulator(baseDir, source, fields);
+    await publishEmulator(fullBase, source, fields);
     logDone(`Successfully published emulator.`);
     logReset();
   }
 
   if (type !== 'emulator') {
     progress('Publishing release files ...');
-    await publishRelease(baseDir, source, provider, fields);
+    await publishRelease(fullBase, source, provider, fields);
     logDone(`Successfully published release.`);
     logReset();
   }

@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { retrievePiralRoot, retrievePiletsInfo, ruleSummary, runRules, config } from '../common';
 import { setLogLevel, progress, log, checkCliCompatibility } from '../common';
 import { getPiralRules } from '../rules';
@@ -22,11 +23,12 @@ export const validatePiralDefaults: ValidatPiralOptions = {
 
 export async function validatePiral(baseDir = process.cwd(), options: ValidatPiralOptions = {}) {
   const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
 
   const rules = await getPiralRules();
-  const entryFiles = await retrievePiralRoot(baseDir, entry);
+  const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { root, dependencies, ignored: _, ...info } = await retrievePiletsInfo(entryFiles);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];

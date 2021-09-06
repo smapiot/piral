@@ -114,9 +114,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     bundlerName,
     app,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
-  const allEntries = await matchAny(baseDir, [entry]);
+  const allEntries = await matchAny(fullBase, [entry]);
 
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
@@ -129,7 +130,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     app,
   );
   const externals = [...Object.keys(peerDependencies), ...peerModules];
-  const outDir = dirname(resolve(baseDir, target));
+  const outDir = dirname(resolve(fullBase, target));
 
   if (fresh) {
     progress('Removing output directory ...');

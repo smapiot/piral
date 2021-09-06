@@ -86,9 +86,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     _ = {},
     bundlerName,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
-  const entryFiles = await retrievePiralRoot(baseDir, entry);
+  const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
   const krasConfig = readKrasConfig({ port }, krasrc);
 

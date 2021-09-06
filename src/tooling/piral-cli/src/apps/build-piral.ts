@@ -151,12 +151,13 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     _ = {},
     bundlerName,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
+  const useSubdir = type === 'all' || subdir;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
-  const useSubdir = type === 'all' || subdir;
-  const entryFiles = await retrievePiralRoot(baseDir, entry);
+  const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
-  const dest = getDestination(entryFiles, resolve(baseDir, target));
+  const dest = getDestination(entryFiles, resolve(fullBase, target));
 
   await checkCliCompatibility(root);
 
