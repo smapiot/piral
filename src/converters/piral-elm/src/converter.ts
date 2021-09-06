@@ -19,16 +19,7 @@ export function createConverter(config: ElmConverterOptions = {}) {
   ): ForeignComponent<TProps> => {
     return {
       mount(el, props, ctx) {
-        const { piral } = props;
         const node = el.appendChild(document.createElement('div'));
-        el.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
         main.init({
           node,
           flags: {

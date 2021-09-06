@@ -24,21 +24,10 @@ export function createConverter(config: CycleConverterOptions = {}) {
 
     return {
       mount(el, props) {
-        const { piral } = props;
         // The Cycle DOM element is not directly rendered into parent, but into a nested container.
         // This is done because Cycle "erases" information on the host element. If parent was used,
         // Piral related properties like data-portal-id could be removed, leading to things not working.
-        const host = document.createElement('slot');
-        el.appendChild(host);
-        
-        el.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
+        const host = el.appendChild(document.createElement('slot'));
 
         const drivers: PiralDomDrivers<TProps> = {
           DOM: makeDOMDriver(host),

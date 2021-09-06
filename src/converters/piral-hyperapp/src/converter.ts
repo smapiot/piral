@@ -21,15 +21,6 @@ export function createConverter(config: HyperappConverterOptions = {}) {
   ): ForeignComponent<TProps> => {
     return {
       mount(el, props, ctx) {
-        const { piral } = props;
-        el.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
         mountHyperapp(el, root, props, ctx, state, actions);
       },
       unmount(el) {

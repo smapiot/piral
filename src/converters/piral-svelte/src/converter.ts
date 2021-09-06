@@ -21,15 +21,6 @@ export function createConverter(config: SvelteConverterOptions = {}) {
 
     return {
       mount(parent, data, ctx) {
-        const { piral } = data;
-        parent.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
         instance = new Component({
           target: parent,
           props: {

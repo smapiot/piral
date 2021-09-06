@@ -1,25 +1,11 @@
 export function createExtension(selector: string) {
-  if ('customElements' in window) {
-    class EmberExtension extends HTMLElement {
-      connectedCallback() {
-        if (this.isConnected) {
-          this.dispatchEvent(
-            new CustomEvent('render-html', {
-              bubbles: true,
-              detail: {
-                target: this,
-                props: {
-                  name: this.getAttribute('name'),
-                },
-              },
-            }),
-          );
-        }
-      }
-    }
+  const defaultExtensionSelector = 'piral-extension';
 
-    customElements.define(selector, EmberExtension);
+  if ('customElements' in window && selector && selector !== defaultExtensionSelector) {
+    const ExtensionBase = customElements.get(defaultExtensionSelector);
+    class AliasExtension extends ExtensionBase {}
+    customElements.define(selector, AliasExtension);
   }
 
-  return selector;
+  return selector || defaultExtensionSelector;
 }

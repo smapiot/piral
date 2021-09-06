@@ -22,17 +22,6 @@ export function createConverter(config: RiotConverterOptions = {}) {
 
     return {
       mount(el, props, ctx) {
-        const { piral } = props;
-
-        el.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
-
         app = mountApp(el, {
           ...captured,
           ...ctx,

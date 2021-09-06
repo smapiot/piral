@@ -20,17 +20,6 @@ export function createConverter(config: MithrilConverterOptions = {}) {
   ): ForeignComponent<TProps> => {
     return {
       mount(el, props, ctx) {
-        const { piral } = props;
-
-        el.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
-
         mithril.mount(el, {
           view: () =>
             mithril.m(component, {

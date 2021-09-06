@@ -17,17 +17,6 @@ export function createConverter(config: SolidConverterOptions = {}) {
   const convert = <TProps extends BaseComponentProps>(root: Component<TProps>): ForeignComponent<TProps> => {
     return {
       mount(el, props, context) {
-        const { piral } = props;
-
-        el.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
-
         render(() => createComponent(root, { context, ...props }), el);
       },
       unmount(el) {

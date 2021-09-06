@@ -1,25 +1,11 @@
-export function createExtension(selector: string): any {
-  if ('customElements' in window) {
-    class ElmExtension extends HTMLElement {
-      connectedCallback() {
-        if (this.isConnected) {
-          this.dispatchEvent(
-            new CustomEvent('render-html', {
-              bubbles: true,
-              detail: {
-                target: this,
-                props: {
-                  name: this.getAttribute('name'),
-                },
-              },
-            }),
-          );
-        }
-      }
-    }
+export function createExtension(selector: string) {
+  const defaultExtensionSelector = 'piral-extension';
 
-    customElements.define(selector, ElmExtension);
+  if ('customElements' in window && selector && selector !== defaultExtensionSelector) {
+    const ExtensionBase = customElements.get(defaultExtensionSelector);
+    class AliasExtension extends ExtensionBase {}
+    customElements.define(selector, AliasExtension);
   }
-  
-  return selector;
+
+  return selector || defaultExtensionSelector;
 }

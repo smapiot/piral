@@ -23,15 +23,6 @@ export function createConverter(config: EmberConverterOptions = {}) {
 
     return {
       mount(rootElement, props, ctx) {
-        const { piral } = props;
-        rootElement.addEventListener(
-          'render-html',
-          (ev: CustomEvent) => {
-            ev.stopPropagation();
-            piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-          },
-          false,
-        );
         app = App.create({
           ...opts,
           rootElement,
