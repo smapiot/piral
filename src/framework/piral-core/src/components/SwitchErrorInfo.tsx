@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGlobalState } from '../hooks';
-import { defaultRender } from '../utils';
+import { defaultRender, none } from '../utils';
 import { ErrorComponentsState, Errors, ErrorInfoProps } from '../types';
 
 function renderComponent<TKey extends keyof ErrorComponentsState>(
@@ -11,7 +11,7 @@ function renderComponent<TKey extends keyof ErrorComponentsState>(
   const Component = components[name];
 
   if (process.env.NODE_ENV === 'development') {
-    React.useEffect(() => console.error('[dev-info] An error occurred in the Piral instance.', props), []);
+    React.useEffect(() => console.error('[dev-info] An error occurred in the Piral instance.', props), none);
   }
 
   if (!Component) {

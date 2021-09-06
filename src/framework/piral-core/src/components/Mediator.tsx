@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { LoadPiletsOptions, startLoadingPilets, PiletsLoading } from 'piral-base';
 import { useAction } from '../hooks';
+import { none } from '../utils';
 
 /**
  * The props of the Mediator component.
@@ -24,7 +25,7 @@ export const Mediator: React.FC<MediatorProps> = ({ options }) => {
     };
     connect(notifier);
     return () => disconnect(notifier);
-  }, []);
+  }, none);
   // tslint:disable-next-line:no-null-keyword
   return null;
 };

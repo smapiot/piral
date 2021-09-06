@@ -2,9 +2,9 @@ import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { __RouterContext } from 'react-router';
 import { StateContext } from './stateContext';
-import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions } from '../components';
-import { useGlobalState, useActions } from '../hooks';
-import { defaultRender, convertComponent } from '../utils';
+import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions, PortalRenderer } from '../components';
+import { useActions } from '../hooks';
+import { defaultRender, convertComponent, none } from '../utils';
 import {
   AnyComponent,
   Errors,
@@ -18,17 +18,6 @@ import {
 
 // this is an arbitrary start number to have 6 digits
 let portalIdBase = 123456;
-// to avoid creating unnecessary empty arrays
-const none = [];
-
-interface PortalRendererProps {
-  id: string;
-}
-
-const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
-  const children = useGlobalState((m) => m.portals[id]) || none;
-  return defaultRender(children);
-};
 
 const DefaultWrapper: React.FC = (props) => defaultRender(props.children);
 

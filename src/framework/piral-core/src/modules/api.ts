@@ -3,10 +3,12 @@ import { __assign } from 'tslib';
 import { withApi } from '../state';
 import { ExtensionSlot } from '../components';
 import { createDataOptions, getDataExpiration, renderInDom, tryParseJson } from '../utils';
-import { GlobalStateContext, PiletCoreApi, PiralPlugin } from '../types';
+import { Disposable, GlobalStateContext, PiletCoreApi, PiralPlugin } from '../types';
 
 if ('customElements' in window) {
   class PiralExtension extends HTMLElement {
+    dispose: Disposable = () => {};
+
     connectedCallback() {
       if (this.isConnected) {
         const name = this.getAttribute('name');
@@ -25,6 +27,10 @@ if ('customElements' in window) {
         );
       }
     }
+
+    disconnectedCallback() {
+      this.dispose();
+    }
   }
 
   customElements.define('piral-extension', PiralExtension);
@@ -35,7 +41,8 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
     'render-html',
     (ev: CustomEvent) => {
       ev.stopPropagation();
-      renderInDom(context, ev.detail.target, ExtensionSlot, ev.detail.props);
+      const id = renderInDom(context, ev.detail.target, ExtensionSlot, ev.detail.props);
+      ev.detail.target.dispose = () => context.destroyPortal(id);
     },
     false,
   );

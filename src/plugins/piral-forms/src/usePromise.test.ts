@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { usePromise } from './promise';
+import { usePromise } from './usePromise';
 
 jest.mock('react');
 

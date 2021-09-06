@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { none } from '../utils/helpers';
 import { getCurrentLayout } from '../utils/media';
 
 /**
@@ -17,7 +18,7 @@ export function useMedia<T>(queries: Array<string>, values: Array<T>, defaultVal
       window.addEventListener('resize', handler);
       return () => window.removeEventListener('resize', handler);
     }
-  }, []);
+  }, none);
 
   return value;
 }

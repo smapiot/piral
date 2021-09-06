@@ -2,6 +2,18 @@ import { createElement, ComponentType } from 'react';
 import { createPortal } from 'react-dom';
 import { GlobalStateContext, ForeignComponent } from '../types';
 
+function attachPortal<TProps>(
+  id: string,
+  context: GlobalStateContext,
+  element: HTMLElement,
+  component: ComponentType<TProps>,
+  props: TProps,
+) {
+  const portal = createPortal(createElement(component, props), element);
+  context.showPortal(id, portal);
+  return id;
+}
+
 export function convertComponent<T extends { type: string }, U>(
   converter: (component: T) => ForeignComponent<U>,
   component: T,
@@ -24,14 +36,12 @@ export function renderInDom<TProps>(
 
   while (parent) {
     if (parent instanceof Element && parent.hasAttribute(portalId)) {
-      const portal = createPortal(createElement(component, props), element as HTMLElement);
       const id = parent.getAttribute(portalId);
-      context.showPortal(id, portal);
-      return id;
+      return attachPortal(id, context, element as HTMLElement, component, props);
     }
 
     parent = parent.parentNode || (parent as ShadowRoot).host;
   }
 
-  return undefined;
+  return attachPortal('root', context, element as HTMLElement, component, props);
 }
