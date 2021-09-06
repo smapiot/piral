@@ -1,14 +1,18 @@
-export function decycle(object: Record<string, any>) {
+export function decycle(obj: Record<string, any>) {
   const objects = [];
   const paths = [];
 
-  return (function derez(value: Record<string, any>, path: string) {
+  const derez = (value: Record<string, any>, path: string) => {
     const _value = value && value.toJSON instanceof Function ? value.toJSON() : value;
 
     if (_value === null || _value === undefined) {
       return undefined;
     } else if (typeof _value === 'function') {
       return `<function>`;
+    } else if (_value instanceof Error) {
+      return `<error>`;
+    } else if (_value instanceof Node) {
+      return `<node>`;
     } else if (typeof _value === 'object') {
       for (let i = 0; i < objects.length; i++) {
         if (objects[i] === _value) {
@@ -38,7 +42,14 @@ export function decycle(object: Record<string, any>) {
 
         return nu;
       }
+    } else if (typeof _value === 'symbol') {
+      return '<symbol>';
+    } else if (typeof _value === 'bigint') {
+      return '<bigint>';
     }
+
     return _value;
-  })(object, '$');
+  };
+
+  return derez(obj, '$');
 }
