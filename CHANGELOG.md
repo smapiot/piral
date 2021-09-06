@@ -6,6 +6,11 @@
 * Added runtime pilet metadata `basePath`
 * Added support for new debug utils (#397)
 
+## 0.13.7 (September 1, 2021)
+
+* Fixed disabling logging of view state changes (#404)
+* Improved documentation CI/CD
+
 ## 0.13.6 (August 27, 2021)
 
 * Fixed issue with CSS imports in pilets when using Webpack (#403)
