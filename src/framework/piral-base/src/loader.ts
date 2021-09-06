@@ -37,12 +37,12 @@ export function extendLoader(fallback: PiletLoader, specLoaders: CustomSpecLoade
  */
 export function getDefaultLoader(config: DefaultLoaderConfig = {}) {
   return (meta: PiletMetadata): Promise<Pilet> => {
-    if (inBrowser && 'requireRef' in meta && meta.requireRef) {
+    if (inBrowser && 'link' in meta && meta.spec === 'v2') {
+      return loadSystemPilet(meta);
+    } else if (inBrowser && 'requireRef' in meta && meta.spec !== 'v2') {
       return loadUmdPilet(meta, config, includeDependency);
     } else if (inBrowser && 'bundle' in meta && meta.bundle) {
       return loadUmdPilet(meta, config, includeBundle);
-    } else if (inBrowser && 'link' in meta && meta.spec === 'v2') {
-      return loadSystemPilet(meta);
     } else {
       return loadLegacyPilet(meta);
     }

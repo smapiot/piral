@@ -2,10 +2,44 @@ import { isfunc, PiletApiCreator, PiletApiExtender, initializeApi, mergeApis } f
 import { __assign } from 'tslib';
 import { withApi } from '../state';
 import { ExtensionSlot } from '../components';
-import { createDataOptions, getDataExpiration, renderInDom } from '../utils';
+import { createDataOptions, getDataExpiration, renderInDom, tryParseJson } from '../utils';
 import { GlobalStateContext, PiletCoreApi, PiralPlugin } from '../types';
 
+if ('customElements' in window) {
+  class PiralExtension extends HTMLElement {
+    connectedCallback() {
+      if (this.isConnected) {
+        const name = this.getAttribute('name');
+        const params = tryParseJson(this.getAttribute('params'));
+        this.dispatchEvent(
+          new CustomEvent('render-html', {
+            bubbles: true,
+            detail: {
+              target: this,
+              props: {
+                name,
+                params,
+              },
+            },
+          }),
+        );
+      }
+    }
+  }
+
+  customElements.define('piral-extension', PiralExtension);
+}
+
 export function createCoreApi(context: GlobalStateContext): PiletApiExtender<PiletCoreApi> {
+  document.body.addEventListener(
+    'render-html',
+    (ev: CustomEvent) => {
+      ev.stopPropagation();
+      renderInDom(context, ev.detail.target, ExtensionSlot, ev.detail.props);
+    },
+    false,
+  );
+
   return (api, target) => {
     const pilet = target.name;
     return {

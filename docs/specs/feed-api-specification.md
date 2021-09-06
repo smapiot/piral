@@ -134,6 +134,8 @@ interface PiletMetadataV2 {
   name: string;
   version: string;
   link: string;
+  requireRef: string;
+  integrity?: string;
   spec: 'v2';
   custom?: any;
   config?: Record<string, any>;

@@ -31,6 +31,11 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
       if (!hardRefresh) {
         // standard setting is to just perform an inject
         const meta = JSON.parse(data);
+        
+        // tear down pilet
+        injectPilet({ name: meta.name } as any);
+
+        // load and evaluate pilet
         loadPilet(meta).then((pilet) => {
           try {
             if (isfunc(injectPilet)) {

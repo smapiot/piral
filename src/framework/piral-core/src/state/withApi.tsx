@@ -16,7 +16,9 @@ import {
   GlobalStateContext,
 } from '../types';
 
+// this is an arbitrary start number to have 6 digits
 let portalIdBase = 123456;
+// to avoid creating unnecessary empty arrays
 const none = [];
 
 interface PortalRendererProps {
@@ -28,7 +30,7 @@ const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
   return defaultRender(children);
 };
 
-const DefaultWrapper: React.FC = (props) => <>{props.children}</>;
+const DefaultWrapper: React.FC = (props) => defaultRender(props.children);
 
 interface ForeignComponentContainerProps<T> {
   $portalId: string;
@@ -40,6 +42,11 @@ interface ForeignComponentContainerProps<T> {
 class ForeignComponentContainer<T> extends React.Component<ForeignComponentContainerProps<T>> {
   private current?: HTMLElement;
   private previous?: HTMLElement;
+  private handler = (ev: CustomEvent) => {
+    const { innerProps } = this.props;
+    ev.stopPropagation();
+    innerProps.piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+  };
 
   private setNode = (node: HTMLDivElement) => {
     this.current = node;
@@ -52,6 +59,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
     if (node && isfunc(mount)) {
       mount(node, innerProps, $context);
+      node.addEventListener('render-html', this.handler, false);
     }
 
     this.previous = node;
@@ -77,6 +85,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
     if (node && isfunc(unmount)) {
       unmount(node);
+      node.removeEventListener('render-html', this.handler, false);
     }
 
     this.previous = undefined;

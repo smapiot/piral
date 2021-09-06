@@ -126,6 +126,14 @@ export interface PiletMetadataV2 {
    */
   spec: 'v2';
   /**
+   * The reference name for the global require.
+   */
+  requireRef: string;
+  /**
+   * The computed integrity of the pilet.
+   */
+  integrity?: string;
+  /**
    * The link for retrieving the content of the pilet.
    */
   link: string;

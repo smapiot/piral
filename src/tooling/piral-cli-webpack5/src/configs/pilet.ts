@@ -21,18 +21,18 @@ export async function getPiletConfig(
   const production = !develop;
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
+  const entry = filename.replace(/\.js$/i, '');
 
   const enhance = piletWebpackConfigEnhancer({
     name,
     piral,
     version,
+    entry,
     externals,
     schema,
     filename,
     variables: getVariables(),
   });
-
-  const entryName = filename.replace(/\.js$/i, '');
 
   return [
     {
@@ -43,7 +43,7 @@ export async function getPiletConfig(
       target: 'web',
 
       entry: {
-        [entryName]: [template],
+        [entry]: [template],
       },
 
       output: {

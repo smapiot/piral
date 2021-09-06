@@ -1,6 +1,6 @@
 import * as SystemJSPublicPathWebpackPlugin from 'systemjs-webpack-interop/SystemJSPublicPathWebpackPlugin';
 import { join, resolve } from 'path';
-import { Configuration, BannerPlugin, DefinePlugin, WebpackPluginInstance } from 'webpack';
+import { Configuration, BannerPlugin, DefinePlugin } from 'webpack';
 import { setEnvironment, getDefineVariables, getVariables } from './helpers';
 
 export interface PiletWebpackConfigEnhancerOptions {
@@ -8,6 +8,10 @@ export interface PiletWebpackConfigEnhancerOptions {
    * The name of the pilet.
    */
   name: string;
+  /**
+   * The name of the entry module.
+   */
+  entry: string;
   /**
    * The version of the pilet.
    */
@@ -33,6 +37,14 @@ export interface PiletWebpackConfigEnhancerOptions {
    * Additional environment variables to define.
    */
   variables?: Record<string, string>;
+}
+
+interface SchemaEnhancerOptions {
+  name: string;
+  entry: string;
+  file: string;
+  variables: Record<string, string>;
+  externals: Array<string>;
 }
 
 interface Importmap {
@@ -62,12 +74,11 @@ function getDependencies(compilerOptions: Configuration, importmap: Importmap) {
 
   if (typeof compilerOptions.entry === 'object' && compilerOptions.entry && typeof sharedImports === 'object') {
     for (const depName of Object.keys(sharedImports)) {
-      const basePath = require.resolve(`${depName}/package.json`);
-      const details = require(basePath);
+      const details = require(`${depName}/package.json`);
       const depId = `${depName}@${details.version}`;
       dependencies[depId] = `${depName}.js`;
       compilerOptions.externals[depName] = depId;
-      compilerOptions.entry[depName] = resolve(basePath, sharedImports[depName]);
+      compilerOptions.entry[depName] = resolve(process.cwd(), sharedImports[depName]);
     }
   }
 
@@ -111,39 +122,30 @@ function withExternals(compilerOptions: Configuration, externals: Array<string>)
   }
 }
 
-function piletVxWebpackConfigEnhancer(
-  _name: string,
-  _file: string,
-  variables: Record<string, string>,
-  externals: Array<string>,
-  compilerOptions: Configuration,
-) {
-  const plugins: Array<WebpackPluginInstance> = [new DefinePlugin(getDefineVariables(variables))];
+function piletVxWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { variables, externals } = options;
 
-  withSetPath(compilerOptions);
+  withSetPath(compiler);
   setEnvironment(variables);
 
-  compilerOptions.plugins = [...compilerOptions.plugins, ...plugins];
+  compiler.plugins.push(new DefinePlugin(getDefineVariables(variables)));
 
-  withExternals(compilerOptions, externals);
+  withExternals(compiler, externals);
 
-  return compilerOptions;
+  return compiler;
 }
 
-function piletV1WebpackConfigEnhancer(
-  name: string,
-  file: string,
-  variables: Record<string, string>,
-  externals: Array<string>,
-  compilerOptions: Configuration,
-) {
+function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
-  const plugins: Array<WebpackPluginInstance> = [new DefinePlugin(getDefineVariables(variables))];
 
-  withSetPath(compilerOptions);
+  withSetPath(compiler);
 
-  plugins.push(
+  setEnvironment(variables);
+
+  compiler.plugins.push(
+    new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
       banner: `//@pilet v:1(${jsonpFunction})`,
       entryOnly: true,
@@ -151,41 +153,33 @@ function piletV1WebpackConfigEnhancer(
       raw: true,
     }),
   );
+  compiler.output.uniqueName = `${jsonpFunction}`;
+  compiler.output.library = name;
+  compiler.output.libraryTarget = 'umd';
+  compiler.output.auxiliaryComment = {
+    commonjs2: `\nfunction define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
+  };
 
-  setEnvironment(variables);
+  withExternals(compiler, externals);
 
-  compilerOptions.plugins = [...compilerOptions.plugins, ...plugins];
-  compilerOptions.output.uniqueName = `${jsonpFunction}`;
-  compilerOptions.output.library = name;
-  compilerOptions.output.libraryTarget = 'umd';
-
-  const reset = `delete window.webpackChunk${jsonpFunction};`;
-  compilerOptions.output.auxiliaryComment = {
-    commonjs2: `\nfunction define(d,k){${reset}(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
-  } as any;
-
-  withExternals(compilerOptions, externals);
-
-  return compilerOptions;
+  return compiler;
 }
 
-function piletV2WebpackConfigEnhancer(
-  _name: string,
-  file: string,
-  variables: Record<string, string>,
-  externals: Array<string>,
-  compilerOptions: Configuration,
-) {
+function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file } = options;
+  const shortName = name.replace(/\W/gi, '');
+  const jsonpFunction = `pr_${shortName}`;
   const packageDetails = require(resolve(process.cwd(), 'package.json'));
-  const plugins: Array<WebpackPluginInstance> = [new DefinePlugin(getDefineVariables(variables))];
 
-  withExternals(compilerOptions, externals);
+  withExternals(compiler, externals);
 
-  const dependencies = getDependencies(compilerOptions, packageDetails.importmap);
+  const dependencies = getDependencies(compiler, packageDetails.importmap);
+  const plugins = [];
 
   plugins.push(
+    new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
-      banner: `//@pilet v:2(${JSON.stringify(dependencies)})`,
+      banner: `//@pilet v:2(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`,
       entryOnly: true,
       include: file,
       raw: true,
@@ -195,29 +189,36 @@ function piletV2WebpackConfigEnhancer(
 
   setEnvironment(variables);
 
-  compilerOptions.plugins = [...compilerOptions.plugins, ...plugins];
-  compilerOptions.output.libraryTarget = 'system';
+  compiler.plugins = [...compiler.plugins, ...plugins];
+  compiler.module.rules.push({ parser: { system: false } });
+  compiler.output.uniqueName = `${jsonpFunction}`;
+  compiler.output.library = { type: 'system' };
 
-  return compilerOptions;
+  return compiler;
 }
 
-export const piletWebpackConfigEnhancer =
-  (options: PiletWebpackConfigEnhancerOptions) => (compilerOptions: Configuration) => {
-    const { name, version, piral, externals = getExternals(piral), schema, filename } = options;
-    const environment = process.env.NODE_ENV || 'development';
-    const variables = {
-      ...getVariables(name, version, environment),
-      ...options.variables,
-    };
-
-    switch (schema) {
-      case 'v1':
-        return piletV1WebpackConfigEnhancer(name, filename, variables, externals, compilerOptions);
-      case 'v2':
-        return piletV2WebpackConfigEnhancer(name, filename, variables, externals, compilerOptions);
-      case 'v0':
-      case 'none':
-      default:
-        return piletVxWebpackConfigEnhancer(name, filename, variables, externals, compilerOptions);
-    }
+export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOptions) => (compiler: Configuration) => {
+  const { piral, externals = getExternals(piral), schema } = details;
+  const environment = process.env.NODE_ENV || 'development';
+  const options: SchemaEnhancerOptions = {
+    entry: details.entry,
+    externals,
+    file: details.filename,
+    name: details.name,
+    variables: {
+      ...getVariables(details.name, details.version, environment),
+      ...details.variables,
+    },
   };
+
+  switch (schema) {
+    case 'v1':
+      return piletV1WebpackConfigEnhancer(options, compiler);
+    case 'v2':
+      return piletV2WebpackConfigEnhancer(options, compiler);
+    case 'v0':
+    case 'none':
+    default:
+      return piletVxWebpackConfigEnhancer(options, compiler);
+  }
+};

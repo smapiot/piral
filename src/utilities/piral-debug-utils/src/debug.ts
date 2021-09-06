@@ -143,10 +143,13 @@ export function installPiralDebug(options: DebuggerOptions) {
     }));
   };
 
-  const goToRoute = (route: string) => {
+  const goToRoute = (path: string, state?: any) => {
     setState((s) => ({
       ...s,
-      route,
+      route: {
+        path,
+        state,
+      },
     }));
   };
 
@@ -246,7 +249,7 @@ export function installPiralDebug(options: DebuggerOptions) {
         case 'emit-event':
           return fireEvent(content.name, content.args);
         case 'goto-route':
-          return goToRoute(content.route);
+          return goToRoute(content.route, content.state);
         case 'visualize-all':
           return toggleVisualize();
       }

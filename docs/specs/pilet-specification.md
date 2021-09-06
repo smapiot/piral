@@ -277,11 +277,11 @@ interface PiletMetadata {
    */
   hash?: string;
   /**
-   * Pilet global reference (v:1)
+   * Pilet global reference (v:1 and v:2)
    */
   requireRef?: string;
   /**
-   * Checksum of the pilet (v:1)
+   * Checksum of the pilet (v:1 and v:2)
    */
   integrity?: string;
   /**
@@ -355,7 +355,9 @@ The `v:x` specification was introduced to allow custom formats to work besides o
 - Evaluation should be done via SystemJS.
 - Registration of the module by using `System.register`.
 - Supports transport via `link`.
-- Optionally uses a JSON serialized object as argument, which defines the shared dependencies from the pilet.
+- Requires two arguments separated by a comma.
+- The first argument declares the global require reference.
+- The second argument is a JSON serialized object, which defines the shared dependencies from the pilet.
 
 ### `v:x`
 
@@ -454,7 +456,7 @@ unction(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)tr
 For `v2` the output changes to:
 
 ```js
-//@pilet v:2({})
+//@pilet v:2(pr_1fab123ad4fd76bd20e5e5e97366fd47, {})
 System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _dep;}],execute:function(){_export((function(){
 //TODO content here
 })())}};});
@@ -478,3 +480,4 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 - [CLI Specification](https://docs.piral.io/reference/specifications/cli)
 - [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
 - [UMD: Patterns and Examples](https://github.com/umdjs/umd)
+- [SystemJS: Register API](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md)

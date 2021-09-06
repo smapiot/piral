@@ -77,3 +77,11 @@ export function withoutKey<T, TKey extends keyof T>(obj: T, key: TKey): T {
   const { [key]: _, ...newObj } = obj || {};
   return newObj as any;
 }
+
+export function tryParseJson(content: string) {
+  try {
+    return JSON.parse(content);
+  } catch {
+    return {};
+  }
+}

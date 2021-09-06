@@ -1,3 +1,4 @@
+import { cleanup } from './cleanup';
 import type { PiletApi, PiletApiCreator, SinglePilet, MultiPilet, Pilet, PiralUnloadPiletEvent } from './types';
 
 /**
@@ -16,6 +17,7 @@ export function setupSinglePilet(app: SinglePilet, api: PiletApi) {
         if (e.name === app.name) {
           api.off(evtName, handler);
           app.teardown(api);
+          cleanup(app);
         }
       };
       api.on(evtName, handler);

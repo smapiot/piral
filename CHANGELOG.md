@@ -5,6 +5,7 @@
 * Improved converter plugins to allow more flexible pilet embedded usage
 * Added runtime pilet metadata `basePath`
 * Added support for new debug utils (#397)
+* Added generic `piral-extension` web component for rendering extensions
 
 ## 0.13.7 (September 1, 2021)
 

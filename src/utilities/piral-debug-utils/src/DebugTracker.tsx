@@ -10,7 +10,7 @@ export const DebugTracker: React.FC<DebugTrackerProps> = () => {
 
   React.useEffect(() => {
     if (route) {
-      history.push(route);
+      history.push(route.path, route.state);
     }
   }, [route]);
 

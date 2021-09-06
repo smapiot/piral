@@ -1,13 +1,18 @@
 import * as React from 'react';
+import { useLocation } from 'react-router';
+
+interface ExtensionCatalogueState {
+  name: string;
+  params: any;
+}
 
 export const ExtensionCatalogue: React.FC = () => {
-  return (
-    <>
-      <h1>Extension Catalogue</h1>
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis maxime ab autem cumque dolore eligendi
-        tempora quos pariatur! Nihil quibusdam sed ad at libero eum facere natus necessitatibus earum amet?
-      </p>
-    </>
-  );
+  const { state } = useLocation<ExtensionCatalogueState>();
+
+  if (state) {
+    const { name = '', params = {} } = state;
+    return <piral-extension name={name} params={JSON.stringify(params)} />;
+  }
+
+  return null;
 };
