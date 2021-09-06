@@ -44,6 +44,6 @@
     "piral-core": "^0.13.7"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x"
+    "piral-core": "0.14.x"
   }
 }

@@ -24,24 +24,7 @@ npm i --save piral-systemjs-utils
 
 ## Setup
 
-The lib already comes with SystemJS as a dependency. There is nothing else required. Usually, you just want to include the (SystemJS) vendor bundle first:
-
-```ts
-import 'piral-systemjs-utils/vendor';
-```
-
-The contents of the vendor bundle are listed below.
-
-Now you should actually register the shared components. This will add all the Piral-shared dependencies to SystemJS, which allows sharing across boundaries.
-
-```ts
-import { extendSharedDependencies } from 'piral';
-import { registerSharedDependencies } from 'piral-systemjs-utils';
-
-registerSharedDependencies();
-```
-
-Finally, provide your pilets via import maps in the *index.html*:
+Provide your pilets via import maps in the *index.html*:
 
 ```html
 <script type='systemjs-importmap' src="https://feed.piral.cloud/api/v1/pilet/my-import-maps"></script>
@@ -91,21 +74,15 @@ By default, this will assume that all entries of the previously supplied import 
 
 Pilet authors don't need to know anything besides that the build system has support SystemJS. Therefore, like with the Piral instance, pilets need to be created via `piral-cli-webpack` or another bundler supporting SystemJS.
 
-(tbd)
+The most straight forward way to apply SystemJS to your pilets is to use `--schema v2` (which is the default schema) when building or publishing:
 
-## Vendor Bundle
+```sh
+# build the current pilet
+npx pilet build --schema v2
 
-The vendor bundle comes with the following SystemJS scripts:
-
-- The core library
-- AMD support
-- Support for named exports
-- Support for named registrations
-- Support for default exports / imports
-
-If you'd like to customize this list then we recommend to avoid importing `piral-systemjs-utils/vendor` and instead declaring your own imports.
-
-In most cases you should be fine with importing `piral-systemjs-utils/vendor`.
+# publish the current build with a fresh build
+npx pilet publish --fresh --schema v2 --url <feed-service-url> --api-key <your-api-key>
+```
 
 ## License
 

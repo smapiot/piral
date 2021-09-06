@@ -48,7 +48,7 @@
     "preact": "^10.5.13"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x",
+    "piral-core": "0.14.x",
     "preact": "^10.0.0"
   }
 }

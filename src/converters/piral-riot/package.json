@@ -48,7 +48,7 @@
     "riot": "^4.7.2"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x",
+    "piral-core": "0.14.x",
     "riot": "^4.0.0"
   }
 }
