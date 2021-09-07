@@ -123,7 +123,7 @@ stages:
 
                 git config --global user.name "Piral Release Bot"
 
-                git checkout $(previewBranch)
+                git checkout $(canaryBranch)
 
                 git checkout -- .
           - task: Yarn@2

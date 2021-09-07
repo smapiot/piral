@@ -10,7 +10,7 @@ import {
   logInfo,
   createPiletDeclaration,
   ForceOverwrite,
-  matchAny,
+  matchAnyPilet,
   fail,
 } from '../common';
 
@@ -115,7 +115,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   } = options;
   setLogLevel(logLevel);
   progress('Reading configuration ...');
-  const allEntries = await matchAny(baseDir, [entry]);
+  const allEntries = await matchAnyPilet(baseDir, [entry]);
 
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');

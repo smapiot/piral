@@ -1,6 +1,7 @@
 import { isfunc } from 'piral-base';
 import { DebugTracker } from './DebugTracker';
 import { VisualizationWrapper } from './VisualizationWrapper';
+import { decycle } from './decycle';
 import { DebuggerOptions } from './types';
 
 export function installPiralDebug(options: DebuggerOptions) {
@@ -56,7 +57,7 @@ export function installPiralDebug(options: DebuggerOptions) {
   const sendCurrentContainer = (state: any) => {
     sendMessage({
       type: 'container',
-      container: JSON.parse(JSON.stringify(state)),
+      container: decycle(state),
     });
   };
 
@@ -188,7 +189,7 @@ export function installPiralDebug(options: DebuggerOptions) {
     const registeredRoutes = context.readState((state) => Object.keys(state.registry.pages));
     const componentRoutes = context.readState((state) => Object.keys(state.routes));
     const routes = [...componentRoutes, ...registeredRoutes];
-    const container = JSON.parse(JSON.stringify(context.readState((s) => s)));
+    const container = decycle(context.readState((s) => s));
     const pilets = context
       .readState((m) => m.modules)
       .map((pilet: any) => ({

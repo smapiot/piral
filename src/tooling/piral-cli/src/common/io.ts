@@ -205,16 +205,22 @@ async function matchAnyPattern(baseDir: string, pattern: AnyPattern) {
 
 const preferences = ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs', '.esm', '.es', '.es6', '.html'];
 
-export async function matchAny(baseDir: string, patterns: Array<string>) {
+export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
   const matches: Array<string> = [];
+  const pilets: Array<string> = [];
+  const matched = (name: string, path: string) => {
+    pilets.push(name);
+    matches.push(path);
+  };
+  const nameOfPackageJson = 'package.json';
   const exts = preferences.map((s) => s.substr(1)).join(',');
   const allPatterns = patterns.reduce<Array<AnyPattern>>((agg, curr) => {
     const patterns = [];
 
-    if (/[a-zA-Z0-9\-]+$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
-      patterns.push(curr, `${curr}.{${exts}}`, `${curr}/package.json`);
+    if (/[a-zA-Z0-9\-\*]+$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
+      patterns.push(curr, `${curr}.{${exts}}`, `${curr}/${nameOfPackageJson}`);
     } else if (curr.endsWith('/')) {
-      patterns.push(`${curr}index.{${exts}}`, `${curr}package.json`);
+      patterns.push(`${curr}index.{${exts}}`, `${curr}${nameOfPackageJson}`);
     } else {
       patterns.push(curr);
     }
@@ -227,43 +233,57 @@ export async function matchAny(baseDir: string, patterns: Array<string>) {
     allPatterns.map((patterns) =>
       matchAnyPattern(baseDir, patterns).then(async ({ results, pattern }) => {
         if (!results.length) {
-          //TODO emit warning
+          log('generalDebug_0003', `Found no potential entry points using "${pattern}".`);
         } else {
           log('generalDebug_0003', `Found ${results.length} potential entry points in "${pattern}".`);
-          // only take first / primary result
-          const firstResult = results[0];
-          const fileName = basename(firstResult);
 
-          if (fileName === 'package.json') {
-            log('generalDebug_0003', `Entry point is a "package.json" and needs further inspection.`);
-            const targetDir = dirname(firstResult);
-            const { source } = await readJson(targetDir, fileName);
+          for (const result of results) {
+            const fileName = basename(result);
 
-            if (typeof source === 'string') {
-              log('generalDebug_0003', `Found a "source" field with value "${source}".`);
-              const target = resolve(targetDir, source);
-              const exists = await checkExists(target);
+            if (fileName === nameOfPackageJson) {
+              log('generalDebug_0003', `Entry point is a "${nameOfPackageJson}" and needs further inspection.`);
+              const targetDir = dirname(result);
+              const { source, name } = await readJson(targetDir, fileName);
 
-              if (exists) {
-                log('generalDebug_0003', `Taking existing target as "${target}".`);
-                matches.push(target);
-              } else {
-                log('generalDebug_0003', `Source target "${target}" does not exist. Skipped.`);
+              if (!pilets.includes(name)) {
+                if (typeof source === 'string') {
+                  log('generalDebug_0003', `Found a "source" field with value "${source}".`);
+                  const target = resolve(targetDir, source);
+                  const exists = await checkExists(target);
+  
+                  if (exists) {
+                    log('generalDebug_0003', `Taking existing target as "${target}".`);
+                    matched(name, target);
+                  } else {
+                    log('generalDebug_0003', `Source target "${target}" does not exist. Skipped.`);
+                  }
+                } else {
+                  log('generalDebug_0003', `No "source" field found. Trying combinations in "src".`);
+                  const files = await matchPattern(targetDir, `src/index.{${exts}}`);
+  
+                  if (files.length > 0) {
+                    log('generalDebug_0003', `Found a result; taking "${files[0]}".`);
+                    matched(name, files[0]);
+                  } else {
+                    log('generalDebug_0003', `Found no results in "src". Skipped.`);
+                  }
+                }
               }
             } else {
-              log('generalDebug_0003', `No "source" field found. Trying combinations in "src".`);
-              const files = await matchPattern(baseDir, `src/index.{${exts}}`);
+              const packageJson = await findFile(result, nameOfPackageJson);
 
-              if (files.length > 0) {
-                log('generalDebug_0003', `Found a result; taking "${files[0]}".`);
-                matches.push(files[0]);
+              if (packageJson) {
+                const targetDir = dirname(packageJson);
+                const { name } = await readJson(targetDir, nameOfPackageJson);
+
+                if (!pilets.includes(name)) {
+                  log('generalDebug_0003', `Entry point result is "${result}".`);
+                  matched(name, result);
+                }
               } else {
-                log('generalDebug_0003', `Found no results in "src". Skipped.`);
+                log('generalDebug_0003', `Could not find "${nameOfPackageJson}" for entry "${result}". Skipping.`);
               }
             }
-          } else {
-            log('generalDebug_0003', `Entry point result is "${firstResult}".`);
-            matches.push(firstResult);
           }
         }
       }),
