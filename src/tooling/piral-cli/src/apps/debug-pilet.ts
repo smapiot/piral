@@ -11,7 +11,7 @@ import {
   notifyServerOnline,
   setLogLevel,
   progress,
-  matchAny,
+  matchAnyPilet,
   fail,
   log,
 } from '../common';
@@ -154,7 +154,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${baseDir}".`);
 
-  const allEntries = await matchAny(baseDir, entryList);
+  const allEntries = await matchAnyPilet(baseDir, entryList);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (krasConfig.sources === undefined) {
