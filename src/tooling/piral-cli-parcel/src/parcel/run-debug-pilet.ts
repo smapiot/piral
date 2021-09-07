@@ -76,7 +76,7 @@ process.on('message', async (msg) => {
 
       if (bundler) {
         bundler.on('bundled', async (bundle) => {
-          const requireRef = await postProcess(bundle, msg.version, false);
+          const requireRef = await postProcess(bundle, msg.version, false, {});
 
           if (msg.hmr) {
             process.send({

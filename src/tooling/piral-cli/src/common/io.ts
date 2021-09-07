@@ -229,6 +229,9 @@ export async function matchAny(baseDir: string, patterns: Array<string>) {
         if (!results.length) {
           //TODO emit warning
         } else {
+          //TODO -> shouldn't take the first one,
+          // should be the first one, yes, but, PER pilet
+          // so that multiple pilets can be considered, too
           log('generalDebug_0003', `Found ${results.length} potential entry points in "${pattern}".`);
           // only take first / primary result
           const firstResult = results[0];

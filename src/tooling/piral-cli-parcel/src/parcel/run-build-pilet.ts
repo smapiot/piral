@@ -50,7 +50,7 @@ async function run(
   });
 
   const bundle = await bundler.bundle();
-  await postProcess(bundle, version, minify);
+  await postProcess(bundle, version, minify, {});
   return bundle.name;
 }
 
