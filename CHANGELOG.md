@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.13.8 (September 10, 2021)
+
+* Fixed circular structure support in debugging utils (#409)
+* Fixed pilet templates giving wrong path in Windows when scaffolding
+* Fixed support for multi pilet debug commands with wildcards on Windows
+
 ## 0.13.7 (September 1, 2021)
 
 * Fixed disabling logging of view state changes (#404)
