@@ -38,9 +38,11 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.13.7"
+    "piral-base": "^0.13.7"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x"
+    "piral-base": "0.14.x",
+    "react": ">=16.8.0",
+    "react-router": ">=5.0.0"
   }
 }

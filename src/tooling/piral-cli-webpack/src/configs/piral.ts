@@ -51,7 +51,6 @@ export async function getPiralConfig(
         new TerserPlugin({
           extractComments: false,
           terserOptions: {
-            warnings: false,
             ie8: true,
           },
         }),

@@ -42,12 +42,46 @@ export function createPiletOptions({
     const { installPiralDebug } = require('piral-debug-utils');
 
     installPiralDebug({
-      context,
       createApi,
       loadPilet,
+      injectPilet: context.injectPilet,
+      fireEvent: context.emit,
       requestPilets,
       getDependencies() {
         return dependencies;
+      },
+      getRoutes() {
+        const registeredRoutes = context.readState((state) => Object.keys(state.registry.pages));
+        const componentRoutes = context.readState((state) => Object.keys(state.routes));
+        return [...componentRoutes, ...registeredRoutes];
+      },
+      getGlobalState() {
+        return context.readState((s) => s);
+      },
+      getPilets() {
+        return context.readState((s) => s.modules);
+      },
+      setPilets(modules) {
+        context.dispatch((state) => ({
+          ...state,
+          modules,
+        }));
+      },
+      integrate(debug, wrapper) {
+        context.dispatch((s) => ({
+          ...s,
+          components: {
+            ...s.components,
+            Debug: debug,
+          },
+          registry: {
+            ...s.registry,
+            wrappers: {
+              ...s.registry.wrappers,
+              '*': wrapper,
+            },
+          },
+        }));
       },
       onChange(cb: (previous: any, current: any) => void) {
         addChangeHandler(context.state, 'debugging', ({ previous, current }) => {
@@ -61,7 +95,7 @@ export function createPiletOptions({
     const { withEmulatorPilets } = require('piral-debug-utils');
 
     requestPilets = withEmulatorPilets(requestPilets, {
-      inject: context.injectPilet,
+      injectPilet: context.injectPilet,
       createApi,
       loadPilet,
     });

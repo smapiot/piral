@@ -1,25 +1,23 @@
-import { GlobalStateContext } from 'piral-core';
-import { AvailableDependencies, PiletApiCreator, PiletLoader, PiletRequester } from 'piral-base';
+import { FC } from 'react';
+import { AvailableDependencies, Pilet, PiletApiCreator, PiletLoader, PiletRequester } from 'piral-base';
+
+export interface EmulatorConnectorOptions {
+  createApi: PiletApiCreator;
+  loadPilet: PiletLoader;
+  injectPilet?(pilet: Pilet): void;
+  piletApiFallback?: string;
+}
 
 export interface DebuggerOptions {
   createApi: PiletApiCreator;
   loadPilet: PiletLoader;
-  context?: GlobalStateContext;
-  requestPilets: PiletRequester;
+  injectPilet(pilet: Pilet): void;
+  fireEvent(name: string, arg: any): void;
   getDependencies(): AvailableDependencies;
   onChange?(cb: (previous: any, current: any) => void): void;
-}
-
-export interface PiralDebugState {
-  $debug: {
-    visualize: {
-      force: boolean;
-      active: boolean;
-    };
-    route: string;
-  };
-}
-
-declare module 'piral-core/lib/types/custom' {
-  interface PiralCustomState extends PiralDebugState {}
+  getGlobalState(): any;
+  getPilets(): Array<Pilet>;
+  getRoutes(): Array<string>;
+  setPilets(pilets: Array<Pilet>): void;
+  integrate(debug: FC, wrapper: FC): void;
 }

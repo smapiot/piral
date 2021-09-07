@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
-import { BaseComponentProps, useGlobalState } from 'piral-core';
+import { PiletApi } from 'piral-base';
+import { useDebugState } from './state';
 
 interface VisualizerProps {
   pilet: string;
@@ -26,7 +26,6 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
     '#F012BE',
     '#B10DC9',
   ];
-  const location = useLocation();
   const container = React.useRef<HTMLDivElement>();
   const color = React.useMemo(
     () => moduleColor[pilet] || (moduleColor[pilet] = colors[Object.keys(moduleColor).length % colors.length]),
@@ -91,7 +90,7 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
         observer.disconnect();
       };
     }
-  }, [location.key, active, force]);
+  }, [active, force]);
 
   if (active) {
     const rect: React.CSSProperties = {
@@ -126,8 +125,12 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
   return null;
 };
 
-export const VisualizationWrapper: React.FC<BaseComponentProps> = ({ piral, children }) => {
-  const { active, force } = useGlobalState((m) => m.$debug.visualize);
+export interface VisualizationWrapperProps {
+  piral: PiletApi;
+}
+
+export const VisualizationWrapper: React.FC<VisualizationWrapperProps> = ({ piral, children }) => {
+  const { active, force } = useDebugState((m) => m.visualize);
   return (
     <>
       <Visualizer pilet={piral.meta.name} force={force} active={active} />

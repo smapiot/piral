@@ -1,14 +1,8 @@
-import { isfunc, Pilet, PiletApiCreator, PiletLoader, PiletRequester, setupPilet } from 'piral-base';
-
-export interface EmulatorConnectorOptions {
-  createApi: PiletApiCreator;
-  loadPilet: PiletLoader;
-  inject?(pilet: Pilet): void;
-  piletApiFallback?: string;
-}
+import { isfunc, PiletRequester, setupPilet } from 'piral-base';
+import { EmulatorConnectorOptions } from './types';
 
 export function withEmulatorPilets(requestPilets: PiletRequester, options: EmulatorConnectorOptions): PiletRequester {
-  const { loadPilet, createApi, inject, piletApiFallback = '/$pilet-api' } = options;
+  const { loadPilet, createApi, injectPilet, piletApiFallback = '/$pilet-api' } = options;
   // check if pilets should be loaded
   const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
   const noPilets: PiletRequester = () => Promise.resolve([]);
@@ -39,8 +33,8 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
         const meta = JSON.parse(data);
         loadPilet(meta).then((pilet) => {
           try {
-            if (isfunc(inject)) {
-              inject(pilet);
+            if (isfunc(injectPilet)) {
+              injectPilet(pilet);
             }
 
             setupPilet(pilet, createApi);
