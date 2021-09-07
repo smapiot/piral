@@ -37,6 +37,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     shareDependencies = defaultDependencySelector,
     loadPilet,
     loaders,
+    debug,
     apiFactory = defaultApiFactory,
   } = config;
   const globalState = createGlobalState(state);
@@ -60,6 +61,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     shareDependencies,
     strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
     requestPilets,
+    debug,
   });
 
   if (actions) {

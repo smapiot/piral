@@ -8,6 +8,7 @@ import type {
   DefaultLoaderConfig,
   PiletApiCreator,
 } from 'piral-base';
+import { DebuggerExtensionOptions } from 'piral-debug-utils';
 import type { NestedPartial } from './common';
 import type { PiralPlugin } from './plugin';
 import type { GlobalState, GlobalStateContext, PiralDefineActions } from './state';
@@ -96,6 +97,10 @@ export interface PiralStateConfiguration {
    * Optionally, sets up some initial custom actions ⚡️.
    */
   actions?: PiralDefineActions;
+  /**
+   * Optionally, sets up additional configuration for the debug tooling 🤖.
+   */
+  debug?: DebuggerExtensionOptions;
 }
 
 /**

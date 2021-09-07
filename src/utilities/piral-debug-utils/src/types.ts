@@ -43,9 +43,12 @@ export type DebugCustomSetting = (DebugCustomBooleanSetting | DebugCustomNumberS
   label: string;
 };
 
-export interface DebuggerOptions {
-  dependencies: AvailableDependencies;
+export interface DebuggerExtensionOptions {
   customSettings?: Record<string, DebugCustomSetting>;
+}
+
+export interface DebuggerOptions extends DebuggerExtensionOptions {
+  dependencies: AvailableDependencies;
   createApi: PiletApiCreator;
   loadPilet: PiletLoader;
   injectPilet(pilet: Pilet): void;

@@ -1,10 +1,15 @@
 import { addChangeHandler } from '@dbeining/react-atom';
 import { LoadPiletsOptions } from 'piral-base';
-import { installPiralDebug } from 'piral-debug-utils';
+import { installPiralDebug, DebuggerExtensionOptions } from 'piral-debug-utils';
 import { GlobalStateContext } from './lib/types';
 
-export function integrate(context: GlobalStateContext, options: LoadPiletsOptions) {
+export function integrate(
+  context: GlobalStateContext,
+  options: LoadPiletsOptions,
+  debug: DebuggerExtensionOptions = {},
+) {
   installPiralDebug({
+    ...debug,
     createApi: options.createApi,
     loadPilet: options.loadPilet,
     injectPilet: context.injectPilet,
