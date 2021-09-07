@@ -123,7 +123,7 @@ stages:
 
                 git config --global user.name "Piral Release Bot"
 
-                git checkout $(previewBranch)
+                git checkout $(canaryBranch)
 
                 git checkout -- .
           - task: Yarn@2
@@ -363,7 +363,7 @@ stages:
             inputs:
               targetType: inline
               script: >-
-                git push origin $(documentBranch)
+                git push origin $(releaseBranch):$(documentBranch)
 
   - deployment: ReleaseDemoCross
     displayName: Release Demo CrossFx Package
