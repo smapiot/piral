@@ -4,6 +4,9 @@ export const removeIndicator = null;
 // to avoid creating unnecessary empty arrays
 export const none = [];
 
+// to avoid creating unnecessary empty functions
+export const noop = () => {};
+
 export function prependItem<T>(items: Array<T>, item: T) {
   return [item, ...(items || none)];
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PiletApi } from 'piral-base';
+import type { PiletApi } from 'piral-base';
 import { useDebugState } from './state';
 
 interface VisualizerProps {

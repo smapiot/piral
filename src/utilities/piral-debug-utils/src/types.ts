@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { AvailableDependencies, Pilet, PiletApiCreator, PiletLoader, PiletMetadata } from 'piral-base';
+import type { FC } from 'react';
+import type { AvailableDependencies, Pilet, PiletApiCreator, PiletLoader, PiletMetadata } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
   createApi: PiletApiCreator;
@@ -21,8 +21,31 @@ export interface DebugComponents {
   onChange(previous: any, current: any, changed: ChangeSet): void;
 }
 
+export interface DebugCustomBooleanSetting {
+  value: boolean;
+  type: 'boolean';
+  onChange(newValue: boolean, prevValue: boolean): void;
+}
+
+export interface DebugCustomNumberSetting {
+  value: number;
+  type: 'number';
+  onChange(newValue: number, prevValue: number): void;
+}
+
+export interface DebugCustomStringSetting {
+  value: string;
+  type: 'string';
+  onChange(newValue: string, prevValue: string): void;
+}
+
+export type DebugCustomSetting = (DebugCustomBooleanSetting | DebugCustomNumberSetting | DebugCustomStringSetting) & {
+  label: string;
+};
+
 export interface DebuggerOptions {
   dependencies: AvailableDependencies;
+  customSettings?: Record<string, DebugCustomSetting>;
   createApi: PiletApiCreator;
   loadPilet: PiletLoader;
   injectPilet(pilet: Pilet): void;

@@ -3,7 +3,7 @@ import { VisualizationWrapper } from './VisualizationWrapper';
 import { ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
 import { setState, initialSettings } from './state';
-import { DebuggerOptions } from './types';
+import { DebugCustomSetting, DebuggerOptions } from './types';
 
 export function installPiralDebug(options: DebuggerOptions) {
   const {
@@ -18,37 +18,58 @@ export function installPiralDebug(options: DebuggerOptions) {
     dependencies,
     createApi,
     loadPilet,
+    customSettings = {},
   } = options;
   const events = [];
   const legacyBrowser = !new Error().stack;
   const excludedRoutes = [initialSettings.cataloguePath];
   const selfSource = 'piral-debug-api';
   const debugApiVersion = 'v1';
-  const settings = {
+  const settings: Record<string, DebugCustomSetting> = {
+    ...customSettings,
     viewState: {
       value: initialSettings.viewState,
       type: 'boolean',
       label: 'State container logging',
+      onChange(value) {
+        sessionStorage.setItem('dbg:view-state', value ? 'on' : 'off');
+      },
     },
     loadPilets: {
       value: initialSettings.loadPilets,
       type: 'boolean',
       label: 'Load available pilets',
+      onChange(value) {
+        sessionStorage.setItem('dbg:load-pilets', value ? 'on' : 'off');
+      },
     },
     hardRefresh: {
       value: initialSettings.hardRefresh,
       type: 'boolean',
       label: 'Full refresh on change',
+      onChange(value) {
+        sessionStorage.setItem('dbg:hard-refresh', value ? 'on' : 'off');
+      },
     },
     viewOrigins: {
       value: initialSettings.viewOrigins,
       type: 'boolean',
       label: 'Visualize component origins',
+      onChange(value, prev) {
+        sessionStorage.setItem('dbg:view-origins', value ? 'on' : 'off');
+
+        if (prev !== value) {
+          updateVisualize(value);
+        }
+      },
     },
     extensionCatalogue: {
       value: initialSettings.extensionCatalogue,
       type: 'boolean',
       label: 'Enable extension catalogue',
+      onChange(value) {
+        sessionStorage.setItem('dbg:extension-catalogue', value ? 'on' : 'off');
+      },
     },
   };
 
@@ -63,26 +84,59 @@ export function installPiralDebug(options: DebuggerOptions) {
     );
   };
 
-  const setSetting = (setting: { value: any }, key: string, value: any) => {
-    setting.value = value;
-    sessionStorage.setItem(key, value ? 'on' : 'off');
+  const getSettings = () => {
+    return Object.keys(settings).reduce((obj, key) => {
+      const setting = settings[key];
+
+      if (
+        setting &&
+        typeof setting === 'object' &&
+        typeof setting.label === 'string' &&
+        typeof setting.type === 'string' &&
+        ['boolean', 'string', 'number'].includes(typeof setting.value)
+      ) {
+        obj[key] = {
+          label: setting.label,
+          value: setting.value,
+          type: setting.type,
+        };
+      }
+
+      return obj;
+    }, {});
   };
 
   const updateSettings = (values: Record<string, any>) => {
-    const prev = settings.viewOrigins.value;
-    setSetting(settings.viewState, 'dbg:view-state', values.viewState);
-    setSetting(settings.loadPilets, 'dbg:load-pilets', values.loadPilets);
-    setSetting(settings.hardRefresh, 'dbg:hard-refresh', values.hardRefresh);
-    setSetting(settings.viewOrigins, 'dbg:view-origins', values.viewOrigins);
-    setSetting(settings.extensionCatalogue, 'dbg:extension-catalogue', values.extensionCatalogue);
-    const curr = settings.viewOrigins.value;
+    Object.keys(values).forEach((key) => {
+      const setting = settings[key];
 
-    if (prev !== curr) {
-      updateVisualize(curr);
-    }
+      switch (setting.type) {
+        case 'boolean': {
+          const prev = setting.value;
+          const value = values[key];
+          setting.value = value;
+          setting.onChange(value, prev);
+          break;
+        }
+        case 'number': {
+          const prev = setting.value;
+          const value = values[key];
+          setting.value = value;
+          setting.onChange(value, prev);
+          break;
+        }
+        case 'string': {
+          const prev = setting.value;
+          const value = values[key];
+          setting.value = value;
+          setting.onChange(value, prev);
+          break;
+        }
+      }
+    });
 
     sendMessage({
-      settings,
+      settings: getSettings(),
       type: 'settings',
     });
   };
@@ -178,6 +232,7 @@ export function installPiralDebug(options: DebuggerOptions) {
     const container = decycle(getGlobalState());
     const routes = getRoutes().filter((r) => !excludedRoutes.includes(r));
     const extensions = getExtensions();
+    const settings = getSettings();
     const pilets = getPilets().map((pilet: any) => ({
       name: pilet.name,
       version: pilet.version,
@@ -227,6 +282,7 @@ export function installPiralDebug(options: DebuggerOptions) {
         loadPilets: sessionStorage.getItem('dbg:load-pilets') === 'on',
         hardRefresh: sessionStorage.getItem('dbg:hard-refresh') === 'on',
         viewOrigins: sessionStorage.getItem('dbg:view-origins') === 'on',
+        extensionCatalogue: sessionStorage.getItem('dbg:extension-catalogue') !== 'off',
       });
     }
   });
@@ -313,7 +369,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       if (changed.extensions) {
         sendMessage({
           type: 'extensions',
-          routes: getExtensions(),
+          extensions: getExtensions(),
         });
       }
 
