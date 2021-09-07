@@ -1,4 +1,4 @@
-import { resolve, join } from 'path';
+import { resolve, join, posix } from 'path';
 import { renderFile } from 'ejs';
 
 export interface TemplateFile {
@@ -21,7 +21,7 @@ function fillTemplate(name: string, data: any = {}) {
 
 export function getPackageJsonWithSource(targetDir: string, fileName: string) {
   return Promise.resolve({
-    content: Buffer.from(`{"source":${JSON.stringify(join(targetDir, fileName))}}`, 'utf8'),
+    content: Buffer.from(`{"source":${JSON.stringify(posix.join(targetDir, fileName))}}`, 'utf8'),
     path: 'package.json',
   });
 }

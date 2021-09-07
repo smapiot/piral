@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.13.8 (tbd)
+
+* Fixed circular structure support in debugging utils (#409)
+
 ## 0.13.7 (September 1, 2021)
 
 * Fixed disabling logging of view state changes (#404)
