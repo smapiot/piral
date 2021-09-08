@@ -85,7 +85,7 @@ function getPiletSpecMeta(target: string, basePath: string) {
 function fillPiletMeta(pilet: Pilet, basePath: string) {
   const { root, bundler } = pilet;
   const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-  const file = bundler.bundle.name.replace(/^\//, '');
+  const file = bundler.bundle.name.replace(/^[\/\\]/, '');
   const target = join(bundler.bundle.dir, file);
   const url = new URL(file, basePath);
   const meta = {
