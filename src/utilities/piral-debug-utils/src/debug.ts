@@ -10,12 +10,12 @@ export function installPiralDebug(options: DebuggerOptions) {
     injectPilet,
     getGlobalState,
     getExtensions,
+    getDependencies,
     getRoutes,
     getPilets,
     setPilets,
     fireEvent,
     integrate,
-    dependencies,
     createApi,
     loadPilet,
     customSettings = {},
@@ -222,7 +222,6 @@ export function installPiralDebug(options: DebuggerOptions) {
       compat: process.env.DEBUG_PIRAL,
     },
     pilets: {
-      dependencies,
       loadPilet,
       createApi,
     },
@@ -233,6 +232,7 @@ export function installPiralDebug(options: DebuggerOptions) {
     const routes = getRoutes().filter((r) => !excludedRoutes.includes(r));
     const extensions = getExtensions();
     const settings = getSettings();
+    const dependencies = getDependencies();
     const pilets = getPilets().map((pilet: any) => ({
       name: pilet.name,
       version: pilet.version,
@@ -245,7 +245,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       version: debugApi.instance.version,
       kind: debugApiVersion,
       mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-      capabilities: ['events', 'container', 'routes', 'pilets', 'settings', 'extensions'],
+      capabilities: ['events', 'container', 'routes', 'pilets', 'settings', 'extensions', 'dependencies'],
       state: {
         routes,
         pilets,
@@ -253,6 +253,7 @@ export function installPiralDebug(options: DebuggerOptions) {
         settings,
         events,
         extensions,
+        dependencies,
       },
     });
   };
@@ -324,29 +325,35 @@ export function installPiralDebug(options: DebuggerOptions) {
       '*': VisualizationWrapper,
     },
     onChange(previous, current, changed) {
-      if (settings.viewState.value) {
-        const infos = new Error().stack;
+      if (changed.state) {
+        if (settings.viewState.value) {
+          if (!legacyBrowser) {
+            // Chrome, Firefox, ... (full capability)
+            const err = new Error();
+            const lastLine = err.stack.split('\n')[7];
 
-        if (infos) {
-          // Chrome, Firefox, ... (full capability)
-          const lastLine = infos.split('\n')[7];
-
-          if (lastLine) {
-            const action = lastLine.replace(/^\s+at\s+(Atom\.|Object\.)?/, '');
-            console.group(
-              `%c Piral State Change %c ${new Date().toLocaleTimeString()}`,
-              'color: gray; font-weight: lighter;',
-              'color: black; font-weight: bold;',
-            );
-            console.log('%c Previous', `color: #9E9E9E; font-weight: bold`, previous);
-            console.log('%c Action', `color: #03A9F4; font-weight: bold`, action);
-            console.log('%c Next', `color: #4CAF50; font-weight: bold`, current);
-            console.groupEnd();
+            if (lastLine) {
+              const action = lastLine.replace(/^\s+at\s+(Atom\.|Object\.)?/, '');
+              console.group(
+                `%c Piral State Change %c ${new Date().toLocaleTimeString()}`,
+                'color: gray; font-weight: lighter;',
+                'color: black; font-weight: bold;',
+              );
+              console.log('%c Previous', `color: #9E9E9E; font-weight: bold`, previous);
+              console.log('%c Action', `color: #03A9F4; font-weight: bold`, action);
+              console.log('%c Next', `color: #4CAF50; font-weight: bold`, current);
+              console.groupEnd();
+            }
+          } else {
+            // IE 11, ... (does not know colors etc.)
+            console.log('Changed state', previous, current);
           }
-        } else {
-          // IE 11, ... (does not know colors etc.)
-          console.log('Changed state', previous, current);
         }
+
+        sendMessage({
+          type: 'container',
+          container: decycle(getGlobalState()),
+        });
       }
 
       if (changed.pilets) {
@@ -374,10 +381,12 @@ export function installPiralDebug(options: DebuggerOptions) {
         });
       }
 
-      sendMessage({
-        type: 'container',
-        container: decycle(getGlobalState()),
-      });
+      if (changed.dependencies) {
+        sendMessage({
+          type: 'dependencies',
+          dependencies: getDependencies(),
+        });
+      }
     },
   });
 

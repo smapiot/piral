@@ -36,7 +36,14 @@ function createPipe(piral: PiletApi) {
   return ResourceUrlPipe;
 }
 
-function getAnnotations(component: any) {
+interface NgAnnotation {
+  providers: Array<StaticProvider>;
+  declarations: Array<any>;
+  bootstrap: any;
+  selector: string;
+}
+
+function getAnnotations(component: any): Array<NgAnnotation> {
   let annotations = component?.__annotations__;
 
   if (!annotations && typeof Reflect !== 'undefined' && 'getOwnMetadata' in Reflect) {
@@ -166,7 +173,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
     annotation.providers = spread(getComponentProps(props), annotation.providers);
     annotation.declarations = spread([NgExtension, ResourceUrlPipe], annotation.declarations);
 
-    if (Array.isArray(annotation.boostrap) && annotation.bootstrap.length > 0) {
+    if (Array.isArray(annotation.bootstrap) && annotation.bootstrap.length > 0) {
       const [component] = annotation.bootstrap;
       setComponentSelector(component, node.id);
       annotation.bootstrap = [component];

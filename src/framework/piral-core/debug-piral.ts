@@ -14,7 +14,9 @@ export function integrate(
     loadPilet: options.loadPilet,
     injectPilet: context.injectPilet,
     fireEvent: context.emit,
-    dependencies: options.dependencies,
+    getDependencies() {
+      return Object.keys(options.dependencies);
+    },
     getExtensions() {
       return context.readState((s) => Object.keys(s.registry.extensions));
     },
@@ -54,14 +56,17 @@ export function integrate(
           },
         },
       }));
+
       addChangeHandler(context.state, 'debugging', ({ previous, current }) => {
         const pilets = current.modules !== previous.modules;
         const pages = current.registry.pages !== previous.registry.pages || current.routes !== previous.routes;
         const extensions = current.registry.extensions !== previous.registry.extensions;
+        const state = current !== previous;
         dbg.onChange(previous, current, {
           pilets,
           pages,
           extensions,
+          state,
         });
       });
     },

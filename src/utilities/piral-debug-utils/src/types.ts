@@ -9,9 +9,11 @@ export interface EmulatorConnectorOptions {
 }
 
 export interface ChangeSet {
-  pilets: boolean;
-  extensions: boolean;
-  pages: boolean;
+  state?: boolean;
+  pages?: boolean;
+  pilets?: boolean;
+  extensions?: boolean;
+  dependencies?: boolean;
 }
 
 export interface DebugComponents {
@@ -48,7 +50,7 @@ export interface DebuggerExtensionOptions {
 }
 
 export interface DebuggerOptions extends DebuggerExtensionOptions {
-  dependencies: AvailableDependencies;
+  getDependencies(): Array<string>;
   createApi: PiletApiCreator;
   loadPilet: PiletLoader;
   injectPilet(pilet: Pilet): void;
