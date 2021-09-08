@@ -244,6 +244,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       name: debugApi.instance.name,
       version: debugApi.instance.version,
       kind: debugApiVersion,
+      mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
       capabilities: ['events', 'container', 'routes', 'pilets', 'settings', 'extensions'],
       state: {
         routes,
