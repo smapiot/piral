@@ -45,6 +45,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     devDependencies,
     peerModules,
     root,
+    importmap,
     ignored: _0,
     emulator: _1,
     ...data
@@ -64,6 +65,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     dependencies,
     devDependencies,
     peerDependencies,
+    importmap,
     peerModules,
     root,
     data,

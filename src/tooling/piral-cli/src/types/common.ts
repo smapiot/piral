@@ -76,6 +76,14 @@ export interface RuleContext {
   peerDependencies: Record<string, string>;
 }
 
+export interface SharedDependency {
+  id: string;
+  name: string;
+  ref: string;
+  type: 'local' | 'remote';
+  entry: string;
+}
+
 export interface RuleRunner<T extends RuleContext> {
   (context: T, options: any): void | Promise<void>;
 }
@@ -92,6 +100,7 @@ export interface PiralRuleContext extends RuleContext {
 export interface PiletRuleContext extends RuleContext {
   data: PiralData;
   peerModules: Array<string>;
+  importmap: Array<SharedDependency>;
 }
 
 export interface PiralData {

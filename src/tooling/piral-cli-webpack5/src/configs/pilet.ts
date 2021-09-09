@@ -1,6 +1,6 @@
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { PiletSchemaVersion } from 'piral-cli';
+import type { PiletSchemaVersion, SharedDependency } from 'piral-cli';
 import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration } from './common';
 import { piletWebpackConfigEnhancer } from '../enhancers/pilet-webpack-config-enhancer';
 
@@ -9,6 +9,7 @@ export async function getPiletConfig(
   dist: string,
   filename: string,
   externals: Array<string>,
+  importmap: Array<SharedDependency> = [],
   piral: string,
   schema: PiletSchemaVersion,
   develop = false,
@@ -29,6 +30,7 @@ export async function getPiletConfig(
     version,
     entry,
     externals,
+    importmap,
     schema,
     filename,
     variables: getVariables(),

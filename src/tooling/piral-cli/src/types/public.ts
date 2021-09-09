@@ -6,6 +6,7 @@ import {
   Bundler,
   BundleDetails,
   LogLevels,
+  SharedDependency,
   ReleaseProvider,
 } from './common';
 
@@ -108,6 +109,7 @@ export interface DebugPiletParameters extends BaseBundleParameters {
   piral: string;
   hmr: boolean;
   externals: Array<string>;
+  importmap: Array<SharedDependency>;
   targetDir: string;
   entryModule: string;
   logLevel: LogLevels;
@@ -120,6 +122,7 @@ export interface BuildPiletParameters extends BaseBundleParameters {
   contentHash: boolean;
   minify: boolean;
   externals: Array<string>;
+  importmap: Array<SharedDependency>;
   targetDir: string;
   outFile: string;
   outDir: string;

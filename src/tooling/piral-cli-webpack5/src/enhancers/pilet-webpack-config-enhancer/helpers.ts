@@ -1,4 +1,5 @@
-import { join, resolve } from 'path';
+import { join } from 'path';
+import { SharedDependency } from 'piral-cli';
 import { Configuration } from 'webpack';
 
 export function getVariables(name: string, version: string, env: string): Record<string, string> {
@@ -22,10 +23,6 @@ export function getDefineVariables(variables: Record<string, string>) {
   }, {});
 }
 
-interface Importmap {
-  imports: Record<string, string>;
-}
-
 export function getExternals(piral: string) {
   const shellPkg = require(`${piral}/package.json`);
   const piralExternals = shellPkg.pilets?.externals ?? [];
@@ -43,19 +40,17 @@ export function getExternals(piral: string) {
   ];
 }
 
-export function getDependencies(compilerOptions: Configuration) {
-  const packageDetails = require(resolve(process.cwd(), 'package.json'));
-  const importmap: Importmap = packageDetails.importmap;
+export function getDependencies(importmap: Array<SharedDependency>, compilerOptions: Configuration) {
   const dependencies = {};
-  const sharedImports = importmap?.imports;
 
-  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry && typeof sharedImports === 'object') {
-    for (const depName of Object.keys(sharedImports)) {
-      const details = require(`${depName}/package.json`);
-      const depId = `${depName}@${details.version}`;
-      dependencies[depId] = `${depName}.js`;
-      compilerOptions.externals[depName] = depId;
-      compilerOptions.entry[depName] = resolve(process.cwd(), sharedImports[depName]);
+  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
+    for (const dep of importmap) {
+      dependencies[dep.id] = dep.ref;
+      compilerOptions.externals[dep.name] = dep.id;
+
+      if (dep.type === 'local') {
+        compilerOptions.entry[dep.ref.replace(/\.js$/, '')] = dep.entry;
+      }
     }
   }
 

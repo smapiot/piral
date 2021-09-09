@@ -1,5 +1,5 @@
 import * as SystemJSPublicPathWebpackPlugin from 'systemjs-webpack-interop/SystemJSPublicPathWebpackPlugin';
-import { resolve } from 'path';
+import type { SharedDependency } from 'piral-cli';
 import { Configuration, BannerPlugin, DefinePlugin } from 'webpack';
 import {
   setEnvironment,
@@ -45,6 +45,10 @@ export interface PiletWebpackConfigEnhancerOptions {
    * Additional environment variables to define.
    */
   variables?: Record<string, string>;
+  /**
+   * The shared dependencies to consider.
+   */
+  importmap: Array<SharedDependency>;
 }
 
 interface SchemaEnhancerOptions {
@@ -53,6 +57,7 @@ interface SchemaEnhancerOptions {
   file: string;
   variables: Record<string, string>;
   externals: Array<string>;
+  importmap: Array<SharedDependency>;
 }
 
 function piletVxWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
@@ -96,14 +101,14 @@ function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
 }
 
 function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
-  const { name, variables, externals, file } = options;
+  const { name, variables, externals, file, importmap } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
 
   withExternals(compiler, externals);
   setEnvironment(variables);
 
-  const dependencies = getDependencies(compiler);
+  const dependencies = getDependencies(importmap, compiler);
   const plugins = [];
 
   plugins.push(
@@ -126,13 +131,14 @@ function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
 }
 
 export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOptions) => (compiler: Configuration) => {
-  const { piral, externals = getExternals(piral), schema } = details;
+  const { piral, externals = getExternals(piral), schema, importmap } = details;
   const environment = process.env.NODE_ENV || 'development';
   const options: SchemaEnhancerOptions = {
     entry: details.entry,
     externals,
     file: details.filename,
     name: details.name,
+    importmap,
     variables: {
       ...getVariables(details.name, details.version, environment),
       ...details.variables,

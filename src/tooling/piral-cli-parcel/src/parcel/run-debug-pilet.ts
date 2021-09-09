@@ -1,4 +1,4 @@
-import { LogLevels } from 'piral-cli';
+import type { LogLevels, SharedDependency } from 'piral-cli';
 import { setupBundler, postProcess } from './bundler';
 import { setStandardEnvs } from 'piral-cli/utils';
 
@@ -9,6 +9,7 @@ async function run(
   autoInstall: boolean,
   cacheDir: string,
   externals: Array<string>,
+  importmap: Array<SharedDependency>,
   targetDir: string,
   entryModule: string,
   logLevel: LogLevels,
@@ -21,6 +22,7 @@ async function run(
   const bundler = setupBundler({
     type: 'pilet',
     externals,
+    importmap,
     targetDir,
     entryModule,
     config: {
@@ -64,6 +66,7 @@ process.on('message', async (msg) => {
         msg.autoInstall,
         msg.cacheDir,
         msg.externals,
+        msg.importmap,
         msg.targetDir,
         msg.entryModule,
         msg.logLevel,
@@ -76,7 +79,7 @@ process.on('message', async (msg) => {
 
       if (bundler) {
         bundler.on('bundled', async (bundle) => {
-          const requireRef = await postProcess(bundle, msg.version, false, {});
+          const requireRef = await postProcess(bundle, msg.version, false, msg.externals, msg.importmap);
 
           if (msg.hmr) {
             process.send({

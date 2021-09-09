@@ -168,7 +168,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const pilets = await Promise.all(
     allEntries.map(async (entryModule) => {
       const targetDir = dirname(entryModule);
-      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator } = await retrievePiletData(
+      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } = await retrievePiletData(
         targetDir,
         app,
       );
@@ -192,6 +192,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           hmr,
           externals,
           targetDir,
+          importmap,
           entryModule: `./${relative(root, entryModule)}`,
           logLevel,
           version: schemaVersion,

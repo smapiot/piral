@@ -125,7 +125,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const entryModule = allEntries.shift();
   const targetDir = dirname(entryModule);
-  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored } = await retrievePiletData(
+  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored, importmap } = await retrievePiletData(
     targetDir,
     app,
   );
@@ -149,6 +149,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       minify,
       externals,
       targetDir,
+      importmap,
       outFile: basename(target),
       outDir,
       entryModule: `./${relative(root, entryModule)}`,

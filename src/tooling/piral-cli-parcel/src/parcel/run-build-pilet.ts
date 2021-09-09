@@ -1,5 +1,5 @@
 import { dirname, basename } from 'path';
-import { LogLevels, PiletSchemaVersion } from 'piral-cli';
+import type { LogLevels, PiletSchemaVersion, SharedDependency } from 'piral-cli';
 import { setStandardEnvs, removeDirectory } from 'piral-cli/utils';
 import { setupBundler, postProcess } from './bundler';
 
@@ -13,6 +13,7 @@ async function run(
   minify: boolean,
   cacheDir: string,
   externals: Array<string>,
+  importmap: Array<SharedDependency>,
   targetDir: string,
   outFile: string,
   outDir: string,
@@ -32,6 +33,7 @@ async function run(
   const bundler = setupBundler({
     type: 'pilet',
     externals,
+    importmap,
     targetDir,
     entryModule,
     config: {
@@ -50,7 +52,7 @@ async function run(
   });
 
   const bundle = await bundler.bundle();
-  await postProcess(bundle, version, minify, {});
+  await postProcess(bundle, version, minify, externals, importmap);
   return bundle.name;
 }
 
@@ -67,6 +69,7 @@ process.on('message', async (msg) => {
         msg.minify,
         msg.cacheDir,
         msg.externals,
+        msg.importmap,
         msg.targetDir,
         msg.outFile,
         msg.outDir,

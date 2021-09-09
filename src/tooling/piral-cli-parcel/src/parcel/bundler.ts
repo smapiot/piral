@@ -2,7 +2,7 @@ import * as Bundler from 'parcel-bundler';
 import extendBundlerWithAtAlias = require('parcel-plugin-at-alias');
 import extendBundlerWithCodegen = require('parcel-plugin-codegen');
 import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
-import { PiletSchemaVersion } from 'piral-cli';
+import type { PiletSchemaVersion, SharedDependency } from 'piral-cli';
 import { log } from 'piral-cli/utils';
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
 import { SourceMapConsumer, SourceMapGenerator } from 'source-map';
@@ -24,9 +24,14 @@ export function setupBundler(setup: BundlerSetup) {
   }
 
   if (setup.type === 'pilet') {
-    const { entryModule, targetDir, externals, config } = setup;
+    const { entryModule, targetDir, externals, config, importmap } = setup;
+    const deps = externals.concat(importmap.map(m => m.name));
+    const aliases = importmap.reduce((obj, dep) => {
+      obj[dep.name] = dep.id;
+      return obj;
+    }, {});
     bundler = new Bundler(entryModule, extendConfig(config));
-    const resolver = combineExternals(targetDir, [], externals, {});
+    const resolver = combineExternals(targetDir, [], deps, aliases);
     extendBundlerWithExternals(bundler, resolver);
   } else {
     const { entryFiles, config } = setup;
@@ -151,44 +156,28 @@ async function applySourceMapShift(sourceFile: string, lineOffset = 1): Promise<
   return JSON.stringify(outgoingSourceMap);
 }
 
-interface Importmap {
-  imports: Record<string, string>;
-}
-
-export function getDependencies() {
-  const packageDetails = require(resolve(process.cwd(), 'package.json'));
-  const importmap: Importmap = packageDetails.importmap;
-  const dependencies = {};
-  const sharedImports = importmap?.imports;
-
-  //TODO
-  // if (typeof compilerOptions.entry === 'object' && compilerOptions.entry && typeof sharedImports === 'object') {
-  //   for (const depName of Object.keys(sharedImports)) {
-  //     const details = require(`${depName}/package.json`);
-  //     const depId = `${depName}@${details.version}`;
-  //     dependencies[depId] = `${depName}.js`;
-  //     compilerOptions.externals[depName] = depId;
-  //     compilerOptions.entry[depName] = resolve(process.cwd(), sharedImports[depName]);
-  //   }
-  // }
-
-  return dependencies;
-}
-
 /**
  * Transforms a pilet's bundle to a microfrontend entry module.
  * @param bundle The bundle to transform.
  * @param version The manifest version to create.
+ * @param minified Determines if the bundle should be minified.
+ * @param externals The used externals from the app shell.
+ * @param importmap The importmap for sharing dependencies.
  */
 export async function postProcess(
   bundle: Bundler.ParcelBundle,
   version: PiletSchemaVersion,
   minified: boolean,
-  dependencies: Record<string, string>,
+  externals: Array<string>,
+  importmap: Array<SharedDependency>,
 ) {
   const hash = bundle.getHash();
   const prName = `pr_${hash}`;
   const bundles = gatherJsBundles(bundle);
+  const dependencies = importmap.reduce((obj, dep) => {
+    obj[dep.name] = dep.ref;
+    return obj;
+  }, {});
 
   await Promise.all(
     bundles.map(async ({ src, css, map, parent }) => {
@@ -201,7 +190,8 @@ export async function postProcess(
       const details = {
         prName,
         version,
-        dependencies,
+        externals,
+        importmap,
         marker,
         head,
         map,
@@ -267,7 +257,8 @@ interface WrapDetails {
   minified: boolean;
   prName: string;
   version: PiletSchemaVersion;
-  dependencies: Record<string, string>;
+  externals: Array<string>;
+  importmap: Array<SharedDependency>,
   marker: string;
   head: string;
 }
@@ -341,7 +332,8 @@ async function wrapUmd(details: WrapDetails, content: string): Promise<string> {
  * Transforms a pilet's bundle to a SystemJS entry module.
  */
 async function wrapSystemJs(details: WrapDetails, content: string): Promise<string> {
-  const { minified, map, prName, head } = details;
+  const { minified, map, prName, head, importmap, externals } = details;
+  const dependencies = [...externals, ...importmap.map(m => m.id)];
   const originalRequire = minified
     ? '"function"==typeof parcelRequire&&parcelRequire'
     : "typeof parcelRequire === 'function' && parcelRequire";
@@ -352,12 +344,6 @@ async function wrapSystemJs(details: WrapDetails, content: string): Promise<stri
     await writeFileContent(map, result);
   }
 
-  /**
-   * Wrap the JavaScript output bundle in an IIFE, fixing `global` and
-   * `parcelRequire` declaration problems, and preventing `parcelRequire`
-   * from leaking into global (window).
-   * @see https://github.com/parcel-bundler/parcel/issues/1401
-   */
   content = [head, content.split(originalRequire).join(`"function"==typeof global.${prName}&&global.${prName}`)].join(
     '\n',
   );
@@ -366,26 +352,21 @@ async function wrapSystemJs(details: WrapDetails, content: string): Promise<stri
   const sourceMapping = lines.pop();
   const hasSourceMaps = sourceMapping.indexOf('//# sourceMappingURL=') === 0;
 
-  content = `
-    System.register([], function(e,c){
-      var dep;
-      return {
-        setters: [function(_dep){
-          dep = _dep;
-        }],
-        execute: function(_export){
-          _export((function(){
-            //TODO content here
-            ;global.${prName}=parcelRequire}(window, window.${prName}));
-          })());
-        },
-      };
-    });
-  `;
-
   if (!hasSourceMaps) {
     lines.push(sourceMapping);
   }
+
+  const innerContent = lines.join('\n');
+
+  lines.splice(0, lines.length, `
+    System.register(${JSON.stringify(dependencies)},function(){var deps={};var require=function(n){return deps[n];};return {
+      setters:[${dependencies.map(d => `function(_dep){deps[${JSON.stringify(d)}]=_dep}`).join(',')}],
+      execute:function(_export){var module={exports:{}};
+        ${innerContent};global.${prName}=parcelRequire}(window, window.${prName}));
+      _export(module.exports);
+      },
+    };
+  });`);
 
   if (hasSourceMaps) {
     lines.push(sourceMapping);
