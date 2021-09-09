@@ -1,13 +1,42 @@
 import { resolve } from 'path';
 import { removeDirectory } from 'piral-cli/utils';
-import {
+import type {
   DebugPiletBundlerDefinition,
   DebugPiralBundlerDefinition,
   BuildPiletBundlerDefinition,
   BuildPiralBundlerDefinition,
   WatchPiralBundlerDefinition,
+  LogLevels,
+  PiletSchemaVersion,
+  SharedDependency,
 } from 'piral-cli';
 import { callDynamic, callStatic, defaultCacheDir } from './parcel';
+
+interface BuildDependencyParameters {
+  externals: Array<string>;
+  importmap: Array<SharedDependency>;
+  targetDir: string;
+  entryModule: string;
+  logLevel: LogLevels;
+  version: PiletSchemaVersion;
+}
+
+async function buildDependencies(args: BuildDependencyParameters, cacheDir: string) {
+  for (const dependency of args.importmap) {
+    if (dependency.type === 'local') {
+      await callStatic('build-dependency', {
+        ...args,
+        name: dependency.id,
+        optimizeModules: false,
+        outFile: dependency.ref,
+        entryModule: dependency.entry,
+        importmap: [],
+        _: {},
+        cacheDir,
+      } as any);
+    }
+  }
+}
 
 export const debugPiral: DebugPiralBundlerDefinition = {
   flags(argv) {
@@ -115,6 +144,8 @@ export const debugPilet: DebugPiletBundlerDefinition = {
       autoInstall,
     });
 
+    await buildDependencies(args, cacheDir);
+
     return bundler;
   },
 };
@@ -145,6 +176,8 @@ export const buildPilet: BuildPiletBundlerDefinition = {
       detailedReport,
       scopeHoist,
     });
+
+    await buildDependencies(args, cache);
 
     return bundler.bundle;
   },

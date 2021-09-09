@@ -28,4 +28,12 @@ export interface PiletBundlerSetup {
   config: ParcelConfig;
 }
 
-export type BundlerSetup = PiralBundlerSetup | PiletBundlerSetup;
+export interface DependencyBundlerSetup {
+  type: 'dependency';
+  targetDir: string;
+  externals: Array<string>;
+  entryModule: string;
+  config: ParcelConfig;
+}
+
+export type BundlerSetup = PiralBundlerSetup | PiletBundlerSetup | DependencyBundlerSetup;

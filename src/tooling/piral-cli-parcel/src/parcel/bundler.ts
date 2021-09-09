@@ -1,7 +1,6 @@
 import * as Bundler from 'parcel-bundler';
 import extendBundlerWithAtAlias = require('parcel-plugin-at-alias');
 import extendBundlerWithCodegen = require('parcel-plugin-codegen');
-import extendBundlerWithImportMaps = require('parcel-plugin-import-maps');
 import type { PiletSchemaVersion, SharedDependency } from 'piral-cli';
 import { log } from 'piral-cli/utils';
 import { extendBundlerWithExternals, combineExternals } from 'parcel-plugin-externals/utils';
@@ -15,7 +14,6 @@ let original: any;
 
 export function setupBundler(setup: BundlerSetup) {
   const proto = Bundler.prototype as any;
-  let bundler: Bundler;
 
   if (!original) {
     original = proto.getLoadedAsset;
@@ -23,25 +21,33 @@ export function setupBundler(setup: BundlerSetup) {
     proto.getLoadedAsset = original;
   }
 
-  if (setup.type === 'pilet') {
-    const { entryModule, targetDir, externals, config, importmap } = setup;
-    const deps = externals.concat(importmap.map(m => m.name));
-    const aliases = importmap.reduce((obj, dep) => {
-      obj[dep.name] = dep.id;
-      return obj;
-    }, {});
-    bundler = new Bundler(entryModule, extendConfig(config));
-    const resolver = combineExternals(targetDir, [], deps, aliases);
-    extendBundlerWithExternals(bundler, resolver);
-  } else {
-    const { entryFiles, config } = setup;
-    bundler = new Bundler(entryFiles, extendConfig(config));
+  switch (setup.type) {
+    case 'pilet': {
+      const { entryModule, targetDir, externals, config, importmap } = setup;
+      const deps = externals.concat(importmap.map((m) => m.name));
+      const bundler = new Bundler(entryModule, extendConfig(config));
+      const resolver = combineExternals(targetDir, [], deps, {});
+      extendBundlerWithExternals(bundler, resolver);
+      extendBundlerWithAtAlias(bundler);
+      extendBundlerWithCodegen(bundler);
+      return bundler;
+    }
+    case 'piral': {
+      const { entryFiles, config } = setup;
+      const bundler = new Bundler(entryFiles, extendConfig(config));
+      extendBundlerWithAtAlias(bundler);
+      extendBundlerWithCodegen(bundler);
+      return bundler;
+    }
+    case 'dependency': {
+      const { entryModule, targetDir, externals, config } = setup;
+      const bundler = new Bundler(entryModule, extendConfig(config));
+      const resolver = combineExternals(targetDir, [], externals, {});
+      extendBundlerWithExternals(bundler, resolver);
+      extendBundlerWithCodegen(bundler);
+      return bundler;
+    }
   }
-
-  extendBundlerWithAtAlias(bundler);
-  extendBundlerWithCodegen(bundler);
-  extendBundlerWithImportMaps(bundler);
-  return bundler;
 }
 
 export interface BundleSource {
@@ -86,6 +92,21 @@ export function gatherJsBundles(
   return gatheredBundles;
 }
 
+function gatherExternals(bundle: Bundler.ParcelBundle, gatheredExternals: Array<string> = []) {
+  if (bundle.type === 'external') {
+    const parts = bundle.name.split('/').pop().split('.');
+    parts.pop();
+    parts.pop();
+    gatheredExternals.push(parts.join('.'));
+  }
+
+  for (const childBundle of bundle.childBundles) {
+    gatherExternals(childBundle, gatheredExternals);
+  }
+
+  return gatheredExternals;
+}
+
 const bundleUrlRef = '__bundleUrl__';
 const piletMarker = '//@pilet v:';
 const preamble = `!(function(global,parcelRequire){'use strict';`;
@@ -99,7 +120,7 @@ function isFile(bundleDir: string, name: string) {
   return existsSync(path) && statSync(path).isFile();
 }
 
-function getScriptHead(version: PiletSchemaVersion, prName: string, dependencies: Record<string, string>): string {
+function getScriptHead(version: PiletSchemaVersion, prName: string, importmap: Array<SharedDependency>): string {
   switch (version) {
     case 'none':
       return `\n${initializer}`;
@@ -108,10 +129,15 @@ function getScriptHead(version: PiletSchemaVersion, prName: string, dependencies
     case 'v1': // currentScript
       return `${piletMarker}1(${prName})\n${initializer}${insertScript}`;
     case 'v2': // SystemJS
-      return `${piletMarker}2(${prName},${JSON.stringify(dependencies)})`;
+      return `${piletMarker}2(${prName},${JSON.stringify(
+        importmap.reduce((obj, dep) => {
+          obj[dep.id] = dep.ref;
+          return obj;
+        }, {}),
+      )})`;
     default:
       log('invalidSchemaVersion_0171', version, ['v0', 'v1', 'v2']);
-      return getScriptHead('v0', prName, dependencies);
+      return getScriptHead('v0', prName, importmap);
   }
 }
 
@@ -161,46 +187,65 @@ async function applySourceMapShift(sourceFile: string, lineOffset = 1): Promise<
  * @param bundle The bundle to transform.
  * @param version The manifest version to create.
  * @param minified Determines if the bundle should be minified.
- * @param externals The used externals from the app shell.
  * @param importmap The importmap for sharing dependencies.
  */
 export async function postProcess(
   bundle: Bundler.ParcelBundle,
+  name: string,
   version: PiletSchemaVersion,
   minified: boolean,
-  externals: Array<string>,
-  importmap: Array<SharedDependency>,
+  importmap: Array<SharedDependency> | true,
 ) {
-  const hash = bundle.getHash();
-  const prName = `pr_${hash}`;
+  //const hash = bundle.getHash();
+  const prName = `parcelChunkpr_${name.replace(/\W/gi, '')}`;
   const bundles = gatherJsBundles(bundle);
-  const dependencies = importmap.reduce((obj, dep) => {
-    obj[dep.name] = dep.ref;
-    return obj;
-  }, {});
+  const externals = gatherExternals(bundle);
 
-  await Promise.all(
-    bundles.map(async ({ src, css, map, parent }) => {
-      const root = parent === undefined;
-      const head = root ? getScriptHead(version, prName, dependencies) : initializer;
-      const marker = root ? piletMarker : head;
-      const originalContent = await readFileContent(src);
-      const refAdjustedContent = replaceAssetRefs(src, originalContent);
-      const adjustedContent = includeCssLink(css, refAdjustedContent);
-      const details = {
-        prName,
-        version,
-        externals,
-        importmap,
-        marker,
-        head,
-        map,
-        minified,
-      };
-      const wrappedContent = await wrapJsBundle(details, adjustedContent);
-      await writeFileContent(src, wrappedContent);
-    }),
-  );
+  if (importmap === true) {
+    await Promise.all(
+      bundles.map(async ({ src, map, parent }) => {
+        const root = parent === undefined;
+        const originalContent = await readFileContent(src);
+        const refAdjustedContent = replaceAssetRefs(src, originalContent);
+        const details = {
+          prName,
+          version,
+          externals,
+          importmap: [],
+          head: '',
+          map,
+          minified,
+          root,
+        };
+        const wrappedContent = await wrapSystemJs(details, refAdjustedContent);
+        await writeFileContent(src, wrappedContent);
+      }),
+    );
+  } else {
+    await Promise.all(
+      bundles.map(async ({ src, css, map, parent }) => {
+        const root = parent === undefined;
+        const head = root ? getScriptHead(version, prName, importmap) : initializer;
+        const marker = root ? piletMarker : head;
+        const originalContent = await readFileContent(src);
+        const refAdjustedContent = replaceAssetRefs(src, originalContent);
+        const adjustedContent = includeCssLink(css, refAdjustedContent);
+        const details = {
+          prName,
+          version,
+          externals,
+          importmap,
+          marker,
+          head,
+          map,
+          minified,
+          root,
+        };
+        const wrappedContent = await wrapJsBundle(details, adjustedContent);
+        await writeFileContent(src, wrappedContent);
+      }),
+    );
+  }
 
   return prName;
 }
@@ -258,20 +303,21 @@ interface WrapDetails {
   prName: string;
   version: PiletSchemaVersion;
   externals: Array<string>;
-  importmap: Array<SharedDependency>,
-  marker: string;
+  importmap: Array<SharedDependency>;
+  marker?: string;
   head: string;
+  root: boolean;
 }
 
 async function wrapJsBundle(details: WrapDetails, content: string) {
-  const { version, marker } = details;
+  const { version, marker, root } = details;
 
   /**
    * Only happens in (pilet) debug mode:
    * Untouched bundles are not rewritten so we ignore them.
    */
   if (!content.startsWith(marker)) {
-    switch (version) {
+    switch (root && version) {
       case 'v2':
         return await wrapSystemJs(details, content);
       default:
@@ -333,22 +379,21 @@ async function wrapUmd(details: WrapDetails, content: string): Promise<string> {
  */
 async function wrapSystemJs(details: WrapDetails, content: string): Promise<string> {
   const { minified, map, prName, head, importmap, externals } = details;
-  const dependencies = [...externals, ...importmap.map(m => m.id)];
+  const dependencies = externals.map((depName) => importmap.find((i) => i.name === depName)?.id ?? depName);
   const originalRequire = minified
     ? '"function"==typeof parcelRequire&&parcelRequire'
     : "typeof parcelRequire === 'function' && parcelRequire";
 
   if (map) {
-    const offset = head.split('\n').length;
+    const offset = head.split('\n').length + 3;
     const result = await applySourceMapShift(map, offset);
     await writeFileContent(map, result);
   }
 
-  content = [head, content.split(originalRequire).join(`"function"==typeof global.${prName}&&global.${prName}`)].join(
-    '\n',
-  );
-
-  const lines = content.split('\n');
+  const lines = content
+    .split(originalRequire)
+    .join(`"function"==typeof global.${prName}&&global.${prName}`)
+    .split('\n');
   const sourceMapping = lines.pop();
   const hasSourceMaps = sourceMapping.indexOf('//# sourceMappingURL=') === 0;
 
@@ -357,16 +402,25 @@ async function wrapSystemJs(details: WrapDetails, content: string): Promise<stri
   }
 
   const innerContent = lines.join('\n');
+  const modDeps = JSON.stringify(dependencies);
+  const init = externals.map(e => `${JSON.stringify(e)}:{}`).join(',');
+  const check = `var e=new Error("Cannot find module '"+n+"'");e.code='MODULE_NOT_FOUND';throw e`;
+  const getters = `var _deps={${init}};var require=function(n){var d=_deps[n];if(!d){${check}} return d}`;
+  const setters = externals.map((d) => `function(_dep){_deps[${JSON.stringify(d)}]=_dep}`).join(',');
+  const execute = `function(){var module={exports:{}};var exports=module.exports;
+${initializer}${innerContent};global.${prName}=parcelRequire}(window,window.${prName}));
+_export(module.exports);
+}`;
 
-  lines.splice(0, lines.length, `
-    System.register(${JSON.stringify(dependencies)},function(){var deps={};var require=function(n){return deps[n];};return {
-      setters:[${dependencies.map(d => `function(_dep){deps[${JSON.stringify(d)}]=_dep}`).join(',')}],
-      execute:function(_export){var module={exports:{}};
-        ${innerContent};global.${prName}=parcelRequire}(window, window.${prName}));
-      _export(module.exports);
-      },
-    };
-  });`);
+  lines.splice(
+    0,
+    lines.length,
+    `${head}
+System.register(${modDeps},function(_export){${getters};return {
+  setters:[${setters}],
+  execute:${execute},
+}});`,
+  );
 
   if (hasSourceMaps) {
     lines.push(sourceMapping);

@@ -79,7 +79,8 @@ process.on('message', async (msg) => {
 
       if (bundler) {
         bundler.on('bundled', async (bundle) => {
-          const requireRef = await postProcess(bundle, msg.version, false, msg.externals, msg.importmap);
+          const name = process.env.BUILD_PCKG_NAME;
+          const requireRef = await postProcess(bundle, name, msg.version, false, msg.importmap);
 
           if (msg.hmr) {
             process.send({
