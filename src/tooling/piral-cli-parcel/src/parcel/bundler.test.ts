@@ -44,6 +44,9 @@ describe('Pilet Build Module', () => {
         childBundles: [],
       } as any,
       'v0',
+      false,
+      [],
+      [],
     );
     expect(writeContent).toBeUndefined();
   });
@@ -60,6 +63,9 @@ describe('Pilet Build Module', () => {
         childBundles: [],
       } as any,
       'v0',
+      false,
+      [],
+      [],
     );
     expect(writeContent).toBeUndefined();
   });
@@ -76,6 +82,9 @@ describe('Pilet Build Module', () => {
         childBundles: [],
       } as any,
       'v0',
+      false,
+      [],
+      [],
     );
     expect(writeContent)
       .toBe(`//@pilet v:0\n!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
@@ -104,6 +113,9 @@ no-js
         ],
       } as any,
       'v0',
+      false,
+      [],
+      [],
     );
     expect(writeContent)
       .toBe(`!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
@@ -123,6 +135,9 @@ no-js
         childBundles: [],
       } as any,
       'v1',
+      false,
+      [],
+      [],
     );
     expect(writeContent)
       .toBe(`//@pilet v:1(pr_abcdef)\n!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;
@@ -151,6 +166,9 @@ no-js
         ],
       } as any,
       'v1',
+      false,
+      [],
+      [],
     );
     expect(writeContent)
       .toBe(`!(function(global,parcelRequire){'use strict';var __bundleUrl__=function(){try{throw new Error}catch(t){const e=(\"\"+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,\"$1\")+\"/\"}return\"/\"}();
