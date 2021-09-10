@@ -5257,7 +5257,7 @@ cheerio-select@^1.5.0:
     domhandler "^4.2.0"
     domutils "^2.7.0"
 
-cheerio@^1.0.0-rc.3:
+cheerio@^1.0.0-rc.10, cheerio@^1.0.0-rc.3:
   version "1.0.0-rc.10"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.10.tgz#2ba3dcdfcc26e7956fc1f440e61d51c643379f3e"
   integrity sha512-g0J0q/O6mW8z5zxQ3A8E8J1hUgp4SMOvEoW/x84OwyHKe/Zccz83PVT4y5Crcr530FV6NgmKI1qvGTKVl9XXVw==
@@ -6294,7 +6294,7 @@ debug@3.1.0:
   dependencies:
     ms "2.0.0"
 
-debug@^3.0.0, debug@^3.1.0:
+debug@^3.1.0:
   version "3.2.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.7.tgz#72580b7e9145fb39b6676f9c5e5fb100b934179a"
   integrity sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==
@@ -8343,7 +8343,7 @@ html-tags@^1.0.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-1.2.0.tgz#c78de65b5663aa597989dd2b7ab49200d7e4db98"
   integrity sha1-x43mW1Zjqll5id0rerSSANfk25g=
 
-html-webpack-plugin@^4.2.0:
+html-webpack-plugin@^4.5.2:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-4.5.2.tgz#76fc83fa1a0f12dd5f7da0404a54e2699666bc12"
   integrity sha512-q5oYdzjKUIPQVjOosjgvCHQOv9Ett9CYYHlgvJeXG0qQvdSojnBq4vAdQBwn1+yGveAwHCoe/rMR86ozX3+c2A==
@@ -8369,13 +8369,13 @@ html-webpack-plugin@^5.2.0:
     pretty-error "^3.0.4"
     tapable "^2.0.0"
 
-html5-entry-webpack-plugin@^0.6.7:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.6.8.tgz#1e965256ca4998ed50189ad9c63fe9dea0d40659"
-  integrity sha512-3hsGm844SpvTayvERi0vACxg3PrvU2JDtec8rYh0Zc8Oa8E/HIebpTOYhpRbeu9f25Pc7U9Yq0NvfE5mEVcygw==
+html5-entry-webpack-plugin@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.7.0.tgz#0fb97d9024ad32c2b04e8ef62f83f659b73c3719"
+  integrity sha512-Xv/V7f+s7+qS7o3kc64xAisye83VPd06NJRwoKKvmLIIb8VwT4RgDdcCKAPZc4AO3MX070swGRsqMXjKR/JqEQ==
   dependencies:
-    cheerio "^1.0.0-rc.3"
-    html-webpack-plugin "^4.2.0"
+    cheerio "^1.0.0-rc.10"
+    html-webpack-plugin "^4.5.2"
 
 htmlnano@^0.2.2:
   version "0.2.9"
@@ -8569,13 +8569,6 @@ import-local@^3.0.2:
   dependencies:
     pkg-dir "^4.2.0"
     resolve-cwd "^3.0.0"
-
-import-maps-webpack-plugin@^0.6.6, import-maps-webpack-plugin@^0.6.7:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/import-maps-webpack-plugin/-/import-maps-webpack-plugin-0.6.8.tgz#266ff754aee075333feddb68366546fb5bba12f3"
-  integrity sha512-g/jLNY4wTxZw2sgmfZUuRl0FuQAqZa6qTdGjbidvPQCnrSEwjxs84ewgAatwD2XFo5pAgikbFN/Z7jkt5SRAfQ==
-  dependencies:
-    webpack-virtual-modules "^0.3.0"
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -12050,10 +12043,10 @@ parcel-bundler@^1.12.4:
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
 
-parcel-codegen-loader@^0.6.6, parcel-codegen-loader@^0.6.7:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.6.8.tgz#bb740e5c6cf3652fe2a883e044b23018530a6fc8"
-  integrity sha512-6sKASIEG1hAvwNe/3ilHewP2eYLn8vxt46X9PbU9ADiW4/ZAGeuWqdAAO4D8OwVMTbqY5u2pfgGnwxjhXc+8cg==
+parcel-codegen-loader@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.7.0.tgz#354f2084fada6e8b9feaab0effbb3fca4bbb7270"
+  integrity sha512-JIbsYsh4ZZbbSy2Ii5ob0vC7Hx4fFYXcaAfU7bbMrwuKU89o8NbawTR3H0aGd1vBF/LwT+XPoCOj9fDjT2+BJA==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
@@ -12072,11 +12065,6 @@ parcel-plugin-externals@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.5.2.tgz#581402610746f1a60d0a4399328d4ad096db6348"
   integrity sha512-ukXPrpkwwWpDu1M/gq31hYl08vGO5wwRk/SdeyKrZmU6AI0cR3OJtHbZ1SleJ34GjGXVzuejvJKTxl9grLGXsw==
-
-parcel-plugin-import-maps@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/parcel-plugin-import-maps/-/parcel-plugin-import-maps-0.3.1.tgz#34d0135b5363324ca8b88e37072848cf5fe37cc3"
-  integrity sha512-P4F3ehheamfwkJx+UoRrr8/7/uWhFDLaOFgrrYhvtdo3irq0WTh2XavMQ48W3G+CUgVosm4hbq8EhGNgGEjHng==
 
 parse-asn1@^5.0.0, parse-asn1@^5.1.5:
   version "5.1.6"
@@ -12302,10 +12290,10 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-pilet-webpack-plugin@^0.6.7:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.6.8.tgz#811b157870fc4d11d1ce32d8c585f00b4fc3d74f"
-  integrity sha512-WjyZU0YpU4JqYnWlg+JEHRKLns5OEtCX612MH07/kU2Kx3CTzQJ0uDD6QiwvBKhsmE0CBjzSOZuexRJiGWRiOA==
+pilet-webpack-plugin@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.7.0.tgz#ef2cd0bdfac64698d51b2339bc8f040bc661e569"
+  integrity sha512-mfxfIcmrp8Pf//IFhrz+74P9KS+xkH9nyp04hSTW/ZNq+CLfTeML0ijgXsyQhcnROMfr+1kGgsTU9872zqgtxg==
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -12346,10 +12334,10 @@ piral-docs-tools@0.10.1:
     stickyfilljs "^2.1.0"
     yaml "^1.10.2"
 
-piral-instance-webpack-plugin@^0.6.7:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.6.8.tgz#e5e32222b10d7340ecce3ece7ec613eff5db5baf"
-  integrity sha512-2E8T7t4pEMP4hA5WuA9VBKwTyXIOHaKvSmEGcTSHUrTwaJiQrtTsiBeDHELVQN6adiUofivjv0ngiSB6Wc9dEw==
+piral-instance-webpack-plugin@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.7.0.tgz#129257febd9565bbb4e73d213c390ca3adee4b11"
+  integrity sha512-Nuh4g68WkocC0MqbtwvC2CIjKXb8HRpBDoxJ90SmDCqXwgJG1EewjP0ZI+vfBQaGGlzK/uRFmcKtuuSPPWr7hQ==
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"
@@ -16578,13 +16566,6 @@ webpack-sources@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.0.tgz#b16973bcf844ebcdb3afde32eda1c04d0b90f89d"
   integrity sha512-fahN08Et7P9trej8xz/Z7eRu8ltyiygEo/hnRi9KqBUs80KeDcnf96ZJo++ewWd84fEf3xSX9bp4ZS9hbw0OBw==
-
-webpack-virtual-modules@^0.3.0:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.3.2.tgz#b7baa30971a22d99451f897db053af48ec29ad2c"
-  integrity sha512-RXQXioY6MhzM4CNQwmBwKXYgBs6ulaiQ8bkNQEl2J6Z+V+s7lgl/wGvaI/I0dLnYKB8cKsxQc17QOAVIphPLDw==
-  dependencies:
-    debug "^3.0.0"
 
 webpack@^4.42.0:
   version "4.46.0"

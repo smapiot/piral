@@ -1,7 +1,6 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, WebpackPluginInstance, Configuration } from 'webpack';
-import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import SheetPlugin from './SheetPlugin';
 
 const piletCss = 'main.css';
@@ -33,7 +32,6 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
       filename: pilet ? piletCss : '[name].[fullhash:6].css',
       chunkFilename: '[id].[chunkhash:6].css',
     }) as any,
-    new ImportMapsWebpackPlugin(),
   ];
 
   if (showProgress) {

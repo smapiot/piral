@@ -1,7 +1,6 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
-import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import { HotModuleServerPlugin } from './HotModuleServerPlugin';
 import SheetPlugin from './SheetPlugin';
 
@@ -46,7 +45,6 @@ export function getPlugins(
       filename: pilet ? piletCss : '[name].[hash:6].css',
       chunkFilename: '[id].[hash:6].css',
     }),
-    new ImportMapsWebpackPlugin(),
   ];
 
   if (showProgress) {
