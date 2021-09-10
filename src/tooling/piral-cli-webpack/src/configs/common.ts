@@ -71,7 +71,8 @@ export function getPlugins(
     otherPlugins.push(new optimize.OccurrenceOrderPlugin(true));
 
     if (pilet) {
-      otherPlugins.push(new SheetPlugin(piletCss));
+      const name = process.env.BUILD_PCKG_NAME;
+      otherPlugins.push(new SheetPlugin(piletCss, name));
     }
   }
 

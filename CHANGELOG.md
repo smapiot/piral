@@ -3,6 +3,7 @@
 ## 0.14.0 (tbd)
 
 * Improved converter plugins to allow more flexible pilet embedded usage
+* Improved on the fly updates of pilet stylesheets
 * Changed library contents to target ES6
 * Added runtime pilet metadata `basePath`
 * Added support for new debug utils (#397)

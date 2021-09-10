@@ -209,7 +209,7 @@ export async function postProcess(
       const root = parent === undefined;
       const originalContent = await readFileContent(src);
       const refAdjustedContent = replaceAssetRefs(src, originalContent);
-      const adjustedContent = includeCssLink(css, refAdjustedContent);
+      const adjustedContent = includeCssLink(css, refAdjustedContent, name);
       const details = {
         prName,
         version,
@@ -247,7 +247,7 @@ function replaceAssetRefs(src: string, content: string) {
   });
 }
 
-function includeCssLink(css: string, content: string) {
+function includeCssLink(css: string, content: string, name: string) {
   /**
    * In pure JS bundles (i.e., we are not starting with an HTML file) Parcel
    * just omits the included CSS... This is bad (to say the least).
@@ -258,13 +258,19 @@ function includeCssLink(css: string, content: string) {
    */
   if (css) {
     const cssName = basename(css);
+    const createNew = [
+        `var e=d.createElement("link")`,
+        `e.setAttribute('data-origin', ${JSON.stringify(name)})`,
+        `e.type="text/css"`,
+        `e.rel="stylesheet"`,
+        `e.href=u`,
+        `d.head.appendChild(e)`,
+    ].join(';');
     const stylesheet = [
-      `var d=document`,
-      `var e=d.createElement("link")`,
-      `e.type="text/css"`,
-      `e.rel="stylesheet"`,
-      `e.href=${bundleUrlRef}+${JSON.stringify(cssName)}`,
-      `d.head.appendChild(e)`,
+        `var d=document`,
+        `var u=${bundleUrlRef}+${JSON.stringify(cssName)}`,
+        `var f=d.querySelector('link[data-origin=${JSON.stringify(name)}]')`,
+        `if(f){f.href=u+'?_='+Math.random()}else{${createNew}}`
     ].join(';');
 
     /**

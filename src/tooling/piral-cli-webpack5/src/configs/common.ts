@@ -50,7 +50,8 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
   }
 
   if (production && pilet) {
-    otherPlugins.push(new SheetPlugin(piletCss) as any);
+    const name = process.env.BUILD_PCKG_NAME;
+    otherPlugins.push(new SheetPlugin(piletCss, name) as any);
   }
 
   return plugins.concat(otherPlugins);
