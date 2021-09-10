@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.13.8 (tbd)
+## 0.13.8 (September 10, 2021)
 
 * Fixed circular structure support in debugging utils (#409)
 * Fixed pilet templates giving wrong path in Windows when scaffolding
