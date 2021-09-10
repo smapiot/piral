@@ -40,9 +40,10 @@ export function setupBundler(setup: BundlerSetup) {
       return bundler;
     }
     case 'dependency': {
-      const { entryModule, targetDir, externals, config } = setup;
+      const { entryModule, targetDir, externals, config, importmap } = setup;
+      const deps = externals.concat(importmap.map((m) => m.name));
       const bundler = new Bundler(entryModule, extendConfig(config));
-      const resolver = combineExternals(targetDir, [], externals, {});
+      const resolver = combineExternals(targetDir, [], deps, {});
       extendBundlerWithExternals(bundler, resolver);
       extendBundlerWithCodegen(bundler);
       return bundler;
@@ -185,67 +186,51 @@ async function applySourceMapShift(sourceFile: string, lineOffset = 1): Promise<
 /**
  * Transforms a pilet's bundle to a microfrontend entry module.
  * @param bundle The bundle to transform.
+ * @param name The name of the package for the chunk.
  * @param version The manifest version to create.
  * @param minified Determines if the bundle should be minified.
  * @param importmap The importmap for sharing dependencies.
+ * @param isDependency Determines if the given bundle is a pilet or dependency.
  */
 export async function postProcess(
   bundle: Bundler.ParcelBundle,
   name: string,
   version: PiletSchemaVersion,
   minified: boolean,
-  importmap: Array<SharedDependency> | true,
+  importmap: Array<SharedDependency>,
+  isDependency = false,
 ) {
-  //const hash = bundle.getHash();
   const prName = `parcelChunkpr_${name.replace(/\W/gi, '')}`;
   const bundles = gatherJsBundles(bundle);
   const externals = gatherExternals(bundle);
 
-  if (importmap === true) {
-    await Promise.all(
-      bundles.map(async ({ src, map, parent }) => {
-        const root = parent === undefined;
-        const originalContent = await readFileContent(src);
-        const refAdjustedContent = replaceAssetRefs(src, originalContent);
-        const details = {
-          prName,
-          version,
-          externals,
-          importmap: [],
-          head: '',
-          map,
-          minified,
-          root,
-        };
-        const wrappedContent = await wrapSystemJs(details, refAdjustedContent);
-        await writeFileContent(src, wrappedContent);
-      }),
-    );
-  } else {
-    await Promise.all(
-      bundles.map(async ({ src, css, map, parent }) => {
-        const root = parent === undefined;
-        const head = root ? getScriptHead(version, prName, importmap) : initializer;
-        const marker = root ? piletMarker : head;
-        const originalContent = await readFileContent(src);
-        const refAdjustedContent = replaceAssetRefs(src, originalContent);
-        const adjustedContent = includeCssLink(css, refAdjustedContent);
-        const details = {
-          prName,
-          version,
-          externals,
-          importmap,
-          marker,
-          head,
-          map,
-          minified,
-          root,
-        };
-        const wrappedContent = await wrapJsBundle(details, adjustedContent);
-        await writeFileContent(src, wrappedContent);
-      }),
-    );
-  }
+  await Promise.all(
+    bundles.map(async ({ src, css, map, parent }) => {
+      const root = parent === undefined;
+      const originalContent = await readFileContent(src);
+      const refAdjustedContent = replaceAssetRefs(src, originalContent);
+      const adjustedContent = includeCssLink(css, refAdjustedContent);
+      const details = {
+        prName,
+        version,
+        externals,
+        importmap,
+        marker: undefined,
+        head: '',
+        map,
+        minified,
+        root,
+      };
+
+      if (!isDependency) {
+        details.head = root ? getScriptHead(version, prName, importmap) : initializer;
+        details.marker = root ? piletMarker : details.head;
+      }
+
+      const wrappedContent = await wrapJsBundle(details, adjustedContent);
+      await writeFileContent(src, wrappedContent);
+    }),
+  );
 
   return prName;
 }

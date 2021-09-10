@@ -32,6 +32,7 @@ export interface DependencyBundlerSetup {
   type: 'dependency';
   targetDir: string;
   externals: Array<string>;
+  importmap: Array<SharedDependency>,
   entryModule: string;
   config: ParcelConfig;
 }

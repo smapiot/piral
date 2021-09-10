@@ -30,7 +30,7 @@ async function buildDependencies(args: BuildDependencyParameters, cacheDir: stri
         optimizeModules: false,
         outFile: dependency.ref,
         entryModule: dependency.entry,
-        importmap: [],
+        importmap: args.importmap.filter(m => m !== dependency),
         _: {},
         cacheDir,
       } as any);

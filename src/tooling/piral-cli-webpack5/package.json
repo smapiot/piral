@@ -64,7 +64,6 @@
     "file-loader": "^6.1.1",
     "html-entities": "^1.2.0",
     "html-webpack-plugin": "^5.2.0",
-    "import-maps-webpack-plugin": "^0.6.6",
     "mini-css-extract-plugin": "^1.1.1",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "parcel-codegen-loader": "^0.6.6",
