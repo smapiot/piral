@@ -166,18 +166,17 @@ Depending on your Angular needs you'd want to share more packages.
 
 Depending on the mounted component different services are injected. the following table lists the names of the injected services per component type.
 
-| Component | Props            | Piral   | Context   |
-|-----------|------------------|---------|-----------|
-| Tile      | `TileProps`      | `Piral` | `Context` |
-| Page      | `PageProps`      | `Piral` | `Context` |
-| Modal     | `ModalProps`     | `Piral` | `Context` |
-| Extension | `ExtensionProps` | `Piral` | `Context` |
-| Menu      | `MenuProps`      | `Piral` | `Context` |
+| Component | Props   | Piral   | Context   |
+|-----------|---------|---------|-----------|
+| Tile      | `Props` | `piral` | `Context` |
+| Page      | `Props` | `piral` | `Context` |
+| Modal     | `Props` | `piral` | `Context` |
+| Extension | `Props` | `piral` | `Context` |
+| Menu      | `Props` | `piral` | `Context` |
 
 To use such a service the `@Inject` decorator should be used with the explicit name.
 
-The following code snippet illustrates the injection of the `TileProps` service into a sample tile component.
-
+The following code snippet illustrates the injection of the `Props` service from an `TileProps` interface into a sample tile component.
 ```ts
 @Component({
   template: `
@@ -187,7 +186,7 @@ The following code snippet illustrates the injection of the `TileProps` service 
   `,
 })
 export class SampleTileComponent {
-  constructor(@Inject('TileProps') public props: TileComponentProps<any>) {}
+  constructor(@Inject('Props') public props: TileComponentProps<any>) {}
 }
 ```
 
