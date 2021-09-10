@@ -168,16 +168,15 @@ Depending on the mounted component different services are injected. the followin
 
 | Component | Props   | Piral   | Context   |
 |-----------|---------|---------|-----------|
-| Tile      | `Props` | `Piral` | `Context` |
-| Page      | `Props` | `Piral` | `Context` |
-| Modal     | `Props` | `Piral` | `Context` |
-| Extension | `Props` | `Piral` | `Context` |
-| Menu      | `Props` | `Piral` | `Context` |
+| Tile      | `Props` | `piral` | `Context` |
+| Page      | `Props` | `piral` | `Context` |
+| Modal     | `Props` | `piral` | `Context` |
+| Extension | `Props` | `piral` | `Context` |
+| Menu      | `Props` | `piral` | `Context` |
 
 To use such a service the `@Inject` decorator should be used with the explicit name.
 
-The following code snippet illustrates the injection of the `Tile Props` service into a sample tile component.
-
+The following code snippet illustrates the injection of the `Props` service from an `TileProps` interface into a sample tile component.
 ```ts
 @Component({
   template: `
