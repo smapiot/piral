@@ -3,6 +3,7 @@ import { APP_BASE_HREF, VERSION } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import type { BaseComponentProps, ComponentContext, PiletApi } from 'piral-core';
+import { NgOptions } from './types';
 
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 
@@ -75,7 +76,12 @@ function spread<T>(items: Array<T>, more: Array<T> | undefined): Array<T> {
   return items;
 }
 
-function startup(BootstrapModule: any, context: ComponentContext, node: HTMLElement): Promise<void | NgModuleInt> {
+function startup(
+  BootstrapModule: any,
+  context: ComponentContext,
+  node: HTMLElement,
+  ngOptions?: NgOptions,
+): Promise<void | NgModuleInt> {
   const platform = platformBrowserDynamic([{ provide: 'Context', useValue: context }]);
   const zoneIdentifier = `piral-ng:${node.id}`;
 
@@ -88,7 +94,7 @@ function startup(BootstrapModule: any, context: ComponentContext, node: HTMLElem
   NgZone.isInAngularZone = () => window.Zone.current._properties[zoneIdentifier] === true;
 
   return platform
-    .bootstrapModule(BootstrapModule)
+    .bootstrapModule(BootstrapModule, ngOptions)
     .catch((err) => console.log(err))
     .then((bootstrapModule: NgModuleInt) => {
       node.removeAttribute('id');
@@ -113,18 +119,19 @@ export function bootstrap<T extends BaseComponentProps>(
   moduleOrComponent: any,
   node: HTMLElement,
   id: string,
-  moduleOptions: Omit<NgModule, 'boostrap'>,
+  moduleOptions: Omit<NgModule, 'bootstrap'>,
   NgExtension: any,
+  ngOptions?: NgOptions,
 ) {
   const annotations = getAnnotations(moduleOrComponent);
   const annotation = annotations[0];
 
   if (annotation && annotation.bootstrap) {
     // usually contains things like imports, exports, declarations, ...
-    return bootstrapModule(context, props, moduleOrComponent, node, id, NgExtension);
+    return bootstrapModule(context, props, moduleOrComponent, node, id, NgExtension, ngOptions);
   } else {
     // usually contains things like selector, template or templateUrl, changeDetection, ...
-    return bootstrapComponent(context, props, moduleOrComponent, node, id, moduleOptions, NgExtension);
+    return bootstrapComponent(context, props, moduleOrComponent, node, id, moduleOptions, NgExtension, ngOptions);
   }
 }
 
@@ -134,8 +141,9 @@ export function bootstrapComponent<T extends BaseComponentProps>(
   component: any,
   node: HTMLElement,
   id: string,
-  moduleOptions: Omit<NgModule, 'boostrap'>,
+  moduleOptions: Omit<NgModule, 'bootstrap'>,
   NgExtension: any,
+  ngOptions?: NgOptions,
 ) {
   const providers = getComponentProps(props);
   const ResourceUrlPipe = createPipe(props.piral);
@@ -153,7 +161,7 @@ export function bootstrapComponent<T extends BaseComponentProps>(
     constructor() {}
   }
 
-  return startup(BootstrapModule, context, node);
+  return startup(BootstrapModule, context, node, ngOptions);
 }
 
 export function bootstrapModule<T extends BaseComponentProps>(
@@ -163,6 +171,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
   node: HTMLElement,
   id: string,
   NgExtension: any,
+  ngOptions?: NgOptions,
 ) {
   const annotations = getAnnotations(BootstrapModule);
   const ResourceUrlPipe = createPipe(props.piral);
@@ -190,7 +199,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
     );
   }
 
-  return startup(BootstrapModule, context, node);
+  return startup(BootstrapModule, context, node, ngOptions);
 }
 
 if (process.env.NODE_ENV === 'development') {

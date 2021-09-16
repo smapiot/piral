@@ -1,3 +1,4 @@
+import type { PlatformRef } from '@angular/core';
 import type { ForeignComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -8,6 +9,8 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
+export type NgOptions = Parameters<PlatformRef['bootstrapModule']>[1];
+
 export interface NgComponent {
   /**
    * The component root.
@@ -17,6 +20,13 @@ export interface NgComponent {
    * The type of the Angular component.
    */
   type: 'ng';
+  /**
+   * Options passed through to Angular `bootstrapModule`.
+   *
+   * Mainly to specify Noop Zone, but also includes compiler specific settings.
+   * See https://angular.io/api/core/PlatformRef#bootstrapModule for possible values.
+   */
+  opts: NgOptions;
 }
 
 /**
@@ -28,7 +38,7 @@ export interface PiletNgApi {
    * @param component The component root.
    * @returns The Piral Ng component.
    */
-  fromNg(component: any): NgComponent;
+  fromNg(component: any, opts?: NgOptions): NgComponent;
   /**
    * Angular component for displaying extensions of the given name.
    */
