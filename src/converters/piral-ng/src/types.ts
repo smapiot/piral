@@ -20,7 +20,12 @@ export interface NgComponent {
    * The type of the Angular component.
    */
   type: 'ng';
-
+  /**
+   * Options passed through to Angular `bootstrapModule`.
+   *
+   * Mainly to specify Noop Zone, but also includes compiler specific settings.
+   * See https://angular.io/api/core/PlatformRef#bootstrapModule for possible values.
+   */
   opts: NgOptions;
 }
 

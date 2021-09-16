@@ -3,7 +3,7 @@ import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { createExtension } from './extension';
 import { enqueue } from './queue';
 import { bootstrap, NgModuleInt } from './bootstrap';
-import { NgOptions } from '.';
+import { NgOptions } from './types';
 
 let next = ~~(Math.random() * 10000);
 
