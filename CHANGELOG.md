@@ -7,6 +7,7 @@
 * Added runtime pilet metadata `basePath`
 * Added support for new debug utils (#397)
 * Added generic `piral-extension` web component for rendering extensions
+* Added option to run Angular without `zone.js` in `piral-ng`.
 
 ## 0.13.8 (September 10, 2021)
 

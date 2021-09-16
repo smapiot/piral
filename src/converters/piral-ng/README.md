@@ -37,6 +37,21 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Angular Options:
+
+You can optionally provide Options to `fromNg`, which are identical to those given to `bootstrapModule` during the Angular boot process. See https://angular.io/api/core/PlatformRef#bootstrapModule for possible values.
+
+This is mainly used to allow an Angular Pilet to run without `zone.js` as described [here](https://angular.io/guide/zone#noopzone).
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { AngularPage } from './AngularPage';
+
+export function setup(piral: PiletApi) {
+  piral.registerPage('/sample', piral.fromNg(AngularPage, { ngZone: 'noop' }));
+}
+```
+
 Within Angular components the Piral Angular extension component can be used by referring to `extension-component`, e.g.,
 
 ```html
