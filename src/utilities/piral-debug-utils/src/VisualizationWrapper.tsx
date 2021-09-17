@@ -36,44 +36,49 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
     let sibling = container.current && (container.current.nextElementSibling as HTMLElement);
 
     if (sibling && active) {
-      const style = container.current.style;
       const target = container.current.parentNode;
 
       const mouseIn = () => {
-        style.display = 'block';
-        style.left = '0px';
-        style.top = '0px';
-        style.bottom = '0px';
-        style.right = '0px';
-        const targetRect = sibling.getBoundingClientRect();
-        const sourceRect = container.current.getBoundingClientRect();
-        style.left = targetRect.left - sourceRect.left + 'px';
-        style.top = targetRect.top - sourceRect.top + 'px';
-        style.bottom = -(targetRect.bottom - sourceRect.bottom) + 'px';
-        style.right = -(targetRect.right - sourceRect.right) + 'px';
+        if (container.current && sibling) {
+          const style = container.current.style;
+          style.display = 'block';
+          style.left = '0px';
+          style.top = '0px';
+          style.bottom = '0px';
+          style.right = '0px';
+          const targetRect = sibling.getBoundingClientRect();
+          const sourceRect = container.current.getBoundingClientRect();
+          style.left = targetRect.left - sourceRect.left + 'px';
+          style.top = targetRect.top - sourceRect.top + 'px';
+          style.bottom = -(targetRect.bottom - sourceRect.bottom) + 'px';
+          style.right = -(targetRect.right - sourceRect.right) + 'px';
+        }
       };
       const mouseOut = () => {
-        style.display = 'none';
+        if (container.current) {
+          const style = container.current.style;
+          style.display = 'none';
+        }
       };
       const append = () => {
-        if (!force) {
+        if (force) {
+          mouseIn();
+        } else if (sibling) {
           sibling.addEventListener('mouseover', mouseIn);
           sibling.addEventListener('mouseout', mouseOut);
-        } else {
-          mouseIn();
         }
       };
       const remove = () => {
-        if (!force) {
+        if (force) {
+          mouseOut();
+        } else if (sibling) {
           sibling.removeEventListener('mouseover', mouseIn);
           sibling.removeEventListener('mouseout', mouseOut);
-        } else {
-          mouseOut();
         }
       };
 
       const observer = new MutationObserver(() => {
-        const newSibling = container.current.nextElementSibling as HTMLElement;
+        const newSibling = container.current?.nextElementSibling as HTMLElement;
 
         if (newSibling !== sibling) {
           remove();

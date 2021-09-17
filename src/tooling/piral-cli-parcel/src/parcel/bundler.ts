@@ -77,9 +77,7 @@ export function gatherJsBundles(
       if (childBundle.name.endsWith('.js.map')) {
         source.map = childBundle.name;
       } else if (childBundle.name.endsWith('.css')) {
-        if (childBundle.totalSize > 0) {
-          source.css = childBundle.name;
-        }
+        source.css = childBundle.name;
       }
     }
 
@@ -258,19 +256,16 @@ function includeCssLink(css: string, content: string, name: string) {
    */
   if (css) {
     const cssName = basename(css);
-    const createNew = [
-        `var e=d.createElement("link")`,
-        `e.setAttribute('data-origin', ${JSON.stringify(name)})`,
-        `e.type="text/css"`,
-        `e.rel="stylesheet"`,
-        `e.href=u`,
-        `d.head.appendChild(e)`,
-    ].join(';');
+    const debug = process.env.NODE_ENV === 'development';
     const stylesheet = [
-        `var d=document`,
-        `var u=${bundleUrlRef}+${JSON.stringify(cssName)}`,
-        `var f=d.querySelector('link[data-origin=${JSON.stringify(name)}]')`,
-        `if(f){f.href=u+'?_='+Math.random()}else{${createNew}}`
+      `var d=document`,
+      `var u=${bundleUrlRef}+${JSON.stringify(cssName)}`,
+      `var e=d.createElement("link")`,
+      `e.setAttribute('data-origin', ${JSON.stringify(name)})`,
+      `e.type="text/css"`,
+      `e.rel="stylesheet"`,
+      `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
+      `d.head.nappendChild(e)`,
     ].join(';');
 
     /**
@@ -394,7 +389,7 @@ async function wrapSystemJs(details: WrapDetails, content: string): Promise<stri
 
   const innerContent = lines.join('\n');
   const modDeps = JSON.stringify(dependencies);
-  const init = externals.map(e => `${JSON.stringify(e)}:{}`).join(',');
+  const init = externals.map((e) => `${JSON.stringify(e)}:{}`).join(',');
   const check = `var e=new Error("Cannot find module '"+n+"'");e.code='MODULE_NOT_FOUND';throw e`;
   const getters = `var _deps={${init}};var require=function(n){var d=_deps[n];if(!d){${check}} return d}`;
   const setters = externals.map((d) => `function(_dep){_deps[${JSON.stringify(d)}]=_dep}`).join(',');

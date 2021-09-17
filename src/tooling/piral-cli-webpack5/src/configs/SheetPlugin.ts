@@ -2,21 +2,17 @@ import InjectPlugin from 'webpack-inject-plugin';
 
 function sheetLoader(cssName: string, name: string) {
   return () => {
-    const createNew = [
+    const debug = process.env.NODE_ENV === 'development';
+    return [
+      `var d=document`,
+      `var u=__webpack_public_path__+${JSON.stringify(cssName)}`,
       `var e=d.createElement("link")`,
       `e.setAttribute('data-origin', ${JSON.stringify(name)})`,
       `e.type="text/css"`,
       `e.rel="stylesheet"`,
-      `e.href=u`,
-      `d.head.appendChild(e)`,
+      `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
+      `d.head.nappendChild(e)`,
     ].join(';');
-    const lines = [
-      `var d=document`,
-      `var u=__webpack_public_path__+${JSON.stringify(cssName)}`,
-      `var f=d.querySelector('link[data-origin=${JSON.stringify(name)}]')`,
-      `if(f){f.href=u+'?_='+Math.random()}else{${createNew}}`,
-    ];
-    return lines.join(';');
   };
 }
 
