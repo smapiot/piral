@@ -33,12 +33,14 @@ export function createConverter(config: NgConverterOptions = {}) {
 
     return {
       mount(el, props, ctx) {
-        const id = selectId();
-        result = enqueue(() => active && bootstrap(ctx, props, component, el, id, moduleOptions, Extension, opts));
+        active = true;
+        result = result.then(() =>
+          enqueue(() => active && bootstrap(ctx, props, component, el, selectId(), moduleOptions, Extension, opts)),
+        );
       },
       unmount() {
         active = false;
-        result.then((ngMod) => ngMod && !ngMod._destroyed && ngMod.destroy());
+        result = result.then((ngMod) => ngMod && !ngMod._destroyed && ngMod.destroy());
       },
     };
   };
