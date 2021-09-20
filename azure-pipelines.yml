@@ -289,7 +289,7 @@ stages:
             displayName: Release Packages
             inputs:
               command: custom
-              customCommand: publish dist/demo-full/emulator/sample-full.tgz
+              customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag next
               customEndpoint: DefaultNpmConnection
 
 - stage: Release

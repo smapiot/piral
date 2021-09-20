@@ -12,6 +12,10 @@
 * Added direct support for using the Angular router in `piral-ng` (#396)
 * Added convenience module `extend-config` for `piral-cli-webpack` and `piral-cli-webpack5` (#410)
 
+## 0.13.9 (September 23, 2021)
+
+* Fixed an issue w.r.t. the serialization of events in the debug tools
+
 ## 0.13.8 (September 10, 2021)
 
 * Fixed circular structure support in debugging utils (#409)
