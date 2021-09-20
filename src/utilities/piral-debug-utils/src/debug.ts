@@ -219,7 +219,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       events.unshift({
         id: events.length.toString(),
         name: ev.type.replace('piral-', ''),
-        args: ev.detail.arg,
+        args: decycle(ev.detail.arg),
         time: Date.now(),
       });
 

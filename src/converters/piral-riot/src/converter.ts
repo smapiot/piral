@@ -20,6 +20,7 @@ export function createConverter() {
       unmount(el) {
         app.unmount(true);
         el.innerHTML = '';
+        app = undefined;
       },
     };
   };

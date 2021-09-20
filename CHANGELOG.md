@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.13.9 (tbd)
+
+* Fixed an issue w.r.t. the serialization of events in the debug tools
+
 ## 0.13.8 (September 10, 2021)
 
 * Fixed circular structure support in debugging utils (#409)
