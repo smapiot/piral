@@ -182,6 +182,7 @@ function matchPattern(baseDir: string, pattern: string) {
       {
         cwd: baseDir,
         nodir: true,
+        absolute: true,
       },
       (err, files) => {
         if (err) {
