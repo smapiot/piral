@@ -31,6 +31,7 @@ export function createConverter(config: RiotConverterOptions = {}) {
       unmount(el) {
         app.unmount(true);
         el.innerHTML = '';
+        app = undefined;
       },
     };
   };

@@ -19,7 +19,7 @@ export function createConverter(config: CycleConverterOptions = {}) {
   const convert = <TProps extends BaseComponentProps, M extends MatchingMain<PiralDomDrivers<TProps>, M>>(
     main: M,
   ): ForeignComponent<TProps> => {
-    const props$ = xs.create<TProps>();
+    let props$ = xs.create<TProps>();
     let dispose = () => {};
 
     return {
@@ -43,6 +43,7 @@ export function createConverter(config: CycleConverterOptions = {}) {
       unmount() {
         props$.shamefullySendComplete();
         dispose();
+        props$ = xs.create<TProps>();
       },
     };
   };
