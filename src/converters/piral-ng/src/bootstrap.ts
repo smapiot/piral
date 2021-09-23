@@ -2,8 +2,9 @@ import { enableProdMode, Pipe, PipeTransform, NgModule, NgModuleRef, NgZone, Sta
 import { APP_BASE_HREF, VERSION } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { RoutingService } from './RoutingService';
 import type { BaseComponentProps, ComponentContext, PiletApi } from 'piral-core';
-import { NgOptions } from './types';
+import type { NgOptions } from './types';
 
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 
@@ -21,6 +22,7 @@ function getComponentProps(props: BaseComponentProps): Array<StaticProvider> {
     { provide: 'Props', useValue: props },
     { provide: 'piral', useValue: props.piral },
     { provide: APP_BASE_HREF, useValue: '/' },
+    RoutingService as any,
   ];
 }
 
@@ -38,6 +40,7 @@ function createPipe(piral: PiletApi) {
 }
 
 interface NgAnnotation {
+  _initial?: Array<StaticProvider>;
   providers: Array<StaticProvider>;
   declarations: Array<any>;
   bootstrap: any;
@@ -158,7 +161,7 @@ export function bootstrapComponent<T extends BaseComponentProps>(
     bootstrap: [component],
   })
   class BootstrapModule {
-    constructor() {}
+    constructor(private _routing: RoutingService) {}
   }
 
   return startup(BootstrapModule, context, node, ngOptions);
@@ -179,8 +182,25 @@ export function bootstrapModule<T extends BaseComponentProps>(
   node.id = sanatize(id);
 
   if (annotation) {
-    annotation.providers = spread(getComponentProps(props), annotation.providers);
-    annotation.declarations = spread([NgExtension, ResourceUrlPipe], annotation.declarations);
+    const cp = getComponentProps(props);
+
+    // no need for multiple annotations in re-mounting scenarios
+    if (!annotation._initial) {
+      const routingService = { type: RoutingService };
+      annotation._initial = annotation.providers;
+      annotation.providers = spread(cp, annotation.providers);
+      annotation.declarations = spread([NgExtension, ResourceUrlPipe], annotation.declarations);
+
+      // inject the RoutingService as last/only parameter to make sure it runs
+      if (typeof BootstrapModule.ctorParameters === 'function') {
+        const getParameters = BootstrapModule.ctorParameters;
+        BootstrapModule.ctorParameters = () => [...getParameters(), routingService];
+      } else {
+        BootstrapModule.ctorParameters = () => [routingService];
+      }
+    } else {
+      annotation.providers = spread(cp, annotation._initial);
+    }
 
     if (Array.isArray(annotation.bootstrap) && annotation.bootstrap.length > 0) {
       const [component] = annotation.bootstrap;

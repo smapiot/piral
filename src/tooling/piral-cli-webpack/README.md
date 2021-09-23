@@ -71,6 +71,26 @@ module.exports = function(config) {
 };
 ```
 
+Otherwise, you can also use the `extend-config` helper module to get the job done without having to know the internals:
+
+```js
+const extendConfig = require('piral-cli-webpack/extend-config');
+
+module.exports = extendConfig({
+  checkTypes: true, // not only transpiles TS, but also checks the types
+  noPresets: true, // removes existing presets from Babel
+  rules: [], // adds additional rules
+  removeRules: [], // removes the rules mentioned by their loader name
+  plugins: [], // adds additional plugins
+  removePlugins: [], // removes the plugins mentioned by their class reference
+  fileLoaderOptions: {}, // sets the options for the file loader
+  tsLoaderOptions: {}, // sets the options for the TS loader
+  babelLoaderOptions: {}, // sets the options for the Babel loader
+  cssLoaderOptions: {}, // sets the options for the CSS loader
+  sassLoaderOptions: {}, // sets the options for the SASS loader
+});
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

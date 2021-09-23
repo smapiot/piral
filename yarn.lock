@@ -37,6 +37,13 @@
   dependencies:
     tslib "^1.9.0"
 
+"@angular/router@^8.0.0":
+  version "8.2.14"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-8.2.14.tgz#5f9f9707710983c2143aead79dcd2da520ae3eb8"
+  integrity sha512-DHA2BhODqV7F0g6ZKgFaZgbsqzHHWRcfWchCOrOVKu2rYiKUTwwHVLBgZAhrpNeinq2pWanVYSIhMr7wy+LfEA==
+  dependencies:
+    tslib "^1.9.0"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.14.5":
   version "7.14.5"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.14.5.tgz#23b08d740e83f49c5e59945fbf1b43e80bbf4edb"
@@ -6452,10 +6459,10 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-dets@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.10.1.tgz#8efc650ac3ab17f3c3963d08a3df5f1776cb3982"
-  integrity sha512-5o1k1xaEqtZVSd00B4DU4td9BsXLQwLuPfKme3EPJew3r56dPAY6pzhuJ2Nm/f7EORwNuyeoGOREnEbRFp0Rng==
+dets@^0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.10.2.tgz#ef2b9948485da133f403c64ee08de7002aa88547"
+  integrity sha512-lqQjijqMTpeEWnY/027xzbM6CeE+qtVkIk1Bw9MLp/B32gTKUFgekcm1wF1Q0kLo5T2gCLFOlzTHbnLNOOsZvA==
   dependencies:
     yargs "^15.4.1"
 
@@ -14388,6 +14395,13 @@ rxjs@^6.3.3, rxjs@^6.4.0:
   dependencies:
     tslib "^1.9.0"
 
+rxjs@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.3.0.tgz#39fe4f3461dc1e50be1475b2b85a0a88c1e938c6"
+  integrity sha512-p2yuGIg9S1epc3vrjKf6iVb3RCaAYjYskkO+jHIaV0IjOPlJop4UnodOoFb2xeNwlguqLYvGw1b1McillYb5Gw==
+  dependencies:
+    tslib "~2.1.0"
+
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
@@ -15731,9 +15745,9 @@ tmp@^0.0.33:
     os-tmpdir "~1.0.2"
 
 tmpl@1.0.x:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
-  integrity sha1-I2QN17QtAEM5ERQIIOXPRA5SHdE=
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
+  integrity sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==
 
 to-arraybuffer@^1.0.0:
   version "1.0.1"
@@ -15885,7 +15899,7 @@ ts-loader@^8.0.6:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-tslib@2.3.1, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.2.0, tslib@^2.3.1:
+tslib@2.3.1, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.2.0, tslib@^2.3.1, tslib@~2.1.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
