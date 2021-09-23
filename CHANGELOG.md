@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.13.9 (tbd)
+## 0.13.9 (September 23, 2021)
 
 * Fixed an issue w.r.t. the serialization of events in the debug tools
 
