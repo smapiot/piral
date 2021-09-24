@@ -14,7 +14,7 @@ describe('Setting up Modules', () => {
       {
         setup: setupMock,
       } as any,
-      api,
+      () => api,
     );
     expect(setupMock).toHaveBeenCalledWith(api);
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -37,7 +37,7 @@ describe('Setting up Modules', () => {
           setupMock(api);
         },
       } as any,
-      api,
+      () => api,
     );
     expect(setupMock).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -52,7 +52,7 @@ describe('Setting up Modules', () => {
       emit: jest.fn(),
       meta: {} as any,
     };
-    setupSinglePilet({} as any, api);
+    setupSinglePilet({} as any, () => api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
   });
@@ -66,7 +66,7 @@ describe('Setting up Modules', () => {
       emit: jest.fn(),
       meta: {} as any,
     };
-    setupSinglePilet(undefined as any, api);
+    setupSinglePilet(undefined as any, () => api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
   });
@@ -80,7 +80,7 @@ describe('Setting up Modules', () => {
       emit: jest.fn(),
       meta: {} as any,
     };
-    setupSinglePilet((() => {}) as any, api);
+    setupSinglePilet((() => {}) as any, () => api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
   });

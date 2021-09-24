@@ -431,6 +431,24 @@ export interface PiletLoader {
 export type CustomSpecLoaders = Record<string, PiletLoader>;
 
 /**
+ * A set of pipeline hooks used by the Piral loading orchestrator.
+ */
+export interface PiralLoadingHooks {
+  /**
+   * Hook fired before a pilet is loaded.
+   */
+  loadPilet?(pilet: PiletMetadata): void;
+  /**
+   * Hook fired before a pilet is being set up.
+   */
+  setupPilet?(pilet: Pilet): void;
+  /**
+   * Hook fired before a pilet is being cleaned up.
+   */
+  cleanupPilet?(pilet: Pilet): void;
+}
+
+/**
  * The options for loading pilets.
  */
 export interface LoadPiletsOptions {
@@ -461,6 +479,10 @@ export interface LoadPiletsOptions {
    */
   loaders?: CustomSpecLoaders;
   /**
+   * Optionally, defines a set of loading hooks to be used.
+   */
+  hooks?: PiralLoadingHooks;
+  /**
    * Gets the map of globally available dependencies with their names
    * as keys and their evaluated pilet content as value.
    */
@@ -484,3 +506,7 @@ export interface PiletApiExtender<T> {
    */
   (api: PiletApi, target: PiletMetadata): T;
 }
+
+export type LoaderResult<T> = Promise<
+  [T, PiletMetadata, (app: T, apiFactory: PiletApiCreator, hooks: PiralLoadingHooks) => Promise<void> | void]
+>;

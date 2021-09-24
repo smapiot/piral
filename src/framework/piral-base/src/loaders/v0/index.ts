@@ -1,15 +1,15 @@
-import { loadFrom } from './load';
 import { fetchDependency } from './fetch';
-import { createEmptyModule, setBasePath } from './utils';
 import { compileDependency } from './dependency';
-import type { PiletMetadata } from './types';
+import { loadFrom, setBasePath } from '../../utils';
+import type { DefaultLoaderConfig, PiletMetadataV0 } from '../../types';
 
 /**
  * Loads a legacy (v0) or invalid pilet.
  * @param meta The metadata of the pilet.
+ * @param _config The loader configuration.
  * @returns The evaluated pilet that can now be integrated.
  */
-export function loadLegacyPilet(meta: PiletMetadata) {
+export default function loader(meta: PiletMetadataV0, _config: DefaultLoaderConfig) {
   const name = meta.name;
 
   if ('link' in meta && meta.link) {
@@ -19,8 +19,6 @@ export function loadLegacyPilet(meta: PiletMetadata) {
     const content = meta.content;
     return loadFrom(meta, () => compileDependency(name, content, undefined));
   } else {
-    console.warn('Empty pilet found!', name);
+    return loadFrom(meta, () => compileDependency(name, '', undefined));
   }
-
-  return Promise.resolve(createEmptyModule(meta));
 }

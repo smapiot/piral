@@ -1,4 +1,4 @@
-import { SinglePilet } from './types';
+import { SinglePilet } from '../types';
 
 export function cleanup(pilet: SinglePilet) {
   const css = document.querySelector(`link[data-origin=${JSON.stringify(pilet.name)}]`);

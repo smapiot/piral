@@ -1,10 +1,22 @@
-import { getDefaultLoader, extendLoader } from './loader';
+import { registerDependencies } from './utils';
 import { loadPilets, loadMetadata } from './load';
-import { registerDependencies } from './system';
 import { createPilets, createPilet } from './aggregate';
-import type { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
+import { getDefaultLoader, extendLoader } from './loader';
+import type {
+  PiralLoadingHooks,
+  LoadPiletsOptions,
+  PiletsLoaded,
+  Pilet,
+  PiletApiCreator,
+  PiletLoadingStrategy,
+} from './types';
 
-function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModules: Array<Pilet>) {
+function evalAll(
+  createApi: PiletApiCreator,
+  oldModules: Array<Pilet>,
+  newModules: Array<Pilet>,
+  hooks: PiralLoadingHooks,
+) {
   if (!Array.isArray(oldModules)) {
     return Promise.reject(`The existing pilets must be passed as an array.`);
   }
@@ -18,7 +30,7 @@ function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModule
       }
     }
 
-    return createPilets(createApi, [...oldModules, ...newModules]);
+    return createPilets(createApi, [...oldModules, ...newModules], hooks);
   } catch (err) {
     return Promise.reject(err);
   }
@@ -40,12 +52,13 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
       pilets = [],
       loadPilet = getDefaultLoader(config),
       loaders,
+      hooks = {},
     } = options;
     const loader = loadMetadata(fetchPilets);
     const loadSingle = extendLoader(loadPilet, loaders);
 
     return registerDependencies(dependencies).then(() =>
-      createPilets(createApi, pilets).then((allModules) => {
+      createPilets(createApi, pilets, hooks).then((allModules) => {
         if (async && allModules.length > 0) {
           cb(undefined, [...allModules]);
         }
@@ -56,7 +69,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
               const available = pilets.filter((m) => m.name === mod.name).length === 0;
 
               if (available) {
-                return createPilet(createApi, mod).then((newModule) => {
+                return createPilet(createApi, mod, hooks).then((newModule) => {
                   allModules.push(newModule);
 
                   if (async) {
@@ -113,11 +126,12 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
     pilets = [],
     loadPilet = getDefaultLoader(config),
     loaders,
+    hooks = {},
   } = options;
   const loadSingle = extendLoader(loadPilet, loaders);
   return registerDependencies(dependencies)
     .then(() => loadPilets(fetchPilets, loadSingle))
-    .then((newModules) => evalAll(createApi, pilets, newModules))
+    .then((newModules) => evalAll(createApi, pilets, newModules, hooks))
     .then((modules) => cb(undefined, modules))
     .catch((error) => cb(error, []));
 }
@@ -128,9 +142,9 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
  * considers the already given pilets.
  */
 export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
-  const { createApi, dependencies = {}, pilets = [] } = options;
+  const { createApi, dependencies = {}, pilets = [], hooks = {} } = options;
   return registerDependencies(dependencies).then(() =>
-    evalAll(createApi, pilets, []).then(
+    evalAll(createApi, pilets, [], hooks).then(
       (modules) => cb(undefined, modules),
       (err) => cb(err, []),
     ),

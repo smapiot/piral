@@ -1,47 +1,8 @@
 import 'systemjs/dist/system';
 import 'systemjs/dist/extras/named-register';
-import type { PiletMetadataV2 } from './types';
-import { setBasePath } from './utils';
 
 export interface ModuleResolver {
   (): any;
-}
-
-/**
- * Loads the provided SystemJS-powered pilet.
- * @param meta The pilet's metadata.
- */
-export function loadSystemPilet(meta: PiletMetadataV2) {
-  const deps = meta.dependencies;
-  const link = setBasePath(meta, meta.link);
-
-  if (deps) {
-    for (const depName of Object.keys(deps)) {
-      if (!System.has(depName)) {
-        registerModule(depName, () => System.import(deps[depName]));
-      }
-    }
-  }
-
-  return loadSystemModule(link).then(([_, app]) => ({
-    ...app,
-    ...meta,
-  }));
-}
-
-/**
- * Loads the provided modules by their URL. Performs a
- * SystemJS import.
- * @param modules The names of the modules to resolve.
- */
-export function loadSystemModule(source: string) {
-  return System.import(source).then(
-    (value): [string, any] => [source, value],
-    (error): [string, any] => {
-      console.error('Failed to load SystemJS module', source, error);
-      return [source, {}];
-    },
-  );
 }
 
 /**
@@ -77,4 +38,16 @@ export function registerModule(name: string, resolve: ModuleResolver) {
       }
     },
   }));
+}
+
+export function requireModule(name: string) {
+  const dependency = System.get(name);
+
+  if (!dependency) {
+    const error = new Error(`Cannot find module '${name}'`);
+    (error as any).code = 'MODULE_NOT_FOUND';
+    throw error;
+  }
+
+  return dependency;
 }

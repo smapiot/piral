@@ -1,7 +1,11 @@
-import type { PiletMetadata } from './types';
+import type { PiletMetadata } from '../types';
 
 export function isfunc(f: any): f is Function {
   return typeof f === 'function';
+}
+
+export function callfunc<T extends (...args: Array<any>) => void>(f: T, ...args: Parameters<T>) {
+  isfunc(f) && f(...args);
 }
 
 export function createEmptyModule(meta: PiletMetadata) {
