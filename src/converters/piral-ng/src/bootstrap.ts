@@ -1,4 +1,14 @@
-import { enableProdMode, Pipe, PipeTransform, NgModule, NgModuleRef, NgZone, StaticProvider } from '@angular/core';
+import {
+  enableProdMode,
+  Pipe,
+  PipeTransform,
+  NgModule,
+  NgModuleRef,
+  NgZone,
+  StaticProvider,
+  ComponentFactoryResolver,
+  ApplicationRef,
+} from '@angular/core';
 import { APP_BASE_HREF, VERSION } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
@@ -11,10 +21,6 @@ export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 function getVersionHandler(versions: Record<string, () => void>) {
   const version = `v${VERSION.major || VERSION.full.split('.')[0]}`;
   return versions[version];
-}
-
-function sanatize(id: string) {
-  return id.replace(/\W/g, '_');
 }
 
 function getComponentProps(props: BaseComponentProps): Array<StaticProvider> {
@@ -37,6 +43,17 @@ function createPipe(piral: PiletApi) {
   }
 
   return ResourceUrlPipe;
+}
+
+function createSharedModule<T extends BaseComponentProps>(props: T, NgExtension: any) {
+  const ResourceUrlPipe = createPipe(props.piral);
+
+  @NgModule({
+    declarations: [NgExtension, ResourceUrlPipe],
+  })
+  class SharedModule {}
+
+  return SharedModule;
 }
 
 interface NgAnnotation {
@@ -65,7 +82,7 @@ function setComponentSelector(component: any, id: string) {
     annotation.selector = `#${id}`;
   } else if (process.env.NODE_ENV === 'development') {
     console.error(
-      '[piral-ng] No annotations found on the component. Check if `@NgComponent` has been applied on your component.',
+      '[piral-ng] No annotations found on the component. Check if `@Component` has been applied on your component.',
       component,
     );
   }
@@ -82,11 +99,11 @@ function spread<T>(items: Array<T>, more: Array<T> | undefined): Array<T> {
 function startup(
   BootstrapModule: any,
   context: ComponentContext,
-  node: HTMLElement,
+  id: string,
   ngOptions?: NgOptions,
 ): Promise<void | NgModuleInt> {
   const platform = platformBrowserDynamic([{ provide: 'Context', useValue: context }]);
-  const zoneIdentifier = `piral-ng:${node.id}`;
+  const zoneIdentifier = `piral-ng:${id}`;
 
   // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
   // See:
@@ -100,8 +117,6 @@ function startup(
     .bootstrapModule(BootstrapModule, ngOptions)
     .catch((err) => console.log(err))
     .then((bootstrapModule: NgModuleInt) => {
-      node.removeAttribute('id');
-
       if (bootstrapModule) {
         const zone = bootstrapModule.injector.get(NgZone);
         // @ts-ignore
@@ -138,6 +153,8 @@ export function bootstrap<T extends BaseComponentProps>(
   }
 }
 
+let GlobalBootstrapModule: any = undefined;
+
 export function bootstrapComponent<T extends BaseComponentProps>(
   context: ComponentContext,
   props: T,
@@ -148,23 +165,49 @@ export function bootstrapComponent<T extends BaseComponentProps>(
   NgExtension: any,
   ngOptions?: NgOptions,
 ) {
-  const providers = getComponentProps(props);
-  const ResourceUrlPipe = createPipe(props.piral);
-  node.id = sanatize(id);
-  setComponentSelector(component, node.id);
+  if (!GlobalBootstrapModule) {
+    let renderQueue: Array<[any, HTMLElement]> = [];
+    const pushToQueue = (c: any, n: HTMLElement) => {
+      renderQueue.push([c, n]);
+    };
+    const providers = getComponentProps(props);
+    const SharedModule = createSharedModule(props, NgExtension);
 
-  @NgModule({
-    ...moduleOptions,
-    imports: spread([BrowserModule], moduleOptions.imports),
-    providers: spread(providers, moduleOptions.providers),
-    declarations: spread([component, NgExtension, ResourceUrlPipe], moduleOptions.declarations),
-    bootstrap: [component],
-  })
-  class BootstrapModule {
-    constructor(private _routing: RoutingService) {}
+    @NgModule({
+      ...moduleOptions,
+      imports: spread([BrowserModule, SharedModule], moduleOptions.imports),
+      providers: spread(providers, moduleOptions.providers),
+      declarations: spread([component], moduleOptions.declarations),
+    })
+    class BootstrapModule {
+      private appRef: ApplicationRef;
+
+      constructor(private resolver: ComponentFactoryResolver, public routing: RoutingService) {}
+
+      ngDoBootstrap(appRef: ApplicationRef) {
+        this.appRef = appRef;
+        renderQueue.forEach(([c, n]) => this.render(c, n));
+        BootstrapModule.renderComponent = (c, n) => this.render(c, n);
+      }
+
+      ngOnDestroy() {
+        renderQueue = [];
+        BootstrapModule.renderComponent = pushToQueue;
+      }
+
+      render(component: any, node: HTMLElement) {
+        const factory = this.resolver.resolveComponentFactory(component);
+        this.appRef.bootstrap(factory, node);
+      }
+
+      static renderComponent = pushToQueue;
+    }
+
+    GlobalBootstrapModule = BootstrapModule;
   }
 
-  return startup(BootstrapModule, context, node, ngOptions);
+  GlobalBootstrapModule.renderComponent(component, node);
+  return startup(GlobalBootstrapModule, context, id, ngOptions);
 }
 
 export function bootstrapModule<T extends BaseComponentProps>(
@@ -179,7 +222,6 @@ export function bootstrapModule<T extends BaseComponentProps>(
   const annotations = getAnnotations(BootstrapModule);
   const ResourceUrlPipe = createPipe(props.piral);
   const annotation = annotations[0];
-  node.id = sanatize(id);
 
   if (annotation) {
     const cp = getComponentProps(props);
@@ -219,7 +261,7 @@ export function bootstrapModule<T extends BaseComponentProps>(
     );
   }
 
-  return startup(BootstrapModule, context, node, ngOptions);
+  return startup(BootstrapModule, context, id, ngOptions);
 }
 
 if (process.env.NODE_ENV === 'development') {

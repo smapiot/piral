@@ -1,9 +1,9 @@
 import type { NgModule } from '@angular/core';
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { createExtension } from './extension';
 import { enqueue } from './queue';
+import { createExtension } from './extension';
+import { createDefineModule } from './module';
 import { bootstrap, NgModuleInt } from './bootstrap';
-import { NgOptions } from './types';
 
 let next = ~~(Math.random() * 10000);
 
@@ -27,7 +27,8 @@ export interface NgConverterOptions {
 export function createConverter(config: NgConverterOptions = {}) {
   const { selectId = () => `ng-${next++}`, moduleOptions = {}, selector = 'extension-component' } = config;
   const Extension = createExtension(selector);
-  const convert = <TProps extends BaseComponentProps>(component: any, opts?: NgOptions): ForeignComponent<TProps> => {
+  const defineModule = createDefineModule();
+  const convert = <TProps extends BaseComponentProps>(component: any, moduleRef?: string): ForeignComponent<TProps> => {
     let result: Promise<void | NgModuleInt> = Promise.resolve();
     let active = true;
 
@@ -35,7 +36,7 @@ export function createConverter(config: NgConverterOptions = {}) {
       mount(el, props, ctx) {
         active = true;
         result = result.then(() =>
-          enqueue(() => active && bootstrap(ctx, props, component, el, selectId(), moduleOptions, Extension, opts)),
+          enqueue(() => active && bootstrap(ctx, props, component, el, selectId(), moduleOptions, Extension)),
         );
       },
       unmount() {
@@ -44,6 +45,7 @@ export function createConverter(config: NgConverterOptions = {}) {
       },
     };
   };
+  convert.defineModule = defineModule;
   convert.Extension = Extension;
   return convert;
 }

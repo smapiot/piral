@@ -8,14 +8,15 @@ export interface NgConverter {
 export function createNgConverter(...params: Parameters<typeof createConverter>) {
   const convert = createConverter(...params);
   const Extension = convert.Extension;
+  const defineModule = convert.defineModule;
   const from: NgConverter = (component, opts) => ({
     type: 'html',
     component: convert(component, opts),
   });
 
-  return { from, Extension };
+  return { from, Extension, defineModule };
 }
 
-const { from: fromNg, Extension: NgExtension } = createNgConverter();
+const { from: fromNg, Extension: NgExtension, defineModule: defineNgModule } = createNgConverter();
 
-export { fromNg, NgExtension };
+export { fromNg, NgExtension, defineNgModule };
