@@ -132,7 +132,7 @@ api.registerExtension("machine-actions", ({ params }) => {
     return null;
   }
 
-  return <Link to={`/machine/${machine.id}/edit`}>Edit</Link>;
+  return <Link to={`/machine/${id}/edit`}>Edit</Link>;
 });
 ```
 

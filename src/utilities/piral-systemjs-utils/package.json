@@ -1,6 +1,6 @@
 {
   "name": "piral-systemjs-utils",
-  "version": "0.13.8",
+  "version": "0.13.9",
   "description": "Utilities for providing SystemJS support to Piral.",
   "keywords": [
     "piral",
@@ -41,7 +41,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/systemjs": "^6.1.1",
-    "piral-core": "^0.13.8"
+    "piral-core": "^0.13.9"
   },
   "peerDependencies": {
     "piral-core": "0.14.x"
