@@ -4203,9 +4203,9 @@ aurelia-pal@^1.0.0, aurelia-pal@^1.3.0, aurelia-pal@^1.4.0:
   integrity sha512-6erozUK5aaD88PvThs/L87kLsqxqPaBU59PGECr36v9yezhve0BHqpKgbtJ8haHJSiH80K9lsJtXfefedS/3sw==
 
 aurelia-path@^1.0.0:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/aurelia-path/-/aurelia-path-1.1.5.tgz#e1035daddef7a1926ec7bb76232b659da86c7ed5"
-  integrity sha512-gvjGQalckFXMXJEztlUTQXa4y7fES6/QaC+fSPqE9FcHlB9DE4b0gztY9RRUf+8guCo5L6122h+iYk1AR/ICrQ==
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/aurelia-path/-/aurelia-path-1.1.7.tgz#8eba50a45ca52dfbb3c65f0bf3a221c987602b58"
+  integrity sha512-D6/Tz8jE8b2+Y8Pt6P/fxF6xfJGef+TA6YEljzo1kEzyzbxIvwfqc7pK6i/XGY3LowlumPqrhxkfMjPxLpFIcA==
 
 aurelia-task-queue@^1.0.0, aurelia-task-queue@^1.1.0:
   version "1.3.3"
