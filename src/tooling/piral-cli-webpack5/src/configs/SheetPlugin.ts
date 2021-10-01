@@ -1,27 +1,37 @@
 import InjectPlugin from 'webpack-inject-plugin';
+import { RawSource } from 'webpack-sources';
 
 function sheetLoader(cssName: string, name: string) {
   return () => {
-    const createNew = [
+    const debug = process.env.NODE_ENV === 'development';
+    return [
+      `var d=document`,
+      `var u=__webpack_public_path__+${JSON.stringify(cssName)}`,
       `var e=d.createElement("link")`,
       `e.setAttribute('data-origin', ${JSON.stringify(name)})`,
       `e.type="text/css"`,
       `e.rel="stylesheet"`,
-      `e.href=u`,
+      `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
       `d.head.appendChild(e)`,
     ].join(';');
-    const lines = [
-      `var d=document`,
-      `var u=__webpack_public_path__+${JSON.stringify(cssName)}`,
-      `var f=d.querySelector('link[data-origin=${JSON.stringify(name)}]')`,
-      `if(f){f.href=u+'?_='+Math.random()}else{${createNew}}`,
-    ];
-    return lines.join(';');
   };
 }
 
 export default class SheetPlugin extends InjectPlugin {
-  constructor(cssName: string, name: string) {
+  constructor(private cssName: string, name: string) {
     super(sheetLoader(cssName, name));
+  }
+
+  apply(compiler) {
+    super.apply(compiler);
+
+    compiler.hooks.compilation.tap('SheetPlugin', (compilation) => {
+      compilation.hooks.afterProcessAssets.tap('SheetPlugin', (module) => {
+        if (!compilation.assets[this.cssName] && Object.keys(module).length > 0) {
+          const source = new RawSource('');
+          compilation.emitAsset(this.cssName, source);
+        }
+      });
+    });
   }
 }

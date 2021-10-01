@@ -1,3 +1,4 @@
+import type { PiletApi } from 'piral-core';
 import { Component, ElementRef, Input, Inject } from '@angular/core';
 
 export function createExtension(selector: string): any {
@@ -9,7 +10,7 @@ export function createExtension(selector: string): any {
     @Input('name') public name: string;
     @Input('params') public params: object;
 
-    constructor(private elRef: ElementRef<HTMLElement>, @Inject('piral') private piral: any) {}
+    constructor(private elRef: ElementRef<HTMLElement>, @Inject('piral') private piral: PiletApi) {}
 
     ngAfterContentInit() {
       this.piral.renderHtmlExtension(this.elRef.nativeElement, {
