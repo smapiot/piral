@@ -15,13 +15,11 @@ export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
     const convert = createConverter(config);
     context.converters.ng = ({ component, moduleRef }) => convert(component, moduleRef);
 
-    return () => {
-      const components = [];
-
+    return (api) => {
       return {
         NgExtension: convert.Extension,
         defineNgModule(ngModule, opts) {
-          return '';
+          return convert.defineModule(api, ngModule, opts);
         },
         fromNg(component, moduleRef) {
           return {

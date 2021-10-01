@@ -1,5 +1,5 @@
-import type { PlatformRef } from '@angular/core';
-import type { ForeignComponent } from 'piral-core';
+import type { PlatformRef, NgModuleRef } from '@angular/core';
+import type { ForeignComponent, PiletApi } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNgApi {}
@@ -16,6 +16,16 @@ declare module 'piral-core/lib/types/custom' {
  * See https://angular.io/api/core/PlatformRef#bootstrapModule for possible values.
  */
 export type NgOptions = Parameters<PlatformRef['bootstrapModule']>[1];
+
+export type ModuleInstanceResult = [any, NgOptions];
+
+export type PrepareBootstrapResult = [...ModuleInstanceResult, any];
+
+export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
+
+export interface NgModuleDefiner {
+  (piral: PiletApi, module: any, opts?: NgOptions): string;
+}
 
 export interface NgComponent {
   /**
