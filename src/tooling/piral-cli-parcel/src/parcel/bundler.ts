@@ -265,7 +265,7 @@ function includeCssLink(css: string, content: string, name: string) {
       `e.type="text/css"`,
       `e.rel="stylesheet"`,
       `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
-      `d.head.nappendChild(e)`,
+      `d.head.appendChild(e)`,
     ].join(';');
 
     /**
