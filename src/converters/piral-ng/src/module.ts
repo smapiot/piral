@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, NgModule, NgZone } from '@angular/core';
 import { RoutingService } from './RoutingService';
 import { ResourceUrlPipe } from './ResourceUrlPipe';
-import { addImportRecursively, getAnnotations } from './utils';
+import { addImportRecursively, findComponents, getAnnotations } from './utils';
 
 interface ModuleDefinition {
   active: any;
@@ -108,7 +108,7 @@ export function createDefineModule(SharedModule: any) {
     availableModules.push({
       SharedModule,
       active: undefined,
-      components: annotation.exports || [],
+      components: findComponents(annotation.exports),
       module,
       opts,
     });

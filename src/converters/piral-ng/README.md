@@ -106,10 +106,12 @@ export class AngularPage {
 }
 ```
 
-::: warning: Don't use `templateUrl`
+::: warning: Prefer not to use `templateUrl`
 In many Angular projects you still find `templateUrl`, which would be transformed to a `template` by the Angular CLI during build. If you want to achieve the same using, e.g., Webpack, then use a custom loader such as [angularjs-template-loader](https://www.npmjs.com/package/angularjs-template-loader).
 
 The same issue applies to `styleUrls`, which should be replaced by `styles`.
+
+If you still need to use `templateUrl` then take a look below at the Webpack config file.
 :::
 
 If you don't want to inline the `template` then just `require` the contents, e.g.,

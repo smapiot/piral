@@ -21,13 +21,34 @@ export function getAnnotations(component: any): Array<NgAnnotation> {
   return annotations || [];
 }
 
+export function findComponents(exports: Array<any>): Array<any> {
+  const components = [];
+
+  for (const ex of exports) {
+    const [annotation] = getAnnotations(ex);
+
+    if (annotation) {
+      if (annotation.exports) {
+        components.push(...findComponents(annotation.exports));
+      } else if (!annotation.imports) {
+        components.push(ex);
+      }
+    }
+  }
+
+  return components;
+}
+
 export function addImportRecursively(targetModule: any, importModule: any) {
   const [annotation] = getAnnotations(targetModule);
 
   if (annotation) {
     const existingImports = annotation.imports || [];
     annotation.imports = [...existingImports, importModule];
-    targetModule.ɵinj.imports = [...existingImports, importModule];
+
+    if ('ɵinj' in targetModule) {
+      targetModule.ɵinj.imports = annotation.imports;
+    }
 
     for (const existingImport of existingImports) {
       addImportRecursively(existingImport, importModule);
