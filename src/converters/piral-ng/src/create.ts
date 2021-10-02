@@ -13,22 +13,19 @@ export interface NgConfig extends NgConverterOptions {}
 export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
   return (context) => {
     const convert = createConverter(config);
-    context.converters.ng = ({ component, moduleRef }) => convert(component, moduleRef);
+    context.converters.ng = ({ component }) => convert(component);
 
-    return (api) => {
-      return {
-        NgExtension: convert.Extension,
-        defineNgModule(ngModule, opts) {
-          return convert.defineModule(api, ngModule, opts);
-        },
-        fromNg(component, moduleRef) {
-          return {
-            type: 'ng',
-            component,
-            moduleRef,
-          };
-        },
-      };
+    return {
+      NgExtension: convert.Extension,
+      defineNgModule(ngModule, opts) {
+        convert.defineModule(ngModule, opts);
+      },
+      fromNg(component) {
+        return {
+          type: 'ng',
+          component,
+        };
+      },
     };
   };
 }

@@ -6,6 +6,7 @@ export interface NgAnnotation {
   imports: Array<any>;
   exports: Array<any>;
   declarations: Array<any>;
+  entryComponents: Array<any>;
   bootstrap: any;
   selector: string;
 }

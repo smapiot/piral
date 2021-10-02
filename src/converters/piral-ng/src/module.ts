@@ -1,15 +1,12 @@
-import type { PiletApi } from 'piral-core';
+import type { NgOptions, NgModuleDefiner, ModuleInstanceResult } from './types';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, NgModule, NgZone } from '@angular/core';
 import { RoutingService } from './RoutingService';
 import { ResourceUrlPipe } from './ResourceUrlPipe';
 import { addImportRecursively, getAnnotations } from './utils';
-import { NgOptions, NgModuleDefiner, ModuleInstanceResult } from './types';
 
 interface ModuleDefinition {
-  id: string;
-  piral: PiletApi;
   active: any;
   module: any;
   components: Array<any>;
@@ -40,40 +37,33 @@ function instantiateModule(moduleDef: ModuleDefinition) {
       this.appRef = appRef;
     }
 
-    attach(component: any, node: HTMLElement) {
+    attach(component: any, node: HTMLElement, props: any) {
       const factory = this.resolver.resolveComponentFactory(component);
+      SharedModule.props = props;
 
       if (factory) {
         const ref = this.zone.run(() => this.appRef.bootstrap<any>(factory, node));
         this.refs.push([component, node, ref]);
-        return ref;
       }
     }
 
     detach(component: any, node: HTMLElement) {
       for (let i = this.refs.length; i--; ) {
-        const item = this.refs[i];
+        const [sourceComponent, sourceNode, ref] = this.refs[i];
 
-        if (item[0] === component && item[1] === node) {
-          item[2].destroy();
+        if (sourceComponent === component && sourceNode === node) {
+          ref.destroy();
           this.refs.splice(i, 1);
         }
       }
-
-      //ngMod && !ngMod._destroyed && ngMod.destroy()
     }
   }
 
   return BootstrapModule;
 }
 
-export function getModuleRef(component: any) {
-  const [moduleDef] = availableModules.filter((m) => m.components.includes(component)).map((m) => m.id);
-  return moduleDef;
-}
-
-export function getModuleInstance(moduleRef: string): ModuleInstanceResult {
-  const moduleDef = availableModules.find((s) => s.id === moduleRef);
+export function getModuleInstance(component: any): ModuleInstanceResult {
+  const [moduleDef] = availableModules.filter((m) => m.components.includes(component));
 
   if (moduleDef) {
     if (!moduleDef.active) {
@@ -86,11 +76,7 @@ export function getModuleInstance(moduleRef: string): ModuleInstanceResult {
   return undefined;
 }
 
-export function createModuleInstance(
-  piral: PiletApi,
-  component: any,
-  defineModule: NgModuleDefiner,
-): ModuleInstanceResult {
+export function createModuleInstance(component: any, defineModule: NgModuleDefiner): ModuleInstanceResult {
   @NgModule({
     declarations: [component],
     imports: [CommonModule],
@@ -98,35 +84,33 @@ export function createModuleInstance(
   })
   class Module {}
 
-  const moduleRef = defineModule(piral, Module);
-  return getModuleInstance(moduleRef);
+  defineModule(Module);
+  return getModuleInstance(component);
 }
 
 export function createSharedModule(NgExtension: any): any {
   @NgModule({
     declarations: [NgExtension, ResourceUrlPipe],
+    providers: [{ provide: 'Props', useFactory: () => SharedModule.props, deps: [] }],
     imports: [CommonModule],
     exports: [NgExtension, ResourceUrlPipe],
   })
-  class SharedModule {}
+  class SharedModule {
+    static props = {};
+  }
 
   return SharedModule;
 }
 
 export function createDefineModule(SharedModule: any) {
-  return (piral: PiletApi, module: any, opts: NgOptions = undefined) => {
-    const name = piral.meta.name || '';
-    const id = name + Math.floor((availableModules.length + Math.random()) * 1234567890).toString(36);
+  return (module: any, opts: NgOptions = undefined) => {
     const [annotation] = getAnnotations(module);
     availableModules.push({
-      id,
       SharedModule,
       active: undefined,
       components: annotation.exports || [],
       module,
-      piral,
       opts,
     });
-    return id;
   };
 }

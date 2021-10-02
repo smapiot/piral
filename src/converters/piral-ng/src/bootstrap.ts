@@ -1,28 +1,22 @@
-import type { BaseComponentProps, ComponentContext, Disposable, PiletApi } from 'piral-core';
+import type { BaseComponentProps, ComponentContext, Disposable } from 'piral-core';
+import type { NgModuleDefiner, PrepareBootstrapResult } from './types';
 import { startup } from './startup';
 import { getAnnotations } from './utils';
-import { createModuleInstance, getModuleInstance, getModuleRef } from './module';
-import { NgModuleDefiner, PrepareBootstrapResult } from './types';
+import { createModuleInstance, getModuleInstance } from './module';
 
-export function prepareBootstrap(
-  piral: PiletApi,
-  moduleOrComponent: any,
-  moduleRef: string,
-  defineModule: NgModuleDefiner,
-): PrepareBootstrapResult {
+export function prepareBootstrap(moduleOrComponent: any, defineModule: NgModuleDefiner): PrepareBootstrapResult {
   const [annotation] = getAnnotations(moduleOrComponent);
 
   if (annotation && annotation.bootstrap) {
     // usually contains things like imports, exports, declarations, ...
     const [component] = annotation.bootstrap;
     annotation.exports = [component];
-    const newModuleRef = defineModule(piral, moduleOrComponent);
-    return [...getModuleInstance(newModuleRef), component];
+    defineModule(moduleOrComponent);
+    return [...getModuleInstance(component), component];
   } else {
     // usually contains things like selector, template or templateUrl, changeDetection, ...
     return [
-      ...(getModuleInstance(moduleRef || getModuleRef(moduleOrComponent)) ||
-        createModuleInstance(piral, moduleOrComponent, defineModule)),
+      ...(getModuleInstance(moduleOrComponent) || createModuleInstance(moduleOrComponent, defineModule)),
       moduleOrComponent,
     ];
   }
@@ -35,10 +29,10 @@ export async function bootstrap<TProps extends BaseComponentProps>(
   context: ComponentContext,
 ): Promise<Disposable> {
   const [selectedModule, ngOptions, component] = result;
-  const ref = await startup(selectedModule, context, props, ngOptions);
+  const ref = await startup(selectedModule, context, props.piral, ngOptions);
 
   if (ref) {
-    ref.instance.attach(component, node);
+    ref.instance.attach(component, node, props);
     return () => ref.instance.detach(component, node);
   }
 

@@ -1,8 +1,8 @@
+import type { Subscription } from 'rxjs';
+import type { ComponentContext, Disposable } from 'piral-core';
 import { Inject, Injectable, NgZone, OnDestroy, Optional } from '@angular/core';
 import { NavigationError, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import type { Subscription } from 'rxjs';
-import type { ComponentContext, Disposable } from 'piral-core';
 
 @Injectable()
 export class RoutingService implements OnDestroy {

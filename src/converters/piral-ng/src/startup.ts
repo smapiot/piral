@@ -1,39 +1,35 @@
-import { enableProdMode, NgModuleRef, NgZone, ValueProvider } from '@angular/core';
+import type { PiletApi, ComponentContext } from 'piral-core';
+import type { NgOptions } from './types';
+import { enableProdMode, NgModuleRef, NgZone } from '@angular/core';
 import { APP_BASE_HREF, VERSION } from '@angular/common';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import type { BaseComponentProps, ComponentContext } from 'piral-core';
-import type { NgOptions } from './types';
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const version = `v${VERSION.major || VERSION.full.split('.')[0]}`;
   return versions[version];
 }
 
-const runningModules: Array<[any, NgModuleInt, Array<ValueProvider>]> = [];
+const runningModules: Array<[any, NgModuleInt]> = [];
 
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 
 export function startup(
   BootstrapModule: any,
   context: ComponentContext,
-  props: BaseComponentProps,
+  piral: PiletApi,
   ngOptions?: NgOptions,
 ): Promise<void | NgModuleInt> {
   const runningModule = runningModules.find(([ref]) => ref === BootstrapModule);
 
   if (runningModule) {
-    const [, instance, providers] = runningModule;
-    const [, Props] = providers;
-    Props.useValue = props;
+    const [, instance] = runningModule;
     return Promise.resolve(instance);
   } else {
-    const providers = [
+    const platform = platformBrowserDynamic([
       { provide: 'Context', useValue: context },
-      { provide: 'Props', useValue: props },
-      { provide: 'piral', useValue: props.piral },
+      { provide: 'piral', useValue: piral },
       { provide: APP_BASE_HREF, useValue: '/' },
-    ];
-    const platform = platformBrowserDynamic(providers);
+    ]);
     const id = Math.random().toString(36);
     const zoneIdentifier = `piral-ng:${id}`;
 
@@ -58,7 +54,7 @@ export function startup(
             z._properties[zoneIdentifier] = true;
           }
 
-          runningModules.push([BootstrapModule, instance, providers]);
+          runningModules.push([BootstrapModule, instance]);
         }
 
         return instance;
