@@ -22,8 +22,6 @@
     "esm",
     "lib",
     "src",
-    "debug-pilet.ts",
-    "debug-piral.ts",
     "debug-pilet.d.ts",
     "debug-piral.d.ts",
     "debug-pilet.js",

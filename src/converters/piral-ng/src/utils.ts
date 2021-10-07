@@ -24,14 +24,16 @@ export function getAnnotations(component: any): Array<NgAnnotation> {
 export function findComponents(exports: Array<any>): Array<any> {
   const components = [];
 
-  for (const ex of exports) {
-    const [annotation] = getAnnotations(ex);
-
-    if (annotation) {
-      if (annotation.exports) {
-        components.push(...findComponents(annotation.exports));
-      } else if (!annotation.imports) {
-        components.push(ex);
+  if (exports && Array.isArray(exports)) {
+    for (const ex of exports) {
+      const [annotation] = getAnnotations(ex);
+  
+      if (annotation) {
+        if (annotation.exports) {
+          components.push(...findComponents(annotation.exports));
+        } else if (!annotation.imports) {
+          components.push(ex);
+        }
       }
     }
   }
