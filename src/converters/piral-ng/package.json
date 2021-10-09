@@ -24,6 +24,7 @@
     "esm",
     "lib",
     "src",
+    "common.ts",
     "convert.d.ts",
     "convert.js"
   ],

@@ -17,9 +17,6 @@ export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
 
     return {
       NgExtension: convert.Extension,
-      defineNgModule(ngModule, opts) {
-        convert.defineModule(ngModule, opts);
-      },
       fromNg(component) {
         return {
           type: 'ng',

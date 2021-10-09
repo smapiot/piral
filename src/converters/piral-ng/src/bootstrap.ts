@@ -1,10 +1,10 @@
 import type { BaseComponentProps, ComponentContext, Disposable } from 'piral-core';
-import type { NgModuleDefiner, PrepareBootstrapResult } from './types';
+import type { PrepareBootstrapResult } from './types';
 import { startup } from './startup';
 import { getAnnotations } from './utils';
-import { createModuleInstance, getModuleInstance } from './module';
+import { createModuleInstance, getModuleInstance, defineModule } from './module';
 
-export function prepareBootstrap(moduleOrComponent: any, defineModule: NgModuleDefiner): PrepareBootstrapResult {
+export function prepareBootstrap(moduleOrComponent: any): PrepareBootstrapResult {
   const [annotation] = getAnnotations(moduleOrComponent);
 
   if (annotation && annotation.bootstrap) {
@@ -15,10 +15,7 @@ export function prepareBootstrap(moduleOrComponent: any, defineModule: NgModuleD
     return [...getModuleInstance(component), component];
   } else {
     // usually contains things like selector, template or templateUrl, changeDetection, ...
-    return [
-      ...(getModuleInstance(moduleOrComponent) || createModuleInstance(moduleOrComponent, defineModule)),
-      moduleOrComponent,
-    ];
+    return [...(getModuleInstance(moduleOrComponent) || createModuleInstance(moduleOrComponent)), moduleOrComponent];
   }
 }
 

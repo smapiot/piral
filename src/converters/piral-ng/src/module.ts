@@ -1,26 +1,23 @@
-import type { NgOptions, NgModuleDefiner, ModuleInstanceResult } from './types';
+import type { NgOptions, ModuleInstanceResult } from './types';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, NgModule, NgZone } from '@angular/core';
 import { RoutingService } from './RoutingService';
-import { ResourceUrlPipe } from './ResourceUrlPipe';
-import { addImportRecursively, findComponents, getAnnotations } from './utils';
+import { SharedModule } from './SharedModule';
+import { findComponents, getAnnotations } from './utils';
 
 interface ModuleDefinition {
   active: any;
   module: any;
   components: Array<any>;
-  SharedModule: any;
   opts: NgOptions;
 }
 
 const availableModules: Array<ModuleDefinition> = [];
 
 function instantiateModule(moduleDef: ModuleDefinition) {
-  const { SharedModule, module, components } = moduleDef;
+  const { module, components } = moduleDef;
   const imports = [BrowserModule, SharedModule, module];
-
-  addImportRecursively(module, SharedModule);
 
   @NgModule({
     imports,
@@ -76,7 +73,7 @@ export function getModuleInstance(component: any): ModuleInstanceResult {
   return undefined;
 }
 
-export function createModuleInstance(component: any, defineModule: NgModuleDefiner): ModuleInstanceResult {
+export function createModuleInstance(component: any): ModuleInstanceResult {
   @NgModule({
     declarations: [component],
     imports: [CommonModule],
@@ -88,29 +85,12 @@ export function createModuleInstance(component: any, defineModule: NgModuleDefin
   return getModuleInstance(component);
 }
 
-export function createSharedModule(NgExtension: any): any {
-  @NgModule({
-    declarations: [NgExtension, ResourceUrlPipe],
-    providers: [{ provide: 'Props', useFactory: () => SharedModule.props, deps: [] }],
-    imports: [CommonModule],
-    exports: [NgExtension, ResourceUrlPipe],
-  })
-  class SharedModule {
-    static props = {};
-  }
-
-  return SharedModule;
-}
-
-export function createDefineModule(SharedModule: any) {
-  return (module: any, opts: NgOptions = undefined) => {
-    const [annotation] = getAnnotations(module);
-    availableModules.push({
-      SharedModule,
-      active: undefined,
-      components: findComponents(annotation.exports),
-      module,
-      opts,
-    });
-  };
+export function defineModule(module: any, opts: NgOptions = undefined) {
+  const [annotation] = getAnnotations(module);
+  availableModules.push({
+    active: undefined,
+    components: findComponents(annotation.exports),
+    module,
+    opts,
+  });
 }
