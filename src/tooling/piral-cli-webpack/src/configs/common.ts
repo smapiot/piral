@@ -133,5 +133,10 @@ export function getRules(production: boolean): Array<RuleSetRule> {
       exclude: nodeModules,
       enforce: 'pre',
     },
+    {
+      parser: {
+        system: false,
+      },
+    },
   ];
 }

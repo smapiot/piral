@@ -66,7 +66,7 @@
     "html-webpack-plugin": "^5.2.0",
     "mini-css-extract-plugin": "^1.1.1",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
-    "parcel-codegen-loader": "^0.7.0",
+    "parcel-codegen-loader": "^0.8.0",
     "querystring": "^0.2.0",
     "sass": "^1.32.12",
     "sass-loader": "^10.0.3",

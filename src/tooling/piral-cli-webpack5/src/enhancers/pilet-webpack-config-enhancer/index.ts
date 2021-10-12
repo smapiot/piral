@@ -72,6 +72,31 @@ function piletVxWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   return compiler;
 }
 
+function piletV0WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file } = options;
+  const shortName = name.replace(/\W/gi, '');
+  const jsonpFunction = `pr_${shortName}`;
+
+  withSetPath(compiler);
+  setEnvironment(variables);
+  withExternals(compiler, externals);
+
+  compiler.plugins.push(
+    new DefinePlugin(getDefineVariables(variables)),
+    new BannerPlugin({
+      banner: `//@pilet v:0`,
+      entryOnly: true,
+      include: file,
+      raw: true,
+    }),
+  );
+  compiler.output.uniqueName = `${jsonpFunction}`;
+  compiler.output.library = name;
+  compiler.output.libraryTarget = 'umd';
+
+  return compiler;
+}
+
 function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
   const { name, variables, externals, file } = options;
   const shortName = name.replace(/\W/gi, '');
@@ -146,11 +171,12 @@ export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOp
   };
 
   switch (schema) {
+    case 'v0':
+      return piletV0WebpackConfigEnhancer(options, compiler);
     case 'v1':
       return piletV1WebpackConfigEnhancer(options, compiler);
     case 'v2':
       return piletV2WebpackConfigEnhancer(options, compiler);
-    case 'v0':
     case 'none':
     default:
       return piletVxWebpackConfigEnhancer(options, compiler);

@@ -161,7 +161,7 @@ export function appInstanceNotFound_0010(name: string): QuickMessage {
  * It should be an HTML file.
  *
  * @see
- * - [Parcel HTML Asset](https://parceljs.org/html.html)
+ * - [Parcel HTML Asset](https://parceljs.org/languages/html/)
  *
  * @example
  * Make sure the package.json of the Piral instance is valid (has an "app" field).
@@ -1277,10 +1277,10 @@ export function failedHttpGet_0068(error: string): QuickMessage {
  *
  * @abstract
  * While submitting the HTTP get request an error was reported.
- * 
+ *
  * Potentially, the server returned some more indicative error message. In this
  * case read it carefully to know what version was already published.
- * 
+ *
  * In any case only the documentation of the corresponding feed service can be
  * conclusive how this can be resolved. Presumably, some payment of some fee
  * is necessary to publish pilets.
@@ -1299,28 +1299,28 @@ export function failedToUploadPayment_0161(response: any): QuickMessage {
  *
  * @abstract
  * While submitting the HTTP get request an error was reported.
- * 
+ *
  * Potentially, the server returned some more indicative error message. In this
  * case read it carefully to know what version was already published.
- * 
+ *
  * In any case you need to change the version to continue. You can do that by
  * editing the "version" field in the pilet's package.json or using `npm version`.
  *
  * @example
  * If you already published the pilet, e.g., via
- * 
+ *
  * ```sh
  * pilet publish --api-key ... --url ...
  * ```
- * 
+ *
  * then doing this again without any change should result in this error.
- * 
+ *
  * Now we can patch-upgrade the version of the pilet:
- * 
+ *
  * ```sh
  * npm version patch
  * ```
- * 
+ *
  * And try the `pilet publish` command again. This time it should just work.
  */
 export function failedToUploadVersion_0162(response: any): QuickMessage {
@@ -1337,10 +1337,10 @@ export function failedToUploadVersion_0162(response: any): QuickMessage {
  *
  * @abstract
  * While submitting the HTTP get request an error was reported.
- * 
+ *
  * Potentially, the server returned some more indicative error message. In this
  * case read it carefully to know how much the limit was exceeded.
- * 
+ *
  * In any case the pilet must be somehow trimmed down. Most often, the size is
  * dominantly determined by some external packages that are referened. Use a
  * page such as bundlephobia.com or some IDE tools to find out which packages
@@ -1960,7 +1960,7 @@ export function publishProviderMissing_0113(providerName: string, availableProvi
  * ```sh
  * piral publish --type release --provider xcopy --fields.target "/temp/dest"
  * ```
- * 
+ *
  * The type is "release".
  */
 export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
@@ -2018,7 +2018,7 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  *
  * The v1 version has better support for older browsers, but requires a polyfill to work
  * correctly. This polyfill is part of the standard Piral polyfills.
- * 
+ *
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
  * indirectly, making it a quite broad choice.
