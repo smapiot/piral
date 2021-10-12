@@ -23,6 +23,18 @@ export type PrepareBootstrapResult = [...ModuleInstanceResult, any];
 
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 
+/**
+ * Represents the interface implemented by a module definer function.
+ */
+export interface NgModuleDefiner {
+  /**
+   * Defines the module to use when bootstrapping the Angular pilet.
+   * @param ngModule The module to use for running Angular.
+   * @param opts The options to pass when bootstrapping.
+   */
+  (module: any, opts?: NgOptions): void;
+}
+
 export interface NgComponent {
   /**
    * The component root.
@@ -38,6 +50,10 @@ export interface NgComponent {
  * Defines the provided set of Angular Pilet API extensions.
  */
 export interface PiletNgApi {
+  /**
+   * Defines the module to use when bootstrapping the Angular pilet.
+   */
+  defineNgModule: NgModuleDefiner;
   /**
    * Wraps an Angular component for use in Piral. Might reuse a previously
    * defined module if the component was exported from it.
