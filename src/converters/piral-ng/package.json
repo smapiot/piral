@@ -24,7 +24,7 @@
     "esm",
     "lib",
     "src",
-    "common.ts",
+    "common.js",
     "convert.d.ts",
     "convert.js"
   ],
@@ -36,9 +36,8 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
+    "build": "yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration",
-    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-ng.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
