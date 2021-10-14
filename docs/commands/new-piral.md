@@ -84,7 +84,7 @@ Sets the log level to use (1-5).
 Sets the tag or version of the package to install. By default, this uses the version of the CLI.
 
 - Type: `string`
-- Default: `"0.13.2"`
+- Default: `"0.13.9"`
 
 ### `--force-overwrite`
 
