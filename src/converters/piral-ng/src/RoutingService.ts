@@ -16,6 +16,14 @@ export class RoutingService implements OnDestroy {
     @Optional() private zone: NgZone,
   ) {
     if (this.router) {
+      this.router.errorHandler = (error: Error) => {
+          if (error.message.match('Cannot match any routes')) {
+              // ignore this special error
+              return undefined;
+          }
+          throw error;
+      };
+
       this.dispose = this.context.router.history.listen((e) => {
         const path = e.pathname;
 
