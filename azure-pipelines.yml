@@ -21,7 +21,7 @@ variables:
 - name: documentBranch
   value: 'documentation'
 - name: nodeVersion
-  value: '12.16.3'
+  value: '12.18.3'
 
 stages:
 - stage: Build

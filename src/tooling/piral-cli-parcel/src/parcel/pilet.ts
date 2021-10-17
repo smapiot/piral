@@ -16,7 +16,7 @@ const handler: PiletBuildHandler = {
         cacheDir: options.args.cacheDir,
         watch: options.watch,
         hmr: false,
-        sourceMaps: options.minify,
+        sourceMaps: options.sourceMaps,
         minify: options.minify,
         scopeHoist: options.args.scopeHoist,
         contentHash: options.contentHash,

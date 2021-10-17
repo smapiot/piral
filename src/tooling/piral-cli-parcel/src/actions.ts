@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import { fork } from 'child_process';
 import { removeDirectory } from 'piral-cli/utils';
 import type {
   DebugPiletBundlerDefinition,
@@ -6,35 +7,54 @@ import type {
   BuildPiletBundlerDefinition,
   BuildPiralBundlerDefinition,
   WatchPiralBundlerDefinition,
+  SharedDependency,
+  LogLevels,
+  PiletSchemaVersion,
 } from 'piral-cli';
 import { defaultCacheDir } from './parcel';
 
-// interface BuildDependencyParameters {
-//   externals: Array<string>;
-//   importmap: Array<SharedDependency>;
-//   targetDir: string;
-//   entryModule: string;
-//   logLevel: LogLevels;
-//   version: PiletSchemaVersion;
-// }
+interface BuildDependencyParameters {
+  externals: Array<string>;
+  importmap: Array<SharedDependency>;
+  targetDir: string;
+  entryModule: string;
+  logLevel: LogLevels;
+  version: PiletSchemaVersion;
+}
 
-//TODO
-// async function buildDependencies(args: BuildDependencyParameters, cacheDir: string) {
-//   for (const dependency of args.importmap) {
-//     if (dependency.type === 'local') {
-//       await callStatic('build-dependency', {
-//         ...args,
-//         name: dependency.id,
-//         optimizeModules: false,
-//         outFile: dependency.ref,
-//         entryModule: dependency.entry,
-//         importmap: args.importmap.filter((m) => m !== dependency),
-//         _: {},
-//         cacheDir,
-//       } as any);
-//     }
-//   }
-// }
+async function buildDependencies(args: BuildDependencyParameters, cacheDir: string) {
+  const path = resolve(__dirname, 'parcel', `dependency.js`);
+  const cwd = process.cwd();
+
+  for (const dependency of args.importmap) {
+    if (dependency.type === 'local') {
+      await new Promise<void>((resolve, reject) => {
+        const ps = fork(path, [], { cwd });
+
+        ps.on('message', (msg: any) => {
+          switch (msg.type) {
+            case 'done':
+              return resolve();
+            case 'fail':
+              return reject(msg.error);
+          }
+        });
+
+        ps.send({
+          type: 'start',
+          ...args,
+          name: dependency.id,
+          optimizeModules: false,
+          outFile: dependency.ref,
+          entryModule: dependency.entry,
+          importmap: args.importmap.filter((m) => m !== dependency),
+          _: {},
+          cacheDir,
+        });
+      });
+    }
+  }
+}
 
 export const debugPiral: DebugPiralBundlerDefinition = {
   flags(argv) {
@@ -130,13 +150,16 @@ export const debugPilet: DebugPiletBundlerDefinition = {
       await removeDirectory(cache);
     }
 
-    return {
+    const options = {
       ...args,
       _: {},
       cacheDir: cache,
       scopeHoist,
       autoInstall,
     };
+
+    await buildDependencies(options, cacheDir);
+    return options;
   },
 };
 
@@ -160,12 +183,15 @@ export const buildPilet: BuildPiletBundlerDefinition = {
 
     await removeDirectory(cache);
 
-    return {
+    const options = {
       ...args,
       _: {},
       cacheDir: cache,
       detailedReport,
       scopeHoist,
     };
+
+    await buildDependencies(options, cacheDir);
+    return options;
   },
 };
