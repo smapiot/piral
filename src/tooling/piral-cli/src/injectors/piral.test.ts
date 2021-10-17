@@ -1,5 +1,6 @@
-import PiralInjector, { PiralInjectorConfig } from './piral';
+import PiralInjector from './piral';
 import { KrasRequest, KrasResult } from 'kras';
+import { EventEmitter } from 'events';
 
 const bundlerMock = {
   pending: true,
@@ -36,7 +37,7 @@ describe('Piral-CLI piral injector', () => {
       bundler,
       active: true,
     };
-    const injector = new PiralInjector(config);
+    const injector = new PiralInjector(config, undefined, new EventEmitter());
     expect(injector.active).toBeTruthy();
   });
 
@@ -46,7 +47,7 @@ describe('Piral-CLI piral injector', () => {
       bundler: bundlerMock,
       active: true,
     };
-    const injector = new PiralInjector(config);
+    const injector = new PiralInjector(config, undefined, new EventEmitter());
 
     // Act
     injector.active = false;
@@ -64,7 +65,7 @@ describe('Piral-CLI piral injector', () => {
       bundler: bundlerMock,
       active: true,
     };
-    const injector = new PiralInjector(config);
+    const injector = new PiralInjector(config, undefined, new EventEmitter());
 
     // Act
     const res = injector.sendResponse('some/nice/invalid/path', 'sometarget.file', 'someDir', 'localhost:1234');
@@ -79,7 +80,7 @@ describe('Piral-CLI piral injector', () => {
       bundler: bundlerMock,
       active: true,
     };
-    const injector = new PiralInjector(config);
+    const injector = new PiralInjector(config, undefined, new EventEmitter());
     const request: KrasRequest = {
       content: 'someFakeContent',
       headers: {},
