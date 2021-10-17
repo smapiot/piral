@@ -6,37 +6,35 @@ import type {
   BuildPiletBundlerDefinition,
   BuildPiralBundlerDefinition,
   WatchPiralBundlerDefinition,
-  LogLevels,
-  PiletSchemaVersion,
-  SharedDependency,
 } from 'piral-cli';
-import { callDynamic, callStatic, defaultCacheDir } from './parcel';
+import { defaultCacheDir } from './parcel';
 
-interface BuildDependencyParameters {
-  externals: Array<string>;
-  importmap: Array<SharedDependency>;
-  targetDir: string;
-  entryModule: string;
-  logLevel: LogLevels;
-  version: PiletSchemaVersion;
-}
+// interface BuildDependencyParameters {
+//   externals: Array<string>;
+//   importmap: Array<SharedDependency>;
+//   targetDir: string;
+//   entryModule: string;
+//   logLevel: LogLevels;
+//   version: PiletSchemaVersion;
+// }
 
-async function buildDependencies(args: BuildDependencyParameters, cacheDir: string) {
-  for (const dependency of args.importmap) {
-    if (dependency.type === 'local') {
-      await callStatic('build-dependency', {
-        ...args,
-        name: dependency.id,
-        optimizeModules: false,
-        outFile: dependency.ref,
-        entryModule: dependency.entry,
-        importmap: args.importmap.filter(m => m !== dependency),
-        _: {},
-        cacheDir,
-      } as any);
-    }
-  }
-}
+//TODO
+// async function buildDependencies(args: BuildDependencyParameters, cacheDir: string) {
+//   for (const dependency of args.importmap) {
+//     if (dependency.type === 'local') {
+//       await callStatic('build-dependency', {
+//         ...args,
+//         name: dependency.id,
+//         optimizeModules: false,
+//         outFile: dependency.ref,
+//         entryModule: dependency.entry,
+//         importmap: args.importmap.filter((m) => m !== dependency),
+//         _: {},
+//         cacheDir,
+//       } as any);
+//     }
+//   }
+// }
 
 export const debugPiral: DebugPiralBundlerDefinition = {
   flags(argv) {
@@ -54,7 +52,8 @@ export const debugPiral: DebugPiralBundlerDefinition = {
       .describe('autoinstall', 'Automatically installs missing Node.js packages.')
       .default('autoinstall', true);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { cacheDir = defaultCacheDir, scopeHoist = false, autoInstall = true, fresh = false } = args._;
     const cache = resolve(args.root, cacheDir);
 
@@ -62,23 +61,18 @@ export const debugPiral: DebugPiralBundlerDefinition = {
       await removeDirectory(cache);
     }
 
-    const bundler = await callDynamic('debug-piral', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       scopeHoist,
       autoInstall,
-    });
-
-    return bundler;
+    };
   },
 };
 
 export const watchPiral: WatchPiralBundlerDefinition = {
-  async run(args) {
-    const bundler = await callStatic('debug-mono-piral', args);
-    return bundler;
-  },
+  path: '',
 };
 
 export const buildPiral: BuildPiralBundlerDefinition = {
@@ -94,21 +88,20 @@ export const buildPiral: BuildPiralBundlerDefinition = {
       .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
       .default('scope-hoist', false);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { detailedReport = false, scopeHoist = false, cacheDir = defaultCacheDir } = args._;
     const cache = resolve(args.root, cacheDir);
 
     await removeDirectory(cache);
 
-    const bundler = await callStatic('build-piral', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       detailedReport,
       scopeHoist,
-    });
-
-    return bundler.bundle;
+    };
   },
 };
 
@@ -128,7 +121,8 @@ export const debugPilet: DebugPiletBundlerDefinition = {
       .describe('autoinstall', 'Automatically installs missing Node.js packages.')
       .default('autoinstall', true);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { cacheDir = defaultCacheDir, scopeHoist = false, autoInstall = true, fresh = false } = args._;
     const cache = resolve(args.root, cacheDir);
 
@@ -136,17 +130,13 @@ export const debugPilet: DebugPiletBundlerDefinition = {
       await removeDirectory(cache);
     }
 
-    const bundler = await callDynamic('debug-pilet', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       scopeHoist,
       autoInstall,
-    });
-
-    await buildDependencies(args, cacheDir);
-
-    return bundler;
+    };
   },
 };
 
@@ -163,22 +153,19 @@ export const buildPilet: BuildPiletBundlerDefinition = {
       .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
       .default('scope-hoist', false);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { detailedReport = false, cacheDir = defaultCacheDir, scopeHoist = false } = args._;
     const cache = resolve(args.root, cacheDir);
 
     await removeDirectory(cache);
 
-    const bundler = await callStatic('build-pilet', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       detailedReport,
       scopeHoist,
-    });
-
-    await buildDependencies(args, cache);
-
-    return bundler.bundle;
+    };
   },
 };

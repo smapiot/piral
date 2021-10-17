@@ -7,7 +7,7 @@ import {
   BuildPiralBundlerDefinition,
   WatchPiralBundlerDefinition,
 } from 'piral-cli';
-import { callDynamic, callStatic, defaultCacheDir } from './parcel';
+import { defaultCacheDir } from './parcel';
 
 export const debugPiral: DebugPiralBundlerDefinition = {
   flags(argv) {
@@ -25,7 +25,8 @@ export const debugPiral: DebugPiralBundlerDefinition = {
       .describe('autoinstall', 'Automatically installs missing Node.js packages.')
       .default('autoinstall', true);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { cacheDir = defaultCacheDir, scopeHoist = false, autoInstall = true, fresh = false } = args._;
     const cache = resolve(args.root, cacheDir);
 
@@ -33,23 +34,18 @@ export const debugPiral: DebugPiralBundlerDefinition = {
       await removeDirectory(cache);
     }
 
-    const bundler = await callDynamic('debug-piral', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       scopeHoist,
       autoInstall,
-    });
-
-    return bundler;
+    };
   },
 };
 
 export const watchPiral: WatchPiralBundlerDefinition = {
-  async run(args) {
-    const bundler = await callStatic('debug-mono-piral', args);
-    return bundler;
-  },
+  path: '',
 };
 
 export const buildPiral: BuildPiralBundlerDefinition = {
@@ -65,21 +61,20 @@ export const buildPiral: BuildPiralBundlerDefinition = {
       .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
       .default('scope-hoist', true);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { detailedReport = false, scopeHoist = false, cacheDir = defaultCacheDir } = args._;
     const cache = resolve(args.root, cacheDir);
 
     await removeDirectory(cache);
 
-    const bundler = await callStatic('build-piral', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       detailedReport,
       scopeHoist,
-    });
-
-    return bundler.bundle;
+    };
   },
 };
 
@@ -99,7 +94,8 @@ export const debugPilet: DebugPiletBundlerDefinition = {
       .describe('autoinstall', 'Automatically installs missing Node.js packages.')
       .default('autoinstall', true);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { cacheDir = defaultCacheDir, scopeHoist = false, autoInstall = true, fresh = false } = args._;
     const cache = resolve(args.root, cacheDir);
 
@@ -107,15 +103,13 @@ export const debugPilet: DebugPiletBundlerDefinition = {
       await removeDirectory(cache);
     }
 
-    const bundler = await callDynamic('debug-pilet', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       scopeHoist,
       autoInstall,
-    });
-
-    return bundler;
+    };
   },
 };
 
@@ -132,20 +126,19 @@ export const buildPilet: BuildPiletBundlerDefinition = {
       .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
       .default('scope-hoist', true);
   },
-  async run(args) {
+  path: '',
+  async prepare(args) {
     const { detailedReport = false, cacheDir = defaultCacheDir, scopeHoist = false } = args._;
     const cache = resolve(args.root, cacheDir);
 
     await removeDirectory(cache);
 
-    const bundler = await callStatic('build-pilet', {
+    return {
       ...args,
       _: {},
       cacheDir: cache,
       detailedReport,
       scopeHoist,
-    });
-
-    return bundler.bundle;
+    };
   },
 };
