@@ -11,11 +11,13 @@ function run(
   minify: boolean,
   externals: Array<string>,
   importmap: Array<SharedDependency>,
+  targetDir: string,
   outDir: string,
   outFile: string,
   entryModule: string,
   version: PiletSchemaVersion,
   logLevel: LogLevels,
+  args: any,
 ) {
   setStandardEnvs({
     production: true,
@@ -27,6 +29,7 @@ function run(
     root,
     piral,
     entryModule,
+    targetDir,
     outDir,
     outFile,
     externals,
@@ -38,6 +41,7 @@ function run(
     minify,
     logLevel,
     watch: false,
+    args,
   });
 }
 
@@ -56,11 +60,13 @@ process.on('message', async (msg) => {
           msg.minify,
           msg.externals,
           msg.importmap,
+          msg.targetDir,
           msg.outDir,
           msg.outFile,
           msg.entryModule,
           msg.version,
           msg.logLevel,
+          msg,
         );
         const result = await bundler.bundle();
 

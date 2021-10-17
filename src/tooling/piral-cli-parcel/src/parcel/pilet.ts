@@ -1,31 +1,36 @@
 import type { PiletBuildHandler } from 'piral-cli';
+import { postProcess, setupBundler } from './bundler';
+import { runParcel } from './bundler-run';
 
 const handler: PiletBuildHandler = {
-  create(config) {
+  create(options) {
     const bundler = setupBundler({
       type: 'pilet',
-      externals,
-      importmap,
-      targetDir,
-      entryModule,
+      externals: options.externals,
+      importmap: options.importmap,
+      targetDir: options.targetDir,
+      entryModule: options.entryModule,
       config: {
-        outFile,
-        outDir,
-        cacheDir,
-        watch: false,
-        sourceMaps,
-        minify,
-        scopeHoist,
-        contentHash,
+        outFile: options.outFile,
+        outDir: options.outDir,
+        cacheDir: options.args.cacheDir,
+        watch: options.watch,
+        hmr: false,
+        sourceMaps: options.minify,
+        minify: options.minify,
+        scopeHoist: options.args.scopeHoist,
+        contentHash: options.contentHash,
         publicUrl: './',
-        detailedReport,
-        logLevel,
+        detailedReport: options.args.detailedReport,
+        logLevel: options.logLevel,
+        autoInstall: options.args.autoInstall,
       },
     });
-  
-    const name = process.env.BUILD_PCKG_NAME;
-    const bundle = await bundler.bundle();
-    await postProcess(bundle, name, version, minify, importmap);
+
+    return runParcel(bundler, (bundle) => {
+      const name = process.env.BUILD_PCKG_NAME;
+      return postProcess(bundle, name, options.version, options.minify, options.importmap);
+    });
   },
 };
 

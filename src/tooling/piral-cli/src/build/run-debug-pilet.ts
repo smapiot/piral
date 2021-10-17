@@ -13,6 +13,7 @@ let bundler: BundleHandlerResponse;
 
 function run(
   root: string,
+  targetDir: string,
   outDir: string,
   piral: string,
   externals: Array<string>,
@@ -20,6 +21,7 @@ function run(
   entryModule: string,
   version: PiletSchemaVersion,
   logLevel: LogLevels,
+  args: any,
 ) {
   setStandardEnvs({
     piral,
@@ -29,6 +31,7 @@ function run(
     root,
     piral,
     entryModule,
+    targetDir,
     outDir,
     outFile: 'index.js',
     externals,
@@ -40,6 +43,7 @@ function run(
     minify: false,
     logLevel,
     watch: true,
+    args,
   });
 }
 
@@ -61,6 +65,7 @@ process.on('message', async (msg) => {
         const dist = resolve(root, 'dist');
         bundler = await run(
           root,
+          msg.targetDir,
           dist,
           msg.piral,
           msg.externals,
@@ -68,6 +73,7 @@ process.on('message', async (msg) => {
           msg.entryModule,
           msg.version,
           msg.logLevel,
+          msg,
         );
 
         if (bundler) {

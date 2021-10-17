@@ -12,9 +12,11 @@ function run(
   minify: boolean,
   externals: Array<string>,
   publicUrl: string,
+  outFile: string,
   outDir: string,
   entryFiles: string,
   logLevel: LogLevels,
+  args: any,
 ) {
   setStandardEnvs({
     production: !emulator,
@@ -28,6 +30,7 @@ function run(
   return handler.create({
     root,
     entryFiles,
+    outFile,
     outDir,
     externals,
     emulator,
@@ -38,6 +41,7 @@ function run(
     hmr: false,
     logLevel,
     watch: false,
+    args,
   });
 }
 
@@ -57,9 +61,11 @@ process.on('message', async (msg) => {
           msg.minify,
           msg.externals,
           msg.publicUrl,
+          msg.outFile,
           msg.outDir,
           msg.entryFiles,
           msg.logLevel,
+          msg,
         );
         const result = await bundler.bundle();
 

@@ -154,6 +154,7 @@ export interface PiralBuildHandler {
     root: string;
     entryFiles: string;
     outDir: string;
+    outFile: string;
     externals: Array<string>;
     emulator: boolean;
     sourceMaps: boolean;
@@ -163,6 +164,7 @@ export interface PiralBuildHandler {
     hmr: boolean;
     logLevel: LogLevels;
     watch: boolean;
+    args: any;
   }): Promise<BundleHandlerResponse>;
 }
 
@@ -171,6 +173,7 @@ export interface PiletBuildHandler {
     root: string;
     piral: string;
     entryModule: string;
+    targetDir: string;
     outDir: string;
     outFile: string;
     externals: Array<string>;
@@ -182,6 +185,7 @@ export interface PiletBuildHandler {
     minify: boolean;
     logLevel: LogLevels;
     watch: boolean;
+    args: any;
   }): Promise<BundleHandlerResponse>;
 }
 

@@ -6,12 +6,14 @@ let handler: PiralBuildHandler;
 
 function run(
   root: string,
+  outFile: string,
   outDir: string,
   piral: string,
   hmr: boolean,
   externals: Array<string>,
   entryFiles: string,
   logLevel: LogLevels,
+  args: any,
 ) {
   progress(`Preparing supplied Piral instance ...`);
 
@@ -27,6 +29,7 @@ function run(
   return handler.create({
     root,
     entryFiles,
+    outFile,
     outDir,
     externals,
     emulator: true,
@@ -37,6 +40,7 @@ function run(
     hmr,
     logLevel,
     watch: true,
+    args,
   });
 }
 
@@ -49,7 +53,17 @@ process.on('message', async (msg) => {
       case 'start':
         const root = process.cwd();
         const outDir = resolve(root, 'dist', 'app');
-        const bundler = await run(root, outDir, msg.piral, true, msg.externals, msg.entryFiles, msg.logLevel);
+        const bundler = await run(
+          root,
+          msg.outFile,
+          outDir,
+          msg.piral,
+          true,
+          msg.externals,
+          msg.entryFiles,
+          msg.logLevel,
+          msg,
+        );
         const result = await bundler.bundle();
 
         logReset();
