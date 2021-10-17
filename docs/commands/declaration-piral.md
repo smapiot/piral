@@ -1,6 +1,6 @@
 # `declaration-piral`
 
-Creates the declaration file for a Piral instance.
+Creates the TypeScript declaration file (index.d.ts) for a Piral instance.
 
 ## Syntax
 
@@ -51,7 +51,7 @@ Sets the log level to use (1-5).
 
 ### `--force-overwrite`
 
-Determines if files should be overwritten by the declaration.
+Determines if files should be overwritten by the command.
 
 - Type: `string`
 - Choices: `"no"`, `"prompt"`, `"yes"`

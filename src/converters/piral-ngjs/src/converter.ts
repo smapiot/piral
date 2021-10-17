@@ -1,7 +1,18 @@
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { bootstrap, IModule } from 'angular';
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { createExtension } from './extension';
 
-export function createConverter() {
+export interface NgjsConverterOptions {
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
+
+export function createConverter(config: NgjsConverterOptions = {}) {
+  const { rootName = 'slot' } = config;
+  const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(name: string, root: IModule): ForeignComponent<TProps> => {
     let injector: any = undefined;
 
@@ -20,5 +31,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

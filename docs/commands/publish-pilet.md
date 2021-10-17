@@ -39,15 +39,14 @@ Sets the source previously packed *.tgz bundle to publish.
 Sets the explicit URL where to publish the pilet to.
 
 - Type: `string`
-- Default: `""`
-- **Caution: This flag is required!**
+- Default: `undefined`
 
 ### `--api-key`
 
 Sets the potential API key to send to the service.
 
 - Type: `string`
-- Default: `""`
+- Default: `undefined`
 
 ### `--ca-cert`
 
@@ -83,8 +82,8 @@ Performs a fresh build, then packages and finally publishes the pilet.
 Sets the schema to be used when making a fresh build of the pilet.
 
 - Type: `string`
-- Choices: `"v0"`, `"v1"`, `"none"`
-- Default: `"v1"`
+- Choices: `"v0"`, `"v1"`, `"v2"`, `"none"`
+- Default: `"v2"`
 
 ### `--from`
 

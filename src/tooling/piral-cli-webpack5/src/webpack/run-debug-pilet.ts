@@ -1,4 +1,4 @@
-import type { PiletSchemaVersion, LogLevels } from 'piral-cli';
+import type { PiletSchemaVersion, LogLevels, SharedDependency } from 'piral-cli';
 import { setStandardEnvs } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -10,6 +10,7 @@ async function run(
   root: string,
   piral: string,
   externals: Array<string>,
+  importmap: Array<SharedDependency>,
   entryModule: string,
   version: PiletSchemaVersion,
   logLevel: LogLevels,
@@ -22,11 +23,11 @@ async function run(
   const otherConfigPath = resolve(root, defaultWebpackConfig);
   const dist = resolve(root, 'dist');
   const baseConfig = await getPiletConfig(
-    root,
     entryModule,
     dist,
     'index.js',
     externals,
+    importmap,
     piral,
     version,
     true,
@@ -60,7 +61,7 @@ process.on('message', async (msg) => {
 
       break;
     case 'start':
-      bundler = await run(root, msg.piral, msg.externals, msg.entryModule, msg.version, msg.logLevel).catch((error) => {
+      bundler = await run(root, msg.piral, msg.externals, msg.importmap, msg.entryModule, msg.version, msg.logLevel).catch((error) => {
         process.send({
           type: 'fail',
           error: error?.message,

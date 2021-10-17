@@ -1,6 +1,6 @@
+import type { BaseComponentProps } from 'piral-core';
 import { render } from 'react-dom-15';
 import { createElement, ComponentType, Component } from 'react-15';
-import { BaseComponentProps } from 'piral-core';
 
 // tslint:disable-next-line:no-null-keyword
 export const anyPropType = () => null;

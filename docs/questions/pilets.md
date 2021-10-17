@@ -158,3 +158,15 @@ A pilet is essentially its own application - just that you can expose more than 
 No, pilets require an app shell (Piral instance) to work. A pilet is just a library - so it does not offer anything to just run. You can, however, create lightweight app shells to host pilets. This way pilets run standalone.
 
 ---------------------------------------
+
+## Do I need to create my own app shell?
+
+No, pilets could be also developed without an app shell. In order to avoid having to create your own app shell you could either use `sample-piral`, which is the app shell from our [demo](https://demo-full.piral.io/) based on `piral` or `empty-piral`, which represents an empty app shell based on `piral-core`.
+
+A pilet could then be scaffolded like this:
+
+```sh
+npm init pilet --source sample-piral --defaults
+```
+
+---------------------------------------

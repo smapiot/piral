@@ -1,9 +1,8 @@
-import { join, dirname, basename, resolve } from 'path';
+import { dirname, basename, resolve, relative } from 'path';
 import { LogLevels, PiletSchemaVersion } from '../types';
 import { callPiletBuild } from '../bundler';
 import {
   removeDirectory,
-  findEntryModule,
   retrievePiletData,
   setLogLevel,
   progress,
@@ -11,6 +10,9 @@ import {
   logInfo,
   createPiletDeclaration,
   ForceOverwrite,
+  matchAnyPilet,
+  fail,
+  config,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -92,7 +94,7 @@ export const buildPiletDefaults: BuildPiletOptions = {
   sourceMaps: true,
   contentHash: true,
   optimizeModules: false,
-  schemaVersion: 'v1',
+  schemaVersion: config.schemaVersion,
   declaration: true,
 };
 
@@ -112,17 +114,23 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     bundlerName,
     app,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
-  const entryFile = join(baseDir, entry);
-  const targetDir = dirname(entryFile);
-  const entryModule = await findEntryModule(entryFile, targetDir);
-  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored } = await retrievePiletData(
+  const allEntries = await matchAnyPilet(fullBase, [entry]);
+
+  if (allEntries.length === 0) {
+    fail('entryFileMissing_0077');
+  }
+
+  const entryModule = allEntries.shift();
+  const targetDir = dirname(entryModule);
+  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored, importmap } = await retrievePiletData(
     targetDir,
     app,
   );
   const externals = [...Object.keys(peerDependencies), ...peerModules];
-  const outDir = dirname(resolve(baseDir, target));
+  const outDir = dirname(resolve(fullBase, target));
 
   if (fresh) {
     progress('Removing output directory ...');
@@ -141,9 +149,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       minify,
       externals,
       targetDir,
+      importmap,
       outFile: basename(target),
       outDir,
-      entryModule,
+      entryModule: `./${relative(root, entryModule)}`,
       logLevel,
       version: schemaVersion,
       ignored,

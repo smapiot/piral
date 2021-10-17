@@ -107,9 +107,7 @@ describe('Piral-Base strategies module', () => {
       pilets: pilets,
       fetchPilets: jest.fn(() => Promise.resolve(pilets)),
       loadPilet: jest.fn((m) => Promise.resolve(m as any)),
-      fetchDependency: jest.fn(),
       dependencies: jest.fn(),
-      getDependencies: jest.fn(),
     };
 
     // Act
@@ -145,9 +143,7 @@ describe('Piral-Base strategies module', () => {
       createApi: createMockApi,
       fetchPilets: jest.fn(() => Promise.resolve(pilets)),
       loadPilet: jest.fn((m) => Promise.resolve(m as any)),
-      fetchDependency: jest.fn(),
       dependencies: jest.fn(),
-      getDependencies: jest.fn(),
     };
 
     // Act
@@ -172,9 +168,7 @@ describe('Piral-Base strategies module', () => {
       createApi: createMockApi,
       fetchPilets: jest.fn(() => Promise.resolve(pilets)),
       loadPilet: jest.fn((m) => Promise.resolve(m as any)),
-      fetchDependency: jest.fn(),
       dependencies: jest.fn(),
-      getDependencies: jest.fn(),
       pilets: pilets,
     };
 

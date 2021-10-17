@@ -1,6 +1,6 @@
 import * as angular from 'angular';
 
-export function createExtension(rootName = 'slot'): angular.IModule {
+export function createExtension(rootName: string): angular.IModule {
   const NgjsExtension = angular.module(`piralExtension`, []);
   NgjsExtension.component('extensionComponent', {
     template: `<${rootName}></${rootName}>`,

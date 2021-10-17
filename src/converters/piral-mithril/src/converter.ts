@@ -1,8 +1,19 @@
 import * as mithril from 'mithril';
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { Component } from './types';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { createExtension } from './extension';
+import type { Component } from './types';
 
-export function createConverter() {
+export interface MithrilConverterOptions {
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
+
+export function createConverter(config: MithrilConverterOptions = {}) {
+  const { rootName = 'slot' } = config;
+  const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(
     component: Component<TProps>,
     captured?: Record<string, any>,
@@ -34,6 +45,6 @@ export function createConverter() {
       },
     };
   };
-
+  convert.Extension = Extension;
   return convert;
 }

@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "0.13.2",
+  "version": "0.13.9",
   "description": "The core library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -22,6 +22,10 @@
     "esm",
     "lib",
     "src",
+    "debug-pilet.d.ts",
+    "debug-piral.d.ts",
+    "debug-pilet.js",
+    "debug-piral.js",
     "dependencies.codegen",
     "dependencies.codegen.native.js"
   ],
@@ -37,7 +41,8 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
+    "build:convert": "tsc debug-pilet.ts debug-piral.ts --skipLibCheck --declaration",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
@@ -59,7 +64,7 @@
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
-    "piral-base": "^0.13.2",
-    "piral-debug-utils": "^0.13.2"
+    "piral-base": "^0.13.9",
+    "piral-debug-utils": "^0.13.9"
   }
 }

@@ -58,7 +58,11 @@ A pilet package may contain more file types than just JSON and JS. Any asset tha
 
 The *root JS file* contains the root module, which is the first module loaded when the bundle is evaluated by a JS engine.
 
-### UMD Creation
+### `v0` and `v1` Format
+
+The code in this section works for `v0` and `v1` pilets. For `v1` the code could be also reduced to an evaluation against the `src` of the `currentScript` element, which also happens implicitly without any implementation.
+
+#### UMD Creation
 
 For proper bundling of the JS files, the UMD specification should be followed. The following parts are all relevant for the created bundle.
 
@@ -69,7 +73,7 @@ For proper bundling of the JS files, the UMD specification should be followed. T
 
 *Remark*: As global `require` (C) a `window.pr_...` function should be used that is generated (and valid) for the current bundle only.
 
-### Bundle Splitting
+#### Bundle Splitting
 
 The dynamic splitting of the single bundle into multiple files needs to adhere to the following algorithm.
 
@@ -97,7 +101,9 @@ The following algorithm works quite reliably:
 
 The script for the partial resource has to be loaded from the same base URL as the currently running script.
 
-**Remark**: The code above works for `v0` and `v1` of the pilet layout. For `v1` the code could be also reduced to an evaluation against the `src` of the `currentScript` element, which also happens implicitly without any implementation.
+### `v2` Format
+
+This code in this section works exclusively for `v2` pilets. `v2` pilets are using the [SystemJS format](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md). For conformance to this format the SystemJS specification should be considered.
 
 ## Package Keys
 
@@ -271,11 +277,11 @@ interface PiletMetadata {
    */
   hash?: string;
   /**
-   * Pilet global reference (v:1)
+   * Pilet global reference (v:1 and v:2)
    */
   requireRef?: string;
   /**
-   * Checksum of the pilet (v:1)
+   * Checksum of the pilet (v:1 and v:2)
    */
   integrity?: string;
   /**
@@ -323,6 +329,7 @@ Right now the following values for `<version-number>` exist:
 
 - `0`: Initial specification (marker is optional).
 - `1`: Extended specification (marker is required).
+- `2`: Extended specification (marker is required).
 - `x`: Custom specification (marker is required).
 
 All official (i.e., numbered) specifications are backwards compatible, i.e., evaluating a `v:1` pilet with a `v:0` Piral instance should work.
@@ -342,6 +349,15 @@ The `v:x` specification was introduced to allow custom formats to work besides o
 - Exports to `document.currentScript.app`.
 - Supports transport via `link`.
 - Requires a single argument declaring the global require reference.
+
+### `v:2`
+
+- Evaluation should be done via SystemJS.
+- Registration of the module by using `System.register`.
+- Supports transport via `link`.
+- Requires two arguments separated by a comma.
+- The first argument declares the global require reference.
+- The second argument is a JSON serialized object, which defines the shared dependencies from the pilet.
 
 ### `v:x`
 
@@ -422,6 +438,30 @@ The internal structure and wrapper are bundler specific. The one shown is genera
 
 The final package for this Pilet can be created using `npm` (or the Piral CLI for that matter) using `npm pack`.
 
+For `v1` the output changes to:
+
+```js
+//@pilet v:1(pr_1fab123ad4fd76bd20e5e5e97366fd47)
+!(function(global,parcelRequire){
+parcelRequire=function(e,r,t,n){function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;var i,o="function"==typeof global.pr_1fab123ad4fd76bd20e5e5e97366fd47&&global.pr_1fab123ad4fd76bd20e5e5e97366fd47,u="function"==typeof require&&require;function f(t,n){if(!r[t]){if(!e[t]){var i="function"==typeof global.pr_1fab123ad4fd7
+6bd20e5e5e97366fd47&&global.pr_1fab123ad4fd76bd20e5e5e97366fd47;if(!n&&i)return i(t,!0);if(o)return o(t,!0);if(u&&"string"==typeof t)return u(t);var c=new Error("Cannot find module '"+t+"'");throw c.code="MODULE_NOT_FOUND",c}p.resolve=function(r){return e[t][1][r]||r}
+,p.cache={};var l=r[t]=new f.Module(t);e[t][0].call(l.exports,p,l,l.exports,this)}return r[t].exports;function p(e){return f(p.resolve(e))}}f.isParcelRequire=!0,f.Module=function(e){this.id=e,this.bundle=f,this.exports={}},f.modules=e,f.cache=r,f.parent=o,f.register=f
+unction(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)try{f(t[c])}catch(e){i||(i=e)}if(t.length){var l=f(t[t.length-1]);"object"==typeof exports&&"undefined"!=typeof module?module.exports=l:"function"==typeof define&&define.amd?define(function(
+){return l}):n&&(this[n]=l)}if(parcelRequire=f,i)throw i;return f}({"zo2T":[function(require,module,exports) {
+"use strict";function e(e){e.showNotification("Hello World!")}Object.defineProperty(exports,"__esModule",{value:!0}),exports.setup=e;
+},{}]},{},["zo2T"], null)
+;global.pr_1fab123ad4fd76bd20e5e5e97366fd47=parcelRequire}(window, window.pr_1fab123ad4fd76bd20e5e5e97366fd47));
+```
+
+For `v2` the output changes to:
+
+```js
+//@pilet v:2(pr_1fab123ad4fd76bd20e5e5e97366fd47, {})
+System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _dep;}],execute:function(){_export((function(){
+//TODO content here
+})())}};});
+```
+
 ## Limitations
 
 Not all assets should be packed into a pilet. Videos and larger (or in general persistent) images should be hosted on a CDN, where data transfer is faster and caching is independent of the published version of the pilet.
@@ -440,3 +480,4 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 - [CLI Specification](https://docs.piral.io/reference/specifications/cli)
 - [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
 - [UMD: Patterns and Examples](https://github.com/umdjs/umd)
+- [SystemJS: Register API](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md)

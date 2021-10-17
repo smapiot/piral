@@ -99,8 +99,8 @@ Also includes the node modules for target transpilation.
 Sets the schema to be used when bundling the pilets.
 
 - Type: `string`
-- Choices: `"v0"`, `"v1"`, `"none"`
-- Default: `"v1"`
+- Choices: `"v0"`, `"v1"`, `"v2"`, `"none"`
+- Default: `"v2"`
 
 ### `--bundler`
 

@@ -118,9 +118,10 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     bundlerName = newPiralDefaults.bundlerName,
     variables = newPiralDefaults.variables,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
+  const root = resolve(fullBase, target);
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
-  const root = resolve(baseDir, target);
   const success = await createDirectory(root);
 
   if (success) {

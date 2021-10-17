@@ -6,8 +6,8 @@ import {
   callPiralDebug,
   callDebugPiralFromMonoRepo,
 } from './bundler';
+import * as common from './common';
 
-let common: any;
 let defaults = {
   bundler: false,
 };
@@ -29,27 +29,23 @@ jest.mock('./inject', () => ({
   },
 }));
 
-jest.mock(
-  './common',
-  () =>
-    (common = {
-      config: {
-        bundler: 'parcel',
-      },
-      cliVersion: '1.0.0',
-      installPackage: jest.fn(),
-      fail(msg) {
-        throw new Error(msg);
-      },
-      progress() {},
-      log() {},
-      determineNpmClient() {
-        return 'npm';
-      },
-      patchModules: jest.fn(),
-      logReset() {},
-    }),
-);
+jest.mock('./common', () => ({
+  config: {
+    bundler: 'parcel',
+  },
+  cliVersion: '1.0.0',
+  installPackage: jest.fn(),
+  fail(msg) {
+    throw new Error(msg);
+  },
+  progress() {},
+  log() {},
+  determineNpmClient() {
+    return 'npm';
+  },
+  patchModules: jest.fn(),
+  logReset() {},
+}));
 
 describe('Piral CLI Bundler Module', () => {
   it('fails if no default bundler can be installed, but required', async () => {

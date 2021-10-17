@@ -1,6 +1,6 @@
 {
   "name": "piral-pwa",
-  "version": "0.13.2",
+  "version": "0.13.9",
   "description": "Plugin for creating the Piral instance as a PWA shell.",
   "keywords": [
     "piral",
@@ -43,11 +43,11 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.13.2"
+    "piral-core": "^0.13.9"
   },
   "peerDependencies": {
     "minimatch": "^3.0.0",
-    "parcel-bundler": "0.13.x",
-    "piral-core": "0.13.x"
+    "parcel-bundler": "0.14.x",
+    "piral-core": "0.14.x"
   }
 }

@@ -10,8 +10,11 @@ interface BuildResult {
 
 function getOutput(stats: webpack.Stats) {
   const { outputPath, entrypoints } = stats.toJson();
-  const assets = entrypoints.main.assets;
-  return resolve(outputPath, assets[0]);
+
+  for (const name of Object.keys(entrypoints)) {
+    const assets = entrypoints[name].assets;
+    return resolve(outputPath, assets[0]);
+  }
 }
 
 function getPreset(logLevel: LogLevels): webpack.Stats.Preset {

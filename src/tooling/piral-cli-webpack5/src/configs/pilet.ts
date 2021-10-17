@@ -1,16 +1,15 @@
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { join } from 'path';
-import { PiletSchemaVersion } from 'piral-cli';
+import type { PiletSchemaVersion, SharedDependency } from 'piral-cli';
 import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration } from './common';
 import { piletWebpackConfigEnhancer } from '../enhancers/pilet-webpack-config-enhancer';
 
 export async function getPiletConfig(
-  baseDir: string,
   template: string,
   dist: string,
   filename: string,
   externals: Array<string>,
+  importmap: Array<SharedDependency> = [],
   piral: string,
   schema: PiletSchemaVersion,
   develop = false,
@@ -23,13 +22,17 @@ export async function getPiletConfig(
   const production = !develop;
   const name = process.env.BUILD_PCKG_NAME;
   const version = process.env.BUILD_PCKG_VERSION;
+  const entry = filename.replace(/\.js$/i, '');
 
   const enhance = piletWebpackConfigEnhancer({
     name,
     piral,
     version,
+    entry,
     externals,
+    importmap,
     schema,
+    filename,
     variables: getVariables(),
   });
 
@@ -39,14 +42,16 @@ export async function getPiletConfig(
 
       mode: develop ? 'development' : 'production',
 
+      target: 'web',
+
       entry: {
-        main: [template],
+        [entry]: [template],
       },
 
       output: {
         publicPath,
         path: dist,
-        filename,
+        filename: '[name].js',
         chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
       },
 
@@ -55,7 +60,7 @@ export async function getPiletConfig(
       },
 
       module: {
-        rules: getRules(baseDir, production),
+        rules: getRules(production),
       },
 
       optimization: {

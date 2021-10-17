@@ -1,10 +1,17 @@
 import { m } from 'mithril';
-import type { PiletApi } from 'piral-core';
 
-export function createExtension(api: PiletApi, rootName = 'slot') {
+export function createExtension(rootName: string) {
   return {
     oncreate(vnode) {
-      api.renderHtmlExtension(vnode.dom, vnode.attrs);
+      vnode.dom.dispatchEvent(
+        new CustomEvent('render-html', {
+          bubbles: true,
+          detail: {
+            target: vnode.dom,
+            props: vnode.attrs,
+          },
+        }),
+      );
     },
     view() {
       return m(rootName);

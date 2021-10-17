@@ -109,6 +109,48 @@ export interface PiletMetadataV1 {
   dependencies?: Record<string, string>;
 }
 
+/**
+ * Metadata for pilets using the v2 schema.
+ */
+export interface PiletMetadataV2 {
+  /**
+   * The name of the pilet, i.e., the package id.
+   */
+  name: string;
+  /**
+   * The version of the pilet. Should be semantically versioned.
+   */
+  version: string;
+  /**
+   * Provides the version of the specification for this pilet.
+   */
+  spec: 'v2';
+  /**
+   * The reference name for the global require.
+   */
+  requireRef: string;
+  /**
+   * The computed integrity of the pilet.
+   */
+  integrity?: string;
+  /**
+   * The link for retrieving the content of the pilet.
+   */
+  link: string;
+  /**
+   * Optionally provides some custom metadata for the pilet.
+   */
+  custom?: any;
+  /**
+   * Optionally provides some configuration to be used in the pilet.
+   */
+  config?: Record<string, any>;
+  /**
+   * Additional shared dependency script files.
+   */
+  dependencies?: Record<string, string>;
+}
+
 export interface PiletMetadataVx {
   /**
    * The name of the pilet, i.e., the package id.
@@ -174,7 +216,7 @@ export interface PiletMetadataBundle {
 /**
  * The metadata response for a single pilet.
  */
-export type SinglePiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetadataVx;
+export type SinglePiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetadataV2 | PiletMetadataVx;
 
 /**
  * The metadata response for a multi pilet.
@@ -182,9 +224,21 @@ export type SinglePiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetad
 export type MultiPiletMetadata = PiletMetadataBundle;
 
 /**
+ * Additional metadata that may be added to the runtime information.
+ */
+export interface PiletRuntimeMetadata {
+  basePath?: string;
+}
+
+/**
  * Describes the metadata transported by a pilet.
  */
-export type PiletMetadata = SinglePiletMetadata | MultiPiletMetadata;
+export type PiletMetadata = (SinglePiletMetadata | MultiPiletMetadata) & PiletRuntimeMetadata;
+
+/**
+ * Metadata for the UMD (v1) pilets.
+ */
+export type PiletUmdMetadata = (PiletMetadataBundle | PiletMetadataV1) & PiletRuntimeMetadata;
 
 /**
  * Defines the API accessible from pilets.
@@ -303,18 +357,6 @@ export type MultiPilet = MultiPiletApp & MultiPiletMetadata;
 export type Pilet = SinglePilet | MultiPilet;
 
 /**
- * The callback to fetch a JS content from an URL.
- */
-export interface PiletDependencyFetcher {
-  /**
-   * Defines how other dependencies are fetched.
-   * @param url The URL to the dependency that should be fetched.
-   * @returns The promise yielding the dependency's content.
-   */
-  (url: string): Promise<string>;
-}
-
-/**
  * Additional configuration options for the default loader.
  */
 export interface DefaultLoaderConfig {
@@ -336,20 +378,6 @@ export interface PiletApiCreator {
    * @returns The API object to be used with the pilet.
    */
   (target: PiletMetadata): PiletApi;
-}
-
-/**
- * The callback to get the shared dependencies for a specific pilet.
- */
-export interface PiletDependencyGetter {
-  /**
-   * Gets the locally available dependencies for the specified
-   * pilet. If this function is missing or returns false or undefined
-   * the globally available dependencies will be used.
-   * @returns The dependencies that should be used for evaluating the
-   * pilet.
-   */
-  (target: PiletMetadata): AvailableDependencies | undefined | false;
 }
 
 /**
@@ -433,15 +461,6 @@ export interface LoadPiletsOptions {
    */
   loaders?: CustomSpecLoaders;
   /**
-   * The callback for defining how a dependency will be fetched.
-   */
-  fetchDependency?: PiletDependencyFetcher;
-  /**
-   * Gets a map of available locale dependencies for a pilet.
-   * The dependencies are used during the evaluation.
-   */
-  getDependencies?: PiletDependencyGetter;
-  /**
    * Gets the map of globally available dependencies with their names
    * as keys and their evaluated pilet content as value.
    */
@@ -450,4 +469,18 @@ export interface LoadPiletsOptions {
    * Optionally, defines the loading strategy to use.
    */
   strategy?: PiletLoadingStrategy;
+}
+
+/**
+ * Shape to be used by a Pilet API extension that requires other
+ * APIs or some metadata to work properly.
+ */
+export interface PiletApiExtender<T> {
+  /**
+   * Extends the base API of a module with new functionality.
+   * @param api The API created by the base layer.
+   * @param target The target the API is created for.
+   * @returns The extended API.
+   */
+  (api: PiletApi, target: PiletMetadata): T;
 }

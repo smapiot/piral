@@ -1,7 +1,7 @@
 {
   "name": "piral-vue",
-  "version": "0.13.2",
-  "description": "Plugin for integrating Vue components in Piral.",
+  "version": "0.13.9",
+  "description": "Plugin for integrating Vue@2 components in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -26,7 +26,6 @@
     "lib",
     "src",
     "convert.d.ts",
-    "convert.ts",
     "convert.js"
   ],
   "repository": {
@@ -45,11 +44,11 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.13.2",
+    "piral-core": "^0.13.9",
     "vue": "^2.6.10"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x",
+    "piral-core": "0.14.x",
     "vue": "^2.0.0"
   }
 }

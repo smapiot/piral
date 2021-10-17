@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Containers](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-containers.svg?style=flat)](https://www.npmjs.com/package/piral-containers) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Containers](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-containers.svg?style=flat)](https://www.npmjs.com/package/piral-containers) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-containers` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
@@ -11,6 +11,12 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 State management is important. While plugins such as `piral-redux` bring in an additional kind of state container they also allow using this state container in pilets. `piral-containers` makes the global app state container accessible by all pilets. Using `piral-containers` every pilet can create its own states within the global store.
 
 Alternatives: Leave every pilet to decide and bundle their own state management. A lightweight, framework-agnostic alternative would be [unistore](https://github.com/developit/unistore).
+
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/SOY_8temoEE)
 
 ## Documentation
 

@@ -30,5 +30,7 @@ The following tutorials are currently available:
 20. [Migration of Existing Applications](./20-migrate-app.md) - illustrates how existing applications can be migrated.
 21. [Parcel vs Webpack](./21-parcel-vs-webpack.md) - goes into details of the available bundlers.
 22. [Core and Base](./22-core-and-base.md) - discusses other framework packages and when they should be used.
+23. [Monorepo](./23-monorepo.md) - introduces the concept and realization of a monorepo.
+23. [Extension Patterns](./24-extension-patterns.md) - reveals a set of patterns for extension components.
 
 Please don't hesitate to send us feedback regarding the tutorials and suggestions for additional topics.

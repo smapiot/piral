@@ -101,6 +101,21 @@ Create associated source maps for the bundles.
 - Type: `boolean`
 - Default: `false`
 
+### `--subdir`
+
+Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".
+
+- Type: `boolean`
+- Default: `true`
+
+### `--no-subdir`
+
+Opposite of:
+Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".
+
+- Type: `boolean`
+- Default: `false`
+
 ### `--content-hash`
 
 Appends the hash to the side-bundle files.
@@ -136,7 +151,7 @@ Also includes the node modules for target transpilation.
 Selects the target type of the build. "all" builds all target types.
 
 - Type: `string`
-- Choices: `"all"`, `"release"`, `"emulator"`
+- Choices: `"all"`, `"release"`, `"emulator"`, `"emulator-sources"`
 - Default: `"all"`
 
 ### `--bundler`

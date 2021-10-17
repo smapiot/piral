@@ -1,15 +1,15 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { resolve } from 'path';
 import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, WebpackPluginInstance, Configuration } from 'webpack';
-import { ImportMapsWebpackPlugin } from 'import-maps-webpack-plugin';
 import SheetPlugin from './SheetPlugin';
+
+const piletCss = 'main.css';
 
 function getStyleLoaders(production: boolean) {
   if (production) {
     return [MiniCssExtractPlugin.loader];
   } else {
-    return ['style-loader'];
+    return [require.resolve('style-loader')];
   }
 }
 
@@ -29,10 +29,9 @@ export function getVariables(): Record<string, string> {
 export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, pilet: boolean) {
   const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
-      filename: '[name].[hash:6].css',
-      chunkFilename: '[id].[hash:6].css',
+      filename: pilet ? piletCss : '[name].[fullhash:6].css',
+      chunkFilename: '[id].[chunkhash:6].css',
     }) as any,
-    new ImportMapsWebpackPlugin(),
   ];
 
   if (showProgress) {
@@ -51,29 +50,30 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
   }
 
   if (production && pilet) {
-    otherPlugins.push(new SheetPlugin())
+    const name = process.env.BUILD_PCKG_NAME;
+    otherPlugins.push(new SheetPlugin(piletCss, name) as any);
   }
 
   return plugins.concat(otherPlugins);
 }
 
-export function getRules(baseDir: string, production: boolean): Array<RuleSetRule> {
+export function getRules(production: boolean): Array<RuleSetRule> {
   const styleLoaders = getStyleLoaders(production);
-  const nodeModules = resolve(baseDir, 'node_modules');
+  const nodeModules = /node_modules/;
   const babelLoader = {
-    loader: 'babel-loader',
+    loader: require.resolve('babel-loader'),
     options: {
       presets: ['@babel/preset-env', '@babel/preset-react'],
     },
   };
   const tsLoader = {
-    loader: 'ts-loader',
+    loader: require.resolve('ts-loader'),
     options: {
       transpileOnly: true,
     },
   };
   const fileLoader = {
-    loader: 'file-loader',
+    loader: require.resolve('file-loader'),
     options: {
       esModule: false,
     },
@@ -86,11 +86,11 @@ export function getRules(baseDir: string, production: boolean): Array<RuleSetRul
     },
     {
       test: /\.s[ac]ss$/i,
-      use: [...styleLoaders, 'css-loader', 'sass-loader'],
+      use: [...styleLoaders, require.resolve('css-loader'), require.resolve('sass-loader')],
     },
     {
       test: /\.css$/i,
-      use: [...styleLoaders, 'css-loader'],
+      use: [...styleLoaders, require.resolve('css-loader')],
     },
     {
       test: /\.m?jsx?$/i,
@@ -103,11 +103,11 @@ export function getRules(baseDir: string, production: boolean): Array<RuleSetRul
     },
     {
       test: /\.codegen$/i,
-      use: ['parcel-codegen-loader'],
+      use: [require.resolve('parcel-codegen-loader')],
     },
     {
       test: /\.js$/i,
-      use: ['source-map-loader'],
+      use: [require.resolve('source-map-loader')],
       exclude: nodeModules,
       enforce: 'pre',
     },

@@ -1,11 +1,79 @@
-import { isfunc, PiletApiCreator } from 'piral-base';
+import { isfunc, PiletApiCreator, PiletApiExtender, initializeApi, mergeApis } from 'piral-base';
 import { __assign } from 'tslib';
 import { withApi } from '../state';
 import { ExtensionSlot } from '../components';
-import { createDataOptions, getDataExpiration, renderInDom } from '../utils';
-import { PiletApi, PiletMetadata, GlobalStateContext, PiletCoreApi, PiralPlugin, PiletApiExtender } from '../types';
+import { createDataOptions, getDataExpiration, renderInDom, tryParseJson, changeDomPortal, noop } from '../utils';
+import { Disposable, GlobalStateContext, PiletCoreApi, PiralPlugin } from '../types';
+
+interface Updatable {
+  (newProps: any): void;
+}
+
+if ('customElements' in window) {
+  class PiralExtension extends HTMLElement {
+    dispose: Disposable = noop;
+    update: Updatable = noop;
+
+    getProps() {
+      const name = this.getAttribute('name');
+      const params = tryParseJson(this.getAttribute('params'));
+      return { name, params };
+    }
+
+    connectedCallback() {
+      if (this.isConnected) {
+        this.dispatchEvent(
+          new CustomEvent('render-html', {
+            bubbles: true,
+            detail: {
+              target: this,
+              props: this.getProps(),
+            },
+          }),
+        );
+      }
+    }
+
+    disconnectedCallback() {
+      this.dispose();
+      this.dispose = noop;
+      this.update = noop;
+    }
+
+    attributeChangedCallback() {
+      this.update(this.getProps());
+    }
+
+    static get observedAttributes() {
+      return ['name', 'params'];
+    }
+  }
+
+  customElements.define('piral-extension', PiralExtension);
+}
+
+function render(context: GlobalStateContext, element: HTMLElement | ShadowRoot, props: any): [Disposable, Updatable] {
+  let [id, portal] = renderInDom(context, element, ExtensionSlot, props);
+  const dispose: Disposable = () => context.hidePortal(id, portal);
+  const update: Updatable = (newProps) => {
+    [id, portal] = changeDomPortal(id, portal, context, element, ExtensionSlot, newProps);
+  };
+  return [dispose, update];
+}
 
 export function createCoreApi(context: GlobalStateContext): PiletApiExtender<PiletCoreApi> {
+  document.body.addEventListener(
+    'render-html',
+    (ev: CustomEvent) => {
+      ev.stopPropagation();
+      const container = ev.detail.target;
+      const [dispose, update] = render(context, container, ev.detail.props);
+      container.dispose = dispose;
+      container.update = update;
+    },
+    false,
+  );
+
   return (api, target) => {
     const pilet = target.name;
     return {
@@ -41,29 +109,12 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
         context.unregisterExtension(name as string, arg);
       },
       renderHtmlExtension(element, props) {
-        const id = renderInDom(context, element, ExtensionSlot, props);
-        return () => context.destroyPortal(id);
+        const [dispose] = render(context, element, props);
+        return dispose;
       },
       Extension: ExtensionSlot,
     };
   };
-}
-
-export function initializeApi(target: PiletMetadata, context: GlobalStateContext) {
-  return {
-    on: context.on,
-    off: context.off,
-    emit: context.emit,
-    meta: {
-      ...target,
-    },
-  } as PiletApi;
-}
-
-export function mergeApis(api: PiletApi, extenders: Array<PiletApiExtender<Partial<PiletApi>>>, target: PiletMetadata) {
-  const frags = extenders.map((extender) => extender(api, target));
-  __assign(api, ...frags);
-  return api;
 }
 
 export function createExtenders(context: GlobalStateContext, apis: Array<PiralPlugin>) {

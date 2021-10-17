@@ -1,7 +1,5 @@
 import type {
   PiletRequester,
-  PiletDependencyFetcher,
-  PiletDependencyGetter,
   PiletLoadingStrategy,
   PiletLoader,
   Pilet,
@@ -10,24 +8,30 @@ import type {
   DefaultLoaderConfig,
   PiletApiCreator,
 } from 'piral-base';
+import { DebuggerExtensionOptions } from 'piral-debug-utils';
 import type { NestedPartial } from './common';
 import type { PiralPlugin } from './plugin';
 import type { GlobalState, GlobalStateContext, PiralDefineActions } from './state';
 
-export { PiletLoadingStrategy, PiletDependencyFetcher, PiletDependencyGetter, PiletRequester, AvailableDependencies };
+export { PiletLoadingStrategy, PiletRequester, AvailableDependencies };
+
+/**
+ * Definition for customizing the shared dependencies.
+ */
+export interface DependencySelector {
+  /**
+   * Selects the dependencies to share from the currently available dependencies.
+   * @param currentDependencies The currently available dependencies.
+   * @default currentDependencies All current dependencies are shared
+   * @returns The dependencies selected to be shared.
+   */
+  (currentDependencies: AvailableDependencies): AvailableDependencies;
+}
 
 /**
  * The configuration for loading the pilets of the Piral instance.
  */
 export interface PiralPiletConfiguration {
-  /**
-   * The callback for defining how a dependency will be fetched.
-   */
-  fetchDependency?: PiletDependencyFetcher;
-  /**
-   * Function to get the dependencies for a given module.
-   */
-  getDependencies?: PiletDependencyGetter;
   /**
    * Function to load the modules asynchronously, e.g., from a server 🚚.
    */
@@ -45,6 +49,10 @@ export interface PiralPiletConfiguration {
    */
   loaderConfig?: DefaultLoaderConfig;
   /**
+   * Optionally, configures explicitly what dependencies are shared.
+   */
+  shareDependencies?: DependencySelector;
+  /**
    * Determines that pilets are loaded asynchronously, essentially showing the
    * app right away without waiting for the pilets to load and evaluate.
    */
@@ -55,12 +63,6 @@ export interface PiralPiletConfiguration {
    * This can be used for customization or for debugging purposes.
    */
   availablePilets?: Array<Pilet>;
-  /**
-   * Optionally provides a function to extend the API creator with some additional
-   * functionality.
-   * @deprecated Use plugins instead.
-   */
-  extendApi?: PiralPlugin | Array<PiralPlugin>;
   /**
    * Extends the Piral instance with additional capabilities.
    */
@@ -95,6 +97,10 @@ export interface PiralStateConfiguration {
    * Optionally, sets up some initial custom actions ⚡️.
    */
   actions?: PiralDefineActions;
+  /**
+   * Optionally, sets up additional configuration for the debug tooling 🤖.
+   */
+  debug?: DebuggerExtensionOptions;
 }
 
 /**

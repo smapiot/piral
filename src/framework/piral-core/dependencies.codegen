@@ -1,6 +1,6 @@
 module.exports = function() {
   const appName = process.env.BUILD_PCKG_NAME || '';
-  const externals = (process.env.SHARED_DEPENDENCIES || '').split(',');
+  const externals = (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean);
   const deps = [`deps['${appName}']={}`, ...externals.map(name => `deps['${name}']=require('${name}')`)];
   const code = deps.join(';');
   return `module.exports = function(deps){

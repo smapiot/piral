@@ -27,8 +27,9 @@ describe('Events Module', () => {
   });
 
   it('does only react to self events when same state', (done) => {
-    const events1 = createListener(undefined);
-    const events2 = createListener(undefined);
+    const state = {};
+    const events1 = createListener(state);
+    const events2 = createListener(state);
     const mockCallback = jest.fn();
     events1.on('init', mockCallback);
     events2.emit('init', undefined);

@@ -1,11 +1,66 @@
 # Piral Changelog
 
-## 0.13.3 (tbd)
+## 0.14.0 (tbd)
+
+* Improved converter plugins to allow more flexible pilet embedded usage
+* Improved on the fly updates of pilet stylesheets
+* Changed library contents to target ES6
+* Added more MSAL options to setup a client in `piral-adal` (#418)
+* Added runtime pilet metadata `basePath`
+* Added support for new debug utils (#397)
+* Added generic `piral-extension` web component for rendering extensions
+* Added option to run Angular without `zone.js` in `piral-ng`
+* Added bundler for `esbuild` (#363)
+* Added direct support for using the Angular router in `piral-ng` (#396)
+* Added convenience module `extend-config` for `piral-cli-webpack` and `piral-cli-webpack5` (#410)
+
+## 0.13.9 (September 23, 2021)
+
+* Fixed an issue w.r.t. the serialization of events in the debug tools
+
+## 0.13.8 (September 10, 2021)
+
+* Fixed circular structure support in debugging utils (#409)
+* Fixed pilet templates giving wrong path in Windows when scaffolding
+* Fixed support for multi pilet debug commands with wildcards on Windows
+
+## 0.13.7 (September 1, 2021)
+
+* Fixed disabling logging of view state changes (#404)
+* Improved documentation CI/CD
+
+## 0.13.6 (August 27, 2021)
+
+* Fixed issue with CSS imports in pilets when using Webpack (#403)
+* Improved documentation (#395)
+* Improved `piral-debug-utils` with new architecture (#397)
+
+## 0.13.5 (August 17, 2021)
+
+* Fixed explicit declaration via state of `LanguagesPicker` component
+* Updated outdated `piral-cli-weback` and `piral-cli-webpack5` dependencies
+* Improved `piral-cli-webpack` and `piral-cli-webpack5` loader resolution
+* Added `getCurrentLanguage` to pilet API from `piral-translate`
+
+## 0.13.4 (August 2, 2021)
+
+* Fixed issue with pilet scaffolding templates on Windows
+* Fixed usage of `process.env.ENV` in `piral-ng`
+* Fixed selecting scaffolding templates with version specifier
+* Added `experimental` branch for `canary` releases
+
+## 0.13.3 (July 28, 2021)
 
 * Fixed missing support for `favicon-webpack-plugin` in `piral-cli-webpack`
+* Fixed conflicting import for `piral-cli-parcel` in `piral-breadcrumbs` (#385)
+* Added support for `apiKeys` in `.piralrc` file
+* Added support for more flexible entry module resolution to `pilet build`
 * Added `dashboardPath` and `piralChildren` as options for `renderInstance`
+* Added new optional convert plugin `piral-vue-3` covering Vue@3
 * Updated used chunk hash length for Webpack
+* Updated `piral-ng` to support all (current) versions of Angular
 * Replaced `node-sass` with `sass`
+* Renamed `master` branch to `main`
 
 ## 0.13.2 (April 27, 2021)
 
@@ -170,7 +225,7 @@
 * Added support for Yarn and Pnpm (#203)
 * Added optional `--cacert` flag to `pilet publish` command (#204)
 * Fixed `NODE_ENV` mode of the emulator (#207)
-* Added `getProfile()` to [piral-oidc](./src/packages/piral-oidc/README.md) (#210)
+* Added `getProfile()` to [piral-oidc](./src/plugins/piral-oidc/README.md) (#210)
 * Switched to relative paths for local Piral references
 * Added new package `siteless` for painless microfrontends
 * Added `reducers` option to `piral-feeds`

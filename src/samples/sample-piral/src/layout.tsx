@@ -142,8 +142,6 @@ export const layout: Partial<ComponentsState> = {
         body.style.top = '';
         window.scrollTo(0, offset);
       }
-
-      return () => {};
     }, [open]);
     return <div className="pi-modal">{children}</div>;
   },

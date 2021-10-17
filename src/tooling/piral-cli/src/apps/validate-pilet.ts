@@ -1,4 +1,4 @@
-import { join, dirname } from 'path';
+import { join, dirname, resolve } from 'path';
 import { ruleSummary, runRules, retrievePiletData, getPiletsInfo, setLogLevel, progress, log } from '../common';
 import { getPiletRules } from '../rules';
 import { PiletRuleContext, LogLevels } from '../types';
@@ -32,11 +32,12 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     logLevel = validatePiletDefaults.logLevel,
     app = validatePiletDefaults.app,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
 
   const rules = await getPiletRules();
-  const entryFile = join(baseDir, entry);
+  const entryFile = join(fullBase, entry);
   const target = dirname(entryFile);
   const {
     dependencies,
@@ -44,6 +45,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     devDependencies,
     peerModules,
     root,
+    importmap,
     ignored: _0,
     emulator: _1,
     ...data
@@ -63,6 +65,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     dependencies,
     devDependencies,
     peerDependencies,
+    importmap,
     peerModules,
     root,
     data,

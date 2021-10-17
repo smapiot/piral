@@ -22,6 +22,12 @@ We also have a video tutorial:
 
 Sharing components or other (global, i.e., not really Piral instance dependent) functionality should be done with packages. The idea is that the package is included in the app shell as a shared dependency.
 
+::: question: What's the advantage of a shared package?
+A shared package is already bundled into the app shell and therefore does not need to be bundled into any pilet again. It is therefore already evaluated and does not take additional space and time.
+
+A shared package makes sense when multiple pilets would need to access it anyway.
+:::
+
 To automatically share a package the `package.json` of the Piral instance needs to changed. Using the `externals` field in the `pilets` section we can just add the package.
 
 ```json
@@ -42,6 +48,8 @@ To automatically share a package the `package.json` of the Piral instance needs 
 **Note**: Don't forget to add the dependency also to the `dependencies` section.
 
 This way is our recommendation for core libraries (e.g., `react`, `react-dom`, ...) and component libraries such as the primary pattern library. It can, however, also be used for utility libraries (e.g., `lodash`) or other useful libraries.
+
+You can read more about shared dependencies in [the sharing dependencies tutorial](https://docs.piral.io/guidelines/tutorials/15-share-dependencies).
 
 ## Using the Global Data State
 

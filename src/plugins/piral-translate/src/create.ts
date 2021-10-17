@@ -2,7 +2,7 @@ import type { PiralPlugin } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
 import { DefaultPicker } from './default';
-import { PiletLocaleApi, LocalizationMessages, Localizable } from './types';
+import { PiletLocaleApi, LocalizationMessages, Localizable, PiralSelectLanguageEvent } from './types';
 
 export interface TranslationFallback {
   (key: string, language: string): string;
@@ -56,8 +56,8 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
     context.dispatch((state) => ({
       ...state,
       components: {
-        ...state.components,
         LanguagesPicker: DefaultPicker,
+        ...state.components,
       },
       language: {
         loading: false,
@@ -66,10 +66,24 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
       },
     }));
 
-    return () => {
+    return (api) => {
       let localTranslations: LocalizationMessages = {};
 
       return {
+        getCurrentLanguage(cb?: (l: string) => void): any {
+          const selected = context.readState((s) => s.language.selected);
+
+          if (cb) {
+            cb(selected);
+            const handler = (ev: PiralSelectLanguageEvent) => {
+              cb(ev.currentLanguage);
+            };
+            api.on('select-language', handler);
+            return () => api.off('select-language', handler);
+          }
+
+          return selected;
+        },
         setTranslations(messages) {
           localTranslations = messages;
         },

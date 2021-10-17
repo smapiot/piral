@@ -21,8 +21,11 @@ const useDebounce = jest.fn((value) => value);
 jest.mock('piral-core', () => ({
   ...jest.requireActual('piral-core'),
   useGlobalState,
-  useDebounce,
   useActions,
+}));
+
+jest.mock('./useDebounce.ts', () => ({
+  useDebounce,
 }));
 
 describe('Search Hook Module', () => {

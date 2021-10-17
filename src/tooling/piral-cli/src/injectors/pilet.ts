@@ -1,15 +1,17 @@
+import { URL } from 'url';
 import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
+import { computeHash, computeIntegrity } from '../common/hash';
+import { log } from '../common/log';
 import { axios, mime } from '../external';
 import { Bundler } from '../types';
-import { log } from '../common/log';
 
 interface Pilet {
   bundler: Bundler;
   root: string;
-  requireRef?: string;
+  meta: PiletMetadata;
 }
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
@@ -22,6 +24,80 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 interface PiletMetadata {
   name?: string;
   [key: string]: unknown;
+}
+
+const checkV1 = /^\/\/\s*@pilet\s+v:1\s*\(([A-Za-z0-9\_\:\-]+)\)/;
+const checkV2 = /^\/\/\s*@pilet\s+v:2\s*(?:\(([A-Za-z0-9\_\:\-]+),\s*(.*)\))?/;
+
+function getDependencies(deps: string, basePath: string) {
+  try {
+    const depMap = JSON.parse(deps);
+
+    if (depMap && typeof depMap === 'object') {
+      return Object.keys(depMap).reduce((obj, depName) => {
+        const depUrl = depMap[depName];
+
+        if (typeof depUrl === 'string') {
+          const url = new URL(depUrl, basePath);
+          obj[depName] = url.href;
+        }
+
+        return obj;
+      }, {});
+    }
+  } catch {}
+
+  return {};
+}
+
+function getPiletSpecMeta(target: string, basePath: string) {
+  if (existsSync(target) && statSync(target).isFile()) {
+    const content = readFileSync(target, 'utf8');
+
+    if (checkV1.test(content)) {
+      // uses single argument; requireRef (required)
+      const [, requireRef] = checkV1.exec(content);
+      return {
+        spec: 'v1',
+        requireRef,
+        integrity: computeIntegrity(content),
+      };
+    } else if (checkV2.test(content)) {
+      // uses two arguments; requireRef and dependencies as JSON (required)
+      const [, requireRef, plainDependencies] = checkV2.exec(content);
+      return {
+        spec: 'v2',
+        requireRef,
+        dependencies: getDependencies(plainDependencies, basePath),
+      };
+    } else {
+      return {
+        spec: 'v0',
+        hash: computeHash(content),
+        noCache: true,
+      };
+    }
+  }
+
+  return {};
+}
+
+function fillPiletMeta(pilet: Pilet, basePath: string) {
+  const { root, bundler } = pilet;
+  const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  const file = bundler.bundle.name.replace(/^[\/\\]/, '');
+  const target = join(bundler.bundle.dir, file);
+  const url = new URL(file, basePath);
+  const meta = {
+    name: def.name,
+    version: def.version,
+    link: `${url.href}?updated=${Date.now()}`,
+    custom: def.custom,
+    ...getPiletSpecMeta(target, basePath),
+  };
+
+  pilet.meta = meta;
+  return JSON.stringify(meta);
 }
 
 export default class PiletInjector implements KrasInjector {
@@ -49,9 +125,9 @@ export default class PiletInjector implements KrasInjector {
     });
 
     pilets.forEach((p, i) =>
-      p.bundler.on(({ requireRef, version }) => {
-        p.requireRef = version === 'v1' ? requireRef : undefined;
-        const meta = JSON.stringify(this.getMetaOf(i));
+      p.bundler.on(() => {
+        const basePath = `${this.piletApi}/${i}/`;
+        const meta = fillPiletMeta(p, basePath);
 
         for (const id of Object.keys(cbs)) {
           cbs[id](meta);
@@ -77,25 +153,9 @@ export default class PiletInjector implements KrasInjector {
 
   setOptions() {}
 
-  getMetaOf(index: number) {
-    const { api, pilets } = this.config;
-    const { bundler, root, requireRef } = pilets[index];
-    const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-    const file = bundler.bundle.name.replace(/^\//, '');
-    return {
-      name: def.name,
-      version: def.version,
-      link: `${this.piletApi}/${index}/${file}`,
-      hash: bundler.bundle.hash,
-      requireRef,
-      noCache: true,
-      custom: def.custom,
-    };
-  }
-
   async getMeta() {
     const { pilets, feed } = this.config;
-    const localPilets = pilets.map((_, i) => this.getMetaOf(i));
+    const localPilets = pilets.map((pilet) => pilet.meta).filter(Boolean);
     const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
 
     if (mergedPilets.length === 1) {

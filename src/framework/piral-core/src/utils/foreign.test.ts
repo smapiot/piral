@@ -1,4 +1,4 @@
-import { createElement, createRef } from 'react';
+import { createElement } from 'react';
 import { convertComponent, renderInDom } from './foreign';
 import { ForeignComponent } from '../types';
 import { DefaultLoadingIndicator } from '../components/DefaultLoader';
@@ -28,7 +28,7 @@ describe('Util Foreign.', () => {
     const portalId = 'data-portal-id';
     const element = document.createElement('div') as HTMLDivElement;
     element.setAttribute(portalId, '100');
-    var result = renderInDom(context, element, DefaultLoadingIndicator, {});
+    var [result] = renderInDom(context, element, DefaultLoadingIndicator, {});
     expect(result).toBe('100');
   });
 
@@ -37,7 +37,7 @@ describe('Util Foreign.', () => {
       showPortal: jest.fn(),
     } as any;
     const element = document.createElement('div') as HTMLDivElement;
-    var result = renderInDom(context, element, DefaultLoadingIndicator, {});
-    expect(result).toBeUndefined();
+    var [result] = renderInDom(context, element, DefaultLoadingIndicator, {});
+    expect(result).toBe('root');
   });
 });

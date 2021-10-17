@@ -1,6 +1,6 @@
 {
   "name": "piral-documentation-page",
-  "version": "0.13.2",
+  "version": "0.13.9",
   "private": true,
   "description": "The documentation page for Piral.",
   "keywords": [
@@ -31,8 +31,7 @@
     "watch:docs": "piral-docs watch",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {},
   "devDependencies": {
-    "piral-docs-tools": "0.4.0"
+    "piral-docs-tools": "0.11.0"
   }
 }

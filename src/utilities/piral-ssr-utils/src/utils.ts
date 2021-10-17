@@ -54,12 +54,18 @@ export function loadPilets(
 ) {
   return Promise.all(
     metadata.map(async (pilet) => {
-      const originalContent = 'content' in pilet && pilet.content ? pilet.content : 'link' in pilet ? await getPilet(pilet.link) : '';
+      const originalContent =
+        'content' in pilet && pilet.content ? pilet.content : 'link' in pilet ? await getPilet(pilet.link) : '';
 
       if (typeof originalContent === 'string') {
         return {
           custom: pilet.custom,
-          hash: 'requireRef' in pilet || 'bundle' in pilet ? pilet.integrity : 'hash' in pilet ? pilet.hash : '',
+          hash:
+            ('requireRef' in pilet || 'bundle' in pilet) && 'integrity' in pilet
+              ? pilet.integrity
+              : 'hash' in pilet
+              ? pilet.hash
+              : '',
           name: pilet.name,
           version: 'version' in pilet ? pilet.version : '',
           content: modifyUrlReferences(originalContent, 'link' in pilet ? pilet.link : undefined),

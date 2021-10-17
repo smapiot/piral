@@ -1,9 +1,8 @@
 import { __assign } from 'tslib';
-import { blazingStrategy, standardStrategy, isfunc } from 'piral-base';
-import { getLocalDependencies, defaultApiFactory, defaultModuleRequester } from './modules';
+import { blazingStrategy, standardStrategy, createListener, isfunc } from 'piral-base';
+import { defaultApiFactory, defaultDependencySelector, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, includeActions } from './state';
 import { createPiletOptions } from './helpers';
-import { createListener } from './utils';
 import type { PiralConfiguration, PiralInstance } from './types';
 
 /**
@@ -31,21 +30,20 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     state,
     actions,
     availablePilets = [],
-    extendApi,
     plugins,
     requestPilets = defaultModuleRequester,
-    fetchDependency,
-    getDependencies = getLocalDependencies,
     loaderConfig,
     async = false,
+    shareDependencies = defaultDependencySelector,
     loadPilet,
     loaders,
+    debug,
     apiFactory = defaultApiFactory,
   } = config;
   const globalState = createGlobalState(state);
   const events = createListener(globalState);
   const context = createActions(globalState, events);
-  const definedPlugins = plugins || extendApi || [];
+  const definedPlugins = plugins || [];
   const usedPlugins = Array.isArray(definedPlugins) ? definedPlugins : [definedPlugins];
   const createApi = apiFactory(context, usedPlugins);
   const root = createApi({
@@ -59,11 +57,11 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
     loaders,
     loadPilet,
     availablePilets,
-    fetchDependency,
     loaderConfig,
-    getDependencies,
+    shareDependencies,
     strategy: isfunc(async) ? async : async ? blazingStrategy : standardStrategy,
     requestPilets,
+    debug,
   });
 
   if (actions) {

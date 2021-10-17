@@ -1,3 +1,7 @@
+import { join } from 'path';
+import { SharedDependency } from 'piral-cli';
+import { Configuration } from 'webpack';
+
 export function getVariables(name: string, version: string, env: string): Record<string, string> {
   return {
     NODE_ENV: env,
@@ -17,4 +21,75 @@ export function getDefineVariables(variables: Record<string, string>) {
     obj[`process.env.${name}`] = JSON.stringify(value);
     return obj;
   }, {});
+}
+
+export function getExternals(piral: string) {
+  const shellPkg = require(`${piral}/package.json`);
+  const piralExternals = shellPkg.pilets?.externals ?? [];
+  return [
+    ...piralExternals,
+    '@dbeining/react-atom',
+    '@libre/atom',
+    'history',
+    'react',
+    'react-dom',
+    'react-router',
+    'react-router-dom',
+    'tslib',
+    'path-to-regexp',
+  ];
+}
+
+export function getDependencies(importmap: Array<SharedDependency>, compilerOptions: Configuration) {
+  const dependencies = {};
+
+  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
+    for (const dep of importmap) {
+      dependencies[dep.id] = dep.ref;
+      compilerOptions.externals[dep.name] = dep.id;
+
+      if (dep.type === 'local') {
+        compilerOptions.entry[dep.ref.replace(/\.js$/, '')] = dep.entry;
+      }
+    }
+  }
+
+  return dependencies;
+}
+
+export function withSetPath(compilerOptions: Configuration) {
+  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
+    const setPath = join(__dirname, '..', '..', 'set-path');
+
+    if (Array.isArray(compilerOptions.entry)) {
+      compilerOptions.entry.unshift(setPath);
+    } else {
+      for (const key of Object.keys(compilerOptions.entry)) {
+        const entry = compilerOptions.entry[key];
+
+        if (Array.isArray(entry)) {
+          entry.unshift(setPath);
+        }
+      }
+    }
+  }
+}
+
+export function withExternals(compilerOptions: Configuration, externals: Array<string>) {
+  const current = compilerOptions.externals;
+  const newExternals = Array.isArray(current)
+    ? [...(current as Array<string>), ...externals]
+    : typeof current === 'string'
+    ? [current, ...externals]
+    : externals;
+
+  if (newExternals !== externals || typeof compilerOptions.externals !== 'object' || !compilerOptions.externals) {
+    compilerOptions.externals = {};
+  }
+
+  for (const external of newExternals) {
+    if (typeof external === 'string') {
+      compilerOptions.externals[external] = external;
+    }
+  }
 }

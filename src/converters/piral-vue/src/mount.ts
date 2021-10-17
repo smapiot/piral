@@ -1,5 +1,5 @@
 import Vue, { VueConstructor } from 'vue';
-import { BaseComponentProps, ComponentContext } from 'piral-core';
+import type { BaseComponentProps, ComponentContext } from 'piral-core';
 
 export function register<T>(name: string, component: Vue.Component<T>) {
   Vue.component(name, component as VueConstructor);

@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Configs](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-configs.svg?style=flat)](https://www.npmjs.com/package/piral-configs) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Configs](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-configs.svg?style=flat)](https://www.npmjs.com/package/piral-configs) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-configs` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
@@ -16,6 +16,12 @@ For whitelabel products and generic applications configuration may be applied to
 This plugin does not make any statement how the configuration is retrieved. Usually, it will be loaded from the backend when the application starts, but you could also go for something like storing the information in `localStorage` or having a pre-determined configuration embedded in your application. The door is open.
 
 Alternatives: Pilets can ready configuration values from the global data store or state container. They are responsible for evaluating these values and falling back to another value.
+
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/mrf886cnBRk)
 
 ## Documentation
 

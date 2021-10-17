@@ -2,9 +2,9 @@ import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { __RouterContext } from 'react-router';
 import { StateContext } from './stateContext';
-import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions } from '../components';
-import { useGlobalState, useActions } from '../hooks';
-import { defaultRender, convertComponent } from '../utils';
+import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions, PortalRenderer } from '../components';
+import { useActions } from '../hooks';
+import { defaultRender, convertComponent, none } from '../utils';
 import {
   AnyComponent,
   Errors,
@@ -16,18 +16,10 @@ import {
   GlobalStateContext,
 } from '../types';
 
+// this is an arbitrary start number to have 6 digits
 let portalIdBase = 123456;
 
-interface PortalRendererProps {
-  id: string;
-}
-
-const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
-  const children = useGlobalState((m) => m.portals[id] || []);
-  return defaultRender(children);
-};
-
-const DefaultWrapper: React.FC = (props) => <>{props.children}</>;
+const DefaultWrapper: React.FC = (props) => defaultRender(props.children);
 
 interface ForeignComponentContainerProps<T> {
   $portalId: string;
@@ -39,6 +31,15 @@ interface ForeignComponentContainerProps<T> {
 class ForeignComponentContainer<T> extends React.Component<ForeignComponentContainerProps<T>> {
   private current?: HTMLElement;
   private previous?: HTMLElement;
+  private handler = (ev: CustomEvent) => {
+    const { innerProps } = this.props;
+    ev.stopPropagation();
+    innerProps.piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+  };
+
+  private setNode = (node: HTMLDivElement) => {
+    this.current = node;
+  };
 
   componentDidMount() {
     const node = this.current;
@@ -47,6 +48,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
     if (node && isfunc(mount)) {
       mount(node, innerProps, $context);
+      node.addEventListener('render-html', this.handler, false);
     }
 
     this.previous = node;
@@ -72,6 +74,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
     if (node && isfunc(unmount)) {
       unmount(node);
+      node.removeEventListener('render-html', this.handler, false);
     }
 
     this.previous = undefined;
@@ -79,15 +82,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
   render() {
     const { $portalId } = this.props;
-
-    return (
-      <div
-        data-portal-id={$portalId}
-        ref={(node) => {
-          this.current = node;
-        }}
-      />
-    );
+    return <div data-portal-id={$portalId} ref={this.setNode} />;
   }
 }
 
@@ -111,30 +106,26 @@ function wrapForeignComponent<T>(
   stasisOptions: ErrorBoundaryOptions<T>,
   piral: PiletApi,
   Wrapper: React.ComponentType<any>,
-): React.ComponentType<T> {
-  return (props: T) => {
+) {
+  return React.memo((props: T) => {
     const { destroyPortal } = useActions();
-    const [id] = React.useState(() => (portalIdBase++).toString(26));
-    const router = React.useContext(__RouterContext);
     const { state } = React.useContext(StateContext);
-    const innerProps = { ...props, piral };
+    const router = React.useContext(__RouterContext);
+    const id = React.useMemo(() => (portalIdBase++).toString(26), none);
+    const context = React.useMemo(() => ({ router, state }), [router, state]);
+    const innerProps = React.useMemo(() => ({ ...props, piral }), [props]);
 
-    React.useEffect(() => () => destroyPortal(id), []);
+    React.useEffect(() => () => destroyPortal(id), none);
 
     return (
       <Wrapper {...innerProps}>
         <ErrorBoundary {...stasisOptions} renderProps={props}>
           <PortalRenderer id={id} />
-          <ForeignComponentContainer
-            innerProps={innerProps}
-            $portalId={id}
-            $component={component}
-            $context={{ router, state }}
-          />
+          <ForeignComponentContainer innerProps={innerProps} $portalId={id} $component={component} $context={context} />
         </ErrorBoundary>
       </Wrapper>
     );
-  };
+  });
 }
 
 function isNotExotic(component: any): component is object {

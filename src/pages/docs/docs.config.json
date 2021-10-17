@@ -8,9 +8,14 @@
   "rootDir": "../../../",
   "outputDir": "../../../dist/docs",
   "changelogFile": "../../../CHANGELOG.md",
-  "logoFile": "./src/Logo.tsx",
-  "footerFile": "./src/Footer.tsx",
-  "notFoundPageFile": "./src/NotFound.tsx",
+  "components": {
+    "logo": "./src/Logo.tsx",
+    "footer": "./src/Footer.tsx",
+    "notFoundPage": "./src/NotFound.tsx"
+  },
+  "pages": {
+    "/reference/codes/search": "./src/SearchPage.tsx"
+  },
   "redirects": {
     "/": "/guidelines",
     "/tutorials": "/guidelines",
@@ -126,7 +131,7 @@
       ]
     },
     "types": {
-      "title": "Types", 
+      "title": "Types",
       "sections": [
         {
           "title": "Framework",

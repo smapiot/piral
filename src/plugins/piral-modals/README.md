@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Modals](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-modals.svg?style=flat)](https://www.npmjs.com/package/piral-modals) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Modals](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-modals.svg?style=flat)](https://www.npmjs.com/package/piral-modals) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-modals` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core` to easily trigger the display of modal dialogs from pilets.
 
@@ -9,6 +9,12 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-mo
 If you have modal dialogs on your page that `piral-modals` gives you a nice abstraction over registering components for them. These items will be stored in the global state container and will be filtered on a given dialog name. Thus the plugin makes only sense if you want to have consistent dialog management.
 
 Alternative: You could simply use an event to trigger opening a dialog. The event could transport a React component which would then be globally used. Alternatively, each pilet would come up with its own dialog design and management system.
+
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/gZt7Ic1BHNA)
 
 ## Documentation
 

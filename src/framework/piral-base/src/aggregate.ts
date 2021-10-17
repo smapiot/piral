@@ -20,7 +20,7 @@ function checkCreateApi(createApi: PiletApiCreator) {
 export function createPilets(createApi: PiletApiCreator, pilets: Array<Pilet>) {
   const promises: Array<Promise<void> | void> = [];
 
-  if (checkCreateApi(createApi)) {
+  if (checkCreateApi(createApi) && Array.isArray(pilets)) {
     for (const pilet of pilets) {
       promises.push(setupPilet(pilet, createApi));
     }

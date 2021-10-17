@@ -1,8 +1,19 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { mountHyperapp } from './mount';
-import { Component } from './types';
+import { createExtension } from './extension';
+import type { Component } from './types';
 
-export function createConverter() {
+export interface HyperappConverterOptions {
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
+
+export function createConverter(config: HyperappConverterOptions = {}) {
+  const { rootName = 'slot' } = config;
+  const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(
     root: Component<TProps>,
     state: any,
@@ -17,5 +28,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

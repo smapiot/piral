@@ -120,10 +120,11 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     bundlerName = newPiletDefaults.bundlerName,
     variables = newPiletDefaults.variables,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
+  const root = resolve(fullBase, target);
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
-  const root = resolve(baseDir, target);
-  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, source);
+  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(fullBase, source);
   const success = await createDirectory(root);
 
   if (success) {

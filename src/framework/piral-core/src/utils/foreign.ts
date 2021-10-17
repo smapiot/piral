@@ -1,6 +1,31 @@
-import { createElement, ComponentType } from 'react';
+import { createElement, ComponentType, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 import { GlobalStateContext, ForeignComponent } from '../types';
+
+export function attachDomPortal<TProps>(
+  id: string,
+  context: GlobalStateContext,
+  element: HTMLElement | ShadowRoot,
+  component: ComponentType<TProps>,
+  props: TProps,
+): [string, ReactPortal] {
+  const portal = createPortal(createElement(component, props), element as HTMLElement);
+  context.showPortal(id, portal);
+  return [id, portal];
+}
+
+export function changeDomPortal<TProps>(
+  id: string,
+  current: ReactPortal,
+  context: GlobalStateContext,
+  element: HTMLElement | ShadowRoot,
+  component: ComponentType<TProps>,
+  props: TProps,
+): [string, ReactPortal] {
+  const next = createPortal(createElement(component, props), element as HTMLElement);
+  context.updatePortal(id, current, next);
+  return [id, next];
+}
 
 export function convertComponent<T extends { type: string }, U>(
   converter: (component: T) => ForeignComponent<U>,
@@ -24,14 +49,12 @@ export function renderInDom<TProps>(
 
   while (parent) {
     if (parent instanceof Element && parent.hasAttribute(portalId)) {
-      const portal = createPortal(createElement(component, props), element as HTMLElement);
       const id = parent.getAttribute(portalId);
-      context.showPortal(id, portal);
-      return id;
+      return attachDomPortal(id, context, element, component, props);
     }
 
     parent = parent.parentNode || (parent as ShadowRoot).host;
   }
 
-  return undefined;
+  return attachDomPortal('root', context, element, component, props);
 }

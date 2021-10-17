@@ -25,18 +25,7 @@ async function run(
   const otherConfigPath = resolve(root, defaultWebpackConfig);
   const dist = resolve(root, 'dist');
   const hmrPort = hmr ? await getFreePort(62123) : 0;
-  const baseConfig = await getPiralConfig(
-    root,
-    entryFiles,
-    dist,
-    externals,
-    true,
-    true,
-    false,
-    false,
-    publicUrl,
-    hmrPort,
-  );
+  const baseConfig = await getPiralConfig(entryFiles, dist, externals, true, true, false, false, publicUrl, hmrPort);
   const wpConfig = extendConfig(baseConfig, otherConfigPath, {
     watch: true,
   });

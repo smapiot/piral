@@ -1,6 +1,6 @@
 {
   "name": "piral-solid",
-  "version": "0.13.2",
+  "version": "0.13.9",
   "description": "Plugin for integrating Solid components in Piral.",
   "keywords": [
     "piral",
@@ -25,7 +25,6 @@
     "lib",
     "src",
     "convert.d.ts",
-    "convert.ts",
     "convert.js"
   ],
   "repository": {
@@ -44,11 +43,11 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.13.2",
+    "piral-core": "^0.13.9",
     "solid-js": "^0.18.7"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x",
+    "piral-core": "0.14.x",
     "solid-js": "^0.18.0"
   }
 }

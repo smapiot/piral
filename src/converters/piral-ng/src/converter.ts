@@ -1,23 +1,36 @@
-import { NgModuleRef } from '@angular/core';
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { ForeignComponent, BaseComponentProps, Disposable } from 'piral-core';
+import type { NgModuleDefiner } from './types';
 import { enqueue } from './queue';
-import { bootstrap } from './bootstrap';
+import { defineModule } from './module';
+import { NgExtension } from './extension';
+import { bootstrap, prepareBootstrap } from './bootstrap';
 
-let next = ~~(Math.random() * 10000);
+export interface NgConverterOptions {}
 
-export function createConverter(selectId = () => `ng-${next++}`) {
+export interface NgConverter {
+  <TProps extends BaseComponentProps>(component: any): ForeignComponent<TProps>;
+  defineModule: NgModuleDefiner;
+  Extension: any;
+}
+
+export function createConverter(_: NgConverterOptions = {}): NgConverter {
   const convert = <TProps extends BaseComponentProps>(component: any): ForeignComponent<TProps> => {
-    const id = selectId();
-    let result: Promise<void | NgModuleRef<any>> = Promise.resolve();
+    const bootstrapped = prepareBootstrap(component);
+    let mounted: Promise<void | Disposable> = Promise.resolve();
+    let active = true;
 
     return {
       mount(el, props, ctx) {
-        result = enqueue(() => bootstrap(ctx, props, component, el, id));
+        active = true;
+        mounted = mounted.then(() => enqueue(() => active && bootstrap(bootstrapped, el, props, ctx)));
       },
       unmount() {
-        result.then((ngMod) => ngMod && ngMod.destroy());
+        active = false;
+        mounted = mounted.then((dispose) => dispose && dispose());
       },
     };
   };
+  convert.defineModule = defineModule;
+  convert.Extension = NgExtension;
   return convert;
 }

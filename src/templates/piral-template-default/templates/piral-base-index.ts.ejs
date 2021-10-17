@@ -1,0 +1,23 @@
+import { startLoadingPilets, createListener } from "piral-base";
+
+const loader = startLoadingPilets({
+  createApi(meta) {
+    return {
+      meta,
+      ...createListener(),
+    };
+  },
+  fetchPilets() {
+    return fetch("https://feed.piral.cloud/api/v1/pilet/empty")
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+});
+
+loader.connect((err, pilets, loaded) => {
+  if (err) {
+    console.error('Error loading', err);
+  } else if (loaded) {
+    console.log('Everything loaded', pilets);
+  }
+});

@@ -14,7 +14,7 @@ export default async function (root: string, args: TemplateArgs) {
   const mocksDir = relative(root, resolve(root, src, mocks));
   const files: Array<Promise<TemplateFile>> = [];
   const data = {
-    extension: getLanguageExtension(language),
+    extension: getLanguageExtension(language, packageName !== 'piral-base'),
     src: srcDir,
   };
 
@@ -41,7 +41,10 @@ export default async function (root: string, args: TemplateArgs) {
     }
 
     case 'piral-base':
-      files.push(getFileFromTemplate(mocksDir, 'piral', 'backend.js', data));
+      files.push(
+        getFileFromTemplate('.', 'piral-base', 'index.html', data),
+        getFileFromTemplate(mocksDir, 'piral', 'backend.js', data),
+      );
 
       switch (language) {
         case 'js':

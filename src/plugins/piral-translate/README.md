@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Translate](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-translate.svg?style=flat)](https://www.npmjs.com/package/piral-translate) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral Translate](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-translate.svg?style=flat)](https://www.npmjs.com/package/piral-translate) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-translate` brings to the table is a set of Pilet API extensions that is used by `piral`. The set features a simple yet sufficient translation system.
 
@@ -9,6 +9,12 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-tr
 One of the key non-functional requirements of many applications is to be localizable. While this area contains many parts such as potential conversion of currency, number formats etc., one elementary part is the translation of labels and text fragments. There are many solutions out there, but `piral-translate` brings a quite simplified model to the table that works in a distributed way, yet is simple and allows going from proof of concept (language snippets included in the pilets) to massive application later on (language snippets gathered from a dedicated service).
 
 Alternatives: Use a library such as `i18next` as a shared library. Choose one that makes working with your content authors or translation team easier.
+
+## Video
+
+We also have a video for this plugin:
+
+@[youtube](https://youtu.be/Hh-CrOTDSnA)
 
 ## Documentation
 

@@ -1,6 +1,6 @@
 {
   "name": "piral-configs",
-  "version": "0.13.2",
+  "version": "0.13.9",
   "description": "Plugin for dynamic configurations of pilets in Piral.",
   "keywords": [
     "piral",
@@ -40,12 +40,13 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "jsonschema": "^1.4.0"
+    "jsonschema": "^1.4.0",
+    "url": "^0.11.0"
   },
   "devDependencies": {
-    "piral-core": "^0.13.2"
+    "piral-core": "^0.13.9"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x"
+    "piral-core": "0.14.x"
   }
 }

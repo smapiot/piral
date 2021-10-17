@@ -1,6 +1,6 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral CLI](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-cli.svg?style=flat)](https://www.npmjs.com/package/piral-cli) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
+# [Piral CLI](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-cli.svg?style=flat)](https://www.npmjs.com/package/piral-cli) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
 Piral CLI is a command-line tool that can also be used as a library. It should make common tasks such as building a pilet, scaffolding a pilet, or debugging a piral instance simple.
 
@@ -8,7 +8,7 @@ Internally, Piral CLI is build upon existing tools with connection points to the
 
 ## Documentation
 
-For details on the available commands check out the [documentation at Piral](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/master/docs/commands).
+For details on the available commands check out the [documentation at Piral](https://docs.piral.io) or [on GitHub](https://github.com/smapiot/piral/tree/main/docs/commands).
 
 ## Plugins
 
@@ -23,8 +23,10 @@ Right now the following generic plugins exist:
 
 Also the following bundler plugin exists (bringing build / debug capabilities):
 
-- [**piral-cli-parcel**](https://github.com/smapiot/piral), provides an integration for Parcel as a bundler
-- [**piral-cli-webpack**](https://github.com/smapiot/piral), provides an integration for Webpack as a bundler
+- [**piral-cli-parcel**](https://github.com/smapiot/piral), provides an integration for Parcel (v1) as a bundler
+- [**piral-cli-webpack**](https://github.com/smapiot/piral), provides an integration for Webpack (v4) as a bundler
+- [**piral-cli-webpack5**](https://github.com/smapiot/piral), provides an integration for Webpack (v5) as a bundler
+- [**piral-cli-esbuild**](https://github.com/smapiot/piral), provides an integration for ES Build as a bundler
 
 You'll find an updated list [on NPM](https://www.npmjs.com/search?q=keywords%3Apiral-cli) using the keyword **piral-cli**.
 

@@ -36,11 +36,9 @@ function defaultReducer<T>(state: T): T {
 export function createReduxApi(config: ReduxConfig = {}): PiralPlugin<PiletReduxApi> {
   const { reducer = defaultReducer, enhancer } = config;
   const otherReducers = {};
+  const initialState: PiralReduxState = { stores: {} };
   const store = createStore(createReducer() as Reducer<any>, enhancer);
   const provider = createElement(Provider, { store });
-  const initialState: PiralReduxState = {
-    stores: {},
-  };
 
   function createReducer() {
     return (state: PiralReduxState = initialState, action: ReducerUnion<PiralReduxActions>): PiralReduxState => {

@@ -1,16 +1,21 @@
 import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
-import { createExtension } from './lib/extension';
-
-const convert = createConverter();
 
 export interface AureliaConverter {
-  (...params: Parameters<typeof convert>): HtmlComponent<any>;
+  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
 }
 
-export const fromAurelia: AureliaConverter = (root) => ({
-  type: 'html',
-  component: convert(root),
-});
+export function createAureliaConverter(...params: Parameters<typeof createConverter>) {
+  const convert = createConverter(...params);
+  const Extension = convert.Extension;
+  const from: AureliaConverter = (root) => ({
+    type: 'html',
+    component: convert(root),
+  });
 
-export const createAureliaExtension = createExtension;
+  return { from, Extension };
+}
+
+const { from: fromAurelia, Extension: AureliaExtension } = createAureliaConverter();
+
+export { fromAurelia, AureliaExtension };

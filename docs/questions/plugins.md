@@ -147,3 +147,15 @@ You can, however, always include SSR'ed apps as described in https://docs.piral.
 On the other hand, the React components can be used without restrictions. This excludes strange dependencies that require the Next.js or Gatsby build process.
 
 ---------------------------------------
+
+## Does piral-notifications work with react-toastify?
+
+Yes and no.
+
+Yes: Sure, you can take the view elements and use them.
+
+No: It comes with its own global logic etc. -> while `piral-notifications` uses the app shell's state container to handle the lifecycle of the notifications.
+
+In general, you could base your app shell on `piral-core` and use `react-toastify` via a shared dependency instead of including `piral-notifications`. This way, pilets could just `import { toast } from 'react-toastify'` without having to touch the pilet API.
+
+---------------------------------------

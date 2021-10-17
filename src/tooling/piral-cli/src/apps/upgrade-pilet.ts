@@ -82,8 +82,9 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     logLevel = upgradePiletDefaults.logLevel,
     install = upgradePiletDefaults.install,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
+  const root = resolve(fullBase, target);
   setLogLevel(logLevel);
-  const root = resolve(baseDir, target);
   const valid = await checkExistingDirectory(root);
 
   if (!valid) {
@@ -107,9 +108,9 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       fail('invalidPiralReference_0043');
     }
 
-    const monorepoRef = await isMonorepoPackageRef(sourceName, baseDir);
+    const monorepoRef = await isMonorepoPackageRef(sourceName, fullBase);
     const [packageRef, packageVersion] = await getCurrentPackageDetails(
-      baseDir,
+      fullBase,
       sourceName,
       currentVersion,
       version,

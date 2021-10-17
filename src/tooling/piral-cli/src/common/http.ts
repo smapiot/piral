@@ -4,9 +4,13 @@ import { Stream } from 'stream';
 import { platform, tmpdir } from 'os';
 import { createWriteStream } from 'fs';
 import { log } from './log';
+import { computeHash } from './hash';
 import { axios, FormData } from '../external';
 
 const os = platform();
+const standardHeaders = {
+  'user-agent': `piral-cli/http.node-${os}`,
+};
 
 function getMessage(body: string | { message?: string }) {
   if (typeof body === 'string') {
@@ -36,14 +40,24 @@ function streamToFile(source: Stream, target: string) {
   });
 }
 
+export function getHashFromUrl(target: string): Promise<string> {
+  return axios.default
+    .get<Buffer>(target, {
+      responseType: 'arraybuffer',
+      headers: standardHeaders,
+    })
+    .then((res) => {
+      log('generalDebug_0003', `Received the contents from "${target}" (status: ${res.status}).`);
+      return computeHash(res.data);
+    });
+}
+
 export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>> {
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
   return axios.default
     .get<Stream>(target, {
       responseType: 'stream',
-      headers: {
-        'user-agent': `piral-cli/http.node-${os}`,
-      },
+      headers: standardHeaders,
       httpsAgent,
     })
     .then((res) => {
@@ -78,13 +92,18 @@ export function postFile(
 
   form.append('file', file, 'pilet.tgz');
 
+  const headers: Record<string, string> = {
+    ...form.getHeaders(),
+    ...standardHeaders,
+  };
+
+  if (key) {
+    headers.authorization = `Basic ${key}`;
+  }
+
   return axios.default
     .post(target, form, {
-      headers: {
-        ...form.getHeaders(),
-        authorization: `Basic ${key}`,
-        'user-agent': `piral-cli/http.node-${os}`,
-      },
+      headers,
       httpsAgent,
       maxContentLength: Infinity,
       maxBodyLength: Infinity,

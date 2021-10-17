@@ -36,7 +36,7 @@ While `piral` is build on top of `piral-core`, `piral-core` is itself build on t
 
 A Piral instance requires the following things:
 
-1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/master/src/samples/sample-piral))
+1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/main/src/samples/sample-piral))
 2. A backend service to provision the pilets (you can use our available [feed service](https://www.piral.cloud))
 3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) NPM feed or a Git repository
 
@@ -60,7 +60,7 @@ Piral was created with microfrontend architectures relying on heavy client-side 
 
 Nevertheless, for a couple of reasons you may want to offer a non-JS (or progressive) version of your application. You may want to offer enhanced SEO capabilities. You may want to reduce initial loading / rendering time. You may want to give non-JS users a bit more capabilities than just stating "Sorry - you need to enable JavaScript". We hear you loud and clear.
 
-Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../guidelines/server-side-rendering.md).
+Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../tutorials/11-server-side-rendering.md).
 
 ---------------------------------------
 

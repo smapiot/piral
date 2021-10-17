@@ -1,6 +1,6 @@
-require('promise-polyfill/lib/polyfill');
-require('url-polyfill');
-require('whatwg-fetch');
-require('current-script-polyfill');
-require('core-js/stable');
-require('regenerator-runtime/runtime');
+import 'promise-polyfill/lib/polyfill';
+import 'url-polyfill';
+import 'whatwg-fetch';
+import 'current-script-polyfill';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';

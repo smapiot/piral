@@ -1,6 +1,17 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import { createExtension } from './extension';
 
-export function createConverter() {
+export interface LitElConverterOptions {
+  /**
+   * Defines the name of the extension component.
+   * @default litel-extension
+   */
+  selector?: string;
+}
+
+export function createConverter(config: LitElConverterOptions = {}) {
+  const { selector = 'litel-extension' } = config;
+  const Extension = createExtension(selector);
   const convert = <TProps extends BaseComponentProps>(elementName: string): ForeignComponent<TProps> => {
     return {
       mount(parent, data, ctx) {
@@ -11,6 +22,7 @@ export function createConverter() {
         el.shadowRoot.addEventListener(
           'render-html',
           (ev: CustomEvent) => {
+            ev.stopPropagation();
             piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
           },
           false,
@@ -29,5 +41,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

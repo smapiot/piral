@@ -36,7 +36,13 @@ function getCodes() {
       codes.push({
         id: type.symbol.name.split('_').pop(),
         docs: docs.reduce((prev, curr) => {
-          prev[curr.name] = normalizeText(curr.text);
+          let text = curr.text;
+
+          if (Array.isArray(text)) {
+            text = curr.text.map(t => t.text).join('');
+          }
+
+          prev[curr.name] = normalizeText(text);
           return prev;
         }, {}),
       });

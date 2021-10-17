@@ -1,18 +1,8 @@
 import { PiletMetadata, AvailableDependencies, isfunc } from 'piral-base';
 
-const sharedDependencies: AvailableDependencies = {};
-
-if (process.env.SHARED_DEPENDENCIES) {
-  const fillDependencies = require('../../dependencies.codegen');
-
-  if (isfunc(fillDependencies)) {
-    fillDependencies(sharedDependencies);
-  }
-}
-
 /**
  * The global dependencies, which represent the dependencies
- * already used by piral-core itself.
+ * shared from the app shell itself.
  */
 export const globalDependencies: AvailableDependencies = {
   react: require('react'),
@@ -26,16 +16,20 @@ export const globalDependencies: AvailableDependencies = {
   '@dbeining/react-atom': require('@dbeining/react-atom'),
 };
 
+if (process.env.SHARED_DEPENDENCIES) {
+  const fillDependencies = require('../../dependencies.codegen');
+
+  if (isfunc(fillDependencies)) {
+    fillDependencies(globalDependencies);
+  }
+}
+
 /**
- * Gets the local dependencies for the app shell, which
- * are the global dependencies and the implicitly shared
+ * The default dependency selector, which just returns the provided
  * dependencies.
  */
-export function getLocalDependencies(): AvailableDependencies {
-  return {
-    ...globalDependencies,
-    ...sharedDependencies,
-  };
+export function defaultDependencySelector(dependencies: AvailableDependencies) {
+  return dependencies;
 }
 
 /**

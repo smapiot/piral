@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { useGlobalState } from '../hooks';
-import { defaultRender } from '../utils';
+import { defaultRender, none } from '../utils';
 import { ExtensionSlotProps } from '../types';
 
 /**
@@ -11,7 +11,7 @@ import { ExtensionSlotProps } from '../types';
  */
 export function ExtensionSlot<T extends string>(props: ExtensionSlotProps<T>) {
   const { name, render = defaultRender, empty, params } = props;
-  const extensions = useGlobalState((s) => s.registry.extensions[name] || []);
+  const extensions = useGlobalState((s) => s.registry.extensions[name] || none);
   return render(
     extensions.length === 0 && isfunc(empty)
       ? [defaultRender(empty(), 'empty')]

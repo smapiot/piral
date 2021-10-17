@@ -210,6 +210,24 @@ The incoming option value should be checked. In the case of an unknown value, a 
 
 **Remark**: The Piral CLI does not check if all listed validators really exist. Instead, only the ones that exist will be called.
 
+## Setting Defaults
+
+The Piral CLI uses three sources for its configuration:
+
+- Environment variables
+- Command line parameters
+- The `.piralrc` configuration file
+
+The latter can be used to define defaults even beyond a single repository. As an example, creating a `.piralrc` file with the following content in the home directory would define a default API key in case no key is specified via the command line parameters:
+
+```json
+{
+  "apiKey": "my-default-key"
+}
+```
+
+More details can be found [in the reference documentation](https://docs.piral.io/reference/documentation/cli-config).
+
 ## Next Steps
 
 In this tutorial, we looked at the Piral CLI in more detail. Now that we know the areas where the Piral CLI helps us greatly we can make use of it more efficiently.

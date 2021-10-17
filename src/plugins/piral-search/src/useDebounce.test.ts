@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDebounce } from './debounce';
+import { useDebounce } from './useDebounce';
 
 jest.mock('react');
 

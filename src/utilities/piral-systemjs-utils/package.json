@@ -1,6 +1,6 @@
 {
   "name": "piral-systemjs-utils",
-  "version": "0.13.2",
+  "version": "0.13.9",
   "description": "Utilities for providing SystemJS support to Piral.",
   "keywords": [
     "piral",
@@ -20,7 +20,6 @@
   "typings": "lib/index.d.ts",
   "files": [
     "vendor.js",
-    "vendor.d.ts",
     "esm",
     "lib",
     "src"
@@ -39,14 +38,12 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-systemjs-utils.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {
-    "systemjs": "^6.3.2"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/systemjs": "^6.1.0",
-    "piral-core": "^0.13.2"
+    "@types/systemjs": "^6.1.1",
+    "piral-core": "^0.13.9"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x"
+    "piral-core": "0.14.x"
   }
 }

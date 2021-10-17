@@ -81,8 +81,9 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
     logLevel = upgradePiralDefaults.logLevel,
     install = upgradePiralDefaults.install,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
+  const root = resolve(fullBase, target);
   setLogLevel(logLevel);
-  const root = resolve(baseDir, target);
   const valid = await checkExistingDirectory(root);
   const exists = await checkExists(join(root, 'package.json'));
 

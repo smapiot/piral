@@ -7,6 +7,7 @@ export * from './ExtensionSlot';
 export * from './Mediator';
 export * from './PiralRoutes';
 export * from './PiralView';
+export * from './PortalRenderer';
 export * from './ResponsiveLayout';
 export * from './SetComponent';
 export * from './SetError';
