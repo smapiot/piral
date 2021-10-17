@@ -1,0 +1,21 @@
+{
+    "sourceMaps": true,
+    "comments": true,
+    "overrides": [
+      {
+        "test": "dist/index.js",
+        "plugins": ["./lib/plugins/banner-plugin.js"]
+      }
+    ],
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "chrome": "82"
+          },
+          "modules": "systemjs"
+        }
+      ]
+    ]
+  }

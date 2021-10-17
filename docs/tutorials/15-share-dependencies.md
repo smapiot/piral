@@ -45,11 +45,11 @@ These are dependencies that are coming directly or indirectly from `piral-core`.
 
 ## Explicit Sharing from the App Shell
 
-Dependencies can also be "defined" or explicitly mentioned in the app shell. The mechanism for this works via the `getDependencies` option of the `createInstance` function.
+Dependencies can also be "defined" or explicitly mentioned in the app shell. The mechanism for this works via the `shareDependencies` option of the `createInstance` function.
 
 ```js
 const instance = createInstance({
-  getDependencies() {
+  shareDependencies() {
     return {
 
     };
@@ -61,8 +61,10 @@ const instance = createInstance({
 
 ```js
 const instance = createInstance({
-  getDependencies() {
-    return getLocalDependencies();
+  shareDependencies(dependencies) {
+    // just return the pre-defined dependencies, otherwise either
+    // remove or add dependencies before returning
+    return dependencies;
   },
 });
 ```
@@ -73,9 +75,9 @@ As an example consider that an app shell named `my-app-shell` also wants to expo
 
 ```js
 const instance = createInstance({
-  getDependencies() {
+  shareDependencies(dependencies) {
     return {
-      ...getLocalDependencies(),
+      ...dependencies,
       'my-app-shell': require('./exports'),
     };
   },

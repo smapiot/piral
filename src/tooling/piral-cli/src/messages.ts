@@ -2058,6 +2058,7 @@ export function invalidSchemaVersion_0171(schemaVersion: string, schemas: Array<
  * @see
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
+ * - [esbuild](https://esbuild.github.io)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example
@@ -2089,6 +2090,7 @@ export function bundlerMissing_0172(bundlerName: string, installed: Array<string
  * @see
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
+ * - [esbuild](https://esbuild.github.io)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example
@@ -2120,6 +2122,7 @@ export function defaultBundlerMissing_0173(): QuickMessage {
  * @see
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
+ * - [esbuild](https://esbuild.github.io)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example

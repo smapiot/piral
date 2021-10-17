@@ -23,8 +23,10 @@ Right now the following generic plugins exist:
 
 Also the following bundler plugin exists (bringing build / debug capabilities):
 
-- [**piral-cli-parcel**](https://github.com/smapiot/piral), provides an integration for Parcel as a bundler
-- [**piral-cli-webpack**](https://github.com/smapiot/piral), provides an integration for Webpack as a bundler
+- [**piral-cli-parcel**](https://github.com/smapiot/piral), provides an integration for Parcel (v1) as a bundler
+- [**piral-cli-webpack**](https://github.com/smapiot/piral), provides an integration for Webpack (v4) as a bundler
+- [**piral-cli-webpack5**](https://github.com/smapiot/piral), provides an integration for Webpack (v5) as a bundler
+- [**piral-cli-esbuild**](https://github.com/smapiot/piral), provides an integration for ES Build as a bundler
 
 You'll find an updated list [on NPM](https://www.npmjs.com/search?q=keywords%3Apiral-cli) using the keyword **piral-cli**.
 
