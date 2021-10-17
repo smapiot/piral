@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import { CliPlugin } from 'piral-cli';
+import type { CliPlugin } from 'piral-cli';
 
 const plugin: CliPlugin = (cli) => {
   cli.withBundler('esbuild', actions);

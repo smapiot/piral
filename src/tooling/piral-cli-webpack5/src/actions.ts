@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import {
   DebugPiletBundlerDefinition,
   DebugPiralBundlerDefinition,
@@ -7,21 +8,21 @@ import {
 } from 'piral-cli';
 
 export const debugPiral: DebugPiralBundlerDefinition = {
-  path: '',
+  path: resolve(__dirname, 'webpack', 'piral.js'),
 };
 
 export const watchPiral: WatchPiralBundlerDefinition = {
-  path: '',
+  path: resolve(__dirname, 'webpack', 'piral.js'),
 };
 
 export const buildPiral: BuildPiralBundlerDefinition = {
-  path: '',
+  path: resolve(__dirname, 'webpack', 'piral.js'),
 };
 
 export const debugPilet: DebugPiletBundlerDefinition = {
-  path: '',
+  path: resolve(__dirname, 'webpack', 'pilet.js'),
 };
 
 export const buildPilet: BuildPiletBundlerDefinition = {
-  path: '',
+  path: resolve(__dirname, 'webpack', 'pilet.js'),
 };

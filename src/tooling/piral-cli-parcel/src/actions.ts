@@ -52,7 +52,7 @@ export const debugPiral: DebugPiralBundlerDefinition = {
       .describe('autoinstall', 'Automatically installs missing Node.js packages.')
       .default('autoinstall', true);
   },
-  path: '',
+  path: resolve(__dirname, 'parcel', 'piral.js'),
   async prepare(args) {
     const { cacheDir = defaultCacheDir, scopeHoist = false, autoInstall = true, fresh = false } = args._;
     const cache = resolve(args.root, cacheDir);
@@ -72,7 +72,7 @@ export const debugPiral: DebugPiralBundlerDefinition = {
 };
 
 export const watchPiral: WatchPiralBundlerDefinition = {
-  path: '',
+  path: resolve(__dirname, 'parcel', 'piral.js'),
 };
 
 export const buildPiral: BuildPiralBundlerDefinition = {
@@ -88,7 +88,7 @@ export const buildPiral: BuildPiralBundlerDefinition = {
       .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
       .default('scope-hoist', false);
   },
-  path: '',
+  path: resolve(__dirname, 'parcel', 'piral.js'),
   async prepare(args) {
     const { detailedReport = false, scopeHoist = false, cacheDir = defaultCacheDir } = args._;
     const cache = resolve(args.root, cacheDir);
@@ -121,7 +121,7 @@ export const debugPilet: DebugPiletBundlerDefinition = {
       .describe('autoinstall', 'Automatically installs missing Node.js packages.')
       .default('autoinstall', true);
   },
-  path: '',
+  path: resolve(__dirname, 'parcel', 'pilet.js'),
   async prepare(args) {
     const { cacheDir = defaultCacheDir, scopeHoist = false, autoInstall = true, fresh = false } = args._;
     const cache = resolve(args.root, cacheDir);
@@ -153,7 +153,7 @@ export const buildPilet: BuildPiletBundlerDefinition = {
       .describe('scope-hoist', 'Tries to reduce bundle size by introducing tree shaking.')
       .default('scope-hoist', false);
   },
-  path: '',
+  path: resolve(__dirname, 'parcel', 'pilet.js'),
   async prepare(args) {
     const { detailedReport = false, cacheDir = defaultCacheDir, scopeHoist = false } = args._;
     const cache = resolve(args.root, cacheDir);
