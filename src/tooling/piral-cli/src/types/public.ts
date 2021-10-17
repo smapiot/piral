@@ -151,6 +151,7 @@ export interface BuildPiletBundlerDefinition extends BaseBundlerDefinition<Build
 
 export interface PiralBuildHandler {
   create(config: {
+    root: string;
     entryFiles: string;
     outDir: string;
     externals: Array<string>;
@@ -167,6 +168,8 @@ export interface PiralBuildHandler {
 
 export interface PiletBuildHandler {
   create(config: {
+    root: string;
+    piral: string;
     entryModule: string;
     outDir: string;
     outFile: string;

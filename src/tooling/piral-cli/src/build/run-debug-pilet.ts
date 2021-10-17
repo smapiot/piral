@@ -26,6 +26,8 @@ function run(
     root,
   });
   return handler.create({
+    root,
+    piral,
     entryModule,
     outDir,
     outFile: 'index.js',

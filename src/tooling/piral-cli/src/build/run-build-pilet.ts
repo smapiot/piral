@@ -24,6 +24,8 @@ function run(
   });
 
   return handler.create({
+    root,
+    piral,
     entryModule,
     outDir,
     outFile,

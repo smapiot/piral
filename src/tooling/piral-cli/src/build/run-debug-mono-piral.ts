@@ -25,6 +25,7 @@ function run(
   });
 
   return handler.create({
+    root,
     entryFiles,
     outDir,
     externals,

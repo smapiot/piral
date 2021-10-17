@@ -1,8 +1,7 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { progress, logReset, log } from 'piral-cli/utils';
-import { RuleSetRule, ProgressPlugin, HotModuleReplacementPlugin, optimize } from 'webpack';
-import { HotModuleServerPlugin } from './HotModuleServerPlugin';
-import SheetPlugin from './SheetPlugin';
+import { RuleSetRule, ProgressPlugin, WebpackPluginInstance, Configuration } from 'webpack';
+import SheetPlugin from '../plugins/SheetPlugin';
 
 const piletCss = 'main.css';
 
@@ -14,37 +13,25 @@ function getStyleLoaders(production: boolean) {
   }
 }
 
+export type ConfigEnhancer = (config: Configuration) => Configuration;
+
+export type DefaultConfiguration = [Configuration, ConfigEnhancer];
+
 export const extensions = ['.ts', '.tsx', '.js', '.json'];
 
 export function getVariables(): Record<string, string> {
-  return Object.keys(process.env).reduce(
-    (prev, curr) => {
-      prev[curr] = process.env[curr];
-      return prev;
-    },
-    {
-      DEBUG_PIRAL: '',
-      DEBUG_PILET: '',
-    },
-  );
+  return Object.keys(process.env).reduce((prev, curr) => {
+    prev[curr] = process.env[curr];
+    return prev;
+  }, {});
 }
 
-export function getHmrEntry(hmrPort: number) {
-  return hmrPort ? [`webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`] : [];
-}
-
-export function getPlugins(
-  plugins: Array<any>,
-  showProgress: boolean,
-  production: boolean,
-  pilet: boolean,
-  hmrPort?: number,
-) {
-  const otherPlugins = [
+export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, pilet: boolean) {
+  const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
-      filename: pilet ? piletCss : '[name].[hash:6].css',
-      chunkFilename: '[id].[hash:6].css',
-    }),
+      filename: pilet ? piletCss : '[name].[fullhash:6].css',
+      chunkFilename: '[id].[chunkhash:6].css',
+    }) as any,
   ];
 
   if (showProgress) {
@@ -62,18 +49,9 @@ export function getPlugins(
     );
   }
 
-  if (hmrPort) {
-    otherPlugins.push(new HotModuleReplacementPlugin());
-    otherPlugins.push(new HotModuleServerPlugin(hmrPort));
-  }
-
-  if (production) {
-    otherPlugins.push(new optimize.OccurrenceOrderPlugin(true));
-
-    if (pilet) {
-      const name = process.env.BUILD_PCKG_NAME;
-      otherPlugins.push(new SheetPlugin(piletCss, name));
-    }
+  if (production && pilet) {
+    const name = process.env.BUILD_PCKG_NAME;
+    otherPlugins.push(new SheetPlugin(piletCss, name) as any);
   }
 
   return plugins.concat(otherPlugins);
@@ -132,11 +110,6 @@ export function getRules(production: boolean): Array<RuleSetRule> {
       use: [require.resolve('source-map-loader')],
       exclude: nodeModules,
       enforce: 'pre',
-    },
-    {
-      parser: {
-        system: false,
-      },
     },
   ];
 }

@@ -26,14 +26,15 @@ export function runEsbuild(config: BuildOptions, logLevel: LogLevels, watch: boo
     case 2:
       config.logLevel = 'warning';
       break;
-    case 3:
-      config.logLevel = 'info';
-      break;
     case 4:
       config.logLevel = 'verbose';
       break;
     case 5:
       config.logLevel = 'debug';
+      break;
+    case 3:
+    default:
+      config.logLevel = 'info';
       break;
   }
 
