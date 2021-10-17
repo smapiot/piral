@@ -10,6 +10,7 @@
 * Added support for new debug utils (#397)
 * Added generic `piral-extension` web component for rendering extensions
 * Added option to run Angular without `zone.js` in `piral-ng`
+* Added bundler for `esbuild` (#363)
 * Added direct support for using the Angular router in `piral-ng` (#396)
 * Added convenience module `extend-config` for `piral-cli-webpack` and `piral-cli-webpack5` (#410)
 

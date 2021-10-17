@@ -1,3 +1,4 @@
+import type { SharedDependency } from 'piral-cli';
 import { Plugin } from 'esbuild';
 import { transformFileAsync } from '@babel/core';
 import { promises } from 'fs';
@@ -5,7 +6,7 @@ import { isAbsolute, join, resolve, basename } from 'path';
 import { getPackageName, getRequireRef } from '../shared';
 
 export interface PiletPluginOptions {
-  deps: string;
+  importmap: Array<SharedDependency>;
 }
 
 export const piletPlugin = (options: PiletPluginOptions): Plugin => ({
@@ -85,7 +86,7 @@ export const piletPlugin = (options: PiletPluginOptions): Plugin => ({
                       require.resolve('./banner-plugin'),
                       {
                         name: getPackageName(),
-                        deps: options.deps,
+                        importmap: options.importmap,
                         requireRef: getRequireRef(),
                         cssFiles,
                       },

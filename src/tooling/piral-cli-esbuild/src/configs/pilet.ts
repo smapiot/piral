@@ -27,17 +27,14 @@ export function createConfig(
   }
 
   const config = createCommonConfig(outdir, development, sourcemap, contentHash, minify);
-  const deps = JSON.stringify(
-    importmap.reduce((obj, dep) => {
-      obj[dep.id] = dep.ref;
-      return obj;
-    }, {}),
-  );
-  const external = [...externals, ...importmap.map((m) => m.name)];
   const name = nameOf(filename);
+  const external = [...externals, ...importmap.map((m) => m.name)];
   const entryPoints = {
     [name]: entryModule,
   };
+  importmap.forEach((dep) => {
+    entryPoints[nameOf(dep.ref)] = dep.entry;
+  });
 
   return {
     ...config,
@@ -46,6 +43,6 @@ export function createConfig(
     splitting: true,
     external,
     format: 'esm',
-    plugins: [...config.plugins, piletPlugin({ deps })],
+    plugins: [...config.plugins, piletPlugin({ importmap })],
   };
 }

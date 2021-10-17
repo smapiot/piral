@@ -1,6 +1,7 @@
 import { join } from 'path';
+import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration } from 'kras';
 import { mime } from '../external';
 import { Bundler } from '../types';
 
@@ -16,8 +17,26 @@ export interface PiralInjectorConfig extends KrasInjectorConfig {
 export default class PiralInjector implements KrasInjector {
   public config: PiralInjectorConfig;
 
-  constructor(options: PiralInjectorConfig) {
+  constructor(options: PiralInjectorConfig, _config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
+    const api = '/$events';
+    const cbs = {};
+
+    core.on('user-connected', (e) => {
+      if (e.target === '*' && e.url === api.substr(1)) {
+        cbs[e.id] = (msg: string) => e.ws.send(msg);
+      }
+    });
+
+    core.on('user-disconnected', (e) => {
+      delete cbs[e.id];
+    });
+
+    this.config.bundler.on((args) => {
+      for (const id of Object.keys(cbs)) {
+        cbs[id](JSON.stringify(args));
+      }
+    });
   }
 
   get active() {

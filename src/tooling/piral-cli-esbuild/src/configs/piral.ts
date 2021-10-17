@@ -16,7 +16,9 @@ export function createConfig(
   const config = createCommonConfig(outdir, development, sourcemap, contentHash, minify);
 
   if (hmr) {
-    //TODO use hmr
+    config.banner = {
+      js: `(() => new WebSocket(location.origin.replace('http', 'ws')+"/$events").onmessage = () => location.reload())();`,
+    };
   }
 
   return {
