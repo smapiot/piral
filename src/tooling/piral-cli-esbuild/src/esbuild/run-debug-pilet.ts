@@ -19,18 +19,7 @@ async function run(
   });
 
   const dist = resolve(root, 'dist');
-  const config = createConfig(
-    entryModule,
-    dist,
-    'index.js',
-    externals,
-    importmap,
-    version,
-    true,
-    true,
-    true,
-    false,
-  );
+  const config = createConfig(entryModule, dist, 'index.js', externals, importmap, version, true, true, true, false);
 
   return runEsbuild(config, logLevel, true);
 }
@@ -54,7 +43,15 @@ process.on('message', async (msg) => {
 
       break;
     case 'start':
-      bundler = await run(root, msg.piral, msg.externals, msg.importmap, msg.entryModule, msg.version, msg.logLevel).catch((error) => {
+      bundler = await run(
+        root,
+        msg.piral,
+        msg.externals,
+        msg.importmap,
+        msg.entryModule,
+        msg.version,
+        msg.logLevel,
+      ).catch((error) => {
         process.send({
           type: 'fail',
           error: error?.message,
@@ -67,7 +64,7 @@ process.on('message', async (msg) => {
             process.send({
               type: 'update',
               outHash: bundler.mainBundle.entryAsset.hash,
-              outName: bundler.mainBundle.name.substr(bundler.options.outDir.length),
+              outName: bundler.mainBundle.name,
               args: {
                 requireRef: bundler.mainBundle.requireRef,
                 version: msg.version,

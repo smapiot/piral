@@ -2,16 +2,16 @@ import { BuildOptions, build } from 'esbuild';
 import { resolve, dirname } from 'path';
 import { EventEmitter } from 'events';
 import { LogLevels } from 'piral-cli';
+import { getRequireRef } from '../shared';
 
 export function runEsbuild(config: BuildOptions, logLevel: LogLevels, watch: boolean) {
   const eventEmitter = new EventEmitter();
   const rootDir = process.cwd();
   const outDir = config.outdir ? resolve(rootDir, config.outdir) : dirname(resolve(rootDir, config.outfile));
-  const requireRef = `esbuildpr_${process.env.BUILD_PCKG_NAME.replace(/\W/gi, '')}`;
-  const name = Object.keys(config.entryPoints)[0];
+  const name = `${Object.keys(config.entryPoints)[0]}.js`;
   const mainBundle = {
     name,
-    requireRef,
+    requireRef: getRequireRef(),
     entryAsset: {},
   };
 
@@ -49,13 +49,7 @@ export function runEsbuild(config: BuildOptions, logLevel: LogLevels, watch: boo
     },
   });
 
-  if (watch) {
-    config.watch = {
-      onRebuild(err, result) {
-        //TODO is required?
-      },
-    };
-  }
+  config.watch = watch;
 
   return {
     bundle() {
@@ -65,7 +59,7 @@ export function runEsbuild(config: BuildOptions, logLevel: LogLevels, watch: boo
             throw new Error(JSON.stringify(result.errors));
           } else {
             return {
-              outFile: `/${name}.js`,
+              outFile: `/${name}`,
               outDir,
             };
           }

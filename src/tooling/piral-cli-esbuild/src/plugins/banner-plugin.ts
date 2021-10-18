@@ -1,12 +1,40 @@
-import type { NodePath, PluginObj } from '@babel/core';
+import type { PluginObj } from '@babel/core';
+import type { Statement } from '@babel/types';
+import template from '@babel/template';
+
+export interface PluginOptions {
+  name: string;
+  deps: string;
+  requireRef: string;
+  cssFiles: Array<string>;
+}
 
 export default function babelPlugin(): PluginObj {
+  const debug = process.env.NODE_ENV === 'development';
+
   return {
     visitor: {
-      Program(path: NodePath) {
-        const deps = process.env.IMPORT_DEPS || '{}';
-        const requireRef = `esbuildpr_${process.env.BUILD_PCKG_NAME.replace(/\W/gi, '')}`;
+      Program(path, state) {
+        const { name, deps, requireRef, cssFiles } = state.opts as PluginOptions;
         path.addComment('leading', `@pilet v:2(${requireRef},${deps})`, true);
+
+        if (cssFiles.length > 0) {
+          const bundleUrl = `function(){try{throw new Error}catch(t){const e=(""+t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\\/\\/[^)\\n]+/g);if(e)return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\\/\\/.+)\\/[^\\/]+$/,"$1")+"/"}return"/"}`;
+          const stylesheet = [
+            `var d=document`,
+            `var __bundleUrl__=(${bundleUrl})()`,
+            `${JSON.stringify(cssFiles)}.forEach(cf=>{`,
+            `var u=__bundleUrl__+cf`,
+            `var e=d.createElement("link")`,
+            `e.setAttribute('data-origin', ${JSON.stringify(name)})`,
+            `e.type="text/css"`,
+            `e.rel="stylesheet"`,
+            `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
+            `d.head.appendChild(e)`,
+            `})`,
+          ].join('\n');
+          path.node.body.push(template.ast(`(function(){${stylesheet}})()`) as Statement);
+        }
       },
     },
   };

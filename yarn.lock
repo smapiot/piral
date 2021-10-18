@@ -7352,6 +7352,11 @@ esbuild-openbsd-64@0.13.6:
   resolved "https://registry.yarnpkg.com/esbuild-openbsd-64/-/esbuild-openbsd-64-0.13.6.tgz#315fd85970365835f6a1eb7b6e9335d59f772564"
   integrity sha512-WFa5J0IuyER0UJbCGw87gvGWXGfhxeNppYcvQjp0pWYuH4FS+YqphyjV0RJlybzzDpAXkyZ9RzkMFtSAp+6AUA==
 
+esbuild-plugin-babel@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/esbuild-plugin-babel/-/esbuild-plugin-babel-0.2.3.tgz#e6bce2ad9b962bf725700b6d0c803eed21b9fff6"
+  integrity sha512-hGLL31n+GvBhkHUpPCt1sU4ynzOH7I1IUkKhera66jigi4mHFPL6dfJo44L6/1rfcZudXx+wGdf9VOifzDPqYQ==
+
 esbuild-sass-plugin@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/esbuild-sass-plugin/-/esbuild-sass-plugin-1.6.1.tgz#ebd8b61b445db26fb595a4167da54363d6405576"

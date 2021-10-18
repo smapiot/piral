@@ -61,7 +61,15 @@ process.on('message', async (msg) => {
 
       break;
     case 'start':
-      bundler = await run(root, msg.piral, msg.externals, msg.importmap, msg.entryModule, msg.version, msg.logLevel).catch((error) => {
+      bundler = await run(
+        root,
+        msg.piral,
+        msg.externals,
+        msg.importmap,
+        msg.entryModule,
+        msg.version,
+        msg.logLevel,
+      ).catch((error) => {
         process.send({
           type: 'fail',
           error: error?.message,

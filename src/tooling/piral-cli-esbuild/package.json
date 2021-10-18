@@ -20,6 +20,7 @@
     "node": ">=10.0"
   },
   "files": [
+    "set-path.js",
     "lib",
     "src"
   ],

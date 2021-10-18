@@ -3,7 +3,7 @@ import { fork, ChildProcess } from 'child_process';
 import { Bundler, BundleDetails, BaseBundleParameters } from 'piral-cli';
 
 function getPath(name: string) {
-  return resolve(__dirname, '..', '..', 'lib', 'webpack', `run-${name}.js`);
+  return resolve(__dirname, '..', '..', 'lib', 'esbuild', `run-${name}.js`);
 }
 
 type BundleListener = (args: any) => void;

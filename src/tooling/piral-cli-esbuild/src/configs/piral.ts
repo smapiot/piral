@@ -1,7 +1,6 @@
 import { BuildOptions } from 'esbuild';
-import { sassPlugin } from 'esbuild-sass-plugin';
 import { htmlPlugin } from '../plugins/html';
-import { codegenPlugin } from '../plugins/codegen';
+import { createCommonConfig } from './common';
 
 export function createConfig(
   entryFile: string,
@@ -14,25 +13,22 @@ export function createConfig(
   publicPath: string,
   hmr = false,
 ): BuildOptions {
-  //TODO use hmr
+  const config = createCommonConfig(outdir, development, sourcemap, contentHash, minify);
+
+  if (hmr) {
+    //TODO use hmr
+  }
+
   return {
+    ...config,
     entryPoints: [entryFile],
-    bundle: true,
     publicPath,
-    minify,
-    assetNames: contentHash ? '[name]-[hash]' : '[name]',
-    chunkNames: contentHash ? '[name]-[hash]' : '[name]',
-    sourcemap,
     define: {
-      'process.env.NODE_ENV': JSON.stringify(development ? 'development' : 'production'),
+      ...config.define,
       'process.env.DEBUG_PIRAL': JSON.stringify(process.env.DEBUG_PIRAL || ''),
       'process.env.DEBUG_PILET': JSON.stringify(process.env.DEBUG_PILET || ''),
       'process.env.SHARED_DEPENDENCIES': JSON.stringify(externals.join(',')),
-      'process.env.BUILD_PCKG_NAME': JSON.stringify(process.env.BUILD_PCKG_NAME),
-      'process.env.BUILD_PCKG_VERSION': JSON.stringify(process.env.BUILD_PCKG_VERSION),
     },
-    plugins: [codegenPlugin(), sassPlugin(), htmlPlugin()],
-    target: ['esnext'],
-    outdir,
+    plugins: [...config.plugins, htmlPlugin()],
   };
 }

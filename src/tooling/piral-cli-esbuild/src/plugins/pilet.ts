@@ -1,20 +1,8 @@
-import { BuildOptions, Plugin } from 'esbuild';
-import { spawnSync } from 'child_process';
-import { basename, dirname, extname, relative, resolve } from 'path';
-
-function filename(path: string) {
-  const file = basename(path);
-  const ext = extname(file);
-  return file.substr(0, file.length - ext.length);
-}
-
-function getEntryName(options: BuildOptions) {
-  if (Array.isArray(options.entryPoints)) {
-    return filename(options.entryPoints[0]);
-  } else {
-    return Object.keys(options.entryPoints)[0];
-  }
-}
+import { Plugin } from 'esbuild';
+import { transformFileAsync } from '@babel/core';
+import { promises } from 'fs';
+import { isAbsolute, join, resolve, basename } from 'path';
+import { getPackageName, getRequireRef } from '../shared';
 
 export interface PiletPluginOptions {
   deps: string;
@@ -23,23 +11,110 @@ export interface PiletPluginOptions {
 export const piletPlugin = (options: PiletPluginOptions): Plugin => ({
   name: 'pilet-plugin',
   setup(build) {
-    const rootDir = process.cwd();
-    const outFile = build.initialOptions.outfile
-      ? resolve(rootDir, build.initialOptions.outfile)
-      : resolve(rootDir, build.initialOptions.outdir, getEntryName(build.initialOptions) + '.js');
-    const outDir = relative(rootDir, dirname(outFile));
+    const loaders = build.initialOptions.loader || {};
+    const extensions = [];
 
-    build.onEnd((result) => {
-      if (result.errors.length === 0) {
-        const configPath = resolve(__dirname, '..', '..', 'pilet-babel-config.json');
-        spawnSync('npx', ['babel', outDir, '--out-dir', outDir, '--source-maps', '--config-file', configPath], {
-          stdio: 'inherit',
-          cwd: rootDir,
-          env: {
-            ...process.env,
-            IMPORT_DEPS: options.deps,
-          },
-        });
+    for (const ext of Object.keys(loaders)) {
+      const loader = loaders[ext];
+
+      if (loader === 'file') {
+        extensions.push(ext);
+        delete loaders[ext];
+      }
+    }
+
+    build.initialOptions.metafile = true;
+    const filter = new RegExp(`(${extensions.map((ext) => `\\${ext}`).join('|')})$`);
+
+    build.onResolve({ filter }, (args) => {
+      if (args.namespace === 'ref-stub') {
+        return {
+          path: args.path,
+          namespace: 'ref-binary',
+        };
+      } else if (args.resolveDir !== '') {
+        return {
+          path: isAbsolute(args.path) ? args.path : join(args.resolveDir, args.path),
+          namespace: 'ref-stub',
+        };
+      } else {
+        return; // Ignore unresolvable paths
+      }
+    });
+
+    build.onLoad({ filter: /.*/, namespace: 'ref-stub' }, async (args) => ({
+      resolveDir: resolve(__dirname),
+      contents: [
+        `import path from ${JSON.stringify(args.path)}`,
+        `import { __bundleUrl__ } from ${JSON.stringify('../../set-path.js')}`,
+        `export default __bundleUrl__ + path;`,
+      ].join('\n'),
+    }));
+
+    build.onLoad({ filter: /.*/, namespace: 'ref-binary' }, async (args) => ({
+      contents: await promises.readFile(args.path),
+      loader: 'file',
+    }));
+
+    build.onEnd(async (result) => {
+      const root = process.cwd();
+
+      if (result.metafile) {
+        const { outputs } = result.metafile;
+        const { entryPoints } = build.initialOptions;
+        const [name] = Object.keys(entryPoints);
+        const entryModule = resolve(root, entryPoints[name]);
+        const cssFiles = Object.keys(outputs)
+          .filter((m) => m.endsWith('.css'))
+          .map((m) => basename(m));
+
+        await Promise.all(
+          Object.keys(outputs)
+            .filter((m) => m.endsWith('.js'))
+            .map(async (file) => {
+              const { entryPoint } = outputs[file];
+              const isEntryModule = entryPoint && resolve(root, entryPoint) === entryModule;
+              const path = resolve(root, file);
+              const smname = `${file}.map`;
+              const smpath = resolve(root, smname);
+              const sourceMaps = smname in outputs;
+              const inputSourceMap = sourceMaps ? JSON.parse(await promises.readFile(smpath, 'utf8')) : undefined;
+              const plugins = isEntryModule
+                ? [
+                    [
+                      require.resolve('./banner-plugin'),
+                      {
+                        name: getPackageName(),
+                        deps: options.deps,
+                        requireRef: getRequireRef(),
+                        cssFiles,
+                      },
+                    ],
+                  ]
+                : [];
+
+              const { code, map } = await transformFileAsync(path, {
+                sourceMaps,
+                inputSourceMap,
+                comments: isEntryModule,
+                plugins,
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      modules: 'systemjs',
+                    },
+                  ],
+                ],
+              });
+
+              if (map) {
+                await promises.writeFile(smpath, JSON.stringify(map), 'utf8');
+              }
+
+              await promises.writeFile(path, code, 'utf8');
+            }),
+        );
       }
     });
   },
