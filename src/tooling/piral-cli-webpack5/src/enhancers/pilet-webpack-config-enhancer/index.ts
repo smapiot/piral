@@ -148,7 +148,6 @@ function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   );
 
   compiler.plugins = [...compiler.plugins, ...plugins];
-  compiler.module.rules.push({ parser: { system: false } });
   compiler.output.uniqueName = `${jsonpFunction}`;
   compiler.output.library = { type: 'system' };
 

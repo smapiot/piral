@@ -1,4 +1,5 @@
 import InjectPlugin from 'webpack-inject-plugin';
+import { Compilation } from 'webpack';
 import { RawSource } from 'webpack-sources';
 
 function sheetLoader(cssName: string, name: string) {
@@ -26,12 +27,20 @@ export default class SheetPlugin extends InjectPlugin {
     super.apply(compiler);
 
     compiler.hooks.compilation.tap('SheetPlugin', (compilation) => {
-      compilation.hooks.afterProcessAssets.tap('SheetPlugin', (module) => {
-        if (!compilation.assets[this.cssName] && Object.keys(module).length > 0) {
-          const source = new RawSource('');
-          compilation.emitAsset(this.cssName, source);
-        }
-      });
+      if (!compilation.compiler.parentCompilation) {
+        compilation.hooks.processAssets.tap(
+          {
+            name: 'SheetPlugin',
+            stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
+          },
+          (assets) => {
+            if (!assets[this.cssName]) {
+              const source = new RawSource('');
+              compilation.emitAsset(this.cssName, source);
+            }
+          },
+        );
+      }
     });
   }
 }
