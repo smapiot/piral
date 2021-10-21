@@ -14,6 +14,147 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 1. The debug API does not work with the legacy Piral Inspector. The new API is supported from the Piral Inspector browser extension v0.7 upwards.
 2. By default the new pilet schema (v2) is used to build and debug pilets. Make sure the used feed service and app shell support this or use `--schema v1` when building or publishing pilets with the previous (v1) schema.
+3. The API for the bundler plugins in the `piral-cli` changed. See below for details.
+
+#### 3) New Bundler API
+
+The **old** bundler API looked as follows (fragment):
+
+```ts
+export interface WatchPiralBundlerDefinition {
+  run(args: WatchPiralParameters): Promise<Bundler>;
+}
+
+export interface DebugPiralBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: DebugPiralParameters): Promise<Bundler>;
+}
+
+export interface BuildPiralBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: BuildPiralParameters): Promise<BundleDetails>;
+}
+
+export interface DebugPiletBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: DebugPiletParameters): Promise<Bundler>;
+}
+
+export interface BuildPiletBundlerDefinition {
+  flags?: ToolCommandFlagsSetter;
+  run(args: BuildPiletParameters): Promise<BundleDetails>;
+}
+
+export interface BundlerDefinition {
+  debugPiral: DebugPiralBundlerDefinition;
+  watchPiral: WatchPiralBundlerDefinition;
+  buildPiral: BuildPiralBundlerDefinition;
+  debugPilet: DebugPiletBundlerDefinition;
+  buildPilet: BuildPiletBundlerDefinition;
+}
+```
+
+The **new** bundler API is now changed to (fragment):
+
+```ts
+export interface BundlerPrepareArgs<T> {
+  (args: T): T | Promise<T>;
+}
+
+export interface BaseBundlerDefinition<T> {
+  path: string;
+  prepare?: BundlerPrepareArgs<T>;
+}
+
+export interface WatchPiralBundlerDefinition extends BaseBundlerDefinition<WatchPiralParameters> {}
+
+export interface DebugPiralBundlerDefinition extends BaseBundlerDefinition<DebugPiralParameters> {
+  flags?: ToolCommandFlagsSetter;
+}
+
+export interface BuildPiralBundlerDefinition extends BaseBundlerDefinition<BuildPiralParameters> {
+  flags?: ToolCommandFlagsSetter;
+}
+
+export interface DebugPiletBundlerDefinition extends BaseBundlerDefinition<DebugPiletParameters> {
+  flags?: ToolCommandFlagsSetter;
+}
+
+export interface BuildPiletBundlerDefinition extends BaseBundlerDefinition<BuildPiletParameters> {
+  flags?: ToolCommandFlagsSetter;
+}
+```
+
+This means that the job of pre-processing the configuration and then starting a new process for the bundling is completely done inside the `piral-cli`.
+
+If you want to pre-process some of the new arguments (still inserted via the `flags` option) you'd use the `prepare` function. The `run` function has been removed. Instead, use the `path`, which should be absolute to lead to a module to invoke.
+
+Example (changed actions in `piral-cli-webpack`).
+
+**Previously** we had:
+
+```ts
+export const debugPiral: DebugPiralBundlerDefinition = {
+  async run(args) {
+    const bundler = await callDynamic('debug-piral', args);
+    return bundler;
+  },
+};
+
+export const watchPiral: WatchPiralBundlerDefinition = {
+  async run(args) {
+    const bundler = await callStatic('debug-mono-piral', args);
+    return bundler;
+  },
+};
+
+export const buildPiral: BuildPiralBundlerDefinition = {
+  async run(args) {
+    const bundler = await callStatic('build-piral', args);
+    return bundler.bundle;
+  },
+};
+
+export const debugPilet: DebugPiletBundlerDefinition = {
+  async run(args) {
+    const bundler = await callDynamic('debug-pilet', args);
+    return bundler;
+  },
+};
+
+export const buildPilet: BuildPiletBundlerDefinition = {
+  async run(args) {
+    const bundler = await callStatic('build-pilet', args);
+    return bundler.bundle;
+  },
+};
+```
+
+In the **current** way we have:
+
+```ts
+export const debugPiral: DebugPiralBundlerDefinition = {
+  path: resolve(__dirname, 'webpack', 'piral.js'),
+};
+
+export const watchPiral: WatchPiralBundlerDefinition = {
+  path: resolve(__dirname, 'webpack', 'piral.js'),
+};
+
+export const buildPiral: BuildPiralBundlerDefinition = {
+  path: resolve(__dirname, 'webpack', 'piral.js'),
+};
+
+export const debugPilet: DebugPiletBundlerDefinition = {
+  path: resolve(__dirname, 'webpack', 'pilet.js'),
+};
+
+export const buildPilet: BuildPiletBundlerDefinition = {
+  path: resolve(__dirname, 'webpack', 'pilet.js'),
+};
+```
+
+Essentially, we only distinguish between pilet and Piral. The module itself is a standard CommonJS module that exports a single function `create` returning a `Promise`.
 
 ## 0.12 to 0.13
 
