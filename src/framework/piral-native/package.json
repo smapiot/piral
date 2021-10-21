@@ -55,7 +55,7 @@
     "react-native": ">=0.60.0"
   },
   "dependencies": {
-    "piral-core": "^0.13.9",
+    "piral-core": "0.13.9",
     "react-router-dom": "5.2.0",
     "react-router-native": "5.2.0"
   }

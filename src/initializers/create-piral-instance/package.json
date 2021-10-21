@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "inquirer": "^6.2.2",
-    "piral-cli": "^0.13.9"
+    "piral-cli": "0.13.9"
   }
 }
