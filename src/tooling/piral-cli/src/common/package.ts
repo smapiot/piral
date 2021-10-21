@@ -7,7 +7,7 @@ import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { getHashFromUrl } from './http';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makeExternals } from './npm';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals } from './npm';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
@@ -437,6 +437,7 @@ export async function patchPiletPackage(
   name: string,
   version: string,
   piralInfo: any,
+  fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
@@ -450,7 +451,6 @@ export async function patchPiletPackage(
     ...piralInfo.dependencies,
   };
   const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
-  const allExternals = makeExternals(externals);
   const scripts = newInfo
     ? {
         start: 'pilet debug',
@@ -460,6 +460,7 @@ export async function patchPiletPackage(
       }
     : info.scripts;
   const peerModules = [];
+  const allExternals = makePiletExternals(externals, fromEmulator, piralInfo);
   const peerDependencies = {
     ...allExternals.reduce((deps, name) => {
       const valid = isValidDependency(name);

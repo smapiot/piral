@@ -81,6 +81,7 @@ export async function createEmulatorSources(
       ...piralPkg.dependencies,
       ...externalDependencies,
     },
+    sharedDependencies: allExternals,
     repository: piralPkg.repository,
     bugs: piralPkg.bugs,
     author: piralPkg.author,

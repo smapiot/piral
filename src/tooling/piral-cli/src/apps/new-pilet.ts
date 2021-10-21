@@ -205,7 +205,10 @@ always-auth=true`,
       await copyScaffoldingFiles(packageRoot, root, files, piralInfo);
     }
 
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
+      language,
+      bundler: bundlerName,
+    });
 
     if (install) {
       progress(`Installing dependencies ...`);

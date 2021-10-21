@@ -149,7 +149,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo);
     }
 
-    await patchPiletPackage(root, sourceName, packageVersion, piralInfo);
+    await patchPiletPackage(root, sourceName, packageVersion, piralInfo, isEmulator);
 
     if (install) {
       progress(`Updating dependencies ...`);

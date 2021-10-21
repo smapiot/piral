@@ -4,7 +4,7 @@ export const filesOnceTar = 'files_once';
 export const piralBaseRoot = 'piral-base/lib/types';
 export const entryModuleExtensions = ['.ts', '.tsx', '.js', '.jsx'];
 export const declarationEntryExtensions = ['.html', '.pug', ...entryModuleExtensions];
-export const coreExternals = [
+export const legacyCoreExternals = [
   '@dbeining/react-atom',
   '@libre/atom',
   'history',

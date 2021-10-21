@@ -2,8 +2,8 @@ import { resolve, relative } from 'path';
 import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
+import { legacyCoreExternals } from './constants';
 import { inspectPackage } from './inspect';
-import { coreExternals } from './constants';
 import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
@@ -388,7 +388,26 @@ export function getPackageVersion(
   }
 }
 
-export function makeExternals(externals?: Array<string>) {
+export function getCoreExternals(): Array<string> {
+  try {
+    return require('piral-core/package.json').sharedDependencies || [];
+  } catch {
+    return [];
+  }
+}
+
+export function makePiletExternals(externals: Array<string>, fromEmulator: boolean, piralInfo: any) {
+  if (fromEmulator) {
+    const { sharedDependencies = makeExternals(externals, true) } = piralInfo;
+    return sharedDependencies;
+  } else {
+    return makeExternals(externals);
+  }
+}
+
+export function makeExternals(externals?: Array<string>, legacy = false) {
+  const coreExternals = legacy ? legacyCoreExternals : getCoreExternals();
+
   if (externals && Array.isArray(externals)) {
     const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(
       (prev, curr) => {
