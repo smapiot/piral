@@ -21,7 +21,7 @@ variables:
 - name: documentBranch
   value: 'documentation'
 - name: nodeVersion
-  value: '12.18.3'
+  value: '12.21.0'
 
 stages:
 - stage: Build
@@ -226,7 +226,7 @@ stages:
               script: >-
                 ORIGVER=`yarn --silent ci:version`
 
-                VERSION="$ORIGVER-pre.$(previewId)"
+                VERSION="$ORIGVER-beta.$(previewId)"
 
                 sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-cross-fx/package.json
 
@@ -278,7 +278,7 @@ stages:
               script: >-
                 ORIGVER=`yarn --silent ci:version`
 
-                VERSION="$ORIGVER-pre.$(previewId)"
+                VERSION="$ORIGVER-beta.$(previewId)"
 
                 sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-piral/package.json
 

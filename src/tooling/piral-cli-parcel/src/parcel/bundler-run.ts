@@ -18,11 +18,11 @@ export function runParcel(
 
   const update = async (bundle: ParcelBundle) => {
     const requireRef = await postProcess(bundle);
-    const outPath = bundler.mainBundle.name.substr(result.outDir.length);
+    const file = bundler.mainBundle.name;
     result.hash = bundler.mainBundle.entryAsset.hash;
-    result.name = outPath;
-    result.outDir = dirname(outPath);
-    result.outFile = basename(outPath);
+    result.name = file;
+    result.outDir = dirname(file);
+    result.outFile = `/${basename(file)}`;
     result.requireRef = requireRef;
   };
 

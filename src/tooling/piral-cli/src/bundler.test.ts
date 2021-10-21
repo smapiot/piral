@@ -6,11 +6,25 @@ import {
   callPiralDebug,
   callDebugPiralFromMonoRepo,
 } from './bundler';
+import { callDynamic, callStatic } from './build/bundler-calls';
 import * as common from './common';
 
-let defaults = {
+const defaults = {
   bundler: false,
 };
+
+jest.mock('./build/bundler-calls.ts', () => ({
+  callDynamic: jest.fn(() =>
+    Promise.resolve({
+      bundle: {},
+    }),
+  ),
+  callStatic: jest.fn(() =>
+    Promise.resolve({
+      bundle: {},
+    }),
+  ),
+}));
 
 jest.mock('./inject', () => ({
   inject() {
@@ -18,11 +32,11 @@ jest.mock('./inject', () => ({
       setBundler({
         name: 'default',
         actions: {
-          buildPilet: { run: jest.fn(() => Promise.resolve({})) },
-          debugPilet: { run: jest.fn(() => Promise.resolve({})) },
-          buildPiral: { run: jest.fn(() => Promise.resolve({})) },
-          debugPiral: { run: jest.fn(() => Promise.resolve({})) },
-          watchPiral: { run: jest.fn(() => Promise.resolve({})) },
+          buildPilet: { path: '' },
+          debugPilet: { path: '' },
+          buildPiral: { path: '' },
+          debugPiral: { path: '' },
+          watchPiral: { path: '' },
         } as any,
       });
     }
@@ -60,11 +74,11 @@ describe('Piral CLI Bundler Module', () => {
 
   it('setting the bundler can resolve it properly for call pilet build', async () => {
     const actions = {
-      buildPilet: { run: jest.fn(() => Promise.resolve({})) },
-      debugPilet: { run: jest.fn(() => Promise.resolve({})) },
-      buildPiral: { run: jest.fn(() => Promise.resolve({})) },
-      debugPiral: { run: jest.fn(() => Promise.resolve({})) },
-      watchPiral: { run: jest.fn(() => Promise.resolve({})) },
+      buildPilet: { path: '1' },
+      debugPilet: { path: '2' },
+      buildPiral: { path: '3' },
+      debugPiral: { path: '4' },
+      watchPiral: { path: '5' },
     };
 
     setBundler({
@@ -72,17 +86,18 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiletBuild({ root: undefined } as any, 'foo1');
-    expect(actions.buildPilet.run).toHaveBeenCalled();
+    const args = { root: undefined };
+    await callPiletBuild(args as any, 'foo1');
+    expect(callStatic).toHaveBeenCalledWith('build-pilet', '1', args);
   });
 
   it('setting the bundler with optimize modules calls optimize modules', async () => {
     const actions = {
-      buildPilet: { run: jest.fn(() => Promise.resolve({})) },
-      debugPilet: { run: jest.fn(() => Promise.resolve({})) },
-      buildPiral: { run: jest.fn(() => Promise.resolve({})) },
-      debugPiral: { run: jest.fn(() => Promise.resolve({})) },
-      watchPiral: { run: jest.fn(() => Promise.resolve({})) },
+      buildPilet: { path: '' },
+      debugPilet: { path: '' },
+      buildPiral: { path: '' },
+      debugPiral: { path: '' },
+      watchPiral: { path: '' },
     };
 
     setBundler({
@@ -101,11 +116,11 @@ describe('Piral CLI Bundler Module', () => {
 
   it('setting the bundler can resolve it properly for call piral build', async () => {
     const actions = {
-      buildPilet: { run: jest.fn(() => Promise.resolve({})) },
-      debugPilet: { run: jest.fn(() => Promise.resolve({})) },
-      buildPiral: { run: jest.fn(() => Promise.resolve({})) },
-      debugPiral: { run: jest.fn(() => Promise.resolve({})) },
-      watchPiral: { run: jest.fn(() => Promise.resolve({})) },
+      buildPilet: { path: '1' },
+      debugPilet: { path: '2' },
+      buildPiral: { path: '3' },
+      debugPiral: { path: '4' },
+      watchPiral: { path: '5' },
     };
 
     setBundler({
@@ -113,17 +128,18 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiralBuild({ root: undefined } as any, 'foo2');
-    expect(actions.buildPiral.run).toHaveBeenCalled();
+    const args = { root: undefined };
+    await callPiralBuild(args as any, 'foo2');
+    expect(callStatic).toHaveBeenCalledWith('build-piral', '3', args);
   });
 
   it('setting the bundler can resolve it properly for call pilet debug', async () => {
     const actions = {
-      buildPilet: { run: jest.fn(() => Promise.resolve({})) },
-      debugPilet: { run: jest.fn(() => Promise.resolve({})) },
-      buildPiral: { run: jest.fn(() => Promise.resolve({})) },
-      debugPiral: { run: jest.fn(() => Promise.resolve({})) },
-      watchPiral: { run: jest.fn(() => Promise.resolve({})) },
+      buildPilet: { path: '0' },
+      debugPilet: { path: '1' },
+      buildPiral: { path: '2' },
+      debugPiral: { path: '3' },
+      watchPiral: { path: '4' },
     };
 
     setBundler({
@@ -131,17 +147,18 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiletDebug({ root: undefined } as any, 'foo3');
-    expect(actions.debugPilet.run).toHaveBeenCalled();
+    const args = { root: undefined };
+    await callPiletDebug(args as any, 'foo3');
+    expect(callDynamic).toHaveBeenCalledWith('debug-pilet', '1', args);
   });
 
   it('setting the bundler can resolve it properly for call piral debug', async () => {
     const actions = {
-      buildPilet: { run: jest.fn(() => Promise.resolve({})) },
-      debugPilet: { run: jest.fn(() => Promise.resolve({})) },
-      buildPiral: { run: jest.fn(() => Promise.resolve({})) },
-      debugPiral: { run: jest.fn(() => Promise.resolve({})) },
-      watchPiral: { run: jest.fn(() => Promise.resolve({})) },
+      buildPilet: { path: '7' },
+      debugPilet: { path: '8' },
+      buildPiral: { path: '9' },
+      debugPiral: { path: '10' },
+      watchPiral: { path: '11' },
     };
 
     setBundler({
@@ -149,17 +166,18 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callPiralDebug({ root: undefined } as any, 'foo4');
-    expect(actions.debugPiral.run).toHaveBeenCalled();
+    const args = { root: undefined };
+    await callPiralDebug(args as any, 'foo4');
+    expect(callDynamic).toHaveBeenCalledWith('debug-piral', '10', args);
   });
 
   it('setting the bundler can resolve it properly for call piral watch', async () => {
     const actions = {
-      buildPilet: { run: jest.fn(() => Promise.resolve({})) },
-      debugPilet: { run: jest.fn(() => Promise.resolve({})) },
-      buildPiral: { run: jest.fn(() => Promise.resolve({})) },
-      debugPiral: { run: jest.fn(() => Promise.resolve({})) },
-      watchPiral: { run: jest.fn(() => Promise.resolve({})) },
+      buildPilet: { path: '3' },
+      debugPilet: { path: '4' },
+      buildPiral: { path: '5' },
+      debugPiral: { path: '6' },
+      watchPiral: { path: '7' },
     };
 
     setBundler({
@@ -167,8 +185,9 @@ describe('Piral CLI Bundler Module', () => {
       actions: actions as any,
     });
 
-    await callDebugPiralFromMonoRepo({ root: undefined } as any, 'foo5');
-    expect(actions.watchPiral.run).toHaveBeenCalled();
+    const args = { root: undefined };
+    await callDebugPiralFromMonoRepo(args as any, 'foo5');
+    expect(callStatic).toHaveBeenCalledWith('debug-mono-piral', '7', args);
   });
 
   it('using a non-available bundler should fail', () => {

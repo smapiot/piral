@@ -203,9 +203,9 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
     if (type !== emulatorSourcesName) {
       await packageEmulator(rootDir);
-      logDone(`Emulator sources available in "${rootDir}".`);
-    } else {
       logDone(`Emulator package available in "${rootDir}".`);
+    } else {
+      logDone(`Emulator sources available in "${rootDir}".`);
     }
 
     logReset();
