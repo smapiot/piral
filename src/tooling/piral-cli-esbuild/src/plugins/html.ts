@@ -21,6 +21,16 @@ function isLocal(path: string) {
   return false;
 }
 
+function getName(path: string) {
+  const name = filename(path);
+
+  if (/\.(jsx?|tsx?)$/.test(path) && name === 'index') {
+    return 'main';
+  } else {
+    return name;
+  }
+}
+
 function filename(path: string) {
   const file = basename(path);
   const ext = extname(file);
@@ -40,7 +50,7 @@ function extractParts(content: cheerio.Root) {
 
   for (const script of scripts) {
     const src = script.attribs.src;
-    const name = filename(src);
+    const name = getName(src);
     files.push(src);
     content('body').append(`<script src="./${name}.js"></script>`);
   }
@@ -92,6 +102,12 @@ export const htmlPlugin = (): Plugin => ({
           const newEntries = modifyHtmlFile(rootDir, htmlFile, outDir);
           entries.splice(index, 1, ...newEntries);
         });
+
+      build.initialOptions.entryPoints = entries.reduce((entries, entry) => {
+        const name = getName(entry);
+        entries[name] = entry;
+        return entries;
+      }, {});
     } else {
       Object.keys(entries)
         .filter((m) => entries[m].endsWith('.html'))
@@ -101,7 +117,8 @@ export const htmlPlugin = (): Plugin => ({
           delete entries[m];
 
           for (const entry of newEntries) {
-            entries[filename(entry)] = entry;
+            const name = getName(entry);
+            entries[name] = entry;
           }
         });
     }

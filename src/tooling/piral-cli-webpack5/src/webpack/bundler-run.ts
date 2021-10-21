@@ -40,6 +40,15 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
     requireRef: undefined,
   };
 
+  const updateBundle = (stats: webpack.Stats) => {
+    const file  = getOutput(stats);
+    bundle.name = basename(file);
+    bundle.requireRef = stats.compilation.outputOptions?.uniqueName;
+    bundle.hash = stats.hash;
+    bundle.outFile = `/${basename(file)}`;
+    bundle.outDir = dirname(file);
+  };
+
   wpConfig.plugins.push({
     apply(compiler: webpack.Compiler) {
       compiler.hooks.beforeCompile.tap('piral-cli', () => {
@@ -47,9 +56,7 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
       });
 
       compiler.hooks.done.tap('piral-cli', (stats) => {
-        bundle.name = getOutput(stats);
-        bundle.requireRef = stats.compilation.outputOptions?.uniqueName;
-        bundle.hash = stats.hash;
+        updateBundle(stats);
         eventEmitter.emit('end', bundle);
       });
     },
@@ -77,9 +84,7 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
             if (stats.hasErrors()) {
               reject(stats.toJson(preset.current));
             } else {
-              const file = getOutput(stats);
-              bundle.outFile = `/${basename(file)}`;
-              bundle.outDir = dirname(file);
+              updateBundle(stats);
               resolve(bundle);
             }
           }

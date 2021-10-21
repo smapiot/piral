@@ -20,7 +20,7 @@ export function runParcel(
     const requireRef = await postProcess(bundle);
     const file = bundler.mainBundle.name;
     result.hash = bundler.mainBundle.entryAsset.hash;
-    result.name = file;
+    result.name = basename(file);
     result.outDir = dirname(file);
     result.outFile = `/${basename(file)}`;
     result.requireRef = requireRef;

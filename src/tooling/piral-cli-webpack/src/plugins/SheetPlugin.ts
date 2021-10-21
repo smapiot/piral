@@ -26,8 +26,12 @@ export default class SheetPlugin extends InjectPlugin {
     super.apply(compiler);
 
     compiler.hooks.compilation.tap('SheetPlugin', (compilation) => {
-      compilation.hooks.afterProcessAssets.tap('SheetPlugin', (module) => {
-        if (!compilation.assets[this.cssName] && Object.keys(module).length > 0) {
+      compilation.hooks.afterOptimizeAssets.tap('SheetPlugin', (assets) => {
+        const keys = Object.keys(assets);
+
+        if (keys.includes('*')) {
+          return;
+        } else if (!assets[this.cssName]) {
           const source = new RawSource('');
           compilation.emitAsset(this.cssName, source);
         }
