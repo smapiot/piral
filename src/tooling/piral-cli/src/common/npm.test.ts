@@ -409,30 +409,30 @@ describe('NPM Module', () => {
   it('makeExternals without externals returns coreExternals', () => {
     const externals = makeExternals();
     expect(externals).toEqual([
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
   it('makeExternals with no externals returns coreExternals', () => {
     const externals = makeExternals([]);
     expect(externals).toEqual([
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
@@ -446,15 +446,15 @@ describe('NPM Module', () => {
     expect(externals).toEqual([
       'foo',
       'bar',
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
@@ -463,14 +463,14 @@ describe('NPM Module', () => {
     expect(externals).toEqual([
       'react',
       'foo',
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
@@ -479,13 +479,13 @@ describe('NPM Module', () => {
     expect(externals).toEqual([
       'react',
       'react-calendar',
-      '@dbeining/react-atom',
-      '@libre/atom',
       'react-dom',
       'react-router',
       'react-router-dom',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
