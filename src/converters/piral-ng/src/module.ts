@@ -18,11 +18,16 @@ const availableModules: Array<ModuleDefinition> = [];
 function instantiateModule(moduleDef: ModuleDefinition) {
   const { module, components } = moduleDef;
   const imports = [BrowserModule, SharedModule, module];
+  const props = { current: undefined };
 
   @NgModule({
     imports,
     entryComponents: components,
-    providers: [RoutingService],
+    providers: [
+      RoutingService,
+      { provide: 'Props', useFactory: () => props.current, deps: [] },
+      { provide: 'piral', useFactory: () => props.current.piral, deps: [] },
+    ],
   })
   class BootstrapModule {
     private appRef: ApplicationRef;
@@ -34,9 +39,9 @@ function instantiateModule(moduleDef: ModuleDefinition) {
       this.appRef = appRef;
     }
 
-    attach(component: any, node: HTMLElement, props: any) {
+    attach(component: any, node: HTMLElement, $props: any) {
       const factory = this.resolver.resolveComponentFactory(component);
-      SharedModule.props = props;
+      props.current = $props;
 
       if (factory) {
         const ref = this.zone.run(() => this.appRef.bootstrap<any>(factory, node));

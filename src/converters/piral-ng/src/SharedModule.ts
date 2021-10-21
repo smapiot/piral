@@ -5,7 +5,7 @@ import { ResourceUrlPipe } from './ResourceUrlPipe';
 
 @NgModule({
   declarations: [NgExtension, ResourceUrlPipe],
-  providers: [{ provide: 'Props', useFactory: () => SharedModule.props, deps: [] }],
+  providers: [],
   imports: [CommonModule],
   exports: [NgExtension, ResourceUrlPipe],
 })

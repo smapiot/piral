@@ -1,4 +1,4 @@
-import type { PiletApi, ComponentContext } from 'piral-core';
+import type { ComponentContext } from 'piral-core';
 import type { NgOptions } from './types';
 import { enableProdMode, NgModuleRef, NgZone } from '@angular/core';
 import { APP_BASE_HREF, VERSION } from '@angular/common';
@@ -16,7 +16,6 @@ export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 export function startup(
   BootstrapModule: any,
   context: ComponentContext,
-  piral: PiletApi,
   ngOptions?: NgOptions,
 ): Promise<void | NgModuleInt> {
   const runningModule = runningModules.find(([ref]) => ref === BootstrapModule);
@@ -27,7 +26,6 @@ export function startup(
   } else {
     const platform = platformBrowserDynamic([
       { provide: 'Context', useValue: context },
-      { provide: 'piral', useValue: piral },
       { provide: APP_BASE_HREF, useValue: '/' },
     ]);
     const id = Math.random().toString(36);
