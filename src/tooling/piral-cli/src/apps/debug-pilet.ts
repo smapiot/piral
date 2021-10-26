@@ -73,6 +73,18 @@ export interface DebugPiletOptions {
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
+
+  /**
+   * Hooks to be triggered at various stages.
+   */
+  hooks?: {
+    onBegin?(e: any): Promise<void>;
+    beforeBuild?(e: any): Promise<void>;
+    afterBuild?(e: any): Promise<void>;
+    beforeOnline?(e: any): Promise<void>;
+    afterOnline?(e: any): Promise<void>;
+    onEnd?(e: any): Promise<void>;
+  };
 }
 
 export const debugPiletDefaults: DebugPiletOptions = {
@@ -142,19 +154,23 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     optimizeModules = debugPiletDefaults.optimizeModules,
     schemaVersion = debugPiletDefaults.schemaVersion,
     _ = {},
+    hooks = {},
     bundlerName,
     app,
     feed,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
+
+  await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
   const krasConfig = readKrasConfig({ port }, krasrc);
   const api = config.piletApi;
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
-  log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${baseDir}".`);
+  log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
 
-  const allEntries = await matchAnyPilet(baseDir, entryList);
+  const allEntries = await matchAnyPilet(fullBase, entryList);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (krasConfig.sources === undefined) {
@@ -168,10 +184,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const pilets = await Promise.all(
     allEntries.map(async (entryModule) => {
       const targetDir = dirname(entryModule);
-      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } = await retrievePiletData(
-        targetDir,
-        app,
-      );
+      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } =
+        await retrievePiletData(targetDir, app);
       const externals = [...Object.keys(peerDependencies), ...peerModules];
       const mocks = join(targetDir, 'mocks');
       const exists = await checkExistingDirectory(mocks);
@@ -183,6 +197,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
         krasConfig.sources.push(mocks);
       }
+
+      await hooks.beforeBuild?.({ root, importmap, entryModule, schemaVersion });
 
       const bundler = await callPiletDebug(
         {
@@ -201,6 +217,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         },
         bundlerName,
       );
+
+      await hooks.afterBuild?.({ root, importmap, entryModule, schemaVersion, bundler });
 
       return {
         emulator,
@@ -260,7 +278,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     ),
   );
 
+  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await krasServer.start();
   openBrowser(open, port);
+  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await new Promise((resolve) => krasServer.on('close', resolve));
+  await hooks.onEnd?.({});
 }
