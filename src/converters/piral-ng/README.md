@@ -4,13 +4,17 @@
 
 This is a plugin that only has a peer dependency to `piral-core`. What `piral-ng` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
-The set includes an Angular converter for any component registration, as well as a `fromNg` shortcut and a `NgExtension` component.
+The set includes an Angular converter for any component registration, as well as a `fromNg` shortcut, a `defineNgModule` function, and a `NgExtension` component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
 
 ## Documentation
 
 The following functions are brought to the Pilet API.
+
+### `defineNgModule()`
+
+Communicates the usage of a pre-defined Angular module to Piral. Components declared / exported in the module will be bootstrapped within this module.
 
 ### `fromNg()`
 
@@ -37,18 +41,55 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+We recommend that you still put these components into modules as you would normally do. In order for Piral to use that module you need to define it first. This also allows you to use special Piral declarations such as the `NgExtension` or the `ResourceUrlPipe`. All these declarations come with the `SharedModule` available via import from `piral-ng/common`.
+
+Example (app) module:
+
+```ts
+import { NgModule } from '@angular/core';
+import { SharedModule } from 'piral-ng/common';
+import { AngularPage } from './AngularPage';
+
+@NgModule({
+  imports: [SharedModule],
+  declarations: [AngularPage],
+  exports: [AngularPage]
+})
+export class AppModule {}
+```
+
+Now the example above changes:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { AppModule } from './AppModule';
+import { AngularPage } from './AngularPage';
+
+export function setup(piral: PiletApi) {
+  // this "teaches" Piral about the given module
+  piral.defineNgModule(AppModule);
+
+  // since we export the AngularPage from the defined module
+  // Piral will use the AppModule for bootstrapping the Ng app
+  piral.registerPage('/sample', piral.fromNg(AngularPage));
+}
+```
+
 Angular Options:
 
-You can optionally provide Options to `fromNg`, which are identical to those given to `bootstrapModule` during the Angular boot process. See https://angular.io/api/core/PlatformRef#bootstrapModule for possible values.
+You can optionally provide Options to `defineNgModule`, which are identical to those given to `bootstrapModule` during the Angular boot process. See https://angular.io/api/core/PlatformRef#bootstrapModule for possible values.
 
 This is mainly used to allow an Angular Pilet to run without `zone.js` as described [here](https://angular.io/guide/zone#noopzone).
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { AppModule } from './AppModule';
 import { AngularPage } from './AngularPage';
 
 export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromNg(AngularPage, { ngZone: 'noop' }));
+  piral.defineNgModule(AppModule, { ngZone: 'noop' });
+
+  piral.registerPage('/sample', piral.fromNg(AngularPage));
 }
 ```
 
@@ -64,6 +105,14 @@ For specifying `params` you may use data binding. Example:
 <extension-component name="foo" [params]="{ foo: 2, bar: 'hello' }"></extension-component>
 ```
 
+The `ResourceUrlPipe` is there to get the correct paths for images that are just copied to the output directory. The pipe can be used in HTML like this:
+
+```html
+<img width="250" [src]="'images/coffee.jpg' | resourceUrl" alt="Coffee" />
+```
+
+In the example the relative path `images/coffee.jpg` will be expanded to a full URL rooted at the pilet's origin.
+
 Alternatively, if `piral-ng` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
@@ -75,7 +124,21 @@ export function setup(piral: PiletApi) {
   piral.registerPage('/sample', fromNg(AngularPage));
 }
 ```
-:::
+
+Also, here you can make use of the `defineNgModule` function:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+import { fromNg, defineNgModule } from 'piral-ng/convert';
+import { AngularPage } from './AngularPage';
+import { AngularModule } from './AngularModule';
+
+export function setup(piral: PiletApi) {
+  defineNgModule(AngularModule);
+
+  piral.registerPage('/sample', fromNg(AngularPage));
+}
+```
 
 For components, such as the `AngularPage` a `template` should be specified.
 
@@ -111,7 +174,7 @@ In many Angular projects you still find `templateUrl`, which would be transforme
 
 The same issue applies to `styleUrls`, which should be replaced by `styles`.
 
-If you still need to use `templateUrl` then take a look below at the Webpack config file.
+If you still need to use `templateUrl` (or `styleUrls`) then take a look below at the Webpack config file.
 :::
 
 If you don't want to inline the `template` then just `require` the contents, e.g.,
@@ -174,6 +237,7 @@ module.exports = (config) => {
   return config;
 };
 ```
+:::
 
 ::: summary: For Piral instance developers
 
