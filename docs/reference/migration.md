@@ -17,6 +17,28 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 3. The API for the bundler plugins in the `piral-cli` changed. See below for details.
 4. The overall mechanism for converting Angular components (`piral-ng`) has changed. See below for details.
 
+#### 2) New Pilet Schema
+
+The new pilet schema (`v2`) uses SystemJS as output format. Still, a spec version marker is required (just with `v1`). For `v2` it looks as follows:
+
+```js
+//@pilet v:2(<requireRef>, <sharedDependencies>)
+```
+
+The `requireRef` is not used as beforehand. Most notably, it should be used for internal chunk sharing of the pilet. In cases where the pilet is removed or this name would be removed from the global object.
+
+The `sharedDependencies` are interesting. This is a JSON object that maps the identifiers of the shared dependencies to their bundles.
+
+Example:
+
+```js
+//@pilet v:2(webpackChunkpr_piletwebpack5,{"emojis-list@3.0.0":"emojis-list.js"})
+```
+
+Here, the `requireRef` is `webpackChunkpr_piletwebpack5` and the `sharedDependencies` are `{"emojis-list@3.0.0":"emojis-list.js"}`, i.e., a single shared dependency named `emojis-list@3.0.0` (coming from the `emojis-list` package in version 3.0.0) which can be loaded via the local *emojis-list.js* file, if not available yet.
+
+We recommend to update custom feed server implementations to support `v2`. See the [specification](../specs/feed-api-specification.md) for details.
+
 #### 3) New Bundler API
 
 The **old** bundler API looked as follows (fragment):

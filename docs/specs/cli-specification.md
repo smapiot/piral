@@ -112,7 +112,7 @@ Additionally, some feed servers may implement a bit more here. For instance, the
 
 The Piral supports specifying different mechanisms for loading pilets. To allow versioning of a pilet's loading mechanism, we use a special header line in the output bundle. If the first line starts with a comment such as `//@pilet`, it will be treated as the pilet schema version indicator.
 
-Right now, there are two available schema versions: the legacy version is indicated by (`v0`) and the current standard version is (`v1`). Backwards compatibility should always be given, when introducing a new schema version.
+Right now, there are three available schema versions: the legacy version is indicated by `v0` (UMD), the improved version has `v1` (plain UMD using `currentScript`), and the current standard version is `v2` (using SystemJS). Backwards compatibility should always be given, when introducing a new schema version.
 
 Most notably the following components should all be able to gracefully fall back:
 
@@ -159,6 +159,19 @@ The bundled code should be wrapped in an IIFE to look similar to:
 ```
 
 The `$pr_name` has to be replaced with the globally used name for `require` of the pilet.
+
+**`v:2`**
+
+The bundled code should form a valid SystemJS module:
+
+```js
+//@pilet v:2($pr_name, $shared_dependencies)
+System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _dep;}],execute:function(){_export((function(){
+  // ...
+})())}};});
+```
+
+The `$pr_name` has to be replaced with the globally used name for other (lazy loaded) chunks of the pilet. The `$shared_dependencies` represent the used shared dependencies. This is a JSON object mapping the identifiers used for the shared dependencies to their bundles.
 
 ## Limitations
 

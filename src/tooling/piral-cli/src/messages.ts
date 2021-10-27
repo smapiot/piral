@@ -944,6 +944,7 @@ export function cannotResolveVersion_0052(name: string): QuickMessage {
  *     }
  *   }
  * }
+ * ```
  */
 export function cannotResolveDependency_0053(name: string, rootDir: string): QuickMessage {
   return [LogLevels.warning, '0053', `Could not resolve "${name}" from "${rootDir}". Taking "latest" version.`];
