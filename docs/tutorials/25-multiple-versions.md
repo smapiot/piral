@@ -89,16 +89,105 @@ Now TypeScript can resolve the type package for `lodashV4` via the `@types/lodas
 
 ## Defining a Version Selector
 
-We could try to go one step forward. Let's see we use the npm aliases of the previous section to define (and then share) multiple versions of the same dependency. How can we dynamically resolve it all fine?
+We could try to go one step forward. Let's see we use the npm aliases of the previous section to define (and then share) multiple versions of the same dependency. How can we dynamically resolve it all fine (**from a pilet**)?
 
 What we want is:
 
 - In case the used version (e.g., version 4 of lodash) in the pilet is matching one provided in the app shell - take the shared one (i.e., external)
 - In case the used version (e.g., version 5 of lodash) in the pilet is not matching any provided in the app shell - bundle the currently used version with the pilet
 
-For the second bullet point you can also aim for a refinement, where you'd use pilet-shared dependencies to not directly bundle the dependency, but use one from the app shell if provided, otherwise take a version. In this guide we will not focus on this refinement. Let's try to get the goal above working.
+For the second bullet point you can also aim for a refinement, where you'd use pilet-shared dependencies to not directly bundle the dependency, but use one from the app shell if provided, otherwise take a version. In this guide we will not focus on this refinement. Let's try to get the goal above working using **Webpack** as our bundler.
 
-(tbd)
+Our assumption is that the app shell was built with the following externals, i.e., shared dependencies:
+
+- `lodashV3`
+- `lodashV4`
+- (more generic externals such as `react` or `react-dom`)
+
+Importantly, `lodash` was not set as a shared dependency.
+
+We need to have a few helpers to accomplish the goals above. We start with a helper to determine the current version of the dependency in question. Following the example above we choose `lodash` as this dependency:
+
+```js
+function getLodashVersion() {
+  try {
+    const { version } = require('lodash/package.json');
+    const [major] = version.split('.');
+    return major;
+  } catch {
+    // ignore, potentially not really installed
+  }
+
+  return undefined;
+}
+```
+
+This gets us the used / installed version in the current repository. As an example, if `lodash` was installed in version `5.4.3` we'd get `"5"`. If it's installed as `4.1.2` we'd get `"4"`.
+
+Now we need to use this to manipulate the set externals. A little helper would be great again. The following piece helps:
+
+```js
+function getExternals(externals) {
+  const lodashVersion = getLodashVersion();
+  const externalNames = Object.keys(externals);
+
+  // check if we have a "known" (i.e., "shared") version of lodash
+  if (lodashVersion) {
+    const target = `lodashV${lodashVersion}`;
+
+    // check if its shared
+    if (externalNames.includes(target)) {
+      // redirect lodash to the shared version of lodash, otherwise its bundled
+      externals.lodash = target;
+    }
+  }
+
+  return externals;
+}
+```
+
+In case of a known version of lodash we would change the created externals object. Otherwise, the externals object stays as-is and does not contain any target redirect.
+
+Finally, we can put everything together in the *webpack.config.js* of the pilet:
+
+```js
+function getLodashVersion() {
+  try {
+    const { version } = require('lodash/package.json');
+    const [major] = version.split('.');
+    return major;
+  } catch {
+    // ignore, potentially not really installed
+  }
+
+  return undefined;
+}
+
+function getExternals(externals) {
+  const lodashVersion = getLodashVersion();
+  const externalNames = Object.keys(externals);
+
+  // check if we have a "known" (i.e., "shared") version of lodash
+  if (lodashVersion) {
+    const target = `lodashV${lodashVersion}`;
+
+    // check if its shared
+    if (externalNames.includes(target)) {
+      // redirect lodash to the shared version of lodash, otherwise its bundled
+      externals.lodash = target;
+    }
+  }
+
+  return externals;
+}
+
+module.exports = config => {
+  config.externals = getExternals(config.externals);
+  return config;
+};
+```
+
+If this file should be part of all your pilets then place it already in the app shell and configure a scaffolding rule for it. [More on this topic in the reference section](../reference/scaffolding.md).
 
 ## Conclusion
 

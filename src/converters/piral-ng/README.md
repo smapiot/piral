@@ -346,6 +346,10 @@ The available options are:
 
 For AoT (i.e. `jitMode: false`) to work correctly the `compilationMode: 'partial'` has to be set. If you use the `piral-ng/extend-webpack` helper as shown above this will be configured correctly for you.
 
+::: danger: AoT does not work with dependency sharing
+For AoT to work correctly the Angular sources need to be bundled. This is not the case in scenarios where you installed `piral-ng` as a plugin in your shell or distribute the Angular packages as shared dependencies from your app shell.
+:::
+
 If you have set up the build process then you need to make sure that your application has an entry point (*index.ts*). That entry point has to be a valid pilet entry module. It may look as follows:
 
 ```ts

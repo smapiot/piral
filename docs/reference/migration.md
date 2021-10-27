@@ -159,7 +159,68 @@ Essentially, we only distinguish between pilet and Piral. The module itself is a
 
 #### 4) Updated `piral-ng`
 
-(tbd)
+Previously, using Angular AoT was pretty much impossible. With the new approach this is possible in situations where you also bundle Angular with your pilet. Otherwise, in a shared Angular scenario you'll not be able to get AoT working.
+
+The other thing that is new is that you can actually reuse modules. While the old approach of having an `NgModule` inserted into `fromNg` still works, we recommend inserting the module into `defineNgModule` instead.
+
+Old way:
+
+```ts
+@NgModule({
+  //...
+  bootstrap: [MyComponent],
+})
+class MyModule {}
+
+// in the setup function
+api.registerPage('/foo', api.fromNg(MyModule));
+```
+
+New way:
+
+```ts
+@NgModule({
+  //...
+  exports: [MyComponent],
+})
+class MyModule {}
+
+// in the setup function
+api.defineNgModule(MyModule);
+api.registerPage('/foo', api.fromNg(MyComponent));
+```
+
+The main advantage of the new way is that it allows reusing the module for multiple components.
+
+```ts
+@NgModule({
+  //...
+  exports: [MyPage, MyTile],
+})
+class MyModule {}
+
+// in the setup function
+api.defineNgModule(MyModule);
+
+api.registerPage('/foo', api.fromNg(MyPage));
+api.registerTile(api.fromNg(MyTile));
+```
+
+All of these components will be running in the same module instance, but they will be bootstrapped into different container elements.
+
+For using the common functionality such as the `ResourceUrlPipe` pipe or the `NgExtension` component you'll now need to install `piral-ng` in the pilets, too. Then you can import the `SharedModule` from `piral-ng/common`. Your app module (or any other) would then look as follows:
+
+```ts
+import { SharedModule } from 'piral-ng/common';
+
+@NgModule({
+  //...
+  imports: [SharedModule],
+})
+class AppModule {}
+```
+
+Very often, this import would only go into a single module - your "common" module.
 
 ## 0.12 to 0.13
 
