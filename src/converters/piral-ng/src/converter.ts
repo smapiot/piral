@@ -1,8 +1,8 @@
 import type { ForeignComponent, BaseComponentProps, Disposable } from 'piral-core';
 import type { NgModuleDefiner } from './types';
+import { NgExtension } from './NgExtension';
 import { enqueue } from './queue';
 import { defineModule } from './module';
-import { NgExtension } from './extension';
 import { bootstrap, prepareBootstrap } from './bootstrap';
 
 export interface NgConverterOptions {}

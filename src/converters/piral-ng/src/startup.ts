@@ -1,11 +1,13 @@
 import type { ComponentContext } from 'piral-core';
 import type { NgOptions } from './types';
 import { enableProdMode, NgModuleRef, NgZone } from '@angular/core';
-import { APP_BASE_HREF, VERSION } from '@angular/common';
+import { APP_BASE_HREF } from '@angular/common';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { getNgVersion } from './utils';
 
 function getVersionHandler(versions: Record<string, () => void>) {
-  const version = `v${VERSION.major || VERSION.full.split('.')[0]}`;
+  const major = getNgVersion();
+  const version = `v${major}`;
   return versions[version];
 }
 

@@ -1,10 +1,14 @@
 import type { NgOptions, ModuleInstanceResult } from './types';
+import * as ngCore from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, NgModule, NgZone } from '@angular/core';
 import { RoutingService } from './RoutingService';
 import { SharedModule } from './SharedModule';
-import { findComponents, getAnnotations } from './utils';
+import { findComponents, getAnnotations, getMinVersion } from './utils';
+
+const ngc = ngCore as any;
+const version = getMinVersion();
 
 interface ModuleDefinition {
   active: any;
@@ -19,15 +23,16 @@ function instantiateModule(moduleDef: ModuleDefinition) {
   const { module, components } = moduleDef;
   const imports = [BrowserModule, SharedModule, module];
   const props = { current: undefined };
+  const providers = [
+    RoutingService,
+    { provide: 'Props', useFactory: () => props.current, deps: [] },
+    { provide: 'piral', useFactory: () => props.current.piral, deps: [] },
+  ];
 
   @NgModule({
     imports,
     entryComponents: components,
-    providers: [
-      RoutingService,
-      { provide: 'Props', useFactory: () => props.current, deps: [] },
-      { provide: 'piral', useFactory: () => props.current.piral, deps: [] },
-    ],
+    providers,
   })
   class BootstrapModule {
     private appRef: ApplicationRef;
@@ -59,6 +64,68 @@ function instantiateModule(moduleDef: ModuleDefinition) {
         }
       }
     }
+
+    static ɵfac = undefined;
+
+    static ɵmod = undefined;
+
+    static ɵinj = undefined;
+  }
+
+  if ('ɵɵngDeclareFactory' in ngc) {
+    BootstrapModule.ɵfac = ngc.ɵɵngDeclareFactory({
+      minVersion: version,
+      version,
+      ngImport: ngc,
+      type: BootstrapModule,
+      deps: [{ token: ComponentFactoryResolver }, { token: NgZone }, { token: RoutingService }],
+      target: ngc.ɵɵFactoryTarget.NgModule,
+    });
+  }
+
+  if ('ɵɵngDeclareNgModule' in ngc) {
+    BootstrapModule.ɵmod = ngc.ɵɵngDeclareNgModule({
+      minVersion: version,
+      version,
+      ngImport: ngc,
+      type: BootstrapModule,
+      imports,
+    });
+  }
+
+  if ('ɵɵngDeclareInjector' in ngc) {
+    BootstrapModule.ɵinj = ngc.ɵɵngDeclareInjector({
+      minVersion: version,
+      version,
+      ngImport: ngc,
+      type: BootstrapModule,
+      providers,
+      imports: [imports],
+    });
+  }
+
+  if ('ɵɵngDeclareClassMetadata' in ngc) {
+    ngc.ɵɵngDeclareClassMetadata({
+      minVersion: version,
+      version,
+      ngImport: ngc,
+      type: BootstrapModule,
+      decorators: [
+        {
+          type: NgModule,
+          args: [
+            {
+              imports,
+              entryComponents: components,
+              providers,
+            },
+          ],
+        },
+      ],
+      ctorParameters() {
+        return [{ type: ComponentFactoryResolver }, { type: NgZone }, { type: RoutingService }];
+      },
+    });
   }
 
   return BootstrapModule;

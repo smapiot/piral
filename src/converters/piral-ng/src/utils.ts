@@ -1,4 +1,4 @@
-import type { StaticProvider } from '@angular/core';
+import { VERSION, StaticProvider } from '@angular/core';
 
 export interface NgAnnotation {
   _initial?: Array<StaticProvider>;
@@ -9,6 +9,15 @@ export interface NgAnnotation {
   entryComponents: Array<any>;
   bootstrap: any;
   selector: string;
+}
+
+export function getNgVersion() {
+  return VERSION.major || VERSION.full.split('.')[0];
+}
+
+export function getMinVersion() {
+  const major = getNgVersion();
+  return `${major}.0.0`;
 }
 
 export function getAnnotations(component: any): Array<NgAnnotation> {
@@ -27,7 +36,7 @@ export function findComponents(exports: Array<any>): Array<any> {
   if (exports && Array.isArray(exports)) {
     for (const ex of exports) {
       const [annotation] = getAnnotations(ex);
-  
+
       if (annotation) {
         if (annotation.exports) {
           components.push(...findComponents(annotation.exports));
