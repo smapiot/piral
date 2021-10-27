@@ -169,14 +169,6 @@ export class AngularPage {
 }
 ```
 
-::: warning: Prefer not to use `templateUrl`
-In many Angular projects you still find `templateUrl`, which would be transformed to a `template` by the Angular CLI during build. If you want to achieve the same using, e.g., Webpack, then use a custom loader such as [angularjs-template-loader](https://www.npmjs.com/package/angularjs-template-loader).
-
-The same issue applies to `styleUrls`, which should be replaced by `styles`.
-
-If you still need to use `templateUrl` (or `styleUrls`) then take a look below at the Webpack config file.
-:::
-
 If you don't want to inline the `template` then just `require` the contents, e.g.,
 
 ```js
@@ -346,7 +338,7 @@ The available options are:
 
 For AoT (i.e. `jitMode: false`) to work correctly the `compilationMode: 'partial'` has to be set. If you use the `piral-ng/extend-webpack` helper as shown above this will be configured correctly for you.
 
-::: danger: AoT does not work with dependency sharing
+::: failure: AoT does not work with dependency sharing
 For AoT to work correctly the Angular sources need to be bundled. This is not the case in scenarios where you installed `piral-ng` as a plugin in your shell or distribute the Angular packages as shared dependencies from your app shell.
 :::
 
@@ -396,6 +388,16 @@ export function setup(api: PiletApi) {
 In the given example we register a single page, however, with all subpages resolving to the same page. Within the page we may use the Angular Router to determine what content to show.
 
 The content may remain pretty much unchanged. Routing should be done either via the Angular Router (internal) or via the React Router (across components) automatically. The thing you'll need to pay attention to is the usage of resources. Since the resource will be available available to the location of the pilet (e.g., if the pilet's main bundle is located at `https://yourcdn.com/your-pilet/1.0.0/index.js` then resources need to be relative to `https://yourcdn.com/your-pilet/1.0.0/`).
+
+In general you may also want to convert the `templateUrl` (and `styleUrls`) properties of your components (to `template` and `styles`). If you set up the bundler as recommended then it would still work though.
+
+::: warning: Prefer not to use `templateUrl`
+In many Angular projects you still find `templateUrl`, which would be transformed to a `template` by the Angular CLI during build. If you want to achieve the same using, e.g., Webpack, then use a custom loader such as [angularjs-template-loader](https://www.npmjs.com/package/angularjs-template-loader).
+
+The same issue applies to `styleUrls`, which should be replaced by `styles`.
+
+If you still need to use `templateUrl` (or `styleUrls`) then take a look below at the Webpack config file.
+:::
 
 ## Angular Versions
 
