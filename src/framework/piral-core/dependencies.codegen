@@ -1,9 +1,35 @@
-module.exports = function() {
+function getIdentifiers(packageName) {
+  const packageJson = `${packageName}/package.json`;
+
+  try {
+    const details = require(packageJson);
+
+    if (details.version) {
+      return [packageName, `${packageName}@${details.version}`];
+    }
+  } catch {}
+
+  return [packageName];
+}
+
+module.exports = function () {
   const appName = process.env.BUILD_PCKG_NAME || '';
   const externals = (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean);
-  const deps = [`deps['${appName}']={}`, ...externals.map(name => `deps['${name}']=require('${name}')`)];
-  const code = deps.join(';');
+  const assignments = [];
+
+  if (appName) {
+    assignments.push(`deps['${appName}']={}`);
+  }
+
+  for (const name of externals) {
+    const identifiers = getIdentifiers(name);
+
+    for (const id of identifiers) {
+      assignments.push(`deps[${JSON.stringify(id)}]=require(${JSON.stringify(name)})`);
+    }
+  }
+
   return `module.exports = function(deps){
-    ${code}
+    ${assignments.join(';')}
   }`;
 };
