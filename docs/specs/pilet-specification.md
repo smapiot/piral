@@ -34,8 +34,6 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 **MIT**: Massachusetts Institute of Technology
 
-**NPM**: Node Package Manager
-
 **UMD**: Universal Module Definition
 
 **URL**: Uniform Resource Locator
@@ -44,7 +42,7 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 ## Package Layout
 
-The layout of a pilet package is a standard gzipped tarball (file extension *tgz*) that matches the NPM package layout. In the root folder of the *tgz* file we also have the same `package.json` file. This file can - in addition to the standard NPM keys - contain special Piral related keys. The special keys are described in further detail in the "Package Keys" section of this document.
+The layout of a pilet package is a standard gzipped tarball (file extension *tgz*) that matches the npm package layout. In the root folder of the *tgz* file we also have the same `package.json` file. This file can - in addition to the standard npm keys - contain special Piral related keys. The special keys are described in further detail in the "Package Keys" section of this document.
 
 The `main` key of the `package.json` has to point to a folder that has to contain all the assets shipped with the pilet. The assets must be linked from a JavaScript file that is either the *root JS file* or has been linked (directly or indirectly) by the *root JS file*. The *root JS file* is either directly named in the `main` key (e.g., `dist/example.js` would relate to the `dist` folder with *root JS file* `example.js`) or indirectly by just pointing to a folder (e.g., `dist/example` would relate to the `dist/example` folder with *root JS file* `index.js`).
 
@@ -107,23 +105,23 @@ This code in this section works exclusively for `v2` pilets. `v2` pilets are usi
 
 ## Package Keys
 
-The following package keys are either already officially introduced by NPM and reused, or introduced only for usage in Piral.
+The following package keys are either already officially introduced by npm and reused, or introduced only for usage in Piral.
 
 ### `name`
 
-The `name` property is a standard NPM field that is required for a pilet.
+The `name` property is a standard npm field that is required for a pilet.
 
 The property defines the unique identifier of the pilet.
 
 ### `version`
 
-The `version` property is a standard NPM field that is required for a pilet.
+The `version` property is a standard npm field that is required for a pilet.
 
 The property defines the unique version of the pilet. It needs to adhere to the semantic versioning specification.
 
 ### `description`
 
-The `description` property is a standard NPM field that is optional for a pilet.
+The `description` property is a standard npm field that is optional for a pilet.
 
 The property describes the contents and functionality of the given pilet.
 
@@ -131,7 +129,7 @@ By default, the `description` is left blank.
 
 ### `author`
 
-The `author` property is a standard NPM field that is optional for a pilet.
+The `author` property is a standard npm field that is optional for a pilet.
 
 The property contains information about the author in the form of a string or an object containing properties such as `name`, `email`, and `url`. The string's format can be either a simple string or an email string (format: `name <email>`).
 
@@ -139,11 +137,11 @@ By default, the `author` is `(unknown)`.
 
 ### `license`
 
-The `license` property is a standard NPM field that is optional for a pilet.
+The `license` property is a standard npm field that is optional for a pilet.
 
 The property reflects the license used for distributing the given pilet.
 
-By default, the `license` is set to `ISC`, which is equivalent to MIT and NPM's default.
+By default, the `license` is set to `ISC`, which is equivalent to MIT and npm's default.
 
 ### `piral`
 
@@ -155,7 +153,7 @@ By default, the `piral` is considered undefined, i.e., no primary Piral instance
 
 ### `peerDependencies`
 
-The `peerDependencies` property is a standard NPM field that is optional for a pilet.
+The `peerDependencies` property is a standard npm field that is optional for a pilet.
 
 The property contains information about the used shared dependencies that have to be supplied from the Piral instance. A feed service or Piral instance may reject the Pilet in case of unmatched shared dependencies.
 
@@ -173,7 +171,7 @@ By default, the `peerModules` are set to an empty array `[]`, i.e., no peer modu
 
 ### `dependencies`
 
-The `dependencies` property is a standard NPM field that is optional for a pilet.
+The `dependencies` property is a standard npm field that is optional for a pilet.
 
 The property contains information about the used direct dependencies that are supplied by the pilet. A feed service or Piral instance may reject the Pilet in case of blacklisted or insecure  dependencies.
 
@@ -183,7 +181,7 @@ By default, the `dependencies` are set to an empty record `{}`, i.e., no depende
 
 ### `main`
 
-The `main` property is a standard NPM field that is optional for a pilet.
+The `main` property is a standard npm field that is optional for a pilet.
 
 The field is used to help determine where the root module is located. It is strongly encouraged to *always* set this value to a path leading explicitly or implicitly to the root module.
 
@@ -200,7 +198,7 @@ The order of the search for the root module using the value of `main` (hereafter
 
 ### `preview`
 
-The `preview` property is a custom NPM field that is optional for a pilet.
+The `preview` property is a custom npm field that is optional for a pilet.
 
 The property contains a boolean value indicating whether the current pilet should be released as a preview independent of the information gathered from the semantic versioning.
 
@@ -210,7 +208,7 @@ By default, the `preview` field is set to `false`.
 
 ### `custom`
 
-The `custom` property is a custom NPM field that is optional for a pilet.
+The `custom` property is a custom npm field that is optional for a pilet.
 
 The property can contain any value. The content of this field is transported from the feed service to the Piral instance.
 
@@ -478,6 +476,6 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 
 - [RFC2119](https://tools.ietf.org/html/rfc2119)
 - [CLI Specification](https://docs.piral.io/reference/specifications/cli)
-- [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
+- [npm: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
 - [UMD: Patterns and Examples](https://github.com/umdjs/umd)
 - [SystemJS: Register API](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md)

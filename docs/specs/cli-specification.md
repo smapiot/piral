@@ -6,7 +6,7 @@ title: Piral CLI Specification
 
 ## Abstract
 
-The Piral CLI is a command-line tool, which offers a rich feature set to allow building application shells for Microfrontend solutions. The application shell can be used as a host and an emulator for smaller applications (known as Microfrontends). As part of the Piral framework, we call those small applications *pilets*. In addition, the Piral CLI is capable of generating valid NPM packages, which can be published to the Piral Feed Service.
+The Piral CLI is a command-line tool, which offers a rich feature set to allow building application shells for Microfrontend solutions. The application shell can be used as a host and an emulator for smaller applications (known as Microfrontends). As part of the Piral framework, we call those small applications *pilets*. In addition, the Piral CLI is capable of generating valid npm packages, which can be published to the Piral Feed Service.
 
 ## Introduction
 
@@ -27,8 +27,6 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 **JSON**: JavaScript Object Notation
 
 **MIT**: Massachusetts Institute of Technology
-
-**NPM**: Node Package Manager
 
 **UMD**: Universal Module Definition
 

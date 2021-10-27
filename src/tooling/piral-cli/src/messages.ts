@@ -198,7 +198,7 @@ export function appInstanceInvalid_0011(): QuickMessage {
  * project folder has a package.json in its root.
  *
  * @see
- * - [NPM Package Specification](https://docs.npmjs.com/files/package.json)
+ * - [npm Package Specification](https://docs.npmjs.com/files/package.json)
  *
  * @example
  * You can see if you are currently in a correct folder.
@@ -235,7 +235,7 @@ export function packageJsonNotFound_0020(): QuickMessage {
  * The name of the pilet is provided by the name field specified in its package.json.
  *
  * A valid package.json file requires a valid name. The name has to follow standard naming
- * conventions of the NPM system.
+ * conventions of the npm system.
  *
  * @see
  * - [Package Naming Guidelines](https://docs.npmjs.com/package-name-guidelines)
@@ -285,7 +285,7 @@ export function packageJsonMissingName_0021(): QuickMessage {
  * specification.
  *
  * @see
- * - [NPM on Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning)
+ * - [npm on Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning)
  *
  * @example
  * Check the contents of the available package.json:
@@ -330,7 +330,7 @@ export function packageJsonMissingVersion_0022(): QuickMessage {
  * and which ones can remain at their current version.
  *
  * @see
- * - [NPM Install](https://docs.npmjs.com/cli/install)
+ * - [npm Install](https://docs.npmjs.com/cli/install)
  *
  * @example
  * Check that the package is indeed installed:
@@ -370,7 +370,7 @@ export function packageNotInstalled_0023(name: string): QuickMessage {
  * versions. If no release for the given version was found then an error is emitted.
  *
  * @see
- * - [StackOverflow Listing NPM Versions](https://stackoverflow.com/questions/41415945/how-to-list-all-versions-of-an-npm-module)
+ * - [StackOverflow Listing npm Versions](https://stackoverflow.com/questions/41415945/how-to-list-all-versions-of-an-npm-module)
  *
  * @example
  * Check that the version is valid:
@@ -481,7 +481,7 @@ export function projectReferenceNotSupported_0032(fullPath: string): QuickMessag
  * CLI via command line parameters.
  *
  * @see
- * - [NPM Package Specification](https://docs.npmjs.com/files/package.json)
+ * - [npm Package Specification](https://docs.npmjs.com/files/package.json)
  *
  * @example
  * Make sure you are in the right directory by calling commands such as
@@ -611,7 +611,7 @@ export function invalidPiletPackage_0042(): QuickMessage {
  * Even though everything seems to be correct on the first glance it may be that the
  * actual reference is broken. This could be due to various reasons.
  *
- * - NPM linking is broken
+ * - npm linking is broken
  * - The dependencies have not been installed yet (run `npm i`)
  * - The Piral instance's name is invalid (e.g., due to a typo)
  *
@@ -762,8 +762,8 @@ export function cannotFindFile_0046(file: string): QuickMessage {
  * Since the local resolution only works against a filename the update process has also to be triggered with
  * a file location. Otherwise, there is no chance to know a different file location.
  *
- * Potentially, you wanted to switch / resolve the module from NPM instead. Therefore, we are then trying to
- * obtain the Piral instance from NPM instead using the known name.
+ * Potentially, you wanted to switch / resolve the module from npm instead. Therefore, we are then trying to
+ * obtain the Piral instance from npm instead using the known name.
  *
  * @see
  * - [Local File Dependencies](https://stackoverflow.com/questions/14381898/local-dependency-in-package-json)
@@ -800,11 +800,11 @@ export function localeFileForUpgradeMissing_0050(): QuickMessage {
  * Right now we only support "latest" for Git resolved Piral instances. In this scenario we obtain the
  * current head from the repository's default branch and update accordingly.
  *
- * Potentially, you wanted to switch / resolve the module from NPM instead. Therefore, we are then trying to
- * obtain the Piral instance from NPM instead using the known name.
+ * Potentially, you wanted to switch / resolve the module from npm instead. Therefore, we are then trying to
+ * obtain the Piral instance from npm instead using the known name.
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/&commat;jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [Git Dependencies in npm](https://medium.com/&commat;jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
  *
  * @example
  * You may have set up the pilet using a locally available tgz file. In this case your original command may
@@ -995,7 +995,7 @@ export function missingPiletFeedUrl_0060(): QuickMessage {
  * directly.
  *
  * @see
- * - [NPM Pack](https://docs.npmjs.com/cli-commands/pack.html)
+ * - [npm Pack](https://docs.npmjs.com/cli-commands/pack.html)
  *
  * @example
  * Make sure to have build a pilet beforehand:
@@ -1541,10 +1541,10 @@ export function entryPointDoesNotExist_0073(app: string): QuickMessage {
  * point for the bundler.
  *
  * @see
- * - [NPM Init](https://docs.npmjs.com/cli/init)
+ * - [npm Init](https://docs.npmjs.com/cli/init)
  *
  * @example
- * You can create a new NPM project using the `npm init` command. This will essentially guide
+ * You can create a new npm project using the `npm init` command. This will essentially guide
  * you through a number of decisions for creating a proper package.json.
  *
  * Even better you could start a new Piral instance using the following command:
@@ -1577,10 +1577,10 @@ export function packageJsonMissing_0074(): QuickMessage {
  * point for the bundler.
  *
  * @see
- * - [NPM Init](https://docs.npmjs.com/cli/init)
+ * - [npm Init](https://docs.npmjs.com/cli/init)
  *
  * @example
- * You can create a new NPM project using the `npm init` command. This will essentially guide
+ * You can create a new npm project using the `npm init` command. This will essentially guide
  * you through a number of decisions for creating a proper package.json.
  *
  * Even better you could start a new pilet using the following command:
@@ -1855,7 +1855,7 @@ export function toolingIncompatible_0101(piralVersion: string, cliVersion: strin
  *
  * @example
  * The following command first removes the output directory, then starts the build,
- * and finally publishes the emulator to NPM.
+ * and finally publishes the emulator to npm.
  *
  * ```sh
  * rm -rf dist
@@ -1881,7 +1881,7 @@ export function publishDirectoryMissing_0110(directory: string): QuickMessage {
  *
  * @example
  * The following command first removes the output directory, then starts the build,
- * and finally publishes the emulator to NPM.
+ * and finally publishes the emulator to npm.
  *
  * ```sh
  * rm -rf dist
@@ -1964,7 +1964,11 @@ export function publishProviderMissing_0113(providerName: string, availableProvi
  * The type is "release".
  */
 export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
-  return [LogLevels.error, '0114', `The command "publish" cannot be done with "--type emulator-sources". Use another type instead.`];
+  return [
+    LogLevels.error,
+    '0114',
+    `The command "publish" cannot be done with "--type emulator-sources". Use another type instead.`,
+  ];
 }
 
 /**
@@ -1986,7 +1990,7 @@ export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
  * - The API for opening the default browser is invalid
  *
  * @see
- * - [NPM Open Package](https://www.npmjs.com/package/open)
+ * - [npm Open Package](https://www.npmjs.com/package/open)
  *
  * @example
  * The browser is usually just opened via the command line:

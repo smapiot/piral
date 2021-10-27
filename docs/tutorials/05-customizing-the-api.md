@@ -157,6 +157,6 @@ renderInstance({
 });
 ```
 
-The list of all plugins is available via [NPM](https://www.npmjs.com/search?q=keywords:piral).
+The list of all plugins is available via [npm](https://www.npmjs.com/search?q=keywords:piral).
 
 Next, we will see how we can define the user experience by setting up the whole look and feel of Piral.

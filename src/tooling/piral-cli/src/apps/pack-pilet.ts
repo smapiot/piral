@@ -10,7 +10,7 @@ export interface PackPiletOptions {
 
 export const packPiletDefaults: PackPiletOptions = {
   /**
-   * Sets the source directory for creating the NPM package.
+   * Sets the source directory for creating the npm package.
    */
   source: '.',
 

@@ -76,7 +76,7 @@ export interface NewPiletOptions {
   logLevel?: LogLevels;
 
   /**
-   * The NPM client to be used when scaffolding.
+   * The npm client to be used when scaffolding.
    * @example 'yarn'
    */
   npmClient?: NpmClientType;
@@ -154,7 +154,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     );
 
     if (registry !== newPiletDefaults.registry) {
-      progress(`Setting up NPM registry (%s) ...`, registry);
+      progress(`Setting up npm registry (%s) ...`, registry);
 
       await createFileIfNotExists(
         root,
@@ -170,11 +170,11 @@ always-auth=true`,
     if (!isLocal) {
       const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
-      progress(`Installing NPM package %s ...`, packageRef);
+      progress(`Installing npm package %s ...`, packageRef);
 
       await installPackage(npmClient, packageRef, root, '--save-dev');
     } else {
-      progress(`Using locally available NPM package %s ...`, sourceName);
+      progress(`Using locally available npm package %s ...`, sourceName);
     }
 
     const packageName = await getPackageName(root, sourceName, type);

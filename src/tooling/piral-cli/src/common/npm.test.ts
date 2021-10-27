@@ -81,7 +81,7 @@ jest.mock('fs', () => ({
   },
 }));
 
-describe('NPM Module', () => {
+describe('npm Module', () => {
   it('dissects a fully qualified name with latest correctly', async () => {
     wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@latest');
@@ -172,14 +172,14 @@ describe('NPM Module', () => {
     expect(type).toBe('registry');
   });
 
-  it('installs a package using the NPM command line tool without a target', async () => {
+  it('installs a package using the npm command line tool without a target', async () => {
     wrongCase = false;
     await installPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
     await installPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
-  it('installs a package using the NPM command line tool without a version', async () => {
+  it('installs a package using the npm command line tool without a version', async () => {
     wrongCase = false;
     await installPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
@@ -200,7 +200,7 @@ describe('NPM Module', () => {
     await installPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
-  it('installs a package using the NPM command line tool with some flag', async () => {
+  it('installs a package using the npm command line tool with some flag', async () => {
     wrongCase = false;
     await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;

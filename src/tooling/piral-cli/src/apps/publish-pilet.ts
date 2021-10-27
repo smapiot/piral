@@ -59,7 +59,7 @@ export interface PublishPiletOptions {
   /**
    * Changing the publish source makes it possible to publish pilets that have
    * been stored on non-local paths, e.g., when a pilet was already published to
-   * an NPM feed.
+   * an npm feed.
    */
   from?: PiletPublishSource;
 
@@ -114,7 +114,7 @@ async function getFiles(
         log('generalDebug_0003', `Download file from "${source}".`);
         return await downloadFile(source, ca);
       case 'npm':
-        log('generalDebug_0003', `View NPM package "${source}".`);
+        log('generalDebug_0003', `View npm package "${source}".`);
         const url = await findTarball(source);
         log('generalDebug_0003', `Download file from "${url}".`);
         return await downloadFile(url, ca);

@@ -63,14 +63,14 @@ piral new --target my-app
 
 As a result, we will find in the folder `./my-app` the files for the newly created application shell.
 
-::: tip: Use NPM initializers
-In case you don't want to install the Piral CLI globally, you can also leverage the NPM initializer for this command.
+::: tip: Use npm initializers
+In case you don't want to install the Piral CLI globally, you can also leverage the npm initializer for this command.
 
 ```sh
 npm init piral-instance --target my-app --defaults
 ```
 
-The NPM initializer comes with a quick survey going over the options. Specifying `--defaults` will take the default values.
+The npm initializer comes with a quick survey going over the options. Specifying `--defaults` will take the default values.
 :::
 
 ### Run the Application Shell
@@ -91,10 +91,10 @@ At this point, the application shell shows an empty page, since there is current
 
 ### Create Package for the Application Shell
 
-To use the newly created Piral instance as the application shell (or simply "app shell") for the development of pilets, we need to create an **NPM package**, which will be referenced within pilets. To create the package run the command:
+To use the newly created Piral instance as the application shell (or simply "app shell") for the development of pilets, we need to create an **npm package**, which will be referenced within pilets. To create the package run the command:
 
 ```sh
-# Create an NPM package for the app shell
+# Create an npm package for the app shell
 piral build
 ```
 
@@ -109,7 +109,7 @@ piral build --type emulator
 
 :::
 
-The *emulator package* is a tarball containing the application shell, in our case, it will be named `my-app-1.0.0.tgz`. Usually, the tarball will be published to a (private) NPM registry, so that all development teams will be able to reference and use the same Piral instance for developing their pilets.
+The *emulator package* is a tarball containing the application shell, in our case, it will be named `my-app-1.0.0.tgz`. Usually, the tarball will be published to a (private) npm registry, so that all development teams will be able to reference and use the same Piral instance for developing their pilets.
 
 ![Folder structure of the application shell](../diagrams/my-app-structure.png)
 
@@ -135,8 +135,8 @@ With the `pilet new` command, a new pilet with pre-defined content is created. T
 
 If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 
-::: tip: Use NPM initializers
-You can also leverage the NPM initializers for creating new pilets.
+::: tip: Use npm initializers
+You can also leverage the npm initializers for creating new pilets.
 
 ```sh
 npm init pilet --target my-pilet --source ./my-app/dist/emulator/my-app-1.0.0.tgz --defaults

@@ -122,7 +122,7 @@ Sets the NPM client to be used when scaffolding.
 Sets the default bundler to install.
 
 - Type: `string`
-- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`
+- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`, `"esbuild"`
 - Default: `"none"`
 
 ### `--vars`

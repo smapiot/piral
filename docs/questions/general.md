@@ -38,7 +38,7 @@ A Piral instance requires the following things:
 
 1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/main/src/samples/sample-piral))
 2. A backend service to provision the pilets (you can use our available [feed service](https://www.piral.cloud))
-3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) NPM feed or a Git repository
+3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) npm registry or a Git repository
 
 The SPA can be hosted on a static storage, while the backend service may be run anyway - serverless may be an option here, too.
 

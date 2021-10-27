@@ -10,7 +10,7 @@ The emulator is essentially the app shell with special debug helpers (e.g., allo
 
 ## Building
 
-The emulator is built via the `piral-cli` using the command `piral build --type emulator`. The result is a `tgz` located in the `dist/emulator` folder that could be published to an NPM feed.
+The emulator is built via the `piral-cli` using the command `piral build --type emulator`. The result is a `tgz` located in the `dist/emulator` folder that could be published to an npm registry.
 
 ## Package Definition
 
@@ -38,7 +38,7 @@ The following props are created:
 - `main` (pointing to `app/index.js`)
 - `typings` (pointing to `app/index.d.ts`)
 - `app` (pointing to `app/index.html`)
-- `piralCLI` (to containg the current version)
+- `piralCLI` (to contain the current version)
 - `devDependencies` (from `devDependencies`, `dependencies`, and `pilets.externals`)
 
 The `piralCLI` property determines if the given package contains *raw* sources or already *pre-bundled* sources. In the latter case we will directly start a server from `app`, in the former case a lightweight version of `piral debug` is applied to the sources.

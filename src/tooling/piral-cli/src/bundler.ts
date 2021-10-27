@@ -35,7 +35,7 @@ async function installDefaultBundler(root: string) {
   const selectedBundler = config.bundler || 'webpack';
   log('generalDebug_0003', `Installation of default bundler for "${selectedBundler}".`);
   const selectedPackage = `piral-cli-${selectedBundler}`;
-  log('generalDebug_0003', `Determining NPM client at "${root}" ...`);
+  log('generalDebug_0003', `Determining npm client at "${root}" ...`);
   const client = await determineNpmClient(root);
   log('generalDebug_0003', `Prepare to install ${selectedPackage}@${cliVersion} using "${client}" into "${root}".`);
   progress(`Installing ${selectedPackage} ...`);

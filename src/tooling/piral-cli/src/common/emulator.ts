@@ -119,7 +119,7 @@ export async function createEmulatorSources(
   // generate the associated index.d.ts
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
-  // since things like .gitignore are not properly treated by NPM we pack the files (for standard and once only)
+  // since things like .gitignore are not properly treated by npm we pack the files (for standard and once only)
   await Promise.all([
     createTarball(filesDir, rootDir, `${filesTar}.tar`),
     createTarball(filesOnceDir, rootDir, `${filesOnceTar}.tar`),

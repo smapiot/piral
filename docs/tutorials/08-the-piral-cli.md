@@ -54,15 +54,15 @@ Since the Piral CLI is extensible it provides all capabilities necessary to foll
 
 To simplify development a global installation of the Piral CLI makes sense. Nevertheless, we've made sure that global installation is unnecessary and less important by introducing a couple of important factors.
 
-### NPM Initializers
+### npm Initializers
 
-We created prompt-focused tools in form of NPM initializers. Instead of creating a new Piral instance via
+We created prompt-focused tools in form of npm initializers. Instead of creating a new Piral instance via
 
 ```sh
 piral new my-app
 ```
 
-you can use the NPM initializer `create-piral-instance`:
+you can use the npm initializer `create-piral-instance`:
 
 ```sh
 npm init piral-instance
@@ -74,17 +74,17 @@ The same is possible for scaffolding pilets. Instead of using
 pilet new my-app --target my-pilet
 ```
 
-you can use the NPM initializer `create-pilet`:
+you can use the npm initializer `create-pilet`:
 
 ```sh
 npm init pilet
 ```
 
-While the Piral CLI commands use command line arguments to determine the behavior, the NPM initializers provide an interactive version at the command prompt to fill out the parameters.
+While the Piral CLI commands use command line arguments to determine the behavior, the npm initializers provide an interactive version at the command prompt to fill out the parameters.
 
 ### Local First
 
-When you are inside of an NPM project folder structure and run a Piral CLI the local Piral CLI instance (if available) is taken. Right now there is no way to override this.
+When you are inside of an npm project folder structure and run a Piral CLI the local Piral CLI instance (if available) is taken. Right now there is no way to override this.
 
 As far as Piral CLI plugins go, their integration is *always* a combination of the local ones found (preferred) plus the global ones available. There is no option to deactivate global plugins.
 
@@ -92,7 +92,7 @@ Local installations should always be considered. First, this makes behavior (e.g
 
 ## Extending the Piral CLI
 
-We already mentioned the use of plugins for the Piral CLI. A plugin for the Piral CLI is just another NPM package which has a name starting with `piral-cli-`, e.g., `piral-cli-my-plugin`.
+We already mentioned the use of plugins for the Piral CLI. A plugin for the Piral CLI is just another npm package which has a name starting with `piral-cli-`, e.g., `piral-cli-my-plugin`.
 
 A Piral CLI plugin package exports a single function.
 

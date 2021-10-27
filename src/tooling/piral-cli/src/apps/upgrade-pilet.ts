@@ -58,9 +58,9 @@ export interface UpgradePiletOptions {
   install?: boolean;
 
   /**
-   * Defines the used NPM client. By default, "npm" is used
+   * Defines the used npm client. By default, "npm" is used
    * if no other client is autodetected. The autodetection
-   * works against Lerna, PNPM, and Yarn.
+   * works against Lerna, pnpm, and Yarn.
    */
   npmClient?: NpmClientType;
 }
@@ -120,7 +120,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     if (!monorepoRef) {
       // only install the latest if the shell does come from remote
-      progress(`Updating NPM package to %s ...`, packageRef);
+      progress(`Updating npm package to %s ...`, packageRef);
       await installPackage(npmClient, packageRef, root, '--no-save');
     }
 
