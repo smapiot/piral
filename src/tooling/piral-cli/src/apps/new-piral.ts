@@ -18,6 +18,7 @@ import {
   determineNpmClient,
   defaultRegistry,
   cliVersion,
+  getPiralScaffoldData,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -166,8 +167,9 @@ always-auth=true`,
     await installPackage(npmClient, packageRef, root);
 
     progress(`Taking care of templating ...`);
-
-    await scaffoldPiralSourceFiles(template, registry, language, root, app, framework, forceOverwrite, variables);
+    
+    const data = getPiralScaffoldData(language, root, app, framework, variables);
+    await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
 
     if (install) {
       progress(`Installing dependencies ...`);

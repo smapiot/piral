@@ -25,6 +25,8 @@ import {
   detectMonorepo,
   bootstrapMonorepo,
   isMonorepoPackageRef,
+  getPiletScaffoldData,
+  SourceLanguage,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -100,10 +102,11 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
   const npmClient = await determineNpmClient(root, options.npmClient);
   const pckg = await readJson(root, 'package.json');
-  const { devDependencies = {}, dependencies = {}, piral } = pckg;
+  const { devDependencies = {}, dependencies = {}, piral, source } = pckg;
 
   if (piral && typeof piral === 'object') {
     const sourceName = piral.name;
+    const language = /\.jsx?$/.test(source) ? SourceLanguage.js : SourceLanguage.ts;
 
     if (!sourceName || typeof sourceName !== 'string') {
       fail('invalidPiletPackage_0042');
@@ -144,17 +147,17 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     progress(`Taking care of templating ...`);
-    variables.sourceName = sourceName;
+    const data = getPiletScaffoldData(language, root, sourceName, variables);
 
     if (isEmulator) {
       // in the emulator case we get the files from the contained tarball
-      await copyPiralFiles(root, sourceName, piralInfo, forceOverwrite, variables, originalFiles);
+      await copyPiralFiles(root, sourceName, piralInfo, forceOverwrite, data, originalFiles);
     } else {
       // otherwise, we perform the same action as in the emulator creation
       // just with a different target; not a created directory, but the root
       const packageRoot = getPiralPath(root, sourceName);
       const notOnceFiles = files.filter((m) => typeof m === 'string' || !m.once);
-      await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo, variables);
+      await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo, data);
     }
 
     await patchPiletPackage(root, sourceName, packageVersion, piralInfo, isEmulator);

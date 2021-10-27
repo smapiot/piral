@@ -206,7 +206,7 @@ async function getAvailableFiles(
   return files.map((file) => ({
     sourcePath: file,
     targetPath: resolve(root, relative(base, file)),
-    template: fileMap.find((m) => resolve(base, m.from) === file)?.template || false,
+    template: fileMap.find((m) => resolve(source, m.from) === file)?.template || false,
   }));
 }
 
