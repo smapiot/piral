@@ -46,11 +46,13 @@ export async function createEmulatorSources(
   const filesOnceDir = resolve(rootDir, filesOnceTar);
 
   const filesMap = files
+    .filter((file) => file && (typeof file === 'string' || typeof file === 'object'))
     .map((file) => (typeof file === 'string' ? { from: file, to: file } : file))
+    .filter((file) => typeof file.to === 'string' && typeof file.from === 'string')
     .map((file) => ({
       ...file,
       to: file.to.replace(/\\/g, '/'),
-      from: join('files', file.from).replace(/\\/g, '/'),
+      from: join('files', file.to).replace(/\\/g, '/'),
     }));
 
   // do not modify an existing JSON

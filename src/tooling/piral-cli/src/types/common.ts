@@ -48,6 +48,7 @@ export interface ReleaseProvider {
 export interface TemplateFileLocation {
   from: string;
   to: string;
+  template?: boolean;
   deep?: boolean;
   once?: boolean;
 }

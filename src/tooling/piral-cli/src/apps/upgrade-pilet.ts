@@ -63,6 +63,11 @@ export interface UpgradePiletOptions {
    * works against Lerna, pnpm, and Yarn.
    */
   npmClient?: NpmClientType;
+
+  /**
+   * Places additional variables that should used when scaffolding.
+   */
+  variables?: Record<string, string>;
 }
 
 export const upgradePiletDefaults: UpgradePiletOptions = {
@@ -72,6 +77,7 @@ export const upgradePiletDefaults: UpgradePiletOptions = {
   logLevel: LogLevels.info,
   install: true,
   npmClient: undefined,
+  variables: {},
 };
 
 export async function upgradePilet(baseDir = process.cwd(), options: UpgradePiletOptions = {}) {
@@ -81,6 +87,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     forceOverwrite = upgradePiletDefaults.forceOverwrite,
     logLevel = upgradePiletDefaults.logLevel,
     install = upgradePiletDefaults.install,
+    variables = upgradePiletDefaults.variables,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -137,16 +144,17 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     progress(`Taking care of templating ...`);
+    variables.sourceName = sourceName;
 
     if (isEmulator) {
       // in the emulator case we get the files from the contained tarball
-      await copyPiralFiles(root, sourceName, piralInfo, forceOverwrite, originalFiles);
+      await copyPiralFiles(root, sourceName, piralInfo, forceOverwrite, variables, originalFiles);
     } else {
       // otherwise, we perform the same action as in the emulator creation
       // just with a different target; not a created directory, but the root
       const packageRoot = getPiralPath(root, sourceName);
       const notOnceFiles = files.filter((m) => typeof m === 'string' || !m.once);
-      await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo);
+      await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo, variables);
     }
 
     await patchPiletPackage(root, sourceName, packageVersion, piralInfo, isEmulator);

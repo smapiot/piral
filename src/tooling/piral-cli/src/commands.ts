@@ -682,6 +682,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('npm-client', clientTypeKeys)
         .describe('npm-client', 'Sets the npm client to be used when upgrading.')
         .default('npm-client', apps.upgradePiletDefaults.npmClient)
+        .option('vars', undefined)
+        .describe('vars', 'Sets additional variables to be used when scaffolding.')
+        .default('vars', apps.upgradePiletDefaults.variables)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -694,6 +697,7 @@ const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
         install: args.install as boolean,
         npmClient: args['npm-client'] as NpmClientType,
+        variables: args.vars as Record<string, string>,
       });
     },
   },
