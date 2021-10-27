@@ -4,10 +4,8 @@ import * as ngCore from '@angular/core';
 import { Inject, Injectable, NgZone, OnDestroy, Optional } from '@angular/core';
 import { NavigationError, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { getMinVersion } from './utils';
 
 const ngc = ngCore as any;
-const version = getMinVersion();
 
 @Injectable()
 export class RoutingService implements OnDestroy {
@@ -54,69 +52,52 @@ export class RoutingService implements OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  static ɵfac = undefined;
-  static ɵprov = undefined;
+  static ɵfac =
+    'ɵɵinject' in ngc
+      ? (t: any) => new (t || RoutingService)(ngc.ɵɵinject('Context'), ngc.ɵɵinject(Router, 8), ngc.ɵɵinject(NgZone, 8))
+      : undefined;
+
+  static ɵprov =
+    'ɵɵngDeclareInjectable' in ngc
+      ? ngc.ɵɵdefineInjectable({ token: RoutingService, factory: RoutingService.ɵfac })
+      : undefined;
 }
 
-if ('ɵɵngDeclareFactory' in ngc) {
-  RoutingService.ɵfac = ngc.ɵɵngDeclareFactory({
-    minVersion: version,
-    version,
-    ngImport: ngc,
-    type: RoutingService,
-    deps: [{ token: 'Context' }, { token: Router, optional: true }, { token: NgZone, optional: true }],
-    target: ngc.ɵɵFactoryTarget.Injectable,
-  });
-}
-
-if ('ɵɵngDeclareInjectable' in ngc) {
-  RoutingService.ɵprov = ngc.ɵɵngDeclareInjectable({
-    minVersion: version,
-    version,
-    ngImport: ngc,
-    type: RoutingService,
-  });
-}
-
-if ('ɵɵngDeclareClassMetadata' in ngc) {
-  ngc.ɵɵngDeclareClassMetadata({
-    minVersion: version,
-    version,
-    ngImport: ngc,
-    type: RoutingService,
-    decorators: [
+if ('ɵsetClassMetadata' in ngc) {
+  ngc.ɵsetClassMetadata(
+    RoutingService,
+    [
       {
         type: Injectable,
+        args: [{ name: 'resourceUrl' }],
       },
     ],
-    ctorParameters() {
-      return [
-        {
-          type: undefined,
-          decorators: [
-            {
-              type: Inject,
-              args: ['Context'],
-            },
-          ],
-        },
-        {
-          type: Router,
-          decorators: [
-            {
-              type: Optional,
-            },
-          ],
-        },
-        {
-          type: NgZone,
-          decorators: [
-            {
-              type: Optional,
-            },
-          ],
-        },
-      ];
-    },
-  });
+    () => [
+      {
+        type: undefined,
+        decorators: [
+          {
+            type: Inject,
+            args: ['Context'],
+          },
+        ],
+      },
+      {
+        type: Router,
+        decorators: [
+          {
+            type: Optional,
+          },
+        ],
+      },
+      {
+        type: NgZone,
+        decorators: [
+          {
+            type: Optional,
+          },
+        ],
+      },
+    ],
+  );
 }

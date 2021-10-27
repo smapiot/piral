@@ -15,7 +15,8 @@ export function prepareBootstrap(moduleOrComponent: any): PrepareBootstrapResult
     return [...getModuleInstance(component), component];
   } else {
     // usually contains things like selector, template or templateUrl, changeDetection, ...
-    return [...(getModuleInstance(moduleOrComponent) || createModuleInstance(moduleOrComponent)), moduleOrComponent];
+    const result = getModuleInstance(moduleOrComponent) || createModuleInstance(moduleOrComponent);
+    return [...result, moduleOrComponent];
   }
 }
 

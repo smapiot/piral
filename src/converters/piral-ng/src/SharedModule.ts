@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { NgExtension } from './NgExtension';
 import { ResourceUrlPipe } from './ResourceUrlPipe';
-import { getMinVersion } from './utils';
 
 const ngc = ngCore as any;
-const version = getMinVersion();
 const declarationsDef = [NgExtension, ResourceUrlPipe];
 const exportsDef = [NgExtension, ResourceUrlPipe];
 const importsDef = [CommonModule];
@@ -20,65 +18,45 @@ const importsDef = [CommonModule];
 export class SharedModule {
   static props = {};
 
-  static ɵfac = undefined;
+  // @ts-ignore
+  static ɵfac: ngCore.ɵɵFactoryDeclaration<SharedModule, never> =
+    'ɵɵinject' in ngc ? (t: any) => new (t || SharedModule)() : undefined;
 
-  static ɵmod = undefined;
+  // @ts-ignore
+  static ɵmod: ngCore.ɵɵNgModuleDeclaration<
+    SharedModule,
+    [typeof NgExtension, typeof ResourceUrlPipe],
+    [typeof CommonModule],
+    [typeof NgExtension, typeof ResourceUrlPipe]
+  > =
+    'ɵɵdefineNgModule' in ngc
+      ? ngc.ɵɵdefineNgModule({
+          type: SharedModule,
+        })
+      : undefined;
 
-  static ɵinj = undefined;
+  // @ts-ignore
+  static ɵinj: ngCore.ɵɵInjectorDeclaration<SharedModule> =
+    'ɵɵdefineInjector' in ngc
+      ? ngc.ɵɵdefineInjector({
+          providers: [],
+          imports: [importsDef],
+        })
+      : undefined;
 }
 
-if ('ɵɵngDeclareFactory' in ngc) {
-  SharedModule.ɵfac = ngc.ɵɵngDeclareFactory({
-    minVersion: version,
-    version,
-    ngImport: ngc,
-    type: SharedModule,
-    deps: [],
-    target: ngc.ɵɵFactoryTarget.NgModule,
-  });
-}
-
-if ('ɵɵngDeclareNgModule' in ngc) {
-  SharedModule.ɵmod = ngc.ɵɵngDeclareNgModule({
-    minVersion: version,
-    version,
-    ngImport: ngc,
-    type: SharedModule,
-    declarations: declarationsDef,
-    imports: importsDef,
-    exports: exportsDef,
-  });
-}
-
-if ('ɵɵngDeclareInjector' in ngc) {
-  SharedModule.ɵinj = ngc.ɵɵngDeclareInjector({
-    minVersion: version,
-    version,
-    ngImport: ngc,
-    type: SharedModule,
-    providers: [],
-    imports: [importsDef],
-  });
-}
-
-if ('ɵɵngDeclareClassMetadata' in ngc) {
-  ngc.ɵɵngDeclareClassMetadata({
-    minVersion: version,
-    version,
-    ngImport: ngc,
-    type: SharedModule,
-    decorators: [
-      {
-        type: NgModule,
-        args: [
-          {
-            declarations: declarationsDef,
-            providers: [],
-            imports: importsDef,
-            exports: exportsDef,
-          },
-        ],
-      },
-    ],
-  });
+if ('ɵsetClassMetadata' in ngc) {
+  ngc.ɵsetClassMetadata(SharedModule, [
+    {
+      type: NgModule,
+      args: [
+        {
+          declarations: declarationsDef,
+          providers: [],
+          imports: importsDef,
+          exports: exportsDef,
+        },
+      ],
+    },
+  ]);
 }

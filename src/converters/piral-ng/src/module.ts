@@ -5,10 +5,9 @@ import { CommonModule } from '@angular/common';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, NgModule, NgZone } from '@angular/core';
 import { RoutingService } from './RoutingService';
 import { SharedModule } from './SharedModule';
-import { findComponents, getAnnotations, getMinVersion } from './utils';
+import { findComponents, getAnnotations } from './utils';
 
 const ngc = ngCore as any;
-const version = getMinVersion();
 
 interface ModuleDefinition {
   active: any;
@@ -65,67 +64,49 @@ function instantiateModule(moduleDef: ModuleDefinition) {
       }
     }
 
-    static ɵfac = undefined;
+    static ɵfac =
+      'ɵɵinject' in ngc
+        ? (t: any) =>
+            new (t || BootstrapModule)(
+              ngc.ɵɵinject(ComponentFactoryResolver),
+              ngc.ɵɵinject(NgZone),
+              ngc.ɵɵinject(RoutingService),
+            )
+        : undefined;
 
-    static ɵmod = undefined;
+    static ɵmod =
+      'ɵɵdefineNgModule' in ngc
+        ? ngc.ɵɵdefineNgModule({
+            type: BootstrapModule,
+          })
+        : undefined;
 
-    static ɵinj = undefined;
+    static ɵinj =
+      'ɵɵdefineInjector' in ngc
+        ? ngc.ɵɵdefineInjector({
+            providers,
+            imports: [imports],
+          })
+        : undefined;
   }
 
-  if ('ɵɵngDeclareFactory' in ngc) {
-    BootstrapModule.ɵfac = ngc.ɵɵngDeclareFactory({
-      minVersion: version,
-      version,
-      ngImport: ngc,
-      type: BootstrapModule,
-      deps: [{ token: ComponentFactoryResolver }, { token: NgZone }, { token: RoutingService }],
-      target: ngc.ɵɵFactoryTarget.NgModule,
-    });
-  }
-
-  if ('ɵɵngDeclareNgModule' in ngc) {
-    BootstrapModule.ɵmod = ngc.ɵɵngDeclareNgModule({
-      minVersion: version,
-      version,
-      ngImport: ngc,
-      type: BootstrapModule,
-      imports,
-    });
-  }
-
-  if ('ɵɵngDeclareInjector' in ngc) {
-    BootstrapModule.ɵinj = ngc.ɵɵngDeclareInjector({
-      minVersion: version,
-      version,
-      ngImport: ngc,
-      type: BootstrapModule,
-      providers,
-      imports: [imports],
-    });
-  }
-
-  if ('ɵɵngDeclareClassMetadata' in ngc) {
-    ngc.ɵɵngDeclareClassMetadata({
-      minVersion: version,
-      version,
-      ngImport: ngc,
-      type: BootstrapModule,
-      decorators: [
+  if ('ɵsetClassMetadata' in ngc) {
+    ngc.ɵsetClassMetadata(
+      BootstrapModule,
+      [
         {
           type: NgModule,
           args: [
             {
-              imports,
               entryComponents: components,
               providers,
+              imports,
             },
           ],
         },
       ],
-      ctorParameters() {
-        return [{ type: ComponentFactoryResolver }, { type: NgZone }, { type: RoutingService }];
-      },
-    });
+      () => [{ type: ComponentFactoryResolver }, { type: NgZone }, { type: RoutingService }],
+    );
   }
 
   return BootstrapModule;
@@ -146,12 +127,47 @@ export function getModuleInstance(component: any): ModuleInstanceResult {
 }
 
 export function createModuleInstance(component: any): ModuleInstanceResult {
+  const declarations = [component];
+  const importsDef = [CommonModule];
+  const exportsDef = [component];
+
   @NgModule({
-    declarations: [component],
-    imports: [CommonModule],
-    exports: [component],
+    declarations,
+    imports: importsDef,
+    exports: exportsDef,
   })
-  class Module {}
+  class Module {
+    static ɵfac = 'ɵɵinject' in ngc ? (t: any) => new (t || Module)() : undefined;
+
+    static ɵmod =
+      'ɵɵdefineNgModule' in ngc
+        ? ngc.ɵɵdefineNgModule({
+            type: Module,
+          })
+        : undefined;
+
+    static ɵinj =
+      'ɵɵdefineInjector' in ngc
+        ? ngc.ɵɵdefineInjector({
+            imports: [importsDef],
+          })
+        : undefined;
+  }
+
+  if ('ɵsetClassMetadata' in ngc) {
+    ngc.ɵsetClassMetadata(Module, [
+      {
+        type: NgModule,
+        args: [
+          {
+            declarations,
+            imports: importsDef,
+            exports: exportsDef,
+          },
+        ],
+      },
+    ]);
+  }
 
   defineModule(Module);
   return getModuleInstance(component);

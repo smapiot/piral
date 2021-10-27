@@ -27,6 +27,14 @@ export function getAnnotations(component: any): Array<NgAnnotation> {
     annotations = (Reflect as any).getOwnMetadata('annotations', component);
   }
 
+  if (!annotations && typeof component.ɵcmp !== 'undefined') {
+    annotations = [{}];
+  }
+
+  if (!annotations && typeof component.ɵmod !== 'undefined') {
+    annotations = [component.ɵmod];
+  }
+
   return annotations || [];
 }
 
@@ -48,21 +56,4 @@ export function findComponents(exports: Array<any>): Array<any> {
   }
 
   return components;
-}
-
-export function addImportRecursively(targetModule: any, importModule: any) {
-  const [annotation] = getAnnotations(targetModule);
-
-  if (annotation) {
-    const existingImports = annotation.imports || [];
-    annotation.imports = [...existingImports, importModule];
-
-    if ('ɵinj' in targetModule) {
-      targetModule.ɵinj.imports = annotation.imports;
-    }
-
-    for (const existingImport of existingImports) {
-      addImportRecursively(existingImport, importModule);
-    }
-  }
 }
