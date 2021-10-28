@@ -27,7 +27,8 @@
     "common.d.ts",
     "common.js",
     "convert.d.ts",
-    "convert.js"
+    "convert.js",
+    "extend-webpack.js"
   ],
   "repository": {
     "type": "git",

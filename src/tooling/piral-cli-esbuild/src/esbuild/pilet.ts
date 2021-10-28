@@ -4,6 +4,7 @@ import { basename, extname } from 'path';
 import { createCommonConfig } from './common';
 import { runEsbuild } from './bundler-run';
 import { piletPlugin } from '../plugins/pilet';
+import { extendConfig } from '../helpers';
 
 function nameOf(path: string) {
   const file = basename(path);
@@ -50,7 +51,7 @@ function createConfig(
 
 const handler: PiletBuildHandler = {
   create(options) {
-    const config = createConfig(
+    const baseConfig = createConfig(
       options.entryModule,
       options.outDir,
       options.outFile,
@@ -62,6 +63,7 @@ const handler: PiletBuildHandler = {
       options.contentHash,
       options.minify,
     );
+    const config = extendConfig(baseConfig, options.root);
     return runEsbuild(config, options.logLevel, options.watch);
   },
 };

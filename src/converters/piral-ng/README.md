@@ -237,6 +237,7 @@ module.exports = (config) => {
   return config;
 };
 ```
+
 :::
 
 ::: summary: For Piral instance developers
@@ -319,6 +320,79 @@ export class SampleTileComponent {
 }
 ```
 
+## Converting an Angular Application to a Pilet
+
+Depending on the kind of Angular application this may be rather straight forward or very difficult. Since we cannot discuss all possible edge cases we will assume the standard scenario. If you need more help then don't hesitate to contact us.
+
+First, you'll need to get rid of the Angular CLI. In most cases adding a Webpack configuration should be sufficient. The Webpack configuration can be similar to the one presented above. In many cases you can use the convenience `extend-webpack` module.
+
+This is how your *webpack.config.js* can look like:
+
+```js
+const extendWebpack = require('piral-ng/extend-webpack');
+
+module.exports = extendWebpack({
+  ngOptions: {
+    jitMode: false,
+  },
+});
+```
+
+The available options are:
+
+- `ngOptions` (providing input to the `AngularWebpackPlugin` class)
+- `patterns` (providing input to the Webpack `copy-webpack-plugin`)
+- `compilerOptions` (providing input to the `angularCompilerOptions` section of the *tsconfig.json*)
+
+For AoT (i.e. `jitMode: false`) to work correctly the `compilationMode: 'partial'` has to be set. If you use the `piral-ng/extend-webpack` helper as shown above this will be configured correctly for you.
+
+If you have set up the build process then you need to make sure that your application has an entry point (*index.ts*). That entry point has to be a valid pilet entry module. It may look as follows:
+
+```ts
+import { PiletApi } from '<your-app-shell>';
+
+export function setup(api: PiletApi) {
+
+}
+```
+
+You can remove your *main.ts* (or similar) containing
+
+```ts
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+```
+
+as the bootstrapping is done by Piral. Instead, you now need to define your `AppModule` in the pilet:
+
+```ts
+import { PiletApi } from '<your-app-shell>';
+import { AppModule } from './app/AppModule.ts';
+
+export function setup(api: PiletApi) {
+  api.defineNgModule(AppModule);
+}
+```
+
+Now you can register the exported components from the `AppModule` in the various parts. Example:
+
+```ts
+import { PiletApi } from '<your-app-shell>';
+import { AppModule } from './app/AppModule.ts';
+import { AppComponent } from './app/AppComponent.ts';
+
+export function setup(api: PiletApi) {
+  api.defineNgModule(AppModule);
+
+  api.registerPage('/foo/*', api.fromNg(AppComponent));
+}
+```
+
+In the given example we register a single page, however, with all subpages resolving to the same page. Within the page we may use the Angular Router to determine what content to show.
+
+The content may remain pretty much unchanged. Routing should be done either via the Angular Router (internal) or via the React Router (across components) automatically. The thing you'll need to pay attention to is the usage of resources. Since the resource will be available available to the location of the pilet (e.g., if the pilet's main bundle is located at `https://yourcdn.com/your-pilet/1.0.0/index.js` then resources need to be relative to `https://yourcdn.com/your-pilet/1.0.0/`).
+
 ## Angular Versions
 
 This plugin works with all versions of Angular (right now 2 - 12). Support for Angular.js (also known as Angular 1) is given via `piral-ngjs`.
@@ -334,6 +408,7 @@ The basic dependencies look as follows:
   "@angular/common": "^2",
   "@angular/compiler": "^2",
   "@angular/core": "^2",
+  "@angular/router": "^2",
   "@angular/platform-browser": "^2",
   "@angular/platform-browser-dynamic": "^2",
   "core-js": "^3.15.2",
@@ -357,6 +432,7 @@ The basic dependencies look as follows:
   "@angular/common": "^4",
   "@angular/compiler": "^4",
   "@angular/core": "^4",
+  "@angular/router": "^4",
   "@angular/platform-browser": "^4",
   "@angular/platform-browser-dynamic": "^4",
   "core-js": "^3.15.2",
@@ -373,11 +449,12 @@ The basic dependencies look as follows:
 
 ```json
 {
-  "@angular/common": "^4",
-  "@angular/compiler": "^4",
-  "@angular/core": "^4",
-  "@angular/platform-browser": "^4",
-  "@angular/platform-browser-dynamic": "^4",
+  "@angular/common": "^5",
+  "@angular/compiler": "^5",
+  "@angular/core": "^5",
+  "@angular/router": "^5",
+  "@angular/platform-browser": "^5",
+  "@angular/platform-browser-dynamic": "^5",
   "core-js": "^3.15.2",
   "rxjs": "^5.0.0",
   "zone.js": "~0.9"
@@ -395,6 +472,7 @@ The basic dependencies look as follows:
   "@angular/common": "^6",
   "@angular/compiler": "^6",
   "@angular/core": "^6",
+  "@angular/router": "^6",
   "@angular/platform-browser": "^6",
   "@angular/platform-browser-dynamic": "^6",
   "core-js": "^3.15.2",
@@ -411,11 +489,12 @@ The basic dependencies look as follows:
 
 ```json
 {
-  "@angular/common": "^6",
-  "@angular/compiler": "^6",
-  "@angular/core": "^6",
-  "@angular/platform-browser": "^6",
-  "@angular/platform-browser-dynamic": "^6",
+  "@angular/common": "^7",
+  "@angular/compiler": "^7",
+  "@angular/core": "^7",
+  "@angular/router": "^7",
+  "@angular/platform-browser": "^7",
+  "@angular/platform-browser-dynamic": "^7",
   "core-js": "^3.15.2",
   "rxjs": "^6.0.0",
   "zone.js": "~0.9"
@@ -433,6 +512,7 @@ The basic dependencies look as follows:
   "@angular/common": "^8",
   "@angular/compiler": "^8",
   "@angular/core": "^8",
+  "@angular/router": "^8",
   "@angular/platform-browser": "^8",
   "@angular/platform-browser-dynamic": "^8",
   "core-js": "^3.15.2",
@@ -452,6 +532,7 @@ The basic dependencies look as follows:
   "@angular/common": "^9",
   "@angular/compiler": "^9",
   "@angular/core": "^9",
+  "@angular/router": "^9",
   "@angular/platform-browser": "^9",
   "@angular/platform-browser-dynamic": "^9",
   "core-js": "^3.15.2",
@@ -471,6 +552,7 @@ The basic dependencies look as follows:
   "@angular/common": "^10",
   "@angular/compiler": "^10",
   "@angular/core": "^10",
+  "@angular/router": "^10",
   "@angular/platform-browser": "^10",
   "@angular/platform-browser-dynamic": "^10",
   "core-js": "^3.15.2",
@@ -490,6 +572,7 @@ The basic dependencies look as follows:
   "@angular/common": "^11",
   "@angular/compiler": "^11",
   "@angular/core": "^11",
+  "@angular/router": "^11",
   "@angular/platform-browser": "^11",
   "@angular/platform-browser-dynamic": "^11",
   "core-js": "^3.15.2",
@@ -509,6 +592,7 @@ The basic dependencies look as follows:
   "@angular/common": "^12",
   "@angular/compiler": "^12",
   "@angular/core": "^12",
+  "@angular/router": "^12",
   "@angular/platform-browser": "^12",
   "@angular/platform-browser-dynamic": "^12",
   "core-js": "^3.15.2",

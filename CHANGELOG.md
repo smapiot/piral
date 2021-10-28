@@ -4,6 +4,7 @@
 
 * Improved converter plugins to allow more flexible pilet embedded usage
 * Improved on the fly updates of pilet stylesheets
+* Improved the documentation on `piral-ng` (incl. migration tips)
 * Changed library contents to target ES6
 * Changed `unstable` preview flag to `alpha`
 * Changed `pre` preview flag to `beta`

@@ -42,7 +42,7 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
   };
 
   const updateBundle = (stats: webpack.Stats) => {
-    const file  = getOutput(stats);
+    const file = getOutput(stats);
     bundle.name = basename(file);
     bundle.requireRef = stats.compilation.outputOptions?.jsonpFunction?.replace('_chunks', '');
     bundle.hash = stats.hash;

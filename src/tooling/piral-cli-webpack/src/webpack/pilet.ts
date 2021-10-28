@@ -110,7 +110,7 @@ const handler: PiletBuildHandler = {
     const wpConfig = extendConfig(baseConfig, otherConfigPath, {
       watch: options.watch,
     });
-  
+
     return runWebpack(wpConfig, options.logLevel);
   },
 };

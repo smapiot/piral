@@ -95,7 +95,7 @@ const handler: PiralBuildHandler = {
       options.contentHash,
       options.minify,
       options.publicUrl,
-      hmrPort
+      hmrPort,
     );
     const wpConfig = extendConfig(baseConfig, otherConfigPath, {
       watch: options.watch,

@@ -3,6 +3,7 @@ import { BuildOptions } from 'esbuild';
 import { createCommonConfig } from './common';
 import { runEsbuild } from './bundler-run';
 import { htmlPlugin } from '../plugins/html';
+import { extendConfig } from '../helpers';
 
 function createConfig(
   entryFile: string,
@@ -39,7 +40,7 @@ function createConfig(
 
 const handler: PiralBuildHandler = {
   create(options) {
-    const config = createConfig(
+    const baseConfig = createConfig(
       options.entryFiles,
       options.outDir,
       options.externals,
@@ -50,6 +51,7 @@ const handler: PiralBuildHandler = {
       options.publicUrl,
       options.hmr,
     );
+    const config = extendConfig(baseConfig, options.root);
     return runEsbuild(config, options.logLevel, options.watch);
   },
 };

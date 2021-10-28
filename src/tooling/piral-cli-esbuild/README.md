@@ -28,7 +28,28 @@ Right now it includes:
 
 ### Customizing
 
-(tbd).
+If you want to customize the given config (e.g., to add more plugins) then create a file *esbuild.config.js* in your root directory.
+
+In the most trivial version the file looks as follows:
+
+```js
+module.exports = function(options) {
+  return options;
+};
+```
+
+This would just receive the original build options and return them, i.e., essentially not doing anything. If you want to add some plugin you could do:
+
+```js
+const { somePlugin } = require('esbuild-some-plugin');
+
+module.exports = function(options) {
+  options.plugins.push(somePlugin());
+  return options;
+};
+```
+
+There are no overrides applied afterwards. Therefore, what you modify will remain in the options.
 
 ## License
 
