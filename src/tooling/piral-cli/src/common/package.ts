@@ -7,7 +7,7 @@ import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { getHashFromUrl } from './http';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals } from './npm';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals, makeExternals } from './npm';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
@@ -410,9 +410,12 @@ export async function retrievePiletsInfo(entryFile: string) {
   }
 
   const packageInfo = require(packageJson);
+  const info = getPiletsInfo(packageInfo);
+  const externals = makeExternals(info.externals);
 
   return {
-    ...getPiletsInfo(packageInfo),
+    ...info,
+    externals,
     name: packageInfo.name,
     version: packageInfo.version,
     dependencies: {

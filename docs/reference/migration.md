@@ -15,6 +15,7 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 1. The debug API does not work with the legacy Piral Inspector. The new API is supported from the Piral Inspector browser extension v0.7 upwards.
 2. By default the new pilet schema (v2) is used to build and debug pilets. Make sure the used feed service and app shell support this or use `--schema v1` when building or publishing pilets with the previous (v1) schema.
 3. The API for the bundler plugins in the `piral-cli` changed. See below for details.
+4. The overall mechanism for converting Angular components (`piral-ng`) has changed. See below for details.
 
 #### 3) New Bundler API
 
@@ -155,6 +156,10 @@ export const buildPilet: BuildPiletBundlerDefinition = {
 ```
 
 Essentially, we only distinguish between pilet and Piral. The module itself is a standard CommonJS module that exports a single function `create` returning a `Promise`.
+
+#### 4) Updated `piral-ng`
+
+(tbd)
 
 ## 0.12 to 0.13
 

@@ -17,6 +17,7 @@
 * Added bundler for `esbuild` (#363)
 * Added direct support for using the Angular router in `piral-ng` (#396)
 * Added convenience module `extend-config` for `piral-cli-webpack` and `piral-cli-webpack5` (#410)
+* Added support for AoT in `piral-ng` (#415)
 
 ## 0.13.9 (September 23, 2021)
 
