@@ -26,6 +26,8 @@ function changeRule(config, name, cb) {
 }
 
 function changeLoader(config, name, cb) {
+  const loaderPath = require.resolve(name);
+
   changeRule(config, name, (rule) => {
     rule.use = rule.use.map((m) => {
       if (m === loaderPath) {
@@ -42,7 +44,10 @@ function changeLoader(config, name, cb) {
 }
 
 function changeLoaderOptions(config, name, options) {
-  changeLoader(config, name, (rule) => (rule.options = options));
+  changeLoader(config, name, (rule) => {
+    rule.options = options;
+    return rule;
+  });
 }
 
 module.exports = function (override) {

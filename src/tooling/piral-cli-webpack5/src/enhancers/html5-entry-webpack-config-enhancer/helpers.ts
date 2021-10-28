@@ -61,7 +61,7 @@ export function replaceEntries(existingEntries: Array<string>, oldEntry: string,
   }
 }
 
-export function setEntries(config: Configuration, template: string, entries: [string, ...string[]]) {
+export function setEntries(config: Configuration, template: string, entries: [string, ...Array<string>]) {
   if (typeof config.entry === 'string') {
     config.entry = entries;
   } else if (Array.isArray(config.entry)) {
