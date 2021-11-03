@@ -18,6 +18,16 @@ piral [piral-command]
 pilet [pilet-command]
 ```
 
+In case you have not installed the `piral-cli` globally you'll need to prefix these commands with the `npx` task runner:
+
+```sh
+npx pb [any-command]
+npx piral [piral-command]
+npx pilet [pilet-command]
+```
+
+This will take the locally installed version. So these commands will only work in a pilet or Piral instance.
+
 Here, `any-command` is the union of all `piral-command` (suffixed with `-piral`) and all `pilet-command` (suffixed with `-pilet`) instructions. Additionally, some commands that that belong to neither category may be found here.
 
 ## Video
@@ -145,9 +155,9 @@ Running the validations is simple.
 
 ```sh
 # Validate the current Piral instance
-piral validate
+npx piral validate
 # Validate the current pilet
-pilet validate
+npx pilet validate
 ```
 
 Extending the set of available rules with a plugin is simple. For example, the `withPiletRule` can be used to add another rule for the validation of pilets.

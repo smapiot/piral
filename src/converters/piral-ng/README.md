@@ -230,6 +230,8 @@ module.exports = (config) => {
 };
 ```
 
+**Note**: You must install these dependencies (also things like `copy-webpack-plugin`) yourself. `piral-ng` does not come with any dependencies for development.
+
 :::
 
 ::: summary: For Piral instance developers
@@ -330,7 +332,20 @@ module.exports = extendWebpack({
 });
 ```
 
-The available options are:
+For using `piral-ng/extend-webpack` you must have installed:
+
+- `copy-webpack-plugin`
+- `@ngtools/webpack`
+- `to-string-loader`
+- `webpack`, e.g., via `piral-cli-webpack5`
+
+You can do that via:
+
+```sh
+npm i copy-webpack-plugin @ngtools/webpack to-string-loader piral-cli-webpack5 --save-dev
+```
+
+The available options for `piral-ng/extend-webpack` are:
 
 - `ngOptions` (providing input to the `AngularWebpackPlugin` class)
 - `patterns` (providing input to the Webpack `copy-webpack-plugin`)

@@ -14,6 +14,12 @@ npm i piral-cli-parcel2 --save-dev
 
 **Note**: If you don't install any bundler for use in `piral-cli` then `piral-cli-parcel2` won't be automatically installed for you.
 
+::: failure: Still work in progress
+This `piral-cli` bundler plugin is still work in progress and should not be used, unless you know what you are doing.
+
+There are some things that need to be prepared for Parcel v2 to behave as it should.
+:::
+
 ## Using
 
 There is nothing to do. Standard commands such as `piral build` or `pilet debug` will now work with Parcel as the bundler.

@@ -1,6 +1,8 @@
 {
   "name": "piral-cli-parcel2",
   "version": "0.13.9",
+  "privateComment": "lets not publish right now, still WIP",
+  "private": true,
   "description": "Provides debug and build capabilities for pilets and Piral instances using Parcel v2.",
   "keywords": [
     "piral-cli",
@@ -37,6 +39,10 @@
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@parcel/transformer-sass": "^2.0.0",
+    "parcel-transformer-codegen": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^13.9.0",
