@@ -218,7 +218,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         bundlerName,
       );
 
-      await hooks.afterBuild?.({ root, importmap, entryModule, schemaVersion, bundler });
+      bundler.on((args) => {
+        hooks.afterBuild?.({ ...args, root, importmap, entryModule, schemaVersion, bundler });
+      });
 
       return {
         emulator,

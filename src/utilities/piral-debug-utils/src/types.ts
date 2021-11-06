@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { AvailableDependencies, Pilet, PiletApiCreator, PiletLoader, PiletMetadata } from 'piral-base';
+import type { Pilet, PiletApiCreator, PiletLoader, PiletMetadata } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
   createApi: PiletApiCreator;

@@ -70,6 +70,7 @@
     "node-forge": "0.10.0",
     "normalize-url": "4.5.1",
     "underscore": "1.12.1",
+    "rc": "1.2.8",
     "ssri": "8.0.1",
     "trim-newlines": "3.0.1",
     "tslib": "2.3.1",

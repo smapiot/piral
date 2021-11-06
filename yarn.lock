@@ -12667,10 +12667,10 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-piral-docs-tools@0.12.3:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/piral-docs-tools/-/piral-docs-tools-0.12.3.tgz#0214ccdc369ff8e3457def78976f2e921f4fc64c"
-  integrity sha512-kY/Q/QUn32t8hEaiGZi9EEtlZ5wx5k4kZ9sW3ieF8059Tm40Nd9uIe3gVqaDJEcXzZRqcvx9FOZzEjL9Faog8w==
+piral-docs-tools@0.12.5:
+  version "0.12.5"
+  resolved "https://registry.yarnpkg.com/piral-docs-tools/-/piral-docs-tools-0.12.5.tgz#5c1e04a5188651815d084a12d858cd5983465030"
+  integrity sha512-5p20VbHccddxNbpB/zYEZW/6U2rEkExABT/pqoIY6QOZ+3+gRJSH2FPUpj5VYx3X4w1AoEvO6fYbCyy0e5QJ9Q==
   dependencies:
     flexsearch "^0.6.32"
     keyword-extractor "0.0.20"

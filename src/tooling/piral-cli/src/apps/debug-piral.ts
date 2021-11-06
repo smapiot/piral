@@ -147,7 +147,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     },
     bundlerName,
   );
-  await hooks.afterBuild?.({ root, publicUrl, externals, entryFiles, name, bundler });
+
+  bundler.on((args) => {
+    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
+  });
 
   const injectorConfig = {
     active: true,
