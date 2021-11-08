@@ -1,30 +1,21 @@
-import { PiralPlugin } from 'piral-core';
+import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { PiletRiotApi } from './types';
-import { createExtension } from './extension';
+import type { PiletRiotApi } from './types';
 
 /**
  * Available configuration options for the Riot.js plugin.
  */
-export interface RiotConfig {
-  /**
-   * Defines the name of the Riot extension element.
-   * @default riot-extension
-   */
-  extensionName?: string;
-}
+export interface RiotConfig {}
 
 /**
  * Creates new Pilet API extensions for integrating Riot.js.
  */
 export function createRiotApi(config: RiotConfig = {}): PiralPlugin<PiletRiotApi> {
-  const { extensionName } = config;
-
   return (context) => {
-    const convert = createConverter();
+    const convert = createConverter(config);
     context.converters.riot = ({ component, captured }) => convert(component, captured);
 
-    return (api) => ({
+    return {
       fromRiot(component, captured) {
         return {
           type: 'riot',
@@ -32,7 +23,7 @@ export function createRiotApi(config: RiotConfig = {}): PiralPlugin<PiletRiotApi
           captured,
         };
       },
-      RiotExtension: createExtension(api, extensionName),
-    });
+      RiotExtension: convert.Extension,
+    };
   };
 }

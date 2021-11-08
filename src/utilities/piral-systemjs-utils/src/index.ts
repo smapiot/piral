@@ -1,25 +1,6 @@
 import { isfunc, Pilet } from 'piral-base';
-import { PiletMetadata, extendSharedDependencies, AvailableDependencies } from 'piral-core';
-import { getImportMaps, convertToMetadata, appendImportMaps } from './utils';
-
-/**
- * Feeds the existing shared dependencies into SystemJS
- * for further use in the SystemJS powered pilets.
- * @param additionalDependencies More dependencies to register, if any.
- */
-export function registerSharedDependencies(additionalDependencies: AvailableDependencies = {}) {
-  const deps = extendSharedDependencies(additionalDependencies)();
-  const depNames = Object.keys(deps);
-  appendImportMaps(
-    depNames.reduce((prev, name) => {
-      prev[name] = `app:${name}`;
-      return prev;
-    }, {}),
-  );
-  depNames.forEach((name) => {
-    System.set(`app:${name}`, deps[name]);
-  });
-}
+import { PiletMetadata } from 'piral-core';
+import { getImportMaps, convertToMetadata } from './utils';
 
 /**
  * Resolves a pilet from the given metadata using SystemJS.

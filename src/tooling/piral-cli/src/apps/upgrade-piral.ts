@@ -42,9 +42,9 @@ export interface UpgradePiralOptions {
   install?: boolean;
 
   /**
-   * Defines the used NPM client. By default, "npm" is used
+   * Defines the used npm client. By default, "npm" is used
    * if no other client is autodetected. The autodetection
-   * works against Lerna, PNPM, and Yarn.
+   * works against Lerna, pnpm, and Yarn.
    */
   npmClient?: NpmClientType;
 }
@@ -81,8 +81,9 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
     logLevel = upgradePiralDefaults.logLevel,
     install = upgradePiralDefaults.install,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
+  const root = resolve(fullBase, target);
   setLogLevel(logLevel);
-  const root = resolve(baseDir, target);
   const valid = await checkExistingDirectory(root);
   const exists = await checkExists(join(root, 'package.json'));
 
@@ -111,7 +112,7 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
   await updateExistingJson(root, 'package.json', pckg);
 
   if (install) {
-    progress(`Updating the NPM packages to %s ...`, version);
+    progress(`Updating the npm packages to %s ...`, version);
     await installDependencies(npmClient, root);
   }
 

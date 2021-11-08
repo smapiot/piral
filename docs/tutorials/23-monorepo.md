@@ -49,8 +49,8 @@ npx lerna init
 With these three commands we
 
 1. initialize a new git repository,
-2. start a new NPM project, and
-3. apply Lerna to the new NPM project.
+2. start a new npm project, and
+3. apply Lerna to the new npm project.
 
 You might be wondering "what is this Lerna"? Lerna is a Node.js command line tool that allows you to manage monorepos. Classically, monorepos might be difficult to deal with as you might need to jump to different directories, patch multiple files at once, cannot really reference other packages in the monorepo, or have trouble with versioning of these packages. Lerna helps you will of that - and more.
 
@@ -161,7 +161,7 @@ and we can change it to:
 }
 ```
 
-where we moved the `devDependencies` to the top-level (monorepo root) *package.json*, added a script to create the declaration ("index.d.ts") file, and referenced the file in the `types` field. We'll also need some *.gitignore* rule for omitting the `dist` folder, but let's focus on the NPM work right now.
+where we moved the `devDependencies` to the top-level (monorepo root) *package.json*, added a script to create the declaration ("index.d.ts") file, and referenced the file in the `types` field. We'll also need some *.gitignore* rule for omitting the `dist` folder, but let's focus on the npm work right now.
 
 The monorepo root *package.json* should now look close to the following:
 

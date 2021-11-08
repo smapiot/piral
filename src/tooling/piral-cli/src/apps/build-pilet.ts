@@ -12,6 +12,7 @@ import {
   ForceOverwrite,
   matchAnyPilet,
   fail,
+  config,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -82,6 +83,18 @@ export interface BuildPiletOptions {
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
+
+  /**
+   * Hooks to be triggered at various stages.
+   */
+  hooks?: {
+    onBegin?(e: any): Promise<void>;
+    beforeBuild?(e: any): Promise<void>;
+    afterBuild?(e: any): Promise<void>;
+    beforeDeclaration?(e: any): Promise<void>;
+    afterDeclaration?(e: any): Promise<void>;
+    onEnd?(e: any): Promise<void>;
+  };
 }
 
 export const buildPiletDefaults: BuildPiletOptions = {
@@ -93,7 +106,7 @@ export const buildPiletDefaults: BuildPiletOptions = {
   sourceMaps: true,
   contentHash: true,
   optimizeModules: false,
-  schemaVersion: 'v1',
+  schemaVersion: config.schemaVersion,
   declaration: true,
 };
 
@@ -110,12 +123,16 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     schemaVersion = buildPiletDefaults.schemaVersion,
     declaration = buildPiletDefaults.declaration,
     _ = {},
+    hooks = {},
     bundlerName,
     app,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
+
+  await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
-  const allEntries = await matchAnyPilet(baseDir, [entry]);
+  const allEntries = await matchAnyPilet(fullBase, [entry]);
 
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
@@ -123,12 +140,12 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const entryModule = allEntries.shift();
   const targetDir = dirname(entryModule);
-  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored } = await retrievePiletData(
+  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored, importmap } = await retrievePiletData(
     targetDir,
     app,
   );
   const externals = [...Object.keys(peerDependencies), ...peerModules];
-  const outDir = dirname(resolve(baseDir, target));
+  const outDir = dirname(resolve(fullBase, target));
 
   if (fresh) {
     progress('Removing output directory ...');
@@ -136,6 +153,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   }
 
   logInfo('Bundle pilet ...');
+
+  await hooks.beforeBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
 
   await callPiletBuild(
     {
@@ -147,6 +166,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       minify,
       externals,
       targetDir,
+      importmap,
       outFile: basename(target),
       outDir,
       entryModule: `./${relative(root, entryModule)}`,
@@ -158,9 +178,14 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     bundlerName,
   );
 
+  await hooks.afterBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
+
   if (declaration) {
+    await hooks.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
     await createPiletDeclaration(piletPackage.name, root, entryModule, externals, outDir, ForceOverwrite.yes, logLevel);
+    await hooks.afterDeclaration?.({ root, outDir, entryModule, piletPackage });
   }
 
   logDone('Pilet built successfully!');
+  await hooks.onEnd?.({ root });
 }

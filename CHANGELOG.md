@@ -1,5 +1,24 @@
 # Piral Changelog
 
+## 0.14.0 (tbd)
+
+* Improved converter plugins to allow more flexible pilet embedded usage
+* Improved on the fly updates of pilet stylesheets
+* Improved the documentation on `piral-ng` (incl. migration tips)
+* Changed library contents to target ES6
+* Changed `unstable` preview flag to `alpha`
+* Changed `pre` preview flag to `beta`
+* Changed the expected format for a bundler `piral-cli` plugin
+* Added more MSAL options to setup a client in `piral-adal` (#418)
+* Added runtime pilet metadata `basePath`
+* Added support for new debug utils (#397)
+* Added generic `piral-extension` web component for rendering extensions
+* Added option to run Angular without `zone.js` in `piral-ng`
+* Added bundler for `esbuild` (#363)
+* Added direct support for using the Angular router in `piral-ng` (#396)
+* Added convenience module `extend-config` for `piral-cli-webpack` and `piral-cli-webpack5` (#410)
+* Added support for AoT in `piral-ng` (#415)
+
 ## 0.13.9 (September 23, 2021)
 
 * Fixed an issue w.r.t. the serialization of events in the debug tools

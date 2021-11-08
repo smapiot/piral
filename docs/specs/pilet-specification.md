@@ -34,8 +34,6 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 **MIT**: Massachusetts Institute of Technology
 
-**NPM**: Node Package Manager
-
 **UMD**: Universal Module Definition
 
 **URL**: Uniform Resource Locator
@@ -44,7 +42,7 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 
 ## Package Layout
 
-The layout of a pilet package is a standard gzipped tarball (file extension *tgz*) that matches the NPM package layout. In the root folder of the *tgz* file we also have the same `package.json` file. This file can - in addition to the standard NPM keys - contain special Piral related keys. The special keys are described in further detail in the "Package Keys" section of this document.
+The layout of a pilet package is a standard gzipped tarball (file extension *tgz*) that matches the npm package layout. In the root folder of the *tgz* file we also have the same `package.json` file. This file can - in addition to the standard npm keys - contain special Piral related keys. The special keys are described in further detail in the "Package Keys" section of this document.
 
 The `main` key of the `package.json` has to point to a folder that has to contain all the assets shipped with the pilet. The assets must be linked from a JavaScript file that is either the *root JS file* or has been linked (directly or indirectly) by the *root JS file*. The *root JS file* is either directly named in the `main` key (e.g., `dist/example.js` would relate to the `dist` folder with *root JS file* `example.js`) or indirectly by just pointing to a folder (e.g., `dist/example` would relate to the `dist/example` folder with *root JS file* `index.js`).
 
@@ -58,7 +56,11 @@ A pilet package may contain more file types than just JSON and JS. Any asset tha
 
 The *root JS file* contains the root module, which is the first module loaded when the bundle is evaluated by a JS engine.
 
-### UMD Creation
+### `v0` and `v1` Format
+
+The code in this section works for `v0` and `v1` pilets. For `v1` the code could be also reduced to an evaluation against the `src` of the `currentScript` element, which also happens implicitly without any implementation.
+
+#### UMD Creation
 
 For proper bundling of the JS files, the UMD specification should be followed. The following parts are all relevant for the created bundle.
 
@@ -69,7 +71,7 @@ For proper bundling of the JS files, the UMD specification should be followed. T
 
 *Remark*: As global `require` (C) a `window.pr_...` function should be used that is generated (and valid) for the current bundle only.
 
-### Bundle Splitting
+#### Bundle Splitting
 
 The dynamic splitting of the single bundle into multiple files needs to adhere to the following algorithm.
 
@@ -97,27 +99,29 @@ The following algorithm works quite reliably:
 
 The script for the partial resource has to be loaded from the same base URL as the currently running script.
 
-**Remark**: The code above works for `v0` and `v1` of the pilet layout. For `v1` the code could be also reduced to an evaluation against the `src` of the `currentScript` element, which also happens implicitly without any implementation.
+### `v2` Format
+
+This code in this section works exclusively for `v2` pilets. `v2` pilets are using the [SystemJS format](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md). For conformance to this format the SystemJS specification should be considered.
 
 ## Package Keys
 
-The following package keys are either already officially introduced by NPM and reused, or introduced only for usage in Piral.
+The following package keys are either already officially introduced by npm and reused, or introduced only for usage in Piral.
 
 ### `name`
 
-The `name` property is a standard NPM field that is required for a pilet.
+The `name` property is a standard npm field that is required for a pilet.
 
 The property defines the unique identifier of the pilet.
 
 ### `version`
 
-The `version` property is a standard NPM field that is required for a pilet.
+The `version` property is a standard npm field that is required for a pilet.
 
 The property defines the unique version of the pilet. It needs to adhere to the semantic versioning specification.
 
 ### `description`
 
-The `description` property is a standard NPM field that is optional for a pilet.
+The `description` property is a standard npm field that is optional for a pilet.
 
 The property describes the contents and functionality of the given pilet.
 
@@ -125,7 +129,7 @@ By default, the `description` is left blank.
 
 ### `author`
 
-The `author` property is a standard NPM field that is optional for a pilet.
+The `author` property is a standard npm field that is optional for a pilet.
 
 The property contains information about the author in the form of a string or an object containing properties such as `name`, `email`, and `url`. The string's format can be either a simple string or an email string (format: `name <email>`).
 
@@ -133,11 +137,11 @@ By default, the `author` is `(unknown)`.
 
 ### `license`
 
-The `license` property is a standard NPM field that is optional for a pilet.
+The `license` property is a standard npm field that is optional for a pilet.
 
 The property reflects the license used for distributing the given pilet.
 
-By default, the `license` is set to `ISC`, which is equivalent to MIT and NPM's default.
+By default, the `license` is set to `ISC`, which is equivalent to MIT and npm's default.
 
 ### `piral`
 
@@ -149,7 +153,7 @@ By default, the `piral` is considered undefined, i.e., no primary Piral instance
 
 ### `peerDependencies`
 
-The `peerDependencies` property is a standard NPM field that is optional for a pilet.
+The `peerDependencies` property is a standard npm field that is optional for a pilet.
 
 The property contains information about the used shared dependencies that have to be supplied from the Piral instance. A feed service or Piral instance may reject the Pilet in case of unmatched shared dependencies.
 
@@ -167,7 +171,7 @@ By default, the `peerModules` are set to an empty array `[]`, i.e., no peer modu
 
 ### `dependencies`
 
-The `dependencies` property is a standard NPM field that is optional for a pilet.
+The `dependencies` property is a standard npm field that is optional for a pilet.
 
 The property contains information about the used direct dependencies that are supplied by the pilet. A feed service or Piral instance may reject the Pilet in case of blacklisted or insecure  dependencies.
 
@@ -177,7 +181,7 @@ By default, the `dependencies` are set to an empty record `{}`, i.e., no depende
 
 ### `main`
 
-The `main` property is a standard NPM field that is optional for a pilet.
+The `main` property is a standard npm field that is optional for a pilet.
 
 The field is used to help determine where the root module is located. It is strongly encouraged to *always* set this value to a path leading explicitly or implicitly to the root module.
 
@@ -194,7 +198,7 @@ The order of the search for the root module using the value of `main` (hereafter
 
 ### `preview`
 
-The `preview` property is a custom NPM field that is optional for a pilet.
+The `preview` property is a custom npm field that is optional for a pilet.
 
 The property contains a boolean value indicating whether the current pilet should be released as a preview independent of the information gathered from the semantic versioning.
 
@@ -204,7 +208,7 @@ By default, the `preview` field is set to `false`.
 
 ### `custom`
 
-The `custom` property is a custom NPM field that is optional for a pilet.
+The `custom` property is a custom npm field that is optional for a pilet.
 
 The property can contain any value. The content of this field is transported from the feed service to the Piral instance.
 
@@ -271,11 +275,11 @@ interface PiletMetadata {
    */
   hash?: string;
   /**
-   * Pilet global reference (v:1)
+   * Pilet global reference (v:1 and v:2)
    */
   requireRef?: string;
   /**
-   * Checksum of the pilet (v:1)
+   * Checksum of the pilet (v:1 and v:2)
    */
   integrity?: string;
   /**
@@ -323,6 +327,7 @@ Right now the following values for `<version-number>` exist:
 
 - `0`: Initial specification (marker is optional).
 - `1`: Extended specification (marker is required).
+- `2`: Extended specification (marker is required).
 - `x`: Custom specification (marker is required).
 
 All official (i.e., numbered) specifications are backwards compatible, i.e., evaluating a `v:1` pilet with a `v:0` Piral instance should work.
@@ -342,6 +347,15 @@ The `v:x` specification was introduced to allow custom formats to work besides o
 - Exports to `document.currentScript.app`.
 - Supports transport via `link`.
 - Requires a single argument declaring the global require reference.
+
+### `v:2`
+
+- Evaluation should be done via SystemJS.
+- Registration of the module by using `System.register`.
+- Supports transport via `link`.
+- Requires two arguments separated by a comma.
+- The first argument declares the global require reference.
+- The second argument is a JSON serialized object, which defines the shared dependencies from the pilet.
 
 ### `v:x`
 
@@ -422,6 +436,30 @@ The internal structure and wrapper are bundler specific. The one shown is genera
 
 The final package for this Pilet can be created using `npm` (or the Piral CLI for that matter) using `npm pack`.
 
+For `v1` the output changes to:
+
+```js
+//@pilet v:1(pr_1fab123ad4fd76bd20e5e5e97366fd47)
+!(function(global,parcelRequire){
+parcelRequire=function(e,r,t,n){function define(getExports){(typeof document!=='undefined')&&(document.currentScript.app=getExports())};define.amd=true;var i,o="function"==typeof global.pr_1fab123ad4fd76bd20e5e5e97366fd47&&global.pr_1fab123ad4fd76bd20e5e5e97366fd47,u="function"==typeof require&&require;function f(t,n){if(!r[t]){if(!e[t]){var i="function"==typeof global.pr_1fab123ad4fd7
+6bd20e5e5e97366fd47&&global.pr_1fab123ad4fd76bd20e5e5e97366fd47;if(!n&&i)return i(t,!0);if(o)return o(t,!0);if(u&&"string"==typeof t)return u(t);var c=new Error("Cannot find module '"+t+"'");throw c.code="MODULE_NOT_FOUND",c}p.resolve=function(r){return e[t][1][r]||r}
+,p.cache={};var l=r[t]=new f.Module(t);e[t][0].call(l.exports,p,l,l.exports,this)}return r[t].exports;function p(e){return f(p.resolve(e))}}f.isParcelRequire=!0,f.Module=function(e){this.id=e,this.bundle=f,this.exports={}},f.modules=e,f.cache=r,f.parent=o,f.register=f
+unction(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)try{f(t[c])}catch(e){i||(i=e)}if(t.length){var l=f(t[t.length-1]);"object"==typeof exports&&"undefined"!=typeof module?module.exports=l:"function"==typeof define&&define.amd?define(function(
+){return l}):n&&(this[n]=l)}if(parcelRequire=f,i)throw i;return f}({"zo2T":[function(require,module,exports) {
+"use strict";function e(e){e.showNotification("Hello World!")}Object.defineProperty(exports,"__esModule",{value:!0}),exports.setup=e;
+},{}]},{},["zo2T"], null)
+;global.pr_1fab123ad4fd76bd20e5e5e97366fd47=parcelRequire}(window, window.pr_1fab123ad4fd76bd20e5e5e97366fd47));
+```
+
+For `v2` the output changes to:
+
+```js
+//@pilet v:2(pr_1fab123ad4fd76bd20e5e5e97366fd47, {})
+System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _dep;}],execute:function(){_export((function(){
+//...
+})())}};});
+```
+
 ## Limitations
 
 Not all assets should be packed into a pilet. Videos and larger (or in general persistent) images should be hosted on a CDN, where data transfer is faster and caching is independent of the published version of the pilet.
@@ -437,6 +475,7 @@ The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The re
 ## References
 
 - [RFC2119](https://tools.ietf.org/html/rfc2119)
-- [CLI Specification](https://docs.piral.io/reference/specifications/cli)
-- [NPM: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
+- [CLI Specification](./cli-specification.md)
+- [npm: About Packages and Modules](https://docs.npmjs.com/about-packages-and-modules)
 - [UMD: Patterns and Examples](https://github.com/umdjs/umd)
+- [SystemJS: Register API](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md)

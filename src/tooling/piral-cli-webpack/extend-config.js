@@ -1,19 +1,53 @@
+function changePlugin(config, classRef, cb) {
+  config.module.plugins = config.module.plugins
+    .map((plugin) => {
+      if (plugin instanceof classRef) {
+        return cb(plugin);
+      }
+
+      return plugin;
+    })
+    .filter(Boolean);
+}
+
+function changeRule(config, name, cb) {
+  const loaderPath = require.resolve(name);
+  config.module.rules = config.module.rules
+    .map((rule) => {
+      const uses = rule.use || [];
+
+      if (uses.some((m) => m && (m === loaderPath || (typeof m === 'object' && m.loader === loaderPath)))) {
+        return cb(rule);
+      }
+
+      return rule;
+    })
+    .filter(Boolean);
+}
+
 function changeLoader(config, name, cb) {
-  config.module.rules.forEach((rule) => {
-    (rule.use || [])
-      .filter((m) => m && typeof m === 'object')
-      .forEach((m, i) => {
-        if (m === name) {
-          rule.use[i] = cb({ loader: m });
-        } else if (m.loader === name) {
-          rule.use[i] = cb(m);
-        }
-      });
+  const loaderPath = require.resolve(name);
+
+  changeRule(config, name, (rule) => {
+    rule.use = rule.use.map((m) => {
+      if (m === loaderPath) {
+        return cb({ loader: m });
+      } else if (m.loader === loaderPath) {
+        return cb(m);
+      } else {
+        return m;
+      }
+    });
+
+    return rule;
   });
 }
 
 function changeLoaderOptions(config, name, options) {
-  changeLoader(config, name, (rule) => (rule.options = options));
+  changeLoader(config, name, (rule) => {
+    rule.options = options;
+    return rule;
+  });
 }
 
 module.exports = function (override) {
@@ -63,16 +97,24 @@ module.exports = function (override) {
         );
       }
 
-      if ('change' in override && typeof override.change === 'function') {
-        config = override.change(config);
-      }
-
       if ('rules' in override && Array.isArray(override.rules)) {
         config.module.rules.push(...rules);
       }
 
+      if ('removeRules' in override && Array.isArray(override.removeRules)) {
+        override.removeRules.forEach((rule) => changeRule(config, rule, () => undefined));
+      }
+
       if ('plugins' in override && Array.isArray(override.plugins)) {
         config.plugins.push(...plugins);
+      }
+
+      if ('removePlugins' in override && Array.isArray(override.removePlugins)) {
+        override.removePlugins.forEach((plugin) => changePlugin(config, plugin, () => undefined));
+      }
+
+      if ('change' in override && typeof override.change === 'function') {
+        config = override.change(config);
       }
     }
 

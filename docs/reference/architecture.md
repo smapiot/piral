@@ -28,7 +28,7 @@ To give any development another boost the Piral ecosystem also contains pre-made
 
 A (technically speaking: inaccurate) analogy to illustrate what this means is that `piral-core` is like the Linux kernel. A certain distribution like Ubuntu would be `piral`. Additionally, to the kernel, there can be some special programs ("drivers"), which would be the Piral plugins. An application running in user space would then be a pilet. In this analogy, the role of `piral-base` would be a specific kernel driver, e.g., the TCP/IP driver.
 
-A pilet is just an NPM package containing a library. The library (JS file) is consumed by Piral, while the package is inspected and unpacked by a service (pilet feed service). The package contains some metadata, one or more JS files, and potentially some other assets.
+A pilet is just an npm package containing a library. The library (JS file) is consumed by Piral, while the package is inspected and unpacked by a service (pilet feed service). The package contains some metadata, one or more JS files, and potentially some other assets.
 
 ![Layers of a pilet package](../diagrams/pilet-layers.svg)
 

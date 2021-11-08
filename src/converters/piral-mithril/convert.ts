@@ -1,16 +1,21 @@
 import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
-import { createExtension } from './lib/extension';
-
-const convert = createConverter();
 
 export interface MithrilConverter {
-  (...params: Parameters<typeof convert>): HtmlComponent<any>;
+  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
 }
 
-export const fromMithril: MithrilConverter = (component, captured) => ({
-  type: 'html',
-  component: convert(component, captured),
-});
+export function createMithrilConverter(...params: Parameters<typeof createConverter>) {
+  const convert = createConverter(...params);
+  const Extension = convert.Extension;
+  const from: MithrilConverter = (component, captured) => ({
+    type: 'html',
+    component: convert(component, captured),
+  });
 
-export const createMithrilExtension = createExtension;
+  return { from, Extension };
+}
+
+const { from: fromMithril, Extension: MithrilExtension } = createMithrilConverter();
+
+export { fromMithril, MithrilExtension };

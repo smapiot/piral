@@ -1,3 +1,4 @@
+import { callDynamic, callStatic } from './build/bundler-calls';
 import { availableBundlers } from './helpers';
 import {
   installPackage,
@@ -20,6 +21,7 @@ import {
   DebugPiletParameters,
   BundlerDefinition,
   BaseBundleParameters,
+  BaseBundlerDefinition,
 } from './types';
 
 export interface QualifiedBundler {
@@ -33,7 +35,7 @@ async function installDefaultBundler(root: string) {
   const selectedBundler = config.bundler || 'webpack';
   log('generalDebug_0003', `Installation of default bundler for "${selectedBundler}".`);
   const selectedPackage = `piral-cli-${selectedBundler}`;
-  log('generalDebug_0003', `Determining NPM client at "${root}" ...`);
+  log('generalDebug_0003', `Determining npm client at "${root}" ...`);
   const client = await determineNpmClient(root);
   log('generalDebug_0003', `Prepare to install ${selectedPackage}@${cliVersion} using "${client}" into "${root}".`);
   progress(`Installing ${selectedPackage} ...`);
@@ -76,12 +78,18 @@ async function findBundler(root: string, bundlerName?: string) {
   return defaultBundler;
 }
 
-async function prepareModules(args: BaseBundleParameters) {
+async function prepareArgs<T extends BaseBundleParameters>(bundler: BaseBundlerDefinition<T>, args: T): Promise<T> {
   if (args.optimizeModules) {
     progress('Preparing modules ...');
     await patchModules(args.root, args.ignored);
     logReset();
   }
+
+  if (bundler.prepare) {
+    return await bundler.prepare(args);
+  }
+
+  return args;
 }
 
 export function setBundler(bundler: QualifiedBundler) {
@@ -94,26 +102,52 @@ export function setBundler(bundler: QualifiedBundler) {
 
 export async function callPiralDebug(args: DebugPiralParameters, bundlerName?: string): Promise<Bundler> {
   const bundler = await findBundler(args.root, bundlerName);
-  await prepareModules(args);
-  return await bundler.actions.debugPiral.run(args).catch((err) => fail('bundlingFailed_0174', err));
+
+  try {
+    const action = bundler.actions.debugPiral;
+    const params = await prepareArgs(action, args);
+    return await callDynamic('debug-piral', action.path, params);
+  } catch (err) {
+    fail('bundlingFailed_0174', err);
+  }
 }
 
 export async function callPiletDebug(args: DebugPiletParameters, bundlerName?: string): Promise<Bundler> {
   const bundler = await findBundler(args.root, bundlerName);
-  await prepareModules(args);
-  return await bundler.actions.debugPilet.run(args).catch((err) => fail('bundlingFailed_0174', err));
+
+  try {
+    const action = bundler.actions.debugPilet;
+    const params = await prepareArgs(action, args);
+    return await callDynamic('debug-pilet', action.path, params);
+  } catch (err) {
+    fail('bundlingFailed_0174', err);
+  }
 }
 
 export async function callPiralBuild(args: BuildPiralParameters, bundlerName?: string): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
-  await prepareModules(args);
-  return await bundler.actions.buildPiral.run(args).catch((err) => fail('bundlingFailed_0174', err));
+
+  try {
+    const action = bundler.actions.buildPiral;
+    const params = await prepareArgs(action, args);
+    const instance = await callStatic('build-piral', action.path, params);
+    return instance.bundle;
+  } catch (err) {
+    fail('bundlingFailed_0174', err);
+  }
 }
 
 export async function callPiletBuild(args: BuildPiletParameters, bundlerName?: string): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
-  await prepareModules(args);
-  return await bundler.actions.buildPilet.run(args).catch((err) => fail('bundlingFailed_0174', err));
+
+  try {
+    const action = bundler.actions.buildPilet;
+    const params = await prepareArgs(action, args);
+    const instance = await callStatic('build-pilet', action.path, params);
+    return instance.bundle;
+  } catch (err) {
+    fail('bundlingFailed_0174', err);
+  }
 }
 
 export async function callDebugPiralFromMonoRepo(
@@ -121,7 +155,13 @@ export async function callDebugPiralFromMonoRepo(
   bundlerName?: string,
 ): Promise<BundleDetails> {
   const bundler = await findBundler(args.root, bundlerName);
-  await prepareModules(args);
-  const { bundle } = await bundler.actions.watchPiral.run(args).catch((err) => fail('bundlingFailed_0174', err));
-  return bundle;
+
+  try {
+    const action = bundler.actions.watchPiral;
+    const params = await prepareArgs(action, args);
+    const instance = await callStatic('debug-mono-piral', action.path, params);
+    return instance.bundle;
+  } catch (err) {
+    fail('bundlingFailed_0174', err);
+  }
 }

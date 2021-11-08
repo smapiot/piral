@@ -1,17 +1,15 @@
 import * as webpack from 'webpack';
 import { resolve, basename, dirname } from 'path';
 import { EventEmitter } from 'events';
-import type { LogLevels } from 'piral-cli';
-
-interface BuildResult {
-  outFile: string;
-  outDir: string;
-}
+import type { LogLevels, BundleHandlerResponse } from 'piral-cli';
 
 function getOutput(stats: webpack.Stats) {
   const { outputPath, entrypoints } = stats.toJson();
-  const assets = entrypoints.main.assets;
-  return resolve(outputPath, assets[0]);
+
+  for (const name of Object.keys(entrypoints)) {
+    const assets = entrypoints[name].assets;
+    return resolve(outputPath, assets[0]);
+  }
 }
 
 function getPreset(logLevel: LogLevels): webpack.Stats.Preset {
@@ -31,71 +29,70 @@ function getPreset(logLevel: LogLevels): webpack.Stats.Preset {
   }
 }
 
-export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels) {
+export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels): BundleHandlerResponse {
   const eventEmitter = new EventEmitter();
   const outDir = wpConfig.output.path;
   const preset = webpack.Stats.presetToOptions(getPreset(logLevel));
-  const mainBundle = {
+  const bundle = {
+    outFile: '',
+    outDir,
     name: '',
+    hash: '',
     requireRef: undefined,
-    entryAsset: {
-      hash: '',
-    },
+  };
+
+  const updateBundle = (stats: webpack.Stats) => {
+    const file = getOutput(stats);
+    bundle.name = basename(file);
+    bundle.requireRef = stats.compilation.outputOptions?.jsonpFunction?.replace('_chunks', '');
+    bundle.hash = stats.hash;
+    bundle.outFile = `/${basename(file)}`;
+    bundle.outDir = dirname(file);
   };
 
   wpConfig.plugins.push({
     apply(compiler) {
       compiler.hooks.beforeCompile.tap('piral-cli', () => {
-        eventEmitter.emit('buildStart');
+        eventEmitter.emit('start');
       });
 
       compiler.hooks.done.tap('piral-cli', (stats) => {
-        mainBundle.name = getOutput(stats);
-        mainBundle.requireRef = stats.compilation.outputOptions?.jsonpFunction?.replace('_chunks', '');
-        mainBundle.entryAsset.hash = stats.hash;
-        eventEmitter.emit('bundled');
+        updateBundle(stats);
+        eventEmitter.emit('end', bundle);
       });
     },
   });
 
-  const bundle = () =>
-    new Promise<BuildResult>((resolve, reject) => {
-      webpack(wpConfig, (err, stats) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          console.log(
-            stats.toString({
-              ...preset,
-              colors: true,
-            }),
-          );
-
-          if (stats.hasErrors()) {
-            reject(stats.toJson(preset));
-          } else {
-            const file = getOutput(stats);
-            resolve({
-              outFile: `/${basename(file)}`,
-              outDir: dirname(file),
-            });
-          }
-        }
-      });
-    });
-
   return {
-    bundle,
-    on(ev: string, listener: () => void) {
-      eventEmitter.on(ev, listener);
+    bundle() {
+      return new Promise((resolve, reject) => {
+        webpack(wpConfig, (err, stats) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            console.log(
+              stats.toString({
+                ...preset,
+                colors: true,
+              }),
+            );
+
+            if (stats.hasErrors()) {
+              reject(stats.toJson(preset));
+            } else {
+              updateBundle(stats);
+              resolve(bundle);
+            }
+          }
+        });
+      });
     },
-    off(ev: string, listener: () => void) {
-      eventEmitter.off(ev, listener);
+    onStart(cb) {
+      eventEmitter.on('start', cb);
     },
-    options: {
-      outDir,
+    onEnd(cb) {
+      eventEmitter.on('end', cb);
     },
-    mainBundle,
   };
 }

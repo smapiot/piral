@@ -3,6 +3,7 @@
   "title": "Piral - Documentation",
   "description": "The documentation and guidelines for using Piral - the React-based framework for building microfrontends.",
   "author": "smapiot",
+  "bundlerName": "webpack5",
   "branch": "documentation",
   "repositoryUrl": "https://github.com/smapiot/piral",
   "rootDir": "../../../",

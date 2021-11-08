@@ -43,14 +43,14 @@
     "piral-core": "^0.13.9"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x"
+    "piral-core": "0.14.x"
   },
   "dependencies": {
-    "piral-dashboard": "^0.13.9",
-    "piral-feeds": "^0.13.9",
-    "piral-menu": "^0.13.9",
-    "piral-modals": "^0.13.9",
-    "piral-notifications": "^0.13.9",
-    "piral-translate": "^0.13.9"
+    "piral-dashboard": "0.13.9",
+    "piral-feeds": "0.13.9",
+    "piral-menu": "0.13.9",
+    "piral-modals": "0.13.9",
+    "piral-notifications": "0.13.9",
+    "piral-translate": "0.13.9"
   }
 }

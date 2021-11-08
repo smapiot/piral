@@ -1,4 +1,4 @@
-import { relative, join, dirname, basename } from 'path';
+import { relative, join, dirname, basename, resolve } from 'path';
 import { buildPilet } from './build-pilet';
 import { LogLevels, PiletSchemaVersion, PiletPublishSource } from '../types';
 import {
@@ -59,7 +59,7 @@ export interface PublishPiletOptions {
   /**
    * Changing the publish source makes it possible to publish pilets that have
    * been stored on non-local paths, e.g., when a pilet was already published to
-   * an NPM feed.
+   * an npm feed.
    */
   from?: PiletPublishSource;
 
@@ -76,7 +76,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
   fresh: false,
   cert: undefined,
   logLevel: LogLevels.info,
-  schemaVersion: 'v1',
+  schemaVersion: config.schemaVersion,
   from: 'local',
   fields: {},
 };
@@ -114,7 +114,7 @@ async function getFiles(
         log('generalDebug_0003', `Download file from "${source}".`);
         return await downloadFile(source, ca);
       case 'npm':
-        log('generalDebug_0003', `View NPM package "${source}".`);
+        log('generalDebug_0003', `View npm package "${source}".`);
         const url = await findTarball(source);
         log('generalDebug_0003', `Download file from "${url}".`);
         return await downloadFile(url, ca);
@@ -134,6 +134,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     cert = config.cert ?? publishPiletDefaults.cert,
     fields = publishPiletDefaults.fields,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
 
@@ -152,7 +153,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   }
 
   log('generalDebug_0003', 'Getting the tgz files ...');
-  const files = await getFiles(baseDir, source, from, fresh, schemaVersion, ca);
+  const files = await getFiles(fullBase, source, from, fresh, schemaVersion, ca);
   const successfulUploads: Array<string> = [];
   log('generalDebug_0003', 'Received available tgz files.');
 
@@ -164,8 +165,8 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
   for (const file of files) {
     log('generalDebug_0003', 'Reading the file for upload ...');
-    const fileName = relative(baseDir, file);
-    const content = await readBinary(baseDir, fileName);
+    const fileName = relative(fullBase, file);
+    const content = await readBinary(fullBase, fileName);
 
     if (content) {
       progress(`Publishing "%s" ...`, file, url);

@@ -30,6 +30,7 @@ import {
   getPiralPath,
   detectMonorepo,
   bootstrapMonorepo,
+  getPiletScaffoldData,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -76,7 +77,7 @@ export interface NewPiletOptions {
   logLevel?: LogLevels;
 
   /**
-   * The NPM client to be used when scaffolding.
+   * The npm client to be used when scaffolding.
    * @example 'yarn'
    */
   npmClient?: NpmClientType;
@@ -120,10 +121,11 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     bundlerName = newPiletDefaults.bundlerName,
     variables = newPiletDefaults.variables,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
+  const root = resolve(fullBase, target);
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
-  const root = resolve(baseDir, target);
-  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, source);
+  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(fullBase, source);
   const success = await createDirectory(root);
 
   if (success) {
@@ -153,7 +155,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     );
 
     if (registry !== newPiletDefaults.registry) {
-      progress(`Setting up NPM registry (%s) ...`, registry);
+      progress(`Setting up npm registry (%s) ...`, registry);
 
       await createFileIfNotExists(
         root,
@@ -169,11 +171,11 @@ always-auth=true`,
     if (!isLocal) {
       const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
-      progress(`Installing NPM package %s ...`, packageRef);
+      progress(`Installing npm package %s ...`, packageRef);
 
       await installPackage(npmClient, packageRef, root, '--save-dev');
     } else {
-      progress(`Using locally available NPM package %s ...`, sourceName);
+      progress(`Using locally available npm package %s ...`, sourceName);
     }
 
     const packageName = await getPackageName(root, sourceName, type);
@@ -192,19 +194,23 @@ always-auth=true`,
 
     progress(`Taking care of templating ...`);
 
-    await scaffoldPiletSourceFiles(template, registry, language, root, packageName, forceOverwrite, variables);
+    const data = getPiletScaffoldData(language, root, packageName, variables);
+    await scaffoldPiletSourceFiles(template, registry, data, forceOverwrite);
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs
-      await copyPiralFiles(root, packageName, piralInfo, ForceOverwrite.yes);
+      await copyPiralFiles(root, packageName, piralInfo, ForceOverwrite.yes, data);
     } else {
       // otherwise, we perform the same action as in the emulator creation
       // just with a different target; not a created directory, but the root
       const packageRoot = getPiralPath(root, packageName);
-      await copyScaffoldingFiles(packageRoot, root, files, piralInfo);
+      await copyScaffoldingFiles(packageRoot, root, files, piralInfo, data);
     }
 
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, { language, bundler: bundlerName });
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
+      language,
+      bundler: bundlerName,
+    });
 
     if (install) {
       progress(`Installing dependencies ...`);

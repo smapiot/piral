@@ -1,5 +1,5 @@
+import type { BaseComponentProps, ComponentContext } from 'piral-core';
 import { createApp, Component, h } from 'vue';
-import { BaseComponentProps, ComponentContext } from 'piral-core';
 
 export function mountVue<T extends BaseComponentProps>(
   root: Component<T>,

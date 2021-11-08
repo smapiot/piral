@@ -22,6 +22,10 @@
     "esm",
     "lib",
     "src",
+    "debug-pilet.d.ts",
+    "debug-piral.d.ts",
+    "debug-pilet.js",
+    "debug-piral.js",
     "dependencies.codegen",
     "dependencies.codegen.native.js"
   ],
@@ -37,7 +41,8 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
+    "build:convert": "tsc debug-pilet.ts debug-piral.ts --skipLibCheck --declaration",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
@@ -57,9 +62,20 @@
     "react-router": ">=5.0.0",
     "react-router-dom": ">=5.0.0"
   },
+  "sharedDependencies": [
+    "react",
+    "react-dom",
+    "react-router",
+    "react-router-dom",
+    "history",
+    "tslib",
+    "path-to-regexp",
+    "@libre/atom",
+    "@dbeining/react-atom"
+  ],
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
-    "piral-base": "^0.13.9",
-    "piral-debug-utils": "^0.13.9"
+    "piral-base": "0.13.9",
+    "piral-debug-utils": "0.13.9"
   }
 }

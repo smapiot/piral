@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
-import { BaseComponentProps, useGlobalState } from 'piral-core';
+import type { PiletApi } from 'piral-base';
+import { useDebugState } from './state';
 
 interface VisualizerProps {
   pilet: string;
@@ -26,7 +26,6 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
     '#F012BE',
     '#B10DC9',
   ];
-  const location = useLocation();
   const container = React.useRef<HTMLDivElement>();
   const color = React.useMemo(
     () => moduleColor[pilet] || (moduleColor[pilet] = colors[Object.keys(moduleColor).length % colors.length]),
@@ -37,44 +36,49 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
     let sibling = container.current && (container.current.nextElementSibling as HTMLElement);
 
     if (sibling && active) {
-      const style = container.current.style;
       const target = container.current.parentNode;
 
       const mouseIn = () => {
-        style.display = 'block';
-        style.left = '0px';
-        style.top = '0px';
-        style.bottom = '0px';
-        style.right = '0px';
-        const targetRect = sibling.getBoundingClientRect();
-        const sourceRect = container.current.getBoundingClientRect();
-        style.left = targetRect.left - sourceRect.left + 'px';
-        style.top = targetRect.top - sourceRect.top + 'px';
-        style.bottom = -(targetRect.bottom - sourceRect.bottom) + 'px';
-        style.right = -(targetRect.right - sourceRect.right) + 'px';
+        if (container.current && sibling) {
+          const style = container.current.style;
+          style.display = 'block';
+          style.left = '0px';
+          style.top = '0px';
+          style.bottom = '0px';
+          style.right = '0px';
+          const targetRect = sibling.getBoundingClientRect();
+          const sourceRect = container.current.getBoundingClientRect();
+          style.left = targetRect.left - sourceRect.left + 'px';
+          style.top = targetRect.top - sourceRect.top + 'px';
+          style.bottom = -(targetRect.bottom - sourceRect.bottom) + 'px';
+          style.right = -(targetRect.right - sourceRect.right) + 'px';
+        }
       };
       const mouseOut = () => {
-        style.display = 'none';
+        if (container.current) {
+          const style = container.current.style;
+          style.display = 'none';
+        }
       };
       const append = () => {
-        if (!force) {
+        if (force) {
+          mouseIn();
+        } else if (sibling) {
           sibling.addEventListener('mouseover', mouseIn);
           sibling.addEventListener('mouseout', mouseOut);
-        } else {
-          mouseIn();
         }
       };
       const remove = () => {
-        if (!force) {
+        if (force) {
+          mouseOut();
+        } else if (sibling) {
           sibling.removeEventListener('mouseover', mouseIn);
           sibling.removeEventListener('mouseout', mouseOut);
-        } else {
-          mouseOut();
         }
       };
 
       const observer = new MutationObserver(() => {
-        const newSibling = container.current.nextElementSibling as HTMLElement;
+        const newSibling = container.current?.nextElementSibling as HTMLElement;
 
         if (newSibling !== sibling) {
           remove();
@@ -91,7 +95,7 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
         observer.disconnect();
       };
     }
-  }, [location.key, active, force]);
+  }, [active, force]);
 
   if (active) {
     const rect: React.CSSProperties = {
@@ -126,8 +130,12 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
   return null;
 };
 
-export const VisualizationWrapper: React.FC<BaseComponentProps> = ({ piral, children }) => {
-  const { active, force } = useGlobalState((m) => m.$debug.visualize);
+export interface VisualizationWrapperProps {
+  piral: PiletApi;
+}
+
+export const VisualizationWrapper: React.FC<VisualizationWrapperProps> = ({ piral, children }) => {
+  const { active, force } = useDebugState((m) => m.visualize);
   return (
     <>
       <Visualizer pilet={piral.meta.name} force={force} active={active} />

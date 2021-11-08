@@ -181,6 +181,7 @@ const instance = createInstance({
     createSearchApi(),
   ],
   requestPilets() {
+    // Artificial delay to show the loading indicator
     return new Promise((resolve) => setTimeout(() => resolve([]), 1000));
   },
 });
@@ -193,4 +194,5 @@ const app = (
     <SetRoute path="/sitemap" component={Sitemap} />
   </Piral>
 );
+
 render(app, document.querySelector('#app'));

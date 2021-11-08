@@ -132,7 +132,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('source-maps', 'Create associated source maps for the bundles.')
         .default('source-maps', apps.buildPiralDefaults.sourceMaps)
         .boolean('subdir')
-        .describe('subdir', `Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".`)
+        .describe(
+          'subdir',
+          `Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".`,
+        )
         .default('subdir', apps.buildPiralDefaults.subdir)
         .boolean('content-hash')
         .describe('content-hash', 'Appends the hash to the side-bundle files.')
@@ -260,7 +263,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('framework', 'Sets the framework/library level to use.')
         .default('framework', apps.newPiralDefaults.framework)
         .boolean('install')
-        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .describe('install', 'Already performs the installation of its npm dependencies.')
         .default('install', apps.newPiralDefaults.install)
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the dependencies.')
@@ -269,7 +272,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.newPiralDefaults.logLevel)
         .string('tag')
-        .describe('tag', 'Sets the tag or version of the package to install. By default, this uses the version of the CLI.')
+        .describe(
+          'tag',
+          'Sets the tag or version of the package to install. By default, this uses the version of the CLI.',
+        )
         .default('tag', apps.newPiralDefaults.version)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the installation.')
@@ -281,7 +287,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiralDefaults.template)
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
+        .describe('npm-client', 'Sets the npm client to be used when scaffolding.')
         .default('npm-client', apps.newPiralDefaults.npmClient)
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
@@ -330,10 +336,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.upgradePiralDefaults.logLevel)
         .boolean('install')
-        .describe('install', 'Already performs the update of its NPM dependencies.')
+        .describe('install', 'Already performs the update of its npm dependencies.')
         .default('install', apps.upgradePiralDefaults.install)
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when upgrading.')
+        .describe('npm-client', 'Sets the npm client to be used when upgrading.')
         .default('npm-client', apps.upgradePiralDefaults.npmClient)
         .string('base')
         .default('base', process.cwd())
@@ -606,7 +612,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
         .default('registry', apps.newPiletDefaults.registry)
         .boolean('install')
-        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .describe('install', 'Already performs the installation of its npm dependencies.')
         .default('install', apps.newPiletDefaults.install)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
@@ -621,7 +627,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiletDefaults.template)
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
+        .describe('npm-client', 'Sets the npm client to be used when scaffolding.')
         .default('npm-client', apps.newPiletDefaults.npmClient)
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
@@ -668,14 +674,17 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.upgradePiletDefaults.logLevel)
         .boolean('install')
-        .describe('install', 'Already performs the update of its NPM dependencies.')
+        .describe('install', 'Already performs the update of its npm dependencies.')
         .default('install', apps.upgradePiletDefaults.install)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when upgrading.')
+        .describe('npm-client', 'Sets the npm client to be used when upgrading.')
         .default('npm-client', apps.upgradePiletDefaults.npmClient)
+        .option('vars', undefined)
+        .describe('vars', 'Sets additional variables to be used when scaffolding.')
+        .default('vars', apps.upgradePiletDefaults.variables)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -688,6 +697,7 @@ const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
         install: args.install as boolean,
         npmClient: args['npm-client'] as NpmClientType,
+        variables: args.vars as Record<string, string>,
       });
     },
   },

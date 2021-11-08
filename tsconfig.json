@@ -10,7 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "target": "es5",
+    "target": "es6",
     "sourceMap": true,
     "lib": ["es6", "dom", "esnext"]
   },

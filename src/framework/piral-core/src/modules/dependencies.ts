@@ -1,41 +1,41 @@
 import { PiletMetadata, AvailableDependencies, isfunc } from 'piral-base';
+import { __assign } from 'tslib';
 
-const sharedDependencies: AvailableDependencies = {};
+/**
+ * The global dependencies, which represent the dependencies
+ * shared from the app shell itself.
+ */
+export const globalDependencies: AvailableDependencies = {};
 
 if (process.env.SHARED_DEPENDENCIES) {
   const fillDependencies = require('../../dependencies.codegen');
 
   if (isfunc(fillDependencies)) {
-    fillDependencies(sharedDependencies);
+    fillDependencies(globalDependencies);
+  } else {
+    // fall back to the default list if the codegen is invalid / not supported
+    __assign(globalDependencies, {
+      react: require('react'),
+      'react-dom': require('react-dom'),
+      'react-router': require('react-router'),
+      'react-router-dom': require('react-router-dom'),
+      history: require('history'),
+      tslib: require('tslib'),
+      'path-to-regexp': require('path-to-regexp'),
+      '@libre/atom': require('@libre/atom'),
+      '@dbeining/react-atom': require('@dbeining/react-atom'),
+    });
   }
+} else {
+  // App shell is built with something else than the Piral CLI - just don't fill ...
 }
 
 /**
- * The global dependencies, which represent the dependencies
- * already used by piral-core itself.
- */
-export const globalDependencies: AvailableDependencies = {
-  react: require('react'),
-  'react-dom': require('react-dom'),
-  'react-router': require('react-router'),
-  'react-router-dom': require('react-router-dom'),
-  history: require('history'),
-  tslib: require('tslib'),
-  'path-to-regexp': require('path-to-regexp'),
-  '@libre/atom': require('@libre/atom'),
-  '@dbeining/react-atom': require('@dbeining/react-atom'),
-};
-
-/**
- * Gets the local dependencies for the app shell, which
- * are the global dependencies and the implicitly shared
+ * The default dependency selector, which just returns the provided
  * dependencies.
  */
-export function getLocalDependencies(): AvailableDependencies {
-  return {
-    ...globalDependencies,
-    ...sharedDependencies,
-  };
+export function defaultDependencySelector(dependencies: AvailableDependencies) {
+  return dependencies;
 }
 
 /**

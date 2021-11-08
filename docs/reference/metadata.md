@@ -64,7 +64,7 @@ The names in the list of `externals` need to be aligned with the names of the de
 
 ### Pilet Lifecycle Hooks
 
-The `preScaffold`, `postScaffold`, `preUpgrade`, and `postUpgrade` fields provide lifecycle hooks for the scaffolding and upgrading operations in pilets. The content is structurally equivalent to the content inside NPM scripts.
+The `preScaffold`, `postScaffold`, `preUpgrade`, and `postUpgrade` fields provide lifecycle hooks for the scaffolding and upgrading operations in pilets. The content is structurally equivalent to the content inside npm scripts.
 
 The lifecycle hooks are run in the following order:
 

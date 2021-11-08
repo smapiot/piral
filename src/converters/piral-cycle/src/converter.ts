@@ -1,23 +1,33 @@
-import { BaseComponentProps, ForeignComponent } from 'piral-core';
+import type { BaseComponentProps, ForeignComponent } from 'piral-core';
 import { makeDOMDriver } from '@cycle/dom';
 import run, { MatchingMain, Main } from '@cycle/run';
 import xs from 'xstream';
-import { PiralDomDrivers } from './types';
+import { createExtension } from './extension';
+import type { PiralDomDrivers } from './types';
 
-export function createConverter() {
-  return <TProps extends BaseComponentProps, M extends MatchingMain<PiralDomDrivers<TProps>, M>>(
+export interface CycleConverterOptions {
+  /**
+   * The tag name of the root element into which a CycleExtension is rendered.
+   * @default slot
+   */
+  rootName?: string;
+}
+
+export function createConverter(config: CycleConverterOptions = {}) {
+  const { rootName = 'slot' } = config;
+  const Extension = createExtension(rootName);
+  const convert = <TProps extends BaseComponentProps, M extends MatchingMain<PiralDomDrivers<TProps>, M>>(
     main: M,
   ): ForeignComponent<TProps> => {
     let props$ = xs.create<TProps>();
     let dispose = () => {};
 
     return {
-      mount(parent, props) {
+      mount(el, props) {
         // The Cycle DOM element is not directly rendered into parent, but into a nested container.
         // This is done because Cycle "erases" information on the host element. If parent was used,
         // Piral related properties like data-portal-id could be removed, leading to things not working.
-        const host = document.createElement('slot');
-        parent.appendChild(host);
+        const host = el.appendChild(document.createElement('slot'));
 
         const drivers: PiralDomDrivers<TProps> = {
           DOM: makeDOMDriver(host),
@@ -37,4 +47,7 @@ export function createConverter() {
       },
     };
   };
+
+  convert.Extension = Extension;
+  return convert;
 }

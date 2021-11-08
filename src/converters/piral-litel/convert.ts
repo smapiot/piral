@@ -1,16 +1,21 @@
 import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
-import { createExtension } from './lib/extension';
-
-const convert = createConverter();
 
 export interface LitElConverter {
-  (...params: Parameters<typeof convert>): HtmlComponent<any>;
+  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
 }
 
-export const fromLitEl: LitElConverter = (elementName) => ({
-  type: 'html',
-  component: convert(elementName),
-});
+export function createLitElConverter(...params: Parameters<typeof createConverter>) {
+  const convert = createConverter(...params);
+  const Extension = convert.Extension;
+  const from: LitElConverter = (elementName) => ({
+    type: 'html',
+    component: convert(elementName),
+  });
 
-export const createLitElExtension = createExtension;
+  return { from, Extension };
+}
+
+const { from: fromLitEl, Extension: LitElExtension } = createLitElConverter();
+
+export { fromLitEl, LitElExtension };

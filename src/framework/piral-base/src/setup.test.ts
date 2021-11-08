@@ -4,7 +4,12 @@ describe('Setting up Modules', () => {
   it('works if setup is available', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
-    const api = {};
+    const api = {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      meta: {} as any,
+    };
     setupSinglePilet(
       {
         setup: setupMock,
@@ -18,7 +23,12 @@ describe('Setting up Modules', () => {
   it('emits error but does not crash if setup crashes', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
-    const api = {};
+    const api = {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      meta: {} as any,
+    };
     setupSinglePilet(
       {
         setup(api) {
@@ -36,7 +46,12 @@ describe('Setting up Modules', () => {
   it('emits error but does not crash if no setup is available', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
-    const api = {};
+    const api = {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      meta: {} as any,
+    };
     setupSinglePilet({} as any, api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -45,7 +60,12 @@ describe('Setting up Modules', () => {
   it('emits error but does not crash if no module is available', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
-    const api = {};
+    const api = {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      meta: {} as any,
+    };
     setupSinglePilet(undefined as any, api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -54,7 +74,12 @@ describe('Setting up Modules', () => {
   it('emits error but does not crash if wrong type supplied', () => {
     const setupMock = jest.fn();
     console.error = jest.fn();
-    const api = {};
+    const api = {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      meta: {} as any,
+    };
     setupSinglePilet((() => {}) as any, api);
     expect(setupMock).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(1);

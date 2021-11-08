@@ -1,6 +1,6 @@
 import { LitElement, property, customElement } from 'lit-element';
 
-export function createExtension(selector = 'litel-extension'): any {
+export function createExtension(selector: string) {
   @customElement(selector)
   class LitElExtension extends LitElement {
     @property() name: string;
@@ -30,5 +30,5 @@ export function createExtension(selector = 'litel-extension'): any {
     }
   }
 
-  return LitElExtension;
+  return selector;
 }

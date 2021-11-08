@@ -1,9 +1,20 @@
-import { getLocalDependencies } from './dependencies';
+import { globalDependencies, defaultDependencySelector, defaultModuleRequester } from './dependencies';
 
 describe('Dependencies Module', () => {
-  it('getLocalDependencies should contain global dependencies', () => {
-    const localDependencies = getLocalDependencies();
-    expect(localDependencies).toHaveProperty('react');
-    expect(localDependencies).toHaveProperty('history');
+  it('globalDependencies should not contain any dependencies', () => {
+    expect(globalDependencies).toEqual({});
+  });
+
+  it('defaultDependencySelector should return given dependencies', () => {
+    const deps = defaultDependencySelector({
+      foo: 'bar',
+    });
+    expect(deps).toHaveProperty('foo');
+    expect(deps).not.toHaveProperty('bar');
+  });
+
+  it('defaultModuleRequester should return given dependencies', async () => {
+    const mods = await defaultModuleRequester();
+    expect(mods).toEqual([]);
   });
 });

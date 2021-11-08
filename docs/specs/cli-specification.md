@@ -6,7 +6,7 @@ title: Piral CLI Specification
 
 ## Abstract
 
-The Piral CLI is a command-line tool, which offers a rich feature set to allow building application shells for Microfrontend solutions. The application shell can be used as a host and an emulator for smaller applications (known as Microfrontends). As part of the Piral framework, we call those small applications *pilets*. In addition, the Piral CLI is capable of generating valid NPM packages, which can be published to the Piral Feed Service.
+The Piral CLI is a command-line tool, which offers a rich feature set to allow building application shells for Microfrontend solutions. The application shell can be used as a host and an emulator for smaller applications (known as Microfrontends). As part of the Piral framework, we call those small applications *pilets*. In addition, the Piral CLI is capable of generating valid npm packages, which can be published to the Piral Feed Service.
 
 ## Introduction
 
@@ -27,8 +27,6 @@ The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* 
 **JSON**: JavaScript Object Notation
 
 **MIT**: Massachusetts Institute of Technology
-
-**NPM**: Node Package Manager
 
 **UMD**: Universal Module Definition
 
@@ -70,6 +68,10 @@ For running the Piral instance in emulation mode, the set of relevant environmen
 | `DEBUG_PILET`         | Indicate emulator environment.      | `on`               |
 | `DEBUG_PIRAL`         | Provides debug API for inspection.  | `1.0`              |
 | `SHARED_DEPENDENCIES` | Allow exposing shared dependencies. | `react,react-dom`  |
+| `BUILD_PCKG_NAME`     | The name of the Piral instance.     | `my-app`           |
+| `BUILD_PCKG_VERSION`  | The version of the Piral instance.  | `1.2.3`            |
+| `BUILD_TIME_FULL`     | The date time of the build.         | `2021-01-01T10:23` |
+| `PIRAL_CLI_VERSION`   | The version the used Piral CLI.     | `0.14.0`           |
 
 As in the case for generating a production instance, some special keys of the `package.json` are also considered for the emulation mode:
 
@@ -110,7 +112,7 @@ Additionally, some feed servers may implement a bit more here. For instance, the
 
 The Piral supports specifying different mechanisms for loading pilets. To allow versioning of a pilet's loading mechanism, we use a special header line in the output bundle. If the first line starts with a comment such as `//@pilet`, it will be treated as the pilet schema version indicator.
 
-Right now, there are two available schema versions: the legacy version is indicated by (`v0`) and the current standard version is (`v1`). Backwards compatibility should always be given, when introducing a new schema version.
+Right now, there are three available schema versions: the legacy version is indicated by `v0` (UMD), the improved version has `v1` (plain UMD using `currentScript`), and the current standard version is `v2` (using SystemJS). Backwards compatibility should always be given, when introducing a new schema version.
 
 Most notably the following components should all be able to gracefully fall back:
 
@@ -157,6 +159,19 @@ The bundled code should be wrapped in an IIFE to look similar to:
 ```
 
 The `$pr_name` has to be replaced with the globally used name for `require` of the pilet.
+
+**`v:2`**
+
+The bundled code should form a valid SystemJS module:
+
+```js
+//@pilet v:2($pr_name, $shared_dependencies)
+System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _dep;}],execute:function(){_export((function(){
+  // ...
+})())}};});
+```
+
+The `$pr_name` has to be replaced with the globally used name for other (lazy loaded) chunks of the pilet. The `$shared_dependencies` represent the used shared dependencies. This is a JSON object mapping the identifiers used for the shared dependencies to their bundles.
 
 ## Limitations
 

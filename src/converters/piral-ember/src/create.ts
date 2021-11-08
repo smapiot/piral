@@ -1,31 +1,20 @@
 import type { PiralPlugin } from 'piral-core';
 import { loadEmberApp } from './load';
-import { createConverter } from './converter';
-import { createExtension } from './extension';
+import { createConverter, EmberConverterOptions } from './converter';
 import type { PiletEmberApi } from './types';
 
 /**
  * Available configuration options for the Ember.js plugin.
  */
-export interface EmberConfig {
-  /**
-   * Defines the name of the extension component.
-   * @default ember-extension
-   */
-  selector?: string;
-}
+export interface EmberConfig extends EmberConverterOptions {}
 
 /**
  * Creates Pilet API extensions for integrating Ember.js.
  */
 export function createEmberApi(config: EmberConfig = {}): PiralPlugin<PiletEmberApi> {
-  const { selector } = config;
-
   return (context) => {
-    const convert = createConverter();
+    const convert = createConverter(config);
     context.converters.ember = ({ App, opts }) => convert(App, opts);
-
-    createExtension(selector);
 
     return {
       fromEmber(App, opts) {
@@ -36,7 +25,7 @@ export function createEmberApi(config: EmberConfig = {}): PiralPlugin<PiletEmber
         };
       },
       loadEmberApp,
-      EmberExtension: selector,
+      EmberExtension: convert.Extension,
     };
   };
 }

@@ -60,6 +60,18 @@ export interface DebugPiralOptions {
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
+
+  /**
+   * Hooks to be triggered at various stages.
+   */
+  hooks?: {
+    onBegin?(e: any): Promise<void>;
+    beforeBuild?(e: any): Promise<void>;
+    afterBuild?(e: any): Promise<void>;
+    beforeOnline?(e: any): Promise<void>;
+    afterOnline?(e: any): Promise<void>;
+    onEnd?(e: any): Promise<void>;
+  };
 }
 
 export const debugPiralDefaults: DebugPiralOptions = {
@@ -84,11 +96,15 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
     _ = {},
+    hooks = {},
     bundlerName,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
+
+  await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
-  const entryFiles = await retrievePiralRoot(baseDir, entry);
+  const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
   const krasConfig = readKrasConfig({ port }, krasrc);
 
@@ -114,6 +130,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
+  await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, name });
+
   const bundler = await callPiralDebug(
     {
       root,
@@ -130,6 +148,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     bundlerName,
   );
 
+  bundler.on((args) => {
+    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
+  });
+
   const injectorConfig = {
     active: true,
     handle: ['/'],
@@ -145,7 +167,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   krasServer.removeAllListeners('open');
   krasServer.on('open', notifyServerOnline([bundler], krasConfig.api));
 
+  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port });
   await krasServer.start();
   openBrowser(open, port);
+  await hooks.afterOnline?.({ krasServer, krasConfig, open, port });
   await new Promise((resolve) => krasServer.on('close', resolve));
+  await hooks.onEnd?.({});
 }

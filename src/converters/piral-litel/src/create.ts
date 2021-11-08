@@ -1,30 +1,19 @@
 import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
-import { createExtension } from './extension';
 import type { PiletLitElApi } from './types';
 
 /**
  * Available configuration options for the LitElement plugin.
  */
-export interface LitElConfig {
-  /**
-   * Defines the name of the extension component.
-   * @default litel-extension
-   */
-  selector?: string;
-}
+export interface LitElConfig {}
 
 /**
  * Creates new Pilet API extensions for integration of LitElement.
  */
 export function createLitElApi(config: LitElConfig = {}): PiralPlugin<PiletLitElApi> {
-  const { selector } = config;
-
   return (context) => {
-    const convert = createConverter();
+    const convert = createConverter(config);
     context.converters.litel = ({ elementName }) => convert(elementName);
-
-    createExtension(selector);
 
     return {
       fromLitEl(elementName) {
@@ -33,7 +22,7 @@ export function createLitElApi(config: LitElConfig = {}): PiralPlugin<PiletLitEl
           elementName,
         };
       },
-      LitElExtension: selector,
+      LitElExtension: convert.Extension,
     };
   };
 }

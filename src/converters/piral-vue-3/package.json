@@ -48,7 +48,7 @@
     "vue": "^3.0.0"
   },
   "peerDependencies": {
-    "piral-core": "0.13.x",
+    "piral-core": "0.14.x",
     "vue": "^3.0.0"
   }
 }

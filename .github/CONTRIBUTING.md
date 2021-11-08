@@ -41,7 +41,7 @@ Enhancements or general suggestions are tracked as [GitHub issues](https://guide
 
 ### Main Branches
 
-The central repository holds two main branches with an infinite lifetime:
+The central repository holds four main branches with an infinite lifetime:
 
 - **main**
 - **develop**
@@ -58,9 +58,9 @@ The following table gives an overview:
 
 | Branch Name   | Builds Documentation | NPM Release / Tag | Version Suffix |
 | ------------- | -------------------- | ----------------- | -------------- |
-| main          | yes                  | latest            | (none)         |
-| develop       | no                   | next              | pre            |
-| experimental  | no                   | canary            | unstable       |
+| main          | yes (indirectly)     | latest            | (none)         |
+| develop       | no                   | next              | beta           |
+| experimental  | no                   | canary            | alpha          |
 | documentation | yes                  | (none)            | (none)         |
 
 If you don't know what to do - use `develop` as target for pull requests.

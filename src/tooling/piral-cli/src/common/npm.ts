@@ -2,8 +2,8 @@ import { resolve, relative } from 'path';
 import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
+import { legacyCoreExternals } from './constants';
 import { inspectPackage } from './inspect';
-import { coreExternals } from './constants';
 import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
@@ -69,27 +69,27 @@ export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
  */
 export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClientType> {
   if (!selected || !clientTypeKeys.includes(selected)) {
-    log('generalDebug_0003', 'No NPM client selected. Checking for lock files ...');
+    log('generalDebug_0003', 'No npm client selected. Checking for lock files ...');
     const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
     const found = +hasNpm + +hasYarn + +hasPnpm;
-    log('generalDebug_0003', `Results of the lock file check: NPM = ${hasNpm}, Yarn = ${hasYarn}, Pnpm = ${hasPnpm}`);
+    log('generalDebug_0003', `Results of the lock file check: npm = ${hasNpm}, Yarn = ${hasYarn}, Pnpm = ${hasPnpm}`);
     const defaultClient = config.npmClient;
 
     if (found !== 1) {
       const lernaClient = await getLernaNpmClient(root);
 
       if (clientTypeKeys.includes(lernaClient)) {
-        log('generalDebug_0003', `Found valid NPM client via Lerna: ${lernaClient}.`);
+        log('generalDebug_0003', `Found valid npm client via Lerna: ${lernaClient}.`);
         return lernaClient;
       }
     } else if (hasNpm) {
-      log('generalDebug_0003', `Found valid NPM client via lockfile.`);
+      log('generalDebug_0003', `Found valid npm client via lockfile.`);
       return 'npm';
     } else if (hasYarn) {
       log('generalDebug_0003', `Found valid Yarn client via lockfile.`);
       return 'yarn';
     } else if (hasPnpm) {
-      log('generalDebug_0003', `Found valid Pnpm client via lockfile.`);
+      log('generalDebug_0003', `Found valid pnpm client via lockfile.`);
       return 'pnpm';
     }
 
@@ -98,7 +98,7 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
       return defaultClient;
     }
 
-    log('generalDebug_0003', 'Using the default NPM client.');
+    log('generalDebug_0003', 'Using the default npm client.');
     return 'npm';
   }
 
@@ -388,7 +388,26 @@ export function getPackageVersion(
   }
 }
 
-export function makeExternals(externals?: Array<string>) {
+export function getCoreExternals(): Array<string> {
+  try {
+    return require('piral-core/package.json').sharedDependencies || [];
+  } catch {
+    return [];
+  }
+}
+
+export function makePiletExternals(externals: Array<string>, fromEmulator: boolean, piralInfo: any) {
+  if (fromEmulator) {
+    const { sharedDependencies = makeExternals(externals, true) } = piralInfo;
+    return sharedDependencies;
+  } else {
+    return makeExternals(externals);
+  }
+}
+
+export function makeExternals(externals?: Array<string>, legacy = false) {
+  const coreExternals = legacy ? legacyCoreExternals : getCoreExternals();
+
   if (externals && Array.isArray(externals)) {
     const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(
       (prev, curr) => {

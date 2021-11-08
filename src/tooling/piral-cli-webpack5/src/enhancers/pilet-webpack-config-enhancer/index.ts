@@ -1,12 +1,25 @@
-import { join } from 'path';
-import { Configuration, BannerPlugin, DefinePlugin, WebpackPluginInstance } from 'webpack';
-import { setEnvironment, getDefineVariables, getVariables } from './helpers';
+import * as SystemJSPublicPathWebpackPlugin from 'systemjs-webpack-interop/SystemJSPublicPathWebpackPlugin';
+import type { SharedDependency } from 'piral-cli';
+import { Configuration, BannerPlugin, DefinePlugin } from 'webpack';
+import {
+  setEnvironment,
+  getDefineVariables,
+  getVariables,
+  withSetPath,
+  withExternals,
+  getDependencies,
+  getExternals,
+} from './helpers';
 
 export interface PiletWebpackConfigEnhancerOptions {
   /**
    * The name of the pilet.
    */
   name: string;
+  /**
+   * The name of the entry module.
+   */
+  entry: string;
   /**
    * The version of the pilet.
    */
@@ -16,9 +29,13 @@ export interface PiletWebpackConfigEnhancerOptions {
    */
   piral: string;
   /**
+   * The name of the main output file.
+   */
+  filename: string;
+  /**
    * The schema version. By default, v1 is used.
    */
-  schema?: 'v0' | 'v1' | 'none';
+  schema?: 'v0' | 'v1' | 'v2' | 'none';
   /**
    * The shared dependencies. By default, these are read from the
    * Piral instance.
@@ -28,85 +45,139 @@ export interface PiletWebpackConfigEnhancerOptions {
    * Additional environment variables to define.
    */
   variables?: Record<string, string>;
+  /**
+   * The shared dependencies to consider.
+   */
+  importmap: Array<SharedDependency>;
 }
 
-function getExternals(piral: string) {
-  const shellPkg = require(`${piral}/package.json`);
-  const piralExternals = shellPkg.pilets?.externals ?? [];
-  return [
-    ...piralExternals,
-    '@dbeining/react-atom',
-    '@libre/atom',
-    'history',
-    'react',
-    'react-dom',
-    'react-router',
-    'react-router-dom',
-    'tslib',
-    'path-to-regexp',
-  ];
+interface SchemaEnhancerOptions {
+  name: string;
+  entry: string;
+  file: string;
+  variables: Record<string, string>;
+  externals: Array<string>;
+  importmap: Array<SharedDependency>;
 }
 
-export const piletWebpackConfigEnhancer = (options: PiletWebpackConfigEnhancerOptions) => (
-  compilerOptions: Configuration,
-) => {
-  const environment = process.env.NODE_ENV || 'development';
-  const { name, version, piral, externals = getExternals(piral), schema } = options;
+function piletVxWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { variables, externals } = options;
+
+  withSetPath(compiler);
+  setEnvironment(variables);
+  withExternals(compiler, externals);
+
+  compiler.plugins.push(new DefinePlugin(getDefineVariables(variables)));
+
+  return compiler;
+}
+
+function piletV0WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
-  const variables = {
-    ...getVariables(name, version, environment),
-    ...options.variables,
+
+  withSetPath(compiler);
+  setEnvironment(variables);
+  withExternals(compiler, externals);
+
+  compiler.plugins.push(
+    new DefinePlugin(getDefineVariables(variables)),
+    new BannerPlugin({
+      banner: `//@pilet v:0`,
+      entryOnly: true,
+      include: file,
+      raw: true,
+    }),
+  );
+  compiler.output.uniqueName = `${jsonpFunction}`;
+  compiler.output.library = name;
+  compiler.output.libraryTarget = 'umd';
+
+  return compiler;
+}
+
+function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file } = options;
+  const shortName = name.replace(/\W/gi, '');
+  const jsonpFunction = `pr_${shortName}`;
+
+  withSetPath(compiler);
+  setEnvironment(variables);
+  withExternals(compiler, externals);
+
+  compiler.plugins.push(
+    new DefinePlugin(getDefineVariables(variables)),
+    new BannerPlugin({
+      banner: `//@pilet v:1(${jsonpFunction})`,
+      entryOnly: true,
+      include: file,
+      raw: true,
+    }),
+  );
+  compiler.output.uniqueName = `${jsonpFunction}`;
+  compiler.output.library = name;
+  compiler.output.libraryTarget = 'umd';
+  compiler.output.auxiliaryComment = {
+    commonjs2: `\nfunction define(d,k){(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
   };
-  const plugins: WebpackPluginInstance[] = [new DefinePlugin(getDefineVariables(variables))];
 
-  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
-    const setPath = join(__dirname, '..', '..', 'set-path');
+  return compiler;
+}
 
-    if (Array.isArray(compilerOptions.entry)) {
-      compilerOptions.entry.unshift(setPath);
-    } else if (Array.isArray(compilerOptions.entry.main)) {
-      compilerOptions.entry.main.unshift(setPath);
-    }
-  }
+function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file, importmap } = options;
+  const shortName = name.replace(/\W/gi, '');
+  const jsonpFunction = `pr_${shortName}`;
 
-  if (schema !== 'none') {
-    const bannerSuffix = schema ? `1(${jsonpFunction})` : `0`;
-
-    plugins.push(
-      new BannerPlugin({
-        banner: `//@pilet v:${bannerSuffix}`,
-        entryOnly: true,
-        include: /\.js$/,
-        raw: true,
-      }),
-    );
-  }
-
+  withExternals(compiler, externals);
   setEnvironment(variables);
 
-  compilerOptions.plugins = [...compilerOptions.plugins, ...plugins];
+  const dependencies = getDependencies(importmap, compiler);
+  const plugins = [];
 
-  const current = compilerOptions.externals;
-  compilerOptions.output.uniqueName = `${jsonpFunction}`;
-  compilerOptions.output.library = name;
+  plugins.push(
+    new DefinePlugin(getDefineVariables(variables)),
+    new BannerPlugin({
+      banner: `//@pilet v:2(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`,
+      entryOnly: true,
+      include: file,
+      raw: true,
+    }),
+    new SystemJSPublicPathWebpackPlugin(),
+  );
 
-  if (schema !== 'none') {
-    compilerOptions.output.libraryTarget = 'umd';
+  compiler.plugins = [...compiler.plugins, ...plugins];
+  compiler.output.uniqueName = `${jsonpFunction}`;
+  compiler.output.library = { type: 'system' };
+
+  return compiler;
+}
+
+export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOptions) => (compiler: Configuration) => {
+  const { piral, externals = getExternals(piral), schema, importmap } = details;
+  const environment = process.env.NODE_ENV || 'development';
+  const options: SchemaEnhancerOptions = {
+    entry: details.entry,
+    externals,
+    file: details.filename,
+    name: details.name,
+    importmap,
+    variables: {
+      ...getVariables(details.name, details.version, environment),
+      ...details.variables,
+    },
+  };
+
+  switch (schema) {
+    case 'v0':
+      return piletV0WebpackConfigEnhancer(options, compiler);
+    case 'v1':
+      return piletV1WebpackConfigEnhancer(options, compiler);
+    case 'v2':
+      return piletV2WebpackConfigEnhancer(options, compiler);
+    case 'none':
+    default:
+      return piletVxWebpackConfigEnhancer(options, compiler);
   }
-
-  if (schema === 'v1') {
-    const reset = `delete window.webpackChunk${jsonpFunction};`;
-    compilerOptions.output.auxiliaryComment = {
-      commonjs2: `\nfunction define(d,k){${reset}(typeof document!=='undefined')&&(document.currentScript.app=k.apply(null,d.map(window.${jsonpFunction})));}define.amd=!0;`,
-    } as any;
-  }
-
-  compilerOptions.externals = Array.isArray(current)
-    ? [...current, ...externals]
-    : current
-    ? [current, ...externals]
-    : externals;
-
-  return compilerOptions;
 };

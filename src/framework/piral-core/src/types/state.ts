@@ -295,6 +295,19 @@ export interface PiralActions extends PiralCustomActions {
    */
   showPortal(id: string, entry: ReactPortal): void;
   /**
+   * Hides the provided portal in the rendering pipeline.
+   * @param id The id of the portal to use.
+   * @param entry The child to remove.
+   */
+  hidePortal(id: string, entry: ReactPortal): void;
+  /**
+   * Updates the provided portal in the rendering pipeline.
+   * @param id The id of the portal to use.
+   * @param current The currently displayed child.
+   * @param next The updated child that should be displayed.
+   */
+  updatePortal(id: string, current: ReactPortal, next: ReactPortal): void;
+  /**
    * Dispatches a state change.
    * @param update The update function creating a new state.
    */

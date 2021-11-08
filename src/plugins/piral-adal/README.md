@@ -102,6 +102,21 @@ if (location.pathname !== '/auth') {
 
 This way we evaluate the current path and act accordingly. Note that the actually used path may be different for your application.
 
+By default, the `redirectUri` is chosen to be `{location.origin}/auth`, i.e., if your site is running on `https://example.com` then the redirect would go against `https://example.com/auth`. You can set the `redirectUri` (as well as `postLogoutRedirectUri` for the logout case) in the client setup:
+
+```ts
+// module adal.ts
+import { setupAdalClient } from 'piral-adal';
+
+export const client = setupAdalClient({
+  clientId: '...',
+  redirectUri: 'https://example.com/logged-in',
+  postLogoutRedirectUri: 'https://example.com/logged-out',
+});
+```
+
+All auth options from the MSAL library are supported. For an overview, [see the MSAL wiki page](https://github.com/AzureAD/microsoft-authentication-library-for-js/wiki/MSAL.js-1.0.0-api-release#configuration-options).
+
 :::
 
 ## License

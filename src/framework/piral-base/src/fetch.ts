@@ -5,7 +5,7 @@
  * @param url The URL to GET.
  * @returns A promise leading to the raw text content.
  */
-export function defaultFetchDependency(url: string) {
+export function fetchDependency(url: string) {
   return fetch(url, {
     method: 'GET',
     cache: 'force-cache',

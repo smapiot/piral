@@ -1,6 +1,6 @@
 import { existsSync } from 'fs';
 import { Configuration } from 'webpack';
-import { DefaultConfiguration } from './configs/common';
+import { DefaultConfiguration } from './webpack/common';
 
 export function extendConfig(
   [webPackConfig, enhancer]: DefaultConfiguration,

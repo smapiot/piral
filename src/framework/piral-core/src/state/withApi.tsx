@@ -2,9 +2,9 @@ import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { __RouterContext } from 'react-router';
 import { StateContext } from './stateContext';
-import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions } from '../components';
-import { useGlobalState, useActions } from '../hooks';
-import { defaultRender, convertComponent } from '../utils';
+import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions, PortalRenderer } from '../components';
+import { useActions } from '../hooks';
+import { defaultRender, convertComponent, none } from '../utils';
 import {
   AnyComponent,
   Errors,
@@ -16,19 +16,10 @@ import {
   GlobalStateContext,
 } from '../types';
 
+// this is an arbitrary start number to have 6 digits
 let portalIdBase = 123456;
-const none = [];
 
-interface PortalRendererProps {
-  id: string;
-}
-
-const PortalRenderer: React.FC<PortalRendererProps> = ({ id }) => {
-  const children = useGlobalState((m) => m.portals[id]) || none;
-  return defaultRender(children);
-};
-
-const DefaultWrapper: React.FC = (props) => <>{props.children}</>;
+const DefaultWrapper: React.FC = (props) => defaultRender(props.children);
 
 interface ForeignComponentContainerProps<T> {
   $portalId: string;
@@ -40,6 +31,11 @@ interface ForeignComponentContainerProps<T> {
 class ForeignComponentContainer<T> extends React.Component<ForeignComponentContainerProps<T>> {
   private current?: HTMLElement;
   private previous?: HTMLElement;
+  private handler = (ev: CustomEvent) => {
+    const { innerProps } = this.props;
+    ev.stopPropagation();
+    innerProps.piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+  };
 
   private setNode = (node: HTMLDivElement) => {
     this.current = node;
@@ -52,6 +48,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
     if (node && isfunc(mount)) {
       mount(node, innerProps, $context);
+      node.addEventListener('render-html', this.handler, false);
     }
 
     this.previous = node;
@@ -77,6 +74,7 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
     if (node && isfunc(unmount)) {
       unmount(node);
+      node.removeEventListener('render-html', this.handler, false);
     }
 
     this.previous = undefined;

@@ -45,11 +45,11 @@ These are dependencies that are coming directly or indirectly from `piral-core`.
 
 ## Explicit Sharing from the App Shell
 
-Dependencies can also be "defined" or explicitly mentioned in the app shell. The mechanism for this works via the `getDependencies` option of the `createInstance` function.
+Dependencies can also be "defined" or explicitly mentioned in the app shell. The mechanism for this works via the `shareDependencies` option of the `createInstance` function.
 
 ```js
 const instance = createInstance({
-  getDependencies() {
+  shareDependencies() {
     return {
 
     };
@@ -61,8 +61,10 @@ const instance = createInstance({
 
 ```js
 const instance = createInstance({
-  getDependencies() {
-    return getLocalDependencies();
+  shareDependencies(dependencies) {
+    // just return the pre-defined dependencies, otherwise either
+    // remove or add dependencies before returning
+    return dependencies;
   },
 });
 ```
@@ -73,9 +75,9 @@ As an example consider that an app shell named `my-app-shell` also wants to expo
 
 ```js
 const instance = createInstance({
-  getDependencies() {
+  shareDependencies(dependencies) {
     return {
-      ...getLocalDependencies(),
+      ...dependencies,
       'my-app-shell': require('./exports'),
     };
   },
@@ -123,8 +125,6 @@ The rule of thumb for sharing the type declarations is: Everything exported top-
 
 The mechanism to share dependencies used in pilets is called "import maps". Import maps are also on the way to become [an official standard](https://wicg.github.io/import-maps/).
 
-If you are using Parcel as bundler via `piral-cli-parcel` you rely on the Parcel plugin `parcel-plugin-import-maps`. In case of Webpack the Webpack plugin `import-maps-webpack-plugin` is already integrated in the `piral-cli-webpack`.
-
 The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load it again. Otherwise, it will load the different resources.
 
 ![Using Import Maps to Share Dependencies](../diagrams/import-maps.png)
@@ -151,27 +151,6 @@ Independent of you reference the shared dependency from a local installation or 
 npm i lodash --save-dev
 ```
 
-The next step is to introduce a loader wrapper. Since import maps are loaded asynchronously we need to wait until these are ready.
-
-```ts
-// index.ts
-module.exports = require('importmap').ready().then(() => require('./root'));
-```
-
-where `root` refers to the usual pilet root module, e.g.,
-
-```ts
-// root.tsx
-import * as React from 'react';
-import { PiletApi } from 'my-app-shell';
-
-const MyPage = React.lazy(() => import('./MyPage'));
-
-export function setup(app: PiletApi) {
-  app.registerPage('/sample', MyPage);
-}
-```
-
 At this point, you can use the shared resource (like any other dependency) in your code.
 
 ```jsx
@@ -190,30 +169,6 @@ export default () => (
   </div>
 );
 ```
-
-The showcased use of `ready` works in all cases, however, sometimes you may want to delay loading until you need a resource.
-
-::: tip: Using with piral-lazy
-With the `piral-lazy` plugin the import maps are even easier to use.
-
-An example:
-
-```ts
-piral.defineDependency('lodash', () => require('importmap').ready('lodash'));
-const LazyPage = piral.fromLazy(() => import('./MyPage'), ['lodash']);
-piral.registerPage('/sample', LazyPage);
-```
-
-The major advantage is that this implicitly creates a lazy loaded page, which has all the right suspension defined by default.
-:::
-
-In these situations, it makes sense to use another variant of `ready`, which gets a single parameter as input data. If the parameter is a single string, it is interpreted as the package to look for.
-
-```ts
-require('importmap').ready('lodash')
-```
-
-Alternatively, an array of package names can be passed in, too.
 
 ## Conclusion
 

@@ -43,7 +43,6 @@ interface DebugInstance {
     name: string;
     version: string;
     dependencies: string;
-    context: GlobalStateContext;
   },
   build: {
     date: string;
@@ -51,9 +50,8 @@ interface DebugInstance {
     compat: string;
   },
   pilets: {
-    createApi(meta: PiletMetadata): PiletApi;
-    getDependencies(meta: PiletMetadata): Record<string, any>;
-    requestPilets(): Promise<Array<PiletMetadata>>;
+    createApi: PiletApiCreator;
+    loadPilet: PiletLoader;
   };
 }
 ```

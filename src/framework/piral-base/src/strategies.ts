@@ -1,5 +1,6 @@
-import { createDefaultLoader, extendLoader } from './loader';
+import { getDefaultLoader, extendLoader } from './loader';
 import { loadPilets, loadMetadata } from './load';
+import { registerDependencies } from './system';
 import { createPilets, createPilet } from './aggregate';
 import type { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
 
@@ -33,49 +34,49 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
   return (options, cb) => {
     const {
       fetchPilets,
-      fetchDependency,
-      dependencies,
-      getDependencies,
+      dependencies = {},
       createApi,
       config,
       pilets = [],
-      loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency, config),
+      loadPilet = getDefaultLoader(config),
       loaders,
     } = options;
     const loader = loadMetadata(fetchPilets);
     const loadSingle = extendLoader(loadPilet, loaders);
 
-    return createPilets(createApi, pilets).then((allModules) => {
-      if (async && allModules.length > 0) {
-        cb(undefined, [...allModules]);
-      }
+    return registerDependencies(dependencies).then(() =>
+      createPilets(createApi, pilets).then((allModules) => {
+        if (async && allModules.length > 0) {
+          cb(undefined, [...allModules]);
+        }
 
-      const followUp = loader.then((metadata) => {
-        const promises = metadata.map((m) =>
-          loadSingle(m).then((mod) => {
-            const available = pilets.filter((m) => m.name === mod.name).length === 0;
+        const followUp = loader.then((metadata) => {
+          const promises = metadata.map((m) =>
+            loadSingle(m).then((mod) => {
+              const available = pilets.filter((m) => m.name === mod.name).length === 0;
 
-            if (available) {
-              return createPilet(createApi, mod).then((newModule) => {
-                allModules.push(newModule);
+              if (available) {
+                return createPilet(createApi, mod).then((newModule) => {
+                  allModules.push(newModule);
 
-                if (async) {
-                  cb(undefined, [...allModules]);
-                }
-              });
+                  if (async) {
+                    cb(undefined, [...allModules]);
+                  }
+                });
+              }
+            }),
+          );
+
+          return Promise.all(promises).then(() => {
+            if (!async) {
+              cb(undefined, allModules);
             }
-          }),
-        );
-
-        return Promise.all(promises).then(() => {
-          if (!async) {
-            cb(undefined, allModules);
-          }
+          });
         });
-      });
 
-      return async ? loader.then() : followUp.then();
-    });
+        return async ? loader.then() : followUp.then();
+      }),
+    );
   };
 }
 
@@ -106,17 +107,16 @@ export function asyncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): Pro
 export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   const {
     fetchPilets,
-    fetchDependency,
-    dependencies,
-    getDependencies,
+    dependencies = {},
     createApi,
     config,
     pilets = [],
-    loadPilet = createDefaultLoader(dependencies, getDependencies, fetchDependency, config),
+    loadPilet = getDefaultLoader(config),
     loaders,
   } = options;
   const loadSingle = extendLoader(loadPilet, loaders);
-  return loadPilets(fetchPilets, loadSingle)
+  return registerDependencies(dependencies)
+    .then(() => loadPilets(fetchPilets, loadSingle))
     .then((newModules) => evalAll(createApi, pilets, newModules))
     .then((modules) => cb(undefined, modules))
     .catch((error) => cb(error, []));
@@ -128,9 +128,11 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
  * considers the already given pilets.
  */
 export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
-  const { createApi, pilets = [] } = options;
-  return evalAll(createApi, pilets, []).then(
-    (modules) => cb(undefined, modules),
-    (err) => cb(err, []),
+  const { createApi, dependencies = {}, pilets = [] } = options;
+  return registerDependencies(dependencies).then(() =>
+    evalAll(createApi, pilets, []).then(
+      (modules) => cb(undefined, modules),
+      (err) => cb(err, []),
+    ),
   );
 }

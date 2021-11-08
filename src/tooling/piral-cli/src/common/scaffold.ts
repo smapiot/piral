@@ -93,51 +93,67 @@ function getLanguageName(language: SourceLanguage) {
   }
 }
 
-export async function scaffoldPiralSourceFiles(
-  template: string,
-  registry: string,
+export function getPiralScaffoldData(
   language: SourceLanguage,
   root: string,
   app: string,
   packageName: Framework,
-  forceOverwrite: ForceOverwrite,
   variables: Record<string, string>,
 ) {
   const src = dirname(join(root, app));
+  return {
+    ...variables,
+    root,
+    src,
+    language: getLanguageName(language),
+    packageName,
+  };
+}
+
+export async function scaffoldPiralSourceFiles(
+  template: string,
+  registry: string,
+  data: ReturnType<typeof getPiralScaffoldData>,
+  forceOverwrite: ForceOverwrite,
+) {
+  const { src, root } = data;
   const templatePackageName = getTemplatePackageName('piral', template);
 
   await createDirectory(src);
 
-  const files = await getTemplateFiles(templatePackageName, registry, root, {
-    ...variables,
-    src,
-    language: getLanguageName(language),
-    packageName,
-  });
+  const files = await getTemplateFiles(templatePackageName, registry, root, data);
 
   await writeFiles(root, files, forceOverwrite);
+}
+
+export function getPiletScaffoldData(
+  language: SourceLanguage,
+  root: string,
+  sourceName: string,
+  variables: Record<string, string>,
+) {
+  const src = join(root, 'src');
+  return {
+    ...variables,
+    root,
+    src,
+    language: getLanguageName(language),
+    sourceName,
+  };
 }
 
 export async function scaffoldPiletSourceFiles(
   template: string,
   registry: string,
-  language: SourceLanguage,
-  root: string,
-  sourceName: string,
+  data: ReturnType<typeof getPiletScaffoldData>,
   forceOverwrite: ForceOverwrite,
-  variables: Record<string, string>,
 ) {
-  const src = join(root, 'src');
+  const { src, root } = data;
   const templatePackageName = getTemplatePackageName('pilet', template);
 
   await createDirectory(src);
 
-  const files = await getTemplateFiles(templatePackageName, registry, root, {
-    ...variables,
-    src,
-    language: getLanguageName(language),
-    sourceName,
-  });
+  const files = await getTemplateFiles(templatePackageName, registry, root, data);
 
   await writeFiles(root, files, forceOverwrite);
 }

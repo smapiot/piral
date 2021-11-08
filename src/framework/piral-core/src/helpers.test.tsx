@@ -1,6 +1,6 @@
-import { createPiletOptions, PiletOptionsConfig, extendSharedDependencies, setSharedDependencies } from './helpers';
+import { createPiletOptions, PiletOptionsConfig } from './helpers';
 import { globalDependencies } from './modules';
-import { PiletMetadata, AvailableDependencies } from 'piral-base';
+import { PiletMetadata } from 'piral-base';
 import { Atom, swap, deref } from '@dbeining/react-atom';
 
 function createMockApi(meta: PiletMetadata) {
@@ -16,6 +16,7 @@ function createMockContainer() {
   const state = Atom.of({
     registry: {
       pages: {},
+      extensions: {},
       wrappers: {},
     },
     routes: {},
@@ -48,35 +49,6 @@ function createMockContainer() {
 }
 
 describe('Piral-Core helpers module', () => {
-  it('setSharedDependencies set the shared dependecies', () => {
-    // Arrange
-    const dependencies: AvailableDependencies = {
-      gg: {},
-      ff: {},
-    };
-
-    // Act
-    const dependencyGetter = setSharedDependencies(dependencies);
-    const result = dependencyGetter();
-
-    // Assert
-    expect(result).not.toBeUndefined();
-  });
-
-  it('extendSharedDependencies should extend the dependecies', () => {
-    // Arrange
-    const additionalDependencies: AvailableDependencies = {
-      gg: {},
-      ff: {},
-    };
-
-    // Act
-    const extendedDependecies = extendSharedDependencies(additionalDependencies);
-
-    // Assert
-    expect(extendedDependecies).not.toBeUndefined();
-  });
-
   it('createPiletOptions creates the options using the provided pilets', () => {
     const wasUndefined = process.env.DEBUG_PIRAL === undefined;
 
@@ -102,9 +74,8 @@ describe('Piral-Core helpers module', () => {
     const optionsConfig: PiletOptionsConfig = {
       createApi: createMockApi,
       availablePilets: providedPilets,
+      shareDependencies: jest.fn(deps => deps),
       context: globalContext,
-      fetchDependency: jest.fn(),
-      getDependencies: jest.fn(),
       loadPilet: jest.fn(),
       requestPilets: jest.fn(() => Promise.resolve(providedPilets)),
       strategy: jest.fn(),
@@ -143,8 +114,7 @@ describe('Piral-Core helpers module', () => {
       createApi: createMockApi,
       availablePilets: providedPilets,
       context: globalContext,
-      fetchDependency: jest.fn(),
-      getDependencies: () => globalDependencies,
+      shareDependencies: jest.fn(deps => deps),
       loadPilet: jest.fn(),
       requestPilets: jest.fn(() => Promise.resolve(providedPilets)),
       strategy: jest.fn(),
@@ -183,8 +153,7 @@ describe('Piral-Core helpers module', () => {
       createApi: createMockApi,
       availablePilets: providedPilets,
       context: globalContext,
-      fetchDependency: jest.fn(),
-      getDependencies: jest.fn(),
+      shareDependencies: jest.fn(deps => deps),
       loadPilet: jest.fn(),
       requestPilets: requestPilets,
       strategy: jest.fn(),
@@ -238,8 +207,7 @@ describe('Piral-Core helpers module', () => {
       createApi: createMockApi,
       availablePilets: providedPilets,
       context: globalContext,
-      fetchDependency: jest.fn(),
-      getDependencies: jest.fn(),
+      shareDependencies: jest.fn(deps => deps),
       loadPilet: jest.fn(),
       requestPilets: requestPilets,
       strategy: jest.fn(),

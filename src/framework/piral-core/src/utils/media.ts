@@ -1,4 +1,5 @@
 import { isfunc } from 'piral-base';
+import { none } from './helpers';
 import { LayoutTypes, LayoutBreakpoints } from '../types';
 
 export const defaultLayouts: LayoutTypes = ['desktop', 'tablet', 'mobile'];
@@ -7,7 +8,7 @@ export const defaultBreakpoints: LayoutBreakpoints = ['(min-width: 991px)', '(mi
 
 const mm =
   typeof window === 'undefined' || !isfunc(window.matchMedia)
-    ? () => ({ matches: [] })
+    ? () => ({ matches: none })
     : (q: string) => window.matchMedia(q);
 
 export function getCurrentLayout<T>(breakpoints: Array<string>, layouts: Array<T>, defaultLayout: T) {

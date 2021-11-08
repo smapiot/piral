@@ -1,8 +1,19 @@
-import { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { ComponentType } from 'inferno';
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+import type { ComponentType } from 'inferno';
 import { mountInferno, unmountInferno } from './mount';
+import { createExtension } from './extension';
 
-export function createConverter() {
+export interface InfernoConverterOptions {
+  /**
+   * Defines the name of the root element.
+   * @default slot
+   */
+  rootName?: string;
+}
+
+export function createConverter(config: InfernoConverterOptions = {}) {
+  const { rootName = 'slot' } = config;
+  const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => {
     return {
       mount(el, props, ctx) {
@@ -16,5 +27,6 @@ export function createConverter() {
       },
     };
   };
+  convert.Extension = Extension;
   return convert;
 }

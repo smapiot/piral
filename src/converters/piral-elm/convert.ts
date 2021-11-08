@@ -1,16 +1,21 @@
 import type { HtmlComponent } from 'piral-core';
 import { createConverter } from './lib/converter';
-import { createExtension } from './lib/extension';
-
-const convert = createConverter();
 
 export interface ElmConverter {
-  (...params: Parameters<typeof convert>): HtmlComponent<any>;
+  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
 }
 
-export const fromElm: ElmConverter = (main, captured) => ({
-  type: 'html',
-  component: convert(main, captured),
-});
+export function createElmConverter(...params: Parameters<typeof createConverter>) {
+  const convert = createConverter(...params);
+  const Extension = convert.Extension;
+  const from: ElmConverter = (main, captured) => ({
+    type: 'html',
+    component: convert(main, captured),
+  });
 
-export const createElmExtension = createExtension;
+  return { from, Extension };
+}
+
+const { from: fromElm, Extension: ElmExtension } = createElmConverter();
+
+export { fromElm, ElmExtension };
