@@ -456,7 +456,7 @@ For `v2` the output changes to:
 ```js
 //@pilet v:2(pr_1fab123ad4fd76bd20e5e5e97366fd47, {})
 System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _dep;}],execute:function(){_export((function(){
-//TODO content here
+//...
 })())}};});
 ```
 
