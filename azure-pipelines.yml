@@ -400,7 +400,7 @@ stages:
           - task: Yarn@2
             displayName: Update Version
             inputs:
-              Arguments: ci:version --update
+              Arguments: ci:version --apply
               customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build CrossFx Emulator
@@ -451,7 +451,7 @@ stages:
           - task: Yarn@2
             displayName: Update Version
             inputs:
-              Arguments: ci:version --update
+              Arguments: ci:version --apply
               customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Full Emulator
@@ -502,7 +502,7 @@ stages:
           - task: Yarn@2
             displayName: Update Version
             inputs:
-              Arguments: ci:version --update
+              Arguments: ci:version --apply
               customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Siteless

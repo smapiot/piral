@@ -9,7 +9,7 @@ interface Updatable {
   (newProps: any): void;
 }
 
-if ('customElements' in window) {
+if (typeof window !== 'undefined' && 'customElements' in window) {
   class PiralExtension extends HTMLElement {
     dispose: Disposable = noop;
     update: Updatable = noop;
@@ -62,17 +62,19 @@ function render(context: GlobalStateContext, element: HTMLElement | ShadowRoot, 
 }
 
 export function createCoreApi(context: GlobalStateContext): PiletApiExtender<PiletCoreApi> {
-  document.body.addEventListener(
-    'render-html',
-    (ev: CustomEvent) => {
-      ev.stopPropagation();
-      const container = ev.detail.target;
-      const [dispose, update] = render(context, container, ev.detail.props);
-      container.dispose = dispose;
-      container.update = update;
-    },
-    false,
-  );
+  if (typeof document !== 'undefined') {
+    document.body.addEventListener(
+      'render-html',
+      (ev: CustomEvent) => {
+        ev.stopPropagation();
+        const container = ev.detail.target;
+        const [dispose, update] = render(context, container, ev.detail.props);
+        container.dispose = dispose;
+        container.update = update;
+      },
+      false,
+    );
+  }
 
   return (api, target) => {
     const pilet = target.name;

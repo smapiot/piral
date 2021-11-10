@@ -2,7 +2,8 @@
 
 ## 0.14.1 (tbd)
 
-- (update)
+- Fixed usage of `plugins` in `extend-config` of `piral-cli-webpack(5)` (#422)
+- Fixed use of DOM references preventing proper use of SSR
 
 ## 0.14.0 (November 8, 2021)
 
