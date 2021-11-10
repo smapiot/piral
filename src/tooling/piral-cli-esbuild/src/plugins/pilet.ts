@@ -80,19 +80,26 @@ export const piletPlugin = (options: PiletPluginOptions): Plugin => ({
               const smpath = resolve(root, smname);
               const sourceMaps = smname in outputs;
               const inputSourceMap = sourceMaps ? JSON.parse(await promises.readFile(smpath, 'utf8')) : undefined;
-              const plugins = isEntryModule
-                ? [
-                    [
-                      require.resolve('./banner-plugin'),
-                      {
-                        name: getPackageName(),
-                        importmap: options.importmap,
-                        requireRef: getRequireRef(),
-                        cssFiles,
-                      },
-                    ],
-                  ]
-                : [];
+              const plugins: Array<any> = [
+                [
+                  require.resolve('./importmap-plugin'),
+                  {
+                    importmap: options.importmap,
+                  },
+                ],
+              ];
+
+              if (isEntryModule) {
+                plugins.push([
+                  require.resolve('./banner-plugin'),
+                  {
+                    name: getPackageName(),
+                    importmap: options.importmap,
+                    requireRef: getRequireRef(),
+                    cssFiles,
+                  },
+                ]);
+              }
 
               const { code, map } = await transformFileAsync(path, {
                 sourceMaps,

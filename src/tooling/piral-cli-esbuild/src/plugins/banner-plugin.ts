@@ -10,7 +10,7 @@ export interface PluginOptions {
   cssFiles: Array<string>;
 }
 
-export default function babelPlugin({ types }): PluginObj {
+export default function babelPlugin(): PluginObj {
   const debug = process.env.NODE_ENV === 'development';
 
   return {
@@ -38,25 +38,9 @@ export default function babelPlugin({ types }): PluginObj {
             `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
             `d.head.appendChild(e)`,
             `})`,
-          ].join('\n');
+          ].join(';\n');
           path.node.body.push(template.ast(`(function(){${stylesheet}})()`) as Statement);
         }
-      },
-      ImportDeclaration(path, state) {
-        const { importmap } = state.opts as PluginOptions;
-
-        path.traverse({
-          Literal(path) {
-            if (path.node.type === 'StringLiteral') {
-              const name = path.node.value;
-              const entry = importmap.find((m) => m.name === name);
-
-              if (entry) {
-                path.replaceWith(types.stringLiteral(entry.id));
-              }
-            }
-          },
-        });
       },
     },
   };

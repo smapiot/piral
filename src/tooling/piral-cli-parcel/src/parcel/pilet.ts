@@ -19,7 +19,7 @@ const handler: PiletBuildHandler = {
         sourceMaps: options.sourceMaps,
         minify: options.minify,
         scopeHoist: options.args.scopeHoist,
-        contentHash: options.contentHash,
+        contentHash: !options.watch && options.contentHash,
         publicUrl: './',
         detailedReport: options.args.detailedReport,
         logLevel: options.logLevel,

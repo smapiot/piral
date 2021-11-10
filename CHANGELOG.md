@@ -4,6 +4,8 @@
 
 - Fixed usage of `plugins` in `extend-config` of `piral-cli-webpack(5)` (#422)
 - Fixed use of DOM references preventing proper use of SSR
+- Fixed error when using importmaps in `piral-cli-parcel`
+- Fixed usage of importmap dependencies in lazy loaded assets in `piral-cli-esbuild`
 
 ## 0.14.0 (November 8, 2021)
 
