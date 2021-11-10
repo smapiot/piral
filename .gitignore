@@ -33,6 +33,7 @@ yarn.lock
 # Editor files
 .idea
 .vscode
+.vs
 *.sublime-project
 *.sublime-workspace
 
