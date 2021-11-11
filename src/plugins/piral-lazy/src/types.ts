@@ -1,12 +1,12 @@
 import { ComponentType } from 'react';
-import { FirstParametersOf, ComponentConverters } from 'piral-core';
+import { AnyComponent, BaseComponentProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletLazyApi {}
 }
 
 export interface LazyComponentLoader<TProps> {
-  (): Promise<FirstParametersOf<ComponentConverters<TProps>>>;
+  (): Promise<AnyComponent<TProps>>;
 }
 
 export interface LazyDependencyLoader {
@@ -29,5 +29,8 @@ export interface PiletLazyApi {
    * @param deps The optional names of the dependencies to load beforehand.
    * @returns The lazy loading component.
    */
-  fromLazy<T>(cb: LazyComponentLoader<T>, deps?: Array<string>): ComponentType<T>;
+  fromLazy<T extends BaseComponentProps>(
+    cb: LazyComponentLoader<T>,
+    deps?: Array<string>,
+  ): ComponentType<T & { deps?: Record<string, any> }>;
 }
