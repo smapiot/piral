@@ -2,8 +2,12 @@
 
 ## 0.14.1 (tbd)
 
+- Improved types of `piral-lazy`
 - Fixed usage of `plugins` in `extend-config` of `piral-cli-webpack(5)` (#422)
 - Fixed use of DOM references preventing proper use of SSR
+- Fixed error when using importmaps in `piral-cli-parcel`
+- Fixed usage of importmap dependencies in lazy loaded assets in `piral-cli-esbuild`
+- Added `deps` props to components loaded with `piral-lazy`
 
 ## 0.14.0 (November 8, 2021)
 
