@@ -69,7 +69,15 @@ Extending this is possible, too. The first step is to reference additional `typi
 }
 ```
 
-This could lead to a `.d.ts` or `.ts` file. Exports in the given file are directly integrated into the declaration.
+If, for some reason, you cannot use the `typings` field you can use the artificial / non-official `extraTypes` field, too:
+
+```json
+{
+  "extraTypes": "src/types.ts"
+}
+```
+
+Either way, this could lead to a `.d.ts` or `.ts` file. Exports in the given file are directly integrated into the declaration.
 
 For instance, the following would appear as an app shell export:
 
@@ -84,6 +92,12 @@ By default, the `piral declaration` command works against the current working di
 
 The command `piral declaration path/to/entry` supports *.html*, *.js*, *.jsx*, *.ts*, and *.tsx* files as entry points.
 :::
+
+There are some advantages of using `extraTypes` over `types`:
+
+- Works in a monorepo, too
+- Avoids confusion for developers knowing that `types` comes from TypeScript directly
+- Also accepts an array of entries, e.g., `["src/types.ts", "src/api.ts"]`
 
 ## Virtual Packages
 
@@ -126,4 +140,10 @@ As the `typings` field in the *package.json* is already used for the declaration
 
 For specifying the path in a monorepo we can use the `types` field. Officially, the `types` field is synonymous to `typings`, however, in resolution it takes precedence. Thus it works just as it should.
 
-Note that for creating the emulator none of the two are directly taken.
+::: tip: Avoid confusion
+Our recommendation is to use the artificial `extraTypes` field to avoid having `typings` and `types` specified. The latter may result in confusion among developers, which is never a good thing.
+
+In this approach we recommend using `extraTypes` for specifying the additional typings to consider when building the declaration, and `types` to refer to the generated declaration file.
+:::
+
+Note that for creating the emulator none of the two are directly taken. More details are in the [monorepo guideline](../tutorials/23-monorepo.md).
