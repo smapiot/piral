@@ -144,6 +144,10 @@ export interface OidcClient {
    */
   logout(): Promise<void>;
   /**
+   * Revokes the access token.
+   */
+  revoke(): Promise<void>;
+  /**
    * Performs a login when the app needs a new token, handles callbacks when on
    * a callback URL, and redirects into the app route if the client was configured with an `appUri`.
    *

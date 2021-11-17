@@ -206,6 +206,9 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     logout() {
       return userManager.signoutRedirect();
     },
+    revoke() {
+      return userManager.revokeAccessToken();
+    },
     handleAuthentication,
     extendHeaders(req) {
       if (!restrict) {
