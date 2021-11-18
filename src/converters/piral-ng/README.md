@@ -622,6 +622,35 @@ The basic dependencies look as follows:
 }
 ```
 
+### Angular 13
+
+In general, Angular 13 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^13",
+  "@angular/compiler": "^13",
+  "@angular/core": "^13",
+  "@angular/router": "^13",
+  "@angular/platform-browser": "^13",
+  "@angular/platform-browser-dynamic": "^13",
+  "core-js": "^3.19.0",
+  "rxjs": "~7.4",
+  "zone.js": "~0.9"
+}
+```
+
+Besides the usual imports the explicit import of the `@angular/compiler` package may be necessary.
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
