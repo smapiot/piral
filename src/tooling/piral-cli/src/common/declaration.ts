@@ -22,7 +22,15 @@ function findPiralBaseApi(root: string) {
 
 function findDeclaredTypings(root: string) {
   try {
-    const { typings } = require(resolve(root, 'package.json'));
+    const { typings, extraTypes } = require(resolve(root, 'package.json'));
+
+    if (extraTypes) {
+      if (typeof extraTypes === 'string') {
+        return [resolve(root, extraTypes)];
+      } else if (Array.isArray(extraTypes)) {
+        return extraTypes.filter((types) => typeof types === 'string').map((types) => resolve(root, types));
+      }
+    }
 
     if (typings) {
       return [resolve(root, typings)];

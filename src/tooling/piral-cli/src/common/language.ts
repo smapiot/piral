@@ -2,17 +2,17 @@ import { log } from './log';
 import { SourceLanguage } from './enums';
 
 export const reactDeps = {
-  react: 'latest',
-  'react-dom': 'latest',
-  'react-router': 'latest',
-  'react-router-dom': 'latest',
+  react: '^17',
+  'react-dom': '^17',
+  'react-router': '^5',
+  'react-router-dom': '^5',
 };
 
 export const reactTypings = {
-  '@types/react': 'latest',
-  '@types/react-dom': 'latest',
-  '@types/react-router': 'latest',
-  '@types/react-router-dom': 'latest',
+  '@types/react': '^17',
+  '@types/react-dom': '^17',
+  '@types/react-router': '^5',
+  '@types/react-router-dom': '^5',
 };
 
 export function getDependencies(language: SourceLanguage, packages: Record<string, string> = reactDeps) {
