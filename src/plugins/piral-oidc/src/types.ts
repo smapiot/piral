@@ -48,6 +48,12 @@ export interface OidcConfig {
    */
   responseType?: string;
   /**
+   * The response mode, which is usually already configured well
+   * via the responseType. By default, the responseType `code` will
+   * get `query` and responseType `token` will get `fragment`.
+   */
+  responseMode?: string;
+  /**
    * The scopes to be used. By default, `openid` is used.
    */
   scopes?: Array<string>;
@@ -73,6 +79,22 @@ export interface OidcConfig {
    * This defaults to oidc-client's WebStorageStateStore, using sessionStorage as the internal store
    */
   userStore?: OidcStore;
+  /**
+   * Provides some extra query parameters. These are included in the authorization request.
+   */
+  extraQueryParams?: Record<string, any>;
+  /**
+   * Sets the optiopnal ui_locales parameter to set the language of the login page.
+   */
+  uiLocales?: string;
+  /**
+   * Sets the metadata if the OIDC service does not allow querying it for whatever reason.
+   */
+  metadata?: any;
+  /**
+   * Overrides the default metadata URL if the server does not follow the standard paths.
+   */
+  metadataUrl?: string;
 }
 
 /**
@@ -135,6 +157,10 @@ export interface OidcRequest {
 }
 
 export interface OidcClient {
+  /**
+   * The underlying OIDC client.
+   */
+  _: any;
   /**
    * Performs a login. Will do nothing when called from a non-top window.
    */

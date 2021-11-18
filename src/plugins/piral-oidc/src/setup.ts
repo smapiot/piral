@@ -31,12 +31,17 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     signInRedirectParams,
     postLogoutRedirectUri = location.origin,
     responseType,
+    responseMode,
     scopes,
     restrict = false,
     parentName,
     appUri,
     logLevel,
     userStore,
+    extraQueryParams,
+    uiLocales,
+    metadata,
+    metadataUrl,
   } = config;
 
   const isMainWindow = () => (parentName ? parentName === window.parent?.name : window === window.top);
@@ -51,7 +56,12 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     client_secret: clientSecret,
     response_type: responseType,
     scope: scopes?.join(' '),
-    userStore: userStore,
+    userStore,
+    extraQueryParams,
+    ui_locales: uiLocales,
+    response_mode: responseMode,
+    metadata,
+    metadataUrl,
   });
 
   if (logLevel !== undefined) {
@@ -200,6 +210,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     });
 
   return {
+    _: userManager,
     login() {
       return userManager.signinRedirect(signInRedirectParams);
     },

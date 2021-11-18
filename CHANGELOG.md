@@ -8,6 +8,8 @@
 - Fixed error when using importmaps in `piral-cli-parcel`
 - Fixed usage of importmap dependencies in lazy loaded assets in `piral-cli-esbuild`
 - Added `deps` props to components loaded with `piral-lazy`
+- Added more options to `piral-oidc` and `piral-oauth2`
+- Added `createDeferredStrategy` to `piral-base` for simplifying deferred pilet fetching
 
 ## 0.14.0 (November 8, 2021)
 
