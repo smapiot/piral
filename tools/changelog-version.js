@@ -1,4 +1,5 @@
 const { join } = require('path');
+const { execSync } = require('child_process');
 const { readFileSync, writeFileSync } = require('fs');
 
 const defaultPath = join(__dirname, '..', 'CHANGELOG.md');
@@ -29,10 +30,21 @@ function updateChangelogDate(changelogPath = defaultPath) {
 
 if (require.main === module) {
   const version = getChangelogVersion();
+  const arg = process.argv.pop();
   console.log(version);
 
-  if (process.argv.pop() === '--update') {
+  if (arg === '--update') {
     updateChangelogDate();
+  } else if (arg === '--apply') {
+    execSync(`lerna version ${version} --no-git-tag-version`, {
+      cwd,
+      stdio: 'inherit',
+      shell: true,
+      env: {
+        ...process.env,
+        PATH: `${process.env.PATH}:${process.cwd()}/node_modules/.bin`,
+      },
+    });
   }
 } else {
   module.exports = {

@@ -11,7 +11,7 @@ const handler: PiralBuildHandler = {
         cacheDir: options.args.cacheDir,
         watch: options.watch,
         sourceMaps: options.sourceMaps,
-        contentHash: options.contentHash,
+        contentHash: !options.watch && options.contentHash,
         minify: options.minify,
         scopeHoist: options.args.scopeHoist,
         detailedReport: options.args.detailedReport,

@@ -1,6 +1,5 @@
 import { PiralPlugin } from 'piral-core';
-import { OAuth2Client } from './setup';
-import { PiralOAuth2Api } from './types';
+import { OAuth2Client, PiralOAuth2Api } from './types';
 
 /**
  * Creates new Pilet API extensions for the integration of OAuth 2.0.

@@ -106,7 +106,7 @@ module.exports = function (override) {
       }
 
       if ('plugins' in override && Array.isArray(override.plugins)) {
-        config.plugins.push(...plugins);
+        config.plugins.push(...override.plugins);
       }
 
       if ('removePlugins' in override && Array.isArray(override.removePlugins)) {

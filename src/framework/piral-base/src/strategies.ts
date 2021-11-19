@@ -136,3 +136,18 @@ export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): Prom
     ),
   );
 }
+
+/**
+ * Creates a strategy that deferres the actual loading until a trigger promise resolves.
+ * The loading spinner is not shown during this time and pilets are supposed to appear directly.
+ * @param trigger The trigger resolving when the strategy should be applied.
+ * @param strategy The strategy to apply. Falls back to the standard strategy.
+ * @returns A pilet loading strategy.
+ */
+export function createDeferredStrategy(trigger: Promise<void>, strategy = standardStrategy): PiletLoadingStrategy {
+  return (options, cb) => {
+    cb(undefined, []);
+    trigger.then(() => strategy(options, cb));
+    return Promise.resolve();
+  };
+}

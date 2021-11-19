@@ -167,7 +167,7 @@ always-auth=true`,
     await installPackage(npmClient, packageRef, root);
 
     progress(`Taking care of templating ...`);
-    
+
     const data = getPiralScaffoldData(language, root, app, framework, variables);
     await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
 

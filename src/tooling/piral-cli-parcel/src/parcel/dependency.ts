@@ -13,7 +13,7 @@ process.on('message', async (msg) => {
         config: {
           outFile: msg.outFile,
           outDir: msg.outDir,
-          cacheDir: msg.args.cacheDir,
+          cacheDir: msg.cacheDir,
           watch: false,
           sourceMaps: msg.sourceMaps,
           minify: msg.minify,
@@ -25,9 +25,11 @@ process.on('message', async (msg) => {
         },
       });
 
-      await runParcel(bundler, (bundle) => {
+      const handler = await runParcel(bundler, (bundle) => {
         return postProcess(bundle, msg.name, msg.version, true, msg.importmap, true);
       });
+
+      await handler.bundle();
 
       process.send({
         type: 'done',
