@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.1 (tbd)
+## 0.14.1 (November 19, 2021)
 
 - Improved types of `piral-lazy`
 - Fixed usage of `plugins` in `extend-config` of `piral-cli-webpack(5)` (#422)
