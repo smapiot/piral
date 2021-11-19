@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.2 (tbd)
+
+- Improved CI/CD scripts
+
 ## 0.14.1 (November 19, 2021)
 
 - Improved types of `piral-lazy`
