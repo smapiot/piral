@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.2 (tbd)
+## 0.14.2 (November 22, 2021)
 
 - Improved CI/CD scripts
 - Fixed issue with weird terminal input after running `piral-cli`
