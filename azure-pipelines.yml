@@ -364,6 +364,7 @@ stages:
               targetType: inline
               script: >-
                 git commit --allow-empty -m "Auto update documentation"
+
                 git push origin $(releaseBranch):$(documentBranch)
 
   - deployment: ReleaseDemoCross

@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.2 (tbd)
+
+- Improved CI/CD scripts
+- Fixed issue with weird terminal input after running `piral-cli`
+
 ## 0.14.1 (November 19, 2021)
 
 - Improved types of `piral-lazy`

@@ -31,6 +31,7 @@ function updateChangelogDate(changelogPath = defaultPath) {
 if (require.main === module) {
   const version = getChangelogVersion();
   const arg = process.argv.pop();
+  const cwd = process.cwd();
   console.log(version);
 
   if (arg === '--update') {
@@ -42,7 +43,7 @@ if (require.main === module) {
       shell: true,
       env: {
         ...process.env,
-        PATH: `${process.env.PATH}:${process.cwd()}/node_modules/.bin`,
+        PATH: `${process.env.PATH}:${cwd}/node_modules/.bin`,
       },
     });
   }
