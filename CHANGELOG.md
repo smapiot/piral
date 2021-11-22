@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.3 (tbd)
+
+- Fixed CI/CD scripts to automatically accept version change
+
 ## 0.14.2 (November 22, 2021)
 
 - Improved CI/CD scripts

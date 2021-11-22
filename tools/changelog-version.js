@@ -37,7 +37,7 @@ if (require.main === module) {
   if (arg === '--update') {
     updateChangelogDate();
   } else if (arg === '--apply') {
-    execSync(`lerna version ${version} --no-git-tag-version`, {
+    execSync(`lerna version ${version} --no-git-tag-version --yes`, {
       cwd,
       stdio: 'inherit',
       shell: true,
