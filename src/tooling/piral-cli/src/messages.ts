@@ -1026,8 +1026,8 @@ export function missingPiletFeedUrl_0060(): QuickMessage {
  * Using multiple commands is preferred if you use custom options, otherwise
  * just go for the single command.
  */
-export function missingPiletTarball_0061(source: string): QuickMessage {
-  return [LogLevels.error, '0061', `No files found using pattern "${source}".`];
+export function missingPiletTarball_0061(sources: Array<string>): QuickMessage {
+  return [LogLevels.error, '0061', `No files found using pattern "${sources.join('", "')}".`];
 }
 
 /**
@@ -1839,6 +1839,26 @@ export function toolingIncompatible_0101(piralVersion: string, cliVersion: strin
     LogLevels.warning,
     '0101',
     `The version of Piral (${piralVersion}) may be incompatible to the used version of "piral-cli" (${cliVersion}).`,
+  ];
+}
+
+/**
+ * @kind Info
+ *
+ * @summary
+ * The Piral CLI could not detect the tooling version used by the app shell. Therefore, it may be incompatible to the
+ * currently used version of the piral-cli. Keep an eye on weird errors.
+ *
+ * @abstract
+ * The emulator contains a special section to inform the Piral CLI about the used version of the tooling. This is
+ * important to detect potential alignment or incompatibilities. The used version of the emulator does not contain
+ * this information and therefore may be incompatible.
+ */
+export function appShellMaybeIncompatible_0102(cliVersion: string): QuickMessage {
+  return [
+    LogLevels.info,
+    '0100',
+    `The Piral instance's CLI version is unknown and may be incompatible to the used version (${cliVersion}).`,
   ];
 }
 

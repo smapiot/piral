@@ -23,7 +23,7 @@ export interface PublishPiletOptions {
    * used with `--fresh`, otherwise expects source to be a path leading
    * to a `*.tgz` file.
    */
-  source?: string;
+  source?: string | Array<string>;
 
   /**
    * Sets the URL of the feed service to deploy to.
@@ -83,7 +83,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
 
 async function getFiles(
   baseDir: string,
-  source: string,
+  sources: Array<string>,
   from: PiletPublishSource,
   fresh: boolean,
   schemaVersion: PiletSchemaVersion,
@@ -107,17 +107,23 @@ async function getFiles(
     log('generalDebug_0003', `Did not find fresh flag. Trying to match from "${from}".`);
 
     switch (from) {
-      case 'local':
-        log('generalDebug_0003', `Matching files using "${source}".`);
-        return await matchFiles(baseDir, source);
-      case 'remote':
-        log('generalDebug_0003', `Download file from "${source}".`);
-        return await downloadFile(source, ca);
-      case 'npm':
-        log('generalDebug_0003', `View npm package "${source}".`);
-        const url = await findTarball(source);
-        log('generalDebug_0003', `Download file from "${url}".`);
-        return await downloadFile(url, ca);
+      case 'local': {
+        log('generalDebug_0003', `Matching files using "${sources.join('", "')}".`);
+        const allFiles = await Promise.all(sources.map((s) => matchFiles(baseDir, s)));
+        return allFiles.reduce((result, files) => [...result, ...files], []);
+      }
+      case 'remote': {
+        log('generalDebug_0003', `Download file from "${sources.join('", "')}".`);
+        const allFiles = await Promise.all(sources.map((s) => downloadFile(s, ca)));
+        return allFiles.reduce((result, files) => [...result, ...files], []);
+      }
+      case 'npm': {
+        log('generalDebug_0003', `View npm package "${sources.join('", "')}".`);
+        const allUrls = await Promise.all(sources.map((s) => findTarball(s)));
+        log('generalDebug_0003', `Download file from "${allUrls.join('", "')}".`);
+        const allFiles = await Promise.all(allUrls.map((url) => downloadFile(url, ca)));
+        return allFiles.reduce((result, files) => [...result, ...files], []);
+      }
     }
   }
 }
@@ -153,12 +159,13 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   }
 
   log('generalDebug_0003', 'Getting the tgz files ...');
-  const files = await getFiles(fullBase, source, from, fresh, schemaVersion, ca);
+  const sources = Array.isArray(source) ? source : [source];
+  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, ca);
   const successfulUploads: Array<string> = [];
   log('generalDebug_0003', 'Received available tgz files.');
 
   if (files.length === 0) {
-    fail('missingPiletTarball_0061', source);
+    fail('missingPiletTarball_0061', sources);
   }
 
   log('generalInfo_0000', `Using feed service "${url}".`);

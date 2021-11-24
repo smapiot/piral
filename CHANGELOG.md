@@ -2,7 +2,11 @@
 
 ## 0.14.3 (tbd)
 
+- Improved `pilet-uses-latest-piral` rule w.r.t. monorepos
 - Fixed CI/CD scripts to automatically accept version change
+- Added `--type standalone` option for building pilets (#427)
+- Added support for building (or publishing) multiple pilets at once
+- Added `useGlobalStateContext` hook to `piral-core`
 
 ## 0.14.2 (November 22, 2021)
 

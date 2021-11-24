@@ -1,4 +1,4 @@
-import { findLatestVersion } from '../common';
+import { isMonorepoPackageRef, findLatestVersion } from '../common';
 import { PiletRuleContext } from '../types';
 
 export type Options = 'suggest' | 'required' | 'ignore';
@@ -13,17 +13,27 @@ export default async function (context: PiletRuleContext, options: Options = 'su
     const isfixed = demanded.startsWith('git+') || demanded.startsWith('file:');
 
     if (!isfixed) {
-      const latestVersion = await findLatestVersion(name);
+      const isMonorepoRef = await isMonorepoPackageRef(name, context.root);
 
-      if (version !== latestVersion) {
-        const notify = options === 'required' ? context.error : context.warning;
-        notify(
-          `
-The used version of "${name}" is outdated.
-  Expected: v${latestVersion}.
-  Received: v${version}.
-`,
-        );
+      // either we are not in a monorepo or the app shell is not part of the monorepo
+      if (!isMonorepoRef) {
+        const latestVersion = await findLatestVersion(name).catch((err) => {
+          context.warning(`
+  The used version of "${name}" could not be determined: ${err}.
+          `);
+          return version;
+        });
+
+        if (version !== latestVersion) {
+          const notify = options === 'required' ? context.error : context.warning;
+          notify(
+            `
+  The used version of "${name}" is outdated.
+    Expected: v${latestVersion}.
+    Received: v${version}.
+  `,
+          );
+        }
       }
     }
   }

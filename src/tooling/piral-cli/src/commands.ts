@@ -1,3 +1,4 @@
+import { piletBuildTypeKeys } from '.';
 import * as apps from './apps';
 import {
   availableBundlers,
@@ -13,7 +14,7 @@ import {
   schemaKeys,
   fromKeys,
   bundlerKeys,
-  buildTypeKeys,
+  piralBuildTypeKeys,
 } from './helpers';
 import {
   ToolCommand,
@@ -23,6 +24,7 @@ import {
   PiralBuildType,
   PiletPublishSource,
   PiletSchemaVersion,
+  PiletBuildType,
 } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
@@ -143,7 +145,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.buildPiralDefaults.optimizeModules)
-        .choices('type', buildTypeKeys)
+        .choices('type', piralBuildTypeKeys)
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', apps.buildPiralDefaults.type)
         .choices('bundler', availableBundlers)
@@ -186,7 +188,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.publishPiralDefaults.logLevel)
-        .choices('type', buildTypeKeys)
+        .choices('type', piralBuildTypeKeys)
         .describe('type', 'Selects the target type to publish. "all" publishes all target types.')
         .default('type', apps.publishPiralDefaults.type)
         .choices('provider', availableReleaseProviders)
@@ -482,6 +484,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('bundler', availableBundlers)
         .describe('bundler', 'Sets the bundler to use.')
         .default('bundler', availableBundlers[0])
+        .choices('type', piletBuildTypeKeys)
+        .describe('type', 'Selects the target type of the build.')
+        .default('type', apps.buildPiletDefaults.type)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -498,6 +503,7 @@ const allCommands: Array<ToolCommand<any>> = [
         declaration: args.declaration as boolean,
         sourceMaps: args['source-maps'] as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
+        type: args.type as PiletBuildType,
         fresh: args.fresh as boolean,
         logLevel: args['log-level'] as LogLevels,
         schemaVersion: args.schema as PiletSchemaVersion,

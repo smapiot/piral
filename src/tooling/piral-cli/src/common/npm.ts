@@ -1,4 +1,4 @@
-import { resolve, relative } from 'path';
+import { resolve, relative, dirname } from 'path';
 import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
@@ -107,20 +107,50 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
 
 export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
   const c = require(`./clients/npm`);
-  const details = await c.listPackage(refName, root);
-  return details?.dependencies?.[refName]?.extraneous ?? false;
+  const newRoot = await detectMonorepoRoot(root);
+
+  if (newRoot) {
+    const details = await c.listPackage(refName, newRoot);
+    return details?.dependencies?.[refName]?.extraneous ?? false;
+  }
+
+  return false;
+}
+
+export async function detectMonorepoRoot(root: string): Promise<string> {
+  const file = await getLernaConfigPath(root);
+
+  if (file !== undefined) {
+    return dirname(file);
+  }
+
+  let previous = root;
+
+  do {
+    const packageJson = await readJson(root, 'package.json');
+
+    if (Array.isArray(packageJson?.workspaces)) {
+      return root;
+    }
+
+    previous = root;
+    root = dirname(root);
+  } while (root !== previous);
+
+  return undefined;
 }
 
 export type MonorepoKind = 'none' | 'lerna' | 'yarn';
 
 export async function detectMonorepo(root: string): Promise<MonorepoKind> {
-  const file = await getLernaConfigPath(root);
+  const newRoot = await detectMonorepoRoot(root);
+  const file = await getLernaConfigPath(newRoot);
 
   if (file !== undefined) {
     return 'lerna';
   }
 
-  const packageJson = await readJson(root, 'package.json');
+  const packageJson = await readJson(newRoot, 'package.json');
 
   if (Array.isArray(packageJson?.workspaces)) {
     return 'yarn';
@@ -159,7 +189,7 @@ export function createPackage(target = '.'): Promise<string> {
   return c.createPackage(target);
 }
 
-export function findTarball(packageRef: string) {
+export function findTarball(packageRef: string): Promise<string> {
   const c = require(`./clients/npm`);
   return c.findTarball(packageRef);
 }
