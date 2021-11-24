@@ -144,16 +144,19 @@ export type MonorepoKind = 'none' | 'lerna' | 'yarn';
 
 export async function detectMonorepo(root: string): Promise<MonorepoKind> {
   const newRoot = await detectMonorepoRoot(root);
-  const file = await getLernaConfigPath(newRoot);
 
-  if (file !== undefined) {
-    return 'lerna';
-  }
+  if (newRoot) {
+    const file = await getLernaConfigPath(newRoot);
 
-  const packageJson = await readJson(newRoot, 'package.json');
+    if (file !== undefined) {
+      return 'lerna';
+    }
 
-  if (Array.isArray(packageJson?.workspaces)) {
-    return 'yarn';
+    const packageJson = await readJson(newRoot, 'package.json');
+
+    if (Array.isArray(packageJson?.workspaces)) {
+      return 'yarn';
+    }
   }
 
   return 'none';
