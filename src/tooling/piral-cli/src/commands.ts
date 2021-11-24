@@ -573,6 +573,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
         .default('schema', apps.publishPiletDefaults.schemaVersion)
+        .choices('bundler', availableBundlers)
+        .describe('bundler', 'Sets the bundler to use.')
+        .default('bundler', availableBundlers[0])
         .choices('from', fromKeys)
         .describe('from', 'Sets the type of the source to use for publishing.')
         .default('from', apps.publishPiletDefaults.from)
@@ -590,10 +593,12 @@ const allCommands: Array<ToolCommand<any>> = [
         url: args.url as string,
         logLevel: args['log-level'] as LogLevels,
         cert: args['ca-cert'] as string,
+        bundlerName: args.bundler as string,
         fresh: args.fresh as boolean,
         from: args.from as PiletPublishSource,
         schemaVersion: args.schema as PiletSchemaVersion,
         fields: args.fields as Record<string, string>,
+        _: args,
       });
     },
   },

@@ -19,6 +19,7 @@ import {
   getPiletSpecMeta,
   getFileNames,
   copy,
+  checkAppShellPackage,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -226,9 +227,12 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   );
 
   if (type === 'standalone') {
-    const outDir = resolve(fullBase, target, 'standalone');
+    const distDir = dirname(resolve(fullBase, target));
+    const outDir = resolve(distDir, 'standalone');
     const { appFile, appPackage, root } = pilets[0];
-    await createDirectory(outDir);
+    const isEmulator = checkAppShellPackage(appPackage);
+
+    await removeDirectory(outDir);
 
     Promise.all(
       pilets.map(async (p) => {
@@ -239,6 +243,12 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
         }
       }),
     );
+
+    if (isEmulator) {
+      // in case of an emulator assets are not "seen" by the bundler, so we
+      // just copy overthing over - this should work in most cases.
+      await copy(dirname(appFile), outDir, ForceOverwrite.yes);
+    }
 
     await callPiralBuild(
       {

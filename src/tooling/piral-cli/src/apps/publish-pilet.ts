@@ -1,5 +1,5 @@
-import { relative, join, dirname, basename, resolve } from 'path';
-import { buildPilet } from './build-pilet';
+import { relative, dirname, basename, resolve } from 'path';
+import { callPiletBuild } from '../bundler';
 import { LogLevels, PiletSchemaVersion, PiletPublishSource } from '../types';
 import {
   postFile,
@@ -15,6 +15,10 @@ import {
   checkExists,
   findTarball,
   downloadFile,
+  matchAnyPilet,
+  retrievePiletData,
+  removeDirectory,
+  logInfo,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -67,6 +71,16 @@ export interface PublishPiletOptions {
    * Places additional fields that should be posted to the feed service.
    */
   fields?: Record<string, string>;
+
+  /**
+   * Sets the bundler to use for building, if any specific.
+   */
+  bundlerName?: string;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
+  _?: Record<string, any>;
 }
 
 export const publishPiletDefaults: PublishPiletOptions = {
@@ -87,22 +101,69 @@ async function getFiles(
   from: PiletPublishSource,
   fresh: boolean,
   schemaVersion: PiletSchemaVersion,
+  logLevel: LogLevels,
+  bundlerName: string,
+  _?: Record<string, any>,
   ca?: Buffer,
 ): Promise<Array<string>> {
   if (fresh) {
     log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
-    const details = require(join(baseDir, 'package.json'));
-    progress('Triggering pilet build ...');
-    await buildPilet(baseDir, {
-      target: details.main,
-      fresh,
-      schemaVersion,
-    });
-    log('generalDebug_0003', 'Successfully built.');
-    progress('Triggering pilet pack ...');
-    const file = await createPiletPackage(baseDir, '.', '.');
-    log('generalDebug_0003', 'Successfully packed.');
-    return [file];
+    const allEntries = await matchAnyPilet(baseDir, sources);
+
+    if (allEntries.length === 0) {
+      fail('entryFileMissing_0077');
+    }
+
+    return await Promise.all(
+      allEntries.map(async (entryModule) => {
+        const targetDir = dirname(entryModule);
+        const { root, piletPackage, importmap, peerDependencies, peerModules, appPackage } = await retrievePiletData(
+          targetDir,
+        );
+        const dest = resolve(root, piletPackage.main);
+        const outDir = dirname(dest);
+        const outFile = basename(dest);
+        const externals = [...Object.keys(peerDependencies), ...peerModules];
+        progress('Triggering pilet build ...');
+
+        if (fresh) {
+          progress('Removing output directory ...');
+          await removeDirectory(outDir);
+        }
+
+        logInfo('Bundle pilet ...');
+
+        await callPiletBuild(
+          {
+            root,
+            piral: appPackage.name,
+            optimizeModules: false,
+            sourceMaps: true,
+            contentHash: true,
+            minify: true,
+            externals,
+            targetDir,
+            importmap,
+            outFile,
+            outDir,
+            entryModule: `./${relative(root, entryModule)}`,
+            logLevel,
+            version: schemaVersion,
+            ignored: [],
+            _,
+          },
+          bundlerName,
+        );
+
+        log('generalDebug_0003', `Pilet "${piletPackage.name}" built successfully!`);
+        progress('Triggering pilet pack ...');
+
+        const file = await createPiletPackage(root, '.', '.');
+        log('generalDebug_0003', `Pilet "${piletPackage.name}" packed successfully!`);
+
+        return file;
+      }),
+    );
   } else {
     log('generalDebug_0003', `Did not find fresh flag. Trying to match from "${from}".`);
 
@@ -139,6 +200,8 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     schemaVersion = publishPiletDefaults.schemaVersion,
     cert = config.cert ?? publishPiletDefaults.cert,
     fields = publishPiletDefaults.fields,
+    _ = {},
+    bundlerName,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
@@ -160,7 +223,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
   log('generalDebug_0003', 'Getting the tgz files ...');
   const sources = Array.isArray(source) ? source : [source];
-  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, ca);
+  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, logLevel, bundlerName, _, ca);
   const successfulUploads: Array<string> = [];
   log('generalDebug_0003', 'Received available tgz files.');
 
