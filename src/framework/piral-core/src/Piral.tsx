@@ -21,10 +21,12 @@ const app = (
  */
 export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => (
   <StateContext.Provider value={instance.context}>
-    <PortalRenderer id="root" />
     <ResponsiveLayout breakpoints={breakpoints} />
     <Mediator options={instance.options} />
-    <PiralView>{children}</PiralView>
+    <PiralView>
+      <PortalRenderer id="root" />
+      {children}
+    </PiralView>
   </StateContext.Provider>
 );
 Piral.displayName = 'Piral';
