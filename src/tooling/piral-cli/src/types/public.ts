@@ -85,6 +85,7 @@ export interface WatchPiralParameters extends BaseBundleParameters {
 export interface BuildPiralParameters extends BaseBundleParameters {
   piral: string;
   emulator: boolean;
+  standalone: boolean;
   sourceMaps: boolean;
   contentHash: boolean;
   minify: boolean;

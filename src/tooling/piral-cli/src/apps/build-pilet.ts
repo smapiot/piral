@@ -232,6 +232,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     const { appFile, appPackage, root } = pilets[0];
     const isEmulator = checkAppShellPackage(appPackage);
 
+    progress('Building standalone solution ...');
     await removeDirectory(outDir);
 
     Promise.all(
@@ -250,11 +251,25 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       await copy(dirname(appFile), outDir, ForceOverwrite.yes);
     }
 
+    await writeJson(
+      outDir,
+      '$pilet-api',
+      pilets.map((p) => ({
+        name: p.package.name,
+        version: p.package.version,
+        link: `./${p.id}/${p.outFile}`,
+        ...getPiletSpecMeta(p.path, p.outDir),
+      })),
+    );
+
+    progress('Optimizing app shell ...');
+
     await callPiralBuild(
       {
         root,
         piral: appPackage.name,
         emulator: false,
+        standalone: true,
         optimizeModules: false,
         sourceMaps,
         contentHash,
@@ -269,17 +284,6 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
         _,
       },
       bundlerName,
-    );
-
-    await writeJson(
-      outDir,
-      '$pilet-api',
-      pilets.map((p) => ({
-        name: p.package.name,
-        version: p.package.version,
-        link: `./${p.id}/${p.outFile}`,
-        ...getPiletSpecMeta(p.path, p.outDir),
-      })),
     );
 
     logDone(`Standalone app available at "${outDir}"!`);
