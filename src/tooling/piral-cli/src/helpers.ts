@@ -11,7 +11,7 @@ import {
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'v2', 'none'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const piralBuildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator', 'emulator-sources'];
-export const piletBuildTypeKeys: Array<PiletBuildType> = ['default', 'standalone'];
+export const piletBuildTypeKeys: Array<PiletBuildType> = ['default', 'standalone', 'manifest'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
 export const bundlerKeys: Array<string> = ['none', 'parcel', 'webpack', 'webpack5', 'esbuild'];
 export const availableBundlers: Array<string> = [];

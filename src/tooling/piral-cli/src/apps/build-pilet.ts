@@ -109,6 +109,39 @@ export interface BuildPiletOptions {
   };
 }
 
+interface PiletData {
+  id: string;
+  package: any;
+  path: string;
+  outFile: string;
+  outDir: string;
+}
+
+function createMetadata(outDir: string, outFile: string, pilets: Array<PiletData>) {
+  return writeJson(
+    outDir,
+    outFile,
+    pilets.map((p) => ({
+      name: p.package.name,
+      version: p.package.version,
+      link: `./${p.id}/${p.outFile}`,
+      ...getPiletSpecMeta(p.path, p.outDir),
+    })),
+  );
+}
+
+function copyPilets(outDir: string, pilets: Array<PiletData>) {
+  return Promise.all(
+    pilets.map(async (p) => {
+      const files = await getFileNames(p.outDir);
+
+      for (const file of files) {
+        await copy(resolve(p.outDir, file), resolve(outDir, p.id, file), ForceOverwrite.yes);
+      }
+    }),
+  );
+}
+
 export const buildPiletDefaults: BuildPiletOptions = {
   entry: './src/index',
   target: './dist/index.js',
@@ -232,35 +265,21 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     const { appFile, appPackage, root } = pilets[0];
     const isEmulator = checkAppShellPackage(appPackage);
 
-    progress('Building standalone solution ...');
+    logInfo('Building standalone solution ...');
+
     await removeDirectory(outDir);
 
-    Promise.all(
-      pilets.map(async (p) => {
-        const files = await getFileNames(p.outDir);
+    progress('Copying files ...');
 
-        for (const file of files) {
-          await copy(resolve(p.outDir, file), resolve(outDir, p.id, file), ForceOverwrite.yes);
-        }
-      }),
-    );
+    await copyPilets(outDir, pilets);
+
+    await createMetadata(outDir, '$pilet-api', pilets);
 
     if (isEmulator) {
       // in case of an emulator assets are not "seen" by the bundler, so we
       // just copy overthing over - this should work in most cases.
       await copy(dirname(appFile), outDir, ForceOverwrite.yes);
     }
-
-    await writeJson(
-      outDir,
-      '$pilet-api',
-      pilets.map((p) => ({
-        name: p.package.name,
-        version: p.package.version,
-        link: `./${p.id}/${p.outFile}`,
-        ...getPiletSpecMeta(p.path, p.outDir),
-      })),
-    );
 
     progress('Optimizing app shell ...');
 
@@ -287,6 +306,19 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     );
 
     logDone(`Standalone app available at "${outDir}"!`);
+  } else if (type === 'manifest') {
+    const manifest = 'pilets.json';
+    const outDir = dirname(resolve(fullBase, target));
+
+    logInfo('Building pilet manifest ...');
+
+    progress('Copying files ...');
+
+    await copyPilets(outDir, pilets);
+
+    await createMetadata(outDir, manifest, pilets);
+
+    logDone(`Manifest available at "${outDir}/${manifest}"!`);
   }
 
   await hooks.onEnd?.({});

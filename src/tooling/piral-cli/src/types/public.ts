@@ -218,7 +218,7 @@ export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
 export type PiralBuildType = 'all' | 'release' | 'emulator' | 'emulator-sources';
 
-export type PiletBuildType = 'default' | 'standalone';
+export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 
 export type PackageType = 'registry' | 'file' | 'git';
 
