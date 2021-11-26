@@ -194,7 +194,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name });
 
     logInfo(`Bundle ${emulatorName} ...`);
-    const { dir: outDir, name: outFile, hash } = await callPiralBuild(
+    const {
+      dir: outDir,
+      name: outFile,
+      hash,
+    } = await callPiralBuild(
       {
         root,
         piral: name,
@@ -251,7 +255,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name });
 
-    const { dir: outDir, name: outFile, hash } = await callPiralBuild(
+    const {
+      dir: outDir,
+      name: outFile,
+      hash,
+    } = await callPiralBuild(
       {
         root,
         piral: name,

@@ -23,7 +23,7 @@ export interface PiletBundlerSetup {
   type: 'pilet';
   targetDir: string;
   externals: Array<string>;
-  importmap: Array<SharedDependency>,
+  importmap: Array<SharedDependency>;
   entryModule: string;
   config: ParcelConfig;
 }
@@ -32,7 +32,7 @@ export interface DependencyBundlerSetup {
   type: 'dependency';
   targetDir: string;
   externals: Array<string>;
-  importmap: Array<SharedDependency>,
+  importmap: Array<SharedDependency>;
   entryModule: string;
   config: ParcelConfig;
 }
