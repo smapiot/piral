@@ -1,5 +1,6 @@
 import { join } from 'path';
 import { log } from './log';
+import { frameworkLibs } from './constants';
 import { pathSeparator, cliVersion, compatVersion } from './info';
 import { StandardEnvProps } from '../types';
 
@@ -43,7 +44,7 @@ export function setStandardEnvs(options: StandardEnvProps) {
   }
 
   if (options.dependencies && options.dependencies.length) {
-    const excludedDependencies = ['piral', 'piral-core', 'piral-base', options.piral];
+    const excludedDependencies = [...frameworkLibs, options.piral];
     const dependencies = options.dependencies.filter((m) => !excludedDependencies.includes(m));
     process.env.SHARED_DEPENDENCIES = dependencies.join(',');
   } else {

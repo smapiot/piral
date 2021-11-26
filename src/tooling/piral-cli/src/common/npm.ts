@@ -7,6 +7,7 @@ import { inspectPackage } from './inspect';
 import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
+import { frameworkLibs } from '.';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
@@ -421,25 +422,44 @@ export function getPackageVersion(
   }
 }
 
-export function getCoreExternals(): Array<string> {
+function getExternalsFrom(packageName: string): Array<string> | undefined {
   try {
-    return require('piral-core/package.json').sharedDependencies || [];
+    return require(`${packageName}/package.json`).sharedDependencies;
   } catch {
-    return [];
+    return undefined;
   }
 }
 
-export function makePiletExternals(externals: Array<string>, fromEmulator: boolean, piralInfo: any) {
+function getCoreExternals(dependencies: Record<string, string>): Array<string> {
+  for (const frameworkLib of frameworkLibs) {
+    if (dependencies[frameworkLib]) {
+      const deps = getExternalsFrom(frameworkLib);
+
+      if (deps) {
+        return deps;
+      }
+    }
+  }
+
+  return [];
+}
+
+export function makePiletExternals(
+  dependencies: Record<string, string>,
+  externals: Array<string>,
+  fromEmulator: boolean,
+  piralInfo: any,
+) {
   if (fromEmulator) {
-    const { sharedDependencies = makeExternals(externals, true) } = piralInfo;
+    const { sharedDependencies = makeExternals(dependencies, externals, true) } = piralInfo;
     return sharedDependencies;
   } else {
-    return makeExternals(externals);
+    return makeExternals(dependencies, externals);
   }
 }
 
-export function makeExternals(externals?: Array<string>, legacy = false) {
-  const coreExternals = legacy ? legacyCoreExternals : getCoreExternals();
+export function makeExternals(dependencies: Record<string, string>, externals?: Array<string>, legacy = false) {
+  const coreExternals = legacy ? legacyCoreExternals : getCoreExternals(dependencies);
 
   if (externals && Array.isArray(externals)) {
     const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(

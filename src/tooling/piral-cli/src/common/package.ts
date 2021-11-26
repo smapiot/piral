@@ -442,8 +442,12 @@ export async function retrievePiletsInfo(entryFile: string) {
   }
 
   const packageInfo = require(packageJson);
+  const allDeps = {
+    ...packageInfo.devDependencies,
+    ...packageInfo.dependencies,
+  };
   const info = getPiletsInfo(packageInfo);
-  const externals = makeExternals(info.externals);
+  const externals = makeExternals(allDeps, info.externals);
 
   return {
     ...info,
@@ -495,7 +499,7 @@ export async function patchPiletPackage(
       }
     : info.scripts;
   const peerModules = [];
-  const allExternals = makePiletExternals(externals, fromEmulator, piralInfo);
+  const allExternals = makePiletExternals(piralDependencies, externals, fromEmulator, piralInfo);
   const peerDependencies = {
     ...allExternals.reduce((deps, name) => {
       const valid = isValidDependency(name);
