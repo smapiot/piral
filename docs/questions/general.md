@@ -4,6 +4,14 @@ title: General Questions
 
 # General
 
+## How is it pronounced?
+
+It's *pie-ral* and *pie-let* (and **not** *pee-ral* and *pee-let*). Just think of pies. They are delicious!
+
+Alternatively, you can think of pi like the number PI (π).
+
+---------------------------------------
+
 ## What's the motivation behind Piral?
 
 We've build several extensible frontend applications in the past. Sometimes these applications have been shipped packaged as an app, sometimes they have been deployed as a webpage only, many times both. The general mechanism was always the same and we've detected a basic pattern that can be followed successfully to develop modern (grand scale) web apps.
