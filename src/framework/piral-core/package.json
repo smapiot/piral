@@ -48,6 +48,17 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
+  "dependencies": {
+    "@dbeining/react-atom": "^4.0.0",
+    "piral-base": "^0.14.2",
+    "piral-debug-utils": "^0.14.2"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "react-router": ">=5.0.0",
+    "react-router-dom": ">=5.0.0"
+  },
   "devDependencies": {
     "@types/history": "^4.7.8",
     "@types/react": "^17.0.0",
@@ -55,12 +66,6 @@
     "@types/react-router-dom": "^5.1.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "react-router": ">=5.0.0",
-    "react-router-dom": ">=5.0.0"
   },
   "sharedDependencies": [
     "react",
@@ -72,10 +77,5 @@
     "path-to-regexp",
     "@libre/atom",
     "@dbeining/react-atom"
-  ],
-  "dependencies": {
-    "@dbeining/react-atom": "^4.0.0",
-    "piral-base": "^0.14.2",
-    "piral-debug-utils": "^0.14.2"
-  }
+  ]
 }

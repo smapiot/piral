@@ -59,11 +59,7 @@ export function evalDependency(name: string, content: string, link = '') {
  * @param link The optional link to the dependency.
  * @returns The evaluated module.
  */
-export function compileDependency(
-  name: string,
-  content: string,
-  link = '',
-): Promise<PiletApp> {
+export function compileDependency(name: string, content: string, link = ''): Promise<PiletApp> {
   const app = evalDependency(name, content, link);
   return checkPiletAppAsync(name, app);
 }

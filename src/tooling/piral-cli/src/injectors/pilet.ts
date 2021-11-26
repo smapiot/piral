@@ -3,8 +3,8 @@ import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
-import { computeHash, computeIntegrity } from '../common/hash';
 import { log } from '../common/log';
+import { getPiletSpecMeta } from '../common/spec';
 import { axios, mime } from '../external';
 import { Bundler } from '../types';
 
@@ -26,62 +26,6 @@ interface PiletMetadata {
   [key: string]: unknown;
 }
 
-const checkV1 = /^\/\/\s*@pilet\s+v:1\s*\(([A-Za-z0-9\_\:\-]+)\)/;
-const checkV2 = /^\/\/\s*@pilet\s+v:2\s*(?:\(([A-Za-z0-9\_\:\-]+),\s*(.*)\))?/;
-
-function getDependencies(deps: string, basePath: string) {
-  try {
-    const depMap = JSON.parse(deps);
-
-    if (depMap && typeof depMap === 'object') {
-      return Object.keys(depMap).reduce((obj, depName) => {
-        const depUrl = depMap[depName];
-
-        if (typeof depUrl === 'string') {
-          const url = new URL(depUrl, basePath);
-          obj[depName] = url.href;
-        }
-
-        return obj;
-      }, {});
-    }
-  } catch {}
-
-  return {};
-}
-
-function getPiletSpecMeta(target: string, basePath: string) {
-  if (existsSync(target) && statSync(target).isFile()) {
-    const content = readFileSync(target, 'utf8');
-
-    if (checkV1.test(content)) {
-      // uses single argument; requireRef (required)
-      const [, requireRef] = checkV1.exec(content);
-      return {
-        spec: 'v1',
-        requireRef,
-        integrity: computeIntegrity(content),
-      };
-    } else if (checkV2.test(content)) {
-      // uses two arguments; requireRef and dependencies as JSON (required)
-      const [, requireRef, plainDependencies] = checkV2.exec(content);
-      return {
-        spec: 'v2',
-        requireRef,
-        dependencies: getDependencies(plainDependencies, basePath),
-      };
-    } else {
-      return {
-        spec: 'v0',
-        hash: computeHash(content),
-        noCache: true,
-      };
-    }
-  }
-
-  return {};
-}
-
 function fillPiletMeta(pilet: Pilet, basePath: string) {
   const { root, bundler } = pilet;
   const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
@@ -98,6 +42,24 @@ function fillPiletMeta(pilet: Pilet, basePath: string) {
 
   pilet.meta = meta;
   return JSON.stringify(meta);
+}
+
+async function loadFeed(feed: string) {
+  try {
+    const response = await axios.default.get<{ items?: Array<PiletMetadata> } | Array<PiletMetadata> | PiletMetadata>(
+      feed,
+    );
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (Array.isArray(response.data?.items)) {
+      return response.data.items;
+    } else {
+      return [response.data];
+    }
+  } catch (e) {
+    log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
+  }
 }
 
 export default class PiletInjector implements KrasInjector {
@@ -165,35 +127,26 @@ export default class PiletInjector implements KrasInjector {
     return JSON.stringify(mergedPilets);
   }
 
-  async loadRemoteFeed(feed?: string): Promise<Array<PiletMetadata>> {
+  async loadRemoteFeed(feed?: string | Array<string>): Promise<Array<Array<PiletMetadata>>> {
     if (feed) {
-      try {
-        const response = await axios.default.get<{ items?: Array<PiletMetadata> } | Array<PiletMetadata> | PiletMetadata>(feed);
-  
-        if (Array.isArray(response.data)) {
-          return response.data;
-        } else if (Array.isArray(response.data?.items)) {
-          return response.data.items;
-        } else {
-          return [response.data];
-        }
-      } catch (e) {
-        log('generalWarning_0001', `Couldn't load feed at ${feed}.`);
-      }
+      const feeds = Array.isArray(feed) ? feed : [feed];
+      return await Promise.all(feeds.map(loadFeed));
     }
-
   }
 
-  mergePilets(localPilets: Array<PiletMetadata>, remotePilets: Array<PiletMetadata>) {
-    if (!remotePilets) {
+  mergePilets(localPilets: Array<PiletMetadata>, remoteFeeds: Array<Array<PiletMetadata>>) {
+    if (!remoteFeeds) {
       return localPilets;
     }
 
     const names = localPilets.map((pilet) => pilet.name);
-    const merged = [
-      ...localPilets,
-      ...remotePilets.filter((pilet) => pilet.name !== undefined && !names.includes(pilet.name)),
-    ];
+    const merged = [...localPilets];
+
+    for (const remotePilets of remoteFeeds) {
+      const newPilets = remotePilets.filter((pilet) => pilet.name !== undefined && !names.includes(pilet.name));
+      names.push(...newPilets.map((p) => p.name));
+      merged.push(...newPilets);
+    }
 
     return merged;
   }

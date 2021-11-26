@@ -254,7 +254,7 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
                   log('generalDebug_0003', `Found a "source" field with value "${source}".`);
                   const target = resolve(targetDir, source);
                   const exists = await checkExists(target);
-  
+
                   if (exists) {
                     log('generalDebug_0003', `Taking existing target as "${target}".`);
                     matched(name, target);
@@ -264,7 +264,7 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
                 } else {
                   log('generalDebug_0003', `No "source" field found. Trying combinations in "src".`);
                   const files = await matchPattern(targetDir, `src/index.{${exts}}`);
-  
+
                   if (files.length > 0) {
                     log('generalDebug_0003', `Found a result; taking "${files[0]}".`);
                     matched(name, files[0]);
@@ -420,10 +420,20 @@ export async function copy(source: string, target: string, forceOverwrite = Forc
 
   try {
     const flag = forceOverwrite === ForceOverwrite.yes ? 0 : constants.COPYFILE_EXCL;
-    await new Promise<void>((resolve, reject) => {
-      copyFile(source, target, flag, (err) => (err ? reject(err) : resolve()));
-    });
-    return true;
+    const isDir = await checkIsDirectory(source);
+
+    if (isDir) {
+      const files = await getFileNames(source);
+      const results = await Promise.all(
+        files.map((file) => copy(resolve(source, file), resolve(target, file), forceOverwrite)),
+      );
+      return results.every(Boolean);
+    } else {
+      await new Promise<void>((resolve, reject) => {
+        copyFile(source, target, flag, (err) => (err ? reject(err) : resolve()));
+      });
+      return true;
+    }
   } catch (e) {
     if (forceOverwrite === ForceOverwrite.prompt) {
       const shouldOverwrite = await promptOverwrite(target);

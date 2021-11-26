@@ -1,7 +1,6 @@
 import { DeclOptions, generateDeclaration, createExcludePlugin, Logger } from 'dets';
 import { dirname, basename, resolve, extname } from 'path';
 import { progress, log, logWarn, logVerbose, logInfo } from './log';
-import { makeExternals } from './npm';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { entryModuleExtensions, piralBaseRoot } from './constants';
@@ -132,7 +131,6 @@ export async function createPiralDeclaration(
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
   const { name, root, externals } = await retrievePiletsInfo(entryFiles);
-  const allowedImports = makeExternals(externals);
   const entryModules = await getEntryModules(entryFiles);
   const files = await getAllFiles(entryModules);
   const options: DeclOptions = {
@@ -146,7 +144,7 @@ export async function createPiralDeclaration(
         name: 'PiletApi',
       },
     ],
-    imports: allowedImports,
+    imports: externals,
     logLevel,
     logger: createLogger(),
   };

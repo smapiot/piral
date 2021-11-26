@@ -27,7 +27,11 @@ export async function createEmulatorSources(
 ) {
   const piralPkg = require(resolve(sourceDir, packageJson));
   const files: Array<string | TemplateFileLocation> = piralPkg.pilets?.files ?? [];
-  const allExternals = makeExternals(piralPkg.pilets?.externals);
+  const allDeps = {
+    ...piralPkg.devDependencies,
+    ...piralPkg.dependencies,
+  };
+  const allExternals = makeExternals(allDeps, piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
     allExternals.filter(isValidDependency).map(async (name) => ({
@@ -79,8 +83,7 @@ export async function createEmulatorSources(
     app: `./${appDir}/index.html`,
     peerDependencies: {},
     devDependencies: {
-      ...piralPkg.devDependencies,
-      ...piralPkg.dependencies,
+      ...allDeps,
       ...externalDependencies,
     },
     sharedDependencies: allExternals,

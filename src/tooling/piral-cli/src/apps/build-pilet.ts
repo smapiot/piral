@@ -1,6 +1,6 @@
 import { dirname, basename, resolve, relative } from 'path';
-import { LogLevels, PiletSchemaVersion } from '../types';
-import { callPiletBuild } from '../bundler';
+import { LogLevels, PiletBuildType, PiletSchemaVersion } from '../types';
+import { callPiletBuild, callPiralBuild } from '../bundler';
 import {
   removeDirectory,
   retrievePiletData,
@@ -13,6 +13,13 @@ import {
   matchAnyPilet,
   fail,
   config,
+  log,
+  createDirectory,
+  writeJson,
+  getPiletSpecMeta,
+  getFileNames,
+  copy,
+  checkAppShellPackage,
 } from '../common';
 
 export interface BuildPiletOptions {
@@ -25,7 +32,7 @@ export interface BuildPiletOptions {
    * The source index file (e.g. index.tsx) for collecting all the information
    * @example './src/index'
    */
-  entry?: string;
+  entry?: string | Array<string>;
 
   /**
    * The target file of bundling.
@@ -69,6 +76,11 @@ export interface BuildPiletOptions {
   contentHash?: boolean;
 
   /**
+   * Selects the target type of the build (e.g. 'release'). "all" builds all target types.
+   */
+  type?: PiletBuildType;
+
+  /**
    * States if the node modules should be included for target transpilation
    */
   optimizeModules?: boolean;
@@ -97,11 +109,45 @@ export interface BuildPiletOptions {
   };
 }
 
+interface PiletData {
+  id: string;
+  package: any;
+  path: string;
+  outFile: string;
+  outDir: string;
+}
+
+function createMetadata(outDir: string, outFile: string, pilets: Array<PiletData>) {
+  return writeJson(
+    outDir,
+    outFile,
+    pilets.map((p) => ({
+      name: p.package.name,
+      version: p.package.version,
+      link: `./${p.id}/${p.outFile}`,
+      ...getPiletSpecMeta(p.path, p.outDir),
+    })),
+  );
+}
+
+function copyPilets(outDir: string, pilets: Array<PiletData>) {
+  return Promise.all(
+    pilets.map(async (p) => {
+      const files = await getFileNames(p.outDir);
+
+      for (const file of files) {
+        await copy(resolve(p.outDir, file), resolve(outDir, p.id, file), ForceOverwrite.yes);
+      }
+    }),
+  );
+}
+
 export const buildPiletDefaults: BuildPiletOptions = {
   entry: './src/index',
   target: './dist/index.js',
   minify: true,
   logLevel: LogLevels.info,
+  type: 'default',
   fresh: false,
   sourceMaps: true,
   contentHash: true,
@@ -122,70 +168,158 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     optimizeModules = buildPiletDefaults.optimizeModules,
     schemaVersion = buildPiletDefaults.schemaVersion,
     declaration = buildPiletDefaults.declaration,
+    type = buildPiletDefaults.type,
     _ = {},
     hooks = {},
     bundlerName,
     app,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
+  const entryList = Array.isArray(entry) ? entry : [entry];
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
-  const allEntries = await matchAnyPilet(fullBase, [entry]);
+  const allEntries = await matchAnyPilet(fullBase, entryList);
+  log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
   }
 
-  const entryModule = allEntries.shift();
-  const targetDir = dirname(entryModule);
-  const { peerDependencies, peerModules, root, appPackage, piletPackage, ignored, importmap } = await retrievePiletData(
-    targetDir,
-    app,
-  );
-  const externals = [...Object.keys(peerDependencies), ...peerModules];
-  const outDir = dirname(resolve(fullBase, target));
+  const pilets = await Promise.all(
+    allEntries.map(async (entryModule) => {
+      const targetDir = dirname(entryModule);
+      const { peerDependencies, peerModules, root, appPackage, appFile, piletPackage, ignored, importmap } =
+        await retrievePiletData(targetDir, app);
+      const externals = [...Object.keys(peerDependencies), ...peerModules];
+      const dest = resolve(root, target);
+      const outDir = dirname(dest);
+      const outFile = basename(dest);
 
-  if (fresh) {
-    progress('Removing output directory ...');
+      if (fresh) {
+        progress('Removing output directory ...');
+        await removeDirectory(outDir);
+      }
+
+      logInfo('Bundle pilet ...');
+
+      await hooks.beforeBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
+
+      await callPiletBuild(
+        {
+          root,
+          piral: appPackage.name,
+          optimizeModules,
+          sourceMaps,
+          contentHash,
+          minify,
+          externals,
+          targetDir,
+          importmap,
+          outFile,
+          outDir,
+          entryModule: `./${relative(root, entryModule)}`,
+          logLevel,
+          version: schemaVersion,
+          ignored,
+          _,
+        },
+        bundlerName,
+      );
+
+      await hooks.afterBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
+
+      if (declaration) {
+        await hooks.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
+        await createPiletDeclaration(
+          piletPackage.name,
+          root,
+          entryModule,
+          externals,
+          outDir,
+          ForceOverwrite.yes,
+          logLevel,
+        );
+        await hooks.afterDeclaration?.({ root, outDir, entryModule, piletPackage });
+      }
+
+      logDone(`Pilet "${piletPackage.name}" built successfully!`);
+
+      return {
+        id: piletPackage.name.replace(/[^a-zA-Z0-9\-]/gi, ''),
+        root,
+        appFile,
+        appPackage,
+        outDir,
+        outFile,
+        path: dest,
+        package: piletPackage,
+      };
+    }),
+  );
+
+  if (type === 'standalone') {
+    const distDir = dirname(resolve(fullBase, target));
+    const outDir = resolve(distDir, 'standalone');
+    const { appFile, appPackage, root } = pilets[0];
+    const isEmulator = checkAppShellPackage(appPackage);
+
+    logInfo('Building standalone solution ...');
+
     await removeDirectory(outDir);
+
+    progress('Copying files ...');
+
+    await copyPilets(outDir, pilets);
+
+    await createMetadata(outDir, '$pilet-api', pilets);
+
+    if (isEmulator) {
+      // in case of an emulator assets are not "seen" by the bundler, so we
+      // just copy overthing over - this should work in most cases.
+      await copy(dirname(appFile), outDir, ForceOverwrite.yes);
+    }
+
+    progress('Optimizing app shell ...');
+
+    await callPiralBuild(
+      {
+        root,
+        piral: appPackage.name,
+        emulator: false,
+        standalone: true,
+        optimizeModules: false,
+        sourceMaps,
+        contentHash,
+        minify,
+        externals: [],
+        publicUrl: '/',
+        outFile: 'index.html',
+        outDir,
+        entryFiles: appFile,
+        logLevel,
+        ignored: [],
+        _,
+      },
+      bundlerName,
+    );
+
+    logDone(`Standalone app available at "${outDir}"!`);
+  } else if (type === 'manifest') {
+    const manifest = 'pilets.json';
+    const outDir = dirname(resolve(fullBase, target));
+
+    logInfo('Building pilet manifest ...');
+
+    progress('Copying files ...');
+
+    await copyPilets(outDir, pilets);
+
+    await createMetadata(outDir, manifest, pilets);
+
+    logDone(`Manifest available at "${outDir}/${manifest}"!`);
   }
 
-  logInfo('Bundle pilet ...');
-
-  await hooks.beforeBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
-
-  await callPiletBuild(
-    {
-      root,
-      piral: appPackage.name,
-      optimizeModules,
-      sourceMaps,
-      contentHash,
-      minify,
-      externals,
-      targetDir,
-      importmap,
-      outFile: basename(target),
-      outDir,
-      entryModule: `./${relative(root, entryModule)}`,
-      logLevel,
-      version: schemaVersion,
-      ignored,
-      _,
-    },
-    bundlerName,
-  );
-
-  await hooks.afterBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
-
-  if (declaration) {
-    await hooks.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
-    await createPiletDeclaration(piletPackage.name, root, entryModule, externals, outDir, ForceOverwrite.yes, logLevel);
-    await hooks.afterDeclaration?.({ root, outDir, entryModule, piletPackage });
-  }
-
-  logDone('Pilet built successfully!');
-  await hooks.onEnd?.({ root });
+  await hooks.onEnd?.({});
 }

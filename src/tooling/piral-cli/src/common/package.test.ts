@@ -1,11 +1,5 @@
 import { resolve } from 'path';
-import {
-  findPackageVersion,
-  findPackageRoot,
-  getPiralPackage,
-  getPiletsInfo,
-  retrievePiletData,
-} from './package';
+import { findPackageVersion, findPackageRoot, getPiralPackage, getPiletsInfo, retrievePiletData } from './package';
 import { cliVersion } from './info';
 import { SourceLanguage } from './enums';
 

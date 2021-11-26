@@ -65,9 +65,9 @@ export interface DebugPiletOptions {
   schemaVersion?: PiletSchemaVersion;
 
   /**
-   * The URL of a pilet feed used to include locally missing pilets.
+   * The URL of a pilet feed(s) used to include locally missing pilets.
    */
-  feed?: string;
+  feed?: string | Array<string>;
 
   /**
    * Additional arguments for a specific bundler.

@@ -239,3 +239,32 @@ Wrappers are applied on basis of component registrations, so you'd need to defin
 There is also the special fallback wrapper `*`, which is used if no specific wrapper is available.
 
 ---------------------------------------
+
+## My public path is different - how to configure Piral?
+
+The `piral build` command supports a `--public-url` flag that you can configure with your public path (e.g., `"/foo"`). In addition, you may want to change also the `basename` of the router, such that routes like `/bar` are still working as they should (e.g., working with `/foo/bar`).
+
+You could create your own `Router` component for this:
+
+```ts
+const Router: React.FC = ({ children }) => (
+  <BrowserRouter basename="/foo">{children}</BrowserRouter>
+);
+```
+
+and use it with your instance:
+
+```ts
+const instance = createInstance({
+  state: {
+    components: {
+      Router,
+    },
+  },
+  // ...
+});
+```
+
+This way not only the bundled assets are handled correctly, but also the paths internally. Additionally, the pages in the pilets don't need to be adjusted to the new `basename` - it just works with everything being "relative" to "/".
+
+---------------------------------------

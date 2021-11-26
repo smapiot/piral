@@ -194,11 +194,16 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name });
 
     logInfo(`Bundle ${emulatorName} ...`);
-    const { dir: outDir, name: outFile, hash } = await callPiralBuild(
+    const {
+      dir: outDir,
+      name: outFile,
+      hash,
+    } = await callPiralBuild(
       {
         root,
         piral: name,
         emulator: true,
+        standalone: false,
         optimizeModules,
         sourceMaps,
         contentHash,
@@ -219,11 +224,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);
-    
+
     await hooks.beforeEmulator?.({ root, externals, targetDir, outDir });
 
     const rootDir = await createEmulatorSources(root, outDir, outFile, logLevel);
-    
+
     await hooks.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
 
     if (type !== emulatorSourcesName) {
@@ -247,14 +252,19 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(targetDir);
 
     logInfo(`Bundle ${releaseName} ...`);
-    
+
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name });
 
-    const { dir: outDir, name: outFile, hash } = await callPiralBuild(
+    const {
+      dir: outDir,
+      name: outFile,
+      hash,
+    } = await callPiralBuild(
       {
         root,
         piral: name,
         emulator: false,
+        standalone: false,
         optimizeModules,
         sourceMaps,
         contentHash,
@@ -270,7 +280,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       },
       bundlerName,
     );
-    
+
     await hooks.afterBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name, outDir, outFile, hash });
 
     await runLifecycle(root, scripts, 'piral:postbuild');
