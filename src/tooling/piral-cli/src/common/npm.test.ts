@@ -407,7 +407,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals without externals returns coreExternals', () => {
-    const externals = makeExternals();
+    const externals = makeExternals({ piral: '*' });
     expect(externals).toEqual([
       'react',
       'react-dom',
@@ -422,7 +422,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with no externals returns coreExternals', () => {
-    const externals = makeExternals([]);
+    const externals = makeExternals({ piral: '*' }, []);
     expect(externals).toEqual([
       'react',
       'react-dom',
@@ -437,12 +437,12 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with exclude coreExternals returns empty set', () => {
-    const externals = makeExternals(['!*']);
+    const externals = makeExternals({ piral: '*' }, ['!*']);
     expect(externals).toEqual([]);
   });
 
   it('makeExternals with externals concats coreExternals', () => {
-    const externals = makeExternals(['foo', 'bar']);
+    const externals = makeExternals({ piral: '*' }, ['foo', 'bar']);
     expect(externals).toEqual([
       'foo',
       'bar',
@@ -459,7 +459,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with external duplicate only reflects coreExternals', () => {
-    const externals = makeExternals(['react', 'foo']);
+    const externals = makeExternals({ piral: '*' }, ['react', 'foo']);
     expect(externals).toEqual([
       'react',
       'foo',
@@ -475,7 +475,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with explicit include and exclude', () => {
-    const externals = makeExternals(['react', 'react-calendar', '!history']);
+    const externals = makeExternals({ piral: '*' }, ['react', 'react-calendar', '!history']);
     expect(externals).toEqual([
       'react',
       'react-calendar',
@@ -490,7 +490,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with all exclude and explicit include', () => {
-    const externals = makeExternals(['react', 'react-router-dom', '!*']);
+    const externals = makeExternals({ piral: '*' }, ['react', 'react-router-dom', '!*']);
     expect(externals).toEqual(['react', 'react-router-dom']);
   });
 });
