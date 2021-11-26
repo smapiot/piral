@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.3 (tbd)
+## 0.14.3 (November 26, 2021)
 
 - Improved `pilet-uses-latest-piral` rule w.r.t. monorepos
 - Fixed CI/CD scripts to automatically accept version change
