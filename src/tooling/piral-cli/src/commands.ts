@@ -552,8 +552,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source previously packed *.tgz bundle to publish.',
-          default: apps.publishPiletDefaults.source,
+          describe: 'Sets the source of either the previously packed *.tgz bundle or the pilet root module to publish.',
         })
         .string('url')
         .describe('url', 'Sets the explicit URL where to publish the pilet to.')

@@ -2,6 +2,7 @@ import { createLazyApi } from 'piral-lazy';
 import { PiletLoader, PiletLoadingStrategy } from 'piral-base';
 import {
   renderInstance,
+  AnyComponent,
   PiletRequester,
   ComponentsState,
   ErrorComponentsState,
@@ -12,6 +13,7 @@ import {
   GlobalState,
   NestedPartial,
   PiralDefineActions,
+  withApi,
 } from 'piral';
 
 declare module 'piral-core/lib/types/custom' {
@@ -33,6 +35,12 @@ declare global {
     ): PiralInstance;
   }
 }
+
+export type GenericComponents<T> = Partial<
+  {
+    [P in keyof T]: T[P] extends React.ComponentType<infer C> ? AnyComponent<C> : T[P];
+  }
+>;
 
 export interface SitelessOptions {
   /**
@@ -81,33 +89,47 @@ export interface SitelessApi {
    * Sets layout components in the application.
    * @param components The components to define.
    */
-  setLayout(components: Partial<ComponentsState>): void;
+  setLayout(components: GenericComponents<ComponentsState>): void;
   /**
    * Sets errors components in the application.
    * @param errors The error handlers to define.
    */
-  setErrors(errors: Partial<ErrorComponentsState>): void;
+  setErrors(errors: GenericComponents<ErrorComponentsState>): void;
 }
 
 function createSitelessApi(): PiralPlugin<SitelessApi> {
-  return (context) => ({
-    setErrors(errorComponents) {
-      context.dispatch((state) => ({
-        ...state,
-        errorComponents: {
+  return (context) => (api) => ({
+    setErrors(newErrorComponents) {
+      context.dispatch((state) => {
+        const errorComponents = {
           ...state.errorComponents,
-          ...errorComponents,
-        },
-      }));
+        };
+
+        for (const name of Object.keys(newErrorComponents)) {
+          errorComponents[name] = withApi(context, newErrorComponents[name], api, 'unknown');
+        }
+
+        return {
+          ...state,
+          errorComponents,
+        };
+      });
     },
-    setLayout(components) {
-      context.dispatch((state) => ({
-        ...state,
-        components: {
+    setLayout(newComponents) {
+      context.dispatch((state) => {
+        const components = {
           ...state.components,
-          ...components,
-        },
-      }));
+        };
+
+        for (const name of Object.keys(newComponents)) {
+          components[name] = withApi(context, newComponents[name], api, 'unknown');
+        }
+
+        return {
+          ...state,
+          components,
+        };
+      });
     },
   });
 }

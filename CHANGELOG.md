@@ -2,7 +2,8 @@
 
 ## 0.14.4 (tbd)
 
-- (tbd)
+- Fixed issue with entry point of pilet missing
+- Improved siteless API to support using other frameworks
 
 ## 0.14.3 (November 26, 2021)
 

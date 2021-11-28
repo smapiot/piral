@@ -84,7 +84,6 @@ export interface PublishPiletOptions {
 }
 
 export const publishPiletDefaults: PublishPiletOptions = {
-  source: '*.tgz',
   url: undefined,
   apiKey: undefined,
   fresh: false,
@@ -120,7 +119,8 @@ async function getFiles(
         const { root, piletPackage, importmap, peerDependencies, peerModules, appPackage } = await retrievePiletData(
           targetDir,
         );
-        const dest = resolve(root, piletPackage.main);
+        const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
+        const dest = resolve(root, main);
         const outDir = dirname(dest);
         const outFile = basename(dest);
         const externals = [...Object.keys(peerDependencies), ...peerModules];
@@ -155,11 +155,11 @@ async function getFiles(
           bundlerName,
         );
 
-        log('generalDebug_0003', `Pilet "${piletPackage.name}" built successfully!`);
+        log('generalDebug_0003', `Pilet "${name}" built successfully!`);
         progress('Triggering pilet pack ...');
 
         const file = await createPiletPackage(root, '.', '.');
-        log('generalDebug_0003', `Pilet "${piletPackage.name}" packed successfully!`);
+        log('generalDebug_0003', `Pilet "${name}" packed successfully!`);
 
         return file;
       }),
@@ -191,10 +191,10 @@ async function getFiles(
 
 export async function publishPilet(baseDir = process.cwd(), options: PublishPiletOptions = {}) {
   const {
-    source = publishPiletDefaults.source,
+    fresh = publishPiletDefaults.fresh,
+    source = fresh ? './src/index' : '*.tgz',
     url = config.url ?? publishPiletDefaults.url,
     apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiletDefaults.apiKey,
-    fresh = publishPiletDefaults.fresh,
     logLevel = publishPiletDefaults.logLevel,
     from = publishPiletDefaults.from,
     schemaVersion = publishPiletDefaults.schemaVersion,
