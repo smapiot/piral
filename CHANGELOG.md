@@ -2,8 +2,9 @@
 
 ## 0.14.4 (tbd)
 
-- Fixed issue with entry point of pilet missing
 - Improved siteless API to support using other frameworks
+- Fixed issue with entry point of pilet missing
+- Added extensions for each plugin component (e.g., `piral-dashboard` for the `Dashboard` component of `piral-dashbard`)
 
 ## 0.14.3 (November 26, 2021)
 

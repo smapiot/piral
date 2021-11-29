@@ -14,6 +14,7 @@ import {
   NestedPartial,
   PiralDefineActions,
   withApi,
+  useGlobalState,
 } from 'piral';
 
 declare module 'piral-core/lib/types/custom' {
@@ -95,6 +96,16 @@ export interface SitelessApi {
    * @param errors The error handlers to define.
    */
   setErrors(errors: GenericComponents<ErrorComponentsState>): void;
+  /**
+   * Gets a snapshot of the current global state.
+   * @param select The selection function to obtain the desired slice.
+   */
+  readState<T>(select: (state: GlobalState) => T): T;
+  /**
+   * Connects to the global state.
+   * @param select The selection function to obtain the desired slice.
+   */
+  useState<T>(select: (state: GlobalState) => T): T;
 }
 
 function createSitelessApi(): PiralPlugin<SitelessApi> {
@@ -130,6 +141,12 @@ function createSitelessApi(): PiralPlugin<SitelessApi> {
           components,
         };
       });
+    },
+    readState(select) {
+      return context.readState(select);
+    },
+    useState(select) {
+      return useGlobalState(select);
     },
   });
 }

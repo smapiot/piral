@@ -1,7 +1,8 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { withApi, buildName, PiralPlugin, Dict } from 'piral-core';
+import { withApi, buildName, PiralPlugin, Dict, withRootExtension, withAll, GlobalState } from 'piral-core';
 import { DefaultHost, DefaultDialog } from './default';
+import { Modals } from './Modals';
 import { PiletModalsApi, ModalRegistration, BareModalComponentProps } from './types';
 
 export interface InitialModalDialog {
@@ -51,6 +52,22 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
   return modals;
 }
 
+function withModals(modals: Dict<ModalRegistration>) {
+  return (state: GlobalState): GlobalState => ({
+    ...state,
+    components: {
+      ModalsHost: DefaultHost,
+      ModalsDialog: DefaultDialog,
+      ...state.components,
+    },
+    registry: {
+      ...state.registry,
+      modals,
+    },
+    modals: [],
+  });
+}
+
 /**
  * Creates new Pilet API extensions for support modal dialogs.
  */
@@ -60,19 +77,7 @@ export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletMod
   return (context) => {
     context.defineActions(actions);
 
-    context.dispatch((state) => ({
-      ...state,
-      components: {
-        ModalsHost: DefaultHost,
-        ModalsDialog: DefaultDialog,
-        ...state.components,
-      },
-      registry: {
-        ...state.registry,
-        modals: getModalDialogs(dialogs),
-      },
-      modals: [],
-    }));
+    context.dispatch(withAll(withModals(getModalDialogs(dialogs)), withRootExtension('piral-modals', Modals)));
 
     return (api, target) => {
       const pilet = target.name;

@@ -6,7 +6,11 @@ const StubComponent: FC = (props) => createElement('div', props);
 StubComponent.displayName = 'StubComponent';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = Atom.of({
+    registry: {
+      extensions: {},
+    },
+  });
   return {
     context: {
       on: jest.fn(),

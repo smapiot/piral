@@ -1,7 +1,16 @@
 import * as actions from './actions';
 import { ComponentType, isValidElement, ReactElement } from 'react';
-import { PiralPlugin, GlobalStateContext, withApi, defaultRender } from 'piral-core';
+import {
+  PiralPlugin,
+  GlobalStateContext,
+  withApi,
+  defaultRender,
+  withAll,
+  withRootExtension,
+  GlobalState,
+} from 'piral-core';
 import { DefaultHost, DefaultToast } from './default';
+import { Notifications } from './Notifications';
 import { PiletNotificationsApi, NotificationOptions, OpenNotification, BareNotificationProps } from './types';
 
 export type NotificationContent = string | ReactElement<any> | ComponentType<BareNotificationProps>;
@@ -97,6 +106,18 @@ function getNotifications(
   return notifications;
 }
 
+function withNotifications(notifications: Array<OpenNotification>) {
+  return (state: GlobalState): GlobalState => ({
+    ...state,
+    components: {
+      NotificationsHost: DefaultHost,
+      NotificationsToast: DefaultToast,
+      ...state.components,
+    },
+    notifications,
+  });
+}
+
 /**
  * Creates new Pilet API extensions for showing notifications.
  */
@@ -106,15 +127,12 @@ export function createNotificationsApi(config: NotificationsConfig = {}): PiralP
   return (context) => {
     context.defineActions(actions);
 
-    context.dispatch((state) => ({
-      ...state,
-      components: {
-        NotificationsHost: DefaultHost,
-        NotificationsToast: DefaultToast,
-        ...state.components,
-      },
-      notifications: getNotifications(context, messages, defaultOptions),
-    }));
+    context.dispatch(
+      withAll(
+        withNotifications(getNotifications(context, messages, defaultOptions)),
+        withRootExtension('piral-notifications', Notifications),
+      ),
+    );
 
     return (api) => ({
       showNotification(content, customOptions) {

@@ -1,7 +1,8 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { buildName, withApi, PiralPlugin, Dict } from 'piral-core';
+import { buildName, withApi, PiralPlugin, Dict, withRootExtension, withAll, GlobalState } from 'piral-core';
 import { DefaultTile, DefaultContainer } from './default';
+import { Dashboard } from './Dashboard';
 import { PiletDashboardApi, TilePreferences, BareTileComponentProps, TileRegistration } from './types';
 
 export interface InitialTile {
@@ -53,6 +54,21 @@ function getTiles(items: Array<InitialTile>, defaultPreferences: TilePreferences
   return tiles;
 }
 
+function withTiles(tiles: Dict<TileRegistration>) {
+  return (state: GlobalState): GlobalState => ({
+    ...state,
+    components: {
+      DashboardTile: DefaultTile,
+      DashboardContainer: DefaultContainer,
+      ...state.components,
+    },
+    registry: {
+      ...state.registry,
+      tiles,
+    },
+  });
+}
+
 /**
  * Creates the Pilet API extension for activating dashboard support.
  */
@@ -62,18 +78,9 @@ export function createDashboardApi(config: DashboardConfig = {}): PiralPlugin<Pi
   return (context) => {
     context.defineActions(actions);
 
-    context.dispatch((state) => ({
-      ...state,
-      components: {
-        DashboardTile: DefaultTile,
-        DashboardContainer: DefaultContainer,
-        ...state.components,
-      },
-      registry: {
-        ...state.registry,
-        tiles: getTiles(tiles, defaultPreferences),
-      },
-    }));
+    context.dispatch(
+      withAll(withTiles(getTiles(tiles, defaultPreferences)), withRootExtension('piral-dashboard', Dashboard)),
+    );
 
     return (api, target) => {
       const pilet = target.name;
