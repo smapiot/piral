@@ -2,7 +2,11 @@ import { Atom, swap } from '@dbeining/react-atom';
 import { createNotificationsApi } from './create';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = Atom.of({
+    registry: {
+      extensions: {},
+    },
+  });
   return {
     context: {
       on: jest.fn(),
