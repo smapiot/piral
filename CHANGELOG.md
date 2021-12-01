@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.4 (tbd)
+## 0.14.4 (December 1, 2021)
 
 - Improved siteless API to support using other frameworks
 - Fixed issue with entry point of pilet missing
