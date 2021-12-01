@@ -1,6 +1,6 @@
 {
   "name": "create-pilet",
-  "version": "0.14.3",
+  "version": "0.14.4",
   "description": "The NPM initializer to scaffold a new pilet for an existing Piral instance.",
   "keywords": [
     "scaffold",
@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "inquirer": "^6.2.2",
-    "piral-cli": "^0.14.3"
+    "piral-cli": "^0.14.4"
   }
 }
