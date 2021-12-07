@@ -2,8 +2,9 @@
 
 ## 0.14.5 (tbd)
 
-- Removed `file-loader` from `piral-cli-webpack5`
+- Improved `pilet debug` to use actual app externals
 - Fixed `publicPath` in pilets built with Webpack to be `./` instead of `/`
+- Removed `file-loader` from `piral-cli-webpack5`
 
 ## 0.14.4 (December 1, 2021)
 

@@ -5,6 +5,7 @@ import { LogLevels, PiletSchemaVersion } from '../types';
 import {
   checkExistingDirectory,
   retrievePiletData,
+  retrievePiletsInfo,
   config,
   openBrowser,
   reorderInjectors,
@@ -32,6 +33,12 @@ export interface DebugPiletOptions {
    * By default the app is inferred from the package.json.
    */
   app?: string;
+
+  /**
+   * Overrides the directory of the app to serve when
+   * debugging.
+   */
+  appInstanceDir?: string;
 
   /**
    * Sets if the (system default) browser should be auto-opened.
@@ -81,6 +88,8 @@ export interface DebugPiletOptions {
     onBegin?(e: any): Promise<void>;
     beforeBuild?(e: any): Promise<void>;
     afterBuild?(e: any): Promise<void>;
+    beforeApp?(e: any): Promise<void>;
+    afterApp?(e: any): Promise<void>;
     beforeOnline?(e: any): Promise<void>;
     afterOnline?(e: any): Promise<void>;
     onEnd?(e: any): Promise<void>;
@@ -107,14 +116,13 @@ interface AppInfo {
   piral: string;
 }
 
-async function getOrMakeAppDir({ emulator, piral, externals, appFile }: AppInfo, logLevel: LogLevels) {
+async function getOrMakeAppDir({ emulator, piral, appFile }: AppInfo, logLevel: LogLevels) {
   if (!emulator) {
-    const packageJson = require.resolve(`${piral}/package.json`);
-    const cwd = resolve(packageJson, '..');
+    const { externals, root, ignored } = await retrievePiletsInfo(appFile);
     const { dir } = await callDebugPiralFromMonoRepo({
-      root: cwd,
+      root,
       optimizeModules: false,
-      ignored: [],
+      ignored,
       externals,
       piral,
       entryFiles: appFile,
@@ -157,6 +165,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     hooks = {},
     bundlerName,
     app,
+    appInstanceDir,
     feed,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
@@ -237,7 +246,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   // sanity check see #250
   checkSanity(pilets);
 
-  const appDir = await getOrMakeAppDir(pilets[0], logLevel);
+  await hooks.beforeApp?.({ appInstanceDir, pilets });
+  const appDir = appInstanceDir || (await getOrMakeAppDir(pilets[0], logLevel));
+  await hooks.afterApp?.({ appInstanceDir, pilets });
 
   if (krasConfig.ssl === undefined) {
     krasConfig.ssl = undefined;
