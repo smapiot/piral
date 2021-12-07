@@ -61,7 +61,6 @@
     "cheerio": "^1.0.0-rc.10",
     "css-loader": "^5.0.0",
     "express": "^4.17.1",
-    "file-loader": "^6.1.1",
     "html-entities": "^1.2.0",
     "html-webpack-plugin": "^5.2.0",
     "mini-css-extract-plugin": "^1.1.1",

@@ -22,7 +22,6 @@ async function getConfig(
   minimize = true,
   publicPath = '/',
   hmr = 0,
-  progress = false,
 ): Promise<DefaultConfiguration> {
   const production = !develop;
   const name = process.env.BUILD_PCKG_NAME;
@@ -76,7 +75,7 @@ async function getConfig(
         ],
       },
 
-      plugins: getPlugins([], progress, production, false),
+      plugins: getPlugins([], production, false),
     },
     enhance,
   ];

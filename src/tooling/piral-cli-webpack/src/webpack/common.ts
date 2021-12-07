@@ -33,13 +33,7 @@ export function getHmrEntry(hmrPort: number) {
   return hmrPort ? [`webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`] : [];
 }
 
-export function getPlugins(
-  plugins: Array<any>,
-  showProgress: boolean,
-  production: boolean,
-  pilet: boolean,
-  hmrPort?: number,
-) {
+export function getPlugins(plugins: Array<any>, production: boolean, pilet: boolean, hmrPort?: number) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
       filename: pilet ? piletCss : '[name].[hash:6].css',
@@ -47,7 +41,7 @@ export function getPlugins(
     }),
   ];
 
-  if (showProgress) {
+  if (process.env.WEBPACK_PROGRESS) {
     otherPlugins.push(
       new ProgressPlugin((percent, msg) => {
         if (percent !== undefined) {
