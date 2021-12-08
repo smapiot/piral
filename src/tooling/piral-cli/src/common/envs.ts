@@ -43,6 +43,10 @@ export function setStandardEnvs(options: StandardEnvProps) {
     process.env.NODE_ENV = 'development';
   }
 
+  if (options.piral) {
+    process.env.PIRAL_INSTANCE = options.piral;
+  }
+
   if (options.dependencies && options.dependencies.length) {
     const excludedDependencies = [...frameworkLibs, options.piral];
     const dependencies = options.dependencies.filter((m) => !excludedDependencies.includes(m));

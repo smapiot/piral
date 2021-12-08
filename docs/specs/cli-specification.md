@@ -91,6 +91,7 @@ Used environment variables:
 | Environment Variable  | Purpose                             | Example            |
 |:----------------------|:------------------------------------|:-------------------|
 | `NODE_ENV`            | Indicate the target environment.    | `production`       |
+| `PIRAL_INSTANCE`      | Name of the app shell to build for. | `my-app-shell`     |
 
 Some special fields of the `package.json` are used to switch on some building features.
 
