@@ -1,5 +1,4 @@
 import 'systemjs/dist/system.js';
-import 'systemjs/dist/extras/use-default.js';
 import 'systemjs/dist/extras/named-register.js';
 import type { PiletMetadataV2 } from './types';
 import { setBasePath } from './utils';
@@ -74,6 +73,10 @@ export function registerModule(name: string, resolve: ModuleResolver) {
         if (typeof content === 'function') {
           _exports('__esModule', true);
           _exports('default', content);
+        } else if (typeof content === 'object') {
+          if (content && !Array.isArray(content) && !('default' in content)) {
+            _exports('default', content);
+          }
         }
       }
     },
