@@ -1,4 +1,5 @@
 import 'systemjs/dist/system.js';
+import 'systemjs/dist/extras/use-default.js';
 import 'systemjs/dist/extras/named-register.js';
 import type { PiletMetadataV2 } from './types';
 import { setBasePath } from './utils';
