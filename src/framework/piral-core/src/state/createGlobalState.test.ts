@@ -1,7 +1,8 @@
 import { deref } from '@dbeining/react-atom';
-import { BrowserRouter as DefaultRouter } from 'react-router-dom';
 import { createGlobalState } from './createGlobalState';
-import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout } from '../components';
+import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout, DefaultRouter } from '../components';
+
+process.env.PIRAL_PUBLIC_PATH = '/';
 
 describe('Create Global State Module', () => {
   window.matchMedia = jest.fn((q) => ({ matches: false })) as any;
@@ -13,6 +14,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: true,
         error: undefined,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -40,6 +42,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: true,
         error: undefined,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -71,6 +74,7 @@ describe('Create Global State Module', () => {
         error: undefined,
         layout: 'desktop',
         loading: true,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -98,6 +102,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: true,
         error: undefined,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -127,6 +132,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: true,
         error: undefined,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -156,6 +162,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: true,
         error: undefined,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -191,6 +198,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: true,
         error: undefined,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -225,6 +233,7 @@ describe('Create Global State Module', () => {
         layout: 'desktop',
         loading: false,
         error: undefined,
+        publicPath: '/',
       },
       errorComponents: {},
       components: {
