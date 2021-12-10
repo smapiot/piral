@@ -46,6 +46,7 @@ When building the Piral instance for production, the following environment varia
 |:----------------------|:------------------------------------|:-------------------|
 | `NODE_ENV`            | Indicate the target environment.    | `production`       |
 | `SHARED_DEPENDENCIES` | Allow exposing shared dependencies. | `react,react-dom`  |
+| `PIRAL_PUBLIC_PATH`   | The chosen public path of the app.  | `/app`             |
 
 In addition, some special keys of the `package.json` are relevant for a production build:
 
@@ -72,6 +73,7 @@ For running the Piral instance in emulation mode, the set of relevant environmen
 | `BUILD_PCKG_VERSION`  | The version of the Piral instance.  | `1.2.3`            |
 | `BUILD_TIME_FULL`     | The date time of the build.         | `2021-01-01T10:23` |
 | `PIRAL_CLI_VERSION`   | The version the used Piral CLI.     | `0.14.0`           |
+| `PIRAL_PUBLIC_PATH`   | The chosen public path of the app.  | `/`                |
 
 As in the case for generating a production instance, some special keys of the `package.json` are also considered for the emulation mode:
 

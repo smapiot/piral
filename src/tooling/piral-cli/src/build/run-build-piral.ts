@@ -22,6 +22,7 @@ function run(
   setStandardEnvs({
     production: !emulator,
     root,
+    publicPath: publicUrl,
     debugPiral: emulator,
     debugPilet: emulator || standalone,
     piral,

@@ -231,6 +231,7 @@ export interface StandardEnvProps {
   debugPiral?: boolean;
   debugPilet?: boolean;
   root: string;
+  publicPath?: string;
   piral?: string;
   dependencies?: Array<string>;
 }

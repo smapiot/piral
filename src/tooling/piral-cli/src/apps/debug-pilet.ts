@@ -282,6 +282,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
   const krasServer = buildKrasWithCli(krasConfig);
+  krasServer.setMaxListeners(pilets.length * 2);
   krasServer.removeAllListeners('open');
   krasServer.on(
     'open',

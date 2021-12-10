@@ -1,6 +1,5 @@
 import { Atom } from '@dbeining/react-atom';
-import { BrowserRouter } from 'react-router-dom';
-import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout } from '../components';
+import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout, DefaultRouter } from '../components';
 import { GlobalState, NestedPartial } from '../types';
 
 function extend<T>(defaultState: T, customState: NestedPartial<T>) {
@@ -24,11 +23,12 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
       error: undefined,
       loading: typeof window !== 'undefined',
       layout: 'desktop',
+      publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
     },
     components: {
       ErrorInfo: DefaultErrorInfo,
       LoadingIndicator: DefaultLoadingIndicator,
-      Router: BrowserRouter,
+      Router: DefaultRouter,
       Layout: DefaultLayout,
     },
     errorComponents: {},

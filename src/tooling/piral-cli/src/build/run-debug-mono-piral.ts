@@ -20,6 +20,7 @@ function run(
   setStandardEnvs({
     piral,
     dependencies: externals,
+    publicPath: '/',
     production: false,
     debugPiral: true,
     debugPilet: true,
@@ -36,7 +37,7 @@ function run(
     sourceMaps: true,
     contentHash: false,
     minify: false,
-    publicUrl: undefined,
+    publicUrl: '/',
     hmr,
     logLevel,
     watch: true,

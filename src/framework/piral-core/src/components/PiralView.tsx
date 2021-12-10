@@ -20,7 +20,12 @@ const PiralContent: React.FC = () => {
   );
 };
 
-const Router = typeof window === 'undefined' ? (props) => <StaticRouter location="/" {...props} /> : PiralRouter;
+const FallbackRouter: React.FC = (props) => {
+  const publicPath = useGlobalState((s) => s.app.publicPath);
+  return <StaticRouter location="/" {...props} basename={publicPath} />;
+};
+
+const Router = typeof window === 'undefined' ? FallbackRouter : PiralRouter;
 
 const PiralProvider: React.FC = ({ children }) => {
   const provider = useGlobalState((m) => m.provider) || React.Fragment;
