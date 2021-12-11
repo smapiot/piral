@@ -20,11 +20,11 @@ export function reorderInjectors(injectorName: string, injectorConfig: any, inje
   };
 }
 
-export function notifyServerOnline(bundlers: Array<Bundler>, api: string | false) {
+export function notifyServerOnline(bundlers: Array<Bundler>, path: string, api: string | false) {
   return (svc: any) => {
     log('generalDebug_0003', `The kras server for debugging is online!`);
     const address = `${svc.protocol}://localhost:${chalk.green(svc.port)}`;
-    logInfo(`${liveIcon} Running at ${chalk.bold(address)}`);
+    logInfo(`${liveIcon} Running at ${chalk.bold(address + path)}`);
     logInfo(`${settingsIcon} Manage via ${chalk.bold(address + api)}`);
     logReset();
     bundlers.forEach((bundler) => bundler.start());

@@ -119,7 +119,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('target', 'Sets the target directory or file of bundling.')
         .default('target', apps.buildPiralDefaults.target)
         .string('public-url')
-        .describe('public-url', 'Sets the public URL (path) of the bundle.')
+        .describe('public-url', 'Sets the public URL (path) of the bundle. Only for release output.')
         .default('public-url', apps.buildPiralDefaults.publicUrl)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')

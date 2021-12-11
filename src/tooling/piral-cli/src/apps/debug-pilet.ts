@@ -288,6 +288,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     'open',
     notifyServerOnline(
       pilets.map((p) => p.bundler),
+      '/',
       krasConfig.api,
     ),
   );

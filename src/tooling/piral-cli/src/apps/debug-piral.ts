@@ -155,6 +155,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const injectorConfig = {
     active: true,
     handle: ['/'],
+    publicUrl,
     bundler,
   };
 
@@ -165,7 +166,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
-  krasServer.on('open', notifyServerOnline([bundler], krasConfig.api));
+  krasServer.on('open', notifyServerOnline([bundler], publicUrl, krasConfig.api));
 
   await hooks.beforeOnline?.({ krasServer, krasConfig, open, port });
   await krasServer.start();
