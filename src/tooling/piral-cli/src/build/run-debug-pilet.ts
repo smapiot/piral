@@ -24,6 +24,7 @@ function run(
   args: any,
 ) {
   setStandardEnvs({
+    production: false,
     piral,
     root,
   });

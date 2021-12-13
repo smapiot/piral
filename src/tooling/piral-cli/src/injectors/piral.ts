@@ -12,6 +12,7 @@ const maxRetrySendResponse = 4;
 
 export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
+  publicUrl: string;
 }
 
 export default class PiralInjector implements KrasInjector {
@@ -21,6 +22,8 @@ export default class PiralInjector implements KrasInjector {
     this.config = options;
     const api = '/$events';
     const cbs = {};
+
+    core.setMaxListeners(16);
 
     core.on('user-connected', (e) => {
       if (e.target === '*' && e.url === api.substr(1)) {
@@ -85,11 +88,15 @@ export default class PiralInjector implements KrasInjector {
 
   handle(req: KrasRequest): KrasResponse {
     if (!req.target) {
-      const { bundler } = this.config;
-      const path = req.url.substr(1);
-      const dir = bundler.bundle.dir;
-      const target = join(dir, path.split('?')[0]);
-      return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
+      const { bundler, publicUrl } = this.config;
+
+      if (req.url.startsWith(publicUrl)) {
+        const pathLength = publicUrl.length || 1;
+        const path = req.url.substr(pathLength);
+        const dir = bundler.bundle.dir;
+        const target = join(dir, path.split('?')[0]);
+        return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
+      }
     }
   }
 }

@@ -21,6 +21,7 @@ function run(
     root,
     debugPiral: true,
     dependencies: externals,
+    publicPath: publicUrl,
     piral,
   });
 

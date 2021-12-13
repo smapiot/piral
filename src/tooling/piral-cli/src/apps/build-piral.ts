@@ -54,7 +54,7 @@ export interface BuildPiralOptions {
   target?: string;
 
   /**
-   * Sets the public URL (path) of the bundle.
+   * Sets the public URL (path) of the bundle. Only for release output.
    */
   publicUrl?: string;
 
@@ -185,13 +185,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   // everything except release -> build emulator
   if (type !== releaseName) {
+    const emulatorPublicUrl = '/';
     const targetDir = useSubdir ? join(dest.outDir, emulatorName) : dest.outDir;
     progress('Starting emulator build ...');
 
     // since we create this anyway let's just pretend we want to have it clean!
     await removeDirectory(targetDir);
 
-    await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name });
+    await hooks.beforeBuild?.({ root, publicUrl: emulatorPublicUrl, externals, entryFiles, targetDir, name });
 
     logInfo(`Bundle ${emulatorName} ...`);
     const {
@@ -209,7 +210,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         contentHash,
         minify: false,
         externals,
-        publicUrl,
+        publicUrl: emulatorPublicUrl,
         outFile: dest.outFile,
         outDir: join(targetDir, 'app'),
         entryFiles,
@@ -220,7 +221,17 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       bundlerName,
     );
 
-    await hooks.afterBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name, outDir, hash, outFile });
+    await hooks.afterBuild?.({
+      root,
+      publicUrl: emulatorPublicUrl,
+      externals,
+      entryFiles,
+      targetDir,
+      name,
+      outDir,
+      hash,
+      outFile,
+    });
 
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);

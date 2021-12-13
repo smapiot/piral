@@ -35,6 +35,7 @@ describe('Piral-CLI piral injector', () => {
     };
     const config = {
       bundler,
+      publicUrl: '/',
       active: true,
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());
@@ -45,6 +46,7 @@ describe('Piral-CLI piral injector', () => {
     // Arrange
     const config = {
       bundler: bundlerMock,
+      publicUrl: '/',
       active: true,
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());
@@ -63,6 +65,7 @@ describe('Piral-CLI piral injector', () => {
     // Arrange
     const config = {
       bundler: bundlerMock,
+      publicUrl: '/',
       active: true,
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());
@@ -78,6 +81,7 @@ describe('Piral-CLI piral injector', () => {
     // Arrange
     const config = {
       bundler: bundlerMock,
+      publicUrl: '/',
       active: true,
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());

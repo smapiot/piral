@@ -21,8 +21,6 @@ async function getConfig(
   sourceMaps = true,
   contentHash = true,
   minimize = true,
-  publicPath = '/',
-  progress = false,
 ): Promise<webpack.Configuration> {
   const production = !develop;
   const name = process.env.BUILD_PCKG_NAME;
@@ -39,7 +37,7 @@ async function getConfig(
     },
 
     output: {
-      publicPath,
+      publicPath: './',
       path: dist,
       filename: '[name].js',
       chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
@@ -84,7 +82,6 @@ async function getConfig(
           variables: getVariables(),
         }),
       ],
-      progress,
       production,
       true,
     ),

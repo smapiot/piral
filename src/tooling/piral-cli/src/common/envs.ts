@@ -37,10 +37,18 @@ export function setStandardEnvs(options: StandardEnvProps) {
     delete process.env.DEBUG_PILET;
   }
 
+  if (options.publicPath) {
+    process.env.PIRAL_PUBLIC_PATH = options.publicPath;
+  }
+
   if (options.production) {
     process.env.NODE_ENV = 'production';
   } else if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'development';
+  }
+
+  if (options.piral) {
+    process.env.PIRAL_INSTANCE = options.piral;
   }
 
   if (options.dependencies && options.dependencies.length) {

@@ -1,5 +1,16 @@
 # Piral Changelog
 
+## 0.14.5 (tbd)
+
+- Improved `pilet debug` to use actual app externals
+- Improved `piral debug` to respect `--public-url` like `piral build`
+- Fixed `publicPath` in pilets built with Webpack to be `./` instead of `/`
+- Fixed default imports of shared dependencies with `v2` schema (#433)
+- Fixed usage of custom public path with `piral-ng` (#434)
+- Removed `file-loader` from `piral-cli-webpack5`
+- Added env variable `PIRAL_PUBLIC_PATH` during `piral build` and `piral debug` (#434)
+- Added `publicPath` to state container (in `app`)
+
 ## 0.14.4 (December 1, 2021)
 
 - Improved siteless API to support using other frameworks

@@ -119,7 +119,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('target', 'Sets the target directory or file of bundling.')
         .default('target', apps.buildPiralDefaults.target)
         .string('public-url')
-        .describe('public-url', 'Sets the public URL (path) of the bundle.')
+        .describe('public-url', 'Sets the public URL (path) of the bundle. Only for release output.')
         .default('public-url', apps.buildPiralDefaults.publicUrl)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
@@ -419,6 +419,8 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('bundler', availableBundlers[0])
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
+        .string('app-dir')
+        .describe('app-dir', 'Sets the path to a custom Piral instance for serving.')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
@@ -432,6 +434,7 @@ const allCommands: Array<ToolCommand<any>> = [
         hmr: args.hmr as boolean,
         bundlerName: args.bundler as string,
         optimizeModules: args['optimize-modules'] as boolean,
+        appInstanceDir: args['app-dir'] as string,
         app: args.app as string,
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,

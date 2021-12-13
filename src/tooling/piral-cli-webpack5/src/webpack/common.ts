@@ -26,7 +26,7 @@ export function getVariables(): Record<string, string> {
   }, {});
 }
 
-export function getPlugins(plugins: Array<any>, showProgress: boolean, production: boolean, pilet: boolean) {
+export function getPlugins(plugins: Array<any>, production: boolean, pilet: boolean) {
   const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
       filename: pilet ? piletCss : '[name].[fullhash:6].css',
@@ -34,7 +34,7 @@ export function getPlugins(plugins: Array<any>, showProgress: boolean, productio
     }) as any,
   ];
 
-  if (showProgress) {
+  if (process.env.WEBPACK_PROGRESS) {
     otherPlugins.push(
       new ProgressPlugin((percent, msg) => {
         if (percent !== undefined) {
@@ -72,17 +72,11 @@ export function getRules(production: boolean): Array<RuleSetRule> {
       transpileOnly: true,
     },
   };
-  const fileLoader = {
-    loader: require.resolve('file-loader'),
-    options: {
-      esModule: false,
-    },
-  };
 
   return [
     {
       test: /\.(png|jpe?g|gif|bmp|avi|mp4|mp3|svg|ogg|webp|woff2?|eot|ttf|wav)$/i,
-      use: [fileLoader],
+      type: 'asset/resource',
     },
     {
       test: /\.s[ac]ss$/i,

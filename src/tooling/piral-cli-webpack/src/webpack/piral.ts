@@ -21,7 +21,6 @@ async function getConfig(
   minimize = true,
   publicPath = '/',
   hmr = 0,
-  progress = false,
 ): Promise<webpack.Configuration> {
   const production = !develop;
   const name = process.env.BUILD_PCKG_NAME;
@@ -74,7 +73,6 @@ async function getConfig(
           variables: getVariables(),
         }),
       ],
-      progress,
       production,
       false,
       hmr,

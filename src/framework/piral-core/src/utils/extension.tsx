@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ExtensionComponentProps } from '../types';
+import { ExtensionComponentProps, WrappedComponent } from '../types';
 
-export function toExtension<T>(Component: React.ComponentType<T>): React.ComponentType<ExtensionComponentProps<T>> {
+export function toExtension<T>(Component: React.ComponentType<T>): WrappedComponent<ExtensionComponentProps<T>> {
   return (props) => <Component {...props.params} />;
 }

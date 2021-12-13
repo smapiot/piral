@@ -14,7 +14,17 @@ export const html5EntryWebpackConfigEnhancer =
 
     if (template) {
       const src = dirname(template);
-      const templateContent = load(readFileSync(template, 'utf8'));
+      const html = readFileSync(template, 'utf8');
+      const templateContent = load(
+        // try to replace ejs tags, if any
+        html.replace(/<%=([\w\W]*?)%>/g, function (match, group) {
+          try {
+            return eval(group);
+          } catch {
+            return match;
+          }
+        }),
+      );
       const entries = extractParts(templateContent).map((entry) => join(src, entry));
       const plugins = [
         new HtmlWebpackPlugin({

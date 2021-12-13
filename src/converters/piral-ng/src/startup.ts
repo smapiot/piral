@@ -26,9 +26,10 @@ export function startup(
     const [, instance] = runningModule;
     return Promise.resolve(instance);
   } else {
+    const path = context.readState?.((s) => s.app.publicPath) || '/';
     const platform = platformBrowserDynamic([
       { provide: 'Context', useValue: context },
-      { provide: APP_BASE_HREF, useValue: '/' },
+      { provide: APP_BASE_HREF, useValue: path },
     ]);
     const id = Math.random().toString(36);
     const zoneIdentifier = `piral-ng:${id}`;

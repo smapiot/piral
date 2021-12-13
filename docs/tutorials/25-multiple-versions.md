@@ -192,3 +192,5 @@ If this file should be part of all your pilets then place it already in the app 
 ## Conclusion
 
 In this tutorial you've seen different strategies to mitigate issues that may appear when you want to share multiple versions of the same dependency. Clearly, the best way forward is to rely on the implicit sharing of dependencies between your pilets. As seen, Piral allows you to move forward in various ways making it possible to find the right solution for your problem.
+
+In the next tutorial we look at how pilets can be developed for multiple Piral instances.
