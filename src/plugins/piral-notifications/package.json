@@ -1,6 +1,6 @@
 {
   "name": "piral-notifications",
-  "version": "0.14.4",
+  "version": "0.14.5",
   "description": "Plugin for triggering notifications in Piral.",
   "keywords": [
     "piral",
@@ -42,7 +42,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.4"
+    "piral-core": "^0.14.5"
   },
   "peerDependencies": {
     "piral-core": "0.14.x"
