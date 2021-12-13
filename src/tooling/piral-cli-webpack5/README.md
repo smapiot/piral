@@ -42,10 +42,6 @@ Right now it includes:
 
 As such it should be prepared to include assets (images, videos, ...), stylesheets (CSS and SASS), and work with TypeScript.
 
-> Right now the output of this plugin is for the **v1** pilet schema only!
-
-No support for the legacy **v0** pilet schema.
-
 ### Customizing
 
 You can still leverage your own `webpack.config.js`. Either just export *what you want to have overwritten*, e.g.,
