@@ -1,5 +1,6 @@
-const { AngularWebpackPlugin } = require('@ngtools/webpack');
 const CopyPlugin = require('copy-webpack-plugin');
+
+const { AngularWebpackPlugin } = require('@ngtools/webpack');
 const { resolve } = require('path');
 
 const ngtoolsLoader = require.resolve('@ngtools/webpack');

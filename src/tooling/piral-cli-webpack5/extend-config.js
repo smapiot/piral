@@ -98,7 +98,7 @@ module.exports = function (override) {
       }
 
       if ('rules' in override && Array.isArray(override.rules)) {
-        config.module.rules.push(...rules);
+        config.module.rules.push(...override.rules);
       }
 
       if ('removeRules' in override && Array.isArray(override.removeRules)) {
@@ -106,7 +106,7 @@ module.exports = function (override) {
       }
 
       if ('plugins' in override && Array.isArray(override.plugins)) {
-        config.plugins.push(...plugins);
+        config.plugins.push(...override.plugins);
       }
 
       if ('removePlugins' in override && Array.isArray(override.removePlugins)) {
