@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.5 (tbd)
+## 0.14.5 (December 13, 2021)
 
 - Improved `pilet debug` to use actual app externals
 - Improved `piral debug` to respect `--public-url` like `piral build`
