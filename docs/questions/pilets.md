@@ -166,7 +166,11 @@ No, pilets could be also developed without an app shell. In order to avoid havin
 A pilet could then be scaffolded like this:
 
 ```sh
+# npm v6
 npm init pilet --source sample-piral --defaults
+
+# npm v7 and npm v8
+npm init pilet -- --source sample-piral --defaults
 ```
 
 ---------------------------------------

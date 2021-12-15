@@ -12,8 +12,11 @@ Use the template with `piral new` or `npm init piral-instance`:
 # directly via the CLI (prefer to prefix with npx)
 piral new --template default <other-options>
 
-# via the initializer - best option
+# via the initializer - best option (NPM v6)
 npm init piral-instance --template default <other-options>
+
+# via the initializer - best option (NPM v7 and v8)
+npm init piral-instance -- --template default <other-options>
 ```
 
 ## License

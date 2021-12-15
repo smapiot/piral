@@ -48,13 +48,21 @@ The generated tarball is now being located under *dist/emulator/*.
 Let's create a directory for the pilet next to the app shell's directory. Assuming that the app shell's directory has been called `my-piral-instance` we could run in the pilet's directory:
 
 ```sh
+# npm v6
 npm init pilet --source ../my-piral-instance/develop/my-piral-instance-1.0.0.tgz
+
+# npm v7 and npm v8
+npm init pilet -- --source ../my-piral-instance/develop/my-piral-instance-1.0.0.tgz
 ```
 
 Like beforehand, if you don't want to see the survey use the `--defaults` flag:
 
 ```sh
+# npm v6
 npm init pilet --source ../my-piral-instance/develop/my-piral-instance-1.0.0.tgz --defaults
+
+# npm v7 and npm v8
+npm init pilet -- --source ../my-piral-instance/develop/my-piral-instance-1.0.0.tgz --defaults
 ```
 
 Make sure to adapt the command above to the name of your app shell.
