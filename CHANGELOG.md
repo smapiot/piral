@@ -2,7 +2,8 @@
 
 ## 0.14.6 (tbd)
 
-- Fixed potential warning about too many listeners
+- Improved docs w.r.t. npm initializers
+- Fixed potential warning about too many listener
 
 ## 0.14.5 (December 13, 2021)
 
