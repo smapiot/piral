@@ -2,7 +2,7 @@
 
 ## 0.14.6 (tbd)
 
-- (tbd)
+- Fixed potential warning about too many listeners
 
 ## 0.14.5 (December 13, 2021)
 

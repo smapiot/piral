@@ -76,8 +76,6 @@ export default class PiletInjector implements KrasInjector {
     const { pilets, api } = options;
     const cbs = {};
 
-    core.setMaxListeners(64);
-
     core.on('user-connected', (e) => {
       if (e.target === '*' && e.url === api.substr(1)) {
         cbs[e.id] = (msg: string) => e.ws.send(msg);

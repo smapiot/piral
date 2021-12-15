@@ -190,6 +190,11 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     fail('entryFileMissing_0077');
   }
 
+  const maxListeners = allEntries.length * 2;
+  process.stderr.setMaxListeners(maxListeners);
+  process.stdout.setMaxListeners(maxListeners);
+  process.stdin.setMaxListeners(maxListeners);
+
   const pilets = await Promise.all(
     allEntries.map(async (entryModule) => {
       const targetDir = dirname(entryModule);

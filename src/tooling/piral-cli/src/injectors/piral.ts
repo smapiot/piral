@@ -23,8 +23,6 @@ export default class PiralInjector implements KrasInjector {
     const api = '/$events';
     const cbs = {};
 
-    core.setMaxListeners(16);
-
     core.on('user-connected', (e) => {
       if (e.target === '*' && e.url === api.substr(1)) {
         cbs[e.id] = (msg: string) => e.ws.send(msg);
