@@ -12,7 +12,7 @@ module.exports =
   (options = {}) =>
   (config) => {
     const {
-      patterns = [{ from: resolve(process.cwd(), 'src/assets') }],
+      patterns = [{ from: resolve(process.cwd(), 'src/assets'), noErrorOnMissing: true }],
       ngOptions = {},
       compilerOptions = {},
     } = options;
