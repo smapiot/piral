@@ -1,5 +1,5 @@
 const { sep, resolve } = require('path');
-const { render, generatePage, docRef, generated, readme } = require('piral-docs-tools');
+const { render, generatePage, docRef, generated, readme } = require('@pidoc/core');
 
 function getBundlers() {
   const toolingRoot = resolve(__dirname, '../../../../tooling');
@@ -46,7 +46,7 @@ exports.build = function (entry, options) {
   const content = ['`', `<h1><code>${name}</code></h1>`, mdValue.substr(mdValue.indexOf('</h1>') + 5)].join('');
 
   const head = `
-    import { PageContent, Markdown, } from '../../scripts/components';
+    import { PageContent, Markdown } from '@pidoc/components';
 
     const link = "${docRef(file)}";
     const html = ${content};

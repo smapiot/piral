@@ -2529,6 +2529,43 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
+"@pidoc/components@0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.0.tgz#7b871fec9e5ba1e8245678f3f505bdf89dcfa0ba"
+  integrity sha512-l9K14P5anF2YIAG8AkOV3taBzounAdmMMXyvGj1R/UGZbXCmxfeMzjKn2J5w+HAu8RFOoZIomsMcEgsfA6e6lA==
+  dependencies:
+    flexsearch "^0.6.32"
+    stickyfilljs "^2.1.0"
+
+"@pidoc/core@0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.0.tgz#9c876e7f2d18e528428feec1a85065610710b412"
+  integrity sha512-TiKfO7cu7PgnCe++1+b8aQWcpX0u1HDXSXW7dDC6oT1jtw8rc9MkMDFl/OFqhJay4MF9lWIlt9CIC9bT040YZQ==
+  dependencies:
+    "@pidoc/components" "0.14.0"
+    keyword-extractor "0.0.20"
+    markdown-it "^12.0.6"
+    markdown-it-abbr "^1.0.4"
+    markdown-it-anchor "^7.1.0"
+    markdown-it-attrs "^4.0.0"
+    markdown-it-container "^3.0.0"
+    markdown-it-div "^1.1.0"
+    markdown-it-emoji "^2.0.0"
+    markdown-it-footnote "^3.0.2"
+    markdown-it-front-matter "^0.2.3"
+    markdown-it-highlightjs "^3.5.0"
+    markdown-it-include "^2.0.0"
+    markdown-it-mark "^3.0.1"
+    markdown-it-replace-link "^1.1.0"
+    markdown-it-smartarrows "^1.0.1"
+    markdown-it-sub "^1.0.0"
+    markdown-it-sup "^1.0.0"
+    markdown-it-task-checkbox "^1.0.6"
+    markdown-it-video "^0.6.3"
+    pug "^3.0.2"
+    yaml "^1.10.2"
+    yargs "^15.4.1"
+
 "@react-native-community/cli-debugger-ui@^5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-5.0.1.tgz#6b1f3367b8e5211e899983065ea2e72c1901d75f"
@@ -7789,14 +7826,6 @@ file-loader@^5.1.0:
     loader-utils "^1.4.0"
     schema-utils "^2.5.0"
 
-file-loader@^6.1.1:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-6.2.0.tgz#baef7cf8e1840df325e4390b4484879480eebe4d"
-  integrity sha512-qo3glqyTa61Ytg4u73GultjHGjdRyig3tG6lPtyX/jOEJvHif9uB0/OCI2Kif6ctF3caQTW2G5gym21oAsI4pw==
-  dependencies:
-    loader-utils "^2.0.0"
-    schema-utils "^3.0.0"
-
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
@@ -10804,6 +10833,11 @@ markdown-it-highlightjs@^3.5.0:
     highlight.js "^10.7.2"
     lodash.flow "^3.5.0"
 
+markdown-it-include@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-include/-/markdown-it-include-2.0.0.tgz#e86e3b3c68c8f0e0437e179ba919ffd28443127a"
+  integrity sha512-wfgIX92ZEYahYWiCk6Jx36XmHvAimeHN420csOWgfyZjpf171Y0xREqZWcm/Rwjzyd0RLYryY+cbNmrkYW2MDw==
+
 markdown-it-mark@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/markdown-it-mark/-/markdown-it-mark-3.0.1.tgz#51257db58787d78aaf46dc13418d99a9f3f0ebd3"
@@ -10828,6 +10862,11 @@ markdown-it-sup@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/markdown-it-sup/-/markdown-it-sup-1.0.0.tgz#cb9c9ff91a5255ac08f3fd3d63286e15df0a1fc3"
   integrity sha1-y5yf+RpSVawI8/09YyhuFd8KH8M=
+
+markdown-it-task-checkbox@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/markdown-it-task-checkbox/-/markdown-it-task-checkbox-1.0.6.tgz#9ebd7b6382e99162264605bc580f2ac118be4242"
+  integrity sha512-7pxkHuvqTOu3iwVGmDPeYjQg+AIS9VQxzyLP9JCg9lBjgPAJXGEkChK6A2iFuj3tS0GV3HG2u5AMNhcQqwxpJw==
 
 markdown-it-video@^0.6.3:
   version "0.6.3"
@@ -12645,33 +12684,6 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
-
-piral-docs-tools@0.12.6:
-  version "0.12.6"
-  resolved "https://registry.yarnpkg.com/piral-docs-tools/-/piral-docs-tools-0.12.6.tgz#7d14404d11fe58558f6df64c2d8deff5e9d6720a"
-  integrity sha512-DruTB76gus3go20pVlG3dKP36exrWWdS6tlureMPe1HapLvgkV4Fkx2FEhhksPR+XetM8rvrx+EvC0nu1iDESg==
-  dependencies:
-    flexsearch "^0.6.32"
-    keyword-extractor "0.0.20"
-    markdown-it "^12.0.6"
-    markdown-it-abbr "^1.0.4"
-    markdown-it-anchor "^7.1.0"
-    markdown-it-attrs "^4.0.0"
-    markdown-it-container "^3.0.0"
-    markdown-it-div "^1.1.0"
-    markdown-it-emoji "^2.0.0"
-    markdown-it-footnote "^3.0.2"
-    markdown-it-front-matter "^0.2.3"
-    markdown-it-highlightjs "^3.5.0"
-    markdown-it-mark "^3.0.1"
-    markdown-it-replace-link "^1.1.0"
-    markdown-it-smartarrows "^1.0.1"
-    markdown-it-sub "^1.0.0"
-    markdown-it-sup "^1.0.0"
-    markdown-it-video "^0.6.3"
-    pug "^3.0.2"
-    stickyfilljs "^2.1.0"
-    yaml "^1.10.2"
 
 piral-instance-webpack-plugin@^0.8.0:
   version "0.8.0"

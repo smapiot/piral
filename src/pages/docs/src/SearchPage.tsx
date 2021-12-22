@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import './styles.scss';
 
 export default () => {
   const history = useHistory();

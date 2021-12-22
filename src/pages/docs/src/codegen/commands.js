@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const { render, generated, generateStandardPage, getName, getDocsFrom } = require('piral-docs-tools');
+const { render, generated, generateStandardPage, getName, getDocsFrom } = require('@pidoc/core');
 
 function getCommands(docsFolder) {
   const commands = resolve(docsFolder, 'commands');
