@@ -4,6 +4,8 @@
 
 - Improved docs w.r.t. npm initializers
 - Fixed potential warning about too many listener
+- Fixed version of `react-router` in the peer dependencies of `piral-core` (#441)
+- Fixed missing update cycle in `piral-vue` converter (#440)
 
 ## 0.14.5 (December 13, 2021)
 
