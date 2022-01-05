@@ -11,7 +11,7 @@ export function createExtension(rootName: string, selector: string): Component<E
       return createElement(rootName);
     },
     watch: {
-      params(oldValue, newValue) {
+      params(newValue, oldValue) {
         if (newValue !== oldValue) {
           const newKeys = Object.keys(newValue);
           const oldKeys = Object.keys(oldValue);
@@ -31,7 +31,14 @@ export function createExtension(rootName: string, selector: string): Component<E
             }
           }
 
-          const ev = new CustomEvent('extension-props-changed', { detail: newValue });
+          const ev = new CustomEvent('extension-props-changed', {
+            detail: {
+              empty: this.empty,
+              params: newValue,
+              render: this.render,
+              name: this.name,
+            },
+          });
           this.$el.dispatchEvent(ev);
         }
       },
