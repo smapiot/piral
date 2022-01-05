@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.6 (tbd)
+## 0.14.6 (January 5, 2022)
 
 - Improved docs w.r.t. npm initializers
 - Fixed potential warning about too many listener
