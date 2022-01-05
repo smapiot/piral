@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.7 (tbd)
+
+- (...)
+
 ## 0.14.6 (January 5, 2022)
 
 - Improved docs w.r.t. npm initializers
