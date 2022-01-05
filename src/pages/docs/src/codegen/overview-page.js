@@ -1,6 +1,6 @@
 const { readFileSync, existsSync, readdirSync } = require('fs');
 const { basename, resolve, relative } = require('path');
-const { generated, generatePage, getDocsFrom } = require('piral-docs-tools');
+const { generated, generatePage, getDocsFrom } = require('@pidoc/core');
 
 const categoryPrefix = 'plugin-';
 const packagesRoot = resolve(__dirname, '../../../..');
@@ -104,7 +104,7 @@ exports.build = function (entry, options) {
   fragments.sort((a, b) => (a.category > b.category ? 1 : -1));
 
   const head = `
-    import { ImageCard, PageContent } from '../../scripts/components';
+    import { ImageCard, PageContent } from '@pidoc/components';
   `;
 
   const body = `

@@ -12,8 +12,11 @@ Use the template with `pilet new` or `npm init pilet`:
 # directly via the CLI (prefer to prefix with npx)
 pilet new --template default <other-options>
 
-# via the initializer - best option
+# via the initializer - best option (NPM v6)
 npm init pilet --template default <other-options>
+
+# via the initializer - best option (NPM v7 and v8)
+npm init pilet -- --template default <other-options>
 ```
 
 ## License

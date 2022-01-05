@@ -1,6 +1,6 @@
 const { resolve, relative } = require('path');
 const { readFileSync, readdirSync, existsSync } = require('fs');
-const { render, docRef, generated, generatePage, getName, getDocsFrom } = require('piral-docs-tools');
+const { render, docRef, generated, generatePage, getName, getDocsFrom } = require('@pidoc/core');
 
 const categoryPrefix = 'plugin-';
 const packagesRoot = resolve(__dirname, '../../../..');
@@ -112,7 +112,7 @@ exports.build = function (entry, options) {
     title: name,
   };
   const head = `
-    import { PageContent, TypeInfo, Tabs, Markdown, PluginMeta } from '../../scripts/components';
+    import { PageContent, TypeInfo, Tabs, Markdown, PluginMeta } from '@pidoc/components';
 
     const link = "${docRef(readme)}";
     const meta = ${JSON.stringify(plugin)};

@@ -72,8 +72,16 @@ As a result, we will find in the folder `./my-app` the files for the newly creat
 ::: tip: Use npm initializers
 In case you don't want to install the Piral CLI globally, you can also leverage the npm initializer for this command.
 
+In **npm v6** you can write:
+
 ```sh
 npm init piral-instance --target my-app --defaults
+```
+
+In **npm v7**, **npm v8** and higher you'd write:
+
+```sh
+npm init piral-instance -- --target my-app --defaults
 ```
 
 The npm initializer comes with a quick survey going over the options. Specifying `--defaults` will take the default values.
@@ -146,8 +154,16 @@ If you navigate into the folder `my-pilet`, you'll find the files for the newly 
 ::: tip: Use npm initializers
 You can also leverage the npm initializers for creating new pilets.
 
+In **npm v6** you can write:
+
 ```sh
 npm init pilet --target my-pilet --source ./my-app/dist/emulator/my-app-1.0.0.tgz --defaults
+```
+
+In **npm v7**, **npm v8** and higher you'd write:
+
+```sh
+npm init pilet -- --target my-pilet --source ./my-app/dist/emulator/my-app-1.0.0.tgz --defaults
 ```
 
 Also here, if you drop the `--defaults` option additional settings will be presented to you in form of a quick survey.
