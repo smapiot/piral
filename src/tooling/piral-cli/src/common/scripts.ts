@@ -28,9 +28,9 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
       resolveWinPath('AppData', 'npm'),
       resolveWinPath('ProgramFiles', 'nodejs'),
       resolveWinPath('ProgramFiles(x86)', 'nodejs'),
-      ...env.Path.split(';'),
+      ...(env.Path || env.PATH || '').split(';'),
     ];
-    env.PATH = newPaths.filter(Boolean).join(sep);
+    env.PATH = newPaths.filter((path) => path && path.length > 0).join(sep);
   }
 
   env.PATH = `${bin}${sep}${env.PATH}`;
