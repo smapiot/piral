@@ -19,7 +19,6 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
   const sep = isWindows ? ';' : ':';
   const env = Object.assign({}, process.env);
 
-  env.PATH = `${bin}${sep}${env.PATH}`;
   log('generalDebug_0003', `Running "${script}" in "${cwd}" ("${bin}").`);
 
   if (isWindows) {
@@ -29,10 +28,12 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
       resolveWinPath('AppData', 'npm'),
       resolveWinPath('ProgramFiles', 'nodejs'),
       resolveWinPath('ProgramFiles(x86)', 'nodejs'),
-      ...env.PATH.split(';'),
+      ...env.Path.split(';'),
     ];
     env.PATH = newPaths.filter(Boolean).join(sep);
   }
+
+  env.PATH = `${bin}${sep}${env.PATH}`;
 
   return new Promise<void>((resolve, reject) => {
     const error = new MemoryStream();
