@@ -1,5 +1,6 @@
 import { rc } from '../external';
 import { NpmClientType, PiletSchemaVersion } from '../types';
+import { SourceLanguage } from './enums';
 
 export interface PiralCliConfig {
   /**
@@ -41,6 +42,22 @@ export interface PiralCliConfig {
    * Sets the schema version to be used for pilets.
    */
   schemaVersion?: PiletSchemaVersion;
+  /**
+   * Automatically open the browser.
+   */
+  open?: boolean;
+  /**
+   * Port number.
+   */
+  port?: number;
+  /**
+   * Template language.
+   */
+  language?: SourceLanguage.ts;
+  /**
+   * Host name.
+   */
+  host?: string;
 }
 
 export const config: PiralCliConfig = rc('piral', {
@@ -53,4 +70,8 @@ export const config: PiralCliConfig = rc('piral', {
   piletApi: '/$pilet-api',
   validators: {},
   schemaVersion: 'v2',
+  open: false,
+  port: 1234,
+  language: SourceLanguage.ts,
+  host: 'localhost',
 });

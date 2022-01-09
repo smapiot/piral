@@ -19,6 +19,7 @@ import {
   defaultRegistry,
   cliVersion,
   getPiralScaffoldData,
+  config,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -95,12 +96,12 @@ export const newPiralDefaults: NewPiralOptions = {
   target: '.',
   version: cliVersion,
   forceOverwrite: ForceOverwrite.no,
-  language: SourceLanguage.ts,
+  language: config.language,
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
-  npmClient: undefined,
-  bundlerName: 'none',
+  npmClient: config.npmClient,
+  bundlerName: config.bundler,
   variables: {},
 };
 

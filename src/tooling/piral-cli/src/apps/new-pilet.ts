@@ -31,6 +31,7 @@ import {
   detectMonorepo,
   bootstrapMonorepo,
   getPiletScaffoldData,
+  config,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -99,12 +100,12 @@ export const newPiletDefaults: NewPiletOptions = {
   registry: defaultRegistry,
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
-  language: SourceLanguage.ts,
+  language: config.language,
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
-  npmClient: undefined,
-  bundlerName: 'none',
+  npmClient: config.npmClient,
+  bundlerName: config.bundler,
   variables: {},
 };
 

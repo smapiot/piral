@@ -99,8 +99,8 @@ export interface DebugPiletOptions {
 export const debugPiletDefaults: DebugPiletOptions = {
   logLevel: LogLevels.info,
   entry: './src/index',
-  open: false,
-  port: 1234,
+  open: config.open,
+  port: config.port,
   hmr: true,
   optimizeModules: false,
   schemaVersion: config.schemaVersion,
@@ -300,7 +300,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await krasServer.start();
-  openBrowser(open, port);
+  openBrowser(open, port, !!krasConfig.ssl);
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});
