@@ -180,6 +180,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
 
   const allEntries = await matchAnyPilet(fullBase, entryList);
+  const maxListeners = Math.max(2 + allEntries.length * 2, 16);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (krasConfig.sources === undefined) {
@@ -190,7 +191,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     fail('entryFileMissing_0077');
   }
 
-  const maxListeners = allEntries.length * 2;
   process.stderr.setMaxListeners(maxListeners);
   process.stdout.setMaxListeners(maxListeners);
   process.stdin.setMaxListeners(maxListeners);
@@ -287,7 +287,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
   const krasServer = buildKrasWithCli(krasConfig);
-  krasServer.setMaxListeners(pilets.length * 2);
+  krasServer.setMaxListeners(maxListeners);
   krasServer.removeAllListeners('open');
   krasServer.on(
     'open',
