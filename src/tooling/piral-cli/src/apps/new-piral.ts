@@ -100,7 +100,7 @@ export const newPiralDefaults: NewPiralOptions = {
   template: 'default',
   logLevel: LogLevels.info,
   npmClient: config.npmClient,
-  bundlerName: config.bundler,
+  bundlerName: 'none',
   variables: {},
 };
 
