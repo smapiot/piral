@@ -45,7 +45,7 @@ export interface PiralCliConfig {
   /**
    * Automatically open the browser.
    */
-  open?: boolean;
+  openBrowser?: boolean;
   /**
    * Port number.
    */
@@ -53,7 +53,7 @@ export interface PiralCliConfig {
   /**
    * Template language.
    */
-  language?: SourceLanguage.ts;
+  language?: SourceLanguage;
   /**
    * Host name.
    */
@@ -70,7 +70,7 @@ export const config: PiralCliConfig = rc('piral', {
   piletApi: '/$pilet-api',
   validators: {},
   schemaVersion: 'v2',
-  open: false,
+  openBrowser: false,
   port: 1234,
   language: SourceLanguage.ts,
   host: 'localhost',

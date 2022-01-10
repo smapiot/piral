@@ -80,7 +80,7 @@ export const debugPiralDefaults: DebugPiralOptions = {
   port: config.port,
   publicUrl: '/',
   logLevel: LogLevels.info,
-  open: config.open,
+  open: config.openBrowser,
   hmr: true,
   optimizeModules: false,
 };

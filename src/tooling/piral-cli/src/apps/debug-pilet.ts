@@ -99,7 +99,7 @@ export interface DebugPiletOptions {
 export const debugPiletDefaults: DebugPiletOptions = {
   logLevel: LogLevels.info,
   entry: './src/index',
-  open: config.open,
+  open: config.openBrowser,
   port: config.port,
   hmr: true,
   optimizeModules: false,
