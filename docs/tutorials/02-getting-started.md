@@ -196,7 +196,7 @@ As for the application shell, the pilet can be started in debug mode using the `
 npx pilet debug
 ```
 
-When navigating to `http://localhost:1234`, the application shell will be started and the content of the pilet will be shown. Currently, "Welcome to Piral!' will be shown in the left top corner.
+When navigating to `http://localhost:1234`, the application shell will be started and the content of the pilet will be shown. Currently, a tile with "Welcome to Piral!" is shown on the dashboard with a link to the "Documentation" in the top navigation, and a short-lived notification "Hello from Piral!" appearing on the bottom right corner.
 
 **Remark:** Although our pilet has already the setup for a menu entry and showing a notification, those entities are not visible when starting the pilet. The reason for this is that for our current version of the application shell no menu and no support for notifications have been configured yet. Subsequent tutorials will guide us through configuring further functions of the application shell.
 
