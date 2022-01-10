@@ -58,6 +58,10 @@ export interface PiralCliConfig {
    * Host name.
    */
   host?: string;
+  /**
+   * Npm registry.
+   */
+  registry?: string;
 }
 
 export const config: PiralCliConfig = rc('piral', {
@@ -74,4 +78,5 @@ export const config: PiralCliConfig = rc('piral', {
   port: 1234,
   language: SourceLanguage.ts,
   host: 'localhost',
+  registry: 'https://registry.npmjs.org/',
 });

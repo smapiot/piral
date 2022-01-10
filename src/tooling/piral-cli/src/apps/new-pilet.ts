@@ -5,7 +5,6 @@ import {
   SourceLanguage,
   createDirectory,
   createFileIfNotExists,
-  defaultRegistry,
   installPackage,
   dissectPackageName,
   copyPiralFiles,
@@ -97,7 +96,7 @@ export interface NewPiletOptions {
 
 export const newPiletDefaults: NewPiletOptions = {
   target: '.',
-  registry: defaultRegistry,
+  registry: config.registry,
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
   language: config.language,

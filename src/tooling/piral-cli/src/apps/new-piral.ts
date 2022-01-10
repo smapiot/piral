@@ -16,7 +16,6 @@ import {
   fail,
   progress,
   determineNpmClient,
-  defaultRegistry,
   cliVersion,
   getPiralScaffoldData,
   config,
@@ -91,7 +90,7 @@ export interface NewPiralOptions {
 
 export const newPiralDefaults: NewPiralOptions = {
   app: './src/index.html',
-  registry: defaultRegistry,
+  registry: config.registry,
   framework: 'piral',
   target: '.',
   version: cliVersion,
