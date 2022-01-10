@@ -5,8 +5,11 @@ import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { log } from '../common/log';
 import { getPiletSpecMeta } from '../common/spec';
+import { config } from '../common/config';
 import { axios, mime } from '../external';
 import { Bundler } from '../types';
+
+const { host } = config;
 
 interface Pilet {
   bundler: Bundler;
@@ -71,7 +74,7 @@ export default class PiletInjector implements KrasInjector {
     // either take a full URI or make it an absolute path relative to the current origin
     this.piletApi = /^https?:/.test(options.api)
       ? options.api
-      : `${config.ssl ? 'https' : 'http'}://localhost:${config.port}${options.api}`;
+      : `${config.ssl ? 'https' : 'http'}://${host}:${config.port}${options.api}`;
 
     const { pilets, api } = options;
     const cbs = {};
