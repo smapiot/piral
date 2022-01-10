@@ -1,6 +1,7 @@
 import { rc } from '../external';
 import { NpmClientType, PiletSchemaVersion } from '../types';
 import { SourceLanguage } from './enums';
+import { defaultRegistry } from './constants';
 
 export interface PiralCliConfig {
   /**
@@ -78,5 +79,5 @@ export const config: PiralCliConfig = rc('piral', {
   port: 1234,
   language: SourceLanguage.ts,
   host: 'localhost',
-  registry: 'https://registry.npmjs.org/',
+  registry: defaultRegistry,
 });

@@ -1,3 +1,4 @@
+export const defaultRegistry = 'https://registry.npmjs.org/';
 export const filesTar = 'files';
 export const filesOnceTar = 'files_once';
 export const piralBaseRoot = 'piral-base/lib/types';
