@@ -2,7 +2,7 @@
 
 ## 0.14.7 (tbd)
 
-- (...)
+- Updated `PATH` environment usage for child processes in Windows
 
 ## 0.14.6 (January 5, 2022)
 
