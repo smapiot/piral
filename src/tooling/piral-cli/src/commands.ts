@@ -98,6 +98,7 @@ const allCommands: Array<ToolCommand<any>> = [
         bundlerName: args.bundler as string,
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
+        hooks: args.hooks as object,
         _: args,
       });
     },
@@ -169,6 +170,7 @@ const allCommands: Array<ToolCommand<any>> = [
         optimizeModules: args['optimize-modules'] as boolean,
         logLevel: args['log-level'] as LogLevels,
         type: args.type as PiralBuildType,
+        hooks: args.hooks as object,
         _: args,
       });
     },
@@ -440,6 +442,7 @@ const allCommands: Array<ToolCommand<any>> = [
         open: args.open as boolean,
         schemaVersion: args.schema as PiletSchemaVersion,
         feed: args.feed as string,
+        hooks: args.hooks as object,
         _: args,
       });
     },
@@ -511,6 +514,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         schemaVersion: args.schema as PiletSchemaVersion,
         app: args.app as string,
+        hooks: args.hooks as object,
         _: args,
       });
     },
