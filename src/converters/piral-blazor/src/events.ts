@@ -63,7 +63,7 @@ function dispatchToRoot(event: any) {
   document.getElementById(blazorRootId)?.dispatchEvent(eventClone);
 }
 
-export function emitRenderEvent(source: HTMLElement, name: string) {
+export function emitRenderEvent(source: HTMLElement, name: string, params: any) {
   const target = findTarget(source);
   const eventInit = {
     bubbles: true,
@@ -71,6 +71,7 @@ export function emitRenderEvent(source: HTMLElement, name: string) {
       target,
       props: {
         name,
+        params,
       },
     },
   };

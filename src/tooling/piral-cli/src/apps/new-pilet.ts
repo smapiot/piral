@@ -5,7 +5,6 @@ import {
   SourceLanguage,
   createDirectory,
   createFileIfNotExists,
-  defaultRegistry,
   installPackage,
   dissectPackageName,
   copyPiralFiles,
@@ -31,6 +30,7 @@ import {
   detectMonorepo,
   bootstrapMonorepo,
   getPiletScaffoldData,
+  config,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -96,14 +96,14 @@ export interface NewPiletOptions {
 
 export const newPiletDefaults: NewPiletOptions = {
   target: '.',
-  registry: defaultRegistry,
+  registry: config.registry,
   source: 'piral',
   forceOverwrite: ForceOverwrite.no,
-  language: SourceLanguage.ts,
+  language: config.language,
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
-  npmClient: undefined,
+  npmClient: config.npmClient,
   bundlerName: 'none',
   variables: {},
 };

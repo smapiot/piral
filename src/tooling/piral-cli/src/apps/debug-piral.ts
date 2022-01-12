@@ -12,6 +12,7 @@ import {
   setLogLevel,
   progress,
   log,
+  config,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -76,10 +77,10 @@ export interface DebugPiralOptions {
 
 export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
-  port: 1234,
+  port: config.port,
   publicUrl: '/',
   logLevel: LogLevels.info,
-  open: false,
+  open: config.openBrowser,
   hmr: true,
   optimizeModules: false,
 };
@@ -170,7 +171,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   await hooks.beforeOnline?.({ krasServer, krasConfig, open, port });
   await krasServer.start();
-  openBrowser(open, port);
+  openBrowser(open, port, !!krasConfig.ssl);
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port });
   await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});

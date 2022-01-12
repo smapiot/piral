@@ -205,6 +205,10 @@ module.exports = (config) => {
       loader: '@ngtools/webpack',
     },
     {
+      test: /\.component.html$/i,
+      use: ["to-string-loader", "html-loader?esModule=false"],
+    },
+    {
       test: /\.component.css$/i,
       use: ["to-string-loader", "css-loader?esModule=false"],
     },
@@ -337,6 +341,7 @@ For using `piral-ng/extend-webpack` you must have installed:
 - `copy-webpack-plugin`
 - `@ngtools/webpack`
 - `to-string-loader`
+- `html-loader`
 - `webpack`, e.g., via `piral-cli-webpack5`
 
 You can do that via:

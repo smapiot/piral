@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.14.7 (tbd)
+
+- Updated `PATH` environment usage for child processes in Windows
+- Pass on hooks from args in commands of the `piral-cli`
+- Added `registry`, `language`, `host`, `port`, and `openBrowser` to *.piralrc*
+- Added `html-loader` to `piral-ng/extend-webpack`
+
 ## 0.14.6 (January 5, 2022)
 
 - Improved docs w.r.t. npm initializers

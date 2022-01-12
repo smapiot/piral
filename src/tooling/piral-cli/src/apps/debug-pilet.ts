@@ -99,8 +99,8 @@ export interface DebugPiletOptions {
 export const debugPiletDefaults: DebugPiletOptions = {
   logLevel: LogLevels.info,
   entry: './src/index',
-  open: false,
-  port: 1234,
+  open: config.openBrowser,
+  port: config.port,
   hmr: true,
   optimizeModules: false,
   schemaVersion: config.schemaVersion,
@@ -180,6 +180,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
 
   const allEntries = await matchAnyPilet(fullBase, entryList);
+  const maxListeners = Math.max(2 + allEntries.length * 2, 16);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (krasConfig.sources === undefined) {
@@ -190,7 +191,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     fail('entryFileMissing_0077');
   }
 
-  const maxListeners = allEntries.length * 2;
   process.stderr.setMaxListeners(maxListeners);
   process.stdout.setMaxListeners(maxListeners);
   process.stdin.setMaxListeners(maxListeners);
@@ -287,7 +287,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
   const krasServer = buildKrasWithCli(krasConfig);
-  krasServer.setMaxListeners(pilets.length * 2);
+  krasServer.setMaxListeners(maxListeners);
   krasServer.removeAllListeners('open');
   krasServer.on(
     'open',
@@ -300,7 +300,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await krasServer.start();
-  openBrowser(open, port);
+  openBrowser(open, port, !!krasConfig.ssl);
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});
