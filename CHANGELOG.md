@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.7 (tbd)
+## 0.14.7 (January 12, 2022)
 
 - Updated `PATH` environment usage for child processes in Windows
 - Pass on hooks from args in commands of the `piral-cli`
