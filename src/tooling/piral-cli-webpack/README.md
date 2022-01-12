@@ -12,7 +12,7 @@ Use your favorite NPM client for the installation:
 npm i piral-cli-webpack --save-dev
 ```
 
-**Note**: The plugin has to be installed to tell the `piral-cli` to use Webpack v4 as the default bundler.
+**Note**: If you don't install any bundler for use in `piral-cli` then `piral-cli-webpack` will be automatically installed for you.
 
 ## Using
 
@@ -44,10 +44,6 @@ Right now it includes:
 - `webpack-dev-server`.
 
 As such it should be prepared to include assets (images, videos, ...), stylesheets (CSS and SASS), and work with TypeScript.
-
-> Right now the output of this plugin is for the **v1** pilet schema only!
-
-No support for the legacy **v0** pilet schema.
 
 ### Customizing
 

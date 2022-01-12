@@ -69,6 +69,26 @@ export interface AdalConfig {
    * For more details see the MSAL.js documentation.
    */
   framework?: any;
+  /**
+   * Determines whether or not the authority should be validated.
+   */
+  validateAuthority?: boolean;
+  /**
+   * Additional metadata to hand over.
+   */
+  authorityMetadata?: string;
+  /**
+   * A list of known authorities to respect.
+   */
+  knownAuthorities?: Array<string>;
+  /**
+   * Optionally decides where to redirect to in the logout case.
+   */
+  postLogoutRedirectUri?: string;
+  /**
+   * Determines if the URL for the login request should be navigated to.
+   */
+  navigateToLoginRequestUrl?: boolean;
 }
 
 export interface AdalRequest {
@@ -108,8 +128,6 @@ export interface AdalClient {
  */
 export function setupAdalClient(config: AdalConfig): AdalClient {
   const {
-    clientId,
-    authority,
     redirectUri = `${location.origin}/auth`,
     restrict = false,
     scopes = ['User.Read'],
@@ -117,12 +135,12 @@ export function setupAdalClient(config: AdalConfig): AdalClient {
     cacheLocation = 'sessionStorage',
     framework,
     system,
+    ...remainingOptions
   } = config;
   const msalInstance = new UserAgentApplication({
     auth: {
-      clientId,
       redirectUri,
-      authority,
+      ...remainingOptions,
     },
     cache: {
       storeAuthStateInCookie,

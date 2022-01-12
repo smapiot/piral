@@ -84,7 +84,7 @@ Sets the log level to use (1-5).
 Sets the tag or version of the package to install. By default, this uses the version of the CLI.
 
 - Type: `string`
-- Default: `"0.13.2"`
+- Default: `"0.13.9"`
 
 ### `--force-overwrite`
 
@@ -122,7 +122,7 @@ Sets the NPM client to be used when scaffolding.
 Sets the default bundler to install.
 
 - Type: `string`
-- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`
+- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`, `"esbuild"`
 - Default: `"none"`
 
 ### `--vars`

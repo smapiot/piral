@@ -1,6 +1,7 @@
 import type { PiralPlugin } from 'piral-core';
-import { createConverter, NgConverterOptions } from './converter';
 import type { PiletNgApi } from './types';
+import { createConverter, NgConverterOptions } from './converter';
+import { defineModule } from './module';
 
 /**
  * Available configuration options for the Angular plugin.
@@ -13,15 +14,15 @@ export interface NgConfig extends NgConverterOptions {}
 export function createNgApi(config: NgConfig = {}): PiralPlugin<PiletNgApi> {
   return (context) => {
     const convert = createConverter(config);
-    context.converters.ng = ({ component, opts }) => convert(component, opts);
+    context.converters.ng = ({ component }) => convert(component);
 
     return {
       NgExtension: convert.Extension,
-      fromNg(component, opts) {
+      defineNgModule: defineModule,
+      fromNg(component) {
         return {
           type: 'ng',
           component,
-          opts,
         };
       },
     };

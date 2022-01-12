@@ -1,4 +1,26 @@
-@import '../../../../node_modules/piral-docs-tools/src/styles/variables';
+@import '../../../../node_modules/@pidoc/core/src/styles/variables';
+
+body.dark {
+  h2.plugin {
+    color: $docs-color-text-dark;
+  }
+
+  .card.image-card {
+    color: $docs-color-text-dark;
+  }
+
+  .tabs .tabs-header ul li a.active {
+    color: $docs-color-text-dark;
+  }
+
+  .type-title {
+    background: $docs-color-shadow-dark;
+
+    & > b {
+      color: transparentize($color: $docs-color-text-dark, $amount: 0.2);
+    }
+  }
+}
 
 .overlay {
   position: fixed;

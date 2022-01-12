@@ -12,6 +12,7 @@ import {
   setLogLevel,
   progress,
   log,
+  config,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -60,14 +61,26 @@ export interface DebugPiralOptions {
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
+
+  /**
+   * Hooks to be triggered at various stages.
+   */
+  hooks?: {
+    onBegin?(e: any): Promise<void>;
+    beforeBuild?(e: any): Promise<void>;
+    afterBuild?(e: any): Promise<void>;
+    beforeOnline?(e: any): Promise<void>;
+    afterOnline?(e: any): Promise<void>;
+    onEnd?(e: any): Promise<void>;
+  };
 }
 
 export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
-  port: 1234,
+  port: config.port,
   publicUrl: '/',
   logLevel: LogLevels.info,
-  open: false,
+  open: config.openBrowser,
   hmr: true,
   optimizeModules: false,
 };
@@ -84,10 +97,13 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
     _ = {},
+    hooks = {},
     bundlerName,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
+
+  await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
@@ -115,6 +131,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
+  await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, name });
+
   const bundler = await callPiralDebug(
     {
       root,
@@ -131,9 +149,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     bundlerName,
   );
 
+  bundler.on((args) => {
+    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
+  });
+
   const injectorConfig = {
     active: true,
     handle: ['/'],
+    publicUrl,
     bundler,
   };
 
@@ -144,9 +167,12 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.removeAllListeners('open');
-  krasServer.on('open', notifyServerOnline([bundler], krasConfig.api));
+  krasServer.on('open', notifyServerOnline([bundler], publicUrl, krasConfig.api));
 
+  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port });
   await krasServer.start();
-  openBrowser(open, port);
+  openBrowser(open, port, !!krasConfig.ssl);
+  await hooks.afterOnline?.({ krasServer, krasConfig, open, port });
   await new Promise((resolve) => krasServer.on('close', resolve));
+  await hooks.onEnd?.({});
 }

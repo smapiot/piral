@@ -8,7 +8,7 @@ section: Details
 
 # Core and Base
 
-Piral is shipped in individual NPM packages. While packages such as the `piral-cli` or `piral` can be used standalone, others exist purely as libraries to add additional functionality or form the basis for some specific behavior.
+Piral is shipped in individual npm packages. While packages such as the `piral-cli` or `piral` can be used standalone, others exist purely as libraries to add additional functionality or form the basis for some specific behavior.
 
 Following this guideline you will most likely have chosen `piral` as your most fundamental package. For us, `piral` is in the framework category of packages.
 

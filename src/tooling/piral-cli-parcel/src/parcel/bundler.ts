@@ -93,10 +93,11 @@ export function gatherJsBundles(
 
 function gatherExternals(bundle: Bundler.ParcelBundle, gatheredExternals: Array<string> = []) {
   if (bundle.type === 'external') {
-    const parts = bundle.name.split('/').pop().split('.');
-    parts.pop();
-    parts.pop();
-    gatheredExternals.push(parts.join('.'));
+    const offset = 1;
+    const length = '.external'.length + offset;
+    const assetName = bundle.entryAsset.name;
+    const name = assetName.substr(offset, assetName.length - length);
+    gatheredExternals.push(name);
   }
 
   for (const childBundle of bundle.childBundles) {
@@ -265,7 +266,7 @@ function includeCssLink(css: string, content: string, name: string) {
       `e.type="text/css"`,
       `e.rel="stylesheet"`,
       `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
-      `d.head.nappendChild(e)`,
+      `d.head.appendChild(e)`,
     ].join(';');
 
     /**

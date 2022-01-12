@@ -1,6 +1,6 @@
 {
   "name": "piral-hyperapp",
-  "version": "0.13.8",
+  "version": "0.14.7",
   "description": "Plugin for integrating hyperapp components in Piral.",
   "keywords": [
     "piral",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "hyperapp": "^1.2.10",
-    "piral-core": "^0.13.8"
+    "piral-core": "^0.14.7"
   },
   "peerDependencies": {
     "hyperapp": "^1.0.0",

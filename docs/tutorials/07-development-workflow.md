@@ -36,7 +36,7 @@ While creating the initial version of the app shell the corresponding pilet feed
 
 Once the initial version of the app shell has been created it can be published as a package to start the development of pilets. Additionally, the app should also be available in *some* environment (e.g., a development or staging environment).
 
-> Publish the NPM package of the app shell in a private NPM registry.
+> Publish the npm package of the app shell in a private npm registry.
 
 Now the first pilets can be created. In the long run it makes sense to also publish some of the initial features of the app shell as a pilet. For instance, if the app shell contains some kind of feedback functionality this could be also exposed as a pilet.
 

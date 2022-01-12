@@ -123,7 +123,7 @@ export interface FormCreator<TFormData, TRequiredProps> {
   /**
    * Form function for wrapping a component.
    */
-   <TProps extends TRequiredProps>(component: ComponentType<TProps & FormProps<TFormData>>): FC<TProps>;
+  <TProps extends TRequiredProps>(component: ComponentType<TProps & FormProps<TFormData>>): FC<TProps>;
 }
 
 /**

@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "0.13.8",
+  "version": "0.14.7",
   "description": "The core library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -22,8 +22,6 @@
     "esm",
     "lib",
     "src",
-    "debug-pilet.ts",
-    "debug-piral.ts",
     "debug-pilet.d.ts",
     "debug-piral.d.ts",
     "debug-pilet.js",
@@ -50,6 +48,17 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
+  "dependencies": {
+    "@dbeining/react-atom": "^4.0.0",
+    "piral-base": "^0.14.7",
+    "piral-debug-utils": "^0.14.7"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "react-router": "5.x",
+    "react-router-dom": "5.x"
+  },
   "devDependencies": {
     "@types/history": "^4.7.8",
     "@types/react": "^17.0.0",
@@ -58,15 +67,15 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "react-router": ">=5.0.0",
-    "react-router-dom": ">=5.0.0"
-  },
-  "dependencies": {
-    "@dbeining/react-atom": "^4.0.0",
-    "piral-base": "^0.13.8",
-    "piral-debug-utils": "^0.13.8"
-  }
+  "sharedDependencies": [
+    "react",
+    "react-dom",
+    "react-router",
+    "react-router-dom",
+    "history",
+    "tslib",
+    "path-to-regexp",
+    "@libre/atom",
+    "@dbeining/react-atom"
+  ]
 }

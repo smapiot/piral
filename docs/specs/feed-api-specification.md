@@ -40,7 +40,7 @@ A pilet feed service must provide an endpoint for publishing a pilet. By default
 
 The endpoint needs to accept a `POST` request using basic authentication with an `Authorization` header. Other ways of authentication may be implemented as well. The value of the basic authentication is an API key that can be fully decided by the implementation. We recommend using a base64 encoded value here.
 
-The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tarball (i.e., an NPM package). The content detail of this file is explained in the Pilet Specification (see references).
+The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tarball (i.e., an npm package). The content detail of this file is explained in the Pilet Specification (see references).
 
 Other entries besides `file` may be used, too. These can be determined by implementation dependent requirements. The `piral-cli` supports filling these fields via the `--fields[field]` flag, followed by a value, e.g., `--fields.tag next`.
 

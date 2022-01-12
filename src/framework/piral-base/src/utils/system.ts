@@ -1,5 +1,5 @@
-import 'systemjs/dist/system';
-import 'systemjs/dist/extras/named-register';
+import 'systemjs/dist/system.js';
+import 'systemjs/dist/extras/named-register.js';
 
 export interface ModuleResolver {
   (): any;
@@ -34,6 +34,10 @@ export function registerModule(name: string, resolve: ModuleResolver) {
         if (typeof content === 'function') {
           _exports('__esModule', true);
           _exports('default', content);
+        } else if (typeof content === 'object') {
+          if (content && !Array.isArray(content) && !('default' in content)) {
+            _exports('default', content);
+          }
         }
       }
     },

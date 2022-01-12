@@ -120,7 +120,7 @@ Since your feed will have a different name, just replace the name of the feed wi
 For publishing the pilet navigate to the folder of the pilet and invoke the following command:
 
 ```sh
-pilet publish --fresh --url https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed --api-key <your-api-key>
+npx pilet publish --fresh --url https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed --api-key <your-api-key>
 ```
 
 ::: tip: Use the .piralrc file

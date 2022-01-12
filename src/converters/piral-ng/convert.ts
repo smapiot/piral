@@ -1,5 +1,5 @@
 import type { HtmlComponent } from 'piral-core';
-import { createConverter } from './lib/converter';
+import { createConverter } from './esm/converter';
 
 export interface NgConverter {
   (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
@@ -8,14 +8,15 @@ export interface NgConverter {
 export function createNgConverter(...params: Parameters<typeof createConverter>) {
   const convert = createConverter(...params);
   const Extension = convert.Extension;
-  const from: NgConverter = (component, opts) => ({
+  const defineModule = convert.defineModule;
+  const from: NgConverter = (component) => ({
     type: 'html',
-    component: convert(component, opts),
+    component: convert(component),
   });
 
-  return { from, Extension };
+  return { from, Extension, defineModule };
 }
 
-const { from: fromNg, Extension: NgExtension } = createNgConverter();
+const { from: fromNg, Extension: NgExtension, defineModule: defineNgModule } = createNgConverter();
 
-export { fromNg, NgExtension };
+export { fromNg, NgExtension, defineNgModule };

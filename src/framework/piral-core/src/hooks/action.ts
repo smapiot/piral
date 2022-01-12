@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { StateContext } from '../state/stateContext';
+import { useGlobalStateContext } from './globalState';
 import { PiralActions, GlobalStateContext } from '../types';
 
 /**
@@ -7,6 +6,6 @@ import { PiralActions, GlobalStateContext } from '../types';
  * @param action The name of the action to retrieve.
  */
 export function useAction<T extends keyof PiralActions>(action: T): GlobalStateContext[T] {
-  const ctx = useContext(StateContext);
+  const ctx = useGlobalStateContext();
   return ctx[action];
 }

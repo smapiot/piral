@@ -26,11 +26,7 @@ function getPiletHash(pilet: PiletMetadata) {
 }
 
 function computePiletHash(pilets: Array<PiletMetadata>) {
-  return JSON.stringify(
-    pilets
-      .map(getPiletHash)
-      .sort((a, b) => a.name.localeCompare(b.name)),
-  );
+  return JSON.stringify(pilets.map(getPiletHash).sort((a, b) => a.name.localeCompare(b.name)));
 }
 
 export function rejectUpdate(ctx: GlobalStateContext) {

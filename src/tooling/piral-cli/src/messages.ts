@@ -161,7 +161,7 @@ export function appInstanceNotFound_0010(name: string): QuickMessage {
  * It should be an HTML file.
  *
  * @see
- * - [Parcel HTML Asset](https://parceljs.org/html.html)
+ * - [Parcel HTML Asset](https://parceljs.org/languages/html/)
  *
  * @example
  * Make sure the package.json of the Piral instance is valid (has an "app" field).
@@ -198,7 +198,7 @@ export function appInstanceInvalid_0011(): QuickMessage {
  * project folder has a package.json in its root.
  *
  * @see
- * - [NPM Package Specification](https://docs.npmjs.com/files/package.json)
+ * - [npm Package Specification](https://docs.npmjs.com/files/package.json)
  *
  * @example
  * You can see if you are currently in a correct folder.
@@ -235,7 +235,7 @@ export function packageJsonNotFound_0020(): QuickMessage {
  * The name of the pilet is provided by the name field specified in its package.json.
  *
  * A valid package.json file requires a valid name. The name has to follow standard naming
- * conventions of the NPM system.
+ * conventions of the npm system.
  *
  * @see
  * - [Package Naming Guidelines](https://docs.npmjs.com/package-name-guidelines)
@@ -285,7 +285,7 @@ export function packageJsonMissingName_0021(): QuickMessage {
  * specification.
  *
  * @see
- * - [NPM on Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning)
+ * - [npm on Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning)
  *
  * @example
  * Check the contents of the available package.json:
@@ -330,7 +330,7 @@ export function packageJsonMissingVersion_0022(): QuickMessage {
  * and which ones can remain at their current version.
  *
  * @see
- * - [NPM Install](https://docs.npmjs.com/cli/install)
+ * - [npm Install](https://docs.npmjs.com/cli/install)
  *
  * @example
  * Check that the package is indeed installed:
@@ -370,7 +370,7 @@ export function packageNotInstalled_0023(name: string): QuickMessage {
  * versions. If no release for the given version was found then an error is emitted.
  *
  * @see
- * - [StackOverflow Listing NPM Versions](https://stackoverflow.com/questions/41415945/how-to-list-all-versions-of-an-npm-module)
+ * - [StackOverflow Listing npm Versions](https://stackoverflow.com/questions/41415945/how-to-list-all-versions-of-an-npm-module)
  *
  * @example
  * Check that the version is valid:
@@ -481,7 +481,7 @@ export function projectReferenceNotSupported_0032(fullPath: string): QuickMessag
  * CLI via command line parameters.
  *
  * @see
- * - [NPM Package Specification](https://docs.npmjs.com/files/package.json)
+ * - [npm Package Specification](https://docs.npmjs.com/files/package.json)
  *
  * @example
  * Make sure you are in the right directory by calling commands such as
@@ -611,7 +611,7 @@ export function invalidPiletPackage_0042(): QuickMessage {
  * Even though everything seems to be correct on the first glance it may be that the
  * actual reference is broken. This could be due to various reasons.
  *
- * - NPM linking is broken
+ * - npm linking is broken
  * - The dependencies have not been installed yet (run `npm i`)
  * - The Piral instance's name is invalid (e.g., due to a typo)
  *
@@ -762,8 +762,8 @@ export function cannotFindFile_0046(file: string): QuickMessage {
  * Since the local resolution only works against a filename the update process has also to be triggered with
  * a file location. Otherwise, there is no chance to know a different file location.
  *
- * Potentially, you wanted to switch / resolve the module from NPM instead. Therefore, we are then trying to
- * obtain the Piral instance from NPM instead using the known name.
+ * Potentially, you wanted to switch / resolve the module from npm instead. Therefore, we are then trying to
+ * obtain the Piral instance from npm instead using the known name.
  *
  * @see
  * - [Local File Dependencies](https://stackoverflow.com/questions/14381898/local-dependency-in-package-json)
@@ -800,11 +800,11 @@ export function localeFileForUpgradeMissing_0050(): QuickMessage {
  * Right now we only support "latest" for Git resolved Piral instances. In this scenario we obtain the
  * current head from the repository's default branch and update accordingly.
  *
- * Potentially, you wanted to switch / resolve the module from NPM instead. Therefore, we are then trying to
- * obtain the Piral instance from NPM instead using the known name.
+ * Potentially, you wanted to switch / resolve the module from npm instead. Therefore, we are then trying to
+ * obtain the Piral instance from npm instead using the known name.
  *
  * @see
- * - [Git Dependencies in NPM](https://medium.com/&commat;jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
+ * - [Git Dependencies in npm](https://medium.com/&commat;jonchurch/use-github-branch-as-dependency-in-package-json-5eb609c81f1a)
  *
  * @example
  * You may have set up the pilet using a locally available tgz file. In this case your original command may
@@ -944,6 +944,7 @@ export function cannotResolveVersion_0052(name: string): QuickMessage {
  *     }
  *   }
  * }
+ * ```
  */
 export function cannotResolveDependency_0053(name: string, rootDir: string): QuickMessage {
   return [LogLevels.warning, '0053', `Could not resolve "${name}" from "${rootDir}". Taking "latest" version.`];
@@ -995,7 +996,7 @@ export function missingPiletFeedUrl_0060(): QuickMessage {
  * directly.
  *
  * @see
- * - [NPM Pack](https://docs.npmjs.com/cli-commands/pack.html)
+ * - [npm Pack](https://docs.npmjs.com/cli-commands/pack.html)
  *
  * @example
  * Make sure to have build a pilet beforehand:
@@ -1025,8 +1026,8 @@ export function missingPiletFeedUrl_0060(): QuickMessage {
  * Using multiple commands is preferred if you use custom options, otherwise
  * just go for the single command.
  */
-export function missingPiletTarball_0061(source: string): QuickMessage {
-  return [LogLevels.error, '0061', `No files found using pattern "${source}".`];
+export function missingPiletTarball_0061(sources: Array<string>): QuickMessage {
+  return [LogLevels.error, '0061', `No files found using pattern "${sources.join('", "')}".`];
 }
 
 /**
@@ -1277,10 +1278,10 @@ export function failedHttpGet_0068(error: string): QuickMessage {
  *
  * @abstract
  * While submitting the HTTP get request an error was reported.
- * 
+ *
  * Potentially, the server returned some more indicative error message. In this
  * case read it carefully to know what version was already published.
- * 
+ *
  * In any case only the documentation of the corresponding feed service can be
  * conclusive how this can be resolved. Presumably, some payment of some fee
  * is necessary to publish pilets.
@@ -1299,28 +1300,28 @@ export function failedToUploadPayment_0161(response: any): QuickMessage {
  *
  * @abstract
  * While submitting the HTTP get request an error was reported.
- * 
+ *
  * Potentially, the server returned some more indicative error message. In this
  * case read it carefully to know what version was already published.
- * 
+ *
  * In any case you need to change the version to continue. You can do that by
  * editing the "version" field in the pilet's package.json or using `npm version`.
  *
  * @example
  * If you already published the pilet, e.g., via
- * 
+ *
  * ```sh
  * pilet publish --api-key ... --url ...
  * ```
- * 
+ *
  * then doing this again without any change should result in this error.
- * 
+ *
  * Now we can patch-upgrade the version of the pilet:
- * 
+ *
  * ```sh
  * npm version patch
  * ```
- * 
+ *
  * And try the `pilet publish` command again. This time it should just work.
  */
 export function failedToUploadVersion_0162(response: any): QuickMessage {
@@ -1337,10 +1338,10 @@ export function failedToUploadVersion_0162(response: any): QuickMessage {
  *
  * @abstract
  * While submitting the HTTP get request an error was reported.
- * 
+ *
  * Potentially, the server returned some more indicative error message. In this
  * case read it carefully to know how much the limit was exceeded.
- * 
+ *
  * In any case the pilet must be somehow trimmed down. Most often, the size is
  * dominantly determined by some external packages that are referened. Use a
  * page such as bundlephobia.com or some IDE tools to find out which packages
@@ -1541,10 +1542,10 @@ export function entryPointDoesNotExist_0073(app: string): QuickMessage {
  * point for the bundler.
  *
  * @see
- * - [NPM Init](https://docs.npmjs.com/cli/init)
+ * - [npm Init](https://docs.npmjs.com/cli/init)
  *
  * @example
- * You can create a new NPM project using the `npm init` command. This will essentially guide
+ * You can create a new npm project using the `npm init` command. This will essentially guide
  * you through a number of decisions for creating a proper package.json.
  *
  * Even better you could start a new Piral instance using the following command:
@@ -1577,10 +1578,10 @@ export function packageJsonMissing_0074(): QuickMessage {
  * point for the bundler.
  *
  * @see
- * - [NPM Init](https://docs.npmjs.com/cli/init)
+ * - [npm Init](https://docs.npmjs.com/cli/init)
  *
  * @example
- * You can create a new NPM project using the `npm init` command. This will essentially guide
+ * You can create a new npm project using the `npm init` command. This will essentially guide
  * you through a number of decisions for creating a proper package.json.
  *
  * Even better you could start a new pilet using the following command:
@@ -1842,6 +1843,26 @@ export function toolingIncompatible_0101(piralVersion: string, cliVersion: strin
 }
 
 /**
+ * @kind Info
+ *
+ * @summary
+ * The Piral CLI could not detect the tooling version used by the app shell. Therefore, it may be incompatible to the
+ * currently used version of the piral-cli. Keep an eye on weird errors.
+ *
+ * @abstract
+ * The emulator contains a special section to inform the Piral CLI about the used version of the tooling. This is
+ * important to detect potential alignment or incompatibilities. The used version of the emulator does not contain
+ * this information and therefore may be incompatible.
+ */
+export function appShellMaybeIncompatible_0102(cliVersion: string): QuickMessage {
+  return [
+    LogLevels.info,
+    '0100',
+    `The Piral instance's CLI version is unknown and may be incompatible to the used version (${cliVersion}).`,
+  ];
+}
+
+/**
  * @kind Error
  *
  * @summary
@@ -1855,7 +1876,7 @@ export function toolingIncompatible_0101(piralVersion: string, cliVersion: strin
  *
  * @example
  * The following command first removes the output directory, then starts the build,
- * and finally publishes the emulator to NPM.
+ * and finally publishes the emulator to npm.
  *
  * ```sh
  * rm -rf dist
@@ -1881,7 +1902,7 @@ export function publishDirectoryMissing_0110(directory: string): QuickMessage {
  *
  * @example
  * The following command first removes the output directory, then starts the build,
- * and finally publishes the emulator to NPM.
+ * and finally publishes the emulator to npm.
  *
  * ```sh
  * rm -rf dist
@@ -1960,11 +1981,15 @@ export function publishProviderMissing_0113(providerName: string, availableProvi
  * ```sh
  * piral publish --type release --provider xcopy --fields.target "/temp/dest"
  * ```
- * 
+ *
  * The type is "release".
  */
 export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
-  return [LogLevels.error, '0114', `The command "publish" cannot be done with "--type emulator-sources". Use another type instead.`];
+  return [
+    LogLevels.error,
+    '0114',
+    `The command "publish" cannot be done with "--type emulator-sources". Use another type instead.`,
+  ];
 }
 
 /**
@@ -1986,7 +2011,7 @@ export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
  * - The API for opening the default browser is invalid
  *
  * @see
- * - [NPM Open Package](https://www.npmjs.com/package/open)
+ * - [npm Open Package](https://www.npmjs.com/package/open)
  *
  * @example
  * The browser is usually just opened via the command line:
@@ -2018,7 +2043,7 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  *
  * The v1 version has better support for older browsers, but requires a polyfill to work
  * correctly. This polyfill is part of the standard Piral polyfills.
- * 
+ *
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
  * indirectly, making it a quite broad choice.
@@ -2058,6 +2083,7 @@ export function invalidSchemaVersion_0171(schemaVersion: string, schemas: Array<
  * @see
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
+ * - [esbuild](https://esbuild.github.io)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example
@@ -2089,6 +2115,7 @@ export function bundlerMissing_0172(bundlerName: string, installed: Array<string
  * @see
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
+ * - [esbuild](https://esbuild.github.io)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example
@@ -2120,6 +2147,7 @@ export function defaultBundlerMissing_0173(): QuickMessage {
  * @see
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
+ * - [esbuild](https://esbuild.github.io)
  * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
  *
  * @example

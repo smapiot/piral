@@ -18,10 +18,12 @@ export interface PiralDebugState {
     active: boolean;
     path: string;
   };
-  route: {
-    path: string;
-    state?: any;
-  } | undefined;
+  route:
+    | {
+        path: string;
+        state?: any;
+      }
+    | undefined;
 }
 
 const listeners: Array<() => void> = [];

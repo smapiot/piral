@@ -16,8 +16,9 @@ import {
   fail,
   progress,
   determineNpmClient,
-  defaultRegistry,
   cliVersion,
+  getPiralScaffoldData,
+  config,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -72,7 +73,7 @@ export interface NewPiralOptions {
   logLevel?: LogLevels;
 
   /**
-   * Sets the NPM client to be used when scaffolding. (e.g. 'yarn')
+   * Sets the npm client to be used when scaffolding. (e.g. 'yarn')
    */
   npmClient?: NpmClientType;
 
@@ -89,16 +90,16 @@ export interface NewPiralOptions {
 
 export const newPiralDefaults: NewPiralOptions = {
   app: './src/index.html',
-  registry: defaultRegistry,
+  registry: config.registry,
   framework: 'piral',
   target: '.',
   version: cliVersion,
   forceOverwrite: ForceOverwrite.no,
-  language: SourceLanguage.ts,
+  language: config.language,
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
-  npmClient: undefined,
+  npmClient: config.npmClient,
   bundlerName: 'none',
   variables: {},
 };
@@ -148,7 +149,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     );
 
     if (registry !== newPiralDefaults.registry) {
-      progress(`Setting up NPM registry (%s) ...`, registry);
+      progress(`Setting up npm registry (%s) ...`, registry);
 
       await createFileIfNotExists(
         root,
@@ -161,13 +162,14 @@ always-auth=true`,
 
     await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework, bundlerName));
 
-    progress(`Installing NPM package ${packageRef} ...`);
+    progress(`Installing npm package ${packageRef} ...`);
 
     await installPackage(npmClient, packageRef, root);
 
     progress(`Taking care of templating ...`);
 
-    await scaffoldPiralSourceFiles(template, registry, language, root, app, framework, forceOverwrite, variables);
+    const data = getPiralScaffoldData(language, root, app, framework, variables);
+    await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
 
     if (install) {
       progress(`Installing dependencies ...`);

@@ -151,7 +151,7 @@ For the full example look at the [sample Piral instance layout definition](https
 
 ## Sharing Layouts
 
-Layouts can be shared in multiple ways. The Piral independent way is a simple NPM package that contains all components necessary for creating the layout. Alternatively, it could be contained in the same packages as, e.g., a pattern library anyway.
+Layouts can be shared in multiple ways. The Piral independent way is a simple npm package that contains all components necessary for creating the layout. Alternatively, it could be contained in the same packages as, e.g., a pattern library anyway.
 
 Additionally, the layout can already be shared in a package that comes with a **peer dependency** to `piral`. In such a package we could expose a whole layout builder instance, such as the one shown in the example layout section.
 

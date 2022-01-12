@@ -8,7 +8,7 @@ function createTempDir() {
 }
 
 describe('Pack Pilet Command', () => {
-  it('can pack a standard NPM package to a specified target', async () => {
+  it('can pack a standard npm package to a specified target', async () => {
     const dir = createTempDir();
     const target = 'foo.tgz';
     const packageJson = resolve(dir, 'package.json');
@@ -28,7 +28,7 @@ describe('Pack Pilet Command', () => {
     expect(existsSync(resolve(dir, target))).toBeTruthy();
   });
 
-  it('can pack a standard NPM package to a the default target using the process directory', async () => {
+  it('can pack a standard npm package to a the default target using the process directory', async () => {
     const originalDir = process.cwd();
     const dir = createTempDir();
     const packageJson = resolve(dir, 'package.json');

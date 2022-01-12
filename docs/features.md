@@ -24,7 +24,7 @@ Let's check our list against common checklists for microfrontends.
 
 > The process is simple and doesn't require learning new complex skills or other frameworks.
 
-Indeed Piral works in a standard configuration by relying only on the NPM ecosystem and proper bundling. Our CLI ships with the best bundling configuration, but if you have custom needs you can use any other bundler or bundling configuration.
+Indeed Piral works in a standard configuration by relying only on the npm ecosystem and proper bundling. Our CLI ships with the best bundling configuration, but if you have custom needs you can use any other bundler or bundling configuration.
 
 ✔️ **Code isolation and separation of concerns**
 

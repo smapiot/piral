@@ -27,7 +27,11 @@ export async function createEmulatorSources(
 ) {
   const piralPkg = require(resolve(sourceDir, packageJson));
   const files: Array<string | TemplateFileLocation> = piralPkg.pilets?.files ?? [];
-  const allExternals = makeExternals(piralPkg.pilets?.externals);
+  const allDeps = {
+    ...piralPkg.devDependencies,
+    ...piralPkg.dependencies,
+  };
+  const allExternals = makeExternals(allDeps, piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
     allExternals.filter(isValidDependency).map(async (name) => ({
@@ -46,11 +50,13 @@ export async function createEmulatorSources(
   const filesOnceDir = resolve(rootDir, filesOnceTar);
 
   const filesMap = files
+    .filter((file) => file && (typeof file === 'string' || typeof file === 'object'))
     .map((file) => (typeof file === 'string' ? { from: file, to: file } : file))
+    .filter((file) => typeof file.to === 'string' && typeof file.from === 'string')
     .map((file) => ({
       ...file,
       to: file.to.replace(/\\/g, '/'),
-      from: join('files', file.from).replace(/\\/g, '/'),
+      from: join('files', file.to).replace(/\\/g, '/'),
     }));
 
   // do not modify an existing JSON
@@ -77,10 +83,10 @@ export async function createEmulatorSources(
     app: `./${appDir}/index.html`,
     peerDependencies: {},
     devDependencies: {
-      ...piralPkg.devDependencies,
-      ...piralPkg.dependencies,
+      ...allDeps,
       ...externalDependencies,
     },
+    sharedDependencies: allExternals,
     repository: piralPkg.repository,
     bugs: piralPkg.bugs,
     author: piralPkg.author,
@@ -118,7 +124,7 @@ export async function createEmulatorSources(
   // generate the associated index.d.ts
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
-  // since things like .gitignore are not properly treated by NPM we pack the files (for standard and once only)
+  // since things like .gitignore are not properly treated by npm we pack the files (for standard and once only)
   await Promise.all([
     createTarball(filesDir, rootDir, `${filesTar}.tar`),
     createTarball(filesOnceDir, rootDir, `${filesOnceTar}.tar`),

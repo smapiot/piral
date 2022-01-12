@@ -9,7 +9,7 @@ interface Updatable {
   (newProps: any): void;
 }
 
-if ('customElements' in window) {
+if (typeof window !== 'undefined' && 'customElements' in window) {
   class PiralExtension extends HTMLElement {
     dispose: Disposable = noop;
     update: Updatable = noop;
@@ -54,25 +54,33 @@ if ('customElements' in window) {
 
 function render(context: GlobalStateContext, element: HTMLElement | ShadowRoot, props: any): [Disposable, Updatable] {
   let [id, portal] = renderInDom(context, element, ExtensionSlot, props);
-  const dispose: Disposable = () => context.hidePortal(id, portal);
+  const evName = 'extension-props-changed';
+  const handler = (ev: CustomEvent) => update(ev.detail);
+  const dispose: Disposable = () => {
+    context.hidePortal(id, portal);
+    element.removeEventListener(evName, handler);
+  };
   const update: Updatable = (newProps) => {
     [id, portal] = changeDomPortal(id, portal, context, element, ExtensionSlot, newProps);
   };
+  element.addEventListener(evName, handler);
   return [dispose, update];
 }
 
 export function createCoreApi(context: GlobalStateContext): PiletApiExtender<PiletCoreApi> {
-  document.body.addEventListener(
-    'render-html',
-    (ev: CustomEvent) => {
-      ev.stopPropagation();
-      const container = ev.detail.target;
-      const [dispose, update] = render(context, container, ev.detail.props);
-      container.dispose = dispose;
-      container.update = update;
-    },
-    false,
-  );
+  if (typeof document !== 'undefined') {
+    document.body.addEventListener(
+      'render-html',
+      (ev: CustomEvent) => {
+        ev.stopPropagation();
+        const container = ev.detail.target;
+        const [dispose, update] = render(context, container, ev.detail.props);
+        container.dispose = dispose;
+        container.update = update;
+      },
+      false,
+    );
+  }
 
   return (api, target) => {
     const pilet = target.name;

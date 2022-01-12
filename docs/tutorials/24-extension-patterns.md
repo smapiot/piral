@@ -10,7 +10,7 @@ section: Details
 
 The extension system was designed to allow the creation of flexible frontend applications. They sit in the heart of the Piral ecosystem. One of the reasons for their power is that they are loosely coupled, which enables you to use them in various ways.
 
-The loose coupling also comes with some challenges. Most notably, the missing typings and resiliance against refactoring is something to actively tackling, e.g., via tests, conventions, and discipline.
+The loose coupling also comes with some challenges. Most notably, the missing typings and resilience against refactoring is something to actively tackling, e.g., via tests, conventions, and discipline.
 
 Most often, you'll experience that the extension system can be used for much more. You'll see that in the end you'll potentially not need to share some state or emit events when you can leverage extension components. After all, what you want in a frontend is to render something on the screen.
 
@@ -132,7 +132,7 @@ api.registerExtension("machine-actions", ({ params }) => {
     return null;
   }
 
-  return <Link to={`/machine/${machine.id}/edit`}>Edit</Link>;
+  return <Link to={`/machine/${id}/edit`}>Edit</Link>;
 });
 ```
 
@@ -261,7 +261,7 @@ api.registerExtension('use-machine-overview', ({ params }) => {
 })
 ```
 
-Now, everytime we require the machine data we can just use an extension slot:
+Now, every time we require the machine data we can just use an extension slot:
 
 ```jsx
 const MyMachineOverview = ({ data }) => {
@@ -278,3 +278,5 @@ This way the data and everything to obtain and update the data is still handled 
 ## Conclusion
 
 The extension mechanism provides a flexible way to respect the boundaries of your application domains. By using the right pattern you'll be able to reduce friction between the teams and scale the development efficiently.
+
+In the next tutorial you'll see some strategies how to solve the issue of sharing multiple versions from the same dependency.

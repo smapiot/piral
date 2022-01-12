@@ -11,10 +11,15 @@ type MessageTypes = keyof Messages;
 
 const logger = (() => {
   try {
-    return require('@parcel/logger');
-  } catch {
-    return require('../external').logger;
-  }
+    const logger = require('@parcel/logger');
+
+    // check to see if this is really right
+    if (typeof logger.verbose === 'function') {
+      return logger;
+    }
+  } catch {}
+
+  return require('../external').logger;
 })();
 
 // unfortunately, Parcel's support for verbose logging on Windows is broken

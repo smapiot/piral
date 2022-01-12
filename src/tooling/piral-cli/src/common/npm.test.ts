@@ -81,7 +81,7 @@ jest.mock('fs', () => ({
   },
 }));
 
-describe('NPM Module', () => {
+describe('npm Module', () => {
   it('dissects a fully qualified name with latest correctly', async () => {
     wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@latest');
@@ -172,14 +172,14 @@ describe('NPM Module', () => {
     expect(type).toBe('registry');
   });
 
-  it('installs a package using the NPM command line tool without a target', async () => {
+  it('installs a package using the npm command line tool without a target', async () => {
     wrongCase = false;
     await installPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
     await installPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
-  it('installs a package using the NPM command line tool without a version', async () => {
+  it('installs a package using the npm command line tool without a version', async () => {
     wrongCase = false;
     await installPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
@@ -200,7 +200,7 @@ describe('NPM Module', () => {
     await installPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
-  it('installs a package using the NPM command line tool with some flag', async () => {
+  it('installs a package using the npm command line tool with some flag', async () => {
     wrongCase = false;
     await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
@@ -407,90 +407,90 @@ describe('NPM Module', () => {
   });
 
   it('makeExternals without externals returns coreExternals', () => {
-    const externals = makeExternals();
+    const externals = makeExternals({ piral: '*' });
     expect(externals).toEqual([
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
   it('makeExternals with no externals returns coreExternals', () => {
-    const externals = makeExternals([]);
+    const externals = makeExternals({ piral: '*' }, []);
     expect(externals).toEqual([
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
   it('makeExternals with exclude coreExternals returns empty set', () => {
-    const externals = makeExternals(['!*']);
+    const externals = makeExternals({ piral: '*' }, ['!*']);
     expect(externals).toEqual([]);
   });
 
   it('makeExternals with externals concats coreExternals', () => {
-    const externals = makeExternals(['foo', 'bar']);
+    const externals = makeExternals({ piral: '*' }, ['foo', 'bar']);
     expect(externals).toEqual([
       'foo',
       'bar',
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
   it('makeExternals with external duplicate only reflects coreExternals', () => {
-    const externals = makeExternals(['react', 'foo']);
+    const externals = makeExternals({ piral: '*' }, ['react', 'foo']);
     expect(externals).toEqual([
       'react',
       'foo',
-      '@dbeining/react-atom',
-      '@libre/atom',
-      'history',
       'react-dom',
       'react-router',
       'react-router-dom',
+      'history',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
   it('makeExternals with explicit include and exclude', () => {
-    const externals = makeExternals(['react', 'react-calendar', '!history']);
+    const externals = makeExternals({ piral: '*' }, ['react', 'react-calendar', '!history']);
     expect(externals).toEqual([
       'react',
       'react-calendar',
-      '@dbeining/react-atom',
-      '@libre/atom',
       'react-dom',
       'react-router',
       'react-router-dom',
       'tslib',
       'path-to-regexp',
+      '@libre/atom',
+      '@dbeining/react-atom',
     ]);
   });
 
   it('makeExternals with all exclude and explicit include', () => {
-    const externals = makeExternals(['react', 'react-router-dom', '!*']);
+    const externals = makeExternals({ piral: '*' }, ['react', 'react-router-dom', '!*']);
     expect(externals).toEqual(['react', 'react-router-dom']);
   });
 });

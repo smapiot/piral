@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, createElement, ComponentType } from 'react';
 import { PiralPlugin, withApi, HtmlComponent } from 'piral-core';
 import { PiletLazyApi, LazyDependencyLoader } from './types';
 
@@ -25,9 +25,6 @@ export function createLazyApi(): PiralPlugin<PiletLazyApi> {
 
         return dep.result ?? (dep.result = dep.loader());
       };
-      const wrapComponent = <T>(comp: HtmlComponent<T>) => ({
-        default: withApi(context, comp, api, 'unknown'),
-      });
 
       return {
         defineDependency(name, loader) {
@@ -37,7 +34,19 @@ export function createLazyApi(): PiralPlugin<PiletLazyApi> {
           };
         },
         fromLazy(load, deps = []) {
-          return lazy(() => Promise.all(deps.map(getDependency)).then(load).then(wrapComponent));
+          return lazy(() =>
+            Promise.all(deps.map(getDependency)).then((values) => {
+              const depMap = deps.reduce((obj, name, index) => {
+                obj[name] = values[index];
+                return obj;
+              }, {});
+              return load()
+                .then((comp) => withApi(context, comp, api, 'unknown'))
+                .then((compWithApi) => ({
+                  default: (props) => createElement(compWithApi as ComponentType, { deps: depMap, ...props }),
+                }));
+            }),
+          );
         },
       };
     };

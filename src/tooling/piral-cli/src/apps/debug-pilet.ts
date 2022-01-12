@@ -5,6 +5,7 @@ import { LogLevels, PiletSchemaVersion } from '../types';
 import {
   checkExistingDirectory,
   retrievePiletData,
+  retrievePiletsInfo,
   config,
   openBrowser,
   reorderInjectors,
@@ -32,6 +33,12 @@ export interface DebugPiletOptions {
    * By default the app is inferred from the package.json.
    */
   app?: string;
+
+  /**
+   * Overrides the directory of the app to serve when
+   * debugging.
+   */
+  appInstanceDir?: string;
 
   /**
    * Sets if the (system default) browser should be auto-opened.
@@ -65,21 +72,35 @@ export interface DebugPiletOptions {
   schemaVersion?: PiletSchemaVersion;
 
   /**
-   * The URL of a pilet feed used to include locally missing pilets.
+   * The URL of a pilet feed(s) used to include locally missing pilets.
    */
-  feed?: string;
+  feed?: string | Array<string>;
 
   /**
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
+
+  /**
+   * Hooks to be triggered at various stages.
+   */
+  hooks?: {
+    onBegin?(e: any): Promise<void>;
+    beforeBuild?(e: any): Promise<void>;
+    afterBuild?(e: any): Promise<void>;
+    beforeApp?(e: any): Promise<void>;
+    afterApp?(e: any): Promise<void>;
+    beforeOnline?(e: any): Promise<void>;
+    afterOnline?(e: any): Promise<void>;
+    onEnd?(e: any): Promise<void>;
+  };
 }
 
 export const debugPiletDefaults: DebugPiletOptions = {
   logLevel: LogLevels.info,
   entry: './src/index',
-  open: false,
-  port: 1234,
+  open: config.openBrowser,
+  port: config.port,
   hmr: true,
   optimizeModules: false,
   schemaVersion: config.schemaVersion,
@@ -95,14 +116,13 @@ interface AppInfo {
   piral: string;
 }
 
-async function getOrMakeAppDir({ emulator, piral, externals, appFile }: AppInfo, logLevel: LogLevels) {
+async function getOrMakeAppDir({ emulator, piral, appFile }: AppInfo, logLevel: LogLevels) {
   if (!emulator) {
-    const packageJson = require.resolve(`${piral}/package.json`);
-    const cwd = resolve(packageJson, '..');
+    const { externals, root, ignored } = await retrievePiletsInfo(appFile);
     const { dir } = await callDebugPiralFromMonoRepo({
-      root: cwd,
+      root,
       optimizeModules: false,
-      ignored: [],
+      ignored,
       externals,
       piral,
       entryFiles: appFile,
@@ -142,19 +162,25 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     optimizeModules = debugPiletDefaults.optimizeModules,
     schemaVersion = debugPiletDefaults.schemaVersion,
     _ = {},
+    hooks = {},
     bundlerName,
     app,
+    appInstanceDir,
     feed,
   } = options;
+  const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
+
+  await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
   const krasConfig = readKrasConfig({ port }, krasrc);
   const api = config.piletApi;
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
-  log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${baseDir}".`);
+  log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
 
-  const allEntries = await matchAnyPilet(baseDir, entryList);
+  const allEntries = await matchAnyPilet(fullBase, entryList);
+  const maxListeners = Math.max(2 + allEntries.length * 2, 16);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (krasConfig.sources === undefined) {
@@ -165,13 +191,15 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     fail('entryFileMissing_0077');
   }
 
+  process.stderr.setMaxListeners(maxListeners);
+  process.stdout.setMaxListeners(maxListeners);
+  process.stdin.setMaxListeners(maxListeners);
+
   const pilets = await Promise.all(
     allEntries.map(async (entryModule) => {
       const targetDir = dirname(entryModule);
-      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } = await retrievePiletData(
-        targetDir,
-        app,
-      );
+      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } =
+        await retrievePiletData(targetDir, app);
       const externals = [...Object.keys(peerDependencies), ...peerModules];
       const mocks = join(targetDir, 'mocks');
       const exists = await checkExistingDirectory(mocks);
@@ -183,6 +211,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
         krasConfig.sources.push(mocks);
       }
+
+      await hooks.beforeBuild?.({ root, importmap, entryModule, schemaVersion });
 
       const bundler = await callPiletDebug(
         {
@@ -202,6 +232,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         bundlerName,
       );
 
+      bundler.on((args) => {
+        hooks.afterBuild?.({ ...args, root, importmap, entryModule, schemaVersion, bundler });
+      });
+
       return {
         emulator,
         appFile,
@@ -217,7 +251,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   // sanity check see #250
   checkSanity(pilets);
 
-  const appDir = await getOrMakeAppDir(pilets[0], logLevel);
+  await hooks.beforeApp?.({ appInstanceDir, pilets });
+  const appDir = appInstanceDir || (await getOrMakeAppDir(pilets[0], logLevel));
+  await hooks.afterApp?.({ appInstanceDir, pilets });
 
   if (krasConfig.ssl === undefined) {
     krasConfig.ssl = undefined;
@@ -251,16 +287,21 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
   const krasServer = buildKrasWithCli(krasConfig);
+  krasServer.setMaxListeners(maxListeners);
   krasServer.removeAllListeners('open');
   krasServer.on(
     'open',
     notifyServerOnline(
       pilets.map((p) => p.bundler),
+      '/',
       krasConfig.api,
     ),
   );
 
+  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await krasServer.start();
-  openBrowser(open, port);
+  openBrowser(open, port, !!krasConfig.ssl);
+  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
   await new Promise((resolve) => krasServer.on('close', resolve));
+  await hooks.onEnd?.({});
 }

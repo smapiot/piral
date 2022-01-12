@@ -7,7 +7,8 @@ import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { getHashFromUrl } from './http';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makeExternals } from './npm';
+import { applyTemplate } from './template';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals, makeExternals } from './npm';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
@@ -31,6 +32,7 @@ function getDependencyVersion(
 interface FileDescriptor {
   sourcePath: string;
   targetPath: string;
+  template: boolean;
 }
 
 const globPatternStartIndicators = ['*', '?', '[', '!(', '?(', '+(', '@('];
@@ -40,7 +42,12 @@ async function getMatchingFiles(
   target: string,
   file: string | TemplateFileLocation,
 ): Promise<Array<FileDescriptor>> {
-  const { from, to, deep = true } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
+  const {
+    from,
+    to,
+    deep = true,
+    template = false,
+  } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
   const sourcePath = resolve(source, from);
   const targetPath = resolve(target, to);
   const isDirectory = await checkIsDirectory(sourcePath);
@@ -52,6 +59,7 @@ async function getMatchingFiles(
     return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(targetPath, relative(sourcePath, file)),
+      template,
     }));
   } else if (globPatternStartIndicators.some((m) => from.indexOf(m) !== -1)) {
     log('generalDebug_0003', `Matching using glob "${sourcePath}".`);
@@ -73,6 +81,7 @@ async function getMatchingFiles(
     return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(tarRoot, relative(relRoot, file)),
+      template,
     }));
   }
 
@@ -82,6 +91,7 @@ async function getMatchingFiles(
     {
       sourcePath,
       targetPath,
+      template,
     },
   ];
 }
@@ -174,26 +184,35 @@ export function getPiralPackage(
   };
 }
 
-async function getAvailableFiles(root: string, name: string, tarBall: string): Promise<Array<FileDescriptor>> {
+async function getAvailableFiles(
+  root: string,
+  name: string,
+  dirName: string,
+  fileMap: Array<TemplateFileLocation>,
+): Promise<Array<FileDescriptor>> {
   const source = getPiralPath(root, name);
-  log('generalDebug_0003', `Checking if "files.tar" exists in "${source}" ...`);
-  const exists = await checkExists(resolve(source, `${tarBall}.tar`));
+  const tgz = `${dirName}.tar`;
+  log('generalDebug_0003', `Checking if "${tgz}" exists in "${source}" ...`);
+  const exists = await checkExists(resolve(source, tgz));
 
   if (exists) {
-    await unpackTarball(source, `${tarBall}.tar`);
+    await unpackTarball(source, tgz);
   }
 
   log('generalDebug_0003', `Get matching files from "${source}".`);
-  const base = resolve(source, tarBall);
+  const base = resolve(source, dirName);
   const files = await matchFiles(base, '**/*');
+
   return files.map((file) => ({
     sourcePath: file,
     targetPath: resolve(root, relative(base, file)),
+    template: fileMap.find((m) => resolve(source, m.from) === file)?.template || false,
   }));
 }
 
-export async function getFileStats(root: string, name: string) {
-  const files = await getAvailableFiles(root, name, filesTar);
+export async function getFileStats(root: string, name: string, fileMap: Array<TemplateFileLocation> = []) {
+  const files = await getAvailableFiles(root, name, filesTar, fileMap);
+
   return await Promise.all(
     files.map(async (file) => {
       const { sourcePath, targetPath } = file;
@@ -214,15 +233,20 @@ async function copyFiles(
   subfiles: Array<FileDescriptor>,
   forceOverwrite: ForceOverwrite,
   originalFiles: Array<FileInfo>,
+  variables?: Record<string, string>,
 ) {
   for (const subfile of subfiles) {
-    const { sourcePath, targetPath } = subfile;
+    const { sourcePath, targetPath, template } = subfile;
     const exists = await checkExists(sourcePath);
 
     if (exists) {
       const overwrite = originalFiles.some((m) => m.path === targetPath && !m.changed);
       const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
-      await copy(sourcePath, targetPath, force);
+      const written = await copy(sourcePath, targetPath, force);
+
+      if (written && template && variables) {
+        await applyTemplate(targetPath, variables);
+      }
     } else {
       fail('cannotFindFile_0046', sourcePath);
     }
@@ -234,6 +258,7 @@ export async function copyScaffoldingFiles(
   target: string,
   files: Array<string | TemplateFileLocation>,
   piralInfo?: any,
+  variables?: Record<string, string>,
 ) {
   log('generalDebug_0003', `Copying the scaffolding files ...`);
   const allFiles: Array<FileDescriptor> = [];
@@ -247,7 +272,7 @@ export async function copyScaffoldingFiles(
     await extendPackageOverridesFromTemplateFragment(target, piralInfo, allFiles);
   }
 
-  await copyFiles(allFiles, ForceOverwrite.yes, []);
+  await copyFiles(allFiles, ForceOverwrite.yes, [], variables);
 }
 
 async function extendPackageOverridesFromTemplateFragment(root: string, piralInfo: any, files: Array<FileDescriptor>) {
@@ -276,24 +301,31 @@ async function extendPackageOverridesFromTemplateFragment(root: string, piralInf
   }
 }
 
+function isTemplateFileLocation(item: string | TemplateFileLocation): item is TemplateFileLocation {
+  return typeof item === 'object';
+}
+
 export async function copyPiralFiles(
   root: string,
   name: string,
   piralInfo: any,
   forceOverwrite: ForceOverwrite,
+  variables: Record<string, string>,
   originalFiles?: Array<FileInfo>,
 ) {
   log('generalDebug_0003', `Copying the Piral files ...`);
-  const files = await getAvailableFiles(root, name, filesTar);
+  const { files: _files } = getPiletsInfo(piralInfo);
+  const fileMap = _files.filter(isTemplateFileLocation);
+  const files = await getAvailableFiles(root, name, filesTar, fileMap);
 
   if (originalFiles === undefined) {
-    const initialFiles = await getAvailableFiles(root, name, filesOnceTar);
+    const initialFiles = await getAvailableFiles(root, name, filesOnceTar, fileMap);
     files.push(...initialFiles);
     originalFiles = [];
   }
 
   await extendPackageOverridesFromTemplateFragment(root, piralInfo, files);
-  await copyFiles(files, forceOverwrite, originalFiles);
+  await copyFiles(files, forceOverwrite, originalFiles, variables);
 }
 
 export function getPiletsInfo(piralInfo: any): PiletsInfo {
@@ -410,9 +442,16 @@ export async function retrievePiletsInfo(entryFile: string) {
   }
 
   const packageInfo = require(packageJson);
+  const allDeps = {
+    ...packageInfo.devDependencies,
+    ...packageInfo.dependencies,
+  };
+  const info = getPiletsInfo(packageInfo);
+  const externals = makeExternals(allDeps, info.externals);
 
   return {
-    ...getPiletsInfo(packageInfo),
+    ...info,
+    externals,
     name: packageInfo.name,
     version: packageInfo.version,
     dependencies: {
@@ -437,6 +476,7 @@ export async function patchPiletPackage(
   name: string,
   version: string,
   piralInfo: any,
+  fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
@@ -450,7 +490,6 @@ export async function patchPiletPackage(
     ...piralInfo.dependencies,
   };
   const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
-  const allExternals = makeExternals(externals);
   const scripts = newInfo
     ? {
         start: 'pilet debug',
@@ -460,6 +499,7 @@ export async function patchPiletPackage(
       }
     : info.scripts;
   const peerModules = [];
+  const allExternals = makePiletExternals(piralDependencies, externals, fromEmulator, piralInfo);
   const peerDependencies = {
     ...allExternals.reduce((deps, name) => {
       const valid = isValidDependency(name);

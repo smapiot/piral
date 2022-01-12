@@ -1,12 +1,13 @@
-import { resolve, relative } from 'path';
+import { resolve, relative, dirname } from 'path';
 import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
+import { legacyCoreExternals } from './constants';
 import { inspectPackage } from './inspect';
-import { coreExternals } from './constants';
 import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
+import { frameworkLibs } from '.';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
@@ -69,27 +70,27 @@ export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
  */
 export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClientType> {
   if (!selected || !clientTypeKeys.includes(selected)) {
-    log('generalDebug_0003', 'No NPM client selected. Checking for lock files ...');
+    log('generalDebug_0003', 'No npm client selected. Checking for lock files ...');
     const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
     const found = +hasNpm + +hasYarn + +hasPnpm;
-    log('generalDebug_0003', `Results of the lock file check: NPM = ${hasNpm}, Yarn = ${hasYarn}, Pnpm = ${hasPnpm}`);
+    log('generalDebug_0003', `Results of the lock file check: npm = ${hasNpm}, Yarn = ${hasYarn}, Pnpm = ${hasPnpm}`);
     const defaultClient = config.npmClient;
 
     if (found !== 1) {
       const lernaClient = await getLernaNpmClient(root);
 
       if (clientTypeKeys.includes(lernaClient)) {
-        log('generalDebug_0003', `Found valid NPM client via Lerna: ${lernaClient}.`);
+        log('generalDebug_0003', `Found valid npm client via Lerna: ${lernaClient}.`);
         return lernaClient;
       }
     } else if (hasNpm) {
-      log('generalDebug_0003', `Found valid NPM client via lockfile.`);
+      log('generalDebug_0003', `Found valid npm client via lockfile.`);
       return 'npm';
     } else if (hasYarn) {
       log('generalDebug_0003', `Found valid Yarn client via lockfile.`);
       return 'yarn';
     } else if (hasPnpm) {
-      log('generalDebug_0003', `Found valid Pnpm client via lockfile.`);
+      log('generalDebug_0003', `Found valid pnpm client via lockfile.`);
       return 'pnpm';
     }
 
@@ -98,7 +99,7 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
       return defaultClient;
     }
 
-    log('generalDebug_0003', 'Using the default NPM client.');
+    log('generalDebug_0003', 'Using the default npm client.');
     return 'npm';
   }
 
@@ -107,23 +108,56 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
 
 export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
   const c = require(`./clients/npm`);
-  const details = await c.listPackage(refName, root);
-  return details?.dependencies?.[refName]?.extraneous ?? false;
+  const newRoot = await detectMonorepoRoot(root);
+
+  if (newRoot) {
+    const details = await c.listPackage(refName, newRoot);
+    return details?.dependencies?.[refName]?.extraneous ?? false;
+  }
+
+  return false;
+}
+
+export async function detectMonorepoRoot(root: string): Promise<string> {
+  const file = await getLernaConfigPath(root);
+
+  if (file !== undefined) {
+    return dirname(file);
+  }
+
+  let previous = root;
+
+  do {
+    const packageJson = await readJson(root, 'package.json');
+
+    if (Array.isArray(packageJson?.workspaces)) {
+      return root;
+    }
+
+    previous = root;
+    root = dirname(root);
+  } while (root !== previous);
+
+  return undefined;
 }
 
 export type MonorepoKind = 'none' | 'lerna' | 'yarn';
 
 export async function detectMonorepo(root: string): Promise<MonorepoKind> {
-  const file = await getLernaConfigPath(root);
+  const newRoot = await detectMonorepoRoot(root);
 
-  if (file !== undefined) {
-    return 'lerna';
-  }
+  if (newRoot) {
+    const file = await getLernaConfigPath(newRoot);
 
-  const packageJson = await readJson(root, 'package.json');
+    if (file !== undefined) {
+      return 'lerna';
+    }
 
-  if (Array.isArray(packageJson?.workspaces)) {
-    return 'yarn';
+    const packageJson = await readJson(newRoot, 'package.json');
+
+    if (Array.isArray(packageJson?.workspaces)) {
+      return 'yarn';
+    }
   }
 
   return 'none';
@@ -159,7 +193,7 @@ export function createPackage(target = '.'): Promise<string> {
   return c.createPackage(target);
 }
 
-export function findTarball(packageRef: string) {
+export function findTarball(packageRef: string): Promise<string> {
   const c = require(`./clients/npm`);
   return c.findTarball(packageRef);
 }
@@ -388,7 +422,45 @@ export function getPackageVersion(
   }
 }
 
-export function makeExternals(externals?: Array<string>) {
+function getExternalsFrom(packageName: string): Array<string> | undefined {
+  try {
+    return require(`${packageName}/package.json`).sharedDependencies;
+  } catch {
+    return undefined;
+  }
+}
+
+function getCoreExternals(dependencies: Record<string, string>): Array<string> {
+  for (const frameworkLib of frameworkLibs) {
+    if (dependencies[frameworkLib]) {
+      const deps = getExternalsFrom(frameworkLib);
+
+      if (deps) {
+        return deps;
+      }
+    }
+  }
+
+  return [];
+}
+
+export function makePiletExternals(
+  dependencies: Record<string, string>,
+  externals: Array<string>,
+  fromEmulator: boolean,
+  piralInfo: any,
+) {
+  if (fromEmulator) {
+    const { sharedDependencies = makeExternals(dependencies, externals, true) } = piralInfo;
+    return sharedDependencies;
+  } else {
+    return makeExternals(dependencies, externals);
+  }
+}
+
+export function makeExternals(dependencies: Record<string, string>, externals?: Array<string>, legacy = false) {
+  const coreExternals = legacy ? legacyCoreExternals : getCoreExternals(dependencies);
+
   if (externals && Array.isArray(externals)) {
     const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(
       (prev, curr) => {

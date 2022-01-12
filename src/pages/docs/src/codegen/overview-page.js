@@ -1,6 +1,6 @@
 const { readFileSync, existsSync, readdirSync } = require('fs');
 const { basename, resolve, relative } = require('path');
-const { generated, generatePage, getDocsFrom } = require('piral-docs-tools');
+const { generated, generatePage, getDocsFrom } = require('@pidoc/core');
 
 const categoryPrefix = 'plugin-';
 const packagesRoot = resolve(__dirname, '../../../..');
@@ -37,30 +37,30 @@ function getPluginImage(name) {
   return hasImage ? `extensions/${rest}.png` : 'top-extensions.png';
 }
 
-module.exports = function (basePath, docsFolder) {
-  const categories = [];
-  const fragments = [];
+exports.find = function (basePath, docsFolder, options) {
   const pluginName = 'overview';
   const displayName = 'All Plugins';
   const route = `${basePath}/overview`;
+  const dependencies = [];
 
   const children = getPluginTypes(docsFolder).map((file) => {
     const name = basename(file).replace('.json', '');
     const image = getPluginImage(name);
-    let dest = '';
     let data = null;
     let pluginCategory = '';
 
     try {
-      dest = resolve(packagesRoot, 'plugins', name, 'package.json');
+      const dest = resolve(packagesRoot, 'plugins', name, 'package.json');
       data = JSON.parse(readFileSync(dest, 'utf8'));
+      dependencies.push(dest);
     } catch (e) {
-      dest = resolve(packagesRoot, 'converters', name, 'package.json');
+      const dest = resolve(packagesRoot, 'converters', name, 'package.json');
       data = JSON.parse(readFileSync(dest, 'utf8'));
+      dependencies.push(dest);
     }
 
     pluginCategory = getPluginCategory(data);
-    this.addDependency(dest, { includedInParent: true });
+
     return {
       category: pluginCategory.charAt(0).toUpperCase() + pluginCategory.slice(1),
       content: `
@@ -72,6 +72,20 @@ module.exports = function (basePath, docsFolder) {
         />`,
     };
   });
+
+  return [{
+    route,
+    pluginName,
+    displayName,
+    dependencies,
+    children,
+  }];
+};
+
+exports.build = function (entry, options) {
+  const { pluginName, displayName, route, children } = entry;
+  const categories = [];
+  const fragments = [];
 
   for (const child of children) {
     const index = categories.indexOf(child.category);
@@ -90,7 +104,7 @@ module.exports = function (basePath, docsFolder) {
   fragments.sort((a, b) => (a.category > b.category ? 1 : -1));
 
   const head = `
-    import { ImageCard, PageContent } from '../../scripts/components';
+    import { ImageCard, PageContent } from '@pidoc/components';
   `;
 
   const body = `
@@ -109,7 +123,5 @@ module.exports = function (basePath, docsFolder) {
     </PageContent>
   `;
 
-  const rendered = generatePage(pluginName, { link: route }, pluginName, head, body, route, displayName);
-
-  return [rendered];
+  return generatePage(pluginName, { link: route }, pluginName, head, body, route, displayName);
 };

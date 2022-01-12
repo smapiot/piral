@@ -1,6 +1,6 @@
 import { ComponentType, cloneElement, createElement } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { withKey, replaceOrAddItem, removeNested } from '../utils';
+import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute } from '../utils';
 import {
   LayoutType,
   ComponentsState,
@@ -36,7 +36,7 @@ export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {
     modules: replaceOrAddItem(state.modules, pilet, (m) => m.name === pilet.name),
     registry: removeNested<RegistryState, BaseRegistration>(state.registry, (m) => m.pilet === pilet.name),
   }));
-  
+
   ctx.emit('unload-pilet', {
     name: pilet.name,
   });
@@ -69,17 +69,9 @@ export function setRoute<T = {}>(
   path: string,
   component: ComponentType<RouteComponentProps<T>>,
 ) {
-  ctx.dispatch((state) => ({
-    ...state,
-    routes: withKey(state.routes, path, component),
-  }));
+  ctx.dispatch(withRoute(path, component));
 }
 
 export function includeProvider(ctx: GlobalStateContext, provider: JSX.Element) {
-  const wrapper: React.FC = (props) => cloneElement(provider, props);
-
-  ctx.dispatch((state) => ({
-    ...state,
-    provider: !state.provider ? wrapper : (props) => createElement(state.provider, undefined, wrapper(props)),
-  }));
+  ctx.dispatch(withProvider(provider));
 }

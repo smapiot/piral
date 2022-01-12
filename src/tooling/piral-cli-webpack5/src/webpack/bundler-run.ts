@@ -1,12 +1,7 @@
 import * as webpack from 'webpack';
 import { resolve, basename, dirname } from 'path';
 import { EventEmitter } from 'events';
-import type { LogLevels } from 'piral-cli';
-
-interface BuildResult {
-  outFile: string;
-  outDir: string;
-}
+import type { LogLevels, BundleHandlerResponse } from 'piral-cli';
 
 function getOutput(stats: webpack.Stats) {
   const { outputPath, entrypoints } = stats.toJson();
@@ -34,77 +29,76 @@ function getPreset(logLevel: LogLevels) {
   }
 }
 
-export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels) {
+export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels): BundleHandlerResponse {
   const eventEmitter = new EventEmitter();
   const outDir = wpConfig.output.path;
-  const mainBundle = {
+  const bundle = {
+    outFile: '',
+    outDir,
     name: '',
+    hash: '',
     requireRef: undefined,
-    entryAsset: {
-      hash: '',
-    },
+  };
+
+  const updateBundle = (stats: webpack.Stats) => {
+    const file = getOutput(stats);
+    bundle.name = basename(file);
+    bundle.requireRef = stats.compilation.outputOptions?.uniqueName;
+    bundle.hash = stats.hash;
+    bundle.outFile = `/${basename(file)}`;
+    bundle.outDir = dirname(file);
   };
 
   wpConfig.plugins.push({
     apply(compiler: webpack.Compiler) {
       compiler.hooks.beforeCompile.tap('piral-cli', () => {
-        eventEmitter.emit('buildStart');
+        eventEmitter.emit('start');
       });
 
       compiler.hooks.done.tap('piral-cli', (stats) => {
-        mainBundle.name = getOutput(stats);
-        mainBundle.requireRef = stats.compilation.outputOptions?.uniqueName;
-        mainBundle.entryAsset.hash = stats.hash;
-        eventEmitter.emit('bundled');
+        updateBundle(stats);
+        eventEmitter.emit('end', bundle);
       });
     },
   });
 
-  const bundle = () =>
-    new Promise<BuildResult>((resolve, reject) => {
-      const preset = {
-        current: undefined,
-      };
-
-      const process = webpack(wpConfig, (err, stats) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          console.log(
-            stats.toString({
-              ...preset.current,
-              colors: true,
-            }),
-          );
-
-          if (stats.hasErrors()) {
-            reject(stats.toJson(preset.current));
-          } else {
-            const file = getOutput(stats);
-            resolve({
-              outFile: `/${basename(file)}`,
-              outDir: dirname(file),
-            });
-          }
-        }
-      });
-
-      const compilation = process.createCompilation();
-      preset.current = compilation.createStatsOptions(getPreset(logLevel));
-    });
-
   return {
-    bundle,
-    on(ev: string, listener: () => void) {
-      eventEmitter.on(ev, listener);
+    bundle() {
+      return new Promise((resolve, reject) => {
+        const preset = {
+          current: undefined,
+        };
+
+        const process = webpack(wpConfig, (err, stats) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            console.log(
+              stats.toString({
+                ...preset.current,
+                colors: true,
+              }),
+            );
+
+            if (stats.hasErrors()) {
+              reject(stats.toJson(preset.current));
+            } else {
+              updateBundle(stats);
+              resolve(bundle);
+            }
+          }
+        });
+
+        const compilation = process.createCompilation();
+        preset.current = compilation.createStatsOptions(getPreset(logLevel));
+      });
     },
-    off(ev: string, listener: () => void) {
-      eventEmitter.off(ev, listener);
+    onStart(cb) {
+      eventEmitter.on('start', cb);
     },
-    options: {
-      outDir,
+    onEnd(cb) {
+      eventEmitter.on('end', cb);
     },
-    mainBundle,
   };
 }

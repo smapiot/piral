@@ -21,7 +21,7 @@ variables:
 - name: documentBranch
   value: 'documentation'
 - name: nodeVersion
-  value: '12.16.3'
+  value: '12.21.0'
 
 stages:
 - stage: Build
@@ -226,7 +226,7 @@ stages:
               script: >-
                 ORIGVER=`yarn --silent ci:version`
 
-                VERSION="$ORIGVER-pre.$(previewId)"
+                VERSION="$ORIGVER-beta.$(previewId)"
 
                 sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-cross-fx/package.json
 
@@ -278,7 +278,7 @@ stages:
               script: >-
                 ORIGVER=`yarn --silent ci:version`
 
-                VERSION="$ORIGVER-pre.$(previewId)"
+                VERSION="$ORIGVER-beta.$(previewId)"
 
                 sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-piral/package.json
 
@@ -289,7 +289,7 @@ stages:
             displayName: Release Packages
             inputs:
               command: custom
-              customCommand: publish dist/demo-full/emulator/sample-full.tgz
+              customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag next
               customEndpoint: DefaultNpmConnection
 
 - stage: Release
@@ -363,6 +363,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                git commit --allow-empty -m "Auto update documentation"
+
                 git push origin $(releaseBranch):$(documentBranch)
 
   - deployment: ReleaseDemoCross
@@ -399,7 +401,7 @@ stages:
           - task: Yarn@2
             displayName: Update Version
             inputs:
-              Arguments: ci:version --update
+              Arguments: ci:version --apply
               customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build CrossFx Emulator
@@ -450,7 +452,7 @@ stages:
           - task: Yarn@2
             displayName: Update Version
             inputs:
-              Arguments: ci:version --update
+              Arguments: ci:version --apply
               customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Full Emulator
@@ -501,7 +503,7 @@ stages:
           - task: Yarn@2
             displayName: Update Version
             inputs:
-              Arguments: ci:version --update
+              Arguments: ci:version --apply
               customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Siteless

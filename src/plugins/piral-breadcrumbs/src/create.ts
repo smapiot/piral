@@ -1,6 +1,7 @@
 import * as actions from './actions';
-import { buildName, PiralPlugin, Dict } from 'piral-core';
+import { buildName, PiralPlugin, Dict, withRootExtension, withAll, GlobalState } from 'piral-core';
 import { DefaultBreadbrumbItem, DefaultBreadcrumbsContainer } from './default';
+import { Breadcrumbs } from './Breadcrumbs';
 import { PiletBreadcrumbsApi, BreadcrumbSettings, BreadcrumbRegistration } from './types';
 
 // Unfortunately `require`d:
@@ -43,6 +44,21 @@ function getBreadcrumbs(items: Array<BreadcrumbSettings>) {
   return breadcrumbs;
 }
 
+function withBreadcrumbs(breadcrumbs: Dict<BreadcrumbRegistration>) {
+  return (state: GlobalState): GlobalState => ({
+    ...state,
+    components: {
+      BreadcrumbItem: DefaultBreadbrumbItem,
+      BreadcrumbsContainer: DefaultBreadcrumbsContainer,
+      ...state.components,
+    },
+    registry: {
+      ...state.registry,
+      breadcrumbs,
+    },
+  });
+}
+
 /**
  * Creates the Pilet API extension for activating breadcrumbs support.
  */
@@ -52,18 +68,9 @@ export function createBreadcrumbsApi(config: DashboardConfig = {}): PiralPlugin<
   return (context) => {
     context.defineActions(actions);
 
-    context.dispatch((state) => ({
-      ...state,
-      components: {
-        BreadcrumbItem: DefaultBreadbrumbItem,
-        BreadcrumbsContainer: DefaultBreadcrumbsContainer,
-        ...state.components,
-      },
-      registry: {
-        ...state.registry,
-        breadcrumbs: getBreadcrumbs(breadcrumbs),
-      },
-    }));
+    context.dispatch(
+      withAll(withBreadcrumbs(getBreadcrumbs(breadcrumbs)), withRootExtension('piral-breadcrumbs', Breadcrumbs)),
+    );
 
     return (api, target) => {
       const pilet = target.name;

@@ -26,6 +26,8 @@ function changeRule(config, name, cb) {
 }
 
 function changeLoader(config, name, cb) {
+  const loaderPath = require.resolve(name);
+
   changeRule(config, name, (rule) => {
     rule.use = rule.use.map((m) => {
       if (m === loaderPath) {
@@ -42,7 +44,10 @@ function changeLoader(config, name, cb) {
 }
 
 function changeLoaderOptions(config, name, options) {
-  changeLoader(config, name, (rule) => (rule.options = options));
+  changeLoader(config, name, (rule) => {
+    rule.options = options;
+    return rule;
+  });
 }
 
 module.exports = function (override) {
@@ -92,20 +97,36 @@ module.exports = function (override) {
         );
       }
 
-      if ('rules' in override && Array.isArray(override.rules)) {
-        config.module.rules.push(...rules);
+      if ('updateRules' in override && Array.isArray(override.updateRules)) {
+        override.updateRules.forEach((def) => {
+          if (typeof def.name === 'string' && def.rule) {
+            changeRule(config, def.name, def.rule);
+          }
+        });
       }
 
       if ('removeRules' in override && Array.isArray(override.removeRules)) {
         override.removeRules.forEach((rule) => changeRule(config, rule, () => undefined));
       }
 
-      if ('plugins' in override && Array.isArray(override.plugins)) {
-        config.plugins.push(...plugins);
+      if ('rules' in override && Array.isArray(override.rules)) {
+        config.module.rules.push(...override.rules);
+      }
+
+      if ('updatePlugins' in override && Array.isArray(override.updatePlugins)) {
+        override.updatePlugins.forEach((def) => {
+          if (def.type && def.rule) {
+            changePlugin(config, def.type, def.plugin);
+          }
+        });
       }
 
       if ('removePlugins' in override && Array.isArray(override.removePlugins)) {
         override.removePlugins.forEach((plugin) => changePlugin(config, plugin, () => undefined));
+      }
+
+      if ('plugins' in override && Array.isArray(override.plugins)) {
+        config.plugins.push(...override.plugins);
       }
 
       if ('change' in override && typeof override.change === 'function') {

@@ -41,8 +41,8 @@
     "ci:version-update": "yarn ci:version --update && git add CHANGELOG.md && git commit -m UpdateReleaseDate",
     "ci:copy-docs": "cp -r ./dist/docs/release ./dist/docs/tmp && mv ./dist/docs/tmp ./dist/docs/release/$(yarn --silent ci:version)",
     "ci:docs": "yarn docgen && yarn build:docs && yarn ci:copy-docs && git checkout -- .",
-    "ci:canary": "lerna publish $(yarn --silent ci:version)-unstable.$BUILD_BUILDID --yes --force-publish --no-git-tag-version --no-push --dist-tag canary && git checkout -- .",
-    "ci:prerelease": "lerna publish $(yarn --silent ci:version)-pre.$BUILD_BUILDID --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
+    "ci:canary": "lerna publish $(yarn --silent ci:version)-alpha.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag canary && git checkout -- .",
+    "ci:prerelease": "lerna publish $(yarn --silent ci:version)-beta.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --message '[skip ci] publish %s'"
   },
   "devDependencies": {
@@ -60,16 +60,22 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "^0.17.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.4.2"
   },
   "resolutions": {
+    "ansi-regex": "5.0.1",
     "glob-parent": "5.1.2",
     "highlight.js": "10.7.1",
     "is-svg": "4.3.1",
+    "json-schema": "0.4.0",
     "node-fetch": "2.6.1",
     "node-forge": "0.10.0",
+    "node-notifier": "8.0.1",
     "normalize-url": "4.5.1",
+    "nth-check": "2.0.1",
     "underscore": "1.12.1",
+    "rc": "1.2.8",
+    "set-value": "4.0.1",
     "ssri": "8.0.1",
     "trim-newlines": "3.0.1",
     "tslib": "2.3.1",

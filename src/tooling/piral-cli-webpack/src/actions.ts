@@ -1,4 +1,4 @@
-import { callDynamic, callStatic } from './webpack';
+import { resolve } from 'path';
 import {
   DebugPiletBundlerDefinition,
   DebugPiralBundlerDefinition,
@@ -8,36 +8,21 @@ import {
 } from 'piral-cli';
 
 export const debugPiral: DebugPiralBundlerDefinition = {
-  async run(args) {
-    const bundler = await callDynamic('debug-piral', args);
-    return bundler;
-  },
+  path: resolve(__dirname, 'webpack', 'piral.js'),
 };
 
 export const watchPiral: WatchPiralBundlerDefinition = {
-  async run(args) {
-    const bundler = await callStatic('debug-mono-piral', args);
-    return bundler;
-  },
+  path: resolve(__dirname, 'webpack', 'piral.js'),
 };
 
 export const buildPiral: BuildPiralBundlerDefinition = {
-  async run(args) {
-    const bundler = await callStatic('build-piral', args);
-    return bundler.bundle;
-  },
+  path: resolve(__dirname, 'webpack', 'piral.js'),
 };
 
 export const debugPilet: DebugPiletBundlerDefinition = {
-  async run(args) {
-    const bundler = await callDynamic('debug-pilet', args);
-    return bundler;
-  },
+  path: resolve(__dirname, 'webpack', 'pilet.js'),
 };
 
 export const buildPilet: BuildPiletBundlerDefinition = {
-  async run(args) {
-    const bundler = await callStatic('build-pilet', args);
-    return bundler.bundle;
-  },
+  path: resolve(__dirname, 'webpack', 'pilet.js'),
 };

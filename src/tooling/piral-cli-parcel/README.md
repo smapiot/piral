@@ -12,7 +12,7 @@ Use your favorite NPM client for the installation:
 npm i piral-cli-parcel --save-dev
 ```
 
-**Note**: If you don't install any bundler for use in `piral-cli` then `piral-cli-parcel` will be automatically installed for you.
+**Note**: The plugin has to be installed to tell the `piral-cli` to use Parcel v1 as the default bundler.
 
 ## Using
 

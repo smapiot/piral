@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const { render, generated, generateStandardPage, getName, getDocsFrom } = require('piral-docs-tools');
+const { render, generated, generateStandardPage, getName, getDocsFrom } = require('@pidoc/core');
 
 function getCommands(docsFolder) {
   const commands = resolve(docsFolder, 'commands');
@@ -20,24 +20,28 @@ function getType(file) {
   }
 }
 
-module.exports = function (basePath, docsFolder, options) {
+exports.find = function (basePath, docsFolder, options) {
   const commands = getCommands(docsFolder);
-
-  const imports = commands.map((file) => {
+  return commands.map((file) => {
     const name = getName(file);
     const route = getRoute(basePath, name);
-    const { mdValue } = render(file, generated);
-    const tool = getType(file);
-    const pageMeta = {
-      link: route,
-      source: file,
-      title: name,
-      tool,
+    return {
+      name,
+      route,
+      file,
     };
-
-    this.addDependency(file, { includedInParent: true });
-    return generateStandardPage(name, pageMeta, `commands-${name}`, file, mdValue, route, name, tool);
   });
+};
 
-  return imports;
+exports.build = function (entry, options) {
+  const { name, file, route } = entry;
+  const { mdValue } = render(file, generated);
+  const tool = getType(file);
+  const pageMeta = {
+    link: route,
+    source: file,
+    title: name,
+    tool,
+  };
+  return generateStandardPage(name, pageMeta, `commands-${name}`, file, mdValue, route, name, tool);
 };

@@ -1,14 +1,5 @@
 import { Argv, Arguments } from 'yargs';
-import {
-  RuleRunner,
-  PiletRuleContext,
-  PiralRuleContext,
-  Bundler,
-  BundleDetails,
-  LogLevels,
-  SharedDependency,
-  ReleaseProvider,
-} from './common';
+import { RuleRunner, PiletRuleContext, PiralRuleContext, LogLevels, SharedDependency, ReleaseProvider } from './common';
 
 export interface ToolCommandRunner<U = {}> {
   (args: Arguments<U>): void | Promise<void>;
@@ -94,6 +85,7 @@ export interface WatchPiralParameters extends BaseBundleParameters {
 export interface BuildPiralParameters extends BaseBundleParameters {
   piral: string;
   emulator: boolean;
+  standalone: boolean;
   sourceMaps: boolean;
   contentHash: boolean;
   minify: boolean;
@@ -131,28 +123,85 @@ export interface BuildPiletParameters extends BaseBundleParameters {
   version: PiletSchemaVersion;
 }
 
-export interface WatchPiralBundlerDefinition {
-  run(args: WatchPiralParameters): Promise<Bundler>;
+export interface BundlerPrepareArgs<T> {
+  (args: T): T | Promise<T>;
 }
 
-export interface DebugPiralBundlerDefinition {
-  flags?: ToolCommandFlagsSetter;
-  run(args: DebugPiralParameters): Promise<Bundler>;
+export interface BaseBundlerDefinition<T> {
+  path: string;
+  prepare?: BundlerPrepareArgs<T>;
 }
 
-export interface BuildPiralBundlerDefinition {
+export interface WatchPiralBundlerDefinition extends BaseBundlerDefinition<WatchPiralParameters> {}
+
+export interface DebugPiralBundlerDefinition extends BaseBundlerDefinition<DebugPiralParameters> {
   flags?: ToolCommandFlagsSetter;
-  run(args: BuildPiralParameters): Promise<BundleDetails>;
 }
 
-export interface DebugPiletBundlerDefinition {
+export interface BuildPiralBundlerDefinition extends BaseBundlerDefinition<BuildPiralParameters> {
   flags?: ToolCommandFlagsSetter;
-  run(args: DebugPiletParameters): Promise<Bundler>;
 }
 
-export interface BuildPiletBundlerDefinition {
+export interface DebugPiletBundlerDefinition extends BaseBundlerDefinition<DebugPiletParameters> {
   flags?: ToolCommandFlagsSetter;
-  run(args: BuildPiletParameters): Promise<BundleDetails>;
+}
+
+export interface BuildPiletBundlerDefinition extends BaseBundlerDefinition<BuildPiletParameters> {
+  flags?: ToolCommandFlagsSetter;
+}
+
+export interface PiralBuildHandler {
+  create(config: {
+    root: string;
+    entryFiles: string;
+    outDir: string;
+    outFile: string;
+    externals: Array<string>;
+    emulator: boolean;
+    sourceMaps: boolean;
+    contentHash: boolean;
+    minify: boolean;
+    publicUrl: string;
+    hmr: boolean;
+    logLevel: LogLevels;
+    watch: boolean;
+    args: any;
+  }): Promise<BundleHandlerResponse>;
+}
+
+export interface PiletBuildHandler {
+  create(config: {
+    root: string;
+    piral: string;
+    entryModule: string;
+    targetDir: string;
+    outDir: string;
+    outFile: string;
+    externals: Array<string>;
+    importmap: Array<SharedDependency>;
+    version: PiletSchemaVersion;
+    develop: boolean;
+    sourceMaps: boolean;
+    contentHash: boolean;
+    minify: boolean;
+    logLevel: LogLevels;
+    watch: boolean;
+    args: any;
+  }): Promise<BundleHandlerResponse>;
+}
+
+export interface BundleResult {
+  outDir: string;
+  outFile: string;
+  hash?: string;
+  name?: string;
+  requireRef?: string;
+}
+
+export interface BundleHandlerResponse {
+  onStart(cb: () => void): void;
+  onEnd(cb: (result: BundleResult) => void): void;
+  bundle(): Promise<BundleResult>;
 }
 
 export interface BundlerDefinition {
@@ -169,6 +218,8 @@ export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
 export type PiralBuildType = 'all' | 'release' | 'emulator' | 'emulator-sources';
 
+export type PiletBuildType = 'default' | 'standalone' | 'manifest';
+
 export type PackageType = 'registry' | 'file' | 'git';
 
 export type NpmClientType = 'npm' | 'yarn' | 'pnpm';
@@ -180,6 +231,7 @@ export interface StandardEnvProps {
   debugPiral?: boolean;
   debugPilet?: boolean;
   root: string;
+  publicPath?: string;
   piral?: string;
   dependencies?: Array<string>;
 }

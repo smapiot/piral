@@ -1,7 +1,8 @@
 import * as actions from './actions';
 import { ComponentType } from 'react';
-import { withApi, buildName, PiralPlugin, Dict } from 'piral-core';
+import { withApi, buildName, PiralPlugin, Dict, withAll, withRootExtension, GlobalState } from 'piral-core';
 import { DefaultContainer, DefaultItem } from './default';
+import { Menu } from './Menu';
 import { PiletMenuApi, MenuSettings, MenuItemRegistration } from './types';
 
 export interface InitialMenuItem {
@@ -54,6 +55,21 @@ function getMenuItems(items: Array<InitialMenuItem>, defaultSettings: MenuSettin
   return menuItems;
 }
 
+function withMenu(menuItems: Dict<MenuItemRegistration>) {
+  return (state: GlobalState): GlobalState => ({
+    ...state,
+    components: {
+      MenuContainer: DefaultContainer,
+      MenuItem: DefaultItem,
+      ...state.components,
+    },
+    registry: {
+      ...state.registry,
+      menuItems,
+    },
+  });
+}
+
 /**
  * Creates new Pilet API extensions for integration of menu items.
  */
@@ -63,18 +79,7 @@ export function createMenuApi(config: MenuConfig = {}): PiralPlugin<PiletMenuApi
   return (context) => {
     context.defineActions(actions);
 
-    context.dispatch((state) => ({
-      ...state,
-      components: {
-        MenuContainer: DefaultContainer,
-        MenuItem: DefaultItem,
-        ...state.components,
-      },
-      registry: {
-        ...state.registry,
-        menuItems: getMenuItems(items, defaultSettings),
-      },
-    }));
+    context.dispatch(withAll(withMenu(getMenuItems(items, defaultSettings)), withRootExtension('piral-menu', Menu)));
 
     return (api, target) => {
       const pilet = target.name;

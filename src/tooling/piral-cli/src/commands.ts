@@ -1,3 +1,4 @@
+import { piletBuildTypeKeys } from '.';
 import * as apps from './apps';
 import {
   availableBundlers,
@@ -13,7 +14,7 @@ import {
   schemaKeys,
   fromKeys,
   bundlerKeys,
-  buildTypeKeys,
+  piralBuildTypeKeys,
 } from './helpers';
 import {
   ToolCommand,
@@ -23,6 +24,7 @@ import {
   PiralBuildType,
   PiletPublishSource,
   PiletSchemaVersion,
+  PiletBuildType,
 } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
@@ -96,6 +98,7 @@ const allCommands: Array<ToolCommand<any>> = [
         bundlerName: args.bundler as string,
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
+        hooks: args.hooks as object,
         _: args,
       });
     },
@@ -117,7 +120,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('target', 'Sets the target directory or file of bundling.')
         .default('target', apps.buildPiralDefaults.target)
         .string('public-url')
-        .describe('public-url', 'Sets the public URL (path) of the bundle.')
+        .describe('public-url', 'Sets the public URL (path) of the bundle. Only for release output.')
         .default('public-url', apps.buildPiralDefaults.publicUrl)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
@@ -132,7 +135,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('source-maps', 'Create associated source maps for the bundles.')
         .default('source-maps', apps.buildPiralDefaults.sourceMaps)
         .boolean('subdir')
-        .describe('subdir', `Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".`)
+        .describe(
+          'subdir',
+          `Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".`,
+        )
         .default('subdir', apps.buildPiralDefaults.subdir)
         .boolean('content-hash')
         .describe('content-hash', 'Appends the hash to the side-bundle files.')
@@ -140,7 +146,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.buildPiralDefaults.optimizeModules)
-        .choices('type', buildTypeKeys)
+        .choices('type', piralBuildTypeKeys)
         .describe('type', 'Selects the target type of the build. "all" builds all target types.')
         .default('type', apps.buildPiralDefaults.type)
         .choices('bundler', availableBundlers)
@@ -164,6 +170,7 @@ const allCommands: Array<ToolCommand<any>> = [
         optimizeModules: args['optimize-modules'] as boolean,
         logLevel: args['log-level'] as LogLevels,
         type: args.type as PiralBuildType,
+        hooks: args.hooks as object,
         _: args,
       });
     },
@@ -183,7 +190,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.publishPiralDefaults.logLevel)
-        .choices('type', buildTypeKeys)
+        .choices('type', piralBuildTypeKeys)
         .describe('type', 'Selects the target type to publish. "all" publishes all target types.')
         .default('type', apps.publishPiralDefaults.type)
         .choices('provider', availableReleaseProviders)
@@ -260,7 +267,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('framework', 'Sets the framework/library level to use.')
         .default('framework', apps.newPiralDefaults.framework)
         .boolean('install')
-        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .describe('install', 'Already performs the installation of its npm dependencies.')
         .default('install', apps.newPiralDefaults.install)
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the dependencies.')
@@ -269,7 +276,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.newPiralDefaults.logLevel)
         .string('tag')
-        .describe('tag', 'Sets the tag or version of the package to install. By default, this uses the version of the CLI.')
+        .describe(
+          'tag',
+          'Sets the tag or version of the package to install. By default, this uses the version of the CLI.',
+        )
         .default('tag', apps.newPiralDefaults.version)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the installation.')
@@ -281,7 +291,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiralDefaults.template)
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
+        .describe('npm-client', 'Sets the npm client to be used when scaffolding.')
         .default('npm-client', apps.newPiralDefaults.npmClient)
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
@@ -330,10 +340,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.upgradePiralDefaults.logLevel)
         .boolean('install')
-        .describe('install', 'Already performs the update of its NPM dependencies.')
+        .describe('install', 'Already performs the update of its npm dependencies.')
         .default('install', apps.upgradePiralDefaults.install)
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when upgrading.')
+        .describe('npm-client', 'Sets the npm client to be used when upgrading.')
         .default('npm-client', apps.upgradePiralDefaults.npmClient)
         .string('base')
         .default('base', process.cwd())
@@ -411,6 +421,8 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('bundler', availableBundlers[0])
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
+        .string('app-dir')
+        .describe('app-dir', 'Sets the path to a custom Piral instance for serving.')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
@@ -424,11 +436,13 @@ const allCommands: Array<ToolCommand<any>> = [
         hmr: args.hmr as boolean,
         bundlerName: args.bundler as string,
         optimizeModules: args['optimize-modules'] as boolean,
+        appInstanceDir: args['app-dir'] as string,
         app: args.app as string,
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         schemaVersion: args.schema as PiletSchemaVersion,
         feed: args.feed as string,
+        hooks: args.hooks as object,
         _: args,
       });
     },
@@ -476,6 +490,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('bundler', availableBundlers)
         .describe('bundler', 'Sets the bundler to use.')
         .default('bundler', availableBundlers[0])
+        .choices('type', piletBuildTypeKeys)
+        .describe('type', 'Selects the target type of the build.')
+        .default('type', apps.buildPiletDefaults.type)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -492,10 +509,12 @@ const allCommands: Array<ToolCommand<any>> = [
         declaration: args.declaration as boolean,
         sourceMaps: args['source-maps'] as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
+        type: args.type as PiletBuildType,
         fresh: args.fresh as boolean,
         logLevel: args['log-level'] as LogLevels,
         schemaVersion: args.schema as PiletSchemaVersion,
         app: args.app as string,
+        hooks: args.hooks as object,
         _: args,
       });
     },
@@ -540,8 +559,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source previously packed *.tgz bundle to publish.',
-          default: apps.publishPiletDefaults.source,
+          describe: 'Sets the source of either the previously packed *.tgz bundle or the pilet root module to publish.',
         })
         .string('url')
         .describe('url', 'Sets the explicit URL where to publish the pilet to.')
@@ -561,6 +579,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
         .default('schema', apps.publishPiletDefaults.schemaVersion)
+        .choices('bundler', availableBundlers)
+        .describe('bundler', 'Sets the bundler to use.')
+        .default('bundler', availableBundlers[0])
         .choices('from', fromKeys)
         .describe('from', 'Sets the type of the source to use for publishing.')
         .default('from', apps.publishPiletDefaults.from)
@@ -578,10 +599,12 @@ const allCommands: Array<ToolCommand<any>> = [
         url: args.url as string,
         logLevel: args['log-level'] as LogLevels,
         cert: args['ca-cert'] as string,
+        bundlerName: args.bundler as string,
         fresh: args.fresh as boolean,
         from: args.from as PiletPublishSource,
         schemaVersion: args.schema as PiletSchemaVersion,
         fields: args.fields as Record<string, string>,
+        _: args,
       });
     },
   },
@@ -606,7 +629,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('registry', 'Sets the package registry to use for resolving the specified Piral app.')
         .default('registry', apps.newPiletDefaults.registry)
         .boolean('install')
-        .describe('install', 'Already performs the installation of its NPM dependencies.')
+        .describe('install', 'Already performs the installation of its npm dependencies.')
         .default('install', apps.newPiletDefaults.install)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the scaffolding.')
@@ -621,7 +644,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiletDefaults.template)
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when scaffolding.')
+        .describe('npm-client', 'Sets the npm client to be used when scaffolding.')
         .default('npm-client', apps.newPiletDefaults.npmClient)
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
@@ -668,14 +691,17 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.upgradePiletDefaults.logLevel)
         .boolean('install')
-        .describe('install', 'Already performs the update of its NPM dependencies.')
+        .describe('install', 'Already performs the update of its npm dependencies.')
         .default('install', apps.upgradePiletDefaults.install)
         .choices('force-overwrite', forceOverwriteKeys)
         .describe('force-overwrite', 'Determines if files should be overwritten by the upgrading process.')
         .default('force-overwrite', keyOfForceOverwrite(apps.upgradePiletDefaults.forceOverwrite))
         .choices('npm-client', clientTypeKeys)
-        .describe('npm-client', 'Sets the NPM client to be used when upgrading.')
+        .describe('npm-client', 'Sets the npm client to be used when upgrading.')
         .default('npm-client', apps.upgradePiletDefaults.npmClient)
+        .option('vars', undefined)
+        .describe('vars', 'Sets additional variables to be used when scaffolding.')
+        .default('vars', apps.upgradePiletDefaults.variables)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -688,6 +714,7 @@ const allCommands: Array<ToolCommand<any>> = [
         forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
         install: args.install as boolean,
         npmClient: args['npm-client'] as NpmClientType,
+        variables: args.vars as Record<string, string>,
       });
     },
   },

@@ -30,6 +30,10 @@ function createMockContainer() {
 
 jest.mock('../hooks');
 
+(hooks as any).useGlobalStateContext = () => ({
+  state: {},
+});
+
 (hooks as any).useGlobalState = (select: any) =>
   select({
     components: {

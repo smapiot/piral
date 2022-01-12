@@ -4,6 +4,14 @@ title: General Questions
 
 # General
 
+## How is it pronounced?
+
+It's *pie-ral* and *pie-let* (and **not** *pee-ral* and *pee-let*). Just think of pies. They are delicious!
+
+Alternatively, you can think of pi like the number PI (π).
+
+---------------------------------------
+
 ## What's the motivation behind Piral?
 
 We've build several extensible frontend applications in the past. Sometimes these applications have been shipped packaged as an app, sometimes they have been deployed as a webpage only, many times both. The general mechanism was always the same and we've detected a basic pattern that can be followed successfully to develop modern (grand scale) web apps.
@@ -38,7 +46,7 @@ A Piral instance requires the following things:
 
 1. A React SPA that uses `piral-core` or `piral` (recommended, [sample available](https://github.com/smapiot/piral/tree/main/src/samples/sample-piral))
 2. A backend service to provision the pilets (you can use our available [feed service](https://www.piral.cloud))
-3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) NPM feed or a Git repository
+3. A way to distribute the SPA (also sometimes called "shell") to new pilets, e.g., via a (potentially private) npm registry or a Git repository
 
 The SPA can be hosted on a static storage, while the backend service may be run anyway - serverless may be an option here, too.
 
@@ -237,5 +245,32 @@ renderInstance({
 Wrappers are applied on basis of component registrations, so you'd need to define one (or the same) wrapper for all types of component registrations (`extension`, `page`, `tile`, ...).
 
 There is also the special fallback wrapper `*`, which is used if no specific wrapper is available.
+
+---------------------------------------
+
+## My public path is different - how to configure Piral?
+
+The `piral build` command supports a `--public-url` flag that you can configure with your public path (e.g., `"/foo"`). When you use this, the `basename` of the `react-router` is also also changed, such that routes like `/bar` are still working as they should (e.g., working with `/foo/bar`).
+
+If you want to customize the public path for routing, i.e., the `basename` of the router then you could create your own `Router` component for this:
+
+```ts
+const Router: React.FC = ({ children }) => (
+  <BrowserRouter basename="/foo/boo">{children}</BrowserRouter>
+);
+```
+
+and use it with your instance:
+
+```ts
+const instance = createInstance({
+  state: {
+    components: {
+      Router,
+    },
+  },
+  // ...
+});
+```
 
 ---------------------------------------

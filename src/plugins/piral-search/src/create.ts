@@ -1,8 +1,20 @@
 import { isfunc } from 'piral-base';
 import { ReactChild, isValidElement, createElement } from 'react';
-import { buildName, PiralPlugin, Dict, withApi, PiletApi, GlobalStateContext } from 'piral-core';
+import {
+  buildName,
+  PiralPlugin,
+  Dict,
+  withApi,
+  PiletApi,
+  GlobalStateContext,
+  withAll,
+  GlobalState,
+  withRootExtension,
+} from 'piral-core';
 import { createActions } from './actions';
 import { DefaultContainer, DefaultInput, DefaultResult } from './default';
+import { Search } from './Search';
+import { SearchInput } from './SearchInput';
 import {
   PiletSearchApi,
   SearchSettings,
@@ -103,6 +115,29 @@ function wrapResults(
   return results.map((item) => toChild(item, api, context));
 }
 
+function withSearch(searchProviders: Dict<SearchProviderRegistration>, query: string, items: Array<ReactChild>) {
+  return (state: GlobalState): GlobalState => ({
+    ...state,
+    components: {
+      SearchContainer: DefaultContainer,
+      SearchInput: DefaultInput,
+      SearchResult: DefaultResult,
+      ...state.components,
+    },
+    registry: {
+      ...state.registry,
+      searchProviders,
+    },
+    search: {
+      input: query,
+      results: {
+        loading: false,
+        items,
+      },
+    },
+  });
+}
+
 /**
  * Creates new Pilet API extensions for search and filtering.
  */
@@ -112,26 +147,13 @@ export function createSearchApi(config: SearchConfig = {}): PiralPlugin<PiletSea
   return (context) => {
     context.defineActions(createActions(actionConfig));
 
-    context.dispatch((state) => ({
-      ...state,
-      components: {
-        SearchContainer: DefaultContainer,
-        SearchInput: DefaultInput,
-        SearchResult: DefaultResult,
-        ...state.components,
-      },
-      registry: {
-        ...state.registry,
-        searchProviders: getSearchProviders(providers),
-      },
-      search: {
-        input: query,
-        results: {
-          loading: false,
-          items: results,
-        },
-      },
-    }));
+    context.dispatch(
+      withAll(
+        withSearch(getSearchProviders(providers), query, results),
+        withRootExtension('piral-search', Search),
+        withRootExtension('piral-search-input', SearchInput),
+      ),
+    );
 
     return (api, target) => {
       const pilet = target.name;

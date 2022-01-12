@@ -1,6 +1,7 @@
 import { join } from 'path';
+import { EventEmitter } from 'events';
 import { readFileSync, existsSync, statSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig } from 'kras';
+import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration } from 'kras';
 import { mime } from '../external';
 import { Bundler } from '../types';
 
@@ -11,13 +12,32 @@ const maxRetrySendResponse = 4;
 
 export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
+  publicUrl: string;
 }
 
 export default class PiralInjector implements KrasInjector {
   public config: PiralInjectorConfig;
 
-  constructor(options: PiralInjectorConfig) {
+  constructor(options: PiralInjectorConfig, _config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
+    const api = '/$events';
+    const cbs = {};
+
+    core.on('user-connected', (e) => {
+      if (e.target === '*' && e.url === api.substr(1)) {
+        cbs[e.id] = (msg: string) => e.ws.send(msg);
+      }
+    });
+
+    core.on('user-disconnected', (e) => {
+      delete cbs[e.id];
+    });
+
+    this.config.bundler.on((args) => {
+      for (const id of Object.keys(cbs)) {
+        cbs[id](JSON.stringify(args));
+      }
+    });
   }
 
   get active() {
@@ -66,11 +86,15 @@ export default class PiralInjector implements KrasInjector {
 
   handle(req: KrasRequest): KrasResponse {
     if (!req.target) {
-      const { bundler } = this.config;
-      const path = req.url.substr(1);
-      const dir = bundler.bundle.dir;
-      const target = join(dir, path.split('?')[0]);
-      return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
+      const { bundler, publicUrl } = this.config;
+
+      if (req.url.startsWith(publicUrl)) {
+        const pathLength = publicUrl.length || 1;
+        const path = req.url.substr(pathLength);
+        const dir = bundler.bundle.dir;
+        const target = join(dir, path.split('?')[0]);
+        return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
+      }
     }
   }
 }

@@ -4,6 +4,12 @@ import { log } from './log';
 
 export function checkAppShellCompatibility(piralVersion: string) {
   log('generalDebug_0003', `Checking compatibility ...`);
+
+  if (!piralVersion) {
+    log('appShellMaybeIncompatible_0102', cliVersion);
+    return false;
+  }
+
   const compatible = findCompatVersion(piralVersion);
   log('generalDebug_0003', `Used versions: "${compatible}" and "${compatVersion}".`);
 

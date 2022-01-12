@@ -1,6 +1,6 @@
 {
   "name": "piral-cli",
-  "version": "0.13.8",
+  "version": "0.14.7",
   "description": "The standard CLI for creating and building a Piral instance or a Pilet.",
   "keywords": [
     "portal",
@@ -70,9 +70,9 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
-    "dets": "^0.10.2",
+    "dets": "^0.11.0",
     "ejs": "^2.6.2",
-    "kras": "^0.12.2",
+    "kras": "^0.13.2",
     "rimraf": "^3.0.0",
     "typescript": "^4.0.2",
     "yargs": "^15.4.1"

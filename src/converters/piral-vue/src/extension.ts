@@ -10,6 +10,39 @@ export function createExtension(rootName: string, selector: string): Component<E
     render(createElement) {
       return createElement(rootName);
     },
+    watch: {
+      params(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          const newKeys = Object.keys(newValue);
+          const oldKeys = Object.keys(oldValue);
+
+          if (newKeys.length === oldKeys.length) {
+            let changed = false;
+
+            for (const key of newKeys) {
+              if (!oldKeys.includes(key) || newValue[key] !== oldValue[key]) {
+                changed = true;
+                break;
+              }
+            }
+
+            if (!changed) {
+              return;
+            }
+          }
+
+          const ev = new CustomEvent('extension-props-changed', {
+            detail: {
+              empty: this.empty,
+              params: newValue,
+              render: this.render,
+              name: this.name,
+            },
+          });
+          this.$el.dispatchEvent(ev);
+        }
+      },
+    },
     mounted() {
       this.piral.renderHtmlExtension(this.$el, {
         empty: this.empty,
