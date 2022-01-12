@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.8 (tbd)
+
+- ...
+
 ## 0.14.7 (January 12, 2022)
 
 - Updated `PATH` environment usage for child processes in Windows
