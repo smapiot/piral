@@ -10328,11 +10328,17 @@ klona@^2.0.4:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.4.tgz#7bb1e3affb0cb8624547ef7e8f6708ea2e39dfc0"
   integrity sha512-ZRbnvdg/NxqzC7L9Uyqzf4psi1OM4Cuc+sJAkQPjO6XkQIJTNbfK2Rsmbw8fx1p2mkZdp2FZYo2+LwXYY/uwIA==
 
-kras@^0.12.2:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.12.3.tgz#cd380be212bf0f8b7078ff9688c2531a5ca8be37"
-  integrity sha512-HcMQQqicdQBuzM3maMZOb0FJWzcmBqwx2yDuZ9O0FG0+VeOgvg1AwGDvZ9wuZzjhUxX8j46vOVY7t3FA9vz/pg==
+kras-management-portal@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/kras-management-portal/-/kras-management-portal-0.13.0.tgz#550f2797fce399529897aaa871030644d96812c1"
+  integrity sha512-NjjXTHKcJ/ECkz03L/HQSUVnkuzZkEV2mwcex36lxJNNwiUrYM5Ju0toAjhLnf8Zpc3nLEPnWKmoTwpSgGim2A==
+
+kras@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.13.2.tgz#b157ab4409070b408cccb1123d234279dd4667e5"
+  integrity sha512-ACEGQemKZEmFEWuBufyz1NwVRUWIBOjo4R96IPPyU7nyb9dFDqWJ6hwgrwpS1MLpHEdhhd42E4qWOszaqp8WKw==
   dependencies:
+    kras-management-portal "^0.13.0"
     yargs "^15.4.1"
 
 last-call-webpack-plugin@^3.0.0:

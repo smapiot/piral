@@ -7,6 +7,7 @@ const ngtoolsLoader = require.resolve('@ngtools/webpack');
 const toStringLoader = require.resolve('to-string-loader');
 const cssLoader = require.resolve('css-loader');
 const sassLoader = require.resolve('sass-loader');
+const htmlLoader = require.resolve('html-loader');
 
 module.exports =
   (options = {}) =>
@@ -17,6 +18,12 @@ module.exports =
       compilerOptions = {},
     } = options;
     const cssLoaderNoModule = `${cssLoader}?esModule=false`;
+    const htmlLoaderNoModule = {
+      loader: htmlLoader,
+      options: {
+        esModule: false,
+      },
+    };
 
     config.module.rules
       .filter((m) => m.test.toString() === /\.css$/i.toString())
@@ -38,6 +45,10 @@ module.exports =
       {
         test: /\.[jt]sx?$/,
         loader: ngtoolsLoader,
+      },
+      {
+        test: /\.component.html$/i,
+        use: [toStringLoader, htmlLoaderNoModule],
       },
       {
         test: /\.component.css$/i,
