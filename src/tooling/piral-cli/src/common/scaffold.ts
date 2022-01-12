@@ -30,7 +30,12 @@ async function getTemplateFiles(
   root: string,
   data: Record<string, any>,
 ): Promise<Array<TemplateFile>> {
-  await installPackage(templatePackageName, __dirname, '--registry', registry);
+  // debug in monorepo such as ""../templates/pilet-template-react/lib/index.js"
+  if (templatePackageName.startsWith('.')) {
+    templatePackageName = resolve(process.cwd(), templatePackageName);
+  } else {
+    await installPackage(templatePackageName, __dirname, '--registry', registry);
+  }
   const templateRunner = getTemplatePackage(templatePackageName);
 
   if (typeof templateRunner === 'function') {
