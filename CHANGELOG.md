@@ -2,7 +2,8 @@
 
 ## 0.14.8 (tbd)
 
-- ...
+- Added ability to specify local paths for `--template` in `pilet new` and `piral new`
+- Added convenience module `piral-svelte/extend-webpack`
 
 ## 0.14.7 (January 12, 2022)
 

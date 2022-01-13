@@ -51,6 +51,67 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+How you built your Svelte-pilet is up to you. If you use Webpack then the bundler options such as `piral-cli-webpack` or `piral-cli-webpack5` can be leveraged. In these cases you'd need to install the `svelte-loader` package and create a custom *webpack.config.js*:
+
+```sh
+npm i svelte-loader --save-dev
+```
+
+The Webpack configuration can be rather simplistic, as shown on the [svelte-loader readme](https://github.com/sveltejs/svelte-loader). In many cases you can use the convenience `extend-webpack` module.
+
+This is how your *webpack.config.js* can look like with the convenience module:
+
+```js
+const extendWebpack = require('piral-svelte/extend-webpack');
+
+module.exports = extendWebpack({});
+```
+
+For using `piral-svelte/extend-webpack` you must have installed:
+
+- `svelte-loader`
+- `webpack`, e.g., via `piral-cli-webpack5`
+
+You can do that via:
+
+```sh
+npm i svelte-loader piral-cli-webpack5 --save-dev
+```
+
+The available options for `piral-svelte/extend-webpack` are the same as for the options of the `svelte-loader`, e.g.:
+
+```js
+const extendWebpack = require('piral-svelte/extend-webpack');
+
+module.exports = extendWebpack({
+  emitCss: false,
+  compilerOptions: {
+    css: false,
+  },
+});
+```
+
+You can also customize the options even more:
+
+```js
+const extendWebpack = require('piral-svelte/extend-webpack');
+
+const applySvelte = extendWebpack({
+  emitCss: false,
+  compilerOptions: {
+    css: false,
+  },
+});
+
+module.exports = config => {
+  config = applySvelte(config);
+
+  // your changes to config
+
+  return config;
+};
+```
+
 :::
 
 ::: summary: For Piral instance developers
@@ -113,7 +174,7 @@ For Svelte to work the Svelte compiler and the associated Parcel plugin need to 
 npm i svelte parcel-plugin-svelte --save-dev
 ```
 
-Furthermore, since Svelte distributes its source code as ES6 we need to change the browserlist setting in the *package.json* of the pilet:
+Furthermore, since Svelte distributes its source code as ES6 we need to change the `browserslist` setting in the *package.json* of the pilet:
 
 ```json
 {
