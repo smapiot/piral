@@ -1,4 +1,4 @@
-import { join, dirname, resolve, basename } from 'path';
+import { join, dirname, resolve, basename, isAbsolute } from 'path';
 import { installPackage } from './clients/npm';
 import { ForceOverwrite, SourceLanguage } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
@@ -12,7 +12,8 @@ interface TemplateFile {
 
 function getTemplatePackage(templatePackageName: string) {
   const idx = templatePackageName.indexOf('@', 1);
-  const normalizedName = idx > 0 ? templatePackageName.substr(0, idx) : templatePackageName;
+  const normalizedName =
+    idx > 0 && !isAbsolute(templatePackageName) ? templatePackageName.substr(0, idx) : templatePackageName;
 
   try {
     return require(normalizedName);
@@ -30,7 +31,7 @@ async function getTemplateFiles(
   root: string,
   data: Record<string, any>,
 ): Promise<Array<TemplateFile>> {
-  // debug in monorepo such as ""../templates/pilet-template-react/lib/index.js"
+  // debug in monorepo such as "../templates/pilet-template-react/lib/index.js"
   if (templatePackageName.startsWith('.')) {
     templatePackageName = resolve(process.cwd(), templatePackageName);
   } else {
