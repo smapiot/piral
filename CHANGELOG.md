@@ -2,8 +2,10 @@
 
 ## 0.14.8 (tbd)
 
+- Improved performance of internal action calls
 - Added ability to specify local paths for `--template` in `pilet new` and `piral new`
 - Added convenience module `piral-svelte/extend-webpack`
+- Added support for direct instance switching
 
 ## 0.14.7 (January 12, 2022)
 
