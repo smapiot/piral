@@ -1,11 +1,12 @@
 import type { PiletApi, PiletApiCreator, LoadPiletsOptions, EventEmitter } from 'piral-base';
 import type { GlobalStateContext } from './state';
 import type { LayoutBreakpoints } from './layout';
+import { PiralConfiguration } from './config';
 
 /**
  * The props of the Piral component.
  */
-export interface PortalProps {
+export interface PiralProps {
   /**
    * The specific Piral instance to be used.
    */
@@ -17,10 +18,25 @@ export interface PortalProps {
 }
 
 /**
- * The PiralInstance component, which is an event emitter containing the React
- * functional component as well as some other utilities and helpers.
+ * The options for creating a new PiralInstance object.
+ */
+export interface PiralInstanceOptions extends PiralConfiguration {
+  /**
+   * Defines the id of this instance. Used in case of multiple instances.
+   */
+  id?: string;
+}
+
+/**
+ * The PiralInstance object, which is an event emitter with some other
+ * utilities and helper. This object is the source for the React
+ * functional component (`Piral`).
  */
 export interface PiralInstance extends EventEmitter {
+  /**
+   * The id of the Piral instance.
+   */
+  id: string;
   /**
    * The global state context instance.
    */

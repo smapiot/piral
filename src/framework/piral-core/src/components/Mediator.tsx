@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LoadPiletsOptions, startLoadingPilets, PiletsLoading } from 'piral-base';
-import { useAction } from '../hooks';
+import { useGlobalStateContext } from '../hooks';
 import { none } from '../utils';
 
 /**
@@ -17,15 +17,22 @@ export interface MediatorProps {
  * The Mediator component for interfacing with pilets loading.
  */
 export const Mediator: React.FC<MediatorProps> = ({ options }) => {
-  const initialize = useAction('initialize');
+  const { initialize, readState } = useGlobalStateContext();
+
   React.useEffect(() => {
-    const { connect, disconnect } = startLoadingPilets(options);
-    const notifier: PiletsLoading = (error, pilets, loaded) => {
-      initialize(!loaded, error, pilets);
-    };
-    connect(notifier);
-    return () => disconnect(notifier);
+    const shouldLoad = readState(s => s.app.loading);
+
+    if (shouldLoad) {
+      const { connect, disconnect } = startLoadingPilets(options);
+      const notifier: PiletsLoading = (error, pilets, loaded) => {
+        initialize(!loaded, error, pilets);
+      };
+      connect(notifier);
+      return () => disconnect(notifier);
+    }
+
   }, none);
+
   // tslint:disable-next-line:no-null-keyword
   return null;
 };

@@ -1,4 +1,4 @@
-import { ComponentType, cloneElement, createElement } from 'react';
+import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute } from '../utils';
 import {
