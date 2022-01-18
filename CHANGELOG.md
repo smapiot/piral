@@ -3,6 +3,7 @@
 ## 0.14.8 (tbd)
 
 - Improved performance of internal action calls
+- Improved the `piral-extension` web component with properties `params`, `empty` and `name`
 - Added ability to specify local paths for `--template` in `pilet new` and `piral new`
 - Added convenience module `piral-svelte/extend-webpack`
 - Added support for direct instance switching

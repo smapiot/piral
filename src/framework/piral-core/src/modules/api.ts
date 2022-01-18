@@ -13,11 +13,37 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   class PiralExtension extends HTMLElement {
     dispose: Disposable = noop;
     update: Updatable = noop;
+    props = {
+      name: this.getAttribute('name'),
+      params: tryParseJson(this.getAttribute('params')),
+      empty: undefined,
+    };
 
-    getProps() {
-      const name = this.getAttribute('name');
-      const params = tryParseJson(this.getAttribute('params'));
-      return { name, params };
+    get params() {
+      return this.props.params;
+    }
+
+    set params(value) {
+      this.props.params = value;
+      this.update(this.props);
+    }
+
+    get name() {
+      return this.props.name;
+    }
+
+    set name(value) {
+      this.props.name = value;
+      this.update(this.props);
+    }
+
+    get empty() {
+      return this.props.empty;
+    }
+
+    set empty(value) {
+      this.props.empty = value;
+      this.update(this.props);
     }
 
     connectedCallback() {
@@ -27,7 +53,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
             bubbles: true,
             detail: {
               target: this,
-              props: this.getProps(),
+              props: this.props,
             },
           }),
         );
@@ -40,8 +66,15 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
       this.update = noop;
     }
 
-    attributeChangedCallback() {
-      this.update(this.getProps());
+    attributeChangedCallback(name: string, _: any, newValue: any) {
+      switch (name) {
+        case 'name':
+          this.name = newValue;
+          break;
+        case 'params':
+          this.params = tryParseJson(newValue);
+          break;
+      }
     }
 
     static get observedAttributes() {
