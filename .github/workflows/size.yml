@@ -1,0 +1,22 @@
+name: Check bundle size
+
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  file_size_impact:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup git
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.6.1"
+      - run: npx lerna bootstrap
+      - name: Report changes
+        run: node ./tools/size-reporter.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
