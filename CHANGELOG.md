@@ -2,7 +2,8 @@
 
 ## 0.14.8 (tbd)
 
-- ...
+- Fixed ignored `registry` flag when running `pilet new`
+- Removed command line parsing of `rc`
 
 ## 0.14.7 (January 12, 2022)
 
