@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StateContext } from './state';
 import { createInstance } from './createInstance';
 import { PiralView, Mediator, ResponsiveLayout, PortalRenderer } from './components';
+import { RootListener } from './RootListener';
 import type { PiralProps } from './types';
 
 /**
@@ -23,6 +24,7 @@ export const Piral: React.FC<PiralProps> = ({ instance = createInstance(), break
   <StateContext.Provider value={instance.context}>
     <ResponsiveLayout breakpoints={breakpoints} />
     <Mediator options={instance.options} key={instance.id} />
+    <RootListener />
     <PiralView>
       <PortalRenderer id="root" />
       {children}
