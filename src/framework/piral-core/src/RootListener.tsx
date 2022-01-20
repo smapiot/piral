@@ -5,7 +5,7 @@ import { renderElement } from './modules';
 export const RootListener: React.FC = () => {
   const context = useGlobalStateContext();
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (typeof document !== 'undefined') {
       const handler = (ev: CustomEvent) => {
         ev.stopPropagation();

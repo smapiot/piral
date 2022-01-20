@@ -20,34 +20,34 @@ Piral is developed as a monorepo.
 For development you need to have the following software installed:
 
 - Git must be set up to clone / work with the repository
-- Node.js with NPM (for instructions see [Node.js website](https://nodejs.org/en/))
+- Node.js with NPM (for instructions see [Node.js website](https://nodejs.org/en/)), we recommend version 14 or later
 - Lerna, see [official website](https://lerna.js.org)
 - Yarn, see [official website](https://yarnpkg.com/lang/en/)
-- Obviously, you'll also need a proper command line terminal
+- You'll also need a proper command line terminal
 
 ### Setup
 
-On the command line install Lerna and Yarn (if not done already):
+On the command line install Yarn (if not done already):
 
 ```sh
-npm install --global lerna yarn
+npm install --global yarn
 ```
 
 Once you cloned the repository make sure to bootstrap it (installs all dependencies and more).
 
 ```sh
-lerna bootstrap
+npx lerna bootstrap
 ```
 
 Now you are ready to build all contained modules:
 
 ```sh
-lerna run build
+npx lerna run build
 ```
 
 ### Sample Application
 
-If you want to run the sample application you can already do it with our CLI tool (which should be available after building, otherwise use `lerna bootstrap` again):
+If you want to run the sample application you can already do it with our CLI tool (which should be available after building, otherwise use `npx lerna bootstrap` again):
 
 ```sh
 yarn watch:demo-full
