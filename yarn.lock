@@ -2653,20 +2653,20 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@pidoc/components@0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.1.tgz#b8475c1bd98a0ea25697802caf9d5cae94ca9117"
-  integrity sha512-xElh9apvuAaovIm7tbRP8TbzZEgmvkQzXFy+P3sKDeToJ29vNcKzJYUKcxNbdell2uz2a73b77lZ2jU910DlkA==
+"@pidoc/components@0.14.2":
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.2.tgz#0167d738b1fdb475031e3eaa7f98f7ffd12dc7e3"
+  integrity sha512-hdOpwfHabnLp3ZECcNDSm6sNfEfCNcJO+sQWivNXOREJsDjXJtbejizk1Y2uuzSWN97K5LuxRuPswJDclMtJSg==
   dependencies:
     flexsearch "^0.6.32"
     stickyfilljs "^2.1.0"
 
-"@pidoc/core@0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.1.tgz#406916410ee851ece14f719339380ceb5c5eeb9d"
-  integrity sha512-S3OI1FUzlTiW3PZGSnC+tc0FWJByyyossTvaSGDt8NNHOX0DQDJwNgTR0yLOd9ogvoMF82iHFgDj2TC+sTl5Iw==
+"@pidoc/core@0.14.2":
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.2.tgz#47549cb4d8da043fa129124c61abc4bbc6963a6f"
+  integrity sha512-qMfxw8XXIcAK16HXG9YiyQlLJORRJx+0jGBe/NfUgtOV8ZgI86Ci5ZSKsjlYyi2OizfLOJtfhqYXOLmxEXnslA==
   dependencies:
-    "@pidoc/components" "0.14.1"
+    "@pidoc/components" "0.14.2"
     keyword-extractor "0.0.20"
     markdown-it "^12.0.6"
     markdown-it-abbr "^1.0.4"
@@ -7250,6 +7250,14 @@ enhanced-resolve@^5.8.0:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
+enhanced-resolve@^5.8.3:
+  version "5.8.3"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.8.3.tgz#6d552d465cce0423f5b3d718511ea53826a7b2f0"
+  integrity sha512-EGAbGvH7j7Xt2nc0E7D99La1OiEs8LnyimkRgwExpUMScN6O+3x9tIWs7PLQZVNx4YD+00skHXPXi1yQHpAmZA==
+  dependencies:
+    graceful-fs "^4.2.4"
+    tapable "^2.2.0"
+
 ensure-posix-path@^1.0.0, ensure-posix-path@^1.0.1, ensure-posix-path@^1.0.2, ensure-posix-path@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ensure-posix-path/-/ensure-posix-path-1.1.1.tgz#3c62bdb19fa4681544289edb2b382adc029179ce"
@@ -7395,6 +7403,11 @@ es-module-lexer@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-0.7.1.tgz#c2c8e0f46f2df06274cdaf0dd3f3b33e0a0b267d"
   integrity sha512-MgtWFl5No+4S3TmhDmCz2ObFGm6lEpTnzbQi+Dd+pw4mlTIZTmM2iAs5gRlmx5zS9luzobCSBSI90JM/1/JgOw==
+
+es-module-lexer@^0.9.0:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-0.9.3.tgz#6f13db00cc38417137daf74366f535c8eb438f19"
+  integrity sha512-1HQ2M2sPtxwnvOvT1ZClHyQDiggdNjURWpY2we6aMKCQiUVxTmVs2UYPLIrD84sS+kMdUwfBSylbJPwNnBrnHQ==
 
 es-to-primitive@^1.2.1:
   version "1.2.1"
@@ -8523,6 +8536,11 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.3
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.8.tgz#e412b8d33f5e006593cbd3cee6df9f2cebbe802a"
   integrity sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==
 
+graceful-fs@^4.2.9:
+  version "4.2.9"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.9.tgz#041b05df45755e587a24942279b9d113146e1c96"
+  integrity sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==
+
 grapheme-breaker@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/grapheme-breaker/-/grapheme-breaker-0.3.2.tgz#5b9e6b78c3832452d2ba2bb1cb830f96276410ac"
@@ -8848,10 +8866,10 @@ html-webpack-plugin@^5.2.0:
     pretty-error "^3.0.4"
     tapable "^2.0.0"
 
-html5-entry-webpack-plugin@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.8.1.tgz#341538ef78fc1b970a5c8b992d9cbd9444d2da83"
-  integrity sha512-YCOLg6I8Dgs0F1FRH7JsxJpGmoV9ePtUyTWtR6WrPmFSGIRlC/YauZmHIy34VUZj6OaNoSbUex6E1aDqEFisYw==
+html5-entry-webpack-plugin@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/html5-entry-webpack-plugin/-/html5-entry-webpack-plugin-0.8.2.tgz#1b7ba9e38716d3ab4c33bcd59e2dcc03ac46b7f5"
+  integrity sha512-UQ6eG4VX+ZcRRlG0aycdnab7VGPek7wfnMfjYxR99zBMBbnKgOcgMkq0EO8vQG3DZFGdJJwTQKsWVOa5hz+6uA==
   dependencies:
     cheerio "^1.0.0-rc.10"
     html-webpack-plugin "^4.5.2"
@@ -12543,18 +12561,10 @@ parcel-bundler@^1.12.4:
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
 
-parcel-codegen-loader@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.8.0.tgz#5899d3ff64c7f6f6898bb7c2d81a163032d8d23e"
-  integrity sha512-7U4zrtxz+f2E2qE4J84yCjrhIqnH4phG3L8ldQIha+fGM1Da7LvW+jv8fMHxEio4j3KyJB5G/lj6fpVAO+r0rg==
-  dependencies:
-    loader-utils "^2.0.0"
-    schema-utils "^2.6.5"
-
-parcel-codegen-loader@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.8.1.tgz#80c9f5fa70480dcad3d8f0d33fd0129d166b1b04"
-  integrity sha512-jAa9khRVfZ1ZwalhOGPRtr0U+37viYuUV8FRMGMP6MrnRm6ldylGclPJN0JVxmDMQfXdLPYQ5kRCUskXzcD4/Q==
+parcel-codegen-loader@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-0.8.2.tgz#b74fd4e4b92ebcff7487b366ad67c36c8487450c"
+  integrity sha512-bHllbasiEiPUXYOZSUhAy7kvhAso5wQqj4TPIkoJ6bvtzHRQc6E6d6L9RBI3XNaWHgHNxtwI9WoW8MTybwG4Hg==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
@@ -12803,10 +12813,10 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-pilet-webpack-plugin@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.8.1.tgz#f589c46bd0db365633cbd1876b7451f54f3fdbb1"
-  integrity sha512-SbMVneYnvXumvR4qW5fBiPAvBwnJhZbdz2kQDi6cMtRV62f7mkglhp4vXmz+0Hd190UqIiKeIWqauC8dw7vDBw==
+pilet-webpack-plugin@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/pilet-webpack-plugin/-/pilet-webpack-plugin-0.8.2.tgz#f43705975379c51dd8583ea1f896806850419c9e"
+  integrity sha512-I+3mlbNiH/Y/hBcLBWVUvcIjJhG0hss/DL6fcJ0+VSqUT+1uIRbugCPD1iY9hs6/3ZxV7LSjf9z1nI0R+MTAPg==
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -12820,10 +12830,10 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-piral-instance-webpack-plugin@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.8.1.tgz#e791b2ad1df947f7066b740c39346cdcc39e2d82"
-  integrity sha512-ulRAR0lBqTKoa4iWYeBnPfKUQHwaHqNpzYSZE9/SEeZfk/Ey2f67Oix0Y3UBL/NBIzrESp90jL40ppecr5vMoA==
+piral-instance-webpack-plugin@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/piral-instance-webpack-plugin/-/piral-instance-webpack-plugin-0.8.2.tgz#56956cce4b90846c8ed2b2b78fbba340c37cb212"
+  integrity sha512-2yHy6i8+HQsDJ/1FsF7P/RWGGlxtHNUEkRClEqEsztNZIsxv/D9GOdWLM91moGEEBR83f+AKgKeK8g+1xj90Rg==
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"
@@ -16996,6 +17006,14 @@ watchpack@^2.2.0:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
 
+watchpack@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.3.1.tgz#4200d9447b401156eeca7767ee610f8809bc9d25"
+  integrity sha512-x0t0JuydIo8qCNctdDrn1OzH/qDzk2+rdCOC3YzumZ42fiMqmQ7T3xQurykYMhYfHaPHTp4ZxAx2NfUo1K6QaA==
+  dependencies:
+    glob-to-regexp "^0.4.1"
+    graceful-fs "^4.1.2"
+
 wcwidth@^1.0.0, wcwidth@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/wcwidth/-/wcwidth-1.0.1.tgz#f0b0dcf915bc5ff1528afadb2c0e17b532da2fe8"
@@ -17038,6 +17056,11 @@ webpack-sources@^3.2.0:
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.0.tgz#b16973bcf844ebcdb3afde32eda1c04d0b90f89d"
   integrity sha512-fahN08Et7P9trej8xz/Z7eRu8ltyiygEo/hnRi9KqBUs80KeDcnf96ZJo++ewWd84fEf3xSX9bp4ZS9hbw0OBw==
 
+webpack-sources@^3.2.2:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz#2d4daab8451fd4b240cc27055ff6a0c2ccea0cde"
+  integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
+
 webpack@^4.42.0:
   version "4.46.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.46.0.tgz#bf9b4404ea20a073605e0a011d188d77cb6ad542"
@@ -17067,7 +17090,7 @@ webpack@^4.42.0:
     watchpack "^1.7.4"
     webpack-sources "^1.4.1"
 
-webpack@^5, webpack@^5.1.3:
+webpack@^5:
   version "5.52.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.52.0.tgz#88d997c2c3ebb62abcaa453d2a26e0fd917c71a3"
   integrity sha512-yRZOat8jWGwBwHpco3uKQhVU7HYaNunZiJ4AkAVQkPCUGoZk/tiIXiwG+8HIy/F+qsiZvSOa+GLQOj3q5RKRYg==
@@ -17096,6 +17119,36 @@ webpack@^5, webpack@^5.1.3:
     terser-webpack-plugin "^5.1.3"
     watchpack "^2.2.0"
     webpack-sources "^3.2.0"
+
+webpack@^5.1.3:
+  version "5.66.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.66.0.tgz#789bf36287f407fc92b3e2d6f978ddff1bfc2dbb"
+  integrity sha512-NJNtGT7IKpGzdW7Iwpn/09OXz9inIkeIQ/ibY6B+MdV1x6+uReqz/5z1L89ezWnpPDWpXF0TY5PCYKQdWVn8Vg==
+  dependencies:
+    "@types/eslint-scope" "^3.7.0"
+    "@types/estree" "^0.0.50"
+    "@webassemblyjs/ast" "1.11.1"
+    "@webassemblyjs/wasm-edit" "1.11.1"
+    "@webassemblyjs/wasm-parser" "1.11.1"
+    acorn "^8.4.1"
+    acorn-import-assertions "^1.7.6"
+    browserslist "^4.14.5"
+    chrome-trace-event "^1.0.2"
+    enhanced-resolve "^5.8.3"
+    es-module-lexer "^0.9.0"
+    eslint-scope "5.1.1"
+    events "^3.2.0"
+    glob-to-regexp "^0.4.1"
+    graceful-fs "^4.2.9"
+    json-parse-better-errors "^1.0.2"
+    loader-runner "^4.2.0"
+    mime-types "^2.1.27"
+    neo-async "^2.6.2"
+    schema-utils "^3.1.0"
+    tapable "^2.1.1"
+    terser-webpack-plugin "^5.1.3"
+    watchpack "^2.3.1"
+    webpack-sources "^3.2.2"
 
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.5:
   version "1.0.5"
