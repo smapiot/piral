@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.8 (tbd)
+## 0.14.8 (January 20, 2022)
 
 - Improved performance of internal action calls
 - Improved the `piral-extension` web component with properties `params`, `empty` and `name`
