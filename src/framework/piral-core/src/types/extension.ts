@@ -1,3 +1,4 @@
+import type { ReactNode, ReactElement } from 'react';
 import type { PiralCustomExtensionSlotMap } from './custom';
 
 /**
@@ -10,15 +11,19 @@ export interface PiralExtensionSlotMap extends PiralCustomExtensionSlotMap {}
  */
 export interface BaseExtensionSlotProps<TName, TParams> {
   /**
+   * The children to transport, if any.
+   */
+  children?: ReactNode;
+  /**
    * Defines what should be rendered when no components are available
    * for the specified extension.
    */
-  empty?(): React.ReactNode;
+  empty?(): ReactNode;
   /**
    * Defines how the provided nodes should be rendered.
    * @param nodes The rendered extension nodes.
    */
-  render?(nodes: Array<React.ReactNode>): React.ReactElement<any, any> | null;
+  render?(nodes: Array<ReactNode>): ReactElement<any, any> | null;
   /**
    * The custom parameters for the given extension.
    */

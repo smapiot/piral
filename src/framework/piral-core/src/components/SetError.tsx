@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAction, useSetter } from '../hooks';
+import { useGlobalStateContext, useSetter } from '../hooks';
 import { ErrorComponentsState } from '../types';
 
 /**
@@ -23,7 +23,7 @@ export function SetError<TKey extends keyof ErrorComponentsState>({
   type,
   component,
 }: SetErrorProps<TKey>): React.ReactElement {
-  const setErrorComponent = useAction('setErrorComponent');
+  const { setErrorComponent } = useGlobalStateContext();
   useSetter(() => component && setErrorComponent(type, component));
   // tslint:disable-next-line:no-null-keyword
   return null;

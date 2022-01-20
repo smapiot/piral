@@ -1,5 +1,5 @@
 import { createElement, FC } from 'react';
-import { defaultApiFactory } from './api';
+import { createCoreApi } from './core';
 
 jest.mock('../hooks');
 
@@ -21,21 +21,21 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       converters: {},
-      apis: {},
       readState() {
         return undefined;
       },
     } as any,
+    api: {} as any,
   };
 }
 
-function createApi(container, apis = []) {
-  const api = defaultApiFactory(container.context, apis);
-  return api(moduleMetadata);
+function createApi(container) {
+  Object.assign(container.api, createCoreApi(container.context)(container.api, moduleMetadata));
+  return container.api;
 }
 
-describe('API Module', () => {
-  it('defaultApiFactory can register and unregister a page', () => {
+describe('Core API Module', () => {
+  it('createCoreApi can register and unregister a page', () => {
     const container = createMockContainer();
     container.context.registerPage = jest.fn();
     container.context.unregisterPage = jest.fn();
@@ -48,7 +48,7 @@ describe('API Module', () => {
     expect(container.context.unregisterPage.mock.calls[0][0]).toBe(container.context.registerPage.mock.calls[0][0]);
   });
 
-  it('defaultApiFactory can dispose a registered page', () => {
+  it('createCoreApi can dispose a registered page', () => {
     const container = createMockContainer();
     container.context.registerPage = jest.fn();
     container.context.unregisterPage = jest.fn();
@@ -61,7 +61,7 @@ describe('API Module', () => {
     expect(container.context.unregisterPage.mock.calls[0][0]).toBe(container.context.registerPage.mock.calls[0][0]);
   });
 
-  it('defaultApiFactory can register and unregister an extension', () => {
+  it('createCoreApi can register and unregister an extension', () => {
     const container = createMockContainer();
     container.context.registerExtension = jest.fn();
     container.context.unregisterExtension = jest.fn();
@@ -76,7 +76,7 @@ describe('API Module', () => {
     );
   });
 
-  it('defaultApiFactory can dispose an registered extension', () => {
+  it('createCoreApi can dispose an registered extension', () => {
     const container = createMockContainer();
     container.context.registerExtension = jest.fn();
     container.context.unregisterExtension = jest.fn();
@@ -91,7 +91,7 @@ describe('API Module', () => {
     );
   });
 
-  it('defaultApiFactory read data by its name', () => {
+  it('createCoreApi read data by its name', () => {
     const container = createMockContainer();
     container.context.readDataValue = jest.fn((name) => name);
     const api = createApi(container);
@@ -100,7 +100,7 @@ describe('API Module', () => {
     expect(container.context.readDataValue).toHaveBeenCalled();
   });
 
-  it('defaultApiFactory write data without options shall pass, but memory should not emit events', () => {
+  it('createCoreApi write data without options shall pass, but memory should not emit events', () => {
     const container = createMockContainer();
     container.context.tryWriteDataItem = jest.fn(() => true);
     const api = createApi(container);
@@ -109,7 +109,7 @@ describe('API Module', () => {
     expect(container.context.emit).not.toHaveBeenCalled();
   });
 
-  it('defaultApiFactory write data with empty options shall pass, but memory should not emit events', () => {
+  it('createCoreApi write data with empty options shall pass, but memory should not emit events', () => {
     const container = createMockContainer();
     container.context.tryWriteDataItem = jest.fn(() => true);
     const api = createApi(container);
@@ -118,7 +118,7 @@ describe('API Module', () => {
     expect(container.context.emit).not.toHaveBeenCalled();
   });
 
-  it('defaultApiFactory write data by the simple option should not pass, never emitting events', () => {
+  it('createCoreApi write data by the simple option should not pass, never emitting events', () => {
     const container = createMockContainer();
     container.context.tryWriteDataItem = jest.fn(() => false);
     const api = createApi(container);
@@ -127,7 +127,7 @@ describe('API Module', () => {
     expect(container.context.emit).not.toHaveBeenCalled();
   });
 
-  it('defaultApiFactory write data by the simple option shall pass with remote', () => {
+  it('createCoreApi write data by the simple option shall pass with remote', () => {
     const container = createMockContainer();
     container.context.tryWriteDataItem = jest.fn(() => true);
     const api = createApi(container);
@@ -135,7 +135,7 @@ describe('API Module', () => {
     expect(container.context.tryWriteDataItem).toHaveBeenCalled();
   });
 
-  it('defaultApiFactory write data by the object options shall pass with remote', () => {
+  it('createCoreApi write data by the object options shall pass with remote', () => {
     const container = createMockContainer();
     container.context.tryWriteDataItem = jest.fn(() => true);
     const api = createApi(container);

@@ -46,6 +46,7 @@
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --message '[skip ci] publish %s'"
   },
   "devDependencies": {
+    "@jsenv/file-size-impact": "^12.1.1",
     "@types/enzyme": "^3.1.18",
     "@types/jest": "^25.0.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
@@ -59,7 +60,7 @@
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
-    "typedoc": "^0.17.0",
+    "typedoc": "^0.22.11",
     "typescript": "^4.4.2"
   },
   "resolutions": {
@@ -69,11 +70,12 @@
     "is-svg": "4.3.1",
     "json-schema": "0.4.0",
     "node-fetch": "2.6.1",
-    "node-forge": "0.10.0",
+    "node-forge": "1.2.1",
     "node-notifier": "8.0.1",
     "normalize-url": "4.5.1",
     "nth-check": "2.0.1",
     "underscore": "1.12.1",
+    "postcss": "8.4.5",
     "rc": "1.2.8",
     "set-value": "4.0.1",
     "ssri": "8.0.1",

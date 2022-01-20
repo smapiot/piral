@@ -2,7 +2,7 @@ import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { __RouterContext } from 'react-router';
 import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions, PortalRenderer } from '../components';
-import { useActions, useGlobalStateContext } from '../hooks';
+import { useGlobalStateContext } from '../hooks';
 import { defaultRender, convertComponent, none } from '../utils';
 import {
   AnyComponent,
@@ -107,8 +107,7 @@ function wrapForeignComponent<T>(
   Wrapper: React.ComponentType<any>,
 ) {
   return React.memo((props: T) => {
-    const { destroyPortal } = useActions();
-    const { state, readState } = useGlobalStateContext();
+    const { state, readState, destroyPortal } = useGlobalStateContext();
     const router = React.useContext(__RouterContext);
     const id = React.useMemo(() => (portalIdBase++).toString(26), none);
     const context = React.useMemo(() => ({ router, state, readState }), [router, state]);
