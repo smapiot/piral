@@ -2653,20 +2653,20 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@pidoc/components@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.0.tgz#7b871fec9e5ba1e8245678f3f505bdf89dcfa0ba"
-  integrity sha512-l9K14P5anF2YIAG8AkOV3taBzounAdmMMXyvGj1R/UGZbXCmxfeMzjKn2J5w+HAu8RFOoZIomsMcEgsfA6e6lA==
+"@pidoc/components@0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.1.tgz#b8475c1bd98a0ea25697802caf9d5cae94ca9117"
+  integrity sha512-xElh9apvuAaovIm7tbRP8TbzZEgmvkQzXFy+P3sKDeToJ29vNcKzJYUKcxNbdell2uz2a73b77lZ2jU910DlkA==
   dependencies:
     flexsearch "^0.6.32"
     stickyfilljs "^2.1.0"
 
-"@pidoc/core@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.0.tgz#9c876e7f2d18e528428feec1a85065610710b412"
-  integrity sha512-TiKfO7cu7PgnCe++1+b8aQWcpX0u1HDXSXW7dDC6oT1jtw8rc9MkMDFl/OFqhJay4MF9lWIlt9CIC9bT040YZQ==
+"@pidoc/core@0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.1.tgz#406916410ee851ece14f719339380ceb5c5eeb9d"
+  integrity sha512-S3OI1FUzlTiW3PZGSnC+tc0FWJByyyossTvaSGDt8NNHOX0DQDJwNgTR0yLOd9ogvoMF82iHFgDj2TC+sTl5Iw==
   dependencies:
-    "@pidoc/components" "0.14.0"
+    "@pidoc/components" "0.14.1"
     keyword-extractor "0.0.20"
     markdown-it "^12.0.6"
     markdown-it-abbr "^1.0.4"
