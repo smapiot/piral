@@ -80,4 +80,4 @@ export const config: PiralCliConfig = rc('piral', {
   language: SourceLanguage.ts,
   host: 'localhost',
   registry: defaultRegistry,
-});
+}, {});

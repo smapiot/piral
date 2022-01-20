@@ -2,7 +2,8 @@ import * as React from 'react';
 import { StateContext } from './state';
 import { createInstance } from './createInstance';
 import { PiralView, Mediator, ResponsiveLayout, PortalRenderer } from './components';
-import type { PortalProps } from './types';
+import { RootListener } from './RootListener';
+import type { PiralProps } from './types';
 
 /**
  * Represents the Piral app shell frame. Use this component together
@@ -19,10 +20,11 @@ const app = (
 );
 ```
  */
-export const Piral: React.FC<PortalProps> = ({ instance = createInstance(), breakpoints, children }) => (
+export const Piral: React.FC<PiralProps> = ({ instance = createInstance(), breakpoints, children }) => (
   <StateContext.Provider value={instance.context}>
     <ResponsiveLayout breakpoints={breakpoints} />
-    <Mediator options={instance.options} />
+    <Mediator options={instance.options} key={instance.id} />
+    <RootListener />
     <PiralView>
       <PortalRenderer id="root" />
       {children}

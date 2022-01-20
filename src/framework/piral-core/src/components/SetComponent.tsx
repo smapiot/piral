@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAction, useSetter } from '../hooks';
+import { useGlobalStateContext, useSetter } from '../hooks';
 import { ComponentsState } from '../types';
 
 /**
@@ -23,7 +23,7 @@ export function SetComponent<TKey extends keyof ComponentsState>({
   name,
   component,
 }: SetComponentProps<TKey>): React.ReactElement {
-  const setComponent = useAction('setComponent');
+  const { setComponent } = useGlobalStateContext();
   useSetter(() => component && setComponent(name, component));
   // tslint:disable-next-line:no-null-keyword
   return null;

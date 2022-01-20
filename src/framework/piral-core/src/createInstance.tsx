@@ -3,7 +3,8 @@ import { blazingStrategy, standardStrategy, createListener, isfunc } from 'piral
 import { defaultApiFactory, defaultDependencySelector, defaultModuleRequester } from './modules';
 import { createGlobalState, createActions, includeActions } from './state';
 import { createPiletOptions } from './helpers';
-import type { PiralConfiguration, PiralInstance } from './types';
+import { generateId } from './utils';
+import type { PiralInstanceOptions, PiralInstance } from './types';
 
 /**
  * Creates a new PiralInstance component, which can be used for
@@ -25,8 +26,9 @@ const app = (
 render(app, document.querySelector('#app'));
 ```
  */
-export function createInstance(config: PiralConfiguration = {}): PiralInstance {
+export function createInstance(config: PiralInstanceOptions = {}): PiralInstance {
   const {
+    id = generateId(),
     state,
     actions,
     availablePilets = [],
@@ -71,6 +73,7 @@ export function createInstance(config: PiralConfiguration = {}): PiralInstance {
   context.options = options;
 
   return __assign(events, {
+    id,
     createApi,
     context,
     root,

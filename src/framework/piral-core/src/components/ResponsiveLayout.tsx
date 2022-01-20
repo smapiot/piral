@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMedia, useGlobalState, useAction } from '../hooks';
+import { useMedia, useGlobalState, useGlobalStateContext } from '../hooks';
 import { defaultLayouts, defaultRender, defaultBreakpoints } from '../utils';
 import { LayoutBreakpoints } from '../types';
 
@@ -18,12 +18,12 @@ export interface ResponsiveLayoutProps {
  */
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ breakpoints = defaultBreakpoints, children }) => {
   const current = useGlobalState((m) => m.app.layout) || 'desktop';
-  const changeTo = useAction('changeLayout');
+  const { changeLayout } = useGlobalStateContext();
   const selected = useMedia(breakpoints, defaultLayouts, current);
 
   React.useEffect(() => {
     if (selected !== current) {
-      changeTo(selected);
+      changeLayout(selected);
     }
   }, [selected]);
 

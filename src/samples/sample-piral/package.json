@@ -53,6 +53,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:release": "piral build --type release",
     "test": "echo \"Error: run tests from root\" && exit 1"
   }
 }

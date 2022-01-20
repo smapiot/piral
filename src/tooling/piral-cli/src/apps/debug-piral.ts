@@ -169,10 +169,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   krasServer.removeAllListeners('open');
   krasServer.on('open', notifyServerOnline([bundler], publicUrl, krasConfig.api));
 
-  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port });
+  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, publicUrl });
   await krasServer.start();
-  openBrowser(open, port, !!krasConfig.ssl);
-  await hooks.afterOnline?.({ krasServer, krasConfig, open, port });
+  openBrowser(open, port, publicUrl, !!krasConfig.ssl);
+  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
   await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});
 }

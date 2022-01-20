@@ -347,7 +347,7 @@ For using `piral-ng/extend-webpack` you must have installed:
 You can do that via:
 
 ```sh
-npm i copy-webpack-plugin @ngtools/webpack to-string-loader piral-cli-webpack5 --save-dev
+npm i copy-webpack-plugin @ngtools/webpack to-string-loader html-loader piral-cli-webpack5 --save-dev
 ```
 
 The available options for `piral-ng/extend-webpack` are:

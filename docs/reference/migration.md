@@ -16,6 +16,7 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 2. By default the new pilet schema (v2) is used to build and debug pilets. Make sure the used feed service and app shell support this or use `--schema v1` when building or publishing pilets with the previous (v1) schema.
 3. The API for the bundler plugins in the `piral-cli` changed. See below for details.
 4. The overall mechanism for converting Angular components (`piral-ng`) has changed. See below for details.
+5. Removed the functions `extendSharedDependencies` and `setSharedDependencies`. See below for details.
 
 #### 2) New Pilet Schema
 
@@ -243,6 +244,14 @@ class AppModule {}
 ```
 
 Very often, this import would only go into a single module - your "common" module.
+
+#### 5) Removed dependency helpers
+
+The dependency management is now in the hands of SystemJS. Therefore any manipulation of shared dependencies is no longer using `extendSharedDependencies` or `setSharedDependencies`. Instead, you should use the SystemJS API as [documented on their repository](https://github.com/systemjs/systemjs/blob/main/docs/api.md).
+
+For instance, you can use `System.register` to actually register a new dependency. Alternatively, the `registerModule` function of `piral-base` could be used for a single dependency.
+
+Finally, the best equivalent for `extendSharedDependencies` is `registerDependencies` from `piral-base`. This will receive an object with modules - each module will be registered in SystemJS.
 
 ## 0.12 to 0.13
 

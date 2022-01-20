@@ -19,7 +19,9 @@ StubComponent.displayName = 'StubComponent';
 describe('Responsive Module', () => {
   it('always renders the given children', () => {
     const changeTo = jest.fn();
-    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useGlobalStateContext = () => ({
+      changeLayout: changeTo,
+    });
     (hooks as any).useMedia = () => 'desktop';
     const node = mount(
       <ResponsiveLayout breakpoints={defaultBreakpoints}>
@@ -31,7 +33,9 @@ describe('Responsive Module', () => {
 
   it('does not call changeTo when nothing changed', () => {
     const changeTo = jest.fn();
-    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useGlobalStateContext = () => ({
+      changeLayout: changeTo,
+    });
     (hooks as any).useMedia = () => 'desktop';
     mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).not.toHaveBeenCalled();
@@ -39,7 +43,9 @@ describe('Responsive Module', () => {
 
   it('does not call changeTo when nothing changed', () => {
     const changeTo = jest.fn();
-    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useGlobalStateContext = () => ({
+      changeLayout: changeTo,
+    });
     (hooks as any).useMedia = () => 'desktop';
     mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).not.toHaveBeenCalled();
@@ -47,7 +53,9 @@ describe('Responsive Module', () => {
 
   it('does calls changeTo when someething changed (desktop -> tablet)', () => {
     const changeTo = jest.fn();
-    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useGlobalStateContext = () => ({
+      changeLayout: changeTo,
+    });
     (hooks as any).useMedia = () => 'tablet';
     mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).toHaveBeenCalledWith('tablet');
@@ -55,7 +63,9 @@ describe('Responsive Module', () => {
 
   it('does calls changeTo when someething changed (desktop -> mobile)', () => {
     const changeTo = jest.fn();
-    (hooks as any).useAction = () => changeTo;
+    (hooks as any).useGlobalStateContext = () => ({
+      changeLayout: changeTo,
+    });
     (hooks as any).useMedia = () => 'mobile';
     mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
     expect(changeTo).toHaveBeenCalledWith('mobile');
