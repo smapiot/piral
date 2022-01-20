@@ -13,12 +13,12 @@ jest.mock('open', () => (...args) => {
 describe('Browser Module', () => {
   it('opens browser successfully', async () => {
     error = false;
-    await openBrowser(false, 1234).then((result) => expect(result).toBeUndefined());
-    await openBrowser(true, 1234).then((result) => expect(result).toBeUndefined());
+    await openBrowser(false, 1234, '/').then((result) => expect(result).toBeUndefined());
+    await openBrowser(true, 1234, '/').then((result) => expect(result).toBeUndefined());
   });
 
   it('handles errored opening', async () => {
     error = true;
-    await openBrowser(true, 1234).then((result) => expect(result).toBeUndefined());
+    await openBrowser(true, 1234, '/').then((result) => expect(result).toBeUndefined());
   });
 });
