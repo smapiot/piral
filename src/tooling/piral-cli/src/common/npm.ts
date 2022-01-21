@@ -295,7 +295,7 @@ export async function dissectPackageName(
     const type = 'registry';
 
     if (index !== -1) {
-      return [fullName.substr(0, index), fullName.substr(index + 1), true, type];
+      return [fullName.substring(0, index), fullName.substring(index + 1), true, type];
     }
 
     return [fullName, 'latest', false, type];
@@ -466,7 +466,7 @@ export function makeExternals(dependencies: Record<string, string>, externals?: 
       (prev, curr) => {
         if (typeof curr === 'string') {
           if (curr.startsWith('!')) {
-            prev[1].push(curr.substr(1));
+            prev[1].push(curr.substring(1));
           } else {
             prev[0].push(curr);
           }

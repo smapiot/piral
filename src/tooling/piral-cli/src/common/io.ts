@@ -214,7 +214,7 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
     matches.push(path);
   };
   const nameOfPackageJson = 'package.json';
-  const exts = preferences.map((s) => s.substr(1)).join(',');
+  const exts = preferences.map((s) => s.substring(1)).join(',');
   const allPatterns = patterns.reduce<Array<AnyPattern>>((agg, curr) => {
     const patterns = [];
 

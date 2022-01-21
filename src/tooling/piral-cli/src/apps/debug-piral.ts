@@ -13,6 +13,7 @@ import {
   progress,
   log,
   config,
+  normalizePublicUrl,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -93,13 +94,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     port = debugPiralDefaults.port,
     open = debugPiralDefaults.open,
     hmr = debugPiralDefaults.hmr,
-    publicUrl = debugPiralDefaults.publicUrl,
+    publicUrl: originalPublicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
     _ = {},
     hooks = {},
     bundlerName,
   } = options;
+  const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
 

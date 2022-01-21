@@ -24,7 +24,7 @@ export default class PiralInjector implements KrasInjector {
     const cbs = {};
 
     core.on('user-connected', (e) => {
-      if (e.target === '*' && e.url === api.substr(1)) {
+      if (e.target === '*' && e.url === api.substring(1)) {
         cbs[e.id] = (msg: string) => e.ws.send(msg);
       }
     });
@@ -88,9 +88,9 @@ export default class PiralInjector implements KrasInjector {
     if (!req.target) {
       const { bundler, publicUrl } = this.config;
 
-      if (req.url.startsWith(publicUrl)) {
+      if (req.url.startsWith(publicUrl) || `${req.url}/` === publicUrl) {
         const pathLength = publicUrl.length || 1;
-        const path = req.url.substr(pathLength);
+        const path = req.url.substring(pathLength);
         const dir = bundler.bundle.dir;
         const target = join(dir, path.split('?')[0]);
         return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));

@@ -4,6 +4,7 @@
 
 - Improved error output in `piral-cli-webpack5`
 - Improved error handling in `parcel-codegen-loader`
+- Improved `publicUrl` argument with normalization
 - Fixed types section missing in documentation
 - Fixed error with externals in `piral-cli-webpack`
 - Fixed error with externals in `piral-cli-webpack5`

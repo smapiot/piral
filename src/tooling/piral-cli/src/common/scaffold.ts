@@ -13,7 +13,7 @@ interface TemplateFile {
 function getTemplatePackage(templatePackageName: string) {
   const idx = templatePackageName.indexOf('@', 1);
   const normalizedName =
-    idx > 0 && !isAbsolute(templatePackageName) ? templatePackageName.substr(0, idx) : templatePackageName;
+    idx > 0 && !isAbsolute(templatePackageName) ? templatePackageName.substring(0, idx) : templatePackageName;
 
   try {
     return require(normalizedName);
