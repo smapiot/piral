@@ -14,11 +14,7 @@ jest.mock('../common/clients/npm', () => {
   return {
     ...original,
     installPackage: (...args) => {
-      if (args[0].startsWith('@smapiot/')) {
-        return Promise.resolve();
-      } else {
-        return original.installPackage(...args);
-      }
+      return original.installPackage(...args, '--no-package-lock', '--no-save');
     },
   };
 });
