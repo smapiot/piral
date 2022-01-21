@@ -2071,8 +2071,8 @@ export function invalidSchemaVersion_0171(schemaVersion: string, schemas: Array<
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where multiple bundlers are installed the first one is picked. This
  * may not be what you want. In this scenario you can override the selection by
@@ -2106,8 +2106,8 @@ export function bundlerMissing_0172(bundlerName: string, installed: Array<string
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where no bundler is installed and the default bundler could not be
  * successfully installed this error is shown.
@@ -2169,8 +2169,8 @@ export function bundlingFailed_0174(error: string): QuickMessage {
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where multiple bundlers are installed the first one is picked. This
  * may not be what you want. In this scenario you can explicitly set the bundler
