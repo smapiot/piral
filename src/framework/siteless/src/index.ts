@@ -1,20 +1,24 @@
+import { createElement } from 'react';
+import { render } from 'react-dom';
 import { createLazyApi } from 'piral-lazy';
 import { PiletLoader, PiletLoadingStrategy } from 'piral-base';
 import {
-  renderInstance,
+  createInstance,
   AnyComponent,
   PiletRequester,
   ComponentsState,
   ErrorComponentsState,
   PiralPlugin,
   PiralInstance,
-  PiralConfiguration,
   PiralExtSettings,
   GlobalState,
   NestedPartial,
   PiralDefineActions,
   withApi,
   useGlobalState,
+  Piral,
+  PiralInstanceOptions,
+  createStandardApi,
 } from 'piral';
 
 declare module 'piral-core/lib/types/custom' {
@@ -48,7 +52,7 @@ export interface SitelessOptions {
    * Sets an optional middleware for adjusting the configuration.
    * @default cfg => cfg
    */
-  middleware?: (config: PiralConfiguration) => PiralConfiguration;
+  middleware?: (config: PiralInstanceOptions) => PiralInstanceOptions;
   /**
    * Customizes the plugin settings.
    */
@@ -151,19 +155,44 @@ function createSitelessApi(): PiralPlugin<SitelessApi> {
   });
 }
 
+function noChange<T>(config: T) {
+  return config;
+}
+
 window.initializePiral = (requestPilets, selector = document.querySelector('#app'), options = {}) => {
-  const { actions, errors, layout, loadPilet, middleware, plugins = [], settings, state, strategy } = options;
-  return renderInstance({
+  const {
     actions,
     errors,
     layout,
     loadPilet,
-    middleware,
-    requestPilets,
-    plugins: [...plugins, createSitelessApi(), createLazyApi()],
-    async: strategy,
     settings,
     state,
-    selector,
-  });
+    strategy,
+    middleware = noChange,
+    plugins: customPlugins = [],
+  } = options;
+  const target = selector instanceof Element ? selector : document.querySelector(selector);
+  const plugins = [...createStandardApi(settings), createSitelessApi(), createLazyApi(), ...customPlugins];
+  const instance = createInstance(
+    middleware({
+      actions,
+      loadPilet,
+      requestPilets,
+      plugins,
+      async: strategy,
+      state: {
+        ...state,
+        components: {
+          ...state?.components,
+          ...layout,
+        },
+        errorComponents: {
+          ...state?.errorComponents,
+          ...errors,
+        },
+      },
+    }),
+  );
+  render(createElement(Piral, { instance }), target);
+  return instance;
 };

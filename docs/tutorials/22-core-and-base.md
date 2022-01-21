@@ -63,33 +63,7 @@ Next, we need to think about which plugins from `piral-ext` should still be used
 - `piral-notifications`, and
 - `piral-translate`
 
-Finally, the `renderInstance` (and other) convenience functions are gone. You could replace `renderInstance` with:
-
-```js
-import * as React from 'react';
-import { render } from 'react-dom';
-import { Piral, createInstance } from 'piral-core';
-
-const instance = createInstance({
-   // ... Options here
-});
-render(<Piral instance={instance} />, document.querySelector('#app'));
-```
-
-There are many other possibilities for an adequate replacement. Note that the provided options are not the same. In fact, options such as `layout` or `errors` are gone. These can, however, be obtained either by initializing the state with the desired values, or using the initializer components such as `<SetLayout />` and `<SetErrors />`:
-
-```js
-const piral = (
-  <Piral instance={instance}>
-    <SetLayout layout={{
-        // ...
-    }} />
-  </Piral>
-);
-render(piral, document.querySelector('#app'));
-```
-
-All in all `piral-core` may be the right compromise between individualism and convenience. Even more freedom gives `piral-base`.
+All in all `piral-core` may be the right compromise between individualism and convenience. Even more freedom is then given by choosing `piral-base`.
 
 ## Using Piral Base
 

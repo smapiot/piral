@@ -2,8 +2,10 @@
 
 ## 0.15.0 (tbd)
 
--  Moved templates to dedicated repository (#458)
--  Changed the default bundler to be `piral-cli-webpack5` (#469)
+- Moved templates to dedicated repository (#458)
+- Changed the default bundler to be `piral-cli-webpack5` (#469)
+- Deprecated the usage of `renderInstance` (#465)
+- Added new convenience package `piral-hooks-utils`
 
 ## 0.14.9 (January 21, 2022)
 

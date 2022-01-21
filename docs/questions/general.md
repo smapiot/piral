@@ -222,9 +222,7 @@ A Piral instance can be configured with "wrappers". These are middleware compone
 Simple example:
 
 ```jsx
-renderInstance({
-  layout,
-  errors,
+createInstance({
   state: {
     registry: {
       wrappers: {

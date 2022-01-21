@@ -56,16 +56,16 @@ Using the configured SystemJS import maps is simple. When your Piral instance is
 An example:
 
 ```ts
-import { renderInstance } from 'piral';
+import { createInstance } from 'piral';
 import { loadPilet, requestPilets } from 'piral-systemjs-utils';
-import { layout, errors } from './layout';
 
-renderInstance({
-  layout,
-  errors,
+const instance = createInstance({
   loadPilet,
   requestPilets,
+  // ...
 });
+
+// render instance in <Piral /> etc.
 ```
 
 By default, this will assume that all entries of the previously supplied import maps are pilets. Everything will be loaded and resolved via SystemJS.

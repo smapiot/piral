@@ -77,15 +77,19 @@ import { setupOAuth2Client } from 'piral-oauth2';
 
 export const client = setupOAuth2Client({ ... });
 
-// app.ts
+// app.tsx
+import * as React from 'react';
 import { createOAuth2Api } from 'piral-oauth2';
+import { createInstance } from 'piral-core';
 import { client } from './oauth2';
+import { render } from 'react-dom';
 
 export function render() {
-  renderInstance({
+  const instance = createInstance({
     // ...
     plugins: [createOAuth2Api(client)],
   });
+  render(<Piral instance={instance} />, document.querySelector('#app'));
 }
 
 // index.ts
