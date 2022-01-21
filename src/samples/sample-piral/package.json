@@ -29,6 +29,7 @@
     "bootstrap": "^4.3.1",
     "piral": "^0.14.9",
     "piral-auth": "^0.14.9",
+    "piral-hooks-utils": "^0.14.9",
     "piral-search": "^0.14.9",
     "reactstrap": "^8.0.1"
   },

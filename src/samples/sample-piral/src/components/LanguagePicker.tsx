@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useOnClickOutside, useDynamicLanguage, useTranslate, LanguagesPickerProps } from 'piral';
+import { useDynamicLanguage, useTranslate, LanguagesPickerProps } from 'piral';
+import { useOnClickOutside } from 'piral-hooks-utils';
 import { LanguageIcon } from './LanguageIcon';
 import { loadLanguage } from '../language';
 
