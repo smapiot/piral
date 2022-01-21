@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.9 (tbd)
+## 0.14.9 (January 21, 2022)
 
 - Improved error output in `piral-cli-webpack5`
 - Improved error handling in `parcel-codegen-loader`
