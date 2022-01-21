@@ -1,6 +1,6 @@
 import { hydrate } from 'react-dom';
 import { runInstance } from './run';
-import { getContainer } from './utils';
+import { getContainer } from './options';
 import { PiralRenderOptions } from './types';
 
 /**

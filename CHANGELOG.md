@@ -4,6 +4,7 @@
 
 - Moved templates to dedicated repository (#458)
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
+- Change webpack configs to use `oneOf` for assets (#451)
 - Deprecated the usage of `renderInstance` (#465)
 - Added new convenience package `piral-hooks-utils`
 
