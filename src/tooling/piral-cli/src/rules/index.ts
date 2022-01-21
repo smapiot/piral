@@ -19,7 +19,7 @@ function getRules<T extends RuleContext>(target: 'pilet' | 'piral') {
             .map((fileName) => {
               log('generalDebug_0003', `Including module "${fileName}" ...`);
               const run = require(`./${fileName}`).default;
-              const name = fileName.substr(prefix.length).replace(/\.js$/, '');
+              const name = fileName.substring(prefix.length).replace(/\.js$/, '');
               log('generalDebug_0003', `Included rule with name: "${name}".`);
               return {
                 run,

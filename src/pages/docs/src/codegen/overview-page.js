@@ -109,7 +109,7 @@ exports.build = function (entry, options) {
 
   const body = `
       <PageContent>
-        <div className="plugin-info">
+        <div className="plugin-info markdown-body">
           <h1>Plugins Overview</h1>
         </div>
       ${fragments

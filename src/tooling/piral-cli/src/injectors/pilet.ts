@@ -80,7 +80,7 @@ export default class PiletInjector implements KrasInjector {
     const cbs = {};
 
     core.on('user-connected', (e) => {
-      if (e.target === '*' && e.url === api.substr(1)) {
+      if (e.target === '*' && e.url === api.substring(1)) {
         cbs[e.id] = (msg: string) => e.ws.send(msg);
       }
     });
@@ -210,7 +210,7 @@ export default class PiletInjector implements KrasInjector {
 
   handle(req: KrasRequest): KrasResponse {
     const { app, api } = this.config;
-    const path = req.url.substr(1).split('?')[0];
+    const path = req.url.substring(1).split('?')[0];
 
     if (!req.target) {
       const target = join(app, path);

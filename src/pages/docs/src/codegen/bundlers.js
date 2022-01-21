@@ -1,12 +1,11 @@
 const { sep, resolve } = require('path');
 const { render, generatePage, docRef, generated, readme } = require('@pidoc/core');
 
+const bundlers = ['webpack', 'webpack5', 'esbuild', 'parcel'];
+
 function getBundlers() {
   const toolingRoot = resolve(__dirname, '../../../../tooling');
-  const webpackRoot = resolve(toolingRoot, 'piral-cli-webpack');
-  const parcelRoot = resolve(toolingRoot, 'piral-cli-parcel');
-
-  return [resolve(webpackRoot, readme), resolve(parcelRoot, readme)];
+  return bundlers.map((bundler) => resolve(toolingRoot, `piral-cli-${bundler}`, readme));
 }
 
 function getRoute(basePath, name) {

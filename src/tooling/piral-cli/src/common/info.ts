@@ -12,7 +12,7 @@ export function findCompatVersion(version: string) {
   return major;
 }
 
-export const nodeVersion = process.version.substr(1);
+export const nodeVersion = process.version.substring(1);
 export const cliVersion = info.version;
 export const compatVersion = findCompatVersion(cliVersion);
 export const repositoryUrl = info.repository.url;
