@@ -4,6 +4,7 @@ import { PiralExtSettings } from 'piral-ext';
 
 /**
  * Defines the base options for rendering a Piral instance.
+ * @deprecated Use `createInstance` directly.
  */
 export interface PiralRenderBaseOptions {
   /**
@@ -32,6 +33,7 @@ export interface PiralRenderBaseOptions {
 
 /**
  * Defines the options for rendering a Piral instance.
+ * @deprecated Use `createInstance` directly.
  */
 export interface PiralRenderOptions extends PiralRenderBaseOptions, PiralConfiguration {
   /**
@@ -48,6 +50,7 @@ export interface PiralRenderOptions extends PiralRenderBaseOptions, PiralConfigu
 
 /**
  * Defines how the runner for an app element looks like.
+ * @deprecated Use `createInstance` directly.
  */
 export interface PiralRunner {
   (app: ReactElement, selector: string | Element): void;
