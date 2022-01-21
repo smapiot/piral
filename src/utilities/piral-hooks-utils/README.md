@@ -22,7 +22,35 @@ npm i --save piral-hooks-utils
 
 ## Included Hooks
 
-...
+The following hooks are included.
+
+### `useAfterVisible`
+
+A hook to indicate something was suddenly visible.
+
+### `useAsyncReplace`
+
+Gives a full async lifecycle in a hook.
+
+### `useLockBodyScroll`
+
+Hook that locks scrolling on the main document.
+
+### `useOnClickOutside`
+
+Hook that detects if a click outside the given reference has been performed.
+
+### `useOnScreenVisible`
+
+Hook that detects if a reference element within the main document is visible.
+
+### `usePiletApi`
+
+Retrieves the Pilet API stored in the provider.
+
+### `usePrompt`
+
+Hook to notify the user in case of potential data loss when performing a page transition (internal or external).
 
 ## License
 
