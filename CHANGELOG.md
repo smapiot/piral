@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.0 (tbd)
+
+-  Moved templates to dedicated repository (#458)
+
 ## 0.14.9 (January 21, 2022)
 
 - Improved error output in `piral-cli-webpack5`
