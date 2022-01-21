@@ -61,7 +61,7 @@ const defaultIndexHtml = `
 
 const defaultIndexTsx = `
   import * as React from 'react';
-  import { render } from 'piral-dom';
+  import { render } from 'react-dom';
   import { createInstance, Piral } from 'piral';
 
   const instance = createInstance({
