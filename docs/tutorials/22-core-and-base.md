@@ -45,11 +45,6 @@ Any version that supports hooks should do it.
 
 As the second step we should think about polyfills. If `piral/polyfills` has been used beforehand we may want to replicate that. This one uses the following modules:
 
-- `promise-polyfill/lib/polyfill`,
-- `url-polyfill`,
-- `whatwg-fetch`,
-- `current-script-polyfill`,
-- `core-js/stable`, and
 - `regenerator-runtime/runtime`
 
 Depending on the target platform / browser only a few (or actually none) of these are required.

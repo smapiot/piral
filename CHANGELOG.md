@@ -6,6 +6,7 @@
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
 - Change webpack configs to use `oneOf` for assets (#451)
 - Deprecated the usage of `renderInstance` (#465)
+- Removed support for IE11 (#467)
 - Added new convenience package `piral-hooks-utils`
 
 ## 0.14.9 (January 21, 2022)

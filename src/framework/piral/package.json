@@ -49,17 +49,12 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "core-js": "^3.6.4",
-    "current-script-polyfill": "^1.0.0",
     "piral-core": "^0.14.9",
     "piral-ext": "^0.14.9",
-    "promise-polyfill": "^8.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "url-polyfill": "^1.1.5",
-    "whatwg-fetch": "^3.0.0"
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@dbeining/react-atom": "^4.0.0",

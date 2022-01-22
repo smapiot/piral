@@ -18,7 +18,8 @@ The following table compares the three from an out-of-the-box feature perspectiv
 |------------------|-------|-------|------|
 | Breakpoints      | ️️️✔️     | ️️️✔️     | ✔️    |
 | Events API       | ️️️✔️     | ️️️✔️     | ✔️    |
-| Error Handling   | ️️️❌    | ️️️✔️     | ✔️    |
+| Error Handling   | ️️️✔️    | ️️️✔️     | ✔️    |
+| Error Display    | ️️️❌    | ️️️✔️     | ✔️    |
 | Global State     | ️️️❌    | ️️️✔️     | ✔️    |
 | Pages / Routing  | ️️️❌    | ️️️✔️     | ✔️    |
 | Extension API    | ️️️❌    | ️️️✔️     | ✔️    |

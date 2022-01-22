@@ -2042,7 +2042,8 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * - v2: will use SystemJS for integration of the pilet (default)
  *
  * The v1 version has better support for older browsers, but requires a polyfill to work
- * correctly. This polyfill is part of the standard Piral polyfills.
+ * correctly. This polyfill is part of the `piral-ie11polyfills-utils` package.
+ * Alternatively, use the `currentScript-polyfill` package.
  *
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
