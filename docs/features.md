@@ -12,6 +12,8 @@ Piral comes with the following features:
 - Multi-framework capable
 - Integrated translation system
 - Support for bundle splitting and asset bundling
+- Central dependency sharing (i.e., from app shell) possible
+- Distributed dependency sharing (between micro frontends) possible
 - Global state management
 - Independent development and deployment
 - CLI tool
@@ -60,26 +62,27 @@ One reason for Piral's design is to cache as much as possible. In the full frame
 
 We think that Piral hits a sweet spot that makes development easy and fun while making applications robust, flexible, and efficient. Nevertheless, some of the alternatives to Piral are.
 
-| Feature              | Piral  | Single SPA | Web Components | Mosaic   | Luigi   |
-|----------------------|--------|------------|----------------|----------|---------|
-| Available CLI        | ✔️     | ✔️        | ❌             | ✔️      | ❌      |
-| Free Tooling Choice  | ✔️     | ✔️        | ✔️             | ❌      | ❌      |
-| Bundle Splitting     | ✔️     | ✔️        | ✔️             | ✔️      | ❌      |
-| Multi Framework      | ✔️     | ✔️        | ✔️             | ✔️      | ✔️      |
-| Main Framework       | React  | Vanilla    | Polymer        | Vanilla  | Vanilla |
-| Standards-Driven     | ✔️     | ✔️        | ✔️             | ❌      | ❌      |
-| Module Communication | ✔️     | ✔️        | ✔️             | ❌      | ❌      |
-| TypeScript Support   | ✔️     | ✔️        | ✔️             | ❌      | ✔️      |
-| Stitching Location   | Client  | Client     | Client         | Server  | Client  |
-| Free Deployments     | ✔️     | ❌        | ✔️             | ✔️      | ✔️      |
-| Free Development     | ✔️     | ❌        | ❌             | ✔️      | ❌      |
-| Live Data Feed       | ✔️     | ❌        | ❌             | ❌      | ❌      |
-| Form Management      | ✔️     | ❌        | ❌             | ❌      | ✔️      |
-| Modal Manager        | ✔️     | ❌        | ❌             | ❌      | ✔️      |
-| Translations         | ✔️     | ❌        | ❌             | ❌      | ✔️      |
-| Global State         | ✔️     | ❌        | ❌             | ❌      | ✔️      |
-| Notifications        | ✔️     | ❌        | ❌             | ❌      | ✔️      |
-| Decoupled Sharing    | ✔️     | ❌        | ❌             | ❌      | ❌      |
+| Feature              | Piral  | Module Federation | Single SPA | Web Components | Mosaic   | Luigi   |
+|----------------------|--------|-------------------|------------|----------------|----------|---------|
+| Available CLI        | ✔️     | ✔️               | ✔️        | ❌             | ✔️      | ❌      |
+| Free Tooling Choice  | ✔️     | ❌               | ✔️        | ✔️             | ❌      | ❌      |
+| Bundle Splitting     | ✔️     | ✔️               | ✔️        | ✔️             | ✔️      | ❌      |
+| Multi Framework      | ✔️     | ❌               | ✔️        | ✔️             | ✔️      | ✔️      |
+| Main Framework       | React  | Vanilla           | Vanilla    | Polymer        | Vanilla  | Vanilla |
+| Standards-Driven     | ✔️     | ✔️               | ✔️        | ✔️             | ❌      | ❌      |
+| Module Communication | ✔️     | ❌               | ✔️        | ✔️             | ❌      | ❌      |
+| TypeScript Support   | ✔️     | ❌               | ✔️        | ✔️             | ❌      | ✔️      |
+| Stitching Location   | Client  | Client           | Client     | Client         | Server   | Client  |
+| Free Deployments     | ✔️     | ✔️               | ❌        | ✔️             | ✔️      | ✔️      |
+| Free Development     | ✔️     | ❌               | ❌        | ❌             | ✔️      | ❌      |
+| Live Data Feed       | ✔️     | ❌               | ❌        | ❌             | ❌      | ❌      |
+| Form Management      | ✔️     | ❌               | ❌        | ❌             | ❌      | ✔️      |
+| Modal Manager        | ✔️     | ❌               | ❌        | ❌             | ❌      | ✔️      |
+| Translations         | ✔️     | ❌               | ❌        | ❌             | ❌      | ✔️      |
+| Global State         | ✔️     | ❌               | ❌        | ❌             | ❌      | ✔️      |
+| Notifications        | ✔️     | ❌               | ❌        | ❌             | ❌      | ✔️      |
+| Decoupled Sharing    | ✔️     | ❌               | ❌        | ❌             | ❌      | ❌      |
+| Shared Dependencies  | ✔️     | ✔️               | ✔️        | ❌             | ❌      | ❌      |
 
 (explanation of these features below)
 
@@ -140,6 +143,8 @@ There are more alternatives, which have not been listed for brevity. Some of the
 **Stitching Location**: Where is the primary use case/stitching location?
 
 **Decoupled Sharing**: Are aggregator components available that enable a decoupled way of sharing components that are resilient?
+
+**Shared Dependencies**: Can dependencies be shared between the different micro frontends?
 
 ## Further Reading
 

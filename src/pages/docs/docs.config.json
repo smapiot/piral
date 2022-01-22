@@ -53,27 +53,24 @@
       "title": "Reference",
       "sections": [
         {
-          "title": "Technical",
-          "links": {
-            "generator": "markdown",
-            "segment": "documentation",
-            "dir": "reference"
-          }
+          "generator": "markdown",
+          "segment": "documentation",
+          "dir": "reference"
         },
         {
-          "title": "General",
-          "links": {
-            "generator": "markdown",
-            "segment": "documentation",
-            "dir": "."
-          }
-        },
-        {
-          "title": "Specification",
+          "title": "Specifications",
           "links": {
             "generator": "markdown",
             "segment": "specifications",
             "dir": "specs"
+          }
+        },
+        {
+          "title": "More Information",
+          "links": {
+            "generator": "markdown",
+            "segment": "documentation",
+            "dir": "."
           }
         }
       ]

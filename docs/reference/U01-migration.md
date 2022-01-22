@@ -1,5 +1,7 @@
 ---
 title: Migration Instructions
+description: Find out what to do when upgrading from one major to another major version.
+section: Upgrade
 ---
 
 # Instructions for Migration
