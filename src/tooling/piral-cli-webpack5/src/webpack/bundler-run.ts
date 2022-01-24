@@ -90,8 +90,11 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
           }
         });
 
-        const compilation = process.createCompilation();
-        preset.current = compilation.createStatsOptions(getPreset(logLevel));
+        if (process) {
+          // process is undefined in case of an error
+          const compilation = process.createCompilation();
+          preset.current = compilation.createStatsOptions(getPreset(logLevel));
+        }
       });
     },
     onStart(cb) {

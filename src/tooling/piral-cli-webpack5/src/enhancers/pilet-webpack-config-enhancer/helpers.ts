@@ -42,14 +42,15 @@ export function getExternals(piral: string) {
 
 export function getDependencies(importmap: Array<SharedDependency>, compilerOptions: Configuration) {
   const dependencies = {};
+  const { entry, externals } = compilerOptions;
 
-  if (typeof compilerOptions.entry === 'object' && compilerOptions.entry) {
+  if (typeof entry === 'object' && entry && Array.isArray(externals) && typeof externals[0] === 'object') {
     for (const dep of importmap) {
       dependencies[dep.id] = dep.ref;
-      compilerOptions.externals[dep.name] = dep.id;
+      externals[0][dep.name] = dep.id;
 
       if (dep.type === 'local') {
-        compilerOptions.entry[dep.ref.replace(/\.js$/, '')] = dep.entry;
+        entry[dep.ref.replace(/\.js$/, '')] = dep.entry;
       }
     }
   }
@@ -76,20 +77,23 @@ export function withSetPath(compilerOptions: Configuration) {
 }
 
 export function withExternals(compilerOptions: Configuration, externals: Array<string>) {
-  const current = compilerOptions.externals;
-  const newExternals = Array.isArray(current)
-    ? [...(current as Array<string>), ...externals]
-    : typeof current === 'string'
-    ? [current, ...externals]
-    : externals;
+  const current = compilerOptions.externals || [];
+  const arrayExternals = Array.isArray(current) ? current : [current];
 
-  if (newExternals !== externals || typeof compilerOptions.externals !== 'object' || !compilerOptions.externals) {
-    compilerOptions.externals = {};
-  }
+  const objectExternal = externals.reduce((external, dep) => {
+    external[dep] = dep;
+    return external;
+  }, {});
 
-  for (const external of newExternals) {
-    if (typeof external === 'string') {
-      compilerOptions.externals[external] = external;
+  const newExternals = arrayExternals.filter(external => {
+    if (typeof external === 'object' && Object.keys(external).length) {
+      for (const dep in external) {
+        objectExternal[dep] = external[dep];
+      }
+      return false;
     }
-  }
+    return true;
+  });
+
+  compilerOptions.externals = [objectExternal, ...newExternals];
 }

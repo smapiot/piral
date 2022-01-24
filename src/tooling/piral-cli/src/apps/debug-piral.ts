@@ -13,6 +13,7 @@ import {
   progress,
   log,
   config,
+  normalizePublicUrl,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -93,13 +94,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     port = debugPiralDefaults.port,
     open = debugPiralDefaults.open,
     hmr = debugPiralDefaults.hmr,
-    publicUrl = debugPiralDefaults.publicUrl,
+    publicUrl: originalPublicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
     _ = {},
     hooks = {},
     bundlerName,
   } = options;
+  const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
 
@@ -169,10 +171,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   krasServer.removeAllListeners('open');
   krasServer.on('open', notifyServerOnline([bundler], publicUrl, krasConfig.api));
 
-  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port });
+  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, publicUrl });
   await krasServer.start();
-  openBrowser(open, port, !!krasConfig.ssl);
-  await hooks.afterOnline?.({ krasServer, krasConfig, open, port });
+  openBrowser(open, port, publicUrl, !!krasConfig.ssl);
+  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
   await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});
 }

@@ -22,6 +22,33 @@ body.dark {
   }
 }
 
+.plugin-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  img {
+    width: 64px;
+    height: 64px;
+  }
+
+  h1 {
+    flex: 1;
+    font-size: 2em;
+    margin-left: 0.5em;
+  }
+
+  &.markdown-body h1 {
+    margin-left: 0;
+  }
+}
+
+h2.plugin {
+  font-size: 1.4em;
+  color: $docs-color-tabs-text-normal;
+  margin-top: 2em;
+}
+
 .overlay {
   position: fixed;
   top: 0;

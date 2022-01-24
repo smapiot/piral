@@ -271,6 +271,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
+  const publicUrl = '/';
   const injectorConfig = {
     active: true,
     pilets,
@@ -293,15 +294,15 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     'open',
     notifyServerOnline(
       pilets.map((p) => p.bundler),
-      '/',
+      publicUrl,
       krasConfig.api,
     ),
   );
 
-  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
+  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
   await krasServer.start();
-  openBrowser(open, port, !!krasConfig.ssl);
-  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets });
+  openBrowser(open, port, publicUrl, !!krasConfig.ssl);
+  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
   await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});
 }

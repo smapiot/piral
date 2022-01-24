@@ -28,7 +28,7 @@
     "/reference/tooling/piral": "/tooling/build-piral",
     "/reference/extensions/:id?": "/plugins/:id",
     "/reference/plugins/:id?": "/plugins/:id",
-    "/code/:id": "/reference/codes/:id"
+    "/reference/codes/:id": "/code/:id"
   },
   "sitemap": {
     "guidelines": {
@@ -74,22 +74,6 @@
             "generator": "markdown",
             "segment": "specifications",
             "dir": "specs"
-          }
-        },
-        {
-          "title": "FAQ",
-          "links": {
-            "generator": "markdown",
-            "segment": "faq",
-            "dir": "questions"
-          }
-        },
-        {
-          "title": "Codes",
-          "links": {
-            "generator": "markdown",
-            "segment": "codes",
-            "dir": "messages"
           }
         }
       ]
@@ -154,6 +138,26 @@
             "dir": "types",
             "include": "^piral-.+-utils$"
           }
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ",
+      "sections": [
+        {
+          "generator": "markdown",
+          "segment": "",
+          "dir": "questions"
+        }
+      ]
+    },
+    "code": {
+      "title": "",
+      "sections": [
+        {
+          "generator": "markdown",
+          "segment": "",
+          "dir": "messages"
         }
       ]
     }

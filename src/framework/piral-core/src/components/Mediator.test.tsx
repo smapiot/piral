@@ -22,6 +22,9 @@ function createMockContainer() {
       dispatch(update) {
         swap(state, update);
       },
+      readState(select) {
+        return select(deref(state));
+      },
       initialize(loading, error, modules) {
         swap(state, (state) => ({
           ...state,
@@ -42,9 +45,7 @@ describe('Component Mediator', () => {
     const options = {
       createApi: jest.fn(),
       fetchPilets: () => {
-        return new Promise<Array<PiletMetadata>>((resolve, reject) => {
-          resolve([]);
-        });
+        return new Promise<Array<PiletMetadata>>((resolve) => resolve([]));
       },
     };
     const { context } = createMockContainer();

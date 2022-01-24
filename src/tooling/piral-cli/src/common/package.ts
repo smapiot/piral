@@ -590,7 +590,7 @@ interface Importmap {
 }
 
 function normalizeDepName(s: string) {
-  return (s.startsWith('@') ? s.substr(1) : s).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
+  return (s.startsWith('@') ? s.substring(1) : s).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
 }
 
 async function resolveImportmap(dir: string, importmap: Importmap) {

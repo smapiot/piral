@@ -15,6 +15,7 @@ import {
   logInfo,
   runScript,
   packageEmulator,
+  normalizePublicUrl,
 } from '../common';
 
 const releaseName = 'release';
@@ -153,7 +154,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const {
     entry = buildPiralDefaults.entry,
     target = buildPiralDefaults.target,
-    publicUrl = buildPiralDefaults.publicUrl,
+    publicUrl: originalPublicUrl = buildPiralDefaults.publicUrl,
     logLevel = buildPiralDefaults.logLevel,
     minify = buildPiralDefaults.minify,
     sourceMaps = buildPiralDefaults.sourceMaps,
@@ -166,6 +167,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     hooks = {},
     bundlerName,
   } = options;
+  const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const useSubdir = type === 'all' || subdir;
   setLogLevel(logLevel);

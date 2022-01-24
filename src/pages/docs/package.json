@@ -1,6 +1,6 @@
 {
   "name": "piral-documentation-page",
-  "version": "0.14.7",
+  "version": "0.14.8",
   "private": true,
   "description": "The documentation page for Piral.",
   "keywords": [
@@ -32,6 +32,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@pidoc/core": "0.14.0"
+    "@pidoc/core": "0.14.2"
   }
 }

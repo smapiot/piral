@@ -1,9 +1,23 @@
 # Piral Changelog
 
-## 0.14.8 (tbd)
+## 0.14.9 (tbd)
 
-- Fixed ignored `registry` flag when running `pilet new`
-- Removed command line parsing of `rc`
+- Improved error output in `piral-cli-webpack5`
+- Improved error handling in `parcel-codegen-loader`
+- Improved `publicUrl` argument with normalization
+- Fixed types section missing in documentation
+- Fixed error with externals in `piral-cli-webpack`
+- Fixed error with externals in `piral-cli-webpack5`
+
+## 0.14.8 (January 20, 2022)
+
+- Improved performance of internal action calls
+- Improved the `piral-extension` web component with properties `params`, `empty` and `name`
+- Fixed URL to use with `--open` on `piral debug` to include public path
+- Fixed *.piralrc* to consider command line arguments for choosing defaults
+- Added ability to specify local paths for `--template` in `pilet new` and `piral new`
+- Added convenience module `piral-svelte/extend-webpack`
+- Added support for direct instance switching
 
 ## 0.14.7 (January 12, 2022)
 
