@@ -8,11 +8,27 @@ This makes Piral an ideal foundation for a mid-sized to large-scale applications
 
 :zap: A pilet is capable of dynamically **extending other pilets** or using such extension slots itself.
 
+:zap: A pilet can provide or use **shared dependencies** from other pilets.
+
 :zap: A pilet is **isolated** (developed and handled) and will never destroy your application.
 
 :zap: A pilet can be developed with **any technology** using a **standard IDE**.
 
 :zap: A pilet can be updated and **published within seconds**.
+
+:zap: A pilet can be rolled out or disabled dynamically to create **self-forming applications**.
+
+:zap: A pilet can be **debugged seamlessly** just as if you write a monolith.
+
+## Important Links
+
+* 📢 **[We are hiring!](https://smapiot.com/jobs)** - work with us on Piral, its ecosystem and our users
+* 🌍 [Website](https://piral.io/) - learn more about Piral
+* 📖 [Documentation](https://docs.piral.io/) - everything to get started and master micro frontends
+* 🉐 **Help translating Piral!** - making PRs in the [documentation branch](https://github.com/smapiot/piral/tree/documentation)
+* 🐞 [Issue Tracker](https://github.com/smapiot/piral/issues) - report bugs or suggest new features
+* 🗨  [Forums](https://stackoverflow.com/questions/tagged/piral) - use the community support on StackOverflow
+* 👪 [Community Chat](https://gitter.im/piral-io/community) - ask questions and provide answers in our Gitter room
 
 ## Getting Started
 

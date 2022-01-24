@@ -3167,11 +3167,6 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/fluent@^0.11.0":
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/@types/fluent/-/fluent-0.11.4.tgz#983194d2ddd87f3f8b7083e27be5ff7d79b8e484"
-  integrity sha512-6bHaWt+VABNR6+Qeir3/vpEUd291L66jSmYJhdBRdS7TizJL6ETkIPeAnTTXPMg+GKEE0tzgaoOB2fC6k1//0g==
-
 "@types/fs-extra@^5.0.5":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.1.0.tgz#2a325ef97901504a3828718c390d34b8426a10a1"

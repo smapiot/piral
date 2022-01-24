@@ -2042,7 +2042,8 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * - v2: will use SystemJS for integration of the pilet (default)
  *
  * The v1 version has better support for older browsers, but requires a polyfill to work
- * correctly. This polyfill is part of the standard Piral polyfills.
+ * correctly. This polyfill is part of the `piral-ie11polyfills-utils` package.
+ * Alternatively, use the `currentScript-polyfill` package.
  *
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
@@ -2071,8 +2072,8 @@ export function invalidSchemaVersion_0171(schemaVersion: string, schemas: Array<
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where multiple bundlers are installed the first one is picked. This
  * may not be what you want. In this scenario you can override the selection by
@@ -2106,8 +2107,8 @@ export function bundlerMissing_0172(bundlerName: string, installed: Array<string
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where no bundler is installed and the default bundler could not be
  * successfully installed this error is shown.
@@ -2169,8 +2170,8 @@ export function bundlingFailed_0174(error: string): QuickMessage {
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where multiple bundlers are installed the first one is picked. This
  * may not be what you want. In this scenario you can explicitly set the bundler

@@ -73,7 +73,7 @@ export const config: PiralCliConfig = rc(
     url: undefined,
     cert: undefined,
     npmClient: 'npm',
-    bundler: 'webpack',
+    bundler: 'webpack5',
     piletApi: '/$pilet-api',
     validators: {},
     schemaVersion: 'v2',

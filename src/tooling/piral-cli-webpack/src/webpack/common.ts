@@ -97,35 +97,44 @@ export function getRules(production: boolean): Array<RuleSetRule> {
 
   return [
     {
-      test: /\.(png|jpe?g|gif|bmp|avi|mp4|mp3|svg|ogg|webp|woff2?|eot|ttf|wav)$/i,
-      use: [fileLoader],
-    },
-    {
-      test: /\.s[ac]ss$/i,
-      use: [...styleLoaders, require.resolve('css-loader'), require.resolve('sass-loader')],
-    },
-    {
-      test: /\.css$/i,
-      use: [...styleLoaders, require.resolve('css-loader')],
-    },
-    {
-      test: /\.m?jsx?$/i,
-      use: [babelLoader],
-      exclude: nodeModules,
-    },
-    {
-      test: /\.tsx?$/i,
-      use: [babelLoader, tsLoader],
-    },
-    {
-      test: /\.codegen$/i,
-      use: [require.resolve('parcel-codegen-loader')],
-    },
-    {
-      test: /\.js$/i,
-      use: [require.resolve('source-map-loader')],
-      exclude: nodeModules,
-      enforce: 'pre',
+      oneOf: [
+        {
+          test: /\.s[ac]ss$/i,
+          use: [...styleLoaders, require.resolve('css-loader'), require.resolve('sass-loader')],
+        },
+        {
+          test: /\.css$/i,
+          use: [...styleLoaders, require.resolve('css-loader')],
+        },
+        {
+          test: /\.m?jsx?$/i,
+          use: [babelLoader],
+          exclude: nodeModules,
+        },
+        {
+          test: /\.tsx?$/i,
+          use: [babelLoader, tsLoader],
+        },
+        {
+          test: /\.codegen$/i,
+          use: [require.resolve('parcel-codegen-loader')],
+        },
+        {
+          test: /\.js$/i,
+          use: [require.resolve('source-map-loader')],
+          exclude: nodeModules,
+          enforce: 'pre',
+        },
+        {
+          // Exclude `js` files to keep "css" loader working as it injects
+          // its runtime that would otherwise be processed through "file" loader.
+          // Also exclude `html` and `json` extensions so they get processed
+          // by webpacks internal loaders.
+          exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/i, /\.html$/i, /\.json$/i],
+          use: [fileLoader],
+        },
+        // Don't add new loaders here -> should be added before the last (catch-all) handler
+      ],
     },
     {
       parser: {

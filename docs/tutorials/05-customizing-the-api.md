@@ -24,15 +24,20 @@ The code that has been generated in the getting started section was similar to t
 
 ```jsx
 import * as React from 'react';
-import { renderInstance } from 'piral';
+import { render } from 'react-dom';
+import { createInstance, Piral } from 'piral';
 
-renderInstance({
-  layout: {
-    ErrorInfo: ({ type }) => (
-      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
-    )),
+const instance = createInstance({
+  state: {
+    components: {
+      ErrorInfo: ({ type }) => (
+        <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
+      ),
+    },
   },
 });
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
 ```
 
 This starts rendering a full Piral instance in the `#app` element of the DOM constructed by the *index.html*. While the scaffolding only starts with a *minimal* layout, it does not change anything regarding the Pilet API.
@@ -41,16 +46,21 @@ We can also modify it to the following:
 
 ```jsx
 import * as React from 'react';
-import { renderInstance } from 'piral';
+import { render } from 'react-dom';
+import { createInstance, Piral } from 'piral';
 
-renderInstance({
+const instance = createInstance({
   plugins: [],
-  layout: {
-    ErrorInfo: ({ type }) => (
-      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
-    )),
+  state: {
+    components: {
+      ErrorInfo: ({ type }) => (
+        <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
+      ),
+    },
   },
 });
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
 ```
 
 In this case, we added a configuration that determines how to extend the provided (Pilet) API. The different APIs are usually given by API creator methods, which accept none or one parameter for an optional configuration. In any case, we can pass in an array with such plugins or just a single plugin if we want to.
@@ -144,17 +154,22 @@ Now we can use `piral-vue`:
 
 ```jsx
 import * as React from 'react';
-import { renderInstance } from 'piral';
+import { render } from 'react-dom';
+import { createInstance, Piral } from 'piral';
 import { createVueApi } from 'piral-vue';
 
-renderInstance({
+const instance = createInstance({
   plugins: [createVueApi()],
-  layout: {
-    ErrorInfo: ({ type }) => (
-      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
-    ),
+  state: {
+    components: {
+      ErrorInfo: ({ type }) => (
+        <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
+      ),
+    },
   },
 });
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
 ```
 
 The list of all plugins is available via [npm](https://www.npmjs.com/search?q=keywords:piral).

@@ -10,18 +10,34 @@ function changePlugin(config, classRef, cb) {
     .filter(Boolean);
 }
 
+function matchesLoader(r, loaderPath, cb, otherwise) {
+  const uses = r.use || [];
+
+  if (uses.some((m) => m && (m === loaderPath || (typeof m === 'object' && m.loader === loaderPath)))) {
+    if (typeof cb === 'function') {
+      return cb(r);
+    } else {
+      return cb;
+    }
+  } else if (typeof otherwise === 'function') {
+    return otherwise();
+  }
+
+  return r;
+}
+
 function changeRule(config, name, cb) {
   const loaderPath = require.resolve(name);
   config.module.rules = config.module.rules
-    .map((rule) => {
-      const uses = rule.use || [];
+    .map((rule) =>
+      matchesLoader(rule, loaderPath, cb, () => {
+        if (rule.oneOf) {
+          rule.oneOf = rule.oneOf.map((r) => matchesLoader(r, loaderPath, cb)).filter(Boolean);
+        }
 
-      if (uses.some((m) => m && (m === loaderPath || (typeof m === 'object' && m.loader === loaderPath)))) {
-        return cb(rule);
-      }
-
-      return rule;
-    })
+        return rule;
+      }),
+    )
     .filter(Boolean);
 }
 
@@ -110,7 +126,7 @@ module.exports = function (override) {
       }
 
       if ('rules' in override && Array.isArray(override.rules)) {
-        config.module.rules.push(...override.rules);
+        config.module.rules.unshift(...override.rules);
       }
 
       if ('updatePlugins' in override && Array.isArray(override.updatePlugins)) {

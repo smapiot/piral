@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useGlobalState, useOnClickOutside } from 'piral';
+import { useGlobalState } from 'piral';
+import { useOnClickOutside } from 'piral-hooks-utils';
 import { withClass } from './utils';
 
 export const User: React.FC = () => {

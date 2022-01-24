@@ -60,13 +60,17 @@ const defaultIndexHtml = `
 `;
 
 const defaultIndexTsx = `
-  import { renderInstance } from 'piral';
+  import * as React from 'react';
+  import { render } from 'react-dom';
+  import { createInstance, Piral } from 'piral';
 
-  renderInstance({
+  const instance = createInstance({
     requestPilets() {
       return Promise.resolve([]);
     },
   });
+
+  render(<Piral instance={instance} />, document.querySelector('#app'));
 `;
 
 const tsConfigJson = `

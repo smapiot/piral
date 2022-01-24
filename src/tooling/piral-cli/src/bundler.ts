@@ -32,7 +32,7 @@ export interface QualifiedBundler {
 const bundlers: Array<QualifiedBundler> = [];
 
 async function installDefaultBundler(root: string) {
-  const selectedBundler = config.bundler || 'webpack';
+  const selectedBundler = config.bundler || 'webpack5';
   log('generalDebug_0003', `Installation of default bundler for "${selectedBundler}".`);
   const selectedPackage = `piral-cli-${selectedBundler}`;
   log('generalDebug_0003', `Determining npm client at "${root}" ...`);
