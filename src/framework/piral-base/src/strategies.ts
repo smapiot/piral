@@ -1,7 +1,7 @@
-import { promisify, registerDependencies } from './utils';
+import { checkCreateApi, promisify, registerDependencies } from './utils';
 import { loadPilets, loadMetadata } from './load';
 import { getDefaultLoader, extendLoader } from './loader';
-import { checkCreateApi, runPilet, runPilets } from './aggregate';
+import { runPilet, runPilets } from './aggregate';
 import type {
   PiletLifecycleHooks,
   LoadPiletsOptions,

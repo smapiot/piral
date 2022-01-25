@@ -1,15 +1,5 @@
-import { isfunc } from './utils';
 import { inspectPilet } from './inspect';
 import type { PiletLifecycleHooks, Pilet, PiletApiCreator } from './types';
-
-export function checkCreateApi(createApi: PiletApiCreator) {
-  if (!isfunc(createApi)) {
-    console.warn('Invalid `createApi` function. Skipping pilet installation.');
-    return false;
-  }
-
-  return true;
-}
 
 /**
  * Sets up the evaluated pilets to become integrated pilets.

@@ -5,6 +5,7 @@ import {
   includeScriptDependency,
   emptyApp,
   createEvaluatedPilet,
+  checkCreateApi,
 } from './dependency';
 
 describe('dependency utility module', () => {
@@ -173,5 +174,15 @@ describe('dependency utility module', () => {
     expect(result).toEqual({
       setup,
     });
+  });
+
+  it('checkCreateApi does work with a provided function', () => {
+    const result = checkCreateApi(jest.fn() as any);
+    expect(result).toBe(true);
+  });
+
+  it('checkCreateApi does not work without a provided function', () => {
+    const result = checkCreateApi('foo' as any);
+    expect(result).toBe(false);
   });
 });

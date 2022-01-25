@@ -1,6 +1,6 @@
 import { requireModule } from './system';
-import { promisify } from './helpers';
-import type { Pilet, PiletApp, PiletMetadata } from '../types';
+import { isfunc, promisify } from './helpers';
+import type { Pilet, PiletApiCreator, PiletApp, PiletMetadata } from '../types';
 
 declare global {
   interface HTMLScriptElement {
@@ -14,6 +14,15 @@ export const emptyApp = {
 
 export function createEvaluatedPilet(meta: PiletMetadata, app: any): Pilet {
   return { ...meta, ...checkPiletApp(meta.name, app) } as any;
+}
+
+export function checkCreateApi(createApi: PiletApiCreator) {
+  if (!isfunc(createApi)) {
+    console.warn('Invalid `createApi` function. Skipping pilet installation.');
+    return false;
+  }
+
+  return true;
 }
 
 /**
