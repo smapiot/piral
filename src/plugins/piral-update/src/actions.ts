@@ -1,4 +1,4 @@
-import { setupPilet } from 'piral-base';
+import { runPilet } from 'piral-base';
 import { withKey, GlobalStateContext, PiletMetadata } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
@@ -47,7 +47,7 @@ export function approveUpdate(ctx: GlobalStateContext) {
     ctx.options.loadPilet(meta).then((pilet) => {
       try {
         ctx.injectPilet(pilet);
-        setupPilet(pilet, ctx.options.createApi);
+        runPilet(ctx.options.createApi, pilet, ctx.options.hooks);
       } catch (error) {
         console.error(error);
       }

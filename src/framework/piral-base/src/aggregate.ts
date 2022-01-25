@@ -8,7 +8,7 @@ import type { PiletLifecycleHooks, Pilet, PiletApiCreator } from './types';
  * @param hooks The API hooks to apply.
  * @returns The integrated pilets.
  */
-export function runPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hooks: PiletLifecycleHooks) {
+export function runPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hooks: PiletLifecycleHooks = {}) {
   const promises: Array<Promise<void> | void> = [];
 
   if (Array.isArray(pilets)) {
@@ -29,7 +29,7 @@ export function runPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hook
  * @param hooks The API hooks to apply.
  * @returns The integrated pilet.
  */
-export function runPilet(createApi: PiletApiCreator, pilet: Pilet, hooks: PiletLifecycleHooks) {
+export function runPilet(createApi: PiletApiCreator, pilet: Pilet, hooks: PiletLifecycleHooks = {}) {
   const [, , setupPilet] = inspectPilet(pilet);
   const wait = setupPilet(pilet, createApi, hooks);
   return wait.then(() => pilet);

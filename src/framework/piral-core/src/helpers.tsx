@@ -6,6 +6,7 @@ import {
   getDefaultLoader,
   extendLoader,
   PiletLoader,
+  PiletLifecycleHooks,
 } from 'piral-base';
 import { DebuggerExtensionOptions } from 'piral-debug-utils';
 import { globalDependencies } from './modules';
@@ -13,6 +14,7 @@ import type { Pilet, PiletRequester, GlobalStateContext, PiletLoadingStrategy, D
 
 export interface PiletOptionsConfig {
   context: GlobalStateContext;
+  hooks?: PiletLifecycleHooks;
   loaders?: CustomSpecLoaders;
   loaderConfig?: DefaultLoaderConfig;
   availablePilets: Array<Pilet>;
@@ -25,6 +27,7 @@ export interface PiletOptionsConfig {
 }
 
 export function createPiletOptions({
+  hooks,
   context,
   loaders,
   loaderConfig,
@@ -43,6 +46,7 @@ export function createPiletOptions({
     createApi,
     pilets: availablePilets,
     fetchPilets: requestPilets,
+    hooks,
     dependencies: shareDependencies(globalDependencies),
   };
 

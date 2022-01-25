@@ -1,11 +1,12 @@
 import type { FC } from 'react';
-import type { Pilet, PiletApiCreator, PiletLoader, PiletMetadata } from 'piral-base';
+import type { Pilet, PiletApiCreator, PiletLifecycleHooks, PiletLoader, PiletMetadata } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
   createApi: PiletApiCreator;
   loadPilet: PiletLoader;
   injectPilet?(pilet: Pilet): void;
   piletApiFallback?: string;
+  hooks?: PiletLifecycleHooks;
 }
 
 export interface ChangeSet {

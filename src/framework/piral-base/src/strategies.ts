@@ -15,7 +15,7 @@ function runAll(
   createApi: PiletApiCreator,
   existingPilets: Array<Pilet>,
   additionalPilets: Array<Pilet>,
-  hooks: PiletLifecycleHooks,
+  hooks?: PiletLifecycleHooks,
 ) {
   if (!Array.isArray(existingPilets)) {
     return Promise.reject(`The existing pilets must be passed as an array.`);
@@ -58,7 +58,7 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
       pilets = [],
       loadPilet = getDefaultLoader(config),
       loaders,
-      hooks = {},
+      hooks,
     } = options;
     const loadingAll = loadMetadata(fetchPilets);
     const loadSingle = extendLoader(loadPilet, loaders);
@@ -137,7 +137,7 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
     pilets = [],
     loadPilet = getDefaultLoader(config),
     loaders,
-    hooks = {},
+    hooks,
   } = options;
   const loadSingle = extendLoader(loadPilet, loaders);
 
@@ -154,7 +154,7 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
  * considers the already given pilets.
  */
 export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
-  const { createApi, dependencies = {}, pilets = [], hooks = {} } = options;
+  const { createApi, hooks, dependencies = {}, pilets = [] } = options;
 
   return registerDependencies(dependencies).then(() =>
     runAll(createApi, pilets, [], hooks).then(
