@@ -8,6 +8,7 @@
 - Deprecated the usage of `renderInstance` (#465)
 - Removed support for IE11 (#467)
 - Added new convenience package `piral-hooks-utils`
+- Added new npm script running bundler `piral-cli-xbuild` (#470)
 
 ## 0.14.9 (January 21, 2022)
 

@@ -28,6 +28,7 @@ Also the following bundler plugin exists (bringing build / debug capabilities):
 - [**piral-cli-webpack**](https://github.com/smapiot/piral), provides an integration for Webpack (v4) as a bundler
 - [**piral-cli-webpack5**](https://github.com/smapiot/piral), provides an integration for Webpack (v5) as a bundler
 - [**piral-cli-esbuild**](https://github.com/smapiot/piral), provides an integration for ES Build as a bundler
+- [**piral-cli-xbuild**](https://github.com/smapiot/piral), provides the possibility of using npm scripts for building and debugging
 
 You'll find an updated list [on NPM](https://www.npmjs.com/search?q=keywords%3Apiral-cli) using the keyword **piral-cli**.
 

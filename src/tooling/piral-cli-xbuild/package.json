@@ -1,0 +1,48 @@
+{
+  "name": "piral-cli-xbuild",
+  "version": "0.14.9",
+  "description": "Provides debug and build capabilities for pilets and Piral instances using npm scripts.",
+  "keywords": [
+    "piral-cli",
+    "piral",
+    "plugin",
+    "npm",
+    "scripts",
+    "build",
+    "debug"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "engines": {
+    "node": ">=10.0"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/smapiot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.0",
+    "@types/yargs": "^15.0.4",
+    "piral-cli": "^0.14.9",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {}
+}
