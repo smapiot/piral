@@ -1,5 +1,5 @@
 import { includeScript } from '../../utils';
-import type { MultiPiletApp, PiletMetadataBundle } from '../../types';
+import type { PiletMetadataBundle } from '../../types';
 
 /**
  * Includes the given bundle script via its URL with a dependency resolution.
@@ -8,11 +8,5 @@ import type { MultiPiletApp, PiletMetadataBundle } from '../../types';
  * @returns The evaluated module.
  */
 export function includeBundle(meta: PiletMetadataBundle, crossOrigin?: string) {
-  return includeScript(
-    meta.name ?? '(bundle)',
-    meta.bundle,
-    meta.link,
-    meta.integrity,
-    crossOrigin,
-  ) as Promise<MultiPiletApp>;
+  return includeScript(meta.bundle, meta.link, meta.integrity, crossOrigin);
 }

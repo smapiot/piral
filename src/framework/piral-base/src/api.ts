@@ -1,15 +1,13 @@
 import { __assign } from 'tslib';
 import type { PiletMetadata, EventEmitter, PiletApi, PiletApiExtender } from './types';
 
-export function initializeApi(target: PiletMetadata, events: EventEmitter) {
+export function initializeApi(target: PiletMetadata, events: EventEmitter): PiletApi {
   return {
     on: events.on,
     off: events.off,
     emit: events.emit,
-    meta: {
-      ...target,
-    },
-  } as PiletApi;
+    meta: __assign({}, target),
+  };
 }
 
 export function mergeApis(api: PiletApi, extenders: Array<PiletApiExtender<Partial<PiletApi>>>, target: PiletMetadata) {

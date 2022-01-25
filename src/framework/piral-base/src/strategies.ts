@@ -3,7 +3,7 @@ import { loadPilets, loadMetadata } from './load';
 import { getDefaultLoader, extendLoader } from './loader';
 import { checkCreateApi, runPilet, runPilets } from './aggregate';
 import type {
-  PiralLoadingHooks,
+  PiletLifecycleHooks,
   LoadPiletsOptions,
   PiletsLoaded,
   Pilet,
@@ -15,7 +15,7 @@ function runAll(
   createApi: PiletApiCreator,
   existingPilets: Array<Pilet>,
   additionalPilets: Array<Pilet>,
-  hooks: PiralLoadingHooks,
+  hooks: PiletLifecycleHooks,
 ) {
   if (!Array.isArray(existingPilets)) {
     return Promise.reject(`The existing pilets must be passed as an array.`);

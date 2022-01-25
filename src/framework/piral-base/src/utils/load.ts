@@ -1,6 +1,6 @@
 import { promisify } from './helpers';
-import { includeScriptDependency } from './dependency';
-import type { Pilet, PiletApp, PiletMetadata } from '../types';
+import { includeScriptDependency, emptyApp, createEvaluatedPilet } from './dependency';
+import type { PiletApp, PiletMetadata } from '../types';
 
 const depContext = {};
 
@@ -24,8 +24,12 @@ function loadSharedDependencies(sharedDependencies: Record<string, string> | und
  * @param loadPilet The loader function derived for the pilet.
  * @returns The evaluated pilet, which can then be integrated.
  */
- export function loadFrom(meta: PiletMetadata, loadPilet: () => Promise<PiletApp>): Promise<Pilet> {
+export function loadFrom(meta: PiletMetadata, loadPilet: () => PiletApp | Promise<PiletApp>) {
   return loadSharedDependencies(meta.dependencies)
     .then(loadPilet)
-    .then((app) => ({ ...meta, ...app } as any));
+    .catch((error) => {
+      console.error('Failed to load pilet', meta.name, error);
+      return emptyApp;
+    })
+    .then((app) => createEvaluatedPilet(meta, app));
 }

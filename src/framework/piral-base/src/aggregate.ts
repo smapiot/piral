@@ -1,6 +1,6 @@
 import { isfunc } from './utils';
 import { inspectPilet } from './inspect';
-import type { PiralLoadingHooks, Pilet, PiletApiCreator } from './types';
+import type { PiletLifecycleHooks, Pilet, PiletApiCreator } from './types';
 
 export function checkCreateApi(createApi: PiletApiCreator) {
   if (!isfunc(createApi)) {
@@ -18,7 +18,7 @@ export function checkCreateApi(createApi: PiletApiCreator) {
  * @param hooks The API hooks to apply.
  * @returns The integrated pilets.
  */
-export function runPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hooks: PiralLoadingHooks) {
+export function runPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hooks: PiletLifecycleHooks) {
   const promises: Array<Promise<void> | void> = [];
 
   if (Array.isArray(pilets)) {
@@ -39,7 +39,7 @@ export function runPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hook
  * @param hooks The API hooks to apply.
  * @returns The integrated pilet.
  */
-export function runPilet(createApi: PiletApiCreator, pilet: Pilet, hooks: PiralLoadingHooks) {
+export function runPilet(createApi: PiletApiCreator, pilet: Pilet, hooks: PiletLifecycleHooks) {
   const [, , setupPilet] = inspectPilet(pilet);
   const wait = setupPilet(pilet, createApi, hooks);
   return wait.then(() => pilet);

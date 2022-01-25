@@ -1,8 +1,28 @@
 import { requireModule } from './system';
 import { promisify } from './helpers';
-import type { PiletApp } from '../types';
+import type { Pilet, PiletApp, PiletMetadata } from '../types';
 
-function checkPiletApp(name: string, app?: PiletApp): PiletApp {
+declare global {
+  interface HTMLScriptElement {
+    app?: PiletApp;
+  }
+}
+
+export const emptyApp = {
+  setup() {},
+};
+
+export function createEvaluatedPilet(meta: PiletMetadata, app: any): Pilet {
+  return { ...meta, ...checkPiletApp(meta.name, app) } as any;
+}
+
+/**
+ * Checks the given pilet app for validity.
+ * @param name The name of the pilet to check against.
+ * @param app The evaluated app to check.
+ * @returns The app to be used for the pilet.
+ */
+export function checkPiletApp(name: string, app?: any): PiletApp {
   if (!app) {
     console.error('Invalid module found.', name);
   } else if (typeof app.setup !== 'function') {
@@ -11,33 +31,30 @@ function checkPiletApp(name: string, app?: PiletApp): PiletApp {
     return app;
   }
 
-  return {
-    setup() {},
-  };
+  return emptyApp;
 }
 
+/**
+ * Checks the given pilet app asynchrously for validity.
+ * @param name The name of the pilet to check against.
+ * @param app The evaluated - or evaluating - app to check.
+ * @returns A promise resolving to the app of the pilet.
+ */
 export function checkPiletAppAsync(name: string, app?: PiletApp | Promise<PiletApp>): Promise<PiletApp> {
   return promisify(app).then((resolvedApp) => checkPiletApp(name, resolvedApp));
 }
 
-declare global {
-  interface HTMLScriptElement {
-    app?: PiletApp;
-  }
-}
-
-export function includeScript(
-  piletName: string,
-  depName: string,
-  link: string,
-  integrity?: string,
-  crossOrigin?: string,
-) {
+/**
+ * Includes a pilet as a script.
+ * @param depName The name of the dependency (require reference).
+ * @param link The link to the script.
+ * @param integrity The integrity for the script, if any.
+ * @param crossOrigin Defines if cross-origin should be used.
+ * @returns The promise resolving to the pilet app.
+ */
+export function includeScript(depName: string, link: string, integrity?: string, crossOrigin?: string) {
   window[depName] = requireModule;
-  return includeScriptDependency(link, integrity, crossOrigin).then(
-    (s) => checkPiletAppAsync(piletName, s.app),
-    () => checkPiletApp(piletName),
-  );
+  return includeScriptDependency(link, integrity, crossOrigin).then((s) => s.app);
 }
 
 /**
@@ -61,7 +78,7 @@ export function includeScriptDependency(link: string, integrity?: string, crossO
     }
 
     s.onload = () => resolve(s);
-    s.onerror = () => reject();
+    s.onerror = (e) => reject(e);
     document.body.appendChild(s);
   });
 }

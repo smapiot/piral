@@ -1,4 +1,4 @@
-import { promisify } from '../../utils';
+import { emptyApp, promisify } from '../../utils';
 import type { DefaultLoaderConfig, PiletMetadata, Pilet } from '../../types';
 
 /**
@@ -11,6 +11,6 @@ export default function loader(meta: PiletMetadata, _config: DefaultLoaderConfig
   console.warn('Empty pilet found!', meta.name);
   return promisify({
     ...meta,
-    setup() {},
+    ...emptyApp,
   });
 }

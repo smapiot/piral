@@ -1,20 +1,15 @@
-import { setBasePath, registerModule } from '../../utils';
+import { setBasePath, registerModule, emptyApp, createEvaluatedPilet } from '../../utils';
 import type { DefaultLoaderConfig, PiletMetadataV2, Pilet } from '../../types';
 
-/**
- * Loads the provided modules by their URL. Performs a
- * SystemJS import.
- * @param modules The names of the modules to resolve.
- * @returns A tuple containing the source and the evaluated module.
- */
-function loadSystemModule(source: string) {
-  return System.import(source).then(
-    (value): [string, any] => [source, value],
-    (error): [string, any] => {
-      console.error('Failed to load SystemJS module', source, error);
-      return [source, {}];
-    },
-  );
+function extendSharedDependencies(deps: Record<string, string> | undefined) {
+  if (deps) {
+    for (const depName of Object.keys(deps)) {
+      if (!System.has(depName)) {
+        const depUrl = deps[depName];
+        registerModule(depName, () => System.import(depUrl));
+      }
+    }
+  }
 }
 
 /**
@@ -24,17 +19,13 @@ function loadSystemModule(source: string) {
  * @returns The evaluated pilet that can now be integrated.
  */
 export default function loader(meta: PiletMetadataV2, _config: DefaultLoaderConfig): Promise<Pilet> {
-  const deps = meta.dependencies;
   const link = setBasePath(meta, meta.link);
+  extendSharedDependencies(meta.dependencies);
 
-  if (deps) {
-    for (const depName of Object.keys(deps)) {
-      if (!System.has(depName)) {
-        const depUrl = deps[depName];
-        registerModule(depName, () => System.import(depUrl));
-      }
-    }
-  }
-
-  return loadSystemModule(link).then(([_, app]) => ({ ...meta, ...app }));
+  return System.import(link)
+    .catch((error) => {
+      console.error('Failed to load SystemJS module', link, error);
+      return emptyApp;
+    })
+    .then((app) => createEvaluatedPilet(meta, app));
 }

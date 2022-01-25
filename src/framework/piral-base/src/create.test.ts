@@ -16,4 +16,21 @@ describe('Piral-Base create module', () => {
     });
     loading.connect(reporter);
   });
+
+  it('startLoadingPilets disconnects properly', () => {
+    const reporter = jest.fn();
+    const loading = startLoadingPilets({
+      createApi() {
+        return undefined;
+      },
+      fetchPilets() {
+        return Promise.resolve([]);
+      },
+      strategy(opts, pilets) {
+        return Promise.resolve();
+      },
+    });
+    loading.connect(reporter);
+    loading.disconnect(reporter);
+  });
 });

@@ -10,5 +10,10 @@ import type { DefaultLoaderConfig, PiletMetadataBundle, Pilet } from '../../type
  */
 export default function loader(meta: PiletMetadataBundle, config: DefaultLoaderConfig): Promise<Pilet> {
   setBasePath(meta, meta.link);
+
+  if (!meta.name) {
+    meta.name = `[bundle] ${meta.link}`;
+  }
+
   return loadFrom(meta, () => includeBundle(meta, config.crossOrigin));
 }

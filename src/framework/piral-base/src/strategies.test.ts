@@ -30,13 +30,13 @@ describe('Piral-Base strategies module', () => {
             hash: '',
             name: '',
             version: '',
-          },
+          } as any,
           {
             setup: setupMock,
             hash: '',
             name: '',
             version: '',
-          },
+          } as any,
         ],
       },
       callbackMock,
@@ -94,13 +94,13 @@ describe('Piral-Base strategies module', () => {
         hash: '12g',
         name: 'somePilet',
         version: '1',
-      },
+      } as any,
       {
         setup: setupMock,
         hash: '99a',
         name: 'anotherPilet',
         version: '2',
-      },
+      } as any,
     ];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
@@ -131,13 +131,13 @@ describe('Piral-Base strategies module', () => {
         hash: '12g',
         name: 'somePilet',
         version: '1',
-      },
+      } as any,
       {
         setup: setupMock,
         hash: '99a',
         name: 'anotherPilet',
         version: '2',
-      },
+      } as any,
     ];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
@@ -209,13 +209,13 @@ describe('Piral-Base strategies module', () => {
         hash: '12g',
         name: 'somePilet',
         version: '1',
-      },
+      } as any,
       {
         setup: setupMock,
         hash: '99a',
         name: 'anotherPilet',
         version: '2',
-      },
+      } as any,
     ];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
@@ -280,13 +280,13 @@ describe('Piral-Base strategies module', () => {
         hash: '12g',
         name: 'somePilet',
         version: '1',
-      },
+      } as any,
       {
         setup: setupMock,
         hash: '99a',
         name: 'anotherPilet',
         version: '2',
-      },
+      } as any,
     ];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,

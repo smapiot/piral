@@ -1,5 +1,5 @@
 import { fetchDependency } from './fetch';
-import { compileDependency } from './dependency';
+import { evalDependency } from './dependency';
 import { loadFrom, setBasePath } from '../../utils';
 import type { DefaultLoaderConfig, PiletMetadataV0, Pilet } from '../../types';
 
@@ -14,11 +14,11 @@ export default function loader(meta: PiletMetadataV0, _config: DefaultLoaderConf
 
   if ('link' in meta && meta.link) {
     const link = setBasePath(meta, meta.link);
-    return fetchDependency(link).then((content) => loadFrom(meta, () => compileDependency(name, content, link)));
+    return fetchDependency(link).then((content) => loadFrom(meta, () => evalDependency(name, content, link)));
   } else if ('content' in meta && meta.content) {
     const content = meta.content;
-    return loadFrom(meta, () => compileDependency(name, content, undefined));
+    return loadFrom(meta, () => evalDependency(name, content, undefined));
   } else {
-    return loadFrom(meta, () => compileDependency(name, '', undefined));
+    return loadFrom(meta, () => evalDependency(name, '', undefined));
   }
 }

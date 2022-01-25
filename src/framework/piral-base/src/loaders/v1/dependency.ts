@@ -1,5 +1,5 @@
 import { includeScript } from '../../utils';
-import type { SinglePiletApp, PiletMetadataV1 } from '../../types';
+import type { PiletMetadataV1 } from '../../types';
 
 /**
  * Includes the given single pilet script via its URL with a dependency resolution.
@@ -8,5 +8,5 @@ import type { SinglePiletApp, PiletMetadataV1 } from '../../types';
  * @returns The evaluated module.
  */
 export function includeDependency(meta: PiletMetadataV1, crossOrigin?: string) {
-  return includeScript(meta.name, meta.requireRef, meta.link, meta.integrity, crossOrigin) as Promise<SinglePiletApp>;
+  return includeScript(meta.requireRef, meta.link, meta.integrity, crossOrigin);
 }
