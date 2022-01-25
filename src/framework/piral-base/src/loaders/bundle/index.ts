@@ -1,6 +1,6 @@
 import { includeBundle } from './dependency';
 import { setBasePath, loadFrom } from '../../utils';
-import type { DefaultLoaderConfig, PiletMetadataBundle } from '../../types';
+import type { DefaultLoaderConfig, PiletMetadataBundle, Pilet } from '../../types';
 
 /**
  * Loads the provided UMD-powered pilet.
@@ -8,7 +8,7 @@ import type { DefaultLoaderConfig, PiletMetadataBundle } from '../../types';
  * @param config The configuration for loading the pilet.
  * @returns The evaluated pilet that can now be integrated.
  */
-export default function loader(meta: PiletMetadataBundle, config: DefaultLoaderConfig) {
+export default function loader(meta: PiletMetadataBundle, config: DefaultLoaderConfig): Promise<Pilet> {
   setBasePath(meta, meta.link);
   return loadFrom(meta, () => includeBundle(meta, config.crossOrigin));
 }

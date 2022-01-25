@@ -507,6 +507,6 @@ export interface PiletApiExtender<T> {
   (api: PiletApi, target: PiletMetadata): T;
 }
 
-export type LoaderResult<T> = Promise<
-  [T, PiletMetadata, (app: T, apiFactory: PiletApiCreator, hooks: PiralLoadingHooks) => Promise<void> | void]
->;
+export interface PiletRunner {
+  (app: PiletApp, apiFactory: PiletApiCreator, hooks: PiralLoadingHooks): Promise<void>;
+}

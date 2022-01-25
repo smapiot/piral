@@ -1,4 +1,5 @@
 import { requireModule } from './system';
+import { promisify } from './helpers';
 import type { PiletApp } from '../types';
 
 function checkPiletApp(name: string, app?: PiletApp): PiletApp {
@@ -16,7 +17,7 @@ function checkPiletApp(name: string, app?: PiletApp): PiletApp {
 }
 
 export function checkPiletAppAsync(name: string, app?: PiletApp | Promise<PiletApp>): Promise<PiletApp> {
-  return Promise.resolve(app).then((resolvedApp) => checkPiletApp(name, resolvedApp));
+  return promisify(app).then((resolvedApp) => checkPiletApp(name, resolvedApp));
 }
 
 declare global {

@@ -1,5 +1,5 @@
-import { isfunc } from './utils';
-import type { Pilet, PiletRequester, PiletLoader } from './types';
+import { isfunc, promisify } from './utils';
+import type { PiletRequester, PiletLoader, PiletMetadata } from './types';
 
 function checkFetchPilets(fetchPilets: PiletRequester) {
   if (!isfunc(fetchPilets)) {
@@ -15,12 +15,12 @@ function checkFetchPilets(fetchPilets: PiletRequester) {
  * @param fetchPilets The function to resolve the pilets.
  * @param cache The optional cache to use initially and update later.
  */
-export function loadMetadata(fetchPilets: PiletRequester) {
+export function loadMetadata(fetchPilets: PiletRequester): Promise<Array<PiletMetadata>> {
   if (checkFetchPilets(fetchPilets)) {
     return fetchPilets();
   }
 
-  return Promise.resolve([]);
+  return promisify([]);
 }
 
 /**
@@ -30,7 +30,7 @@ export function loadMetadata(fetchPilets: PiletRequester) {
  * @param dependencies The availablly global dependencies, if any.
  * @returns A promise leading to the evaluated pilets.
  */
-export function loadPilets(fetchPilets: PiletRequester, loadPilet: PiletLoader): Promise<Array<Pilet>> {
+export function loadPilets(fetchPilets: PiletRequester, loadPilet: PiletLoader) {
   return loadMetadata(fetchPilets).then((pilets) => {
     if (!Array.isArray(pilets)) {
       throw new Error('The fetched pilets metadata is not an array.');

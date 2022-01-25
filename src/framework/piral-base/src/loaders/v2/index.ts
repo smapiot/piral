@@ -1,11 +1,11 @@
-import { setupSinglePilet } from '../../lifecycle';
 import { setBasePath, registerModule } from '../../utils';
-import type { SinglePiletApp, DefaultLoaderConfig, PiletMetadataV2, LoaderResult } from '../../types';
+import type { DefaultLoaderConfig, PiletMetadataV2, Pilet } from '../../types';
 
 /**
  * Loads the provided modules by their URL. Performs a
  * SystemJS import.
  * @param modules The names of the modules to resolve.
+ * @returns A tuple containing the source and the evaluated module.
  */
 function loadSystemModule(source: string) {
   return System.import(source).then(
@@ -23,7 +23,7 @@ function loadSystemModule(source: string) {
  * @param _config The loader configuration.
  * @returns The evaluated pilet that can now be integrated.
  */
-export default function loader(meta: PiletMetadataV2, _config: DefaultLoaderConfig): LoaderResult<SinglePiletApp> {
+export default function loader(meta: PiletMetadataV2, _config: DefaultLoaderConfig): Promise<Pilet> {
   const deps = meta.dependencies;
   const link = setBasePath(meta, meta.link);
 
@@ -36,5 +36,5 @@ export default function loader(meta: PiletMetadataV2, _config: DefaultLoaderConf
     }
   }
 
-  return loadSystemModule(link).then(([_, app]) => [app, meta, setupSinglePilet]);
+  return loadSystemModule(link).then(([_, app]) => ({ ...meta, ...app }));
 }

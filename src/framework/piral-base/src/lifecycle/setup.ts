@@ -1,6 +1,6 @@
 import { cleanup } from './cleanup';
-import { callfunc } from '../utils';
-import type { PiletApiCreator, SinglePilet, PiralUnloadPiletEvent, PiralLoadingHooks } from '../types';
+import { callfunc, promisify } from '../utils';
+import type { PiletApiCreator, SinglePilet, PiralUnloadPiletEvent, PiralLoadingHooks, MultiPilet } from '../types';
 
 /**
  * Sets up the given single pilet by calling the exported `setup`
@@ -24,8 +24,29 @@ export function setupSinglePilet(app: SinglePilet, apiFactory: PiletApiCreator, 
       }
     };
     api.on(evtName, handler);
-    return result;
+    return promisify(result);
   } catch (e) {
     console.error(`Error while setting up pilet "${app?.name}".`, e);
   }
+
+  return promisify();
+}
+
+/**
+ * Sets up the given multi pilet by calling the exported `setup`
+ * function on the pilet with the API factory.
+ * @param app The pilet's evaluated content.
+ * @param apiFactory The API factory to be used in the bundle.
+ * @param hooks The API hooks to apply.
+ */
+export function setupPiletBundle(app: MultiPilet, apiFactory: PiletApiCreator, hooks: PiralLoadingHooks) {
+  try {
+    callfunc(hooks.setupPilet, app);
+    const result = app.setup(apiFactory);
+    return promisify(result);
+  } catch (e) {
+    console.error(`Error while setting up pilet bundle.`, e);
+  }
+
+  return promisify();
 }

@@ -1,7 +1,8 @@
 import { isfunc } from './utils';
+import { inspectPilet } from './inspect';
 import type { PiralLoadingHooks, Pilet, PiletApiCreator } from './types';
 
-function checkCreateApi(createApi: PiletApiCreator) {
+export function checkCreateApi(createApi: PiletApiCreator) {
   if (!isfunc(createApi)) {
     console.warn('Invalid `createApi` function. Skipping pilet installation.');
     return false;
@@ -17,12 +18,14 @@ function checkCreateApi(createApi: PiletApiCreator) {
  * @param hooks The API hooks to apply.
  * @returns The integrated pilets.
  */
-export function createPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hooks: PiralLoadingHooks) {
+export function runPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, hooks: PiralLoadingHooks) {
   const promises: Array<Promise<void> | void> = [];
 
-  if (checkCreateApi(createApi) && Array.isArray(pilets)) {
+  if (Array.isArray(pilets)) {
     for (const pilet of pilets) {
-      promises.push(setupPilet(pilet, createApi, hooks));
+      const [, , setupPilet] = inspectPilet(pilet);
+      const wait = setupPilet(pilet, createApi, hooks);
+      promises.push(wait);
     }
   }
 
@@ -36,12 +39,8 @@ export function createPilets(createApi: PiletApiCreator, pilets: Array<Pilet>, h
  * @param hooks The API hooks to apply.
  * @returns The integrated pilet.
  */
-export function createPilet(createApi: PiletApiCreator, pilet: Pilet, hooks: PiralLoadingHooks) {
-  const promises: Array<Promise<void> | void> = [];
-
-  if (checkCreateApi(createApi)) {
-    promises.push(setupPilet(pilet, createApi, hooks));
-  }
-
-  return Promise.all(promises).then(() => pilet);
+export function runPilet(createApi: PiletApiCreator, pilet: Pilet, hooks: PiralLoadingHooks) {
+  const [, , setupPilet] = inspectPilet(pilet);
+  const wait = setupPilet(pilet, createApi, hooks);
+  return wait.then(() => pilet);
 }

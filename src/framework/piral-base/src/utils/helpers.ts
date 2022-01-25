@@ -8,17 +8,14 @@ export function callfunc<T extends (...args: Array<any>) => void>(f: T, ...args:
   isfunc(f) && f(...args);
 }
 
-export function createEmptyModule(meta: PiletMetadata) {
-  return {
-    ...meta,
-    setup() {},
-  };
+export function promisify<T = void>(value?: T | PromiseLike<T>) {
+  return Promise.resolve<T>(value);
 }
 
 export function getBasePath(link: string) {
   if (link) {
     const idx = link.lastIndexOf('/');
-    return link.substr(0, idx + 1);
+    return link.substring(0, idx + 1);
   }
 
   return link;
