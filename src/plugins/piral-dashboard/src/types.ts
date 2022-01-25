@@ -51,6 +51,17 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
+export interface InitialTile {
+  /**
+   * Defines the component to be used for the tile.
+   */
+  component: ComponentType<BareTileComponentProps>;
+  /**
+   * Optionally sets the preferences for the tile.
+   */
+  preferences?: TilePreferences;
+}
+
 export interface DashboardContainerProps extends RouteComponentProps {}
 
 export interface DashboardTileProps {
