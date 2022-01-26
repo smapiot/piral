@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageComponentProps, SinglePilet } from 'piral-core';
+import { Pilet, PiletApi, PageComponentProps } from 'piral-core';
 import { FormProps } from 'piral-forms';
 
 interface SampleFormData {
@@ -10,12 +10,15 @@ interface SampleFormData {
 /**
  * Shows a form.
  */
-export const FormPilet: SinglePilet = {
-  content: '',
+export const FormPilet: Pilet = {
   name: 'Form Module',
   version: '1.0.0',
-  hash: '429',
-  setup(piral) {
+  spec: 'v2',
+  dependencies: {},
+  config: {},
+  basePath: '/pilets',
+  link: '/pilets/connector',
+  setup(piral: PiletApi) {
     class MyForm extends React.Component<PageComponentProps & FormProps<SampleFormData>> {
       render() {
         const { formData, changeForm, changed, submitting, reset, error } = this.props;

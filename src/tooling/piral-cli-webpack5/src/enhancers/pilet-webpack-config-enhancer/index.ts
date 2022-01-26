@@ -8,7 +8,6 @@ import {
   withSetPath,
   withExternals,
   getDependencies,
-  getExternals,
 } from './helpers';
 
 export interface PiletWebpackConfigEnhancerOptions {
@@ -155,7 +154,7 @@ function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
 }
 
 export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOptions) => (compiler: Configuration) => {
-  const { piral, externals = getExternals(piral), schema, importmap } = details;
+  const { externals = [], schema, importmap } = details;
   const environment = process.env.NODE_ENV || 'development';
   const options: SchemaEnhancerOptions = {
     entry: details.entry,

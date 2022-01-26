@@ -60,7 +60,7 @@ export interface PiralStoreDataEvent<TValue = any> {
   expires: number;
 }
 
-declare module 'piral-base/lib/types' {
+declare module 'piral-base/lib/types/api' {
   interface PiralEventMap extends PiralCustomEventMap {
     'store-data': PiralStoreDataEvent;
   }

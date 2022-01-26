@@ -1,5 +1,5 @@
 import { isfunc, promisify } from './utils';
-import type { PiletRequester, PiletLoader, PiletMetadata } from './types';
+import type { PiletRequester, PiletLoader, PiletEntries } from './types';
 
 function checkFetchPilets(fetchPilets: PiletRequester) {
   if (!isfunc(fetchPilets)) {
@@ -15,12 +15,12 @@ function checkFetchPilets(fetchPilets: PiletRequester) {
  * @param fetchPilets The function to resolve the pilets.
  * @param cache The optional cache to use initially and update later.
  */
-export function loadMetadata(fetchPilets: PiletRequester): Promise<Array<PiletMetadata>> {
+export function loadMetadata(fetchPilets: PiletRequester) {
   if (checkFetchPilets(fetchPilets)) {
     return fetchPilets();
   }
 
-  return promisify([]);
+  return promisify<PiletEntries>([]);
 }
 
 /**

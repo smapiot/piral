@@ -371,12 +371,21 @@ export async function mergeWithJson<T>(targetDir: string, fileName: string, newC
   return deepMerge(originalContent, newContent);
 }
 
-export async function readJson<T = any>(targetDir: string, fileName: string) {
+export async function readJson<T = any>(targetDir: string, fileName: string, defaultValue = {}) {
   const targetFile = join(targetDir, fileName);
   const content = await new Promise<string>((resolve) => {
     readFile(targetFile, 'utf8', (err, c) => (err ? resolve('') : resolve(c)));
   });
-  return JSON.parse(content || '{}') as T;
+
+  if (content) {
+    try {
+      return JSON.parse(content) as T;
+    } catch (ex) {
+      log('generalError_0002', `Invalid JSON found in file "${fileName}" at "${targetDir}".`);
+    }
+  }
+
+  return defaultValue as T;
 }
 
 export function readBinary(targetDir: string, fileName: string) {

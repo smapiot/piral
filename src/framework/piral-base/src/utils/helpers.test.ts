@@ -1,4 +1,4 @@
-import { callfunc, getBasePath, isfunc, setBasePath, promisify } from './helpers';
+import { callfunc, getBasePath, isfunc, promisify } from './helpers';
 
 describe('Helpers utils module', () => {
   it('callfunc works with no func given', () => {
@@ -24,12 +24,6 @@ describe('Helpers utils module', () => {
   it('getBasePath works with undefined', () => {
     const link = getBasePath(undefined);
     expect(link).toBe(undefined);
-  });
-
-  it('setBasePath attaches new property to meta', () => {
-    const meta: any = {};
-    setBasePath(meta, 'https://foo.com/my-link/index.js');
-    expect(meta).toHaveProperty('basePath', 'https://foo.com/my-link/');
   });
 
   it('isfunc properly evaluates if the argument is a function', () => {

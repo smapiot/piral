@@ -15,7 +15,7 @@ function resolveWinPath(specialFolder: string, subPath: string): string | undefi
 }
 
 export function runScript(script: string, cwd = process.cwd(), output: NodeJS.WritableStream = process.stdout) {
-  const bin = resolve('./node_modules/.bin');
+  const bin = resolve(cwd, './node_modules/.bin');
   const sep = isWindows ? ';' : ':';
   const env = Object.assign({}, process.env);
 

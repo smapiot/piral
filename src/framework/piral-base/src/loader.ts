@@ -34,7 +34,7 @@ export function extendLoader(fallback: PiletLoader, specLoaders: CustomSpecLoade
 /**
  * Gets the default loader provided by piral-base.
  * @param config The loader configuration.
- * @returns The function to load a pilet from metadata.
+ * @returns The function to load a pilet from its entry.
  */
 export function getDefaultLoader(config: DefaultLoaderConfig = {}): PiletLoader {
   return (result) => {

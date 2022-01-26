@@ -1,22 +1,15 @@
 import { setupSinglePilet, setupPiletBundle } from './lifecycle';
-import type {
-  PiletMetadata,
-  PiletMetadataV0,
-  PiletMetadataV1,
-  PiletMetadataV2,
-  PiletMetadataBundle,
-  PiletRunner,
-} from './types';
+import type { PiletEntry, PiletV0Entry, PiletV1Entry, PiletV2Entry, PiletBundleEntry, PiletRunner } from './types';
 
-export type InspectPiletV0 = ['v0', PiletMetadataV0, PiletRunner];
+export type InspectPiletV0 = ['v0', PiletV0Entry, PiletRunner];
 
-export type InspectPiletV1 = ['v1', PiletMetadataV1, PiletRunner];
+export type InspectPiletV1 = ['v1', PiletV1Entry, PiletRunner];
 
-export type InspectPiletV2 = ['v2', PiletMetadataV2, PiletRunner];
+export type InspectPiletV2 = ['v2', PiletV2Entry, PiletRunner];
 
-export type InspectPiletBundle = ['bundle', PiletMetadataBundle, PiletRunner];
+export type InspectPiletBundle = ['bundle', PiletBundleEntry, PiletRunner];
 
-export type InspectPiletUnknown = ['unknown', PiletMetadata, PiletRunner];
+export type InspectPiletUnknown = ['unknown', PiletEntry, PiletRunner];
 
 export type InspectPiletResult =
   | InspectPiletV0
@@ -25,7 +18,7 @@ export type InspectPiletResult =
   | InspectPiletUnknown
   | InspectPiletBundle;
 
-export function inspectPilet(meta: PiletMetadata): InspectPiletResult {
+export function inspectPilet(meta: PiletEntry): InspectPiletResult {
   const inBrowser = typeof document !== 'undefined';
 
   if (inBrowser && 'link' in meta && meta.spec === 'v2') {

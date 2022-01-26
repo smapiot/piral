@@ -12,7 +12,6 @@ import type {
   PiralCustomComponentsState,
 } from './custom';
 import type {
-  PiletMetadata,
   EventEmitter,
   Pilet,
   BaseComponentProps,
@@ -162,7 +161,7 @@ export interface GlobalState extends PiralCustomState {
   /**
    * Gets the loaded modules.
    */
-  modules: Array<PiletMetadata>;
+  modules: Array<Pilet>;
   /**
    * The foreign component portals to render.
    */

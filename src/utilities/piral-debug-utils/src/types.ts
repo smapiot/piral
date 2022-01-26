@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Pilet, PiletApiCreator, PiletLifecycleHooks, PiletLoader, PiletMetadata } from 'piral-base';
+import type { Pilet, PiletApiCreator, PiletLifecycleHooks, PiletLoader } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
   createApi: PiletApiCreator;
@@ -57,9 +57,9 @@ export interface DebuggerOptions extends DebuggerExtensionOptions {
   injectPilet(pilet: Pilet): void;
   fireEvent(name: string, arg: any): void;
   getGlobalState(): any;
-  getPilets(): Array<PiletMetadata>;
+  getPilets(): Array<Pilet>;
   getExtensions(): Array<string>;
   getRoutes(): Array<string>;
-  setPilets(pilets: Array<PiletMetadata>): void;
+  setPilets(pilets: Array<Pilet>): void;
   integrate(components: DebugComponents): void;
 }

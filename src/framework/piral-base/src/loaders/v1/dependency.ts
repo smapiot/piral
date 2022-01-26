@@ -1,12 +1,12 @@
 import { includeScript } from '../../utils';
-import type { PiletMetadataV1 } from '../../types';
+import type { PiletV1Entry } from '../../types';
 
 /**
  * Includes the given single pilet script via its URL with a dependency resolution.
- * @param meta The meta data of the dependency to include.
+ * @param entry The data of the dependency to include.
  * @param crossOrigin The override for the cross-origin attribute.
  * @returns The evaluated module.
  */
-export function includeDependency(meta: PiletMetadataV1, crossOrigin?: string) {
-  return includeScript(meta.requireRef, meta.link, meta.integrity, crossOrigin);
+export function includeDependency(entry: PiletV1Entry, crossOrigin?: string) {
+  return includeScript(entry.requireRef, entry.link, entry.integrity, crossOrigin);
 }

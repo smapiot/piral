@@ -1,24 +1,31 @@
 import { fetchDependency } from './fetch';
 import { evalDependency } from './dependency';
-import { loadFrom, setBasePath } from '../../utils';
-import type { DefaultLoaderConfig, PiletMetadataV0, Pilet } from '../../types';
+import { loadFrom } from '../../utils';
+import type { DefaultLoaderConfig, PiletV0Entry, Pilet } from '../../types';
 
 /**
  * Loads a legacy (v0) or invalid pilet.
- * @param meta The metadata of the pilet.
+ * @param entry The pilet's entry.
  * @param _config The loader configuration.
  * @returns The evaluated pilet that can now be integrated.
  */
-export default function loader(meta: PiletMetadataV0, _config: DefaultLoaderConfig): Promise<Pilet> {
-  const name = meta.name;
+export default function loader(entry: PiletV0Entry, _config: DefaultLoaderConfig): Promise<Pilet> {
+  const { name, config = {}, dependencies = {}, spec = 'v0' } = entry;
+  const meta = {
+    name,
+    config,
+    dependencies,
+    spec,
+    link: '',
+    ...entry,
+  };
 
-  if ('link' in meta && meta.link) {
-    const link = setBasePath(meta, meta.link);
-    return fetchDependency(link).then((content) => loadFrom(meta, () => evalDependency(name, content, link)));
-  } else if ('content' in meta && meta.content) {
-    const content = meta.content;
-    return loadFrom(meta, () => evalDependency(name, content, undefined));
+  if ('link' in entry && entry.link) {
+    return loadFrom(meta, () =>
+      fetchDependency(entry.link).then((content) => evalDependency(name, content, entry.link)),
+    );
   } else {
-    return loadFrom(meta, () => evalDependency(name, '', undefined));
+    const content = ('content' in entry && entry.content) || '';
+    return loadFrom(meta, () => evalDependency(name, content, undefined));
   }
 }

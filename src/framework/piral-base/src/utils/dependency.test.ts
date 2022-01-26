@@ -154,6 +154,7 @@ describe('dependency utility module', () => {
     const meta: any = { foo: 'bar' };
     const result = createEvaluatedPilet(meta, {});
     expect(result).toEqual({
+      basePath: undefined,
       foo: 'bar',
       setup: expect.anything(),
     });
@@ -163,6 +164,7 @@ describe('dependency utility module', () => {
     const meta: any = {};
     const result = createEvaluatedPilet(meta, {});
     expect(result).toEqual({
+      basePath: undefined,
       setup: expect.anything(),
     });
   });
@@ -172,6 +174,7 @@ describe('dependency utility module', () => {
     const setup = jest.fn();
     const result = createEvaluatedPilet(meta, { setup });
     expect(result).toEqual({
+      basePath: undefined,
       setup,
     });
   });

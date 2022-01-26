@@ -1,16 +1,16 @@
-import { promisify } from './helpers';
 import { includeScriptDependency, emptyApp, createEvaluatedPilet } from './dependency';
+import { promisify } from '../utils';
 import type { PiletApp, PiletMetadata } from '../types';
 
 const depContext = {};
 
-function loadSharedDependencies(sharedDependencies: Record<string, string> | undefined) {
-  if (sharedDependencies && typeof sharedDependencies === 'object') {
-    const sharedDependencyNames = Object.keys(sharedDependencies);
+function loadSharedDependencies(dependencies: Record<string, string>): Promise<any> {
+  if (dependencies) {
+    const names = Object.keys(dependencies);
 
     return Promise.all(
-      sharedDependencyNames.map((name) => {
-        return depContext[name] || (depContext[name] = includeScriptDependency(sharedDependencies[name]));
+      names.map((name) => {
+        return depContext[name] || (depContext[name] = includeScriptDependency(dependencies[name]));
       }),
     );
   }
@@ -18,18 +18,21 @@ function loadSharedDependencies(sharedDependencies: Record<string, string> | und
   return promisify();
 }
 
+function handleFailure(error: Error, name: string) {
+  console.error('Failed to load pilet', name, error);
+  return emptyApp;
+}
+
 /**
  * Loads a pilet from the specified metadata and loader function.
  * @param meta The metadata of the pilet.
+ * @param link The link (URL) to the pilet's main script.
  * @param loadPilet The loader function derived for the pilet.
  * @returns The evaluated pilet, which can then be integrated.
  */
-export function loadFrom(meta: PiletMetadata, loadPilet: () => PiletApp | Promise<PiletApp>) {
+export function loadFrom(meta: Omit<PiletMetadata, 'basePath'>, loadPilet: () => PiletApp | Promise<PiletApp>) {
   return loadSharedDependencies(meta.dependencies)
     .then(loadPilet)
-    .catch((error) => {
-      console.error('Failed to load pilet', meta.name, error);
-      return emptyApp;
-    })
+    .catch((error) => handleFailure(error, meta.name))
     .then((app) => createEvaluatedPilet(meta, app));
 }

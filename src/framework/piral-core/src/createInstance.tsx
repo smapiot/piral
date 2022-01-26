@@ -51,7 +51,11 @@ export function createInstance(config: PiralInstanceOptions = {}): PiralInstance
   const root = createApi({
     name: 'root',
     version: process.env.BUILD_PCKG_VERSION || '1.0.0',
-    spec: '',
+    spec: 'v0',
+    basePath: '',
+    link: '',
+    config: {},
+    dependencies: {},
   });
   const options = createPiletOptions({
     context,

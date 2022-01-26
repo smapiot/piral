@@ -1,17 +1,20 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { SinglePilet } from 'piral-core';
+import { Pilet, PiletApi } from 'piral-core';
 
 /**
  * Shows the usage of another module, here with a
  * feed connector.
  */
-export const Pilet2: SinglePilet = {
-  content: '',
+export const Pilet2: Pilet = {
   name: 'Sample Module',
   version: '1.0.0',
-  hash: '2',
-  setup(piral) {
+  spec: 'v2',
+  dependencies: {},
+  config: {},
+  basePath: '/pilets',
+  link: '/pilets/connector',
+  setup(piral: PiletApi) {
     console.log(piral);
 
     const connect = piral.createConnector({

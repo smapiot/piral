@@ -1,5 +1,3 @@
-import type { PiletMetadata } from '../types';
-
 export function isfunc(f: any): f is Function {
   return typeof f === 'function';
 }
@@ -18,10 +16,5 @@ export function getBasePath(link: string) {
     return link.substring(0, idx + 1);
   }
 
-  return link;
-}
-
-export function setBasePath(meta: PiletMetadata, link: string) {
-  meta.basePath = getBasePath(link);
   return link;
 }

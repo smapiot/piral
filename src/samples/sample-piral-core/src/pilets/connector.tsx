@@ -1,15 +1,18 @@
 import * as React from 'react';
-import { SinglePilet } from 'piral-core';
+import { Pilet, PiletApi } from 'piral-core';
 
 /**
  * Shows an advanced usage of the connector.
  */
-export const ConnectorPilet: SinglePilet = {
-  content: '',
+export const ConnectorPilet: Pilet = {
   name: 'Connector Module',
   version: '1.0.0',
-  hash: '4',
-  setup(piral) {
+  spec: 'v2',
+  dependencies: {},
+  config: {},
+  basePath: '/pilets',
+  link: '/pilets/connector',
+  setup(piral: PiletApi) {
     const connect = piral.createConnector<Array<string>>(
       () => new Promise((resolve, reject) => setTimeout(() => resolve(['one', 'two', 'three']), 5000)),
     );

@@ -1,15 +1,18 @@
 import * as React from 'react';
-import { SinglePilet } from 'piral-core';
+import { Pilet, PiletApi } from 'piral-core';
 
 /**
  * Shows a custom search registration.
  */
-export const SearchPilet: SinglePilet = {
-  content: '',
+export const SearchPilet: Pilet = {
   name: 'Search Module',
   version: '1.0.0',
-  hash: '428',
-  setup(piral) {
+  spec: 'v2',
+  dependencies: {},
+  config: {},
+  basePath: '/pilets',
+  link: '/pilets/connector',
+  setup(piral: PiletApi) {
     piral.registerSearchProvider(
       (q) =>
         new Promise((resolve) =>

@@ -48,8 +48,8 @@ export function requireModule(name: string) {
   const dependency = System.get(name);
 
   if (!dependency) {
-    const error = new Error(`Cannot find module '${name}'`);
-    (error as any).code = 'MODULE_NOT_FOUND';
+    const error: any = new Error(`Cannot find module '${name}'`);
+    error.code = 'MODULE_NOT_FOUND';
     throw error;
   }
 

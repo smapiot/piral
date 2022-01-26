@@ -1,5 +1,5 @@
 import { includeScript } from '../../utils';
-import type { PiletMetadataBundle } from '../../types';
+import type { PiletBundleEntry } from '../../types';
 
 /**
  * Includes the given bundle script via its URL with a dependency resolution.
@@ -7,6 +7,6 @@ import type { PiletMetadataBundle } from '../../types';
  * @param crossOrigin The override for the cross-origin attribute.
  * @returns The evaluated module.
  */
-export function includeBundle(meta: PiletMetadataBundle, crossOrigin?: string) {
+export function includeBundle(meta: PiletBundleEntry, crossOrigin?: string) {
   return includeScript(meta.bundle, meta.link, meta.integrity, crossOrigin);
 }

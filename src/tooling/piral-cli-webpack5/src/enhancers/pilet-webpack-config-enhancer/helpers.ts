@@ -23,23 +23,6 @@ export function getDefineVariables(variables: Record<string, string>) {
   }, {});
 }
 
-export function getExternals(piral: string) {
-  const shellPkg = require(`${piral}/package.json`);
-  const piralExternals = shellPkg.pilets?.externals ?? [];
-  return [
-    ...piralExternals,
-    '@dbeining/react-atom',
-    '@libre/atom',
-    'history',
-    'react',
-    'react-dom',
-    'react-router',
-    'react-router-dom',
-    'tslib',
-    'path-to-regexp',
-  ];
-}
-
 export function getDependencies(importmap: Array<SharedDependency>, compilerOptions: Configuration) {
   const dependencies = {};
   const { entry, externals } = compilerOptions;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SinglePilet } from 'piral-core';
+import { Pilet, PiletApi } from 'piral-core';
 
 /**
  * Shows the general usage of the `setup` function together
@@ -7,12 +7,15 @@ import { SinglePilet } from 'piral-core';
  * Also registeres some custom error page handlers. For details
  * on this, see DashboardModule.
  */
-export const Pilet1: SinglePilet = {
-  content: '',
+export const Pilet1: Pilet = {
   name: 'Example Module',
   version: '1.0.0',
-  hash: '1',
-  setup(piral) {
+  spec: 'v2',
+  dependencies: {},
+  config: {},
+  basePath: '/pilets',
+  link: '/pilets/connector',
+  setup(piral: PiletApi) {
     console.log(piral);
 
     piral.registerTile({

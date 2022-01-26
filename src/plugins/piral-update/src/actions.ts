@@ -1,8 +1,8 @@
 import { runPilet } from 'piral-base';
-import { withKey, GlobalStateContext, PiletMetadata } from 'piral-core';
+import { withKey, GlobalStateContext, PiletEntries, PiletEntry } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
-function getPiletHash(pilet: PiletMetadata) {
+function getPiletHash(pilet: PiletEntry) {
   if ('link' in pilet) {
     return {
       name: pilet.name || '',
@@ -25,7 +25,7 @@ function getPiletHash(pilet: PiletMetadata) {
   }
 }
 
-function computePiletHash(pilets: Array<PiletMetadata>) {
+function computePiletHash(pilets: PiletEntries) {
   return JSON.stringify(pilets.map(getPiletHash).sort((a, b) => a.name.localeCompare(b.name)));
 }
 
@@ -57,7 +57,7 @@ export function approveUpdate(ctx: GlobalStateContext) {
   ctx.rejectUpdate();
 }
 
-export function checkForUpdates(ctx: GlobalStateContext, pilets: Array<PiletMetadata>) {
+export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
   const checkHash = computePiletHash(pilets);
   const lastHash = ctx.readState((s) => s.updatability.lastHash || computePiletHash(s.modules));
 
