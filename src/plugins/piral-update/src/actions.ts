@@ -1,32 +1,20 @@
 import { runPilet } from 'piral-base';
-import { withKey, GlobalStateContext, PiletEntries, PiletEntry } from 'piral-core';
+import { withKey, GlobalStateContext, PiletEntries, PiletMetadata } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
-function getPiletHash(pilet: PiletEntry) {
-  if ('link' in pilet) {
-    return {
-      name: pilet.name || '',
-      link: pilet.link || '',
-    };
-  } else if ('hash' in pilet) {
-    return {
-      name: pilet.name || '',
-      hash: pilet.hash || '',
-    };
-  } else if ('version' in pilet) {
-    return {
-      name: pilet.name || '',
-      version: pilet.version || '',
-    };
-  } else {
-    return {
-      name: pilet['name'] || '',
-    };
-  }
+function getPiletHash(pilet: PiletMetadata) {
+  return {
+    name: pilet.name,
+    version: pilet.version,
+  };
+}
+
+function sortPilets(a: { name: string }, b: { name: string }) {
+  return a.name.localeCompare(b.name);
 }
 
 function computePiletHash(pilets: PiletEntries) {
-  return JSON.stringify(pilets.map(getPiletHash).sort((a, b) => a.name.localeCompare(b.name)));
+  return JSON.stringify(pilets.map(getPiletHash).sort(sortPilets));
 }
 
 export function rejectUpdate(ctx: GlobalStateContext) {
