@@ -10,9 +10,23 @@ export function integrate(
 ) {
   installPiralDebug({
     ...debug,
-    createApi: options.createApi,
-    loadPilet: options.loadPilet,
-    injectPilet: context.injectPilet,
+    addPilet: context.addPilet,
+    removePilet: context.removePilet,
+    updatePilet(pilet) {
+      if (!pilet.disabled) {
+        const { createApi } = options;
+        const newApi = createApi(pilet);
+
+        try {
+          context.injectPilet(pilet);
+          pilet.setup(newApi);
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        context.injectPilet(pilet);
+      }
+    },
     fireEvent: context.emit,
     getDependencies() {
       return Object.keys(options.dependencies);
@@ -30,12 +44,6 @@ export function integrate(
     },
     getPilets() {
       return context.readState((s) => s.modules);
-    },
-    setPilets(modules) {
-      context.dispatch((state) => ({
-        ...state,
-        modules,
-      }));
     },
     integrate(dbg) {
       context.dispatch((s) => ({

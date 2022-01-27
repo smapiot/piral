@@ -19,6 +19,7 @@ import type {
   ExtensionComponentProps,
   PiletsBag,
   PiralPageMeta,
+  PiletEntry,
 } from './api';
 import type {
   ComponentConverters,
@@ -204,10 +205,20 @@ export interface PiralActions extends PiralCustomActions {
    */
   initialize(loading: boolean, error: Error | undefined, modules: Array<Pilet>): void;
   /**
-   * Injects a pilet at runtime - removes the pilet from registry first if available.
+   * Injects an evaluated pilet at runtime - removes the pilet from registry first if available.
    * @param pilet The pilet to be injected.
    */
   injectPilet(pilet: Pilet): void;
+  /**
+   * Adds a pilet at runtime by loading it, evaluating it, and then injecting it.
+   * @param pilet The pilet to be added.
+   */
+  addPilet(pilet: PiletEntry): void;
+  /**
+   * Removes a pilet by unloading it and deleting all component registrations.
+   * @param name The name of the pilet to remove.
+   */
+  removePilet(name: string): void;
   /**
    * Defines a single action for Piral.
    * @param actionName The name of the action to define.

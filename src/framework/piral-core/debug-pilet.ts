@@ -4,9 +4,7 @@ import { GlobalStateContext } from './lib/types';
 
 export function integrate(context: GlobalStateContext, options: LoadPiletsOptions) {
   options.fetchPilets = withEmulatorPilets(options.fetchPilets, {
-    injectPilet: context.injectPilet,
-    hooks: options.hooks,
-    createApi: options.createApi,
-    loadPilet: options.loadPilet,
+    addPilet: context.addPilet,
+    removePilet: context.removePilet,
   });
 }

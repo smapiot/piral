@@ -7,17 +7,16 @@ import { DebugCustomSetting, DebuggerOptions } from './types';
 
 export function installPiralDebug(options: DebuggerOptions) {
   const {
-    injectPilet,
     getGlobalState,
     getExtensions,
     getDependencies,
     getRoutes,
     getPilets,
-    setPilets,
     fireEvent,
     integrate,
-    createApi,
-    loadPilet,
+    removePilet,
+    updatePilet,
+    addPilet,
     customSettings = {},
   } = options;
   const events = [];
@@ -145,36 +144,10 @@ export function installPiralDebug(options: DebuggerOptions) {
     const pilet: any = getPilets().find((m) => m.name === name);
 
     if (pilet.disabled) {
-      try {
-        const { createApi } = options;
-        const newApi = createApi(pilet);
-        injectPilet(pilet.original);
-        pilet.original.setup(newApi);
-      } catch (error) {
-        console.error(error);
-      }
+      updatePilet(pilet.original);
     } else {
-      injectPilet({ name, disabled: true, original: pilet } as any);
+      updatePilet({ name, disabled: true, original: pilet });
     }
-  };
-
-  const removePilet = (name: string) => {
-    const pilets = getPilets().filter((m) => m.name !== name);
-    injectPilet({ name } as any);
-    setPilets(pilets);
-  };
-
-  const appendPilet = (meta: any) => {
-    const { createApi, loadPilet } = options;
-    loadPilet(meta).then((pilet) => {
-      try {
-        const newApi = createApi(pilet);
-        injectPilet(pilet);
-        pilet.setup(newApi as any);
-      } catch (error) {
-        console.error(error);
-      }
-    });
   };
 
   const toggleVisualize = () => {
@@ -220,10 +193,6 @@ export function installPiralDebug(options: DebuggerOptions) {
       date: process.env.BUILD_TIME_FULL,
       cli: process.env.PIRAL_CLI_VERSION,
       compat: process.env.DEBUG_PIRAL,
-    },
-    pilets: {
-      loadPilet,
-      createApi,
     },
   };
 
@@ -299,7 +268,7 @@ export function installPiralDebug(options: DebuggerOptions) {
         case 'update-settings':
           return updateSettings(content.settings);
         case 'append-pilet':
-          return appendPilet(content.meta);
+          return addPilet(content.meta);
         case 'remove-pilet':
           return removePilet(content.name);
         case 'toggle-pilet':

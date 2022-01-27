@@ -1,4 +1,3 @@
-import { runPilet } from 'piral-base';
 import { withKey, GlobalStateContext, PiletEntries, PiletMetadata } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
@@ -31,15 +30,8 @@ export function rejectUpdate(ctx: GlobalStateContext) {
 export function approveUpdate(ctx: GlobalStateContext) {
   const pilets = ctx.readState((s) => s.updatability.target);
 
-  for (const meta of pilets) {
-    ctx.options.loadPilet(meta).then((pilet) => {
-      try {
-        ctx.injectPilet(pilet);
-        runPilet(ctx.options.createApi, pilet, ctx.options.hooks);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+  for (const pilet of pilets) {
+    ctx.addPilet(pilet);
   }
 
   ctx.rejectUpdate();

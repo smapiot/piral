@@ -41,7 +41,6 @@
     "piral-base": "^0.14.9"
   },
   "peerDependencies": {
-    "piral-base": "0.14.x",
     "react": ">=16.8.0",
     "react-router": ">=5.0.0"
   }

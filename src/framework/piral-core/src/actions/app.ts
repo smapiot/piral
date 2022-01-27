@@ -1,5 +1,6 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router';
+import { runPilet } from 'piral-base';
 import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute } from '../utils';
 import {
   LayoutType,
@@ -9,6 +10,7 @@ import {
   RegistryState,
   GlobalStateContext,
   Pilet,
+  PiletEntry,
 } from '../types';
 
 export function changeLayout(ctx: GlobalStateContext, current: LayoutType) {
@@ -28,6 +30,29 @@ export function initialize(ctx: GlobalStateContext, loading: boolean, error: Err
     },
     modules,
   }));
+}
+
+export function addPilet(ctx: GlobalStateContext, meta: PiletEntry) {
+  ctx.options.loadPilet(meta).then((pilet) => {
+    try {
+      ctx.injectPilet(pilet);
+      runPilet(ctx.options.createApi, pilet, ctx.options.hooks);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+}
+
+export function removePilet(ctx: GlobalStateContext, name: string) {
+  ctx.dispatch((state) => ({
+    ...state,
+    modules: state.modules.filter((m) => m.name !== name),
+    registry: removeNested<RegistryState, BaseRegistration>(state.registry, (m) => m.pilet === name),
+  }));
+
+  ctx.emit('unload-pilet', {
+    name,
+  });
 }
 
 export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {

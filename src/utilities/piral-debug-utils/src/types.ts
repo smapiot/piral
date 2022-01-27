@@ -1,12 +1,10 @@
 import type { FC } from 'react';
-import type { Pilet, PiletApiCreator, PiletLifecycleHooks, PiletLoader } from 'piral-base';
+import type { Pilet, PiletEntry } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
-  createApi: PiletApiCreator;
-  loadPilet: PiletLoader;
-  injectPilet?(pilet: Pilet): void;
+  addPilet?(pilet: PiletEntry): void;
+  removePilet?(name: string): void;
   piletApiFallback?: string;
-  hooks?: PiletLifecycleHooks;
 }
 
 export interface ChangeSet {
@@ -52,14 +50,13 @@ export interface DebuggerExtensionOptions {
 
 export interface DebuggerOptions extends DebuggerExtensionOptions {
   getDependencies(): Array<string>;
-  createApi: PiletApiCreator;
-  loadPilet: PiletLoader;
-  injectPilet(pilet: Pilet): void;
   fireEvent(name: string, arg: any): void;
   getGlobalState(): any;
   getPilets(): Array<Pilet>;
   getExtensions(): Array<string>;
   getRoutes(): Array<string>;
-  setPilets(pilets: Array<Pilet>): void;
   integrate(components: DebugComponents): void;
+  addPilet(pilet: PiletEntry): void;
+  removePilet(name: string): void;
+  updatePilet(data: any): void;
 }
