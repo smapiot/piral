@@ -52,13 +52,13 @@ export function createPiletOptions({
 
   // if we build the debug version of piral (debug and emulator build)
   if (process.env.DEBUG_PIRAL) {
-    const { integrate } = require('../debug-piral');
+    const { integrate } = require('./debugger');
     integrate(context, options, debug);
   }
 
   // if we build the emulator version of piral (shipped to pilets)
   if (process.env.DEBUG_PILET) {
-    const { integrate } = require('../debug-pilet');
+    const { integrate } = require('./emulator');
     integrate(context, options);
   }
 

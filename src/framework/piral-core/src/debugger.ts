@@ -1,7 +1,7 @@
 import { addChangeHandler } from '@dbeining/react-atom';
 import { LoadPiletsOptions } from 'piral-base';
 import { installPiralDebug, DebuggerExtensionOptions } from 'piral-debug-utils';
-import { GlobalStateContext } from './lib/types';
+import { GlobalStateContext } from './types';
 
 export function integrate(
   context: GlobalStateContext,
