@@ -17,28 +17,30 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
         const expiration = getDataExpiration(expires);
         return context.tryWriteDataItem(name, value, pilet, target, expiration);
       },
-      registerPage(route, arg, meta) {
+      registerPage(route, arg, meta = {}) {
+        const component = withApi(context, arg, api, 'page', undefined, { meta });
         context.registerPage(route, {
           pilet,
           meta,
-          component: withApi(context, arg, api, 'page'),
+          component,
         });
         return () => api.unregisterPage(route);
       },
       unregisterPage(route) {
         context.unregisterPage(route);
       },
-      registerExtension(name, arg, defaults) {
-        context.registerExtension(name as string, {
+      registerExtension(name, reference, defaults) {
+        const component = withApi(context, reference, api, 'extension');
+        context.registerExtension(name, {
           pilet,
-          component: withApi(context, arg, api, 'extension'),
-          reference: arg,
+          component,
+          reference,
           defaults,
         });
-        return () => api.unregisterExtension(name, arg);
+        return () => api.unregisterExtension(name, reference);
       },
       unregisterExtension(name, arg) {
-        context.unregisterExtension(name as string, arg);
+        context.unregisterExtension(name, arg);
       },
       renderHtmlExtension(element, props) {
         const [dispose] = renderElement(context, element, props);

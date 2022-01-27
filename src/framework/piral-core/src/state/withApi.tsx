@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { isfunc } from 'piral-base';
 import { __RouterContext } from 'react-router';
-import { PiralError, PiralLoadingIndicator, ErrorBoundary, ErrorBoundaryOptions, PortalRenderer } from '../components';
+import { ErrorBoundary, PortalRenderer } from '../components';
 import { useGlobalStateContext } from '../hooks';
 import { defaultRender, convertComponent, none } from '../utils';
 import {
@@ -19,6 +19,10 @@ import {
 let portalIdBase = 123456;
 
 const DefaultWrapper: React.FC = (props) => defaultRender(props.children);
+
+interface CapturedProps {
+  piral: PiletApi;
+}
 
 interface ForeignComponentContainerProps<T> {
   $portalId: string;
@@ -87,40 +91,34 @@ class ForeignComponentContainer<T> extends React.Component<ForeignComponentConta
 
 function wrapReactComponent<T>(
   Component: React.ComponentType<T & BaseComponentProps>,
-  stasisOptions: ErrorBoundaryOptions<T>,
-  piral: PiletApi,
-  Wrapper: React.ComponentType<any>,
+  captured: CapturedProps,
+  Wrapper: React.FC<T>,
 ): React.ComponentType<T> {
   return (props: T) => (
-    <Wrapper {...props} piral={piral}>
-      <ErrorBoundary {...stasisOptions} renderProps={props}>
-        <Component {...props} piral={piral} />
-      </ErrorBoundary>
+    <Wrapper {...props}>
+      <Component {...props} {...captured} />
     </Wrapper>
   );
 }
 
 function wrapForeignComponent<T>(
   component: ForeignComponent<T & BaseComponentProps>,
-  stasisOptions: ErrorBoundaryOptions<T>,
-  piral: PiletApi,
-  Wrapper: React.ComponentType<any>,
+  captured: CapturedProps,
+  Wrapper: React.FC<T>,
 ) {
   return React.memo((props: T) => {
     const { state, readState, destroyPortal } = useGlobalStateContext();
     const router = React.useContext(__RouterContext);
     const id = React.useMemo(() => (portalIdBase++).toString(26), none);
     const context = React.useMemo(() => ({ router, state, readState }), [router, state]);
-    const innerProps = React.useMemo(() => ({ ...props, piral }), [props]);
+    const innerProps = React.useMemo(() => ({ ...props, ...captured }), [props]);
 
     React.useEffect(() => () => destroyPortal(id), none);
 
     return (
-      <Wrapper {...innerProps}>
-        <ErrorBoundary {...stasisOptions} renderProps={props}>
-          <PortalRenderer id={id} />
-          <ForeignComponentContainer innerProps={innerProps} $portalId={id} $component={component} $context={context} />
-        </ErrorBoundary>
+      <Wrapper {...props}>
+        <PortalRenderer id={id} />
+        <ForeignComponentContainer innerProps={innerProps} $portalId={id} $component={component} $context={context} />
       </Wrapper>
     );
   });
@@ -133,22 +131,15 @@ function isNotExotic(component: any): component is object {
 function wrapComponent<T>(
   converters: ComponentConverters<T & BaseComponentProps>,
   component: AnyComponent<T & BaseComponentProps>,
-  piral: PiletApi,
-  Wrapper: React.ComponentType<any>,
-  stasisOptions: ErrorBoundaryOptions<T>,
+  captured: CapturedProps,
+  Wrapper: React.FC<T>,
 ) {
-  if (!component) {
-    console.error('The given value is not a valid component.');
-    // tslint:disable-next-line:no-null-keyword
-    component = () => null;
-  }
-
   if (typeof component === 'object' && isNotExotic(component)) {
     const result = convertComponent(converters[component.type], component);
-    return wrapForeignComponent<T>(result, stasisOptions, piral, Wrapper);
+    return wrapForeignComponent<T>(result, captured, Wrapper);
   }
 
-  return wrapReactComponent<T>(component, stasisOptions, piral, Wrapper);
+  return wrapReactComponent<T>(component, captured, Wrapper);
 }
 
 function getWrapper(wrappers: Record<string, React.ComponentType<any>>, wrapperType: string) {
@@ -161,19 +152,26 @@ export function withApi<TProps>(
   piral: PiletApi,
   errorType: keyof Errors,
   wrapperType: string = errorType,
+  captured = {},
 ) {
+  const outerProps = { ...captured, piral };
   const converters = context.converters;
-  const Wrapper = context.readState((m) => getWrapper(m.registry.wrappers, wrapperType));
+  const OuterWrapper = context.readState((m) => getWrapper(m.registry.wrappers, wrapperType));
 
-  return wrapComponent<TProps>(converters, component, piral, Wrapper, {
-    onError(error) {
-      console.error(piral, error);
-    },
-    renderChild(child) {
-      return <React.Suspense fallback={<PiralLoadingIndicator />}>{child}</React.Suspense>;
-    },
-    renderError(error, props: any) {
-      return <PiralError type={errorType} error={error} {...props} />;
-    },
-  });
+  const Wrapper: React.FC<TProps> = (props) => (
+    <OuterWrapper {...outerProps} {...props}>
+      <ErrorBoundary {...outerProps} {...props} errorType={errorType}>
+        {props.children}
+      </ErrorBoundary>
+    </OuterWrapper>
+  );
+
+  if (!component) {
+    const pilet = piral.meta.name;
+    console.error(`[${pilet}] The given value is not a valid component.`);
+    // tslint:disable-next-line:no-null-keyword
+    component = () => null;
+  }
+
+  return wrapComponent<TProps>(converters, component, outerProps, Wrapper);
 }
