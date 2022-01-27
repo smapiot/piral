@@ -1,5 +1,5 @@
-import { ComponentType } from 'react';
-import {
+import type { ComponentType } from 'react';
+import type {
   Dict,
   WrappedComponent,
   BaseComponentProps,

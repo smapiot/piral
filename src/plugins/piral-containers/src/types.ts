@@ -1,5 +1,5 @@
-import { ComponentType, FC } from 'react';
-import { RemainingArgs, StateDispatcher } from 'piral-core';
+import type { ComponentType, FC } from 'react';
+import type { RemainingArgs, StateDispatcher } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletContainersApi {}

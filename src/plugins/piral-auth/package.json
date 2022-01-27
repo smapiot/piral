@@ -24,7 +24,8 @@
   "files": [
     "esm",
     "lib",
-    "src"
+    "src",
+    "piral-auth.min.js"
   ],
   "repository": {
     "type": "git",
@@ -34,7 +35,8 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-auth.min.js --bundle --external:piral-core --minify",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-auth.json src --exclude \"src/**/*.test.*\"",

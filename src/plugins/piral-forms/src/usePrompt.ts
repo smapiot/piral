@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { isfunc } from 'piral-base';
-import { History, Location } from 'history';
+import { isfunc } from 'piral-core';
+import type { History, Location } from 'history';
 import { PromptMessage } from './types';
 
 /**

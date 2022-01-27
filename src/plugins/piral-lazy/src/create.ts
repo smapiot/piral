@@ -1,5 +1,5 @@
 import { lazy, createElement, ComponentType } from 'react';
-import { PiralPlugin, withApi, HtmlComponent } from 'piral-core';
+import { PiralPlugin, withApi } from 'piral-core';
 import { PiletLazyApi, LazyDependencyLoader } from './types';
 
 interface DependencyCache {

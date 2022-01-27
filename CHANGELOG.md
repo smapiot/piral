@@ -9,6 +9,7 @@
 - Deprecated the usage of `renderInstance` (#465)
 - Removed support for IE11 (#467)
 - Added new prop `meta` to registered pages
+- Added pre-bundled minified versions to each plugin package
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
 - Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`

@@ -1,7 +1,7 @@
-import * as React from 'react';
+import { ComponentType } from 'react';
 import { getPiralComponent } from 'piral-core';
 import { BreadcrumbsContainerProps, BreadcrumbItemProps } from './types';
 
-export const PiralBreadcrumbsContainer: React.ComponentType<BreadcrumbsContainerProps> =
+export const PiralBreadcrumbsContainer: ComponentType<BreadcrumbsContainerProps> =
   getPiralComponent('BreadcrumbsContainer');
-export const PiralBreadcrumbItem: React.ComponentType<BreadcrumbItemProps> = getPiralComponent('BreadcrumbItem');
+export const PiralBreadcrumbItem: ComponentType<BreadcrumbItemProps> = getPiralComponent('BreadcrumbItem');

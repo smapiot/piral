@@ -1,7 +1,6 @@
+import type { History } from 'history';
 import { useState, useEffect, FormEvent } from 'react';
-import { isfunc } from 'piral-base';
-import { History } from 'history';
-import { useAction, useGlobalState, compare, generateId } from 'piral-core';
+import { isfunc, useAction, useGlobalState, compare, generateId } from 'piral-core';
 import { usePrompt } from './usePrompt';
 import { FormProps, InputFormOptions, FormDataState } from './types';
 

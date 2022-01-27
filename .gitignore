@@ -20,6 +20,7 @@ src/samples/*/esm
 src/templates/*/esm
 src/tooling/*/esm
 src/utilities/*/esm
+src/plugins/*/*.min.js
 __generated__
 
 # OS files

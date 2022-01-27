@@ -24,7 +24,8 @@
   "files": [
     "esm",
     "lib",
-    "src"
+    "src",
+    "piral-breadcrumbs.min.js"
   ],
   "repository": {
     "type": "git",
@@ -34,19 +35,24 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-breadcrumbs.min.js --bundle --external:piral-core --external:react --external:react-router --minify",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-breadcrumbs.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-router": "^5.1.8",
     "piral-core": "^0.14.9"
   },
   "dependencies": {
     "path-to-regexp": "^1.8.0"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x"
+    "piral-core": "0.14.x",
+    "react": ">=16.8.0",
+    "react-router": "5.x"
   }
 }

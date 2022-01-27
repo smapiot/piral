@@ -1,4 +1,4 @@
-import { isfunc } from 'piral-base';
+import { isfunc } from 'piral-core';
 import { FeedResolver, FeedConnectorOptions, ConnectorDetails } from './types';
 
 const noop = () => {};

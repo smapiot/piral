@@ -1,6 +1,6 @@
-import { ComponentType } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import {
+import type { ComponentType } from 'react';
+import type { RouteComponentProps } from 'react-router-dom';
+import type {
   Dict,
   WrappedComponent,
   BaseComponentProps,
