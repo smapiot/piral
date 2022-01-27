@@ -143,7 +143,18 @@ function wrapComponent<T>(
 }
 
 function getWrapper(wrappers: Record<string, React.ComponentType<any>>, wrapperType: string) {
-  return wrappers[wrapperType] || wrappers['*'] || DefaultWrapper;
+  const WrapAll = wrappers['*'];
+  const WrapType = wrappers[wrapperType];
+
+  if (WrapAll && WrapType) {
+    return (props) => (
+      <WrapAll {...props}>
+        <WrapType {...props} />
+      </WrapAll>
+    );
+  }
+
+  return WrapType || WrapAll || DefaultWrapper;
 }
 
 export function withApi<TProps>(

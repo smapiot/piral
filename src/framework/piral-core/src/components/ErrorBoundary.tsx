@@ -31,7 +31,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   componentDidCatch(error: Error) {
     const { piral, errorType } = this.props;
     const pilet = piral.meta.name;
-    console.error(`[${pilet}] Exception in component of type "${errorType}"`, error);
+    console.error(`[${pilet}] Exception in component of type "${errorType}".`, error);
 
     this.setState({
       error,

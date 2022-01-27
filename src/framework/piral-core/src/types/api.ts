@@ -40,6 +40,11 @@ export interface ExtensionComponentProps<T> extends BaseComponentProps {
 }
 
 /**
+ * The meta data registered for a page.
+ */
+export interface PiralPageMeta extends PiralCustomPageMeta {}
+
+/**
  * The props that every registered page component obtains.
  */
 export interface RouteBaseProps<UrlParams = any, UrlState = any>
@@ -49,12 +54,12 @@ export interface RouteBaseProps<UrlParams = any, UrlState = any>
 /**
  * The props used by a page component.
  */
-export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
-
-/**
- * The meta data registered for a page.
- */
-export interface PiralPageMeta extends PiralCustomPageMeta {}
+export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {
+  /**
+   * The meta data registered with the page.
+   */
+  meta: PiralPageMeta;
+}
 
 /**
  * Defines the Pilet API from piral-core.

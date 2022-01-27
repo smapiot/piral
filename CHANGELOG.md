@@ -2,11 +2,13 @@
 
 ## 0.15.0 (tbd)
 
+- Improved support and documentation for wrappers
 - Moved templates to dedicated repository (#458)
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
 - Change webpack configs to use `oneOf` for assets (#451)
 - Deprecated the usage of `renderInstance` (#465)
 - Removed support for IE11 (#467)
+- Added new prop `meta` to registered pages
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
 - Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
