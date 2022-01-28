@@ -1,9 +1,11 @@
-import { createElement } from 'react';
+import { createElement, ComponentType } from 'react';
 import { render } from 'react-dom';
 import { createLazyApi } from 'piral-lazy';
-import { PiletLoader, PiletLoadingStrategy } from 'piral-base';
 import {
+  requireModule,
   createInstance,
+  PiletLoader,
+  PiletLoadingStrategy,
   AnyComponent,
   PiletRequester,
   ComponentsState,
@@ -28,6 +30,11 @@ declare module 'piral-core/lib/types/custom' {
 declare global {
   interface Window {
     /**
+     * Loads a shared dependency.
+     * @param moduleName The name of the module to require.
+     */
+    require(moduleName: string): any;
+    /**
      * Initializes the Piral app shell.
      * @param requestPilets Defines how pilets should be requested.
      * @param selector Sets the optional mounting DOM element selector.
@@ -43,7 +50,7 @@ declare global {
 
 export type GenericComponents<T> = Partial<
   {
-    [P in keyof T]: T[P] extends React.ComponentType<infer C> ? AnyComponent<C> : T[P];
+    [P in keyof T]: T[P] extends ComponentType<infer C> ? AnyComponent<C> : T[P];
   }
 >;
 
@@ -159,6 +166,9 @@ function noChange<T>(config: T) {
   return config;
 }
 
+//@ts-ignore
+window.require = requireModule;
+
 window.initializePiral = (requestPilets, selector = document.querySelector('#app'), options = {}) => {
   const {
     actions,
@@ -178,6 +188,12 @@ window.initializePiral = (requestPilets, selector = document.querySelector('#app
       actions,
       loadPilet,
       requestPilets,
+      shareDependencies(deps) {
+        return {
+          ...deps,
+          'piral-core': require('piral-core'),
+        };
+      },
       plugins,
       async: strategy,
       state: {

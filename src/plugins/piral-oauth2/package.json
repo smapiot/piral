@@ -38,7 +38,7 @@
   },
   "scripts": {
     "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
-    "build:bundle": "esbuild src/index.ts --outfile=piral-oauth2.min.js --bundle --external:piral-core --minify",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-oauth2.min.js --bundle --external:piral-core --minify --global-name=piralOAuth2",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-oauth2.json src --exclude \"src/**/*.test.*\"",

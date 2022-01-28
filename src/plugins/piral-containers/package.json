@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
-    "build:bundle": "esbuild src/index.ts --outfile=piral-containers.min.js --bundle --external:piral-core --external:react --minify",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-containers.min.js --bundle --external:piral-core --external:react --minify --global-name=piralContainers",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-containers.json src --exclude \"src/**/*.test.*\"",

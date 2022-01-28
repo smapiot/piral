@@ -40,7 +40,7 @@
   },
   "scripts": {
     "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
-    "build:bundle": "esbuild src/index.ts --outfile=piral-urql.min.js --bundle --external:piral-core --external:graphql --external:react --minify",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-urql.min.js --bundle --external:piral-core --external:graphql --external:react --minify --global-name=piralUrql",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-urql.json src --exclude \"src/**/*.test.*\"",

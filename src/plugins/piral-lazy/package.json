@@ -35,7 +35,7 @@
   },
   "scripts": {
     "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
-    "build:bundle": "esbuild src/index.ts --outfile=piral-lazy.min.js --bundle --external:piral-core --external:react --minify",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-lazy.min.js --bundle --external:piral-core --external:react --minify --global-name=piralLazy",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-lazy.json src --exclude \"src/**/*.test.*\"",
