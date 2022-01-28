@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "piral-core": "^0.14.9",
-    "react-router-dom": "5.2.0",
-    "react-router-native": "5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-router-native": "^5.2.0"
   }
 }

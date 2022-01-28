@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { usePrompt } from './usePrompt';
 
-jest.mock('react');
-
 describe('Prompt Hook Module', () => {
   it('does not do anything when its not active', () => {
     const originalAdd = window.addEventListener;

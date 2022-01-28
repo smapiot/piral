@@ -45,7 +45,8 @@
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
-    "piral-core": "^0.14.9"
+    "piral-core": "^0.14.9",
+    "react": "^17.0.1"
   },
   "peerDependencies": {
     "piral-core": "0.14.x",

@@ -45,7 +45,9 @@
     "@types/history": "^4.7.8",
     "@types/react": "^17.0.0",
     "@types/react-router-dom": "^5.1.6",
-    "piral-core": "^0.14.9"
+    "piral-core": "^0.14.9",
+    "react": "^17.0.1",
+    "react-router-dom": "^5.2.0"
   },
   "peerDependencies": {
     "piral-core": "0.14.x",

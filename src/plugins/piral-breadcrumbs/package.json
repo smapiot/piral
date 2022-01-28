@@ -45,7 +45,9 @@
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-router": "^5.1.8",
-    "piral-core": "^0.14.9"
+    "piral-core": "^0.14.9",
+    "react": "^17.0.1",
+    "react-router": "^5.2.0"
   },
   "dependencies": {
     "path-to-regexp": "^1.8.0"

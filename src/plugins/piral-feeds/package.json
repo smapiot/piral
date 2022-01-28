@@ -35,7 +35,7 @@
   },
   "scripts": {
     "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
-    "build:bundle": "esbuild src/index.ts --outfile=piral-feeds.min.js --bundle --external:piral-core --external:react --minify",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-feeds.min.js --bundle --external:piral-core --external:react --minify --global-name=piralFeeds",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-feeds.json src --exclude \"src/**/*.test.*\"",
@@ -43,7 +43,8 @@
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
-    "piral-core": "^0.14.9"
+    "piral-core": "^0.14.9",
+    "react": "^17.0.1"
   },
   "peerDependencies": {
     "piral-core": "0.14.x",

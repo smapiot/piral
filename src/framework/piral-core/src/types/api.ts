@@ -131,7 +131,7 @@ export interface PiletCoreApi {
   renderHtmlExtension<TName>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<TName>): Disposable;
 }
 
-declare module 'piral-base/lib/types' {
+declare module 'piral-base/lib/types/runtime' {
   interface PiletApi extends PiletCustomApi, PiletCoreApi {}
 }
 
