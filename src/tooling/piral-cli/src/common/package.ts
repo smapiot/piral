@@ -6,13 +6,13 @@ import { getDependencies, getDevDependencies } from './language';
 import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
-import { getHashFromUrl } from './http';
 import { applyTemplate } from './template';
+import { readImportmap } from './importmap';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals, makeExternals } from './npm';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { Framework, FileInfo, PiletsInfo, TemplateFileLocation, SharedDependency } from '../types';
+import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
 
 function getDependencyVersion(
   name: string,
@@ -572,108 +572,6 @@ export function checkAppShellPackage(appPackage: any) {
 
   log('generalDebug_0003', `Missing "piralCLI" section. Assume raw app shell.`);
   return false;
-}
-
-function tryResolve(baseDir: string, name: string) {
-  try {
-    return require.resolve(name, {
-      paths: [baseDir],
-    });
-  } catch (ex) {
-    log('generalDebug_0003', `Could not resolve the package "${name}" in "${baseDir}": ${ex}`);
-    return undefined;
-  }
-}
-
-interface Importmap {
-  imports: Record<string, string>;
-}
-
-function normalizeDepName(s: string) {
-  return (s.startsWith('@') ? s.substring(1) : s).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
-}
-
-async function resolveImportmap(dir: string, importmap: Importmap) {
-  const dependencies: Array<SharedDependency> = [];
-  const sharedImports = importmap?.imports;
-
-  if (typeof sharedImports === 'object' && sharedImports) {
-    for (const depName of Object.keys(sharedImports)) {
-      const url = sharedImports[depName];
-      const assetName = normalizeDepName(depName);
-
-      if (typeof url !== 'string') {
-      } else if (/^https?:\/\//.test(url)) {
-        const hash = await getHashFromUrl(url);
-
-        dependencies.push({
-          id: `${depName}@${hash}`,
-          entry: url,
-          name: depName,
-          ref: url,
-          type: 'remote',
-        });
-      } else if (url === depName) {
-        const entry = tryResolve(dir, depName);
-
-        if (entry) {
-          const packageJson = await findFile(dirname(entry), 'package.json');
-          const details = require(packageJson);
-
-          dependencies.push({
-            id: `${depName}@${details.version}`,
-            entry,
-            ref: `${assetName}.js`,
-            name: depName,
-            type: 'local',
-          });
-        }
-      } else {
-        const entry = resolve(dir, url);
-        const exists = await checkExists(entry);
-
-        if (exists) {
-          const packageJson = await findFile(dirname(entry), 'package.json');
-
-          if (packageJson) {
-            const details = require(packageJson);
-
-            dependencies.push({
-              id: `${depName}@${details.version}`,
-              entry,
-              name: depName,
-              ref: `${assetName}.js`,
-              type: 'local',
-            });
-          } else {
-            const hash = await getHash(entry);
-
-            dependencies.push({
-              id: `${depName}@${hash}`,
-              entry,
-              name: depName,
-              ref: `${assetName}.js`,
-              type: 'local',
-            });
-          }
-        }
-      }
-    }
-  }
-
-  return dependencies;
-}
-
-export async function readImportmap(dir: string, packageDetails: any) {
-  const importmap = packageDetails.importmap;
-
-  if (typeof importmap === 'string') {
-    const content = await readJson(dir, importmap);
-    const baseDir = dirname(resolve(dir, importmap));
-    return resolveImportmap(baseDir, content);
-  }
-
-  return resolveImportmap(dir, importmap);
 }
 
 export async function retrievePiletData(target: string, app?: string) {

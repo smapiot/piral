@@ -366,7 +366,7 @@ async function wrapUmd(details: WrapDetails, content: string): Promise<string> {
  */
 async function wrapSystemJs(details: WrapDetails, content: string): Promise<string> {
   const { minified, map, prName, head, importmap, externals } = details;
-  const dependencies = externals.map((depName) => importmap.find((i) => i.name === depName)?.id ?? depName);
+  const dependencies = externals.map((depName) => importmap.find((i) => i.name === depName)?.requireId ?? depName);
   const originalRequire = minified
     ? '"function"==typeof parcelRequire&&parcelRequire'
     : "typeof parcelRequire === 'function' && parcelRequire";

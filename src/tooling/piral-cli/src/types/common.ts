@@ -79,6 +79,7 @@ export interface RuleContext {
 
 export interface SharedDependency {
   id: string;
+  requireId: string;
   name: string;
   ref: string;
   type: 'local' | 'remote';

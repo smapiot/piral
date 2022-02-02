@@ -18,7 +18,7 @@ export default function babelPlugin({ types }): PluginObj {
               const entry = importmap.find((m) => m.name === name);
 
               if (entry) {
-                path.replaceWith(types.stringLiteral(entry.id));
+                path.replaceWith(types.stringLiteral(entry.requireId));
               }
             }
           },

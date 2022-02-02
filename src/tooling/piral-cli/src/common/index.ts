@@ -10,6 +10,7 @@ export * from './emoji';
 export * from './envs';
 export * from './hash';
 export * from './http';
+export * from './importmap';
 export * from './info';
 export * from './injectors';
 export * from './io';

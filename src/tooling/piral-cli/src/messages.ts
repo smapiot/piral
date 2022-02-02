@@ -396,6 +396,205 @@ export function packageVersionInvalid_0024(version: string): QuickMessage {
  * @kind Error
  *
  * @summary
+ * Cannot add the shared dependency since its version constraint is not satisfied.
+ *
+ * @abstract
+ * The importmap definition allows you to define a version specifier separated with
+ * the '@' character. If you write down a version specifier then it has to be
+ * fulfilled already from the local version, otherwise the packaged version can
+ * potentially not be resolved at runtime. This would resolve in a pilet that fails
+ * when running in isolation and most likely fails when running with other pilets.
+ *
+ * @see
+ * - [import-maps specification](https://github.com/WICG/import-maps)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo@^3.2.1": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * For the error to occur the specifier (^3.2.1) potentially does not match the version (e.g., if
+ * the version of the dependency is 3.1.2).
+ *
+ * One strategy is to remove the specifier, which will automatically use the exact current version
+ * as specifier:
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * The best way, however, is to look at the used version and adjust the specifier to be correct again.
+ * Alternatively, change the used version to satisfy the constraint again.
+ */
+export function importMapVersionSpecNotSatisfied_0025(depName: string, version: string): QuickMessage {
+  return [LogLevels.error, '0025', `The dependency "${depName}" in only available in version "${version}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The version spec part of the importmap identifer is invalid.
+ *
+ * @abstract
+ * The importmap definition allows you to define a version specifier separated with
+ * the '@' character. This part has to follow the semver convention and rules.
+ *
+ * Check your specifier via online tools such as "Semver check" to verify it is
+ * valid and follows the semver specification.
+ *
+ * @see
+ * - [Online Checker](https://jubianchi.github.io/semver-check/)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo@bar": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * For the error to occur the specifier (bar) is not following the semver specification.
+ *
+ * One way is to remove the version spec, which will resolve to an exact version specifier
+ * and therefore always works:
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * The best way, however, is to look at the used version and adjust the specifier to be correct again,
+ * such as "^1.2.3" or "1.x" or "3" etc.
+ */
+export function importMapVersionSpecInvalid_0026(depName: string): QuickMessage {
+  return [LogLevels.error, '0026', `The dependency "${depName}" has an invalid version spec.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The provided importmap reference could not be resolved.
+ *
+ * @abstract
+ * The importmap consists of keys and values. The keys represent the packages names and optional
+ * version specifiers to demand at runtime. The values represent the entry point or URL to use
+ * when the dependency is not yet loaded.
+ *
+ * In case of a non-URL value the reference has either to be a valid package name or a file path
+ * that leads to either a package or valid JS module. Either way, it needs to exist. If the path
+ * is invalid an error will be emitted.
+ *
+ * @see
+ * - [npm Install](https://docs.npmjs.com/cli/install)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo@bar": "./node_modules/prect"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * Note the potential misspelling. It maybe should have been "./node_modules/preact". In such
+ * cases the reference may not be resolved locally. If everything was written correctly the
+ * node modules are most likely not installed (correctly).
+ */
+export function importMapReferenceNotFound_0027(dir: string, reference: string): QuickMessage {
+  return [LogLevels.error, '0027', `The reference to "${reference}" could not be resolved from "${dir}". Are you sure the file or package exists?`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The provided importmap file could not be found.
+ *
+ * @abstract
+ * The importmap can be referenced in a file from the package.json. If the named
+ * file cannot be found the build process has to be stopped. Make sure that the
+ * file has been specified relative to the package.json where it was referenced
+ * from.
+ *
+ * @see
+ * - [import-maps specification](https://github.com/WICG/import-maps)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": "./import-map.json"
+ * }
+ * ```
+ *
+ * If the importmap has instead been (re)named "importmap.json" then this will not work.
+ * Likewise, with the reference above the file is expected to be in the same directory
+ * as the package.json. If it is, e.g., in the "src" subfolder you'd should reference it
+ * as "./src/import-map.json" instead.
+ */
+export function importMapFileNotFound_0028(dir: string, file: string): QuickMessage {
+  return [LogLevels.error, '0028', `The importmap "${file}" could not be found at "${dir}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * Cannot not find the given full path to successfully scaffold the pilet.
  *
  * @abstract
