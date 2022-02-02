@@ -1,5 +1,44 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
+import { satisfies, validate } from './version';
+
+const originalResolve = System.constructor.prototype.resolve;
+
+function findMatchingPackage(id: string) {
+  const sep = id.indexOf('@', 1);
+
+  if (sep > 1) {
+    const available = Object.keys((System as any).registerRegistry);
+    const name = id.substring(0, sep + 1);
+    const versionSpec = id.substring(sep + 1);
+
+    if (validate(versionSpec)) {
+      const availableVersions = available.filter((m) => m.startsWith(name)).map((m) => m.substring(name.length));
+
+      for (const availableVersion of availableVersions) {
+        if (validate(availableVersion) && satisfies(availableVersion, versionSpec)) {
+          return name + availableVersion;
+        }
+      }
+    }
+  }
+
+  return undefined;
+}
+
+System.constructor.prototype.resolve = function (id: string, parentUrl: string) {
+  try {
+    return originalResolve.call(this, id, parentUrl);
+  } catch (ex) {
+    const result = findMatchingPackage(id);
+
+    if (!result) {
+      throw ex;
+    }
+
+    return result;
+  }
+};
 
 export interface ModuleResolver {
   (): any;
