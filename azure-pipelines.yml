@@ -78,7 +78,7 @@ stages:
 
 - stage: CanaryRelease
 
-  displayName: Release Packages
+  displayName: Release Packages (Alpha)
   dependsOn: Build
   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['canaryBranch']))
 
@@ -134,7 +134,7 @@ stages:
 
 - stage: PreviewRelease
 
-  displayName: Release Packages
+  displayName: Release Packages (Alpha)
   dependsOn: Build
   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['previewBranch']))
 
