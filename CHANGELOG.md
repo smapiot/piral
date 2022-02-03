@@ -9,6 +9,7 @@
 - Change webpack configs to use `oneOf` for assets (#451)
 - Deprecated the usage of `renderInstance` (#465)
 - Removed support for IE11 (#467)
+- Removed bundlers (except default) from Piral monorepo
 - Added new prop `meta` to registered pages
 - Added pre-bundled minified versions to each plugin package
 - Added support for *debug-meta.json* when using `pilet debug` (#462)
