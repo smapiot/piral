@@ -155,7 +155,9 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
   });
 
+  const { piral: piralInjector, ...otherInjectors } = krasConfig.injectors;
   const injectorConfig = {
+    ...piralInjector,
     active: true,
     handle: ['/'],
     publicUrl,
@@ -163,7 +165,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   };
 
   krasConfig.map['/'] = '';
-  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);
+  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, otherInjectors);
 
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
