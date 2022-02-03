@@ -1,7 +1,7 @@
 const { sep, resolve } = require('path');
 const { render, generatePage, docRef, generated, readme } = require('@pidoc/core');
 
-const bundlers = ['webpack', 'webpack5', 'esbuild', 'parcel'];
+const bundlers = ['webpack5'];
 
 function getBundlers() {
   const toolingRoot = resolve(__dirname, '../../../../tooling');
