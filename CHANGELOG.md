@@ -2,7 +2,6 @@
 
 ## 0.15.0 (tbd)
 
-- Improved support and documentation for wrappers
 - Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
 - Moved templates to dedicated repository (#458)
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
@@ -12,13 +11,21 @@
 - Removed bundlers (except default) from Piral monorepo
 - Added new bundler `piral-cli-parcel2` (#436)
 - Added new bundler `piral-cli-rollup` (#435)
-- Added new prop `meta` to registered pages
 - Added pre-bundled minified versions to each plugin package
-- Added support for *debug-meta.json* when using `pilet debug` (#462)
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
 - Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
 - Added semver possibilities for resolving shared dependencies
+
+## 0.14.10 (February 4, 2022)
+
+- Improved support and documentation for wrappers
+- Improved default metadata using `piletConfig` from *package.json* in pilet debug (#462)
+- Updated vulnerable dependencies
+- Fixed typing of extension slot defaults
+- Added new prop `meta` to registered pages
+- Added support for *debug-meta.json* when using `pilet debug` (#462)
+- Added `piral-page-layouts` plugin
 
 ## 0.14.9 (January 21, 2022)
 

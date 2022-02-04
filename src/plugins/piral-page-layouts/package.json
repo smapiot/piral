@@ -1,7 +1,7 @@
 {
-  "name": "piral-svelte",
+  "name": "piral-page-layouts",
   "version": "0.14.10",
-  "description": "Plugin for integrating Svelte components in Piral.",
+  "description": "Plugin for providing different page layouts in Piral.",
   "keywords": [
     "piral",
     "pilet-api",
@@ -10,8 +10,9 @@
     "modules",
     "api",
     "plugin",
-    "plugin-converter",
-    "svelte"
+    "plugin-component",
+    "page",
+    "layouts"
   ],
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -24,9 +25,7 @@
     "esm",
     "lib",
     "src",
-    "convert.d.ts",
-    "convert.js",
-    "extend-webpack.js"
+    "piral-page-layouts.min.js"
   ],
   "repository": {
     "type": "git",
@@ -36,17 +35,19 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
-    "build:convert": "tsc convert.ts --skipLibCheck --declaration",
+    "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-page-layouts.min.js --bundle --external:piral-core --external:react --minify --global-name=piralPageLayouts",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-svelte.json src --exclude \"src/**/*.test.*\"",
+    "typedoc": "typedoc --json ../../../docs/types/piral-page-layouts.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
     "piral-core": "^0.14.10"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x"
+    "piral-core": "0.14.x",
+    "react": ">=16.8.0",
+    "react-router": "5.x"
   }
 }

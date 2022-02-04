@@ -1,6 +1,6 @@
 {
   "name": "piral-urql",
-  "version": "0.14.9",
+  "version": "0.14.10",
   "description": "Plugin for providing a GraphQL client in Piral.",
   "keywords": [
     "piral",
@@ -49,7 +49,7 @@
   "devDependencies": {
     "@types/react": "^17.0.0",
     "graphql": "14.6.0",
-    "piral-core": "^0.14.9",
+    "piral-core": "^0.14.10",
     "react": "^17.0.1"
   },
   "peerDependencies": {
