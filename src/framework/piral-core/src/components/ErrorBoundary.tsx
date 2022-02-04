@@ -1,42 +1,18 @@
 import * as React from 'react';
-import { isfunc } from 'piral-base';
+import { PiralError, PiralLoadingIndicator } from './components';
+import { Errors, PiletApi } from '../types';
 
-/**
- * The options to be used for determining the boundary's behavior.
- */
-export interface ErrorBoundaryOptions<T> {
+export interface ErrorBoundaryProps {
   /**
-   * Callback to be used in case of an emitted error.
-   * @param error The error caught by the boundary.
+   * The type of error to indicate when caught.
    */
-  onError(error: Error): void;
+  errorType: keyof Errors;
   /**
-   * Callback to be used when an error should be rendered.
-   * @param error The error caught by the boundary.
-   * @param props The props used by the boundary.
+   * The associated pilet api for the metadata.
    */
-  renderError?(error: Error, props: T): React.ReactNode;
-  /**
-   * Callback to used when no error should be rendered.
-   * @param children The standard children to render.
-   * @param props The props used by the boundary.
-   */
-  renderChild(children: React.ReactNode, props: T): React.ReactNode;
+  piral: PiletApi;
 }
 
-/**
- * The props of the ErrorBoundary component.
- */
-export interface ErrorBoundaryProps<T> extends ErrorBoundaryOptions<T> {
-  /**
-   * The render props for the specific ErrorBoundary.
-   */
-  renderProps: T;
-}
-
-/**
- * The state of the ErrorBoundary component.
- */
 export interface ErrorBoundaryState {
   /**
    * The current error (if any) caught by the boundary.
@@ -45,22 +21,17 @@ export interface ErrorBoundaryState {
 }
 
 /**
- * The React component for catching errors and displaying error information.
+ * The component for catching errors and displaying error information.
  */
-export class ErrorBoundary<T> extends React.Component<ErrorBoundaryProps<T>, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps<T>) {
-    super(props);
-    this.state = {
-      error: undefined,
-    };
-  }
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  state = {
+    error: undefined,
+  };
 
   componentDidCatch(error: Error) {
-    const { onError } = this.props;
-
-    if (isfunc(onError)) {
-      onError(error);
-    }
+    const { piral, errorType } = this.props;
+    const pilet = piral.meta.name;
+    console.error(`[${pilet}] Exception in component of type "${errorType}".`, error);
 
     this.setState({
       error,
@@ -68,17 +39,14 @@ export class ErrorBoundary<T> extends React.Component<ErrorBoundaryProps<T>, Err
   }
 
   render() {
-    const { children, renderError, renderChild, renderProps } = this.props;
+    const { children, piral, errorType, ...renderProps } = this.props;
     const { error } = this.state;
+    const rest: any = renderProps;
 
     if (error) {
-      if (isfunc(renderError)) {
-        return renderError(error, renderProps);
-      }
-
-      return <div style={{ whiteSpace: 'pre-wrap' }}>{error && error.message}</div>;
+      return <PiralError type={errorType} error={error} {...rest} />;
     }
 
-    return isfunc(renderChild) ? renderChild(children, renderProps) : children;
+    return <React.Suspense fallback={<PiralLoadingIndicator />}>{children}</React.Suspense>;
   }
 }

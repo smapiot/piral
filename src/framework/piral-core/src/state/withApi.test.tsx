@@ -58,7 +58,11 @@ StubComponent.displayName = 'StubComponent';
 
 describe('withApi Module', () => {
   it('wraps a component and forwards the API as piral', () => {
-    const api: any = {};
+    const api: any = {
+      meta: {
+        name: 'foo',
+      },
+    };
     const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
     const node = mount(<Component />);
@@ -67,7 +71,11 @@ describe('withApi Module', () => {
 
   it('is protected against a component crash', () => {
     console.error = jest.fn();
-    const api: any = {};
+    const api: any = {
+      meta: {
+        name: 'foo',
+      },
+    };
     const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
     const node = mount(<Component shouldCrash />);
@@ -88,7 +96,11 @@ describe('withApi Module', () => {
   });
 
   it('Wraps component of type object', () => {
-    const api: any = {};
+    const api: any = {
+      meta: {
+        name: 'foo',
+      },
+    };
     const { context } = createMockContainer();
     context.converters = {
       html: (component) => {
@@ -107,7 +119,11 @@ describe('withApi Module', () => {
   });
 
   it('Wraps component which is object == null.', () => {
-    const api: any = {};
+    const api: any = {
+      meta: {
+        name: 'foo',
+      },
+    };
     const { context } = createMockContainer();
     context.converters = {
       html: (component) => {
