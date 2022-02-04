@@ -1,5 +1,15 @@
 # Piral Changelog
 
+## 0.14.10 (tbd)
+
+- Improved support and documentation for wrappers
+- Improved default metadata using `piletConfig` from *package.json* in pilet debug (#462)
+- Updated vulnerable dependencies
+- Fixed typing of extension slot defaults
+- Added new prop `meta` to registered pages
+- Added support for *debug-meta.json* when using `pilet debug` (#462)
+- Added `piral-page-layouts` plugin
+
 ## 0.14.9 (January 21, 2022)
 
 - Improved error output in `piral-cli-webpack5`

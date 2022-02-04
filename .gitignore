@@ -20,6 +20,9 @@ src/samples/*/esm
 src/templates/*/esm
 src/tooling/*/esm
 src/utilities/*/esm
+src/converters/*/convert.d.ts
+src/converters/*/convert.js
+src/**/*.min.js
 __generated__
 
 # OS files

@@ -19,6 +19,7 @@ interface Pilet {
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
+  meta: string;
   api: string;
   app: string;
   feed?: string;
@@ -29,17 +30,22 @@ interface PiletMetadata {
   [key: string]: unknown;
 }
 
-function fillPiletMeta(pilet: Pilet, basePath: string) {
+function fillPiletMeta(pilet: Pilet, basePath: string, metaFile: string) {
   const { root, bundler } = pilet;
-  const def = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  const metaPath = join(root, metaFile);
+  const packagePath = join(root, 'package.json');
+  const def = JSON.parse(readFileSync(packagePath, 'utf8'));
+  const metaOverride = existsSync(metaPath) ? JSON.parse(readFileSync(metaPath, 'utf8')) : undefined;
   const file = bundler.bundle.name.replace(/^[\/\\]/, '');
   const target = join(bundler.bundle.dir, file);
   const url = new URL(file, basePath);
   const meta = {
+    custom: def.custom,
+    config: def.piletConfig,
+    ...metaOverride,
     name: def.name,
     version: def.version,
     link: `${url.href}?updated=${Date.now()}`,
-    custom: def.custom,
     ...getPiletSpecMeta(target, basePath),
   };
 
@@ -92,7 +98,7 @@ export default class PiletInjector implements KrasInjector {
     pilets.forEach((p, i) =>
       p.bundler.on(() => {
         const basePath = `${this.piletApi}/${i}/`;
-        const meta = fillPiletMeta(p, basePath);
+        const meta = fillPiletMeta(p, basePath, options.meta);
 
         for (const id of Object.keys(cbs)) {
           cbs[id](meta);

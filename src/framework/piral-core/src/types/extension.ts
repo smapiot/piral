@@ -35,9 +35,18 @@ export interface BaseExtensionSlotProps<TName, TParams> {
 }
 
 /**
+ * Gives the extension params shape for the given extension slot name.
+ */
+export type ExtensionParams<TName> = TName extends keyof PiralExtensionSlotMap
+  ? PiralExtensionSlotMap[TName]
+  : TName extends string
+  ? any
+  : TName;
+
+/**
  * The props for defining an extension slot.
  */
-export type ExtensionSlotProps<K = string> = BaseExtensionSlotProps<
-  K extends string ? K : string,
-  K extends keyof PiralExtensionSlotMap ? PiralExtensionSlotMap[K] : K extends string ? any : K
+export type ExtensionSlotProps<TName = string> = BaseExtensionSlotProps<
+  TName extends string ? TName : string,
+  ExtensionParams<TName>
 >;
