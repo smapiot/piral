@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.10 (tbd)
+## 0.14.10 (February 4, 2022)
 
 - Improved support and documentation for wrappers
 - Improved default metadata using `piletConfig` from *package.json* in pilet debug (#462)
