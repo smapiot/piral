@@ -3,7 +3,7 @@ import type { RouteComponentProps } from 'react-router';
 import type { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet } from 'piral-base';
 import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
 import type { AnyComponent } from './components';
-import type { ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
+import type { ExtensionParams, ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
 import type { Disposable } from './utils';
 
@@ -99,7 +99,7 @@ export interface PiletCoreApi {
   registerExtension<TName>(
     name: TName extends string ? TName : string,
     Component: AnyComponent<ExtensionComponentProps<TName>>,
-    defaults?: TName,
+    defaults?: Partial<ExtensionParams<TName>>,
   ): RegistrationDisposer;
   /**
    * Unregisters a global extension component.

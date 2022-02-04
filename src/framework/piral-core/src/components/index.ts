@@ -18,3 +18,4 @@ export * from './SetProvider';
 export * from './SetRedirect';
 export * from './SetRoute';
 export * from './SwitchErrorInfo';
+export * from './wrapComponent';

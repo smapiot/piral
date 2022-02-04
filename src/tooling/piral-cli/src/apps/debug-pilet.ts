@@ -15,6 +15,7 @@ import {
   matchAnyPilet,
   fail,
   log,
+  logDone,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -255,6 +256,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const appDir = appInstanceDir || (await getOrMakeAppDir(pilets[0], logLevel));
   await hooks.afterApp?.({ appInstanceDir, pilets });
 
+  Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
+
   if (krasConfig.ssl === undefined) {
     krasConfig.ssl = undefined;
   }
@@ -272,18 +275,22 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   }
 
   const publicUrl = '/';
+  const { pilet: piletInjector, ...otherInjectors } = krasConfig.injectors;
   const injectorConfig = {
+    meta: 'debug-meta.json',
+    feed,
+    ...piletInjector,
     active: true,
     pilets,
     app: appDir,
     handle: ['/', api],
     api,
-    feed,
   };
 
   krasConfig.map['/'] = '';
   krasConfig.map[api] = '';
-  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, krasConfig.injectors);
+
+  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, otherInjectors);
 
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
