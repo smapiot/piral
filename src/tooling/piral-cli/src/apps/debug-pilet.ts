@@ -15,6 +15,7 @@ import {
   matchAnyPilet,
   fail,
   log,
+  logDone,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -254,6 +255,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   await hooks.beforeApp?.({ appInstanceDir, pilets });
   const appDir = appInstanceDir || (await getOrMakeAppDir(pilets[0], logLevel));
   await hooks.afterApp?.({ appInstanceDir, pilets });
+
+  Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
 
   if (krasConfig.ssl === undefined) {
     krasConfig.ssl = undefined;

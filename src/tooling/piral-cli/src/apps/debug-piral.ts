@@ -14,6 +14,7 @@ import {
   log,
   config,
   normalizePublicUrl,
+  logDone,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -150,6 +151,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     },
     bundlerName,
   );
+
+  bundler.ready().then(() => logDone(`Ready!`));
 
   bundler.on((args) => {
     hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
