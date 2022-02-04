@@ -8,6 +8,7 @@
 - Fixed typing of extension slot defaults
 - Added new prop `meta` to registered pages
 - Added support for *debug-meta.json* when using `pilet debug` (#462)
+- Added `piral-page-layouts` plugin
 
 ## 0.14.9 (January 21, 2022)
 

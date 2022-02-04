@@ -49,7 +49,12 @@ export interface RouteBaseProps<UrlParams = any, UrlState = any>
 /**
  * The props used by a page component.
  */
-export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {}
+export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {
+  /**
+   * The meta data registered with the page.
+   */
+  meta: PiralPageMeta;
+}
 
 /**
  * The meta data registered for a page.
