@@ -1,4 +1,4 @@
-import { callfunc } from '../utils';
+import { callfunc, unregisterModules } from '../utils';
 import { SinglePilet, PiletApi, PiralUnloadPiletEvent, PiletLifecycleHooks } from '../types';
 
 const evtName = 'unload-pilet';
@@ -13,6 +13,8 @@ const evtName = 'unload-pilet';
  */
 export function runCleanup(app: SinglePilet, api: PiletApi, hooks: PiletLifecycleHooks) {
   const css = document.querySelector(`link[data-origin=${JSON.stringify(app.name)}]`);
+  const url = app.basePath;
+
   css?.remove();
 
   callfunc(app.teardown, api);
@@ -22,6 +24,10 @@ export function runCleanup(app: SinglePilet, api: PiletApi, hooks: PiletLifecycl
   if ('requireRef' in app) {
     const depName = app.requireRef;
     delete window[depName];
+  }
+
+  if (url) {
+    unregisterModules(url);
   }
 }
 

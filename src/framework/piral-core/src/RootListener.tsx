@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGlobalStateContext } from '.';
+import { useGlobalStateContext } from './hooks';
 import { renderElement } from './modules';
 
 export const RootListener: React.FC = () => {

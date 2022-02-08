@@ -83,6 +83,22 @@ export function registerModule(name: string, resolve: ModuleResolver) {
   }));
 }
 
+/**
+ * Unregisters all modules coming from the given base URL.
+ * @param baseUrl The base URL used to identify the modules to delete to.
+ */
+export function unregisterModules(baseUrl: string) {
+  [...System.entries()]
+    .map(([name]) => name)
+    .filter((name) => name.startsWith(baseUrl))
+    .forEach((name) => System.delete(name));
+}
+
+/**
+ * Requires a module from SystemJS
+ * @param name The name of the module to obtain
+ * @returns The module's content, if any, otherwise throws an error.
+ */
 export function requireModule(name: string) {
   const dependency = System.get(name);
 
