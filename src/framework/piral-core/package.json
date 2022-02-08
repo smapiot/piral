@@ -22,8 +22,10 @@
     "esm",
     "lib",
     "src",
+    "debug.codegen",
+    "debug.codegen.*",
     "dependencies.codegen",
-    "dependencies.codegen.native.js"
+    "dependencies.codegen.*"
   ],
   "funding": {
     "type": "github",

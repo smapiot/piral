@@ -3,7 +3,7 @@ import { LoadPiletsOptions } from 'piral-base';
 import { installPiralDebug, DebuggerExtensionOptions } from 'piral-debug-utils';
 import { GlobalStateContext } from './types';
 
-export function integrate(
+export function integrateDebugger(
   context: GlobalStateContext,
   options: LoadPiletsOptions,
   debug: DebuggerExtensionOptions = {},

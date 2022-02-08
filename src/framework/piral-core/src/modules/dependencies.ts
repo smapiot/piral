@@ -1,6 +1,6 @@
 import { isfunc } from 'piral-base';
-import { __assign } from 'tslib';
 import type { AvailableDependencies, PiletEntries } from '../types';
+import fillDependencies from '../../dependencies.codegen';
 
 /**
  * The global dependencies, which represent the dependencies
@@ -8,27 +8,8 @@ import type { AvailableDependencies, PiletEntries } from '../types';
  */
 export const globalDependencies: AvailableDependencies = {};
 
-if (process.env.SHARED_DEPENDENCIES) {
-  const fillDependencies = require('../../dependencies.codegen');
-
-  if (isfunc(fillDependencies)) {
-    fillDependencies(globalDependencies);
-  } else {
-    // fall back to the default list if the codegen is invalid / not supported
-    __assign(globalDependencies, {
-      react: require('react'),
-      'react-dom': require('react-dom'),
-      'react-router': require('react-router'),
-      'react-router-dom': require('react-router-dom'),
-      history: require('history'),
-      tslib: require('tslib'),
-      'path-to-regexp': require('path-to-regexp'),
-      '@libre/atom': require('@libre/atom'),
-      '@dbeining/react-atom': require('@dbeining/react-atom'),
-    });
-  }
-} else {
-  // App shell is built with something else than the Piral CLI - just don't fill ...
+if (isfunc(fillDependencies)) {
+  fillDependencies(globalDependencies);
 }
 
 /**
