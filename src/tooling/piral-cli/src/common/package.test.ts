@@ -16,8 +16,8 @@ describe('CLI package module', () => {
 
   it('findPackageRoot correctly resolves the package root of parcel-bundler', () => {
     const dir = process.cwd();
-    const version = findPackageRoot('parcel-bundler', dir);
-    expect(version).toBe(resolve(dir, 'node_modules', 'parcel-bundler', 'package.json'));
+    const version = findPackageRoot('webpack', dir);
+    expect(version).toBe(resolve(dir, 'node_modules', 'webpack', 'package.json'));
   });
 
   it('findPackageRoot returns undefined for invalid package', () => {

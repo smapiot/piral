@@ -121,8 +121,8 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
 describe('Build Piral Command', () => {
   beforeEach(() => {
     setBundler({
-      name: 'parcel',
-      actions: require(resolve(__dirname, '../../../piral-cli-parcel/lib/actions')),
+      name: 'webpack5',
+      actions: require(resolve(__dirname, '../../../piral-cli-webpack5/lib/actions')),
     });
   });
 
