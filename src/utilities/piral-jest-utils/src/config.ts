@@ -8,6 +8,7 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.codegen$': resolve(__dirname, 'codegen.js'),
   },
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
