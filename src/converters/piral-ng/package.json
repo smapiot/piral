@@ -38,6 +38,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib convert.d.ts convert.js",
     "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",

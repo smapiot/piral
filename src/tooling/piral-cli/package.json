@@ -41,6 +41,7 @@
     "pilet": "./lib/pilet-cli.js"
   },
   "scripts": {
+    "cleanup": "rimraf lib",
     "build": "tsc --declaration && rimraf lib/external && ncc build src/external/index.ts -o lib/external",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

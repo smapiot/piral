@@ -39,6 +39,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib",
     "build": "yarn build:commonjs && yarn build:esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",

@@ -30,6 +30,7 @@
     "build:demo-full": "piral build src/samples/sample-piral/src/index.html --target dist/demo-full/index.html",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --project tsconfig.json",
     "prettify": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
+    "cleanup": "lerna run cleanup",
     "test": "jest --forceExit",
     "prepublish": "yarn build",
     "release": "lerna publish",

@@ -34,6 +34,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib piral-feeds.min.js",
     "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-feeds.min.js --bundle --external:piral-core --external:react --minify --global-name=piralFeeds",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",

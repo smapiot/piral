@@ -38,6 +38,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf lib",
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
