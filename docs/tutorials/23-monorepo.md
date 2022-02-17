@@ -37,12 +37,10 @@ Independent of the reasons for choosing a monorepo you'll potentially desire one
 Any of these types may make sense depending on your problem and the available resources to solve it. From an implementation point of view, the Piral instance with selected pilets may be the most difficult to set up - which is why we'll focus on this one here. However, the other two would not be so different. Let us know on [Gitter](https://gitter.im/piral-io/community) or [GitHub](https://github.com/smapiot/piral) if you need more help - we are always happy to assist.
 
 ## Setting up a Monorepo
+
 If you want to lean how to setup a monorepo with piral choose one of these two options:
-- [Setting up a monorepo with piral and lerna](./23.1-monorepo-lerna.md)
-- [Setting up a monorepo with piral and rush](./23.2-monorepo-rush.md)
 
-## Conclusion
+- [Setting up a monorepo with Piral and Lerna](./23.1-monorepo-lerna.md)
+- [Setting up a monorepo with Piral and Rush](./23.2-monorepo-rush.md)
 
-Setting up a monorepo with Piral requires some additional knowledge. Nevertheless, using the right steps and keeping an eye on things such as versioning, `dependencies` and `devDependencies` it is possible to come up with a decent solution that scales really well. What we did not cover is the CI/CD aspect, which will certainly be more complex to implement correctly than in the independent repositories case.
-
-In the next tutorial, we'll look at a set of useful patterns to implement agile frontends using extension components.
+In the next tutorial we look into details of setting up a monorepo using Lerna.
