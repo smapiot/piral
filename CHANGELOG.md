@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.11 (tbd)
+## 0.14.11 (February 17, 2022)
 
 - Improved detection of framework packages
 - Improved hash function for remote importmap references
