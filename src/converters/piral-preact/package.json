@@ -1,6 +1,6 @@
 {
   "name": "piral-preact",
-  "version": "0.14.10",
+  "version": "0.14.11",
   "description": "Plugin for integrating Preact components in Piral.",
   "keywords": [
     "piral",
@@ -43,7 +43,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.10",
+    "piral-core": "^0.14.11",
     "preact": "^10.5.13"
   },
   "peerDependencies": {
