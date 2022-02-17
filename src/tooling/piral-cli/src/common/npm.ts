@@ -440,6 +440,7 @@ function getCoreExternals(dependencies: Record<string, string>): Array<string> {
     }
   }
 
+  log('frameworkLibMissing_0078', frameworkLibs);
   return [];
 }
 

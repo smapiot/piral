@@ -1684,6 +1684,67 @@ export function entryFileMissing_0077(): QuickMessage {
 }
 
 /**
+ * @kind Warning
+ *
+ * @summary
+ * The Piral instance is not referencing any framework package.
+ *
+ * @abstract
+ * A Piral instance has to reference either `piral-base`, `piral-core`
+ * or the whole `piral` framework package. If none of these dependencies
+ * is found then no framework dependencies can be shared automatically.
+ * Framework dependencies include react and react-router.
+ *
+ * @example
+ * You might use a monorepo where most / all dependencies are declared in
+ * a top-level package.json. Therefore, the package.json of the actual
+ * Piral instance could look like this:
+ *
+ * ```json
+ * {
+ *   "name": "my-piral-instance",
+ *   "version": "1.0.0",
+ *   "app": "./src/index.html",
+ *   "pilets": {}
+ * }
+ * ```
+ *
+ * While perfectly valid, this one lacks `dependencies` and `devDependencies`.
+ * Surely, those are not really needed in the described case, but under
+ * those conditions we cannot know what dependencies you may want to share. It
+ * could be that you only reference `piral-base` and therefore don't want to
+ * share anything except `tslib`. Or you use `piral-core` and also share things
+ * like `react` or `react-router-dom`.
+ *
+ * Either way, in order to recognize that you'll need to include the correct
+ * reference:
+ *
+ * ```json
+ * {
+ *   "name": "my-piral-instance",
+ *   "version": "1.0.0",
+ *   "app": "./src/index.html",
+ *   "pilets": {},
+ *   "dependencies": {
+ *     "piral": "latest"
+ *   }
+ * }
+ * ```
+ *
+ * If you only want to use `piral-base` or `piral-core` then replace `piral` in
+ * the example above. Also use the version that you'll like to use - `latest`
+ * is just one example.
+ *
+ */
+export function frameworkLibMissing_0078(frameworkLibs: Array<string>): QuickMessage {
+  return [
+    LogLevels.warning,
+    '0078',
+    `Did not find any reference to either ${frameworkLibs.join(', ')}. No framework dependencies are shared.`,
+  ];
+}
+
+/**
  * @kind Error
  *
  * @summary
