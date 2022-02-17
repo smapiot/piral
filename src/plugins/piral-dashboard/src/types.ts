@@ -89,6 +89,10 @@ export interface TileErrorInfoProps {
    * The currently used number of rows.
    */
   rows: number;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 export interface BareTileComponentProps {

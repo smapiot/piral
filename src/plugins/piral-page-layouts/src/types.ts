@@ -65,6 +65,10 @@ export interface PageLayoutErrorInfoProps extends RouteComponentProps {
    * The available page meta data.
    */
   meta: PiralPageMeta;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 export interface PiletPageLayoutsApi {

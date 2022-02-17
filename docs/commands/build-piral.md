@@ -44,7 +44,7 @@ Sets the target directory or file of bundling.
 
 ### `--public-url`
 
-Sets the public URL (path) of the bundle.
+Sets the public URL (path) of the bundle. Only for release output.
 
 - Type: `string`
 - Default: `"/"`

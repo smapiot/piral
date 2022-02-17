@@ -49,7 +49,7 @@ Sets the log level to use (1-5).
 
 ### `--install`
 
-Already performs the update of its NPM dependencies.
+Already performs the update of its npm dependencies.
 
 - Type: `boolean`
 - Default: `true`
@@ -57,14 +57,14 @@ Already performs the update of its NPM dependencies.
 ### `--no-install`
 
 Opposite of:
-Already performs the update of its NPM dependencies.
+Already performs the update of its npm dependencies.
 
 - Type: `boolean`
 - Default: `false`
 
 ### `--npm-client`
 
-Sets the NPM client to be used when upgrading.
+Sets the npm client to be used when upgrading.
 
 - Type: `string`
 - Choices: `"npm"`, `"pnpm"`, `"yarn"`

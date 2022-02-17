@@ -2,12 +2,11 @@ import { resolve, relative, dirname } from 'path';
 import { createReadStream, existsSync, access, constants } from 'fs';
 import { log, fail } from './log';
 import { config } from './config';
-import { legacyCoreExternals } from './constants';
+import { legacyCoreExternals, frameworkLibs } from './constants';
 import { inspectPackage } from './inspect';
 import { readJson, checkExists, findFile } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
-import { frameworkLibs } from '.';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
@@ -441,6 +440,7 @@ function getCoreExternals(dependencies: Record<string, string>): Array<string> {
     }
   }
 
+  log('frameworkLibMissing_0078', frameworkLibs);
   return [];
 }
 

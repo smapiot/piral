@@ -53,6 +53,10 @@ export interface FeedErrorInfoProps {
    * The provided error details.
    */
   error: any;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 export interface FeedDataState {

@@ -53,7 +53,7 @@ Sets the package registry to use for resolving the specified Piral app.
 
 ### `--install`
 
-Already performs the installation of its NPM dependencies.
+Already performs the installation of its npm dependencies.
 
 - Type: `boolean`
 - Default: `true`
@@ -61,7 +61,7 @@ Already performs the installation of its NPM dependencies.
 ### `--no-install`
 
 Opposite of:
-Already performs the installation of its NPM dependencies.
+Already performs the installation of its npm dependencies.
 
 - Type: `boolean`
 - Default: `false`
@@ -98,11 +98,11 @@ Sets the boilerplate template package to be used when scaffolding.
 
 ### `--npm-client`
 
-Sets the NPM client to be used when scaffolding.
+Sets the npm client to be used when scaffolding.
 
 - Type: `string`
 - Choices: `"npm"`, `"pnpm"`, `"yarn"`
-- Default: `undefined`
+- Default: `"npm"`
 
 ### `--bundler`
 
