@@ -40,6 +40,10 @@ export interface FormErrorInfoProps {
    * The provided error details.
    */
   error: any;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 export interface FormDataState {

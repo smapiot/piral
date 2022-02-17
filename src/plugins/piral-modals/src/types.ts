@@ -95,6 +95,10 @@ export interface ModalErrorInfoProps {
    * Callback for closing the modal programmatically.
    */
   onClose(): void;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 export interface OpenModalDialog {

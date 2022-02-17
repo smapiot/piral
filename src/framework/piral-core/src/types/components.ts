@@ -88,6 +88,10 @@ export interface PageErrorInfoProps extends RouteComponentProps {
    * The provided error details.
    */
   error: any;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 /**
@@ -116,6 +120,10 @@ export interface ExtensionErrorInfoProps {
    * The provided error details.
    */
   error: any;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 /**
@@ -130,6 +138,10 @@ export interface UnknownErrorInfoProps {
    * The provided error details.
    */
   error: any;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 /**
