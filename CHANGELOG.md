@@ -17,6 +17,14 @@
 - Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
 - Added semver possibilities for resolving shared dependencies
 
+## 0.14.11 (February 17, 2022)
+
+- Improved detection of framework packages
+- Improved hash function for remote importmap references
+- Fixed wrongly placed imports
+- Fixed handling of async errors when loading pilets (#476)
+- Added `pilet` to `ErrorInfoProps` (#477)
+
 ## 0.14.10 (February 4, 2022)
 
 - Improved support and documentation for wrappers

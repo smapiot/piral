@@ -91,6 +91,10 @@ export interface MenuItemErrorInfoProps {
    * The type of the used menu.
    */
   menu: MenuType;
+  /**
+   * The name of the pilet emitting the error.
+   */
+  pilet?: string;
 }
 
 export interface MenuComponentProps extends BaseComponentProps {}

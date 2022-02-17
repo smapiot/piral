@@ -44,7 +44,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     const rest: any = renderProps;
 
     if (error) {
-      return <PiralError type={errorType} error={error} {...rest} />;
+      const pilet = piral.meta.name;
+      return <PiralError type={errorType} error={error} pilet={pilet} {...rest} />;
     }
 
     return <React.Suspense fallback={<PiralLoadingIndicator />}>{children}</React.Suspense>;

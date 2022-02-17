@@ -52,7 +52,7 @@ Sets the framework/library level to use.
 
 ### `--install`
 
-Already performs the installation of its NPM dependencies.
+Already performs the installation of its npm dependencies.
 
 - Type: `boolean`
 - Default: `true`
@@ -60,7 +60,7 @@ Already performs the installation of its NPM dependencies.
 ### `--no-install`
 
 Opposite of:
-Already performs the installation of its NPM dependencies.
+Already performs the installation of its npm dependencies.
 
 - Type: `boolean`
 - Default: `false`
@@ -84,7 +84,7 @@ Sets the log level to use (1-5).
 Sets the tag or version of the package to install. By default, this uses the version of the CLI.
 
 - Type: `string`
-- Default: `"0.13.9"`
+- Default: `"0.14.10"`
 
 ### `--force-overwrite`
 
@@ -111,11 +111,11 @@ Sets the boilerplate template package to be used when scaffolding.
 
 ### `--npm-client`
 
-Sets the NPM client to be used when scaffolding.
+Sets the npm client to be used when scaffolding.
 
 - Type: `string`
 - Choices: `"npm"`, `"pnpm"`, `"yarn"`
-- Default: `undefined`
+- Default: `"npm"`
 
 ### `--bundler`
 

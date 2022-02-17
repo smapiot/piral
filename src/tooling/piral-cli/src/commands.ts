@@ -1,6 +1,6 @@
-import { piletBuildTypeKeys } from '.';
 import * as apps from './apps';
 import {
+  piletBuildTypeKeys,
   availableBundlers,
   availableReleaseProviders,
   forceOverwriteKeys,

@@ -62,7 +62,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
       if (typeof url !== 'string') {
         log('generalInfo_0000', `The value of "${depName}" in the importmap is not a string and will be ignored.`);
       } else if (/^https?:\/\//.test(url)) {
-        const hash = computeHash(url);
+        const hash = computeHash(url).substring(0, 7);
 
         dependencies.push({
           id: `${identifier}@${hash}`,

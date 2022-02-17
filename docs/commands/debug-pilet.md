@@ -117,6 +117,13 @@ Sets the name of the Piral instance.
 - Type: `string`
 - Default: `undefined`
 
+### `--app-dir`
+
+Sets the path to a custom Piral instance for serving.
+
+- Type: `string`
+- Default: `undefined`
+
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
