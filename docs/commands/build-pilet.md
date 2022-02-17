@@ -155,6 +155,14 @@ Sets the bundler to use.
 - Choices: ``
 - Default: `undefined`
 
+### `--type`
+
+Selects the target type of the build.
+
+- Type: `string`
+- Choices: `"default"`, `"standalone"`, `"manifest"`
+- Default: `"default"`
+
 ### `--app`
 
 Sets the name of the Piral instance.

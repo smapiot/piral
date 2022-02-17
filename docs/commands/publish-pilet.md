@@ -27,10 +27,10 @@ Instead of `publish-pilet` you can also use:
 
 ### `source`
 
-Sets the source previously packed *.tgz bundle to publish.
+Sets the source of either the previously packed *.tgz bundle or the pilet root module to publish.
 
 - Type: `string`
-- Default: `*.tgz`
+- Default: `undefined`
 
 ## Flags
 
@@ -84,6 +84,14 @@ Sets the schema to be used when making a fresh build of the pilet.
 - Type: `string`
 - Choices: `"v0"`, `"v1"`, `"v2"`, `"none"`
 - Default: `"v2"`
+
+### `--bundler`
+
+Sets the bundler to use.
+
+- Type: `string`
+- Choices: ``
+- Default: `undefined`
 
 ### `--from`
 
