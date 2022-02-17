@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.11 (tbd)
+
+- Improved detection of framework packages
+- Fixed wrongly placed imports
+
 ## 0.14.10 (February 4, 2022)
 
 - Improved support and documentation for wrappers
