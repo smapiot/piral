@@ -1,6 +1,18 @@
 import { cleanup } from './cleanup';
 import type { PiletApi, PiletApiCreator, SinglePilet, MultiPilet, Pilet, PiralUnloadPiletEvent } from './types';
 
+function logError(name: string, e: Error) {
+  console.error(`Error while setting up ${name}.`, e);
+}
+
+function withCatch(result: void | Promise<void>, name: string) {
+  if (result instanceof Promise) {
+    return result.catch((e) => logError(name, e));
+  }
+
+  return result;
+}
+
 /**
  * Sets up the given single pilet by calling the exported `setup`
  * function on the pilet with the created API.
@@ -23,9 +35,9 @@ export function setupSinglePilet(app: SinglePilet, api: PiletApi) {
       }
     };
     api.on(evtName, handler);
-    return result;
+    return withCatch(result, app?.name);
   } catch (e) {
-    console.error(`Error while setting up ${app?.name}.`, e);
+    logError(app?.name, e);
   }
 }
 
@@ -37,9 +49,9 @@ export function setupSinglePilet(app: SinglePilet, api: PiletApi) {
  */
 export function setupMultiPilet(app: MultiPilet, apiFactory: PiletApiCreator) {
   try {
-    return app.setup(apiFactory);
+    return withCatch(app.setup(apiFactory), app?.name);
   } catch (e) {
-    console.error(`Error while setting up ${app?.name}.`, e);
+    logError(app?.name, e);
   }
 }
 

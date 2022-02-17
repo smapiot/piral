@@ -4,6 +4,7 @@
 
 - Improved detection of framework packages
 - Fixed wrongly placed imports
+- Fixed handling of async errors when loading pilets (#476)
 
 ## 0.14.10 (February 4, 2022)
 
