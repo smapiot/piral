@@ -3,6 +3,7 @@
 ## 0.14.11 (tbd)
 
 - Improved detection of framework packages
+- Improved hash function for remote importmap references
 - Fixed wrongly placed imports
 - Fixed handling of async errors when loading pilets (#476)
 - Added `pilet` to `ErrorInfoProps` (#477)

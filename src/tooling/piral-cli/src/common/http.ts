@@ -4,7 +4,6 @@ import { Stream } from 'stream';
 import { platform, tmpdir } from 'os';
 import { createWriteStream } from 'fs';
 import { log } from './log';
-import { computeHash } from './hash';
 import { axios, FormData } from '../external';
 
 const os = platform();
@@ -38,18 +37,6 @@ function streamToFile(source: Stream, target: string) {
     source.on('error', (err) => reject(err));
     dest.on('finish', () => resolve([target]));
   });
-}
-
-export function getHashFromUrl(target: string): Promise<string> {
-  return axios.default
-    .get<Buffer>(target, {
-      responseType: 'arraybuffer',
-      headers: standardHeaders,
-    })
-    .then((res) => {
-      log('generalDebug_0003', `Received the contents from "${target}" (status: ${res.status}).`);
-      return computeHash(res.data);
-    });
 }
 
 export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>> {

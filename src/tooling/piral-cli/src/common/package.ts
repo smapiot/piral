@@ -6,7 +6,7 @@ import { getDependencies, getDevDependencies } from './language';
 import { SourceLanguage, ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
-import { getHashFromUrl } from './http';
+import { computeHash } from './hash';
 import { applyTemplate } from './template';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals, makeExternals } from './npm';
 import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
@@ -604,7 +604,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
 
       if (typeof url !== 'string') {
       } else if (/^https?:\/\//.test(url)) {
-        const hash = await getHashFromUrl(url);
+        const hash = computeHash(url).substring(0, 7);
 
         dependencies.push({
           id: `${depName}@${hash}`,
