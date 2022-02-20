@@ -164,7 +164,7 @@ always-auth=true`,
 
     progress(`Installing npm package ${packageRef} ...`);
 
-    await installPackage(npmClient, packageRef, root);
+    await installPackage(npmClient, packageRef, root, '--save-exact');
 
     progress(`Taking care of templating ...`);
 

@@ -173,7 +173,7 @@ always-auth=true`,
 
       progress(`Installing npm package %s ...`, packageRef);
 
-      await installPackage(npmClient, packageRef, root, '--save-dev');
+      await installPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
     } else {
       progress(`Using locally available npm package %s ...`, sourceName);
     }

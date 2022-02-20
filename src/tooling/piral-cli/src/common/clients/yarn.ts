@@ -12,6 +12,8 @@ function runYarnProcess(args: Array<string>, target: string, output?: NodeJS.Wri
 function convert(flags: Array<string>) {
   return flags.map((flag) => {
     switch (flag) {
+      case '--save-exact':
+        return '--exact';
       case '--save-dev':
         return '--dev';
       case '--no-save':
