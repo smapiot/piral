@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.12 (tbd)
+
+- Fixed reference to `optimize-css-assets-webpack-plugin` causing Webpack 5 error in Node.js v16
+
 ## 0.14.11 (February 17, 2022)
 
 - Improved detection of framework packages
