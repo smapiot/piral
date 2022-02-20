@@ -4,7 +4,8 @@
 
 - Improved handling of `--bundler` when scaffolding
 - Improved referenced version of dependencies when scaffolding
-- Fixed reference to `optimize-css-assets-webpack-plugin` causing Webpack 5 error in Node.js v16
+- Fixed reference to `optimize-css-assets-webpack-plugin` causing Webpack 5 error using npm v8
+- Fixed scaffold installation despite `--no-install` when using npm v8
 
 ## 0.14.11 (February 17, 2022)
 
