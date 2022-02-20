@@ -2,6 +2,7 @@
 
 ## 0.14.12 (tbd)
 
+- Improved handling of `--bundler` when scaffolding
 - Fixed reference to `optimize-css-assets-webpack-plugin` causing Webpack 5 error in Node.js v16
 
 ## 0.14.11 (February 17, 2022)
