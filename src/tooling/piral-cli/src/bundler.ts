@@ -39,7 +39,7 @@ async function installDefaultBundler(root: string) {
   const client = await determineNpmClient(root);
   log('generalDebug_0003', `Prepare to install ${selectedPackage}@${cliVersion} using "${client}" into "${root}".`);
   progress(`Installing ${selectedPackage} ...`);
-  await installPackage(client, `${selectedPackage}@${cliVersion}`, root, '--save-dev');
+  await installPackage(client, `${selectedPackage}@${cliVersion}`, root, '--save-dev', '--save-exact');
   log('generalDebug_0003', `Installed bundler from "${selectedPackage}".`);
 
   require('./inject').inject(selectedPackage);

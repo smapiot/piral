@@ -9,10 +9,26 @@ import { deepMerge } from './merge';
 import { computeHash } from './hash';
 import { applyTemplate } from './template';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals, makeExternals } from './npm';
-import { filesTar, filesOnceTar, declarationEntryExtensions } from './constants';
+import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation, SharedDependency } from '../types';
+
+function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
+  if (bundler && bundler !== 'none') {
+    if (bundlerNames.includes(bundler as any)) {
+      devDependencies[`piral-cli-${bundler}`] = version;
+    } else if (!isValidDependency(bundler)) {
+      //Error case - print warning and ignore
+      log('generalWarning_0001', `The provided bundler name "${bundler}" does not refer to a valid package name.'`);
+    } else {
+      const sep = bundler.indexOf('@', 1);
+      const name = bundler.substring(0, sep !== -1 ? sep : bundler.length);
+      const version = sep !== -1 ? bundler.substring(sep + 1) : 'latest';
+      devDependencies[name] = version;
+    }
+  }
+}
 
 function getDependencyVersion(
   name: string,
@@ -168,9 +184,7 @@ export function getPiralPackage(
     ...getDependencies(language, packages),
   };
 
-  if (bundler && bundler !== 'none') {
-    devDependencies[`piral-cli-${bundler}`] = `${version}`;
-  }
+  appendBundler(devDependencies, bundler, version);
 
   return {
     app,
@@ -513,7 +527,7 @@ export async function patchPiletPackage(
     }, {}),
     [name]: `*`,
   };
-  const devDependencies = {
+  const devDependencies: Record<string, string> = {
     ...Object.keys(typeDependencies).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || typeDependencies[name];
       return deps;
@@ -537,11 +551,9 @@ export async function patchPiletPackage(
 
   if (newInfo) {
     const bundler = newInfo.bundler;
-    devDependencies['piral-cli'] = `^${cliVersion}`;
-
-    if (bundler && bundler !== 'none') {
-      devDependencies[`piral-cli-${bundler}`] = `^${cliVersion}`;
-    }
+    const version = `^${cliVersion}`;
+    devDependencies['piral-cli'] = version;
+    appendBundler(devDependencies, bundler, version);
   }
 
   const packageContent = deepMerge(packageOverrides, {
