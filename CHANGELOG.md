@@ -17,6 +17,13 @@
 - Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
 - Added semver possibilities for resolving shared dependencies
 
+## 0.14.12 (February 21, 2022)
+
+- Improved handling of `--bundler` when scaffolding
+- Improved referenced version of dependencies when scaffolding
+- Fixed reference to `optimize-css-assets-webpack-plugin` causing Webpack 5 error using npm v8
+- Fixed scaffold installation despite `--no-install` when using npm v8
+
 ## 0.14.11 (February 17, 2022)
 
 - Improved detection of framework packages

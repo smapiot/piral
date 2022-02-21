@@ -160,16 +160,20 @@ always-auth=true`,
       );
     }
 
-    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework, bundlerName));
-
     progress(`Installing npm package ${packageRef} ...`);
 
-    await installPackage(npmClient, packageRef, root);
+    await installPackage(npmClient, packageRef, root, '--save-exact');
 
     progress(`Taking care of templating ...`);
 
-    const data = getPiralScaffoldData(language, root, app, framework, variables);
-    await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
+    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework, bundlerName));
+
+    await scaffoldPiralSourceFiles(
+      template,
+      registry,
+      getPiralScaffoldData(language, root, app, framework, variables),
+      forceOverwrite,
+    );
 
     if (install) {
       progress(`Installing dependencies ...`);

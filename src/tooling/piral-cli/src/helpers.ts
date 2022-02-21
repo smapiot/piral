@@ -1,4 +1,5 @@
 import { ForceOverwrite, SourceLanguage } from './common/enums';
+import { bundlerNames, frameworkLibs } from './common/constants';
 import {
   Framework,
   NpmClientType,
@@ -13,20 +14,10 @@ export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const piralBuildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator', 'emulator-sources'];
 export const piletBuildTypeKeys: Array<PiletBuildType> = ['default', 'standalone', 'manifest'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'yarn'];
-export const bundlerKeys: Array<string> = [
-  'none',
-  'esbuild',
-  'parcel',
-  'parcel2',
-  'rollup',
-  'webpack',
-  'webpack5',
-  'vite',
-  'xbuild',
-];
+export const bundlerKeys: Array<string> = ['none', ...bundlerNames];
 export const availableBundlers: Array<string> = [];
 export const availableReleaseProviders: Array<string> = [];
-export const frameworkKeys: Array<Framework> = ['piral', 'piral-core', 'piral-base'];
+export const frameworkKeys: Array<Framework> = [...frameworkLibs];
 export const forceOverwriteKeys = Object.keys(ForceOverwrite).filter((m) => typeof ForceOverwrite[m] === 'number');
 
 export function valueOfForceOverwrite(key: string): ForceOverwrite {
