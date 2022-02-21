@@ -1,6 +1,6 @@
 {
   "name": "piral-search",
-  "version": "0.14.11",
+  "version": "0.14.12",
   "description": "Plugin for centralizing search in Piral.",
   "keywords": [
     "piral",
@@ -41,7 +41,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.11"
+    "piral-core": "^0.14.12"
   },
   "peerDependencies": {
     "piral-core": "0.14.x"
