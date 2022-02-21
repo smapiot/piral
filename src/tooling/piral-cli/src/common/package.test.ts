@@ -61,10 +61,10 @@ describe('CLI package module', () => {
   });
 
   it('getPiralPackage returns piral package', () => {
-    let result = getPiralPackage('app', SourceLanguage.ts, '1.0.0', 'piral-base', 'npm');
-    expect(result.devDependencies['piral-cli-npm']).toEqual('1.0.0');
+    let result = getPiralPackage('app', SourceLanguage.ts, '1.0.0', 'piral-base', 'webpack');
+    expect(result.devDependencies['piral-cli-webpack']).toEqual('1.0.0');
     result = getPiralPackage('app', SourceLanguage.ts, '1.0.0', 'piral-base');
-    expect(result.devDependencies).not.toContain('piral-cli-npm');
+    expect(result.devDependencies).not.toContain('piral-cli-webpack');
   });
 
   it('retrievePiletData error cases', async () => {

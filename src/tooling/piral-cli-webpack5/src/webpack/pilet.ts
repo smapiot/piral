@@ -1,6 +1,6 @@
 import type { PiletBuildHandler } from 'piral-cli';
 import * as TerserPlugin from 'terser-webpack-plugin';
-import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import * as CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import type { PiletSchemaVersion, SharedDependency } from 'piral-cli';
 import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration } from './common';
 import { piletWebpackConfigEnhancer } from '../enhancers/pilet-webpack-config-enhancer';
@@ -81,7 +81,7 @@ async function getConfig(
               },
             },
           }),
-          new OptimizeCSSAssetsPlugin({}),
+          new CssMinimizerPlugin(),
         ],
       },
 

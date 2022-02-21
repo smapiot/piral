@@ -1,7 +1,7 @@
 import type { PiralBuildHandler } from 'piral-cli';
 import * as webpack from 'webpack';
 import * as TerserPlugin from 'terser-webpack-plugin';
-import * as OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import * as CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import { getFreePort } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -71,7 +71,7 @@ async function getConfig(
               ie8: true,
             },
           }),
-          new OptimizeCSSAssetsPlugin({}),
+          new CssMinimizerPlugin(),
         ],
       },
 
