@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.12 (tbd)
+## 0.14.12 (February 21, 2022)
 
 - Improved handling of `--bundler` when scaffolding
 - Improved referenced version of dependencies when scaffolding
