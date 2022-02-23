@@ -6,7 +6,6 @@ import type {
   PiletBuildHandler,
 } from '../types';
 import { setStandardEnvs } from '../common';
-import { resolve } from 'path';
 
 let handler: PiletBuildHandler;
 let bundler: BundleHandlerResponse;
@@ -63,11 +62,10 @@ process.on('message', async (msg) => {
 
         break;
       case 'start':
-        const dist = resolve(root, 'dist');
         bundler = await run(
           root,
           msg.targetDir,
-          dist,
+          msg.outDir,
           msg.piral,
           msg.externals,
           msg.importmap,
@@ -100,7 +98,7 @@ process.on('message', async (msg) => {
 
           process.send({
             type: 'done',
-            outDir: dist,
+            outDir: msg.outDir,
           });
         }
 

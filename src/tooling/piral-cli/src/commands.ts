@@ -63,6 +63,9 @@ const allCommands: Array<ToolCommand<any>> = [
           describe: 'Sets the source root directory or index.html file for collecting all the information.',
           default: apps.debugPiralDefaults.entry,
         })
+        .string('target')
+        .describe('target', 'Sets the target directory or file of bundling.')
+        .default('target', apps.debugPiralDefaults.target)
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiralDefaults.port)
@@ -91,6 +94,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.debugPiral(args.base as string, {
         entry: args.source as string,
+        target: args.target as string,
         port: args.port as number,
         hmr: args.hmr as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
@@ -398,6 +402,9 @@ const allCommands: Array<ToolCommand<any>> = [
           describe: 'Sets the source file containing the pilet root module.',
           default: apps.debugPiletDefaults.entry,
         })
+        .string('target')
+        .describe('target', 'Sets the target directory or file of bundling.')
+        .default('target', apps.debugPiletDefaults.target)
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiletDefaults.port)
@@ -432,6 +439,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.debugPilet(args.base as string, {
         entry: args.source as string,
+        target: args.target as string,
         port: args.port as number,
         hmr: args.hmr as boolean,
         bundlerName: args.bundler as string,
