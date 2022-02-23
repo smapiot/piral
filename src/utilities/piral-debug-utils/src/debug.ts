@@ -196,6 +196,14 @@ export function installPiralDebug(options: DebuggerOptions) {
     },
   };
 
+  const details = {
+    name: debugApi.instance.name,
+    version: debugApi.instance.version,
+    kind: debugApiVersion,
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    capabilities: ['events', 'container', 'routes', 'pilets', 'settings', 'extensions', 'dependencies'],
+  };
+
   const start = () => {
     const container = decycle(getGlobalState());
     const routes = getRoutes().filter((r) => !excludedRoutes.includes(r));
@@ -210,11 +218,7 @@ export function installPiralDebug(options: DebuggerOptions) {
 
     sendMessage({
       type: 'available',
-      name: debugApi.instance.name,
-      version: debugApi.instance.version,
-      kind: debugApiVersion,
-      mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-      capabilities: ['events', 'container', 'routes', 'pilets', 'settings', 'extensions', 'dependencies'],
+      ...details,
       state: {
         routes,
         pilets,
@@ -224,6 +228,13 @@ export function installPiralDebug(options: DebuggerOptions) {
         extensions,
         dependencies,
       },
+    });
+  };
+
+  const check = () => {
+    sendMessage({
+      type: 'info',
+      ...details,
     });
   };
 
@@ -265,6 +276,8 @@ export function installPiralDebug(options: DebuggerOptions) {
       switch (content.type) {
         case 'init':
           return start();
+        case 'check-piral':
+          return check();
         case 'update-settings':
           return updateSettings(content.settings);
         case 'append-pilet':
