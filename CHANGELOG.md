@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.13 (tbd)
+
+- Fixed handling of direct function exports in importmaps
+
 ## 0.14.12 (February 21, 2022)
 
 - Improved handling of `--bundler` when scaffolding
