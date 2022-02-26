@@ -3,6 +3,7 @@
 ## 0.14.13 (tbd)
 
 - Fixed handling of direct function exports in importmaps
+- Fixed usage of feed pilets when they are debugged locally
 
 ## 0.14.12 (February 21, 2022)
 
