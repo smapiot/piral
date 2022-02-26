@@ -108,7 +108,13 @@ export function registerDependencies(modules: Record<string, any>) {
 export function registerModule(name: string, resolve: ModuleResolver) {
   System.register(name, [], (_exports) => ({
     execute() {
-      _exports(resolve());
+      const content = resolve();
+
+      if (content instanceof Promise) {
+        return content.then(_exports);
+      } else {
+        _exports(content);
+      }
     },
   }));
 }
