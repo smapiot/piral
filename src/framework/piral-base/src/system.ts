@@ -42,7 +42,7 @@ System.constructor.prototype.register = function (...args) {
         _export(...p);
       }
     };
-    getContent(exp, ctx);
+    return getContent(exp, ctx);
   });
 
   return systemRegister.apply(this, args);
