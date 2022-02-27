@@ -57,6 +57,12 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
         console.error(`Requesting the pilets failed. We'll continue loading without pilets (DEBUG only).`, err);
         return [];
       })
-      .then((pilets) => appendix.then((debugPilets) => [...pilets, ...debugPilets]));
+      .then((pilets) =>
+        appendix.then((debugPilets) => {
+          const debugPiletNames = debugPilets.map((m) => m.name);
+          const feedPilets = pilets.filter((m) => !debugPiletNames.includes(m.name));
+          return [...feedPilets, ...debugPilets];
+        }),
+      );
   };
 }

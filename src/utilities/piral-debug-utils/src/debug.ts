@@ -209,6 +209,20 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   const eventDispatcher = document.body.dispatchEvent;
 
+  const systemResolve = System.constructor.prototype.resolve;
+  const depMap = {};
+
+  System.constructor.prototype.resolve = function (...args) {
+    const [url, parent] = args;
+
+    if (parent) {
+      depMap[parent] = depMap[parent] || {};
+      depMap[parent][url] = true;
+    }
+
+    return systemResolve.call(this, ...args);
+  };
+
   const debugApi = {
     debug: debugApiVersion,
     instance: {
@@ -227,6 +241,23 @@ export function installPiralDebug(options: DebuggerOptions) {
     },
   };
 
+  const details = {
+    name: debugApi.instance.name,
+    version: debugApi.instance.version,
+    kind: debugApiVersion,
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    capabilities: [
+      'events',
+      'container',
+      'routes',
+      'pilets',
+      'settings',
+      'extensions',
+      'dependencies',
+      'dependency-map',
+    ],
+  };
+
   const start = () => {
     const container = decycle(getGlobalState());
     const routes = getRoutes().filter((r) => !excludedRoutes.includes(r));
@@ -241,11 +272,7 @@ export function installPiralDebug(options: DebuggerOptions) {
 
     sendMessage({
       type: 'available',
-      name: debugApi.instance.name,
-      version: debugApi.instance.version,
-      kind: debugApiVersion,
-      mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-      capabilities: ['events', 'container', 'routes', 'pilets', 'settings', 'extensions', 'dependencies'],
+      ...details,
       state: {
         routes,
         pilets,
@@ -255,6 +282,37 @@ export function installPiralDebug(options: DebuggerOptions) {
         extensions,
         dependencies,
       },
+    });
+  };
+
+  const check = () => {
+    sendMessage({
+      type: 'info',
+      ...details,
+    });
+  };
+
+  const getDependencyMap = () => {
+    const dependencyMap = {};
+    const pilets = getPilets()
+      .map((pilet: any) => ({
+        name: pilet.name,
+        link: pilet.link,
+      }))
+      .filter((m) => m.link);
+
+    Object.keys(depMap).forEach((url) => {
+      const dependencies = depMap[url];
+      const pilet = pilets.find((p) => p.link === url);
+
+      if (pilet) {
+        dependencyMap[pilet.name] = dependencies;
+      }
+    });
+
+    sendMessage({
+      type: 'dependency-map',
+      dependencyMap,
     });
   };
 
@@ -296,6 +354,10 @@ export function installPiralDebug(options: DebuggerOptions) {
       switch (content.type) {
         case 'init':
           return start();
+        case 'check-piral':
+          return check();
+        case 'get-dependency-map':
+          return getDependencyMap();
         case 'update-settings':
           return updateSettings(content.settings);
         case 'append-pilet':
