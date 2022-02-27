@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "0.14.12",
+  "version": "0.14.13",
   "description": "The core library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -48,8 +48,8 @@
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
-    "piral-base": "^0.14.12",
-    "piral-debug-utils": "^0.14.12"
+    "piral-base": "^0.14.13",
+    "piral-debug-utils": "^0.14.13"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

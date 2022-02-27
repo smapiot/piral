@@ -2,7 +2,8 @@ import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 import { satisfies, validate } from './version';
 
-const originalResolve = System.constructor.prototype.resolve;
+const systemResolve = System.constructor.prototype.resolve;
+const systemRegister = System.constructor.prototype.register;
 
 function findMatchingPackage(id: string) {
   const sep = id.indexOf('@', 1);
@@ -26,9 +27,22 @@ function findMatchingPackage(id: string) {
   return undefined;
 }
 
+function isPrimitiveExport(content: any) {
+  const type = typeof content;
+  return (
+    type === 'function' ||
+    type === 'number' ||
+    type === 'boolean' ||
+    type === 'symbol' ||
+    type === 'string' ||
+    type === 'bigint' ||
+    Array.isArray(content)
+  );
+}
+
 System.constructor.prototype.resolve = function (id: string, parentUrl: string) {
   try {
-    return originalResolve.call(this, id, parentUrl);
+    return systemResolve.call(this, id, parentUrl);
   } catch (ex) {
     const result = findMatchingPackage(id);
 
@@ -38,6 +52,36 @@ System.constructor.prototype.resolve = function (id: string, parentUrl: string) 
 
     return result;
   }
+};
+
+System.constructor.prototype.register = function (...args) {
+  const getContent = args.pop() as System.DeclareFn;
+
+  args.push((_export, ctx) => {
+    const exp = (...p) => {
+      if (p.length === 1) {
+        const content = p[0];
+
+        if (content instanceof Promise) {
+          return content.then(exp);
+        } else if (isPrimitiveExport(content)) {
+          _export('__esModule', true);
+          _export('default', content);
+        } else if (content) {
+          _export(content);
+
+          if (typeof content === 'object' && !('default' in content)) {
+            _export('default', content);
+          }
+        }
+      } else {
+        _export(...p);
+      }
+    };
+    return getContent(exp, ctx);
+  });
+
+  return systemRegister.apply(this, args);
 };
 
 export interface ModuleResolver {
@@ -69,15 +113,6 @@ export function registerModule(name: string, resolve: ModuleResolver) {
         return content.then(_exports);
       } else {
         _exports(content);
-
-        if (typeof content === 'function') {
-          _exports('__esModule', true);
-          _exports('default', content);
-        } else if (typeof content === 'object') {
-          if (content && !Array.isArray(content) && !('default' in content)) {
-            _exports('default', content);
-          }
-        }
       }
     },
   }));

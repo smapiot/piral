@@ -17,6 +17,12 @@
 - Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
 - Added semver possibilities for resolving shared dependencies
 
+## 0.14.13 (February 27, 2022)
+
+- Fixed handling of direct function exports in importmaps
+- Fixed usage of feed pilets when they are debugged locally
+- Added dependency map capability to debug utils
+
 ## 0.14.12 (February 21, 2022)
 
 - Improved handling of `--bundler` when scaffolding
