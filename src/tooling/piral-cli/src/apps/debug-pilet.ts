@@ -1,4 +1,4 @@
-import { join, dirname, resolve, relative } from 'path';
+import { join, dirname, resolve, relative, basename } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
 import { callDebugPiralFromMonoRepo, callPiletDebug } from '../bundler';
 import { LogLevels, PiletSchemaVersion } from '../types';
@@ -28,6 +28,12 @@ export interface DebugPiletOptions {
    * Sets the paths to the entry modules.
    */
   entry?: string | Array<string>;
+
+  /**
+   * The target file of bundling.
+   * @example './dist/index.js'
+   */
+  target?: string;
 
   /**
    * Overrides the name of the app shell to use.
@@ -99,6 +105,7 @@ export interface DebugPiletOptions {
 
 export const debugPiletDefaults: DebugPiletOptions = {
   logLevel: LogLevels.info,
+  target: './dist/index.js',
   entry: './src/index',
   open: config.openBrowser,
   port: config.port,
@@ -156,6 +163,7 @@ function checkSanity(pilets: Array<AppInfo>) {
 export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOptions = {}) {
   const {
     entry = debugPiletDefaults.entry,
+    target = debugPiletDefaults.target,
     port = debugPiletDefaults.port,
     open = debugPiletDefaults.open,
     hmr = debugPiletDefaults.hmr,
@@ -203,6 +211,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         await retrievePiletData(targetDir, app);
       const externals = [...Object.keys(peerDependencies), ...peerModules];
       const mocks = join(targetDir, 'mocks');
+      const dest = resolve(root, target);
+      const outDir = dirname(dest);
+      const outFile = basename(dest);
       const exists = await checkExistingDirectory(mocks);
 
       if (exists) {
@@ -224,6 +235,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           externals,
           targetDir,
           importmap,
+          outFile,
+          outDir,
           entryModule: `./${relative(root, entryModule)}`,
           logLevel,
           version: schemaVersion,
@@ -234,7 +247,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       );
 
       bundler.on((args) => {
-        hooks.afterBuild?.({ ...args, root, importmap, entryModule, schemaVersion, bundler });
+        hooks.afterBuild?.({ ...args, root, importmap, entryModule, schemaVersion, bundler, outFile, outDir });
       });
 
       return {

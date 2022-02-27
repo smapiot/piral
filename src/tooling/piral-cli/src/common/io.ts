@@ -53,6 +53,27 @@ function isLegacy() {
   return +parts[0] < 10 || (+parts[0] === 10 && +parts[1] < 12);
 }
 
+export interface Destination {
+  outDir: string;
+  outFile: string;
+}
+
+export function getDestination(entryFiles: string, target: string): Destination {
+  const isdir = extname(target) !== '.html';
+
+  if (isdir) {
+    return {
+      outDir: target,
+      outFile: basename(entryFiles),
+    };
+  } else {
+    return {
+      outDir: dirname(target),
+      outFile: basename(target),
+    };
+  }
+}
+
 export async function removeAny(target: string) {
   const isDir = await checkIsDirectory(target);
 

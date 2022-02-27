@@ -15,6 +15,7 @@ import {
   config,
   normalizePublicUrl,
   logDone,
+  getDestination,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -22,6 +23,11 @@ export interface DebugPiralOptions {
    * Sets the path to the entry file.
    */
   entry?: string;
+
+  /**
+   * Sets the target directory where the output of the bundling should be placed.
+   */
+  target?: string;
 
   /**
    * Sets the port to use for the debug server.
@@ -79,6 +85,7 @@ export interface DebugPiralOptions {
 
 export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
+  target: './dist',
   port: config.port,
   publicUrl: '/',
   logLevel: LogLevels.info,
@@ -92,6 +99,7 @@ const injectorName = resolve(__dirname, '../injectors/piral.js');
 export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions = {}) {
   const {
     entry = debugPiralDefaults.entry,
+    target = debugPiralDefaults.target,
     port = debugPiralDefaults.port,
     open = debugPiralDefaults.open,
     hmr = debugPiralDefaults.hmr,
@@ -110,6 +118,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
+  const dest = getDestination(entryFiles, resolve(fullBase, target));
   const krasConfig = readKrasConfig({ port }, krasrc);
 
   await checkCliCompatibility(root);
@@ -147,6 +156,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       entryFiles,
       logLevel,
       ignored,
+      ...dest,
       _,
     },
     bundlerName,
@@ -155,7 +165,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   bundler.ready().then(() => logDone(`Ready!`));
 
   bundler.on((args) => {
-    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
+    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler, ...dest });
   });
 
   const { piral: piralInjector, ...otherInjectors } = krasConfig.injectors;

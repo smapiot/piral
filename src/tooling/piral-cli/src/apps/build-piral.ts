@@ -1,4 +1,4 @@
-import { dirname, basename, extname, join, resolve } from 'path';
+import { join, resolve } from 'path';
 import { callPiralBuild } from '../bundler';
 import { LogLevels, PiralBuildType } from '../types';
 import {
@@ -16,32 +16,12 @@ import {
   runScript,
   packageEmulator,
   normalizePublicUrl,
+  getDestination,
 } from '../common';
 
 const releaseName = 'release';
 const emulatorName = 'emulator';
 const emulatorSourcesName = 'emulator-sources';
-
-interface Destination {
-  outDir: string;
-  outFile: string;
-}
-
-function getDestination(entryFiles: string, target: string): Destination {
-  const isdir = extname(target) !== '.html';
-
-  if (isdir) {
-    return {
-      outDir: target,
-      outFile: basename(entryFiles),
-    };
-  } else {
-    return {
-      outDir: dirname(target),
-      outFile: basename(target),
-    };
-  }
-}
 
 export interface BuildPiralOptions {
   /**
@@ -213,11 +193,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         minify: false,
         externals,
         publicUrl: emulatorPublicUrl,
-        outFile: dest.outFile,
-        outDir: join(targetDir, 'app'),
         entryFiles,
         logLevel,
         ignored,
+        outDir: join(targetDir, 'app'),
+        outFile: dest.outFile,
         _,
       },
       bundlerName,
@@ -230,8 +210,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       entryFiles,
       targetDir,
       name,
-      outDir,
       hash,
+      outDir,
       outFile,
     });
 

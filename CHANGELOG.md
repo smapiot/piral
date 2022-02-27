@@ -9,6 +9,7 @@
 - Deprecated the usage of `renderInstance` (#465)
 - Removed support for IE11 (#467)
 - Removed bundlers (except default) from Piral monorepo
+- Added `--target` to `piral debug` and `pilet debug` commands (#482)
 - Added new bundler `piral-cli-parcel2` (#436)
 - Added new bundler `piral-cli-rollup` (#435)
 - Added pre-bundled minified versions to each plugin package
