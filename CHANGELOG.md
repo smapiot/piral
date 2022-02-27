@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.13 (tbd)
+## 0.14.13 (February 27, 2022)
 
 - Fixed handling of direct function exports in importmaps
 - Fixed usage of feed pilets when they are debugged locally
