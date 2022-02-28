@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.14 (tbd)
+
+- Fixed issue placing *tsconfig.json* in empty template
+
 ## 0.14.13 (February 27, 2022)
 
 - Fixed handling of direct function exports in importmaps
