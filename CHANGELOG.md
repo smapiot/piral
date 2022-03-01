@@ -3,6 +3,7 @@
 ## 0.14.14 (tbd)
 
 - Fixed issue placing *tsconfig.json* in empty template
+- Fixed issue placing *piral-layout.jsx* in empty template
 
 ## 0.14.13 (February 27, 2022)
 

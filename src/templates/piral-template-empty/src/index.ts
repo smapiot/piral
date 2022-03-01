@@ -69,10 +69,7 @@ export default async function (root: string, args: TemplateArgs) {
 
       switch (language) {
         case 'js':
-          files.push(
-            getFileFromTemplate(srcDir, 'piral', 'layout.jsx', data),
-            getFileFromTemplate(srcDir, 'piral', 'index.jsx', data),
-          );
+          files.push(getFileFromTemplate(srcDir, 'piral', 'index.jsx', data));
           break;
         case 'ts':
         default:
