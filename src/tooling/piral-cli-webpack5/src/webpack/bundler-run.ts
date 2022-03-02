@@ -8,7 +8,8 @@ function getOutput(stats: webpack.Stats) {
 
   for (const name of Object.keys(entrypoints)) {
     const assets = entrypoints[name].assets;
-    return resolve(outputPath, assets[0].name);
+    const firstAsset = assets[0];
+    return resolve(outputPath, firstAsset.name);
   }
 }
 

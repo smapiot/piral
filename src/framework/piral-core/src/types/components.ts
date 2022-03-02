@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { RouteComponentProps } from 'react-router';
+import type { RouteComponentProps, SwitchProps } from 'react-router';
 import type { FirstParametersOf, UnionOf } from './common';
 import type { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
 import type { LayoutType } from './layout';
@@ -194,3 +194,26 @@ export interface LayoutProps {
  * The props of a Router component.
  */
 export interface RouterProps {}
+
+/**
+ * The props of the RouteSwitch component.
+ */
+export interface RouteSwitchProps extends SwitchProps {
+  /**
+   * The component that should be used in case nothing was found.
+   */
+  NotFound: ComponentType<RouteComponentProps>;
+  /**
+   * The component to register for the different paths.
+   */
+  paths: Array<{
+    /**
+     * The exact path to use.
+     */
+    path: string;
+    /**
+     * The component to register for this path.
+     */
+    Component: ComponentType<RouteComponentProps>;
+  }>;
+}
