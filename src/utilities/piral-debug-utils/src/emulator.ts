@@ -51,11 +51,11 @@ export function installPiletEmulator(requestPilets: PiletRequester, options: Emu
             const unfreeze = freezeRouteRefresh();
 
             // tear down pilet
-            removePilet(meta.name);
-
-            // load and evaluate pilet
-            // then disable route cache, should be zero again and lead to route refresh
-            addPilet(meta).then(unfreeze, unfreeze);
+            removePilet(meta.name)
+              // load and evaluate pilet
+              .then(() => addPilet(meta))
+              // then disable route cache, should be zero again and lead to route refresh
+              .then(unfreeze, unfreeze);
           }, timeout);
         } else {
           location.reload();

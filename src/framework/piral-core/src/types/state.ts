@@ -212,8 +212,9 @@ export interface PiralActions extends PiralCustomActions {
   /**
    * Injects an evaluated pilet at runtime - removes the pilet from registry first if available.
    * @param pilet The pilet to be injected.
+   * @returns The injected pilet.
    */
-  injectPilet(pilet: Pilet): void;
+  injectPilet(pilet: Pilet): Pilet;
   /**
    * Adds a pilet at runtime by loading it, evaluating it, and then injecting it.
    * @param pilet The pilet to be added.
@@ -224,7 +225,7 @@ export interface PiralActions extends PiralCustomActions {
    * Removes a pilet by unloading it and deleting all component registrations.
    * @param name The name of the pilet to remove.
    */
-  removePilet(name: string): void;
+  removePilet(name: string): Promise<void>;
   /**
    * Defines a single action for Piral.
    * @param actionName The name of the action to define.

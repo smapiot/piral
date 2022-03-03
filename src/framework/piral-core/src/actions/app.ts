@@ -1,7 +1,7 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { runPilet } from 'piral-base';
-import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute } from '../utils';
+import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute, noop } from '../utils';
 import {
   LayoutType,
   ComponentsState,
@@ -32,14 +32,15 @@ export function initialize(ctx: GlobalStateContext, loading: boolean, error: Err
   }));
 }
 
-export function addPilet(ctx: GlobalStateContext, meta: PiletEntry) {
-  return ctx.options.loadPilet(meta).then((pilet) => {
-    ctx.injectPilet(pilet);
-    return runPilet(ctx.options.createApi, pilet, ctx.options.hooks);
-  });
+export function addPilet(ctx: GlobalStateContext, meta: PiletEntry): Promise<void> {
+  return ctx.options
+    .loadPilet(meta)
+    .then((pilet) => ctx.injectPilet(pilet))
+    .then((pilet) => runPilet(ctx.options.createApi, pilet, ctx.options.hooks))
+    .then(noop);
 }
 
-export function removePilet(ctx: GlobalStateContext, name: string) {
+export function removePilet(ctx: GlobalStateContext, name: string): Promise<void> {
   ctx.dispatch((state) => ({
     ...state,
     modules: state.modules.filter((m) => m.name !== name),
@@ -49,9 +50,11 @@ export function removePilet(ctx: GlobalStateContext, name: string) {
   ctx.emit('unload-pilet', {
     name,
   });
+
+  return Promise.resolve();
 }
 
-export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {
+export function injectPilet(ctx: GlobalStateContext, pilet: Pilet): Pilet {
   ctx.dispatch((state) => ({
     ...state,
     modules: replaceOrAddItem(state.modules, pilet, (m) => m.name === pilet.name),
@@ -61,6 +64,8 @@ export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {
   ctx.emit('unload-pilet', {
     name: pilet.name,
   });
+
+  return pilet;
 }
 
 export function setComponent<TKey extends keyof ComponentsState>(

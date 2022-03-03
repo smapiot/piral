@@ -3,7 +3,7 @@ import type { Pilet, PiletEntry, PiletRequester } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
   addPilet(pilet: PiletEntry): Promise<void>;
-  removePilet(name: string): void;
+  removePilet(name: string): Promise<void>;
   piletApiFallback?: string;
   integrate(components: EmulatorComponents): void;
 }
