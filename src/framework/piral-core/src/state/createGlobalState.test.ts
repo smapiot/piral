@@ -1,6 +1,12 @@
 import { deref } from '@dbeining/react-atom';
 import { createGlobalState } from './createGlobalState';
-import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout, DefaultRouter } from '../components';
+import {
+  DefaultErrorInfo,
+  DefaultLoadingIndicator,
+  DefaultLayout,
+  DefaultRouter,
+  DefaultRouteSwitch,
+} from '../components';
 
 process.env.PIRAL_PUBLIC_PATH = '/';
 
@@ -22,6 +28,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       routes: {},
       registry: {
@@ -50,6 +57,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       routes: {},
       registry: {
@@ -82,6 +90,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       routes,
       registry: {
@@ -110,6 +119,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       registry: {
         extensions: {},
@@ -140,6 +150,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       registry: {
         extensions: {},
@@ -170,6 +181,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       registry: {
         extensions: {},
@@ -206,6 +218,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       registry: {
         extensions: {},
@@ -241,6 +254,7 @@ describe('Create Global State Module', () => {
         LoadingIndicator: DefaultLoadingIndicator,
         Router: DefaultRouter,
         Layout: DefaultLayout,
+        RouteSwitch: DefaultRouteSwitch,
       },
       registry: {
         extensions: {},

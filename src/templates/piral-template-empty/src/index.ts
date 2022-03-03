@@ -21,7 +21,7 @@ export default async function (root: string, args: TemplateArgs) {
   switch (packageName) {
     case 'piral-core': {
       files.push(
-        getFileFromTemplate('.', 'piral-core', 'index.html', data),
+        getFileFromTemplate(srcDir, 'piral-core', 'index.html', data),
         getFileFromTemplate(mocksDir, 'piral', 'backend.js', data),
       );
 
@@ -42,7 +42,7 @@ export default async function (root: string, args: TemplateArgs) {
 
     case 'piral-base':
       files.push(
-        getFileFromTemplate('.', 'piral-base', 'index.html', data),
+        getFileFromTemplate(srcDir, 'piral-base', 'index.html', data),
         getFileFromTemplate(mocksDir, 'piral', 'backend.js', data),
       );
 
@@ -69,15 +69,12 @@ export default async function (root: string, args: TemplateArgs) {
 
       switch (language) {
         case 'js':
-          files.push(
-            getFileFromTemplate(srcDir, 'piral', 'layout.jsx', data),
-            getFileFromTemplate(srcDir, 'piral', 'index.jsx', data),
-          );
+          files.push(getFileFromTemplate(srcDir, 'piral', 'index.jsx', data));
           break;
         case 'ts':
         default:
           files.push(
-            getFileFromTemplate(srcDir, 'piral', 'tsconfig.json', data),
+            getFileFromTemplate('.', 'piral', 'tsconfig.json', data),
             getFileFromTemplate(srcDir, 'piral', 'index.tsx', data),
           );
           break;

@@ -6,6 +6,7 @@ export interface EmulatorConnectorOptions {
   loadPilet: PiletLoader;
   injectPilet?(pilet: Pilet): void;
   piletApiFallback?: string;
+  integrate?(components: EmulatorComponents): void;
 }
 
 export interface ChangeSet {
@@ -14,6 +15,10 @@ export interface ChangeSet {
   pilets?: boolean;
   extensions?: boolean;
   dependencies?: boolean;
+}
+
+export interface EmulatorComponents {
+  components: Record<string, FC>;
 }
 
 export interface DebugComponents {

@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.14.14 (tbd)
+
+- Fixed issue placing *tsconfig.json* in empty template
+- Fixed issue placing *piral-layout.jsx* in empty template
+- Fixed page not found message when doing pilet development
+
 ## 0.14.13 (February 27, 2022)
 
 - Fixed handling of direct function exports in importmaps

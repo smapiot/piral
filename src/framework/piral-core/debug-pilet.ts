@@ -7,5 +7,14 @@ export function integrate(context: GlobalStateContext, options: LoadPiletsOption
     injectPilet: context.injectPilet,
     createApi: options.createApi,
     loadPilet: options.loadPilet,
+    integrate(emulator) {
+      context.dispatch((s) => ({
+        ...s,
+        components: {
+          ...s.components,
+          ...emulator.components,
+        },
+      }));
+    },
   });
 }
