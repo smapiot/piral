@@ -262,11 +262,19 @@ export function installPiralDebug(options: DebuggerOptions) {
   };
 
   const getDependencyMap = () => {
-    const dependencyMap = {};
+    const dependencyMap: Record<string, Array<string>> = {};
+    const addDeps = (pilet: string, dependencies: Array<string>) => {
+      if (!(pilet in dependencyMap)) {
+        dependencyMap[pilet] = [];
+      }
+
+      dependencyMap[pilet].push(...dependencies);
+    };
     const pilets = getPilets()
       .map((pilet: any) => ({
         name: pilet.name,
         link: pilet.link,
+        base: pilet.base,
       }))
       .filter((m) => m.link);
 
@@ -275,7 +283,13 @@ export function installPiralDebug(options: DebuggerOptions) {
       const pilet = pilets.find((p) => p.link === url);
 
       if (pilet) {
-        dependencyMap[pilet.name] = dependencies;
+        addDeps(pilet.name, dependencies);
+      } else if (!pilet) {
+        const parent = pilets.find((p) => url.startsWith(p.base));
+
+        if (parent) {
+          addDeps(parent.name, dependencies);
+        }
       }
     });
 

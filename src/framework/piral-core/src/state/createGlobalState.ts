@@ -1,5 +1,11 @@
 import { Atom } from '@dbeining/react-atom';
-import { DefaultErrorInfo, DefaultLoadingIndicator, DefaultLayout, DefaultRouter } from '../components';
+import {
+  DefaultErrorInfo,
+  DefaultLoadingIndicator,
+  DefaultLayout,
+  DefaultRouter,
+  DefaultRouteSwitch,
+} from '../components';
 import { GlobalState, NestedPartial } from '../types';
 
 function extend<T>(defaultState: T, customState: NestedPartial<T>) {
@@ -29,6 +35,7 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
       ErrorInfo: DefaultErrorInfo,
       LoadingIndicator: DefaultLoadingIndicator,
       Router: DefaultRouter,
+      RouteSwitch: DefaultRouteSwitch,
       Layout: DefaultLayout,
     },
     errorComponents: {},

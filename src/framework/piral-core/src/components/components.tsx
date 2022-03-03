@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { useGlobalState } from '../hooks';
-import { ComponentsState, ErrorInfoProps, LoadingIndicatorProps, RouterProps, LayoutProps } from '../types';
+import {
+  ComponentsState,
+  ErrorInfoProps,
+  LoadingIndicatorProps,
+  RouterProps,
+  LayoutProps,
+  RouteSwitchProps,
+} from '../types';
 
 export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey): ComponentsState[TKey] {
   return (props) => {
     const Component = useGlobalState((s) => s.components[name]);
+    // tslint:disable-next-line:no-null-keyword
     return Component ? <Component {...props} /> : null;
   };
 }
@@ -26,6 +34,12 @@ export const PiralLoadingIndicator: React.ComponentType<LoadingIndicatorProps> =
  * By default the BrowserRouter is used.
  */
 export const PiralRouter: React.ComponentType<RouterProps> = getPiralComponent('Router');
+
+/**
+ * Gets the currently registered Route Switch component.
+ * By default the DefaultRouteSwitch component is used.
+ */
+export const PiralRouteSwitch: React.ComponentType<RouteSwitchProps> = getPiralComponent('RouteSwitch');
 
 /**
  * Gets the currently registered Layout component.

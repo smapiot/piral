@@ -28,6 +28,7 @@ import type {
   RouterProps,
   LayoutProps,
   Errors,
+  RouteSwitchProps,
 } from './components';
 
 export interface StateDispatcher<TState> {
@@ -87,6 +88,10 @@ export interface ComponentsState extends PiralCustomComponentsState {
    * The layout used for pages.
    */
   Layout: ComponentType<LayoutProps>;
+  /**
+   * The route switch used for determining the route registration.
+   */
+  RouteSwitch: ComponentType<RouteSwitchProps>;
   /**
    * A component that can be used for debugging purposes.
    */

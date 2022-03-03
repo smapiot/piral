@@ -1,10 +1,11 @@
 import type { FC } from 'react';
-import type { Pilet, PiletEntry } from 'piral-base';
+import type { Pilet, PiletEntry, PiletRequester } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
   addPilet?(pilet: PiletEntry): void;
   removePilet?(name: string): void;
   piletApiFallback?: string;
+  integrate(components: EmulatorComponents): void;
 }
 
 export interface ChangeSet {
@@ -13,6 +14,11 @@ export interface ChangeSet {
   pilets?: boolean;
   extensions?: boolean;
   dependencies?: boolean;
+}
+
+export interface EmulatorComponents {
+  components: Record<string, FC>;
+  requester: PiletRequester;
 }
 
 export interface DebugComponents {

@@ -12,7 +12,7 @@ module.exports = function () {
 
   // if we build the emulator version of piral (shipped to pilets)
   if (process.env.DEBUG_PILET) {
-    imports.push('import { integrateEmulator } from "./esm/debugger"');
+    imports.push('import { integrateEmulator } from "./esm/emulator"');
     exports.push(`export { integrateEmulator }`);
   } else {
     exports.push(`export function integrateEmulator() {}`);

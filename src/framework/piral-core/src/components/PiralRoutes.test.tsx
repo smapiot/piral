@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as hooks from '../hooks';
 import { MemoryRouter } from 'react-router';
 import { mount } from 'enzyme';
+import { DefaultRouteSwitch } from './DefaultRouteSwitch';
 import { PiralRoutes } from './PiralRoutes';
 
 const mountWithRouter = (node, url = '/') =>
@@ -52,7 +53,7 @@ StubBarPage.displayName = 'StubBarPage';
 
 describe('Routes Module', () => {
   it('always goes to the given home on "/"', () => {
-    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} />, '/');
+    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/');
     expect(node.find(StubHome).length).toBe(1);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -60,7 +61,7 @@ describe('Routes Module', () => {
   });
 
   it('goes to the not found on an invalid path', () => {
-    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} />, '/qxz');
+    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/qxz');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(1);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -68,7 +69,7 @@ describe('Routes Module', () => {
   });
 
   it('goes to the custom page on "/custom"', () => {
-    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} />, '/custom');
+    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/custom');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(1);
@@ -76,7 +77,7 @@ describe('Routes Module', () => {
   });
 
   it('goes exactly to the page on "/foo/bar"', () => {
-    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} />, '/foo/bar');
+    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/foo/bar');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -84,7 +85,7 @@ describe('Routes Module', () => {
   });
 
   it('goes exactly to the page on "/foo"', () => {
-    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} />, '/foo');
+    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/foo');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);
@@ -93,7 +94,7 @@ describe('Routes Module', () => {
   });
 
   it('goes exactly to the page on "/bar"', () => {
-    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} />, '/bar');
+    const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/bar');
     expect(node.find(StubHome).length).toBe(0);
     expect(node.find(StubNotFound).length).toBe(0);
     expect(node.find(StubCustomPage).length).toBe(0);
