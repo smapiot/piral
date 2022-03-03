@@ -3,6 +3,7 @@ export * from './DefaultErrorInfo';
 export * from './DefaultLayout';
 export * from './DefaultLoader';
 export * from './DefaultRouter';
+export * from './DefaultRouteSwitch';
 export * from './ErrorBoundary';
 export * from './ExtensionSlot';
 export * from './Mediator';

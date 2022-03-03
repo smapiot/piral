@@ -1,12 +1,19 @@
 import { isfunc, PiletRequester, setupPilet } from 'piral-base';
+import { freezeRouteRefresh, DebugRouteSwitch } from './DebugRouteSwitch';
 import { EmulatorConnectorOptions } from './types';
 
 export function withEmulatorPilets(requestPilets: PiletRequester, options: EmulatorConnectorOptions): PiletRequester {
-  const { loadPilet, createApi, injectPilet, piletApiFallback = '/$pilet-api' } = options;
+  const { loadPilet, createApi, injectPilet, integrate, piletApiFallback = '/$pilet-api' } = options;
   // check if pilets should be loaded
   const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
   const noPilets: PiletRequester = () => Promise.resolve([]);
   const requester = loadPilets ? requestPilets : noPilets;
+
+  integrate?.({
+    components: {
+      RouteSwitch: DebugRouteSwitch,
+    },
+  });
 
   return () => {
     const promise = requester();
@@ -20,6 +27,8 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
       : `${location.origin}${piletApi[0] === '/' ? '' : '/'}${piletApi}`;
     const updateTarget = initialTarget.replace('http', 'ws');
     const ws = new WebSocket(updateTarget);
+    const timeoutCache = {};
+    const timeout = 150;
 
     const appendix = fetch(initialTarget)
       .then((res) => res.json())
@@ -31,22 +40,37 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
       if (!hardRefresh) {
         // standard setting is to just perform an inject
         const meta = JSON.parse(data);
+        const name = meta.name;
 
-        // tear down pilet
-        injectPilet({ name: meta.name } as any);
+        // like a debounce; only one change of the current pilet should be actively processed
+        clearTimeout(timeoutCache[name]);
 
-        // load and evaluate pilet
-        loadPilet(meta).then((pilet) => {
-          try {
-            if (isfunc(injectPilet)) {
-              injectPilet(pilet);
+        // some bundlers may have fired before writing to the disk
+        // so we give them a bit of time before actually loading the pilet
+        timeoutCache[name] = setTimeout(() => {
+          // we should make sure to only refresh the page / router if pilets have been loaded
+          const unfreeze = freezeRouteRefresh();
+
+          // tear down pilet
+          injectPilet({ name } as any);
+
+          // load and evaluate pilet
+          loadPilet(meta).then((pilet) => {
+            try {
+              if (isfunc(injectPilet)) {
+                injectPilet(pilet);
+              }
+
+              // setup actual pilet
+              setupPilet(pilet, createApi);
+
+              // disable route cache, should be zero again and lead to route refresh
+              unfreeze();
+            } catch (error) {
+              console.error(error);
             }
-
-            setupPilet(pilet, createApi);
-          } catch (error) {
-            console.error(error);
-          }
-        });
+          });
+        }, timeout);
       } else {
         location.reload();
       }

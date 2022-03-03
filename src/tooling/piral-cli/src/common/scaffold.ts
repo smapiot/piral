@@ -30,6 +30,7 @@ async function getTemplateFiles(
   registry: string,
   root: string,
   data: Record<string, any>,
+  forceOverwrite: ForceOverwrite,
 ): Promise<Array<TemplateFile>> {
   // debug in monorepo such as "../templates/pilet-template-react/lib/index.js"
   if (templatePackageName.startsWith('.')) {
@@ -40,9 +41,9 @@ async function getTemplateFiles(
   const templateRunner = getTemplatePackage(templatePackageName);
 
   if (typeof templateRunner === 'function') {
-    return await templateRunner(root, data);
+    return await templateRunner(root, data, forceOverwrite);
   } else if ('default' in templateRunner && typeof templateRunner.default === 'function') {
-    return await templateRunner.default(root, data);
+    return await templateRunner.default(root, data, forceOverwrite);
   } else {
     fail(
       'generalError_0002',
@@ -82,7 +83,7 @@ function writeFiles(root: string, files: Array<TemplateFile>, forceOverwrite: Fo
 }
 
 function getTemplatePackageName(type: 'piral' | 'pilet', template: string) {
-  if (template.indexOf('/') === -1) {
+  if (template.indexOf('/') === -1 && !template.startsWith('.')) {
     return `@smapiot/${type}-template-${template}`;
   }
 
@@ -127,7 +128,7 @@ export async function scaffoldPiralSourceFiles(
 
   await createDirectory(src);
 
-  const files = await getTemplateFiles(templatePackageName, registry, root, data);
+  const files = await getTemplateFiles(templatePackageName, registry, root, data, forceOverwrite);
 
   await writeFiles(root, files, forceOverwrite);
 }
@@ -159,7 +160,7 @@ export async function scaffoldPiletSourceFiles(
 
   await createDirectory(src);
 
-  const files = await getTemplateFiles(templatePackageName, registry, root, data);
+  const files = await getTemplateFiles(templatePackageName, registry, root, data, forceOverwrite);
 
   await writeFiles(root, files, forceOverwrite);
 }
