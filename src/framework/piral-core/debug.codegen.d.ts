@@ -8,4 +8,8 @@ export function integrateDebugger(
   debug?: DebuggerExtensionOptions,
 ): void;
 
-export function integrateEmulator(context: GlobalStateContext, options, debug?: DebuggerExtensionOptions): void;
+export function integrateEmulator(
+  context: GlobalStateContext,
+  options: LoadPiletsOptions,
+  debug?: DebuggerExtensionOptions,
+): void;

@@ -217,8 +217,9 @@ export interface PiralActions extends PiralCustomActions {
   /**
    * Adds a pilet at runtime by loading it, evaluating it, and then injecting it.
    * @param pilet The pilet to be added.
+   * @returns The promise indicating when the pilet was fully added.
    */
-  addPilet(pilet: PiletEntry): void;
+  addPilet(pilet: PiletEntry): Promise<void>;
   /**
    * Removes a pilet by unloading it and deleting all component registrations.
    * @param name The name of the pilet to remove.

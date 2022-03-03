@@ -33,13 +33,9 @@ export function initialize(ctx: GlobalStateContext, loading: boolean, error: Err
 }
 
 export function addPilet(ctx: GlobalStateContext, meta: PiletEntry) {
-  ctx.options.loadPilet(meta).then((pilet) => {
-    try {
-      ctx.injectPilet(pilet);
-      runPilet(ctx.options.createApi, pilet, ctx.options.hooks);
-    } catch (error) {
-      console.error(error);
-    }
+  return ctx.options.loadPilet(meta).then((pilet) => {
+    ctx.injectPilet(pilet);
+    return runPilet(ctx.options.createApi, pilet, ctx.options.hooks);
   });
 }
 

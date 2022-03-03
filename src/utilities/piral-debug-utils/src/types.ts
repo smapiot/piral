@@ -2,8 +2,8 @@ import type { FC } from 'react';
 import type { Pilet, PiletEntry, PiletRequester } from 'piral-base';
 
 export interface EmulatorConnectorOptions {
-  addPilet?(pilet: PiletEntry): void;
-  removePilet?(name: string): void;
+  addPilet(pilet: PiletEntry): Promise<void>;
+  removePilet(name: string): void;
   piletApiFallback?: string;
   integrate(components: EmulatorComponents): void;
 }
