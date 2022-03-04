@@ -210,17 +210,19 @@ export function installPiralDebug(options: DebuggerOptions) {
   const eventDispatcher = document.body.dispatchEvent;
 
   const systemResolve = System.constructor.prototype.resolve;
-  const depMap: Record<string, Record<string, boolean>> = {};
+  const depMap: Record<string, Record<string, string>> = {};
 
   System.constructor.prototype.resolve = function (...args) {
     const [url, parent] = args;
+    const result = systemResolve.call(this, ...args);
 
     if (parent) {
-      depMap[parent] = depMap[parent] || {};
-      depMap[parent][url] = true;
+      const deps = depMap[parent] || {};
+      deps[url] = result;
+      depMap[parent] = deps;
     }
 
-    return systemResolve.call(this, ...args);
+    return result;
   };
 
   const debugApi = {
@@ -293,11 +295,20 @@ export function installPiralDebug(options: DebuggerOptions) {
   };
 
   const getDependencyMap = () => {
-    const dependencyMap: Record<string, Array<string>> = {};
-    const addDeps = (pilet: string, dependencies: Record<string, boolean>) => {
-      const oldDeps = dependencyMap[pilet] || [];
-      const newDeps = Object.keys(dependencies).filter((depName) => !oldDeps.includes(depName));
-      dependencyMap[pilet] = [...oldDeps, ...newDeps];
+    const dependencyMap: Record<string, Array<{ demanded: string; resolved: string }>> = {};
+    const addDeps = (pilet: string, dependencies: Record<string, string>) => {
+      const deps = dependencyMap[pilet] || [];
+
+      for (const depName of Object.keys(dependencies)) {
+        if (!deps.some((m) => m.demanded === depName)) {
+          deps.push({
+            demanded: depName,
+            resolved: dependencies[depName],
+          });
+        }
+      }
+
+      dependencyMap[pilet] = deps;
     };
     const pilets = getPilets()
       .map((pilet: any) => ({
