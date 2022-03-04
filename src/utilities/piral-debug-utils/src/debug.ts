@@ -210,7 +210,7 @@ export function installPiralDebug(options: DebuggerOptions) {
   const eventDispatcher = document.body.dispatchEvent;
 
   const systemResolve = System.constructor.prototype.resolve;
-  const depMap = {};
+  const depMap: Record<string, Record<string, boolean>> = {};
 
   System.constructor.prototype.resolve = function (...args) {
     const [url, parent] = args;
@@ -294,12 +294,10 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   const getDependencyMap = () => {
     const dependencyMap: Record<string, Array<string>> = {};
-    const addDeps = (pilet: string, dependencies: Array<string>) => {
-      if (!(pilet in dependencyMap)) {
-        dependencyMap[pilet] = [];
-      }
-
-      dependencyMap[pilet].push(...dependencies);
+    const addDeps = (pilet: string, dependencies: Record<string, boolean>) => {
+      const oldDeps = dependencyMap[pilet] || [];
+      const newDeps = Object.keys(dependencies).filter((depName) => !oldDeps.includes(depName));
+      dependencyMap[pilet] = [...oldDeps, ...newDeps];
     };
     const pilets = getPilets()
       .map((pilet: any) => ({

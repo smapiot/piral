@@ -1,7 +1,8 @@
 import type { PiletApp, PiletExports, PiletMetadataV1, PiletMetadataBundle } from './types';
 
-function requireModule(name: string) {
-  const dependency = System.get(name);
+function requireModule(name: string, parent: string) {
+  const moduleId = System.resolve(name, parent);
+  const dependency = moduleId && System.get(moduleId);
 
   if (!dependency) {
     const error = new Error(`Cannot find module '${name}'`);
@@ -44,7 +45,9 @@ export function evalDependency(name: string, content: string, link = '') {
   try {
     const sourceUrl = link && `\n//# sourceURL=${link}`;
     const importer = new Function('module', 'exports', 'require', content + sourceUrl);
-    importer(mod, mod.exports, requireModule);
+    const parent = link || name;
+    const require = (moduleId: string) => requireModule(moduleId, parent);
+    importer(mod, mod.exports, require);
   } catch (e) {
     console.error(`Error while evaluating ${name}.`, e);
   }
@@ -71,7 +74,7 @@ declare global {
 }
 
 function includeScript(piletName: string, depName: string, link: string, integrity?: string, crossOrigin?: string) {
-  window[depName] = requireModule;
+  window[depName] = (moduleId: string) => requireModule(moduleId, link);
   return includeScriptDependency(link, integrity, crossOrigin).then(
     (s) => checkPiletAppAsync(piletName, s.app),
     () => checkPiletApp(piletName),
