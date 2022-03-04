@@ -141,17 +141,29 @@ export function installPiralDebug(options: DebuggerOptions) {
     });
   };
 
+  const activatePilet = (pilet: any) => {
+    try {
+      const { createApi } = options;
+      const newApi = createApi(pilet);
+      injectPilet(pilet);
+      pilet.setup(newApi);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const togglePilet = (name: string) => {
     const pilet: any = getPilets().find((m) => m.name === name);
 
-    if (pilet.disabled) {
-      try {
-        const { createApi } = options;
-        const newApi = createApi(pilet);
-        injectPilet(pilet.original);
-        pilet.original.setup(newApi);
-      } catch (error) {
-        console.error(error);
+    if (!pilet) {
+      // nothing to do, obviously invalid call
+    } else if (pilet.disabled) {
+      if (pilet.original) {
+        // everything is fine, let's use the cached version
+        activatePilet(pilet.original);
+      } else {
+        // something fishy is going on - let's just try to activate the same pilet
+        activatePilet({ ...pilet, disabled: false });
       }
     } else {
       injectPilet({ name, disabled: true, original: pilet } as any);
@@ -165,16 +177,8 @@ export function installPiralDebug(options: DebuggerOptions) {
   };
 
   const appendPilet = (meta: any) => {
-    const { createApi, loadPilet } = options;
-    loadPilet(meta).then((pilet) => {
-      try {
-        const newApi = createApi(pilet);
-        injectPilet(pilet);
-        pilet.setup(newApi as any);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+    const { loadPilet } = options;
+    loadPilet(meta).then(activatePilet);
   };
 
   const toggleVisualize = () => {
