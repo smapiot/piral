@@ -1,6 +1,6 @@
 {
   "name": "piral-containers",
-  "version": "0.14.14",
+  "version": "0.14.15",
   "description": "Plugin for creating a pilet state container in Piral.",
   "keywords": [
     "piral",

@@ -1,6 +1,6 @@
 {
   "name": "piral-dashboard",
-  "version": "0.14.14",
+  "version": "0.14.15",
   "description": "Plugin for creating a centralized dashboard in Piral.",
   "keywords": [
     "piral",

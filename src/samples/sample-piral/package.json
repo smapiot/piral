@@ -1,7 +1,7 @@
 {
   "name": "sample-piral",
   "private": true,
-  "version": "0.14.14",
+  "version": "0.14.15",
   "description": "Example project illustrating the use of the piral and piral-cli packages.",
   "keywords": [
     "portal",
@@ -38,8 +38,8 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
-    "piral-cli": "^0.14.14",
-    "piral-cli-webpack5": "^0.14.14",
+    "piral-cli": "^0.14.15",
+    "piral-cli-webpack5": "^0.14.15",
     "sass": "^1.17.0"
   },
   "pilets": {

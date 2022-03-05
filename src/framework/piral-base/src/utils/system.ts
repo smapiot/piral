@@ -134,8 +134,9 @@ export function unregisterModules(baseUrl: string) {
  * @param name The name of the module to obtain
  * @returns The module's content, if any, otherwise throws an error.
  */
-export function requireModule(name: string) {
-  const dependency = System.get(name);
+export function requireModule(name: string, parent: string) {
+  const moduleId = System.resolve(name, parent);
+  const dependency = moduleId && System.get(moduleId);
 
   if (!dependency) {
     const error: any = new Error(`Cannot find module '${name}'`);

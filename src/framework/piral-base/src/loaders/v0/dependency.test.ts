@@ -22,6 +22,9 @@ describe('v0 dependency module', () => {
       test: log,
     };
     (global as any).System = {
+      resolve(url) {
+        return url;
+      },
       get(depName) {
         return deps[depName];
       },
@@ -41,6 +44,9 @@ describe('v0 dependency module', () => {
     console.error = jest.fn();
     const deps = {};
     (global as any).System = {
+      resolve(url) {
+        return url;
+      },
       get(depName) {
         return deps[depName];
       },

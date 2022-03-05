@@ -1,6 +1,6 @@
 {
   "name": "piral-update",
-  "version": "0.14.14",
+  "version": "0.14.15",
   "description": "Plugin for auto-updating pilets in Piral.",
   "keywords": [
     "piral",

@@ -64,7 +64,7 @@ export function checkPiletAppAsync(name: string, app?: PiletApp | Promise<PiletA
  * @returns The promise resolving to the pilet app.
  */
 export function includeScript(depName: string, link: string, integrity?: string, crossOrigin?: string) {
-  window[depName] = requireModule;
+  window[depName] = (moduleId: string) => requireModule(moduleId, link);
   return includeScriptDependency(link, integrity, crossOrigin).then((s) => s.app);
 }
 

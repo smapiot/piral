@@ -16,7 +16,9 @@ export function evalDependency(name: string, content: string, link = '') {
   try {
     const sourceUrl = link && `\n//# sourceURL=${link}`;
     const importer = new Function('module', 'exports', 'require', content + sourceUrl);
-    importer(mod, mod.exports, requireModule);
+    const parent = link || name;
+    const require = (moduleId: string) => requireModule(moduleId, parent);
+    importer(mod, mod.exports, require);
   } catch (e) {
     console.error(`Error while evaluating ${name}.`, e);
   }
