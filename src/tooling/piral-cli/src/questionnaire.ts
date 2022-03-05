@@ -102,6 +102,8 @@ function getValue(type: FlagType, value: string) {
       return +value;
     case 'string':
       return value;
+    case 'object':
+      return value;
   }
 }
 

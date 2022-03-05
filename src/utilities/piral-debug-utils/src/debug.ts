@@ -141,17 +141,29 @@ export function installPiralDebug(options: DebuggerOptions) {
     });
   };
 
+  const activatePilet = (pilet: any) => {
+    try {
+      const { createApi } = options;
+      const newApi = createApi(pilet);
+      injectPilet(pilet);
+      pilet.setup(newApi);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const togglePilet = (name: string) => {
     const pilet: any = getPilets().find((m) => m.name === name);
 
-    if (pilet.disabled) {
-      try {
-        const { createApi } = options;
-        const newApi = createApi(pilet);
-        injectPilet(pilet.original);
-        pilet.original.setup(newApi);
-      } catch (error) {
-        console.error(error);
+    if (!pilet) {
+      // nothing to do, obviously invalid call
+    } else if (pilet.disabled) {
+      if (pilet.original) {
+        // everything is fine, let's use the cached version
+        activatePilet(pilet.original);
+      } else {
+        // something fishy is going on - let's just try to activate the same pilet
+        activatePilet({ ...pilet, disabled: false });
       }
     } else {
       injectPilet({ name, disabled: true, original: pilet } as any);
@@ -165,16 +177,8 @@ export function installPiralDebug(options: DebuggerOptions) {
   };
 
   const appendPilet = (meta: any) => {
-    const { createApi, loadPilet } = options;
-    loadPilet(meta).then((pilet) => {
-      try {
-        const newApi = createApi(pilet);
-        injectPilet(pilet);
-        pilet.setup(newApi as any);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+    const { loadPilet } = options;
+    loadPilet(meta).then(activatePilet);
   };
 
   const toggleVisualize = () => {
@@ -210,17 +214,19 @@ export function installPiralDebug(options: DebuggerOptions) {
   const eventDispatcher = document.body.dispatchEvent;
 
   const systemResolve = System.constructor.prototype.resolve;
-  const depMap = {};
+  const depMap: Record<string, Record<string, string>> = {};
 
   System.constructor.prototype.resolve = function (...args) {
     const [url, parent] = args;
+    const result = systemResolve.call(this, ...args);
 
     if (parent) {
-      depMap[parent] = depMap[parent] || {};
-      depMap[parent][url] = true;
+      const deps = depMap[parent] || {};
+      deps[url] = result;
+      depMap[parent] = deps;
     }
 
-    return systemResolve.call(this, ...args);
+    return result;
   };
 
   const debugApi = {
@@ -293,13 +299,20 @@ export function installPiralDebug(options: DebuggerOptions) {
   };
 
   const getDependencyMap = () => {
-    const dependencyMap: Record<string, Array<string>> = {};
-    const addDeps = (pilet: string, dependencies: Array<string>) => {
-      if (!(pilet in dependencyMap)) {
-        dependencyMap[pilet] = [];
+    const dependencyMap: Record<string, Array<{ demanded: string; resolved: string }>> = {};
+    const addDeps = (pilet: string, dependencies: Record<string, string>) => {
+      const deps = dependencyMap[pilet] || [];
+
+      for (const depName of Object.keys(dependencies)) {
+        if (!deps.some((m) => m.demanded === depName)) {
+          deps.push({
+            demanded: depName,
+            resolved: dependencies[depName],
+          });
+        }
       }
 
-      dependencyMap[pilet].push(...dependencies);
+      dependencyMap[pilet] = deps;
     };
     const pilets = getPilets()
       .map((pilet: any) => ({

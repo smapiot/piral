@@ -22,6 +22,9 @@ describe('Handling Dependencies', () => {
       test: log,
     };
     (global as any).System = {
+      resolve(url) {
+        return url;
+      },
       get(depName) {
         return deps[depName];
       },
@@ -41,6 +44,9 @@ describe('Handling Dependencies', () => {
     console.error = jest.fn();
     const deps = {};
     (global as any).System = {
+      resolve(url) {
+        return url;
+      },
       get(depName) {
         return deps[depName];
       },
