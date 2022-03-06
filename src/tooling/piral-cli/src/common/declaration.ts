@@ -9,11 +9,14 @@ import { LogLevels } from '../types';
 
 function findPiralBaseApi(root: string) {
   try {
-    return require
-      .resolve(piralBaseRoot, {
-        paths: [root],
-      })
-      ?.replace(/\.js$/, '.d.ts');
+    const packageJsonPath = require.resolve(piralBaseRoot, {
+      paths: [root],
+    });
+    const project = require(packageJsonPath);
+    const projectDir = dirname(packageJsonPath);
+    // By default support for piral-base < 0.15
+    const { piletApiTypings = 'lib/types.d.ts' } = project;
+    return resolve(projectDir, piletApiTypings);
   } catch {
     return undefined;
   }

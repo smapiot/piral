@@ -2,7 +2,8 @@ import { join, dirname, resolve, basename, isAbsolute } from 'path';
 import { installPackage } from './clients/npm';
 import { ForceOverwrite, SourceLanguage } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
-import { log, fail } from './log';
+import { cliVersion, isWindows } from './info';
+import { log, fail, getLogLevel } from './log';
 import { Framework } from '../types';
 
 interface TemplateFile {
@@ -39,11 +40,18 @@ async function getTemplateFiles(
     await installPackage(templatePackageName, __dirname, '--registry', registry);
   }
   const templateRunner = getTemplatePackage(templatePackageName);
+  const logLevel = getLogLevel();
+  const details = {
+    forceOverwrite,
+    cliVersion,
+    isWindows,
+    logLevel,
+  };
 
   if (typeof templateRunner === 'function') {
-    return await templateRunner(root, data, forceOverwrite);
+    return await templateRunner(root, data, details);
   } else if ('default' in templateRunner && typeof templateRunner.default === 'function') {
-    return await templateRunner.default(root, data, forceOverwrite);
+    return await templateRunner.default(root, data, details);
   } else {
     fail(
       'generalError_0002',

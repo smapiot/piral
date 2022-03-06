@@ -47,6 +47,10 @@ if (isWindows) {
   };
 }
 
+export function getLogLevel(): LogLevels {
+  return logger.logLevel;
+}
+
 export function setLogLevel(logLevel: LogLevels) {
   logger.setOptions({ logLevel });
 }
