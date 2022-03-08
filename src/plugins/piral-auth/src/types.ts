@@ -1,5 +1,5 @@
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralAuthApi {}
+  interface PiletCustomApi extends PiletAuthApi {}
 
   interface PiralCustomEventMap {
     'change-user': PiralChangeUserEvent;
@@ -42,7 +42,7 @@ export interface PiralChangeUserEvent {
   current: UserInfo;
 }
 
-export interface PiralAuthApi {
+export interface PiletAuthApi {
   /**
    * Gets the currently authenticated user, if any.
    */

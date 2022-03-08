@@ -87,6 +87,8 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('bundler', availableBundlers)
         .describe('bundler', 'Sets the bundler to use.')
         .default('bundler', availableBundlers[0])
+        .string('feed')
+        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -103,6 +105,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         hooks: args.hooks as object,
+        feed: args.feed as string,
         _: args,
       });
     },
@@ -430,11 +433,11 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('app', 'Sets the name of the Piral instance.')
         .string('app-dir')
         .describe('app-dir', 'Sets the path to a custom Piral instance for serving.')
+        .string('feed')
+        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.')
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.')
-        .string('feed')
-        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
       return apps.debugPilet(args.base as string, {

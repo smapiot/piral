@@ -199,7 +199,7 @@ export interface OidcClient {
   extendHeaders(req: OidcRequest): void;
 }
 
-export interface PiralOidcApi {
+export interface PiletOidcApi {
   /**
    * Gets the currently valid access token, if any.
    */
@@ -212,7 +212,7 @@ export interface PiralOidcApi {
 }
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralOidcApi {}
+  interface PiletCustomApi extends PiletOidcApi {}
 }
 
 /**

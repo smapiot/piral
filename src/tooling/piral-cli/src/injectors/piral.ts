@@ -13,6 +13,7 @@ const maxRetrySendResponse = 4;
 export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   publicUrl: string;
+  feed?: string;
 }
 
 export default class PiralInjector implements KrasInjector {
@@ -57,19 +58,7 @@ export default class PiralInjector implements KrasInjector {
 
   setOptions() {}
 
-  sendResponse(path: string, target: string, dir: string, url: string, recursionDepth = 0): KrasResponse {
-    if (recursionDepth > maxRetrySendResponse) {
-      return undefined;
-    }
-
-    if (!path || !existsSync(target) || !statSync(target).isFile()) {
-      const { bundler } = this.config;
-      const newTarget = join(bundler.bundle.dir, bundler.bundle.name);
-      return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
-    }
-
-    const type = mime.getType(target) ?? 'application/octet-stream';
-
+  sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
     return {
       injector: { name: this.name },
       headers: {
@@ -80,8 +69,42 @@ export default class PiralInjector implements KrasInjector {
       },
       status: { code: 200 },
       url,
-      content: readFileSync(target),
+      content,
     };
+  }
+
+  sendIndexFile(target: string, url: string): KrasResponse {
+    const indexHtml = readFileSync(target, 'utf8');
+    const { feed } = this.config;
+
+    if (feed) {
+      // mechanism to inject server side debug piletApi config into piral emulator
+      const windowInjectionScript = `window['dbg:pilet-api'] = '${feed}';`;
+      const findStr = `<script`;
+      const replaceStr = `<script>/* Pilet Debugging Emulator Config Injection */${windowInjectionScript}</script><script`;
+      const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);
+      return this.sendContent(content, mime.getType(target), url);
+    }
+
+    return this.sendContent(indexHtml, mime.getType(target), url);
+  }
+
+  sendResponse(path: string, target: string, dir: string, url: string, recursionDepth = 0): KrasResponse {
+    if (recursionDepth > maxRetrySendResponse) {
+      return undefined;
+    }
+
+    const { bundler } = this.config;
+    const newTarget = join(bundler.bundle.dir, bundler.bundle.name);
+
+    if (!path || !existsSync(target) || !statSync(target).isFile()) {
+      return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
+    } else if (target === newTarget) {
+      return this.sendIndexFile(target, url);
+    }
+
+    const type = mime.getType(target) ?? 'application/octet-stream';
+    return this.sendContent(readFileSync(target), type, url);
   }
 
   handle(req: KrasRequest): KrasResponse {

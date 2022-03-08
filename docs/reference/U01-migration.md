@@ -15,13 +15,17 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 ### Breaking Changes in 0.15
 
 1. Changed the default bundler from `piral-cli-webpack` to `piral-cli-webpack5`
-2. ...
+2. Deprecated the usage of `renderInstance`
 
 #### 1) New Default Bundler
 
 The default bundler is used / installed in scenarios where no other bundler has been installed. If you've not explictly installed a bundler (e.g., `piral-cli-webpack`) beforehand we advise you to do that. The most reliable way to configure your default bundler is to just be explicit here.
 
 Otherwise, you can also tell the `piral-cli` what default bundler to use in general by configuring the *.piralrc* file in your home directory.
+
+#### 2) Deprecated `renderInstance`
+
+While this is not (yet) breaking it will be in the near future (when `renderInstance` is fully removed). We recommend everyone to replace the implicit `renderInstance` call with a more explicit version involving `createInstance`, `Piral` (both from `piral-core`) and `render` (from `react-dom`).
 
 ## 0.13 to 0.14
 

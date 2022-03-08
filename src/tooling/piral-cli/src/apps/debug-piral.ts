@@ -66,6 +66,11 @@ export interface DebugPiralOptions {
   optimizeModules?: boolean;
 
   /**
+   * The URL of a pilet feed(s) used to include locally missing pilets.
+   */
+  feed?: string | Array<string>;
+
+  /**
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
@@ -106,6 +111,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     publicUrl: originalPublicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
+    feed,
     _ = {},
     hooks = {},
     bundlerName,
@@ -171,6 +177,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const { piral: piralInjector, ...otherInjectors } = krasConfig.injectors;
   const injectorConfig = {
     ...piralInjector,
+    feed,
     active: true,
     handle: ['/'],
     publicUrl,

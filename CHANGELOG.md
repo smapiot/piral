@@ -16,6 +16,7 @@
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
 - Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
+- Added `--feed` option to `piral debug` command
 - Added semver possibilities for resolving shared dependencies
 
 ## 0.14.15 (March 5, 2022)
