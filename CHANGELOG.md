@@ -1,6 +1,10 @@
 # Piral Changelog
 
-## 0.14.15 (tbd)
+## 0.14.16 (tbd)
+
+- Fixed problem if provided pilet metadata is immutable (#486)
+
+## 0.14.15 (March 5, 2022)
 
 - Fixed issue with `get-dependency-map` of the `piral-debug-utils`
 - Added support for v0 and v1 pilets in `get-dependency-map`

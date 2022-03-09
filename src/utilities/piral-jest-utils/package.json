@@ -1,6 +1,6 @@
 {
   "name": "piral-jest-utils",
-  "version": "0.14.14",
+  "version": "0.14.15",
   "description": "Utilities for testing pilets with jest.",
   "keywords": [
     "piral",
