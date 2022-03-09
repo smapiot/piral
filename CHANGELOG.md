@@ -5,6 +5,7 @@
 - Fixed issue with `get-dependency-map` of the `piral-debug-utils`
 - Added support for v0 and v1 pilets in `get-dependency-map`
 - Added support for object flags (e.g., `--vars`) in the initializers
+- Upgraded `jest` dependencies to 26.x.x
 
 ## 0.14.14 (March 3, 2022)
 

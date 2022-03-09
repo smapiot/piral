@@ -47,7 +47,7 @@
   },
   "peerDependencies": {
     "minimatch": "^3.0.0",
-    "parcel-bundler": "0.14.x",
+    "parcel-bundler": "^1.12.5",
     "piral-core": "0.14.x"
   }
 }
