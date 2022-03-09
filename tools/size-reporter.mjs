@@ -3,6 +3,6 @@ import { reportFileSizeImpact, readGitHubWorkflowEnv } from '@jsenv/file-size-im
 await reportFileSizeImpact({
   ...readGitHubWorkflowEnv(),
   buildCommand: 'npx lerna run build:release',
-  installCommand: 'npx lerna bootstrap',
+  installCommand: 'yarn setup',
   fileSizeReportModulePath: './tools/size-generator.mjs#fileSizeReport',
 });
