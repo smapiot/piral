@@ -32,9 +32,15 @@ function checkFetchPilets(fetchPilets: PiletRequester) {
  * @param fetchPilets The function to resolve the pilets.
  * @param cache The optional cache to use initially and update later.
  */
-export function loadMetadata(fetchPilets: PiletRequester) {
+export function loadMetadata(fetchPilets: PiletRequester): Promise<Array<PiletMetadata>> {
   if (checkFetchPilets(fetchPilets)) {
-    return fetchPilets();
+    return fetchPilets().then((pilets) => {
+      if (!Array.isArray(pilets)) {
+        throw new Error('The fetched pilets metadata is not an array.');
+      }
+
+      return pilets.map((meta) => ({ ...meta }));
+    });
   }
 
   return Promise.resolve([]);
@@ -48,13 +54,7 @@ export function loadMetadata(fetchPilets: PiletRequester) {
  * @returns A promise leading to the evaluated pilets.
  */
 export function loadPilets(fetchPilets: PiletRequester, loadPilet: PiletLoader): Promise<Array<Pilet>> {
-  return loadMetadata(fetchPilets).then((pilets) => {
-    if (!Array.isArray(pilets)) {
-      throw new Error('The fetched pilets metadata is not an array.');
-    }
-
-    return Promise.all(pilets.map(loadPilet));
-  });
+  return loadMetadata(fetchPilets).then((pilets) => Promise.all(pilets.map(loadPilet)));
 }
 
 /**
