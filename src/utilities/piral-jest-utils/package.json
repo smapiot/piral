@@ -41,9 +41,9 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
     "enzyme": "^3.11.0",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^26.6.3",
-    "jest-cli": "^26.6.3",
-    "ts-jest": "^26.5.6"
+    "jest": "^26.0.0",
+    "jest-cli": "^26.0.0",
+    "ts-jest": "^26.0.0"
   },
   "devDependencies": {
     "@types/enzyme": "^3.1.18",
