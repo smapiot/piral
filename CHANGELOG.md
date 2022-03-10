@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.16 (tbd)
+## 0.14.16 (March 10, 2022)
 
 - Fixed problem if provided pilet metadata is immutable (#486)
 - Fixed cloning of `MutationEvent` events inside `piral-blazor`
