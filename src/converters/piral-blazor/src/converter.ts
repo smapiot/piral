@@ -9,7 +9,7 @@ const mediaRules = [
 ];
 
 function prefixMediaSources(component: Element, prefix: string) {
-  const prefixAttributeValue = (el, attr) => el.setAttribute(attr, prefix + el.getAttribute(attr));
+  const prefixAttributeValue = (el: Element, attr: string) => el.setAttribute(attr, prefix + el.getAttribute(attr));
 
   for (const { attribute, selector } of mediaRules) {
     Array.from(component.querySelectorAll(selector))
@@ -18,9 +18,9 @@ function prefixMediaSources(component: Element, prefix: string) {
   }
 }
 
-function project(component: Element, destination: Element, options: BlazorOptions): Element {
+function project(component: Element, destination: Element, options: BlazorOptions) {
   options?.resourcePathRoot && prefixMediaSources(component, options.resourcePathRoot);
-  return destination.appendChild(component);
+  destination.appendChild(component);
 }
 
 export function createConverter(lazy: boolean) {
@@ -57,8 +57,8 @@ export function createConverter(lazy: boolean) {
           .then((refId) => {
             if (state === 'fresh') {
               id = refId;
-              const component = root.querySelector('#' + id + ' > div');
-              node = project(component, el, options) as HTMLElement;
+              node = root.querySelector(`#${id} > div`);
+              project(node, el, options);
               state = 'mounted';
               referenceId = refId;
             }

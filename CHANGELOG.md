@@ -3,6 +3,7 @@
 ## 0.14.16 (tbd)
 
 - Fixed problem if provided pilet metadata is immutable (#486)
+- Fixed cloning of `MutationEvent` events inside `piral-blazor`
 - Upgraded `jest` dependencies to 26.x
 
 ## 0.14.15 (March 5, 2022)
