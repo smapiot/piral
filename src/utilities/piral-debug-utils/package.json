@@ -1,6 +1,6 @@
 {
   "name": "piral-debug-utils",
-  "version": "0.14.15",
+  "version": "0.14.16",
   "description": "Utilities for debugging Piral instances.",
   "keywords": [
     "piral",
@@ -38,7 +38,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-base": "^0.14.15"
+    "piral-base": "^0.14.16"
   },
   "peerDependencies": {
     "piral-base": "0.14.x",
