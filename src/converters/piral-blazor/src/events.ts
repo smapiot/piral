@@ -59,8 +59,12 @@ function findTarget(target: HTMLElement = document.body) {
 
 function dispatchToRoot(event: any) {
   isInternalNavigation(event) && performInternalNavigation(event);
-  const eventClone = new event.constructor(event.type, event);
-  document.getElementById(blazorRootId)?.dispatchEvent(eventClone);
+
+  // the mutation event cannot be cloned (at least in Webkit-based browsers)
+  if (!(event instanceof MutationEvent)) {
+    const eventClone = new event.constructor(event.type, event);
+    document.getElementById(blazorRootId)?.dispatchEvent(eventClone);
+  }
 }
 
 export function emitRenderEvent(source: HTMLElement, name: string, params: any) {

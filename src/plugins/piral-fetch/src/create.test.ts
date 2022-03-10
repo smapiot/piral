@@ -32,7 +32,8 @@ describe('Create fetch API Module', () => {
       );
     });
 
-    terminate = app.listen(port);
+    let server = app.listen(port);
+    terminate = () => server.close();
   });
 
   afterAll(() => terminate());
