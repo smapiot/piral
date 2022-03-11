@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.17 (tbd)
+
+- Fixed usage of multi instances of Blazor components (#490)
+
 ## 0.14.16 (March 10, 2022)
 
 - Fixed problem if provided pilet metadata is immutable (#486)

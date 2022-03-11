@@ -14,19 +14,17 @@ export interface PreactConverterOptions {
 export function createConverter(config: PreactConverterOptions = {}) {
   const { rootName = 'slot' } = config;
   const Extension = createExtension(rootName);
-  const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => {
-    return {
-      mount(el, props, ctx) {
-        mountPreact(el, root, props, ctx);
-      },
-      update(el, props, ctx) {
-        mountPreact(el, root, props, ctx);
-      },
-      unmount(el) {
-        unmountPreact(el);
-      },
-    };
-  };
+  const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => ({
+    mount(el, props, ctx) {
+      mountPreact(el, root, props, ctx);
+    },
+    update(el, props, ctx) {
+      mountPreact(el, root, props, ctx);
+    },
+    unmount(el) {
+      unmountPreact(el);
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

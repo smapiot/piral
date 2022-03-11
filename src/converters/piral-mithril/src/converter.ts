@@ -17,34 +17,32 @@ export function createConverter(config: MithrilConverterOptions = {}) {
   const convert = <TProps extends BaseComponentProps>(
     component: Component<TProps>,
     captured?: Record<string, any>,
-  ): ForeignComponent<TProps> => {
-    return {
-      mount(el, props, ctx) {
-        mithril.mount(el, {
-          view: () =>
-            mithril.m(component, {
-              ...captured,
-              ...ctx,
-              ...props,
-            }),
-        });
-      },
-      update(el, props, ctx) {
-        mithril.mount(el, {
-          view: () =>
-            mithril.m(component, {
-              ...captured,
-              ...ctx,
-              ...props,
-            }),
-        });
-      },
-      unmount(el) {
-        // tslint:disable-next-line:no-null-keyword
-        mithril.mount(el, null);
-      },
-    };
-  };
+  ): ForeignComponent<TProps> => ({
+    mount(el, props, ctx) {
+      mithril.mount(el, {
+        view: () =>
+          mithril.m(component, {
+            ...captured,
+            ...ctx,
+            ...props,
+          }),
+      });
+    },
+    update(el, props, ctx) {
+      mithril.mount(el, {
+        view: () =>
+          mithril.m(component, {
+            ...captured,
+            ...ctx,
+            ...props,
+          }),
+      });
+    },
+    unmount(el) {
+      // tslint:disable-next-line:no-null-keyword
+      mithril.mount(el, null);
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

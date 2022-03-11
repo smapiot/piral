@@ -18,16 +18,14 @@ export function createConverter(config: HyperappConverterOptions = {}) {
     root: Component<TProps>,
     state: any,
     actions: any,
-  ): ForeignComponent<TProps> => {
-    return {
-      mount(el, props, ctx) {
-        mountHyperapp(el, root, props, ctx, state, actions);
-      },
-      unmount(el) {
-        el.innerHTML = '';
-      },
-    };
-  };
+  ): ForeignComponent<TProps> => ({
+    mount(el, props, ctx) {
+      mountHyperapp(el, root, props, ctx, state, actions);
+    },
+    unmount(el) {
+      el.innerHTML = '';
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }
