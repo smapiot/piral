@@ -3,6 +3,7 @@
 ## 0.14.17 (tbd)
 
 - Fixed usage of multi instances of Blazor components (#490)
+- Added `update` lifecycle to `piral-blazor` converter
 
 ## 0.14.16 (March 10, 2022)
 

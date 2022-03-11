@@ -1,6 +1,6 @@
 import type { BaseComponentProps, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
-import { activate, deactivate, createBootLoader } from './interop';
+import { activate, deactivate, createBootLoader, reactivate } from './interop';
 import { BlazorOptions } from './types';
 
 const mediaRules = [
@@ -75,6 +75,10 @@ export function createConverter(lazy: boolean) {
           }
         })
         .catch((err) => console.error(err));
+    },
+    update(el, data, ctx, locals: BlazorLocals) {
+      const props = { ...args, ...data };
+      reactivate(moduleName, locals.referenceId, props);
     },
     unmount(el, locals: BlazorLocals) {
       removeGlobalEventListeners(el);
