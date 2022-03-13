@@ -45,20 +45,23 @@ export interface ForeignComponent<TProps> {
    * @param element The container hosting the element.
    * @param props The props to transport.
    * @param ctx The associated context.
+   * @param locals The local state of this component instance.
    */
-  mount(element: HTMLElement, props: TProps, ctx: ComponentContext): void;
+  mount(element: HTMLElement, props: TProps, ctx: ComponentContext, locals: Record<string, any>): void;
   /**
    * Called when the component should be updated.
    * @param element The container hosting the element.
    * @param props The props to transport.
    * @param ctx The associated context.
+   * @param locals The local state of this component instance.
    */
-  update?(element: HTMLElement, props: TProps, ctx: ComponentContext): void;
+  update?(element: HTMLElement, props: TProps, ctx: ComponentContext, locals: Record<string, any>): void;
   /**
    * Called when a component is unmounted.
    * @param element The container that was hosting the element.
+   * @param locals The local state of this component instance.
    */
-  unmount?(element: HTMLElement): void;
+  unmount?(element: HTMLElement, locals: Record<string, any>): void;
 }
 
 /**

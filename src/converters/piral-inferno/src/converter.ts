@@ -14,19 +14,17 @@ export interface InfernoConverterOptions {
 export function createConverter(config: InfernoConverterOptions = {}) {
   const { rootName = 'slot' } = config;
   const Extension = createExtension(rootName);
-  const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => {
-    return {
-      mount(el, props, ctx) {
-        mountInferno(el, root, props, ctx);
-      },
-      update(el, props, ctx) {
-        mountInferno(el, root, props, ctx);
-      },
-      unmount(el) {
-        unmountInferno(el);
-      },
-    };
-  };
+  const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => ({
+    mount(el, props, ctx) {
+      mountInferno(el, root, props, ctx);
+    },
+    update(el, props, ctx) {
+      mountInferno(el, root, props, ctx);
+    },
+    unmount(el) {
+      unmountInferno(el);
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

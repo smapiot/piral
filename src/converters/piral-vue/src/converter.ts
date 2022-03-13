@@ -16,32 +16,32 @@ export interface VueConverterOptions {
   rootName?: string;
 }
 
+interface VueState {
+  instance: any;
+}
+
 export function createConverter(config: VueConverterOptions = {}) {
   const { rootName = 'slot', selector = 'extension-component' } = config;
   const Extension = createExtension(rootName, selector);
   const convert = <TProps extends BaseComponentProps>(
     root: Component<TProps>,
     captured?: Record<string, any>,
-  ): ForeignComponent<TProps> => {
-    let instance: any = undefined;
-
-    return {
-      mount(parent, data, ctx) {
-        const el = parent.appendChild(document.createElement(rootName));
-        instance = mountVue(el, root, data, ctx, captured);
-      },
-      update(_, data) {
-        for (const prop in data) {
-          instance[prop] = data[prop];
-        }
-      },
-      unmount(el) {
-        instance.$destroy();
-        el.innerHTML = '';
-        instance = undefined;
-      },
-    };
-  };
+  ): ForeignComponent<TProps> => ({
+    mount(parent, data, ctx, locals: VueState) {
+      const el = parent.appendChild(document.createElement(rootName));
+      locals.instance = mountVue(el, root, data, ctx, captured);
+    },
+    update(parent, data, ctx, locals: VueState) {
+      for (const prop in data) {
+        locals.instance[prop] = data[prop];
+      }
+    },
+    unmount(parent, locals: VueState) {
+      locals.instance.$destroy();
+      parent.innerHTML = '';
+      locals.instance = undefined;
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

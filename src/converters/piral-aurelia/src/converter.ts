@@ -13,6 +13,10 @@ export interface AureliaConverterOptions {
   rootName?: string;
 }
 
+interface AureliaLocals {
+  aurelia: Aurelia;
+}
+
 export function createConverter(config: AureliaConverterOptions = {}) {
   const { rootName = 'span' } = config;
 
@@ -20,35 +24,27 @@ export function createConverter(config: AureliaConverterOptions = {}) {
 
   const Extension = createExtension(rootName);
 
-  const convert = <TProps extends BaseComponentProps>(root: AureliaModule<TProps>): ForeignComponent<TProps> => {
-    let aurelia: Aurelia = undefined;
+  const convert = <TProps extends BaseComponentProps>(root: AureliaModule<TProps>): ForeignComponent<TProps> => ({
+    mount(el, props, ctx, locals: AureliaLocals) {
+      const aurelia = new Aurelia(new DefaultLoader());
 
-    return {
-      mount(el, props, ctx) {
-        aurelia = new Aurelia(new DefaultLoader());
+      aurelia.use.eventAggregator().history().defaultBindingLanguage().globalResources([Extension]).defaultResources();
 
-        aurelia.use
-          .eventAggregator()
-          .history()
-          .defaultBindingLanguage()
-          .globalResources([Extension])
-          .defaultResources();
+      aurelia.container.registerInstance('props', props);
+      aurelia.container.registerInstance('ctx', ctx);
+      aurelia.container.registerInstance('piral', props.piral);
 
-        aurelia.container.registerInstance('props', props);
-        aurelia.container.registerInstance('ctx', ctx);
-        aurelia.container.registerInstance('piral', props.piral);
-
-        aurelia.start().then(() => aurelia.setRoot(root, el));
-      },
-      update(_, props, ctx) {
-        aurelia.container.registerInstance('props', props);
-        aurelia.container.registerInstance('ctx', ctx);
-      },
-      unmount() {
-        aurelia = undefined;
-      },
-    };
-  };
+      aurelia.start().then(() => aurelia.setRoot(root, el));
+      locals.aurelia = aurelia;
+    },
+    update(el, props, ctx, locals: AureliaLocals) {
+      locals.aurelia.container.registerInstance('props', props);
+      locals.aurelia.container.registerInstance('ctx', ctx);
+    },
+    unmount(el, locals: AureliaLocals) {
+      locals.aurelia = undefined;
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }
