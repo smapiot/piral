@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.17 (tbd)
+## 0.14.17 (March 13, 2022)
 
 - Fixed usage of multi instances of Blazor components (#490)
 - Fixed star export of augmented functions from CommonJS (#489)
