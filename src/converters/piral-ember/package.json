@@ -49,7 +49,6 @@
     "piral-core": "^0.14.17"
   },
   "peerDependencies": {
-    "ember-source": "^3.0.0",
-    "piral-core": "0.14.x"
+    "ember-source": "^3.0.0"
   }
 }

@@ -11,7 +11,7 @@ interface ForeignComponentContainerProps<T> {
 }
 
 export class ForeignComponentContainer<T> extends React.Component<ForeignComponentContainerProps<T>> {
-  private local?: Record<string, any> = {};
+  private locals?: Record<string, any> = {};
   private current?: HTMLElement;
   private previous?: HTMLElement;
   private handler = (ev: CustomEvent) => {
@@ -30,7 +30,7 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
     const { mount } = $component;
 
     if (node && isfunc(mount)) {
-      mount(node, innerProps, $context, this.local);
+      mount(node, innerProps, $context, this.locals);
       node.addEventListener('render-html', this.handler, false);
     }
 
@@ -46,7 +46,7 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
       previous && this.componentWillUnmount();
       current && this.componentDidMount();
     } else if (isfunc(update)) {
-      update(current, innerProps, $context, this.local);
+      update(current, innerProps, $context, this.locals);
     }
   }
 
@@ -56,7 +56,7 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
     const { unmount } = $component;
 
     if (node && isfunc(unmount)) {
-      unmount(node, this.local);
+      unmount(node, this.locals);
       node.removeEventListener('render-html', this.handler, false);
     }
 

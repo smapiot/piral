@@ -1,5 +1,5 @@
 import { render, ComponentType, createElement, Component } from 'preact';
-import { BaseComponentProps } from 'piral-core';
+import type { BaseComponentProps } from 'piral-core';
 
 // tslint:disable-next-line:no-null-keyword
 export const anyPropType = () => null;

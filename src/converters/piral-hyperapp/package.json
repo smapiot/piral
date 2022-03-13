@@ -48,7 +48,6 @@
     "piral-core": "^0.14.17"
   },
   "peerDependencies": {
-    "hyperapp": "^1.0.0",
-    "piral-core": "0.14.x"
+    "hyperapp": "^1.0.0"
   }
 }

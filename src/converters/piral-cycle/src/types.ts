@@ -1,7 +1,7 @@
 import { Stream } from 'xstream';
 import { Driver, Drivers, MatchingMain, Main } from '@cycle/run';
 import { MainDOMSource, VNode } from '@cycle/dom';
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletCycleApi {}

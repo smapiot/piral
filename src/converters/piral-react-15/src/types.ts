@@ -1,5 +1,5 @@
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
-import { Component, ComponentType } from 'react-15';
+import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import type { Component, ComponentType } from 'react-15';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletReact15Api {}

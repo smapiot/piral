@@ -48,7 +48,6 @@
     "piral-core": "^0.14.17"
   },
   "peerDependencies": {
-    "mithril": "^2.0.0",
-    "piral-core": "0.14.x"
+    "mithril": "^2.0.0"
   }
 }

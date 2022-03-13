@@ -52,7 +52,6 @@
   "peerDependencies": {
     "@cycle/dom": "^22.0.0",
     "@cycle/run": "^5.0.0",
-    "piral-core": "0.14.x",
     "xstream": "^11.0.0"
   }
 }

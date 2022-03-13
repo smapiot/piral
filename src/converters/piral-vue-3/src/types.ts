@@ -1,5 +1,5 @@
-import { Component } from 'vue';
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import type { Component } from 'vue';
+import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletVue3Api {}

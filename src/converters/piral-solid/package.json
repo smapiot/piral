@@ -48,7 +48,6 @@
     "solid-js": "^0.18.7"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x",
     "solid-js": "^0.18.0"
   }
 }

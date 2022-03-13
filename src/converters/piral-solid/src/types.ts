@@ -1,5 +1,5 @@
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
-import { Component } from 'solid-js';
+import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import type { Component } from 'solid-js';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletSolidApi {}

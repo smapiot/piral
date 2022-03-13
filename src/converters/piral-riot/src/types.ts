@@ -1,5 +1,5 @@
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
-import { RiotComponentShell } from 'riot';
+import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import type { RiotComponentShell } from 'riot';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletRiotApi {}
