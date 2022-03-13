@@ -30,7 +30,6 @@ function findMatchingPackage(id: string) {
 function isPrimitiveExport(content: any) {
   const type = typeof content;
   return (
-    type === 'function' ||
     type === 'number' ||
     type === 'boolean' ||
     type === 'symbol' ||
@@ -64,6 +63,12 @@ System.constructor.prototype.register = function (...args) {
 
         if (content instanceof Promise) {
           return content.then(exp);
+        } else if (typeof content === 'function') {
+          _export('__esModule', true);
+          Object.keys(content).forEach((prop) => {
+            _export(prop, content[prop]);
+          });
+          _export('default', content);
         } else if (isPrimitiveExport(content)) {
           _export('__esModule', true);
           _export('default', content);

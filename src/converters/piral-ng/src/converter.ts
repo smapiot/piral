@@ -13,20 +13,30 @@ export interface NgConverter {
   Extension: any;
 }
 
+interface NgState {
+  queued: Promise<void | Disposable>;
+  active: boolean;
+}
+
 export function createConverter(_: NgConverterOptions = {}): NgConverter {
   const convert = <TProps extends BaseComponentProps>(component: any): ForeignComponent<TProps> => {
     const bootstrapped = prepareBootstrap(component);
-    let mounted: Promise<void | Disposable> = Promise.resolve();
-    let active = true;
 
     return {
-      mount(el, props, ctx) {
-        active = true;
-        mounted = mounted.then(() => enqueue(() => active && bootstrap(bootstrapped, el, props, ctx)));
+      mount(el, props, ctx, locals: NgState) {
+        locals.active = true;
+
+        if (!locals.queued) {
+          locals.queued = Promise.resolve();
+        }
+
+        locals.queued = locals.queued.then(() =>
+          enqueue(() => locals.active && bootstrap(bootstrapped, el, props, ctx)),
+        );
       },
-      unmount() {
-        active = false;
-        mounted = mounted.then((dispose) => dispose && dispose());
+      unmount(el, locals: NgState) {
+        locals.active = false;
+        locals.queued = locals.queued.then((dispose) => dispose && dispose());
       },
     };
   };

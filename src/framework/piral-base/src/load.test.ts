@@ -40,4 +40,41 @@ describe('Loading Modules', () => {
       'The fetched pilets metadata is not an array.',
     );
   });
+
+  it('Fetching a non-array throws', async () => {
+    const promise = loadMetadata(() => Promise.resolve({}) as any);
+    expect(promise).rejects.toBeInstanceOf(Error);
+  });
+
+  it('Fetching with a standard array works', async () => {
+    const data: any = {
+      foo: 'bar',
+    };
+    const promise = loadMetadata(() =>
+      Promise.resolve([data]),
+    );
+    expect(promise).rejects.toBeNull();
+    const result = await promise;
+    expect(result).toEqual([{
+      foo: 'bar',
+    }]);
+  });
+
+  it('Fetching with an immutable response works', async () => {
+    const data: any = {
+      foo: 'bar',
+    };
+    Object.preventExtensions(data);
+    const promise = loadMetadata(() =>
+      Promise.resolve([data]),
+    );
+    expect(promise).rejects.toBeNull();
+    const result = await promise;
+    // @ts-ignore
+    result[0].bar = 'qxz'
+    expect(result).toEqual([{
+      foo: 'bar',
+      bar: 'qxz',
+    }]);
+  });
 });

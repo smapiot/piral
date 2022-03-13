@@ -10,38 +10,38 @@ export interface SvelteConverterOptions {
   selector?: string;
 }
 
+interface SvelteState {
+  instance: SvelteComponentInstance<any>;
+}
+
 export function createConverter(config: SvelteConverterOptions = {}) {
   const { selector = 'svelte-extension' } = config;
   const Extension = createExtension(selector);
   const convert = <TProps extends BaseComponentProps>(
     Component: SvelteModule<TProps>,
     captured?: Record<string, any>,
-  ): ForeignComponent<TProps> => {
-    let instance: SvelteComponentInstance<any> = undefined;
-
-    return {
-      mount(parent, data, ctx) {
-        instance = new Component({
-          target: parent,
-          props: {
-            ...captured,
-            ...ctx,
-            ...data,
-          },
-        });
-      },
-      update(_, data) {
-        Object.keys(data).forEach((key) => {
-          instance[key] = data[key];
-        });
-      },
-      unmount(el) {
-        instance.$destroy();
-        instance = undefined;
-        el.innerHTML = '';
-      },
-    };
-  };
+  ): ForeignComponent<TProps> => ({
+    mount(parent, data, ctx, locals: SvelteState) {
+      locals.instance = new Component({
+        target: parent,
+        props: {
+          ...captured,
+          ...ctx,
+          ...data,
+        },
+      });
+    },
+    update(el, data, ctx, locals: SvelteState) {
+      Object.keys(data).forEach((key) => {
+        locals.instance[key] = data[key];
+      });
+    },
+    unmount(el, locals: SvelteState) {
+      locals.instance.$destroy();
+      locals.instance = undefined;
+      el.innerHTML = '';
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

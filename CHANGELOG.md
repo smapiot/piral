@@ -19,6 +19,18 @@
 - Added `--feed` option to `piral debug` command
 - Added semver possibilities for resolving shared dependencies
 
+## 0.14.17 (March 13, 2022)
+
+- Fixed usage of multi instances of Blazor components (#490)
+- Fixed star export of augmented functions from CommonJS (#489)
+- Added `update` lifecycle to `piral-blazor` converter
+
+## 0.14.16 (March 10, 2022)
+
+- Fixed problem if provided pilet metadata is immutable (#486)
+- Fixed cloning of `MutationEvent` events inside `piral-blazor`
+- Upgraded `jest` dependencies to 26.x
+
 ## 0.14.15 (March 5, 2022)
 
 - Fixed issue with `get-dependency-map` of the `piral-debug-utils`

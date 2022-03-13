@@ -36,6 +36,13 @@ export function activate(moduleName: string, props: any) {
   return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, props);
 }
 
+export function reactivate(moduleName: string, referenceId: string, props: any) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'Reactivate', moduleName, referenceId, props).catch(() => {
+    // Apparently an older version of Piral.Blazor, which does not support this
+    // discard this error silently (in the future we may print warnings here)
+  });
+}
+
 export function deactivate(moduleName: string, referenceId: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'Deactivate', moduleName, referenceId);
 }
