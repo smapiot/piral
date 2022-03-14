@@ -1,7 +1,16 @@
 import type { PiletApp, PiletExports, PiletMetadataV1, PiletMetadataBundle } from './types';
 
+function tryResolve(name: string, parent: string) {
+  try {
+    return System.resolve(name, parent);
+  } catch {
+    // just ignore - will be handled differently later.
+    return undefined;
+  }
+}
+
 function requireModule(name: string, parent: string) {
-  const moduleId = System.resolve(name, parent);
+  const moduleId = tryResolve(name, parent);
   const dependency = moduleId && System.get(moduleId);
 
   if (!dependency) {
