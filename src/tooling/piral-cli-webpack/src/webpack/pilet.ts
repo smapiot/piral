@@ -83,7 +83,7 @@ async function getConfig(
         }),
       ],
       production,
-      true,
+      entry,
     ),
   };
 }

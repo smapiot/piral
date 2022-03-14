@@ -33,7 +33,7 @@ export function getHmrEntry(hmrPort: number) {
   return hmrPort ? [`webpack-hot-middleware/client?path=http://localhost:${hmrPort}/__webpack_hmr&reload=true`] : [];
 }
 
-export function getPlugins(plugins: Array<any>, production: boolean, pilet: boolean, hmrPort?: number) {
+export function getPlugins(plugins: Array<any>, production: boolean, pilet?: string, hmrPort?: number) {
   const otherPlugins = [
     new MiniCssExtractPlugin({
       filename: pilet ? piletCss : '[name].[hash:6].css',
@@ -66,7 +66,7 @@ export function getPlugins(plugins: Array<any>, production: boolean, pilet: bool
 
     if (pilet) {
       const name = process.env.BUILD_PCKG_NAME;
-      otherPlugins.push(new SheetPlugin(piletCss, name));
+      otherPlugins.push(new SheetPlugin(piletCss, name, pilet));
     }
   }
 

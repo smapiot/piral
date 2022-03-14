@@ -18,8 +18,10 @@ function sheetLoader(cssName: string, name: string) {
 }
 
 export default class SheetPlugin extends InjectPlugin {
-  constructor(private cssName: string, name: string) {
-    super(sheetLoader(cssName, name));
+  constructor(private cssName: string, name: string, entryName: string) {
+    super(sheetLoader(cssName, name), {
+      entryName,
+    });
   }
 
   apply(compiler) {

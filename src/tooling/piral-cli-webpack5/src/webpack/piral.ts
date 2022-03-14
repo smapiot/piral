@@ -75,7 +75,7 @@ async function getConfig(
         ],
       },
 
-      plugins: getPlugins([], production, false),
+      plugins: getPlugins([], production),
     },
     enhance,
   ];
