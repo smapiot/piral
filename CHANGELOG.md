@@ -3,6 +3,7 @@
 ## 0.14.19 (tbd)
 
 - Removed dependency to `webpack-inject-plugin` in `piral-cli-webpack5`
+- Cleaned up some tests so project can also be built with node16
 
 ## 0.14.18 (March 15, 2022)
 
