@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.18 (tbd)
+## 0.14.18 (March 15, 2022)
 
 - Fixed issue with `v1` pilets not loading additional chunks
 - Fixed CSS inject being applied to importmap dependencies (#492)
