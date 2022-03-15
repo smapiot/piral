@@ -5,6 +5,7 @@ const config: Config.InitialOptions = {
   collectCoverage: true,
   setupFiles: [resolve(__dirname, 'setup.js')],
   roots: ['src/'],
+  testEnvironment: 'jsdom',
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.jsx?$': 'babel-jest',

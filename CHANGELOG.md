@@ -2,7 +2,9 @@
 
 ## 0.14.19 (tbd)
 
+- Improved pilet injector to always return an array as metadata response
 - Removed dependency to `webpack-inject-plugin` in `piral-cli-webpack5`
+- Fixed issue with `getCurrentLayout` not returning default layout in SSR
 - Cleaned up some tests so project can also be built with node16
 
 ## 0.14.18 (March 15, 2022)
