@@ -14,19 +14,17 @@ export interface React15ConverterOptions {
 export function createConverter(config: React15ConverterOptions = {}) {
   const { rootName = 'slot' } = config;
   const Extension = createExtension(rootName);
-  const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => {
-    return {
-      mount(el, props, ctx) {
-        mountReact15(el, root, props, ctx);
-      },
-      update(el, props, ctx) {
-        mountReact15(el, root, props, ctx);
-      },
-      unmount(el) {
-        unmountReact15(el);
-      },
-    };
-  };
+  const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => ({
+    mount(el, props, ctx) {
+      mountReact15(el, root, props, ctx);
+    },
+    update(el, props, ctx) {
+      mountReact15(el, root, props, ctx);
+    },
+    unmount(el) {
+      unmountReact15(el);
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

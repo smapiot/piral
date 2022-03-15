@@ -1,6 +1,6 @@
 import type { BaseComponentProps, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
-import { activate, deactivate, createBootLoader } from './interop';
+import { activate, deactivate, createBootLoader, reactivate } from './interop';
 import { BlazorOptions } from './types';
 
 const mediaRules = [
@@ -9,7 +9,7 @@ const mediaRules = [
 ];
 
 function prefixMediaSources(component: Element, prefix: string) {
-  const prefixAttributeValue = (el, attr) => el.setAttribute(attr, prefix + el.getAttribute(attr));
+  const prefixAttributeValue = (el: Element, attr: string) => el.setAttribute(attr, prefix + el.getAttribute(attr));
 
   for (const { attribute, selector } of mediaRules) {
     Array.from(component.querySelectorAll(selector))
@@ -18,9 +18,17 @@ function prefixMediaSources(component: Element, prefix: string) {
   }
 }
 
-function project(component: Element, destination: Element, options: BlazorOptions): Element {
+function project(component: Element, destination: Element, options: BlazorOptions) {
   options?.resourcePathRoot && prefixMediaSources(component, options.resourcePathRoot);
-  return destination.appendChild(component);
+  destination.appendChild(component);
+}
+
+interface BlazorLocals {
+  id: string;
+  referenceId: string;
+  node: HTMLElement;
+  dispose(): void;
+  state: 'fresh' | 'mounted' | 'removed';
 }
 
 export function createConverter(lazy: boolean) {
@@ -37,58 +45,55 @@ export function createConverter(lazy: boolean) {
     dependency: () => Promise<void>,
     args: Record<string, any>,
     options?: BlazorOptions,
-  ): ForeignComponent<TProps> => {
-    let id: string;
-    let referenceId: string;
-    let node: HTMLElement;
-    let dispose = () => {};
-    let state: 'fresh' | 'mounted' | 'removed';
+  ): ForeignComponent<TProps> => ({
+    mount(el, data, ctx, locals: BlazorLocals) {
+      const props = { ...args, ...data };
+      el.setAttribute('data-blazor-pilet-root', 'true');
 
-    return {
-      mount(el, data, ctx) {
-        const props = { ...args, ...data };
-        el.setAttribute('data-blazor-pilet-root', 'true');
+      addGlobalEventListeners(el);
 
-        addGlobalEventListeners(el);
+      locals.state = 'fresh';
+      locals.dispose = attachEvents(
+        el,
+        (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
+        (ev) =>
+          ev.detail.replace
+            ? ctx.router.history.replace(ev.detail.to, ev.detail.store)
+            : ctx.router.history.push(ev.detail.to, ev.detail.state),
+      );
 
-        (loader || (loader = boot()))
-          .then(dependency)
-          .then(() => activate(moduleName, props))
-          .then((refId) => {
-            if (state === 'fresh') {
-              id = refId;
-              const component = root.querySelector('#' + id + ' > div');
-              node = project(component, el, options) as HTMLElement;
-              state = 'mounted';
-              referenceId = refId;
-            }
-          })
-          .catch((err) => console.error(err));
-        dispose = attachEvents(
-          el,
-          (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-          (ev) =>
-            ev.detail.replace
-              ? ctx.router.history.replace(ev.detail.to, ev.detail.store)
-              : ctx.router.history.push(ev.detail.to, ev.detail.state),
-        );
-        state = 'fresh';
-      },
-      unmount(el) {
-        removeGlobalEventListeners(el);
-        el.removeAttribute('data-blazor-pilet-root');
-        dispose();
+      (loader || (loader = boot()))
+        .then(dependency)
+        .then(() => activate(moduleName, props))
+        .then((refId) => {
+          if (locals.state === 'fresh') {
+            locals.id = refId;
+            locals.node = root.querySelector(`#${locals.id} > div`);
+            project(locals.node, el, options);
+            locals.state = 'mounted';
+            locals.referenceId = refId;
+          }
+        })
+        .catch((err) => console.error(err));
+    },
+    update(el, data, ctx, locals: BlazorLocals) {
+      const props = { ...args, ...data };
+      reactivate(moduleName, locals.referenceId, props);
+    },
+    unmount(el, locals: BlazorLocals) {
+      removeGlobalEventListeners(el);
+      el.removeAttribute('data-blazor-pilet-root');
+      locals.dispose();
 
-        if (state === 'mounted') {
-          root.querySelector(`#${id}`).appendChild(node);
-          deactivate(moduleName, referenceId);
-        }
+      if (locals.state === 'mounted') {
+        root.querySelector(`#${locals.id}`).appendChild(locals.node);
+        deactivate(moduleName, locals.referenceId);
+      }
 
-        el.innerHTML = '';
-        state = 'removed';
-      },
-    };
-  };
+      el.innerHTML = '';
+      locals.state = 'removed';
+    },
+  });
 
   convert.loader = loader;
   return convert;

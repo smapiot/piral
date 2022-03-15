@@ -1,8 +1,24 @@
 # Piral Changelog
 
-## 0.14.16 (tbd)
+## 0.14.19 (tbd)
+
+- Removed dependency to `webpack-inject-plugin` in `piral-cli-webpack5`
+
+## 0.14.18 (March 15, 2022)
+
+- Fixed issue with `v1` pilets not loading additional chunks
+- Fixed CSS inject being applied to importmap dependencies (#492)
+
+## 0.14.17 (March 13, 2022)
+
+- Fixed usage of multi instances of Blazor components (#490)
+- Fixed star export of augmented functions from CommonJS (#489)
+- Added `update` lifecycle to `piral-blazor` converter
+
+## 0.14.16 (March 10, 2022)
 
 - Fixed problem if provided pilet metadata is immutable (#486)
+- Fixed cloning of `MutationEvent` events inside `piral-blazor`
 - Upgraded `jest` dependencies to 26.x
 
 ## 0.14.15 (March 5, 2022)

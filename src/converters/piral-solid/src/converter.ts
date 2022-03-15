@@ -14,17 +14,15 @@ export interface SolidConverterOptions {
 export function createConverter(config: SolidConverterOptions = {}) {
   const { rootName = 'slot' } = config;
   const Extension = createExtension(rootName);
-  const convert = <TProps extends BaseComponentProps>(root: Component<TProps>): ForeignComponent<TProps> => {
-    return {
-      mount(el, props, context) {
-        render(() => createComponent(root, { context, ...props }), el);
-      },
-      unmount(el) {
-        render(() => undefined, el);
-        el.innerHTML = '';
-      },
-    };
-  };
+  const convert = <TProps extends BaseComponentProps>(root: Component<TProps>): ForeignComponent<TProps> => ({
+    mount(el, props, context) {
+      render(() => createComponent(root, { context, ...props }), el);
+    },
+    unmount(el) {
+      render(() => undefined, el);
+      el.innerHTML = '';
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

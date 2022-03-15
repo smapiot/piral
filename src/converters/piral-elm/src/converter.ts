@@ -16,24 +16,22 @@ export function createConverter(config: ElmConverterOptions = {}) {
   const convert = <TProps extends BaseComponentProps>(
     main: ElmModule<TProps>,
     captured?: Record<string, any>,
-  ): ForeignComponent<TProps> => {
-    return {
-      mount(el, props, ctx) {
-        const node = el.appendChild(document.createElement('div'));
-        main.init({
-          node,
-          flags: {
-            ...captured,
-            ...ctx,
-            ...props,
-          },
-        });
-      },
-      unmount(el) {
-        el.innerHTML = '';
-      },
-    };
-  };
+  ): ForeignComponent<TProps> => ({
+    mount(el, props, ctx) {
+      const node = el.appendChild(document.createElement('div'));
+      main.init({
+        node,
+        flags: {
+          ...captured,
+          ...ctx,
+          ...props,
+        },
+      });
+    },
+    unmount(el) {
+      el.innerHTML = '';
+    },
+  });
   convert.Extension = Extension;
   return convert;
 }

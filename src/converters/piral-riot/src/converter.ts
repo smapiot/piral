@@ -10,6 +10,10 @@ export interface RiotConverterOptions {
   extensionName?: string;
 }
 
+interface RiotState<TProps> {
+  app: Riot.RiotComponent<TProps>;
+}
+
 export function createConverter(config: RiotConverterOptions = {}) {
   const { extensionName = 'riot-extension' } = config;
   const Extension = createExtension(extensionName);
@@ -18,20 +22,19 @@ export function createConverter(config: RiotConverterOptions = {}) {
     captured?: Record<string, any>,
   ): ForeignComponent<TProps> => {
     const mountApp = Riot.component(component);
-    let app: Riot.RiotComponent<TProps> = undefined;
 
     return {
-      mount(el, props, ctx) {
-        app = mountApp(el, {
+      mount(el, props, ctx, locals: RiotState<TProps>) {
+        locals.app = mountApp(el, {
           ...captured,
           ...ctx,
           ...props,
         });
       },
-      unmount(el) {
-        app.unmount(true);
+      unmount(el, locals: RiotState<TProps>) {
+        locals.app.unmount(true);
         el.innerHTML = '';
-        app = undefined;
+        locals.app = undefined;
       },
     };
   };
