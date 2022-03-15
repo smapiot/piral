@@ -26,11 +26,12 @@ jest.mock('../common/clients/npm', () => {
 describe('New Pilet Command', () => {
   it('scaffolding in an empty directory works', async () => {
     jest.setTimeout(60000);
+
     const dir = createTempDir();
     await newPilet(dir, {
       install: false,
       source: 'piral@latest',
-      registry: 'https://someFakeRegistry.com',
+      registry: 'https://registry.npmjs.org',
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
@@ -40,6 +41,8 @@ describe('New Pilet Command', () => {
   });
 
   it('command will fail when providing invalid registry', async () => {
+    jest.setTimeout(100000);
+
     // Arrange
     const dir = createTempDir();
     const options = {
@@ -49,7 +52,13 @@ describe('New Pilet Command', () => {
     };
 
     // Act
-    const result = await newPilet(dir, options);
+    let result
+    try {
+      // In node14, this resolves to undefined.
+      // In node16, this rejects with an Error.
+      result = await newPilet(dir, options);
+    } catch {
+    }
 
     // Assert
     expect(result).toBeUndefined();
@@ -57,6 +66,7 @@ describe('New Pilet Command', () => {
 
   it('should scaffold without creating npmrc file', async () => {
     jest.setTimeout(60000);
+
     const dir = createTempDir();
     await newPilet(dir, {
       install: false,
@@ -71,6 +81,7 @@ describe('New Pilet Command', () => {
 
   it('scaffolding with language JS works', async () => {
     jest.setTimeout(60000);
+
     const dir = createTempDir();
     await newPilet(dir, {
       language: SourceLanguage.js,

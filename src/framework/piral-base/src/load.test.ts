@@ -36,7 +36,6 @@ describe('Loading Modules', () => {
     const promise = loadMetadata(() =>
       Promise.resolve([data]),
     );
-    expect(promise).rejects.toBeNull();
     const result = await promise;
     expect(result).toEqual([{
       foo: 'bar',
@@ -51,7 +50,6 @@ describe('Loading Modules', () => {
     const promise = loadMetadata(() =>
       Promise.resolve([data]),
     );
-    expect(promise).rejects.toBeNull();
     const result = await promise;
     // @ts-ignore
     result[0].bar = 'qxz'

@@ -39,6 +39,9 @@ jest.mock('../external', () => ({
     log() {},
     setOptions() {},
   },
+  tar: {
+    Parse: jest.fn(),
+  }
 }));
 
 let specialCase = false;
@@ -59,9 +62,10 @@ jest.mock('fs', () => ({
   constants: {
     F_OK: 1,
   },
-  createReadStream() {
-    return undefined;
-  },
+  createReadStream: () => ({
+    on: jest.fn().mockReturnThis(),
+    pipe: jest.fn().mockReturnThis(),
+  }),
   exists: (file: string, cb: (status: boolean) => void) =>
     cb(!file.endsWith('package.json') && !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock')))),
   existsSync: (file: string) => {

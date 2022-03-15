@@ -14,11 +14,14 @@ function createMockContainer() {
       emit: jest.fn(),
       defineActions() {},
       state,
+      readState: jest.fn(),
       dispatch(update) {
         swap(state, update);
       },
     } as any,
-    api: {} as any,
+    api: {
+      meta: {},
+    } as any,
   };
 }
 

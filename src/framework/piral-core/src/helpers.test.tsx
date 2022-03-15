@@ -183,7 +183,7 @@ describe('Piral-Core helpers module', () => {
           return Promise.resolve('This is an example response');
         },
         json() {
-          return Promise.resolve(options);
+          return Promise.resolve({ foo: 'bar' });
         },
       }),
     ) as any;

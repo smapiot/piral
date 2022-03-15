@@ -187,12 +187,12 @@ describe('Piral-Base strategies module', () => {
     const pilets = true as any;
     const invalidLoadPiletOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      fetchPilets: jest.fn(() => Promise.resolve([])),
       pilets: pilets,
     };
 
     // Act
-    await expect(blazingStrategy(invalidLoadPiletOptions, callbackMock)).rejects.toThrow();
+    await blazingStrategy(invalidLoadPiletOptions, callbackMock);
 
     // Assert
     expect(setupMock).toHaveBeenCalledTimes(0);
@@ -258,12 +258,12 @@ describe('Piral-Base strategies module', () => {
     const pilets = true as any;
     const invalidLoadPiletOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      fetchPilets: jest.fn(() => Promise.resolve([])),
       pilets: pilets,
     };
 
     // Act
-    await expect(blazingStrategy(invalidLoadPiletOptions, callbackMock)).rejects.toThrow();
+    await blazingStrategy(invalidLoadPiletOptions, callbackMock);
 
     // Assert
     expect(setupMock).toHaveBeenCalledTimes(0);
