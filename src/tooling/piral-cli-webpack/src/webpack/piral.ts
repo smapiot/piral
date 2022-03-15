@@ -74,7 +74,7 @@ async function getConfig(
         }),
       ],
       production,
-      false,
+      undefined,
       hmr,
     ),
   };

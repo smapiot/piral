@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.18 (tbd)
+
+- Fixed issue with `v1` pilets not loading additional chunks
+- Fixed CSS inject being applied to importmap dependencies (#492)
+
 ## 0.14.17 (March 13, 2022)
 
 - Fixed usage of multi instances of Blazor components (#490)
