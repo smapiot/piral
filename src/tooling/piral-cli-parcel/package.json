@@ -1,6 +1,6 @@
 {
   "name": "piral-cli-parcel",
-  "version": "0.14.17",
+  "version": "0.14.18",
   "description": "Provides debug and build capabilities for pilets and Piral instances using Parcel Bundler.",
   "keywords": [
     "piral-cli",
@@ -42,7 +42,7 @@
     "@types/node": "^13.9.0",
     "@types/parcel-bundler": "^1.12.1",
     "@types/yargs": "^15.0.4",
-    "piral-cli": "^0.14.17",
+    "piral-cli": "^0.14.18",
     "typescript": "^4.0.2"
   },
   "dependencies": {
