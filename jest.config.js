@@ -1,4 +1,3 @@
 module.exports = {
-  testEnvironment: 'jsdom',
-  ...require('piral-jest-utils').default
-}
+  ...require('piral-jest-utils').default,
+};
