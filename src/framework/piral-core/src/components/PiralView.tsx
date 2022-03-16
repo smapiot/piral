@@ -28,7 +28,6 @@ const PiralContent: React.FC = () => {
 };
 
 const FallbackRouter: React.FC = (props) => {
-  console.log("from piral 2")
   const publicPath = useGlobalState((s) => s.app.publicPath);
   return <StaticRouter location="/" {...props} basename={publicPath} />;
 };
