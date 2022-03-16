@@ -8,9 +8,61 @@ import {
   prependItems,
   appendItems,
   updateKey,
+  replaceOrAddItem,
+  includeItem,
+  tryParseJson,
+  removeNested,
 } from './helpers';
 
 describe('Helpers Module', () => {
+  it('removeNested removes keys values', () => {
+    const obj = { d: 'test', z: ['test arr'] };
+    const result = removeNested(obj, () => true);
+    const expectedResult = { d: {}, z: {} };
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('removeNested removes keys values with nested arrays', () => {
+    const obj = { z: [['test arr'], ['test arr2']] };
+    const result = removeNested(obj, () => true);
+    const expectedResult = { z: { '0': [], '1': [] } };
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('removeNested splits keys values', () => {
+    const obj = { d: 'test', z: ['test arr'] };
+    const result = removeNested(obj, () => false);
+    const expectedResult = { d: { '0': 't', '1': 'e', '2': 's', '3': 't' }, z: { '0': 'test arr' } };
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('tryParseJson parses a JSON string', () => {
+    const content = '{"result":true, "count":42}';
+    const result = tryParseJson(content);
+    expect(result).toEqual({ result: true, count: 42 });
+  });
+
+  it('tryParseJson return empty object if the content is not valid', () => {
+    const content = '"result":true, "count":42';
+    const result = tryParseJson(content);
+    expect(result).toEqual({});
+  });
+
+  it('includeItem adds an item to array', () => {
+    const result = includeItem([1, 2, 3], 4);
+    expect(result).toEqual([1, 2, 3, 4]);
+  });
+
+  it('replaceOrAddItem replaces the first item', () => {
+    const result = replaceOrAddItem([1, 2, 3], 4, () => true);
+    expect(result).toEqual([4, 2, 3]);
+  });
+
+  it('replaceOrAddItem adds the item the end', () => {
+    const result = replaceOrAddItem([1, 2, 3], 4, () => false);
+    expect(result).toEqual([1, 2, 3, 4]);
+  });
+
   it('prependItem works with an existing array', () => {
     const result = prependItem([1, 2, 3], 4);
     expect(result).toEqual([4, 1, 2, 3]);

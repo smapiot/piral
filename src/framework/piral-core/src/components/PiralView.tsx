@@ -28,6 +28,7 @@ const PiralContent: React.FC = () => {
 };
 
 const FallbackRouter: React.FC = (props) => {
+  console.log("from piral 2")
   const publicPath = useGlobalState((s) => s.app.publicPath);
   return <StaticRouter location="/" {...props} basename={publicPath} />;
 };
@@ -42,7 +43,7 @@ const PiralProvider: React.FC = ({ children }) => {
 /**
  * The props for the PiralView component.
  */
-export interface PiralViewProps {}
+export interface PiralViewProps { }
 
 /**
  * The component responsible for the generic view of the application.

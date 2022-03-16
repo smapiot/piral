@@ -43,7 +43,7 @@ const state = {
 
 (hooks as any).useGlobalState = (select: any) => select(state);
 
-(routes as any).PiralRoutes = ({}) => <StubDashboard />;
+(routes as any).PiralRoutes = ({ }) => <StubDashboard />;
 
 describe('Portal Module', () => {
   it('renders the dashboard / content in layout if loaded without error', () => {
