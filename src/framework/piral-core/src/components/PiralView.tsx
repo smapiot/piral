@@ -42,7 +42,7 @@ const PiralProvider: React.FC = ({ children }) => {
 /**
  * The props for the PiralView component.
  */
-export interface PiralViewProps {}
+export interface PiralViewProps { }
 
 /**
  * The component responsible for the generic view of the application.
