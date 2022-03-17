@@ -2,7 +2,6 @@ import { createElement } from 'react';
 import { Atom, deref } from '@dbeining/react-atom';
 import { createListener, Pilet, PiletEntry } from 'piral-base';
 import {
-  addPilet,
   changeLayout,
   includeProvider,
   initialize,
@@ -15,10 +14,6 @@ import {
 import { createActions } from '../state';
 import { mount } from 'enzyme';
 import { RootListener } from '../RootListener';
-
-// meta: {
-//   name: 'my pilet',
-// },
 
 const pilet: Pilet = {
   name: 'my-pilet',
@@ -91,7 +86,6 @@ describe('App Actions Module', () => {
       components: {},
     });
     const ctx = createActions(state, createListener({}));
-    // const node = mount(createElement('componet'));
     const node = RootListener;
     setComponent(ctx, 'ComponentName', node);
     expect(deref(state)).toEqual({ components: { ComponentName: RootListener } });

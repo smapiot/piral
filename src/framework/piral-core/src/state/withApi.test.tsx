@@ -64,7 +64,7 @@ describe('withApi Module', () => {
       },
     };
     const { context } = createMockContainer();
-    const Component = withApi(context, StubComponent, api, 'feed' as any, "d");
+    const Component = withApi(context, StubComponent, api, 'feed' as any);
     const node = mount(<Component />);
     expect(node.find(StubComponent).first().prop('piral')).toBe(api);
   });
