@@ -1,7 +1,7 @@
 import { render } from 'enzyme';
 import { useEffect as useSideEffect } from 'react';
 import { none } from '../utils/helpers';
-import * as React from 'react';
+
 function useMainEffect(cb: () => void) {
   cb();
 }
