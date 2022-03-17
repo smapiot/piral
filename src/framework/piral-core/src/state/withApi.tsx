@@ -3,14 +3,20 @@ import { __RouterContext } from 'react-router';
 import { ErrorBoundary, wrapComponent } from '../components';
 import { defaultRender } from '../utils';
 import { AnyComponent, Errors, PiletApi, BaseComponentProps, GlobalStateContext } from '../types';
+import { useGlobalState, useGlobalStateContext } from '../hooks';
 
 const DefaultWrapper: React.FC = (props) => defaultRender(props.children);
 
 function getWrapper(wrappers: Record<string, React.ComponentType<any>>, wrapperType: string) {
   const WrapAll = wrappers['*'];
   const WrapType = wrappers[wrapperType];
+  console.log(wrappers)
+  console.log(wrapperType)
+  console.log(WrapAll)
+  console.log(WrapType)
 
   if (WrapAll && WrapType) {
+    console.log("from here")
     return (props) => (
       <WrapAll {...props}>
         <WrapType {...props} />
