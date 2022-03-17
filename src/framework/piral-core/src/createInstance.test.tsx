@@ -2,7 +2,7 @@ import { createInstance } from './createInstance';
 import { standardStrategy, blazingStrategy } from 'piral-base';
 
 describe('Piral-Core createInstance module', () => {
-  it('createInstance without arguments uses the standard', () => {
+  it('createInstance without arguments uses the standard strategy', () => {
     const instance = createInstance();
     expect(instance.options.strategy).toBe(standardStrategy);
   });
@@ -12,7 +12,7 @@ describe('Piral-Core createInstance module', () => {
     expect(instance.options.strategy).toBe(blazingStrategy);
   });
 
-  it('createInstance with empty actions uses the standard strategy', () => {
+  it('createInstance with empty actions and plugins uses the standard strategy', () => {
     const instance = createInstance({ plugins: {}, actions: {} });
     expect(instance.options.strategy).toBe(standardStrategy);
   })
