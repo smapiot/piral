@@ -89,6 +89,7 @@ export function renderElement(
   props: any,
 ): [Disposable, Updatable] {
   let [id, portal] = renderInDom(context, element, ExtensionSlot, props);
+  console.log(id, portal);
   const evName = 'extension-props-changed';
   const handler = (ev: CustomEvent) => update(ev.detail);
   const dispose: Disposable = () => {

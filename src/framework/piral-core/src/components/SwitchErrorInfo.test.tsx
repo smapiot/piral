@@ -23,14 +23,14 @@ const state = {
 
 (React as any).useMemo = (cb) => cb();
 
-describe('Extension Module', () => {
-    it('is able to default render not available extension', () => {
+describe('SwitchErrorInfo Module', () => {
+    it('is able to render StubComponent1 component', () => {
         const node = mount(<SwitchErrorInfo type="stubComponent1" />);
         expect(node.at(0).exists()).toBe(true);
         expect(node.find(StubComponent1).length).toBe(1);
     });
 
-    it('is able to default render not available extension', () => {
+    it('is able to default render Unknow component if the compenent name not available in state data', () => {
         const node = mount(<SwitchErrorInfo type="notRealComponent" />);
         expect(node.at(0).exists()).toBe(true);
         expect(node.find(Unknown).length).toBe(1);
