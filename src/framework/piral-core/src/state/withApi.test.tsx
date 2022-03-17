@@ -23,7 +23,7 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       state,
-      destroyPortal: (id) => {},
+      destroyPortal: (id) => { },
     } as any,
   };
 }
@@ -64,7 +64,7 @@ describe('withApi Module', () => {
       },
     };
     const { context } = createMockContainer();
-    const Component = withApi(context, StubComponent, api, 'feed' as any);
+    const Component = withApi(context, StubComponent, api, 'feed' as any, "d");
     const node = mount(<Component />);
     expect(node.find(StubComponent).first().prop('piral')).toBe(api);
   });
@@ -107,7 +107,7 @@ describe('withApi Module', () => {
         return component.component;
       },
     };
-    const Component = withApi(context, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
+    const Component = withApi(context, { type: 'html', component: { mount: () => { } } }, api, 'unknown');
 
     const node = mount(
       <StateContext.Provider value={context}>

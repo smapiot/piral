@@ -36,6 +36,12 @@ const state = {
 (React as any).useMemo = (cb) => cb();
 
 describe('Extension Module', () => {
+  // it('is able to default render not available extension', () => {
+  //   const node = mount(<ExtensionSlot empty={() => <StubComponent2 key="empty" />} />);
+  //   // expect(node.at(0).exists()).toBe(true);
+  //   // expect(node.find(StubComponent1).length).toBe(0);
+  // });
+
   it('is able to default render not available extension', () => {
     const node = mount(<ExtensionSlot name="qxz" />);
     expect(node.at(0).exists()).toBe(true);

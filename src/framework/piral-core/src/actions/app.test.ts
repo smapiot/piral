@@ -1,9 +1,31 @@
 import { createElement } from 'react';
 import { Atom, deref } from '@dbeining/react-atom';
-import { createListener } from 'piral-base';
-import { changeLayout, includeProvider } from './app';
+import { createListener, Pilet, PiletEntry } from 'piral-base';
+import {
+  addPilet,
+  changeLayout,
+  includeProvider,
+  initialize,
+  injectPilet,
+  removePilet,
+  setComponent,
+  setErrorComponent,
+  setRoute,
+} from './app';
 import { createActions } from '../state';
 import { mount } from 'enzyme';
+import { RootListener } from '../RootListener';
+
+// meta: {
+//   name: 'my pilet',
+// },
+
+const pilet: Pilet = {
+  name: 'my-pilet',
+  version: '1.0.0',
+  link: undefined,
+  custom: undefined,
+};
 
 describe('App Actions Module', () => {
   it('changeLayout changes the current layout', () => {
@@ -21,6 +43,78 @@ describe('App Actions Module', () => {
         layout: 'mobile',
       },
     });
+  });
+
+  it('initialize initializes state data', () => {
+    const state = Atom.of({
+      app: {},
+    });
+    const ctx = createActions(state, createListener({}));
+    const modules = ['pilet 1', 'pilet 2', 'pilet 3'];
+    initialize(ctx, false, undefined, modules);
+    expect(deref(state)).toEqual({
+      app: { error: undefined, loading: false },
+      modules: ['pilet 1', 'pilet 2', 'pilet 3'],
+    });
+  });
+
+  it('removePilet removes pilet', () => {
+    const state = Atom.of({
+      app: {},
+      modules: [pilet],
+      registry: { 'my-pilet': pilet },
+    });
+    const ctx = createActions(state, createListener({}));
+    removePilet(ctx, 'my-pilet');
+    expect(deref(state)).toEqual({ app: {}, modules: [], registry: { 'my-pilet': pilet } });
+  });
+
+  it('injectPilet injects pilet', () => {
+    const pilet2: Pilet = {
+      name: 'my-pilet2',
+      version: '1.0.0',
+      link: undefined,
+      custom: undefined,
+    };
+    const state = Atom.of({
+      app: {},
+      modules: [pilet2],
+      registry: { pilet2 },
+    });
+    const ctx = createActions(state, createListener({}));
+    injectPilet(ctx, pilet);
+    expect(deref(state)).toEqual({ app: {}, modules: [pilet2, pilet], registry: { pilet2 } });
+  });
+
+  it('setComponent set component', () => {
+    const state = Atom.of({
+      components: {},
+    });
+    const ctx = createActions(state, createListener({}));
+    // const node = mount(createElement('componet'));
+    const node = RootListener;
+    setComponent(ctx, 'ComponentName', node);
+    expect(deref(state)).toEqual({ components: { ComponentName: RootListener } });
+  });
+
+  it('setErrorComponent set error component', () => {
+    const state = Atom.of({
+      errorComponents: {},
+    });
+    const ctx = createActions(state, createListener({}));
+    const node = RootListener;
+    setErrorComponent(ctx, 'ComponentName', node);
+    expect(deref(state)).toEqual({ errorComponents: { ComponentName: RootListener } });
+  });
+
+  it('setRoute sets route', () => {
+    const state = Atom.of({
+      routes: {},
+    });
+    const ctx = createActions(state, createListener({}));
+    const node = RootListener;
+    setRoute(ctx, './dist', RootListener);
+    expect(deref(state)).toEqual({ routes: { './dist': RootListener } });
   });
 
   it('allows using includeProvider once', () => {

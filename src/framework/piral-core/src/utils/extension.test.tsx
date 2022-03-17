@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { toExtension } from './extension';
+import { reactifyContent, toExtension } from './extension';
 
 describe('Util Extension.', () => {
   it('Convert some component to an extension component.', () => {
