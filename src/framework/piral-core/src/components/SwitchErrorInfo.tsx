@@ -9,7 +9,6 @@ function renderComponent<TKey extends keyof ErrorComponentsState>(
 ) {
   const name = props.type;
   const Component = components[name];
-  console.log(process.env.NODE_ENV)
 
   if (process.env.NODE_ENV === 'development') {
     React.useEffect(() => console.error('[dev-info] An error occurred in the Piral instance.', props), none);
