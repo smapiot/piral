@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import { Atom, deref } from '@dbeining/react-atom';
-import { createListener, Pilet, PiletEntry } from 'piral-base';
+import { createListener, Pilet } from 'piral-base';
 import {
   changeLayout,
   includeProvider,

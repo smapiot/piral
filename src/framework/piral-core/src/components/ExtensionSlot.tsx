@@ -9,6 +9,7 @@ const renderExtensions: [ExtensionRegistration] = [
   {
     component: (props) => {
       const context = useGlobalStateContext();
+      console.log(context)
       const converters = context.converters;
       const piral = context.apis._;
       const { component, props: args } =

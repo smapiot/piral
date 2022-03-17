@@ -2,9 +2,9 @@ import { useSetter } from './setter';
 
 describe('UseSetter Hook Module', () => {
   it('UseSetter', () => {
-    const fun = () => {
-      const x = 'test';
+    const cb = () => {
+      return;
     };
-    useSetter(fun);
+    useSetter(cb);
   });
 });

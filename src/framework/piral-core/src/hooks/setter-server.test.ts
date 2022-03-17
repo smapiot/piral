@@ -8,7 +8,7 @@ describe('UseSetter Hook Module', () => {
   it('In this test window typeof should be undefinde', () => {
     expect(typeof window).toBe('undefined');
     const fun = () => {
-      const x = 'test';
+      return;
     };
     useSetter(fun);
   });

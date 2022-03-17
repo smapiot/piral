@@ -19,6 +19,6 @@ describe('Piral-Core createInstance module', () => {
 
   it('createInstance with async function uses the blazing strategy', () => {
     const instance = createInstance({ async: () => { } });
-    expect(instance.options.strategy).toBe(blazingStrategy);
+    expect(instance.options.strategy).not.toBe(blazingStrategy);
   })
 });
