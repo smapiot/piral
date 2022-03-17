@@ -11,7 +11,6 @@ function getWrapper(wrappers: Record<string, React.ComponentType<any>>, wrapperT
   const WrapType = wrappers[wrapperType];
 
   if (WrapAll && WrapType) {
-    console.log("from here")
     return (props) => (
       <WrapAll {...props}>
         <WrapType {...props} />
