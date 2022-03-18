@@ -13,7 +13,6 @@ const renderExtensions: [ExtensionRegistration] = [
       const piral = context.apis._;
       const { component, props: args } =
         props.params;
-      console.log({ piral })
       const Component = React.useMemo(
         () => wrapComponent(converters, component, { piral }, defaultRender),
         [component],
