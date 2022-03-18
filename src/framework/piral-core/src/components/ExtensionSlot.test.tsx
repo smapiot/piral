@@ -1,4 +1,5 @@
-import *  as React from 'react';
+import * as React from 'react';
+import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { ExtensionSlot } from './ExtensionSlot';
 
@@ -7,6 +8,16 @@ jest.mock('../hooks/globalState', () => ({
     return select(state);
   },
 }));
+
+(hooks as any).useGlobalStateContext = () => ({
+  converters: {},
+  apis: {},
+});
+
+// {
+// html: (component) => {
+//   return component.component;
+// }
 
 const StubComponent1: React.FC = (props) => <div children={props.children} />;
 StubComponent1.displayName = 'StubComponent1';
@@ -36,6 +47,12 @@ const state = {
 (React as any).useMemo = (cb) => cb();
 
 describe('Extension Module', () => {
+  it('is able to default render not available extension', () => {
+    const node = mount(<ExtensionSlot />);
+    expect(node.at(0).exists()).toBe(true);
+    expect(node.find(StubComponent1).length).toBe(0);
+  });
+
   it('is able to default render not available extension', () => {
     const node = mount(<ExtensionSlot name="qxz" />);
     expect(node.at(0).exists()).toBe(true);

@@ -1,10 +1,19 @@
+import * as React from 'react';
+import { act } from 'react-dom/test-utils';
+import { render } from 'react-dom';
 import { useSetter } from './setter';
 
 describe('UseSetter Hook Module', () => {
-  it('UseSetter', () => {
-    const cb = () => {
-      return;
+  it('UseSetter', async () => {
+    const cb = jest.fn();
+
+    const MyComponent = () => {
+      useSetter(cb);
+      return null;
     };
-    useSetter(cb);
+
+    render(React.createElement(MyComponent), document.body.appendChild(document.createElement('div')));
+    await act(() => Promise.resolve());
+    expect(cb).toHaveBeenCalled();
   });
 });

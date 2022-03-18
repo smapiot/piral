@@ -2,14 +2,21 @@
  * @jest-environment node
  */
 
+import * as React from 'react';
+import { renderToString } from 'react-dom/server';
 import { useSetter } from './setter';
 
 describe('UseSetter Hook Module', () => {
-  it('In this test window typeof should be undefinde', () => {
-    expect(typeof window).toBe('undefined');
-    const fun = () => {
-      return;
+  it('UseSetter', () => {
+    const cb = jest.fn();
+
+    const MyComponent = () => {
+      useSetter(cb);
+      return null;
     };
-    useSetter(fun);
+
+    const result = renderToString(React.createElement(MyComponent));
+    expect(result).toEqual('');
+    expect(cb).toHaveBeenCalled();
   });
 });
