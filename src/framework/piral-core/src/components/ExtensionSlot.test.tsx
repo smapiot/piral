@@ -11,7 +11,15 @@ jest.mock('../hooks/globalState', () => ({
 
 (hooks as any).useGlobalStateContext = () => ({
   converters: {},
-  apis: {},
+  apis: {
+    _: {
+      piral: {
+        meta: {
+          name: "PiletName",
+        }
+      }
+    }
+  },
 });
 
 const StubComponent1: React.FC = (props) => <div children={props.children} />;
