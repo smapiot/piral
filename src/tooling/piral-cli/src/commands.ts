@@ -15,6 +15,7 @@ import {
   fromKeys,
   bundlerKeys,
   piralBuildTypeKeys,
+  publishModeKeys,
 } from './helpers';
 import {
   ToolCommand,
@@ -25,6 +26,7 @@ import {
   PiletPublishSource,
   PiletSchemaVersion,
   PiletBuildType,
+  PiletPublishScheme,
 } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
@@ -579,6 +581,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
         .default('schema', apps.publishPiletDefaults.schemaVersion)
+        .choices('mode', publishModeKeys)
+        .describe('mode', 'Sets the authorization mode to use.')
+        .default('mode', apps.publishPiletDefaults.mode)
         .choices('bundler', availableBundlers)
         .describe('bundler', 'Sets the bundler to use.')
         .default('bundler', availableBundlers[0])
@@ -588,6 +593,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .option('fields', undefined)
         .describe('fields', 'Sets additional fields to be included in the feed service request.')
         .default('fields', apps.publishPiletDefaults.fields)
+        .option('headers', undefined)
+        .describe('headers', 'Sets additional headers to be included in the feed service request.')
+        .default('headers', apps.publishPiletDefaults.headers)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -604,6 +612,8 @@ const allCommands: Array<ToolCommand<any>> = [
         from: args.from as PiletPublishSource,
         schemaVersion: args.schema as PiletSchemaVersion,
         fields: args.fields as Record<string, string>,
+        headers: args.headers as Record<string, string>,
+        mode: args.mode as PiletPublishScheme,
         _: args,
       });
     },

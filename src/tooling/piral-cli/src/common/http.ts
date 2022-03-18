@@ -5,6 +5,7 @@ import { platform, tmpdir } from 'os';
 import { createWriteStream } from 'fs';
 import { log } from './log';
 import { axios, FormData } from '../external';
+import { PiletPublishScheme } from '../types';
 
 const os = platform();
 const standardHeaders = {
@@ -67,25 +68,42 @@ export interface PostFileResult {
 
 export function postFile(
   target: string,
+  scheme: PiletPublishScheme,
   key: string,
   file: Buffer,
-  fields: Record<string, string> = {},
+  customFields: Record<string, string> = {},
+  customHeaders: Record<string, string> = {},
   ca?: Buffer,
 ): Promise<PostFileResult> {
   const form = new FormData();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
 
-  Object.keys(fields).forEach((key) => form.append(key, fields[key]));
+  Object.keys(customFields).forEach((key) => form.append(key, customFields[key]));
 
   form.append('file', file, 'pilet.tgz');
 
   const headers: Record<string, string> = {
     ...form.getHeaders(),
     ...standardHeaders,
+    ...customHeaders,
   };
 
   if (key) {
-    headers.authorization = `Basic ${key}`;
+    switch (scheme) {
+      case 'basic':
+        headers.authorization = `Basic ${key}`;
+        break;
+      case 'basic':
+        headers.authorization = `Bearer ${key}`;
+        break;
+      case 'digest':
+        headers.authorization = `Digest ${key}`;
+        break;
+      case 'none':
+      default:
+        headers.authorization = key;
+        break;
+    }
   }
 
   return axios.default

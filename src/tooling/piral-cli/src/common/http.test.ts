@@ -71,7 +71,7 @@ jest.mock('axios', () => ({
 
 describe('HTTP Module', () => {
   it('postFile form posts a file successfully should be ok', async () => {
-    const result = await postFile(apiUrl, '123', Buffer.from('example'));
+    const result = await postFile(apiUrl, 'basic', '123', Buffer.from('example'));
     expect(result).toEqual({
       response: undefined,
       status: 200,
@@ -80,7 +80,7 @@ describe('HTTP Module', () => {
   });
 
   it('postFile form fails to post file should be false', async () => {
-    const result = await postFile(apiUrl, '124', Buffer.from('example'));
+    const result = await postFile(apiUrl, 'basic', '124', Buffer.from('example'));
     expect(result).toEqual({
       response: '',
       status: 401,
@@ -89,7 +89,7 @@ describe('HTTP Module', () => {
   });
 
   it('postFile form not found to post file should be false', async () => {
-    const result = await postFile('http://sample.com/', '', Buffer.from('example'));
+    const result = await postFile('http://sample.com/', 'basic', '', Buffer.from('example'));
     expect(result).toEqual({
       response: '',
       status: 404,
@@ -99,7 +99,7 @@ describe('HTTP Module', () => {
 
   it('postFile call results in error request', async () => {
     errorRequest = true;
-    const result = await postFile('http://sample.com/', '', Buffer.from('example'));
+    const result = await postFile('http://sample.com/', 'basic', '', Buffer.from('example'));
     expect(result).toEqual({
       response: undefined,
       status: 500,
@@ -110,7 +110,7 @@ describe('HTTP Module', () => {
 
   it('postFile call results in error other', async () => {
     errorOther = true;
-    const result = await postFile('http://sample.com/', '', Buffer.from('example'));
+    const result = await postFile('http://sample.com/', 'basic', '', Buffer.from('example'));
     expect(result).toEqual({
       response: undefined,
       status: 500,
@@ -121,7 +121,7 @@ describe('HTTP Module', () => {
 
   it('postFile call results in error response', async () => {
     errorResponse = true;
-    let result = await postFile('http://sample.com/', '', Buffer.from('example'));
+    let result = await postFile('http://sample.com/', 'basic', '', Buffer.from('example'));
     expect(result).toEqual({
       response: 'This component is not available anymore.',
       status: 410,
@@ -129,7 +129,7 @@ describe('HTTP Module', () => {
     });
     errorResponse = false;
     errorResponse2 = true;
-    result = await postFile('http://sample.com/', '', Buffer.from('example'));
+    result = await postFile('http://sample.com/', 'basic', '', Buffer.from('example'));
     expect(result).toEqual({
       response: 'This component is not available anymore.',
       status: 410,
