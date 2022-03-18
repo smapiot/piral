@@ -42,7 +42,7 @@ const state = {
 (React as any).useMemo = (cb) => cb();
 
 describe('Extension Module', () => {
-  it('is able to default render not available extension', () => {
+  it('is able to default render not available extension with no name', () => {
     const node = mount(<ExtensionSlot />);
     expect(node.at(0).exists()).toBe(true);
     expect(node.find(StubComponent1).length).toBe(0);
