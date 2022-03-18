@@ -25,7 +25,6 @@ function instantiateModule(moduleDef: ModuleDefinition) {
   const providers = [
     RoutingService,
     { provide: 'Props', useFactory: () => props.current, deps: [] },
-    { provide: 'piral', useFactory: () => props.current.piral, deps: [] },
   ];
 
   @NgModule({

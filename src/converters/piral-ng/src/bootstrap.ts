@@ -27,7 +27,7 @@ export async function bootstrap<TProps extends BaseComponentProps>(
   context: ComponentContext,
 ): Promise<Disposable> {
   const [selectedModule, ngOptions, component] = result;
-  const ref = await startup(selectedModule, context, ngOptions);
+  const ref = await startup(selectedModule, context, props.piral, ngOptions);
 
   if (ref) {
     ref.instance.attach(component, node, props);

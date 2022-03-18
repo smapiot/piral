@@ -1,4 +1,4 @@
-import type { ComponentContext } from 'piral-core';
+import type { ComponentContext, PiletApi } from 'piral-core';
 import type { NgOptions } from './types';
 import { enableProdMode, NgModuleRef, NgZone } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
@@ -18,6 +18,7 @@ export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 export function startup(
   BootstrapModule: any,
   context: ComponentContext,
+  piral: PiletApi,
   ngOptions?: NgOptions,
 ): Promise<void | NgModuleInt> {
   const runningModule = runningModules.find(([ref]) => ref === BootstrapModule);
@@ -29,6 +30,7 @@ export function startup(
     const path = context.readState?.((s) => s.app.publicPath) || '/';
     const platform = platformBrowserDynamic([
       { provide: 'Context', useValue: context },
+      { provide: 'piral', useFactory: () => piral, deps: [] },
       { provide: APP_BASE_HREF, useValue: path },
     ]);
     const id = Math.random().toString(36);
@@ -73,10 +75,10 @@ if (process.env.NODE_ENV === 'development') {
       console.log('Running in outdated mode (Angular 5-8)');
     },
     current() {
-      console.log('Running in current mode (Angular 9-11)');
+      console.log('Running in current mode (Angular 9-13)');
     },
     next() {
-      console.log('Running in next mode (Angular 12)');
+      console.log('Running in next mode (Angular 14)');
     },
     unknown() {
       console.log('Running with an unknown version of Angular');
@@ -92,7 +94,9 @@ if (process.env.NODE_ENV === 'development') {
     v9: versionHandlers.current,
     v10: versionHandlers.current,
     v11: versionHandlers.current,
-    v12: versionHandlers.next,
+    v12: versionHandlers.current,
+    v13: versionHandlers.current,
+    v14: versionHandlers.next,
   };
 
   const handler = getVersionHandler(versions) || versionHandlers.unknown;
