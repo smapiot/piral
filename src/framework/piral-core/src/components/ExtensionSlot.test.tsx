@@ -14,11 +14,6 @@ jest.mock('../hooks/globalState', () => ({
   apis: {},
 });
 
-// {
-// html: (component) => {
-//   return component.component;
-// }
-
 const StubComponent1: React.FC = (props) => <div children={props.children} />;
 StubComponent1.displayName = 'StubComponent1';
 
