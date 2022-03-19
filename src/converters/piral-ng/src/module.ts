@@ -1,3 +1,4 @@
+import type { PiletApi } from 'piral-core';
 import type { NgOptions, ModuleInstanceResult } from './types';
 import * as ngCore from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,13 +19,14 @@ interface ModuleDefinition {
 
 const availableModules: Array<ModuleDefinition> = [];
 
-function instantiateModule(moduleDef: ModuleDefinition) {
+function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
   const { module, components } = moduleDef;
   const imports = [BrowserModule, SharedModule, module];
   const props = { current: undefined };
   const providers = [
     RoutingService,
     { provide: 'Props', useFactory: () => props.current, deps: [] },
+    { provide: 'piral', useFactory: () => piral, deps: [] },
   ];
 
   @NgModule({
@@ -111,12 +113,12 @@ function instantiateModule(moduleDef: ModuleDefinition) {
   return BootstrapModule;
 }
 
-export function getModuleInstance(component: any): ModuleInstanceResult {
+export function getModuleInstance(component: any, piral: PiletApi): ModuleInstanceResult {
   const [moduleDef] = availableModules.filter((m) => m.components.includes(component));
 
   if (moduleDef) {
     if (!moduleDef.active) {
-      moduleDef.active = instantiateModule(moduleDef);
+      moduleDef.active = instantiateModule(moduleDef, piral);
     }
 
     return [moduleDef.active, moduleDef.opts];
@@ -125,7 +127,7 @@ export function getModuleInstance(component: any): ModuleInstanceResult {
   return undefined;
 }
 
-export function createModuleInstance(component: any): ModuleInstanceResult {
+export function createModuleInstance(component: any, piral: PiletApi): ModuleInstanceResult {
   const declarations = [component];
   const importsDef = [CommonModule];
   const exportsDef = [component];
@@ -169,7 +171,7 @@ export function createModuleInstance(component: any): ModuleInstanceResult {
   }
 
   defineModule(Module);
-  return getModuleInstance(component);
+  return getModuleInstance(component, piral);
 }
 
 export function defineModule(module: any, opts: NgOptions = undefined) {

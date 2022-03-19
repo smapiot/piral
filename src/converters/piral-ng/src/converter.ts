@@ -1,5 +1,5 @@
 import type { ForeignComponent, BaseComponentProps, Disposable } from 'piral-core';
-import type { NgModuleDefiner } from './types';
+import type { NgModuleDefiner, PrepareBootstrapResult } from './types';
 import { NgExtension } from './NgExtension';
 import { enqueue } from './queue';
 import { defineModule } from './module';
@@ -19,27 +19,28 @@ interface NgState {
 }
 
 export function createConverter(_: NgConverterOptions = {}): NgConverter {
-  const convert = <TProps extends BaseComponentProps>(component: any): ForeignComponent<TProps> => {
-    const bootstrapped = prepareBootstrap(component);
+  const registry = new Map<any, PrepareBootstrapResult>();
+  const convert = <TProps extends BaseComponentProps>(component: any): ForeignComponent<TProps> => ({
+    mount(el, props, ctx, locals: NgState) {
+      locals.active = true;
 
-    return {
-      mount(el, props, ctx, locals: NgState) {
-        locals.active = true;
+      if (!registry.has(component)) {
+        registry.set(component, prepareBootstrap(component, props.piral));
+      }
 
-        if (!locals.queued) {
-          locals.queued = Promise.resolve();
-        }
+      if (!locals.queued) {
+        locals.queued = Promise.resolve();
+      }
 
-        locals.queued = locals.queued.then(() =>
-          enqueue(() => locals.active && bootstrap(bootstrapped, el, props, ctx)),
-        );
-      },
-      unmount(el, locals: NgState) {
-        locals.active = false;
-        locals.queued = locals.queued.then((dispose) => dispose && dispose());
-      },
-    };
-  };
+      locals.queued = locals.queued.then(() =>
+        enqueue(() => locals.active && bootstrap(registry.get(component), el, props, ctx)),
+      );
+    },
+    unmount(el, locals: NgState) {
+      locals.active = false;
+      locals.queued = locals.queued.then((dispose) => dispose && dispose());
+    },
+  });
   convert.defineModule = defineModule;
   convert.Extension = NgExtension;
   return convert;

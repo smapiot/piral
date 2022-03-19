@@ -7,6 +7,7 @@
 - Fixed issue with `getCurrentLayout` not returning default layout in SSR
 - Fixed `piral` service in `piral-ng` such that it can also be used with `APP_INITIALIZER`
 - Added options `--headers` and `--mode` to `pilet publish`
+- Added option `--concurrency` to `pilet build` and `pilet debug`
 
 ## 0.14.18 (March 15, 2022)
 
