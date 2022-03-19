@@ -406,6 +406,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.debugPiletDefaults.logLevel)
+        .number('concurrency')
+        .describe('concurrency', 'Sets the maximum number of concurrent build jobs.')
+        .default('concurrency', apps.debugPiletDefaults.concurrency)
         .boolean('open')
         .describe('open', 'Opens the pilet directly in the browser.')
         .default('open', apps.debugPiletDefaults.open)
@@ -443,6 +446,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         schemaVersion: args.schema as PiletSchemaVersion,
+        concurrency: args.concurrency as number,
         feed: args.feed as string,
         hooks: args.hooks as object,
         _: args,
@@ -468,6 +472,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.buildPiletDefaults.logLevel)
+        .number('concurrency')
+        .describe('concurrency', 'Sets the maximum number of concurrent build jobs.')
+        .default('concurrency', apps.buildPiletDefaults.concurrency)
         .boolean('source-maps')
         .describe('source-maps', 'Creates source maps for the bundles.')
         .default('source-maps', apps.buildPiletDefaults.sourceMaps)
@@ -515,6 +522,7 @@ const allCommands: Array<ToolCommand<any>> = [
         fresh: args.fresh as boolean,
         logLevel: args['log-level'] as LogLevels,
         schemaVersion: args.schema as PiletSchemaVersion,
+        concurrency: args.concurrency as number,
         app: args.app as string,
         hooks: args.hooks as object,
         _: args,

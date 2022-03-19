@@ -16,6 +16,8 @@ import {
   fail,
   log,
   logDone,
+  cpuCount,
+  concurrentWorkers,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -50,6 +52,11 @@ export interface DebugPiletOptions {
    * Sets the port to use for the debug server.
    */
   port?: number;
+
+  /**
+   * Sets the maximum number of parallel build processes.
+   */
+  concurrency?: number;
 
   /**
    * Defines if hot module reloading (HMR) should be integrated for faster debugging.
@@ -105,6 +112,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   hmr: true,
   optimizeModules: false,
   schemaVersion: config.schemaVersion,
+  concurrency: cpuCount,
 };
 
 const injectorName = resolve(__dirname, '../injectors/pilet.js');
@@ -160,6 +168,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     open = debugPiletDefaults.open,
     hmr = debugPiletDefaults.hmr,
     logLevel = debugPiletDefaults.logLevel,
+    concurrency = debugPiletDefaults.concurrency,
     optimizeModules = debugPiletDefaults.optimizeModules,
     schemaVersion = debugPiletDefaults.schemaVersion,
     _ = {},
@@ -196,58 +205,56 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   process.stdout.setMaxListeners(maxListeners);
   process.stdin.setMaxListeners(maxListeners);
 
-  const pilets = await Promise.all(
-    allEntries.map(async (entryModule) => {
-      const targetDir = dirname(entryModule);
-      const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } =
-        await retrievePiletData(targetDir, app);
-      const externals = [...Object.keys(peerDependencies), ...peerModules];
-      const mocks = join(targetDir, 'mocks');
-      const exists = await checkExistingDirectory(mocks);
+  const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
+    const targetDir = dirname(entryModule);
+    const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } =
+      await retrievePiletData(targetDir, app);
+    const externals = [...Object.keys(peerDependencies), ...peerModules];
+    const mocks = join(targetDir, 'mocks');
+    const exists = await checkExistingDirectory(mocks);
 
-      if (exists) {
-        if (krasConfig.directory === undefined) {
-          krasConfig.directory = mocks;
-        }
-
-        krasConfig.sources.push(mocks);
+    if (exists) {
+      if (krasConfig.directory === undefined) {
+        krasConfig.directory = mocks;
       }
 
-      await hooks.beforeBuild?.({ root, importmap, entryModule, schemaVersion });
+      krasConfig.sources.push(mocks);
+    }
 
-      const bundler = await callPiletDebug(
-        {
-          root,
-          piral: appPackage.name,
-          optimizeModules,
-          hmr,
-          externals,
-          targetDir,
-          importmap,
-          entryModule: `./${relative(root, entryModule)}`,
-          logLevel,
-          version: schemaVersion,
-          ignored,
-          _,
-        },
-        bundlerName,
-      );
+    await hooks.beforeBuild?.({ root, importmap, entryModule, schemaVersion });
 
-      bundler.on((args) => {
-        hooks.afterBuild?.({ ...args, root, importmap, entryModule, schemaVersion, bundler });
-      });
-
-      return {
-        emulator,
-        appFile,
-        appVersion: appPackage.version,
-        externals,
-        piral: appPackage.name,
-        bundler,
+    const bundler = await callPiletDebug(
+      {
         root,
-      };
-    }),
-  );
+        piral: appPackage.name,
+        optimizeModules,
+        hmr,
+        externals,
+        targetDir,
+        importmap,
+        entryModule: `./${relative(root, entryModule)}`,
+        logLevel,
+        version: schemaVersion,
+        ignored,
+        _,
+      },
+      bundlerName,
+    );
+
+    bundler.on((args) => {
+      hooks.afterBuild?.({ ...args, root, importmap, entryModule, schemaVersion, bundler });
+    });
+
+    return {
+      emulator,
+      appFile,
+      appVersion: appPackage.version,
+      externals,
+      piral: appPackage.name,
+      bundler,
+      root,
+    };
+  });
 
   // sanity check see #250
   checkSanity(pilets);
