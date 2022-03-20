@@ -7,9 +7,11 @@ import {
   PiletPublishSource,
   PiralBuildType,
   PiletBuildType,
+  PiletPublishScheme,
 } from './types';
 
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'v2', 'none'];
+export const publishModeKeys: Array<PiletPublishScheme> = ['none', 'basic', 'bearer', 'digest'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const piralBuildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator', 'emulator-sources'];
 export const piletBuildTypeKeys: Array<PiletBuildType> = ['default', 'standalone', 'manifest'];

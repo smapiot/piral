@@ -1,6 +1,6 @@
 import { relative, dirname, basename, resolve } from 'path';
 import { callPiletBuild } from '../bundler';
-import { LogLevels, PiletSchemaVersion, PiletPublishSource } from '../types';
+import { LogLevels, PiletSchemaVersion, PiletPublishSource, PiletPublishScheme } from '../types';
 import {
   postFile,
   readBinary,
@@ -73,9 +73,19 @@ export interface PublishPiletOptions {
   fields?: Record<string, string>;
 
   /**
+   * Places additional headers that should be posted to the feed service.
+   */
+  headers?: Record<string, string>;
+
+  /**
    * Sets the bundler to use for building, if any specific.
    */
   bundlerName?: string;
+
+  /**
+   * Sets the authorization scheme to use.
+   */
+  mode?: PiletPublishScheme;
 
   /**
    * Additional arguments for a specific bundler.
@@ -90,8 +100,10 @@ export const publishPiletDefaults: PublishPiletOptions = {
   cert: undefined,
   logLevel: LogLevels.info,
   schemaVersion: config.schemaVersion,
+  mode: 'basic',
   from: 'local',
   fields: {},
+  headers: {},
 };
 
 async function getFiles(
@@ -200,6 +212,8 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     schemaVersion = publishPiletDefaults.schemaVersion,
     cert = config.cert ?? publishPiletDefaults.cert,
     fields = publishPiletDefaults.fields,
+    headers = publishPiletDefaults.headers,
+    mode = publishPiletDefaults.mode,
     _ = {},
     bundlerName,
   } = options;
@@ -240,7 +254,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
     if (content) {
       progress(`Publishing "%s" ...`, file, url);
-      const result = await postFile(url, apiKey, content, fields, ca);
+      const result = await postFile(url, mode, apiKey, content, fields, headers, ca);
 
       if (result.success) {
         successfulUploads.push(file);

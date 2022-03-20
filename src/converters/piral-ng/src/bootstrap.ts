@@ -1,10 +1,10 @@
-import type { BaseComponentProps, ComponentContext, Disposable } from 'piral-core';
+import type { BaseComponentProps, ComponentContext, Disposable, PiletApi } from 'piral-core';
 import type { PrepareBootstrapResult } from './types';
 import { startup } from './startup';
 import { getAnnotations } from './utils';
 import { createModuleInstance, getModuleInstance, defineModule } from './module';
 
-export function prepareBootstrap(moduleOrComponent: any): PrepareBootstrapResult {
+export function prepareBootstrap(moduleOrComponent: any, piral: PiletApi): PrepareBootstrapResult {
   const [annotation] = getAnnotations(moduleOrComponent);
 
   if (annotation && annotation.bootstrap) {
@@ -12,10 +12,10 @@ export function prepareBootstrap(moduleOrComponent: any): PrepareBootstrapResult
     const [component] = annotation.bootstrap;
     annotation.exports = [component];
     defineModule(moduleOrComponent);
-    return [...getModuleInstance(component), component];
+    return [...getModuleInstance(component, piral), component];
   } else {
     // usually contains things like selector, template or templateUrl, changeDetection, ...
-    const result = getModuleInstance(moduleOrComponent) || createModuleInstance(moduleOrComponent);
+    const result = getModuleInstance(moduleOrComponent, piral) || createModuleInstance(moduleOrComponent, piral);
     return [...result, moduleOrComponent];
   }
 }

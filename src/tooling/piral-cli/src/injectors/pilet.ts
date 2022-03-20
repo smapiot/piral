@@ -128,11 +128,6 @@ export default class PiletInjector implements KrasInjector {
     const { pilets, feed } = this.config;
     const localPilets = pilets.map((pilet) => pilet.meta).filter(Boolean);
     const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
-
-    if (mergedPilets.length === 1) {
-      return JSON.stringify(mergedPilets[0]);
-    }
-
     return JSON.stringify(mergedPilets);
   }
 

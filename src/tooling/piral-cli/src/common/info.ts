@@ -1,3 +1,5 @@
+import { cpus } from 'os';
+
 const info = require('../../package.json');
 
 export function findCompatVersion(version: string) {
@@ -18,3 +20,4 @@ export const compatVersion = findCompatVersion(cliVersion);
 export const repositoryUrl = info.repository.url;
 export const isWindows = process.platform === 'win32';
 export const pathSeparator = isWindows ? ';' : ':';
+export const cpuCount = cpus().length;

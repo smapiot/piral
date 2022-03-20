@@ -1,5 +1,14 @@
 # Piral Changelog
 
+## 0.14.19 (tbd)
+
+- Improved pilet injector to always return an array as metadata response
+- Removed dependency to `webpack-inject-plugin` in `piral-cli-webpack5`
+- Fixed issue with `getCurrentLayout` not returning default layout in SSR
+- Fixed `piral` service in `piral-ng` such that it can also be used with `APP_INITIALIZER`
+- Added options `--headers` and `--mode` to `pilet publish`
+- Added option `--concurrency` to `pilet build` and `pilet debug`
+
 ## 0.14.18 (March 15, 2022)
 
 - Fixed issue with `v1` pilets not loading additional chunks
