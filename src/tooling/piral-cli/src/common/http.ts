@@ -93,7 +93,7 @@ export function postFile(
       case 'basic':
         headers.authorization = `Basic ${key}`;
         break;
-      case 'basic':
+      case 'bearer':
         headers.authorization = `Bearer ${key}`;
         break;
       case 'digest':
