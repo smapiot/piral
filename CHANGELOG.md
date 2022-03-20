@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.19 (tbd)
+## 0.14.19 (March 20, 2022)
 
 - Improved pilet injector to always return an array as metadata response
 - Removed dependency to `webpack-inject-plugin` in `piral-cli-webpack5`
