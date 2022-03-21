@@ -12,11 +12,9 @@ describe('Util Extension.', () => {
 
   it('reactifyContent.', () => {
     const container = document.body.appendChild(document.createElement('div'));
-    // const container = document.createElement('div');
     container.innerHTML = `<div>FOO<</div>`;
     const result = reactifyContent(container.childNodes)
     expect(result).not.toBeNull();
-    // console.log(result);
   });
 });
 
