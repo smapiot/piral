@@ -20,6 +20,7 @@ export * from './merge';
 export * from './npm';
 export * from './pack';
 export * from './package';
+export * from './parallel';
 export * from './patcher';
 export * from './patches';
 export * from './port';

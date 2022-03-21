@@ -1,6 +1,6 @@
 {
   "name": "piral-urql",
-  "version": "0.14.17",
+  "version": "0.14.19",
   "description": "Plugin for providing a GraphQL client in Piral.",
   "keywords": [
     "piral",

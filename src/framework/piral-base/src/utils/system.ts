@@ -27,6 +27,15 @@ function findMatchingPackage(id: string) {
   return undefined;
 }
 
+function tryResolve(name: string, parent: string) {
+  try {
+    return System.resolve(name, parent);
+  } catch {
+    // just ignore - will be handled differently later.
+    return undefined;
+  }
+}
+
 function isPrimitiveExport(content: any) {
   const type = typeof content;
   return (
@@ -140,7 +149,7 @@ export function unregisterModules(baseUrl: string) {
  * @returns The module's content, if any, otherwise throws an error.
  */
 export function requireModule(name: string, parent: string) {
-  const moduleId = System.resolve(name, parent);
+  const moduleId = tryResolve(name, parent);
   const dependency = moduleId && System.get(moduleId);
 
   if (!dependency) {

@@ -1,6 +1,14 @@
-import type { HtmlComponent } from 'piral-core';
-import { createConverter } from './lib/converter';
-import { createDependencyLoader } from './lib/dependencies';
+import { createConverter } from './esm/converter';
+import { createDependencyLoader } from './esm/dependencies';
+
+export interface HtmlComponent<TProps> {
+  component: {
+    mount(element: HTMLElement, props: TProps, ctx: any, locals: any): void;
+    update?(element: HTMLElement, props: TProps, ctx: any, locals: any): void;
+    unmount?(element: HTMLElement, locals: any): void;
+  };
+  type: 'html';
+}
 
 const convert = createConverter(true);
 const loader = createDependencyLoader(convert);

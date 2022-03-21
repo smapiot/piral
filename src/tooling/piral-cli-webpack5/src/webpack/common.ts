@@ -26,7 +26,7 @@ export function getVariables(): Record<string, string> {
   }, {});
 }
 
-export function getPlugins(plugins: Array<any>, production: boolean, pilet: boolean) {
+export function getPlugins(plugins: Array<any>, production: boolean, pilet?: string) {
   const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
       filename: pilet ? piletCss : '[name].[fullhash:6].css',
@@ -51,7 +51,7 @@ export function getPlugins(plugins: Array<any>, production: boolean, pilet: bool
 
   if (production && pilet) {
     const name = process.env.BUILD_PCKG_NAME;
-    otherPlugins.push(new SheetPlugin(piletCss, name) as any);
+    otherPlugins.push(new SheetPlugin(piletCss, name, pilet) as any);
   }
 
   return plugins.concat(otherPlugins);

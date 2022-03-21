@@ -15,6 +15,7 @@ import {
   fromKeys,
   bundlerKeys,
   piralBuildTypeKeys,
+  publishModeKeys,
 } from './helpers';
 import {
   ToolCommand,
@@ -25,6 +26,7 @@ import {
   PiletPublishSource,
   PiletSchemaVersion,
   PiletBuildType,
+  PiletPublishScheme,
 } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
@@ -414,6 +416,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.debugPiletDefaults.logLevel)
+        .number('concurrency')
+        .describe('concurrency', 'Sets the maximum number of concurrent build jobs.')
+        .default('concurrency', apps.debugPiletDefaults.concurrency)
         .boolean('open')
         .describe('open', 'Opens the pilet directly in the browser.')
         .default('open', apps.debugPiletDefaults.open)
@@ -452,6 +457,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         schemaVersion: args.schema as PiletSchemaVersion,
+        concurrency: args.concurrency as number,
         feed: args.feed as string,
         hooks: args.hooks as object,
         _: args,
@@ -477,6 +483,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.buildPiletDefaults.logLevel)
+        .number('concurrency')
+        .describe('concurrency', 'Sets the maximum number of concurrent build jobs.')
+        .default('concurrency', apps.buildPiletDefaults.concurrency)
         .boolean('source-maps')
         .describe('source-maps', 'Creates source maps for the bundles.')
         .default('source-maps', apps.buildPiletDefaults.sourceMaps)
@@ -524,6 +533,7 @@ const allCommands: Array<ToolCommand<any>> = [
         fresh: args.fresh as boolean,
         logLevel: args['log-level'] as LogLevels,
         schemaVersion: args.schema as PiletSchemaVersion,
+        concurrency: args.concurrency as number,
         app: args.app as string,
         hooks: args.hooks as object,
         _: args,
@@ -590,6 +600,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('schema', schemaKeys)
         .describe('schema', 'Sets the schema to be used when making a fresh build of the pilet.')
         .default('schema', apps.publishPiletDefaults.schemaVersion)
+        .choices('mode', publishModeKeys)
+        .describe('mode', 'Sets the authorization mode to use.')
+        .default('mode', apps.publishPiletDefaults.mode)
         .choices('bundler', availableBundlers)
         .describe('bundler', 'Sets the bundler to use.')
         .default('bundler', availableBundlers[0])
@@ -599,6 +612,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .option('fields', undefined)
         .describe('fields', 'Sets additional fields to be included in the feed service request.')
         .default('fields', apps.publishPiletDefaults.fields)
+        .option('headers', undefined)
+        .describe('headers', 'Sets additional headers to be included in the feed service request.')
+        .default('headers', apps.publishPiletDefaults.headers)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -615,6 +631,8 @@ const allCommands: Array<ToolCommand<any>> = [
         from: args.from as PiletPublishSource,
         schemaVersion: args.schema as PiletSchemaVersion,
         fields: args.fields as Record<string, string>,
+        headers: args.headers as Record<string, string>,
+        mode: args.mode as PiletPublishScheme,
         _: args,
       });
     },
