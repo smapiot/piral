@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router';
 import { toExtension } from './extension';
 import { withKey, withoutKey, appendItem, excludeOn } from './helpers';
 import { GlobalState, PageRegistration, ExtensionRegistration } from '../types';
+import { useGlobalState } from '../hooks';
 
 /**
  * Returns a dispatcher that includes all mentioned dispatchers.
