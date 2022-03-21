@@ -11,4 +11,9 @@ describe('Piral-Core createInstance module', () => {
     const instance = createInstance({ async: true });
     expect(instance.options.strategy).toBe(blazingStrategy);
   });
+
+  it('createInstance with empty actions uses the standard strategy', () => {
+    const instance = createInstance({ actions: {} });
+    expect(instance.options.strategy).toBe(standardStrategy);
+  })
 });

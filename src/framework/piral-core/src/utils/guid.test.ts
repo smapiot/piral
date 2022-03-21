@@ -1,6 +1,11 @@
-import { generateId } from './guid';
+import { buildName, generateId } from './guid';
 
 describe('Guid Utility Module', () => {
+  it('buildName returns name with its prefix', () => {
+    const result = buildName('Ma', 'Majd');
+    expect(result).toEqual('Ma://Majd');
+  });
+
   it('Generates two consecutive different guids', () => {
     const guid1 = generateId();
     const guid2 = generateId();
