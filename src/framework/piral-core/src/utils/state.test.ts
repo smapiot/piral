@@ -4,31 +4,36 @@ import { RootListener } from '../RootListener';
 import { createGlobalState } from '../state';
 
 describe('State Module', () => {
-  it('withRootExtension should create an extension', () => {
-    const dispatch = withRootExtension('testNmae', RootListener);
+  it('withRootExtension should create an extension key', () => {
+    const dispatch = withRootExtension('test', RootListener);
     const result = dispatch({ registry: { extensions: {} } });
-    expect(result).not.toBe('undefined');
-    expect(result['registry']['extensions']['testNmae']).toBeTruthy();
+    expect(result['registry']['extensions']['test']).toBeTruthy();
   });
 
-  it('withAll should return state with dispatchers (s) => s', () => {
+  it('withAll should return identity state with no dispatcher', () => {
+    const dispatchers = withAll();
+    const result = dispatchers({ state: ['foo', 'boo'] });
+    expect(result).toEqual({ state: ['foo', 'boo'] });
+  });
+
+  it('withAll should return identity state with identity dispatcher', () => {
     const dispatchers = withAll((s) => s);
     const result = dispatchers({ state: ['foo', 'boo'] });
     expect(result).toEqual({ state: ['foo', 'boo'] });
   });
 
-  it('withAll should return state with dispatchers (s => ({ }))', () => {
+  it('withAll should return empty state with blank dispatcher', () => {
     const dispatchers = withAll((s) => ({}));
-    const result = dispatchers({});
+    const result = dispatchers({ state: ['foo', 'boo'] });
     expect(result).toEqual({});
   });
 
-  it('withAll should return state with dispatchers with some state', () => {
+  it('withAll should return mutated state of all dispatchers', () => {
     const dispatchers = withAll(
       (s) => ({ ...s, foo: 'bar' }),
       (s) => ({ ...s, bar: 'qxz' }),
     );
-    const result = dispatchers({ state: 'foo' });
-    expect(result).toEqual({ state: 'foo', bar: 'qxz', foo: 'bar' });
+    const result = dispatchers({ state: ['foo', 'boo'] });
+    expect(result).toEqual({ state: ['foo', 'boo'], foo: 'bar', bar: 'qxz' });
   });
 });
