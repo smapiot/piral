@@ -15,6 +15,29 @@ function createMockContainer() {
       readState(cb) {
         return cb({
           registry: {
+            wrappers: { "feed": "test", "*": "test" },
+          },
+        });
+      },
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      state,
+      destroyPortal: (id) => { },
+    } as any,
+  };
+}
+
+function createMockContainerWithNoWrappers() {
+  const state = Atom.of({
+    portals: {},
+  });
+  return {
+    context: {
+      converters: {},
+      readState(cb) {
+        return cb({
+          registry: {
             wrappers: {},
           },
         });
@@ -23,7 +46,7 @@ function createMockContainer() {
       off: jest.fn(),
       emit: jest.fn(),
       state,
-      destroyPortal: (id) => {},
+      destroyPortal: (id) => { },
     } as any,
   };
 }
@@ -107,7 +130,7 @@ describe('withApi Module', () => {
         return component.component;
       },
     };
-    const Component = withApi(context, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
+    const Component = withApi(context, { type: 'html', component: { mount: () => { } } }, api, 'unknown');
 
     const node = mount(
       <StateContext.Provider value={context}>
@@ -124,7 +147,7 @@ describe('withApi Module', () => {
         name: 'foo',
       },
     };
-    const { context } = createMockContainer();
+    const { context } = createMockContainerWithNoWrappers();
     context.converters = {
       html: (component) => {
         return component.component;
