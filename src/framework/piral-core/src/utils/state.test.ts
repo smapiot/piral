@@ -11,9 +11,24 @@ describe('State Module', () => {
     expect(result['registry']['extensions']['testNmae']).toBeTruthy();
   });
 
-  it('withAll', () => {
-    const dispatcher = withAll((state) => state);
-    const result = dispatcher({ state: 'foo' });
-    expect(result).toEqual({ state: 'foo' });
+  it('withAll should return state with dispatchers (s) => s', () => {
+    const dispatchers = withAll((s) => s);
+    const result = dispatchers({ state: ['foo', 'boo'] });
+    expect(result).toEqual({ state: ['foo', 'boo'] });
+  });
+
+  it('withAll should return state with dispatchers (s => ({ }))', () => {
+    const dispatchers = withAll((s) => ({}));
+    const result = dispatchers({});
+    expect(result).toEqual({});
+  });
+
+  it('withAll should return state with dispatchers with some state', () => {
+    const dispatchers = withAll(
+      (s) => ({ ...s, foo: 'bar' }),
+      (s) => ({ ...s, bar: 'qxz' }),
+    );
+    const result = dispatchers({ state: 'foo' });
+    expect(result).toEqual({ state: 'foo', bar: 'qxz', foo: 'bar' });
   });
 });

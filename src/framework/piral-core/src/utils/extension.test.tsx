@@ -2,6 +2,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import { reactifyContent, toExtension } from './extension';
 
+
 describe('Util Extension.', () => {
   it('Convert some component to an extension component.', () => {
     const Component = (props) => <b>{props.title}</b>;
@@ -10,11 +11,12 @@ describe('Util Extension.', () => {
     expect(node.find('b').length).toBe(1);
   });
 
-  it('reactifyContent.', () => {
+  it('reactifyContent.', async () => {
     const container = document.body.appendChild(document.createElement('div'));
     container.innerHTML = `<div>FOO<</div>`;
-    const result = reactifyContent(container.childNodes)
-    expect(result).not.toBeNull();
+    const result = reactifyContent(container.childNodes) as React.ReactElement;
+    const node = await mount(result)
+    expect(node.find("slot").length).toBe(1);
   });
 });
 
