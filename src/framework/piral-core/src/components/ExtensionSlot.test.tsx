@@ -26,6 +26,8 @@ StubComponent1.displayName = 'StubComponent1';
 const StubComponent2: React.FC = (props) => <div children={props.children} />;
 StubComponent2.displayName = 'StubComponent2';
 
+const StubComponent3: React.FC = (props) => <div children={props.children} />;
+
 const state = {
   portals: {},
   registry: {
@@ -40,6 +42,11 @@ const state = {
         },
         {
           component: StubComponent2,
+        },
+      ],
+      bla: [
+        {
+          component: StubComponent3,
         },
       ],
     },
@@ -98,6 +105,14 @@ describe('Extension Module', () => {
     const node = mount(<ExtensionSlot name="bar" />);
     expect(node.find(StubComponent1).length).toBe(2);
     expect(node.find(StubComponent2).length).toBe(1);
+    expect(node.find(StubComponent3).length).toBe(0);
+  });
+
+  it('is able to render extension without displayName', () => {
+    const node = mount(<ExtensionSlot name="bla" />);
+    expect(node.find(StubComponent1).length).toBe(0);
+    expect(node.find(StubComponent2).length).toBe(0);
+    expect(node.find(StubComponent3).length).toBe(1);
   });
 
   it('overrides the empty renderer on not available extension', () => {
