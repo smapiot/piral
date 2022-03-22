@@ -126,9 +126,7 @@ describe('withApi Module', () => {
     };
     const { context } = createMockContainer();
     context.converters = {
-      html: (component) => {
-        return component.component;
-      },
+      html: ({ component }) => component,
     };
     const Component = withApi(context, { type: 'html', component: { mount: () => { } } }, api, 'unknown');
 
@@ -149,9 +147,7 @@ describe('withApi Module', () => {
     };
     const { context } = createMockContainerWithNoWrappers();
     context.converters = {
-      html: (component) => {
-        return component.component;
-      },
+      html: ({ component }) => component,
     };
     const Component = withApi(context, null, api, 'unknown');
 

@@ -88,16 +88,20 @@ export function renderElement(
   element: HTMLElement | ShadowRoot,
   props: any,
 ): [Disposable, Updatable] {
-  let [id, portal] = renderInDom(context, element, ExtensionSlot, props);
-  const evName = 'extension-props-changed';
-  const handler = (ev: CustomEvent) => update(ev.detail);
-  const dispose: Disposable = () => {
-    context.hidePortal(id, portal);
-    element.removeEventListener(evName, handler);
-  };
-  const update: Updatable = (newProps) => {
-    [id, portal] = changeDomPortal(id, portal, context, element, ExtensionSlot, newProps);
-  };
-  element.addEventListener(evName, handler);
-  return [dispose, update];
+  if (typeof window !== 'undefined') {
+    let [id, portal] = renderInDom(context, element, ExtensionSlot, props);
+    const evName = 'extension-props-changed';
+    const handler = (ev: CustomEvent) => update(ev.detail);
+    const dispose: Disposable = () => {
+      context.hidePortal(id, portal);
+      element.removeEventListener(evName, handler);
+    };
+    const update: Updatable = (newProps) => {
+      [id, portal] = changeDomPortal(id, portal, context, element, ExtensionSlot, newProps);
+    };
+    element.addEventListener(evName, handler);
+    return [dispose, update];
+  }
+
+  return [noop, noop];
 }

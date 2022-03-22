@@ -1,26 +1,24 @@
 import * as React from 'react';
-import * as hooks from '../hooks';
 import { mount } from 'enzyme';
 import { ExtensionSlot } from './ExtensionSlot';
 
 jest.mock('../hooks/globalState', () => ({
-  useGlobalState(select: any) {
-    return select(state);
-  },
+  useGlobalState: (select: any) => select(state),
+  useGlobalStateContext: () => ({
+    converters: {
+      html: ({ component }) => component,
+    },
+    apis: {
+      _: {
+        meta: {
+          name: 'PiletName',
+        },
+      },
+    },
+  }),
 }));
 
-(hooks as any).useGlobalStateContext = () => ({
-  converters: {},
-  apis: {
-    _: {
-      piral: {
-        meta: {
-          name: "PiletName",
-        }
-      }
-    }
-  },
-});
+(React as any).useMemo = (cb) => cb();
 
 const StubComponent1: React.FC = (props) => <div children={props.children} />;
 StubComponent1.displayName = 'StubComponent1';
@@ -29,6 +27,7 @@ const StubComponent2: React.FC = (props) => <div children={props.children} />;
 StubComponent2.displayName = 'StubComponent2';
 
 const state = {
+  portals: {},
   registry: {
     extensions: {
       foo: [],
@@ -47,13 +46,30 @@ const state = {
   },
 };
 
-(React as any).useMemo = (cb) => cb();
-
 describe('Extension Module', () => {
   it('is able to default render not available extension with no name', () => {
     const node = mount(<ExtensionSlot />);
     expect(node.at(0).exists()).toBe(true);
     expect(node.find(StubComponent1).length).toBe(0);
+    expect(node.find('div').length).toBe(0);
+  });
+
+  it('is able to default render given component with no name', () => {
+    const component = {
+      type: 'html',
+      component: {
+        mount(element) {
+          const container = document.createElement('div');
+          container.textContent = 'Hello!';
+          element.appendChild(container);
+        },
+      },
+    };
+    const node = mount(<ExtensionSlot params={{ component }} />);
+    expect(node.at(0).exists()).toBe(true);
+    expect(node.find(StubComponent1).length).toBe(0);
+    expect(node.find('div').length).toBe(1);
+    expect(node.text()).toContain('Hello!');
   });
 
   it('is able to default render not available extension', () => {
