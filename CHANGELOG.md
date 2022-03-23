@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.20 (tbd)
+
+- Updated dependencies
+
 ## 0.14.19 (March 20, 2022)
 
 - Improved pilet injector to always return an array as metadata response
