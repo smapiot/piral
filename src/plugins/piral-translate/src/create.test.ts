@@ -1,4 +1,4 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import { Atom, swap, deref } from '@dbeining/react-atom';
 import { createLocaleApi, setupLocalizer } from './create';
 
 describe('Create Localize API', () => {
@@ -6,6 +6,9 @@ describe('Create Localize API', () => {
   const context: any = {
     defineActions() {},
     state,
+    readState(cb) {
+      return cb(deref(state));
+    },
     dispatch(update) {
       swap(state, update);
     },
@@ -94,5 +97,40 @@ describe('Create Localize API', () => {
     const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
     const result = api.translate('qxz');
     expect(result).toEqual('__fr_qxz__');
+  });
+
+  it('getTranslations return the translations', () => {
+    const config = {
+      language: 'fr',
+      messages: {
+        fr: {
+          foo: 'bár',
+          bar: 'bár',
+        },
+      },
+    };
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
+    api.setTranslations({
+      fr: {
+        foo: 'boo',
+      },
+    });
+    const result = api.getTranslations();
+    expect(result).toEqual({ fr: { foo: 'boo' } });
+  });
+
+  it('getCurrentLanguage return the current language', () => {
+    const config = {
+      language: 'fr',
+      messages: {
+        fr: {
+          foo: 'bár',
+          bar: 'bár',
+        },
+      },
+    };
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
+    const result = api.getCurrentLanguage();
+    expect(result).toEqual('fr');
   });
 });
