@@ -3,6 +3,7 @@
 ## 0.14.20 (tbd)
 
 - Updated dependencies
+- Fixed issue with `pilet build` of `--type standalone` when using importmap
 
 ## 0.14.19 (March 20, 2022)
 

@@ -39,7 +39,7 @@ function createMetadata(outDir: string, outFile: string, pilets: Array<PiletData
       name: p.package.name,
       version: p.package.version,
       link: `./${p.id}/${p.outFile}`,
-      ...getPiletSpecMeta(p.path, p.outDir),
+      ...getPiletSpecMeta(p.path, `./${p.id}/`),
     })),
   );
 }
