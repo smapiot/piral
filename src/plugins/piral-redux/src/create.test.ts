@@ -1,5 +1,6 @@
 import { Atom, swap } from '@dbeining/react-atom';
 import { createReduxApi } from './create';
+import { MyComponent } from './MyComponent';
 
 function createMockContainer() {
   const state = Atom.of({});
@@ -29,5 +30,6 @@ describe('Piral-Redux create module', () => {
     const api = apiCreator(undefined, {
       name: 'test',
     });
+    api.createReduxStore(() => {})(MyComponent);
   });
 });
