@@ -1,4 +1,4 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import { Atom, swap, deref } from '@dbeining/react-atom';
 import { createReduxApi } from './create';
 import { MyComponent } from './MyComponent';
 
@@ -13,7 +13,7 @@ function createMockContainer() {
       defineActions() {},
       state,
       readState(read) {
-        return read(state);
+        return read(deref(state));
       },
       dispatch(update) {
         swap(state, update);

@@ -25,11 +25,10 @@ function createMockContainer() {
   };
 }
 
-const mount = jest.fn();
-const MyComponent = { component: { mount }, type: 'html' };
-
 describe('Piral-Lazy create module', () => {
   it('appends lazy loading for a DOM component', async () => {
+    const mount = jest.fn();
+    const MyComponent = { component: { mount }, type: 'html' };
     const load = async () => await Promise.resolve(MyComponent);
     const { context, api } = createMockContainer();
     const apiCreator: any = createLazyApi()(context);
