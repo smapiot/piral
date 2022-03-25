@@ -37,6 +37,41 @@ describe('Translation Action Module', () => {
     });
   });
 
+  it('setTranslations sets translations to the global translations', () => {
+    const state = Atom.of({
+      foo: 5,
+      language: {
+        foo: 10,
+        loading: false,
+        selected: 'fr',
+      },
+    });
+    const localizer = {
+      language: 'en',
+      languages: ['en'],
+      messages: {},
+      localizeGlobal() {
+        return '';
+      },
+      localizeLocal() {
+        return '';
+      },
+    };
+    const ctx = ca(state, createListener({}));
+    const actions = createActions(localizer);
+    const data = {
+      global: {
+        car: 'Auto',
+        table: 'Tisch',
+      },
+      locals: [],
+    };
+    actions.setTranslations(ctx, 'de', data);
+    expect(localizer.messages).toEqual({
+      de: { car: 'Auto', table: 'Tisch' },
+    });
+  });
+
   it('getTranslations returns translations', () => {
     const state = Atom.of({
       foo: 5,
