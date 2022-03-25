@@ -1,4 +1,4 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import { Atom, swap, deref } from '@dbeining/react-atom';
 import { createReduxApi } from './create';
 
 function createMockContainer() {
@@ -8,11 +8,11 @@ function createMockContainer() {
       on: jest.fn(),
       off: jest.fn(),
       emit: jest.fn(),
-      includeProvider() {},
-      defineActions() {},
+      includeProvider() { },
+      defineActions() { },
       state,
       readState(read) {
-        return read(state);
+        return read(deref(state));
       },
       dispatch(update) {
         swap(state, update);
@@ -22,6 +22,9 @@ function createMockContainer() {
   };
 }
 
+const MyComponent: React.FC = () => <div>Component</div>;
+MyComponent.displayName = 'MyComponent';
+
 describe('Piral-Redux create module', () => {
   it('creates a new substate', () => {
     const { context } = createMockContainer();
@@ -29,5 +32,6 @@ describe('Piral-Redux create module', () => {
     const api = apiCreator(undefined, {
       name: 'test',
     });
+    api.createReduxStore(() => { })(MyComponent);
   });
 });
