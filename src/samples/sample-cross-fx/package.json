@@ -47,6 +47,7 @@
       "lit-element",
       "solid-js",
       "solid-js/dom",
+      "piral-ng/common",
       "preact",
       "riot",
       "rxjs",

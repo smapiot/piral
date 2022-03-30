@@ -4,6 +4,7 @@
 
 - Updated dependencies
 - Fixed issue with `pilet build` of `--type standalone` when using importmap
+- Added `CUSTOM_ELEMENTS_SCHEMA` to default / fallback module in `piral-ng`
 
 ## 0.14.19 (March 20, 2022)
 
