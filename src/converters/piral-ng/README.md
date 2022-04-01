@@ -278,6 +278,7 @@ The related packages should be shared with the pilets via the *package.json*:
       "@angular/core",
       "@angular/platform-browser",
       "@angular/platform-browser-dynamic",
+      "piral-ng/common",
       "rxjs",
       "zone.js"
     ]

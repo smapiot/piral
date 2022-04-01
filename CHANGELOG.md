@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.14.20 (tbd)
+
+- Updated dependencies
+- Fixed issue with `pilet build` of `--type standalone` when using importmap
+- Added `CUSTOM_ELEMENTS_SCHEMA` to default / fallback module in `piral-ng`
+- Added automatic module cleanup on pilet teardown
+
 ## 0.14.19 (March 20, 2022)
 
 - Improved pilet injector to always return an array as metadata response
