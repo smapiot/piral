@@ -3,7 +3,14 @@ import type { NgOptions, ModuleInstanceResult } from './types';
 import * as ngCore from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { ApplicationRef, ComponentFactoryResolver, ComponentRef, NgModule, NgZone } from '@angular/core';
+import {
+  ApplicationRef,
+  ComponentFactoryResolver,
+  ComponentRef,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NgModule,
+  NgZone,
+} from '@angular/core';
 import { RoutingService } from './RoutingService';
 import { SharedModule } from './SharedModule';
 import { findComponents, getAnnotations } from './utils';
@@ -131,11 +138,13 @@ export function createModuleInstance(component: any, piral: PiletApi): ModuleIns
   const declarations = [component];
   const importsDef = [CommonModule];
   const exportsDef = [component];
+  const schemasDef = [CUSTOM_ELEMENTS_SCHEMA];
 
   @NgModule({
     declarations,
     imports: importsDef,
     exports: exportsDef,
+    schemas: schemasDef,
   })
   class Module {
     static ɵfac = 'ɵɵinject' in ngc ? (t: any) => new (t || Module)() : undefined;
@@ -164,6 +173,7 @@ export function createModuleInstance(component: any, piral: PiletApi): ModuleIns
             declarations,
             imports: importsDef,
             exports: exportsDef,
+            schemas: schemasDef,
           },
         ],
       },

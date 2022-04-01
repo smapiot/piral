@@ -1,6 +1,6 @@
 {
   "name": "piral-base",
-  "version": "0.14.19",
+  "version": "0.14.20",
   "description": "The base library for creating a Piral instance.",
   "keywords": [
     "portal",

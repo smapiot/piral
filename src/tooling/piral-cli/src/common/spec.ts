@@ -3,6 +3,7 @@ import { computeHash, computeIntegrity } from './hash';
 
 const checkV1 = /^\/\/\s*@pilet\s+v:1\s*\(([A-Za-z0-9\_\:\-]+)\)/;
 const checkV2 = /^\/\/\s*@pilet\s+v:2\s*(?:\(([A-Za-z0-9\_\:\-]+),\s*(.*)\))?/;
+const isUrl = /^https?:\/\//;
 
 function getDependencies(deps: string, basePath: string) {
   try {
@@ -13,8 +14,8 @@ function getDependencies(deps: string, basePath: string) {
         const depUrl = depMap[depName];
 
         if (typeof depUrl === 'string') {
-          const url = new URL(depUrl, basePath);
-          obj[depName] = url.href;
+          const url = isUrl.test(depUrl) ? depUrl : `${basePath}${depUrl}`;
+          obj[depName] = url;
         }
 
         return obj;

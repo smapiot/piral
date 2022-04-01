@@ -135,11 +135,12 @@ export function registerModule(name: string, resolve: ModuleResolver) {
 /**
  * Unregisters all modules coming from the given base URL.
  * @param baseUrl The base URL used to identify the modules to delete to.
+ * @param dependencies The shared dependencies from the pilet. These will be left alive.
  */
-export function unregisterModules(baseUrl: string) {
+export function unregisterModules(baseUrl: string, dependencies: Array<string>) {
   [...System.entries()]
     .map(([name]) => name)
-    .filter((name) => name.startsWith(baseUrl))
+    .filter((name) => name.startsWith(baseUrl) && !dependencies.includes(name))
     .forEach((name) => System.delete(name));
 }
 

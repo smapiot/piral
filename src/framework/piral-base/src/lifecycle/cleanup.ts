@@ -26,8 +26,10 @@ export function runCleanup(app: SinglePilet, api: PiletApi, hooks: PiletLifecycl
     delete window[depName];
   }
 
+  // remove the pilet's evaluated modules from SystemJS (except the shared dependencies)
   if (url) {
-    unregisterModules(url);
+    const dependencies = Object.keys(app.dependencies || {}).map((m) => app.dependencies[m]);
+    unregisterModules(url, dependencies);
   }
 }
 
