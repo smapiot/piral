@@ -1,13 +1,6 @@
 import * as React from 'react';
 import { useGlobalState } from '../hooks';
-import {
-  ComponentsState,
-  ErrorInfoProps,
-  LoadingIndicatorProps,
-  RouterProps,
-  LayoutProps,
-  RouteSwitchProps,
-} from '../types';
+import { ComponentsState } from '../types';
 
 export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey): ComponentsState[TKey] {
   return (props) => {
@@ -21,34 +14,34 @@ export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey
  * Gets the currently registered ErrorInfo component.
  * By default the DefaultErrorInfo component is used.
  */
-export const PiralError: React.ComponentType<ErrorInfoProps> = getPiralComponent('ErrorInfo');
+export const PiralError = getPiralComponent('ErrorInfo');
 
 /**
  * Gets the currently registered LoadingIndicator component.
  * By default only Loading is rendered.
  */
-export const PiralLoadingIndicator: React.ComponentType<LoadingIndicatorProps> = getPiralComponent('LoadingIndicator');
+export const PiralLoadingIndicator = getPiralComponent('LoadingIndicator');
 
 /**
  * Gets the currently registered Router component.
  * By default the BrowserRouter is used.
  */
-export const PiralRouter: React.ComponentType<RouterProps> = getPiralComponent('Router');
+export const PiralRouter = getPiralComponent('Router');
 
 /**
  * Gets the currently registered Route Switch component.
  * By default the DefaultRouteSwitch component is used.
  */
-export const PiralRouteSwitch: React.ComponentType<RouteSwitchProps> = getPiralComponent('RouteSwitch');
+export const PiralRouteSwitch = getPiralComponent('RouteSwitch');
 
 /**
  * Gets the currently registered Layout component.
  * By default the children are rendered.
  */
-export const PiralLayout: React.ComponentType<LayoutProps> = getPiralComponent('Layout');
+export const PiralLayout = getPiralComponent('Layout');
 
 /**
  * Gets the currently registered Debug component.
  * By default nothing is used.
  */
-export const PiralDebug: React.ComponentType = getPiralComponent('Debug');
+export const PiralDebug = getPiralComponent('Debug');
