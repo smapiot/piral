@@ -172,7 +172,12 @@ interface AvailableDebugCommand {
   capabilities: Array<string>;
   state: {
     container?: any;
-    events?: Array<PiralEvent>;
+    events?: Array<{
+      id: string;
+      name: string;
+      time: number;
+      args: any;
+    }>;
     pilets?: Array<{
       name: string;
       version: string;
@@ -194,4 +199,60 @@ interface AvailableDebugCommand {
 interface UnavailableDebugCommand {
   type: 'unavailable';
 }
+
+interface ResultDebugCommand {
+  type: 'result';
+  result: any;
+  id: string;
+}
+
+interface PiletsDebugCommand {
+  type: 'pilets';
+  pilets: Array<any>;
+}
+
+interface RoutesDebugCommand {
+  type: 'routes';
+  routes: Array<string>;
+}
+
+interface SettingsDebugCommand {
+  type: 'settings';
+  settings: PiralDebugSettings;
+}
+
+interface EventsDebugCommand {
+  type: 'events';
+  events: Array<PiralEvent>;
+}
+
+interface ExtensionsDebugCommand {
+  type: 'extensions';
+  extensions: Array<string>;
+}
+
+interface ContainerDebugCommand {
+  type: 'container';
+  container: any;
+}
+
+interface ReconnectDebugCommand {
+  type: 'cs-connect';
+}
+
+interface InfoDebugCommand {
+  type: 'info';
+  name: string;
+  version: string;
+  kind: 'v0' | 'v1';
+  mode: 'production' | 'development';
+  capabilities: Array<string>;
+}
+
+interface DependencyMapDebugCommand {
+  type: 'dependency-map';
+  dependencyMap: Record<string, Array<string>>;
+}
 ```
+
+With these in mind the debug API is fully specified.

@@ -29,6 +29,14 @@ const instance = createInstance({
 // ... use instance
 ```
 
+Alternativeley, registration of layout components can be done via the `SetComponent` component, e.g.,
+
+```jsx
+<Piral instance={instance}>
+  <SetComponent name="LoadingIndicator" component={Spinner} />
+</Piral>
+```
+
 Coming with `piral-core` already there are just a few layout components you'd need to consider:
 
 - `LoadingIndicator` if you want to add your own loading spinner when the application or sub-parts are loading (recommended)
