@@ -31,14 +31,14 @@ interface PiletData {
   outDir: string;
 }
 
-function createMetadata(outDir: string, outFile: string, pilets: Array<PiletData>) {
+function createMetadata(outDir: string, outFile: string, pilets: Array<PiletData>, publicPath: string) {
   return writeJson(
     outDir,
     outFile,
     pilets.map((p) => ({
       name: p.package.name,
       version: p.package.version,
-      link: `./${p.id}/${p.outFile}`,
+      link: `${publicPath}${p.id}/${p.outFile}`,
       ...getPiletSpecMeta(p.path, `./${p.id}/`),
     })),
   );
@@ -279,7 +279,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
     await copyPilets(outDir, pilets);
 
-    await createMetadata(outDir, '$pilet-api', pilets);
+    await createMetadata(outDir, '$pilet-api', pilets, '/');
 
     if (isEmulator) {
       // in case of an emulator assets are not "seen" by the bundler, so we
@@ -322,7 +322,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
     await copyPilets(outDir, pilets);
 
-    await createMetadata(outDir, manifest, pilets);
+    await createMetadata(outDir, manifest, pilets, '/');
 
     logDone(`Manifest available at "${outDir}/${manifest}"!`);
   }
