@@ -18,6 +18,7 @@ import {
   logDone,
   cpuCount,
   concurrentWorkers,
+  normalizePublicUrl,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -58,6 +59,12 @@ export interface DebugPiletOptions {
    * Sets the port to use for the debug server.
    */
   port?: number;
+
+  /**
+   * Sets the publicUrl to use.
+   * By default, the server is assumed to be at root "/".
+   */
+  publicUrl?: string;
 
   /**
    * Sets the maximum number of parallel build processes.
@@ -116,6 +123,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   entry: './src/index',
   open: config.openBrowser,
   port: config.port,
+  publicUrl: '/',
   hmr: true,
   optimizeModules: false,
   schemaVersion: config.schemaVersion,
@@ -127,17 +135,19 @@ const injectorName = resolve(__dirname, '../injectors/pilet.js');
 interface AppInfo {
   emulator: boolean;
   appFile: string;
+  publicUrl: string;
   appVersion: string;
   externals: Array<string>;
   piral: string;
 }
 
-async function getOrMakeAppDir({ emulator, piral, appFile }: AppInfo, logLevel: LogLevels) {
+async function getOrMakeAppDir({ emulator, piral, appFile, publicUrl }: AppInfo, logLevel: LogLevels) {
   if (!emulator) {
     const { externals, root, ignored } = await retrievePiletsInfo(appFile);
     const { dir } = await callDebugPiralFromMonoRepo({
       root,
       optimizeModules: false,
+      publicUrl,
       ignored,
       externals,
       piral,
@@ -175,6 +185,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     port = debugPiletDefaults.port,
     open = debugPiletDefaults.open,
     hmr = debugPiletDefaults.hmr,
+    publicUrl: originalPublicUrl = debugPiletDefaults.publicUrl,
     logLevel = debugPiletDefaults.logLevel,
     concurrency = debugPiletDefaults.concurrency,
     optimizeModules = debugPiletDefaults.optimizeModules,
@@ -186,13 +197,14 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     appInstanceDir,
     feed,
   } = options;
+  const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
   const krasConfig = readKrasConfig({ port }, krasrc);
-  const api = config.piletApi;
+  const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
@@ -232,7 +244,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       krasConfig.sources.push(mocks);
     }
 
-    await hooks.beforeBuild?.({ root, importmap, entryModule, schemaVersion });
+    await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 
     const bundler = await callPiletDebug(
       {
@@ -255,12 +267,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     );
 
     bundler.on((args) => {
-      hooks.afterBuild?.({ ...args, root, importmap, entryModule, schemaVersion, bundler, outFile, outDir });
+      hooks.afterBuild?.({ ...args, root, publicUrl, importmap, entryModule, schemaVersion, bundler, outFile, outDir });
     });
 
     return {
       emulator,
       appFile,
+      publicUrl,
       appVersion: appPackage.version,
       externals,
       piral: appPackage.name,
@@ -294,7 +307,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     krasConfig.injectors = defaultConfig.injectors;
   }
 
-  const publicUrl = '/';
   const { pilet: piletInjector, ...otherInjectors } = krasConfig.injectors;
   const injectorConfig = {
     meta: 'debug-meta.json',
@@ -303,6 +315,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     active: true,
     pilets,
     app: appDir,
+    publicUrl,
     handle: ['/', api],
     api,
   };

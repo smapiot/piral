@@ -80,6 +80,7 @@ export interface DebugPiralParameters extends BaseBundleParameters {
 export interface WatchPiralParameters extends BaseBundleParameters {
   piral: string;
   externals: Array<string>;
+  publicUrl: string;
   entryFiles: string;
   logLevel: LogLevels;
 }

@@ -410,6 +410,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target directory or file of bundling.')
         .default('target', apps.debugPiletDefaults.target)
+        .string('public-url')
+        .describe('public-url', 'Sets the public URL (path) of the application.')
+        .default('public-url', apps.debugPiletDefaults.publicUrl)
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiletDefaults.port)
@@ -448,6 +451,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.debugPilet(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
+        publicUrl: args['public-url'] as string,
         port: args.port as number,
         hmr: args.hmr as boolean,
         bundlerName: args.bundler as string,
@@ -480,6 +484,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('target')
         .describe('target', 'Sets the target file of bundling.')
         .default('target', apps.buildPiletDefaults.target)
+        .string('public-url')
+        .describe('public-url', 'Sets the public URL (path) of the application.')
+        .default('public-url', apps.buildPiletDefaults.publicUrl)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.buildPiletDefaults.logLevel)
@@ -523,6 +530,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.buildPilet(args.base as string, {
         entry: args.source as string,
         target: args.target as string,
+        publicUrl: args['public-url'] as string,
         minify: args.minify as boolean,
         contentHash: args['content-hash'] as boolean,
         bundlerName: args.bundler as string,

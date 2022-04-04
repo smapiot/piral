@@ -4,6 +4,8 @@ import PiletInjector from './pilet';
 
 const optionsMock = {
   pilets: [],
+  publicUrl: '/',
+  meta: 'debug-meta.json',
   api: '',
   app: '',
   active: true,
@@ -83,6 +85,8 @@ describe('Piral-CLI piral injector', () => {
     // Arrange
     const optionsMock = {
       pilets: [],
+      meta: 'debug-meta.json',
+      publicUrl: '/',
       api: 'http://someFakeApi:1234',
       app: '',
       active: true,
@@ -110,6 +114,8 @@ describe('Piral-CLI piral injector', () => {
     // Arrange
     const optionsMock = {
       pilets: [],
+      meta: 'debug-meta.json',
+      publicUrl: '/',
       api: 'http://someFakeApi:1234',
       app: '',
       active: true,
