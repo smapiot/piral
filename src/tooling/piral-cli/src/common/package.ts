@@ -461,7 +461,10 @@ export async function retrievePiletsInfo(entryFile: string) {
     ...packageInfo.dependencies,
   };
   const info = getPiletsInfo(packageInfo);
-  const externals = makeExternals(allDeps, info.externals);
+  const root = dirname(packageJson);
+  const sharedDependencies = await readImportmap(root, packageInfo);
+  const deps = sharedDependencies.length > 0 ? sharedDependencies.map((m) => m.name) : info.externals;
+  const externals = makeExternals(allDeps, deps);
 
   return {
     ...info,
@@ -475,7 +478,7 @@ export async function retrievePiletsInfo(entryFile: string) {
     },
     scripts: packageInfo.scripts,
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
-    root: dirname(packageJson),
+    root,
   };
 }
 

@@ -16,6 +16,8 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 1. Changed the default bundler from `piral-cli-webpack` to `piral-cli-webpack5`
 2. Deprecated the usage of `renderInstance`
+3. Removed IE polyfills
+4. Deprecated package field `pilets.externals` in favor of `importmap`
 
 #### 1) New Default Bundler
 
@@ -26,6 +28,142 @@ Otherwise, you can also tell the `piral-cli` what default bundler to use in gene
 #### 2) Deprecated `renderInstance`
 
 While this is not (yet) breaking it will be in the near future (when `renderInstance` is fully removed). We recommend everyone to replace the implicit `renderInstance` call with a more explicit version involving `createInstance`, `Piral` (both from `piral-core`) and `render` (from `react-dom`).
+
+If you want to change right now you'll need to replace a few parts with their lower level counterparts. Let's say you start with something like this:
+
+```ts
+import { renderInstance, getUserLocale, setupLocalizer } from 'piral';
+import { createSearchApi } from 'piral-search'; // some plugin
+import { setupFooter, setupMenu } from './parts'; // initializers
+import { layout, errors } from './layout'; // some components
+
+renderInstance({
+  settings: {
+    locale: setupLocalizer({
+      language: getUserLocale,
+      messages: {
+        de: {},
+        en: {},
+      },
+    }),
+    menu: {
+      items: [...setupMenu(), ...setupFooter()],
+    },
+  },
+  plugins: [createSearchApi()],
+  requestPilets() {
+    return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+  layout,
+  errors,
+});
+```
+
+turns into
+
+```ts
+import * as React from 'react'; // required depending on JSX factory, makes <> work
+import { render } from 'react-dom'; // required to actually render something
+import { createInstance, createStandardApi, getUserLocale, Piral, setupLocalizer } from 'piral'; // replaced renderInstance with createInstance + createStandardApi + Piral
+import { createSearchApi } from 'piral-search';
+import { setupFooter, setupMenu } from './parts';
+import { layout, errors } from './layout';
+
+const instance = createInstance({
+  plugins: [
+    createSearchApi(),
+    ...createStandardApi({ // important to add the standard plugins, which previously have just been added
+      locale: setupLocalizer({
+        language: getUserLocale,
+        messages: {
+          de: {},
+          en: {},
+        },
+      }),
+      menu: {
+        items: [...setupMenu(), ...setupFooter()],
+      },
+    }),
+  ],
+  requestPilets() {
+    return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+  state: { // important to register the layout / error components immediately
+    components: layout,
+    errorComponents: errors,
+  },
+});
+
+render(<Piral instance={instance} />, document.querySelector('#app')); // does the explicit rendering now
+```
+
+The goal with this is to provide more flexibility also in the `piral` package. Furthermore, this unifies the documentation in a very important area.
+
+#### 3) Removed IE Polyfills
+
+If you included the following import in your app shell:
+
+```ts
+import 'piral/polyfills';
+```
+
+then either keep them, remove them completely, or add additional polyfills yourself. As of now, this package only contains
+
+```ts
+import 'regenerator-runtime/runtime';
+```
+
+which you can also put in there yourself. If, for whatever reason, you are still interested in keeping IE11 support alive you'd need to add references to recreate the following (previous) import list:
+
+```ts
+import 'promise-polyfill/lib/polyfill';
+import 'url-polyfill';
+import 'whatwg-fetch';
+import 'current-script-polyfill';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+```
+
+Either way under certain conditions you may spare the import of the `regenerator-runtime` completely, too.
+
+#### 4) Deprecated Package Field `pilets.externals`
+
+Before 0.15 the way of defining the centrally shared dependencies (or just "shared dependencies") was different than the way of defining the decentrally shared dependencies (or "distributed dependencies"). While shared dependencies have been using an array of strings called `externals` in the `pilets` section of the app shell's *package.json*, the distributed dependencies have been remarked using the standard importmaps format either specified in the *package.json* or in a dedicated file.
+
+With 0.15 both ways are the same. Dependencies will always be remarked using the `importmap` field of the *package.json* or the importmaps file specified there.
+
+Previously:
+
+```json
+{
+  // ...
+  "pilets": {
+    "externals": [
+      "reactstrap"
+    ]
+  }
+}
+```
+
+Will now be:
+
+```json
+  // ...
+  "importmap": {
+    "imports": {
+      "reactstrap": "*"
+    }
+  }
+}
+```
+
+In general, this will also open to use benefits of the importmap system such as using remote references instead of local ones.
+
+If both, the `pilets.externals` ad the `importmap` fields are specified the `importmap` field takes precedence.
 
 ## 0.13 to 0.14
 
