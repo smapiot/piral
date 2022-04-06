@@ -41,6 +41,7 @@ const state = {
         pages: {},
         extensions: {},
     },
+    portals: {},
     routes: {},
     provider: undefined,
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PiralError, PiralLoadingIndicator } from './components';
+import { RegisteredErrorInfo, RegisteredLoadingIndicator } from './components';
 import { Errors, PiletApi } from '../types';
 
 export interface ErrorBoundaryProps {
@@ -45,9 +45,9 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
     if (error) {
       const pilet = piral.meta.name;
-      return <PiralError type={errorType} error={error} pilet={pilet} {...rest} />;
+      return <RegisteredErrorInfo type={errorType} error={error} pilet={pilet} {...rest} />;
     }
 
-    return <React.Suspense fallback={<PiralLoadingIndicator />}>{children}</React.Suspense>;
+    return <React.Suspense fallback={<RegisteredLoadingIndicator />}>{children}</React.Suspense>;
   }
 }

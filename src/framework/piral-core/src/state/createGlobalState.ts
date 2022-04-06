@@ -5,7 +5,7 @@ import {
   DefaultLayout,
   DefaultRouter,
   DefaultRouteSwitch,
-} from '../components';
+} from '../defaults';
 import { GlobalState, NestedPartial } from '../types';
 
 function extend<T>(defaultState: T, customState: NestedPartial<T>) {

@@ -33,6 +33,7 @@ const state = {
     Router: StubRouter,
     Layout: StubLayout,
   },
+  portals: {},
   registry: {
     pages: {},
     extensions: {},

@@ -4,13 +4,19 @@ import type { LayoutBreakpoints } from './layout';
 import { PiralConfiguration } from './config';
 
 /**
- * The props of the Piral component.
+ * The props of the Piral context.
  */
-export interface PiralProps {
+export interface PiralContextProps {
   /**
    * The specific Piral instance to be used.
    */
   instance?: PiralInstance;
+}
+
+/**
+ * The props of the Piral component.
+ */
+export interface PiralProps extends PiralContextProps {
   /**
    * The custom breakpoints for the different layout modi.
    */

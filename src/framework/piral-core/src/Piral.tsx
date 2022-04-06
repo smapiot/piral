@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { StateContext } from './state';
 import { createInstance } from './createInstance';
-import { PiralView, Mediator, ResponsiveLayout, PortalRenderer } from './components';
-import { RootListener } from './RootListener';
+import { PiralView, ResponsiveLayout } from './components';
+import { PiralContext } from './PiralContext';
 import type { PiralProps } from './types';
 
 /**
  * Represents the Piral app shell frame. Use this component together
  * with an existing instance to render the app shell.
- * Includes layout and routing handling. Wires the state container
+ * Includes layout and routing handling. Connects the piral context
  * to the generated views.
  *
  * @example
@@ -21,14 +20,11 @@ const app = (
 ```
  */
 export const Piral: React.FC<PiralProps> = ({ instance = createInstance(), breakpoints, children }) => (
-  <StateContext.Provider value={instance.context}>
+  <PiralContext instance={instance}>
     <ResponsiveLayout breakpoints={breakpoints} />
-    <Mediator options={instance.options} key={instance.id} />
-    <RootListener />
     <PiralView>
-      <PortalRenderer id="root" />
       {children}
     </PiralView>
-  </StateContext.Provider>
+  </PiralContext>
 );
 Piral.displayName = 'Piral';

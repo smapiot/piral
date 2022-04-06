@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { LayoutProps } from '../types';
 import { defaultRender } from '../utils';
+import { LayoutProps } from '../types';
 
 /**
  * The default layout only rendering the provided children.

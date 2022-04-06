@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as hooks from '../hooks';
 import { MemoryRouter } from 'react-router';
 import { mount } from 'enzyme';
-import { DefaultRouteSwitch } from './DefaultRouteSwitch';
 import { PiralRoutes } from './PiralRoutes';
+import { DefaultRouteSwitch } from '../defaults';
 
 const mountWithRouter = (node, url = '/') =>
   mount(

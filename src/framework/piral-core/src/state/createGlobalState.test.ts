@@ -6,7 +6,7 @@ import {
   DefaultLayout,
   DefaultRouter,
   DefaultRouteSwitch,
-} from '../components';
+} from '../defaults';
 
 process.env.PIRAL_PUBLIC_PATH = '/';
 
