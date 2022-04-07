@@ -55,7 +55,8 @@ export interface TemplateFileLocation {
 
 export interface PiletsInfo {
   files: Array<string | TemplateFileLocation>;
-  externals: Array<string>;
+  template: string;
+  externals?: Array<string>;
   devDependencies: Record<string, string | true>;
   scripts: Record<string, string>;
   validators: Record<string, any>;
@@ -106,6 +107,7 @@ export interface PiletRuleContext extends RuleContext {
 }
 
 export interface PiralData {
+  appRoot: string;
   appFile: string;
   appPackage: any;
   piletPackage: any;

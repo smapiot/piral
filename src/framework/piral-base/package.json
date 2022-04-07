@@ -11,6 +11,11 @@
     "base",
     "functional"
   ],
+  "importmap": {
+    "imports": {
+      "tslib": "tslib"
+    }
+  },
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",

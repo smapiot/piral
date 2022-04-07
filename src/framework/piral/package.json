@@ -10,6 +10,9 @@
     "portal",
     "spa"
   ],
+  "importmap": {
+    "imports": {}
+  },
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",

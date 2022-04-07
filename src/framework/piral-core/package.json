@@ -11,6 +11,18 @@
     "core",
     "functional"
   ],
+  "importmap": {
+    "imports": {
+      "react": "react",
+      "react-dom": "react-dom",
+      "react-router": "react-router",
+      "react-router-dom": "react-router-dom",
+      "history": "history",
+      "path-to-regexp": "path-to-regexp",
+      "@libre/atom": "@libre/atom",
+      "@dbeining/react-atom": "@dbeining/react-atom"
+    }
+  },
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",

@@ -2,7 +2,6 @@ import { createElement } from 'react';
 import { Atom, deref } from '@dbeining/react-atom';
 import { createListener, Pilet } from 'piral-base';
 import {
-  changeLayout,
   includeProvider,
   initialize,
   injectPilet,
@@ -23,23 +22,6 @@ const pilet: Pilet = {
 };
 
 describe('App Actions Module', () => {
-  it('changeLayout changes the current layout', () => {
-    const state = Atom.of({
-      foo: 5,
-      app: {
-        layout: 'tablet',
-      },
-    });
-    const ctx = createActions(state, createListener({}));
-    changeLayout(ctx, 'mobile');
-    expect(deref(state)).toEqual({
-      foo: 5,
-      app: {
-        layout: 'mobile',
-      },
-    });
-  });
-
   it('initialize initializes state data', () => {
     const state = Atom.of({
       app: {},

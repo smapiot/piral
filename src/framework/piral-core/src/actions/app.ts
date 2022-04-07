@@ -3,7 +3,6 @@ import { RouteComponentProps } from 'react-router';
 import { runPilet } from 'piral-base';
 import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute, noop } from '../utils';
 import {
-  LayoutType,
   ComponentsState,
   ErrorComponentsState,
   BaseRegistration,
@@ -12,13 +11,6 @@ import {
   Pilet,
   PiletEntry,
 } from '../types';
-
-export function changeLayout(ctx: GlobalStateContext, current: LayoutType) {
-  ctx.dispatch((state) => ({
-    ...state,
-    app: withKey(state.app, 'layout', current),
-  }));
-}
 
 export function initialize(ctx: GlobalStateContext, loading: boolean, error: Error | undefined, modules: Array<Pilet>) {
   ctx.dispatch((state) => ({

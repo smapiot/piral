@@ -6,25 +6,15 @@ import { defaultBreakpoints } from '../utils';
 
 jest.mock('../hooks');
 
-(hooks as any).useGlobalState = (select: any) =>
-  select({
-    app: {
-      layout: 'desktop',
-    },
-  });
-
-const StubComponent: React.FC = () => <div />;
-StubComponent.displayName = 'StubComponent';
-
 describe('Responsive Module', () => {
   it('always renders the given children', () => {
-    const changeTo = jest.fn();
-    (hooks as any).useGlobalStateContext = () => ({
-      changeLayout: changeTo,
-    });
     (hooks as any).useMedia = () => 'desktop';
+    const Layout: React.FC = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
+    Layout.displayName = 'Layout';
+    const StubComponent: React.FC = () => <div />;
+    StubComponent.displayName = 'StubComponent';
     const node = mount(
-      <ResponsiveLayout breakpoints={defaultBreakpoints}>
+      <ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints}>
         <StubComponent />)
       </ResponsiveLayout>,
     );
@@ -32,42 +22,23 @@ describe('Responsive Module', () => {
   });
 
   it('does not call changeTo when nothing changed', () => {
-    const changeTo = jest.fn();
-    (hooks as any).useGlobalStateContext = () => ({
-      changeLayout: changeTo,
-    });
     (hooks as any).useMedia = () => 'desktop';
-    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
-    expect(changeTo).not.toHaveBeenCalled();
-  });
-
-  it('does not call changeTo when nothing changed', () => {
-    const changeTo = jest.fn();
-    (hooks as any).useGlobalStateContext = () => ({
-      changeLayout: changeTo,
-    });
-    (hooks as any).useMedia = () => 'desktop';
-    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
-    expect(changeTo).not.toHaveBeenCalled();
+    const Layout = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
+    mount(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
+    expect(Layout).toHaveBeenCalledWith({ currentLayout: 'desktop' }, {});
   });
 
   it('does calls changeTo when someething changed (desktop -> tablet)', () => {
-    const changeTo = jest.fn();
-    (hooks as any).useGlobalStateContext = () => ({
-      changeLayout: changeTo,
-    });
     (hooks as any).useMedia = () => 'tablet';
-    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
-    expect(changeTo).toHaveBeenCalledWith('tablet');
+    const Layout = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
+    mount(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
+    expect(Layout).toHaveBeenCalledWith({ currentLayout: 'tablet' }, {});
   });
 
   it('does calls changeTo when someething changed (desktop -> mobile)', () => {
-    const changeTo = jest.fn();
-    (hooks as any).useGlobalStateContext = () => ({
-      changeLayout: changeTo,
-    });
     (hooks as any).useMedia = () => 'mobile';
-    mount(<ResponsiveLayout breakpoints={defaultBreakpoints} />);
-    expect(changeTo).toHaveBeenCalledWith('mobile');
+    const Layout = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
+    mount(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
+    expect(Layout).toHaveBeenCalledWith({ currentLayout: 'mobile' }, {});
   });
 });

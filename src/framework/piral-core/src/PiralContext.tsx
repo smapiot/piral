@@ -14,7 +14,8 @@ const PiralProvider: React.FC = ({ children }) => {
 /**
  * Represents the Piral app shell frame. Use this component together
  * with an existing instance to render components from micro frontends
- * in your app. Wires the state container together with the global providers.
+ * in your app.
+ * Wires the state container together with the global providers.
  *
  * @example
 ```jsx

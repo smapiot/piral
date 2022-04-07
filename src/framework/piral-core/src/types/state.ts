@@ -3,7 +3,6 @@ import type { RouteComponentProps } from 'react-router';
 import type { Atom } from '@dbeining/react-atom';
 import type { LoadPiletsOptions } from 'piral-base';
 import type { Dict, Without } from './common';
-import type { LayoutType } from './layout';
 import type { SharedDataItem, DataStoreTarget } from './data';
 import type {
   PiralCustomActions,
@@ -102,10 +101,6 @@ export interface ComponentsState extends PiralCustomComponentsState {
  * The Piral global app sub-state container for app information.
  */
 export interface AppState {
-  /**
-   * Information for the layout computation.
-   */
-  layout: LayoutType;
   /**
    * Gets if the application is currently performing a background loading
    * activity, e.g., for loading modules asynchronously or fetching
@@ -254,11 +249,6 @@ export interface PiralActions extends PiralCustomActions {
    * @param expiration The time for when to dispose the shared item.
    */
   tryWriteDataItem(name: string, value: any, owner: string, target: DataStoreTarget, expiration: number): boolean;
-  /**
-   * Performs a layout change.
-   * @param current The layout to take.
-   */
-  changeLayout(current: LayoutType): void;
   /**
    * Registers a new route to be resolved.
    * @param route The route to register.

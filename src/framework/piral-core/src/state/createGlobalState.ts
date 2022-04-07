@@ -1,4 +1,5 @@
 import { Atom } from '@dbeining/react-atom';
+import { GlobalState, NestedPartial } from '../types';
 import {
   DefaultErrorInfo,
   DefaultLoadingIndicator,
@@ -6,7 +7,6 @@ import {
   DefaultRouter,
   DefaultRouteSwitch,
 } from '../defaults';
-import { GlobalState, NestedPartial } from '../types';
 
 function extend<T>(defaultState: T, customState: NestedPartial<T>) {
   for (const key of Object.keys(customState)) {
@@ -28,7 +28,6 @@ export function createGlobalState(customState: NestedPartial<GlobalState> = {}) 
     app: {
       error: undefined,
       loading: typeof window !== 'undefined',
-      layout: 'desktop',
       publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
     },
     components: {

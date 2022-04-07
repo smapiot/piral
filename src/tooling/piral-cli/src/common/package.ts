@@ -150,8 +150,10 @@ function findPackage(pck: string | Array<string>, baseDir: string) {
     if (path) {
       log('generalDebug_0003', `Following the app package in "${path}" ...`);
       const appPackage = require(path);
+      const root = dirname(path);
       const relPath = appPackage && appPackage.app;
-      appPackage.app = relPath && resolve(dirname(path), relPath);
+      appPackage.app = relPath && resolve(root, relPath);
+      appPackage.root = root;
       return appPackage;
     }
   }
@@ -191,6 +193,10 @@ export function getPiralPackage(
     scripts: {
       start: 'piral debug',
       build: 'piral build',
+    },
+    importmap: {
+      imports: {},
+      inherit: ['piral-base', framework !== 'piral-base' && 'piral-core'].filter(Boolean),
     },
     pilets: getPiletsInfo({}),
     dependencies,
@@ -345,8 +351,8 @@ export async function copyPiralFiles(
 export function getPiletsInfo(piralInfo: any): PiletsInfo {
   const {
     files = [],
-    externals = [],
     scripts = {},
+    template = 'default',
     validators = {},
     devDependencies = {},
     preScaffold = '',
@@ -358,8 +364,8 @@ export function getPiletsInfo(piralInfo: any): PiletsInfo {
 
   return {
     files,
-    externals,
     scripts,
+    template,
     validators,
     devDependencies,
     preScaffold,
@@ -442,6 +448,21 @@ export async function findPackageVersion(rootPath: string, packageName: string):
   }
 }
 
+export async function retrieveExternals(root: string, packageInfo: any) {
+  const sharedDependencies = await readImportmap(root, packageInfo);
+
+  if (sharedDependencies.length === 0) {
+    const allDeps = {
+      ...packageInfo.devDependencies,
+      ...packageInfo.dependencies,
+    };
+    const deps = packageInfo.pilets?.externals;
+    return makeExternals(allDeps, deps);
+  }
+
+  return sharedDependencies.map((m) => m.name);
+}
+
 export async function retrievePiletsInfo(entryFile: string) {
   const exists = await checkExists(entryFile);
 
@@ -456,15 +477,9 @@ export async function retrievePiletsInfo(entryFile: string) {
   }
 
   const packageInfo = require(packageJson);
-  const allDeps = {
-    ...packageInfo.devDependencies,
-    ...packageInfo.dependencies,
-  };
   const info = getPiletsInfo(packageInfo);
   const root = dirname(packageJson);
-  const sharedDependencies = await readImportmap(root, packageInfo);
-  const deps = sharedDependencies.length > 0 ? sharedDependencies.map((m) => m.name) : info.externals;
-  const externals = makeExternals(allDeps, deps);
+  const externals = await retrieveExternals(root, packageInfo);
 
   return {
     ...info,
@@ -602,9 +617,10 @@ export async function retrievePiletData(target: string, app?: string) {
     app || (piletPackage.piral && piletPackage.piral.name) || Object.keys(piletPackage.devDependencies),
     target,
   );
-  const appFile: string = appPackage && appPackage.app;
+  const appFile: string = appPackage?.app;
+  const appRoot: string = appPackage?.root;
 
-  if (!appFile) {
+  if (!appFile || !appRoot) {
     fail('appInstanceInvalid_0011');
   }
 
@@ -619,6 +635,7 @@ export async function retrievePiletData(target: string, app?: string) {
     ignored: checkArrayOrUndefined(piletPackage, 'preservedDependencies'),
     importmap,
     appFile,
+    appRoot,
     piletPackage,
     appPackage,
     emulator,

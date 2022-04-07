@@ -17,7 +17,6 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState({});
     expect(deref(globalState)).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
         publicPath: '/',
@@ -46,7 +45,6 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState({});
     expect(deref(globalState)).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
         publicPath: '/',
@@ -80,7 +78,6 @@ describe('Create Global State Module', () => {
     expect(deref(globalState)).toEqual({
       app: {
         error: undefined,
-        layout: 'desktop',
         loading: true,
         publicPath: '/',
       },
@@ -108,7 +105,6 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState();
     expect(deref(globalState)).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
         publicPath: '/',
@@ -139,7 +135,6 @@ describe('Create Global State Module', () => {
     });
     expect(deref(globalState)).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
         publicPath: '/',
@@ -170,7 +165,6 @@ describe('Create Global State Module', () => {
     });
     expect(deref(globalState)).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
         publicPath: '/',
@@ -198,7 +192,6 @@ describe('Create Global State Module', () => {
   it('global state with non-default breakpoints and more routes', () => {
     const globalState = createGlobalState({
       app: {
-        layout: 'desktop',
       },
       routes: {
         '/': '...' as any,
@@ -207,7 +200,6 @@ describe('Create Global State Module', () => {
     });
     expect(deref(globalState)).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
         publicPath: '/',
@@ -243,7 +235,6 @@ describe('Create Global State Module', () => {
     });
     expect(deref(globalState)).toEqual({
       app: {
-        layout: 'desktop',
         loading: false,
         error: undefined,
         publicPath: '/',

@@ -7,6 +7,7 @@ import { SharedDependency } from '../types';
 
 interface Importmap {
   imports: Record<string, string>;
+  inherit: Array<string>;
 }
 
 function tryResolve(baseDir: string, name: string) {
@@ -53,6 +54,7 @@ function getLocalDependencyVersion(
 async function resolveImportmap(dir: string, importmap: Importmap) {
   const dependencies: Array<SharedDependency> = [];
   const sharedImports = importmap?.imports;
+  const inheritedImports = importmap?.inherit;
 
   if (typeof sharedImports === 'object' && sharedImports) {
     for (const depName of Object.keys(sharedImports)) {
@@ -96,7 +98,9 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
 
         if (exists) {
           const isDirectory = await checkIsDirectory(entry);
-          const packageJson = isDirectory ? resolve(entry, 'package.json') : await findFile(dirname(entry), 'package.json');
+          const packageJson = isDirectory
+            ? resolve(entry, 'package.json')
+            : await findFile(dirname(entry), 'package.json');
           const packageJsonExists = await checkExists(packageJson);
 
           if (packageJsonExists) {
@@ -126,6 +130,26 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
           }
         } else {
           fail('importMapReferenceNotFound_0027', dir, url);
+        }
+      }
+    }
+  }
+
+  if (Array.isArray(inheritedImports)) {
+    for (const inheritedImport of inheritedImports) {
+      const packageJson = tryResolve(dir, `${inheritedImport}/package.json`);
+
+      if (packageJson) {
+        const packageDir = dirname(packageJson);
+        const packageDetails = require(packageJson);
+        const otherDependencies = await readImportmap(packageDir, packageDetails);
+
+        for (const dependency of otherDependencies) {
+          const entry = dependencies.find((dep) => dep.name === dependency.name);
+
+          if (!entry) {
+            dependencies.push(dependency);
+          }
         }
       }
     }
