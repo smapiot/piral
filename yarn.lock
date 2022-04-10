@@ -4537,10 +4537,10 @@ aurelia-event-aggregator@1.0.3, aurelia-event-aggregator@^1.0.3:
   dependencies:
     aurelia-logging "^1.0.0"
 
-aurelia-framework@1.3.1, aurelia-framework@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/aurelia-framework/-/aurelia-framework-1.3.1.tgz#4b309970936fb487677a3ed3b54bc153d3b24f62"
-  integrity sha512-eKR+JnrVzYQ372pokHjfw+YfiGpFIO6yGOotGHkeLtIVZcVowX4oYe1HEkDe7/VXU3f6cDILoYkNIwrZUBij0g==
+aurelia-framework@1.4.1, aurelia-framework@^1.3.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/aurelia-framework/-/aurelia-framework-1.4.1.tgz#76a76dfa555e3315daab4256c776434fb7932f43"
+  integrity sha512-oFnJyqqIDk2Kk7iSy2YNm2MNQMbTVEiPpa9q0oGfDLclqUgv+L05rnkEW9vEpVTUMV8gmOTxIrDidNICrDT7HA==
   dependencies:
     aurelia-binding "^2.0.0"
     aurelia-dependency-injection "^1.0.0"
@@ -4548,9 +4548,9 @@ aurelia-framework@1.3.1, aurelia-framework@^1.3.1:
     aurelia-logging "^1.0.0"
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
-    aurelia-path "^1.0.0"
+    aurelia-path "^1.1.7"
     aurelia-task-queue "^1.0.0"
-    aurelia-templating "^1.8.1"
+    aurelia-templating "^1.11.1"
 
 aurelia-history-browser@1.4.0, aurelia-history-browser@^1.4.0:
   version "1.4.0"
@@ -4597,7 +4597,7 @@ aurelia-pal@^1.0.0, aurelia-pal@^1.3.0, aurelia-pal@^1.4.0:
   resolved "https://registry.yarnpkg.com/aurelia-pal/-/aurelia-pal-1.8.2.tgz#9c39509ea2650291fa4bda06a4ed37d8be31f0ac"
   integrity sha512-6erozUK5aaD88PvThs/L87kLsqxqPaBU59PGECr36v9yezhve0BHqpKgbtJ8haHJSiH80K9lsJtXfefedS/3sw==
 
-aurelia-path@^1.0.0:
+aurelia-path@^1.0.0, aurelia-path@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/aurelia-path/-/aurelia-path-1.1.7.tgz#8eba50a45ca52dfbb3c65f0bf3a221c987602b58"
   integrity sha512-D6/Tz8jE8b2+Y8Pt6P/fxF6xfJGef+TA6YEljzo1kEzyzbxIvwfqc7pK6i/XGY3LowlumPqrhxkfMjPxLpFIcA==
@@ -4633,10 +4633,10 @@ aurelia-templating-resources@1.13.1, aurelia-templating-resources@^1.12.0:
     aurelia-task-queue "^1.0.0"
     aurelia-templating "^1.8.1"
 
-aurelia-templating@^1.3.0, aurelia-templating@^1.8.1:
-  version "1.10.4"
-  resolved "https://registry.yarnpkg.com/aurelia-templating/-/aurelia-templating-1.10.4.tgz#d42f7d07b4c970812e6ee9e9b1bd6b3727583704"
-  integrity sha512-w1AtGneeRRJJPxr7QiGwTyLOsspPSF0xg1bKJnMntVhGC265SrtEAIsF1aKXOuLVTrjhx1Vi+3xPiJ560ilwtw==
+aurelia-templating@^1.11.1, aurelia-templating@^1.3.0, aurelia-templating@^1.8.1:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/aurelia-templating/-/aurelia-templating-1.11.1.tgz#661df6d9ff09ec280ccf0fc4a94b702fceff0b24"
+  integrity sha512-7Zrb/yvnIYBIlqGaLXIiBsmWMoFwo3SSoxyoucqWe/M80YpR4LJaTEKoZxhZZI6x9pU+tlFOBkwd/sA1JqPR8w==
   dependencies:
     aurelia-binding "^2.0.0"
     aurelia-dependency-injection "^1.0.0"
@@ -4644,7 +4644,7 @@ aurelia-templating@^1.3.0, aurelia-templating@^1.8.1:
     aurelia-logging "^1.0.0"
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
-    aurelia-path "^1.0.0"
+    aurelia-path "^1.1.7"
     aurelia-task-queue "^1.1.0"
 
 aws-sign2@~0.7.0:
@@ -8092,9 +8092,11 @@ fast-sourcemap-concat@^2.1.0:
     sourcemap-validator "^1.1.0"
 
 fast-xml-parser@^3.19.0:
-  version "3.19.0"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-3.19.0.tgz#cb637ec3f3999f51406dd8ff0e6fc4d83e520d01"
-  integrity sha512-4pXwmBplsCPv8FOY1WRakF970TjNGnGnfbOnLqjlYvMiF1SR3yOHyxMR/YCXpPTOspNF5gwudqktIP4VsWkvBg==
+  version "3.21.1"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-3.21.1.tgz#152a1d51d445380f7046b304672dd55d15c9e736"
+  integrity sha512-FTFVjYoBOZTJekiUsawGsSYV9QL0A+zDYCRj7y34IO6Jg+2IMYEtQa+bbictpdpV8dHxXywqU7C0gRDEOFtBFg==
+  dependencies:
+    strnum "^1.0.4"
 
 fastparse@^1.1.2:
   version "1.1.2"
@@ -16215,6 +16217,11 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
+
+strnum@^1.0.4:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/strnum/-/strnum-1.0.5.tgz#5c4e829fe15ad4ff0d20c3db5ac97b73c9b072db"
+  integrity sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==
 
 strong-log-transformer@^2.1.0:
   version "2.1.0"
