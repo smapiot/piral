@@ -8,7 +8,7 @@ The Piral CLI uses the *package.json* file for retrieving useful information. Th
 
 ## Piral Instance - Package Definition
 
-The additional fields for a Piral instance package are as follows:
+The additional fields for a Piral instance package are available as sketched in the following example:
 
 ```json
 {
@@ -23,6 +23,7 @@ The additional fields for a Piral instance package are as follows:
     "externals": [
       "my-ui-lib"
     ],
+    "template": "@my-company/pilet-template",
     "files": [
       ".editorconfig",
       "src/mocks",
@@ -129,6 +130,14 @@ The `preUpgrade` and `postUpgrade` upgrade scripts are run during upgrade (`pile
 5. The `postUpgrade` script is run, if available
 
 Thus for `preUpgrade` and `postUpgrade` either scripts via `npx`, general scripts such as Bash scripts, or running Node.js files make sense.
+
+### Template Package
+
+The optional `template` field makes it possible to override the default template to be used when scaffolding a new pilet. By default, the template would be set to `default` (which corresponds to [`@smapiot/pilet-template-default`](https://www.npmjs.com/package/@smapiot/pilet-template-default)). The user still has the possibility to set a different template explicitly when running `pilet new`.
+
+The core requirement for a template package is that it either resolves to a local package name (i.e., using a local file path), to a custom npm package (using a scoped package name such as `@my-company/...`), or an official template such as `empty`, `default`, etc.
+
+The official template names are all shortcuts to `@smapiot/pilet-template-X`, where `X` would be the name of the official template. For instance, `empty` is a shortcut to `@smapiot/pilet-template-empty`.
 
 ## Pilets - Package Definition
 

@@ -101,7 +101,7 @@ export const newPiletDefaults: NewPiletOptions = {
   forceOverwrite: ForceOverwrite.no,
   language: config.language,
   install: true,
-  template: 'default',
+  template: undefined,
   logLevel: LogLevels.info,
   npmClient: config.npmClient,
   bundlerName: 'none',
@@ -184,7 +184,7 @@ always-auth=true`,
 
     const isEmulator = checkAppShellPackage(piralInfo);
 
-    const { preScaffold, postScaffold, files } = getPiletsInfo(piralInfo);
+    const { preScaffold, postScaffold, files, template: preSelectedTemplate } = getPiletsInfo(piralInfo);
 
     if (preScaffold) {
       progress(`Running preScaffold script ...`);
@@ -195,7 +195,8 @@ always-auth=true`,
     progress(`Taking care of templating ...`);
 
     const data = getPiletScaffoldData(language, root, packageName, variables);
-    await scaffoldPiletSourceFiles(template, registry, data, forceOverwrite);
+    const chosenTemplate = template || preSelectedTemplate || 'default';
+    await scaffoldPiletSourceFiles(chosenTemplate, registry, data, forceOverwrite);
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs

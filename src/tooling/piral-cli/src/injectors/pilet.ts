@@ -10,6 +10,7 @@ import { axios, mime } from '../external';
 import { Bundler } from '../types';
 
 const { host } = config;
+const indexPath = '/index.html';
 
 interface Pilet {
   bundler: Bundler;
@@ -19,6 +20,7 @@ interface Pilet {
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
+  publicUrl: string;
   meta: string;
   api: string;
   app: string;
@@ -210,26 +212,30 @@ export default class PiletInjector implements KrasInjector {
   }
 
   handle(req: KrasRequest): KrasResponse {
-    const { app, api } = this.config;
-    const path = req.url.substring(1).split('?')[0];
+    const { app, api, publicUrl } = this.config;
 
     if (!req.target) {
-      const target = join(app, path);
+      if (req.url.startsWith(publicUrl)) {
+        const path = req.url.substring(publicUrl.length).split('?')[0];
+        const target = join(app, path);
 
-      if (existsSync(target) && statSync(target).isFile()) {
-        if (req.url === '/index.html') {
-          return this.sendIndexFile(target, req.url);
+        if (existsSync(target) && statSync(target).isFile()) {
+          if (req.url === indexPath) {
+            return this.sendIndexFile(target, req.url);
+          } else {
+            return this.sendFile(target, req.url);
+          }
+        } else if (req.url !== indexPath) {
+          return this.handle({
+            ...req,
+            url: indexPath,
+          });
         }
-        return this.sendFile(target, req.url);
-      } else if (req.url !== '/index.html') {
-        return this.handle({
-          ...req,
-          url: '/index.html',
-        });
-      } else {
-        return undefined;
       }
+
+      return undefined;
     } else if (req.target === api) {
+      const path = req.url.substring(1).split('?')[0];
       return this.sendResponse(path, req.url);
     }
   }

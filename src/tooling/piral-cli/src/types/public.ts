@@ -103,6 +103,8 @@ export interface DebugPiletParameters extends BaseBundleParameters {
   externals: Array<string>;
   importmap: Array<SharedDependency>;
   targetDir: string;
+  outFile: string;
+  outDir: string;
   entryModule: string;
   logLevel: LogLevels;
   version: PiletSchemaVersion;

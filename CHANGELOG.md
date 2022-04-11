@@ -5,6 +5,10 @@
 - Updated dependencies
 - Improved `piral-modals` with layout options
 - Improved type declarations of plugins
+- Added `--target` to `piral debug` and `pilet debug` commands (#482)
+- Added support for `--public-url` also in `pilet` commands
+- Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
+- Added option to define the default `template` for `pilets` in Piral instance
 
 ## 0.14.20 (April 1, 2022)
 

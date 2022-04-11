@@ -50,6 +50,26 @@ function changeLoaderOptions(config, name, options) {
   });
 }
 
+/**
+ * Use this function to create a function to return from your webpack
+ * configuration module. The created function can be used to conveniently
+ * override and etend the original configuration.
+ * @typedef OverrideOptions
+ * @property {any=} tsLoaderOptions The new options for the ts-loader
+ * @property {any=} babelLoaderOptions The new options for the babel-loader
+ * @property {any=} cssLoaderOptions The new options for the css-loader
+ * @property {any=} sassLoaderOptions The new options for the sass-loader
+ * @property {boolean=} checkTypes Determines the value of the transpileOnly option in ts-loader
+ * @property {boolean=} noPresets Determines if presets should be set to undefined in babel-loader
+ * @property {Array<{ name: string, rule: any }>=} updateRules Overrides the rules determined by its loader name with the provided rule
+ * @property {Array<string>=} removeRules Removes the rules determined by its loader name
+ * @property {Array<any>=} rules Inserts the given rules in the beginning
+ * @property {Array<{ type: any, plugin: any }>=} updatePlugins Overrides the plugins determined by its class reference (instance) with the provided plugin
+ * @property {Array<any>=} removePlugins Removes the plugins determined by its class reference (instance)
+ * @property {Array<any>=} plugins Inserts the given plugins in the end
+ * @param {OverrideOptions} override
+ * @returns {(config: webpack.Configuration) => webpack.Configuration}
+ */
 module.exports = function (override) {
   return (config) => {
     if (override && typeof override === 'object') {
