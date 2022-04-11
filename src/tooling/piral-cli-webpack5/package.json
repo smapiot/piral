@@ -1,6 +1,6 @@
 {
   "name": "piral-cli-webpack5",
-  "version": "0.14.19",
+  "version": "0.14.20",
   "description": "Provides debug and build capabilities for pilets and Piral instances using Webpack v5.",
   "keywords": [
     "piral-cli",
@@ -48,7 +48,7 @@
     "@types/node": "^13.9.0",
     "@types/terser-webpack-plugin": "^5.0.0",
     "@types/yargs": "^15.0.4",
-    "piral-cli": "^0.14.19",
+    "piral-cli": "^0.14.20",
     "strip-ansi": "^3.0.0",
     "typescript": "^4.0.2"
   },

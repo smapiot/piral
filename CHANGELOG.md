@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.20 (tbd)
+## 0.14.20 (April 1, 2022)
 
 - Updated dependencies
 - Fixed issue with `pilet build` of `--type standalone` when using importmap
