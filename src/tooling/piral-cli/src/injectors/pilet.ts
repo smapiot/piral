@@ -10,7 +10,6 @@ import { axios, mime } from '../external';
 import { Bundler } from '../types';
 
 const { host } = config;
-const indexPath = '/index.html';
 
 interface Pilet {
   bundler: Bundler;
@@ -76,6 +75,7 @@ async function loadFeed(feed: string) {
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
   private piletApi: string;
+  private indexPath: string;
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
@@ -84,7 +84,8 @@ export default class PiletInjector implements KrasInjector {
       ? options.api
       : `${config.ssl ? 'https' : 'http'}://${host}:${config.port}${options.api}`;
 
-    const { pilets, api } = options;
+    const { pilets, api, publicUrl } = options;
+    this.indexPath = `${publicUrl}index.html`;
     const cbs = {};
 
     core.on('user-connected', (e) => {
@@ -220,15 +221,15 @@ export default class PiletInjector implements KrasInjector {
         const target = join(app, path);
 
         if (existsSync(target) && statSync(target).isFile()) {
-          if (req.url === indexPath) {
+          if (req.url === this.indexPath) {
             return this.sendIndexFile(target, req.url);
           } else {
             return this.sendFile(target, req.url);
           }
-        } else if (req.url !== indexPath) {
+        } else if (req.url !== this.indexPath) {
           return this.handle({
             ...req,
-            url: indexPath,
+            url: this.indexPath,
           });
         }
       }
