@@ -1,9 +1,9 @@
-import { Localizable } from 'piral-translate';
-import { DashboardConfig } from 'piral-dashboard';
-import { MenuConfig } from 'piral-menu';
-import { NotificationsConfig } from 'piral-notifications';
-import { ModalsConfig } from 'piral-modals';
-import { FeedsConfig } from 'piral-feeds';
+import type { Localizable } from 'piral-translate';
+import type { DashboardConfig } from 'piral-dashboard';
+import type { MenuConfig } from 'piral-menu';
+import type { NotificationsConfig } from 'piral-notifications';
+import type { ModalsConfig } from 'piral-modals';
+import type { FeedsConfig } from 'piral-feeds';
 
 export interface PiralExtSettings {
   /**

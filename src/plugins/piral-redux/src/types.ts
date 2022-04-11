@@ -1,6 +1,6 @@
 import type {} from 'piral-core';
-import { Store, Action, Reducer, Dispatch, AnyAction } from 'redux';
-import { ComponentType, FC } from 'react';
+import type { Store, Action, Reducer, Dispatch, AnyAction } from 'redux';
+import type { ComponentType, FC } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletReduxApi {}

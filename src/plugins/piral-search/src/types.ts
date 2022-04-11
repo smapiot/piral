@@ -1,5 +1,5 @@
-import { ReactChild, ComponentType, ReactElement } from 'react';
-import {
+import type { ReactChild, ComponentType, ReactElement } from 'react';
+import type {
   Dict,
   Disposable,
   PiletApi,

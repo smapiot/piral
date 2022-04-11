@@ -1,5 +1,5 @@
-import { Dict } from 'piral-core';
-import { Schema } from 'jsonschema';
+import type { Dict } from 'piral-core';
+import type { Schema } from 'jsonschema';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletConfigsApi {}

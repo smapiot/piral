@@ -1,5 +1,5 @@
-import { ComponentType, ReactChild } from 'react';
-import { Dict, BaseRegistration, RegistrationDisposer } from 'piral-core';
+import type { ComponentType, ReactChild } from 'react';
+import type { Dict, BaseRegistration, RegistrationDisposer } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletBreadcrumbsApi {}
