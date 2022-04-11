@@ -33,8 +33,16 @@ export async function installDependencies(target = '.', ...flags: Array<string>)
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
-  const ms = new MemoryStream();
-  await runYarnProcess(['add', packageRef, ...convert(flags)], target, ms);
-  log('generalDebug_0003', `Yarn install package result: ${ms.value}`);
-  return ms.value;
+  try {
+    const ms = new MemoryStream();
+    await runYarnProcess(['add', packageRef, ...convert(flags)], target, ms);
+    log('generalDebug_0003', `Yarn install package result: ${ms.value}`);
+    return ms.value;
+  } catch (ex) {
+    log(
+      'generalError_0002',
+      `Could not install the package "${packageRef}" using Yarn. Make sure Yarn@1 is correctly installed and accessible: ${ex}`,
+    );
+    throw ex;
+  }
 }
