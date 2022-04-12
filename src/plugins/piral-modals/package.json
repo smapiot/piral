@@ -1,6 +1,6 @@
 {
   "name": "piral-modals",
-  "version": "0.14.20",
+  "version": "0.14.21",
   "description": "Plugin for the display of modal dialogs in Piral.",
   "keywords": [
     "piral",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
-    "piral-core": "^0.14.20",
+    "piral-core": "^0.14.21",
     "react": "^17.0.1"
   },
   "peerDependencies": {

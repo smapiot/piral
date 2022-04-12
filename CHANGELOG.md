@@ -10,19 +10,25 @@
 - Deprecated the usage of `externals` for `pilets`
 - Removed support for IE11 (#467)
 - Removed bundlers (except default) from Piral monorepo
-- Added `--target` to `piral debug` and `pilet debug` commands (#482)
 - Added new bundler `piral-cli-parcel2` (#436)
 - Added new bundler `piral-cli-rollup` (#435)
 - Added new bundler `piral-cli-vite` (#435)
 - Added pre-bundled minified versions to each plugin package
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
-- Added support for `--public-url` also in `pilet` commands
-- Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
-- Added option to define the default `template` for `pilets` in Piral instance
 - Added `--feed` option to `piral debug` command
 - Added support for `importmap` in the app shell
 - Added semver possibilities for resolving shared dependencies
+
+## 0.14.21 (April 12, 2022)
+
+- Updated dependencies
+- Improved `piral-modals` with layout options
+- Improved type declarations of plugins
+- Added `--target` to `piral debug` and `pilet debug` commands (#482)
+- Added support for `--public-url` also in `pilet` commands
+- Added types to `piral-cli-webpack/extend-config` and `piral-cli-webpack5/extend-config`
+- Added option to define the default `template` for `pilets` in Piral instance
 
 ## 0.14.20 (April 1, 2022)
 

@@ -1,6 +1,6 @@
-import { Stream } from 'xstream';
-import { Driver, Drivers, MatchingMain, Main } from '@cycle/run';
-import { MainDOMSource, VNode } from '@cycle/dom';
+import type { Stream } from 'xstream';
+import type { Driver, Drivers, MatchingMain, Main } from '@cycle/run';
+import type { MainDOMSource, VNode } from '@cycle/dom';
 import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {

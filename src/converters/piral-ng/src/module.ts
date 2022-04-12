@@ -131,6 +131,14 @@ export function getModuleInstance(component: any, piral: PiletApi): ModuleInstan
     return [moduleDef.active, moduleDef.opts];
   }
 
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(
+      'Component not found in all defined Angular modules. Make sure to define (using `defineNgModule`) a module with your component(s) referenced in the exports section of the `@NgModule` decorator.',
+      component,
+      piral.meta,
+    );
+  }
+
   return undefined;
 }
 

@@ -1,5 +1,5 @@
 import type { Disposable } from 'piral-core';
-import { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletLocaleApi {}

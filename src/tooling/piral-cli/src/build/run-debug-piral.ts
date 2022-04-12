@@ -1,5 +1,5 @@
-import type { BundleHandlerResponse, LogLevels, PiralBuildHandler } from '../types';
 import { setStandardEnvs } from '../common';
+import type { BundleHandlerResponse, LogLevels, PiralBuildHandler } from '../types';
 
 let handler: PiralBuildHandler;
 let bundler: BundleHandlerResponse;

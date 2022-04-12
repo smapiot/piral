@@ -1,3 +1,4 @@
+import { setStandardEnvs } from '../common';
 import type {
   PiletSchemaVersion,
   LogLevels,
@@ -5,7 +6,6 @@ import type {
   BundleHandlerResponse,
   PiletBuildHandler,
 } from '../types';
-import { setStandardEnvs } from '../common';
 
 let handler: PiletBuildHandler;
 let bundler: BundleHandlerResponse;

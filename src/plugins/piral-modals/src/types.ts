@@ -77,7 +77,15 @@ export interface ModalsHostProps {
   close(): void;
 }
 
-export interface ModalsDialogProps extends OpenModalDialog {}
+export interface ModalsDialogProps extends OpenModalDialog {
+  layout: ModalLayoutOptions;
+  defaults: any;
+}
+
+/**
+ * The options provided for the dialog layout.
+ */
+export interface ModalLayoutOptions {}
 
 /**
  * The error used when a registered modal dialog crashed.
@@ -139,6 +147,7 @@ export interface ModalRegistration extends BaseRegistration {
   name: string;
   component: WrappedComponent<ModalComponentProps<any>>;
   defaults: any;
+  layout: ModalLayoutOptions;
 }
 
 export interface BaseModalOptions {}
@@ -170,11 +179,13 @@ export interface PiletModalsApi {
    * @param name The name of the modal to register.
    * @param Component The component to render the page.
    * @param defaults Optionally, sets the default values for the inserted options.
+   * @param layout Optionally, sets the layout options for the dialog wrapper.
    */
   registerModal<T>(
     name: T extends string ? T : string,
     Component: AnyComponent<ModalComponentProps<T>>,
     defaults?: ModalOptions<T>,
+    layout?: ModalLayoutOptions,
   ): RegistrationDisposer;
   /**
    * Unregisters a modal by its name.

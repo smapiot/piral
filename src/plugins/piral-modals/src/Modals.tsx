@@ -28,21 +28,19 @@ export const Modals: React.FC = () => {
       const reg = modals[n.name] || findModal(modals, n.alternative);
       const Component = reg && reg.component;
       const defaults = reg && reg.defaults;
+      const options = {
+        ...defaults,
+        ...n.options,
+      };
       return (
         Component && (
-          <PiralModalsDialog {...n} key={n.name}>
-            <Component
-              onClose={n.close}
-              options={{
-                ...defaults,
-                ...n.options,
-              }}
-            />
+          <PiralModalsDialog {...n} options={options} defaults={reg.defaults} layout={reg.layout} key={n.name}>
+            <Component onClose={n.close} options={options} />
           </PiralModalsDialog>
         )
       );
     })
-    .filter((m) => !!m);
+    .filter(Boolean);
   const open = children.length > 0;
 
   return (

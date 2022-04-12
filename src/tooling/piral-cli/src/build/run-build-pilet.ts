@@ -1,5 +1,5 @@
-import type { PiletSchemaVersion, LogLevels, SharedDependency, PiletBuildHandler } from '../types';
 import { setStandardEnvs } from '../common';
+import type { PiletSchemaVersion, LogLevels, SharedDependency, PiletBuildHandler } from '../types';
 
 let handler: PiletBuildHandler;
 

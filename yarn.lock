@@ -4272,10 +4272,10 @@ aurelia-event-aggregator@1.0.3, aurelia-event-aggregator@^1.0.3:
   dependencies:
     aurelia-logging "^1.0.0"
 
-aurelia-framework@1.3.1, aurelia-framework@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.npmjs.org/aurelia-framework/-/aurelia-framework-1.3.1.tgz"
-  integrity sha512-eKR+JnrVzYQ372pokHjfw+YfiGpFIO6yGOotGHkeLtIVZcVowX4oYe1HEkDe7/VXU3f6cDILoYkNIwrZUBij0g==
+aurelia-framework@1.4.1, aurelia-framework@^1.3.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/aurelia-framework/-/aurelia-framework-1.4.1.tgz#76a76dfa555e3315daab4256c776434fb7932f43"
+  integrity sha512-oFnJyqqIDk2Kk7iSy2YNm2MNQMbTVEiPpa9q0oGfDLclqUgv+L05rnkEW9vEpVTUMV8gmOTxIrDidNICrDT7HA==
   dependencies:
     aurelia-binding "^2.0.0"
     aurelia-dependency-injection "^1.0.0"
@@ -4283,9 +4283,9 @@ aurelia-framework@1.3.1, aurelia-framework@^1.3.1:
     aurelia-logging "^1.0.0"
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
-    aurelia-path "^1.0.0"
+    aurelia-path "^1.1.7"
     aurelia-task-queue "^1.0.0"
-    aurelia-templating "^1.8.1"
+    aurelia-templating "^1.11.1"
 
 aurelia-history-browser@1.4.0, aurelia-history-browser@^1.4.0:
   version "1.4.0"
@@ -4332,7 +4332,7 @@ aurelia-pal@^1.0.0, aurelia-pal@^1.3.0, aurelia-pal@^1.4.0:
   resolved "https://registry.npmjs.org/aurelia-pal/-/aurelia-pal-1.8.2.tgz"
   integrity sha512-6erozUK5aaD88PvThs/L87kLsqxqPaBU59PGECr36v9yezhve0BHqpKgbtJ8haHJSiH80K9lsJtXfefedS/3sw==
 
-aurelia-path@^1.0.0:
+aurelia-path@^1.0.0, aurelia-path@^1.1.7:
   version "1.1.7"
   resolved "https://registry.npmjs.org/aurelia-path/-/aurelia-path-1.1.7.tgz"
   integrity sha512-D6/Tz8jE8b2+Y8Pt6P/fxF6xfJGef+TA6YEljzo1kEzyzbxIvwfqc7pK6i/XGY3LowlumPqrhxkfMjPxLpFIcA==
@@ -4368,10 +4368,10 @@ aurelia-templating-resources@1.13.1, aurelia-templating-resources@^1.12.0:
     aurelia-task-queue "^1.0.0"
     aurelia-templating "^1.8.1"
 
-aurelia-templating@^1.3.0, aurelia-templating@^1.8.1:
-  version "1.10.4"
-  resolved "https://registry.npmjs.org/aurelia-templating/-/aurelia-templating-1.10.4.tgz"
-  integrity sha512-w1AtGneeRRJJPxr7QiGwTyLOsspPSF0xg1bKJnMntVhGC265SrtEAIsF1aKXOuLVTrjhx1Vi+3xPiJ560ilwtw==
+aurelia-templating@^1.11.1, aurelia-templating@^1.3.0, aurelia-templating@^1.8.1:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/aurelia-templating/-/aurelia-templating-1.11.1.tgz#661df6d9ff09ec280ccf0fc4a94b702fceff0b24"
+  integrity sha512-7Zrb/yvnIYBIlqGaLXIiBsmWMoFwo3SSoxyoucqWe/M80YpR4LJaTEKoZxhZZI6x9pU+tlFOBkwd/sA1JqPR8w==
   dependencies:
     aurelia-binding "^2.0.0"
     aurelia-dependency-injection "^1.0.0"
@@ -4379,7 +4379,7 @@ aurelia-templating@^1.3.0, aurelia-templating@^1.8.1:
     aurelia-logging "^1.0.0"
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
-    aurelia-path "^1.0.0"
+    aurelia-path "^1.1.7"
     aurelia-task-queue "^1.1.0"
 
 aws-sign2@~0.7.0:
@@ -10509,9 +10509,9 @@ minimist-options@4.1.0:
     kind-of "^6.0.3"
 
 minimist@^1.1.1, minimist@^1.1.3, minimist@^1.2.0, minimist@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.npmjs.org/minimist/-/minimist-1.2.5.tgz"
-  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
+  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
 minipass-collect@^1.0.2:
   version "1.0.2"

@@ -39,6 +39,7 @@ async function getTemplateFiles(
   } else {
     await installPackage(templatePackageName, __dirname, '--registry', registry);
   }
+
   const templateRunner = getTemplatePackage(templatePackageName);
   const logLevel = getLogLevel();
   const details = {
