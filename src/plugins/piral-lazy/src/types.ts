@@ -1,5 +1,5 @@
-import { ComponentType } from 'react';
-import { AnyComponent, BaseComponentProps } from 'piral-core';
+import type { ComponentType } from 'react';
+import type { AnyComponent, BaseComponentProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletLazyApi {}

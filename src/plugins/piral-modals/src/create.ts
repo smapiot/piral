@@ -3,7 +3,7 @@ import { ComponentType } from 'react';
 import { withApi, buildName, PiralPlugin, Dict, withRootExtension, withAll, GlobalState } from 'piral-core';
 import { DefaultHost, DefaultDialog } from './default';
 import { Modals } from './Modals';
-import { PiletModalsApi, ModalRegistration, BareModalComponentProps } from './types';
+import { PiletModalsApi, ModalRegistration, BareModalComponentProps, ModalLayoutOptions } from './types';
 
 export interface InitialModalDialog {
   /**
@@ -17,7 +17,11 @@ export interface InitialModalDialog {
   /**
    * The default options for the modal dialog.
    */
-  defaults: any;
+  defaults?: any;
+  /**
+   * The layout options for the modal dialog.
+   */
+  layout?: ModalLayoutOptions;
 }
 
 /**
@@ -40,12 +44,13 @@ export interface ModalsConfig {
 function getModalDialogs(dialogs: Array<InitialModalDialog>) {
   const modals: Dict<ModalRegistration> = {};
 
-  for (const { name, component, defaults } of dialogs) {
+  for (const { name, component, defaults, layout = {} } of dialogs) {
     modals[`global-${name}`] = {
       pilet: undefined,
       name,
       component,
       defaults,
+      layout,
     };
   }
 
@@ -97,13 +102,14 @@ export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletMod
           context.openModal(dialog);
           return dialog.close;
         },
-        registerModal(name, arg, defaults) {
+        registerModal(name, arg, defaults, layout = {}) {
           const id = buildName(pilet, name);
           context.registerModal(id, {
             pilet,
             name,
             component: withApi(context, arg, api, 'modal'),
             defaults,
+            layout,
           });
           return () => api.unregisterModal(name);
         },

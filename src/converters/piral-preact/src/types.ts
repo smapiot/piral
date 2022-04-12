@@ -1,5 +1,5 @@
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
-import { ComponentType } from 'preact';
+import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import type { ComponentType } from 'preact';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletPreactApi {}

@@ -1,5 +1,5 @@
-import { ForeignComponent, ExtensionSlotProps } from 'piral-core';
-import { Component, ComponentType } from 'inferno';
+import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
+import type { Component, ComponentType } from 'inferno';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletInfernoApi {}

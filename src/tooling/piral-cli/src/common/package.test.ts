@@ -29,6 +29,7 @@ describe('CLI package module', () => {
   it('getPiletsInfo returns pilets information about provided piralInfo', () => {
     const emptyPiletsInfo = {
       files: [],
+      template: 'default',
       externals: [],
       scripts: {},
       validators: {},
@@ -45,6 +46,7 @@ describe('CLI package module', () => {
     const piralInfo = {
       pilets: {
         files: ['foo.tgz', 'foo2.tgz'],
+        template: 'default',
         externals: [],
         scripts: {},
         validators: {},

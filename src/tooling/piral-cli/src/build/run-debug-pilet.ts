@@ -1,3 +1,4 @@
+import { setStandardEnvs } from '../common';
 import type {
   PiletSchemaVersion,
   LogLevels,
@@ -5,8 +6,6 @@ import type {
   BundleHandlerResponse,
   PiletBuildHandler,
 } from '../types';
-import { setStandardEnvs } from '../common';
-import { resolve } from 'path';
 
 let handler: PiletBuildHandler;
 let bundler: BundleHandlerResponse;
@@ -15,6 +14,7 @@ function run(
   root: string,
   targetDir: string,
   outDir: string,
+  outFile: string,
   piral: string,
   externals: Array<string>,
   importmap: Array<SharedDependency>,
@@ -63,11 +63,11 @@ process.on('message', async (msg) => {
 
         break;
       case 'start':
-        const dist = resolve(root, 'dist');
         bundler = await run(
           root,
           msg.targetDir,
-          dist,
+          msg.outDir,
+          msg.outFile,
           msg.piral,
           msg.externals,
           msg.importmap,
@@ -100,7 +100,7 @@ process.on('message', async (msg) => {
 
           process.send({
             type: 'done',
-            outDir: dist,
+            outDir: msg.outDir,
           });
         }
 

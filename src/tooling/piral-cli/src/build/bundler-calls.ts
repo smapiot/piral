@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { fork, ChildProcess } from 'child_process';
-import { Bundler, BundleDetails, BaseBundleParameters } from '../types';
+import type { Bundler, BundleDetails, BaseBundleParameters } from '../types';
 
 function getPath(name: string) {
   return resolve(__dirname, '..', '..', 'lib', 'build', `run-${name}.js`);

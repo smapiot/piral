@@ -21,6 +21,7 @@ import {
   checkAppShellPackage,
   cpuCount,
   concurrentWorkers,
+  normalizePublicUrl,
 } from '../common';
 
 interface PiletData {
@@ -31,15 +32,15 @@ interface PiletData {
   outDir: string;
 }
 
-function createMetadata(outDir: string, outFile: string, pilets: Array<PiletData>) {
+function createMetadata(outDir: string, outFile: string, pilets: Array<PiletData>, publicPath: string) {
   return writeJson(
     outDir,
     outFile,
     pilets.map((p) => ({
       name: p.package.name,
       version: p.package.version,
-      link: `./${p.id}/${p.outFile}`,
-      ...getPiletSpecMeta(p.path, `./${p.id}/`),
+      link: `${publicPath}${p.id}/${p.outFile}`,
+      ...getPiletSpecMeta(p.path, `${publicPath}${p.id}/`),
     })),
   );
 }
@@ -73,6 +74,11 @@ export interface BuildPiletOptions {
    * @example './dist/index.js'
    */
   target?: string;
+
+  /**
+   * Sets the public URL (path) of the bundle. Only for release output.
+   */
+  publicUrl?: string;
 
   /**
    * States if minifaction or other post-bundle transformations should be performed.
@@ -151,6 +157,7 @@ export interface BuildPiletOptions {
 export const buildPiletDefaults: BuildPiletOptions = {
   entry: './src/index',
   target: './dist/index.js',
+  publicUrl: '/',
   minify: true,
   logLevel: LogLevels.info,
   type: 'default',
@@ -167,6 +174,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const {
     entry = buildPiletDefaults.entry,
     target = buildPiletDefaults.target,
+    publicUrl: originalPublicUrl = buildPiletDefaults.publicUrl,
     minify = buildPiletDefaults.minify,
     sourceMaps = buildPiletDefaults.sourceMaps,
     contentHash = buildPiletDefaults.contentHash,
@@ -182,6 +190,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     bundlerName,
     app,
   } = options;
+  const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const entryList = Array.isArray(entry) ? entry : [entry];
   setLogLevel(logLevel);
@@ -279,7 +288,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
     await copyPilets(outDir, pilets);
 
-    await createMetadata(outDir, '$pilet-api', pilets);
+    await createMetadata(outDir, '$pilet-api', pilets, publicUrl);
 
     if (isEmulator) {
       // in case of an emulator assets are not "seen" by the bundler, so we
@@ -300,7 +309,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
         contentHash,
         minify,
         externals: [],
-        publicUrl: '/',
+        publicUrl,
         outFile: 'index.html',
         outDir,
         entryFiles: appFile,
@@ -322,7 +331,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
     await copyPilets(outDir, pilets);
 
-    await createMetadata(outDir, manifest, pilets);
+    await createMetadata(outDir, manifest, pilets, publicUrl);
 
     logDone(`Manifest available at "${outDir}/${manifest}"!`);
   }

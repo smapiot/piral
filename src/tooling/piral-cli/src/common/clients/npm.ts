@@ -24,10 +24,18 @@ export async function unpackPackage(packageRef: string, target = '.', ...flags: 
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
-  const ms = new MemoryStream();
-  await runNpmProcess(['install', packageRef, '--legacy-peer-deps', ...flags], target, ms);
-  log('generalDebug_0003', `npm install package result: ${ms.value}`);
-  return ms.value;
+  try {
+    const ms = new MemoryStream();
+    await runNpmProcess(['install', packageRef, '--legacy-peer-deps', ...flags], target, ms);
+    log('generalDebug_0003', `npm install package result: ${ms.value}`);
+    return ms.value;
+  } catch (ex) {
+    log(
+      'generalError_0002',
+      `Could not install the package "${packageRef}" using npm. Make sure npm is correctly installed and accessible: ${ex}`,
+    );
+    throw ex;
+  }
 }
 
 export async function createPackage(target = '.', ...flags: Array<string>) {

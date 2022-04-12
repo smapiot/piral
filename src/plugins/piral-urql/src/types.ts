@@ -1,5 +1,5 @@
 import type {} from 'piral-core';
-import { Client } from 'urql';
+import type { Client } from 'urql';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletGqlApi {}

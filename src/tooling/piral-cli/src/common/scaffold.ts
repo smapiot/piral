@@ -38,6 +38,7 @@ async function getTemplateFiles(
   } else {
     await installPackage(templatePackageName, __dirname, '--registry', registry);
   }
+
   const templateRunner = getTemplatePackage(templatePackageName);
 
   if (typeof templateRunner === 'function') {
