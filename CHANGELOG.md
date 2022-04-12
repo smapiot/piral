@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.21 (tbd)
+## 0.14.21 (April 12, 2022)
 
 - Updated dependencies
 - Improved `piral-modals` with layout options
