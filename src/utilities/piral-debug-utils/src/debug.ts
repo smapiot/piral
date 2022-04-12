@@ -392,7 +392,7 @@ export function installPiralDebug(options: DebuggerOptions) {
           if (!legacyBrowser) {
             // Chrome, Firefox, ... (full capability)
             const err = new Error();
-            const lastLine = err.stack.split('\n')[7];
+            const lastLine = err.stack.split('\n')[6];
 
             if (lastLine) {
               const action = lastLine.replace(/^\s+at\s+(Atom\.|Object\.)?/, '');
