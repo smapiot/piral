@@ -132,6 +132,7 @@ const Visualizer: React.FC<VisualizerProps> = ({ pilet, force, active }) => {
 
 export interface VisualizationWrapperProps {
   piral: PiletApi;
+  children: React.ReactNode;
 }
 
 export const VisualizationWrapper: React.FC<VisualizationWrapperProps> = ({ piral, children }) => {

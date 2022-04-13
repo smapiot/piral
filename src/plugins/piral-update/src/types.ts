@@ -1,5 +1,5 @@
+import type { ComponentType, ReactNode } from 'react';
 import type { Dict, GlobalStateContext, PiletEntries } from 'piral-core';
-import type { ComponentType } from 'react';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletUpdateApi {}
@@ -51,6 +51,7 @@ export interface UpdateDialogProps {
   piletsToUpdate: PiletEntries;
   onApprove(): void;
   onReject(): void;
+  children?: ReactNode;
 }
 
 export type PiletUpdateMode = 'allow' | 'block' | 'ask';

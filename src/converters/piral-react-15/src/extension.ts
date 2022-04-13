@@ -1,4 +1,4 @@
-import type { ExtensionSlotProps } from 'piral-core';
+import type { ExtensionSlotProps, PiletApi } from 'piral-core';
 import { createElement, Component } from 'react-15';
 import { anyPropType } from './mount';
 
@@ -41,7 +41,7 @@ export function createExtension(rootName: string) {
 
     private onRefChange = (element: HTMLElement) => {
       if (element) {
-        const { piral } = this.context;
+        const { piral } = this.context as { piral: PiletApi };
         element.innerHTML = '';
         piral.renderHtmlExtension(element, this.props);
       }

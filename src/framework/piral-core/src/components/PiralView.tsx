@@ -17,6 +17,10 @@ export interface PiralViewProps {
    * The custom breakpoints for the different layout modi.
    */
   breakpoints?: LayoutBreakpoints;
+  /**
+   * The extra content.
+   */
+  children: React.ReactNode;
 }
 
 /**

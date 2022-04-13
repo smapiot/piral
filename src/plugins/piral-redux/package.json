@@ -49,14 +49,14 @@
     "redux": "^4.0.5"
   },
   "devDependencies": {
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.0",
     "@types/react-redux": "^5.0.19",
     "@types/redux": "^3.6.0",
     "piral-core": "^0.14.21",
-    "react": "^17.0.1"
+    "react": "^18.0.0"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x",
+    "piral-core": "0.14.x || 0.15.x",
     "react": ">=16.8.0"
   }
 }

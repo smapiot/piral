@@ -1,4 +1,4 @@
-import type { ComponentType, ReactPortal } from 'react';
+import type { ComponentType, ReactPortal, PropsWithChildren } from 'react';
 import type { RouteComponentProps } from 'react-router';
 import type { Atom } from '@dbeining/react-atom';
 import type { LoadPiletsOptions } from 'piral-base';
@@ -41,7 +41,7 @@ declare module './components' {
   }
 }
 
-export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
+export type WrappedComponent<TProps> = ComponentType<PropsWithChildren<Without<TProps, keyof BaseComponentProps>>>;
 
 /**
  * The base type for pilet component registration in the global state context.

@@ -1,4 +1,4 @@
-import type { ComponentType, ReactChild } from 'react';
+import type { ComponentType, ReactChild, ReactNode } from 'react';
 import type { Dict, BaseRegistration, RegistrationDisposer } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -39,13 +39,22 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
-export interface BreadcrumbsContainerProps {}
+export interface BreadcrumbsContainerProps {
+  /**
+   * The breadcrumbs to display.
+   */
+  children?: ReactNode;
+}
 
 export interface BreadcrumbItemProps extends Omit<BreadcrumbSettings, 'title'> {
   /**
    * Determins if the breadcrumb is the current page.
    */
   current: boolean;
+  /**
+   * The title of the breadcrumb to display.
+   */
+  children?: ReactNode;
 }
 
 export interface PiralCustomBreadcrumbSettings {}

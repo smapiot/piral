@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type { RouteComponentProps, SwitchProps } from 'react-router';
 import type { FirstParametersOf, UnionOf } from './common';
 import type { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
@@ -191,12 +191,21 @@ export interface LayoutProps {
    * The currently selected layout type.
    */
   currentLayout: LayoutType;
+  /**
+   * The page's content.
+   */
+  children: ReactNode;
 }
 
 /**
  * The props of a Router component.
  */
-export interface RouterProps {}
+export interface RouterProps {
+  /**
+   * The content to be rendered inside the router.
+   */
+  children?: ReactNode;
+}
 
 /**
  * The props of the RouteSwitch component.

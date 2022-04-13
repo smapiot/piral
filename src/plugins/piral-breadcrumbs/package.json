@@ -43,18 +43,18 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-breadcrumbs.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-router": "^5.1.8",
-    "piral-core": "^0.14.21",
-    "react": "^17.0.1",
-    "react-router": "^5.2.0"
-  },
   "dependencies": {
     "path-to-regexp": "^1.8.0"
   },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-router": "^5.1.8",
+    "piral-core": "^0.14.21",
+    "react": "^18.0.0",
+    "react-router": "^5.2.0"
+  },
   "peerDependencies": {
-    "piral-core": "0.14.x",
+    "piral-core": "0.14.x || 0.15.x",
     "react": ">=16.8.0",
     "react-router": "5.x"
   }

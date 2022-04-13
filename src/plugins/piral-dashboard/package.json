@@ -44,13 +44,13 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.1.6",
     "piral-core": "^0.14.21",
-    "react": "^17.0.1"
+    "react": "^18.0.0"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x",
+    "piral-core": "0.14.x || 0.15.x",
     "react": ">=16.8.0"
   }
 }

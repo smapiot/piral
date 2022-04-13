@@ -8,7 +8,7 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 
 import * as React from 'react';
 import { render } from 'react-dom';
-import { createInstance, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
+import { createInstance, LayoutProps, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
 import { createVueApi } from 'piral-vue';
 import { createNgApi } from 'piral-ng';
 import { createNgjsApi } from 'piral-ngjs';
@@ -24,7 +24,7 @@ import { createElmApi } from 'piral-elm';
 import { createSvelteApi } from 'piral-svelte';
 import { createBlazorApi } from 'piral-blazor';
 import { createSolidApi } from 'piral-solid';
-import { createDashboardApi, Dashboard } from 'piral-dashboard';
+import { createDashboardApi, Dashboard, DashboardContainerProps } from 'piral-dashboard';
 
 const Loader: React.FC<LoadingIndicatorProps> = () => (
   <div className="app-center">
@@ -32,9 +32,9 @@ const Loader: React.FC<LoadingIndicatorProps> = () => (
   </div>
 );
 
-const DashboardContainer: React.FC = ({ children }) => <div className="tiles">{children}</div>;
+const DashboardContainer: React.FC<DashboardContainerProps> = ({ children }) => <div className="tiles">{children}</div>;
 
-const Layout: React.FC = ({ children }) => (
+const Layout: React.FC<LayoutProps> = ({ children }) => (
   <div className="app-container">
     <div className="app-header">
       <h1>Cross Framework Sample</h1>

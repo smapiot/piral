@@ -11,6 +11,10 @@ export interface ErrorBoundaryProps {
    * The associated pilet api for the metadata.
    */
   piral: PiletApi;
+  /**
+   * The content to render (i.e., where to apply the boundary to).
+   */
+  children: React.ReactNode;
 }
 
 export interface ErrorBoundaryState {

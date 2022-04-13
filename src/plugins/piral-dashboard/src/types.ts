@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type { RouteComponentProps } from 'react-router-dom';
 import type {
   Dict,
@@ -62,7 +62,12 @@ export interface InitialTile {
   preferences?: TilePreferences;
 }
 
-export interface DashboardContainerProps extends RouteComponentProps {}
+export interface DashboardContainerProps extends RouteComponentProps {
+  /**
+   * The tiles to display.
+   */
+  children?: ReactNode;
+}
 
 export interface DashboardTileProps {
   /**
@@ -81,6 +86,10 @@ export interface DashboardTileProps {
    * The provided tile preferences.
    */
   meta: TilePreferences;
+  /**
+   * The content of the tile to display.
+   */
+  children?: ReactNode;
 }
 
 export interface TileErrorInfoProps {

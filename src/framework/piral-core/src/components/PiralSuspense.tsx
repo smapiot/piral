@@ -2,7 +2,11 @@ import * as React from 'react';
 import { RegisteredErrorInfo, RegisteredLoadingIndicator } from './components';
 import { useGlobalState } from '../hooks';
 
-export const PiralSuspense: React.FC = ({ children }) => {
+export interface PiralSuspenseProps {
+  children?: React.ReactNode;
+}
+
+export const PiralSuspense: React.FC<PiralSuspenseProps> = ({ children }) => {
   const { error, loading } = useGlobalState((m) => m.app);
 
   return error ? (

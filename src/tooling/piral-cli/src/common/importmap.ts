@@ -10,6 +10,8 @@ interface Importmap {
   inherit: Array<string>;
 }
 
+const shorthandsUrls = ['', '.', '...'];
+
 function tryResolve(baseDir: string, name: string) {
   try {
     return require.resolve(name, {
@@ -74,7 +76,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
           ref: url,
           type: 'remote',
         });
-      } else if (url === identifier) {
+      } else if (url === identifier || shorthandsUrls.includes(url)) {
         const entry = tryResolve(dir, identifier);
 
         if (entry) {
@@ -90,7 +92,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
             type: 'local',
           });
         } else {
-          fail('importMapReferenceNotFound_0027', dir, url);
+          fail('importMapReferenceNotFound_0027', dir, identifier);
         }
       } else {
         const entry = resolve(dir, url);

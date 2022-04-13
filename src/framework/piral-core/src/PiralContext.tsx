@@ -6,7 +6,11 @@ import { useGlobalState } from './hooks';
 import { RootListener } from './RootListener';
 import type { PiralContextProps } from './types';
 
-const PiralProvider: React.FC = ({ children }) => {
+interface PiralProviderProps {
+  children: React.ReactNode;
+}
+
+const PiralProvider: React.FC<PiralProviderProps> = ({ children }) => {
   const Provider = useGlobalState((m) => m.provider || React.Fragment);
   return <Provider>{children}</Provider>;
 };

@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from 'react';
 import type { RouteComponentProps } from 'react-router';
 import type {
   AnyComponent,
@@ -77,7 +78,7 @@ export interface PiletPageLayoutsApi {
    * @param name The name of the layout.
    * @param layout The component responsible for the layout.
    */
-  registerPageLayout(name: string, layout: AnyComponent<PageComponentProps>): RegistrationDisposer;
+  registerPageLayout(name: string, layout: AnyComponent<PropsWithChildren<PageComponentProps>>): RegistrationDisposer;
   /**
    * Unregisters a page layout.
    * @param name The name of the layout.

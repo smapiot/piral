@@ -11,7 +11,14 @@ export interface ResponsiveLayoutProps {
    * The individual breakpoints to be used for the different layouts.
    */
   breakpoints?: LayoutBreakpoints;
+  /**
+   * The actual layout component to render to transport.
+   */
   Layout: React.ComponentType<LayoutProps>;
+  /**
+   * The content to display.
+   */
+  children: React.ReactNode;
 }
 
 /**

@@ -3,6 +3,7 @@
 ## 0.15.0 (tbd)
 
 - Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
+- Updated to React v18 (#501)
 - Moved templates to dedicated repository (#458)
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
 - Changed webpack configs to use `oneOf` for assets (#451)

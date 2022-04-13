@@ -47,7 +47,7 @@
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --message '[skip ci] publish %s'"
   },
   "devDependencies": {
-    "@jsenv/file-size-impact": "^12.1.1",
+    "@jsenv/file-size-impact": "12.1.1",
     "@types/enzyme": "^3.1.18",
     "@types/jest": "^26.0.24",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",

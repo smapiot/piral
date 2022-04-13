@@ -1,27 +1,40 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import { Atom, swap, deref } from '@dbeining/react-atom';
 import { render } from 'react-dom';
 import { createElement, Suspense } from 'react';
+import { StateContext } from 'piral-core';
 import { createLazyApi } from './create';
 import { act } from 'react-dom/test-utils';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = Atom.of({
+    components: {},
+    errorComponents: {},
+    registry: {
+      wrappers: {},
+    },
+  });
   return {
     context: {
-      converters: {},
       on: jest.fn(),
       off: jest.fn(),
       emit: jest.fn(),
       defineActions() {},
       state,
+      converters: {
+        html: ({ component }) => component,
+      },
       readState(read) {
-        return read(state);
+        return read(deref(state));
       },
       dispatch(update) {
         swap(state, update);
       },
     } as any,
-    api: {} as any,
+    api: {
+      meta: {
+        name: 'sample-pilet',
+      },
+    } as any,
   };
 }
 
@@ -36,7 +49,11 @@ describe('Piral-Lazy create module', () => {
     defineDependency('testName', () => {});
     const LazyComponent = fromLazy(load, ['testName']);
     render(
-      createElement(Suspense, { fallback: 'anything' }, createElement(LazyComponent)),
+      createElement(
+        StateContext.Provider,
+        { value: context },
+        createElement(Suspense, { fallback: 'anything' }, createElement(LazyComponent)),
+      ),
       document.body.appendChild(document.createElement('div')),
     );
     await act(() => Promise.resolve());

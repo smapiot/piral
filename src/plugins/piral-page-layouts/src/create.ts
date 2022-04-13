@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import { ComponentType, createElement } from 'react';
+import { ComponentType, createElement, PropsWithChildren } from 'react';
 import { PiralPlugin, PageComponentProps, Dict, GlobalState, withApi, defaultRender, useGlobalState } from 'piral-core';
 import type { PiletPageLayoutsApi, PageLayoutRegistration } from './types';
 
@@ -33,7 +33,7 @@ function getPageLayouts(items: Record<string, ComponentType<PageComponentProps>>
   return layouts;
 }
 
-const DefaultWrapper: ComponentType<PageComponentProps> = (props) => defaultRender(props.children);
+const DefaultWrapper: ComponentType<PropsWithChildren<PageComponentProps>> = (props) => defaultRender(props.children);
 
 function createPageWrapper(Wrapper = DefaultWrapper, fallback = 'default'): ComponentType<PageComponentProps> {
   return (props) => {
