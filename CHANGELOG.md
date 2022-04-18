@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.22 (tbd)
+
+- Added update lifecycle to `piral-ng` (#508)
+
 ## 0.14.21 (April 12, 2022)
 
 - Updated dependencies
