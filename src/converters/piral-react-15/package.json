@@ -19,6 +19,15 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./convert": {
+      "import": "./convert.js"
+    }
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -36,7 +45,7 @@
   },
   "scripts": {
     "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
-    "build:convert": "tsc convert.ts --skipLibCheck --declaration",
+    "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-react-15.json src --exclude \"src/**/*.test.*\"",

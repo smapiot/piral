@@ -18,6 +18,15 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./vendor": {
+      "require": "./vendor.js"
+    }
+  },
   "files": [
     "vendor.js",
     "esm",
