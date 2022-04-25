@@ -21,7 +21,8 @@
     ".": {
       "import": "./esm/index.js",
       "require": "./lib/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
@@ -64,5 +65,17 @@
     "piral-core": "^0.14.21",
     "react-router-dom": "5.2.0",
     "react-router-native": "5.2.0"
-  }
+  },
+  "sharedDependencies": [
+    "react",
+    "react-native",
+    "react-router",
+    "react-router-dom",
+    "react-router-native",
+    "history",
+    "tslib",
+    "path-to-regexp",
+    "@libre/atom",
+    "@dbeining/react-atom"
+  ]
 }

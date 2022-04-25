@@ -29,7 +29,8 @@
     },
     "./extend-webpack": {
       "require": "./extend-webpack.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [

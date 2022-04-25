@@ -26,7 +26,8 @@
     },
     "./convert": {
       "import": "./convert.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [

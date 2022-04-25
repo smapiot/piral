@@ -23,7 +23,8 @@
     },
     "./polyfills": {
       "import": "./polyfills.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": [
     "./polyfills.js"

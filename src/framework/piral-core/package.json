@@ -21,7 +21,8 @@
     ".": {
       "import": "./esm/index.js",
       "require": "./lib/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
