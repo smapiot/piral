@@ -1,6 +1,6 @@
 {
   "name": "piral-lazy",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Plugin for lazy loading third-party framework components in Piral.",
   "keywords": [
     "piral",
@@ -53,7 +53,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.21"
+    "piral-core": "^0.14.22"
   },
   "peerDependencies": {
     "piral-core": "0.14.x"
