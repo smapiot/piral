@@ -17,7 +17,8 @@ function findPiralBaseApi(root: string) {
     // By default support for piral-base < 0.15
     const { piletApiTypings = 'lib/types.d.ts' } = project;
     return resolve(projectDir, piletApiTypings);
-  } catch {
+  } catch (err) {
+    log('generalError_0002', `Could not find the root API of "piral-base" from "${root}": ${err}`);
     return undefined;
   }
 }

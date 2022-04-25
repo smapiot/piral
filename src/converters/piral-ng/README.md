@@ -319,6 +319,25 @@ export class SampleTileComponent {
 }
 ```
 
+## Dynamic Props
+
+For `Props` there is also the possibility to use `@Input` for making them reactive, i.e., notify the Angular component when they changed.
+
+```ts
+@Component({
+  template: `
+    <div class="tile">
+      <p>{{ props.rows }} rows and {{ props.columns }} columns</p>
+    </div>
+  `,
+})
+export class SampleTileComponent {
+  @Input('Props') public props: TileComponentProps<any>;
+
+  constructor() {}
+}
+```
+
 ## Converting an Angular Application to a Pilet
 
 Depending on the kind of Angular application this may be rather straight forward or very difficult. Since we cannot discuss all possible edge cases we will assume the standard scenario. If you need more help then don't hesitate to contact us.

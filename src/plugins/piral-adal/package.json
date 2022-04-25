@@ -1,6 +1,6 @@
 {
   "name": "piral-adal",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Plugin to integrate AAD authentication in Piral.",
   "keywords": [
     "piral",
@@ -23,6 +23,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -50,7 +63,7 @@
     "msal": "^1.1.1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.21"
+    "piral-core": "^0.14.22"
   },
   "peerDependencies": {
     "piral-core": "0.14.x || 0.15.x"

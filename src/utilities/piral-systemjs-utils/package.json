@@ -1,6 +1,6 @@
 {
   "name": "piral-systemjs-utils",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Utilities for providing SystemJS support to Piral.",
   "keywords": [
     "piral",
@@ -18,6 +18,22 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./vendor": {
+      "require": "./vendor.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "vendor.js",
     "esm",
@@ -41,7 +57,7 @@
   },
   "devDependencies": {
     "@types/systemjs": "^6.1.1",
-    "piral-core": "^0.14.21"
+    "piral-core": "^0.14.22"
   },
   "peerDependencies": {
     "piral-core": "0.14.x || 0.15.x"

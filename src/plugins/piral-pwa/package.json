@@ -1,6 +1,6 @@
 {
   "name": "piral-pwa",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Plugin for creating the Piral instance as a PWA shell.",
   "keywords": [
     "piral",
@@ -21,6 +21,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "generators",
@@ -44,7 +57,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.21"
+    "piral-core": "^0.14.22"
   },
   "peerDependencies": {
     "minimatch": "3.x",

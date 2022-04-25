@@ -1,6 +1,6 @@
 {
   "name": "piral-auth",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Plugin for handling authentication in Piral.",
   "keywords": [
     "piral",
@@ -20,6 +20,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -44,7 +57,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.21"
+    "piral-core": "^0.14.22"
   },
   "peerDependencies": {
     "piral-core": "0.14.x || 0.15.x"

@@ -1,6 +1,6 @@
 {
   "name": "piral-breadcrumbs",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Plugin for creating a breadcrumb manager in Piral.",
   "keywords": [
     "piral",
@@ -20,6 +20,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -49,7 +62,7 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-router": "^5.1.8",
-    "piral-core": "^0.14.21",
+    "piral-core": "^0.14.22",
     "react": "^18.0.0",
     "react-router": "^5.2.0"
   },

@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -19,6 +19,22 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./polyfills": {
+      "import": "./polyfills.js"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": [
     "./polyfills.js"
   ],
@@ -52,8 +68,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "piral-core": "^0.14.21",
-    "piral-ext": "^0.14.21",
+    "piral-core": "^0.14.22",
+    "piral-ext": "^0.14.22",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router": "^5.2.0",

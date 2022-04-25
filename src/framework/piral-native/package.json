@@ -1,6 +1,6 @@
 {
   "name": "piral-native",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "The Piral framework for use in React Native.",
   "keywords": [
     "app",
@@ -11,12 +11,31 @@
     "native",
     "react"
   ],
+  "importmap": {
+    "imports": {
+      "react-native": "react-native",
+      "react-router-native": "react-router-native"
+    }
+  },
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -56,8 +75,20 @@
     "react-native": ">=0.60.0"
   },
   "dependencies": {
-    "piral-core": "^0.14.21",
+    "piral-core": "^0.14.22",
     "react-router-dom": "^5.2.0",
     "react-router-native": "^5.2.0"
-  }
+  },
+  "sharedDependencies": [
+    "react",
+    "react-native",
+    "react-router",
+    "react-router-dom",
+    "react-router-native",
+    "history",
+    "tslib",
+    "path-to-regexp",
+    "@libre/atom",
+    "@dbeining/react-atom"
+  ]
 }

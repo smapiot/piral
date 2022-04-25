@@ -21,6 +21,7 @@ title: Articles About Piral
 
 ## Blog Posts
 
+- [How we wrote our CLI integration tests ](https://dev.to/florianrappl/how-we-wrote-our-cli-integration-tests-53i3)
 - [Switching up your Spotify experience with microfrontends and Blazor , dev.to, 05/2021](https://dev.to/dantederuwe/switching-up-your-spotify-experience-with-microfrontends-and-blazor-4k72)
 - [My experiences creating a Netflix clone using microfrontends, dev.to, 03/2021](https://dev.to/dantederuwe/my-experiences-creating-a-netflix-clone-using-microfrontends-1n46)
 - [How Micro Frontends are being Implemented in 2020: A Survey, Bits and Pieces, 09/2020](https://blog.bitsrc.io/microfrontends-survey-evaluation-d2af7eade306)
@@ -48,6 +49,11 @@ title: Articles About Piral
 
 ## Talks at Conferences
 
+- [DevOps.js, 03/2022](https://portal.gitnation.org/contents/serverless-for-frontends)
+- [The .NET Docs Show, 08/2021](https://www.youtube.com/watch?v=8Ac2QMdusrs)
+- [Codegen 2021, 04/2021](https://www.youtube.com/watch?v=OSSa6AarMQ4)
+- [.NET Conf 2020, 11/2020](https://www.youtube.com/watch?v=npff2NjVXEE)
+- [MVP Days Israel, 11/2020](https://www.youtube.com/watch?v=aP3eHtnUTH8)
 - [Virtual Azure Community Day 2020, 07/2020](https://youtu.be/AtUKNsdnwBc)
 - [GAB Austria 2020, 05/2020](https://youtu.be/_q4JDrIMvlA)
 - [ReactConf Europe on YouTube, 02/2020](https://youtu.be/kG7gIF16cOk)

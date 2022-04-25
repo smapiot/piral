@@ -1,6 +1,6 @@
 {
   "name": "piral-litel",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Plugin for integrating Lit-Element components in Piral.",
   "keywords": [
     "piral",
@@ -20,6 +20,22 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./convert": {
+      "import": "./convert.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -38,7 +54,7 @@
   "scripts": {
     "cleanup": "rimraf esm lib convert.d.ts convert.js",
     "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
-    "build:convert": "tsc convert.ts --skipLibCheck --declaration",
+    "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-litel.json src --exclude \"src/**/*.test.*\"",
@@ -46,7 +62,7 @@
   },
   "devDependencies": {
     "lit-element": "^2.2.1",
-    "piral-core": "^0.14.21"
+    "piral-core": "^0.14.22"
   },
   "peerDependencies": {
     "lit-element": "^2.0.0"

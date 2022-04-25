@@ -1,6 +1,6 @@
 {
   "name": "piral-ie11polyfills-utils",
-  "version": "0.14.9",
+  "version": "0.14.22",
   "description": "A set of polyfills to use to make Piral instances IE11 compatible.",
   "keywords": [
     "piral",
@@ -17,6 +17,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": true,
   "files": [
     "esm",

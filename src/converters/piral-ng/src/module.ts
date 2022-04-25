@@ -1,4 +1,5 @@
 import type { PiletApi } from 'piral-core';
+import type { BehaviorSubject } from 'rxjs';
 import type { NgOptions, ModuleInstanceResult } from './types';
 import * as ngCore from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -29,10 +30,10 @@ const availableModules: Array<ModuleDefinition> = [];
 function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
   const { module, components } = moduleDef;
   const imports = [BrowserModule, SharedModule, module];
-  const props = { current: undefined };
+  const props = { current: undefined as BehaviorSubject<any> };
   const providers = [
     RoutingService,
-    { provide: 'Props', useFactory: () => props.current, deps: [] },
+    { provide: 'Props', useFactory: () => props.current.value, deps: [] },
     { provide: 'piral', useFactory: () => piral, deps: [] },
   ];
 
@@ -51,12 +52,22 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
       this.appRef = appRef;
     }
 
-    attach(component: any, node: HTMLElement, $props: any) {
+    attach(component: any, node: HTMLElement, $props: BehaviorSubject<any>) {
       const factory = this.resolver.resolveComponentFactory(component);
       props.current = $props;
 
       if (factory) {
         const ref = this.zone.run(() => this.appRef.bootstrap<any>(factory, node));
+        const name = (ref.componentType as any)?.ɵcmp?.inputs?.Props;
+
+        if (typeof name === 'string') {
+          const sub = $props.subscribe((props) => {
+            ref.instance[name] = props;
+            ref.changeDetectorRef?.detectChanges();
+          });
+          ref.onDestroy(() => sub.unsubscribe());
+        }
+
         this.refs.push([component, node, ref]);
       }
     }

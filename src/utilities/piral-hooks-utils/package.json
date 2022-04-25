@@ -1,6 +1,6 @@
 {
   "name": "piral-hooks-utils",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "Hooks and HOC for pilets and Piral instances.",
   "keywords": [
     "piral",
@@ -19,6 +19,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",

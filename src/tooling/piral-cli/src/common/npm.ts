@@ -424,7 +424,8 @@ export function getPackageVersion(
 function getExternalsFrom(packageName: string): Array<string> | undefined {
   try {
     return require(`${packageName}/package.json`).sharedDependencies;
-  } catch {
+  } catch (err) {
+    log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);
     return undefined;
   }
 }

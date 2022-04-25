@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "0.14.21",
+  "version": "0.14.22",
   "description": "The core library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -29,6 +29,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -60,8 +73,8 @@
   },
   "dependencies": {
     "@dbeining/react-atom": "^4.0.0",
-    "piral-base": "^0.14.21",
-    "piral-debug-utils": "^0.14.21"
+    "piral-base": "^0.14.22",
+    "piral-debug-utils": "^0.14.22"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
