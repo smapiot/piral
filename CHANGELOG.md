@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.22 (tbd)
+## 0.14.22 (April 25, 2022)
 
 - Improved `piral-blazor` codegen module
 - Improved dependencies codegen module
