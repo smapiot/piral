@@ -1,6 +1,6 @@
 import { ForceOverwrite, SourceLanguage } from './common/enums';
 import { bundlerNames, frameworkLibs } from './common/constants';
-import {
+import type {
   Framework,
   NpmClientType,
   PiletSchemaVersion,
