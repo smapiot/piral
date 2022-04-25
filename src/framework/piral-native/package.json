@@ -17,6 +17,19 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "esm",
@@ -58,5 +71,17 @@
     "piral-core": "^0.14.21",
     "react-router-dom": "5.2.0",
     "react-router-native": "5.2.0"
-  }
+  },
+  "sharedDependencies": [
+    "react",
+    "react-native",
+    "react-router",
+    "react-router-dom",
+    "react-router-native",
+    "history",
+    "tslib",
+    "path-to-regexp",
+    "@libre/atom",
+    "@dbeining/react-atom"
+  ]
 }

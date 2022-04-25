@@ -16,6 +16,22 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./polyfills": {
+      "import": "./polyfills.js"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": [
     "./polyfills.js"
   ],

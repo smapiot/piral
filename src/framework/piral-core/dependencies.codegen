@@ -16,6 +16,7 @@ module.exports = function () {
   const appName = process.env.BUILD_PCKG_NAME || '';
   const externals = (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean);
   const assignments = [];
+  const imports = [];
 
   if (appName) {
     assignments.push(`deps['${appName}']={}`);
@@ -23,13 +24,14 @@ module.exports = function () {
 
   for (const name of externals) {
     const identifiers = getIdentifiers(name);
+    const ref = `_${imports.length}`;
+    imports.push(`import * as ${ref} from ${JSON.stringify(name)}`);
 
     for (const id of identifiers) {
-      assignments.push(`deps[${JSON.stringify(id)}]=require(${JSON.stringify(name)})`);
+      assignments.push(`deps[${JSON.stringify(id)}]=${ref}`);
     }
   }
 
-  return `module.exports = function(deps){
-    ${assignments.join(';')}
-  }`;
+  return `${imports.join(';\n')}
+export default function(deps) {${assignments.join(';')}}`;
 };

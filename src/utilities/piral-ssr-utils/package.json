@@ -19,6 +19,22 @@
   "module": "esm/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./runtime": {
+      "require": "./runtime.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "runtime.js",
     "runtime.d.ts",

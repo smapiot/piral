@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.14.22 (tbd)
+
+- Improved `piral-blazor` codegen module
+- Improved dependencies codegen module
+- Added update lifecycle to `piral-ng` (#508)
+- Added `exports` field to package notations
+
 ## 0.14.21 (April 12, 2022)
 
 - Updated dependencies

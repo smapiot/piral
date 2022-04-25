@@ -2,6 +2,7 @@ import type { BaseComponentProps, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
 import { activate, deactivate, createBootLoader, reactivate } from './interop';
 import { BlazorOptions } from './types';
+import bootConfig from '../infra.codegen';
 
 const mediaRules = [
   { attribute: 'src', selector: 'img, embed, video > source, video > track, audio > source' },
@@ -32,7 +33,6 @@ interface BlazorLocals {
 }
 
 export function createConverter(lazy: boolean) {
-  const bootConfig = require('../infra.codegen');
   const boot = createBootLoader(bootConfig);
   const root = document.body.appendChild(document.createElement('div'));
   let loader = !lazy && boot();

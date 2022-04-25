@@ -1,4 +1,5 @@
 import type { BaseComponentProps, ComponentContext, Disposable, PiletApi } from 'piral-core';
+import type { BehaviorSubject } from 'rxjs';
 import type { PrepareBootstrapResult } from './types';
 import { startup } from './startup';
 import { getAnnotations } from './utils';
@@ -25,7 +26,7 @@ export function prepareBootstrap(moduleOrComponent: any, piral: PiletApi): Prepa
 export async function bootstrap<TProps extends BaseComponentProps>(
   result: PrepareBootstrapResult,
   node: HTMLElement,
-  props: TProps,
+  props: BehaviorSubject<TProps>,
   context: ComponentContext,
 ): Promise<Disposable> {
   const [selectedModule, ngOptions, component] = result;

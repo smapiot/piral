@@ -14,7 +14,8 @@ function findPiralBaseApi(root: string) {
         paths: [root],
       })
       ?.replace(/\.js$/, '.d.ts');
-  } catch {
+  } catch (err) {
+    log('generalError_0002', `Could not find the root API of "piral-base" from "${root}": ${err}`);
     return undefined;
   }
 }
