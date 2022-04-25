@@ -26,6 +26,12 @@
       "import": "./esm/index.js",
       "require": "./lib/index.js"
     },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,

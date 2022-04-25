@@ -30,6 +30,12 @@
     "./extend-webpack": {
       "require": "./extend-webpack.js"
     },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,

@@ -23,9 +23,16 @@
       "import": "./esm/index.js",
       "require": "./lib/index.js"
     },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
     "./vendor": {
       "require": "./vendor.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "vendor.js",
