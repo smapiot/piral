@@ -1,3 +1,4 @@
+import { mount } from 'enzyme';
 import { createElement } from 'react';
 import { Atom, deref } from '@dbeining/react-atom';
 import { createListener, Pilet } from 'piral-base';
@@ -11,7 +12,6 @@ import {
   setRoute,
 } from './app';
 import { createActions } from '../state';
-import { mount } from 'enzyme';
 import { RootListener } from '../RootListener';
 
 const pilet: Pilet = {
