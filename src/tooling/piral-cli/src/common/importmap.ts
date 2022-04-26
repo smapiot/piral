@@ -3,6 +3,7 @@ import { log, fail } from './log';
 import { satisfies, validate } from './version';
 import { computeHash } from './hash';
 import { getHash, readJson, findFile, checkExists, checkIsDirectory } from './io';
+import { tryResolvePackage } from './npm';
 import { SharedDependency } from '../types';
 
 interface Importmap {
@@ -11,17 +12,6 @@ interface Importmap {
 }
 
 const shorthandsUrls = ['', '.', '...'];
-
-function tryResolve(baseDir: string, name: string) {
-  try {
-    return require.resolve(name, {
-      paths: [baseDir],
-    });
-  } catch (ex) {
-    log('generalDebug_0003', `Could not resolve the package "${name}" in "${baseDir}": ${ex}`);
-    return undefined;
-  }
-}
 
 function getDependencyDetails(depName: string): [assetName: string, identifier: string, versionSpec: string] {
   const sep = depName.indexOf('@', 1);
@@ -77,7 +67,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
           type: 'remote',
         });
       } else if (url === identifier || shorthandsUrls.includes(url)) {
-        const entry = tryResolve(dir, identifier);
+        const entry = tryResolvePackage(identifier, dir);
 
         if (entry) {
           const packageJson = await findFile(dirname(entry), 'package.json');
@@ -111,7 +101,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
             dependencies.push({
               id: `${identifier}@${version}`,
               requireId: `${identifier}@${requireVersion}`,
-              entry: isDirectory ? tryResolve(dir, entry) : entry,
+              entry: isDirectory ? tryResolvePackage(entry, dir) : entry,
               name: identifier,
               ref: `${assetName}.js`,
               type: 'local',
@@ -139,7 +129,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
 
   if (Array.isArray(inheritedImports)) {
     for (const inheritedImport of inheritedImports) {
-      const packageJson = tryResolve(dir, `${inheritedImport}/package.json`);
+      const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
 
       if (packageJson) {
         const packageDir = dirname(packageJson);

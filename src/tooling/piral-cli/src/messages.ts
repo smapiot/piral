@@ -549,7 +549,11 @@ export function importMapVersionSpecInvalid_0026(depName: string): QuickMessage 
  * node modules are most likely not installed (correctly).
  */
 export function importMapReferenceNotFound_0027(dir: string, reference: string): QuickMessage {
-  return [LogLevels.error, '0027', `The reference to "${reference}" could not be resolved from "${dir}". Are you sure the file or package exists?`];
+  return [
+    LogLevels.error,
+    '0027',
+    `The reference to "${reference}" could not be resolved from "${dir}". Are you sure the file or package exists?`,
+  ];
 }
 
 /**

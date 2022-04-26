@@ -8,10 +8,11 @@ import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { applyTemplate } from './template';
 import { readImportmap } from './importmap';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals, makeExternals } from './npm';
 import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
+import { makePiletExternals, makeExternals, findPackageRoot } from './npm';
 import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
 
 function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
@@ -113,26 +114,13 @@ async function getMatchingFiles(
 }
 
 export function getPiralPath(root: string, name: string) {
-  try {
-    const path = require.resolve(`${name}/package.json`, {
-      paths: [root],
-    });
-    return dirname(path);
-  } catch (ex) {
-    log('generalDebug_0003', `Could not resolve the Piral path of "${name}" in "${root}": ${ex}.`);
+  const path = findPackageRoot(name, root);
+
+  if (!path) {
     fail('invalidPiralReference_0043');
   }
-}
 
-export function findPackageRoot(pck: string, baseDir: string) {
-  try {
-    return require.resolve(`${pck}/package.json`, {
-      paths: [baseDir],
-    });
-  } catch (ex) {
-    log('generalDebug_0003', `Could not find the package root in "${baseDir}": ${ex}.`);
-    return undefined;
-  }
+  return dirname(path);
 }
 
 function findPackage(pck: string | Array<string>, baseDir: string) {
