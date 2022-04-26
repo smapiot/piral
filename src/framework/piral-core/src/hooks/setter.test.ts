@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { useSetter } from './setter';
 
 describe('UseSetter Hook Module', () => {
@@ -12,7 +12,8 @@ describe('UseSetter Hook Module', () => {
       return null;
     };
 
-    render(React.createElement(MyComponent), document.body.appendChild(document.createElement('div')));
+    const root = createRoot(document.body.appendChild(document.createElement('div')));
+    root.render(React.createElement(MyComponent));
     await act(() => Promise.resolve());
     expect(cb).toHaveBeenCalled();
   });

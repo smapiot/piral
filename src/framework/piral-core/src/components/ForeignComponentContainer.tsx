@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { isfunc } from 'piral-base';
-import { __RouterContext } from 'react-router';
-import { ForeignComponent, BaseComponentProps, ComponentContext } from '../types';
+import type { ForeignComponent, BaseComponentProps, ComponentContext } from '../types';
 
 interface ForeignComponentContainerProps<T> {
   $portalId: string;

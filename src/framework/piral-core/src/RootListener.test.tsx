@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 import { RootListener } from './RootListener';
 
@@ -15,7 +15,8 @@ describe('RootListener Component', () => {
     const removed = jest.fn();
     document.body.appendChild(element);
     const container = document.body.appendChild(document.createElement('div'));
-    render(<RootListener />, container);
+    const root = createRoot(container);
+    root.render(<RootListener />);
     document.body.removeEventListener = removed;
     await act(() => {
       const event = new CustomEvent('render-html', {
@@ -23,7 +24,7 @@ describe('RootListener Component', () => {
         detail: {
           target: element,
           props: {},
-        }
+        },
       });
       element.dispatchEvent(event);
       return Promise.resolve();
@@ -35,10 +36,11 @@ describe('RootListener Component', () => {
   it('removes the RootListener successfully', async () => {
     const container = document.body.appendChild(document.createElement('div'));
     const removed = jest.fn();
-    render(<RootListener />, container);
+    const root = createRoot(container);
+    root.render(<RootListener />);
     document.body.removeEventListener = removed;
     await act(() => Promise.resolve());
-    unmountComponentAtNode(container);
+    root.unmount();
     await act(() => Promise.resolve());
     expect(removed).toHaveBeenCalled();
   });

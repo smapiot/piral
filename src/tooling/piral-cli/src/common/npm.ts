@@ -377,7 +377,7 @@ export function tryResolvePackage(name: string, baseDir: string = undefined) {
       const mainPath = baseDir ? tryResolve(mainPart, { paths: [baseDir] }) : tryResolve(mainPart);
       const searchStr = `${sep}${mainPart.replace('/', sep)}${sep}`;
 
-      if (mainPath.includes(searchStr)) {
+      if (mainPath?.includes(searchStr)) {
         const rest = name.startsWith('@') ? parts.slice(2) : parts.slice(1);
         path = mainPath.substring(0, mainPath.indexOf(searchStr) + searchStr.length) + rest.join(sep);
       }

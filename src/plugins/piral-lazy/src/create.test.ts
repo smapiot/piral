@@ -1,5 +1,5 @@
 import { Atom, swap, deref } from '@dbeining/react-atom';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { createElement, Suspense } from 'react';
 import { StateContext } from 'piral-core';
 import { createLazyApi } from './create';
@@ -48,13 +48,13 @@ describe('Piral-Lazy create module', () => {
     const { fromLazy, defineDependency } = apiCreator(api);
     defineDependency('testName', () => {});
     const LazyComponent = fromLazy(load, ['testName']);
-    render(
+    const root = createRoot(document.body.appendChild(document.createElement('div')));
+    root.render(
       createElement(
         StateContext.Provider,
         { value: context },
         createElement(Suspense, { fallback: 'anything' }, createElement(LazyComponent)),
       ),
-      document.body.appendChild(document.createElement('div')),
     );
     await act(() => Promise.resolve());
     expect(LazyComponent).not.toBeUndefined();

@@ -4,7 +4,7 @@ import { PortalRenderer } from './PortalRenderer';
 import { ForeignComponentContainer } from './ForeignComponentContainer';
 import { useGlobalStateContext } from '../hooks';
 import { convertComponent, none } from '../utils';
-import { AnyComponent, ComponentConverters, ForeignComponent, PiletApi, BaseComponentProps } from '../types';
+import type { AnyComponent, ComponentConverters, ForeignComponent, PiletApi, BaseComponentProps } from '../types';
 
 // this is an arbitrary start number to have 6 digits
 let portalIdBase = 123456;
