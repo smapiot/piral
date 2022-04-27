@@ -10,10 +10,17 @@ import { PackageType, NpmClientType } from '../types';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
+const pathPrefixes = ['/', './', '../', '.\\', '..\\', '~/', '~\\', filePrefix];
 
 function isProjectReference(name: string) {
   const target = resolve(name, 'package.json');
   return checkExists(target);
+}
+
+function resolveAbsPath(basePath: string, fullName: string) {
+  const prefixed = fullName.startsWith(filePrefix);
+  const relPath = !prefixed ? fullName : fullName.replace(filePrefix, '');
+  return resolve(basePath, relPath);
 }
 
 export function detectPnpm(root: string) {
@@ -210,7 +217,7 @@ export function isLocalPackage(baseDir: string, fullName: string) {
   log('generalDebug_0003', 'Checking if its a local package ...');
 
   if (fullName) {
-    if (/^[\.\/\~]/.test(fullName)) {
+    if (pathPrefixes.some((prefix) => fullName.startsWith(prefix))) {
       log('generalDebug_0003', 'Found a local package by name.');
       return true;
     } else if (fullName.endsWith('.tgz')) {
@@ -249,9 +256,7 @@ export function makeGitUrl(fullName: string) {
 }
 
 export function makeFilePath(basePath: string, fullName: string) {
-  const prefixed = fullName.startsWith(filePrefix);
-  const relPath = !prefixed ? fullName : fullName.replace(filePrefix, '');
-  const absPath = resolve(basePath, relPath);
+  const absPath = resolveAbsPath(basePath, fullName);
   return `${filePrefix}${absPath}`;
 }
 
@@ -275,7 +280,7 @@ export async function dissectPackageName(
     const gitUrl = makeGitUrl(fullName);
     return [gitUrl, 'latest', false, 'git'];
   } else if (isLocalPackage(baseDir, fullName)) {
-    const fullPath = resolve(baseDir, fullName);
+    const fullPath = resolveAbsPath(baseDir, fullName);
     const exists = await checkExists(fullPath);
 
     if (!exists) {

@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.23 (tbd)
+
+- Fixed issue with tilde version specifier of centrally shared dependencies
+
 ## 0.14.22 (April 25, 2022)
 
 - Improved `piral-blazor` codegen module

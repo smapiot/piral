@@ -302,15 +302,59 @@ describe('npm Module', () => {
     await findSpecificVersion('foo', '1.0.0').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
-  it('check if package is local', () => {
-    let result = isLocalPackage('./', 'file://foo.tgz');
+  it('check if package from full file is local', () => {
+    const result = isLocalPackage('./', 'file://foo.tgz');
     expect(result).toBeTruthy();
-    result = isLocalPackage('./', './');
+  });
+
+  it('check if package from current dir is local', () => {
+    const result = isLocalPackage('./', './');
     expect(result).toBeTruthy();
-    result = isLocalPackage('./', 'foo.tgz');
+  });
+
+  it('check if package from file is local', () => {
+    const result = isLocalPackage('./', 'foo.tgz');
     expect(result).toBeTruthy();
-    result = isLocalPackage('./', null);
+  });
+
+  it('check if package from nothing is not local', () => {
+    const result = isLocalPackage('./', null);
     expect(result).toBeFalsy();
+  });
+
+  it('check if package from tilde version is not local', () => {
+    const result = isLocalPackage('./', '~12.2.2');
+    expect(result).toBeFalsy();
+  });
+
+  it('check if package from caret version is not local', () => {
+    const result = isLocalPackage('./', '^12.2.2');
+    expect(result).toBeFalsy();
+  });
+
+  it('check if package from star version is not local', () => {
+    const result = isLocalPackage('./', '*');
+    expect(result).toBeFalsy();
+  });
+
+  it('check if package from greater than is not local', () => {
+    const result = isLocalPackage('./', '>=1.0.0');
+    expect(result).toBeFalsy();
+  });
+
+  it('check if package from home dir is local', () => {
+    const result = isLocalPackage('./', '~/foo/bar');
+    expect(result).toBeTruthy();
+  });
+
+  it('check if package from zero is not local', () => {
+    const result = isLocalPackage('./', '.0');
+    expect(result).toBeFalsy();
+  });
+
+  it('check if package from absolute dir is local', () => {
+    const result = isLocalPackage('./', '/0');
+    expect(result).toBeTruthy();
   });
 
   it('check if package is coming from git', () => {
