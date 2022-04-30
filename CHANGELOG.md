@@ -2,7 +2,10 @@
 
 ## 0.14.23 (tbd)
 
+- Improved typings for registering extension components
 - Fixed issue with tilde version specifier of centrally shared dependencies
+- Fixed missing update cycle in `piral-vue3` converter (#440)
+- Added update lifecycle to `piral-solid`
 
 ## 0.14.22 (April 25, 2022)
 
