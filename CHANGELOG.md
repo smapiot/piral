@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.23 (tbd)
+## 0.14.23 (May 1, 2022)
 
 - Improved typings for registering extension components
 - Fixed issue with tilde version specifier of centrally shared dependencies
