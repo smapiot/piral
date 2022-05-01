@@ -62,6 +62,15 @@ export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, 
 export interface PiralPageMeta extends PiralCustomPageMeta {}
 
 /**
+ * Shorthand for the definition of an extension component.
+ */
+export type AnyExtensionComponent<TName> = TName extends keyof PiralExtensionSlotMap
+? AnyComponent<ExtensionComponentProps<TName>>
+: TName extends string
+? AnyComponent<ExtensionComponentProps<any>>
+: AnyComponent<ExtensionComponentProps<TName>>
+
+/**
  * Defines the Pilet API from piral-core.
  * This interface will be consumed by pilet developers so that their pilet can interact with the piral instance.
  */
@@ -103,7 +112,7 @@ export interface PiletCoreApi {
    */
   registerExtension<TName>(
     name: TName extends string ? TName : string,
-    Component: AnyComponent<ExtensionComponentProps<TName>>,
+    Component: AnyExtensionComponent<TName>,
     defaults?: Partial<ExtensionParams<TName>>,
   ): RegistrationDisposer;
   /**
@@ -114,7 +123,7 @@ export interface PiletCoreApi {
    */
   unregisterExtension<TName>(
     name: TName extends string ? TName : string,
-    Component: AnyComponent<ExtensionComponentProps<TName>>,
+    Component: AnyExtensionComponent<TName>,
   ): void;
   /**
    * React component for displaying extensions for a given name.

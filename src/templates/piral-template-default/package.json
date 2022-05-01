@@ -13,12 +13,25 @@
     "access": "public"
   },
   "author": "smapiot",
+  "templateOptions": {
+    "title": {
+      "description": "Defines the title of the app / page.",
+      "default": "My Piral Instance",
+      "type": "string"
+    },
+    "feedUrl": {
+      "description": "Defines the URL to use for requesting the pilets.",
+      "default": "https://feed.piral.cloud/api/v1/pilet/empty",
+      "type": "string"
+    }
+  },
   "homepage": "https://piral.io",
   "license": "MIT",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "engines": {
-    "node": ">=10.0"
+    "node": ">=12.0",
+    "piral": "^0.14.x"
   },
   "files": [
     "lib",
@@ -45,6 +58,6 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
-    "ejs": "^2.6.2"
+    "ejs": "^3.1.7"
   }
 }
