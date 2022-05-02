@@ -1,6 +1,6 @@
 {
   "name": "piral-vue-3",
-  "version": "0.14.22",
+  "version": "0.14.23",
   "description": "Plugin for integrating Vue@3 components in Piral.",
   "keywords": [
     "piral",
@@ -61,7 +61,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.22",
+    "piral-core": "^0.14.23",
     "vue": "^3.0.0"
   },
   "peerDependencies": {

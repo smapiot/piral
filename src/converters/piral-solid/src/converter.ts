@@ -1,5 +1,5 @@
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { Component } from 'solid-js';
+import { Component, onCleanup } from 'solid-js';
 import { render, createComponent } from 'solid-js/dom';
 import { createExtension } from './extension';
 
@@ -15,12 +15,24 @@ export function createConverter(config: SolidConverterOptions = {}) {
   const { rootName = 'slot' } = config;
   const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(root: Component<TProps>): ForeignComponent<TProps> => ({
-    mount(el, props, context) {
-      render(() => createComponent(root, { context, ...props }), el);
+    mount(el, props, context, locals) {
+      locals.update = (props, context) => {
+        locals.destroy = render(() => {
+          onCleanup(() => {
+            el.innerHTML = '';
+          });
+          return createComponent(root, { context, ...props });
+        }, el);
+      };
+
+      locals.update(props, context);
     },
-    unmount(el) {
-      render(() => undefined, el);
-      el.innerHTML = '';
+    update(el, props, context, locals) {
+      locals.destroy();
+      locals.update(props, context);
+    },
+    unmount(el, locals) {
+      locals.destroy();
     },
   });
   convert.Extension = Extension;

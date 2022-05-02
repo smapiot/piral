@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "0.14.22",
+  "version": "0.14.23",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -68,8 +68,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "piral-core": "^0.14.22",
-    "piral-ext": "^0.14.22",
+    "piral-core": "^0.14.23",
+    "piral-ext": "^0.14.23",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router": "^5.2.0",
