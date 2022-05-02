@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { __RouterContext } from 'react-router';
 import { ErrorBoundary, wrapComponent } from '../components';
 import { defaultRender } from '../utils';
 import { AnyComponent, Errors, PiletApi, BaseComponentProps, GlobalStateContext } from '../types';

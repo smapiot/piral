@@ -1,5 +1,4 @@
-import { resolve } from 'path';
-import { findPackageVersion, findPackageRoot, getPiralPackage, getPiletsInfo, retrievePiletData } from './package';
+import { findPackageVersion, getPiralPackage, getPiletsInfo, retrievePiletData } from './package';
 import { cliVersion } from './info';
 import { SourceLanguage } from './enums';
 
@@ -12,18 +11,6 @@ describe('CLI package module', () => {
   it('findPackageVersion falls back to latest', async () => {
     const version = await findPackageVersion(process.cwd(), 'foo-bar-not-exists');
     expect(version).toBe('latest');
-  });
-
-  it('findPackageRoot correctly resolves the package root of parcel-bundler', () => {
-    const dir = process.cwd();
-    const version = findPackageRoot('webpack', dir);
-    expect(version).toBe(resolve(dir, 'node_modules', 'webpack', 'package.json'));
-  });
-
-  it('findPackageRoot returns undefined for invalid package', () => {
-    const dir = process.cwd();
-    const version = findPackageRoot('foo-bar-not-exist', dir);
-    expect(version).toBeUndefined();
   });
 
   it('getPiletsInfo returns pilets information about provided piralInfo', () => {

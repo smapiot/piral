@@ -25,6 +25,7 @@ import {
   getPackageVersion,
   isGitPackage,
   makeExternals,
+  findPackageRoot,
 } from './npm';
 
 jest.mock('child_process');
@@ -82,6 +83,18 @@ jest.mock('fs', () => ({
 }));
 
 describe('npm Module', () => {
+  it('findPackageRoot correctly resolves the package root of parcel-bundler', () => {
+    const dir = process.cwd();
+    const version = findPackageRoot('webpack', dir);
+    expect(version).toBe(resolve(dir, 'node_modules', 'webpack', 'package.json'));
+  });
+
+  it('findPackageRoot returns undefined for invalid package', () => {
+    const dir = process.cwd();
+    const version = findPackageRoot('foo-bar-not-exist', dir);
+    expect(version).toBeUndefined();
+  });
+
   it('dissects a fully qualified name with latest correctly', async () => {
     wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@latest');
