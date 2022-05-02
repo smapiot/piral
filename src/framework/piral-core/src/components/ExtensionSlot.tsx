@@ -20,7 +20,7 @@ const renderExtensions: [ExtensionRegistration] = [
     defaults: {},
     pilet: '',
     reference: {
-      displayName: 'RenderExtension',
+      displayName: 'AnyComponent',
     },
   },
 ];
@@ -42,7 +42,7 @@ export function ExtensionSlot<T extends string>(props: ExtensionSlotProps<T>) {
             children={children}
             params={{
               ...defaults,
-              ...(params || {}),
+              ...params,
             }}
           />
         )),
