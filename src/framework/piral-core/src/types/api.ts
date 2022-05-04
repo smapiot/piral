@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type { RouteComponentProps } from 'react-router';
 import type { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet } from 'piral-base';
 import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
@@ -6,6 +6,7 @@ import type { AnyComponent } from './components';
 import type { ExtensionParams, ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
 import type { Disposable } from './utils';
+import React = require('react');
 
 export { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet };
 
@@ -37,6 +38,10 @@ export interface ExtensionComponentProps<T> extends BaseComponentProps {
    * The provided parameters for showing the extension.
    */
   params: T extends keyof PiralExtensionSlotMap ? PiralExtensionSlotMap[T] : T extends string ? any : T;
+  /**
+   * The optional children to receive, if any.
+   */
+  children?: ReactNode;
 }
 
 /**
@@ -65,10 +70,10 @@ export interface PiralPageMeta extends PiralCustomPageMeta {}
  * Shorthand for the definition of an extension component.
  */
 export type AnyExtensionComponent<TName> = TName extends keyof PiralExtensionSlotMap
-? AnyComponent<ExtensionComponentProps<TName>>
-: TName extends string
-? AnyComponent<ExtensionComponentProps<any>>
-: AnyComponent<ExtensionComponentProps<TName>>
+  ? AnyComponent<ExtensionComponentProps<TName>>
+  : TName extends string
+  ? AnyComponent<ExtensionComponentProps<any>>
+  : AnyComponent<ExtensionComponentProps<TName>>;
 
 /**
  * Defines the Pilet API from piral-core.

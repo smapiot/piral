@@ -1,5 +1,6 @@
 import type { ReactNode, ReactElement } from 'react';
 import type { PiralCustomExtensionSlotMap } from './custom';
+import type { ExtensionRegistration } from './state';
 
 /**
  * The mapping of the existing (known) extension slots.
@@ -29,8 +30,17 @@ export interface BaseExtensionSlotProps<TName, TParams> {
    */
   noEmptyRender?: boolean;
   /**
+   * Defines the order of the components to render.
+   * May be more convient than using `render` w.r.t. ordering extensions
+   * by their supplied metadata.
+   * @param extensions The registered extensions.
+   * @returns The ordered extensions.
+   */
+  order?(extensions: Array<ExtensionRegistration>): Array<ExtensionRegistration>;
+  /**
    * Defines how the provided nodes should be rendered.
    * @param nodes The rendered extension nodes.
+   * @returns The rendered nodes, i.e., an ReactElement.
    */
   render?(nodes: Array<ReactNode>): ReactElement<any, any> | null;
   /**
