@@ -10,22 +10,27 @@ import { ExtensionSlotProps } from '../types';
  * location.
  */
 export function ExtensionSlot<T extends string>(props: ExtensionSlotProps<T>) {
-  const { name, render = defaultRender, empty, params, children } = props;
+  const { name, render = defaultRender, empty, params, children, noEmptyRender = false } = props;
   const extensions = useGlobalState((s) => s.registry.extensions[name] || none);
-  return render(
-    extensions.length === 0 && isfunc(empty)
-      ? [defaultRender(empty(), 'empty')]
-      : extensions.map(({ component: Component, reference, defaults = {} }, i) => (
-          <Component
-            key={`${reference?.displayName || '_'}${i}`}
-            children={children}
-            params={{
-              ...defaults,
-              ...(params || {}),
-            }}
-          />
-        )),
-  );
+  const isEmpty = extensions.length === 0 && isfunc(empty);
+  const content = isEmpty
+    ? [defaultRender(empty(), 'empty')]
+    : extensions.map(({ component: Component, reference, defaults = {} }, i) => (
+        <Component
+          key={`${reference?.displayName || '_'}${i}`}
+          children={children}
+          params={{
+            ...defaults,
+            ...(params || {}),
+          }}
+        />
+      ));
+
+  if (isEmpty && noEmptyRender) {
+    return content[0];
+  }
+
+  return render(content);
 }
 
 ExtensionSlot.displayName = `ExtensionSlot`;

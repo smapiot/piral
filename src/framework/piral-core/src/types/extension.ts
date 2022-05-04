@@ -20,6 +20,15 @@ export interface BaseExtensionSlotProps<TName, TParams> {
    */
   empty?(): ReactNode;
   /**
+   * Determines if the `render` function should be called in case no
+   * components are available for the specified extension.
+   *
+   * If true, `empty` will be called and returned from the slot.
+   * If false, `render` will be called with the result of calling `empty`.
+   * The result of calling `render` will then be returned from the slot.
+   */
+  noEmptyRender?: boolean;
+  /**
    * Defines how the provided nodes should be rendered.
    * @param nodes The rendered extension nodes.
    */
