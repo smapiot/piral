@@ -1643,7 +1643,7 @@ export function packageJsonMissing_0075(): QuickMessage {
  * The TypeScript declaration generator will take all files as input to
  * gather all required information for constructing the API declaration.
  */
-export function declarationCouldNotBeGenerated_0076(rootDir: string, error: Error): QuickMessage {
+export function declarationCouldNotBeGenerated_0076(rootDir: string, error: Error | string): QuickMessage {
   return [LogLevels.error, '0076', `Could not create the declaration in "${rootDir}". Error: ${error}`];
 }
 

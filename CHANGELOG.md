@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.24 (tbd)
+
+- Fixed issue with retrieving type root
+- Fixed `exports` field to use `*` notation
+
 ## 0.14.23 (May 1, 2022)
 
 - Improved typings for registering extension components
