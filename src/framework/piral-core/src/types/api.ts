@@ -6,7 +6,6 @@ import type { AnyComponent } from './components';
 import type { ExtensionParams, ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
 import type { Disposable } from './utils';
-import React = require('react');
 
 export { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet };
 
