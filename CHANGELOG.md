@@ -4,6 +4,7 @@
 
 - Fixed issue with retrieving type root
 - Fixed `exports` field to use `*` notation
+- Fixed resolution of `piral-cli` plugins with pnpm (#514)
 - Added `noEmptyRender` prop to `ExtensionSlot`
 - Added `order` prop to `ExtensionSlot`
 
