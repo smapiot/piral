@@ -5,6 +5,7 @@
 - Fixed issue with retrieving type root
 - Fixed `exports` field to use `*` notation
 - Fixed resolution of `piral-cli` plugins with pnpm (#514)
+- Fixed missing `PIRAL_PUBLIC_PATH` when building a Piral instance with `piral-cli-esbuild`
 - Added `emptySkipsRender` prop to `ExtensionSlot`
 - Added `order` prop to `ExtensionSlot`
 

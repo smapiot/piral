@@ -33,6 +33,7 @@ function createConfig(
       'process.env.DEBUG_PIRAL': JSON.stringify(process.env.DEBUG_PIRAL || ''),
       'process.env.DEBUG_PILET': JSON.stringify(process.env.DEBUG_PILET || ''),
       'process.env.SHARED_DEPENDENCIES': JSON.stringify(externals.join(',')),
+      'process.env.PIRAL_PUBLIC_PATH': JSON.stringify(process.env.PIRAL_PUBLIC_PATH),
     },
     plugins: [...config.plugins, htmlPlugin()],
   };
