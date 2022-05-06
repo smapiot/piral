@@ -28,7 +28,7 @@ export interface BaseExtensionSlotProps<TName, TParams> {
    * If false, `render` will be called with the result of calling `empty`.
    * The result of calling `render` will then be returned from the slot.
    */
-  noEmptyRender?: boolean;
+  emptySkipsRender?: boolean;
   /**
    * Defines the order of the components to render.
    * May be more convient than using `render` w.r.t. ordering extensions

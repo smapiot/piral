@@ -14,7 +14,15 @@ function defaultOrder(extensions: Array<ExtensionRegistration>) {
  * location.
  */
 export function ExtensionSlot<T extends string>(props: ExtensionSlotProps<T>) {
-  const { name, render = defaultRender, empty, params, children, noEmptyRender = false, order = defaultOrder } = props;
+  const {
+    name,
+    render = defaultRender,
+    empty,
+    params,
+    children,
+    emptySkipsRender = false,
+    order = defaultOrder,
+  } = props;
   const extensions = useGlobalState((s) => s.registry.extensions[name] || none);
   const isEmpty = extensions.length === 0 && isfunc(empty);
   const content = isEmpty
@@ -30,7 +38,7 @@ export function ExtensionSlot<T extends string>(props: ExtensionSlotProps<T>) {
         />
       ));
 
-  if (isEmpty && noEmptyRender) {
+  if (isEmpty && emptySkipsRender) {
     return content[0];
   }
 

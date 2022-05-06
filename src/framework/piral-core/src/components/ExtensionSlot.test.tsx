@@ -93,11 +93,11 @@ describe('Extension Module', () => {
     expect(node.find(StubComponent2).length).toBe(1);
   });
 
-  it('does not use the render function with empty when noEmptyRender is set', () => {
+  it('does not use the render function with empty when emptySkipsRender is set', () => {
     const node = mount(
       <ExtensionSlot
         name="foo"
-        noEmptyRender
+        emptySkipsRender
         empty={() => <StubComponent2 key="empty" />}
         render={(nodes) => <StubComponent1 children={nodes} />}
       />,
@@ -106,11 +106,11 @@ describe('Extension Module', () => {
     expect(node.find(StubComponent2).length).toBe(1);
   });
 
-  it('does use the render function without empty independent if noEmptyRender is set', () => {
+  it('does use the render function without empty independent if emptySkipsRender is set', () => {
     const node = mount(
       <ExtensionSlot
         name="lol"
-        noEmptyRender
+        emptySkipsRender
         empty={() => <StubComponent2 key="empty" />}
         render={(nodes) => <StubComponent1 children={nodes} />}
       />,
