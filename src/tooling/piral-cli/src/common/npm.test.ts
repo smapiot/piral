@@ -1,13 +1,9 @@
 import { resolve } from 'path';
+import { clients } from './clients';
 import {
   dissectPackageName,
   installPackage,
-  detectNpm,
-  detectPnpm,
-  detectYarn,
   isMonorepoPackageRef,
-  detectMonorepo,
-  bootstrapMonorepo,
   installDependencies,
   createPackage,
   findTarball,
@@ -42,6 +38,7 @@ jest.mock('../external', () => ({
 }));
 
 let specialCase = false;
+let shouldFind = true;
 let wrongCase = false;
 const jsonValueString = JSON.stringify({ dependencies: { npm: { extraneous: true } } });
 const jsonValueStringWrong = JSON.stringify({ dependencies: {} });
@@ -56,14 +53,15 @@ jest.mock('./scripts', () => ({
 }));
 
 jest.mock('fs', () => ({
-  constants: {
-    F_OK: 1,
-  },
   createReadStream() {
     return undefined;
   },
   exists: (file: string, cb: (status: boolean) => void) =>
-    cb(!file.endsWith('package.json') && !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock')))),
+    cb(
+      shouldFind &&
+        !file.endsWith('package.json') &&
+        !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock'))),
+    ),
   existsSync: (file: string) => {
     return true;
   },
@@ -72,13 +70,6 @@ jest.mock('fs', () => ({
   },
   realpathSync: () => ({}),
   readFileSync: () => '',
-  access: (path: string, mode: number, callback: (err: NodeJS.ErrnoException) => void) => {
-    if (path.includes('test')) {
-      return callback(undefined);
-    } else {
-      return callback(new Error('bla'));
-    }
-  },
 }));
 
 describe('npm Module', () => {
@@ -210,19 +201,28 @@ describe('npm Module', () => {
   });
 
   it('detectNpm finds package-lock.json', async () => {
-    await detectNpm('test').then((result) => expect(result).toBeTruthy());
-    await detectNpm('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
+    await clients.npm.detectClient('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = false;
+    await clients.npm.detectClient('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
   });
 
-  it('detectPnpm finds nppm-lock.yaml', async () => {
-    await detectPnpm('test').then((result) => expect(result).toBeTruthy());
-    await detectPnpm('toast').then((result) => expect(result).toBeFalsy());
+  it('detectPnpm finds pnpm-lock.yaml', async () => {
+    shouldFind = true;
+    await clients.pnpm.detectClient('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = false;
+    await clients.pnpm.detectClient('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
   });
 
   it('detectYarn finds yarn.lock', async () => {
-    await detectYarn('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = true;
+    await clients.yarn.detectClient('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = false;
     specialCase = true;
-    await detectYarn('toast').then((result) => expect(result).toBeFalsy());
+    await clients.yarn.detectClient('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
     specialCase = false;
   });
 
@@ -233,24 +233,11 @@ describe('npm Module', () => {
     await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeFalsy());
   });
 
-  it('verifies whether lerna config path is valid', async () => {
-    wrongCase = false;
-    await detectMonorepo('./').then((result) => {
-      expect(result).toBe('lerna');
-    });
-    wrongCase = true;
-    specialCase = true;
-    await detectMonorepo('./').then((result) => {
-      expect(result).toBe('none');
-    });
-    specialCase = false;
-  });
-
   it('verifies whether lerna bootstrap ran', async () => {
     wrongCase = false;
-    await bootstrapMonorepo().then((result) => expect(result).toEqual(jsonValueString));
+    await clients.lerna.installDependencies().then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await bootstrapMonorepo().then((result) => expect(result).not.toEqual(jsonValueString));
+    await clients.lerna.installDependencies().then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with npm client', async () => {

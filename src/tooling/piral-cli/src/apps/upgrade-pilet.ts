@@ -22,8 +22,6 @@ import {
   ForceOverwrite,
   copyScaffoldingFiles,
   getPiralPath,
-  detectMonorepo,
-  bootstrapMonorepo,
   isMonorepoPackageRef,
   getPiletScaffoldData,
   SourceLanguage,
@@ -164,13 +162,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     if (install) {
       progress(`Updating dependencies ...`);
-      const monorepoKind = await detectMonorepo(root);
-
-      if (monorepoKind === 'lerna') {
-        await bootstrapMonorepo(root);
-      } else {
-        await installDependencies(npmClient, root);
-      }
+      await installDependencies(npmClient, root);
     }
 
     if (postUpgrade) {

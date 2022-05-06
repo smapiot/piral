@@ -27,8 +27,6 @@ import {
   isLinkedPackage,
   copyScaffoldingFiles,
   getPiralPath,
-  detectMonorepo,
-  bootstrapMonorepo,
   getPiletScaffoldData,
   config,
 } from '../common';
@@ -215,13 +213,7 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      const monorepoKind = await detectMonorepo(root);
-
-      if (monorepoKind === 'lerna') {
-        await bootstrapMonorepo(root);
-      } else {
-        await installDependencies(npmClient, root);
-      }
+      await installDependencies(npmClient, root);
     }
 
     if (postScaffold) {

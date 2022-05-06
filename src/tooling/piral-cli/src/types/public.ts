@@ -226,7 +226,7 @@ export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 
 export type PackageType = 'registry' | 'file' | 'git';
 
-export type NpmClientType = 'npm' | 'yarn' | 'pnpm';
+export type NpmClientType = 'npm' | 'yarn' | 'pnpm' | 'lerna' | 'rush';
 
 export type Framework = 'piral' | 'piral-core' | 'piral-base';
 

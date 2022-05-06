@@ -1,6 +1,7 @@
 import { resolve, relative, dirname } from 'path';
-import { createReadStream, existsSync, access, constants } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 import { log, fail } from './log';
+import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
 import { legacyCoreExternals, frameworkLibs } from './constants';
 import { inspectPackage } from './inspect';
@@ -23,117 +24,19 @@ function resolveAbsPath(basePath: string, fullName: string) {
   return resolve(basePath, relPath);
 }
 
-export function detectPnpm(root: string) {
-  return new Promise((res) => {
-    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, (noPnpmLock) => {
-      res(!noPnpmLock);
-    });
-  });
-}
-
-export function detectNpm(root: string) {
-  return new Promise((res) => {
-    access(resolve(root, 'package-lock.json'), constants.F_OK, (noPackageLock) => {
-      res(!noPackageLock);
-    });
-  });
-}
-
-export async function detectYarn(root: string) {
-  return !!(await findFile(root, 'yarn.lock'));
-}
-
-export async function getLernaConfigPath(root: string) {
-  log('generalDebug_0003', 'Trying to get the configuration file for Lerna ...');
-  const file = await findFile(root, 'lerna.json');
-
-  if (file) {
-    log('generalDebug_0003', `Found Lerna config in "${file}".`);
-    return file;
-  }
-
-  return undefined;
-}
-
-export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
-  const file = await getLernaConfigPath(root);
-
-  if (file) {
-    try {
-      return require(file).npmClient;
-    } catch (err) {
-      log('generalError_0002', `Could not read lerna.json: ${err}.`);
-    }
-  }
-
-  return undefined;
-}
-
-/**
- * For details about how this works consult issue
- * https://github.com/smapiot/piral/issues/203
- * @param root The project's root directory.
- */
-export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClientType> {
-  if (!selected || !clientTypeKeys.includes(selected)) {
-    log('generalDebug_0003', 'No npm client selected. Checking for lock files ...');
-    const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
-    const found = +hasNpm + +hasYarn + +hasPnpm;
-    log('generalDebug_0003', `Results of the lock file check: npm = ${hasNpm}, Yarn = ${hasYarn}, Pnpm = ${hasPnpm}`);
-    const defaultClient = config.npmClient;
-
-    if (found !== 1) {
-      const lernaClient = await getLernaNpmClient(root);
-
-      if (clientTypeKeys.includes(lernaClient)) {
-        log('generalDebug_0003', `Found valid npm client via Lerna: ${lernaClient}.`);
-        return lernaClient;
-      }
-    } else if (hasNpm) {
-      log('generalDebug_0003', `Found valid npm client via lockfile.`);
-      return 'npm';
-    } else if (hasYarn) {
-      log('generalDebug_0003', `Found valid Yarn client via lockfile.`);
-      return 'yarn';
-    } else if (hasPnpm) {
-      log('generalDebug_0003', `Found valid pnpm client via lockfile.`);
-      return 'pnpm';
-    }
-
-    if (clientTypeKeys.includes(defaultClient)) {
-      log('generalDebug_0003', `Found valid Pnpm client the default client: "${defaultClient}".`);
-      return defaultClient;
-    }
-
-    log('generalDebug_0003', 'Using the default npm client.');
-    return 'npm';
-  }
-
-  return selected;
-}
-
-export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
-  const c = require(`./clients/npm`);
-  const newRoot = await detectMonorepoRoot(root);
-
-  if (newRoot) {
-    const details = await c.listPackage(refName, newRoot);
-    return details?.dependencies?.[refName]?.extraneous ?? false;
-  }
-
-  return false;
-}
-
-export async function detectMonorepoRoot(root: string): Promise<string> {
-  const file = await getLernaConfigPath(root);
-
-  if (file !== undefined) {
-    return dirname(file);
-  }
-
+async function detectMonorepoRoot(root: string): Promise<string> {
   let previous = root;
 
   do {
+    const isMonorepo =
+      (await checkExists(resolve(root, 'lerna.json'))) ||
+      (await checkExists(resolve(root, 'rush.json'))) ||
+      (await checkExists(resolve(root, 'pnpm-workspace.yaml')));
+
+    if (isMonorepo) {
+      return root;
+    }
+
     const packageJson = await readJson(root, 'package.json');
 
     if (Array.isArray(packageJson?.workspaces)) {
@@ -147,69 +50,115 @@ export async function detectMonorepoRoot(root: string): Promise<string> {
   return undefined;
 }
 
-export type MonorepoKind = 'none' | 'lerna' | 'yarn';
+/**
+ * For details about how this works consult issue
+ * https://github.com/smapiot/piral/issues/203
+ * @param root The project's root directory.
+ */
+export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClientType> {
+  if (!selected || !clientTypeKeys.includes(selected)) {
+    log('generalDebug_0003', 'No npm client selected. Checking for lock or config files ...');
 
-export async function detectMonorepo(root: string): Promise<MonorepoKind> {
+    const searchedClients = await detectClients(root);
+    const foundClients = searchedClients.filter((m) => m.result);
+
+    log(
+      'generalDebug_0003',
+      `Results of the lock file check: ${searchedClients.map((m) => `${m.client}=${m.result}`).join(', ')}`,
+    );
+
+    const defaultClient = config.npmClient;
+
+    if (foundClients.length > 1) {
+      const wrapperClient = foundClients.find((m) => isWrapperClient(m.client));
+
+      if (wrapperClient) {
+        const { client } = wrapperClient;
+        log('generalDebug_0003', `Found valid wrapper client via lock or config file: "${client}".`);
+      }
+    }
+
+    if (foundClients.length > 0) {
+      const { client } = foundClients[0];
+
+      if (foundClients.length > 1) {
+        const clientStr = `"${foundClients.map((m) => m.client).join('", "')}"`;
+        log('generalWarning_0001', `Found multiple clients via their lock or config files: ${clientStr}.`);
+      }
+
+      log('generalDebug_0003', `Found valid direct client via lock or config file: "${client}".`);
+      return client;
+    }
+
+    if (clientTypeKeys.includes(defaultClient)) {
+      log('generalDebug_0003', `Using the default client: "${defaultClient}".`);
+      return defaultClient;
+    }
+
+    log('generalDebug_0003', 'Using the default "npm" client.');
+    return 'npm';
+  }
+
+  return selected;
+}
+
+export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
   const newRoot = await detectMonorepoRoot(root);
 
   if (newRoot) {
-    const file = await getLernaConfigPath(newRoot);
-
-    if (file !== undefined) {
-      return 'lerna';
-    }
-
-    const packageJson = await readJson(newRoot, 'package.json');
-
-    if (Array.isArray(packageJson?.workspaces)) {
-      return 'yarn';
-    }
+    const { listPackage } = clients.npm;
+    const details = await listPackage(refName, newRoot);
+    return details?.dependencies?.[refName]?.extraneous ?? false;
   }
 
-  return 'none';
-}
-
-export function bootstrapMonorepo(target = '.') {
-  const c = require(`./clients/lerna`);
-  return c.bootstrap(target);
+  return false;
 }
 
 export function installDependencies(client: NpmClientType, target = '.'): Promise<string> {
-  const c = require(`./clients/${client}`);
-  return c.installDependencies(target);
+  const { installDependencies } = clients[client];
+  return installDependencies(target);
 }
 
-export function installPackage(
+export async function installPackage(
   client: NpmClientType,
   packageRef: string,
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
-  const c = require(`./clients/${client}`);
-  return c.installPackage(packageRef, target, ...flags);
+  try {
+    const { installPackage } = clients[client];
+    return await installPackage(packageRef, target, ...flags);
+  } catch (ex) {
+    log(
+      'generalError_0002',
+      `Could not install the package "${packageRef}" using ${client}. Make sure ${client} is correctly installed and accessible: ${ex}`,
+    );
+    throw ex;
+  }
 }
 
 export function publishPackage(target = '.', file = '*.tgz', flags: Array<string> = []): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.publishPackage(target, file, ...flags);
+  const { publishPackage } = clients.npm;
+  return publishPackage(target, file, ...flags);
 }
 
 export function createPackage(target = '.'): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.createPackage(target);
+  const { createPackage } = clients.npm;
+  return createPackage(target);
 }
 
 export function findTarball(packageRef: string): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.findTarball(packageRef);
+  const { findTarball } = clients.npm;
+  return findTarball(packageRef);
 }
 
 export function findSpecificVersion(packageName: string, version: string): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.findSpecificVersion(packageName, version);
+  const { findSpecificVersion } = clients.npm;
+  return findSpecificVersion(packageName, version);
 }
 
 export function findLatestVersion(packageName: string) {
+  const { findSpecificVersion } = clients.npm;
   return findSpecificVersion(packageName, 'latest');
 }
 

@@ -6,10 +6,10 @@ import { MemoryStream } from '../MemoryStream';
 
 // Helpers:
 
-function runLernaProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
-  log('generalDebug_0003', 'Starting the Lerna process ...');
+function runRushProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
+  log('generalDebug_0003', 'Starting the Rush process ...');
   const cwd = resolve(process.cwd(), target);
-  return runCommand('lerna', args, cwd, output);
+  return runCommand('rush', args, cwd, output);
 }
 
 function convert(flags: Array<string>) {
@@ -32,18 +32,18 @@ function convert(flags: Array<string>) {
 
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runLernaProcess(['bootstrap', ...flags], target, ms);
-  log('generalDebug_0003', `Lerna bootstrap result: ${ms.value}`);
+  await runRushProcess(['update', ...convert(flags)], target, ms);
+  log('generalDebug_0003', `Rush install dependencies result: ${ms.value}`);
   return ms.value;
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runLernaProcess(['add', packageRef, ...convert(flags)], target, ms);
-  log('generalDebug_0003', `Lerna install package result: ${ms.value}`);
+  await runRushProcess(['add', '--package', packageRef, ...convert(flags)], target, ms);
+  log('generalDebug_0003', `Rush install package result: ${ms.value}`);
   return ms.value;
 }
 
 export async function detectClient(root: string) {
-  return !!(await findFile(root, 'lerna.json'));
+  return !!(await findFile(root, 'rush.json'));
 }

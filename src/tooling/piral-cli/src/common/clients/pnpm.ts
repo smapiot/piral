@@ -1,7 +1,10 @@
 import { resolve } from 'path';
 import { log } from '../log';
+import { findFile } from '../io';
 import { runCommand } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
+
+// Helpers:
 
 function runPnpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   log('generalDebug_0003', 'Starting the Pnpm process ...');
@@ -21,6 +24,8 @@ function convert(flags: Array<string>) {
   });
 }
 
+// Client interface functions:
+
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runPnpmProcess(['install', ...convert(flags)], target, ms);
@@ -29,16 +34,12 @@ export async function installDependencies(target = '.', ...flags: Array<string>)
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
-  try {
-    const ms = new MemoryStream();
-    await runPnpmProcess(['add', packageRef, ...convert(flags)], target, ms);
-    log('generalDebug_0003', `Pnpm install package result: ${ms.value}`);
-    return ms.value;
-  } catch (ex) {
-    log(
-      'generalError_0002',
-      `Could not install the package "${packageRef}" using Pnpm. Make sure Pnpm is correctly installed and accessible: ${ex}`,
-    );
-    throw ex;
-  }
+  const ms = new MemoryStream();
+  await runPnpmProcess(['add', packageRef, ...convert(flags)], target, ms);
+  log('generalDebug_0003', `Pnpm install package result: ${ms.value}`);
+  return ms.value;
+}
+
+export async function detectClient(root: string) {
+  return !!(await findFile(root, 'pnpm-lock.yaml'));
 }

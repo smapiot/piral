@@ -1,10 +1,13 @@
 import { resolve } from 'path';
 import { log } from '../log';
+import { findFile } from '../io';
 import { runCommand } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
 
+// Helpers:
+
 function runYarnProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
-  log('generalDebug_0003', 'Starting the Yarn process ...');
+  log('generalDebug_0003', 'Starting the Yarn@1 process ...');
   const cwd = resolve(process.cwd(), target);
   return runCommand('yarn', args, cwd, output);
 }
@@ -25,24 +28,22 @@ function convert(flags: Array<string>) {
   });
 }
 
+// Client interface functions:
+
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runYarnProcess(['install', ...convert(flags)], target, ms);
-  log('generalDebug_0003', `Yarn install dependencies result: ${ms.value}`);
+  log('generalDebug_0003', `Yarn@1 install dependencies result: ${ms.value}`);
   return ms.value;
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
-  try {
-    const ms = new MemoryStream();
-    await runYarnProcess(['add', packageRef, ...convert(flags)], target, ms);
-    log('generalDebug_0003', `Yarn install package result: ${ms.value}`);
-    return ms.value;
-  } catch (ex) {
-    log(
-      'generalError_0002',
-      `Could not install the package "${packageRef}" using Yarn. Make sure Yarn@1 is correctly installed and accessible: ${ex}`,
-    );
-    throw ex;
-  }
+  const ms = new MemoryStream();
+  await runYarnProcess(['add', packageRef, ...convert(flags)], target, ms);
+  log('generalDebug_0003', `Yarn@1 install package result: ${ms.value}`);
+  return ms.value;
+}
+
+export async function detectClient(root: string) {
+  return !!(await findFile(root, 'yarn.lock'));
 }
