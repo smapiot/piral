@@ -54,16 +54,16 @@ More information can be found in the [package information](https://npmjs.com/pac
 
 ---------------------------------------
 
-## What about mono repos?
+## What about monorepos?
 
-Piral was developed to be used in distributed environments, where each pilet could be in its own repository. Nevertheless, for convenience and to get a head start we fully support the mono repo use case, too.
+Piral was developed to be used in distributed environments, where each pilet could be in its own repository. Nevertheless, for convenience and to get a head start we fully support the monorepo use case, too.
 
 We advise you to use the following tools:
 
 1. Yarn: `npm i yarn@1 -g`
 2. Lerna: `npm i lerna -g`
 
-To set up a mono repo we encourage you to run in your desired repository:
+To set up a monorepo we encourage you to run in your desired repository:
 
 1. Run `npx lerna init`
 2. Add `piral-cli` to `devDependencies`
@@ -75,7 +75,7 @@ To set up a mono repo we encourage you to run in your desired repository:
 8. For new pilets use `pilet new <your-app-shell-name>`
 9. Everything should just work as normal
 
-You can still create emulator packages of your app shell, which can be shipped to teams that do not (or cannot / should not) contribute to the mono repo.
+You can still create emulator packages of your app shell, which can be shipped to teams that do not (or cannot / should not) contribute to the monorepo.
 
 ---------------------------------------
 
@@ -157,6 +157,26 @@ yarn workspaces --json info \
   echo "pilet debug $source"; \
   pilet debug $source \
 );
+```
+
+---------------------------------------
+
+## I use pnpm and get a build error that `react` is not found?
+
+Presumably you are using `piral` where `react` (and other packages) are already directly referenced. In this case, the `node_modules` structure of pnpm requires you to still reference packages that you use in your code directly.
+
+We recommend to include things like `react` or `react-router-dom` as `dependencies` with `*`. This way, pnpm will take the version as specified by `piral` - while making the package available in your project's `node_modules` folder. It could look like:
+
+```json
+{
+  "name": "...",
+  "dependencies": {
+    "piral": "0.14.23",
+    "react": "*",
+    "react-router-dom": "*"
+  },
+  //...
+}
 ```
 
 ---------------------------------------
