@@ -404,7 +404,7 @@ export function makePiletExternals(
   externals: Array<string>,
   fromEmulator: boolean,
   piralInfo: any,
-) {
+): Array<string> {
   if (fromEmulator) {
     const { sharedDependencies = makeExternals(dependencies, externals, true) } = piralInfo;
     return sharedDependencies;

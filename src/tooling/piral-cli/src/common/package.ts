@@ -12,7 +12,7 @@ import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExtern
 import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { Framework, FileInfo, PiletsInfo, TemplateFileLocation, SharedDependency } from '../types';
+import { Framework, FileInfo, PiletsInfo, TemplateFileLocation, SharedDependency, PackageData } from '../types';
 
 function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
   if (bundler && bundler !== 'none') {
@@ -159,7 +159,7 @@ function findPackage(pck: string | Array<string>, baseDir: string) {
   return undefined;
 }
 
-export function readPiralPackage(root: string, name: string) {
+export function readPiralPackage(root: string, name: string): Promise<PackageData> {
   log('generalDebug_0003', `Reading the piral package in "${root}" ...`);
   const path = getPiralPath(root, name);
   return readJson(path, 'package.json');
@@ -319,10 +319,19 @@ function isTemplateFileLocation(item: string | TemplateFileLocation): item is Te
   return typeof item === 'object';
 }
 
+function tryFindPackageVersion(packageName: string): string {
+  try {
+    const { version } = require(`${packageName}/package.json`);
+    return version;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function copyPiralFiles(
   root: string,
   name: string,
-  piralInfo: any,
+  piralInfo: PackageData,
   forceOverwrite: ForceOverwrite,
   variables: Record<string, string>,
   originalFiles?: Array<FileInfo>,
@@ -342,7 +351,7 @@ export async function copyPiralFiles(
   await copyFiles(files, forceOverwrite, originalFiles, variables);
 }
 
-export function getPiletsInfo(piralInfo: any): PiletsInfo {
+export function getPiletsInfo(piralInfo: Partial<PackageData>): PiletsInfo {
   const {
     files = [],
     externals = [],
@@ -491,7 +500,7 @@ export async function patchPiletPackage(
   root: string,
   name: string,
   version: string,
-  piralInfo: any,
+  piralInfo: PackageData,
   fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
@@ -539,7 +548,7 @@ export async function patchPiletPackage(
       return deps;
     }, {}),
     ...allExternals.filter(isValidDependency).reduce((deps, name) => {
-      const version = piralDependencies[name];
+      const version = piralDependencies[name] || tryFindPackageVersion(name);
 
       if (version || newInfo) {
         // set only if we have an explicit version or we are in the scaffolding case
@@ -576,7 +585,7 @@ export async function patchPiletPackage(
 /**
  * Returns true if its an emulator package, otherwise it has to be a "raw" app shell.
  */
-export function checkAppShellPackage(appPackage: any) {
+export function checkAppShellPackage(appPackage: PackageData) {
   const { piralCLI = { generated: false, version: cliVersion } } = appPackage;
 
   if (piralCLI.generated) {

@@ -1,4 +1,4 @@
-import { LogLevels } from './common';
+import type { LogLevels, PiletsInfo } from './common';
 
 export interface PackageData {
   name: string;
@@ -13,6 +13,11 @@ export interface PackageData {
         email?: string;
       };
   custom?: any;
+  pilets?: PiletsInfo;
+  piralCLI?: { generated: boolean; version: string };
+  dependencies: Record<string, string>;
+  peerDependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
 }
 
 export interface PackageFiles {
