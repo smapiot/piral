@@ -2,11 +2,11 @@ import { resolve } from 'path';
 import { clients } from './clients';
 import {
   dissectPackageName,
-  installPackage,
+  installNpmPackage,
   isMonorepoPackageRef,
-  installDependencies,
-  createPackage,
-  findTarball,
+  installNpmDependencies,
+  createNpmPackage,
+  findNpmTarball,
   findSpecificVersion,
   findLatestVersion,
   isLocalPackage,
@@ -165,37 +165,39 @@ describe('npm Module', () => {
 
   it('installs a package using the npm command line tool without a target', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the npm command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('npm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Yarn command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('yarn', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('yarn', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('yarn', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('yarn', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Pnpm command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('pnpm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('pnpm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the npm command line tool with some flag', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
+      expect(result).toEqual(jsonValueString),
+    );
     wrongCase = true;
-    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
+    await installNpmPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
       expect(result).not.toEqual(jsonValueString),
     );
   });
@@ -242,37 +244,37 @@ describe('npm Module', () => {
 
   it('install dependencies with npm client', async () => {
     wrongCase = false;
-    await installDependencies('npm').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies('npm').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('npm').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies('npm').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with pnpm client', async () => {
     wrongCase = false;
-    await installDependencies('pnpm').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies('pnpm').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('pnpm').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies('pnpm').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with yarn client', async () => {
     wrongCase = false;
-    await installDependencies('yarn').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies('yarn').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('yarn').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies('yarn').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('create npm package', async () => {
     wrongCase = false;
-    await createPackage().then((result) => expect(result).toEqual(jsonValueString));
+    await createNpmPackage().then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await createPackage().then((result) => expect(result).not.toEqual(jsonValueString));
+    await createNpmPackage().then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find npm tarball', async () => {
     wrongCase = false;
-    await findTarball('foo').then((result) => expect(result).toEqual(jsonValueString));
+    await findNpmTarball('foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await findTarball('foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await findNpmTarball('foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find latest version', async () => {

@@ -1,5 +1,5 @@
 import { join, dirname, resolve, basename, isAbsolute } from 'path';
-import { installPackage } from './npm';
+import { installNpmPackage } from './npm';
 import { ForceOverwrite, SourceLanguage } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
 import { log, fail } from './log';
@@ -36,7 +36,7 @@ async function getTemplateFiles(
   if (templatePackageName.startsWith('.')) {
     templatePackageName = resolve(process.cwd(), templatePackageName);
   } else {
-    await installPackage('npm', templatePackageName, __dirname, '--registry', registry);
+    await installNpmPackage('npm', templatePackageName, __dirname, '--registry', registry);
   }
 
   const templateRunner = getTemplatePackage(templatePackageName);

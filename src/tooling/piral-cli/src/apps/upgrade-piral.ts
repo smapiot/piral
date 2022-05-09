@@ -3,7 +3,7 @@ import { LogLevels, NpmClientType } from '../types';
 import {
   readJson,
   checkExistingDirectory,
-  installDependencies,
+  installNpmDependencies,
   setLogLevel,
   progress,
   fail,
@@ -113,7 +113,7 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
 
   if (install) {
     progress(`Updating the npm packages to %s ...`, version);
-    await installDependencies(npmClient, root);
+    await installNpmDependencies(npmClient, root);
   }
 
   logDone('Piral instance upgraded successfully!');

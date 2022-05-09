@@ -5,12 +5,12 @@ import {
   SourceLanguage,
   createDirectory,
   createFileIfNotExists,
-  installPackage,
+  installNpmPackage,
   dissectPackageName,
   copyPiralFiles,
   patchPiletPackage,
   scaffoldPiletSourceFiles,
-  installDependencies,
+  installNpmDependencies,
   combinePackageRef,
   getPackageName,
   getPackageVersion,
@@ -29,6 +29,7 @@ import {
   getPiralPath,
   getPiletScaffoldData,
   config,
+  initNpmProject,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -128,6 +129,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
 
   if (success) {
     const npmClient = await determineNpmClient(root, options.npmClient);
+    const projectName = basename(root);
 
     progress(`Scaffolding new pilet in %s ...`, root);
 
@@ -136,7 +138,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
       'package.json',
       JSON.stringify(
         {
-          name: basename(root),
+          name: projectName,
           version: '1.0.0',
           description: '',
           keywords: ['pilet'],
@@ -151,6 +153,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
         2,
       ),
     );
+
+    await initNpmProject(npmClient, projectName, root);
 
     if (registry !== newPiletDefaults.registry) {
       progress(`Setting up npm registry (%s) ...`, registry);
@@ -171,7 +175,7 @@ always-auth=true`,
 
       progress(`Installing npm package %s ...`, packageRef);
 
-      await installPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
+      await installNpmPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
     } else {
       progress(`Using locally available npm package %s ...`, sourceName);
     }
@@ -213,7 +217,7 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      await installDependencies(npmClient, root);
+      await installNpmDependencies(npmClient, root);
     }
 
     if (postScaffold) {

@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { LogLevels, NpmClientType } from '../types';
 import {
   readJson,
-  installPackage,
+  installNpmPackage,
   checkExistingDirectory,
   patchPiletPackage,
   copyPiralFiles,
@@ -10,7 +10,7 @@ import {
   readPiralPackage,
   getPiletsInfo,
   runScript,
-  installDependencies,
+  installNpmDependencies,
   getCurrentPackageDetails,
   checkAppShellPackage,
   setLogLevel,
@@ -129,7 +129,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     if (!monorepoRef) {
       // only install the latest if the shell does come from remote
       progress(`Updating npm package to %s ...`, packageRef);
-      await installPackage(npmClient, packageRef, root, '--no-save');
+      await installNpmPackage(npmClient, packageRef, root, '--no-save');
     }
 
     const piralInfo = await readPiralPackage(root, sourceName);
@@ -162,7 +162,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
     if (install) {
       progress(`Updating dependencies ...`);
-      await installDependencies(npmClient, root);
+      await installNpmDependencies(npmClient, root);
     }
 
     if (postUpgrade) {

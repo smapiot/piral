@@ -43,3 +43,5 @@ export async function installPackage(packageRef: string, target = '.', ...flags:
 export async function detectClient(root: string) {
   return !!(await findFile(root, 'pnpm-lock.yaml'));
 }
+
+export async function initProject(projectName: string, target: string) {}

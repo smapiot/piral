@@ -3,14 +3,14 @@ import { LogLevels, Framework, NpmClientType } from '../types';
 import {
   ForceOverwrite,
   SourceLanguage,
-  installPackage,
+  installNpmPackage,
   updateExistingJson,
   getPiralPackage,
   scaffoldPiralSourceFiles,
   createDirectory,
   createFileIfNotExists,
   logDone,
-  installDependencies,
+  installNpmDependencies,
   combinePackageRef,
   setLogLevel,
   fail,
@@ -162,7 +162,7 @@ always-auth=true`,
 
     progress(`Installing npm package ${packageRef} ...`);
 
-    await installPackage(npmClient, packageRef, root, '--save-exact');
+    await installNpmPackage(npmClient, packageRef, root, '--save-exact');
 
     progress(`Taking care of templating ...`);
 
@@ -177,7 +177,7 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      await installDependencies(npmClient, root);
+      await installNpmDependencies(npmClient, root);
     }
 
     logDone(`Piral instance scaffolded successfully!`);

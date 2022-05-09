@@ -114,12 +114,12 @@ export async function isMonorepoPackageRef(refName: string, root: string): Promi
   return false;
 }
 
-export function installDependencies(client: NpmClientType, target = '.'): Promise<string> {
+export function installNpmDependencies(client: NpmClientType, target = '.'): Promise<string> {
   const { installDependencies } = clients[client];
   return installDependencies(target);
 }
 
-export async function installPackage(
+export async function installNpmPackage(
   client: NpmClientType,
   packageRef: string,
   target = '.',
@@ -137,17 +137,22 @@ export async function installPackage(
   }
 }
 
-export function publishPackage(target = '.', file = '*.tgz', flags: Array<string> = []): Promise<string> {
+export function initNpmProject(client: NpmClientType, projectName: string, target: string) {
+  const { initProject } = clients[client];
+  return initProject(projectName, target);
+}
+
+export function publishNpmPackage(target = '.', file = '*.tgz', flags: Array<string> = []): Promise<string> {
   const { publishPackage } = clients.npm;
   return publishPackage(target, file, ...flags);
 }
 
-export function createPackage(target = '.'): Promise<string> {
+export function createNpmPackage(target = '.'): Promise<string> {
   const { createPackage } = clients.npm;
   return createPackage(target);
 }
 
-export function findTarball(packageRef: string): Promise<string> {
+export function findNpmTarball(packageRef: string): Promise<string> {
   const { findTarball } = clients.npm;
   return findTarball(packageRef);
 }

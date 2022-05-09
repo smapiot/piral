@@ -32,6 +32,8 @@ export async function detectClient(root: string) {
   return !!(await findFile(root, 'package-lock.json'));
 }
 
+export async function initProject(projectName: string, target: string) {}
+
 // Functions to exclusively use from npm client:
 
 export async function unpackPackage(packageRef: string, target = '.', ...flags: Array<string>) {

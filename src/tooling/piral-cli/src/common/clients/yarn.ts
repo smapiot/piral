@@ -47,3 +47,5 @@ export async function installPackage(packageRef: string, target = '.', ...flags:
 export async function detectClient(root: string) {
   return !!(await findFile(root, 'yarn.lock'));
 }
+
+export async function initProject(projectName: string, target: string) {}

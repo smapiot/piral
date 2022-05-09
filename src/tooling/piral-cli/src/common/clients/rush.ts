@@ -1,10 +1,12 @@
-import { resolve } from 'path';
+import { dirname, relative, resolve } from 'path';
 import { log } from '../log';
-import { findFile } from '../io';
+import { findFile, readText, writeText } from '../io';
+import { jju } from '../../external';
 import { runCommand } from '../scripts';
 import { MemoryStream } from '../MemoryStream';
 
 // Helpers:
+const rushJson = 'rush.json';
 
 function runRushProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   log('generalDebug_0003', 'Starting the Rush process ...');
@@ -16,7 +18,8 @@ function convert(flags: Array<string>) {
   return flags.map((flag) => {
     switch (flag) {
       case '--save-exact':
-        return '--exact';
+        // discard as this may lead to problems
+        return '';
       case '--save-dev':
         return '--dev';
       case '--no-save':
@@ -45,5 +48,38 @@ export async function installPackage(packageRef: string, target = '.', ...flags:
 }
 
 export async function detectClient(root: string) {
-  return !!(await findFile(root, 'rush.json'));
+  return !!(await findFile(root, rushJson));
+}
+
+export async function initProject(packageName: string, target: string) {
+  const rushPath = await findFile(target, rushJson);
+
+  if (!rushPath) {
+    throw new Error(
+      `Could not find the "${rushJson}" from "${target}". Sure you want to create the project in the right directory?`,
+    );
+  }
+
+  const rushDir = dirname(rushPath);
+  const rushContent = await readText(rushDir, rushJson);
+  const rushData = jju.parse(rushContent);
+  const projectFolder = relative(rushDir, target);
+
+  if (!Array.isArray(rushData.projects)) {
+    rushData.projects = [];
+  }
+
+  rushData.projects.push({
+    packageName,
+    projectFolder,
+  });
+
+  await writeText(
+    rushDir,
+    rushJson,
+    jju.update(rushContent, rushData, {
+      mode: 'cjson',
+      indent: 2,
+    }),
+  );
 }
