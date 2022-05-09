@@ -6,11 +6,11 @@ import { inject } from './inject';
 function getContainerDir() {
   const currentDir = __dirname.split(sep).join(posix.sep);
 
-  if (currentDir.includes(`/.pnpm/${cliName}@${cliVersion}/node_modules/${cliName}/`)) {
-    return resolve(__dirname, '..', '..', '..', '..', '..');
+  if (!currentDir.includes(`/.pnpm/${cliName}@${cliVersion}/node_modules/${cliName}/`)) {
+    return resolve(__dirname, '..', '..');
   }
 
-  return resolve(__dirname, '..', '..');
+  return undefined;
 }
 
 async function getLocalPackageDir() {
@@ -25,7 +25,7 @@ async function getLocalPackageDir() {
   // Right now we always take the first one, but in the future this may be different
   // once we come up with more / better criteria to identify if its a good/valid
   // plugin root directory
-  for (const dir of proposedDirs) {
+  for (const dir of proposedDirs.filter(Boolean)) {
     log('generalDebug_0003', `Checking for potential plugin directory "${dir}" ...`);
 
     if (await isDirectory(dir)) {

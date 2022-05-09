@@ -19,6 +19,7 @@ import {
   cliVersion,
   getPiralScaffoldData,
   config,
+  initNpmProject,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -128,6 +129,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   if (success) {
     const npmClient = await determineNpmClient(root, options.npmClient);
     const packageRef = combinePackageRef(framework, version, 'registry');
+    const projectName = basename(root);
 
     progress(`Creating a new Piral instance in %s ...`, root);
 
@@ -136,7 +138,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       'package.json',
       JSON.stringify(
         {
-          name: basename(root),
+          name: projectName,
           version: '1.0.0',
           description: '',
           keywords: ['piral'],
@@ -147,6 +149,8 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
         2,
       ),
     );
+
+    await initNpmProject(npmClient, projectName, root);
 
     if (registry !== newPiralDefaults.registry) {
       progress(`Setting up npm registry (%s) ...`, registry);
