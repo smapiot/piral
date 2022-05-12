@@ -52,7 +52,12 @@ export async function initProject(projectName: string, target: string) {}
 
 export async function isProject(root: string, packageRef: string) {
   const details = await listProjects(root);
-  return typeof details?.[packageRef]?.location === 'string';
+
+  if (typeof details === 'object') {
+    return typeof details?.[packageRef]?.location === 'string';
+  }
+
+  return false;
 }
 
 // Functions to exclusively use from yarn client:

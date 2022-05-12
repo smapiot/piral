@@ -48,7 +48,12 @@ export async function initProject(projectName: string, target: string) {}
 
 export async function isProject(root: string, packageRef: string) {
   const projects = await listProjects(root);
-  return projects?.some((p) => p.name === packageRef) ?? false;
+
+  if (Array.isArray(projects)) {
+    return projects?.some((p) => p.name === packageRef) ?? false;
+  }
+
+  return false;
 }
 
 // Functions to exclusively use from pnpm client:

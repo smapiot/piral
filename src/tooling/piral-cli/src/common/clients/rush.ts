@@ -86,7 +86,12 @@ export async function initProject(packageName: string, target: string) {
 
 export async function isProject(root: string, packageRef: string) {
   const details = await listProjects(root);
-  return details?.projects?.some((p) => p.name === packageRef) ?? false;
+
+  if (typeof details === 'object' && Array.isArray(details?.projects)) {
+    return details?.projects?.some((p) => p.name === packageRef) ?? false;
+  }
+
+  return false;
 }
 
 // Functions to exclusively use from rush client:
