@@ -32,6 +32,17 @@ export async function detectClient(root: string) {
   return !!(await findFile(root, 'package-lock.json'));
 }
 
+export async function isProject(root: string, packageRef: string) {
+  const details = await listPackage(packageRef, root);
+  const packageDetails =  details?.dependencies?.[packageRef];
+
+  if (packageDetails && typeof packageDetails.resolved === 'string') {
+    return packageDetails.resolved.startsWith('file:');
+  }
+
+  return false;
+}
+
 export async function initProject(projectName: string, target: string) {}
 
 // Functions to exclusively use from npm client:
@@ -78,6 +89,7 @@ export async function listPackage(packageRef: string, target = '.', ...flags: Ar
     await runNpmProcess(['ls', packageRef, '--json', '--depth', '0', ...flags], target, ms);
   } catch (e) {
     log('generalDebug_0003', `npm ls packageRef error: ${e}`);
+    return {};
   }
 
   log('generalDebug_0003', `npm ls packageRef result: ${ms.value}`);

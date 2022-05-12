@@ -174,7 +174,6 @@ always-auth=true`,
       const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
       progress(`Installing npm package %s ...`, packageRef);
-
       await installNpmPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
     } else {
       progress(`Using locally available npm package %s ...`, sourceName);

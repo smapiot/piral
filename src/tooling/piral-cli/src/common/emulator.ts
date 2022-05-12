@@ -31,7 +31,7 @@ export async function createEmulatorSources(
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
   };
-  const allExternals = makeExternals(allDeps, piralPkg.pilets?.externals);
+  const allExternals = makeExternals(sourceDir, allDeps, piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
     allExternals.filter(isValidDependency).map(async (name) => ({

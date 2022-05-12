@@ -5,7 +5,7 @@ import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
 import { legacyCoreExternals, frameworkLibs } from './constants';
 import { inspectPackage } from './inspect';
-import { readJson, checkExists, findFile } from './io';
+import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
 
@@ -24,30 +24,37 @@ function resolveAbsPath(basePath: string, fullName: string) {
   return resolve(basePath, relPath);
 }
 
-async function detectMonorepoRoot(root: string): Promise<string> {
+async function detectMonorepoRoot(root: string): Promise<[] | [string, NpmClientType]> {
   let previous = root;
 
   do {
-    const isMonorepo =
-      (await checkExists(resolve(root, 'lerna.json'))) ||
-      (await checkExists(resolve(root, 'rush.json'))) ||
-      (await checkExists(resolve(root, 'pnpm-workspace.yaml')));
+    if (await checkExists(resolve(root, 'lerna.json'))) {
+      return [root, 'lerna'];
+    }
 
-    if (isMonorepo) {
-      return root;
+    if (await checkExists(resolve(root, 'rush.json'))) {
+      return [root, 'rush'];
+    }
+
+    if (await checkExists(resolve(root, 'pnpm-workspace.yaml'))) {
+      return [root, 'pnpm'];
     }
 
     const packageJson = await readJson(root, 'package.json');
 
     if (Array.isArray(packageJson?.workspaces)) {
-      return root;
+      if (await checkExists(resolve(root, 'yarn.lock'))) {
+        return [root, 'yarn'];
+      }
+
+      return [root, 'npm'];
     }
 
     previous = root;
     root = dirname(root);
   } while (root !== previous);
 
-  return undefined;
+  return [];
 }
 
 /**
@@ -103,12 +110,11 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
 }
 
 export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
-  const newRoot = await detectMonorepoRoot(root);
+  const [monorepoRoot, client] = await detectMonorepoRoot(root);
 
-  if (newRoot) {
-    const { listPackage } = clients.npm;
-    const details = await listPackage(refName, newRoot);
-    return details?.dependencies?.[refName]?.extraneous ?? false;
+  if (monorepoRoot) {
+    const c = clients[client];
+    return await c.isProject(monorepoRoot, refName);
   }
 
   return false;
@@ -326,7 +332,8 @@ export function isLinkedPackage(name: string, type: PackageType, hadVersion: boo
 
 export function combinePackageRef(name: string, version: string, type: PackageType) {
   if (type === 'registry') {
-    return `${name}@${version || 'latest'}`;
+    const tag = version || 'latest';
+    return `${name}@${tag}`;
   }
 
   return name;
@@ -380,19 +387,22 @@ export function getPackageVersion(
   }
 }
 
-function getExternalsFrom(packageName: string): Array<string> | undefined {
+function getExternalsFrom(root: string, packageName: string): Array<string> | undefined {
   try {
-    return require(`${packageName}/package.json`).sharedDependencies;
+    const target = require.resolve(`${packageName}/package.json`, {
+      paths: [root],
+    });
+    return require(target).sharedDependencies;
   } catch (err) {
     log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);
     return undefined;
   }
 }
 
-function getCoreExternals(dependencies: Record<string, string>): Array<string> {
+function getCoreExternals(root: string, dependencies: Record<string, string>): Array<string> {
   for (const frameworkLib of frameworkLibs) {
     if (dependencies[frameworkLib]) {
-      const deps = getExternalsFrom(frameworkLib);
+      const deps = getExternalsFrom(root, frameworkLib);
 
       if (deps) {
         return deps;
@@ -405,24 +415,23 @@ function getCoreExternals(dependencies: Record<string, string>): Array<string> {
 }
 
 export function makePiletExternals(
+  root: string,
   dependencies: Record<string, string>,
   externals: Array<string>,
   fromEmulator: boolean,
   piralInfo: any,
 ): Array<string> {
   if (fromEmulator) {
-    const { sharedDependencies = makeExternals(dependencies, externals, true) } = piralInfo;
+    const { sharedDependencies = mergeExternals(externals, legacyCoreExternals) } = piralInfo;
     return sharedDependencies;
   } else {
-    return makeExternals(dependencies, externals);
+    return makeExternals(root, dependencies, externals);
   }
 }
 
-export function makeExternals(dependencies: Record<string, string>, externals?: Array<string>, legacy = false) {
-  const coreExternals = legacy ? legacyCoreExternals : getCoreExternals(dependencies);
-
-  if (externals && Array.isArray(externals)) {
-    const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(
+export function mergeExternals(customExternals?: Array<string>, coreExternals: Array<string> = []) {
+  if (customExternals && Array.isArray(customExternals)) {
+    const [include, exclude] = customExternals.reduce<[Array<string>, Array<string>]>(
       (prev, curr) => {
         if (typeof curr === 'string') {
           if (curr.startsWith('!')) {
@@ -441,4 +450,9 @@ export function makeExternals(dependencies: Record<string, string>, externals?: 
   }
 
   return coreExternals;
+}
+
+export function makeExternals(root: string, dependencies: Record<string, string>, externals?: Array<string>) {
+  const coreExternals = getCoreExternals(root, dependencies);
+  return mergeExternals(externals, coreExternals);
 }

@@ -83,3 +83,24 @@ export async function initProject(packageName: string, target: string) {
     }),
   );
 }
+
+export async function isProject(root: string, packageRef: string) {
+  const details = await listProjects(root);
+  return details?.projects?.some((p) => p.name === packageRef) ?? false;
+}
+
+// Functions to exclusively use from rush client:
+
+export async function listProjects(target: string) {
+  const ms = new MemoryStream();
+
+  try {
+    await runRushProcess(['list', '--json'], target, ms);
+  } catch (e) {
+    log('generalDebug_0003', `rush list error: ${e}`);
+    return {};
+  }
+
+  log('generalDebug_0003', `rush list project result: ${ms.value}`);
+  return JSON.parse(ms.value);
+}
