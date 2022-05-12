@@ -40,8 +40,8 @@ jest.mock('../external', () => ({
 let specialCase = false;
 let shouldFind = true;
 let wrongCase = false;
-const jsonValueString = JSON.stringify({ dependencies: { npm: { extraneous: true } } });
-const jsonValueStringWrong = JSON.stringify({ dependencies: {} });
+const jsonValueString = JSON.stringify([{ name: 'npm' }]);
+const jsonValueStringWrong = JSON.stringify([]);
 
 jest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
