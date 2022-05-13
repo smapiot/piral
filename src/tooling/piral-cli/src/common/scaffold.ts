@@ -36,6 +36,10 @@ async function getTemplateFiles(
   if (templatePackageName.startsWith('.')) {
     templatePackageName = resolve(process.cwd(), templatePackageName);
   } else {
+    if (templatePackageName.indexOf('@', 1) === -1) {
+      templatePackageName = `${templatePackageName}@latest`;
+    }
+
     await installNpmPackage('npm', templatePackageName, __dirname, '--registry', registry);
   }
 
