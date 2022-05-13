@@ -466,13 +466,14 @@ export async function retrievePiletsInfo(entryFile: string) {
     fail('packageJsonMissing_0074');
   }
 
+  const root = dirname(packageJson);
   const packageInfo = require(packageJson);
   const allDeps = {
     ...packageInfo.devDependencies,
     ...packageInfo.dependencies,
   };
   const info = getPiletsInfo(packageInfo);
-  const externals = makeExternals(allDeps, info.externals);
+  const externals = makeExternals(root, allDeps, info.externals);
 
   return {
     ...info,
@@ -486,7 +487,7 @@ export async function retrievePiletsInfo(entryFile: string) {
     },
     scripts: packageInfo.scripts,
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
-    root: dirname(packageJson),
+    root,
   };
 }
 
@@ -524,7 +525,7 @@ export async function patchPiletPackage(
       }
     : info.scripts;
   const peerModules = [];
-  const allExternals = makePiletExternals(piralDependencies, externals, fromEmulator, piralInfo);
+  const allExternals = makePiletExternals(root, piralDependencies, externals, fromEmulator, piralInfo);
   const peerDependencies = {
     ...allExternals.reduce((deps, name) => {
       const valid = isValidDependency(name);

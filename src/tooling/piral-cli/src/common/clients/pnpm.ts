@@ -45,3 +45,29 @@ export async function detectClient(root: string) {
 }
 
 export async function initProject(projectName: string, target: string) {}
+
+export async function isProject(root: string, packageRef: string) {
+  const projects = await listProjects(root);
+
+  if (Array.isArray(projects)) {
+    return projects?.some((p) => p.name === packageRef) ?? false;
+  }
+
+  return false;
+}
+
+// Functions to exclusively use from pnpm client:
+
+export async function listProjects(target: string) {
+  const ms = new MemoryStream();
+
+  try {
+    await runPnpmProcess(['list', '--json', '--recursive', '--depth', '0'], target, ms);
+  } catch (e) {
+    log('generalDebug_0003', `pnpm list error: ${e}`);
+    return [];
+  }
+
+  log('generalDebug_0003', `pnpm list project result: ${ms.value}`);
+  return JSON.parse(ms.value);
+}

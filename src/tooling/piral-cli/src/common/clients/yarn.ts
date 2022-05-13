@@ -49,3 +49,29 @@ export async function detectClient(root: string) {
 }
 
 export async function initProject(projectName: string, target: string) {}
+
+export async function isProject(root: string, packageRef: string) {
+  const details = await listProjects(root);
+
+  if (typeof details === 'object') {
+    return typeof details?.[packageRef]?.location === 'string';
+  }
+
+  return false;
+}
+
+// Functions to exclusively use from yarn client:
+
+export async function listProjects(target: string) {
+  const ms = new MemoryStream();
+
+  try {
+    await runYarnProcess(['workspaces', 'info'], target, ms);
+  } catch (e) {
+    log('generalDebug_0003', `yarn workspaces error: ${e}`);
+    return {};
+  }
+
+  log('generalDebug_0003', `yarn workspaces result: ${ms.value}`);
+  return JSON.parse(ms.value);
+}
