@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.24 (tbd)
+## 0.14.24 (May 13, 2022)
 
 - Fixed issue with retrieving type root
 - Fixed `exports` field to use `*` notation
