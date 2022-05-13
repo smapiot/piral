@@ -29,6 +29,11 @@ const state = {
           component: StubComponent2,
         },
       ],
+      lol: [
+        {
+          component: StubComponent1,
+        },
+      ],
     },
   },
 };
@@ -67,7 +72,7 @@ describe('Extension Module', () => {
   it('overrides the empty renderer on not available extension', () => {
     const node = mount(<ExtensionSlot name="qxz" empty={() => <StubComponent1 key="empty" />} />);
     expect(node.find(StubComponent1).length).toBe(1);
-    expect(node.find(StubComponent1).length).toBe(1);
+    expect(node.find(StubComponent2).length).toBe(0);
   });
 
   it('overrides the empty renderer on an available extension', () => {
@@ -86,5 +91,31 @@ describe('Extension Module', () => {
     );
     expect(node.find(StubComponent1).length).toBe(1);
     expect(node.find(StubComponent2).length).toBe(1);
+  });
+
+  it('does not use the render function with empty when emptySkipsRender is set', () => {
+    const node = mount(
+      <ExtensionSlot
+        name="foo"
+        emptySkipsRender
+        empty={() => <StubComponent2 key="empty" />}
+        render={(nodes) => <StubComponent1 children={nodes} />}
+      />,
+    );
+    expect(node.find(StubComponent1).length).toBe(0);
+    expect(node.find(StubComponent2).length).toBe(1);
+  });
+
+  it('does use the render function without empty independent if emptySkipsRender is set', () => {
+    const node = mount(
+      <ExtensionSlot
+        name="lol"
+        emptySkipsRender
+        empty={() => <StubComponent2 key="empty" />}
+        render={(nodes) => <StubComponent1 children={nodes} />}
+      />,
+    );
+    expect(node.find(StubComponent1).length).toBe(2);
+    expect(node.find(StubComponent2).length).toBe(0);
   });
 });

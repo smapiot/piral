@@ -3,7 +3,7 @@ import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from '
 import { createFileFromTemplateIfNotExists } from './template';
 import { filesTar, filesOnceTar } from './constants';
 import { cliVersion } from './info';
-import { createPackage, makeExternals } from './npm';
+import { createNpmPackage, makeExternals } from './npm';
 import { createPiralDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
@@ -31,7 +31,7 @@ export async function createEmulatorSources(
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
   };
-  const allExternals = makeExternals(allDeps, piralPkg.pilets?.externals);
+  const allExternals = makeExternals(sourceDir, allDeps, piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
     allExternals.filter(isValidDependency).map(async (name) => ({
@@ -138,7 +138,7 @@ export async function createEmulatorSources(
 
 export async function packageEmulator(rootDir: string) {
   // finally package everything up
-  await createPackage(rootDir);
+  await createNpmPackage(rootDir);
 
   // get all files
   const names = await getFileNames(rootDir);

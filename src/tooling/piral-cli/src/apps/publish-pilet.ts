@@ -13,7 +13,7 @@ import {
   log,
   config,
   checkExists,
-  findTarball,
+  findNpmTarball,
   downloadFile,
   matchAnyPilet,
   retrievePiletData,
@@ -192,7 +192,7 @@ async function getFiles(
       }
       case 'npm': {
         log('generalDebug_0003', `View npm package "${sources.join('", "')}".`);
-        const allUrls = await Promise.all(sources.map((s) => findTarball(s)));
+        const allUrls = await Promise.all(sources.map((s) => findNpmTarball(s)));
         log('generalDebug_0003', `Download file from "${allUrls.join('", "')}".`);
         const allFiles = await Promise.all(allUrls.map((url) => downloadFile(url, ca)));
         return allFiles.reduce((result, files) => [...result, ...files], []);

@@ -9,14 +9,20 @@ import { LogLevels } from '../types';
 
 function findPiralBaseApi(root: string) {
   try {
-    return require
+    const file = require
       .resolve(piralBaseRoot, {
         paths: [root],
       })
       ?.replace(/\.js$/, '.d.ts');
+    return [
+      {
+        file,
+        name: 'PiletApi',
+      },
+    ];
   } catch (err) {
     log('generalError_0002', `Could not find the root API of "piral-base" from "${root}": ${err}`);
-    return undefined;
+    return [];
   }
 }
 
@@ -139,15 +145,15 @@ export async function createPiralDeclaration(
     root,
     files,
     types: findDeclaredTypings(root),
-    apis: [
-      {
-        file: findPiralBaseApi(root),
-        name: 'PiletApi',
-      },
-    ],
+    apis: findPiralBaseApi(root),
     imports: externals,
     logLevel,
     logger: createLogger(),
   };
-  return await createDeclarationFile(options, baseDir, target, forceOverwrite);
+
+  if (options.apis.length) {
+    return await createDeclarationFile(options, baseDir, target, forceOverwrite);
+  }
+
+  log('declarationCouldNotBeGenerated_0076', baseDir, 'The main Pilet API interface could not be found.');
 }

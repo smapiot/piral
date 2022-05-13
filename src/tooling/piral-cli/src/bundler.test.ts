@@ -48,7 +48,7 @@ jest.mock('./common', () => ({
     bundler: 'parcel',
   },
   cliVersion: '1.0.0',
-  installPackage: jest.fn(),
+  installNpmPackage: jest.fn(),
   fail(msg) {
     throw new Error(msg);
   },

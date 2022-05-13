@@ -23,11 +23,11 @@
       "import": "./esm/index.js",
       "require": "./lib/index.js"
     },
-    "./esm/": {
-      "import": "./esm/"
+    "./esm/*": {
+      "import": "./esm/*"
     },
-    "./lib/": {
-      "require": "./lib/"
+    "./lib/*": {
+      "require": "./lib/*"
     },
     "./vendor": {
       "require": "./vendor.js"

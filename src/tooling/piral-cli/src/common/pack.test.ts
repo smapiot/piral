@@ -13,7 +13,7 @@ jest.mock('./io', () => ({
 }));
 
 jest.mock('./npm', () => ({
-  createPackage: (target?: string) => {
+  createNpmPackage: (target?: string) => {
     return Promise.resolve(target);
   },
 }));

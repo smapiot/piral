@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { publishArtifacts } from '../release';
 import { LogLevels, PiralBuildType } from '../types';
-import { setLogLevel, progress, checkExists, fail, logDone, logReset, publishPackage, matchFiles } from '../common';
+import { setLogLevel, progress, checkExists, fail, logDone, logReset, publishNpmPackage, matchFiles } from '../common';
 
 export interface PublishPiralOptions {
   /**
@@ -58,7 +58,7 @@ async function publishEmulator(baseDir: string, source: string, args: Record<str
     p.push(`--${c}`, args[c]);
     return p;
   }, [] as Array<string>);
-  await publishPackage(directory, file, flags);
+  await publishNpmPackage(directory, file, flags);
 }
 
 async function publishRelease(

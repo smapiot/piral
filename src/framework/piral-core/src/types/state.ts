@@ -48,6 +48,9 @@ export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseC
  * The base type for pilet component registration in the global state context.
  */
 export interface BaseRegistration {
+  /**
+   * The pilet registering the component.
+   */
   pilet: string;
 }
 
@@ -55,7 +58,13 @@ export interface BaseRegistration {
  * The interface modeling the registration of a pilet page component.
  */
 export interface PageRegistration extends BaseRegistration {
+  /**
+   * The registered page component.
+   */
   component: WrappedComponent<PageComponentProps>;
+  /**
+   * The page's associated metadata.
+   */
   meta: PiralPageMeta;
 }
 
@@ -63,8 +72,17 @@ export interface PageRegistration extends BaseRegistration {
  * The interface modeling the registration of a pilet extension component.
  */
 export interface ExtensionRegistration extends BaseRegistration {
+  /**
+   * The wrapped registered extension component.
+   */
   component: WrappedComponent<ExtensionComponentProps<string>>;
+  /**
+   * The original extension component that has been registered.
+   */
   reference: any;
+  /**
+   * The default params (i.e., meta) of the extension.
+   */
   defaults: any;
 }
 
