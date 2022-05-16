@@ -42,7 +42,7 @@ export interface Bundler {
 }
 
 export interface ReleaseProvider {
-  (files: Array<string>, args: Record<string, string>): Promise<void>;
+  (files: Array<string>, args: Record<string, string>, interactive: boolean): Promise<void>;
 }
 
 export interface TemplateFileLocation {

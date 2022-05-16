@@ -208,6 +208,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .option('fields', undefined)
         .describe('fields', 'Sets additional fields to be included in the feed service request.')
         .default('fields', apps.publishPiralDefaults.fields)
+        .boolean('interactive')
+        .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
+        .default('interactive', apps.publishPiralDefaults.interactive)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -219,6 +222,7 @@ const allCommands: Array<ToolCommand<any>> = [
         type: args.type as PiralBuildType,
         provider: args.provider as string,
         fields: args.fields as Record<string, string>,
+        interactive: args.interactive as boolean,
       });
     },
   },
@@ -623,6 +627,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .option('headers', undefined)
         .describe('headers', 'Sets additional headers to be included in the feed service request.')
         .default('headers', apps.publishPiletDefaults.headers)
+        .boolean('interactive')
+        .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
+        .default('interactive', apps.publishPiletDefaults.interactive)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -641,6 +648,7 @@ const allCommands: Array<ToolCommand<any>> = [
         fields: args.fields as Record<string, string>,
         headers: args.headers as Record<string, string>,
         mode: args.mode as PiletPublishScheme,
+        interactive: args.interactive as boolean,
         _: args,
       });
     },

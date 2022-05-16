@@ -1,6 +1,7 @@
-import { cpus } from 'os';
+import { cpus, platform } from 'os';
 
 const info = require('../../package.json');
+const os = platform();
 
 export function findCompatVersion(version: string) {
   // we only care about major and minor
@@ -22,3 +23,6 @@ export const repositoryUrl = info.repository.url;
 export const isWindows = process.platform === 'win32';
 export const pathSeparator = isWindows ? ';' : ':';
 export const cpuCount = cpus().length;
+export const standardHeaders = {
+  'user-agent': `piral-cli/http.node-${os}`,
+};

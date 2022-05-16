@@ -16,15 +16,15 @@ function indexOrEnd(str: string, q: string) {
 }
 
 function splitVersion(v: string) {
-  var c = v.replace(/^v/, '').replace(/\+.*$/, '');
-  var patchIndex = indexOrEnd(c, '-');
-  var arr = c.substring(0, patchIndex).split('.');
+  const c = v.replace(/^v/, '').replace(/\+.*$/, '');
+  const patchIndex = indexOrEnd(c, '-');
+  const arr = c.substring(0, patchIndex).split('.');
   arr.push(c.substring(patchIndex + 1));
   return arr;
 }
 
 function parseSegment(v: string) {
-  var n = parseInt(v, 10);
+  const n = parseInt(v, 10);
   return isNaN(n) ? v : n;
 }
 

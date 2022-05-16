@@ -1,16 +1,13 @@
 import { join } from 'path';
 import { Agent } from 'https';
 import { Stream } from 'stream';
-import { platform, tmpdir } from 'os';
+import { tmpdir } from 'os';
 import { createWriteStream } from 'fs';
 import { log } from './log';
+import { standardHeaders } from './info';
+import { getTokenInteractively } from './interactive';
 import { axios, FormData } from '../external';
 import { PiletPublishScheme } from '../types';
-
-const os = platform();
-const standardHeaders = {
-  'user-agent': `piral-cli/http.node-${os}`,
-};
 
 function getMessage(body: string | { message?: string }) {
   if (typeof body === 'string') {
@@ -74,6 +71,7 @@ export function postFile(
   customFields: Record<string, string> = {},
   customHeaders: Record<string, string> = {},
   ca?: Buffer,
+  interactive = false,
 ): Promise<PostFileResult> {
   const form = new FormData();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
@@ -124,6 +122,22 @@ export function postFile(
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           const { data, statusText, status } = error.response;
+
+          if (interactive && 'interactiveAuth' in data) {
+            const { interactiveAuth } = data;
+
+            if (typeof interactiveAuth === 'string') {
+              log(
+                'generalDebug_0003',
+                `Received status "${status}" from HTTP - trying interactive log in to "${interactiveAuth}".`,
+              );
+
+              return getTokenInteractively(interactiveAuth, httpsAgent).then(({ mode, token }) =>
+                postFile(target, mode, token, file, customFields, customHeaders, ca, false),
+              );
+            }
+          }
+
           const message = getMessage(data) || '';
           log('unsuccessfulHttpPost_0066', statusText, status, message);
           return {

@@ -1,4 +1,8 @@
-import { inquirer } from '../external';
+import { Agent } from 'https';
+import { openBrowserAt } from './browser';
+import { standardHeaders } from './info';
+import { axios, inquirer } from '../external';
+import { PiletPublishScheme } from '../types';
 
 export function promptSelect(message: string, values: Array<string>, defaultValue: string): Promise<string> {
   const questions = [
@@ -23,4 +27,47 @@ export function promptConfirm(message: string, defaultValue: boolean): Promise<b
     },
   ];
   return inquirer.prompt(questions).then((answers: any) => answers.q);
+}
+
+type TokenResult = Promise<{ mode: PiletPublishScheme; token: string }>;
+
+const tokenRetrievers: Record<string, TokenResult> = {};
+
+export function getTokenInteractively(url: string, httpsAgent: Agent): TokenResult {
+  if (!(url in tokenRetrievers)) {
+    tokenRetrievers[url] = axios.default
+      .post(
+        url,
+        {
+          clientId: 'piral-cli',
+          clientName: 'Piral CLI',
+          description: 'Authorize the Piral CLI temporarily to perform actions in your name.',
+        },
+        {
+          headers: {
+            ...standardHeaders,
+            'content-type': 'application/json',
+          },
+          httpsAgent,
+        },
+      )
+      .then((res) => {
+        const { loginUrl, callbackUrl, expires } = res.data;
+        console.log(`Use the URL below to complete the login. The link expires at ${new Date(expires)}.`);
+        console.log('===');
+        console.log(loginUrl);
+        console.log('===');
+
+        openBrowserAt(loginUrl);
+
+        return axios.default.get(callbackUrl).then(({ data }) => {
+          console.log('Logged in successfully.');
+          return {
+            ...data,
+          };
+        });
+      });
+  }
+
+  return tokenRetrievers[url];
 }

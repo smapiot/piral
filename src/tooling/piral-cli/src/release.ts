@@ -21,6 +21,9 @@ const providers: Record<string, ReleaseProvider> = {
 
     await Promise.all(files.map(async (file) => copy(file, resolve(target, basename(file)))));
   },
+  async feed(files, args, interactive) {
+    //TODO post files to Piral Feed Service
+  },
 };
 
 function findReleaseProvider(providerName: string) {
@@ -43,7 +46,12 @@ export function setReleaseProvider(provider: QualifiedReleaseProvider) {
   }
 }
 
-export function publishArtifacts(providerName: string, files: Array<string>, args: Record<string, string>) {
+export function publishArtifacts(
+  providerName: string,
+  files: Array<string>,
+  args: Record<string, string>,
+  interactive: boolean,
+) {
   const runRelease = findReleaseProvider(providerName);
-  return runRelease(files, args);
+  return runRelease(files, args, interactive);
 }
