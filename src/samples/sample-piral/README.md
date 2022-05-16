@@ -24,7 +24,7 @@ You can also build the sample Piral instance to see what the outcome ("produced 
 yarn build:demo-full
 ```
 
-will produce the assets in the *dist/demo-full/release* directory. Additionally, the tarball for distribution via NPM will be placed in the *dist/demo-full/develop* directory.
+will produce the assets in the *dist/demo-full/release* directory. Additionally, the tarball for distribution via NPM will be placed in the *dist/demo-full/emulator* directory.
 
 ## Using
 
@@ -33,10 +33,12 @@ This example is also published on NPM as `sample-piral`.
 You can scaffold a new pilet for this instance using the `piral-cli`:
 
 ```sh
-pilet new sample-piral --target my-first-pilet
+npm init pilet --source sample-piral --target my-first-pilet --bundler esbuild --defaults
 ```
 
-This will create a new pilet called `my-first-pilet` in the *./my-first-pilet* folder. Afterwards run `npm install` in the directory to resolve all dependencies followed by `npm start` to start the instance locally.
+(**Note**: Here we select `esbuild` as bundler to use - you can choose any other if you want to)
+
+This will create a new pilet called `my-first-pilet` in the *./my-first-pilet* folder. Afterwards run `npm start` to start the instance locally.
 
 ## Pilets
 

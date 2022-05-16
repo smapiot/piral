@@ -20,6 +20,7 @@
 - Added `--feed` option to `piral debug` command
 - Added support for `importmap` in the app shell
 - Added semver possibilities for resolving shared dependencies
+- Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 
 ## 0.14.24 (May 13, 2022)
 
