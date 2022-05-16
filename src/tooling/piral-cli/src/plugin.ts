@@ -1,10 +1,39 @@
 import { readdir, stat } from 'fs';
-import { join, resolve } from 'path';
-import { log } from './common';
+import { join, resolve, sep, posix } from 'path';
+import { cliName, cliVersion, log } from './common';
 import { inject } from './inject';
 
-function getLocalPackageDir() {
-  return resolve(__dirname, '..', '..');
+function getContainerDir() {
+  const currentDir = __dirname.split(sep).join(posix.sep);
+
+  if (!currentDir.includes(`/.pnpm/${cliName}@${cliVersion}/node_modules/${cliName}/`)) {
+    return resolve(__dirname, '..', '..');
+  }
+
+  return undefined;
+}
+
+async function getLocalPackageDir() {
+  const proposedDirs = [
+    getContainerDir(),
+    resolve(process.cwd(), 'node_modules'),
+    resolve(process.cwd(), '..', 'node_modules'),
+    resolve(process.cwd(), '..', '..', 'node_modules'),
+    resolve(process.cwd(), '..', '..', '..', 'node_modules'),
+  ];
+
+  // Right now we always take the first one, but in the future this may be different
+  // once we come up with more / better criteria to identify if its a good/valid
+  // plugin root directory
+  for (const dir of proposedDirs.filter(Boolean)) {
+    log('generalDebug_0003', `Checking for potential plugin directory "${dir}" ...`);
+
+    if (await isDirectory(dir)) {
+      return dir;
+    }
+  }
+
+  return undefined;
 }
 
 function isDirectory(dir: string) {
@@ -83,7 +112,7 @@ async function getAllPlugins(rootDir: string): Promise<Array<string>> {
 }
 
 export async function loadPlugins() {
-  const localDir = getLocalPackageDir();
+  const localDir = await getLocalPackageDir();
   const allPlugins = await getAllPlugins(localDir);
 
   for (const pluginPath of allPlugins) {

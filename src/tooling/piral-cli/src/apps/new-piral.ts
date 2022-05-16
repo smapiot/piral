@@ -3,14 +3,14 @@ import { LogLevels, Framework, NpmClientType } from '../types';
 import {
   ForceOverwrite,
   SourceLanguage,
-  installPackage,
+  installNpmPackage,
   updateExistingJson,
   getPiralPackage,
   scaffoldPiralSourceFiles,
   createDirectory,
   createFileIfNotExists,
   logDone,
-  installDependencies,
+  installNpmDependencies,
   combinePackageRef,
   setLogLevel,
   fail,
@@ -19,6 +19,7 @@ import {
   cliVersion,
   getPiralScaffoldData,
   config,
+  initNpmProject,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -128,6 +129,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   if (success) {
     const npmClient = await determineNpmClient(root, options.npmClient);
     const packageRef = combinePackageRef(framework, version, 'registry');
+    const projectName = basename(root);
 
     progress(`Creating a new Piral instance in %s ...`, root);
 
@@ -136,7 +138,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       'package.json',
       JSON.stringify(
         {
-          name: basename(root),
+          name: projectName,
           version: '1.0.0',
           description: '',
           keywords: ['piral'],
@@ -147,6 +149,8 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
         2,
       ),
     );
+
+    await initNpmProject(npmClient, projectName, root);
 
     if (registry !== newPiralDefaults.registry) {
       progress(`Setting up npm registry (%s) ...`, registry);
@@ -162,7 +166,7 @@ always-auth=true`,
 
     progress(`Installing npm package ${packageRef} ...`);
 
-    await installPackage(npmClient, packageRef, root, '--save-exact');
+    await installNpmPackage(npmClient, packageRef, root, '--save-exact');
 
     progress(`Taking care of templating ...`);
 
@@ -177,7 +181,7 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      await installDependencies(npmClient, root);
+      await installNpmDependencies(npmClient, root);
     }
 
     logDone(`Piral instance scaffolded successfully!`);

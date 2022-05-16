@@ -1,6 +1,6 @@
 {
   "name": "piral-dashboard",
-  "version": "0.14.23",
+  "version": "0.14.24",
   "description": "Plugin for creating a centralized dashboard in Piral.",
   "keywords": [
     "piral",
@@ -25,11 +25,11 @@
       "import": "./esm/index.js",
       "require": "./lib/index.js"
     },
-    "./esm/": {
-      "import": "./esm/"
+    "./esm/*": {
+      "import": "./esm/*"
     },
-    "./lib/": {
-      "require": "./lib/"
+    "./lib/*": {
+      "require": "./lib/*"
     },
     "./package.json": "./package.json"
   },
@@ -59,7 +59,7 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.1.6",
-    "piral-core": "^0.14.23",
+    "piral-core": "^0.14.24",
     "react": "^18.0.0"
   },
   "peerDependencies": {

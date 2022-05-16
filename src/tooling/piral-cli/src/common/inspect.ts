@@ -1,5 +1,6 @@
 import { dirname, basename } from 'path';
 import { unpackGzTar } from './archive';
+import { jju } from '../external';
 import { PackageData, PackageFiles } from '../types';
 
 const packageRoot = 'package/';
@@ -8,7 +9,7 @@ function getPackageJson(files: PackageFiles): PackageData {
   const fileName = `${packageRoot}package.json`;
   const fileContent = files[fileName];
   const content = fileContent.toString('utf8');
-  return JSON.parse(content);
+  return jju.parse(content);
 }
 
 function getPiletMainPath(data: PackageData, files: PackageFiles) {

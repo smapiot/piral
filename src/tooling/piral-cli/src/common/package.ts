@@ -13,7 +13,7 @@ import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot } from './npm';
-import { Framework, FileInfo, PiletsInfo, TemplateFileLocation } from '../types';
+import { Framework, FileInfo, PiletsInfo, TemplateFileLocation, PackageData } from '../types';
 
 function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
   if (bundler && bundler !== 'none') {
@@ -149,7 +149,7 @@ function findPackage(pck: string | Array<string>, baseDir: string) {
   return undefined;
 }
 
-export function readPiralPackage(root: string, name: string) {
+export function readPiralPackage(root: string, name: string): Promise<PackageData> {
   log('generalDebug_0003', `Reading the piral package in "${root}" ...`);
   const path = getPiralPath(root, name);
   return readJson(path, 'package.json');
@@ -318,10 +318,19 @@ function isTemplateFileLocation(item: string | TemplateFileLocation): item is Te
   return typeof item === 'object';
 }
 
+function tryFindPackageVersion(packageName: string): string {
+  try {
+    const { version } = require(`${packageName}/package.json`);
+    return version;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function copyPiralFiles(
   root: string,
   name: string,
-  piralInfo: any,
+  piralInfo: PackageData,
   forceOverwrite: ForceOverwrite,
   variables: Record<string, string>,
   originalFiles?: Array<FileInfo>,
@@ -341,7 +350,7 @@ export async function copyPiralFiles(
   await copyFiles(files, forceOverwrite, originalFiles, variables);
 }
 
-export function getPiletsInfo(piralInfo: any): PiletsInfo {
+export function getPiletsInfo(piralInfo: Partial<PackageData>): PiletsInfo {
   const {
     files = [],
     scripts = {},
@@ -450,7 +459,7 @@ export async function retrieveExternals(root: string, packageInfo: any) {
       ...packageInfo.dependencies,
     };
     const deps = packageInfo.pilets?.externals;
-    return makeExternals(allDeps, deps);
+    return makeExternals(root, allDeps, deps);
   }
 
   return sharedDependencies.map((m) => m.name);
@@ -469,9 +478,9 @@ export async function retrievePiletsInfo(entryFile: string) {
     fail('packageJsonMissing_0074');
   }
 
+  const root = dirname(packageJson);
   const packageInfo = require(packageJson);
   const info = getPiletsInfo(packageInfo);
-  const root = dirname(packageJson);
   const externals = await retrieveExternals(root, packageInfo);
 
   return {
@@ -500,7 +509,7 @@ export async function patchPiletPackage(
   root: string,
   name: string,
   version: string,
-  piralInfo: any,
+  piralInfo: PackageData,
   fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
@@ -524,7 +533,7 @@ export async function patchPiletPackage(
       }
     : info.scripts;
   const peerModules = [];
-  const allExternals = makePiletExternals(piralDependencies, externals, fromEmulator, piralInfo);
+  const allExternals = makePiletExternals(root, piralDependencies, externals, fromEmulator, piralInfo);
   const peerDependencies = {
     ...allExternals.reduce((deps, name) => {
       const valid = isValidDependency(name);
@@ -548,7 +557,7 @@ export async function patchPiletPackage(
       return deps;
     }, {}),
     ...allExternals.filter(isValidDependency).reduce((deps, name) => {
-      const version = piralDependencies[name];
+      const version = piralDependencies[name] || tryFindPackageVersion(name);
 
       if (version || newInfo) {
         // set only if we have an explicit version or we are in the scaffolding case
@@ -585,7 +594,7 @@ export async function patchPiletPackage(
 /**
  * Returns true if its an emulator package, otherwise it has to be a "raw" app shell.
  */
-export function checkAppShellPackage(appPackage: any) {
+export function checkAppShellPackage(appPackage: PackageData) {
   const { piralCLI = { generated: false, version: cliVersion } } = appPackage;
 
   if (piralCLI.generated) {

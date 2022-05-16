@@ -1,6 +1,6 @@
 {
   "name": "piral-mithril",
-  "version": "0.14.23",
+  "version": "0.14.24",
   "description": "Plugin for integrating Mithril.js components in Piral.",
   "keywords": [
     "piral",
@@ -27,11 +27,11 @@
     "./convert": {
       "import": "./convert.js"
     },
-    "./esm/": {
-      "import": "./esm/"
+    "./esm/*": {
+      "import": "./esm/*"
     },
-    "./lib/": {
-      "require": "./lib/"
+    "./lib/*": {
+      "require": "./lib/*"
     },
     "./package.json": "./package.json"
   },
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "mithril": "2.0.4",
-    "piral-core": "^0.14.23"
+    "piral-core": "^0.14.24"
   },
   "peerDependencies": {
     "mithril": "^2.0.0"

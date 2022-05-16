@@ -1,6 +1,6 @@
 {
   "name": "piral-ie11polyfills-utils",
-  "version": "0.14.23",
+  "version": "0.14.24",
   "description": "A set of polyfills to use to make Piral instances IE11 compatible.",
   "keywords": [
     "piral",

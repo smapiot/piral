@@ -1,7 +1,7 @@
 import { resolve, join } from 'path';
 import { log, progress, fail } from './log';
 import { readJson, move } from './io';
-import { createPackage } from './npm';
+import { createNpmPackage } from './npm';
 import { ForceOverwrite } from './enums';
 
 async function getFile(root: string, name: string, dest: string) {
@@ -38,7 +38,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
 
   progress(`Packing pilet in ${dest} ...`);
   log('generalDebug_0003', 'Creating package ...');
-  await createPackage(root);
+  await createNpmPackage(root);
   log('generalDebug_0003', 'Successfully created package.');
   const name = `${pckg.name}-${pckg.version}.tgz`.replace(/@/g, '').replace(/\//g, '-');
   log('generalDebug_0003', `Assumed package name "${name}".`);

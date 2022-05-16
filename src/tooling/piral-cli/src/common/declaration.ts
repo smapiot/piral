@@ -16,10 +16,16 @@ function findPiralBaseApi(root: string) {
     const projectDir = dirname(packageJsonPath);
     // By default support for piral-base < 0.15
     const { piletApiTypings = 'lib/types.d.ts' } = project;
-    return resolve(projectDir, piletApiTypings);
+
+    return [
+      {
+        file: resolve(projectDir, piletApiTypings),
+        name: 'PiletApi',
+      },
+    ];
   } catch (err) {
     log('generalError_0002', `Could not find the root API of "piral-base" from "${root}": ${err}`);
-    return undefined;
+    return [];
   }
 }
 
@@ -142,15 +148,15 @@ export async function createPiralDeclaration(
     root,
     files,
     types: findDeclaredTypings(root),
-    apis: [
-      {
-        file: findPiralBaseApi(root),
-        name: 'PiletApi',
-      },
-    ],
+    apis: findPiralBaseApi(root),
     imports: externals,
     logLevel,
     logger: createLogger(),
   };
-  return await createDeclarationFile(options, baseDir, target, forceOverwrite);
+
+  if (options.apis.length) {
+    return await createDeclarationFile(options, baseDir, target, forceOverwrite);
+  }
+
+  log('declarationCouldNotBeGenerated_0076', baseDir, 'The main Pilet API interface could not be found.');
 }

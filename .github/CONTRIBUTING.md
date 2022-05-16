@@ -30,7 +30,7 @@ Before creating enhancement suggestions, please make sure that you first check t
 
 #### How Do I Submit a Suggestion
 
-Enhancements or general suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). After you've determined that the enhancement is not already requested, go ahead and create an issue providing the following information:
+Enhancements or general suggestions are tracked as [GitHub issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues). After you've determined that the enhancement is not already requested, go ahead and create an issue providing the following information:
 
 - **Use a clear and descriptive title** for the issue to identify the suggestion.
 - **Provide a step-by-step description of the suggested enhancement** in as many details as possible.

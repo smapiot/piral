@@ -5,12 +5,12 @@ import {
   SourceLanguage,
   createDirectory,
   createFileIfNotExists,
-  installPackage,
+  installNpmPackage,
   dissectPackageName,
   copyPiralFiles,
   patchPiletPackage,
   scaffoldPiletSourceFiles,
-  installDependencies,
+  installNpmDependencies,
   combinePackageRef,
   getPackageName,
   getPackageVersion,
@@ -27,10 +27,9 @@ import {
   isLinkedPackage,
   copyScaffoldingFiles,
   getPiralPath,
-  detectMonorepo,
-  bootstrapMonorepo,
   getPiletScaffoldData,
   config,
+  initNpmProject,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -130,6 +129,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
 
   if (success) {
     const npmClient = await determineNpmClient(root, options.npmClient);
+    const projectName = basename(root);
 
     progress(`Scaffolding new pilet in %s ...`, root);
 
@@ -138,7 +138,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
       'package.json',
       JSON.stringify(
         {
-          name: basename(root),
+          name: projectName,
           version: '1.0.0',
           description: '',
           keywords: ['pilet'],
@@ -153,6 +153,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
         2,
       ),
     );
+
+    await initNpmProject(npmClient, projectName, root);
 
     if (registry !== newPiletDefaults.registry) {
       progress(`Setting up npm registry (%s) ...`, registry);
@@ -172,8 +174,7 @@ always-auth=true`,
       const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
       progress(`Installing npm package %s ...`, packageRef);
-
-      await installPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
+      await installNpmPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
     } else {
       progress(`Using locally available npm package %s ...`, sourceName);
     }
@@ -215,13 +216,7 @@ always-auth=true`,
 
     if (install) {
       progress(`Installing dependencies ...`);
-      const monorepoKind = await detectMonorepo(root);
-
-      if (monorepoKind === 'lerna') {
-        await bootstrapMonorepo(root);
-      } else {
-        await installDependencies(npmClient, root);
-      }
+      await installNpmDependencies(npmClient, root);
     }
 
     if (postScaffold) {

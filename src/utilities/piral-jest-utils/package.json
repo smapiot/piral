@@ -1,6 +1,6 @@
 {
   "name": "piral-jest-utils",
-  "version": "0.14.23",
+  "version": "0.14.24",
   "description": "Utilities for testing pilets with jest.",
   "keywords": [
     "piral",
@@ -23,11 +23,11 @@
       "import": "./esm/index.js",
       "require": "./lib/index.js"
     },
-    "./esm/": {
-      "import": "./esm/"
+    "./esm/*": {
+      "import": "./esm/*"
     },
-    "./lib/": {
-      "require": "./lib/"
+    "./lib/*": {
+      "require": "./lib/*"
     },
     "./package.json": "./package.json"
   },
@@ -64,6 +64,6 @@
   "devDependencies": {
     "@types/enzyme": "^3.1.18",
     "@types/jest": "^26.0.24",
-    "piral-core": "^0.14.23"
+    "piral-core": "^0.14.24"
   }
 }

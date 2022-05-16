@@ -1,10 +1,11 @@
 import { resolve, relative, dirname, isAbsolute, sep } from 'path';
-import { createReadStream, existsSync, access, constants } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 import { log, fail } from './log';
+import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
 import { legacyCoreExternals, frameworkLibs } from './constants';
 import { inspectPackage } from './inspect';
-import { readJson, checkExists, findFile } from './io';
+import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
 import { PackageType, NpmClientType } from '../types';
 
@@ -23,50 +24,37 @@ function resolveAbsPath(basePath: string, fullName: string) {
   return resolve(basePath, relPath);
 }
 
-export function detectPnpm(root: string) {
-  return new Promise((res) => {
-    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, (noPnpmLock) => {
-      res(!noPnpmLock);
-    });
-  });
-}
+async function detectMonorepoRoot(root: string): Promise<[] | [string, NpmClientType]> {
+  let previous = root;
 
-export function detectNpm(root: string) {
-  return new Promise((res) => {
-    access(resolve(root, 'package-lock.json'), constants.F_OK, (noPackageLock) => {
-      res(!noPackageLock);
-    });
-  });
-}
-
-export async function detectYarn(root: string) {
-  return !!(await findFile(root, 'yarn.lock'));
-}
-
-export async function getLernaConfigPath(root: string) {
-  log('generalDebug_0003', 'Trying to get the configuration file for Lerna ...');
-  const file = await findFile(root, 'lerna.json');
-
-  if (file) {
-    log('generalDebug_0003', `Found Lerna config in "${file}".`);
-    return file;
-  }
-
-  return undefined;
-}
-
-export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
-  const file = await getLernaConfigPath(root);
-
-  if (file) {
-    try {
-      return require(file).npmClient;
-    } catch (err) {
-      log('generalError_0002', `Could not read lerna.json: ${err}.`);
+  do {
+    if (await checkExists(resolve(root, 'lerna.json'))) {
+      return [root, 'lerna'];
     }
-  }
 
-  return undefined;
+    if (await checkExists(resolve(root, 'rush.json'))) {
+      return [root, 'rush'];
+    }
+
+    if (await checkExists(resolve(root, 'pnpm-workspace.yaml'))) {
+      return [root, 'pnpm'];
+    }
+
+    const packageJson = await readJson(root, 'package.json');
+
+    if (Array.isArray(packageJson?.workspaces)) {
+      if (await checkExists(resolve(root, 'yarn.lock'))) {
+        return [root, 'yarn'];
+      }
+
+      return [root, 'npm'];
+    }
+
+    previous = root;
+    root = dirname(root);
+  } while (root !== previous);
+
+  return [];
 }
 
 /**
@@ -76,36 +64,45 @@ export async function getLernaNpmClient(root: string): Promise<NpmClientType> {
  */
 export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClientType> {
   if (!selected || !clientTypeKeys.includes(selected)) {
-    log('generalDebug_0003', 'No npm client selected. Checking for lock files ...');
-    const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
-    const found = +hasNpm + +hasYarn + +hasPnpm;
-    log('generalDebug_0003', `Results of the lock file check: npm = ${hasNpm}, Yarn = ${hasYarn}, Pnpm = ${hasPnpm}`);
+    log('generalDebug_0003', 'No npm client selected. Checking for lock or config files ...');
+
+    const searchedClients = await detectClients(root);
+    const foundClients = searchedClients.filter((m) => m.result);
+
+    log(
+      'generalDebug_0003',
+      `Results of the lock file check: ${searchedClients.map((m) => `${m.client}=${m.result}`).join(', ')}`,
+    );
+
     const defaultClient = config.npmClient;
 
-    if (found !== 1) {
-      const lernaClient = await getLernaNpmClient(root);
+    if (foundClients.length > 1) {
+      const wrapperClient = foundClients.find((m) => isWrapperClient(m.client));
 
-      if (clientTypeKeys.includes(lernaClient)) {
-        log('generalDebug_0003', `Found valid npm client via Lerna: ${lernaClient}.`);
-        return lernaClient;
+      if (wrapperClient) {
+        const { client } = wrapperClient;
+        log('generalDebug_0003', `Found valid wrapper client via lock or config file: "${client}".`);
       }
-    } else if (hasNpm) {
-      log('generalDebug_0003', `Found valid npm client via lockfile.`);
-      return 'npm';
-    } else if (hasYarn) {
-      log('generalDebug_0003', `Found valid Yarn client via lockfile.`);
-      return 'yarn';
-    } else if (hasPnpm) {
-      log('generalDebug_0003', `Found valid pnpm client via lockfile.`);
-      return 'pnpm';
+    }
+
+    if (foundClients.length > 0) {
+      const { client } = foundClients[0];
+
+      if (foundClients.length > 1) {
+        const clientStr = `"${foundClients.map((m) => m.client).join('", "')}"`;
+        log('generalWarning_0001', `Found multiple clients via their lock or config files: ${clientStr}.`);
+      }
+
+      log('generalDebug_0003', `Found valid direct client via lock or config file: "${client}".`);
+      return client;
     }
 
     if (clientTypeKeys.includes(defaultClient)) {
-      log('generalDebug_0003', `Found valid Pnpm client the default client: "${defaultClient}".`);
+      log('generalDebug_0003', `Using the default client: "${defaultClient}".`);
       return defaultClient;
     }
 
-    log('generalDebug_0003', 'Using the default npm client.');
+    log('generalDebug_0003', 'Using the default "npm" client.');
     return 'npm';
   }
 
@@ -113,103 +110,66 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
 }
 
 export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
-  const c = require(`./clients/npm`);
-  const newRoot = await detectMonorepoRoot(root);
+  const [monorepoRoot, client] = await detectMonorepoRoot(root);
 
-  if (newRoot) {
-    const details = await c.listPackage(refName, newRoot);
-    return details?.dependencies?.[refName]?.extraneous ?? false;
+  if (monorepoRoot) {
+    const c = clients[client];
+    return await c.isProject(monorepoRoot, refName);
   }
 
   return false;
 }
 
-export async function detectMonorepoRoot(root: string): Promise<string> {
-  const file = await getLernaConfigPath(root);
-
-  if (file !== undefined) {
-    return dirname(file);
-  }
-
-  let previous = root;
-
-  do {
-    const packageJson = await readJson(root, 'package.json');
-
-    if (Array.isArray(packageJson?.workspaces)) {
-      return root;
-    }
-
-    previous = root;
-    root = dirname(root);
-  } while (root !== previous);
-
-  return undefined;
+export function installNpmDependencies(client: NpmClientType, target = '.'): Promise<string> {
+  const { installDependencies } = clients[client];
+  return installDependencies(target);
 }
 
-export type MonorepoKind = 'none' | 'lerna' | 'yarn';
-
-export async function detectMonorepo(root: string): Promise<MonorepoKind> {
-  const newRoot = await detectMonorepoRoot(root);
-
-  if (newRoot) {
-    const file = await getLernaConfigPath(newRoot);
-
-    if (file !== undefined) {
-      return 'lerna';
-    }
-
-    const packageJson = await readJson(newRoot, 'package.json');
-
-    if (Array.isArray(packageJson?.workspaces)) {
-      return 'yarn';
-    }
-  }
-
-  return 'none';
-}
-
-export function bootstrapMonorepo(target = '.') {
-  const c = require(`./clients/lerna`);
-  return c.bootstrap(target);
-}
-
-export function installDependencies(client: NpmClientType, target = '.'): Promise<string> {
-  const c = require(`./clients/${client}`);
-  return c.installDependencies(target);
-}
-
-export function installPackage(
+export async function installNpmPackage(
   client: NpmClientType,
   packageRef: string,
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
-  const c = require(`./clients/${client}`);
-  return c.installPackage(packageRef, target, ...flags);
+  try {
+    const { installPackage } = clients[client];
+    return await installPackage(packageRef, target, ...flags);
+  } catch (ex) {
+    log(
+      'generalError_0002',
+      `Could not install the package "${packageRef}" using ${client}. Make sure ${client} is correctly installed and accessible: ${ex}`,
+    );
+    throw ex;
+  }
 }
 
-export function publishPackage(target = '.', file = '*.tgz', flags: Array<string> = []): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.publishPackage(target, file, ...flags);
+export function initNpmProject(client: NpmClientType, projectName: string, target: string) {
+  const { initProject } = clients[client];
+  return initProject(projectName, target);
 }
 
-export function createPackage(target = '.'): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.createPackage(target);
+export function publishNpmPackage(target = '.', file = '*.tgz', flags: Array<string> = []): Promise<string> {
+  const { publishPackage } = clients.npm;
+  return publishPackage(target, file, ...flags);
 }
 
-export function findTarball(packageRef: string): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.findTarball(packageRef);
+export function createNpmPackage(target = '.'): Promise<string> {
+  const { createPackage } = clients.npm;
+  return createPackage(target);
+}
+
+export function findNpmTarball(packageRef: string): Promise<string> {
+  const { findTarball } = clients.npm;
+  return findTarball(packageRef);
 }
 
 export function findSpecificVersion(packageName: string, version: string): Promise<string> {
-  const c = require(`./clients/npm`);
-  return c.findSpecificVersion(packageName, version);
+  const { findSpecificVersion } = clients.npm;
+  return findSpecificVersion(packageName, version);
 }
 
 export function findLatestVersion(packageName: string) {
+  const { findSpecificVersion } = clients.npm;
   return findSpecificVersion(packageName, 'latest');
 }
 
@@ -423,7 +383,8 @@ export function isLinkedPackage(name: string, type: PackageType, hadVersion: boo
 
 export function combinePackageRef(name: string, version: string, type: PackageType) {
   if (type === 'registry') {
-    return `${name}@${version || 'latest'}`;
+    const tag = version || 'latest';
+    return `${name}@${tag}`;
   }
 
   return name;
@@ -477,19 +438,22 @@ export function getPackageVersion(
   }
 }
 
-function getExternalsFrom(packageName: string): Array<string> | undefined {
+function getExternalsFrom(root: string, packageName: string): Array<string> | undefined {
   try {
-    return require(`${packageName}/package.json`).sharedDependencies;
+    const target = require.resolve(`${packageName}/package.json`, {
+      paths: [root],
+    });
+    return require(target).sharedDependencies;
   } catch (err) {
     log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);
     return undefined;
   }
 }
 
-function getCoreExternals(dependencies: Record<string, string>): Array<string> {
+function getCoreExternals(root: string, dependencies: Record<string, string>): Array<string> {
   for (const frameworkLib of frameworkLibs) {
     if (dependencies[frameworkLib]) {
-      const deps = getExternalsFrom(frameworkLib);
+      const deps = getExternalsFrom(root, frameworkLib);
 
       if (deps) {
         return deps;
@@ -502,24 +466,23 @@ function getCoreExternals(dependencies: Record<string, string>): Array<string> {
 }
 
 export function makePiletExternals(
+  root: string,
   dependencies: Record<string, string>,
   externals: Array<string>,
   fromEmulator: boolean,
   piralInfo: any,
-) {
+): Array<string> {
   if (fromEmulator) {
-    const { sharedDependencies = makeExternals(dependencies, externals, true) } = piralInfo;
+    const { sharedDependencies = mergeExternals(externals, legacyCoreExternals) } = piralInfo;
     return sharedDependencies;
   } else {
-    return makeExternals(dependencies, externals);
+    return makeExternals(root, dependencies, externals);
   }
 }
 
-export function makeExternals(dependencies: Record<string, string>, externals?: Array<string>, legacy = false) {
-  const coreExternals = legacy ? legacyCoreExternals : getCoreExternals(dependencies);
-
-  if (externals && Array.isArray(externals)) {
-    const [include, exclude] = externals.reduce<[Array<string>, Array<string>]>(
+export function mergeExternals(customExternals?: Array<string>, coreExternals: Array<string> = []) {
+  if (customExternals && Array.isArray(customExternals)) {
+    const [include, exclude] = customExternals.reduce<[Array<string>, Array<string>]>(
       (prev, curr) => {
         if (typeof curr === 'string') {
           if (curr.startsWith('!')) {
@@ -538,4 +501,9 @@ export function makeExternals(dependencies: Record<string, string>, externals?: 
   }
 
   return coreExternals;
+}
+
+export function makeExternals(root: string, dependencies: Record<string, string>, externals?: Array<string>) {
+  const coreExternals = getCoreExternals(root, dependencies);
+  return mergeExternals(externals, coreExternals);
 }

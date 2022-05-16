@@ -6,7 +6,7 @@ import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfig
 import { log } from '../common/log';
 import { getPiletSpecMeta } from '../common/spec';
 import { config } from '../common/config';
-import { axios, mime } from '../external';
+import { axios, mime, jju } from '../external';
 import { Bundler } from '../types';
 
 const { host } = config;
@@ -35,8 +35,8 @@ function fillPiletMeta(pilet: Pilet, basePath: string, metaFile: string) {
   const { root, bundler } = pilet;
   const metaPath = join(root, metaFile);
   const packagePath = join(root, 'package.json');
-  const def = JSON.parse(readFileSync(packagePath, 'utf8'));
-  const metaOverride = existsSync(metaPath) ? JSON.parse(readFileSync(metaPath, 'utf8')) : undefined;
+  const def = jju.parse(readFileSync(packagePath, 'utf8'));
+  const metaOverride = existsSync(metaPath) ? jju.parse(readFileSync(metaPath, 'utf8')) : undefined;
   const file = bundler.bundle.name.replace(/^[\/\\]/, '');
   const target = join(bundler.bundle.dir, file);
   const url = new URL(file, basePath);

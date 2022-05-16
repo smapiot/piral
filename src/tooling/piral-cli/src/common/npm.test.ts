@@ -1,16 +1,12 @@
 import { resolve } from 'path';
+import { clients } from './clients';
 import {
   dissectPackageName,
-  installPackage,
-  detectNpm,
-  detectPnpm,
-  detectYarn,
+  installNpmPackage,
   isMonorepoPackageRef,
-  detectMonorepo,
-  bootstrapMonorepo,
-  installDependencies,
-  createPackage,
-  findTarball,
+  installNpmDependencies,
+  createNpmPackage,
+  findNpmTarball,
   findSpecificVersion,
   findLatestVersion,
   isLocalPackage,
@@ -43,9 +39,10 @@ jest.mock('../external', () => ({
 }));
 
 let specialCase = false;
+let shouldFind = true;
 let wrongCase = false;
-const jsonValueString = JSON.stringify({ dependencies: { npm: { extraneous: true } } });
-const jsonValueStringWrong = JSON.stringify({ dependencies: {} });
+const jsonValueString = JSON.stringify([{ name: 'npm' }]);
+const jsonValueStringWrong = JSON.stringify([]);
 
 jest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
@@ -57,14 +54,15 @@ jest.mock('./scripts', () => ({
 }));
 
 jest.mock('fs', () => ({
-  constants: {
-    F_OK: 1,
-  },
   createReadStream() {
     return undefined;
   },
   exists: (file: string, cb: (status: boolean) => void) =>
-    cb(!file.endsWith('package.json') && !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock')))),
+    cb(
+      shouldFind &&
+        !file.endsWith('package.json') &&
+        !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock'))),
+    ),
   existsSync: (file: string) => {
     return true;
   },
@@ -73,13 +71,6 @@ jest.mock('fs', () => ({
   },
   realpathSync: () => ({}),
   readFileSync: () => '',
-  access: (path: string, mode: number, callback: (err: NodeJS.ErrnoException) => void) => {
-    if (path.includes('test')) {
-      return callback(undefined);
-    } else {
-      return callback(new Error('bla'));
-    }
-  },
 }));
 
 describe('npm Module', () => {
@@ -187,55 +178,66 @@ describe('npm Module', () => {
 
   it('installs a package using the npm command line tool without a target', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the npm command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('npm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Yarn command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('yarn', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('yarn', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('yarn', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('yarn', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Pnpm command line tool without a version', async () => {
     wrongCase = false;
-    await installPackage('pnpm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('pnpm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the npm command line tool with some flag', async () => {
     wrongCase = false;
-    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
+      expect(result).toEqual(jsonValueString),
+    );
     wrongCase = true;
-    await installPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
+    await installNpmPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
       expect(result).not.toEqual(jsonValueString),
     );
   });
 
   it('detectNpm finds package-lock.json', async () => {
-    await detectNpm('test').then((result) => expect(result).toBeTruthy());
-    await detectNpm('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
+    await clients.npm.detectClient('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = false;
+    await clients.npm.detectClient('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
   });
 
-  it('detectPnpm finds nppm-lock.yaml', async () => {
-    await detectPnpm('test').then((result) => expect(result).toBeTruthy());
-    await detectPnpm('toast').then((result) => expect(result).toBeFalsy());
+  it('detectPnpm finds pnpm-lock.yaml', async () => {
+    shouldFind = true;
+    await clients.pnpm.detectClient('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = false;
+    await clients.pnpm.detectClient('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
   });
 
   it('detectYarn finds yarn.lock', async () => {
-    await detectYarn('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = true;
+    await clients.yarn.detectClient('test').then((result) => expect(result).toBeTruthy());
+    shouldFind = false;
     specialCase = true;
-    await detectYarn('toast').then((result) => expect(result).toBeFalsy());
+    await clients.yarn.detectClient('toast').then((result) => expect(result).toBeFalsy());
+    shouldFind = true;
     specialCase = false;
   });
 
@@ -246,59 +248,46 @@ describe('npm Module', () => {
     await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeFalsy());
   });
 
-  it('verifies whether lerna config path is valid', async () => {
-    wrongCase = false;
-    await detectMonorepo('./').then((result) => {
-      expect(result).toBe('lerna');
-    });
-    wrongCase = true;
-    specialCase = true;
-    await detectMonorepo('./').then((result) => {
-      expect(result).toBe('none');
-    });
-    specialCase = false;
-  });
-
   it('verifies whether lerna bootstrap ran', async () => {
     wrongCase = false;
-    await bootstrapMonorepo().then((result) => expect(result).toEqual(jsonValueString));
+    await clients.lerna.installDependencies().then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await bootstrapMonorepo().then((result) => expect(result).not.toEqual(jsonValueString));
+    await clients.lerna.installDependencies().then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with npm client', async () => {
     wrongCase = false;
-    await installDependencies('npm').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies('npm').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('npm').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies('npm').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with pnpm client', async () => {
     wrongCase = false;
-    await installDependencies('pnpm').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies('pnpm').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('pnpm').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies('pnpm').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with yarn client', async () => {
     wrongCase = false;
-    await installDependencies('yarn').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies('yarn').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installDependencies('yarn').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies('yarn').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('create npm package', async () => {
     wrongCase = false;
-    await createPackage().then((result) => expect(result).toEqual(jsonValueString));
+    await createNpmPackage().then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await createPackage().then((result) => expect(result).not.toEqual(jsonValueString));
+    await createNpmPackage().then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find npm tarball', async () => {
     wrongCase = false;
-    await findTarball('foo').then((result) => expect(result).toEqual(jsonValueString));
+    await findNpmTarball('foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await findTarball('foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await findNpmTarball('foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('find latest version', async () => {
@@ -464,7 +453,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals without externals returns coreExternals', () => {
-    const externals = makeExternals({ piral: '*' });
+    const externals = makeExternals(process.cwd(), { piral: '*' });
     expect(externals).toEqual([
       'react',
       'react-dom',
@@ -479,7 +468,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with no externals returns coreExternals', () => {
-    const externals = makeExternals({ piral: '*' }, []);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, []);
     expect(externals).toEqual([
       'react',
       'react-dom',
@@ -494,12 +483,12 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with exclude coreExternals returns empty set', () => {
-    const externals = makeExternals({ piral: '*' }, ['!*']);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, ['!*']);
     expect(externals).toEqual([]);
   });
 
   it('makeExternals with externals concats coreExternals', () => {
-    const externals = makeExternals({ piral: '*' }, ['foo', 'bar']);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, ['foo', 'bar']);
     expect(externals).toEqual([
       'foo',
       'bar',
@@ -516,7 +505,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with external duplicate only reflects coreExternals', () => {
-    const externals = makeExternals({ piral: '*' }, ['react', 'foo']);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'foo']);
     expect(externals).toEqual([
       'react',
       'foo',
@@ -532,7 +521,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with explicit include and exclude', () => {
-    const externals = makeExternals({ piral: '*' }, ['react', 'react-calendar', '!history']);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-calendar', '!history']);
     expect(externals).toEqual([
       'react',
       'react-calendar',
@@ -547,7 +536,7 @@ describe('npm Module', () => {
   });
 
   it('makeExternals with all exclude and explicit include', () => {
-    const externals = makeExternals({ piral: '*' }, ['react', 'react-router-dom', '!*']);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-router-dom', '!*']);
     expect(externals).toEqual(['react', 'react-router-dom']);
   });
 });

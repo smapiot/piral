@@ -1,6 +1,6 @@
 {
   "name": "piral-inferno",
-  "version": "0.14.23",
+  "version": "0.14.24",
   "description": "Plugin for integrating Inferno components in Piral.",
   "keywords": [
     "piral",
@@ -27,11 +27,11 @@
     "./convert": {
       "import": "./convert.js"
     },
-    "./esm/": {
-      "import": "./esm/"
+    "./esm/*": {
+      "import": "./esm/*"
     },
-    "./lib/": {
-      "require": "./lib/"
+    "./lib/*": {
+      "require": "./lib/*"
     },
     "./package.json": "./package.json"
   },
@@ -62,7 +62,7 @@
   "devDependencies": {
     "inferno": "^7.3.2",
     "inferno-create-element": "^7.3.2",
-    "piral-core": "^0.14.23"
+    "piral-core": "^0.14.24"
   },
   "peerDependencies": {
     "inferno": "^7.0.0",

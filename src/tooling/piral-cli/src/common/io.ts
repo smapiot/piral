@@ -239,7 +239,7 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
   const allPatterns = patterns.reduce<Array<AnyPattern>>((agg, curr) => {
     const patterns = [];
 
-    if (/[a-zA-Z0-9\-\*]+$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
+    if (/[a-zA-Z0-9\-\*]$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
       patterns.push(curr, `${curr}.{${exts}}`, `${curr}/${nameOfPackageJson}`);
     } else if (curr.endsWith('/')) {
       patterns.push(`${curr}index.{${exts}}`, `${curr}${nameOfPackageJson}`);

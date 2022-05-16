@@ -1,0 +1,11 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://stackoverflow.com/"
+    },
+    {
+      "pattern": "^https://docs.github.com/"
+    }
+  ],
+  "aliveStatusCodes": [429, 200]
+}

@@ -1,6 +1,6 @@
 {
   "name": "piral-ng",
-  "version": "0.14.23",
+  "version": "0.14.24",
   "description": "Plugin for integrating Angular components in Piral.",
   "keywords": [
     "piral",
@@ -33,11 +33,11 @@
     "./extend-webpack": {
       "require": "./extend-webpack.js"
     },
-    "./esm/": {
-      "import": "./esm/"
+    "./esm/*": {
+      "import": "./esm/*"
     },
-    "./lib/": {
-      "require": "./lib/"
+    "./lib/*": {
+      "require": "./lib/*"
     },
     "./package.json": "./package.json"
   },
@@ -75,7 +75,7 @@
     "@angular/platform-browser": "^8.0.0",
     "@angular/platform-browser-dynamic": "^8.0.0",
     "@angular/router": "^8.0.0",
-    "piral-core": "^0.14.23",
+    "piral-core": "^0.14.24",
     "rxjs": "^7.3.0"
   },
   "peerDependencies": {
