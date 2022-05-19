@@ -245,6 +245,56 @@ stages:
               customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseDemoFull
+    displayName: PreRelease Demo Full Package
+    condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
+    pool:
+      vmImage: $(agentName)
+    environment: 'registry-npmjs-org'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: NodeTool@0
+            displayName: Use Node $(nodeVersion)
+            inputs:
+              versionSpec: $(nodeVersion)
+          - task: YarnInstaller@2
+            displayName: Install Yarn
+            inputs:
+              checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: setup
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
+          - task: Bash@3
+            displayName: Build Full Emulator
+            inputs:
+              targetType: inline
+              script: >-
+                ORIGVER=`yarn --silent ci:version`
+
+                VERSION="$ORIGVER-beta.$(previewId)"
+
+                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-piral/package.json
+
+                yarn build:demo-full --type emulator
+
+                mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
+          - task: Npm@1
+            displayName: Release Packages
+            inputs:
+              command: custom
+              customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag next
+              customEndpoint: DefaultNpmConnection
 
   - deployment: PreReleaseDemoMinimal
     displayName: PreRelease Demo Minimal Package
