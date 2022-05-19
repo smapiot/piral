@@ -137,7 +137,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   const krasBaseConfig = resolve(fullBase, krasrc);
   const krasRootConfig = resolve(root, krasrc);
-  const initial = createInitialKrasConfig(join(dirname(entryFiles), 'mocks'), {}, [], 'piral');
+  const initial = createInitialKrasConfig(join(dirname(entryFiles), 'mocks'));
   const required = {
     injectors: {
       piral: {
@@ -145,6 +145,9 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
         handle: ['/'],
         publicUrl,
         bundler,
+      },
+      pilet: {
+        active: false,
       },
     },
   };

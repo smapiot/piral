@@ -17,10 +17,9 @@ export function notifyServerOnline(bundlers: Array<Bundler>, path: string, api: 
 
 export function createInitialKrasConfig(
   directory: string,
-  map: Record<string, string>,
-  sources: Array<string>,
-  injectorName: string,
-  injectorDetails = {},
+  map: Record<string, string> = {},
+  sources: Array<string> = [],
+  feed: string | Array<string> = [],
 ) {
   return {
     api: '/manage-mock-server',
@@ -44,9 +43,13 @@ export function createInitialKrasConfig(
         active: true,
         randomize: true,
       },
-      [injectorName]: {
+      piral: {
         active: true,
-        ...injectorDetails,
+      },
+      pilet: {
+        active: true,
+        meta: 'debug-meta.json',
+        feed,
       },
       proxy: {
         active: true,

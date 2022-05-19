@@ -79,40 +79,44 @@ export default class PiletInjector implements KrasInjector {
 
   constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
-    // either take a full URI or make it an absolute path relative to the current origin
-    this.piletApi = /^https?:/.test(options.api)
-      ? options.api
-      : `${config.ssl ? 'https' : 'http'}://${host}:${config.port}${options.api}`;
 
-    const { pilets, api, publicUrl } = options;
-    this.indexPath = `${publicUrl}index.html`;
-    const cbs = {};
+    if (this.config.active) {
+      // either take a full URI or make it an absolute path relative to the current origin
+      this.piletApi = /^https?:/.test(options.api)
+        ? options.api
+        : `${config.ssl ? 'https' : 'http'}://${host}:${config.port}${options.api}`;
 
-    core.on('user-connected', (e) => {
-      if (e.target === '*' && e.url === api.substring(1)) {
-        cbs[e.id] = (msg: string) => e.ws.send(msg);
-      }
-    });
+      const { pilets, api, publicUrl } = options;
+      this.indexPath = `${publicUrl}index.html`;
+      const cbs = {};
 
-    core.on('user-disconnected', (e) => {
-      delete cbs[e.id];
-    });
-
-    pilets.forEach((p, i) =>
-      p.bundler.on(() => {
-        const basePath = `${this.piletApi}/${i}/`;
-        const meta = fillPiletMeta(p, basePath, options.meta);
-
-        for (const id of Object.keys(cbs)) {
-          cbs[id](meta);
+      core.on('user-connected', (e) => {
+        if (e.target === '*' && e.url === api.substring(1)) {
+          cbs[e.id] = (msg: string) => e.ws.send(msg);
         }
-      }),
-    );
+      });
+
+      core.on('user-disconnected', (e) => {
+        delete cbs[e.id];
+      });
+
+      pilets.forEach((p, i) =>
+        p.bundler.on(() => {
+          const basePath = `${this.piletApi}/${i}/`;
+          const meta = fillPiletMeta(p, basePath, options.meta);
+
+          for (const id of Object.keys(cbs)) {
+            cbs[id](meta);
+          }
+        }),
+      );
+    }
   }
 
   get active() {
     return this.config.active;
   }
+
   set active(value) {
     this.config.active = value;
   }

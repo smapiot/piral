@@ -27,7 +27,7 @@
     "watch:demo-core": "piral debug src/samples/sample-piral-core/src/index.html --bundler webpack5",
     "build:demo-core": "piral build src/samples/sample-piral-core/src/index.html --target dist/demo-core/index.html --type release --bundler webpack5",
     "watch:demo-full": "piral debug src/samples/sample-piral/src/index.html --bundler webpack5",
-    "build:demo-full": "piral build src/samples/sample-piral/src/index.html --target dist/demo-full/index.html --bundler webpack5 --type emulator-sources",
+    "build:demo-full": "piral build src/samples/sample-piral/src/index.html --target dist/demo-full/index.html --bundler webpack5",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --project tsconfig.json",
     "prettify": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
     "test": "jest --forceExit",
