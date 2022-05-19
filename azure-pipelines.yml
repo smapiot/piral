@@ -475,7 +475,7 @@ stages:
               customCommand: publish dist/demo-full/emulator/sample-full.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
-  - deployment: ReleaseDemoFull
+  - deployment: ReleaseDemoMinimal
     displayName: Release Demo Minimal Package
     condition: eq(variables['Build.SourceBranchName'], variables['releaseBranch'])
     pool:
