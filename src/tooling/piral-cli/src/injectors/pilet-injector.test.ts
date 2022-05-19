@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { KrasRequest } from 'kras';
-import PiletInjector from './pilet';
+import PiletInjector from './pilet-injector';
 
 const optionsMock = {
   pilets: [],

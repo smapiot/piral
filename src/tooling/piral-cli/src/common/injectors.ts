@@ -1,24 +1,8 @@
 import chalk from 'chalk';
-import { KrasConfigurationInjectors } from 'kras';
+import { resolve } from 'path';
 import { liveIcon, settingsIcon } from './emoji';
 import { logInfo, log, logReset } from './log';
 import { Bundler } from '../types';
-
-export function reorderInjectors(injectorName: string, injectorConfig: any, injectors: KrasConfigurationInjectors) {
-  return {
-    script: injectors.script || {
-      active: true,
-    },
-    har: injectors.har || {
-      active: true,
-    },
-    json: injectors.json || {
-      active: true,
-    },
-    [injectorName]: injectorConfig,
-    ...injectors,
-  };
-}
 
 export function notifyServerOnline(bundlers: Array<Bundler>, path: string, api: string | false) {
   return (svc: any) => {
@@ -28,5 +12,45 @@ export function notifyServerOnline(bundlers: Array<Bundler>, path: string, api: 
     logInfo(`${settingsIcon} Manage via ${chalk.bold(address + api)}`);
     logReset();
     bundlers.forEach((bundler) => bundler.start());
+  };
+}
+
+export function createInitialKrasConfig(
+  directory: string,
+  map: Record<string, string>,
+  sources: Array<string>,
+  injectorName: string,
+  injectorDetails = {},
+) {
+  return {
+    api: '/manage-mock-server',
+    directory,
+    map: {
+      '/': '',
+      ...map,
+    },
+    ssl: undefined,
+    sources,
+    injectorDirs: [resolve(__dirname, '../injectors')],
+    injectors: {
+      script: {
+        active: true,
+      },
+      har: {
+        active: true,
+        delay: false,
+      },
+      json: {
+        active: true,
+        randomize: true,
+      },
+      [injectorName]: {
+        active: true,
+        ...injectorDetails,
+      },
+      proxy: {
+        active: true,
+      },
+    },
   };
 }

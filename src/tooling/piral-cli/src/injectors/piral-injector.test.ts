@@ -1,4 +1,4 @@
-import PiralInjector from './piral';
+import PiralInjector from './piral-injector';
 import { KrasRequest, KrasResult } from 'kras';
 import { EventEmitter } from 'events';
 

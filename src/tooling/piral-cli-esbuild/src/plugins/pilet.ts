@@ -36,7 +36,8 @@ export const piletPlugin = (options: PiletPluginOptions): Plugin => ({
       } else if (args.resolveDir !== '') {
         return {
           path: isAbsolute(args.path) ? args.path : join(args.resolveDir, args.path),
-          namespace: 'ref-stub',
+          // for CSS we'll just use the path; no intermediate module needed
+          namespace: args.kind === 'url-token' ? 'ref-binary' : 'ref-stub',
         };
       } else {
         return; // Ignore unresolvable paths

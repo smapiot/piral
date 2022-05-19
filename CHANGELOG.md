@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.25 (tbd)
+
+- Fixed issue with `piral-cli-esbuild` referencing files in CSS
+
 ## 0.14.24 (May 13, 2022)
 
 - Fixed issue with retrieving type root

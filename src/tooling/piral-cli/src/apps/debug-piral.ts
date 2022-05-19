@@ -1,5 +1,5 @@
 import { dirname, join, resolve } from 'path';
-import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
 import { callPiralDebug } from '../bundler';
 import { LogLevels } from '../types';
 import {
@@ -7,7 +7,6 @@ import {
   retrievePiralRoot,
   openBrowser,
   checkCliCompatibility,
-  reorderInjectors,
   notifyServerOnline,
   setLogLevel,
   progress,
@@ -15,6 +14,7 @@ import {
   config,
   normalizePublicUrl,
   logDone,
+  createInitialKrasConfig,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -87,8 +87,6 @@ export const debugPiralDefaults: DebugPiralOptions = {
   optimizeModules: false,
 };
 
-const injectorName = resolve(__dirname, '../injectors/piral.js');
-
 export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions = {}) {
   const {
     entry = debugPiralDefaults.entry,
@@ -110,29 +108,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
-  const krasConfig = readKrasConfig({ port }, krasrc);
 
   await checkCliCompatibility(root);
-
-  if (krasConfig.directory === undefined) {
-    krasConfig.directory = join(dirname(entryFiles), 'mocks');
-  }
-
-  if (krasConfig.ssl === undefined) {
-    krasConfig.ssl = undefined;
-  }
-
-  if (krasConfig.map === undefined) {
-    krasConfig.map = {};
-  }
-
-  if (krasConfig.api === undefined) {
-    krasConfig.api = '/manage-mock-server';
-  }
-
-  if (krasConfig.injectors === undefined) {
-    krasConfig.injectors = defaultConfig.injectors;
-  }
 
   await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, name });
 
@@ -158,17 +135,20 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
   });
 
-  const { piral: piralInjector, ...otherInjectors } = krasConfig.injectors;
-  const injectorConfig = {
-    ...piralInjector,
-    active: true,
-    handle: ['/'],
-    publicUrl,
-    bundler,
+  const krasBaseConfig = resolve(fullBase, krasrc);
+  const krasRootConfig = resolve(root, krasrc);
+  const initial = createInitialKrasConfig(join(dirname(entryFiles), 'mocks'), {}, [], 'piral');
+  const required = {
+    injectors: {
+      piral: {
+        active: true,
+        handle: ['/'],
+        publicUrl,
+        bundler,
+      },
+    },
   };
-
-  krasConfig.map['/'] = '';
-  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, otherInjectors);
+  const krasConfig = readKrasConfig({ port, initial, required }, krasBaseConfig, krasRootConfig);
 
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
