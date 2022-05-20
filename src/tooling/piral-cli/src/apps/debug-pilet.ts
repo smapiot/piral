@@ -283,7 +283,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const sources = pilets.map((m) => m.mocks).filter(Boolean);
   const krasBaseConfig = resolve(fullBase, krasrc);
   const krasRootConfig = resolve(appRoot, krasrc);
-  const initial = createInitialKrasConfig(sources[0], { [api]: '' }, sources, feed);
+  const initial = createInitialKrasConfig(sources[0] || resolve(fullBase, 'mocks'), { [api]: '' }, sources, feed);
   const required = {
     injectors: {
       piral: {

@@ -3,6 +3,7 @@
 ## 0.14.25 (tbd)
 
 - Fixed issue with `piral-cli-esbuild` referencing files in CSS
+- Updated `kras` to `v0.14` and improved dev server config resolution
 
 ## 0.14.24 (May 13, 2022)
 
