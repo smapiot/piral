@@ -42,10 +42,10 @@ export function keyOfForceOverwrite(value: ForceOverwrite) {
   return forceOverwriteKeys[0];
 }
 
-export const piletLanguageKeys = Object.keys(SourceLanguage).filter((m) => typeof SourceLanguage[m] === 'number');
+export const sourceLanguageKeys = Object.keys(SourceLanguage).filter((m) => typeof SourceLanguage[m] === 'number');
 
-export function valueOfPiletLanguage(key: string): SourceLanguage {
-  for (const piletLanguageKey of piletLanguageKeys) {
+export function valueOfSourceLanguage(key: string): SourceLanguage {
+  for (const piletLanguageKey of sourceLanguageKeys) {
     if (piletLanguageKey === key) {
       return SourceLanguage[piletLanguageKey];
     }
@@ -54,12 +54,12 @@ export function valueOfPiletLanguage(key: string): SourceLanguage {
   return SourceLanguage.ts;
 }
 
-export function keyOfPiletLanguage(value: SourceLanguage) {
-  for (const piletLanguageKey of piletLanguageKeys) {
+export function keyOfSourceLanguage(value: SourceLanguage) {
+  for (const piletLanguageKey of sourceLanguageKeys) {
     if (SourceLanguage[piletLanguageKey] === value) {
       return piletLanguageKey;
     }
   }
 
-  return piletLanguageKeys[0];
+  return sourceLanguageKeys[0];
 }

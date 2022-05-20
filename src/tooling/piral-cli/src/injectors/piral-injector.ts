@@ -13,6 +13,7 @@ const maxRetrySendResponse = 4;
 export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   publicUrl: string;
+  headers: Record<string, string>;
 }
 
 export default class PiralInjector implements KrasInjector {
@@ -66,8 +67,9 @@ export default class PiralInjector implements KrasInjector {
       return undefined;
     }
 
+    const { bundler, headers } = this.config;
+
     if (!path || !existsSync(target) || !statSync(target).isFile()) {
-      const { bundler } = this.config;
       const newTarget = join(bundler.bundle.dir, bundler.bundle.name);
       return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
     }
@@ -77,6 +79,7 @@ export default class PiralInjector implements KrasInjector {
     return {
       injector: { name: this.name },
       headers: {
+        ...headers,
         'content-type': type,
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',

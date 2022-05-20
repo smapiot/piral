@@ -24,6 +24,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   api: string;
   app: string;
   feed?: string;
+  headers: Record<string, string>;
 }
 
 interface PiletMetadata {
@@ -163,9 +164,12 @@ export default class PiletInjector implements KrasInjector {
   }
 
   sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
+    const { headers } = this.config;
+
     return {
       injector: { name: this.name },
       headers: {
+        ...headers,
         'content-type': type,
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',

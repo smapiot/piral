@@ -45,10 +45,12 @@ export function createInitialKrasConfig(
       },
       piral: {
         active: true,
+        headers: {},
       },
       pilet: {
         active: true,
         meta: 'debug-meta.json',
+        headers: {},
         feed,
       },
       proxy: {
