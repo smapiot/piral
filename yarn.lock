@@ -5606,15 +5606,10 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001254:
-  version "1.0.30001255"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001255.tgz#f3b09b59ab52e39e751a569523618f47c4298ca0"
-  integrity sha512-F+A3N9jTZL882f/fg/WWVnKSu6IOo3ueLz4zwaOPbPYHNmM/ZaDUyzyJwS1mZhX7Ex5jqTyW599Gdelh5PDYLQ==
-
-caniuse-lite@^1.0.30001265:
-  version "1.0.30001267"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001267.tgz#b1cf2937175afc0570e4615fc2d2f9069fa0ed30"
-  integrity sha512-r1mjTzAuJ9W8cPBGbbus8E0SKcUP7gn03R14Wk8FlAlqhH9hroy9nLqmpuXlfKEw/oILW+FGz47ipXV2O7x8lg==
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001254, caniuse-lite@^1.0.30001265, caniuse-lite@^1.0.30001341:
+  version "1.0.30001341"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001341.tgz#59590c8ffa8b5939cf4161f00827b8873ad72498"
+  integrity sha512-2SodVrFFtvGENGCv0ChVJIDQ0KPaS1cg7/qtfMaICgeMolDdo/Z2OD32F0Aq9yl6F4YFwGPBS5AaPqNYiW4PoA==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -10707,10 +10702,10 @@ kras-management-portal@^0.13.0:
   resolved "https://registry.yarnpkg.com/kras-management-portal/-/kras-management-portal-0.13.0.tgz#550f2797fce399529897aaa871030644d96812c1"
   integrity sha512-NjjXTHKcJ/ECkz03L/HQSUVnkuzZkEV2mwcex36lxJNNwiUrYM5Ju0toAjhLnf8Zpc3nLEPnWKmoTwpSgGim2A==
 
-kras@^0.13.2:
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.13.2.tgz#b157ab4409070b408cccb1123d234279dd4667e5"
-  integrity sha512-ACEGQemKZEmFEWuBufyz1NwVRUWIBOjo4R96IPPyU7nyb9dFDqWJ6hwgrwpS1MLpHEdhhd42E4qWOszaqp8WKw==
+kras@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.14.0.tgz#13e356cb0018dc2501a79e4d1c9124a29b03a1fb"
+  integrity sha512-tETQOwFEkeLF9v5iYHTYyfL7j/npAU6C6epG7/4pc0ZBEtmyIZ6M/WKSwO5sM05gLm0PoigjlMcOCtainmsAxQ==
   dependencies:
     kras-management-portal "^0.13.0"
     yargs "^15.4.1"

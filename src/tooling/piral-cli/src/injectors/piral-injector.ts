@@ -13,6 +13,7 @@ const maxRetrySendResponse = 4;
 export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   publicUrl: string;
+  headers: Record<string, string>;
 }
 
 export default class PiralInjector implements KrasInjector {
@@ -20,29 +21,33 @@ export default class PiralInjector implements KrasInjector {
 
   constructor(options: PiralInjectorConfig, _config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
-    const api = '/$events';
-    const cbs = {};
 
-    core.on('user-connected', (e) => {
-      if (e.target === '*' && e.url === api.substring(1)) {
-        cbs[e.id] = (msg: string) => e.ws.send(msg);
-      }
-    });
+    if (this.config.active) {
+      const api = '/$events';
+      const cbs = {};
 
-    core.on('user-disconnected', (e) => {
-      delete cbs[e.id];
-    });
+      core.on('user-connected', (e) => {
+        if (e.target === '*' && e.url === api.substring(1)) {
+          cbs[e.id] = (msg: string) => e.ws.send(msg);
+        }
+      });
 
-    this.config.bundler.on((args) => {
-      for (const id of Object.keys(cbs)) {
-        cbs[id](JSON.stringify(args));
-      }
-    });
+      core.on('user-disconnected', (e) => {
+        delete cbs[e.id];
+      });
+
+      this.config.bundler.on((args) => {
+        for (const id of Object.keys(cbs)) {
+          cbs[id](JSON.stringify(args));
+        }
+      });
+    }
   }
 
   get active() {
     return this.config.active;
   }
+
   set active(value) {
     this.config.active = value;
   }
@@ -62,8 +67,9 @@ export default class PiralInjector implements KrasInjector {
       return undefined;
     }
 
+    const { bundler, headers } = this.config;
+
     if (!path || !existsSync(target) || !statSync(target).isFile()) {
-      const { bundler } = this.config;
       const newTarget = join(bundler.bundle.dir, bundler.bundle.name);
       return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
     }
@@ -73,6 +79,7 @@ export default class PiralInjector implements KrasInjector {
     return {
       injector: { name: this.name },
       headers: {
+        ...headers,
         'content-type': type,
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',

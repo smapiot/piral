@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.14.25 (tbd)
+
+- Fixed issue with `piral-cli-esbuild` referencing files in CSS
+- Updated `kras` to `v0.14` and improved dev server config resolution
+- Added option to set `headers` in kras injector configuration
+
 ## 0.14.24 (May 13, 2022)
 
 - Fixed issue with retrieving type root

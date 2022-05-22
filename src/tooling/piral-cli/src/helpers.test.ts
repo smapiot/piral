@@ -1,4 +1,4 @@
-import { keyOfForceOverwrite, keyOfPiletLanguage, valueOfForceOverwrite, valueOfPiletLanguage } from './helpers';
+import { keyOfForceOverwrite, keyOfSourceLanguage, valueOfForceOverwrite, valueOfSourceLanguage } from './helpers';
 import { ForceOverwrite, SourceLanguage } from './common/enums';
 
 describe('Piral CLI Command Helpers Module', () => {
@@ -13,12 +13,12 @@ describe('Piral CLI Command Helpers Module', () => {
   });
 
   it('correct value of keyOfPiletLanguage results in same key', () => {
-    const result = keyOfPiletLanguage(SourceLanguage.ts);
+    const result = keyOfSourceLanguage(SourceLanguage.ts);
     expect(result).toBe('ts');
   });
 
   it('incorrect value of keyOfPiletLanguage results in key for TS', () => {
-    const result = keyOfPiletLanguage(5);
+    const result = keyOfSourceLanguage(5);
     expect(result).toBe('ts');
   });
 
@@ -33,12 +33,12 @@ describe('Piral CLI Command Helpers Module', () => {
   });
 
   it('correct key of valueOfPiletLanguage results in same value', () => {
-    const result = valueOfPiletLanguage('ts');
+    const result = valueOfSourceLanguage('ts');
     expect(result).toBe(SourceLanguage.ts);
   });
 
   it('incorrect key of valueOfPiletLanguage results in value for TS', () => {
-    const result = valueOfPiletLanguage('foo');
+    const result = valueOfSourceLanguage('foo');
     expect(result).toBe(SourceLanguage.ts);
   });
 });

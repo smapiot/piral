@@ -1,4 +1,4 @@
-import PiralInjector from './piral';
+import PiralInjector from './piral-injector';
 import { KrasRequest, KrasResult } from 'kras';
 import { EventEmitter } from 'events';
 
@@ -37,6 +37,7 @@ describe('Piral-CLI piral injector', () => {
       bundler,
       publicUrl: '/',
       active: true,
+      headers: {},
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());
     expect(injector.active).toBeTruthy();
@@ -48,6 +49,7 @@ describe('Piral-CLI piral injector', () => {
       bundler: bundlerMock,
       publicUrl: '/',
       active: true,
+      headers: {},
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());
 
@@ -67,6 +69,7 @@ describe('Piral-CLI piral injector', () => {
       bundler: bundlerMock,
       publicUrl: '/',
       active: true,
+      headers: {},
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());
 
@@ -83,6 +86,7 @@ describe('Piral-CLI piral injector', () => {
       bundler: bundlerMock,
       publicUrl: '/',
       active: true,
+      headers: {},
     };
     const injector = new PiralInjector(config, undefined, new EventEmitter());
     const request: KrasRequest = {
