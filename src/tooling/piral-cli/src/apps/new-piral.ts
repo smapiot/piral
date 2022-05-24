@@ -1,4 +1,5 @@
 import { resolve, basename } from 'path';
+import { frameworkKeys } from '../helpers';
 import { LogLevels, Framework, NpmClientType } from '../types';
 import {
   ForceOverwrite,
@@ -21,6 +22,7 @@ import {
   config,
   initNpmProject,
 } from '../common';
+import { sourceLanguageKeys } from '..';
 
 export interface NewPiralOptions {
   /**
@@ -122,6 +124,11 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
+
+  if (!frameworkKeys.includes(framework)) {
+    fail('generalError_0002', `The "framework" value must be one of: ${frameworkKeys.join(', ')}`);
+  }
+
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
   const success = await createDirectory(root);

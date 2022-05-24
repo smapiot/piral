@@ -14,6 +14,7 @@ export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   publicUrl: string;
   feed?: string;
+  headers: Record<string, string>;
 }
 
 export default class PiralInjector implements KrasInjector {
@@ -21,29 +22,33 @@ export default class PiralInjector implements KrasInjector {
 
   constructor(options: PiralInjectorConfig, _config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
-    const api = '/$events';
-    const cbs = {};
 
-    core.on('user-connected', (e) => {
-      if (e.target === '*' && e.url === api.substring(1)) {
-        cbs[e.id] = (msg: string) => e.ws.send(msg);
-      }
-    });
+    if (this.config.active) {
+      const api = '/$events';
+      const cbs = {};
 
-    core.on('user-disconnected', (e) => {
-      delete cbs[e.id];
-    });
+      core.on('user-connected', (e) => {
+        if (e.target === '*' && e.url === api.substring(1)) {
+          cbs[e.id] = (msg: string) => e.ws.send(msg);
+        }
+      });
 
-    this.config.bundler.on((args) => {
-      for (const id of Object.keys(cbs)) {
-        cbs[id](JSON.stringify(args));
-      }
-    });
+      core.on('user-disconnected', (e) => {
+        delete cbs[e.id];
+      });
+
+      this.config.bundler.on((args) => {
+        for (const id of Object.keys(cbs)) {
+          cbs[id](JSON.stringify(args));
+        }
+      });
+    }
   }
 
   get active() {
     return this.config.active;
   }
+
   set active(value) {
     this.config.active = value;
   }
@@ -59,9 +64,11 @@ export default class PiralInjector implements KrasInjector {
   setOptions() {}
 
   sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
+    const { headers } = this.config;
     return {
       injector: { name: this.name },
       headers: {
+        ...headers,
         'content-type': type,
         'cache-control': 'no-cache, no-store, must-revalidate',
         pragma: 'no-cache',

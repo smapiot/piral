@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { KrasRequest } from 'kras';
-import PiletInjector from './pilet';
+import PiletInjector from './pilet-injector';
 
 const optionsMock = {
   pilets: [],
@@ -9,6 +9,9 @@ const optionsMock = {
   api: '',
   app: '',
   active: true,
+  publicUrl: '/',
+  meta: '',
+  headers: {},
 };
 
 const configMock: any = {
@@ -89,6 +92,9 @@ describe('Piral-CLI piral injector', () => {
       publicUrl: '/',
       api: 'http://someFakeApi:1234',
       app: '',
+      publicUrl: '/',
+      meta: '',
+      headers: {},
       active: true,
     };
 
@@ -118,6 +124,9 @@ describe('Piral-CLI piral injector', () => {
       publicUrl: '/',
       api: 'http://someFakeApi:1234',
       app: '',
+      publicUrl: '/',
+      meta: '',
+      headers: {},
       active: true,
     };
     const core = new EventEmitter();

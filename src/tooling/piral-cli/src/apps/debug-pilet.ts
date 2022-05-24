@@ -8,7 +8,6 @@ import {
   retrievePiletsInfo,
   config,
   openBrowser,
-  reorderInjectors,
   notifyServerOnline,
   setLogLevel,
   progress,
@@ -19,6 +18,8 @@ import {
   cpuCount,
   concurrentWorkers,
   normalizePublicUrl,
+  findFile,
+  createInitialKrasConfig,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -203,7 +204,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
-  const krasConfig = readKrasConfig({ port }, krasrc);
   const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
@@ -212,10 +212,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const allEntries = await matchAnyPilet(fullBase, entryList);
   const maxListeners = Math.max(2 + allEntries.length * 2, 16);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
-
-  if (krasConfig.sources === undefined) {
-    krasConfig.sources = [];
-  }
 
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
@@ -234,15 +230,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     const dest = resolve(root, target);
     const outDir = dirname(dest);
     const outFile = basename(dest);
-    const exists = await checkExistingDirectory(mocks);
-
-    if (exists) {
-      if (krasConfig.directory === undefined) {
-        krasConfig.directory = mocks;
-      }
-
-      krasConfig.sources.push(mocks);
-    }
+    const mocksExists = await checkExistingDirectory(mocks);
 
     await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 
@@ -278,6 +266,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       externals,
       piral: appPackage.name,
       bundler,
+      mocks: mocksExists ? mocks : undefined,
       root,
     };
   });
@@ -287,43 +276,32 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await hooks.beforeApp?.({ appInstanceDir, pilets });
   const appDir = appInstanceDir || (await getOrMakeAppDir(pilets[0], logLevel));
+  const appRoot = dirname(await findFile(appDir, 'package.json'));
   await hooks.afterApp?.({ appInstanceDir, pilets });
 
   Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
 
-  if (krasConfig.ssl === undefined) {
-    krasConfig.ssl = undefined;
-  }
-
-  if (krasConfig.map === undefined) {
-    krasConfig.map = {};
-  }
-
-  if (krasConfig.api === undefined) {
-    krasConfig.api = '/manage-mock-server';
-  }
-
-  if (krasConfig.injectors === undefined) {
-    krasConfig.injectors = defaultConfig.injectors;
-  }
-
-  const { pilet: piletInjector, ...otherInjectors } = krasConfig.injectors;
-  const injectorConfig = {
-    meta: 'debug-meta.json',
-    feed,
-    ...piletInjector,
-    active: true,
-    pilets,
-    app: appDir,
-    publicUrl,
-    handle: ['/', api],
-    api,
+  const sources = pilets.map((m) => m.mocks).filter(Boolean);
+  const krasBaseConfig = resolve(fullBase, krasrc);
+  const krasRootConfig = resolve(appRoot, krasrc);
+  const initial = createInitialKrasConfig(sources[0] || resolve(fullBase, 'mocks'), { [api]: '' }, sources, feed);
+  const required = {
+    injectors: {
+      piral: {
+        active: false,
+      },
+      pilet: {
+        active: true,
+        pilets,
+        app: appDir,
+        publicUrl,
+        handle: ['/', api],
+        api,
+      },
+    },
   };
-
-  krasConfig.map['/'] = '';
-  krasConfig.map[api] = '';
-
-  krasConfig.injectors = reorderInjectors(injectorName, injectorConfig, otherInjectors);
+  const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
+  const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
