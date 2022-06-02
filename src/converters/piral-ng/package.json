@@ -70,7 +70,7 @@
   "devDependencies": {
     "@angular/common": "^8.0.0",
     "@angular/compiler": "^8.0.0",
-    "@angular/core": "^8.0.0",
+    "@angular/core": "^11.0.5",
     "@angular/platform-browser": "^8.0.0",
     "@angular/platform-browser-dynamic": "^8.0.0",
     "@angular/router": "^8.0.0",
