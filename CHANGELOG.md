@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.26 (tbd)
+
+- Updated dependencies
+- Improved handling of blocked ports
+
 ## 0.14.25 (May 22, 2022)
 
 - Fixed issue with `piral-cli-esbuild` referencing files in CSS
