@@ -3,7 +3,9 @@
 ## 0.14.26 (tbd)
 
 - Updated dependencies
+- Improved `piral-blazor` lifecycle w.r.t. lazy loading
 - Improved handling of blocked ports
+- Added `defineBlazorOptions` to standalone converter
 
 ## 0.14.25 (May 22, 2022)
 
