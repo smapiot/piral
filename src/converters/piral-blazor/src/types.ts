@@ -4,6 +4,7 @@ declare global {
   interface Window {
     Blazor: any;
     DotNet: any;
+    $blazorLoader: any;
   }
 }
 
@@ -74,4 +75,8 @@ export interface PiletBlazorApi {
    * @param options The options for the Blazor components.
    */
   defineBlazorOptions(options: BlazorOptions): void;
+  /**
+   * Releases all defined blazor references from the current pilet.
+   */
+  releaseBlazorReferences(): void;
 }

@@ -55,6 +55,10 @@ export async function loadResourceWithSymbol(dllUrl: string, pdbUrl: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsWithSymbolsFromLibrary', dllUrl, pdbUrl);
 }
 
+export async function unloadResource(url: string) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'UnloadComponentsFromLibrary', url);
+}
+
 export function initialize(scriptUrl: string, publicPath: string) {
   return new Promise((resolve, reject) => {
     const startBlazor = createBlazorStarter(publicPath);
@@ -78,5 +82,11 @@ export function initialize(scriptUrl: string, publicPath: string) {
 
 export function createBootLoader(scriptUrl: string) {
   const publicPath = computePath();
-  return () => initialize(scriptUrl, publicPath);
+  return () => {
+    if (typeof window.$blazorLoader === 'undefined') {
+      window.$blazorLoader = initialize(scriptUrl, publicPath);
+    }
+
+    return window.$blazorLoader;
+  };
 }

@@ -29,3 +29,5 @@ export const fromBlazor: BlazorConverter = (moduleName, args) => ({
 });
 
 export const defineBlazorReferences = loader.defineBlazorReferences;
+
+export const releaseBlazorReferences = loader.releaseBlazorReferences;

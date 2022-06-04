@@ -1,7 +1,8 @@
-import { loadResource, loadResourceWithSymbol } from './interop';
+import { loadResource, loadResourceWithSymbol, unloadResource } from './interop';
 import type { createConverter } from './converter';
 
 export function createDependencyLoader(convert: ReturnType<typeof createConverter>, lazy = true) {
+  const definedBlazorReferences: Array<string> = [];
   let dependency: () => Promise<any>;
 
   return {
@@ -21,11 +22,18 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
             } else {
               await loadResource(dllUrl);
             }
+
+            definedBlazorReferences.push(dllUrl);
           }
         }
       };
       let result = !lazy && convert.loader.then(load);
       dependency = () => result || (result = load());
+    },
+    async releaseBlazorReferences() {
+      for (const reference of definedBlazorReferences) {
+        await unloadResource(reference);
+      }
     },
   };
 }
