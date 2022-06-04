@@ -31,7 +31,9 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       dependency = () => result || (result = load());
     },
     async releaseBlazorReferences() {
-      for (const reference of definedBlazorReferences) {
+      const references = definedBlazorReferences.splice(0, definedBlazorReferences.length);
+
+      for (const reference of references) {
         await unloadResource(reference);
       }
     },

@@ -2,7 +2,12 @@ import { emitRenderEvent, emitNavigateEvent } from './events';
 
 const coreLib = 'Piral.Blazor.Core';
 
-function createBlazorStarter(publicPath: string) {
+function createBlazorStarter(publicPath: string): () => Promise<HTMLDivElement> {
+  const root = document.body.appendChild(document.createElement('div'));
+
+  root.style.display = 'none';
+  root.id = 'blazor-root';
+
   if (publicPath) {
     const baseElement =
       document.head.querySelector('base') || document.head.appendChild(document.createElement('base'));
@@ -12,11 +17,12 @@ function createBlazorStarter(publicPath: string) {
       window.Blazor._internal.navigationManager.getBaseURI = () => originalBase;
       return window.Blazor.start().then(() => {
         baseElement.href = originalBase;
+        return root;
       });
     };
   }
 
-  return () => window.Blazor.start();
+  return () => window.Blazor.start().then(() => root);
 }
 
 function computePath() {
@@ -60,7 +66,7 @@ export async function unloadResource(url: string) {
 }
 
 export function initialize(scriptUrl: string, publicPath: string) {
-  return new Promise((resolve, reject) => {
+  return new Promise<HTMLDivElement>((resolve, reject) => {
     const startBlazor = createBlazorStarter(publicPath);
     const script = document.createElement('script');
     script.src = scriptUrl;

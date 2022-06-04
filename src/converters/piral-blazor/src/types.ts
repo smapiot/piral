@@ -4,7 +4,7 @@ declare global {
   interface Window {
     Blazor: any;
     DotNet: any;
-    $blazorLoader: any;
+    $blazorLoader: Promise<HTMLDivElement>;
   }
 }
 

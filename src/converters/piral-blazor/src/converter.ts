@@ -31,21 +31,17 @@ interface BlazorLocals {
   referenceId: string;
   node: HTMLElement;
   dispose(): void;
-  update(): void;
+  update(root: HTMLElement): void;
   state: 'fresh' | 'mounted' | 'removed';
 }
 
 export function createConverter(lazy: boolean) {
   const boot = createBootLoader(bootConfig);
-  const root = document.body.appendChild(document.createElement('div'));
   let loader = !lazy && boot();
 
-  root.style.display = 'none';
-  root.id = 'blazor-root';
-
-  const enqueueChange = (locals: BlazorLocals, update: () => void) => {
+  const enqueueChange = (locals: BlazorLocals, update: (root: HTMLDivElement) => void) => {
     if (locals.state === 'mounted') {
-      update();
+      loader.then(update);
     } else {
       locals.update = update;
     }
@@ -75,19 +71,21 @@ export function createConverter(lazy: boolean) {
       );
 
       (loader || (loader = boot()))
-        .then(dependency)
-        .then(() => activate(moduleName, props))
-        .then((refId) => {
-          if (locals.state === 'fresh') {
-            locals.id = refId;
-            locals.node = root.querySelector(`#${locals.id} > div`);
-            project(locals.node, el, options);
-            locals.state = 'mounted';
-            locals.referenceId = refId;
-            locals.update();
-            locals.update = noop;
-          }
-        })
+        .then((root) =>
+          dependency()
+            .then(() => activate(moduleName, props))
+            .then((refId) => {
+              if (locals.state === 'fresh') {
+                locals.id = refId;
+                locals.node = root.querySelector(`#${locals.id} > div`);
+                project(locals.node, el, options);
+                locals.state = 'mounted';
+                locals.referenceId = refId;
+                locals.update(root);
+                locals.update = noop;
+              }
+            }),
+        )
         .catch((err) => console.error(err));
     },
     update(el, data, ctx, locals: BlazorLocals) {
@@ -101,7 +99,7 @@ export function createConverter(lazy: boolean) {
       el.removeAttribute('data-blazor-pilet-root');
       locals.dispose();
 
-      enqueueChange(locals, () => {
+      enqueueChange(locals, (root) => {
         root.querySelector(`#${locals.id}`).appendChild(locals.node);
         deactivate(moduleName, locals.referenceId);
       });
