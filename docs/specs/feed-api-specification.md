@@ -169,7 +169,13 @@ In any other case, an empty `items` array is suitable to indicate that no pilets
 
 ## Examples
 
-A working sample feed service exists and can be viewed at [github.com/smapiot/sample-pilet-service](https://github.com/smapiot/sample-pilet-service). The provided version represents a good starting point to see a Node.js express-based service implementing this specification.
+Working feed service implementations exists and can be viewed online.
+
+Full list of known (sample / open-source) implementations:
+
+- [Node.js implementation](https://github.com/smapiot/sample-pilet-service) by [Florian Rappl](https://github.com/FlorianRappl)
+- [Java implementation](https://github.com/scarrozzo/sample-pilet-service) by [Sergio Carrozzo](https://github.com/scarrozzo)
+- [Azure Function implementation](https://github.com/smapiot/azure-function-pilet-feed) by [Waqas Ali](https://github.com/waqasali47)
 
 The crucial points following this specification are:
 
