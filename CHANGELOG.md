@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.14.27 (tbd)
+
+- Fixed issue with `piral-cli-webpack` and `piral-cli-webpack5` not resolving *.jsx*
+
 ## 0.14.26 (June 5, 2022)
 
 - Updated dependencies

@@ -18,3 +18,13 @@ You can use any state container library you like. Piral also comes with an integ
 You can choose any programming language as long as it transpiles to JavaScript.
 By sponsoring @smapiot you get code reviews, calls, reviews, and more from the makers of Piral.
 The Piral Cloud feed service can be purchased as a Docker image with a yearly license.
+Piral can not only run for the web, but also within a native app using `react-native`.
+The documentation page of Piral uses `pidoc`, which is based on Piral, too.
+With `pidoc` you can create a distributed documentation system.
+Piral is tooling agnostic and works with a broad range of different bundlers.
+You can create everything in one monorepo, everything in a different repository, or use an hybrid approach.
+The most efficient way to improve performance is to embed the feed response directly within the server.
+Piral has plugins for many use cases. https://docs.piral.io/plugins/overview
+Monorepos are not necessary but can be very useful. https://docs.piral.io/guidelines/tutorials/23-monorepo
+Extension components are a great tool to structure your application. https://docs.piral.io/guidelines/tutorials/24-extension-patterns
+Pilets are not tied to a particular app shell. You decide how flexible they can be used. https://docs.piral.io/guidelines/tutorials/26-multiple-app-shell
