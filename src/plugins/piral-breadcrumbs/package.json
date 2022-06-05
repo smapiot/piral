@@ -1,6 +1,6 @@
 {
   "name": "piral-breadcrumbs",
-  "version": "0.14.25",
+  "version": "0.14.26",
   "description": "Plugin for creating a breadcrumb manager in Piral.",
   "keywords": [
     "piral",
@@ -54,7 +54,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.25"
+    "piral-core": "^0.14.26"
   },
   "dependencies": {
     "path-to-regexp": "^1.8.0"

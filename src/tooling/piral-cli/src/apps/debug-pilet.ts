@@ -20,6 +20,7 @@ import {
   normalizePublicUrl,
   findFile,
   createInitialKrasConfig,
+  getAvailablePort,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -182,9 +183,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const {
     entry = debugPiletDefaults.entry,
     target = debugPiletDefaults.target,
-    port = debugPiletDefaults.port,
     open = debugPiletDefaults.open,
     hmr = debugPiletDefaults.hmr,
+    port: originalPort = debugPiletDefaults.port,
     publicUrl: originalPublicUrl = debugPiletDefaults.publicUrl,
     logLevel = debugPiletDefaults.logLevel,
     concurrency = debugPiletDefaults.concurrency,
@@ -300,6 +301,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     },
   };
   const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
+  const port = await getAvailablePort(originalPort);
   const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
