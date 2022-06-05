@@ -1,7 +1,19 @@
-import { basename, resolve } from 'path';
-import { copy, fail } from './common';
+import { basename, dirname, relative, resolve } from 'path';
+import { copy, fail, findFile, postForm, readBinary } from './common';
+import { FormData } from './external';
 import { availableReleaseProviders } from './helpers';
 import { ReleaseProvider } from './types';
+
+async function getVersion(directory: string) {
+  const data = await findFile(directory, 'package.json');
+
+  if (!data) {
+    fail('packageJsonNotFound_0020');
+  }
+
+  const { version } = require(data);
+  return version;
+}
 
 export interface QualifiedReleaseProvider {
   name: string;
@@ -12,7 +24,7 @@ const providers: Record<string, ReleaseProvider> = {
   none() {
     return Promise.resolve();
   },
-  async xcopy(files, args) {
+  async xcopy(_, files, args) {
     const { target } = args;
 
     if (!target) {
@@ -21,8 +33,30 @@ const providers: Record<string, ReleaseProvider> = {
 
     await Promise.all(files.map(async (file) => copy(file, resolve(target, basename(file)))));
   },
-  async feed(files, args, interactive) {
-    //TODO post files to Piral Feed Service
+  async feed(directory, files, args, interactive) {
+    const { url, apiKey, scheme = 'basic', version = await getVersion(directory) } = args;
+
+    if (!url) {
+      fail('publishFeedMissingUrl_0115');
+    }
+
+    if (!version) {
+      fail('publishFeedMissingVersion_0116');
+    }
+
+    const form = new FormData();
+
+    form.append('version', version);
+    form.append('type', 'custom');
+
+    for (const file of files) {
+      const relPath = relative(file, directory);
+      const fileName = basename(file);
+      const content = await readBinary(dirname(file), fileName);
+      form.append(relPath, content, fileName);
+    }
+
+    await postForm(url, scheme as any, apiKey, form, {}, undefined, interactive);
   },
 };
 
@@ -48,10 +82,11 @@ export function setReleaseProvider(provider: QualifiedReleaseProvider) {
 
 export function publishArtifacts(
   providerName: string,
+  directory: string,
   files: Array<string>,
   args: Record<string, string>,
   interactive: boolean,
 ) {
   const runRelease = findReleaseProvider(providerName);
-  return runRelease(files, args, interactive);
+  return runRelease(directory, files, args, interactive);
 }

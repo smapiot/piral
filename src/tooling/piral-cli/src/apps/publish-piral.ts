@@ -90,7 +90,7 @@ async function publishRelease(
   }
 
   const files = await matchFiles(directory, '**/*');
-  await publishArtifacts(providerName, files, args, interactive);
+  await publishArtifacts(providerName, directory, files, args, interactive);
 }
 
 export async function publishPiral(baseDir = process.cwd(), options: PublishPiralOptions = {}) {

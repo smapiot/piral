@@ -57,28 +57,22 @@ export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>
     });
 }
 
-export interface PostFileResult {
+export interface PostFormResult {
   status: number;
   success: boolean;
   response?: object;
 }
 
-export function postFile(
+export function postForm(
   target: string,
   scheme: PiletPublishScheme,
   key: string,
-  file: Buffer,
-  customFields: Record<string, string> = {},
+  form: FormData,
   customHeaders: Record<string, string> = {},
   ca?: Buffer,
   interactive = false,
-): Promise<PostFileResult> {
-  const form = new FormData();
+): Promise<PostFormResult> {
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
-
-  Object.keys(customFields).forEach((key) => form.append(key, customFields[key]));
-
-  form.append('file', file, 'pilet.tgz');
 
   const headers: Record<string, string> = {
     ...form.getHeaders(),
@@ -133,7 +127,7 @@ export function postFile(
               );
 
               return getTokenInteractively(interactiveAuth, httpsAgent).then(({ mode, token }) =>
-                postFile(target, mode, token, file, customFields, customHeaders, ca, false),
+                postForm(target, mode, token, form, customHeaders, ca, false),
               );
             }
           }
@@ -177,4 +171,23 @@ export function postFile(
         };
       },
     );
+}
+
+export function postFile(
+  target: string,
+  scheme: PiletPublishScheme,
+  key: string,
+  file: Buffer,
+  customFields: Record<string, string> = {},
+  customHeaders: Record<string, string> = {},
+  ca?: Buffer,
+  interactive = false,
+): Promise<PostFormResult> {
+  const form = new FormData();
+
+  form.append('file', file, 'pilet.tgz');
+
+  Object.keys(customFields).forEach((key) => form.append(key, customFields[key]));
+
+  return postForm(target, scheme, key, form, customHeaders, ca, interactive);
 }

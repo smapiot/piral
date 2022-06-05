@@ -18,9 +18,10 @@
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
 - Added `--feed` option to `piral debug` command
+- Added `feed` provider for using `piral publish`
 - Added support for `importmap` in the app shell
 - Added semver possibilities for resolving shared dependencies
-- Added `--interactive` login for `pilet publish` and `piral publish`
+- Added `--interactive` login for `pilet publish` and `piral publish` (#517)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 
 ## 0.14.26 (June 5, 2022)
