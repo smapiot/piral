@@ -16,6 +16,7 @@ import {
   logDone,
   getDestination,
   createInitialKrasConfig,
+  getAvailablePort,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -103,9 +104,9 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const {
     entry = debugPiralDefaults.entry,
     target = debugPiralDefaults.target,
-    port = debugPiralDefaults.port,
     open = debugPiralDefaults.open,
     hmr = debugPiralDefaults.hmr,
+    port: originalPort = debugPiralDefaults.port,
     publicUrl: originalPublicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
@@ -168,6 +169,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       },
     },
   };
+  const port = await getAvailablePort(originalPort);
   const krasConfig = readKrasConfig({ port, initial, required }, krasBaseConfig, krasRootConfig);
 
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);

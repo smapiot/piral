@@ -1,6 +1,6 @@
 {
   "name": "piral-ng",
-  "version": "0.14.25",
+  "version": "0.14.26",
   "description": "Plugin for integrating Angular components in Piral.",
   "keywords": [
     "piral",
@@ -69,13 +69,13 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@angular/common": "^8.0.0",
-    "@angular/compiler": "^8.0.0",
-    "@angular/core": "^8.0.0",
-    "@angular/platform-browser": "^8.0.0",
-    "@angular/platform-browser-dynamic": "^8.0.0",
-    "@angular/router": "^8.0.0",
-    "piral-core": "^0.14.25",
+    "@angular/common": "^12.0.0",
+    "@angular/compiler": "^12.0.0",
+    "@angular/core": "^12.0.0",
+    "@angular/platform-browser": "^12.0.0",
+    "@angular/platform-browser-dynamic": "^12.0.0",
+    "@angular/router": "^12.0.0",
+    "piral-core": "^0.14.26",
     "rxjs": "^7.3.0"
   },
   "peerDependencies": {

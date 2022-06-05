@@ -1,6 +1,6 @@
 {
   "name": "piral-dashboard",
-  "version": "0.14.25",
+  "version": "0.14.26",
   "description": "Plugin for creating a centralized dashboard in Piral.",
   "keywords": [
     "piral",
@@ -59,7 +59,7 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.1.6",
-    "piral-core": "^0.14.25",
+    "piral-core": "^0.14.26",
     "react": "^18.0.0"
   },
   "peerDependencies": {

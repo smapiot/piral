@@ -23,6 +23,13 @@
 - Added `--interactive` login for `pilet publish` and `piral publish`
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 
+## 0.14.26 (June 5, 2022)
+
+- Updated dependencies
+- Improved `piral-blazor` lifecycle w.r.t. lazy loading
+- Improved handling of blocked ports
+- Added `defineBlazorOptions` to standalone converter
+
 ## 0.14.25 (May 22, 2022)
 
 - Fixed issue with `piral-cli-esbuild` referencing files in CSS

@@ -957,6 +957,41 @@ export function cannotFindFile_0046(file: string): QuickMessage {
  * @kind Warning
  *
  * @summary
+ * Reported when the provided / default port was not available.
+ *
+ * @abstract
+ * By default, the debug commands spawn at the port 1234. However, under certain
+ * circumstances (e.g., another debug command running somewhere) this port may not
+ * be free.
+ *
+ * The piral-cli can select a new port, which is free, however, it will still report
+ * a warning message in such cases. You can then always abort the current debug
+ * process and start a new one - either closing the other run blocking the port or
+ * explicitly selecting a new one using the `--port` flag.
+ *
+ * @see
+ * - [Port (computer networking)](https://en.wikipedia.org/wiki/Port_(computer_networking))
+ *
+ * @example
+ * If you start one process to debug an app shell using `piral debug` and another process
+ * to debug some pilet using `pilet debug` both processes would want to run on the default
+ * port 1234.
+ *
+ * As a mitigation you can now either be very explicit, e.g., `piral debug --port 1010` and
+ * `pilet debug --port 1020` or you can just drop one of the two and always only run a single
+ * debug process.
+ *
+ * In any case, running both without any options also works, but then a new port will be chosen.
+ * The output of the Piral CLI will always show you what port is currently used.
+ */
+export function portNotFree_0047(newPort: number, oldPort: number): QuickMessage {
+  return [LogLevels.warning, '0047', `The selected port "${oldPort}" is already used. Changed port to "${newPort}".`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
  * Reported when the Piral instance is locally resolved, but no location for the upgrade is known.
  *
  * @abstract
