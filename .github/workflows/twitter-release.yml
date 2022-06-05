@@ -1,0 +1,19 @@
+name: tweet-release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ethomson/send-tweet-action@v1
+        name: Tweet new release
+        with:
+          status: "New ${{ github.event.repository.name }} release ${{ github.event.release.tag_name }}! ${{ github.event.release.html_url }} #microfrontends #piral #react #release"
+          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
