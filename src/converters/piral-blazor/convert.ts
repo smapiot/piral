@@ -1,5 +1,6 @@
 import { createConverter } from './esm/converter';
 import { createDependencyLoader } from './esm/dependencies';
+import type { BlazorOptions } from './esm/types';
 
 export interface HtmlComponent<TProps> {
   component: {
@@ -12,14 +13,21 @@ export interface HtmlComponent<TProps> {
 
 const convert = createConverter(true);
 const loader = createDependencyLoader(convert);
+let blazorOptions: BlazorOptions = undefined;
 
 export interface BlazorConverter {
   (moduleName: string, args?: Record<string, any>): HtmlComponent<any>;
 }
 
+export function defineBlazorOptions(options: BlazorOptions) {
+  blazorOptions = options;
+}
+
 export const fromBlazor: BlazorConverter = (moduleName, args) => ({
   type: 'html',
-  component: convert(moduleName, loader.getDependency(), args),
+  component: convert(moduleName, loader.getDependency(), args, blazorOptions),
 });
 
 export const defineBlazorReferences = loader.defineBlazorReferences;
+
+export const releaseBlazorReferences = loader.releaseBlazorReferences;

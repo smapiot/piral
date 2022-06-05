@@ -4,6 +4,8 @@ import { activate, deactivate, createBootLoader, reactivate } from './interop';
 import { BlazorOptions } from './types';
 import bootConfig from '../infra.codegen';
 
+const noop = () => {};
+
 const mediaRules = [
   { attribute: 'src', selector: 'img, embed, video > source, video > track, audio > source' },
   { attribute: 'srcset', selector: 'picture > source' },
@@ -29,16 +31,21 @@ interface BlazorLocals {
   referenceId: string;
   node: HTMLElement;
   dispose(): void;
+  update(root: HTMLElement): void;
   state: 'fresh' | 'mounted' | 'removed';
 }
 
 export function createConverter(lazy: boolean) {
   const boot = createBootLoader(bootConfig);
-  const root = document.body.appendChild(document.createElement('div'));
   let loader = !lazy && boot();
 
-  root.style.display = 'none';
-  root.id = 'blazor-root';
+  const enqueueChange = (locals: BlazorLocals, update: (root: HTMLDivElement) => void) => {
+    if (locals.state === 'mounted') {
+      loader.then(update);
+    } else {
+      locals.update = update;
+    }
+  };
 
   const convert = <TProps extends BaseComponentProps>(
     moduleName: string,
@@ -53,6 +60,7 @@ export function createConverter(lazy: boolean) {
       addGlobalEventListeners(el);
 
       locals.state = 'fresh';
+      locals.update = noop;
       locals.dispose = attachEvents(
         el,
         (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
@@ -63,32 +71,38 @@ export function createConverter(lazy: boolean) {
       );
 
       (loader || (loader = boot()))
-        .then(dependency)
-        .then(() => activate(moduleName, props))
-        .then((refId) => {
-          if (locals.state === 'fresh') {
-            locals.id = refId;
-            locals.node = root.querySelector(`#${locals.id} > div`);
-            project(locals.node, el, options);
-            locals.state = 'mounted';
-            locals.referenceId = refId;
-          }
-        })
+        .then((root) =>
+          dependency()
+            .then(() => activate(moduleName, props))
+            .then((refId) => {
+              if (locals.state === 'fresh') {
+                locals.id = refId;
+                locals.node = root.querySelector(`#${locals.id} > div`);
+                project(locals.node, el, options);
+                locals.state = 'mounted';
+                locals.referenceId = refId;
+                locals.update(root);
+                locals.update = noop;
+              }
+            }),
+        )
         .catch((err) => console.error(err));
     },
     update(el, data, ctx, locals: BlazorLocals) {
-      const props = { ...args, ...data };
-      reactivate(moduleName, locals.referenceId, props);
+      enqueueChange(locals, () => {
+        const props = { ...args, ...data };
+        reactivate(moduleName, locals.referenceId, props);
+      });
     },
     unmount(el, locals: BlazorLocals) {
       removeGlobalEventListeners(el);
       el.removeAttribute('data-blazor-pilet-root');
       locals.dispose();
 
-      if (locals.state === 'mounted') {
+      enqueueChange(locals, (root) => {
         root.querySelector(`#${locals.id}`).appendChild(locals.node);
         deactivate(moduleName, locals.referenceId);
-      }
+      });
 
       el.innerHTML = '';
       locals.state = 'removed';
