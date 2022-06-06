@@ -1,4 +1,4 @@
-name: Check bundle size
+name: check-bundle-size
 
 on:
   pull_request_target:

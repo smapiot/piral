@@ -1,0 +1,25 @@
+name: tweet-tip
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 17 * * *"
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: documentation
+      - id: tweet
+        name: Set Tip
+        run: echo "::set-output name=TIP::$(shuf -n 1 docs/tips.md)"
+      - uses: ethomson/send-tweet-action@v1
+        name: Tweet daily tip
+        with:
+          status: "${{ steps.tweet.outputs.TIP }} #piral #dailytips #microfrontends"
+          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}

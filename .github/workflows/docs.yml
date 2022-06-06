@@ -1,4 +1,4 @@
-name: Check documentation
+name: check-documentation
 
 on:
   push:
@@ -12,7 +12,9 @@ jobs:
   markdown-link-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
+      with:
+        ref: documentation
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
       with:
         max-depth: 4  # exclude the API docs

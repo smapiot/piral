@@ -8,6 +8,12 @@ import {
 } from 'piral-cli';
 
 export const debugPiral: DebugPiralBundlerDefinition = {
+  flags(argv) {
+    return argv
+      .number('hmr-port')
+      .describe('hmr-port', 'Sets the port to be used for HMR for reloading the application.')
+      .default('hmr-port', 62123);
+  },
   path: resolve(__dirname, 'webpack', 'piral.js'),
 };
 
