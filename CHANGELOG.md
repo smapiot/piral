@@ -3,6 +3,8 @@
 ## 0.14.27 (tbd)
 
 - Fixed issue with `piral-cli-webpack` and `piral-cli-webpack5` not resolving *.jsx*
+- Added `--hm-port` option in `piral-cli-webpack` to configure HMR port (#523)
+- Added `--hm-port` option in `piral-cli-webpack5` to configure HMR port (#523)
 
 ## 0.14.26 (June 5, 2022)
 

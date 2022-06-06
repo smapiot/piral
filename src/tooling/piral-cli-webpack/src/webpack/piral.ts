@@ -82,7 +82,8 @@ async function getConfig(
 
 const handler: PiralBuildHandler = {
   async create(options) {
-    const hmrPort = options.hmr ? await getFreePort(62123) : 0;
+    const { 'hmr-port': defaultHmrPort = 62123 } = options.args._;
+    const hmrPort = options.hmr ? await getFreePort(defaultHmrPort) : 0;
     const otherConfigPath = resolve(options.root, defaultWebpackConfig);
     const baseConfig = await getConfig(
       options.entryFiles,
