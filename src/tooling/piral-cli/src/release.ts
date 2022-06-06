@@ -49,7 +49,7 @@ const providers: Record<string, ReleaseProvider> = {
     };
 
     for (const file of files) {
-      const relPath = relative(file, directory);
+      const relPath = relative(directory, file);
       const fileName = basename(file);
       const content = await readBinary(dirname(file), fileName);
       data[relPath] = [content, fileName];

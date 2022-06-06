@@ -2217,24 +2217,24 @@ export function publishEmulatorFilesUnexpected_0111(directory: string): QuickMes
  * @kind Error
  *
  * @summary
- * The "xcopy" provider requires a "--fields.target" argument.
+ * The "xcopy" provider requires a "--opts.target" argument.
  *
  * @abstract
  * The `piral publish --type release` command requires the selection of a suitable
  * provider for running successfully. The "xcopy" provider just copies the sources from
  * the output directory (source) to a specified target directory.
  *
- * Make sure to supply the target directory via the `--fields.target` command line flag.
+ * Make sure to supply the target directory via the `--opts.target` command line flag.
  *
  * @example
  * The following command would specify `/temp/dest` as target directory:
  *
  * ```sh
- * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * piral publish --type release --provider xcopy --opts.target "/temp/dest"
  * ```
  */
 export function publishXcopyMissingTarget_0112(): QuickMessage {
-  return [LogLevels.error, '0112', `The "xcopy" provider requires a "--fields.target" argument.`];
+  return [LogLevels.error, '0112', `The "xcopy" provider requires a "--opts.target" argument.`];
 }
 
 /**
@@ -2257,7 +2257,7 @@ export function publishXcopyMissingTarget_0112(): QuickMessage {
  * The following command uses the in-built "xcopy" provider for releasing to a local directory.
  *
  * ```sh
- * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * piral publish --type release --provider xcopy --opts.target "/temp/dest"
  * ```
  */
 export function publishProviderMissing_0113(providerName: string, availableProviders: Array<string>): QuickMessage {
@@ -2278,7 +2278,7 @@ export function publishProviderMissing_0113(providerName: string, availableProvi
  * The following command uses the in-built "xcopy" provider for releasing to a local directory.
  *
  * ```sh
- * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * piral publish --type release --provider xcopy --opts.target "/temp/dest"
  * ```
  *
  * The type is "release".
@@ -2295,14 +2295,14 @@ export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
  * @kind Error
  *
  * @summary
- * The "feed" provider requires a "--fields.url" argument.
+ * The "feed" provider requires a "--opts.url" argument.
  *
  * @abstract
  * The `piral publish --type release` command requires the selection of a suitable
  * provider for running successfully. The "feed" provider releases the files to
  * the a Piral Feed Service with the static page feature.
  *
- * Make sure to supply the URL for the feed service via the `--fields.url` command
+ * Make sure to supply the URL for the feed service via the `--opts.url` command
  * line flag.
  *
  * @example
@@ -2310,25 +2310,25 @@ export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
  * for the feed service:
  *
  * ```sh
- * piral publish --type release --provider feed --fields.url "https://feed.piral.cloud/api/v1/feed/sample/page" --fields.apikey "foobar123"
+ * piral publish --type release --provider feed --opts.url "https://feed.piral.cloud/api/v1/feed/sample/page" --opts.apikey "foobar123"
  * ```
  */
 export function publishFeedMissingUrl_0115(): QuickMessage {
-  return [LogLevels.error, '0115', `The "feed" provider requires a "--fields.url" argument.`];
+  return [LogLevels.error, '0115', `The "feed" provider requires a "--opts.url" argument.`];
 }
 
 /**
  * @kind Error
  *
  * @summary
- * The "feed" provider requires a "--fields.version" argument.
+ * The "feed" provider requires a "--opts.version" argument.
  *
  * @abstract
  * The `piral publish --type release` command requires the selection of a suitable
  * provider for running successfully. The "feed" provider releases the files to
  * the a Piral Feed Service with the static page feature.
  *
- * Make sure to supply the version either explicitly via the `--fields.version` argument
+ * Make sure to supply the version either explicitly via the `--opts.version` argument
  * or implicitly by having the artifacts stored in a sub-directory of the project's root,
  * which contains a package.json with the version to use.
  *
@@ -2336,11 +2336,11 @@ export function publishFeedMissingUrl_0115(): QuickMessage {
  * The following command would specify version "1.2.3" for the feed service:
  *
  * ```sh
- * piral publish --type release --provider feed --fields.url "..." --fields.apikey "..." --fields.version "1.2.3"
+ * piral publish --type release --provider feed --opts.url "..." --opts.apikey "..." --opts.version "1.2.3"
  * ```
  */
 export function publishFeedMissingVersion_0116(): QuickMessage {
-  return [LogLevels.error, '0116', `The "feed" provider requires either a "--fields.version" argument or a package.json with a version.`];
+  return [LogLevels.error, '0116', `The "feed" provider requires either a "--opts.version" argument or a package.json with a version.`];
 }
 
 /**

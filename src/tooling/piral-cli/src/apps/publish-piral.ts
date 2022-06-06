@@ -1,7 +1,17 @@
 import { resolve } from 'path';
 import { publishArtifacts } from '../release';
+import {
+  setLogLevel,
+  progress,
+  checkExists,
+  fail,
+  logDone,
+  logReset,
+  publishNpmPackage,
+  matchFiles,
+  log,
+} from '../common';
 import { LogLevels, PiralBuildType } from '../types';
-import { setLogLevel, progress, checkExists, fail, logDone, logReset, publishNpmPackage, matchFiles } from '../common';
 
 export interface PublishPiralOptions {
   /**
@@ -15,9 +25,9 @@ export interface PublishPiralOptions {
   logLevel?: LogLevels;
 
   /**
-   * The additional fields to supply for the provider.
+   * The options to supply for the provider.
    */
-  fields?: Record<string, string>;
+  opts?: Record<string, string>;
 
   /**
    * Defines if authorization tokens can be retrieved interactively.
@@ -40,7 +50,7 @@ export const publishPiralDefaults: PublishPiralOptions = {
   logLevel: LogLevels.info,
   type: 'all',
   provider: 'none',
-  fields: {},
+  opts: {},
   interactive: false,
 };
 
@@ -59,6 +69,7 @@ async function publishEmulator(
   }
 
   const files = await matchFiles(directory, '*.tgz');
+  log('generalDebug_0003', `Found ${files.length} in "${directory}": ${files.join(', ')}`);
 
   if (files.length !== 1) {
     fail('publishEmulatorFilesUnexpected_0111', directory);
@@ -70,8 +81,7 @@ async function publishEmulator(
     return p;
   }, [] as Array<string>);
 
-  //TODO support interactive here, too?
-  await publishNpmPackage(directory, file, flags);
+  await publishNpmPackage(directory, file, flags, interactive);
 }
 
 async function publishRelease(
@@ -90,6 +100,7 @@ async function publishRelease(
   }
 
   const files = await matchFiles(directory, '**/*');
+  log('generalDebug_0003', `Found ${files.length} in "${directory}": ${files.join(', ')}`);
   await publishArtifacts(providerName, directory, files, args, interactive);
 }
 
@@ -98,7 +109,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     source = publishPiralDefaults.source,
     type = publishPiralDefaults.type,
     logLevel = publishPiralDefaults.logLevel,
-    fields = publishPiralDefaults.fields,
+    opts = publishPiralDefaults.opts,
     provider = publishPiralDefaults.provider,
     interactive = publishPiralDefaults.interactive,
   } = options;
@@ -113,14 +124,14 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
 
   if (type !== 'release') {
     progress('Publishing emulator package ...');
-    await publishEmulator(fullBase, source, fields, interactive);
+    await publishEmulator(fullBase, source, opts, interactive);
     logDone(`Successfully published emulator.`);
     logReset();
   }
 
   if (type !== 'emulator') {
     progress('Publishing release files ...');
-    await publishRelease(fullBase, source, provider, fields, interactive);
+    await publishRelease(fullBase, source, provider, opts, interactive);
     logDone(`Successfully published release.`);
     logReset();
   }

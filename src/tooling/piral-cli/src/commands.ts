@@ -205,9 +205,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('provider', availableReleaseProviders)
         .describe('provider', 'Sets the provider for publishing the release assets.')
         .default('provider', apps.publishPiralDefaults.provider)
-        .option('fields', undefined)
-        .describe('fields', 'Sets additional fields to be included in the feed service request.')
-        .default('fields', apps.publishPiralDefaults.fields)
+        .option('opts', undefined)
+        .describe('opts', 'Sets the options to forward to the chosen provider.')
+        .default('opts', apps.publishPiralDefaults.opts)
         .boolean('interactive')
         .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
         .default('interactive', apps.publishPiralDefaults.interactive)
@@ -221,7 +221,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         type: args.type as PiralBuildType,
         provider: args.provider as string,
-        fields: args.fields as Record<string, string>,
+        opts: args.opts as Record<string, string>,
         interactive: args.interactive as boolean,
       });
     },
