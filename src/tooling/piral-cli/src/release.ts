@@ -1,6 +1,5 @@
 import { basename, dirname, relative, resolve } from 'path';
-import { copy, fail, findFile, postForm, readBinary } from './common';
-import { FormData } from './external';
+import { copy, fail, findFile, FormDataObj, postForm, readBinary } from './common';
 import { availableReleaseProviders } from './helpers';
 import { ReleaseProvider } from './types';
 
@@ -44,19 +43,19 @@ const providers: Record<string, ReleaseProvider> = {
       fail('publishFeedMissingVersion_0116');
     }
 
-    const form = new FormData();
-
-    form.append('version', version);
-    form.append('type', 'custom');
+    const data: FormDataObj = {
+      version,
+      type: 'custom',
+    };
 
     for (const file of files) {
       const relPath = relative(file, directory);
       const fileName = basename(file);
       const content = await readBinary(dirname(file), fileName);
-      form.append(relPath, content, fileName);
+      data[relPath] = [content, fileName];
     }
 
-    await postForm(url, scheme as any, apiKey, form, {}, undefined, interactive);
+    await postForm(url, scheme as any, apiKey, data, {}, undefined, interactive);
   },
 };
 

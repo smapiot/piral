@@ -8,6 +8,7 @@ import { LogLevels, QuickMessage } from '../types';
 
 type Messages = typeof messages;
 type MessageTypes = keyof Messages;
+let currentProgress: string = undefined;
 
 const logger = (() => {
   try {
@@ -92,12 +93,19 @@ export function logFail(message: string, ...args: Array<string | number | boolea
 }
 
 export function progress(message: string, ...args: Array<string | number | boolean>) {
-  logger.progress(format(message, ...args));
+  currentProgress = format(message, ...args)
+  logger.progress(currentProgress);
 }
 
 export function logReset() {
   logger.lines = 0;
   logger.stopSpinner();
+}
+
+export function logSuspend() {
+  logReset();
+
+  return () => logger.progress(currentProgress);
 }
 
 export function fail<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>): never {

@@ -63,16 +63,29 @@ export interface PostFormResult {
   response?: object;
 }
 
+export type FormDataObj = Record<string, string | [Buffer, string]>;
+
 export function postForm(
   target: string,
   scheme: PiletPublishScheme,
   key: string,
-  form: FormData,
+  formData: FormDataObj,
   customHeaders: Record<string, string> = {},
   ca?: Buffer,
   interactive = false,
 ): Promise<PostFormResult> {
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
+  const form = new FormData();
+
+  Object.keys(formData).forEach((key) => {
+    const value = formData[key];
+
+    if (typeof value === 'string') {
+      form.append(key, value);
+    } else {
+      form.append(key, value[0], value[1]);
+    }
+  });
 
   const headers: Record<string, string> = {
     ...form.getHeaders(),
@@ -106,11 +119,13 @@ export function postForm(
       maxBodyLength: Infinity,
     })
     .then(
-      (res) => ({
-        status: res.status,
-        success: true,
-        response: res.data,
-      }),
+      (res) => {
+        return {
+          status: res.status,
+          success: true,
+          response: res.data,
+        };
+      },
       (error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -127,7 +142,7 @@ export function postForm(
               );
 
               return getTokenInteractively(interactiveAuth, httpsAgent).then(({ mode, token }) =>
-                postForm(target, mode, token, form, customHeaders, ca, false),
+                postForm(target, mode, token, formData, customHeaders, ca, false),
               );
             }
           }
@@ -183,11 +198,6 @@ export function postFile(
   ca?: Buffer,
   interactive = false,
 ): Promise<PostFormResult> {
-  const form = new FormData();
-
-  form.append('file', file, 'pilet.tgz');
-
-  Object.keys(customFields).forEach((key) => form.append(key, customFields[key]));
-
-  return postForm(target, scheme, key, form, customHeaders, ca, interactive);
+  const data: FormDataObj = { ...customFields, file: [file, 'pilet.tgz'] };
+  return postForm(target, scheme, key, data, customHeaders, ca, interactive);
 }

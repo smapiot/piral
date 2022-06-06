@@ -1,6 +1,7 @@
 import { Agent } from 'https';
 import { openBrowserAt } from './browser';
 import { standardHeaders } from './info';
+import { logSuspend } from './log';
 import { axios, inquirer } from '../external';
 import { PiletPublishScheme } from '../types';
 
@@ -35,6 +36,8 @@ const tokenRetrievers: Record<string, TokenResult> = {};
 
 export function getTokenInteractively(url: string, httpsAgent: Agent): TokenResult {
   if (!(url in tokenRetrievers)) {
+    const logResume = logSuspend();
+
     tokenRetrievers[url] = axios.default
       .post(
         url,
@@ -60,12 +63,10 @@ export function getTokenInteractively(url: string, httpsAgent: Agent): TokenResu
 
         openBrowserAt(loginUrl);
 
-        return axios.default.get(callbackUrl).then(({ data }) => {
-          console.log('Logged in successfully.');
-          return {
-            ...data,
-          };
-        });
+        return axios.default
+          .get(callbackUrl)
+          .then(({ data }) => ({ ...data }))
+          .finally(logResume);
       });
   }
 
