@@ -43,6 +43,10 @@ async function detectMonorepoRoot(root: string): Promise<[] | [string, NpmClient
     const packageJson = await readJson(root, 'package.json');
 
     if (Array.isArray(packageJson?.workspaces)) {
+      if (await checkExists(resolve(root, '.pnp.cjs'))) {
+        return [root, 'pnp'];
+      }
+
       if (await checkExists(resolve(root, 'yarn.lock'))) {
         return [root, 'yarn'];
       }
@@ -74,8 +78,6 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
       `Results of the lock file check: ${searchedClients.map((m) => `${m.client}=${m.result}`).join(', ')}`,
     );
 
-    const defaultClient = config.npmClient;
-
     if (foundClients.length > 1) {
       const wrapperClient = foundClients.find((m) => isWrapperClient(m.client));
 
@@ -97,12 +99,14 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
       return client;
     }
 
+    const defaultClient = config.npmClient;
+
     if (clientTypeKeys.includes(defaultClient)) {
       log('generalDebug_0003', `Using the default client: "${defaultClient}".`);
       return defaultClient;
     }
 
-    log('generalDebug_0003', 'Using the default "npm" client.');
+    log('generalDebug_0003', 'Using the fallback "npm" client.');
     return 'npm';
   }
 

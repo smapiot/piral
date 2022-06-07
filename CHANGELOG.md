@@ -21,6 +21,7 @@
 - Added `feed` provider for using `piral publish`
 - Added support for `importmap` in the app shell
 - Added semver possibilities for resolving shared dependencies
+- Added automatic determination of npm client (#516)
 - Added `--interactive` login for `pilet publish` and `piral publish` (#517)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 

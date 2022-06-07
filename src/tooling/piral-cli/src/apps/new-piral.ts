@@ -22,7 +22,6 @@ import {
   config,
   initNpmProject,
 } from '../common';
-import { sourceLanguageKeys } from '..';
 
 export interface NewPiralOptions {
   /**
@@ -102,7 +101,7 @@ export const newPiralDefaults: NewPiralOptions = {
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
-  npmClient: config.npmClient,
+  npmClient: undefined,
   bundlerName: 'none',
   variables: {},
 };
@@ -121,6 +120,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     logLevel = newPiralDefaults.logLevel,
     bundlerName = newPiralDefaults.bundlerName,
     variables = newPiralDefaults.variables,
+    npmClient: defaultNpmClient = newPiralDefaults.npmClient,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -134,7 +134,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   const success = await createDirectory(root);
 
   if (success) {
-    const npmClient = await determineNpmClient(root, options.npmClient);
+    const npmClient = await determineNpmClient(root, defaultNpmClient);
     const packageRef = combinePackageRef(framework, version, 'registry');
     const projectName = basename(root);
 

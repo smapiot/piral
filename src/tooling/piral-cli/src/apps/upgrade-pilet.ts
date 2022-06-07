@@ -88,6 +88,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     logLevel = upgradePiletDefaults.logLevel,
     install = upgradePiletDefaults.install,
     variables = upgradePiletDefaults.variables,
+    npmClient: defaultNpmClient = upgradePiletDefaults.npmClient,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -98,7 +99,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     fail('invalidPiletTarget_0040');
   }
 
-  const npmClient = await determineNpmClient(root, options.npmClient);
+  const npmClient = await determineNpmClient(root, defaultNpmClient);
   const pckg = await readJson(root, 'package.json');
   const { devDependencies = {}, dependencies = {}, piral, source } = pckg;
 

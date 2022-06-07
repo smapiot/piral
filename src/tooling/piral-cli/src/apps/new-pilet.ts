@@ -102,7 +102,7 @@ export const newPiletDefaults: NewPiletOptions = {
   install: true,
   template: undefined,
   logLevel: LogLevels.info,
-  npmClient: config.npmClient,
+  npmClient: undefined,
   bundlerName: 'none',
   variables: {},
 };
@@ -119,6 +119,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     logLevel = newPiletDefaults.logLevel,
     bundlerName = newPiletDefaults.bundlerName,
     variables = newPiletDefaults.variables,
+    npmClient: defaultNpmClient = newPiletDefaults.npmClient,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -128,7 +129,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const success = await createDirectory(root);
 
   if (success) {
-    const npmClient = await determineNpmClient(root, options.npmClient);
+    const npmClient = await determineNpmClient(root, defaultNpmClient);
     const projectName = basename(root);
 
     progress(`Scaffolding new pilet in %s ...`, root);
