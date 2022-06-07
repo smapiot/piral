@@ -56,7 +56,11 @@ export function getTokenInteractively(url: string, httpsAgent: Agent): TokenResu
       )
       .then((res) => {
         const { loginUrl, callbackUrl, expires } = res.data;
-        console.log(`Use the URL below to complete the login. The link expires at ${new Date(expires)}.`);
+        const now = new Date();
+        const then = new Date(expires);
+        const diff = ~~((then.valueOf() - now.valueOf()) / (60 * 1000));
+
+        console.log(`Use the URL below to complete the login. The link expires in ${diff} minutes (${then}).`);
         console.log('===');
         console.log(loginUrl);
         console.log('===');
