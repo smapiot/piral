@@ -17,7 +17,7 @@ export type ConfigEnhancer = (config: Configuration) => Configuration;
 
 export type DefaultConfiguration = [Configuration, ConfigEnhancer];
 
-export const extensions = ['.ts', '.tsx', '.js', '.json'];
+export const extensions = ['.ts', '.tsx', '.js', '.jsx', '.json'];
 
 export function getVariables(): Record<string, string> {
   return Object.keys(process.env).reduce((prev, curr) => {

@@ -24,6 +24,12 @@
 - Added `--interactive` login for `pilet publish` and `piral publish` (#517)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 
+## 0.14.27 (June 7, 2022)
+
+- Fixed issue with `piral-cli-webpack` and `piral-cli-webpack5` not resolving *.jsx*
+- Added `--hmr-port` option in `piral-cli-webpack` to configure HMR port (#523)
+- Added `--hmr-port` option in `piral-cli-webpack5` to configure HMR port (#523)
+
 ## 0.14.26 (June 5, 2022)
 
 - Updated dependencies
