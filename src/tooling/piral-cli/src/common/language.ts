@@ -36,18 +36,11 @@ const reactRouter5Typings = {
   '@types/react-router-dom': '^5',
 };
 
-const reactRouter6Typings = {
-  '@types/react-router': '^6',
-  '@types/react-router-dom': '^6',
-};
-
 const defaultDeps = {};
 
 const defaultTypings = {
   '@types/react': '*',
   '@types/react-dom': '*',
-  '@types/react-router': '*',
-  '@types/react-router-dom': '*',
 };
 
 export function getDependencyPackages(framework: Framework, reactVersion: number, reactRouterVersion: number) {
@@ -66,7 +59,7 @@ export function getDevDependencyPackages(framework: Framework, reactVersion: num
     ? {}
     : {
         ...(reactVersion < 18 ? react17Typings : react18Typings),
-        ...(reactRouterVersion < 6 ? reactRouter5Typings : reactRouter6Typings),
+        ...(reactRouterVersion < 6 ? reactRouter5Typings : {}),
       };
 }
 

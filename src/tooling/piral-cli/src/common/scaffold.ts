@@ -117,8 +117,8 @@ export function getPiralScaffoldData(
     src,
     language,
     packageName,
-    reactVersion: parseInt(variables.reactVersion) || 17,
-    reactRouterVersion: parseInt(variables.reactRouterVersion) || 17,
+    reactVersion: parseInt(variables.reactVersion) || 18,
+    reactRouterVersion: parseInt(variables.reactRouterVersion) || 5,
   } as const;
 }
 
