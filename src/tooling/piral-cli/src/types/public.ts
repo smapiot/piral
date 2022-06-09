@@ -219,6 +219,8 @@ export interface BundlerDefinition {
 
 export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2';
 
+export type SourceLanguage = 'js' | 'ts';
+
 export type PiletPublishScheme = 'none' | 'digest' | 'bearer' | 'basic';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';

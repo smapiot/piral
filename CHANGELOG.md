@@ -11,6 +11,7 @@
 - Deprecated the usage of `externals` for `pilets`
 - Removed support for IE11 (#467)
 - Removed bundlers (except default) from Piral monorepo
+- Removed templating support for the emulator scaffolding files
 - Added new bundler `piral-cli-parcel2` (#436)
 - Added new bundler `piral-cli-rollup` (#435)
 - Added new bundler `piral-cli-vite` (#435)

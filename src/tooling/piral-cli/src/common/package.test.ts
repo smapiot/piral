@@ -1,6 +1,5 @@
 import { findPackageVersion, getPiralPackage, getPiletsInfo, retrievePiletData } from './package';
 import { cliVersion } from './info';
-import { SourceLanguage } from './enums';
 
 describe('CLI package module', () => {
   it('findPackageVersion finds the current package version', async () => {
@@ -48,9 +47,18 @@ describe('CLI package module', () => {
   });
 
   it('getPiralPackage returns piral package', () => {
-    let result = getPiralPackage('app', SourceLanguage.ts, '1.0.0', 'piral-base', 'webpack');
+    let result = getPiralPackage(
+      'app',
+      { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
+      '1.0.0',
+      'webpack',
+    );
     expect(result.devDependencies['piral-cli-webpack']).toEqual('1.0.0');
-    result = getPiralPackage('app', SourceLanguage.ts, '1.0.0', 'piral-base');
+    result = getPiralPackage(
+      'app',
+      { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
+      '1.0.0',
+    );
     expect(result.devDependencies).not.toContain('piral-cli-webpack');
   });
 

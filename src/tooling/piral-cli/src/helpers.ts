@@ -1,4 +1,4 @@
-import { ForceOverwrite, SourceLanguage } from './common/enums';
+import { ForceOverwrite } from './common/enums';
 import { bundlerNames, frameworkLibs } from './common/constants';
 import type {
   Framework,
@@ -8,6 +8,7 @@ import type {
   PiralBuildType,
   PiletBuildType,
   PiletPublishScheme,
+  SourceLanguage,
 } from './types';
 
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'v2', 'none'];
@@ -16,6 +17,7 @@ export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const piralBuildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator', 'emulator-sources'];
 export const piletBuildTypeKeys: Array<PiletBuildType> = ['default', 'standalone', 'manifest'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'pnp', 'yarn', 'lerna', 'rush'];
+export const sourceLanguageKeys: Array<SourceLanguage> = ['ts', 'js'];
 export const bundlerKeys: Array<string> = ['none', ...bundlerNames];
 export const availableBundlers: Array<string> = [];
 export const availableReleaseProviders: Array<string> = [];
@@ -40,26 +42,4 @@ export function keyOfForceOverwrite(value: ForceOverwrite) {
   }
 
   return forceOverwriteKeys[0];
-}
-
-export const sourceLanguageKeys = Object.keys(SourceLanguage).filter((m) => typeof SourceLanguage[m] === 'number');
-
-export function valueOfSourceLanguage(key: string): SourceLanguage {
-  for (const piletLanguageKey of sourceLanguageKeys) {
-    if (piletLanguageKey === key) {
-      return SourceLanguage[piletLanguageKey];
-    }
-  }
-
-  return SourceLanguage.ts;
-}
-
-export function keyOfSourceLanguage(value: SourceLanguage) {
-  for (const piletLanguageKey of sourceLanguageKeys) {
-    if (SourceLanguage[piletLanguageKey] === value) {
-      return piletLanguageKey;
-    }
-  }
-
-  return sourceLanguageKeys[0];
 }

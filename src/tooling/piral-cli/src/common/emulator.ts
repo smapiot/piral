@@ -1,6 +1,6 @@
 import { join, resolve, relative } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from './package';
-import { createFileFromTemplateIfNotExists } from './template';
+import { createPiralStubIndexIfNotExists } from './template';
 import { filesTar, filesOnceTar } from './constants';
 import { cliVersion } from './info';
 import { createNpmPackage, makeExternals } from './npm';
@@ -116,7 +116,7 @@ export async function createEmulatorSources(
   await copyScaffoldingFiles(sourceDir, rootDir, piralPkg.files ?? []);
 
   // actually including this one hints that the app shell should have been included - which is forbidden
-  await createFileFromTemplateIfNotExists('piral', targetDir, 'index.js', ForceOverwrite.yes, {
+  await createPiralStubIndexIfNotExists(targetDir, 'index.js', ForceOverwrite.yes, {
     name: piralPkg.name,
     outFile: targetFile,
   });

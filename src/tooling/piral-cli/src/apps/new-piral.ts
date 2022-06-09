@@ -1,9 +1,8 @@
 import { resolve, basename } from 'path';
 import { frameworkKeys } from '../helpers';
-import { LogLevels, Framework, NpmClientType } from '../types';
+import { SourceLanguage, LogLevels, Framework, NpmClientType } from '../types';
 import {
   ForceOverwrite,
-  SourceLanguage,
   installNpmPackage,
   updateExistingJson,
   getPiralPackage,
@@ -177,14 +176,11 @@ always-auth=true`,
 
     progress(`Taking care of templating ...`);
 
-    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework, bundlerName));
+    const data = getPiralScaffoldData(language, root, app, framework, variables);
 
-    await scaffoldPiralSourceFiles(
-      template,
-      registry,
-      getPiralScaffoldData(language, root, app, framework, variables),
-      forceOverwrite,
-    );
+    await updateExistingJson(root, 'package.json', getPiralPackage(app, data, version, bundlerName));
+
+    await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
 
     if (install) {
       progress(`Installing dependencies ...`);

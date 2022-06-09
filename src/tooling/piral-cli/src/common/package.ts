@@ -2,18 +2,17 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
-import { getDependencies, getDevDependencies } from './language';
-import { SourceLanguage, ForceOverwrite } from './enums';
+import { getDependencies, getDependencyPackages, getDevDependencies, getDevDependencyPackages } from './language';
+import { ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
-import { applyTemplate } from './template';
 import { readImportmap } from './importmap';
 import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot } from './npm';
-import { Framework, FileInfo, PiletsInfo, TemplateFileLocation, PackageData } from '../types';
+import { SourceLanguage, Framework, FileInfo, PiletsInfo, TemplateFileLocation, PackageData } from '../types';
 
 function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
   if (bundler && bundler !== 'none') {
@@ -49,7 +48,6 @@ function getDependencyVersion(
 interface FileDescriptor {
   sourcePath: string;
   targetPath: string;
-  template: boolean;
 }
 
 const globPatternStartIndicators = ['*', '?', '[', '!(', '?(', '+(', '@('];
@@ -59,12 +57,7 @@ async function getMatchingFiles(
   target: string,
   file: string | TemplateFileLocation,
 ): Promise<Array<FileDescriptor>> {
-  const {
-    from,
-    to,
-    deep = true,
-    template = false,
-  } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
+  const { from, to, deep = true } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
   const sourcePath = resolve(source, from);
   const targetPath = resolve(target, to);
   const isDirectory = await checkIsDirectory(sourcePath);
@@ -76,7 +69,6 @@ async function getMatchingFiles(
     return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(targetPath, relative(sourcePath, file)),
-      template,
     }));
   } else if (globPatternStartIndicators.some((m) => from.indexOf(m) !== -1)) {
     log('generalDebug_0003', `Matching using glob "${sourcePath}".`);
@@ -98,7 +90,6 @@ async function getMatchingFiles(
     return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(tarRoot, relative(relRoot, file)),
-      template,
     }));
   }
 
@@ -108,7 +99,6 @@ async function getMatchingFiles(
     {
       sourcePath,
       targetPath,
-      template,
     },
   ];
 }
@@ -155,23 +145,24 @@ export function readPiralPackage(root: string, name: string): Promise<PackageDat
   return readJson(path, 'package.json');
 }
 
-export function getPiralPackage(
-  app: string,
-  language: SourceLanguage,
-  version: string,
-  framework: Framework,
-  bundler?: string,
-) {
-  // take default packages only if piral-core
-  const packages = framework !== 'piral-core' ? {} : undefined;
-  // take default dev packages only if not piral-base
-  const typings = framework === 'piral-base' ? {} : undefined;
+export interface PiralPackageData {
+  packageName: Framework;
+  language: SourceLanguage;
+  reactVersion: number;
+  reactRouterVersion: number;
+}
+
+export function getPiralPackage(app: string, data: PiralPackageData, version: string, bundler?: string) {
+  const framework = data.packageName;
   const devDependencies = {
-    ...getDevDependencies(language, typings),
+    ...getDevDependencies(
+      data.language,
+      getDevDependencyPackages(framework, data.reactVersion, data.reactRouterVersion),
+    ),
     'piral-cli': `${version}`,
   };
   const dependencies = {
-    ...getDependencies(language, packages),
+    ...getDependencies(data.language, getDependencyPackages(framework, data.reactVersion, data.reactRouterVersion)),
   };
 
   appendBundler(devDependencies, bundler, version);
@@ -219,7 +210,6 @@ async function getAvailableFiles(
   return files.map((file) => ({
     sourcePath: file,
     targetPath: resolve(root, relative(base, file)),
-    template: fileMap.find((m) => resolve(source, m.from) === file)?.template || false,
   }));
 }
 
@@ -249,17 +239,13 @@ async function copyFiles(
   variables?: Record<string, string>,
 ) {
   for (const subfile of subfiles) {
-    const { sourcePath, targetPath, template } = subfile;
+    const { sourcePath, targetPath } = subfile;
     const exists = await checkExists(sourcePath);
 
     if (exists) {
       const overwrite = originalFiles.some((m) => m.path === targetPath && !m.changed);
       const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
-      const written = await copy(sourcePath, targetPath, force);
-
-      if (written && template && variables) {
-        await applyTemplate(targetPath, variables);
-      }
+      await copy(sourcePath, targetPath, force);
     } else {
       fail('cannotFindFile_0046', sourcePath);
     }

@@ -3,8 +3,3 @@ export enum ForceOverwrite {
   prompt,
   yes,
 }
-
-export enum SourceLanguage {
-  ts,
-  js,
-}

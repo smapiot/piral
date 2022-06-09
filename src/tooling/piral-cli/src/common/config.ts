@@ -1,7 +1,6 @@
-import { SourceLanguage } from './enums';
 import { defaultRegistry } from './constants';
 import { rc } from '../external';
-import { NpmClientType, PiletSchemaVersion } from '../types';
+import { SourceLanguage, NpmClientType, PiletSchemaVersion } from '../types';
 
 export interface PiralCliConfig {
   /**
@@ -79,7 +78,7 @@ export const config: PiralCliConfig = rc(
     schemaVersion: 'v2' as const,
     openBrowser: false,
     port: 1234,
-    language: SourceLanguage.ts,
+    language: 'ts' as const,
     host: 'localhost',
     registry: defaultRegistry,
   },

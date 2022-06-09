@@ -1,8 +1,7 @@
 import { resolve, basename } from 'path';
-import { LogLevels, NpmClientType } from '../types';
+import { SourceLanguage, LogLevels, NpmClientType } from '../types';
 import {
   ForceOverwrite,
-  SourceLanguage,
   createDirectory,
   createFileIfNotExists,
   installNpmPackage,

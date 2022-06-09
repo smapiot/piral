@@ -24,7 +24,6 @@ import {
   getPiralPath,
   isMonorepoPackageRef,
   getPiletScaffoldData,
-  SourceLanguage,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -105,7 +104,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
 
   if (piral && typeof piral === 'object') {
     const sourceName = piral.name;
-    const language = /\.jsx?$/.test(source) ? SourceLanguage.js : SourceLanguage.ts;
+    const language = /\.jsx?$/.test(source) ? 'js' : 'ts';
 
     if (!sourceName || typeof sourceName !== 'string') {
       fail('invalidPiletPackage_0042');

@@ -6,9 +6,7 @@ import {
   forceOverwriteKeys,
   keyOfForceOverwrite,
   valueOfForceOverwrite,
-  keyOfSourceLanguage,
   sourceLanguageKeys,
-  valueOfSourceLanguage,
   frameworkKeys,
   clientTypeKeys,
   schemaKeys,
@@ -27,6 +25,7 @@ import {
   PiletSchemaVersion,
   PiletBuildType,
   PiletPublishScheme,
+  SourceLanguage,
 } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
@@ -299,7 +298,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiralDefaults.forceOverwrite))
         .choices('language', sourceLanguageKeys)
         .describe('language', 'Determines the programming language for the new Piral instance.')
-        .default('language', keyOfSourceLanguage(apps.newPiralDefaults.language))
+        .default('language', apps.newPiralDefaults.language)
         .string('template')
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiralDefaults.template)
@@ -324,7 +323,7 @@ const allCommands: Array<ToolCommand<any>> = [
         version: args.tag as string,
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
-        language: valueOfSourceLanguage(args.language as string),
+        language: args.language as SourceLanguage,
         install: args.install as boolean,
         template: args.template as string,
         logLevel: args['log-level'] as LogLevels,
@@ -684,7 +683,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('log-level', apps.newPiletDefaults.logLevel)
         .choices('language', sourceLanguageKeys)
         .describe('language', 'Determines the programming language for the new pilet.')
-        .default('language', keyOfSourceLanguage(apps.newPiletDefaults.language))
+        .default('language', apps.newPiletDefaults.language)
         .string('template')
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiletDefaults.template)
@@ -707,7 +706,7 @@ const allCommands: Array<ToolCommand<any>> = [
         source: args.source as string,
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
-        language: valueOfSourceLanguage(args.language as string),
+        language: args.language as SourceLanguage,
         logLevel: args['log-level'] as LogLevels,
         install: args.install as boolean,
         template: args.template as string,

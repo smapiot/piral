@@ -2,7 +2,6 @@ import { mkdtempSync, existsSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
 import { newPiral } from './new-piral';
-import { SourceLanguage } from '../common';
 
 function createTempDir() {
   return mkdtempSync(join(tmpdir(), 'piral-tests-new-piral-'));
@@ -37,7 +36,7 @@ describe('New Piral Command', () => {
     jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
-      language: SourceLanguage.js,
+      language: 'js',
       install: false,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();

@@ -1,10 +1,10 @@
 import { join, dirname, resolve, basename, isAbsolute } from 'path';
 import { installNpmPackage } from './npm';
-import { ForceOverwrite, SourceLanguage } from './enums';
+import { ForceOverwrite } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
 import { cliVersion, isWindows } from './info';
 import { log, fail, getLogLevel } from './log';
-import { Framework } from '../types';
+import { Framework, SourceLanguage } from '../types';
 
 interface TemplateFile {
   path: string;
@@ -103,16 +103,6 @@ function getTemplatePackageName(type: 'piral' | 'pilet', template: string) {
   return template;
 }
 
-function getLanguageName(language: SourceLanguage) {
-  switch (language) {
-    case SourceLanguage.js:
-      return 'js';
-    case SourceLanguage.ts:
-    default:
-      return 'ts';
-  }
-}
-
 export function getPiralScaffoldData(
   language: SourceLanguage,
   root: string,
@@ -125,9 +115,11 @@ export function getPiralScaffoldData(
     ...variables,
     root,
     src,
-    language: getLanguageName(language),
+    language,
     packageName,
-  };
+    reactVersion: parseInt(variables.reactVersion) || 17,
+    reactRouterVersion: parseInt(variables.reactRouterVersion) || 17,
+  } as const;
 }
 
 export async function scaffoldPiralSourceFiles(
@@ -157,9 +149,9 @@ export function getPiletScaffoldData(
     ...variables,
     root,
     src,
-    language: getLanguageName(language),
+    language,
     sourceName,
-  };
+  } as const;
 }
 
 export async function scaffoldPiletSourceFiles(
