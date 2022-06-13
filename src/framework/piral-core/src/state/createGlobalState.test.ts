@@ -1,12 +1,5 @@
 import { deref } from '@dbeining/react-atom';
 import { createGlobalState } from './createGlobalState';
-import {
-  DefaultErrorInfo,
-  DefaultLoadingIndicator,
-  DefaultLayout,
-  DefaultRouter,
-  DefaultRouteSwitch,
-} from '../defaults';
 
 process.env.PIRAL_PUBLIC_PATH = '/';
 
@@ -15,7 +8,11 @@ describe('Create Global State Module', () => {
 
   it('global state works with language as empty string', () => {
     const globalState = createGlobalState({});
-    expect(deref(globalState)).toEqual({
+    const tmp = deref(globalState);
+
+    console.log(tmp);
+
+    expect(tmp).toEqual({
       app: {
         loading: true,
         error: undefined,
@@ -23,11 +20,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       routes: {},
       registry: {
@@ -51,11 +48,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       routes: {},
       registry: {
@@ -83,11 +80,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       routes,
       registry: {
@@ -111,11 +108,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -141,11 +138,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -171,11 +168,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -206,11 +203,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -241,11 +238,11 @@ describe('Create Global State Module', () => {
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},

@@ -14,7 +14,7 @@ describe('UseSetter Hook Module', () => {
 
     const root = createRoot(document.body.appendChild(document.createElement('div')));
     root.render(React.createElement(MyComponent));
-    await act(() => Promise.resolve());
+    await act(() => new Promise(resolve => setTimeout(resolve, 5)));
     expect(cb).toHaveBeenCalled();
   });
 });

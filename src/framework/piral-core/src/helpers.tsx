@@ -11,7 +11,7 @@ import {
 import type { DebuggerExtensionOptions } from 'piral-debug-utils';
 import { globalDependencies } from './modules';
 import type { Pilet, PiletRequester, GlobalStateContext, PiletLoadingStrategy, DependencySelector } from './types';
-import { integrateDebugger, integrateEmulator } from '../debug.codegen';
+import { integrateDebugger, integrateEmulator } from '../app.codegen';
 
 export interface PiletOptionsConfig {
   context: GlobalStateContext;

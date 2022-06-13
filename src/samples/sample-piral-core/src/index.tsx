@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import {
   createInstance,
@@ -183,7 +183,8 @@ const instance = createInstance({
   },
 });
 
-const app = (
+const root = createRoot(document.querySelector('#app'));
+root.render(
   <Piral instance={instance}>
     <SetComponent name="LoadingIndicator" component={Loader} />
     <SetComponent name="Layout" component={Layout} />
@@ -191,5 +192,3 @@ const app = (
     <SetRoute path="/sitemap" component={Sitemap} />
   </Piral>
 );
-
-render(app, document.querySelector('#app'));

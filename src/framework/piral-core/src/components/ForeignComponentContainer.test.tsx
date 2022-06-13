@@ -3,10 +3,14 @@ import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 import { ForeignComponentContainer } from './ForeignComponentContainer';
 
+function resolveAfter(time = 5) {
+  return new Promise<void>(resolve => setTimeout(resolve, time));
+}
+
 async function render(element: any, container: Element) {
   const root = createRoot(container);
   root.render(element);
-  await act(() => Promise.resolve());
+  await act(resolveAfter);
   return root;
 }
 
@@ -63,7 +67,7 @@ describe('ForeignComponentContainer component', () => {
         innerProps={{ a: 'foo' }}
       />,
     );
-    await act(() => Promise.resolve());
+    await act(resolveAfter);
     expect(update).toHaveBeenCalled();
     container.remove();
   });
@@ -74,7 +78,7 @@ describe('ForeignComponentContainer component', () => {
     ForeignComponentContainer.prototype.componentDidMount = function () {
       componentDidMount.call(this);
       this.previous = {
-        removeEventListener() {},
+        removeEventListener() { },
       };
     };
     const mount = jest.fn();
@@ -101,7 +105,7 @@ describe('ForeignComponentContainer component', () => {
         innerProps={{ a: 'foo' }}
       />,
     );
-    await act(() => Promise.resolve());
+    await act(resolveAfter);
     expect(update).not.toHaveBeenCalled();
     expect(unmount).toHaveBeenCalled();
     container.remove();
@@ -121,7 +125,7 @@ describe('ForeignComponentContainer component', () => {
     const node = document.querySelector('[data-portal-id=foo]');
     expect(renderHtmlExtension).not.toHaveBeenCalled();
     node.dispatchEvent(new CustomEvent('render-html', { detail: {} }));
-    await act(() => Promise.resolve());
+    await act(resolveAfter);
     expect(renderHtmlExtension).toHaveBeenCalled();
     container.remove();
   });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, Route } from 'react-router';
+import { RouteRegistration } from './types';
 
 const debugRouteCache = {
   active: 0,
@@ -19,15 +19,7 @@ export function freezeRouteRefresh() {
   };
 }
 
-export interface DebugRouteSwitch {
-  NotFound: React.ComponentType;
-  paths: Array<{
-    path: string;
-    Component: React.ComponentType;
-  }>;
-}
-
-export const DebugRouteSwitch: React.FC<DebugRouteSwitch> = ({ paths, NotFound }) => {
+export function useDebugRouteHandling(paths: Array<RouteRegistration>) {
   const [_, triggerChange] = React.useState(0);
 
   React.useEffect(() => {
@@ -41,12 +33,5 @@ export const DebugRouteSwitch: React.FC<DebugRouteSwitch> = ({ paths, NotFound }
     debugRouteCache.paths = paths;
   }
 
-  return (
-    <Switch>
-      {debugRouteCache.paths.map(({ path, Component }) => (
-        <Route exact key={path} path={path} component={Component} />
-      ))}
-      <Route component={NotFound} />
-    </Switch>
-  );
-};
+  return debugRouteCache.paths;
+}

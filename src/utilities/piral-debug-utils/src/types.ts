@@ -1,11 +1,20 @@
 import type { FC } from 'react';
 import type { Pilet, PiletEntry, PiletRequester } from 'piral-base';
 
+export interface RouteHandler {
+  (paths: Array<RouteRegistration>): Array<RouteRegistration>;
+}
+
 export interface EmulatorConnectorOptions {
   addPilet(pilet: PiletEntry): Promise<void>;
   removePilet(name: string): Promise<void>;
   piletApiFallback?: string;
-  integrate(components: EmulatorComponents): void;
+  integrate(requester: PiletRequester): void;
+}
+
+export interface RouteRegistration {
+  path: string;
+  Component: React.ComponentType;
 }
 
 export interface ChangeSet {
@@ -17,7 +26,7 @@ export interface ChangeSet {
 }
 
 export interface EmulatorComponents {
-  components: Record<string, FC>;
+  routeFilter: RouteHandler;
   requester: PiletRequester;
 }
 
@@ -65,4 +74,5 @@ export interface DebuggerOptions extends DebuggerExtensionOptions {
   addPilet(pilet: PiletEntry): void;
   removePilet(name: string): void;
   updatePilet(data: any): void;
+  navigate(path: string, state?: any): void;
 }

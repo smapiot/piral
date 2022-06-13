@@ -1,6 +1,6 @@
 import { isfunc } from 'piral-base';
 import type { AvailableDependencies, PiletEntries } from '../types';
-import fillDependencies from '../../dependencies.codegen';
+import { fillDependencies } from '../../app.codegen';
 
 /**
  * The global dependencies, which represent the dependencies

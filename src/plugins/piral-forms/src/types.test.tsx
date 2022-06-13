@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DefaultErrorInfo } from 'piral-core/src/defaults';
+import { DefaultErrorInfo } from 'piral-core/defaults/DefaultErrorInfo';
 import { mount } from 'enzyme';
 import './types';
 

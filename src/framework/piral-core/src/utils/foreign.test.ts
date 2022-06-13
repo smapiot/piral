@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { changeDomPortal, convertComponent, renderInDom } from './foreign';
-import { DefaultLoadingIndicator } from '../defaults';
+import { DefaultLoadingIndicator } from '../defaults/DefaultLoadingIndicator';
 import { ForeignComponent } from '../types';
 
 // const StubComponent: React.FC = (props) => <div />;

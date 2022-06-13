@@ -2,7 +2,7 @@ import { DebugTracker } from './DebugTracker';
 import { VisualizationWrapper } from './VisualizationWrapper';
 import { ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
-import { setState, initialSettings } from './state';
+import { setState, initialSettings, setNavigate } from './state';
 import { DebugCustomSetting, DebuggerOptions } from './types';
 
 export function installPiralDebug(options: DebuggerOptions) {
@@ -17,6 +17,7 @@ export function installPiralDebug(options: DebuggerOptions) {
     removePilet,
     updatePilet,
     addPilet,
+    navigate,
     customSettings = {},
   } = options;
   const events = [];
@@ -375,6 +376,8 @@ export function installPiralDebug(options: DebuggerOptions) {
       }
     }
   });
+
+  setNavigate(navigate);
 
   integrate({
     components: {

@@ -28,6 +28,20 @@ export interface PiralDebugState {
 
 const listeners: Array<() => void> = [];
 
+interface NavigateFunction {
+  (path: string, state?: any): void;
+}
+
+let _navigate: NavigateFunction = undefined;
+
+export function setNavigate(navigate: NavigateFunction) {
+  _navigate = navigate;
+}
+
+export function navigate(path: string, state?: any) {
+  _navigate?.(path, state);
+}
+
 let state: PiralDebugState = {
   visualize: {
     active: initialSettings.viewOrigins,

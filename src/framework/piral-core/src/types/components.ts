@@ -208,6 +208,20 @@ export interface RouterProps {
 }
 
 /**
+ * Represents a path in the app registration.
+ */
+ export interface AppPath {
+  /**
+   * The exact path to use.
+   */
+  path: string;
+  /**
+   * The component to register for this path.
+   */
+  Component: ComponentType<RouteComponentProps>;
+}
+
+/**
  * The props of the RouteSwitch component.
  */
 export interface RouteSwitchProps extends SwitchProps {
@@ -218,14 +232,5 @@ export interface RouteSwitchProps extends SwitchProps {
   /**
    * The component to register for the different paths.
    */
-  paths: Array<{
-    /**
-     * The exact path to use.
-     */
-    path: string;
-    /**
-     * The component to register for this path.
-     */
-    Component: ComponentType<RouteComponentProps>;
-  }>;
+  paths: Array<AppPath>;
 }

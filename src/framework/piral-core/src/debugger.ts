@@ -42,6 +42,9 @@ export function integrateDebugger(
     getGlobalState() {
       return context.readState((s) => s);
     },
+    navigate(path, state) {
+      return context.navigate(path, state);
+    },
     getPilets() {
       return context.readState((s) => s.modules);
     },

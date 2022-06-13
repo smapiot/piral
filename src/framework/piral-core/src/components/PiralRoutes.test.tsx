@@ -3,7 +3,7 @@ import * as hooks from '../hooks';
 import { MemoryRouter } from 'react-router';
 import { mount } from 'enzyme';
 import { PiralRoutes } from './PiralRoutes';
-import { DefaultRouteSwitch } from '../defaults';
+import { DefaultRouteSwitch } from '../defaults/DefaultRouteSwitch_v5';
 
 const mountWithRouter = (node, url = '/') =>
   mount(
@@ -14,21 +14,28 @@ const mountWithRouter = (node, url = '/') =>
 
 jest.mock('../hooks');
 
-(hooks as any).useGlobalState = (select: any) =>
-  select({
-    app: {},
-    routes: {
-      '/': StubHome,
-      '/custom': StubCustomPage,
-    },
-    registry: {
-      pages: {
-        '/foo': { component: StubFooPage },
-        '/foo/bar': { component: StubFooBarPage },
-        '/bar': { component: StubBarPage },
-      },
-    },
-  });
+(hooks as any).useRoutes = () => [
+  {
+    path: '/',
+    Component: StubHome,
+  },
+  {
+    path: '/custom',
+    Component: StubCustomPage,
+  },
+  {
+    path: '/foo',
+    Component: StubFooPage,
+  },
+  {
+    path: '/foo/bar',
+    Component: StubFooBarPage,
+  },
+  {
+    path: '/bar',
+    Component: StubBarPage,
+  },
+];
 
 const StubHome: React.FC = (props) => <div />;
 StubHome.displayName = 'StubHome';

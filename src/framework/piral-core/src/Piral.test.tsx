@@ -5,11 +5,13 @@ import { Piral } from './Piral';
 import { RegisteredRouter } from './components';
 import { createInstance } from './createInstance';
 
-async function waitForComponentToPaint<P = {}>(wrapper: ReactWrapper<P>, amount = 0) {
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, amount));
-    wrapper.update();
-  });
+function resolveAfter(time = 5) {
+  return new Promise<void>(resolve => setTimeout(resolve, time));
+}
+
+async function waitForComponentToPaint<P = {}>(wrapper: ReactWrapper<P>, amount = 5) {
+  await act(resolveAfter);
+  wrapper.update();
 }
 
 describe('Piral Component', () => {

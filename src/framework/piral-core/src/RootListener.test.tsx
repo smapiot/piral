@@ -9,6 +9,10 @@ jest.mock('./hooks/globalState', () => ({
   }),
 }));
 
+function resolveAfter(time = 5) {
+  return new Promise<void>(resolve => setTimeout(resolve, time));
+}
+
 describe('RootListener Component', () => {
   it('renders the RootListener instance with default settings', async () => {
     const element = document.createElement('div');
@@ -27,9 +31,9 @@ describe('RootListener Component', () => {
         },
       });
       element.dispatchEvent(event);
-      return Promise.resolve();
+      return resolveAfter();
     });
-    await act(() => Promise.resolve());
+    await act(resolveAfter);
     expect(removed).not.toHaveBeenCalled();
   });
 
@@ -39,9 +43,9 @@ describe('RootListener Component', () => {
     const root = createRoot(container);
     root.render(<RootListener />);
     document.body.removeEventListener = removed;
-    await act(() => Promise.resolve());
+    await act(resolveAfter);
     root.unmount();
-    await act(() => Promise.resolve());
+    await act(resolveAfter);
     expect(removed).toHaveBeenCalled();
   });
 });

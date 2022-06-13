@@ -46,7 +46,7 @@ describe('Create Notifications API Extensions', () => {
     });
     expect(container.context.openNotification).toHaveBeenCalled();
     expect(container.context.closeNotification).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(100);
+    jest.advanceTimersByTime(120);
     expect(container.context.closeNotification).toHaveBeenCalled();
   });
 });

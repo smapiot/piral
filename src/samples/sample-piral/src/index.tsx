@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'piral/polyfills';
 import * as React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { createInstance, createStandardApi, getUserLocale, Piral, setupLocalizer } from 'piral';
 import { createAuthApi } from 'piral-auth';
 import { createSearchApi } from 'piral-search';
@@ -36,4 +36,5 @@ const instance = createInstance({
   },
 });
 
-render(<Piral instance={instance} />, document.querySelector('#app'));
+const root = createRoot(document.querySelector('#app'));
+root.render(<Piral instance={instance} />);

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { __RouterContext } from 'react-router';
 import { PortalRenderer } from './PortalRenderer';
 import { ForeignComponentContainer } from './ForeignComponentContainer';
 import { useGlobalStateContext } from '../hooks';
 import { convertComponent, none } from '../utils';
+import { useRouterContext } from '../../app.codegen';
 import type { AnyComponent, ComponentConverters, ForeignComponent, PiletApi, BaseComponentProps } from '../types';
 
 // this is an arbitrary start number to have 6 digits
@@ -32,7 +32,7 @@ function wrapForeignComponent<T>(
 ) {
   return React.memo((props: T) => {
     const { state, readState, destroyPortal } = useGlobalStateContext();
-    const router = React.useContext(__RouterContext);
+    const router = useRouterContext();
     const id = React.useMemo(() => (portalIdBase++).toString(26), none);
     const context = React.useMemo(() => ({ router, state, readState }), [router, state]);
     const innerProps = React.useMemo(() => ({ ...props, ...captured }), [props]);

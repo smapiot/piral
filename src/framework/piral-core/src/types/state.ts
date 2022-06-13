@@ -348,6 +348,12 @@ export interface PiralActions extends PiralCustomActions {
    * @returns The desired part.
    */
   readState<S>(select: (state: GlobalState) => S): S;
+  /**
+   * Performs a navigation.
+   * @param path The path to navigate to.
+   * @param state The optional state for the navigation.
+   */
+  navigate(path: string, state?: any): void;
 }
 
 /**

@@ -3,7 +3,8 @@ import { resolve } from 'path';
 
 const config: Config.InitialOptions = {
   collectCoverage: true,
-  setupFiles: [resolve(__dirname, 'setup.js')],
+  setupFiles: [resolve(__dirname, 'setupBefore.js')],
+  setupFilesAfterEnv: [resolve(__dirname, 'setupAfter.js')],
   roots: ['src/'],
   testEnvironment: 'jsdom',
   transform: {
@@ -23,7 +24,6 @@ const config: Config.InitialOptions = {
       diagnostics: false,
     },
   },
-  testURL: 'http://localhost',
   verbose: true,
 };
 
