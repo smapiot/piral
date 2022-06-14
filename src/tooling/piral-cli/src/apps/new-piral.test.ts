@@ -18,9 +18,10 @@ jest.mock('../common/clients/npm', () => {
   };
 });
 
+jest.setTimeout(60000);
+
 describe('New Piral Command', () => {
   it('scaffolding in an empty directory works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, { install: false });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
@@ -33,7 +34,6 @@ describe('New Piral Command', () => {
   });
 
   it('scaffolding with language JS works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
       language: 'js',
@@ -49,7 +49,6 @@ describe('New Piral Command', () => {
   });
 
   it('scaffolding for piral-core works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
       framework: 'piral-core',
@@ -67,7 +66,6 @@ describe('New Piral Command', () => {
   });
 
   it('scaffolding for piral-base works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
       framework: 'piral-base',

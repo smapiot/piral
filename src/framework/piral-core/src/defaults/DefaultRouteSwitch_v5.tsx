@@ -12,3 +12,4 @@ export const DefaultRouteSwitch: React.FC<RouteSwitchProps> = ({ paths, NotFound
     </Switch>
   );
 };
+DefaultRouteSwitch.displayName = 'DefaultRouteSwitch';

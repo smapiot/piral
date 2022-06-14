@@ -10,9 +10,11 @@ export const DefaultRouteSwitch: React.FC<RouteSwitchProps> = ({ paths, NotFound
         //@ts-ignore
         <Route key={path} path={path} element={<Component />} />
       ))}
-      {//@ts-ignore
+      {
+        //@ts-ignore
         <Route element={<NotFound />} />
       }
     </Routes>
   );
 };
+DefaultRouteSwitch.displayName = 'DefaultRouteSwitch';

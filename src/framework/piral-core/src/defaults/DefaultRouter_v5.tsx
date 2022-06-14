@@ -7,3 +7,4 @@ export const DefaultRouter: React.FC<RouterProps> = ({ children }) => {
   const publicPath = useGlobalState((s) => s.app.publicPath);
   return <BrowserRouter basename={publicPath}>{children}</BrowserRouter>;
 };
+DefaultRouter.displayName = 'DefaultRouter';

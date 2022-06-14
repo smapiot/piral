@@ -13,14 +13,20 @@ jest.mock('../common/clients/npm', () => {
   return {
     ...original,
     installPackage: (...args) => {
-      return original.installPackage(...args, '--no-package-lock', '--no-save', '--registry=https://registry.npmjs.org/');
+      return original.installPackage(
+        ...args,
+        '--no-package-lock',
+        '--no-save',
+        '--registry=https://registry.npmjs.org/',
+      );
     },
   };
 });
 
+jest.setTimeout(60000);
+
 describe('New Pilet Command', () => {
   it('scaffolding in an empty directory works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPilet(dir, {
       install: false,
@@ -51,7 +57,6 @@ describe('New Pilet Command', () => {
   });
 
   it('should scaffold without creating npmrc file', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPilet(dir, {
       install: false,
@@ -65,7 +70,6 @@ describe('New Pilet Command', () => {
   });
 
   it('scaffolding with language JS works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPilet(dir, {
       language: 'js',
