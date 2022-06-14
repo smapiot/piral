@@ -1,8 +1,10 @@
+const cat = process.env.NODE_ENV === 'test' ? 'src' : '_';
+
 function getRouterVersion() {
   try {
     const { version } = require('react-router/package.json');
     const [major] = version.split('.');
-    return parseInt(major);
+    return parseInt(major, 10);
   } catch {
     console.warn('Could not determine version of react-router. Falling back to v5');
     return 5;
@@ -54,15 +56,15 @@ function createDefaultState(imports, exports) {
   const routerVersion = getRouterVersion();
 
   imports.push(
-    `import { DefaultErrorInfo } from 'piral-core/defaults/DefaultErrorInfo';`,
-    `import { DefaultLoadingIndicator } from 'piral-core/defaults/DefaultLoadingIndicator';`,
-    `import { DefaultLayout } from 'piral-core/defaults/DefaultLayout';`,
+    `import { DefaultErrorInfo } from 'piral-core/${cat}/defaults/DefaultErrorInfo';`,
+    `import { DefaultLoadingIndicator } from 'piral-core/${cat}/defaults/DefaultLoadingIndicator';`,
+    `import { DefaultLayout } from 'piral-core/${cat}/defaults/DefaultLayout';`,
   );
 
   if (routerVersion < 6) {
     imports.push(
-      `import { DefaultRouter } from 'piral-core/defaults/DefaultRouter_v5';`,
-      `import { DefaultRouteSwitch } from 'piral-core/defaults/DefaultRouteSwitch_v5';`,
+      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v5';`,
+      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v5';`,
       `import { __RouterContext as RouterContext } from 'react-router'`,
     );
     exports.push(`
@@ -73,8 +75,8 @@ function createDefaultState(imports, exports) {
     `);
   } else {
     imports.push(
-      `import { DefaultRouter } from 'piral-core/defaults/DefaultRouter_v6';`,
-      `import { DefaultRouteSwitch } from 'piral-core/defaults/DefaultRouteSwitch_v6';`,
+      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v6';`,
+      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6';`,
       `import { UNSAFE_NavigationContext as RouterContext } from 'react-router'`,
     );
     exports.push(`
@@ -118,7 +120,7 @@ function createDefaultState(imports, exports) {
 function createDebugHandler(imports, exports) {
   // if we build the debug version of piral (debug and emulator build)
   if (process.env.DEBUG_PIRAL) {
-    imports.push('import { integrateDebugger } from "piral-core/debugger"');
+    imports.push(`import { integrateDebugger } from "piral-core/${cat}/debugger"`);
     exports.push(`export { integrateDebugger }`);
   } else {
     exports.push(`export function integrateDebugger() {}`);
@@ -126,7 +128,7 @@ function createDebugHandler(imports, exports) {
 
   // if we build the emulator version of piral (shipped to pilets)
   if (process.env.DEBUG_PILET) {
-    imports.push('import { integrateEmulator } from "piral-core/emulator"');
+    imports.push(`import { integrateEmulator } from "piral-core/${cat}/emulator"`);
     exports.push(`export { integrateEmulator }`);
   } else {
     exports.push(`export function integrateEmulator() {}`);
@@ -138,7 +140,7 @@ function createRouteHandler(imports, exports) {
 
   imports.push(
     `import { useContext, useEffect } from 'react';`,
-    `import { useGlobalStateContext } from 'piral-core/hooks/globalState';`
+    `import { useGlobalStateContext } from 'piral-core/${cat}/hooks/globalState';`,
   );
 
   assignments.push(`

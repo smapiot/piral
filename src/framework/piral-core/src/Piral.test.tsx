@@ -6,7 +6,7 @@ import { RegisteredRouter } from './components';
 import { createInstance } from './createInstance';
 
 function resolveAfter(time = 5) {
-  return new Promise<void>(resolve => setTimeout(resolve, time));
+  return new Promise<void>((resolve) => setTimeout(resolve, time));
 }
 
 async function waitForComponentToPaint<P = {}>(wrapper: ReactWrapper<P>, amount = 5) {
