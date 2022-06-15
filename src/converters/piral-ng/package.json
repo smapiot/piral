@@ -39,6 +39,10 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,

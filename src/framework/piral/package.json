@@ -33,6 +33,10 @@
     "./polyfills": {
       "import": "./polyfills.js"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": [

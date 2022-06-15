@@ -33,6 +33,10 @@
     "./runtime": {
       "require": "./runtime.js"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
