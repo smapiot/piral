@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
+import create from 'zustand';
 import { mount } from 'enzyme';
-import { Atom } from '@dbeining/react-atom';
 import { withApi } from './withApi';
 import { StateContext } from '../state';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     portals: {},
-  });
+  }));
   return {
     context: {
       converters: {},
@@ -29,9 +29,9 @@ function createMockContainer() {
 }
 
 function createMockContainerWithNoWrappers() {
-  const state = Atom.of({
+  const state = create(() => ({
     portals: {},
-  });
+  }));
   return {
     context: {
       converters: {},

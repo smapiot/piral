@@ -1,16 +1,16 @@
-import { Atom, swap, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createLocaleApi, setupLocalizer } from './create';
 
 describe('Create Localize API', () => {
-  const state = Atom.of({});
+  const state = create(() => ({}));
   const context: any = {
     defineActions() {},
     state,
     readState(cb) {
-      return cb(deref(state));
+      return cb(state.getState());
     },
     dispatch(update) {
-      swap(state, update);
+      state.setState(update(state.getState()));
     },
   };
 

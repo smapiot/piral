@@ -1,4 +1,4 @@
-import { Atom, swap, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createRoot } from 'react-dom/client';
 import { createElement, Suspense } from 'react';
 import { StateContext } from 'piral-core';
@@ -6,13 +6,13 @@ import { createLazyApi } from './create';
 import { act } from 'react-dom/test-utils';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     components: {},
     errorComponents: {},
     registry: {
       wrappers: {},
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -24,10 +24,10 @@ function createMockContainer() {
         html: ({ component }) => component,
       },
       readState(read) {
-        return read(deref(state));
+        return read(state.getState());
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {

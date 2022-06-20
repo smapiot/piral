@@ -1,4 +1,4 @@
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions } from '../state';
 import { renderElement } from './element';
@@ -14,9 +14,9 @@ declare global {
 }
 
 function createMockContext(): [any, any] {
-  const state = Atom.of({
+  const state: any = create(() => ({
     portals: {},
-  });
+  }));
   const context = createActions(state, createListener({}));
   return [context, state];
 }
@@ -31,7 +31,7 @@ describe('Elements Module', () => {
     element.dispatchEvent(event);
     document.body.removeChild(element);
     (element as any).connectedCallback();
-    expect(deref(state)['portals']['root'].length).toBe(1);
+    expect(state.getState().portals.root.length).toBe(1);
   });
 
   it('disposing piral-extension web component', () => {
@@ -39,9 +39,9 @@ describe('Elements Module', () => {
     const element = document.createElement('piral-extension');
     document.body.appendChild(element);
     const [dispose] = renderElement(context, element, {});
-    expect(deref(state)['portals']['root'].length).toBe(1);
+    expect(state.getState().portals.root.length).toBe(1);
     dispose();
-    expect(deref(state)['portals']['root'].length).toBe(0);
+    expect(state.getState().portals.root.length).toBe(0);
   });
 
   it('testing setters and getters in piral-extension web component', () => {

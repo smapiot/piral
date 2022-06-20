@@ -1,11 +1,11 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
 import { StateContext } from 'piral-core';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { createContainersApi } from './create';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = create(() => ({}));
   return {
     context: {
       on: jest.fn(),
@@ -18,10 +18,10 @@ function createMockContainer() {
       },
       state,
       readState(read) {
-        return read(deref(state));
+        return read(state.getState());
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,

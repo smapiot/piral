@@ -1,13 +1,13 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { SetRedirect } from './SetRedirect';
 import { StateContext } from '../state';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     routes: {},
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -15,13 +15,14 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       setRoute(name, comp) {
-        swap(state, (s) => ({
+        const update = (s) => ({
           ...s,
           routes: {
             ...s.routes,
             [name]: comp,
           },
-        }));
+        });
+        state.setState(update(state.getState()));
       },
     } as any,
   };
@@ -35,7 +36,7 @@ describe('Piral-Core SetRedirect component', () => {
         <SetRedirect from="/foo" to="/bar" />
       </StateContext.Provider>,
     );
-    expect(deref<any>(context.state).routes).toEqual({
+    expect(context.state.getState().routes).toEqual({
       '/foo': expect.anything(),
     });
   });

@@ -1,22 +1,22 @@
-import { Atom, deref, swap } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { readDataItem, readDataValue, resetData, tryWriteDataItem, writeDataItem } from './data';
 
 describe('Data Actions Module', () => {
   it('readDataItem reads the current item', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
       },
-    });
+    }));
     const ctx: any = {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     };
     const value = readDataItem(ctx, 'foo');
@@ -24,21 +24,21 @@ describe('Data Actions Module', () => {
   });
 
   it('readDataValue reads the current value', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: {
           value: 15,
         },
       },
-    });
+    }));
     const ctx: any = {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     };
     const value = readDataValue(ctx, 'foo');
@@ -46,48 +46,48 @@ describe('Data Actions Module', () => {
   });
 
   it('resetData clears all items', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
         bar: [5],
       },
-    });
+    }));
     const ctx: any = {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     };
     resetData(ctx);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       data: {},
     });
   });
 
   it('writeDataItem adds a new data item', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
         bar: [5],
       },
-    });
+    }));
     const ctx: any = Object.assign(createListener(undefined), {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     });
-    writeDataItem(ctx, 'fi', 0);
-    expect(deref(state)).toEqual({
+    writeDataItem(ctx, 'fi', 0, undefined, undefined, undefined);
+    expect(state.getState()).toEqual({
       foo: 5,
       data: {
         foo: 10,
@@ -103,24 +103,24 @@ describe('Data Actions Module', () => {
   });
 
   it('writeDataItem overwrites an existing data item', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
         bar: [5],
       },
-    });
+    }));
     const ctx: any = Object.assign(createListener(undefined), {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     });
-    writeDataItem(ctx, 'bar', 0);
-    expect(deref(state)).toEqual({
+    writeDataItem(ctx, 'bar', 0, undefined, undefined, undefined);
+    expect(state.getState()).toEqual({
       foo: 5,
       data: {
         foo: 10,
@@ -135,24 +135,24 @@ describe('Data Actions Module', () => {
   });
 
   it('writeDataItem removes an existing data item', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
         bar: [5],
       },
-    });
+    }));
     const ctx: any = Object.assign(createListener(undefined), {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     });
-    writeDataItem(ctx, 'bar', null);
-    expect(deref(state)).toEqual({
+    writeDataItem(ctx, 'bar', null, undefined, undefined, undefined);
+    expect(state.getState()).toEqual({
       foo: 5,
       data: {
         foo: 10,
@@ -161,27 +161,27 @@ describe('Data Actions Module', () => {
   });
 
   it('tryWriteDataItem can write new item', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
       },
-    });
+    }));
     const ctx: any = Object.assign(createListener(undefined), {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     });
-    const success = tryWriteDataItem(ctx, 'bar', 10, 'me');
+    const success = tryWriteDataItem(ctx, 'bar', 10, 'me', undefined, undefined);
     expect(success).toBe(true);
   });
 
   it('tryWriteDataItem can overwrite item if owner', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
@@ -190,23 +190,23 @@ describe('Data Actions Module', () => {
           value: 5,
         },
       },
-    });
+    }));
     const ctx: any = Object.assign(createListener(undefined), {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     });
-    const success = tryWriteDataItem(ctx, 'bar', 10, 'me');
+    const success = tryWriteDataItem(ctx, 'bar', 10, 'me', undefined, undefined);
     expect(success).toBe(true);
-    expect(deref(state).data.bar.value).toBe(10);
+    expect(state.getState().data.bar.value).toBe(10);
   });
 
   it('tryWriteDataItem can not overwrite item if not owner', () => {
-    const state = Atom.of({
+    const state = create(() => ({
       foo: 5,
       data: {
         foo: 10,
@@ -215,18 +215,18 @@ describe('Data Actions Module', () => {
           value: 5,
         },
       },
-    });
+    }));
     const ctx: any = Object.assign(createListener(undefined), {
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
     });
-    const success = tryWriteDataItem(ctx, 'bar', 10, 'me');
+    const success = tryWriteDataItem(ctx, 'bar', 10, 'me', undefined, undefined);
     expect(success).toBe(false);
-    expect(deref(state).data.bar.value).toBe(5);
+    expect(state.getState().data.bar.value).toBe(5);
   });
 });

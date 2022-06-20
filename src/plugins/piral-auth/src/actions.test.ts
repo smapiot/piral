@@ -1,18 +1,18 @@
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions } from 'piral-core';
 import { setUser } from './actions';
 
 describe('Auth Actions Module', () => {
   it('Sets the new user successfully', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       user: {
         current: undefined,
         features: {},
         permissions: {},
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     const user = {
       name: 'User',
@@ -20,14 +20,14 @@ describe('Auth Actions Module', () => {
       permissions: { allow: true },
     };
     setUser(ctx, user);
-    expect(deref(state)).toEqual({
+    expect((state.getState())).toEqual({
       foo: 5,
       user,
     });
   });
 
   it('Resets the user successfully', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       user: {
         current: 'User',
@@ -38,10 +38,10 @@ describe('Auth Actions Module', () => {
           allow: false,
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     setUser(ctx, undefined, {}, {});
-    expect(deref(state)).toEqual({
+    expect((state.getState())).toEqual({
       foo: 5,
       user: undefined,
     });

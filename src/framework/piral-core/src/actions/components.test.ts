@@ -1,20 +1,20 @@
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { registerExtension, registerPage, unregisterExtension, unregisterPage } from './components';
 import { createActions } from '../state';
 
 describe('Components Actions Module', () => {
   it('registerExtension and unregisterExtension', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       registry: {
         foo: 5,
         extensions: {},
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     registerExtension(ctx, 'foo', 10 as any);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -23,8 +23,8 @@ describe('Components Actions Module', () => {
         },
       },
     });
-    unregisterExtension(ctx, 'foo');
-    expect(deref(state)).toEqual({
+    unregisterExtension(ctx, 'foo', undefined);
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -36,16 +36,16 @@ describe('Components Actions Module', () => {
   });
 
   it('registerPage and unregisterPage', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       registry: {
         foo: 5,
         pages: {},
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     registerPage(ctx, 'foo', 10 as any);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -55,7 +55,7 @@ describe('Components Actions Module', () => {
       },
     });
     unregisterPage(ctx, 'foo');
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,

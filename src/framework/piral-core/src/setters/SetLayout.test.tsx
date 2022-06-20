@@ -1,6 +1,6 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { SetLayout } from './SetLayout';
 import { StateContext } from '../state/stateContext';
 
@@ -8,9 +8,9 @@ const FakeContainer = () => null;
 FakeContainer.displayName = 'FakeContainer';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     components: {},
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -18,13 +18,14 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       setComponent(name, comp) {
-        swap(state, (s) => ({
+        const s = state.getState();
+        state.setState({
           ...s,
           components: {
             ...s.components,
             [name]: comp,
           },
-        }));
+        });
       },
     } as any,
   };
@@ -44,7 +45,7 @@ describe('Piral SetLayout component', () => {
         />
       </StateContext.Provider>,
     );
-    expect(deref<any>(context.state).components).toEqual({
+    expect(context.state.getState().components).toEqual({
       DashboardContainer: FakeContainer,
     });
   });

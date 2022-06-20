@@ -1,6 +1,6 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { SetProvider } from './SetProvider';
 import { StateContext } from '../state';
 
@@ -8,9 +8,9 @@ const FakeProvider = () => null;
 FakeProvider.displayName = 'FakeProvider';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     providers: [],
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -18,10 +18,11 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       includeProvider(provider) {
-        swap(state, (s) => ({
+        const update = (s) => ({
           ...s,
           providers: [...s.providers, provider],
-        }));
+        });
+        state.setState(update(state.getState()));
       },
     } as any,
   };
@@ -36,6 +37,6 @@ describe('Piral-Core SetProvider component', () => {
         <SetProvider provider={provider} />
       </StateContext.Provider>,
     );
-    expect(deref<any>(context.state).providers).toEqual([provider]);
+    expect(context.state.getState().providers).toEqual([provider]);
   });
 });

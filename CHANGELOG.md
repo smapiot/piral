@@ -7,6 +7,7 @@
 - Moved templates to dedicated repository (#458)
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
 - Changed webpack configs to use `oneOf` for assets (#451)
+- Changed the internal state container to `zustand`
 - Deprecated the usage of `renderInstance` (#465)
 - Deprecated the usage of `externals` for `pilets`
 - Removed support for IE11 (#467)

@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { Atom } from '@dbeining/react-atom';
+import create from 'zustand';
 import { StateContext } from 'piral-core';
 import { DefaultErrorInfo } from 'piral-core/lib/defaults/DefaultErrorInfo.js';
 import { mount } from 'enzyme';
 import './types';
 
 const mockState = {
-  state: Atom.of({
+  state: create(() => ({
     errorComponents: {},
     registry: {
       extensions: {},
     },
-  }),
+  })),
 };
 
 (React as any).useMemo = (cb) => cb();

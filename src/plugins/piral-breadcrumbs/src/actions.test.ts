@@ -1,20 +1,20 @@
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions } from 'piral-core';
 import { registerBreadcrumb, unregisterBreadcrumb } from './actions';
 
 describe('Breadcrumbs Actions Module', () => {
   it('registerBreadcrumb and unregisterBreadcrumb', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       registry: {
         foo: 5,
         breadcrumbs: {},
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     registerBreadcrumb(ctx, 'foo', 10);
-    expect(deref(state)).toEqual({
+    expect((state.getState())).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -24,7 +24,7 @@ describe('Breadcrumbs Actions Module', () => {
       },
     });
     unregisterBreadcrumb(ctx, 'foo');
-    expect(deref(state)).toEqual({
+    expect((state.getState())).toEqual({
       foo: 5,
       registry: {
         foo: 5,

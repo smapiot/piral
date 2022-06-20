@@ -1,16 +1,16 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
 import { StateContext } from 'piral-core';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { Dashboard } from './Dashboard';
 
-const MockDbContainer: React.FC = ({ children }) => <div>{children}</div>;
+const MockDbContainer: React.FC<any> = ({ children }) => <div>{children}</div>;
 MockDbContainer.displayName = 'MockDbContainer';
-const MockDbTile: React.FC = ({ children }) => <div>{children}</div>;
+const MockDbTile: React.FC<any> = ({ children }) => <div>{children}</div>;
 MockDbTile.displayName = 'MockDbTile';
 
 function createMockContainer(tiles = {}) {
-  const state = Atom.of({
+  const state = create(() => ({
     components: {
       DashboardContainer: MockDbContainer,
       DashboardTile: MockDbTile,
@@ -18,7 +18,7 @@ function createMockContainer(tiles = {}) {
     registry: {
       tiles,
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -27,10 +27,10 @@ function createMockContainer(tiles = {}) {
       defineActions() {},
       state,
       readState(read) {
-        return read(deref(state));
+        return read(state.getState());
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,

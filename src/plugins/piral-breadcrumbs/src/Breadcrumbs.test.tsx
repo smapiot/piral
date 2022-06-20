@@ -1,13 +1,13 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
 import { StateContext } from 'piral-core';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { Breadcrumbs } from './Breadcrumbs';
 
-const MockBcContainer: React.FC = ({ children }) => <div>{children}</div>;
+const MockBcContainer: React.FC<any> = ({ children }) => <div>{children}</div>;
 MockBcContainer.displayName = 'MockBcContainer';
 
-const MockBcItem: React.FC = ({ children }) => <div>{children}</div>;
+const MockBcItem: React.FC<any> = ({ children }) => <div>{children}</div>;
 MockBcItem.displayName = 'MockBcTile';
 
 jest.mock('react-router', () => ({
@@ -22,7 +22,7 @@ jest.mock('react-router', () => ({
 }));
 
 function createMockContainer(breadcrumbs = {}) {
-  const state = Atom.of({
+  const state = create(() => ({
     components: {
       BreadcrumbsContainer: MockBcContainer,
       BreadcrumbItem: MockBcItem,
@@ -30,7 +30,7 @@ function createMockContainer(breadcrumbs = {}) {
     registry: {
       breadcrumbs,
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -39,10 +39,10 @@ function createMockContainer(breadcrumbs = {}) {
       defineActions() {},
       state,
       readState(read) {
-        return read(deref(state));
+        return read(state.getState());
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,

@@ -2,17 +2,17 @@
  * @jest-environment node
  */
 
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions } from '../state';
 import { renderElement } from './element';
 
 function createMockContext(): [any, any] {
-  const state = Atom.of({
+  const state: any = create(() => ({
     portals: {
       root: [],
     },
-  });
+  }));
   const context = createActions(state, createListener({}));
   return [context, state];
 }
@@ -24,6 +24,6 @@ describe('Elements Module from SSR', () => {
       addEventListener() {},
     };
     renderElement(context, element, {});
-    expect(deref(state)['portals']['root'].length).toBe(0);
+    expect(state.getState().portals.root.length).toBe(0);
   });
 });

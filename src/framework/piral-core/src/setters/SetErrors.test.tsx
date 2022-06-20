@@ -1,6 +1,6 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { SetErrors } from './SetErrors';
 import { StateContext } from '../state/stateContext';
 
@@ -8,9 +8,9 @@ const FakeError = () => null;
 FakeError.displayName = 'FakeError';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     errorComponents: {},
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -18,13 +18,14 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       setErrorComponent(name, comp) {
-        swap(state, (s) => ({
+        const s = state.getState();
+        state.setState({
           ...s,
           errorComponents: {
             ...s.errorComponents,
             [name]: comp,
           },
-        }));
+        });
       },
     } as any,
   };
@@ -44,7 +45,7 @@ describe('Piral SetErrors component', () => {
         />
       </StateContext.Provider>,
     );
-    expect(deref<any>(context.state).errorComponents).toEqual({
+    expect(context.state.getState().errorComponents).toEqual({
       menu: FakeError,
     });
   });

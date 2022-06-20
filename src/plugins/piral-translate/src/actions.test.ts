@@ -1,18 +1,18 @@
-import { Atom, deref, swap } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions as ca } from 'piral-core';
 import { createActions } from './actions';
 
 describe('Translation Action Module', () => {
   it('selectLanguage changes the current language', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       language: {
         foo: 10,
         loading: false,
         selected: 'fr',
       },
-    });
+    }));
     const localizer = {
       language: 'en',
       languages: ['en'],
@@ -27,7 +27,7 @@ describe('Translation Action Module', () => {
     const actions = createActions(localizer);
     const ctx = ca(state, createListener({}));
     actions.selectLanguage(ctx, 'de');
-    expect(deref(state)).toEqual({
+    expect((state.getState())).toEqual({
       foo: 5,
       language: {
         foo: 10,
@@ -38,14 +38,14 @@ describe('Translation Action Module', () => {
   });
 
   it('translate', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       language: {
         foo: 10,
         loading: false,
         selected: 'fr',
       },
-    });
+    }));
     const localizer = {
       language: 'fr',
       languages: ['fr'],
@@ -73,14 +73,14 @@ describe('Translation Action Module', () => {
   });
 
   it('setTranslations sets translations to the global translations', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       language: {
         foo: 10,
         loading: false,
         selected: 'fr',
       },
-    });
+    }));
     const localizer = {
       language: 'de',
       languages: ['de'],
@@ -98,7 +98,7 @@ describe('Translation Action Module', () => {
       emit: jest.fn(),
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       apis: {
         firstApi: {
@@ -123,14 +123,14 @@ describe('Translation Action Module', () => {
   });
 
   it('getTranslations returns translations', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       language: {
         foo: 10,
         loading: false,
         selected: 'fr',
       },
-    });
+    }));
     const localizer = {
       language: 'fr',
       languages: ['fr'],
@@ -151,7 +151,7 @@ describe('Translation Action Module', () => {
       emit: jest.fn(),
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       apis: {
         firstApi: {

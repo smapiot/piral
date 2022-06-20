@@ -1,6 +1,6 @@
 import * as React from 'react';
+import create from 'zustand';
 import { mount } from 'enzyme';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { SetRoute } from './SetRoute';
 import { StateContext } from '../state';
 
@@ -8,9 +8,9 @@ const FakeRoute = () => null;
 FakeRoute.displayName = 'FakeRoute';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     routes: {},
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -18,13 +18,14 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       setRoute(name, comp) {
-        swap(state, (s) => ({
+        const update = (s) => ({
           ...s,
           routes: {
             ...s.routes,
             [name]: comp,
           },
-        }));
+        });
+        state.setState(update(state.getState()));
       },
     } as any,
   };
@@ -38,7 +39,7 @@ describe('Piral-Core SetRoute component', () => {
         <SetRoute path="/foo" component={FakeRoute} />
       </StateContext.Provider>,
     );
-    expect(deref<any>(context.state).routes).toEqual({
+    expect(context.state.getState().routes).toEqual({
       '/foo': FakeRoute,
     });
   });
