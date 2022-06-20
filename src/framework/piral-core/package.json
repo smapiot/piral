@@ -17,10 +17,7 @@
       "react-dom": "react-dom",
       "react-router": "react-router",
       "react-router-dom": "react-router-dom",
-      "history": "history",
-      "path-to-regexp": "path-to-regexp",
-      "@libre/atom": "@libre/atom",
-      "@dbeining/react-atom": "@dbeining/react-atom"
+      "history": "history"
     }
   },
   "author": "smapiot",
@@ -74,9 +71,9 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@dbeining/react-atom": "^4.0.0",
     "piral-base": "^0.14.27",
-    "piral-debug-utils": "^0.14.27"
+    "piral-debug-utils": "^0.14.27",
+    "zustand": "^3.0.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -101,9 +98,6 @@
     "react-router",
     "react-router-dom",
     "history",
-    "tslib",
-    "path-to-regexp",
-    "@libre/atom",
-    "@dbeining/react-atom"
+    "tslib"
   ]
 }

@@ -1,7 +1,7 @@
 import type { ComponentType, ReactPortal, PropsWithChildren } from 'react';
 import type { RouteComponentProps } from 'react-router';
-import type { Atom } from '@dbeining/react-atom';
 import type { LoadPiletsOptions } from 'piral-base';
+import type { StoreApi, UseBoundStore } from 'zustand';
 import type { Dict, Without } from './common';
 import type { SharedDataItem, DataStoreTarget } from './data';
 import type {
@@ -36,7 +36,6 @@ export interface StateDispatcher<TState> {
 
 declare module './components' {
   interface ComponentContext {
-    state: Atom<GlobalState>;
     readState: PiralActions['readState'];
   }
 }
@@ -364,7 +363,7 @@ export interface GlobalStateContext extends PiralActions, EventEmitter {
    * The global state context atom.
    * Changes to the state should always be dispatched via the `dispatch` action.
    */
-  state: Atom<GlobalState>;
+  state: UseBoundStore<GlobalState>;
   /**
    * The API objects created for the loaded pilets.
    */

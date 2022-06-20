@@ -104,7 +104,7 @@ Besides the typing aspect you'll also need to take care shared dependencies. If 
 
 There is also a combination between (1) and (2) where some shared dependencies are put into `dependencies` and others are put into the `importmap`. Usually, this is the best way. Considering things like `react` are presumably shared and would not behave nicely if not shared, this also brings some advantages.
 
-You don't need to apply this strategy to everything listed in `peerDependencies`. You can also drop packages that are not used at all in the pilet. Hence, things like `path-to-regexp`, `@libre/atom`, or `@dbeining/react-atom` might be just removed. They may still stay in `devDependencies` to potentially resolve all types, but that's it.
+You don't need to apply this strategy to everything listed in `peerDependencies`. You can also drop packages that are not used at all in the pilet. They may still stay in `devDependencies` to potentially resolve all types, but that's it.
 
 ## Multi-Pilet vs Multi-Shell
 

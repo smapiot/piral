@@ -1,4 +1,3 @@
-import { addChangeHandler } from '@dbeining/react-atom';
 import { LoadPiletsOptions } from 'piral-base';
 import { installPiralDebug, DebuggerExtensionOptions } from 'piral-debug-utils';
 import { GlobalStateContext } from './types';
@@ -68,7 +67,7 @@ export function integrateDebugger(
         },
       }));
 
-      addChangeHandler(context.state, 'debugging', ({ previous, current }) => {
+      context.state.subscribe((current, previous) => {
         const pilets = current.modules !== previous.modules;
         const pages = current.registry.pages !== previous.registry.pages || current.routes !== previous.routes;
         const extensions = current.registry.extensions !== previous.registry.extensions;

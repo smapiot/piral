@@ -37,9 +37,6 @@ Besides the dependencies that are specified in the `externals` list of the *pack
 - `react-router-dom`
 - `history`
 - `tslib`
-- `path-to-regexp`
-- `@libre/atom`
-- `@dbeining/react-atom`
 
 These are dependencies that are coming directly or indirectly from `piral-core`. Any other dependency needs to be added to the `externals` list above.
 

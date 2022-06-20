@@ -1,15 +1,6 @@
 import { useContext } from 'react';
-import { useAtom, deref } from '@dbeining/react-atom';
 import { StateContext } from '../state/stateContext';
 import { GlobalState } from '../types';
-
-const useGlobalAtom = typeof window !== 'undefined' ? useAtom : useDirectAtom;
-
-function useDirectAtom(atom: any, opts: any) {
-  const state = deref(atom);
-  const select = opts && opts.select;
-  return typeof select === 'function' ? select(state) : state;
-}
 
 /**
  * Hook to obtain the global state context, which gives you directly
@@ -35,6 +26,6 @@ export function useGlobalState(): GlobalState;
 export function useGlobalState<R>(select: (state: GlobalState) => R): R;
 
 export function useGlobalState<R>(select?: (state: GlobalState) => R) {
-  const { state } = useGlobalStateContext();
-  return useGlobalAtom(state, select && { select });
+  const { state: useState } = useGlobalStateContext();
+  return useState(select);
 }

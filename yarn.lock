@@ -1283,13 +1283,6 @@
     quicktask "1.2.0"
     xstream "10.x || 11.x"
 
-"@dbeining/react-atom@^4.0.0":
-  version "4.1.21"
-  resolved "https://registry.yarnpkg.com/@dbeining/react-atom/-/react-atom-4.1.21.tgz#94ae9033fc1ddaa309db1b9e52b24f0088ccf87c"
-  integrity sha512-lHAyDaIlLpcx5hl6YOv6FFxODOE+Qa2nsvA/oAlk4dv7AWR6hbb3nBU6naaOwFVY3l7urBPJezmNxI/Pixo1Pg==
-  dependencies:
-    "@libre/atom" "^1.3.2"
-
 "@ember-data/rfc395-data@^0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@ember-data/rfc395-data/-/rfc395-data-0.0.4.tgz#ecb86efdf5d7733a76ff14ea651a1b0ed1f8a843"
@@ -2403,11 +2396,6 @@
   dependencies:
     npmlog "^4.1.2"
     write-file-atomic "^3.0.3"
-
-"@libre/atom@^1.3.2":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@libre/atom/-/atom-1.3.3.tgz#b14e5fdac836e281d7206d19255c798a50046816"
-  integrity sha512-u6VDBBeSYuxBIdyGV1FybaeYndP/E8npGKzbYJgxUKQ0L9MsBMWuEP0O/45KcdNhnEaxm+GozSvkGgMJtoWBqg==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -15480,3 +15468,8 @@ zone.js@~0.9:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.9.1.tgz#e37c6e5c54c13fae4de26b5ffe8d8e9212da6d9b"
   integrity sha512-GkPiJL8jifSrKReKaTZ5jkhrMEgXbXYC+IPo1iquBjayRa0q86w3Dipjn8b415jpitMExe9lV8iTsv8tk3DGag==
+
+zustand@^3.0.0:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.7.2.tgz#7b44c4f4a5bfd7a8296a3957b13e1c346f42514d"
+  integrity sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==

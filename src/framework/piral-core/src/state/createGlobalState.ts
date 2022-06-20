@@ -1,4 +1,4 @@
-import { Atom } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createDefaultState } from '../../app.codegen';
 import { GlobalState, NestedPartial } from '../types';
 
@@ -19,5 +19,5 @@ function extend<T>(defaultState: T, customState: NestedPartial<T>) {
 
 export function createGlobalState(customState: NestedPartial<GlobalState> = {}) {
   const defaultState: GlobalState = createDefaultState();
-  return Atom.of(extend(defaultState, customState));
+  return create(() => extend(defaultState, customState));
 }

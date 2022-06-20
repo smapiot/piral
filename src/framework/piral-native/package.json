@@ -90,9 +90,6 @@
     "react-router-dom",
     "react-router-native",
     "history",
-    "tslib",
-    "path-to-regexp",
-    "@libre/atom",
-    "@dbeining/react-atom"
+    "tslib"
   ]
 }
