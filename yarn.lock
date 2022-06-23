@@ -2659,20 +2659,20 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@pidoc/components@0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.2.tgz#0167d738b1fdb475031e3eaa7f98f7ffd12dc7e3"
-  integrity sha512-hdOpwfHabnLp3ZECcNDSm6sNfEfCNcJO+sQWivNXOREJsDjXJtbejizk1Y2uuzSWN97K5LuxRuPswJDclMtJSg==
+"@pidoc/components@0.14.3":
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.3.tgz#7d354dd40f474681aeb1d2dc9909c12f0b163aeb"
+  integrity sha512-Md8NMXQQoCVZuGTK9m1B1x51dcq9oXSKo0vtfxb7v84SXuJ6KzbKlQbI7gESDprPaUUkVQSKFx5ddMYMjExQkA==
   dependencies:
     flexsearch "^0.6.32"
     stickyfilljs "^2.1.0"
 
-"@pidoc/core@0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.2.tgz#47549cb4d8da043fa129124c61abc4bbc6963a6f"
-  integrity sha512-qMfxw8XXIcAK16HXG9YiyQlLJORRJx+0jGBe/NfUgtOV8ZgI86Ci5ZSKsjlYyi2OizfLOJtfhqYXOLmxEXnslA==
+"@pidoc/core@0.14.3":
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.3.tgz#fa940e87613d047e5567a776ff46ddee244c1301"
+  integrity sha512-wBclBBadV3hiW7kRns1C6EngezJyVdqMjsQgMVS+jCO+UupAopwEVXqXL18p1IeHawsEOoBrv0U1HuKqrIYx4Q==
   dependencies:
-    "@pidoc/components" "0.14.2"
+    "@pidoc/components" "0.14.3"
     keyword-extractor "0.0.20"
     markdown-it "^12.0.6"
     markdown-it-abbr "^1.0.4"
@@ -11247,10 +11247,10 @@ markdown-it@^12.0.6:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
-marked@^4.0.10:
-  version "4.0.10"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.10.tgz#423e295385cc0c3a70fa495e0df68b007b879423"
-  integrity sha512-+QvuFj0nGgO970fySghXGmuw+Fd0gD2x3+MqCWLIPf5oxdv1Ka6b2q+z9RP01P/IaKPMEramy+7cNy/Lw8c3hw==
+marked@^4.0.12:
+  version "4.0.17"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.17.tgz#1186193d85bb7882159cdcfc57d1dfccaffb3fe9"
+  integrity sha512-Wfk0ATOK5iPxM4ptrORkFemqroz0ZDxp5MWfYA7H/F+wO17NRWV5Ypxi6p3g2Xmw2bKeiYOl6oVnLHKxBA0VhA==
 
 matcher-collection@^1.0.0, matcher-collection@^1.1.1:
   version "1.1.2"
@@ -15648,10 +15648,10 @@ shellwords@^0.1.1:
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
 
-shiki@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.10.0.tgz#85f21ecfa95b377ff64db6c71442c22c220e9540"
-  integrity sha512-iczxaIYeBFHTFrQPb9DVy2SKgYxC4Wo7Iucm7C17cCh2Ge/refnvHscUOxM85u57MfLoNOtjoEFUWt9gBexblA==
+shiki@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.10.1.tgz#6f9a16205a823b56c072d0f1a0bcd0f2646bef14"
+  integrity sha512-VsY7QJVzU51j5o1+DguUd+6vmCmZ5v/6gYu4vyYAhzjuNQU6P/vmSy4uQaOhvje031qQMiW0d2BwgMH52vqMng==
   dependencies:
     jsonc-parser "^3.0.0"
     vscode-oniguruma "^1.6.1"
@@ -16990,16 +16990,16 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typedoc@^0.22.11:
-  version "0.22.11"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.22.11.tgz#a3d7f4577eef9fc82dd2e8f4e2915e69f884c250"
-  integrity sha512-pVr3hh6dkS3lPPaZz1fNpvcrqLdtEvXmXayN55czlamSgvEjh+57GUqfhAI1Xsuu/hNHUT1KNSx8LH2wBP/7SA==
+typedoc@0.22.15:
+  version "0.22.15"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.22.15.tgz#c6ad7ed9d017dc2c3a06c9189cb392bd8e2d8c3f"
+  integrity sha512-CMd1lrqQbFvbx6S9G6fL4HKp3GoIuhujJReWqlIvSb2T26vGai+8Os3Mde7Pn832pXYemd9BMuuYWhFpL5st0Q==
   dependencies:
     glob "^7.2.0"
     lunr "^2.3.9"
-    marked "^4.0.10"
-    minimatch "^3.0.4"
-    shiki "^0.10.0"
+    marked "^4.0.12"
+    minimatch "^5.0.1"
+    shiki "^0.10.1"
 
 typescript@^4.0.2:
   version "4.4.2"
