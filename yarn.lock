@@ -2613,20 +2613,20 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@pidoc/components@0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.2.tgz#0167d738b1fdb475031e3eaa7f98f7ffd12dc7e3"
-  integrity sha512-hdOpwfHabnLp3ZECcNDSm6sNfEfCNcJO+sQWivNXOREJsDjXJtbejizk1Y2uuzSWN97K5LuxRuPswJDclMtJSg==
+"@pidoc/components@0.14.3":
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.3.tgz#7d354dd40f474681aeb1d2dc9909c12f0b163aeb"
+  integrity sha512-Md8NMXQQoCVZuGTK9m1B1x51dcq9oXSKo0vtfxb7v84SXuJ6KzbKlQbI7gESDprPaUUkVQSKFx5ddMYMjExQkA==
   dependencies:
     flexsearch "^0.6.32"
     stickyfilljs "^2.1.0"
 
-"@pidoc/core@0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.2.tgz#47549cb4d8da043fa129124c61abc4bbc6963a6f"
-  integrity sha512-qMfxw8XXIcAK16HXG9YiyQlLJORRJx+0jGBe/NfUgtOV8ZgI86Ci5ZSKsjlYyi2OizfLOJtfhqYXOLmxEXnslA==
+"@pidoc/core@0.14.3":
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.3.tgz#fa940e87613d047e5567a776ff46ddee244c1301"
+  integrity sha512-wBclBBadV3hiW7kRns1C6EngezJyVdqMjsQgMVS+jCO+UupAopwEVXqXL18p1IeHawsEOoBrv0U1HuKqrIYx4Q==
   dependencies:
-    "@pidoc/components" "0.14.2"
+    "@pidoc/components" "0.14.3"
     keyword-extractor "0.0.20"
     markdown-it "^12.0.6"
     markdown-it-abbr "^1.0.4"
@@ -10103,9 +10103,9 @@ markdown-it@^12.0.6:
     uc.micro "^1.0.5"
 
 marked@^4.0.12:
-  version "4.0.14"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.14.tgz#7a3a5fa5c80580bac78c1ed2e3b84d7bd6fc3870"
-  integrity sha512-HL5sSPE/LP6U9qKgngIIPTthuxC0jrfxpYMZ3LdGDD3vTnLs59m2Z7r6+LNDR3ToqEQdkKd6YaaEfJhodJmijQ==
+  version "4.0.17"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.17.tgz#1186193d85bb7882159cdcfc57d1dfccaffb3fe9"
+  integrity sha512-Wfk0ATOK5iPxM4ptrORkFemqroz0ZDxp5MWfYA7H/F+wO17NRWV5Ypxi6p3g2Xmw2bKeiYOl6oVnLHKxBA0VhA==
 
 matcher-collection@^1.0.0, matcher-collection@^1.1.1:
   version "1.1.2"
@@ -14636,7 +14636,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typedoc@^0.22.11:
+typedoc@0.22.15:
   version "0.22.15"
   resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.22.15.tgz#c6ad7ed9d017dc2c3a06c9189cb392bd8e2d8c3f"
   integrity sha512-CMd1lrqQbFvbx6S9G6fL4HKp3GoIuhujJReWqlIvSb2T26vGai+8Os3Mde7Pn832pXYemd9BMuuYWhFpL5st0Q==
@@ -14646,6 +14646,11 @@ typedoc@^0.22.11:
     marked "^4.0.12"
     minimatch "^5.0.1"
     shiki "^0.10.1"
+
+typescript@^4.0.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
+  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
 
 typescript@^4.7.3:
   version "4.7.3"
