@@ -1,5 +1,6 @@
 import * as yargs from 'yargs';
 import { detailed } from 'yargs-parser';
+import { caterpillerIcon, zapIcon } from './common';
 import { runQuestionnaireFor } from './questionnaire';
 import { ToolCommand } from './types';
 
@@ -46,7 +47,7 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
           () => process.exit(0),
           (err) => {
             err && !err.logged && console.error(err.message);
-            console.log('Codes Reference: https://docs.piral.io/code/search');
+            console.log(`${caterpillerIcon} Codes Reference: https://docs.piral.io/code/search`);
             process.exit(1);
           },
         );
@@ -54,5 +55,5 @@ export function setupCli(commands: Array<ToolCommand<any>>) {
     );
   }
 
-  argv.epilog('For more information, check out the documentation at https://docs.piral.io.').help().strict().argv;
+  argv.epilog(`${zapIcon} For more information, check out the documentation at https://docs.piral.io.`).help().strict().argv;
 }
