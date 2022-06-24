@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.28 (tbd)
+
+- Fixed navigation via `NavigationManager` of Blazor in `piral-blazor`
+- Added warning when overwriting crucial Webpack sections
+
 ## 0.14.27 (June 7, 2022)
 
 - Fixed issue with `piral-cli-webpack` and `piral-cli-webpack5` not resolving *.jsx*
