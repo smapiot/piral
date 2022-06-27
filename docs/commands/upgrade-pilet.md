@@ -28,6 +28,7 @@ Instead of `upgrade-pilet` you can also use:
 
 Sets the tag or version of the Piral instance to upgrade to. By default, it is "latest".
 
+
 - Type: `string`
 - Default: `undefined`
 
@@ -37,12 +38,14 @@ Sets the tag or version of the Piral instance to upgrade to. By default, it is "
 
 Sets the target directory to upgrade. By default, the current directory.
 
+
 - Type: `string`
 - Default: `"."`
 
 ### `--log-level`
 
 Sets the log level to use (1-5).
+
 
 - Type: `number`
 - Default: `3`
@@ -51,6 +54,7 @@ Sets the log level to use (1-5).
 
 Already performs the update of its npm dependencies.
 
+- Aliases: `--package-install`
 - Type: `boolean`
 - Default: `true`
 
@@ -59,12 +63,14 @@ Already performs the update of its npm dependencies.
 Opposite of:
 Already performs the update of its npm dependencies.
 
+- Aliases: `--package-install`
 - Type: `boolean`
 - Default: `false`
 
 ### `--force-overwrite`
 
 Determines if files should be overwritten by the upgrading process.
+
 
 - Type: `string`
 - Choices: `"no"`, `"prompt"`, `"yes"`
@@ -74,13 +80,15 @@ Determines if files should be overwritten by the upgrading process.
 
 Sets the npm client to be used when upgrading.
 
+
 - Type: `string`
-- Choices: `"npm"`, `"pnpm"`, `"yarn"`
+- Choices: `"npm"`, `"pnpm"`, `"yarn"`, `"lerna"`, `"rush"`
 - Default: `undefined`
 
 ### `--vars`
 
 Sets additional variables to be used when scaffolding.
+
 
 - Type: `options`
 - Default: `{}`
@@ -88,6 +96,7 @@ Sets additional variables to be used when scaffolding.
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`

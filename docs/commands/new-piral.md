@@ -30,6 +30,7 @@ Instead of `new-piral` you can also use:
 
 Sets the project's root directory for making the changes.
 
+
 - Type: `string`
 - Default: `.`
 
@@ -39,12 +40,14 @@ Sets the project's root directory for making the changes.
 
 Sets the path to the app's source HTML file.
 
+
 - Type: `string`
 - Default: `"./src/index.html"`
 
 ### `--framework`
 
 Sets the framework/library level to use.
+
 
 - Type: `string`
 - Choices: `"piral"`, `"piral-core"`, `"piral-base"`
@@ -54,6 +57,7 @@ Sets the framework/library level to use.
 
 Already performs the installation of its npm dependencies.
 
+- Aliases: `--package-install`
 - Type: `boolean`
 - Default: `true`
 
@@ -62,6 +66,7 @@ Already performs the installation of its npm dependencies.
 Opposite of:
 Already performs the installation of its npm dependencies.
 
+- Aliases: `--package-install`
 - Type: `boolean`
 - Default: `false`
 
@@ -69,12 +74,14 @@ Already performs the installation of its npm dependencies.
 
 Sets the package registry to use for resolving the dependencies.
 
+- Aliases: `--package-registry`
 - Type: `string`
 - Default: `"https://registry.npmjs.org/"`
 
 ### `--log-level`
 
 Sets the log level to use (1-5).
+
 
 - Type: `number`
 - Default: `3`
@@ -83,12 +90,14 @@ Sets the log level to use (1-5).
 
 Sets the tag or version of the package to install. By default, this uses the version of the CLI.
 
+- Aliases: `--piral-version`
 - Type: `string`
-- Default: `"0.14.10"`
+- Default: `"0.14.27"`
 
 ### `--force-overwrite`
 
 Determines if files should be overwritten by the installation.
+
 
 - Type: `string`
 - Choices: `"no"`, `"prompt"`, `"yes"`
@@ -98,6 +107,7 @@ Determines if files should be overwritten by the installation.
 
 Determines the programming language for the new Piral instance.
 
+
 - Type: `string`
 - Choices: `"ts"`, `"js"`
 - Default: `"ts"`
@@ -106,6 +116,7 @@ Determines the programming language for the new Piral instance.
 
 Sets the boilerplate template package to be used when scaffolding.
 
+
 - Type: `string`
 - Default: `"default"`
 
@@ -113,13 +124,15 @@ Sets the boilerplate template package to be used when scaffolding.
 
 Sets the npm client to be used when scaffolding.
 
+
 - Type: `string`
-- Choices: `"npm"`, `"pnpm"`, `"yarn"`
+- Choices: `"npm"`, `"pnpm"`, `"yarn"`, `"lerna"`, `"rush"`
 - Default: `"npm"`
 
 ### `--bundler`
 
 Sets the default bundler to install.
+
 
 - Type: `string`
 - Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`, `"esbuild"`
@@ -129,12 +142,14 @@ Sets the default bundler to install.
 
 Sets additional variables to be used when scaffolding.
 
+
 - Type: `options`
 - Default: `{}`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`

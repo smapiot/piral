@@ -29,6 +29,7 @@ Instead of `publish-piral` you can also use:
 
 Sets the previously used output directory to publish.
 
+
 - Type: `string`
 - Default: `./dist`
 
@@ -38,12 +39,14 @@ Sets the previously used output directory to publish.
 
 Sets the log level to use (1-5).
 
+
 - Type: `number`
 - Default: `3`
 
 ### `--type`
 
 Selects the target type to publish. "all" publishes all target types.
+
 
 - Type: `string`
 - Choices: `"all"`, `"release"`, `"emulator"`, `"emulator-sources"`
@@ -53,6 +56,7 @@ Selects the target type to publish. "all" publishes all target types.
 
 Sets the provider for publishing the release assets.
 
+
 - Type: `string`
 - Choices: `"none"`, `"xcopy"`
 - Default: `"none"`
@@ -61,12 +65,14 @@ Sets the provider for publishing the release assets.
 
 Sets additional fields to be included in the feed service request.
 
+
 - Type: `options`
 - Default: `{}`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`

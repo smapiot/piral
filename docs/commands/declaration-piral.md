@@ -30,6 +30,7 @@ Instead of `declaration-piral` you can also use:
 
 Sets the source root directory or index.html file for collecting all the information.
 
+
 - Type: `string`
 - Default: `./`
 
@@ -39,12 +40,14 @@ Sets the source root directory or index.html file for collecting all the informa
 
 Sets the target directory for the generated .d.ts file.
 
+
 - Type: `string`
 - Default: `"./dist"`
 
 ### `--log-level`
 
 Sets the log level to use (1-5).
+
 
 - Type: `number`
 - Default: `3`
@@ -53,6 +56,7 @@ Sets the log level to use (1-5).
 
 Determines if files should be overwritten by the command.
 
+
 - Type: `string`
 - Choices: `"no"`, `"prompt"`, `"yes"`
 - Default: `"yes"`
@@ -60,6 +64,7 @@ Determines if files should be overwritten by the command.
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`
