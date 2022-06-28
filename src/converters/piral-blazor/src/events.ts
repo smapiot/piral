@@ -83,7 +83,7 @@ export function emitRenderEvent(
           const oldItems = elements.map((el, id) => ({
             id,
             pilet: el.pilet,
-            defaults: el.defaults,
+            defaults: el.defaults ?? {},
           }));
           const newItems: Array<{ id: number }> = sourceRef.invokeMethod('Order', oldItems);
           return newItems.map(({ id }) => elements[id]).filter(Boolean);
