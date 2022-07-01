@@ -32,6 +32,7 @@ Instead of `new-pilet` you can also use:
 
 Sets the source package (potentially incl. its tag/version) containing a Piral instance for templating the scaffold process.
 
+
 - Type: `string`
 - Default: `piral`
 
@@ -41,6 +42,7 @@ Sets the source package (potentially incl. its tag/version) containing a Piral i
 
 Sets the target directory for scaffolding. By default, the current directory.
 
+
 - Type: `string`
 - Default: `"."`
 
@@ -48,6 +50,7 @@ Sets the target directory for scaffolding. By default, the current directory.
 
 Sets the package registry to use for resolving the specified Piral app.
 
+- Aliases: `--package-registry`
 - Type: `string`
 - Default: `"https://registry.npmjs.org/"`
 
@@ -55,6 +58,7 @@ Sets the package registry to use for resolving the specified Piral app.
 
 Already performs the installation of its npm dependencies.
 
+- Aliases: `--package-install`
 - Type: `boolean`
 - Default: `true`
 
@@ -63,12 +67,14 @@ Already performs the installation of its npm dependencies.
 Opposite of:
 Already performs the installation of its npm dependencies.
 
+- Aliases: `--package-install`
 - Type: `boolean`
 - Default: `false`
 
 ### `--force-overwrite`
 
 Determines if files should be overwritten by the scaffolding.
+
 
 - Type: `string`
 - Choices: `"no"`, `"prompt"`, `"yes"`
@@ -78,12 +84,14 @@ Determines if files should be overwritten by the scaffolding.
 
 Sets the log level to use (1-5).
 
+
 - Type: `number`
 - Default: `3`
 
 ### `--language`
 
 Determines the programming language for the new pilet.
+
 
 - Type: `string`
 - Choices: `"ts"`, `"js"`
@@ -93,20 +101,23 @@ Determines the programming language for the new pilet.
 
 Sets the boilerplate template package to be used when scaffolding.
 
+
 - Type: `string`
-- Default: `"default"`
+- Default: `undefined`
 
 ### `--npm-client`
 
 Sets the npm client to be used when scaffolding.
 
+
 - Type: `string`
-- Choices: `"npm"`, `"pnpm"`, `"yarn"`
+- Choices: `"npm"`, `"pnpm"`, `"yarn"`, `"lerna"`, `"rush"`
 - Default: `"npm"`
 
 ### `--bundler`
 
 Sets the default bundler to install.
+
 
 - Type: `string`
 - Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`, `"esbuild"`
@@ -116,12 +127,14 @@ Sets the default bundler to install.
 
 Sets additional variables to be used when scaffolding.
 
+
 - Type: `options`
 - Default: `{}`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`

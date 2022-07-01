@@ -30,6 +30,7 @@ Instead of `debug-piral` you can also use:
 
 Sets the source root directory or index.html file for collecting all the information.
 
+
 - Type: `string`
 - Default: `./`
 
@@ -39,12 +40,14 @@ Sets the source root directory or index.html file for collecting all the informa
 
 Sets the port of the local development server.
 
+
 - Type: `number`
 - Default: `1234`
 
 ### `--public-url`
 
 Sets the public URL (path) of the bundle.
+
 
 - Type: `string`
 - Default: `"/"`
@@ -53,12 +56,14 @@ Sets the public URL (path) of the bundle.
 
 Sets the log level to use (1-5).
 
+
 - Type: `number`
 - Default: `3`
 
 ### `--open`
 
 Opens the Piral instance directly in the browser.
+
 
 - Type: `boolean`
 - Default: `false`
@@ -68,12 +73,14 @@ Opens the Piral instance directly in the browser.
 Opposite of:
 Opens the Piral instance directly in the browser.
 
+
 - Type: `boolean`
 - Default: `true`
 
 ### `--hmr`
 
 Activates Hot Module Reloading (HMR).
+
 
 - Type: `boolean`
 - Default: `true`
@@ -83,12 +90,14 @@ Activates Hot Module Reloading (HMR).
 Opposite of:
 Activates Hot Module Reloading (HMR).
 
+
 - Type: `boolean`
 - Default: `false`
 
 ### `--optimize-modules`
 
 Also includes the node modules for target transpilation.
+
 
 - Type: `boolean`
 - Default: `false`
@@ -98,12 +107,14 @@ Also includes the node modules for target transpilation.
 Opposite of:
 Also includes the node modules for target transpilation.
 
+
 - Type: `boolean`
 - Default: `true`
 
 ### `--bundler`
 
 Sets the bundler to use.
+
 
 - Type: `string`
 - Choices: ``
@@ -112,6 +123,7 @@ Sets the bundler to use.
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`

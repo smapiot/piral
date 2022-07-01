@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 0.14.28 (tbd)
+
+- Improved download for templates falling back to default registry
+- Fixed navigation via `NavigationManager` of Blazor in `piral-blazor`
+- Added warning when overwriting crucial Webpack sections
+- Added support for `order` and `empty` props from `piral-blazor`
+- Added CLI aliases for problematic flags (e.g., `--install`)
+
 ## 0.14.27 (June 7, 2022)
 
 - Fixed issue with `piral-cli-webpack` and `piral-cli-webpack5` not resolving *.jsx*

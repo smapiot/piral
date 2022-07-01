@@ -114,6 +114,12 @@ function getCommandData(retrieve) {
     flags: [],
   };
   const fn = {
+    alias(name, cmd) {
+      return this.swap(name, (flag) => ({
+        ...flag,
+        alts: [...flag.alts, cmd],
+      }));
+    },
     positional(name, info) {
       data.positionals.push({
         ...info,
@@ -123,7 +129,7 @@ function getCommandData(retrieve) {
     },
     swap(name, swapper) {
       const [flag] = data.flags.filter((m) => m.name === name);
-      const newFlag = swapper(flag || { name });
+      const newFlag = swapper(flag || { name, alts: [] });
 
       if (!flag) {
         data.flags.push(newFlag);
@@ -202,6 +208,7 @@ function details(args) {
 
 ${arg.describe || 'No description available.'}
 
+${!arg.alts || arg.alts.length === 0 ? '' : `- Aliases: \`${arg.alts.map((m) => `--${m}`).join('`, `')}\``}
 - Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('`, `')}\`` : ''}
 - Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}`,
     )
