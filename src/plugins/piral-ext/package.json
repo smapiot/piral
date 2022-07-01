@@ -1,6 +1,6 @@
 {
   "name": "piral-ext",
-  "version": "0.14.27",
+  "version": "0.14.28",
   "description": "Set of standard plugins with component definitions for extending piral-core.",
   "keywords": [
     "piral",
@@ -53,17 +53,17 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.27"
+    "piral-core": "^0.14.28"
   },
   "peerDependencies": {
     "piral-core": "0.14.x"
   },
   "dependencies": {
-    "piral-dashboard": "^0.14.27",
-    "piral-feeds": "^0.14.27",
-    "piral-menu": "^0.14.27",
-    "piral-modals": "^0.14.27",
-    "piral-notifications": "^0.14.27",
-    "piral-translate": "^0.14.27"
+    "piral-dashboard": "^0.14.28",
+    "piral-feeds": "^0.14.28",
+    "piral-menu": "^0.14.28",
+    "piral-modals": "^0.14.28",
+    "piral-notifications": "^0.14.28",
+    "piral-translate": "^0.14.28"
   }
 }
