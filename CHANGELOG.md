@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.28 (tbd)
+## 0.14.28 (July 1, 2022)
 
 - Improved download for templates falling back to default registry
 - Fixed navigation via `NavigationManager` of Blazor in `piral-blazor`
