@@ -29,6 +29,7 @@ Instead of `validate-piral` you can also use:
 
 Sets the source root directory or index.html file for collecting all the information.
 
+
 - Type: `string`
 - Default: `./`
 
@@ -38,12 +39,14 @@ Sets the source root directory or index.html file for collecting all the informa
 
 Sets the log level to use (1-5).
 
+
 - Type: `number`
 - Default: `3`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`

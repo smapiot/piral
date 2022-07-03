@@ -30,14 +30,32 @@ Instead of `debug-pilet` you can also use:
 
 Sets the source file containing the pilet root module.
 
+
 - Type: `string`
 - Default: `./src/index`
 
 ## Flags
 
+### `--target`
+
+Sets the target directory or file of bundling.
+
+
+- Type: `string`
+- Default: `"./dist/index.js"`
+
+### `--public-url`
+
+Sets the public URL (path) of the application.
+
+
+- Type: `string`
+- Default: `"/"`
+
 ### `--port`
 
 Sets the port of the local development server.
+
 
 - Type: `number`
 - Default: `1234`
@@ -46,12 +64,22 @@ Sets the port of the local development server.
 
 Sets the log level to use (1-5).
 
+
 - Type: `number`
 - Default: `3`
+
+### `--concurrency`
+
+Sets the maximum number of concurrent build jobs.
+
+
+- Type: `number`
+- Default: `12`
 
 ### `--open`
 
 Opens the pilet directly in the browser.
+
 
 - Type: `boolean`
 - Default: `false`
@@ -61,12 +89,14 @@ Opens the pilet directly in the browser.
 Opposite of:
 Opens the pilet directly in the browser.
 
+
 - Type: `boolean`
 - Default: `true`
 
 ### `--hmr`
 
 Activates Hot Module Reloading (HMR).
+
 
 - Type: `boolean`
 - Default: `true`
@@ -76,12 +106,14 @@ Activates Hot Module Reloading (HMR).
 Opposite of:
 Activates Hot Module Reloading (HMR).
 
+
 - Type: `boolean`
 - Default: `false`
 
 ### `--optimize-modules`
 
 Also includes the node modules for target transpilation.
+
 
 - Type: `boolean`
 - Default: `false`
@@ -91,12 +123,14 @@ Also includes the node modules for target transpilation.
 Opposite of:
 Also includes the node modules for target transpilation.
 
+
 - Type: `boolean`
 - Default: `true`
 
 ### `--schema`
 
 Sets the schema to be used when bundling the pilets.
+
 
 - Type: `string`
 - Choices: `"v0"`, `"v1"`, `"v2"`, `"none"`
@@ -106,6 +140,7 @@ Sets the schema to be used when bundling the pilets.
 
 Sets the bundler to use.
 
+
 - Type: `string`
 - Choices: ``
 - Default: `undefined`
@@ -114,12 +149,14 @@ Sets the bundler to use.
 
 Sets the name of the Piral instance.
 
+
 - Type: `string`
 - Default: `undefined`
 
 ### `--app-dir`
 
 Sets the path to a custom Piral instance for serving.
+
 
 - Type: `string`
 - Default: `undefined`
@@ -128,12 +165,14 @@ Sets the path to a custom Piral instance for serving.
 
 Sets the base directory. By default the current directory is used.
 
+
 - Type: `string`
 - Default: `process.cwd()`
 
 ### `--feed`
 
 Sets the URL of a pilet feed for including remote pilets.
+
 
 - Type: `string`
 - Default: `undefined`

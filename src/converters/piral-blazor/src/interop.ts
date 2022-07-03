@@ -13,8 +13,21 @@ function createBlazorStarter(publicPath: string): () => Promise<HTMLDivElement> 
       document.head.querySelector('base') || document.head.appendChild(document.createElement('base'));
     const originalBase = baseElement.href;
     baseElement.href = publicPath;
+
     return () => {
-      window.Blazor._internal.navigationManager.getBaseURI = () => originalBase;
+      const navManager = window.Blazor._internal.navigationManager;
+
+      //Overwrite to get NavigationManager in Blazor working, see https://github.com/smapiot/Piral.Blazor/issues/89
+      navManager.navigateTo = (route: string, opts: { forceLoad: boolean; replaceHistoryEntry: boolean }) => {
+        if (opts.forceLoad) {
+          location.href = route;
+        } else {
+          window.Blazor.emitNavigateEvent(undefined, route, opts.replaceHistoryEntry);
+        }
+      };
+
+      navManager.getBaseURI = () => originalBase;
+
       return window.Blazor.start().then(() => {
         baseElement.href = originalBase;
         return root;
