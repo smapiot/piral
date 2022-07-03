@@ -59,7 +59,7 @@ title: Articles About Piral
 - [Virtual Azure Community Day 2020, 07/2020](https://youtu.be/AtUKNsdnwBc)
 - [GAB Austria 2020, 05/2020](https://youtu.be/_q4JDrIMvlA)
 - [ReactConf Europe on YouTube, 02/2020](https://youtu.be/kG7gIF16cOk)
-- [c't webdev in Cologne, 02/2020](https://ctwebdev.de)
+- [c't webdev in Cologne, 02/2020](https://ctwebdev.de/)
 - [O'Reilly Software Architecture Conference in Berlin, 11/2019](https://conferences.oreilly.com/software-architecture/sa-eu/public/schedule/detail/78683)
 
 ## Talks at Meetups
