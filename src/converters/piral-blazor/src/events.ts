@@ -1,3 +1,4 @@
+import type { ExtensionRegistration } from 'piral-core';
 import { isInternalNavigation, performInternalNavigation } from './navigation';
 
 const blazorRootId = 'blazor-root';
@@ -67,8 +68,27 @@ function dispatchToRoot(event: any) {
   }
 }
 
-export function emitRenderEvent(source: HTMLElement, name: string, params: any) {
+export function emitRenderEvent(
+  source: HTMLElement,
+  name: string,
+  params: any,
+  sourceRef: any,
+  fallbackComponent: string | null,
+) {
   const target = findTarget(source);
+  const empty = typeof fallbackComponent === 'string' ? () => {} : undefined;
+  const order =
+    typeof sourceRef !== 'undefined'
+      ? (elements: Array<ExtensionRegistration>) => {
+          const oldItems = elements.map((el, id) => ({
+            id,
+            pilet: el.pilet,
+            defaults: el.defaults ?? {},
+          }));
+          const newItems: Array<{ id: number }> = sourceRef.invokeMethod('Order', oldItems);
+          return newItems.map(({ id }) => elements[id]).filter(Boolean);
+        }
+      : undefined;
   const eventInit = {
     bubbles: true,
     detail: {
@@ -76,6 +96,8 @@ export function emitRenderEvent(source: HTMLElement, name: string, params: any) 
       props: {
         name,
         params,
+        empty,
+        order,
       },
     },
   };

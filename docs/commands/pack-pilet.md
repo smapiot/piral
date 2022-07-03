@@ -30,6 +30,7 @@ Instead of `pack-pilet` you can also use:
 
 Sets the source package.json file for creating the package.
 
+
 - Type: `string`
 - Default: `.`
 
@@ -39,6 +40,7 @@ Sets the source package.json file for creating the package.
 
 Sets the target directory or file of packing.
 
+
 - Type: `string`
 - Default: `"."`
 
@@ -46,12 +48,14 @@ Sets the target directory or file of packing.
 
 Sets the log level to use (1-5).
 
+
 - Type: `number`
 - Default: `3`
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`

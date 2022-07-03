@@ -1,5 +1,5 @@
 import { join, dirname, resolve, basename, isAbsolute } from 'path';
-import { installNpmPackage } from './npm';
+import { installNpmPackageFromOptionalRegistry } from './npm';
 import { ForceOverwrite } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
 import { cliVersion, isWindows } from './info';
@@ -41,7 +41,7 @@ async function getTemplateFiles(
       templatePackageName = `${templatePackageName}@latest`;
     }
 
-    await installNpmPackage('npm', templatePackageName, __dirname, '--registry', registry);
+    await installNpmPackageFromOptionalRegistry(templatePackageName, __dirname, registry);
   }
 
   const templateRunner = getTemplatePackage(templatePackageName);

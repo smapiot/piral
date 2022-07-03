@@ -3,7 +3,7 @@ import { createReadStream, existsSync } from 'fs';
 import { log, fail } from './log';
 import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
-import { legacyCoreExternals, frameworkLibs } from './constants';
+import { legacyCoreExternals, frameworkLibs, defaultRegistry } from './constants';
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
@@ -127,6 +127,22 @@ export async function isMonorepoPackageRef(refName: string, root: string): Promi
 export function installNpmDependencies(client: NpmClientType, target = '.'): Promise<string> {
   const { installDependencies } = clients[client];
   return installDependencies(target);
+}
+
+export async function installNpmPackageFromOptionalRegistry(
+  packageRef: string,
+  target = '.',
+  registry: string,
+): Promise<void> {
+  try {
+    await installNpmPackage('npm', packageRef, target, '--registry', registry);
+  } catch (e) {
+    if (registry === defaultRegistry) {
+      throw e;
+    }
+
+    await installNpmPackage('npm', packageRef, target, '--registry', defaultRegistry);
+  }
 }
 
 export async function installNpmPackage(

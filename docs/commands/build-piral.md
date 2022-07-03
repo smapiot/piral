@@ -30,6 +30,7 @@ Instead of `build-piral` you can also use:
 
 Sets the source root directory or index.html file for collecting all the information.
 
+
 - Type: `string`
 - Default: `./`
 
@@ -39,12 +40,14 @@ Sets the source root directory or index.html file for collecting all the informa
 
 Sets the target directory or file of bundling.
 
+
 - Type: `string`
 - Default: `"./dist"`
 
 ### `--public-url`
 
 Sets the public URL (path) of the bundle. Only for release output.
+
 
 - Type: `string`
 - Default: `"/"`
@@ -53,12 +56,14 @@ Sets the public URL (path) of the bundle. Only for release output.
 
 Sets the log level to use (1-5).
 
+
 - Type: `number`
 - Default: `3`
 
 ### `--fresh`
 
 Performs a fresh build by removing the target directory first.
+
 
 - Type: `boolean`
 - Default: `false`
@@ -68,12 +73,14 @@ Performs a fresh build by removing the target directory first.
 Opposite of:
 Performs a fresh build by removing the target directory first.
 
+
 - Type: `boolean`
 - Default: `true`
 
 ### `--minify`
 
 Performs minification or other post-bundle transformations.
+
 
 - Type: `boolean`
 - Default: `true`
@@ -83,12 +90,14 @@ Performs minification or other post-bundle transformations.
 Opposite of:
 Performs minification or other post-bundle transformations.
 
+
 - Type: `boolean`
 - Default: `false`
 
 ### `--source-maps`
 
 Create associated source maps for the bundles.
+
 
 - Type: `boolean`
 - Default: `true`
@@ -98,12 +107,14 @@ Create associated source maps for the bundles.
 Opposite of:
 Create associated source maps for the bundles.
 
+
 - Type: `boolean`
 - Default: `false`
 
 ### `--subdir`
 
 Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".
+
 
 - Type: `boolean`
 - Default: `true`
@@ -113,12 +124,14 @@ Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ign
 Opposite of:
 Places the build's output in an appropriate subdirectory (e.g., "emulator"). Ignored for "--all".
 
+
 - Type: `boolean`
 - Default: `false`
 
 ### `--content-hash`
 
 Appends the hash to the side-bundle files.
+
 
 - Type: `boolean`
 - Default: `true`
@@ -128,12 +141,14 @@ Appends the hash to the side-bundle files.
 Opposite of:
 Appends the hash to the side-bundle files.
 
+
 - Type: `boolean`
 - Default: `false`
 
 ### `--optimize-modules`
 
 Also includes the node modules for target transpilation.
+
 
 - Type: `boolean`
 - Default: `false`
@@ -143,12 +158,14 @@ Also includes the node modules for target transpilation.
 Opposite of:
 Also includes the node modules for target transpilation.
 
+
 - Type: `boolean`
 - Default: `true`
 
 ### `--type`
 
 Selects the target type of the build. "all" builds all target types.
+
 
 - Type: `string`
 - Choices: `"all"`, `"release"`, `"emulator"`, `"emulator-sources"`
@@ -158,6 +175,7 @@ Selects the target type of the build. "all" builds all target types.
 
 Sets the bundler to use.
 
+
 - Type: `string`
 - Choices: ``
 - Default: `undefined`
@@ -165,6 +183,7 @@ Sets the bundler to use.
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
+
 
 - Type: `string`
 - Default: `process.cwd()`
