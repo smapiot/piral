@@ -27,6 +27,11 @@
 - Added `--interactive` login for `pilet publish` and `piral publish` (#517)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 
+## 0.14.29 (July 5, 2022)
+
+- Fixed issue with npm initializer using CLI aliases
+- Added support for aliases in the npm initializers
+
 ## 0.14.28 (July 1, 2022)
 
 - Improved download for templates falling back to default registry

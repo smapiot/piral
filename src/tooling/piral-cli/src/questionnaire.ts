@@ -7,6 +7,7 @@ type FlagType = 'string' | 'number' | 'boolean' | 'object';
 interface Flag {
   name: string;
   type?: FlagType;
+  alias: Array<string>;
   values?: Array<any>;
   describe?: string;
   default?: any;
@@ -16,16 +17,23 @@ interface Flag {
 function getCommandData(retrieve: any) {
   const instructions: Array<Flag> = [];
   const fn = {
+    alias(name: string, altName: string) {
+      return this.swap(name, (flag) => ({
+        ...flag,
+        alias: [...flag.alias, altName],
+      }));
+    },
     positional(name: string, info: Flag) {
       instructions.push({
         ...info,
+        alias: [],
         name,
       });
       return this;
     },
     swap(name: string, swapper: (flag: Flag) => Flag) {
       const [flag] = instructions.filter((m) => m.name === name);
-      const newFlag = swapper(flag || { name });
+      const newFlag = swapper(flag || { name, alias: [] });
 
       if (!flag) {
         instructions.push(newFlag);
@@ -135,7 +143,7 @@ export function runQuestionnaireFor(
   const questions = instructions
     .filter((instruction) => !ignored.includes(instruction.name))
     .filter((instruction) => !acceptAll || (instruction.default === undefined && instruction.required))
-    .filter((instruction) => args[instruction.name] === undefined)
+    .filter((instruction) => [...instruction.alias, instruction.name].every((m) => args[m] === undefined))
     .filter((instruction) => instruction.type !== 'object')
     .map((instruction) => ({
       name: instruction.name,
@@ -146,12 +154,16 @@ export function runQuestionnaireFor(
       validate: instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true,
     }));
 
+
   return inquirer.prompt(questions).then((answers) => {
     const parameters: any = {};
 
     for (const instruction of instructions) {
       const name = instruction.name;
-      const value = answers[name] ?? ignoredInstructions[name] ?? args[name];
+      const value =
+        answers[name] ??
+        ignoredInstructions[name] ??
+        [...instruction.alias, instruction.name].map((m) => args[m]).find((v) => v !== undefined);
       parameters[name] = value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
     }
 
