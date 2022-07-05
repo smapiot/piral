@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.29 (tbd)
+## 0.14.29 (July 5, 2022)
 
 - Fixed issue with npm initializer using CLI aliases
 - Added support for aliases in the npm initializers
