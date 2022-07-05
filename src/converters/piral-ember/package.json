@@ -1,6 +1,6 @@
 {
   "name": "piral-ember",
-  "version": "0.14.28",
+  "version": "0.14.29",
   "description": "Plugin for integrating Ember.js components in Piral.",
   "keywords": [
     "piral",
@@ -61,7 +61,7 @@
   "devDependencies": {
     "@types/ember": "^3.1.1",
     "ember-source": "^3.15.0",
-    "piral-core": "^0.14.28"
+    "piral-core": "^0.14.29"
   },
   "peerDependencies": {
     "ember-source": "^3.0.0",
