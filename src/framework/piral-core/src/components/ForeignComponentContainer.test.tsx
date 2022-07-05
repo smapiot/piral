@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
+import { render as renderDom } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { ForeignComponentContainer } from './ForeignComponentContainer';
 
 function resolveAfter(time = 5) {
-  return new Promise<void>(resolve => setTimeout(resolve, time));
+  return new Promise<void>((resolve) => setTimeout(resolve, time));
 }
 
 async function render(element: any, container: Element) {
-  const root = createRoot(container);
-  root.render(element);
+  renderDom(element, container);
   await act(resolveAfter);
-  return root;
+  return () => renderDom(<div />, container);
 }
 
 describe('ForeignComponentContainer component', () => {
@@ -32,13 +31,13 @@ describe('ForeignComponentContainer component', () => {
     const mount = jest.fn();
     const unmount = jest.fn();
     const component = { mount, unmount };
-    const root = await render(
+    const doUnmount = await render(
       <ForeignComponentContainer $component={component} $context={undefined} $portalId="foo" innerProps={{}} />,
       container,
     );
     expect(mount).toHaveBeenCalled();
     expect(unmount).not.toHaveBeenCalled();
-    root.unmount();
+    doUnmount();
     expect(unmount).toHaveBeenCalled();
     container.remove();
   });
@@ -48,7 +47,7 @@ describe('ForeignComponentContainer component', () => {
     const mount = jest.fn();
     const update = jest.fn();
     const component = { mount, update };
-    const root = await render(
+    await render(
       <ForeignComponentContainer
         $component={component}
         $context={undefined}
@@ -59,13 +58,14 @@ describe('ForeignComponentContainer component', () => {
     );
     expect(mount).toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
-    root.render(
+    await render(
       <ForeignComponentContainer
         $component={component}
         $context={undefined}
         $portalId="foo"
         innerProps={{ a: 'foo' }}
       />,
+      container,
     );
     await act(resolveAfter);
     expect(update).toHaveBeenCalled();
@@ -78,14 +78,14 @@ describe('ForeignComponentContainer component', () => {
     ForeignComponentContainer.prototype.componentDidMount = function () {
       componentDidMount.call(this);
       this.previous = {
-        removeEventListener() { },
+        removeEventListener() {},
       };
     };
     const mount = jest.fn();
     const update = jest.fn();
     const unmount = jest.fn();
     const component = { mount, update, unmount };
-    const root = await render(
+    await render(
       <ForeignComponentContainer
         $component={component}
         $context={undefined}
@@ -97,13 +97,14 @@ describe('ForeignComponentContainer component', () => {
     expect(mount).toHaveBeenCalled();
     expect(unmount).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
-    root.render(
+    await render(
       <ForeignComponentContainer
         $component={component}
         $context={undefined}
         $portalId="foo"
         innerProps={{ a: 'foo' }}
       />,
+      container,
     );
     await act(resolveAfter);
     expect(update).not.toHaveBeenCalled();
@@ -124,7 +125,7 @@ describe('ForeignComponentContainer component', () => {
     expect(mount).toHaveBeenCalled();
     const node = document.querySelector('[data-portal-id=foo]');
     expect(renderHtmlExtension).not.toHaveBeenCalled();
-    node.dispatchEvent(new CustomEvent('render-html', { detail: {} }));
+    node?.dispatchEvent(new CustomEvent('render-html', { detail: {} }));
     await act(resolveAfter);
     expect(renderHtmlExtension).toHaveBeenCalled();
     container.remove();

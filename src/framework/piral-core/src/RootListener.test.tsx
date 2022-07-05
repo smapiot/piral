@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
+import { render } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { RootListener } from './RootListener';
 
@@ -10,7 +10,7 @@ jest.mock('./hooks/globalState', () => ({
 }));
 
 function resolveAfter(time = 5) {
-  return new Promise<void>(resolve => setTimeout(resolve, time));
+  return new Promise<void>((resolve) => setTimeout(resolve, time));
 }
 
 describe('RootListener Component', () => {
@@ -19,8 +19,7 @@ describe('RootListener Component', () => {
     const removed = jest.fn();
     document.body.appendChild(element);
     const container = document.body.appendChild(document.createElement('div'));
-    const root = createRoot(container);
-    root.render(<RootListener />);
+    render(<RootListener />, container);
     document.body.removeEventListener = removed;
     await act(() => {
       const event = new CustomEvent('render-html', {
@@ -40,11 +39,10 @@ describe('RootListener Component', () => {
   it('removes the RootListener successfully', async () => {
     const container = document.body.appendChild(document.createElement('div'));
     const removed = jest.fn();
-    const root = createRoot(container);
-    root.render(<RootListener />);
+    render(<RootListener />, container);
     document.body.removeEventListener = removed;
     await act(resolveAfter);
-    root.unmount();
+    render(<div />, container);
     await act(resolveAfter);
     expect(removed).toHaveBeenCalled();
   });

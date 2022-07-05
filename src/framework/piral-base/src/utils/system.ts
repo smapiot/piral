@@ -5,6 +5,12 @@ import { satisfies, validate } from './version';
 const systemResolve = System.constructor.prototype.resolve;
 const systemRegister = System.constructor.prototype.register;
 
+function getLoadedVersions(prefix: string) {
+  return [...System.entries()]
+    .filter(([name]) => name.startsWith(prefix))
+    .map(([name]) => name.substring(prefix.length));
+}
+
 function findMatchingPackage(id: string) {
   const sep = id.indexOf('@', 1);
 
@@ -14,7 +20,10 @@ function findMatchingPackage(id: string) {
     const versionSpec = id.substring(sep + 1);
 
     if (validate(versionSpec)) {
-      const availableVersions = available.filter((m) => m.startsWith(name)).map((m) => m.substring(name.length));
+      const loadedVersions = getLoadedVersions(name);
+      const allVersions = available.filter((m) => m.startsWith(name)).map((m) => m.substring(name.length));
+      // Moves the loaded versions to the top
+      const availableVersions = [...loadedVersions, ...allVersions.filter((m) => !loadedVersions.includes(m))];
 
       for (const availableVersion of availableVersions) {
         if (validate(availableVersion) && satisfies(availableVersion, versionSpec)) {

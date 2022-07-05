@@ -1,3 +1,4 @@
+// @ts-nocheck
 import 'core-js/es/reflect';
 import 'core-js/stable/reflect';
 import 'core-js/features/reflect';
@@ -80,5 +81,5 @@ root.render(
     <SetComponent name="Layout" component={Layout} />
     <SetComponent name="DashboardContainer" component={DashboardContainer} />
     <SetRoute path="/" component={Dashboard} />
-  </Piral>
+  </Piral>,
 );
