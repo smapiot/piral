@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { act } from 'react-dom/test-utils';
-import { render } from 'react-dom';
+import { render, act } from '@testing-library/react';
 import { useSetter } from './setter';
 
 describe('UseSetter Hook Module', () => {
@@ -12,7 +11,7 @@ describe('UseSetter Hook Module', () => {
       return null;
     };
 
-    render(React.createElement(MyComponent), document.body.appendChild(document.createElement('div')));
+    render(React.createElement(MyComponent));
     await act(() => new Promise((resolve) => setTimeout(resolve, 5)));
     expect(cb).toHaveBeenCalled();
   });

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-dom';
-import { act } from 'react-dom/test-utils';
+import { render, act } from '@testing-library/react';
 import { RootListener } from './RootListener';
 
 jest.mock('./hooks/globalState', () => ({
@@ -18,8 +17,7 @@ describe('RootListener Component', () => {
     const element = document.createElement('div');
     const removed = jest.fn();
     document.body.appendChild(element);
-    const container = document.body.appendChild(document.createElement('div'));
-    render(<RootListener />, container);
+    render(<RootListener />);
     document.body.removeEventListener = removed;
     await act(() => {
       const event = new CustomEvent('render-html', {
@@ -37,12 +35,11 @@ describe('RootListener Component', () => {
   });
 
   it('removes the RootListener successfully', async () => {
-    const container = document.body.appendChild(document.createElement('div'));
     const removed = jest.fn();
-    render(<RootListener />, container);
+    const container = render(<RootListener />);
     document.body.removeEventListener = removed;
     await act(resolveAfter);
-    render(<div />, container);
+    container.unmount();
     await act(resolveAfter);
     expect(removed).toHaveBeenCalled();
   });
