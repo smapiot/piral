@@ -3,7 +3,7 @@ import * as piralCore from 'piral-core';
 import * as useForm from './useForm';
 import * as usePromise from './usePromise';
 import { MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { withForm } from './withForm';
 
 jest.mock('piral-core');
@@ -11,19 +11,19 @@ jest.mock('./useForm');
 jest.mock('./usePromise');
 
 const mountWithRouter = (node, url = '/') =>
-  mount(
+  render(
     <MemoryRouter initialEntries={[url]} initialIndex={0}>
       {node}
     </MemoryRouter>,
   );
 
-const StubComponent: React.FC<{ data: any }> = () => <div />;
+const StubComponent: React.FC<{ data: any }> = () => <div role="component" />;
 StubComponent.displayName = 'StubComponent';
 
-const LoaderComponent: React.FC<{ data: any }> = () => <div />;
+const LoaderComponent: React.FC<{ data: any }> = () => <div role="loader" />;
 LoaderComponent.displayName = 'LoaderComponent';
 
-const ErrorComponent: React.FC<{ data: any }> = () => <div />;
+const ErrorComponent: React.FC<{ data: any }> = () => <div role="error" />;
 ErrorComponent.displayName = 'ErrorComponent';
 
 (piralCore as any).RegisteredErrorInfo = ErrorComponent;
@@ -44,7 +44,7 @@ describe('withForm Module', () => {
     (usePromise as any).usePromise = usedPromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
-    expect(node.find(ErrorComponent).length).toBe(1);
+    expect(node.getAllByRole("error").length).toBe(1);
   });
 
   it('shows data component if nothing is loading and data is available', () => {
@@ -61,7 +61,7 @@ describe('withForm Module', () => {
     (usePromise as any).usePromise = usedPromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
-    expect(node.find(StubComponent).length).toBe(1);
+    expect(node.getAllByRole("component").length).toBe(1);
   });
 
   it('shows loading component if it is loading', () => {
@@ -78,7 +78,7 @@ describe('withForm Module', () => {
     (usePromise as any).usePromise = usedPromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
-    expect(node.find(LoaderComponent).length).toBe(1);
+    expect(node.getAllByRole("loader").length).toBe(1);
   });
 
   it('calls load data if its there', () => {

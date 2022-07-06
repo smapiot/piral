@@ -8,6 +8,6 @@ import { ErrorInfoProps } from '../types';
  * the "error" name.
  */
 export const DefaultErrorInfo: React.FC<ErrorInfoProps> = (props) => (
-  <ExtensionSlot name="error" params={props} empty={() => <SwitchErrorInfo key="default_error" {...props} />} />
+  <ExtensionSlot name="error" params={props} empty={() => <SwitchErrorInfo {...props} />} />
 );
 DefaultErrorInfo.displayName = 'DefaultErrorInfo';

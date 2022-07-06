@@ -1,12 +1,12 @@
 import create from 'zustand';
 import * as React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { Menu } from './Menu';
 
-const MockMenuContainer: React.FC<any> = ({ children }) => <div>{children}</div>;
+const MockMenuContainer: React.FC<any> = ({ children }) => <div role="menu">{children}</div>;
 MockMenuContainer.displayName = 'MockMenuContainer';
-const MockMenuItem: React.FC<any> = ({ children }) => <div>{children}</div>;
+const MockMenuItem: React.FC<any> = ({ children }) => <div role="item">{children}</div>;
 MockMenuItem.displayName = 'MockMenuItem';
 
 function createMockContainer(menuItems = {}) {
@@ -43,13 +43,13 @@ describe('Piral-Menu Menu component', () => {
       type: '1',
     };
     const { context } = createMockContainer();
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Menu {...fake} />
       </StateContext.Provider>,
     );
-    expect(node.find(MockMenuContainer).length).toBe(1);
-    expect(node.find(MockMenuItem).length).toBe(0);
+    expect(node.getAllByRole("menu").length).toBe(1);
+    expect(node.queryByRole("item")).toBe(null);
   });
 
   it('uses container and item for each menu item of a connected menu', () => {
@@ -76,13 +76,13 @@ describe('Piral-Menu Menu component', () => {
         },
       },
     });
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Menu {...fake} />
       </StateContext.Provider>,
     );
-    expect(node.find(MockMenuContainer).length).toBe(1);
-    expect(node.find(MockMenuItem).length).toBe(2);
+    expect(node.getAllByRole("menu").length).toBe(1);
+    expect(node.getAllByRole("item").length).toBe(2);
   });
 
   it('uses container and item for general if type not specified', () => {
@@ -107,12 +107,12 @@ describe('Piral-Menu Menu component', () => {
         },
       },
     });
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Menu {...fake} />
       </StateContext.Provider>,
     );
-    expect(node.find(MockMenuContainer).length).toBe(1);
-    expect(node.find(MockMenuItem).length).toBe(1);
+    expect(node.getAllByRole("menu").length).toBe(1);
+    expect(node.getAllByRole("item").length).toBe(1);
   });
 });

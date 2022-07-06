@@ -1,6 +1,6 @@
 import * as React from 'react';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { SetRoute } from './SetRoute';
 import { StateContext } from '../state';
 
@@ -34,7 +34,7 @@ function createMockContainer() {
 describe('Piral-Core SetRoute component', () => {
   it('SetRoute sets the link route in the store', () => {
     const { context } = createMockContainer();
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <SetRoute path="/foo" component={FakeRoute} />
       </StateContext.Provider>,

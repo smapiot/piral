@@ -1,127 +1,193 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import create from 'zustand';
+import { StateContext } from 'piral-core';
+import { render, fireEvent } from '@testing-library/react';
 import { Modals } from './Modals';
-import { PiralModalsHost } from './components';
 
-const state = {
-  registry: {
-    modals: {},
-  },
-  modals: [],
-};
-
-jest.mock('piral-core', () => ({
-  useGlobalState(cb: any) {
-    return cb(state);
-  },
-  getPiralComponent() {
-    return ({ children }) => <div>{children}</div>;
-  },
-}));
+function createMockContainer(registeredModals: Record<string, any>, openModals: Array<any>) {
+  const state = create(() => ({
+    components: {
+      ModalsHost: ({ open, children, close }) => (
+        <div role="host">
+          {open && (
+            <div role="overlay">
+              <button role="close" onClick={close}>
+                Close
+              </button>
+              {children}
+            </div>
+          )}
+        </div>
+      ),
+    },
+    registry: {
+      modals: registeredModals,
+    },
+    modals: openModals,
+  }));
+  return {
+    context: {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+      defineActions() {},
+      converters: {},
+      readState(select) {
+        return select(state.getState());
+      },
+      state,
+      dispatch(update) {
+        state.setState(update(state.getState()));
+      },
+    } as any,
+    api: {} as any,
+  };
+}
 
 describe('Modals Component Shell Module', () => {
   it('Should display nothing is nothing is there', () => {
-    state.registry.modals = {};
-    state.modals = [];
-    const node = mount(<Modals />);
-    expect(node.find(PiralModalsHost).prop('open')).toBe(false);
+    const { context } = createMockContainer({}, []);
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Modals />
+      </StateContext.Provider>,
+    );
+    expect(node.queryByRole('overlay')).toBe(null);
   });
 
   it('Should display something if something is there and wanted', () => {
-    state.registry.modals = {
-      foo: {
-        component: () => <div />,
-      },
-    };
-    state.modals = [
+    const { context } = createMockContainer(
       {
-        name: 'foo',
-        options: {},
+        foo: {
+          component: () => <div />,
+        },
       },
-    ];
-    const node = mount(<Modals />);
-    expect(node.find(PiralModalsHost).prop('open')).toBe(true);
+      [
+        {
+          name: 'foo',
+          options: {},
+        },
+      ],
+    );
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Modals />
+      </StateContext.Provider>,
+    );
+    expect(node.queryByRole('overlay')).not.toBe(null);
   });
 
   it('Should display nothing if something is there and not wanted', () => {
-    state.registry.modals = {
-      foo: {
-        component: () => <div />,
+    const { context } = createMockContainer(
+      {
+        foo: {
+          component: () => <div />,
+        },
       },
-    };
-    state.modals = [];
-    const node = mount(<Modals />);
-    expect(node.find(PiralModalsHost).prop('open')).toBe(false);
+      [],
+    );
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Modals />
+      </StateContext.Provider>,
+    );
+    expect(node.queryByRole('overlay')).toBe(null);
   });
 
   it('Should display something if something is there and wanted even indirectly', () => {
-    state.registry.modals = {
-      'abc:foo': {
-        component: () => <div />,
-        name: 'bar',
-      },
-    };
-    state.modals = [
+    const { context } = createMockContainer(
       {
-        name: 'xyz:foo',
-        alternative: 'bar',
-        options: {},
+        'abc:foo': {
+          component: () => <div />,
+          name: 'bar',
+        },
       },
-    ];
-    const node = mount(<Modals />);
-    expect(node.find(PiralModalsHost).prop('open')).toBe(true);
+      [
+        {
+          name: 'xyz:foo',
+          alternative: 'bar',
+          options: {},
+        },
+      ],
+    );
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Modals />
+      </StateContext.Provider>,
+    );
+    expect(node.queryByRole('overlay')).not.toBe(null);
   });
 
   it('Should display nothing is something is there and not wanted with indirection', () => {
-    state.registry.modals = {
-      'abc:foo': {
-        component: () => <div />,
-        name: 'qxz',
-      },
-    };
-    state.modals = [
+    const { context } = createMockContainer(
       {
-        name: 'xyz:foo',
-        alternative: 'bar',
-        options: {},
+        'abc:foo': {
+          component: () => <div />,
+          name: 'qxz',
+        },
       },
-    ];
-    const node = mount(<Modals />);
-    expect(node.find(PiralModalsHost).prop('open')).toBe(false);
+      [
+        {
+          name: 'xyz:foo',
+          alternative: 'bar',
+          options: {},
+        },
+      ],
+    );
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Modals />
+      </StateContext.Provider>,
+    );
+    expect(node.queryByRole('overlay')).toBe(null);
   });
 
   it('Should display nothing if nothing is available even if wanted', () => {
-    state.registry.modals = {};
-    state.modals = [
+    const { context } = createMockContainer({}, [
       {
         name: 'foo',
         options: {},
       },
-    ];
-    const node = mount(<Modals />);
-    expect(node.find(PiralModalsHost).prop('open')).toBe(false);
+    ]);
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Modals />
+      </StateContext.Provider>,
+    );
+    expect(node.queryByRole('overlay')).toBe(null);
   });
 
   it('Should close all available dialogs', () => {
     const close = jest.fn();
-    state.registry.modals = {};
-    state.modals = [
+    const { context } = createMockContainer(
       {
-        name: 'foo',
-        options: {},
-        close,
+        foo: {
+          component: () => <div />,
+        },
+        bar: {
+          component: () => <div />,
+        },
       },
-      {
-        name: 'bar',
-        options: {},
-        close,
-      },
-    ];
-    const node = mount(<Modals />);
-    const closeAll = node.find(PiralModalsHost).prop('close');
-    expect(typeof closeAll).toBe('function');
+      [
+        {
+          name: 'foo',
+          options: {},
+          close,
+        },
+        {
+          name: 'bar',
+          options: {},
+          close,
+        },
+      ],
+    );
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Modals />
+      </StateContext.Provider>,
+    );
     expect(close).toHaveBeenCalledTimes(0);
-    closeAll();
+    fireEvent.click(node.getByRole('close'));
     expect(close).toHaveBeenCalledTimes(2);
   });
 });

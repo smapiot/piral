@@ -1,6 +1,6 @@
 import * as React from 'react';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { SetComponent } from './SetComponent';
 import { StateContext } from '../state';
 
@@ -34,7 +34,7 @@ function createMockContainer() {
 describe('Piral-Core SetComponent component', () => {
   it('SetComponent sets the layout component in the store', () => {
     const { context } = createMockContainer();
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <SetComponent name="LoadingIndicator" component={FakeLoading} />
       </StateContext.Provider>,

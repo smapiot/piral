@@ -1,7 +1,6 @@
+import * as React from 'react';
 import create from 'zustand';
-import { render } from 'react-dom';
-import { act } from 'react-dom/test-utils';
-import { createElement, Suspense } from 'react';
+import { render, act } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { createLazyApi } from './create';
 
@@ -27,6 +26,7 @@ function createMockContainer() {
       readState(read) {
         return read(state.getState());
       },
+      destroyPortal() {},
       dispatch(update) {
         state.setState(update(state.getState()));
       },
@@ -49,14 +49,12 @@ describe('Piral-Lazy create module', () => {
     const { fromLazy, defineDependency } = apiCreator(api);
     defineDependency('testName', () => {});
     const LazyComponent = fromLazy(load, ['testName']);
-    const container = document.body.appendChild(document.createElement('div'));
     render(
-      createElement(
-        StateContext.Provider,
-        { value: context },
-        createElement(Suspense, { fallback: 'anything' }, createElement(LazyComponent)),
-      ),
-      container,
+      <StateContext.Provider value={context}>
+        <React.Suspense fallback="anything">
+          <LazyComponent />
+        </React.Suspense>
+      </StateContext.Provider>,
     );
     await act(() => Promise.resolve());
     expect(LazyComponent).not.toBeUndefined();

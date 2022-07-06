@@ -5,7 +5,7 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
 import * as routes from './PiralRoutes';
-import { render } from 'enzyme';
+import { renderToString } from 'react-dom/server';
 import { PiralView } from './PiralView';
 
 const StubDashboard: React.FC = () => <div />;
@@ -54,8 +54,8 @@ describe('Portal Module', () => {
   it('In this test window should be undefined', () => {
     state.app.loading = false;
     state.app.error = undefined;
-    const node = render(<PiralView children={undefined} />);
+    const html = renderToString(<PiralView children={undefined} />);
     expect(typeof window).toBe('undefined');
-    expect(node.length).toBe(1);
+    expect(html).not.toBe('');
   });
 });

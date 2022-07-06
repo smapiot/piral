@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { createElement } from 'react';
 import { createListener, Pilet } from 'piral-base';
 import {
@@ -104,9 +104,9 @@ describe('App Actions Module', () => {
     const NewProvider = state.getState().provider;
     expect(NewProvider).not.toBeUndefined();
 
-    const node = mount(createElement(NewProvider, undefined, 'Some text'));
-    expect(node.find('div').length).toBe(1);
-    expect(node.text()).toBe('Some text');
+    const node = render(createElement(NewProvider, undefined, 'Some text'));
+    expect(node.container.querySelectorAll('div').length).toBe(1);
+    expect(node.container.textContent).toBe('Some text');
   });
 
   it('allows using includeProvider twice', () => {
@@ -122,10 +122,10 @@ describe('App Actions Module', () => {
     const NewProvider = state.getState().provider;
     expect(NewProvider).not.toBeUndefined();
 
-    const node = mount(createElement(NewProvider, undefined, 'Some text'));
-    expect(node.find('b').length).toBe(1);
-    expect(node.find('i').length).toBe(1);
-    expect(node.text()).toBe('Some text');
+    const node = render(createElement(NewProvider, undefined, 'Some text'));
+    expect(node.container.querySelectorAll('b').length).toBe(1);
+    expect(node.container.querySelectorAll('i').length).toBe(1);
+    expect(node.container.textContent).toBe('Some text');
   });
 
   it('allows using includeProvider with props', () => {
@@ -139,10 +139,10 @@ describe('App Actions Module', () => {
     const NewProvider = state.getState().provider;
     expect(NewProvider).not.toBeUndefined();
 
-    const node = mount(createElement(NewProvider, undefined, 'Some text'));
-    expect(node.find('b').length).toBe(0);
-    expect(node.find('i').length).toBe(1);
-    expect(node.text()).toBe('IcecreamSome text');
+    const node = render(createElement(NewProvider, undefined, 'Some text'));
+    expect(node.container.querySelectorAll('b').length).toBe(0);
+    expect(node.container.querySelectorAll('i').length).toBe(1);
+    expect(node.container.textContent).toBe('IcecreamSome text');
   });
 
   it('allows multiple includeProvider with props', () => {
@@ -158,9 +158,9 @@ describe('App Actions Module', () => {
     const NewProvider = state.getState().provider;
     expect(NewProvider).not.toBeUndefined();
 
-    const node = mount(createElement(NewProvider, undefined, 'Some text'));
-    expect(node.find('b').length).toBe(1);
-    expect(node.find('i').length).toBe(1);
-    expect(node.text()).toBe('IcecreamChocolateSome text');
+    const node = render(createElement(NewProvider, undefined, 'Some text'));
+    expect(node.container.querySelectorAll('b').length).toBe(1);
+    expect(node.container.querySelectorAll('i').length).toBe(1);
+    expect(node.container.textContent).toBe('IcecreamChocolateSome text');
   });
 });

@@ -2,12 +2,16 @@ import * as React from 'react';
 import create from 'zustand';
 import { StateContext } from 'piral-core';
 import { DefaultErrorInfo } from 'piral-core/lib/defaults/DefaultErrorInfo.js';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import './types';
+
+const FeedErrorInfo = () => <div role="feed_error" />;
 
 const mockState = {
   state: create(() => ({
-    errorComponents: {},
+    errorComponents: {
+      feed: FeedErrorInfo,
+    },
     registry: {
       extensions: {},
     },
@@ -18,11 +22,11 @@ const mockState = {
 
 describe('Extended Error Info Component for Feeds', () => {
   it('renders the switch-case in the feed error case', () => {
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={mockState as any}>
         <DefaultErrorInfo type="feed" error="foo" />
       </StateContext.Provider>,
     );
-    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
+    expect(node.getAllByRole('feed_error').length).toBe(1);
   });
 });

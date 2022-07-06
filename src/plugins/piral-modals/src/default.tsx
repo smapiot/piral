@@ -3,7 +3,7 @@ import { defaultRender } from 'piral-core';
 import { ModalsHostProps, ModalsDialogProps } from './types';
 
 export const DefaultHost: React.FC<ModalsHostProps> = (props) => (
-  <div className="piral-modals-host" key="default_modals">
+  <div className="piral-modals-host">
     {props.open && <div className="piral-modals-overlay">{props.children}</div>}
   </div>
 );

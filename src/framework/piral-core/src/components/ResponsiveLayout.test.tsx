@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { ResponsiveLayout } from './ResponsiveLayout';
 import { defaultBreakpoints } from '../utils';
 
@@ -11,34 +11,34 @@ describe('Responsive Module', () => {
     (hooks as any).useMedia = () => 'desktop';
     const Layout: React.FC = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
     Layout.displayName = 'Layout';
-    const StubComponent: React.FC = () => <div />;
+    const StubComponent: React.FC = () => <div role="stub" />;
     StubComponent.displayName = 'StubComponent';
-    const node = mount(
+    const node = render(
       <ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints}>
-        <StubComponent />)
+        <StubComponent />
       </ResponsiveLayout>,
     );
-    expect(node.find(StubComponent).length).toBe(1);
+    expect(node.queryAllByRole('stub').length).toBe(1);
   });
 
   it('does not call changeTo when nothing changed', () => {
     (hooks as any).useMedia = () => 'desktop';
     const Layout = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
-    mount(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
+    render(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
     expect(Layout).toHaveBeenCalledWith({ currentLayout: 'desktop' }, {});
   });
 
   it('does calls changeTo when someething changed (desktop -> tablet)', () => {
     (hooks as any).useMedia = () => 'tablet';
     const Layout = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
-    mount(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
+    render(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
     expect(Layout).toHaveBeenCalledWith({ currentLayout: 'tablet' }, {});
   });
 
   it('does calls changeTo when someething changed (desktop -> mobile)', () => {
     (hooks as any).useMedia = () => 'mobile';
     const Layout = jest.fn().mockImplementation(({ children }) => <div>{children}</div>);
-    mount(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
+    render(<ResponsiveLayout Layout={Layout} breakpoints={defaultBreakpoints} />);
     expect(Layout).toHaveBeenCalledWith({ currentLayout: 'mobile' }, {});
   });
 });

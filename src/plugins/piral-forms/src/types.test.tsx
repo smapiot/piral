@@ -2,12 +2,16 @@ import create from 'zustand';
 import * as React from 'react';
 import { StateContext } from 'piral-core';
 import { DefaultErrorInfo } from 'piral-core/lib/defaults/DefaultErrorInfo.js';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import './types';
+
+const FormErrorInfo = () => <div role="form_error" />;
 
 const mockState = {
   state: create(() => ({
-    errorComponents: {},
+    errorComponents: {
+      form: FormErrorInfo,
+    },
     registry: {
       extensions: {},
     },
@@ -18,11 +22,11 @@ const mockState = {
 
 describe('Extended Error Info Component for Forms', () => {
   it('renders the switch-case in the form error case', () => {
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={mockState as any}>
         <DefaultErrorInfo type="form" error="foo" />
       </StateContext.Provider>,
     );
-    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
+    expect(node.getAllByRole('form_error').length).toBe(1);
   });
 });

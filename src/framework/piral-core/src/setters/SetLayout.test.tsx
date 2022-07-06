@@ -1,6 +1,6 @@
 import * as React from 'react';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { SetLayout } from './SetLayout';
 import { StateContext } from '../state/stateContext';
 
@@ -34,7 +34,7 @@ function createMockContainer() {
 describe('Piral SetLayout component', () => {
   it('SetLayout sets the layout components', () => {
     const { context } = createMockContainer();
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <SetLayout
           layout={

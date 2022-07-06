@@ -1,6 +1,6 @@
 import * as React from 'react';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { SetProvider } from './SetProvider';
 import { StateContext } from '../state';
 
@@ -32,7 +32,7 @@ describe('Piral-Core SetProvider component', () => {
   it('SetProvider uses the includeProvider action', () => {
     const { context } = createMockContainer();
     const provider = <FakeProvider />;
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <SetProvider provider={provider} />
       </StateContext.Provider>,

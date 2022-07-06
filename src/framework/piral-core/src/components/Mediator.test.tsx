@@ -1,7 +1,7 @@
 import * as React from 'react';
 import create from 'zustand';
+import { render } from '@testing-library/react';
 import { Mediator } from './Mediator';
-import { mount } from 'enzyme';
 import { StateContext } from '../state';
 import { PiletMetadata } from '../types';
 
@@ -50,7 +50,7 @@ describe('Component Mediator', () => {
       },
     };
     const { context } = createMockContainer();
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <Mediator options={options} />
       </StateContext.Provider>,

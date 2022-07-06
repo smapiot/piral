@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { DefaultErrorInfo } from './DefaultErrorInfo';
 
 jest.mock('../hooks/globalState', () => ({
@@ -9,47 +9,44 @@ jest.mock('../hooks/globalState', () => ({
 }));
 
 const state = {
+  components: {},
   registry: {
     extensions: {},
   },
   errorComponents: {},
 };
 
-const StubErrorInfo: React.FC = (props) => <div />;
+const StubErrorInfo: React.FC = (props) => <div role="stub" />;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
 describe('Default Error Info Component', () => {
   it('renders the switch-case in the loading error case', () => {
-    const node = mount(<DefaultErrorInfo type="loading" error="foo" />);
-    expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
+    const node = render(<DefaultErrorInfo type="loading" error="foo" />);
+    expect(node.queryAllByRole("stub").length).toBe(0);
+    expect(node.queryAllByText("Error: loading").length).toBe(1);
   });
 
   it('renders the switch-case in the not_found error case', () => {
-    const node = mount(
+    const node = render(
       <DefaultErrorInfo
         type="not_found"
-        history={undefined}
-        match={undefined}
         location={{ pathname: 'foo', hash: '', key: '', search: '', state: '' }}
       />,
     );
-    expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
+    expect(node.queryAllByRole("stub").length).toBe(0);
+    expect(node.queryAllByText("Error: not_found").length).toBe(1);
   });
 
   it('renders the switch-case in the page error case', () => {
-    const node = mount(
+    const node = render(
       <DefaultErrorInfo
         error={undefined}
         type="page"
-        history={undefined}
-        match={undefined}
         location={{ pathname: 'bar', hash: '', key: '', search: '', state: '' }}
       />,
     );
-    expect(node.find(StubErrorInfo).length).toBe(0);
-    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
+    expect(node.queryAllByRole("stub").length).toBe(0);
+    expect(node.queryAllByText("Error: page").length).toBe(1);
   });
 
   it('renders the react fragment in the default case', () => {
@@ -58,8 +55,8 @@ describe('Default Error Info Component', () => {
         component: StubErrorInfo,
       },
     ];
-    const node = mount(<DefaultErrorInfo type="extension" error="foo" />);
-    expect(node.find(StubErrorInfo).length).toBe(1);
-    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(0);
+    const node = render(<DefaultErrorInfo type="extension" error="foo" />);
+    expect(node.queryAllByRole("stub").length).toBe(1);
+    expect(node.queryAllByText("Error: extension").length).toBe(0);
   });
 });

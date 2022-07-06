@@ -1,35 +1,40 @@
 import * as React from 'react';
-import * as hooks from '../hooks';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { withApi } from './withApi';
 import { StateContext } from '../state';
 
 function createMockContainer() {
   const state = create(() => ({
+    components: {
+      ErrorInfo: StubErrorInfo,
+    },
+    registry: {
+      wrappers: { feed: 'test', '*': 'test' },
+    },
     portals: {},
   }));
   return {
     context: {
       converters: {},
       readState(cb) {
-        return cb({
-          registry: {
-            wrappers: { "feed": "test", "*": "test" },
-          },
-        });
+        return cb(state.getState());
       },
       on: jest.fn(),
       off: jest.fn(),
       emit: jest.fn(),
       state,
-      destroyPortal: (id) => { },
+      destroyPortal: (id) => {},
     } as any,
   };
 }
 
 function createMockContainerWithNoWrappers() {
   const state = create(() => ({
+    components: {
+      ErrorInfo: StubErrorInfo,
+    },
+    registry: {},
     portals: {},
   }));
   return {
@@ -46,36 +51,19 @@ function createMockContainerWithNoWrappers() {
       off: jest.fn(),
       emit: jest.fn(),
       state,
-      destroyPortal: (id) => { },
+      destroyPortal: (id) => {},
     } as any,
   };
 }
 
-jest.mock('../hooks');
-
-(hooks as any).useGlobalStateContext = () => ({
-  state: {},
-});
-
-(hooks as any).useGlobalState = (select: any) =>
-  select({
-    components: {
-      ErrorInfo: StubErrorInfo,
-    },
-  });
-
-(hooks as any).useActions = () => ({
-  destroyPortal: jest.fn(),
-});
-
-const StubErrorInfo: React.FC = (props) => <div />;
+const StubErrorInfo: React.FC<any> = ({ type }) => <div role="error">{type}</div>;
 StubErrorInfo.displayName = 'StubErrorInfo';
 
-const StubComponent: React.FC<{ shouldCrash?: boolean }> = ({ shouldCrash }) => {
+const StubComponent: React.FC<{ shouldCrash?: boolean; piral?: any }> = ({ shouldCrash, piral }) => {
   if (shouldCrash) {
     throw new Error('I should crash!');
   }
-  return <div />;
+  return <div role="component">{piral && 'piral'}</div>;
 };
 StubComponent.displayName = 'StubComponent';
 
@@ -88,8 +76,12 @@ describe('withApi Module', () => {
     };
     const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
-    const node = mount(<Component />);
-    expect(node.find(StubComponent).first().prop('piral')).toBe(api);
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Component />
+      </StateContext.Provider>,
+    );
+    expect(node.getByRole('component').textContent).toBe('piral');
   });
 
   it('is protected against a component crash', () => {
@@ -101,8 +93,12 @@ describe('withApi Module', () => {
     };
     const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
-    const node = mount(<Component shouldCrash />);
-    expect(node.find(StubErrorInfo).first().prop('type')).toBe('feed');
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Component shouldCrash />
+      </StateContext.Provider>,
+    );
+    expect(node.getByRole('error').textContent).toBe('feed');
   });
 
   it('reports to console.error when an error is hit', () => {
@@ -114,7 +110,11 @@ describe('withApi Module', () => {
     };
     const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
-    mount(<Component shouldCrash />);
+    render(
+      <StateContext.Provider value={context}>
+        <Component shouldCrash />
+      </StateContext.Provider>,
+    );
     expect(console.error).toHaveBeenCalled();
   });
 
@@ -128,15 +128,15 @@ describe('withApi Module', () => {
     context.converters = {
       html: ({ component }) => component,
     };
-    const Component = withApi(context, { type: 'html', component: { mount: () => { } } }, api, 'unknown');
+    const Component = withApi(context, { type: 'html', component: { mount: () => {} } }, api, 'unknown');
 
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Component />
       </StateContext.Provider>,
     );
 
-    expect(node.children.length).toBe(1);
+    expect(node.container.children.length).toBe(1);
   });
 
   it('Wraps component which is object == null.', () => {
@@ -149,9 +149,9 @@ describe('withApi Module', () => {
     context.converters = {
       html: ({ component }) => component,
     };
-    const Component = withApi(context, null, api, 'unknown');
+    const Component = withApi(context, null as any, api, 'unknown');
 
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <Component />
       </StateContext.Provider>,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { SetRedirect } from './SetRedirect';
 import { StateContext } from '../state';
 
@@ -31,7 +31,7 @@ function createMockContainer() {
 describe('Piral-Core SetRedirect component', () => {
   it('SetRedirect sets the redirect route in the store', () => {
     const { context } = createMockContainer();
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <SetRedirect from="/foo" to="/bar" />
       </StateContext.Provider>,

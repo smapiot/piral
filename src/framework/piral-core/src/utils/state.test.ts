@@ -1,7 +1,5 @@
-import * as hooks from '../hooks';
 import { withAll, withRootExtension } from './state';
 import { RootListener } from '../RootListener';
-import { createGlobalState } from '../state';
 
 describe('State Module', () => {
   it('withRootExtension should create an extension key', () => {

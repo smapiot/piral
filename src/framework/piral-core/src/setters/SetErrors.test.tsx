@@ -1,6 +1,6 @@
 import * as React from 'react';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { SetErrors } from './SetErrors';
 import { StateContext } from '../state/stateContext';
 
@@ -34,7 +34,7 @@ function createMockContainer() {
 describe('Piral SetErrors component', () => {
   it('SetErrors sets the error components', () => {
     const { context } = createMockContainer();
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <SetErrors
           errors={

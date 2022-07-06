@@ -1,12 +1,12 @@
 import * as React from 'react';
 import create from 'zustand';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { Dashboard } from './Dashboard';
 
-const MockDbContainer: React.FC<any> = ({ children }) => <div>{children}</div>;
+const MockDbContainer: React.FC<any> = ({ children }) => <ul>{children}</ul>;
 MockDbContainer.displayName = 'MockDbContainer';
-const MockDbTile: React.FC<any> = ({ children }) => <div>{children}</div>;
+const MockDbTile: React.FC<any> = ({ children }) => <li>{children}</li>;
 MockDbTile.displayName = 'MockDbTile';
 
 function createMockContainer(tiles = {}) {
@@ -41,13 +41,13 @@ describe('Piral-Dashboard Dashboard component', () => {
   it('uses container for a connected dashboard', () => {
     const fake: any = {};
     const { context } = createMockContainer();
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Dashboard {...fake} />
       </StateContext.Provider>,
     );
-    expect(node.find(MockDbContainer).length).toBe(1);
-    expect(node.find(MockDbTile).length).toBe(0);
+    expect(node.getAllByRole('list').length).toBe(1);
+    expect(node.queryByRole('listitem')).toBe(null);
   });
 
   it('uses container and tile for each tile of a connected dashboard', () => {
@@ -62,12 +62,12 @@ describe('Piral-Dashboard Dashboard component', () => {
         preferences: {},
       },
     });
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Dashboard {...fake} />
       </StateContext.Provider>,
     );
-    expect(node.find(MockDbContainer).length).toBe(1);
-    expect(node.find(MockDbTile).length).toBe(2);
+    expect(node.getAllByRole('list').length).toBe(1);
+    expect(node.getAllByRole('listitem').length).toBe(2);
   });
 });

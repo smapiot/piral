@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { render } from '@testing-library/react';
 import { DefaultLoadingIndicator } from './DefaultLoadingIndicator';
-import { mount } from 'enzyme';
 
 describe('Default Loading Indicator Component', () => {
   it('renders correctly', () => {
-    const node = mount(<DefaultLoadingIndicator />);
-    expect(node.find('div').length).toBe(1);
+    const node = render(<DefaultLoadingIndicator />);
+    expect(node.container.querySelectorAll('div').length).toBe(1);
   });
 });
