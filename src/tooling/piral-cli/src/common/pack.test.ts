@@ -1,21 +1,18 @@
 import { createPiletPackage } from './pack';
 import { resolve } from 'path';
 
-let json = {};
+let json: any = {};
 
 jest.mock('./io', () => ({
-  readJson: (dir: string, source: string) => {
-    return json;
-  },
-  move: (source: string, target: string, forceOverwrite?: any) => {
-    return Promise.resolve('foo');
-  },
+  readJson: jest.fn(() => json),
+  removeDirectory: jest.fn(() => Promise.resolve()),
+  makeTempDir: jest.fn(() => Promise.resolve('')),
+  copy: jest.fn(() => Promise.resolve()),
+  checkExists: jest.fn(() => Promise.resolve(true)),
 }));
 
-jest.mock('./npm', () => ({
-  createNpmPackage: (target?: string) => {
-    return Promise.resolve(target);
-  },
+jest.mock('./archive', () => ({
+  createTgz: jest.fn(() => Promise.resolve()),
 }));
 
 describe('Pack Module', () => {
@@ -51,7 +48,7 @@ describe('Pack Module', () => {
 
   it('createPilePackage source <> target', async () => {
     json = { name: 'foo', version: '1.0.0' };
-    const path = resolve('./', 'foo-1.0.0.tgz');
-    await expect(createPiletPackage('./', '', 'test')).resolves.toEqual('foo');
+    const path = resolve('./', 'test', 'foo-1.0.0.tgz');
+    await expect(createPiletPackage('./', '', 'test')).resolves.toEqual(path);
   });
 });

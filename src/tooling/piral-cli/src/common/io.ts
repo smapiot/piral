@@ -1,8 +1,9 @@
 import * as rimraf from 'rimraf';
 import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
 import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
-import { exists, mkdir, lstat, unlink, mkdirSync, statSync } from 'fs';
-import { writeFile, readFile, readdir, copyFile, constants } from 'fs';
+import { exists, lstat, unlink, statSync } from 'fs';
+import { mkdtemp, mkdir, mkdirSync, constants } from 'fs';
+import { writeFile, readFile, readdir, copyFile } from 'fs';
 import { log } from './log';
 import { deepMerge } from './merge';
 import { nodeVersion } from './info';
@@ -133,6 +134,18 @@ export async function getEntryFiles(content: string, basePath: string) {
   }
 
   return results;
+}
+
+export function makeTempDir(prefix: string) {
+  return new Promise<string>((resolve, reject) =>
+    mkdtemp(prefix, (err, folder) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(folder);
+      }
+    }),
+  );
 }
 
 export function checkExists(target: string) {
