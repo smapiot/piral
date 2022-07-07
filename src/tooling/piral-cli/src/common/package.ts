@@ -518,21 +518,7 @@ export async function patchPiletPackage(
         ...info.scripts,
       }
     : info.scripts;
-  const peerModules = [];
   const allExternals = makePiletExternals(root, piralDependencies, externals, fromEmulator, piralInfo);
-  const peerDependencies = {
-    ...allExternals.reduce((deps, name) => {
-      const valid = isValidDependency(name);
-      deps[name] = valid ? '*' : undefined;
-
-      if (!valid) {
-        peerModules.push(name);
-      }
-
-      return deps;
-    }, {}),
-    [name]: `*`,
-  };
   const devDependencies: Record<string, string> = {
     ...Object.keys(typeDependencies).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || typeDependencies[name];
@@ -564,9 +550,11 @@ export async function patchPiletPackage(
 
   const packageContent = deepMerge(packageOverrides, {
     piral,
+    importmap: {
+      imports: {},
+      inherit: [name],
+    },
     devDependencies,
-    peerDependencies,
-    peerModules,
     dependencies: {
       [name]: undefined,
     },

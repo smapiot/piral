@@ -12,16 +12,14 @@ function getPackageJson(files: PackageFiles): PackageData {
   return jju.parse(content);
 }
 
-function getPiletMainPath(data: PackageData, files: PackageFiles) {
-  const paths = [
-    data.main,
-    `dist/${data.main}`,
-    `${data.main}/index.js`,
-    `dist/${data.main}/index.js`,
-    'index.js',
-    'dist/index.js',
-  ];
-  return paths.map((filePath) => `${packageRoot}${filePath}`).filter((filePath) => !!files[filePath])[0];
+export function getPossiblePiletMainPaths(data: PackageData) {
+  const { main = 'index.js' } = data;
+  return [main, `dist/${main}`, `${main}/index.js`, `dist/${main}/index.js`, 'index.js', 'dist/index.js'];
+}
+
+export function getPiletMainPath(data: PackageData, files: PackageFiles) {
+  const paths = getPossiblePiletMainPaths(data);
+  return paths.map((filePath) => `${packageRoot}${filePath}`).find((filePath) => !!files[filePath]);
 }
 
 export interface PiletPackageData extends PackageData {

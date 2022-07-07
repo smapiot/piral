@@ -1,20 +1,60 @@
-import { resolve, join } from 'path';
+import { tmpdir } from 'os';
+import { resolve, relative, join, dirname } from 'path';
+import { createWriteStream, mkdtemp } from 'fs';
 import { log, progress, fail } from './log';
-import { readJson, move } from './io';
-import { createNpmPackage } from './npm';
-import { ForceOverwrite } from './enums';
+import { readJson, copy, removeDirectory, checkExists } from './io';
+import { getPossiblePiletMainPaths } from './inspect';
+import { tar } from '../external';
 
-async function getFile(root: string, name: string, dest: string) {
-  const proposed = join(root, name);
+async function getPiletContentDir(root: string, packageData: any) {
+  const paths = getPossiblePiletMainPaths(packageData);
 
-  if (dest !== root) {
-    log('generalDebug_0003', `Moving file from "${root}" to "${dest}" ...`);
-    const file = await move(proposed, dest, ForceOverwrite.yes);
-    log('generalDebug_0003', 'Successfully moved file.');
-    return file;
+  for (const path of paths) {
+    const file = resolve(root, path);
+
+    if (await checkExists(file)) {
+      return dirname(file);
+    }
   }
 
-  return proposed;
+  return root;
+}
+
+export function makeTempDir(prefix: string) {
+  return new Promise<string>((resolve, reject) =>
+    mkdtemp(prefix, (err, folder) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(folder);
+      }
+    }),
+  );
+}
+
+export function packContent(file: string, cwd: string, files: Array<string>) {
+  const stream = createWriteStream(file);
+
+  tar
+    .c(
+      {
+        cwd,
+        prefix: 'package/',
+        portable: true,
+        follow: true,
+        gzip: {
+          level: 9,
+        },
+        // @ts-ignore
+        mtime: new Date('1985-10-26T08:15:00.000Z'),
+      },
+      files,
+    )
+    .pipe(stream, {
+      end: true,
+    });
+
+  return new Promise((finish) => stream.on('close', finish));
 }
 
 export async function createPiletPackage(baseDir: string, source: string, target: string) {
@@ -37,12 +77,30 @@ export async function createPiletPackage(baseDir: string, source: string, target
   }
 
   progress(`Packing pilet in ${dest} ...`);
-  log('generalDebug_0003', 'Creating package ...');
-  await createNpmPackage(root);
-  log('generalDebug_0003', 'Successfully created package.');
-  const name = `${pckg.name}-${pckg.version}.tgz`.replace(/@/g, '').replace(/\//g, '-');
-  log('generalDebug_0003', `Assumed package name "${name}".`);
-  const file = await getFile(root, name, dest);
+  const pckgName = pckg.name.replace(/@/g, '').replace(/\//g, '-');
+  const id = `${pckgName}-${pckg.version}`;
+  const name = `${id}.tgz`;
+  log('generalDebug_0003', `Assume package name "${name}".`);
+
+  const file = resolve(dest, name);
+  const content = await getPiletContentDir(root, pckg);
+  const files = [resolve(root, 'package.json'), content];
+  const prefix = join(tmpdir(), `${id}-`);
+  const cwd = await makeTempDir(prefix);
+  log('generalDebug_0003', `Creating package with content from "${content}" ...`);
+
+  await Promise.all(files.map((file) => copy(file, resolve(cwd, relative(root, file)))));
+
+  await packContent(
+    file,
+    cwd,
+    files.map((f) => relative(root, f)),
+  );
+
+  log('generalDebug_0003', `Successfully created package from "${cwd}".`);
+
+  await removeDirectory(cwd);
+
   log('generalDebug_0003', `Packed file "${file}".`);
   return file;
 }
