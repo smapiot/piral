@@ -20,6 +20,7 @@ import {
   getPiralScaffoldData,
   config,
   initNpmProject,
+  logInfo,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -129,6 +130,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   }
 
   setLogLevel(logLevel);
+
   progress('Preparing source and target ...');
   const success = await createDirectory(root);
 
