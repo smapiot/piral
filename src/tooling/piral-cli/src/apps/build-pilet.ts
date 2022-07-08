@@ -22,6 +22,7 @@ import {
   cpuCount,
   concurrentWorkers,
   normalizePublicUrl,
+  combinePiletExternals,
 } from '../common';
 
 interface PiletData {
@@ -208,7 +209,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     const targetDir = dirname(entryModule);
     const { peerDependencies, peerModules, root, appPackage, appFile, piletPackage, ignored, importmap } =
       await retrievePiletData(targetDir, app);
-    const externals = [...Object.keys(peerDependencies), ...peerModules];
+    const piral = appPackage.name;
+    const externals = combinePiletExternals([piral], peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
     const outDir = dirname(dest);
     const outFile = basename(dest);
@@ -225,7 +227,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await callPiletBuild(
       {
         root,
-        piral: appPackage.name,
+        piral,
         optimizeModules,
         sourceMaps,
         contentHash,

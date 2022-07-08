@@ -140,7 +140,12 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
           const entry = dependencies.find((dep) => dep.name === dependency.name);
 
           if (!entry) {
-            dependencies.push(dependency);
+            dependencies.push({
+              ...dependency,
+              parents: [inheritedImport],
+            });
+          } else if (Array.isArray(entry.parents)) {
+            entry.parents.push(inheritedImport);
           }
         }
       }

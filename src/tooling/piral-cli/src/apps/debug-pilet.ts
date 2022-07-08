@@ -21,6 +21,7 @@ import {
   findFile,
   createInitialKrasConfig,
   getAvailablePort,
+  combinePiletExternals,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -226,7 +227,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     const targetDir = dirname(entryModule);
     const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } =
       await retrievePiletData(targetDir, app);
-    const externals = [...Object.keys(peerDependencies), ...peerModules];
+    const piral = appPackage.name;
+    const externals = combinePiletExternals([piral], peerDependencies, peerModules, importmap);
     const mocks = join(targetDir, 'mocks');
     const dest = resolve(root, target);
     const outDir = dirname(dest);
@@ -238,7 +240,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     const bundler = await callPiletDebug(
       {
         root,
-        piral: appPackage.name,
+        piral,
         optimizeModules,
         hmr,
         externals,

@@ -12,7 +12,15 @@ import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot } from './npm';
-import { SourceLanguage, Framework, FileInfo, PiletsInfo, TemplateFileLocation, PackageData } from '../types';
+import {
+  SourceLanguage,
+  Framework,
+  FileInfo,
+  PiletsInfo,
+  TemplateFileLocation,
+  PackageData,
+  SharedDependency,
+} from '../types';
 
 function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
   if (bundler && bundler !== 'none') {
@@ -578,6 +586,34 @@ export function checkAppShellPackage(appPackage: PackageData) {
 
   log('generalDebug_0003', `Missing "piralCLI" section. Assume raw app shell.`);
   return false;
+}
+
+export function combinePiletExternals(
+  appShells: Array<string>,
+  peerDependencies: Record<string, string>,
+  peerModules: Array<string>,
+  importmap: Array<SharedDependency>,
+) {
+  const externals = [...Object.keys(peerDependencies), ...peerModules];
+
+  for (let i = importmap.length; i--; ) {
+    const entry = importmap[i];
+
+    // if the entry has no parents, i.e., it was explicitly mentioned in the importmap
+    // then keep it in the importmap (=> prefer the distributed approach, which will always work)
+    if (Array.isArray(entry.parents)) {
+      // only accept entry as a centrally shared dependency if the entry appears in all
+      // mentioned / referenced app shells
+      // in other cases (e.g., if one app shell does not share this) use the distributed
+      // mechanism to ensure that the dependency can also be resolved in this shell
+      if (appShells.every((app) => entry.parents.includes(app))) {
+        externals.push(entry.name);
+        importmap.splice(i, 1);
+      }
+    }
+  }
+
+  return externals;
 }
 
 export async function retrievePiletData(target: string, app?: string) {
