@@ -187,15 +187,14 @@ export function getFileNames(target: string) {
   });
 }
 
-export async function findFile(topDir: string, fileName: string): Promise<string> {
+export async function findFile(topDir: string, fileName: string, stopDir = resolve(topDir, '/')): Promise<string> {
   const path = join(topDir, fileName);
   const exists = await checkExists(path);
 
   if (!exists) {
-    const parentDir = resolve(topDir, '..');
-
-    if (parentDir !== topDir) {
-      return await findFile(parentDir, fileName);
+    if (topDir !== stopDir) {
+      const parentDir = resolve(topDir, '..');
+      return await findFile(parentDir, fileName, stopDir);
     }
 
     return undefined;

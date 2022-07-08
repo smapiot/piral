@@ -1,3 +1,6 @@
+import { dirname, resolve } from 'path';
+import { findFile } from '../io';
+
 import * as lerna from './lerna';
 import * as npm from './npm';
 import * as pnp from './pnp';
@@ -22,10 +25,13 @@ export function isWrapperClient(client: ClientName) {
   return !directClients.includes(client);
 }
 
-export function detectClients(root: string) {
-  return Promise.all(
+export async function detectClients(root: string) {
+  const packageJson = await findFile(resolve(root, '..'), 'package.json');
+  const stopDir = packageJson ? dirname(packageJson) : undefined;
+
+  return await Promise.all(
     Object.keys(clients).map(async (client: ClientName) => {
-      const result = await clients[client].detectClient(root);
+      const result = await clients[client].detectClient(root, stopDir);
       return {
         client,
         result,
