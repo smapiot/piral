@@ -21,6 +21,7 @@ import {
   config,
   initNpmProject,
   logInfo,
+  getPiletsInfo,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -172,6 +173,14 @@ always-auth=true`,
       );
     }
 
+    await createFileIfNotExists(
+      root,
+      'piral.json',
+      JSON.stringify({
+        schemaVersion: 'v2',
+      }),
+    );
+
     progress(`Installing npm package ${packageRef} ...`);
 
     await installNpmPackage(npmClient, packageRef, root, '--save-exact');
@@ -181,6 +190,7 @@ always-auth=true`,
     const data = getPiralScaffoldData(language, root, app, framework, variables);
 
     await updateExistingJson(root, 'package.json', getPiralPackage(app, data, version, bundlerName));
+    await updateExistingJson(root, 'piral.json', { pilets: getPiletsInfo({}) });
 
     await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
 

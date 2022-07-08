@@ -168,6 +168,14 @@ always-auth=true`,
       );
     }
 
+    await createFileIfNotExists(
+      root,
+      'pilet.json',
+      JSON.stringify({
+        schemaVersion: 'v2',
+      }),
+    );
+
     const isLocal = isLinkedPackage(sourceName, type, hadVersion);
 
     if (!isLocal) {

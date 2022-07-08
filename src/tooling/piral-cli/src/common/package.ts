@@ -190,7 +190,6 @@ export function getPiralPackage(app: string, data: PiralPackageData, version: st
         framework === 'piral-native' && 'piral-native', // this we also only take if we selected piral-native
       ].filter(Boolean),
     },
-    pilets: getPiletsInfo({}),
     dependencies,
     devDependencies,
   };
@@ -509,10 +508,6 @@ export async function patchPiletPackage(
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
   const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
-  const piral = {
-    comment: 'Keep this section to use the Piral CLI.',
-    name,
-  };
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,
@@ -556,8 +551,7 @@ export async function patchPiletPackage(
     appendBundler(devDependencies, bundler, version);
   }
 
-  const packageContent = deepMerge(packageOverrides, {
-    piral,
+  await updateExistingJson(root, 'package.json', deepMerge(packageOverrides, {
     importmap: {
       imports: {},
       inherit: [name],
@@ -567,10 +561,16 @@ export async function patchPiletPackage(
       [name]: undefined,
     },
     scripts,
-  });
+  }));
 
-  await updateExistingJson(root, 'package.json', packageContent);
   log('generalDebug_0003', `Succesfully patched the package.json.`);
+
+  await updateExistingJson(root, 'pilet.json', {
+    piralInstances: {
+      [name]: {},
+    },
+  });
+  log('generalDebug_0003', `Succesfully patched the pilet.json.`);
 }
 
 /**
