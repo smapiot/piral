@@ -1,5 +1,6 @@
 import { emitRenderEvent, emitNavigateEvent } from './events';
 
+const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
 
 function createBlazorStarter(publicPath: string): () => Promise<HTMLDivElement> {
@@ -66,15 +67,19 @@ export function deactivate(moduleName: string, referenceId: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'Deactivate', moduleName, referenceId);
 }
 
-export async function loadResource(url: string) {
+export function callNotifyLocationChanged(url: string, replace: boolean) {
+  return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, replace);
+}
+
+export function loadResource(url: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', url);
 }
 
-export async function loadResourceWithSymbol(dllUrl: string, pdbUrl: string) {
+export function loadResourceWithSymbol(dllUrl: string, pdbUrl: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsWithSymbolsFromLibrary', dllUrl, pdbUrl);
 }
 
-export async function unloadResource(url: string) {
+export function unloadResource(url: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'UnloadComponentsFromLibrary', url);
 }
 
