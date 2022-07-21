@@ -1,4 +1,4 @@
-import { resolve, dirname } from 'path';
+import { resolve, dirname, isAbsolute } from 'path';
 import { log, fail } from './log';
 import { satisfies, validate } from './version';
 import { computeHash } from './hash';
@@ -83,6 +83,24 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
           });
         } else {
           fail('importMapReferenceNotFound_0027', dir, identifier);
+        }
+      } else if (!url.startsWith('.') && !isAbsolute(url)) {
+        const entry = tryResolvePackage(url, dir);
+
+        if (entry) {
+          const packageJson = await findFile(dirname(entry), 'package.json');
+          const [version, requireVersion] = getLocalDependencyVersion(packageJson, depName, versionSpec);
+
+          dependencies.push({
+            id: `${identifier}@${version}`,
+            requireId: `${identifier}@${requireVersion}`,
+            entry,
+            name: identifier,
+            ref: `${assetName}.js`,
+            type: 'local',
+          });
+        } else {
+          fail('importMapReferenceNotFound_0027', dir, url);
         }
       } else {
         const entry = resolve(dir, url);

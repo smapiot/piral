@@ -176,9 +176,7 @@ always-auth=true`,
     await createFileIfNotExists(
       root,
       'piral.json',
-      JSON.stringify({
-        schemaVersion: 'v2',
-      }),
+      JSON.stringify({}),
     );
 
     progress(`Installing npm package ${packageRef} ...`);
