@@ -26,7 +26,7 @@ export function startup(
     const [, instance] = runningModule;
     return Promise.resolve(instance);
   } else {
-    const path = context.readState?.((s) => s.app.publicPath) || '/';
+    const path = context.publicPath || '/';
     const platform = platformBrowserDynamic([
       { provide: 'Context', useValue: context },
       { provide: APP_BASE_HREF, useValue: path },

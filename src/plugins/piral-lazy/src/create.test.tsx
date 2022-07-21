@@ -6,6 +6,9 @@ import { createLazyApi } from './create';
 
 function createMockContainer() {
   const state = create(() => ({
+    app: {
+      publicPath: '/',
+    },
     components: {},
     errorComponents: {},
     portals: {},

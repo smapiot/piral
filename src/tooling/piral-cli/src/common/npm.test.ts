@@ -454,12 +454,12 @@ describe('npm Module', () => {
 
   it('makeExternals without externals returns coreExternals', () => {
     const externals = makeExternals(process.cwd(), { piral: '*' });
-    expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'history', 'tslib']);
+    expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
   it('makeExternals with no externals returns coreExternals', () => {
     const externals = makeExternals(process.cwd(), { piral: '*' }, []);
-    expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'history', 'tslib']);
+    expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
   it('makeExternals with exclude coreExternals returns empty set', () => {
@@ -476,19 +476,18 @@ describe('npm Module', () => {
       'react-dom',
       'react-router',
       'react-router-dom',
-      'history',
       'tslib',
     ]);
   });
 
   it('makeExternals with external duplicate only reflects coreExternals', () => {
     const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'foo']);
-    expect(externals).toEqual(['react', 'foo', 'react-dom', 'react-router', 'react-router-dom', 'history', 'tslib']);
+    expect(externals).toEqual(['react', 'foo', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
   it('makeExternals with explicit include and exclude', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-calendar', '!history']);
-    expect(externals).toEqual(['react', 'react-calendar', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-calendar', '!tslib']);
+    expect(externals).toEqual(['react', 'react-calendar', 'react-dom', 'react-router', 'react-router-dom']);
   });
 
   it('makeExternals with all exclude and explicit include', () => {

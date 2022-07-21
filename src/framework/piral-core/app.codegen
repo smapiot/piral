@@ -68,9 +68,59 @@ function createDefaultState(imports, exports) {
       `import { __RouterContext as RouterContext } from 'react-router'`,
     );
     exports.push(`
-      function useNavigate() {
+      function useCurrentNavigation() {
         const ctx = useRouterContext();
-        return (...args) => ctx.history.push(...args);
+
+        useEffect(() => {
+          _nav = ctx.history;
+          return () => {
+            _nav = undefined;
+          };
+        }, []);
+      }
+    `);
+
+    exports.push(`
+      export function createNavigation() {
+        const enhance = info => ({
+          ...info,
+          location: {
+            get href() {
+              return _nav.createHref(info.location);
+            },
+            ...info.location,
+          },
+        });
+
+        return {
+          push(target, state) {
+            if (_nav) {
+              _nav.push(target, state);
+            }
+          },
+          replace(target, state) {
+            if (_nav) {
+              _nav.replace(target, state);
+            }
+          },
+          go(n) {
+            if (_nav) {
+              _nav.go(n);
+            }
+          },
+          block(blocker) {
+            if (!_nav) {
+              return _noop;
+            }
+            return _nav.block((location, action) => blocker(enhance({ location, action })));
+          },
+          listen(listener) {
+            if (!_nav) {
+              return _noop;
+            }
+            return _nav.listen((location, action) => listener(enhance({ location, action })));
+          },
+        };
       }
     `);
   } else {
@@ -80,9 +130,59 @@ function createDefaultState(imports, exports) {
       `import { UNSAFE_NavigationContext as RouterContext } from 'react-router'`,
     );
     exports.push(`
-      function useNavigate() {
+      function useCurrentNavigation() {
         const ctx = useRouterContext();
-        return (...args) => ctx.navigator.push(...args);
+
+        useEffect(() => {
+          _nav = ctx.navigator;
+          return () => {
+            _nav = undefined;
+          };
+        }, []);
+      }
+    `);
+
+    exports.push(`
+      export function createNavigation() {
+        const enhance = info => ({
+          ...info,
+          location: {
+            get href() {
+              return _nav.createHref(info.location);
+            },
+            ...info.location,
+          },
+        });
+
+        return {
+          push(target, state) {
+            if (_nav) {
+              _nav.push(target, state);
+            }
+          },
+          replace(target, state) {
+            if (_nav) {
+              _nav.replace(target, state);
+            }
+          },
+          go(n) {
+            if (_nav) {
+              _nav.go(n);
+            }
+          },
+          block(blocker) {
+            if (!_nav) {
+              return _noop;
+            }
+            return _nav.block(transition => blocker(enhance(transition)));
+          },
+          listen(listener) {
+            if (!_nav) {
+              return _noop;
+            }
+            return _nav.listen(update => listener(enhance(update)));
+          },
+        };
       }
     `);
   }
@@ -144,14 +244,7 @@ function createRouteHandler(imports, exports) {
   );
 
   assignments.push(`
-    const stateContext = useGlobalStateContext();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-      const handler = ({ path, state }) => navigate(path, state);
-      stateContext.on('navigate', handler);
-      return () => stateContext.off('navigate', handler);
-    }, []);
+    useCurrentNavigation();
   `);
 
   if (process.env.DEBUG_PILET) {
@@ -185,6 +278,9 @@ module.exports = function () {
 
   return `
     ${imports.join('\n')}
+
+    let _nav;
+    const _noop = () => {};
 
     ${exports.join('\n')}
   `;

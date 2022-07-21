@@ -1,4 +1,4 @@
-import type { BaseComponentProps, ForeignComponent } from 'piral-core';
+import type { BaseComponentProps, Disposable, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
 import { activate, deactivate, createBootLoader, reactivate, callNotifyLocationChanged } from './interop';
 import { BlazorOptions } from './types';
@@ -38,7 +38,7 @@ interface BlazorLocals {
 export function createConverter(lazy: boolean) {
   const boot = createBootLoader(bootConfig);
   let loader = !lazy && boot();
-  let listener = undefined;
+  let listener: Disposable = undefined;
 
   const enqueueChange = (locals: BlazorLocals, update: (root: HTMLDivElement) => void) => {
     if (locals.state === 'mounted') {
@@ -56,20 +56,16 @@ export function createConverter(lazy: boolean) {
   ): ForeignComponent<TProps> => ({
     mount(el, data, ctx, locals: BlazorLocals) {
       const props = { ...args, ...data };
-      const { history } = ctx.router;
+      const nav = ctx.navigation;
       el.setAttribute('data-blazor-pilet-root', 'true');
 
       addGlobalEventListeners(el);
 
       if (listener === undefined) {
-        listener = history.listen((data, action) => {
-          switch (action) {
-            case 'POP':
-              // Already handled by .NET
-              break;
-            default:
-              callNotifyLocationChanged(location.href, action === 'REPLACE');
-              break;
+        listener = nav.listen(({ location, action }) => {
+          // POP is already handled by .NET
+          if (action !== 'POP') {
+            callNotifyLocationChanged(location.href, action === 'REPLACE');
           }
         });
       }
@@ -81,8 +77,8 @@ export function createConverter(lazy: boolean) {
         (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
         (ev) =>
           ev.detail.replace
-            ? history.replace(ev.detail.to, ev.detail.store)
-            : history.push(ev.detail.to, ev.detail.state),
+            ? nav.replace(ev.detail.to, ev.detail.store)
+            : nav.push(ev.detail.to, ev.detail.state),
       );
 
       (loader || (loader = boot()))

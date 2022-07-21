@@ -1,8 +1,9 @@
 import type { ComponentType, ReactPortal, PropsWithChildren } from 'react';
 import type { RouteComponentProps } from 'react-router';
 import type { LoadPiletsOptions } from 'piral-base';
-import type { StoreApi, UseBoundStore } from 'zustand';
+import type { UseBoundStore } from 'zustand';
 import type { Dict, Without } from './common';
+import type { NavigationApi } from './navigation';
 import type { SharedDataItem, DataStoreTarget } from './data';
 import type {
   PiralCustomActions,
@@ -32,12 +33,6 @@ import type {
 
 export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
-}
-
-declare module './components' {
-  interface ComponentContext {
-    readState: PiralActions['readState'];
-  }
 }
 
 export type WrappedComponent<TProps> = ComponentType<PropsWithChildren<Without<TProps, keyof BaseComponentProps>>>;
@@ -347,12 +342,6 @@ export interface PiralActions extends PiralCustomActions {
    * @returns The desired part.
    */
   readState<S>(select: (state: GlobalState) => S): S;
-  /**
-   * Performs a navigation.
-   * @param path The path to navigate to.
-   * @param state The optional state for the navigation.
-   */
-  navigate(path: string, state?: any): void;
 }
 
 /**
@@ -372,6 +361,10 @@ export interface GlobalStateContext extends PiralActions, EventEmitter {
    * The available component converters.
    */
   converters: ComponentConverters<any>;
+  /**
+   * The navigation manager for the whole instance.
+   */
+  navigation: NavigationApi;
   /**
    * The initial options.
    */

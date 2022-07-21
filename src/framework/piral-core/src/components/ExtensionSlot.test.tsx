@@ -15,6 +15,9 @@ jest.mock('../hooks/globalState', () => ({
         },
       },
     },
+    readState() {
+      return '/';
+    },
     destroyPortal: jest.fn(),
   }),
 }));

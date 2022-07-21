@@ -24,10 +24,6 @@ export function initialize(ctx: GlobalStateContext, loading: boolean, error: Err
   }));
 }
 
-export function navigate(ctx: GlobalStateContext, path: string, state?: any) {
-  ctx.emit('navigate', { path, state });
-}
-
 export function addPilet(ctx: GlobalStateContext, meta: PiletEntry): Promise<void> {
   return ctx.options
     .loadPilet(meta)

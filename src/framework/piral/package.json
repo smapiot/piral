@@ -80,7 +80,6 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@types/history": "^4.7.8",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/react-router": "^5.1.8",
@@ -91,7 +90,6 @@
     "react-dom",
     "react-router",
     "react-router-dom",
-    "history",
     "tslib"
   ]
 }

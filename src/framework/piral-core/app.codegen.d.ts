@@ -1,15 +1,15 @@
 import type { LoadPiletsOptions } from 'prial-base';
 import type { DebuggerExtensionOptions } from 'piral-debug-utils';
 import type { RouteComponentProps } from 'react-router';
-import type { AppPath, GlobalState, GlobalStateContext } from './src/types';
+import type { AppPath, GlobalState, GlobalStateContext, NavigationApi } from './src/types';
 
-export function fillDependencies(deps: Record<string, any>): void;
+export function createNavigation(): NavigationApi;
 
 export function createDefaultState(): GlobalState;
 
-export function useRouteFilter(paths: Array<AppPath>): Array<AppPath>;
+export function fillDependencies(deps: Record<string, any>): void;
 
-export function useRouterContext(): RouteComponentProps;
+export function useRouteFilter(paths: Array<AppPath>): Array<AppPath>;
 
 export function integrateDebugger(
   context: GlobalStateContext,

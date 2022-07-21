@@ -16,8 +16,7 @@
       "react": "react",
       "react-dom": "react-dom",
       "react-router": "react-router",
-      "react-router-dom": "react-router-dom",
-      "history": "history"
+      "react-router-dom": "react-router-dom"
     }
   },
   "author": "smapiot",
@@ -82,7 +81,6 @@
     "react-router-dom": "5.x"
   },
   "devDependencies": {
-    "@types/history": "^4.7.8",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/react-router": "^5.1.8",
@@ -97,7 +95,6 @@
     "react-dom",
     "react-router",
     "react-router-dom",
-    "history",
     "tslib"
   ]
 }

@@ -2,6 +2,7 @@ import type { ComponentType, ReactNode } from 'react';
 import type { RouteComponentProps, SwitchProps } from 'react-router';
 import type { FirstParametersOf, UnionOf } from './common';
 import type { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
+import type { NavigationApi } from './navigation';
 import type { LayoutType } from './layout';
 
 /**
@@ -33,7 +34,8 @@ export interface HtmlComponent<TProps> {
  * The context to be transported into the generic components.
  */
 export interface ComponentContext {
-  router: RouteComponentProps;
+  navigation: NavigationApi;
+  publicPath: string;
 }
 
 /**

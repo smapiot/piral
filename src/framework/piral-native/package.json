@@ -66,7 +66,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@types/history": "^4.7.2",
     "@types/react": "^18.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
@@ -89,7 +88,6 @@
     "react-router",
     "react-router-dom",
     "react-router-native",
-    "history",
     "tslib"
   ]
 }

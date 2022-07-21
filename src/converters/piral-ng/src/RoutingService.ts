@@ -27,8 +27,10 @@ export class RoutingService implements OnDestroy {
         throw error;
       };
 
-      this.dispose = this.context.router.history.listen((e) => {
-        const path = e.pathname;
+      const nav = this.context.navigation;
+
+      this.dispose = nav.listen(({ location }) => {
+        const path = location.pathname;
 
         if (!this.invalidRoutes.includes(path)) {
           this.zone.run(() => this.router.navigateByUrl(path));
@@ -42,7 +44,7 @@ export class RoutingService implements OnDestroy {
           this.invalidRoutes.push(path);
         }
 
-        this.context.router.history.push(path);
+        nav.push(path);
       });
     }
   }
