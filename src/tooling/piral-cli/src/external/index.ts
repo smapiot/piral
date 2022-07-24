@@ -10,5 +10,6 @@ import axios = require('axios');
 import mime = require('mime');
 import getPort = require('get-port');
 import open = require('open');
+import parseStringsInObject = require('parse-strings-in-object');
 
-export { logger, inquirer, glob, tar, FormData, rc, axios, mime, stripAnsi, getPort, open, jju };
+export { logger, inquirer, glob, tar, FormData, rc, axios, mime, stripAnsi, getPort, open, jju, parseStringsInObject };

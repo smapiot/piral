@@ -1,5 +1,5 @@
 import { defaultRegistry } from './constants';
-import { rc } from '../external';
+import { rc, parseStringsInObject } from '../external';
 import { SourceLanguage, NpmClientType, PiletSchemaVersion } from '../types';
 
 export interface PiralCliConfig {
@@ -64,7 +64,7 @@ export interface PiralCliConfig {
   registry?: string;
 }
 
-export const config: PiralCliConfig = rc(
+export const config: PiralCliConfig = parseStringsInObject(rc(
   'piral',
   {
     apiKey: undefined,
@@ -83,4 +83,4 @@ export const config: PiralCliConfig = rc(
     registry: defaultRegistry,
   },
   {},
-);
+));

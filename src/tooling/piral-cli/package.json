@@ -66,6 +66,7 @@
     "jju": "^1.4.0",
     "mime": "^2.5.2",
     "open": "^7.1.0",
+    "parse-strings-in-object": "^1.6.0",
     "rc": "^1.2.8",
     "strip-ansi": "^5.2.0",
     "tar": "^4.4.8"
