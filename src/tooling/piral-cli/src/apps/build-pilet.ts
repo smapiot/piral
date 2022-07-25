@@ -23,6 +23,7 @@ import {
   concurrentWorkers,
   normalizePublicUrl,
   combinePiletExternals,
+  retrievePiletsInfo,
 } from '../common';
 
 interface PiletData {
@@ -296,31 +297,57 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       // in case of an emulator assets are not "seen" by the bundler, so we
       // just copy overthing over - this should work in most cases.
       await copy(dirname(appFile), outDir, ForceOverwrite.yes);
+      progress('Optimizing app shell ...');
+
+      // we don't need to care about externals or other things that are already
+      // part of the emulator
+      await callPiralBuild(
+        {
+          root,
+          piral: appPackage.name,
+          emulator: false,
+          standalone: true,
+          optimizeModules: false,
+          sourceMaps,
+          contentHash,
+          minify,
+          externals: [],
+          publicUrl,
+          outFile: 'index.html',
+          outDir,
+          entryFiles: appFile,
+          logLevel,
+          ignored: [],
+          _,
+        },
+        bundlerName,
+      );
+    } else {
+      // in this case we can just do the same steps as if
+      const { ignored, externals } = await retrievePiletsInfo(appFile);
+
+      await callPiralBuild(
+        {
+          root,
+          piral: appPackage.name,
+          emulator: false,
+          standalone: true,
+          optimizeModules: false,
+          sourceMaps,
+          contentHash,
+          minify,
+          externals,
+          publicUrl,
+          outFile: 'index.html',
+          outDir,
+          entryFiles: appFile,
+          logLevel,
+          ignored,
+          _,
+        },
+        bundlerName,
+      );
     }
-
-    progress('Optimizing app shell ...');
-
-    await callPiralBuild(
-      {
-        root,
-        piral: appPackage.name,
-        emulator: false,
-        standalone: true,
-        optimizeModules: false,
-        sourceMaps,
-        contentHash,
-        minify,
-        externals: [],
-        publicUrl,
-        outFile: 'index.html',
-        outDir,
-        entryFiles: appFile,
-        logLevel,
-        ignored: [],
-        _,
-      },
-      bundlerName,
-    );
 
     logDone(`Standalone app available at "${outDir}"!`);
   } else if (type === 'manifest') {
