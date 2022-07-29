@@ -193,15 +193,32 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   const systemResolve = System.constructor.prototype.resolve;
   const depMap: Record<string, Record<string, string>> = {};
+  const subDeps: Record<string, string> = {};
+
+  const findAncestor = (parent: string) => {
+    while (subDeps[parent]) {
+      parent = subDeps[parent];
+    }
+
+    return parent;
+  };
 
   System.constructor.prototype.resolve = function (...args) {
     const [url, parent] = args;
     const result = systemResolve.call(this, ...args);
 
-    if (parent) {
-      const deps = depMap[parent] || {};
+    if (!parent) {
+      return result;
+    }
+
+    const ancestor = findAncestor(parent);
+
+    if (url.startsWith('./')) {
+      subDeps[result] = ancestor;
+    } else {
+      const deps = depMap[ancestor] || {};
       deps[url] = result;
-      depMap[parent] = deps;
+      depMap[ancestor] = deps;
     }
 
     return result;
