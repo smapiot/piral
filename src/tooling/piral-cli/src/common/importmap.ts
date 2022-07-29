@@ -152,7 +152,7 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
       if (packageJson) {
         const packageDir = dirname(packageJson);
         const packageDetails = require(packageJson);
-        const otherDependencies = await readImportmap(packageDir, packageDetails);
+        const otherDependencies = await readImportmap(packageDir, packageDetails, true);
 
         for (const dependency of otherDependencies) {
           const entry = dependencies.find((dep) => dep.name === dependency.name);
@@ -173,7 +173,11 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
   return dependencies;
 }
 
-export async function readImportmap(dir: string, packageDetails: any) {
+export async function readImportmap(
+  dir: string,
+  packageDetails: any,
+  inherited = false,
+): Promise<Array<SharedDependency>> {
   const importmap = packageDetails.importmap;
 
   if (typeof importmap === 'string') {
@@ -186,18 +190,19 @@ export async function readImportmap(dir: string, packageDetails: any) {
 
     const baseDir = dirname(resolve(dir, importmap));
     return resolveImportmap(baseDir, content);
-  } else if (typeof importmap === 'undefined') {
+  } else if (typeof importmap === 'undefined' && inherited) {
     // Fall back to sharedDependencies or pilets.external if available
-    const shared = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
+    const shared: Array<string> = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
 
     if (Array.isArray(shared)) {
-      return resolveImportmap(dir, {
-        imports: shared.reduce((obj, name) => {
-          obj[name] = name;
-          return obj;
-        }, {} as Record<string, string>),
-        inherit: [],
-      });
+      return shared.map((dep) => ({
+        id: dep,
+        name: dep,
+        entry: dep,
+        type: 'local',
+        ref: undefined,
+        requireId: dep,
+      }));
     }
   }
 
