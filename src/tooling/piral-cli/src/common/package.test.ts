@@ -46,15 +46,48 @@ describe('CLI package module', () => {
     expect(result).toStrictEqual(piralInfo.pilets);
   });
 
-  it('getPiralPackage returns piral package',async () => {
-    let result = await getPiralPackage(
+  it('getPiralPackage returns piral package with webpack in latest version',async () => {
+    const result = await getPiralPackage(
       'app',
       { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
-      '1.0.0',
+      '10.0.0',
       'webpack',
     );
-    expect(result.devDependencies['piral-cli-webpack']).toEqual('1.0.0');
-    result = await getPiralPackage(
+    expect(result.devDependencies['piral-cli-webpack']).toEqual('latest');
+  });
+
+  it('getPiralPackage returns piral package with webpack in beta version',async () => {
+    const result = await getPiralPackage(
+      'app',
+      { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
+      '0.15.0-beta.1',
+      'webpack',
+    );
+    expect(result.devDependencies['piral-cli-webpack']).toEqual('next');
+  });
+
+  it('getPiralPackage returns piral package with webpack in alpha version',async () => {
+    const result = await getPiralPackage(
+      'app',
+      { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
+      '0.15.0-alpha.1',
+      'webpack',
+    );
+    expect(result.devDependencies['piral-cli-webpack']).toEqual('canary');
+  });
+
+  it('getPiralPackage returns piral package with webpack in existing version',async () => {
+    const result = await getPiralPackage(
+      'app',
+      { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
+      '0.14.0',
+      'webpack',
+    );
+    expect(result.devDependencies['piral-cli-webpack']).toEqual('0.14.0');
+  });
+
+  it('getPiralPackage returns piral package without bundler',async () => {
+    const result = await getPiralPackage(
       'app',
       { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
       '1.0.0',
