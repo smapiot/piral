@@ -186,6 +186,19 @@ export async function readImportmap(dir: string, packageDetails: any) {
 
     const baseDir = dirname(resolve(dir, importmap));
     return resolveImportmap(baseDir, content);
+  } else if (typeof importmap === 'undefined') {
+    // Fall back to sharedDependencies or pilets.external if available
+    const shared = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
+
+    if (Array.isArray(shared)) {
+      return resolveImportmap(dir, {
+        imports: shared.reduce((obj, name) => {
+          obj[name] = name;
+          return obj;
+        }, {} as Record<string, string>),
+        inherit: [],
+      });
+    }
   }
 
   return resolveImportmap(dir, importmap);

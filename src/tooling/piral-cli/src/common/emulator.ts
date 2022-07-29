@@ -44,6 +44,11 @@ export async function createEmulatorSources(
     return deps;
   }, {} as Record<string, string>);
 
+  const importmapEntries = externalPackages.reduce((deps, dep) => {
+    deps[dep.name] = dep.name;
+    return deps;
+  }, {} as Record<string, string>);
+
   const rootDir = resolve(targetDir, '..');
   const appDir = relative(rootDir, targetDir);
   const filesDir = resolve(rootDir, filesTar);
@@ -70,6 +75,9 @@ export async function createEmulatorSources(
     license: piralPkg.license,
     homepage: piralPkg.homepage,
     keywords: piralPkg.keywords,
+    importmap: {
+      imports: importmapEntries,
+    },
     pilets: {
       ...piralPkg.pilets,
       files: filesMap,
