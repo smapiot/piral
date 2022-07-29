@@ -11,7 +11,7 @@ import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames } from
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
-import { makePiletExternals, makeExternals, findPackageRoot } from './npm';
+import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
 import {
   SourceLanguage,
   Framework,
@@ -22,18 +22,37 @@ import {
   SharedDependency,
 } from '../types';
 
-function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
+async function appendBundler(devDependencies: Record<string, string>, bundler: string, proposedVersion: string) {
   if (bundler && bundler !== 'none') {
-    if (bundlerNames.includes(bundler as any)) {
-      devDependencies[`piral-cli-${bundler}`] = version;
-    } else if (!isValidDependency(bundler)) {
+    if (isValidDependency(bundler)) {
+      const sep = bundler.indexOf('@', 1);
+      const hasVersion = sep !== -1;
+      const proposedName = bundler.substring(0, hasVersion ? sep : bundler.length);
+      const givenVersion = hasVersion ? bundler.substring(sep + 1) : proposedVersion;
+      const name = bundlerNames.includes(proposedName as any) ? `piral-cli-${bundler}` : proposedName;
+      const versions = new Set([
+        givenVersion,
+        givenVersion.includes('-beta.') && 'next',
+        givenVersion.includes('-alpha.') && 'canary',
+        'latest',
+      ]);
+
+      for (const version of versions) {
+        if (version) {
+          const isAvailable = await findSpecificVersion(name, version);
+
+          // only if something was returned we know that the version exists; so we can take it.
+          if (isAvailable) {
+            devDependencies[name] = version;
+            return;
+          }
+        }
+      }
+
+      log('generalWarning_0001', `Could not find a valid version for the provided bundler "${bundler}".'`);
+    } else {
       //Error case - print warning and ignore
       log('generalWarning_0001', `The provided bundler name "${bundler}" does not refer to a valid package name.'`);
-    } else {
-      const sep = bundler.indexOf('@', 1);
-      const name = bundler.substring(0, sep !== -1 ? sep : bundler.length);
-      const version = sep !== -1 ? bundler.substring(sep + 1) : 'latest';
-      devDependencies[name] = version;
     }
   }
 }
@@ -160,7 +179,24 @@ export interface PiralPackageData {
   reactRouterVersion: number;
 }
 
-export function getPiralPackage(app: string, data: PiralPackageData, version: string, bundler?: string) {
+export async function patchPiralPackage(
+  root: string,
+  app: string,
+  data: PiralPackageData,
+  version: string,
+  bundler?: string,
+) {
+  log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
+  const pkg = await getPiralPackage(app, data, version, bundler);
+
+  await updateExistingJson(root, 'package.json', pkg);
+  log('generalDebug_0003', `Succesfully patched the package.json.`);
+
+  await updateExistingJson(root, 'piral.json', { pilets: getPiletsInfo({}) });
+  log('generalDebug_0003', `Succesfully patched the pilet.json.`);
+}
+
+export async function getPiralPackage(app: string, data: PiralPackageData, version: string, bundler?: string) {
   const framework = data.packageName;
   const devDependencies = {
     ...getDevDependencies(
@@ -173,7 +209,7 @@ export function getPiralPackage(app: string, data: PiralPackageData, version: st
     ...getDependencies(data.language, getDependencyPackages(framework, data.reactVersion, data.reactRouterVersion)),
   };
 
-  appendBundler(devDependencies, bundler, version);
+  await appendBundler(devDependencies, bundler, version);
 
   return {
     app,
@@ -507,6 +543,27 @@ export async function patchPiletPackage(
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
+  const pkg = await getPiletPackage(root, name, version, piralInfo, fromEmulator, newInfo);
+
+  await updateExistingJson(root, 'package.json', pkg);
+  log('generalDebug_0003', `Succesfully patched the package.json.`);
+
+  await updateExistingJson(root, 'pilet.json', {
+    piralInstances: {
+      [name]: {},
+    },
+  });
+  log('generalDebug_0003', `Succesfully patched the pilet.json.`);
+}
+
+export async function getPiletPackage(
+  root: string,
+  name: string,
+  version: string,
+  piralInfo: PackageData,
+  fromEmulator: boolean,
+  newInfo?: { language: SourceLanguage; bundler: string },
+) {
   const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const piralDependencies = {
     ...piralInfo.devDependencies,
@@ -548,10 +605,10 @@ export async function patchPiletPackage(
     const bundler = newInfo.bundler;
     const version = `^${cliVersion}`;
     devDependencies['piral-cli'] = version;
-    appendBundler(devDependencies, bundler, version);
+    await appendBundler(devDependencies, bundler, version);
   }
 
-  await updateExistingJson(root, 'package.json', deepMerge(packageOverrides, {
+  return deepMerge(packageOverrides, {
     importmap: {
       imports: {},
       inherit: [name],
@@ -561,16 +618,7 @@ export async function patchPiletPackage(
       [name]: undefined,
     },
     scripts,
-  }));
-
-  log('generalDebug_0003', `Succesfully patched the package.json.`);
-
-  await updateExistingJson(root, 'pilet.json', {
-    piralInstances: {
-      [name]: {},
-    },
   });
-  log('generalDebug_0003', `Succesfully patched the pilet.json.`);
 }
 
 /**

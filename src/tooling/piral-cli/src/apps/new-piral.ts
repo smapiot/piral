@@ -4,8 +4,7 @@ import { SourceLanguage, LogLevels, Framework, NpmClientType } from '../types';
 import {
   ForceOverwrite,
   installNpmPackage,
-  updateExistingJson,
-  getPiralPackage,
+  patchPiralPackage,
   scaffoldPiralSourceFiles,
   createDirectory,
   createFileIfNotExists,
@@ -20,8 +19,6 @@ import {
   getPiralScaffoldData,
   config,
   initNpmProject,
-  logInfo,
-  getPiletsInfo,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -173,11 +170,7 @@ always-auth=true`,
       );
     }
 
-    await createFileIfNotExists(
-      root,
-      'piral.json',
-      JSON.stringify({}),
-    );
+    await createFileIfNotExists(root, 'piral.json', JSON.stringify({}));
 
     progress(`Installing npm package ${packageRef} ...`);
 
@@ -187,8 +180,7 @@ always-auth=true`,
 
     const data = getPiralScaffoldData(language, root, app, framework, variables);
 
-    await updateExistingJson(root, 'package.json', getPiralPackage(app, data, version, bundlerName));
-    await updateExistingJson(root, 'piral.json', { pilets: getPiletsInfo({}) });
+    await patchPiralPackage(root, app, data, version, bundlerName);
 
     await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
 

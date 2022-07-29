@@ -46,15 +46,15 @@ describe('CLI package module', () => {
     expect(result).toStrictEqual(piralInfo.pilets);
   });
 
-  it('getPiralPackage returns piral package', () => {
-    let result = getPiralPackage(
+  it('getPiralPackage returns piral package',async () => {
+    let result = await getPiralPackage(
       'app',
       { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
       '1.0.0',
       'webpack',
     );
     expect(result.devDependencies['piral-cli-webpack']).toEqual('1.0.0');
-    result = getPiralPackage(
+    result = await getPiralPackage(
       'app',
       { language: 'ts', packageName: 'piral-base', reactRouterVersion: 5, reactVersion: 17 },
       '1.0.0',
