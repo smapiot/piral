@@ -239,7 +239,8 @@ function createRouteHandler(imports, exports) {
   const assignments = [];
 
   imports.push(
-    `import { useContext, useEffect } from 'react';`,
+    `import { useContext, useEffect, createElement } from 'react';`,
+    `import { Redirect } from 'react-router';`,
     `import { useGlobalStateContext } from 'piral-core/${cat}/hooks/globalState';`,
   );
 
@@ -253,6 +254,12 @@ function createRouteHandler(imports, exports) {
   } else {
     assignments.push('return paths;');
   }
+
+  exports.push(`
+    export function createRedirect(to) {
+      return () => createElement(Redirect, { to });
+    }
+  `);
 
   exports.push(`
     export function useRouterContext() {

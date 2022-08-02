@@ -1,17 +1,8 @@
 import * as React from 'react';
-import { StaticRouter } from 'react-router';
 import { createInstance } from './createInstance';
 import { PiralView, RegisteredRouter } from './components';
-import { useGlobalState } from './hooks';
 import { PiralContext } from './PiralContext';
 import type { PiralProps } from './types';
-
-const FallbackRouter: React.FC = (props) => {
-  const publicPath = useGlobalState((s) => s.app.publicPath);
-  return <StaticRouter location="/" {...props} basename={publicPath} />;
-};
-
-const Router = typeof window === 'undefined' ? FallbackRouter : RegisteredRouter;
 
 /**
  * Represents the Piral app shell frame. Use this component together
@@ -30,9 +21,9 @@ const app = (
  */
 export const Piral: React.FC<PiralProps> = ({ instance = createInstance(), breakpoints, children }) => (
   <PiralContext instance={instance}>
-    <Router>
+    <RegisteredRouter>
       <PiralView breakpoints={breakpoints}>{children}</PiralView>
-    </Router>
+    </RegisteredRouter>
   </PiralContext>
 );
 Piral.displayName = 'Piral';

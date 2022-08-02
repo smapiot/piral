@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Redirect } from 'react-router';
 import { useGlobalStateContext, useSetter } from '../hooks';
+import { createRedirect } from '../../app.codegen';
 
 /**
  * The props for the SetRedirect component.
@@ -21,7 +21,7 @@ export interface SetRedirectProps {
  */
 export function SetRedirect({ from, to }: SetRedirectProps): React.ReactElement {
   const { setRoute } = useGlobalStateContext();
-  useSetter(() => setRoute(from, () => <Redirect to={to} />));
+  useSetter(() => setRoute(from, createRedirect(to)));
   // tslint:disable-next-line:no-null-keyword
   return null;
 }
