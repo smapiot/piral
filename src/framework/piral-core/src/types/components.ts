@@ -207,6 +207,10 @@ export interface RouterProps {
    * The content to be rendered inside the router.
    */
   children?: ReactNode;
+  /**
+   * The public path to use.
+   */
+  publicPath: string;
 }
 
 /**

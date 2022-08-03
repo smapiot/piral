@@ -188,12 +188,15 @@ function createDefaultState(imports, exports) {
   }
 
   exports.push(`
+    export const publicPath = ${JSON.stringify(publicPath)};
+  `);
+
+  exports.push(`
     export function createDefaultState() {
       return {
         app: {
           error: undefined,
           loading: typeof window !== 'undefined',
-          publicPath: ${JSON.stringify(publicPath)},
         },
         components: {
           ErrorInfo: DefaultErrorInfo,

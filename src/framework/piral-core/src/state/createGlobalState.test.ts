@@ -15,7 +15,6 @@ describe('Create Global State Module', () => {
       app: {
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -43,7 +42,6 @@ describe('Create Global State Module', () => {
       app: {
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -75,7 +73,6 @@ describe('Create Global State Module', () => {
       app: {
         error: undefined,
         loading: true,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -103,7 +100,6 @@ describe('Create Global State Module', () => {
       app: {
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -133,7 +129,6 @@ describe('Create Global State Module', () => {
       app: {
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -163,7 +158,6 @@ describe('Create Global State Module', () => {
       app: {
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -197,7 +191,6 @@ describe('Create Global State Module', () => {
       app: {
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
@@ -232,7 +225,6 @@ describe('Create Global State Module', () => {
       app: {
         loading: false,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {

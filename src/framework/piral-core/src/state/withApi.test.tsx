@@ -6,9 +6,7 @@ import { StateContext } from '../state';
 
 function createMockContainer() {
   const state = create(() => ({
-    app: {
-      publicPath: '/',
-    },
+    app: {},
     components: {
       ErrorInfo: StubErrorInfo,
     },

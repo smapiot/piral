@@ -4,6 +4,8 @@ import type { ComponentType } from 'react';
 import type { RouteComponentProps } from 'react-router';
 import type { AppPath, GlobalState, GlobalStateContext, NavigationApi } from './src/types';
 
+export const publicPath: string;
+
 export function createNavigation(): NavigationApi;
 
 export function createDefaultState(): GlobalState;

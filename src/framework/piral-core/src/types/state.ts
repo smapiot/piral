@@ -123,10 +123,6 @@ export interface AppState {
    * Gets an unrecoverable application error, if any.
    */
   error: Error | undefined;
-  /**
-   * Gets the public path of the application.
-   */
-  publicPath: string;
 }
 
 /**
