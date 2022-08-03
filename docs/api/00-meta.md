@@ -1,5 +1,5 @@
 ---
-title: `meta`
+title: meta
 section: Core Pilet API
 ---
 

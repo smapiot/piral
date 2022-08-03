@@ -1,5 +1,5 @@
 ---
-title: `Extension`
+title: Extension
 section: Core Pilet API
 ---
 

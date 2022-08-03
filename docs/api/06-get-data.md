@@ -1,5 +1,5 @@
 ---
-title: `getData`
+title: getData
 section: Core Pilet API
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: `setData`
+title: setData
 section: Core Pilet API
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: `registerPage`
+title: registerPage
 section: Core Pilet API
 ---
 

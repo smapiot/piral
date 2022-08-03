@@ -1,5 +1,5 @@
 ---
-title: `unregisterPage`
+title: unregisterPage
 section: Core Pilet API
 ---
 

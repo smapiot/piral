@@ -49,6 +49,21 @@
         }
       ]
     },
+    "concepts": {
+      "title": "Concepts",
+      "sections": [
+        {
+          "generator": "markdown",
+          "segment": "",
+          "dir": "concepts"
+        },
+        {
+          "generator": "markdown",
+          "segment": "core-api",
+          "dir": "api"
+        }
+      ]
+    },
     "reference": {
       "title": "Reference",
       "sections": [
@@ -56,11 +71,6 @@
           "generator": "markdown",
           "segment": "documentation",
           "dir": "reference"
-        },
-        {
-          "generator": "markdown",
-          "segment": "core-api",
-          "dir": "api"
         },
         {
           "title": "Specifications",
@@ -71,10 +81,29 @@
           }
         },
         {
+          "title": "Framework Types",
+          "links": {
+            "generator": "types",
+            "segment": "types",
+            "dir": "types",
+            "include": "^(piral-base|piral-core|piral-native|piral)$"
+          }
+        },
+        {
+          "title": "Utility Types",
+          "links": {
+            "generator": "types",
+            "segment": "types",
+            "dir": "types",
+            "include": "^piral-.+-utils$"
+          }
+        },
+        {
           "title": "More Information",
           "links": {
             "generator": "markdown",
             "segment": "documentation",
+            "exclude": "^t.*",
             "dir": "."
           }
         }
@@ -86,13 +115,6 @@
         {
           "generator": "custom",
           "path": "./src/codegen/commands.js"
-        },
-        {
-          "title": "Piral CLI - Bundlers",
-          "links": {
-            "generator": "custom",
-            "path": "./src/codegen/bundlers.js"
-          }
         },
         {
           "title": "Others",
@@ -117,29 +139,6 @@
         {
           "generator": "custom",
           "path": "./src/codegen/plugins.js"
-        }
-      ]
-    },
-    "types": {
-      "title": "Types",
-      "sections": [
-        {
-          "title": "Framework",
-          "links": {
-            "generator": "types",
-            "segment": "",
-            "dir": "types",
-            "include": "^(piral-base|piral-core|piral-native|piral)$"
-          }
-        },
-        {
-          "title": "Utilities",
-          "links": {
-            "generator": "types",
-            "segment": "",
-            "dir": "types",
-            "include": "^piral-.+-utils$"
-          }
         }
       ]
     },

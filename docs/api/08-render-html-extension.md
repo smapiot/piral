@@ -1,5 +1,5 @@
 ---
-title: `renderHtmlExtension`
+title: renderHtmlExtension
 section: Core Pilet API
 ---
 
