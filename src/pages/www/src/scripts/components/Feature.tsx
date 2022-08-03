@@ -4,6 +4,7 @@ export interface FeatureProps {
   title: string;
   image: string;
   reverse?: boolean;
+  children: React.ReactNode;
 }
 
 export const Feature: React.FC<FeatureProps> = ({ title, image, children, reverse }) => (

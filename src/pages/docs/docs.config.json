@@ -58,6 +58,11 @@
           "dir": "reference"
         },
         {
+          "generator": "markdown",
+          "segment": "core-api",
+          "dir": "api"
+        },
+        {
           "title": "Specifications",
           "links": {
             "generator": "markdown",

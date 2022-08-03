@@ -1,11 +1,19 @@
 h2 {
-  font-size: 2.8rem !important;
+  font-size: 3.5rem !important;
   font-weight: 700;
 }
 
 img {
   display: block;
   max-width: 100%;
+}
+
+.faded {
+  color: #666;
+}
+
+.larger {
+  font-size: 1.3rem;
 }
 
 .badges {
@@ -124,7 +132,7 @@ img {
     }
 
     h4 {
-      font-size: 1.5rem;
+      font-size: 1.7rem;
       margin: 0 0 0.5rem 0;
       font-weight: 500;
       line-height: 1.2;
@@ -133,6 +141,7 @@ img {
     p {
       margin-top: 0;
       margin-bottom: 1rem;
+      font-size: 1.2rem;
     }
   }
 }
@@ -344,6 +353,8 @@ img {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  max-height: 660px;
+  overflow: hidden;
   justify-content: space-evenly;
   margin-top: 2em;
 }
@@ -395,6 +406,7 @@ img {
       font-size: 1rem;
       line-height: 1.5rem;
       letter-spacing: -.1px;
+      text-align: left;
 
       &::before {
         content: "";

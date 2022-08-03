@@ -21,6 +21,7 @@ title: Articles About Piral
 
 ## Blog Posts
 
+- [Getting Started with Micro Frontends](https://dev.to/ibtisamarif831/getting-started-with-micro-frontends-c4)
 - [How we wrote our CLI integration tests ](https://dev.to/florianrappl/how-we-wrote-our-cli-integration-tests-53i3)
 - [Switching up your Spotify experience with microfrontends and Blazor , dev.to, 05/2021](https://dev.to/dantederuwe/switching-up-your-spotify-experience-with-microfrontends-and-blazor-4k72)
 - [My experiences creating a Netflix clone using microfrontends, dev.to, 03/2021](https://dev.to/dantederuwe/my-experiences-creating-a-netflix-clone-using-microfrontends-1n46)
@@ -49,6 +50,8 @@ title: Articles About Piral
 
 ## Talks at Conferences
 
+- [Developer Week 2022, 07/2022](https://www.developer-week.de/)
+- [We Are Developers World Congress 2022, 06/2022](https://www.wearedevelopers.com/world-congress/)
 - [Advanced Developers Conference, 05/2022](https://adc.ms/)
 - [Building IoT, 05/2022](https://www.buildingiot.de/)
 - [DevOps.js, 03/2022](https://portal.gitnation.org/contents/serverless-for-frontends)

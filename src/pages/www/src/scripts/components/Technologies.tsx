@@ -4,7 +4,7 @@ import { Capability } from './Capability';
 export const Technologies: React.FC = () => (
   <div className="container container-section text-center">
     <h2>Providing a Robust Fundament!</h2>
-    <p>
+    <p className="larger">
       We know that stability is one of your top requirements for choosing the right basis. We also know that you care
       about developer experience and efficiency. Piral ships with everything to make your life simpler - so that you can
       focus on what's important for <i>your app</i>.

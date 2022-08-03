@@ -12,11 +12,11 @@ const Company: React.FC<CompanyProps> = ({ image, title }) => (
 );
 
 export const Companies: React.FC = () => (
-  <div className="container container-section">
+  <div className="container container-section text-center">
     <h2>Who's Using Piral</h2>
-    <p>
-      We're happy to have some great innovative companies on board. Together with us they are investing in development
-      of microfrontends to ensure scalability of their applications.
+    <p className="larger">
+      We're happy to have some great innovative companies and institutions on board. Together with us they are investing
+      in development of micro frontends to ensure scalability of their applications.
     </p>
     <div className="row companies">
       <Company image={require('../../assets/c_an.png')} title="Axinom" />
@@ -33,7 +33,14 @@ export const Companies: React.FC = () => (
       <Company image={require('../../assets/c_sp.png')} title="SalesPad" />
       <Company image={require('../../assets/c_ww.png')} title="Wiener Wohnen" />
       <Company image={require('../../assets/c_zg.png')} title="ZEISS Group" />
+      <Company image={require('../../assets/c_hbhc.png')} title="homecare homebase" />
+      <Company image={require('../../assets/c_ch.png')} title="Casablanca Hotelsoftware" />
+      <Company image={require('../../assets/c_co.png')} title="Consolinno Energy" />
+      <Company image={require('../../assets/c_ua.png')} title="Universidad de Alcalá" />
     </div>
-    <p>Just contact us if you are using Piral and want to include your logo in the list above.</p>
+    <p className="faded">
+      Just contact us if you are using Piral and want to include your logo in the list above. If you want your logo
+      removed you can also contact us any time.
+    </p>
   </div>
 );
