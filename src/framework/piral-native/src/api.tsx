@@ -1,5 +1,12 @@
-import { createInstance, PiralConfiguration } from 'piral-core';
+import * as React from 'react';
 import { NativeRouter } from 'react-router-native';
+import { createInstance, PiralConfiguration, RouterProps } from 'piral-core';
+
+const Router: React.FC<RouterProps> = ({ children }) => (
+  <NativeRouter>
+    {children}
+  </NativeRouter>
+);
 
 /**
  * Creates a native Piral instance.
@@ -12,16 +19,9 @@ export function createNativePiral(config: PiralConfiguration = {}) {
       ...config.state,
       components: {
         LoadingIndicator: () => null,
-        Router: NativeRouter,
+        Router,
         ...config.state?.components,
       },
-    },
-    shareDependencies(deps) {
-      return {
-        'react-native': require('react-native'),
-        'react-router-native': require('react-native'),
-        ...deps,
-      };
     },
   });
 }
