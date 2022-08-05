@@ -106,8 +106,7 @@ export default class PiletInjector implements KrasInjector {
 
           for (const id of Object.keys(cbs)) {
             const { baseUrl, notify } = cbs[id];
-            const basePath = this.getPiletApi(baseUrl);
-            const meta = JSON.stringify(p.getMeta(basePath));
+            const meta = this.getPiletMeta(baseUrl, p);
             notify(meta);
           }
         }),
@@ -147,9 +146,15 @@ export default class PiletInjector implements KrasInjector {
     }
   }
 
-  async getMeta(baseUrl: string) {
+  getPiletMeta(baseUrl: string, pilet: Pilet) {
+    const basePath = this.getPiletApi(baseUrl);
+    return JSON.stringify(pilet.getMeta(basePath));
+  }
+
+  async getIndexMeta(baseUrl: string) {
     const { pilets, feed } = this.config;
-    const localPilets = pilets.map((pilet) => pilet.getMeta?.(baseUrl)).filter(Boolean);
+    const basePath = this.getPiletApi(baseUrl);
+    const localPilets = pilets.map((pilet) => pilet.getMeta?.(basePath)).filter(Boolean);
     const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
     return JSON.stringify(mergedPilets);
   }
@@ -210,7 +215,7 @@ export default class PiletInjector implements KrasInjector {
 
     if (!path) {
       await bundler?.ready();
-      const content = await this.getMeta(baseUrl);
+      const content = await this.getIndexMeta(baseUrl);
       return this.sendContent(content, 'application/json', url);
     } else {
       return bundler?.ready().then(() => {

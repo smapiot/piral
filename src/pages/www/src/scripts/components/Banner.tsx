@@ -17,7 +17,7 @@ export const Banner: React.FC = () => (
       </a>
 
       <a
-        href="https://codesandbox.io/s/siteless-starter-is6nx?fontsize=14&hidenavigation=1&theme=dark"
+        href="https://stackblitz.com/edit/my-first-pilet?file=README.md"
         className="btn atlas-cta cta-blue"
         target="_blank">
         Open Playground
