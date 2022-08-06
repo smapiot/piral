@@ -16,7 +16,7 @@ const configMock: any = {
   port: 1234,
 };
 
-describe('Piral-CLI piral injector', () => {
+describe('Piral-CLI pilet injector', () => {
   it('PiletInjector is active when configured', () => {
     const core = new EventEmitter();
     const injector = new PiletInjector(optionsMock, configMock, core);
@@ -33,7 +33,7 @@ describe('Piral-CLI piral injector', () => {
     injector.name;
     injector.getOptions();
     //injector.getMetaOf(0);
-    injector.getMeta('http://localhost:9000');
+    injector.getIndexMeta('http://localhost:9000');
 
     // Assert
     expect(injector.active).toBeFalsy();
