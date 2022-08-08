@@ -18,9 +18,18 @@ import {
   FileInfo,
   PiletsInfo,
   TemplateFileLocation,
-  PackageData,
+  PiletPackageData,
+  PiralPackageData,
   SharedDependency,
+  PiletDefinition,
 } from '../types';
+
+export interface PiralInstanceData {
+  packageName: Framework;
+  language: SourceLanguage;
+  reactVersion: number;
+  reactRouterVersion: number;
+}
 
 async function appendBundler(devDependencies: Record<string, string>, bundler: string, proposedVersion: string) {
   if (bundler && bundler !== 'none') {
@@ -140,49 +149,56 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
-function findPackage(pck: string | Array<string>, baseDir: string) {
-  if (Array.isArray(pck)) {
-    for (const item of pck) {
-      const result = findPackage(item, baseDir);
+function findPackage(proposedApps: Array<string>, piletPackage: PiletPackageData, piletDefinition: undefined | PiletDefinition, baseDir: string) {
+  if (piletDefinition) {
+    const availableApps = Object.keys(piletDefinition.piralInstances || {});
 
-      if (result) {
-        return result;
-      }
+    if (!proposedApps) {
+      proposedApps = availableApps.filter(m => piletDefinition.piralInstances[m].selected);
+    } else {
+      proposedApps = proposedApps.filter(m => availableApps.includes(m));
     }
   } else {
-    const path = findPackageRoot(pck, baseDir);
+    const availableApps = [piletPackage.piral?.name].filter(Boolean);
 
-    if (path) {
-      log('generalDebug_0003', `Following the app package in "${path}" ...`);
-      const appPackage = require(path);
-      const root = dirname(path);
-      const relPath = appPackage && appPackage.app;
-      appPackage.app = relPath && resolve(root, relPath);
-      appPackage.root = root;
-      return appPackage;
+    if (!proposedApps) {
+      proposedApps = availableApps;
+    } else {
+      proposedApps = proposedApps.filter(m => availableApps.includes(m));
     }
+  }
+
+  if (proposedApps.length === 0) {
+    return undefined;
+  }
+
+  //TODO Right now let's just pick the first
+  const [proposedApp] = proposedApps;
+  const path = findPackageRoot(proposedApp, baseDir);
+
+  if (path) {
+    log('generalDebug_0003', `Following the app package in "${path}" ...`);
+    const appPackage = require(path);
+    const root = dirname(path);
+    const relPath = appPackage && appPackage.app;
+    appPackage.app = relPath && resolve(root, relPath);
+    appPackage.root = root;
+    return appPackage;
   }
 
   return undefined;
 }
 
-export function readPiralPackage(root: string, name: string): Promise<PackageData> {
+export function readPiralPackage(root: string, name: string): Promise<PiralPackageData> {
   log('generalDebug_0003', `Reading the piral package in "${root}" ...`);
   const path = getPiralPath(root, name);
   return readJson(path, 'package.json');
 }
 
-export interface PiralPackageData {
-  packageName: Framework;
-  language: SourceLanguage;
-  reactVersion: number;
-  reactRouterVersion: number;
-}
-
 export async function patchPiralPackage(
   root: string,
   app: string,
-  data: PiralPackageData,
+  data: PiralInstanceData,
   version: string,
   bundler?: string,
 ) {
@@ -196,7 +212,7 @@ export async function patchPiralPackage(
   log('generalDebug_0003', `Succesfully patched the pilet.json.`);
 }
 
-export async function getPiralPackage(app: string, data: PiralPackageData, version: string, bundler?: string) {
+export async function getPiralPackage(app: string, data: PiralInstanceData, version: string, bundler?: string) {
   const framework = data.packageName;
   const devDependencies = {
     ...getDevDependencies(
@@ -359,7 +375,7 @@ function tryFindPackageVersion(packageName: string): string {
 export async function copyPiralFiles(
   root: string,
   name: string,
-  piralInfo: PackageData,
+  piralInfo: PiralPackageData,
   forceOverwrite: ForceOverwrite,
   variables: Record<string, string>,
   originalFiles?: Array<FileInfo>,
@@ -379,7 +395,7 @@ export async function copyPiralFiles(
   await copyFiles(files, forceOverwrite, originalFiles, variables);
 }
 
-export function getPiletsInfo(piralInfo: Partial<PackageData>): PiletsInfo {
+export function getPiletsInfo(piralInfo: Partial<PiralPackageData>): PiletsInfo {
   const {
     files = [],
     scripts = {},
@@ -538,7 +554,7 @@ export async function patchPiletPackage(
   root: string,
   name: string,
   version: string,
-  piralInfo: PackageData,
+  piralInfo: PiralPackageData,
   fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
@@ -560,7 +576,7 @@ export async function getPiletPackage(
   root: string,
   name: string,
   version: string,
-  piralInfo: PackageData,
+  piralInfo: PiralPackageData,
   fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
@@ -624,7 +640,7 @@ export async function getPiletPackage(
 /**
  * Returns true if its an emulator package, otherwise it has to be a "raw" app shell.
  */
-export function checkAppShellPackage(appPackage: PackageData) {
+export function checkAppShellPackage(appPackage: PiralPackageData) {
   const { piralCLI = { generated: false, version: cliVersion } } = appPackage;
 
   if (piralCLI.generated) {
@@ -665,7 +681,11 @@ export function combinePiletExternals(
 }
 
 export async function retrievePiletData(target: string, app?: string) {
-  const packageJson = await findFile(target, 'package.json');
+  const piletJson = await findFile(target, 'pilet.json');
+  const proposedRoot = piletJson ? dirname(piletJson) : target;
+  const packageJson = await findFile(proposedRoot, 'package.json');
+
+  console.log(piletJson, proposedRoot, packageJson);
 
   if (!packageJson) {
     fail('packageJsonMissing_0075');
@@ -673,10 +693,8 @@ export async function retrievePiletData(target: string, app?: string) {
 
   const root = dirname(packageJson);
   const piletPackage = require(packageJson);
-  const appPackage = findPackage(
-    app || (piletPackage.piral && piletPackage.piral.name) || Object.keys(piletPackage.devDependencies),
-    target,
-  );
+  const piletDefinition = piletJson && require(piletJson);
+  const appPackage = findPackage(app && [app], piletPackage, piletDefinition, target);
   const appFile: string = appPackage?.app;
   const appRoot: string = appPackage?.root;
 

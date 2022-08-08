@@ -4,12 +4,7 @@ import { satisfies, validate } from './version';
 import { computeHash } from './hash';
 import { getHash, readJson, findFile, checkExists, checkIsDirectory } from './io';
 import { tryResolvePackage } from './npm';
-import { SharedDependency } from '../types';
-
-interface Importmap {
-  imports: Record<string, string>;
-  inherit: Array<string>;
-}
+import { SharedDependency, Importmap } from '../types';
 
 const shorthandsUrls = ['', '.', '...'];
 

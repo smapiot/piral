@@ -2,6 +2,8 @@ import { findPackageVersion, getPiralPackage, getPiletsInfo, retrievePiletData }
 import { cliVersion } from './info';
 
 describe('CLI package module', () => {
+  jest.setTimeout(15000);
+
   it('findPackageVersion finds the current package version', async () => {
     const version = await findPackageVersion(process.cwd(), 'sample-piral');
     expect(version).toBe(cliVersion);
@@ -99,7 +101,7 @@ describe('CLI package module', () => {
     await retrievePiletData('foo', '').catch((err) =>
       expect(err).toStrictEqual(Error('[0011] Could not find a valid Piral instance.')),
     );
-    await retrievePiletData('foo', 'sample-piral').catch((err) =>
+    await retrievePiletData('/foo', 'sample-piral').catch((err) =>
       expect(err).toStrictEqual(
         Error('[0075] Cannot find the "package.json". You need a valid package.json for your pilet.'),
       ),
