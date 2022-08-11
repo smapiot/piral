@@ -8,7 +8,7 @@ export type Options = 'suggest' | 'required' | 'ignore';
  */
 export default async function (context: PiletRuleContext, options: Options = 'suggest') {
   if (options !== 'ignore') {
-    const { name, version } = context.data.appPackage;
+    const { name, version } = context.apps[0].appPackage;
     const demanded = (context.devDependencies && context.devDependencies[name]) || '';
     const isfixed = demanded.startsWith('git+') || demanded.startsWith('file:');
 

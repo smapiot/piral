@@ -225,8 +225,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
     const targetDir = dirname(entryModule);
-    const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } =
-      await retrievePiletData(targetDir, app);
+    const { peerDependencies, peerModules, root, apps, ignored, importmap } = await retrievePiletData(targetDir, app);
+    const { appPackage, appFile, emulator } = apps[0];
     const piral = appPackage.name;
     const externals = combinePiletExternals([piral], peerDependencies, peerModules, importmap);
     const mocks = join(targetDir, 'mocks');

@@ -184,6 +184,53 @@ export function appInstanceInvalid_0011(): QuickMessage {
  * @kind Error
  *
  * @summary
+ * Reported when no valid Piral instance was specified.
+ *
+ * @abstract
+ * The Piral instance is defined either in the package.json or in the pilet.json.
+ *
+ * The resolution of the Piral instance is done via the `require.resolve` function of Node.js. Thus, if the defined module is simply not yet installed this error will be shown.
+ *
+ * @see
+ * - [npm i](https://docs.npmjs.com/cli/install)
+ * - [npm install is missing modules](https://stackoverflow.com/questions/24652681/npm-install-is-missing-modules)
+ *
+ * @example
+ * Assuming that the available pilet.json of your pilet contains content such as:
+ *
+ * ```json
+ * {
+ *   // ...
+ *   "piralInstances": {
+ *     "my-app-shell": {}
+ *   }
+ * }
+ * ```
+ *
+ * However, running
+ *
+ * ```sh
+ * ls node_modules/my-app-shell
+ * ```
+ *
+ * returns an error.
+ *
+ * To mitigate it try running
+ *
+ * ```sh
+ * npm i
+ * ```
+ *
+ * which will install all dependencies.
+ */
+export function appInstancesNotGiven_0012(): QuickMessage {
+  return [LogLevels.error, '0012', `No Piral instances have been provided.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * No valid package.json found
  *
  * @abstract

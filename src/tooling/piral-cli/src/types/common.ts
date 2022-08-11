@@ -1,3 +1,52 @@
+export interface Importmap {
+  imports: Record<string, string>;
+  inherit: Array<string>;
+}
+
+export interface PackageData {
+  name: string;
+  version: string;
+  description: string;
+  importmap?: Importmap;
+  main: string;
+  author:
+    | string
+    | {
+        name?: string;
+        url?: string;
+        email?: string;
+      };
+  dependencies: Record<string, string>;
+  peerDependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
+}
+
+// Shape of the package.json of a pilet
+export interface PiletPackageData extends PackageData {
+  piral?: {
+    name: string;
+  };
+  custom?: any;
+}
+
+// Shape of the package.json of a Piral instance or emulator
+export interface PiralPackageData extends PackageData {
+  pilets?: PiletsInfo;
+  piralCLI?: { generated: boolean; version: string };
+}
+
+export interface PiralInstancePackageData extends PiralPackageData {
+  root: string;
+  app: string;
+}
+
+export interface AppDefinition {
+  appPackage: PiralInstancePackageData;
+  appFile: string;
+  appRoot: string;
+  emulator: boolean;
+}
+
 export enum LogLevels {
   /**
    * Logging disabled
@@ -101,14 +150,8 @@ export interface PiralRuleContext extends RuleContext {
 }
 
 export interface PiletRuleContext extends RuleContext {
-  data: PiralData;
+  apps: Array<AppDefinition>;
+  piletPackage: any;
   peerModules: Array<string>;
   importmap: Array<SharedDependency>;
-}
-
-export interface PiralData {
-  appRoot: string;
-  appFile: string;
-  appPackage: any;
-  piletPackage: any;
 }

@@ -208,9 +208,11 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
     const targetDir = dirname(entryModule);
-    const { peerDependencies, peerModules, root, appPackage, appFile, piletPackage, ignored, importmap } =
-      await retrievePiletData(targetDir, app);
-    const piral = appPackage.name;
+    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap } = await retrievePiletData(
+      targetDir,
+      app,
+    );
+    const piral = apps[0].appPackage.name;
     const externals = combinePiletExternals([piral], peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
     const outDir = dirname(dest);
@@ -268,8 +270,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     return {
       id: piletPackage.name.replace(/[^a-zA-Z0-9\-]/gi, ''),
       root,
-      appFile,
-      appPackage,
+      apps,
       outDir,
       outFile,
       path: dest,
@@ -280,7 +281,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   if (type === 'standalone') {
     const distDir = dirname(resolve(fullBase, target));
     const outDir = resolve(distDir, 'standalone');
-    const { appFile, appPackage, root } = pilets[0];
+    const { apps, root } = pilets[0];
+    const { appPackage, appFile } = apps[0];
     const isEmulator = checkAppShellPackage(appPackage);
 
     logInfo('Building standalone solution ...');

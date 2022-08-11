@@ -21,7 +21,8 @@ Received: Missing "${missingNames.join('", "')}".
  */
 export default async function (context: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
-    const externals = await retrieveExternals(context.data.appRoot, context.data.appPackage);
+    const [app] = context.apps;
+    const externals = await retrieveExternals(app.appRoot, app.appPackage);
     const markedPeerDependencies = Object.keys(context.peerDependencies);
     const markedPeerModules = context.peerModules;
     const missingExternals = externals

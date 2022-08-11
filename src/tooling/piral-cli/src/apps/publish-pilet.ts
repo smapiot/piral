@@ -135,10 +135,10 @@ async function getFiles(
     return await Promise.all(
       allEntries.map(async (entryModule) => {
         const targetDir = dirname(entryModule);
-        const { root, piletPackage, importmap, peerDependencies, peerModules, appPackage } = await retrievePiletData(
+        const { root, piletPackage, importmap, peerDependencies, peerModules, apps } = await retrievePiletData(
           targetDir,
         );
-        const piral = appPackage.name;
+        const piral = apps[0].appPackage.name;
         const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
         const dest = resolve(root, main);
         const outDir = dirname(dest);

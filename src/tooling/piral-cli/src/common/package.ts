@@ -22,6 +22,8 @@ import {
   PiralPackageData,
   SharedDependency,
   PiletDefinition,
+  AppDefinition,
+  PiralInstancePackageData,
 } from '../types';
 
 export interface PiralInstanceData {
@@ -149,44 +151,44 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
-function findPackage(proposedApps: Array<string>, piletPackage: PiletPackageData, piletDefinition: undefined | PiletDefinition, baseDir: string) {
-  if (piletDefinition) {
+function findPiralInstances(
+  proposedApps: Array<string>,
+  piletPackage: PiletPackageData,
+  piletDefinition: undefined | PiletDefinition,
+  baseDir: string,
+): Array<PiralInstancePackageData> {
+  if (proposedApps) {
+    // do nothing
+  } else if (piletDefinition) {
     const availableApps = Object.keys(piletDefinition.piralInstances || {});
+    proposedApps = availableApps.filter((m) => piletDefinition.piralInstances[m].selected);
 
-    if (!proposedApps) {
-      proposedApps = availableApps.filter(m => piletDefinition.piralInstances[m].selected);
-    } else {
-      proposedApps = proposedApps.filter(m => availableApps.includes(m));
+    if (proposedApps.length === 0) {
+      proposedApps = availableApps.slice(0, 1);
     }
   } else {
-    const availableApps = [piletPackage.piral?.name].filter(Boolean);
-
-    if (!proposedApps) {
-      proposedApps = availableApps;
-    } else {
-      proposedApps = proposedApps.filter(m => availableApps.includes(m));
-    }
+    proposedApps = [piletPackage.piral?.name].filter(Boolean);
   }
 
-  if (proposedApps.length === 0) {
-    return undefined;
+  if (proposedApps.length > 0) {
+    return proposedApps.map((proposedApp) => {
+      const path = findPackageRoot(proposedApp, baseDir);
+
+      if (path) {
+        log('generalDebug_0003', `Following the app package in "${path}" ...`);
+        const appPackage = require(path);
+        const root = dirname(path);
+        const relPath = appPackage && appPackage.app;
+        appPackage.app = relPath && resolve(root, relPath);
+        appPackage.root = root;
+        return appPackage;
+      }
+
+      fail('appInstanceNotFound_0010', proposedApp);
+    });
   }
 
-  //TODO Right now let's just pick the first
-  const [proposedApp] = proposedApps;
-  const path = findPackageRoot(proposedApp, baseDir);
-
-  if (path) {
-    log('generalDebug_0003', `Following the app package in "${path}" ...`);
-    const appPackage = require(path);
-    const root = dirname(path);
-    const relPath = appPackage && appPackage.app;
-    appPackage.app = relPath && resolve(root, relPath);
-    appPackage.root = root;
-    return appPackage;
-  }
-
-  return undefined;
+  return [];
 }
 
 export function readPiralPackage(root: string, name: string): Promise<PiralPackageData> {
@@ -685,8 +687,6 @@ export async function retrievePiletData(target: string, app?: string) {
   const proposedRoot = piletJson ? dirname(piletJson) : target;
   const packageJson = await findFile(proposedRoot, 'package.json');
 
-  console.log(piletJson, proposedRoot, packageJson);
-
   if (!packageJson) {
     fail('packageJsonMissing_0075');
   }
@@ -694,15 +694,30 @@ export async function retrievePiletData(target: string, app?: string) {
   const root = dirname(packageJson);
   const piletPackage = require(packageJson);
   const piletDefinition = piletJson && require(piletJson);
-  const appPackage = findPackage(app && [app], piletPackage, piletDefinition, target);
-  const appFile: string = appPackage?.app;
-  const appRoot: string = appPackage?.root;
+  const appPackages = findPiralInstances(app && [app], piletPackage, piletDefinition, target);
+  const apps: Array<AppDefinition> = [];
 
-  if (!appFile || !appRoot) {
-    fail('appInstanceInvalid_0011');
+  if (appPackages.length === 0) {
+    fail('appInstancesNotGiven_0012');
   }
 
-  const emulator = checkAppShellPackage(appPackage);
+  for (const appPackage of appPackages) {
+    const appFile: string = appPackage?.app;
+    const appRoot: string = appPackage?.root;
+
+    if (!appFile || !appRoot) {
+      fail('appInstanceInvalid_0011');
+    }
+
+    const emulator = checkAppShellPackage(appPackage);
+    apps.push({
+      appPackage,
+      appFile,
+      appRoot,
+      emulator,
+    });
+  }
+
   const importmap = await readImportmap(root, piletPackage);
 
   return {
@@ -712,11 +727,8 @@ export async function retrievePiletData(target: string, app?: string) {
     peerModules: piletPackage.peerModules || [],
     ignored: checkArrayOrUndefined(piletPackage, 'preservedDependencies'),
     importmap,
-    appFile,
-    appRoot,
+    apps,
     piletPackage,
-    appPackage,
-    emulator,
     root,
   };
 }
