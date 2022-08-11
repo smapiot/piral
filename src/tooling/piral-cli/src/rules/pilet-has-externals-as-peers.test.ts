@@ -38,13 +38,13 @@ describe('Rule pilet-has-externals-as-peers', () => {
 
   function createContext(externals: string[]): PiletRuleContext {
     return {
-      data: {
+      apps: [{
         appPackage: {
           pilets: {
             externals,
           },
         },
-      },
+      }],
       peerDependencies,
       peerModules,
       entry: 'test-entry',

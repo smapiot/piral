@@ -99,8 +99,13 @@ describe('CLI package module', () => {
 
   it('retrievePiletData error cases', async () => {
     await retrievePiletData('foo', '').catch((err) =>
-      expect(err).toStrictEqual(Error('[0011] Could not find a valid Piral instance.')),
+      expect(err).toStrictEqual(Error('[0012] No Piral instances have been provided.')),
     );
+
+    await retrievePiletData('foo', 'bar').catch((err) =>
+      expect(err).toStrictEqual(Error('[0010] The defined Piral instance ("bar") could not be found.')),
+    );
+
     await retrievePiletData('/foo', 'sample-piral').catch((err) =>
       expect(err).toStrictEqual(
         Error('[0075] Cannot find the "package.json". You need a valid package.json for your pilet.'),
