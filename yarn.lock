@@ -10358,6 +10358,11 @@ micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.4:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
+million@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/million/-/million-1.12.0.tgz#048dc38341e9fe559da067a37d79402cc1621686"
+  integrity sha512-T+5iGkxW6hdHcCXEWCWJ9LI+ooPzJ1QpbKxI0lSpdLbqvujvR89iySF8uN4d7EaMBVEVDiTSpqNCjl9P/KQVww==
+
 mime-db@1.52.0, "mime-db@>= 1.43.0 < 2":
   version "1.52.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"

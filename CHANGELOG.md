@@ -18,6 +18,7 @@
 - Added new bundler `piral-cli-parcel2` (#436)
 - Added new bundler `piral-cli-rollup` (#435)
 - Added new bundler `piral-cli-vite` (#435)
+- Added new optional plugin `piral-million` for Million
 - Added pre-bundled minified versions to each plugin package
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
