@@ -9466,10 +9466,10 @@ kras-management-portal@^0.13.0:
   resolved "https://registry.yarnpkg.com/kras-management-portal/-/kras-management-portal-0.13.0.tgz#550f2797fce399529897aaa871030644d96812c1"
   integrity sha512-NjjXTHKcJ/ECkz03L/HQSUVnkuzZkEV2mwcex36lxJNNwiUrYM5Ju0toAjhLnf8Zpc3nLEPnWKmoTwpSgGim2A==
 
-kras@^0.14.1:
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.14.3.tgz#1b3a92b69ae9c8a19260f426b52da893a1c0084e"
-  integrity sha512-6jSalGGBl7WPmrmZYLJNQ4CYmqob8208VcaZUczL0zoFd2cj39sWgYmQllo8v7hBWT8avdu/trQled1nARTHOQ==
+kras@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.15.0.tgz#d2f1cd3851c6210992a5c97f94f9a4cae1130b26"
+  integrity sha512-IgRLprvyuTX+uYNslkdOZS9gdnT5seM+p0ArKA10ONL3APDowfAa4JUbb47GIfRExSsCoRoDkkzrckz7R61dKg==
   dependencies:
     kras-management-portal "^0.13.0"
     yargs "^15.4.1"
