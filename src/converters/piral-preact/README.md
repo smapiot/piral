@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using Preact with Piral is as simple as installing `piral-preact` and `preact`.
 
 ```ts
-import 'preact';
 import { createPreactApi } from 'piral-preact';
 ```
 

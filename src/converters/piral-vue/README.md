@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using Vue with Piral is as simple as installing `piral-vue` and `vue`.
 
 ```ts
-import 'vue';
 import { createVueApi } from 'piral-vue';
 ```
 

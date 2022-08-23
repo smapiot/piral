@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using Inferno with Piral is as simple as installing `piral-inferno` and `inferno`.
 
 ```ts
-import 'inferno';
 import { createInfernoApi } from 'piral-inferno';
 ```
 

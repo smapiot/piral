@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using Mithril.js with Piral is as simple as installing `piral-mithril` and `mithril`.
 
 ```ts
-import 'mithril';
 import { createMithrilApi } from 'piral-mithril';
 ```
 

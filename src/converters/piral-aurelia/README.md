@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using Aurelia with Piral is as simple as installing `piral-aurelia` and `aurelia-framework`.
 
 ```ts
-import 'aurelia-framework';
 import { createAureliaApi } from 'piral-aurelia';
 ```
 

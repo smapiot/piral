@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using LitElement with Piral is as simple as installing `piral-litel` and `lit-element`.
 
 ```ts
-import 'lit-element';
 import { createLitElApi } from 'piral-litel';
 ```
 
