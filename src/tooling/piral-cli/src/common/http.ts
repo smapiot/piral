@@ -1,16 +1,13 @@
 import { join } from 'path';
 import { Agent } from 'https';
 import { Stream } from 'stream';
-import { platform, tmpdir } from 'os';
+import { tmpdir } from 'os';
 import { createWriteStream } from 'fs';
 import { log } from './log';
+import { standardHeaders } from './info';
+import { getTokenInteractively } from './interactive';
 import { axios, FormData } from '../external';
 import { PiletPublishScheme } from '../types';
-
-const os = platform();
-const standardHeaders = {
-  'user-agent': `piral-cli/http.node-${os}`,
-};
 
 function getMessage(body: string | { message?: string }) {
   if (typeof body === 'string') {
@@ -60,27 +57,35 @@ export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>
     });
 }
 
-export interface PostFileResult {
+export interface PostFormResult {
   status: number;
   success: boolean;
   response?: object;
 }
 
-export function postFile(
+export type FormDataObj = Record<string, string | [Buffer, string]>;
+
+export function postForm(
   target: string,
   scheme: PiletPublishScheme,
   key: string,
-  file: Buffer,
-  customFields: Record<string, string> = {},
+  formData: FormDataObj,
   customHeaders: Record<string, string> = {},
   ca?: Buffer,
-): Promise<PostFileResult> {
-  const form = new FormData();
+  interactive = false,
+): Promise<PostFormResult> {
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
+  const form = new FormData();
 
-  Object.keys(customFields).forEach((key) => form.append(key, customFields[key]));
+  Object.keys(formData).forEach((key) => {
+    const value = formData[key];
 
-  form.append('file', file, 'pilet.tgz');
+    if (typeof value === 'string') {
+      form.append(key, value);
+    } else {
+      form.append(key, value[0], value[1]);
+    }
+  });
 
   const headers: Record<string, string> = {
     ...form.getHeaders(),
@@ -114,16 +119,34 @@ export function postFile(
       maxBodyLength: Infinity,
     })
     .then(
-      (res) => ({
-        status: res.status,
-        success: true,
-        response: res.data,
-      }),
+      (res) => {
+        return {
+          status: res.status,
+          success: true,
+          response: res.data,
+        };
+      },
       (error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           const { data, statusText, status } = error.response;
+
+          if (interactive && 'interactiveAuth' in data) {
+            const { interactiveAuth } = data;
+
+            if (typeof interactiveAuth === 'string') {
+              log(
+                'generalDebug_0003',
+                `Received status "${status}" from HTTP - trying interactive log in to "${interactiveAuth}".`,
+              );
+
+              return getTokenInteractively(interactiveAuth, httpsAgent).then(({ mode, token }) =>
+                postForm(target, mode, token, formData, customHeaders, ca, false),
+              );
+            }
+          }
+
           const message = getMessage(data) || '';
           log('unsuccessfulHttpPost_0066', statusText, status, message);
           return {
@@ -163,4 +186,18 @@ export function postFile(
         };
       },
     );
+}
+
+export function postFile(
+  target: string,
+  scheme: PiletPublishScheme,
+  key: string,
+  file: Buffer,
+  customFields: Record<string, string> = {},
+  customHeaders: Record<string, string> = {},
+  ca?: Buffer,
+  interactive = false,
+): Promise<PostFormResult> {
+  const data: FormDataObj = { ...customFields, file: [file, 'pilet.tgz'] };
+  return postForm(target, scheme, key, data, customHeaders, ca, interactive);
 }

@@ -2089,6 +2089,58 @@ export function publishEmulatorSourcesInvalid_0114(): QuickMessage {
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * The "feed" provider requires a "--opts.url" argument.
+ *
+ * @abstract
+ * The `piral publish --type release` command requires the selection of a suitable
+ * provider for running successfully. The "feed" provider releases the files to
+ * the a Piral Feed Service with the static page feature.
+ *
+ * Make sure to supply the URL for the feed service via the `--opts.url` command
+ * line flag.
+ *
+ * @example
+ * The following command would specify `https://feed.piral.cloud/api/v1/feed/sample/page`
+ * for the feed service:
+ *
+ * ```sh
+ * piral publish --type release --provider feed --opts.url "https://feed.piral.cloud/api/v1/feed/sample/page" --opts.apikey "foobar123"
+ * ```
+ */
+export function publishFeedMissingUrl_0115(): QuickMessage {
+  return [LogLevels.error, '0115', `The "feed" provider requires a "--opts.url" argument.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The "feed" provider requires a "--opts.version" argument.
+ *
+ * @abstract
+ * The `piral publish --type release` command requires the selection of a suitable
+ * provider for running successfully. The "feed" provider releases the files to
+ * the a Piral Feed Service with the static page feature.
+ *
+ * Make sure to supply the version either explicitly via the `--opts.version` argument
+ * or implicitly by having the artifacts stored in a sub-directory of the project's root,
+ * which contains a package.json with the version to use.
+ *
+ * @example
+ * The following command would specify version "1.2.3" for the feed service:
+ *
+ * ```sh
+ * piral publish --type release --provider feed --opts.url "..." --opts.apikey "..." --opts.version "1.2.3"
+ * ```
+ */
+export function publishFeedMissingVersion_0116(): QuickMessage {
+  return [LogLevels.error, '0116', `The "feed" provider requires either a "--opts.version" argument or a package.json with a version.`];
+}
+
+/**
  * @kind Warning
  *
  * @summary

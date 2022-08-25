@@ -39,6 +39,10 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -60,6 +64,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib convert.d.ts convert.js",
     "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
@@ -68,24 +73,21 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@angular/common": "^12.0.0",
-    "@angular/compiler": "^12.0.0",
-    "@angular/core": "^12.0.0",
-    "@angular/platform-browser": "^12.0.0",
-    "@angular/platform-browser-dynamic": "^12.0.0",
-    "@angular/router": "^12.0.0",
+    "@angular/common": "^14.0.0",
+    "@angular/compiler": "^14.0.0",
+    "@angular/core": "^14.0.0",
+    "@angular/platform-browser": "^14.0.0",
+    "@angular/platform-browser-dynamic": "^14.0.0",
+    "@angular/router": "^14.0.0",
     "piral-core": "^0.14.29",
     "rxjs": "^7.3.0"
   },
   "peerDependencies": {
-    "@angular/common": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0",
-    "@angular/core": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0",
-    "@angular/platform-browser": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0",
-    "@angular/platform-browser-dynamic": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0",
-    "@angular/router": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0",
-    "core-js": "~3.5.0",
-    "piral-core": "0.14.x",
-    "rxjs": "^5.0.0 || ^6.0.0 || ^7.0.0",
-    "zone.js": "~0.9.0 || ~0.10.0 || ~0.11.0"
+    "@angular/common": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0",
+    "@angular/core": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0",
+    "@angular/platform-browser": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0",
+    "@angular/platform-browser-dynamic": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0",
+    "@angular/router": "^2.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0",
+    "rxjs": "^5.0.0 || ^6.0.0 || ^7.0.0"
   }
 }

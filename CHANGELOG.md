@@ -1,5 +1,14 @@
 # Piral Changelog
 
+## 0.14.30 (tbd)
+
+- Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
+- Updated `kras` to `v0.15` and set initial mock sources (#532)
+- Added support for Angular 14 in `piral-ng`
+- Added `NotifyLocationChanged` event when route changes within `piral-blazor`
+- Added new optional plugin `piral-million` for Million
+- Added `--interactive` login for `pilet publish` and `piral publish` (#517)
+
 ## 0.14.29 (July 5, 2022)
 
 - Fixed issue with npm initializer using CLI aliases

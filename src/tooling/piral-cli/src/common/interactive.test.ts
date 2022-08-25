@@ -3,6 +3,9 @@ import { promptConfirm, promptSelect } from './interactive';
 const answer = 'Yes, really';
 
 jest.mock('../external', () => ({
+  rc(_, cfg) {
+    return cfg;
+  },
   inquirer: {
     prompt: (...any) => {
       return Promise.resolve({ q: answer });

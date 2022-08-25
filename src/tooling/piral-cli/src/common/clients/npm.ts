@@ -47,6 +47,10 @@ export async function initProject(projectName: string, target: string) {}
 
 // Functions to exclusively use from npm client:
 
+export async function loginUser() {
+  await runNpmProcess(['login'], '.');
+}
+
 export async function unpackPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runNpmProcess(['pack', packageRef, ...flags], target, ms);

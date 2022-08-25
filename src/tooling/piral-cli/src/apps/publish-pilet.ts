@@ -78,6 +78,11 @@ export interface PublishPiletOptions {
   headers?: Record<string, string>;
 
   /**
+   * Defines if authorization tokens can be retrieved interactively.
+   */
+  interactive?: boolean;
+
+  /**
    * Sets the bundler to use for building, if any specific.
    */
   bundlerName?: string;
@@ -104,6 +109,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
   from: 'local',
   fields: {},
   headers: {},
+  interactive: false,
 };
 
 async function getFiles(
@@ -214,6 +220,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     fields = publishPiletDefaults.fields,
     headers = publishPiletDefaults.headers,
     mode = publishPiletDefaults.mode,
+    interactive = publishPiletDefaults.interactive,
     _ = {},
     bundlerName,
   } = options;
@@ -254,7 +261,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
     if (content) {
       progress(`Publishing "%s" ...`, file, url);
-      const result = await postFile(url, mode, apiKey, content, fields, headers, ca);
+      const result = await postFile(url, mode, apiKey, content, fields, headers, ca, interactive);
 
       if (result.success) {
         successfulUploads.push(file);
