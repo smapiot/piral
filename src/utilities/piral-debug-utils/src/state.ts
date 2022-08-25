@@ -1,11 +1,61 @@
 import { useState, useEffect } from 'react';
 
+const persistKey = 'dbg:persist-settings-data';
+const persistSettings = !!localStorage.getItem(persistKey);
+
+const defaultSetter = (name: string, value: string) => {
+  sessionStorage.setItem(name, value);
+};
+
+const persistentSetter = (name: string, value: string) => {
+  defaultSetter(name, value);
+  const data = JSON.parse(localStorage.getItem(persistKey));
+  data[name] = value;
+  localStorage.setItem(persistKey, JSON.stringify(data));
+};
+
+if (persistSettings) {
+  try {
+    const settings = JSON.parse(localStorage.getItem(persistKey));
+
+    Object.keys(settings).forEach((name) => {
+      const value = settings[name];
+      sessionStorage.setItem(name, value);
+    });
+  } catch {
+    // invalid data
+    localStorage.setItem(persistKey, '{}');
+  }
+}
+
+export function enablePersistance() {
+  const data: Record<string, string> = {};
+
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const name = sessionStorage.key(i);
+    const value = sessionStorage.getItem(name);
+    data[name] = value;
+  }
+
+  localStorage.setItem(persistKey, JSON.stringify(data));
+  return persistentSetter;
+}
+
+export function disablePersistance() {
+  localStorage.removeItem(persistKey);
+  return defaultSetter;
+}
+
+export const initialSetter = persistSettings ? persistentSetter : defaultSetter;
+
 export const initialSettings = {
   viewState: sessionStorage.getItem('dbg:view-state') !== 'off',
   loadPilets: sessionStorage.getItem('dbg:load-pilets') === 'on',
   hardRefresh: sessionStorage.getItem('dbg:hard-refresh') === 'on',
   viewOrigins: sessionStorage.getItem('dbg:view-origins') === 'on',
   extensionCatalogue: sessionStorage.getItem('dbg:extension-catalogue') !== 'off',
+  clearConsole: sessionStorage.getItem('dbg:clear-console') === 'on',
+  persistSettings,
   cataloguePath: '/$debug-extension-catalogue',
 };
 

@@ -48,11 +48,18 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
         // some bundlers may have fired before writing to the disk
         // so we give them a bit of time before actually loading the pilet
         timeoutCache[name] = setTimeout(() => {
+          const clearConsole = sessionStorage.getItem('dbg:clear-console') === 'on';
           // we should make sure to only refresh the page / router if pilets have been loaded
           const unfreeze = freezeRouteRefresh();
 
           // tear down pilet
           injectPilet({ name } as any);
+
+          if (clearConsole) {
+            console.clear();
+          }
+
+          console.log('Updating pilet %c%s ...', 'color: green; background: white; font-weight: bold', name);
 
           // load and evaluate pilet
           loadPilet(meta).then((pilet) => {

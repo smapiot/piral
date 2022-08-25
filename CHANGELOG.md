@@ -3,7 +3,9 @@
 ## 0.14.30 (tbd)
 
 - Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
-- Updated `kras` to `v0.15` and set initial mock sources (#532)
+- Updated `kras` to `v0.15` and set mock sources for `piral debug` (#532)
+- Added ability to clear console in `piral-debug-utils` (#534)
+- Added ability to persist settings in `piral-debug-utils` (#533)
 - Added support for Angular 14 in `piral-ng`
 - Added `NotifyLocationChanged` event when route changes within `piral-blazor`
 - Added new optional plugin `piral-million` for Million
