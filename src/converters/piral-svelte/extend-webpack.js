@@ -21,20 +21,43 @@ module.exports =
     config.resolve.extensions.push('.svelte');
     config.resolve.mainFields.unshift('svelte');
 
-    config.module.rules.push(
-      {
-        test: /\.(html|svelte)$/,
-        use: svelteLoader,
-        options: {
-          emitCss: true,
-          ...options,
-        },
-      },
-      {
-        test: /node_modules\/svelte\/.*\.mjs$/,
-        resolve: {
-          fullySpecified: false,
-        },
+    function findRule(tester, changer) {
+      config.module.rules.forEach((rule) => {
+        if (rule.oneOf) {
+          rule.oneOf.forEach((r) => {
+            if (r.test && tester(r)) {
+              changer(r, rule.oneOf);
+            }
+          });
+        } else if (rule.test && tester(rule)) {
+          changer(rule, config.module.rules);
+        }
+      });
+    }
+
+    findRule(
+      (m) => m.test && m.test.toString() === /\.tsx?$/i.toString(),
+      (m, all) => {
+        const ruleIndex = all.indexOf(m);
+
+        all.splice(
+          ruleIndex,
+          0,
+          {
+            test: /\.(html|svelte)$/,
+            use: svelteLoader,
+            options: {
+              emitCss: true,
+              ...options,
+            },
+          },
+          {
+            test: /node_modules\/svelte\/.*\.mjs$/,
+            resolve: {
+              fullySpecified: false,
+            },
+          },
+        );
       },
     );
 

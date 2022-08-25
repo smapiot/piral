@@ -25,38 +25,66 @@ module.exports =
       },
     };
 
-    config.module.rules
-      .filter((m) => m.test.toString() === /\.css$/i.toString())
-      .forEach((m) => {
+    function findRule(tester, changer) {
+      config.module.rules.forEach((rule) => {
+        if (rule.oneOf) {
+          rule.oneOf.forEach((r) => {
+            if (r.test && tester(r)) {
+              changer(r, rule.oneOf);
+            }
+          });
+        } else if (rule.test && tester(rule)) {
+          changer(rule, config.module.rules);
+        }
+      });
+    }
+
+    findRule(
+      (m) => m.test.toString() === /\.css$/i.toString(),
+      (m) => {
         m.exclude = /\.component.css$/i;
-      });
+      },
+    );
 
-    config.module.rules
-      .filter((m) => m.test.toString() === /\.s[ac]ss$/i.toString())
-      .forEach((m) => {
+    findRule(
+      (m) => m.test && m.test.toString() === /\.css$/i.toString(),
+      (m) => {
+        m.exclude = /\.component.css$/i;
+      },
+    );
+
+    findRule(
+      (m) => m.test && m.test.toString() === /\.s[ac]ss$/i.toString(),
+      (m) => {
         m.exclude = /\.component.s[ac]ss$/i;
-      });
+      },
+    );
 
-    const ruleIndex = config.module.rules.findIndex((m) => m.test.toString() === /\.tsx?$/i.toString());
+    findRule(
+      (m) => m.test && m.test.toString() === /\.tsx?$/i.toString(),
+      (m, all) => {
+        const ruleIndex = all.indexOf(m);
 
-    config.module.rules.splice(
-      ruleIndex,
-      1,
-      {
-        test: /\.[jt]sx?$/,
-        loader: ngtoolsLoader,
-      },
-      {
-        test: /\.component.html$/i,
-        use: [toStringLoader, htmlLoaderNoModule],
-      },
-      {
-        test: /\.component.css$/i,
-        use: [toStringLoader, cssLoaderNoModule],
-      },
-      {
-        test: /\.component.s[ac]ss$/i,
-        use: [toStringLoader, cssLoaderNoModule, sassLoader],
+        all.splice(
+          ruleIndex,
+          1,
+          {
+            test: /\.[jt]sx?$/,
+            loader: ngtoolsLoader,
+          },
+          {
+            test: /\.component.html$/i,
+            use: [toStringLoader, htmlLoaderNoModule],
+          },
+          {
+            test: /\.component.css$/i,
+            use: [toStringLoader, cssLoaderNoModule],
+          },
+          {
+            test: /\.component.s[ac]ss$/i,
+            use: [toStringLoader, cssLoaderNoModule, sassLoader],
+          },
+        );
       },
     );
 
