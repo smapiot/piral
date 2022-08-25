@@ -1,5 +1,5 @@
 import { inlineView, customElement, bindable, inject } from 'aurelia-framework';
-import type { ExtensionSlotProps } from 'piral-core';
+import type { ExtensionSlotProps, PiletApi } from 'piral-core';
 import type { AureliaModule } from './types';
 
 export function createExtension(rootName: string): AureliaModule<ExtensionSlotProps> {
@@ -16,7 +16,7 @@ export function createExtension(rootName: string): AureliaModule<ExtensionSlotPr
     @bindable() private empty: any;
     @bindable() private params: any;
 
-    constructor(private piral: any) {}
+    constructor(private piral: PiletApi) {}
 
     attached() {
       this.piral.renderHtmlExtension(this.host, {

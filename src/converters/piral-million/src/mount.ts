@@ -1,23 +1,12 @@
-import { render, m, VNode } from 'million';
 import type { BaseComponentProps } from 'piral-core';
+import { render, createElement } from 'million/react';
 
-export function mountMillion<T extends BaseComponentProps>(el: HTMLElement, root: (props: T) => VNode, props: T) {
-  const node = m(root as any, props);
-  render(el, node);
-  return node;
+export function mountMillion<T extends BaseComponentProps>(el: HTMLElement, root: any, props: T) {
+  const m = createElement as any;
+  const node = m(root, props);
+  render(node, el);
 }
 
-export function updateMillion<T extends BaseComponentProps>(
-  el: HTMLElement,
-  root: (props: T) => VNode,
-  props: T,
-  oldNode: VNode,
-) {
-  const newNode = m(root as any, props);
-  render(el, newNode, oldNode);
-  return newNode;
-}
-
-export function unmountMillion(el: HTMLElement, oldNode: VNode) {
-  render(el, '', oldNode);
+export function unmountMillion(el: HTMLElement) {
+  render('', el);
 }

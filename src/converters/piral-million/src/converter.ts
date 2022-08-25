@@ -1,28 +1,16 @@
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
-import type { VNode } from 'million';
-import { mountMillion, updateMillion, unmountMillion } from './mount';
-import { createExtension } from './extension';
+import { mountMillion, unmountMillion } from './mount';
+import { Extension } from './extension';
 
-export interface MillionConverterOptions {
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
-}
+export interface MillionConverterOptions {}
 
 export function createConverter(config: MillionConverterOptions = {}) {
-  const { rootName = 'slot' } = config;
-  const Extension = createExtension(rootName);
-  const convert = <TProps extends BaseComponentProps>(root: (props: TProps) => VNode): ForeignComponent<TProps> => ({
-    mount(el, props, ctx, locals) {
-      locals.node = mountMillion(el, root, props);
+  const convert = <TProps extends BaseComponentProps>(root: any): ForeignComponent<TProps> => ({
+    mount(el, props) {
+      mountMillion(el, root, props);
     },
-    update(el, props, ctx, locals) {
-      locals.node = updateMillion(el, root, props, locals.node);
-    },
-    unmount(el, locals) {
-      unmountMillion(el, locals.node);
+    unmount(el) {
+      unmountMillion(el);
     },
   });
   convert.Extension = Extension;

@@ -2,7 +2,7 @@
 
 # [Piral Hyperapp](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-hyperapp.svg?style=flat)](https://www.npmjs.com/package/piral-hyperapp) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community)
 
-This is a plugin that only has a peer dependency to `piral-core`. What `piral-hyperapp` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
+This is a plugin that only has a peer dependency to `hyperapp`. What `piral-hyperapp` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
 The set includes a Hyperapp converter for any component registration, as well as a `fromHyperapp` shortcut and a `HyperappExtension` component.
 
@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using Hyperapp with Piral is as simple as installing `piral-hyperapp` and `hyperapp`.
 
 ```ts
-import 'hyperapp';
 import { createHyperappApi } from 'piral-hyperapp';
 ```
 

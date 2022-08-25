@@ -62,7 +62,6 @@ export function setup(piral: PiletApi) {
 Using Million with Piral is as simple as installing `piral-million` and `million`.
 
 ```ts
-import 'million';
 import { createMillionApi } from 'piral-million';
 ```
 
@@ -76,13 +75,14 @@ const instance = createInstance({
 });
 ```
 
-The `million` package should be shared with the pilets via the *package.json*:
+The `million` package and its `million/react` module should be shared with the pilets via the *package.json*:
 
 ```json
 {
   "pilets": {
     "externals": [
-      "million"
+      "million",
+      "million/react"
     ]
   }
 }
