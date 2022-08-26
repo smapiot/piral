@@ -3,6 +3,7 @@
 ## 0.14.30 (tbd)
 
 - Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
+- Fixed loading of Aurelia modules in `piral-aurelia`
 - Updated `kras` to `v0.15` and set mock sources for `piral debug` (#532)
 - Added ability to clear console in `piral-debug-utils` (#534)
 - Added ability to persist settings in `piral-debug-utils` (#533)
