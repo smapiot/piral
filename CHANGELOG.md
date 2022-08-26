@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.30 (tbd)
+## 0.14.30 (August 26, 2022)
 
 - Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
 - Fixed loading of Aurelia modules in `piral-aurelia`
