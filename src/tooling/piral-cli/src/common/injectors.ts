@@ -17,8 +17,8 @@ export function notifyServerOnline(bundlers: Array<Bundler>, path: string, api: 
 
 export function createInitialKrasConfig(
   directory: string,
-  map: Record<string, string> = {},
   sources: Array<string> = [],
+  map: Record<string, string> = {},
   feed: string | Array<string> = [],
 ) {
   return {

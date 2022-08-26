@@ -2,6 +2,7 @@ import { VERSION, StaticProvider } from '@angular/core';
 
 export interface NgAnnotation {
   _initial?: Array<StaticProvider>;
+  standalone?: boolean;
   providers: Array<StaticProvider>;
   imports: Array<any>;
   exports: Array<any>;
@@ -41,14 +42,14 @@ export function getAnnotations(component: any): Array<NgAnnotation> {
 export function findComponents(exports: Array<any>): Array<any> {
   const components = [];
 
-  if (exports && Array.isArray(exports)) {
+  if (Array.isArray(exports)) {
     for (const ex of exports) {
       const [annotation] = getAnnotations(ex);
 
       if (annotation) {
         if (annotation.exports) {
           components.push(...findComponents(annotation.exports));
-        } else if (!annotation.imports) {
+        } else if (!annotation.imports || annotation.standalone) {
           components.push(ex);
         }
       }

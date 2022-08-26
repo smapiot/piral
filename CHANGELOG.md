@@ -1,5 +1,17 @@
 # Piral Changelog
 
+## 0.14.30 (August 26, 2022)
+
+- Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
+- Fixed loading of Aurelia modules in `piral-aurelia`
+- Updated `kras` to `v0.15` and set mock sources for `piral debug` (#532)
+- Added ability to clear console in `piral-debug-utils` (#534)
+- Added ability to persist settings in `piral-debug-utils` (#533)
+- Added support for Angular 14 in `piral-ng`
+- Added `NotifyLocationChanged` event when route changes within `piral-blazor`
+- Added new optional plugin `piral-million` for Million
+- Added `--interactive` login for `pilet publish` and `piral publish` (#517)
+
 ## 0.14.29 (July 5, 2022)
 
 - Fixed issue with npm initializer using CLI aliases

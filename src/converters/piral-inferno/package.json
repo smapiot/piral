@@ -1,6 +1,6 @@
 {
   "name": "piral-inferno",
-  "version": "0.14.29",
+  "version": "0.14.30",
   "description": "Plugin for integrating Inferno components in Piral.",
   "keywords": [
     "piral",
@@ -33,6 +33,10 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -51,6 +55,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib convert.d.ts convert.js",
     "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
@@ -61,11 +66,10 @@
   "devDependencies": {
     "inferno": "^7.3.2",
     "inferno-create-element": "^7.3.2",
-    "piral-core": "^0.14.29"
+    "piral-core": "^0.14.30"
   },
   "peerDependencies": {
     "inferno": "^7.0.0",
-    "inferno-create-element": "^7.0.0",
-    "piral-core": "0.14.x"
+    "inferno-create-element": "^7.0.0"
   }
 }

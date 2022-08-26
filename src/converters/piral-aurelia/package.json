@@ -1,6 +1,6 @@
 {
   "name": "piral-aurelia",
-  "version": "0.14.29",
+  "version": "0.14.30",
   "description": "Plugin for integrating Aurelia components in Piral.",
   "keywords": [
     "piral",
@@ -33,6 +33,10 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -51,6 +55,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib convert.d.ts convert.js",
     "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
@@ -65,7 +70,7 @@
     "aurelia-pal-browser": "1.8.1",
     "aurelia-templating-binding": "1.5.3",
     "aurelia-templating-resources": "1.13.1",
-    "piral-core": "^0.14.29"
+    "piral-core": "^0.14.30"
   },
   "peerDependencies": {
     "aurelia-event-aggregator": "^1.0.0",
@@ -73,7 +78,6 @@
     "aurelia-history-browser": "^1.0.0",
     "aurelia-pal-browser": "^1.0.0",
     "aurelia-templating-binding": "^1.0.0",
-    "aurelia-templating-resources": "^1.0.0",
-    "piral-core": "0.14.x"
+    "aurelia-templating-resources": "^1.0.0"
   }
 }

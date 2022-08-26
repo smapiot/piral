@@ -16,6 +16,7 @@ import {
   logDone,
   createInitialKrasConfig,
   getAvailablePort,
+  checkExistingDirectory,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -108,6 +109,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(fullBase, entry);
+  const targetDir = dirname(entryFiles);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
 
   await checkCliCompatibility(root);
@@ -138,7 +140,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   const krasBaseConfig = resolve(fullBase, krasrc);
   const krasRootConfig = resolve(root, krasrc);
-  const initial = createInitialKrasConfig(join(dirname(entryFiles), 'mocks'));
+  const mocks = join(targetDir, 'mocks');
+  const baseMocks = resolve(fullBase, 'mocks');
+  const mocksExist = await checkExistingDirectory(mocks);
+  const sources = [mocksExist ? mocks : undefined].filter(Boolean);
+  const initial = createInitialKrasConfig(baseMocks, sources);
   const required = {
     injectors: {
       piral: {

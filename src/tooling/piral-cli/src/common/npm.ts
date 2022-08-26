@@ -164,9 +164,20 @@ export function initNpmProject(client: NpmClientType, projectName: string, targe
   return initProject(projectName, target);
 }
 
-export function publishNpmPackage(target = '.', file = '*.tgz', flags: Array<string> = []): Promise<string> {
-  const { publishPackage } = clients.npm;
-  return publishPackage(target, file, ...flags);
+export function publishNpmPackage(
+  target = '.',
+  file = '*.tgz',
+  flags: Array<string> = [],
+  interactive = false,
+): Promise<string> {
+  const { publishPackage, loginUser } = clients.npm;
+  return publishPackage(target, file, ...flags).catch((err) => {
+    if (!interactive) {
+      throw err;
+    }
+
+    return loginUser().then(() => publishNpmPackage(target, file, flags, false));
+  });
 }
 
 export function createNpmPackage(target = '.'): Promise<string> {

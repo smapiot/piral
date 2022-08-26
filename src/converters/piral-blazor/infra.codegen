@@ -52,6 +52,6 @@ module.exports = function () {
 
     return `export default ${JSON.stringify('_framework/blazor.webassembly.js')};`;
   } catch (err) {
-    throw new Error(`The npm package "blazor" was not found. Make sure to install it via "npm i blazor". ${err}`);
+    throw new Error(`The npm package "blazor" was not found. Make sure to install it via "npm i blazor": ${err}`);
   }
 };

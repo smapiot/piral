@@ -167,9 +167,62 @@ This endpoint should always succeed. In case of urgent server issues, a response
 
 In any other case, an empty `items` array is suitable to indicate that no pilets are to be served.
 
+### Interactive Login (Service Facing)
+
+The service can optionally expose an endpoint for an interactive login. The endpoint for the interactive login has to be specified in the body of `401` responses from the feed service - most importantly the publish pilet endpoint specified earlier.
+
+The field `interactiveAuth` of `401` error responses is used to determine the URL for the interactive login. Calling this URL results in an object that determines the polling endpoint, the login endpoint, and the expiration date for the login.
+
+#### Endpoint
+
+The service exposes a REST endpoint, which accepts a `POST` request from the client. With the `POST` request
+
+**Request**
+
+Consider the following example:
+
+```http
+POST /api/v1/auth
+Content-Type: application/json
+
+{
+  "clientId": "my-client",
+  "clientName": "My Client",
+  "description": "Describe why users should login here."
+}
+```
+
+Arbitrary headers and query parameters may be transported. The evaluation of these parameters is implementation-specific and could be done to prevent arbitrary clients from triggering an interactive login.
+
+**Success Response**
+
+The API interface for triggering an interactive login returns a resource in JSON format. The response contains two URLs and one datetime (typed as `AuthApiResponse`):
+
+```ts
+interface AuthApiResponse {
+  loginUrl: string;
+  callbackUrl: string;
+  expires: string;
+}
+```
+
+The `loginUrl` should be opened in the browser by the user. The `callbackUrl` should be used by the client. The former represents the entry point to actually perform the login / obtain the credentials, while the latter can be used to get notified when the user successfully completed the login. The latter *should* be suitable to be used with long polling, otherwise it will be pinged until the user aborts or the `expires` is reached.
+
+Both URLs should be GET endpoints.
+
+**Error Response**
+
+This endpoint should always succeed. In case of urgent server issues, a response with HTTP status code `500` has to be served. Any non-`200` response will be treated as an error response.
+
 ## Examples
 
-A working sample feed service exists and can be viewed at [github.com/smapiot/sample-pilet-service](https://github.com/smapiot/sample-pilet-service). The provided version represents a good starting point to see a Node.js express-based service implementing this specification.
+Working feed service implementations exists and can be viewed online.
+
+Full list of known (sample / open-source) implementations:
+
+- [Node.js implementation](https://github.com/smapiot/sample-pilet-service) by [Florian Rappl](https://github.com/FlorianRappl)
+- [Java implementation](https://github.com/scarrozzo/sample-pilet-service) by [Sergio Carrozzo](https://github.com/scarrozzo)
+- [Azure Function implementation](https://github.com/smapiot/azure-function-pilet-feed) by [Waqas Ali](https://github.com/waqasali47)
 
 The crucial points following this specification are:
 

@@ -17,7 +17,7 @@ export function mountReact15<T extends BaseComponentProps>(
     contextTypes[key] = anyPropType;
   });
 
-  class Provider extends Component {
+  class Provider extends Component<{ children?: any }> {
     static childContextTypes = contextTypes;
 
     getChildContext() {

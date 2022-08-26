@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "0.14.29",
+  "version": "0.14.30",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -67,8 +67,8 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "current-script-polyfill": "^1.0.0",
-    "piral-core": "^0.14.29",
-    "piral-ext": "^0.14.29",
+    "piral-core": "^0.14.30",
+    "piral-ext": "^0.14.30",
     "promise-polyfill": "^8.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

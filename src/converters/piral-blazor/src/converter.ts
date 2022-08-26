@@ -1,6 +1,6 @@
-import type { BaseComponentProps, ForeignComponent } from 'piral-core';
+import type { BaseComponentProps, Disposable, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
-import { activate, deactivate, createBootLoader, reactivate } from './interop';
+import { activate, deactivate, createBootLoader, reactivate, callNotifyLocationChanged } from './interop';
 import { BlazorOptions } from './types';
 import bootConfig from '../infra.codegen';
 
@@ -38,6 +38,7 @@ interface BlazorLocals {
 export function createConverter(lazy: boolean) {
   const boot = createBootLoader(bootConfig);
   let loader = !lazy && boot();
+  let listener: Disposable = undefined;
 
   const enqueueChange = (locals: BlazorLocals, update: (root: HTMLDivElement) => void) => {
     if (locals.state === 'mounted') {
@@ -55,9 +56,20 @@ export function createConverter(lazy: boolean) {
   ): ForeignComponent<TProps> => ({
     mount(el, data, ctx, locals: BlazorLocals) {
       const props = { ...args, ...data };
+      const nav = ctx.router.history;
       el.setAttribute('data-blazor-pilet-root', 'true');
 
       addGlobalEventListeners(el);
+
+      if (listener === undefined) {
+        listener = nav.listen((location, action) => {
+          // POP is already handled by .NET
+          if (action !== 'POP') {
+            const href = nav.createHref(location)
+            callNotifyLocationChanged(href, action === 'REPLACE');
+          }
+        });
+      }
 
       locals.state = 'fresh';
       locals.update = noop;
@@ -66,8 +78,8 @@ export function createConverter(lazy: boolean) {
         (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
         (ev) =>
           ev.detail.replace
-            ? ctx.router.history.replace(ev.detail.to, ev.detail.store)
-            : ctx.router.history.push(ev.detail.to, ev.detail.state),
+            ? nav.replace(ev.detail.to, ev.detail.store)
+            : nav.push(ev.detail.to, ev.detail.state),
       );
 
       (loader || (loader = boot()))
