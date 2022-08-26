@@ -7,6 +7,7 @@ import { createModuleInstance, getModuleInstance, defineModule } from './module'
 
 export function prepareBootstrap(moduleOrComponent: any, piral: PiletApi): PrepareBootstrapResult {
   const [annotation] = getAnnotations(moduleOrComponent);
+  const standalone = annotation?.standalone;
 
   // first way is to directly use a module, which is the legacy way
   // second way is to find a previously defined Angular module
@@ -15,10 +16,12 @@ export function prepareBootstrap(moduleOrComponent: any, piral: PiletApi): Prepa
     const [component] = annotation.bootstrap;
     annotation.exports = [component];
     defineModule(moduleOrComponent);
-    return [...getModuleInstance(component, piral), component];
+    return [...getModuleInstance(component, standalone, piral), component];
   } else {
     // usually contains things like selector, template or templateUrl, changeDetection, ...
-    const result = getModuleInstance(moduleOrComponent, piral) || createModuleInstance(moduleOrComponent, piral);
+    const result =
+      getModuleInstance(moduleOrComponent, standalone, piral) ||
+      createModuleInstance(moduleOrComponent, standalone, piral);
     return [...result, moduleOrComponent];
   }
 }

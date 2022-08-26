@@ -1,14 +1,10 @@
-import type { BaseComponentProps, ComponentContext } from 'piral-core';
-import { render, createElement, createContext } from 'million/react';
+import type { BaseComponentProps } from 'piral-core';
+import { render, createElement } from 'million/react';
 
-export const piralContext = createContext({});
-
-export function mountMillion<T extends BaseComponentProps>(el: HTMLElement, root: any, props: T, ctx: ComponentContext) {
-  const value = { ...ctx, piral: props.piral };
+export function mountMillion<T extends BaseComponentProps>(el: HTMLElement, root: any, props: T) {
   const m = createElement as any;
-  const node = m(piralContext.Provider, { value }, m(root, props));
+  const node = m(root, props);
   render(node, el);
-  return node;
 }
 
 export function unmountMillion(el: HTMLElement) {

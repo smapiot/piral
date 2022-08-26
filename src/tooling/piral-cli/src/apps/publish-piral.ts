@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { publishArtifacts } from '../release';
+import { LogLevels, PiralBuildType } from '../types';
 import {
   setLogLevel,
   progress,
@@ -11,7 +12,6 @@ import {
   matchFiles,
   log,
 } from '../common';
-import { LogLevels, PiralBuildType } from '../types';
 
 export interface PublishPiralOptions {
   /**

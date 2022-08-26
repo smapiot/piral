@@ -2,10 +2,8 @@
 
 ## 0.15.0 (tbd)
 
-- Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
 - Updated to React v18 (#501)
 - Updated `importmap` with `inherit` key
-- Updated `kras` to `v0.15`
 - Moved templates to dedicated repository (#458)
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
 - Changed webpack configs to use `oneOf` for assets (#451)
@@ -19,7 +17,6 @@
 - Added new bundler `piral-cli-parcel2` (#436)
 - Added new bundler `piral-cli-rollup` (#435)
 - Added new bundler `piral-cli-vite` (#435)
-- Added new optional plugin `piral-million` for Million
 - Added pre-bundled minified versions to each plugin package
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
@@ -28,8 +25,19 @@
 - Added support for `importmap` in the app shell
 - Added semver possibilities for resolving shared dependencies
 - Added automatic determination of npm client (#516)
-- Added `--interactive` login for `pilet publish` and `piral publish` (#517)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
+
+## 0.14.30 (August 26, 2022)
+
+- Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
+- Fixed loading of Aurelia modules in `piral-aurelia`
+- Updated `kras` to `v0.15` and set mock sources for `piral debug` (#532)
+- Added ability to clear console in `piral-debug-utils` (#534)
+- Added ability to persist settings in `piral-debug-utils` (#533)
+- Added support for Angular 14 in `piral-ng`
+- Added `NotifyLocationChanged` event when route changes within `piral-blazor`
+- Added new optional plugin `piral-million` for Million
+- Added `--interactive` login for `pilet publish` and `piral publish` (#517)
 
 ## 0.14.29 (July 5, 2022)
 

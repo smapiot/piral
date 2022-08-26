@@ -42,7 +42,7 @@ export class DefaultLoader extends Loader {
    * @return A Promise for the loaded module.
    */
   loadModule(id) {
-    return Promise.resolve(require(id));
+    return System.import(id);
   }
 
   /**

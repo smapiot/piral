@@ -131,7 +131,7 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
   return BootstrapModule;
 }
 
-export function getModuleInstance(component: any, piral: PiletApi): ModuleInstanceResult {
+export function getModuleInstance(component: any, standalone: boolean, piral: PiletApi): ModuleInstanceResult {
   const [moduleDef] = availableModules.filter((m) => m.components.includes(component));
 
   if (moduleDef) {
@@ -143,19 +143,21 @@ export function getModuleInstance(component: any, piral: PiletApi): ModuleInstan
   }
 
   if (process.env.NODE_ENV === 'development') {
-    console.warn(
-      'Component not found in all defined Angular modules. Make sure to define (using `defineNgModule`) a module with your component(s) referenced in the exports section of the `@NgModule` decorator.',
-      component,
-      piral.meta,
-    );
+    if (!standalone) {
+      console.warn(
+        'Component not found in all defined Angular modules. Make sure to define (using `defineNgModule`) a module with your component(s) referenced in the exports section of the `@NgModule` decorator.',
+        component,
+        piral.meta,
+      );
+    }
   }
 
   return undefined;
 }
 
-export function createModuleInstance(component: any, piral: PiletApi): ModuleInstanceResult {
-  const declarations = [component];
-  const importsDef = [CommonModule];
+export function createModuleInstance(component: any, standalone: boolean, piral: PiletApi): ModuleInstanceResult {
+  const declarations = standalone ? [] : [component];
+  const importsDef = standalone ? [CommonModule, component] : [CommonModule];
   const exportsDef = [component];
   const schemasDef = [CUSTOM_ELEMENTS_SCHEMA];
 
@@ -200,7 +202,7 @@ export function createModuleInstance(component: any, piral: PiletApi): ModuleIns
   }
 
   defineModule(Module);
-  return getModuleInstance(component, piral);
+  return getModuleInstance(component, standalone, piral);
 }
 
 export function defineModule(module: any, opts: NgOptions = undefined) {

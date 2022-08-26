@@ -79,6 +79,7 @@
     "underscore": "1.12.1",
     "postcss": "8.4.5",
     "rc": "1.2.8",
+    "rxjs": "7.5.6",
     "set-value": "4.0.1",
     "shell-quote": "1.7.3",
     "ssri": "8.0.1",

@@ -1,24 +1,13 @@
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { mountMillion, unmountMillion } from './mount';
-import { createExtension } from './extension';
+import { Extension } from './extension';
 
-export interface MillionConverterOptions {
-  /**
-   * Defines the name of the root element.
-   * @default slot
-   */
-  rootName?: string;
-}
+export interface MillionConverterOptions {}
 
 export function createConverter(config: MillionConverterOptions = {}) {
-  const { rootName = 'slot' } = config;
-  const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(root: any): ForeignComponent<TProps> => ({
-    mount(el, props, ctx) {
-      mountMillion(el, root, props, ctx);
-    },
-    update(el, props, ctx) {
-      mountMillion(el, root, props, ctx);
+    mount(el, props) {
+      mountMillion(el, root, props);
     },
     unmount(el) {
       unmountMillion(el);

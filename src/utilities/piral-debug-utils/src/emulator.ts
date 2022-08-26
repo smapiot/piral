@@ -50,6 +50,15 @@ export function installPiletEmulator(requestPilets: PiletRequester, options: Emu
 
           // tear down pilet
           removePilet(meta.name)
+            .then(() => {
+              const clearConsole = sessionStorage.getItem('dbg:clear-console') === 'on';
+
+              if (clearConsole) {
+                console.clear();
+              }
+
+              console.log('Updating pilet %c%s ...', 'color: green; background: white; font-weight: bold', name);
+            })
             // load and evaluate pilet
             .then(() => addPilet(meta))
             // then disable route cache, should be zero again and lead to route refresh

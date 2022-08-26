@@ -1,6 +1,6 @@
 {
   "name": "piral-million",
-  "version": "0.14.29",
+  "version": "0.14.30",
   "description": "Plugin for integrating Million components in Piral.",
   "keywords": [
     "piral",
@@ -64,8 +64,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.29",
-    "million": "^1.12.0"
+    "million": "^1.12.0",
+    "piral-core": "^0.14.30"
   },
   "peerDependencies": {
     "million": "^1.0.0"
