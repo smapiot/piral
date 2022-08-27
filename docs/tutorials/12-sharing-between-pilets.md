@@ -97,7 +97,7 @@ So how is an extension registered?
 
 ```jsx
 export function setup(piral: PiletApi) {
-  piral.registerExtension('sample-ext-name', params => {
+  piral.registerExtension('sample-ext-name', ({ params }) => {
     if (typeof params.value !== 'number') {
       console.warn('You need to provide a param "value" with a <number>.');
       return null;
