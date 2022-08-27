@@ -98,8 +98,8 @@ The debug server middleware `kras` can be configured freely. One option is to us
 ```json
 {
   "ssl": {
-    "cert": "node_modules/kras/cert/server.crt",
-    "key": "node_modules/kras/cert/server.key"
+    "cert": "kras/cert/server.crt",
+    "key": "kras/cert/server.key"
   }
 }
 ```
