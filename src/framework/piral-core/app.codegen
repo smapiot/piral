@@ -120,6 +120,9 @@ function createDefaultState(imports, exports) {
             }
             return _nav.listen((location, action) => listener(enhance({ location, action })));
           },
+          router: {
+            history: _nav,
+          },
         };
       }
     `);
@@ -182,6 +185,7 @@ function createDefaultState(imports, exports) {
             }
             return _nav.listen(update => listener(enhance(update)));
           },
+          router: _nav,
         };
       }
     `);

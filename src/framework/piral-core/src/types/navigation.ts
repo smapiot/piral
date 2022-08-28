@@ -85,4 +85,8 @@ export interface NavigationApi {
    * @returns The disposable for stopping the block.
    */
   listen(listener: NavigationListener): Disposable;
+  /**
+   * The original router behind the navigation.
+   */
+  router: any;
 }

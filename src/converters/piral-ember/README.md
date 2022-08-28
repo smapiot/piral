@@ -16,10 +16,6 @@ The following functions are brought to the Pilet API.
 
 Transforms a standard Ember.js component into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
 
-### `EmberExtension`
-
-(tbd)
-
 ## Usage
 
 ::: summary: For pilet authors

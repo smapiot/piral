@@ -3,7 +3,7 @@ import { PortalRenderer } from './PortalRenderer';
 import { ForeignComponentContainer } from './ForeignComponentContainer';
 import { useGlobalStateContext } from '../hooks';
 import { convertComponent, none } from '../utils';
-import { publicPath } from '../../app.codegen';
+import { publicPath, } from '../../app.codegen';
 import type { AnyComponent, ComponentConverters, ForeignComponent, PiletApi, BaseComponentProps } from '../types';
 
 // this is an arbitrary start number to have 6 digits
@@ -33,7 +33,8 @@ function wrapForeignComponent<T>(
   return React.memo((props: T) => {
     const { destroyPortal, navigation } = useGlobalStateContext();
     const id = React.useMemo(() => (portalIdBase++).toString(26), none);
-    const context = React.useMemo(() => ({ publicPath, navigation }), []);
+    // router added for backwards compatibility
+    const context = React.useMemo(() => ({ publicPath, navigation, router: navigation.router }), []);
     const innerProps = React.useMemo(() => ({ ...props, ...captured }), [props]);
 
     React.useEffect(() => () => destroyPortal(id), none);
