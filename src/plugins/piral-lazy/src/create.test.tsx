@@ -26,6 +26,9 @@ function createMockContainer() {
       converters: {
         html: ({ component }) => component,
       },
+      navigation: {
+        router: undefined,
+      },
       readState(read) {
         return read(state.getState());
       },

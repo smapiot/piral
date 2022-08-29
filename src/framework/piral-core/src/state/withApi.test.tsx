@@ -21,6 +21,9 @@ function createMockContainer() {
       readState(cb) {
         return cb(state.getState());
       },
+      navigation: {
+        router: undefined,
+      },
       on: jest.fn(),
       off: jest.fn(),
       emit: jest.fn(),

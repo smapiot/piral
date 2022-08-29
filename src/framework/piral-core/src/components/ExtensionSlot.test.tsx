@@ -15,6 +15,9 @@ jest.mock('../hooks/globalState', () => ({
         },
       },
     },
+    navigation: {
+      router: undefined,
+    },
     readState() {
       return '/';
     },
