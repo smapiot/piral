@@ -1,4 +1,4 @@
-# `publish-pilet`
+# `pilet publish`
 
 Publishes a pilet package to a pilet feed.
 
@@ -7,13 +7,13 @@ Publishes a pilet package to a pilet feed.
 From the command line:
 
 ```sh
-pb publish-pilet [source]
+pilet publish [source]
 ```
 
 Alternative:
 
 ```sh
-pilet publish [source]
+pb publish-pilet [source]
 ```
 
 ## Aliases
@@ -135,6 +135,23 @@ Sets additional headers to be included in the feed service request.
 
 - Type: `options`
 - Default: `{}`
+
+### `--interactive`
+
+Defines if authorization tokens can be retrieved interactively.
+
+
+- Type: `boolean`
+- Default: `false`
+
+### `--no-interactive`
+
+Opposite of:
+Defines if authorization tokens can be retrieved interactively.
+
+
+- Type: `boolean`
+- Default: `true`
 
 ### `--base`
 

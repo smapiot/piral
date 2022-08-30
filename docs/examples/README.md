@@ -8,6 +8,7 @@ The provided examples are not properly designed (as in styled). Styling can be f
 
 The following examples are currently available:
 
+- [All Demos](./all-demos.md)
 - [Webshop](./bare-shop.md)
 - [Piral Core](./demo-core.md)
 - [Cross Framework](./demo-cross.md)

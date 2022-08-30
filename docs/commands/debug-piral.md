@@ -1,4 +1,4 @@
-# `debug-piral`
+# `piral debug`
 
 Starts the debugging process for a Piral instance.
 
@@ -7,13 +7,13 @@ Starts the debugging process for a Piral instance.
 From the command line:
 
 ```sh
-pb debug-piral [source]
+piral debug [source]
 ```
 
 Alternative:
 
 ```sh
-piral debug [source]
+pb debug-piral [source]
 ```
 
 ## Aliases
@@ -35,6 +35,14 @@ Sets the source root directory or index.html file for collecting all the informa
 - Default: `./`
 
 ## Flags
+
+### `--target`
+
+Sets the target directory or file of bundling.
+
+
+- Type: `string`
+- Default: `"./dist"`
 
 ### `--port`
 
@@ -118,6 +126,14 @@ Sets the bundler to use.
 
 - Type: `string`
 - Choices: ``
+- Default: `undefined`
+
+### `--feed`
+
+Sets the URL of a pilet feed for including remote pilets.
+
+
+- Type: `string`
 - Default: `undefined`
 
 ### `--base`

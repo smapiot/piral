@@ -1,4 +1,4 @@
-# `upgrade-pilet`
+# `pilet upgrade`
 
 Upgrades an existing pilet to the latest version of the used Piral instance.
 
@@ -7,13 +7,13 @@ Upgrades an existing pilet to the latest version of the used Piral instance.
 From the command line:
 
 ```sh
-pb upgrade-pilet [target-version]
+pilet upgrade [target-version]
 ```
 
 Alternative:
 
 ```sh
-pilet upgrade [target-version]
+pb upgrade-pilet [target-version]
 ```
 
 ## Aliases
@@ -82,7 +82,7 @@ Sets the npm client to be used when upgrading.
 
 
 - Type: `string`
-- Choices: `"npm"`, `"pnpm"`, `"yarn"`, `"lerna"`, `"rush"`
+- Choices: `"npm"`, `"pnpm"`, `"pnp"`, `"yarn"`, `"lerna"`, `"rush"`
 - Default: `undefined`
 
 ### `--vars`

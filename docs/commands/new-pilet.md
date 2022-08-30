@@ -1,4 +1,4 @@
-# `new-pilet`
+# `pilet new`
 
 Scaffolds a new pilet for a specified Piral instance.
 
@@ -7,13 +7,13 @@ Scaffolds a new pilet for a specified Piral instance.
 From the command line:
 
 ```sh
-pb new-pilet [source]
+pilet new [source]
 ```
 
 Alternative:
 
 ```sh
-pilet new [source]
+pb new-pilet [source]
 ```
 
 ## Aliases
@@ -111,8 +111,8 @@ Sets the npm client to be used when scaffolding.
 
 
 - Type: `string`
-- Choices: `"npm"`, `"pnpm"`, `"yarn"`, `"lerna"`, `"rush"`
-- Default: `"npm"`
+- Choices: `"npm"`, `"pnpm"`, `"pnp"`, `"yarn"`, `"lerna"`, `"rush"`
+- Default: `undefined`
 
 ### `--bundler`
 
@@ -120,7 +120,7 @@ Sets the default bundler to install.
 
 
 - Type: `string`
-- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`, `"esbuild"`
+- Choices: `"none"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"webpack"`, `"webpack5"`, `"vite"`, `"xbuild"`
 - Default: `"none"`
 
 ### `--vars`

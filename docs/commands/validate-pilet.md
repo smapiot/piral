@@ -1,4 +1,4 @@
-# `validate-pilet`
+# `pilet validate`
 
 Checks the validity of the current pilet according to the rules defined by the Piral instance.
 
@@ -7,13 +7,13 @@ Checks the validity of the current pilet according to the rules defined by the P
 From the command line:
 
 ```sh
-pb validate-pilet [source]
+pilet validate [source]
 ```
 
 Alternative:
 
 ```sh
-pilet validate [source]
+pb validate-pilet [source]
 ```
 
 ## Aliases

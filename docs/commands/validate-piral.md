@@ -1,4 +1,4 @@
-# `validate-piral`
+# `piral validate`
 
 Checks the validity of the current project as a Piral instance.
 
@@ -7,13 +7,13 @@ Checks the validity of the current project as a Piral instance.
 From the command line:
 
 ```sh
-pb validate-piral [source]
+piral validate [source]
 ```
 
 Alternative:
 
 ```sh
-piral validate [source]
+pb validate-piral [source]
 ```
 
 ## Aliases
