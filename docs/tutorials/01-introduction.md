@@ -10,7 +10,7 @@ section: Getting Started
 
 Many modern backend system landscapes follow the architecture pattern of **microservices**, while the frontends are still mostly implemented as single applications, which integrate with the entire backend as a kind of monolithic solution.
 
-The **Piral** ecosystem offers the framework for building **microfrontend** solutions, which allows the creation of distributed web applications reflecting the flexibility and modularized structure of a microservice backend.
+The **Piral** ecosystem offers the framework for building **micro frontend** solutions, which allows the creation of distributed web applications reflecting the flexibility and modularized structure of a microservice backend.
 
 ## Video
 

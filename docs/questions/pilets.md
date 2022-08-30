@@ -64,7 +64,7 @@ In general we recommend to design and use the pilets in such a way that reuse of
 
 ## What is registerExtension?
 
-Most typical in a microfrontend the micro applications gets the full page. In Piral we baked in the concept of the app shell in such a fashion that usually the full page is already shared with components from different micro applications (pilets), e.g., menu entries, search results, modal dialogs...
+Most typical in a micro frontend the micro applications gets the full page. In Piral we baked in the concept of the app shell in such a fashion that usually the full page is already shared with components from different micro applications (pilets), e.g., menu entries, search results, modal dialogs...
 
 However, most likely you will at one point in the future reach a point where even the content of a single page needs to be shared / used by different pilets, e.g., when you have a product detail page and want to have a "add to cart" button which manipulates the data from another pilet (shopping cart). In such a case the shopping cart pilet can register an extension with a known name (e.g., `add-to-cart`) and the product detail page could insert an extension slot with the name `add-to-cart`.
 

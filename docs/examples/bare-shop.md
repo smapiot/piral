@@ -10,7 +10,7 @@ An example app based on `piral`.
 
 ## Description
 
-The sample shows how simple a microfrontend app can be set up and created; especially if the app shell does not give any design. Pilets exchange components via extensions and everything just works.
+The sample shows how simple a micro frontend app can be set up and created; especially if the app shell does not give any design. Pilets exchange components via extensions and everything just works.
 
 ![Microfrontends Demo](../diagrams/demo-mife.png)
 

@@ -1,6 +1,6 @@
 ---
 title: Development Workflow
-description: How development of a microfrontend with Piral will look in most cases.
+description: How development of a micro frontend with Piral will look in most cases.
 audience: Developers
 level: Intermediate
 section: Details

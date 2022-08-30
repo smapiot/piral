@@ -16,7 +16,7 @@ Alternatively, you can think of pi like the number PI (π).
 
 We've build several extensible frontend applications in the past. Sometimes these applications have been shipped packaged as an app, sometimes they have been deployed as a webpage only, many times both. The general mechanism was always the same and we've detected a basic pattern that can be followed successfully to develop modern (grand scale) web apps.
 
-Piral is also a solution to successfully implement an architecture based on microfrontends.
+Piral is also a solution to successfully implement an architecture based on micro frontends.
 
 ---------------------------------------
 
@@ -52,19 +52,19 @@ The SPA can be hosted on a static storage, while the backend service may be run 
 
 ---------------------------------------
 
-## Is this really a microfrontend architecture?
+## Is this really a micro frontend architecture?
 
-Sometimes people believe that only web components follow a microfrontend architecture. Sometimes people think that having no API (e.g., just using the DOM for transporting events) is necessary for microfrontends. Both things are not true. This is one extreme perspective, which we have found not to be optimal for real-world scenarios.
+Sometimes people believe that only web components follow a micro frontend architecture. Sometimes people think that having no API (e.g., just using the DOM for transporting events) is necessary for micro frontends. Both things are not true. This is one extreme perspective, which we have found not to be optimal for real-world scenarios.
 
 In reality the application shell will be constructed using some kind of framework or UI library. Realistically, there will be a tendency towards some UI solution such as React - mostly given by some kind of pattern library or preferred UI framework. In such cases it does not make sense to hide the framework of choice from the different modules. Piral makes sharing such dependencies easy.
 
-We think Piral hits a sweep spot as it takes what makes puristic microfrontends great (independent applications coming together, independent releases, independent development) and adds the reason why we build monoliths for the UI in the first place (least bundle size, optimal user experience, coherent design by using a common UI framework).
+We think Piral hits a sweep spot as it takes what makes puristic micro frontends great (independent applications coming together, independent releases, independent development) and adds the reason why we build monoliths for the UI in the first place (least bundle size, optimal user experience, coherent design by using a common UI framework).
 
 ---------------------------------------
 
 ## How is this working in non-JS environments?
 
-Piral was created with microfrontend architectures relying on heavy client-side interaction in mind. As such, the primary use case of Piral requires users to enable JavaScript.
+Piral was created with micro frontend architectures relying on heavy client-side interaction in mind. As such, the primary use case of Piral requires users to enable JavaScript.
 
 Nevertheless, for a couple of reasons you may want to offer a non-JS (or progressive) version of your application. You may want to offer enhanced SEO capabilities. You may want to reduce initial loading / rendering time. You may want to give non-JS users a bit more capabilities than just stating "Sorry - you need to enable JavaScript". We hear you loud and clear.
 
@@ -74,7 +74,7 @@ Piral is fully compatible with server-side-rendering. However, to make a Piral i
 
 ## Why does Piral require an app shell?
 
-The concept of an app shell is an ingredient that is optional for microfrontends, but for us a necessary usability and efficiency factor to ensure rapid development of the different pilets.
+The concept of an app shell is an ingredient that is optional for micro frontends, but for us a necessary usability and efficiency factor to ensure rapid development of the different pilets.
 
 The app shell could be also used fairly minimal and without any of the features that come for free with Piral (e.g., dashboard, menu entries, modal dialog management, ...). It will still be required to load the pilets and ensure proper isolation as well as communication between them.
 
@@ -205,7 +205,7 @@ const NotFound = props => <PiralError type="not_found" {...props} />;
 
 ## What is the difference between pilet and a page?
 
-A pilet contains all the code of a microfrontend, which may include some pages. Essentially a page is nothing more than a component used via a routing rule. A pilet can contain (and register) as many components as it wants.
+A pilet contains all the code of a micro frontend, which may include some pages. Essentially a page is nothing more than a component used via a routing rule. A pilet can contain (and register) as many components as it wants.
 
 ---------------------------------------
 
@@ -217,7 +217,7 @@ Yes definitely. There is nothing in Piral that would violate HIPAA. For HIPAA co
 
 ## How to wrap all MF components?
 
-A Piral instance can be configured with "wrappers". These are middleware components that will host registered components (like the ones coming from the microfrontends).
+A Piral instance can be configured with "wrappers". These are middleware components that will host registered components (like the ones coming from the micro frontends).
 
 Simple example:
 

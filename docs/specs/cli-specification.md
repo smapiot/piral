@@ -10,7 +10,7 @@ The Piral CLI is a command-line tool, which offers a rich feature set to allow b
 
 ## Introduction
 
-For building client-side microfrontends, a combination of tools is required. The Piral framework tries to simplify this process by offering a tool (`piral-cli`) to help with the most common processes. While this tool may be handy for most developers, it may be too restrictive for others. Therefore, we wanted to provide with this specification the description for all necessary processes to support custom implementations, too.
+For building client-side micro frontends, a combination of tools is required. The Piral framework tries to simplify this process by offering a tool (`piral-cli`) to help with the most common processes. While this tool may be handy for most developers, it may be too restrictive for others. Therefore, we wanted to provide with this specification the description for all necessary processes to support custom implementations, too.
 
 ## Conformance
 

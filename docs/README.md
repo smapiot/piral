@@ -1,6 +1,6 @@
 # Piral Documentation
 
-Piral is a React-based framework that tries to help you building a modular single page application (SPA) following the microfrontends architecture. Like every good library Piral tries to
+Piral is a React-based framework that tries to help you building a modular single page application (SPA) following the micro frontends architecture. Like every good library Piral tries to
 
 > make the common things simple and make any customizations possible.
 

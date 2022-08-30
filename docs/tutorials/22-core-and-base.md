@@ -30,7 +30,7 @@ Like `piral-core`, `piral-base` is also a real library. However, while `piral-co
 
 ## Migrating from Piral to Piral Core
 
-`piral-core` should be used if a fully fledged microfrontend solution is expected without being too opinionated with respect to its exposed API or the versions of `react`, `react-dom`, `react-router` etc. packages. It makes sense, for instance, for larger applications that come with already with a lot of restrictions and use cases in mind. It also is the right choice when an existing project should be migrated to Piral.
+`piral-core` should be used if a fully fledged micro frontend solution is expected without being too opinionated with respect to its exposed API or the versions of `react`, `react-dom`, `react-router` etc. packages. It makes sense, for instance, for larger applications that come with already with a lot of restrictions and use cases in mind. It also is the right choice when an existing project should be migrated to Piral.
 
 Quite often the scenario is that somebody starts with `piral` but then realized that one or the other plugin should not be included. Sometimes further flexibility, e.g., regarding the chosen package versions is demanded. In any of these cases a migration from `piral` to `piral-core` makes sense. What should be done then?
 
@@ -95,7 +95,7 @@ interface PiletApi {
 
 Essentially, this means that only the pilet's metadata and the standard eventing system for loose communication is available.
 
-With this in mind we can build our own microfrontend solution, still profiting from the Piral CLI and its essential architecture, principles, and ideas. At its core the `startLoadingPilets` function should be used.
+With this in mind we can build our own micro frontend solution, still profiting from the Piral CLI and its essential architecture, principles, and ideas. At its core the `startLoadingPilets` function should be used.
 
 As an example let's consider the following `App` component, using exactly this:
 
@@ -128,4 +128,4 @@ Now `AppLayout` could be defined to be exactly an app shell layout like you've b
 
 Depending on your application it makes sense to use `piral-core` or even `piral-base`. While `piral` is fully opinionated, the lower-level packages don't come with batteries included. Nevertheless, the modular layout of Piral makes it possible to get everything just in as you need - and want - to.
 
-In the next tutorial, we'll look at how to set up a monorepo for your microfrontends with Piral.
+In the next tutorial, we'll look at how to set up a monorepo for your micro frontends with Piral.

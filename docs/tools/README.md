@@ -1,6 +1,6 @@
 # Tools
 
-Piral is an end-to-end solution for creating large-scale web applications using microfrontends. As such we also try to create an ecosystem of tools that is helpful.
+Piral is an end-to-end solution for creating large-scale web applications using micro frontends. As such we also try to create an ecosystem of tools that is helpful.
 
 ## Available Tooling
 

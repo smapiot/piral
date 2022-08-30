@@ -20,7 +20,7 @@ Piral comes with the following features:
 
 The primary target framework of Piral is React, but due to the secondary ("foreign") API, any framework that can be attached to the DOM can be used.
 
-Let's check our list against common checklists for microfrontends.
+Let's check our list against common checklists for micro frontends.
 
 ✔️ **Implementation, complexity, and integration**
 
@@ -36,7 +36,7 @@ A pilet is sandboxed from the main application. It cannot crash the main applica
 
 ✔️ **Separate deployment and team owners**
 
-> Each microfrontend is deployed and managed separately to prevent downtime and reduce deployment time.
+> Each micro frontend is deployed and managed separately to prevent downtime and reduce deployment time.
 
 A pilet is deployed to a dedicated service or feed independently of the main application, which may be hosted on a CDN. The deployment and release cycle of each pilet is completely independent of each other and the main application.
 
@@ -88,7 +88,7 @@ We think that Piral hits a sweet spot that makes development easy and fun while 
 
 While some of the alternatives focus on multi-frameworks (i.e., having multiple runtimes in the same application) Piral tries to be efficient without having too strong restrictions on the developer. React is preferred, however, if one feels the need there is also an escape hatch to register full components based on a DOM node given by Piral. As such any framework that attaches to a DOM node can be used.
 
-Piral tries to minimize the work required for setting up a microfrontend by not doing a microfrontend. Instead, modules are used, which are independent of a particular backend service. In the end, Piral is not trying to dictate how to cut your architecture, domain model, or available development resources, but rather giving you a toolbox to boost your productivity.
+Piral tries to minimize the work required for setting up a micro frontend by not doing a micro frontend. Instead, modules are used, which are independent of a particular backend service. In the end, Piral is not trying to dictate how to cut your architecture, domain model, or available development resources, but rather giving you a toolbox to boost your productivity.
 
 The links for the alternatives listed above.
 
@@ -136,7 +136,7 @@ There are more alternatives, which have not been listed for brevity. Some of the
 
 **Notifications**: Is a notifications solution included out of the box?
 
-**Module Communication**: Is it easily possible to communicate between the microfrontends, e.g., via a specialized event bus?
+**Module Communication**: Is it easily possible to communicate between the micro frontends, e.g., via a specialized event bus?
 
 **TypeScript Support**: Is the project written in TypeScript and brings an always up-to-date d.ts?
 
@@ -148,7 +148,7 @@ There are more alternatives, which have not been listed for brevity. Some of the
 
 ## Further Reading
 
-There are further reads on the topic of microfrontends.
+There are further reads on the topic of micro frontends.
 
 - [Awesome Micro Frontends](https://github.com/rajasegar/awesome-micro-frontends)
 - [Micro frontends—a microservice approach to front-end web development](https://medium.com/@tomsoderlund/micro-frontends-a-microservice-approach-to-front-end-web-development-f325ebdadc16)

@@ -10,7 +10,7 @@ An example app based on `piral`.
 
 ## Description
 
-The sample shows how a full Piral instance can be created using a completely custom UI and only standard functional components. The idea behind this example is to illustrate how little needs to be done to create a microfrontend shell. A virtual pilet is brought in via the attach API.
+The sample shows how a full Piral instance can be created using a completely custom UI and only standard functional components. The idea behind this example is to illustrate how little needs to be done to create a micro frontend shell. A virtual pilet is brought in via the attach API.
 
 ![Piral Full Demo](../diagrams/demo-full.png)
 

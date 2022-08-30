@@ -130,7 +130,7 @@ dist
 
 Regarding the use of CSS in general: By default, Piral makes no restrictions on what you can put into your CSS from your pilets. As a result, two pilets may collide with each other in styling. Even worse, a pilet may destroy the global design of the app shell.
 
-Luckily, there are ways around this. The best practice here is to "namespace" our CSS, which is facilitated by usage of SASS or CSS-in-JS libraries. Pilets will need to give careful consideration to what "reset" or "normalization" libraries they're using, and microfrontends should decouple themselves from whatever CSS artifacts other pilets are exporting.
+Luckily, there are ways around this. The best practice here is to "namespace" our CSS, which is facilitated by usage of SASS or CSS-in-JS libraries. Pilets will need to give careful consideration to what "reset" or "normalization" libraries they're using, and micro frontends should decouple themselves from whatever CSS artifacts other pilets are exporting.
 
 ## Create React App into App Shell
 
