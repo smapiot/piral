@@ -156,6 +156,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(fullBase, entry);
   const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
+  const piralInstances = [name];
   const dest = getDestination(entryFiles, resolve(fullBase, target));
 
   await checkCliCompatibility(root);
@@ -174,7 +175,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     // since we create this anyway let's just pretend we want to have it clean!
     await removeDirectory(targetDir);
 
-    await hooks.beforeBuild?.({ root, publicUrl: emulatorPublicUrl, externals, entryFiles, targetDir, name });
+    await hooks.beforeBuild?.({ root, publicUrl: emulatorPublicUrl, externals, entryFiles, targetDir, piralInstances });
 
     logInfo(`Bundle ${emulatorName} ...`);
     const {
@@ -184,7 +185,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     } = await callPiralBuild(
       {
         root,
-        piral: name,
+        piralInstances,
         emulator: true,
         standalone: false,
         optimizeModules,
@@ -209,7 +210,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       externals,
       entryFiles,
       targetDir,
-      name,
+      piralInstances,
       hash,
       outDir,
       outFile,
@@ -246,7 +247,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
     logInfo(`Bundle ${releaseName} ...`);
 
-    await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name });
+    await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, piralInstances });
 
     const {
       dir: outDir,
@@ -255,7 +256,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     } = await callPiralBuild(
       {
         root,
-        piral: name,
+        piralInstances,
         emulator: false,
         standalone: false,
         optimizeModules,
@@ -274,7 +275,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       bundlerName,
     );
 
-    await hooks.afterBuild?.({ root, publicUrl, externals, entryFiles, targetDir, name, outDir, outFile, hash });
+    await hooks.afterBuild?.({ root, publicUrl, externals, entryFiles, targetDir, piralInstances, outDir, outFile, hash });
 
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${releaseName}`);

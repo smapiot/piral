@@ -24,9 +24,9 @@ export interface PiletWebpackConfigEnhancerOptions {
    */
   version: string;
   /**
-   * The name of the Piral instance / app shell.
+   * The name of the Piral instances.
    */
-  piral: string;
+  piralInstances: Array<string>;
   /**
    * The name of the main output file.
    */

@@ -1,7 +1,7 @@
 import { join, dirname, resolve, relative, basename } from 'path';
-import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
 import { callDebugPiralFromMonoRepo, callPiletDebug } from '../bundler';
-import { LogLevels, PiletSchemaVersion } from '../types';
+import { AppDefinition, LogLevels, PiletSchemaVersion } from '../types';
 import {
   checkExistingDirectory,
   retrievePiletData,
@@ -133,46 +133,60 @@ export const debugPiletDefaults: DebugPiletOptions = {
   concurrency: cpuCount,
 };
 
-const injectorName = resolve(__dirname, '../injectors/pilet.js');
-
 interface AppInfo {
-  emulator: boolean;
-  appFile: string;
+  apps: Array<AppDefinition>;
+  root: string;
+  mocks: string;
   publicUrl: string;
-  appVersion: string;
   externals: Array<string>;
-  piral: string;
 }
 
-async function getOrMakeAppDir({ emulator, piral, appFile, publicUrl }: AppInfo, logLevel: LogLevels) {
-  if (!emulator) {
-    const { externals, root, ignored } = await retrievePiletsInfo(appFile);
-    const { dir } = await callDebugPiralFromMonoRepo({
-      root,
-      optimizeModules: false,
-      publicUrl,
-      ignored,
-      externals,
-      piral,
-      entryFiles: appFile,
-      logLevel,
-      _: {},
-    });
-    return dir;
-  }
+function getOrMakeApps({ apps, publicUrl }: AppInfo, logLevel: LogLevels) {
+  return Promise.all(
+    apps.map(async ({ emulator, appFile, appPackage }) => {
+      if (!emulator) {
+        const piralInstances = [appPackage.name];
+        const { externals, root, ignored } = await retrievePiletsInfo(appFile);
+        const { dir } = await callDebugPiralFromMonoRepo({
+          root,
+          optimizeModules: false,
+          publicUrl,
+          ignored,
+          externals,
+          piralInstances,
+          entryFiles: appFile,
+          logLevel,
+          _: {},
+        });
+        return dir;
+      }
 
-  return dirname(appFile);
+      return dirname(appFile);
+    }),
+  );
 }
 
 function checkSanity(pilets: Array<AppInfo>) {
   for (let i = 1; i < pilets.length; i++) {
     const previous = pilets[i - 1];
     const current = pilets[i];
+    const previousInstances = previous.apps;
+    const currentInstances = current.apps;
+    const previousInstancesNames = previousInstances
+      .map((m) => m.appPackage.name)
+      .sort()
+      .join(', ');
+    const currentInstancesNames = currentInstances
+      .map((m) => m.appPackage.name)
+      .sort()
+      .join(', ');
+    const previousInstancesVersions = previousInstances.map((m) => m.appPackage.version).join(', ');
+    const currentInstancesVersions = currentInstances.map((m) => m.appPackage.version).join(', ');
 
-    if (previous.piral !== current.piral) {
-      return log('piletMultiDebugAppShellDifferent_0301', previous.piral, current.piral);
-    } else if (previous.appVersion !== current.appVersion) {
-      return log('piletMultiDebugAppShellVersions_0302', previous.appVersion, current.appVersion);
+    if (previousInstancesNames !== currentInstancesNames) {
+      return log('piletMultiDebugAppShellDifferent_0301', previousInstancesNames, currentInstancesNames);
+    } else if (previousInstancesVersions !== currentInstancesVersions) {
+      return log('piletMultiDebugAppShellVersions_0302', previousInstancesVersions, currentInstancesVersions);
     } else if (previous.externals.length !== current.externals.length) {
       return log('piletMultiDebugExternalsDifferent_0303', previous.externals, current.externals);
     } else if (previous.externals.some((m) => !current.externals.includes(m))) {
@@ -226,9 +240,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
     const targetDir = dirname(entryModule);
     const { peerDependencies, peerModules, root, apps, ignored, importmap } = await retrievePiletData(targetDir, app);
-    const { appPackage, appFile, emulator } = apps[0];
-    const piral = appPackage.name;
-    const externals = combinePiletExternals([piral], peerDependencies, peerModules, importmap);
+    const piralInstances = apps.map((m) => m.appPackage.name);
+    const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const mocks = join(targetDir, 'mocks');
     const dest = resolve(root, target);
     const outDir = dirname(dest);
@@ -240,7 +253,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     const bundler = await callPiletDebug(
       {
         root,
-        piral,
+        piralInstances,
         optimizeModules,
         hmr,
         externals,
@@ -262,12 +275,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     });
 
     return {
-      emulator,
-      appFile,
+      apps,
       publicUrl,
-      appVersion: appPackage.version,
       externals,
-      piral: appPackage.name,
       bundler,
       mocks: mocksExists ? mocks : undefined,
       root,
@@ -278,54 +288,59 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   checkSanity(pilets);
 
   await hooks.beforeApp?.({ appInstanceDir, pilets });
-  const appDir = appInstanceDir || (await getOrMakeAppDir(pilets[0], logLevel));
-  const appRoot = dirname(await findFile(appDir, 'package.json'));
-  await hooks.afterApp?.({ appInstanceDir, pilets });
+  const appDirs = [appInstanceDir] || (await getOrMakeApps(pilets[0], logLevel));
 
-  Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
+  await Promise.all(
+    appDirs.map(async (appDir) => {
+      const appRoot = dirname(await findFile(appDir, 'package.json'));
+      await hooks.afterApp?.({ appInstanceDir, pilets });
 
-  const sources = pilets.map((m) => m.mocks).filter(Boolean);
-  const baseMocks = resolve(fullBase, 'mocks');
-  const krasBaseConfig = resolve(fullBase, krasrc);
-  const krasRootConfig = resolve(appRoot, krasrc);
-  const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
-  const required = {
-    injectors: {
-      piral: {
-        active: false,
-      },
-      pilet: {
-        active: true,
-        pilets,
-        app: appDir,
-        publicUrl,
-        handle: ['/', api],
-        api,
-      },
-    },
-  };
-  const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
-  const port = await getAvailablePort(originalPort);
-  const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
+      Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
 
-  log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
+      const sources = pilets.map((m) => m.mocks).filter(Boolean);
+      const baseMocks = resolve(fullBase, 'mocks');
+      const krasBaseConfig = resolve(fullBase, krasrc);
+      const krasRootConfig = resolve(appRoot, krasrc);
+      const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
+      const required = {
+        injectors: {
+          piral: {
+            active: false,
+          },
+          pilet: {
+            active: true,
+            pilets,
+            app: appDir,
+            publicUrl,
+            handle: ['/', api],
+            api,
+          },
+        },
+      };
+      const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
+      const port = await getAvailablePort(originalPort);
+      const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 
-  const krasServer = buildKrasWithCli(krasConfig);
-  krasServer.setMaxListeners(maxListeners);
-  krasServer.removeAllListeners('open');
-  krasServer.on(
-    'open',
-    notifyServerOnline(
-      pilets.map((p) => p.bundler),
-      publicUrl,
-      krasConfig.api,
-    ),
+      log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
+
+      const krasServer = buildKrasWithCli(krasConfig);
+      krasServer.setMaxListeners(maxListeners);
+      krasServer.removeAllListeners('open');
+      krasServer.on(
+        'open',
+        notifyServerOnline(
+          pilets.map((p) => p.bundler),
+          publicUrl,
+          krasConfig.api,
+        ),
+      );
+
+      await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
+      await krasServer.start();
+      openBrowser(open, port, publicUrl, !!krasConfig.ssl);
+      await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
+      await new Promise((resolve) => krasServer.on('close', resolve));
+      await hooks.onEnd?.({});
+    }),
   );
-
-  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
-  await krasServer.start();
-  openBrowser(open, port, publicUrl, !!krasConfig.ssl);
-  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
-  await new Promise((resolve) => krasServer.on('close', resolve));
-  await hooks.onEnd?.({});
 }

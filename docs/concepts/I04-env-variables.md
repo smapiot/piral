@@ -43,3 +43,5 @@ The following variables are available when `pilet build` or `pilet debug` (or re
 | Name | Purpose | Example |
 |------|---------|---------|
 | `PIRAL_INSTANCE` | - | `my-app` |
+
+There can be also multiple Piral instances - they are comma separated, e.g., `my-app1,my-app2`.

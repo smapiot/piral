@@ -15,7 +15,7 @@ function run(
   targetDir: string,
   outDir: string,
   outFile: string,
-  piral: string,
+  piralInstances: Array<string>,
   externals: Array<string>,
   importmap: Array<SharedDependency>,
   entryModule: string,
@@ -25,12 +25,13 @@ function run(
 ) {
   setStandardEnvs({
     production: false,
-    piral,
+    piralInstances,
     root,
   });
+
   return handler.create({
     root,
-    piral,
+    piralInstances,
     entryModule,
     targetDir,
     outDir,
@@ -68,7 +69,7 @@ process.on('message', async (msg) => {
           msg.targetDir,
           msg.outDir,
           msg.outFile,
-          msg.piral,
+          msg.piralInstances,
           msg.externals,
           msg.importmap,
           msg.entryModule,

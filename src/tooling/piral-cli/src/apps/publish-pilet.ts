@@ -138,12 +138,12 @@ async function getFiles(
         const { root, piletPackage, importmap, peerDependencies, peerModules, apps } = await retrievePiletData(
           targetDir,
         );
-        const piral = apps[0].appPackage.name;
+        const piralInstances = apps.map((m) => m.appPackage.name);
         const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
         const dest = resolve(root, main);
         const outDir = dirname(dest);
         const outFile = basename(dest);
-        const externals = combinePiletExternals([piral], peerDependencies, peerModules, importmap);
+        const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
         progress('Triggering pilet build ...');
 
         if (fresh) {
@@ -156,7 +156,7 @@ async function getFiles(
         await callPiletBuild(
           {
             root,
-            piral,
+            piralInstances,
             optimizeModules: false,
             sourceMaps: true,
             contentHash: true,

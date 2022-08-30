@@ -5,7 +5,7 @@ let handler: PiralBuildHandler;
 
 function run(
   root: string,
-  piral: string,
+  piralInstances: Array<string>,
   emulator: boolean,
   standalone: boolean,
   sourceMaps: boolean,
@@ -25,7 +25,7 @@ function run(
     publicPath: publicUrl,
     debugPiral: emulator,
     debugPilet: emulator || standalone,
-    piral,
+    piralInstances,
     dependencies: externals,
   });
 
@@ -56,7 +56,7 @@ process.on('message', async (msg) => {
       case 'start':
         const bundler = await run(
           process.cwd(),
-          msg.piral,
+          msg.piralInstances,
           msg.emulator,
           msg.standalone,
           msg.sourceMaps,

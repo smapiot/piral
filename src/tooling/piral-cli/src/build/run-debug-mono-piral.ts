@@ -8,7 +8,7 @@ function run(
   root: string,
   outFile: string,
   outDir: string,
-  piral: string,
+  piralInstances: Array<string>,
   hmr: boolean,
   externals: Array<string>,
   publicUrl: string,
@@ -19,7 +19,7 @@ function run(
   progress(`Preparing supplied Piral instance ...`);
 
   setStandardEnvs({
-    piral,
+    piralInstances,
     dependencies: externals,
     publicPath: publicUrl,
     production: false,
@@ -59,7 +59,7 @@ process.on('message', async (msg) => {
           root,
           msg.outFile,
           outDir,
-          msg.piral,
+          msg.piralInstances,
           true,
           msg.externals,
           msg.publicUrl,

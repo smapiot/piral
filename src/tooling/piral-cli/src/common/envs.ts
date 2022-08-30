@@ -47,12 +47,12 @@ export function setStandardEnvs(options: StandardEnvProps) {
     process.env.NODE_ENV = 'development';
   }
 
-  if (options.piral) {
-    process.env.PIRAL_INSTANCE = options.piral;
+  if (options.piralInstances) {
+    process.env.PIRAL_INSTANCE = options.piralInstances.join(',');
   }
 
   if (options.dependencies && options.dependencies.length) {
-    const excludedDependencies = [...frameworkLibs, options.piral];
+    const excludedDependencies = [...frameworkLibs, ...options.piralInstances];
     const dependencies = options.dependencies.filter((m) => !excludedDependencies.includes(m));
     process.env.SHARED_DEPENDENCIES = dependencies.join(',');
   } else {

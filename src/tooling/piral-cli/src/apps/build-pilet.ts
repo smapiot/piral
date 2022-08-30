@@ -212,8 +212,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       targetDir,
       app,
     );
-    const piral = apps[0].appPackage.name;
-    const externals = combinePiletExternals([piral], peerDependencies, peerModules, importmap);
+    const piralInstances = apps.map(m => m.appPackage.name);
+    const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
     const outDir = dirname(dest);
     const outFile = basename(dest);
@@ -230,7 +230,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await callPiletBuild(
       {
         root,
-        piral,
+        piralInstances,
         optimizeModules,
         sourceMaps,
         contentHash,
@@ -282,7 +282,9 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     const distDir = dirname(resolve(fullBase, target));
     const outDir = resolve(distDir, 'standalone');
     const { apps, root } = pilets[0];
+
     const { appPackage, appFile } = apps[0];
+    const piralInstances = [appPackage.name];
     const isEmulator = checkAppShellPackage(appPackage);
 
     logInfo('Building standalone solution ...');
@@ -306,7 +308,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       await callPiralBuild(
         {
           root,
-          piral: appPackage.name,
+          piralInstances,
           emulator: false,
           standalone: true,
           optimizeModules: false,
@@ -331,7 +333,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       await callPiralBuild(
         {
           root,
-          piral: appPackage.name,
+          piralInstances,
           emulator: false,
           standalone: true,
           optimizeModules: false,

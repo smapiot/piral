@@ -8,7 +8,7 @@ function run(
   root: string,
   outFile: string,
   outDir: string,
-  piral: string,
+  piralInstances: Array<string>,
   hmr: boolean,
   externals: Array<string>,
   publicUrl: string,
@@ -21,7 +21,7 @@ function run(
     debugPiral: true,
     dependencies: externals,
     publicPath: publicUrl,
-    piral,
+    piralInstances,
   });
 
   return handler.create({
@@ -61,7 +61,7 @@ process.on('message', async (msg) => {
           root,
           msg.outFile,
           msg.outDir,
-          msg.piral,
+          msg.piralInstances,
           msg.hmr,
           msg.externals,
           msg.publicUrl,

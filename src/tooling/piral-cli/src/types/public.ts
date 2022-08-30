@@ -67,7 +67,7 @@ export interface BaseBundleParameters {
 }
 
 export interface DebugPiralParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   hmr: boolean;
   externals: Array<string>;
   publicUrl: string;
@@ -78,7 +78,7 @@ export interface DebugPiralParameters extends BaseBundleParameters {
 }
 
 export interface WatchPiralParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   externals: Array<string>;
   publicUrl: string;
   entryFiles: string;
@@ -86,7 +86,7 @@ export interface WatchPiralParameters extends BaseBundleParameters {
 }
 
 export interface BuildPiralParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   emulator: boolean;
   standalone: boolean;
   sourceMaps: boolean;
@@ -101,7 +101,7 @@ export interface BuildPiralParameters extends BaseBundleParameters {
 }
 
 export interface DebugPiletParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   hmr: boolean;
   externals: Array<string>;
   importmap: Array<SharedDependency>;
@@ -114,7 +114,7 @@ export interface DebugPiletParameters extends BaseBundleParameters {
 }
 
 export interface BuildPiletParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   sourceMaps: boolean;
   contentHash: boolean;
   minify: boolean;
@@ -177,7 +177,7 @@ export interface PiralBuildHandler {
 export interface PiletBuildHandler {
   create(config: {
     root: string;
-    piral: string;
+    piralInstances: Array<string>;
     entryModule: string;
     targetDir: string;
     outDir: string;
@@ -241,6 +241,6 @@ export interface StandardEnvProps {
   debugPilet?: boolean;
   root: string;
   publicPath?: string;
-  piral?: string;
+  piralInstances?: Array<string>;
   dependencies?: Array<string>;
 }

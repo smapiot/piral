@@ -125,16 +125,17 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const entryFiles = await retrievePiralRoot(fullBase, entry);
   const targetDir = dirname(entryFiles);
   const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
+  const piralInstances = [name];
   const dest = getDestination(entryFiles, resolve(fullBase, target));
 
   await checkCliCompatibility(root);
 
-  await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, name });
+  await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, piralInstances });
 
   const bundler = await callPiralDebug(
     {
       root,
-      piral: name,
+      piralInstances,
       optimizeModules,
       hmr,
       externals,
@@ -151,7 +152,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   bundler.ready().then(() => logDone(`Ready!`));
 
   bundler.on((args) => {
-    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler, ...dest });
+    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, piralInstances, bundler, ...dest });
   });
 
   const krasBaseConfig = resolve(fullBase, krasrc);

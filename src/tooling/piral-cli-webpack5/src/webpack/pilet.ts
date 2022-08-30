@@ -15,7 +15,7 @@ async function getConfig(
   filename: string,
   externals: Array<string>,
   importmap: Array<SharedDependency> = [],
-  piral: string,
+  piralInstances: Array<string>,
   schema: PiletSchemaVersion,
   develop = false,
   sourceMaps = true,
@@ -29,7 +29,7 @@ async function getConfig(
 
   const enhance = piletWebpackConfigEnhancer({
     name,
-    piral,
+    piralInstances,
     version,
     entry,
     externals,
@@ -100,7 +100,7 @@ const handler: PiletBuildHandler = {
       options.outFile,
       options.externals,
       options.importmap,
-      options.piral,
+      options.piralInstances,
       options.version,
       options.develop,
       options.sourceMaps,
