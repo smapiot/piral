@@ -86,7 +86,7 @@ The event implementation in Piral is lightweight and fast. Underneath we use cus
 
 We do not serialize the event args. Therefore, you are able to also transparent functions (e.g., callbacks) or compare object references.
 
-![DOM Custom Events](../diagrams/custom-events.png)
+![DOM Custom Events](../diagrams/custom-events.png){.auto}
 
 While it could be possible to fake Piral events in practice it would be very hard to do. Under the hood, Piral makes sure that the Piral events are properly packaged in a wrapper when being transported via a DOM custom event. The wrapper contains a special signature that is checked before distributing.
 

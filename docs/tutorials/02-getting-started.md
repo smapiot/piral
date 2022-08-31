@@ -54,7 +54,7 @@ A Piral instance builds the application shell and as such the foundation for exe
 
 In the end, the app shell is the foundation for the whole frontend. In the diagram below we see that the app shell is the top layer, which may (later on) hold other shared libraries or the shared UI components. The modules are then built later.
 
-![Anatomy of a modulith](../diagrams/modulith.png)
+![Anatomy of a modulith](../diagrams/modulith.png){.auto}
 
 So let's set up a new Piral instance to get our app shell running!
 
@@ -127,7 +127,7 @@ npx piral build --type emulator
 
 The *emulator package* is a tarball containing the application shell, in our case, it will be named `my-app-1.0.0.tgz`. Usually, the tarball will be published to a (private) npm registry, so that all development teams will be able to reference and use the same Piral instance for developing their pilets.
 
-![Folder structure of the application shell](../diagrams/my-app-structure.png)
+![Folder structure of the application shell](../diagrams/my-app-structure.png){.auto}
 
 For local development (or this tutorial) we can refer to the Piral instance locally.
 
@@ -147,7 +147,7 @@ pilet new ./my-app/dist/emulator/my-app-1.0.0.tgz --target my-pilet
 
 With the `pilet new` command, a new pilet with pre-defined content is created. The first parameter `./my-app/dist/emulator/my-app-1.0.0.tgz` specifies the application shell, which the pilet will be built for. Make sure that you adjust the path to the Piral instance located in your local directory structure.
 
-![Folder structure of the pilet](../diagrams/my-pilet-structure.png)
+![Folder structure of the pilet](../diagrams/my-pilet-structure.png){.auto}
 
 If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 

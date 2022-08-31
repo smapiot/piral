@@ -20,13 +20,13 @@ In CSR the client needs to do the work of requesting the info from the feed serv
 
 The diagram below shows this sequence.
 
-![Sequence of CSR](../diagrams/csr-sequence.png)
+![Sequence of CSR](../diagrams/csr-sequence.png){.auto}
 
 In SSR this changes a bit. Now its up to the webserver to do this aggregation. As a side effect we cannot just expose the app shell via some static storage, we actually need a webserver handling the logic.
 
 The diagram below shows this sequence.
 
-![Sequence of SSR](../diagrams/ssr-sequence.png)
+![Sequence of SSR](../diagrams/ssr-sequence.png){.auto}
 
 **Remark**: The sequence above can be simplified if the pilet feed service is on the same server as the webserver. Likewise, we do not have to provide the full chain, i.e., we could go for a hybrid between the full CSR and the full SSR, e.g., by only including the response from the feed service in the SSR part thus still leaving the pilets for retrieval on the client-side.
 
@@ -170,7 +170,7 @@ The important parts being the `<div id="app"></div>` for the main entry point, a
 
 The diagram below shows this sequence.
 
-![Sequence of a CSR-SSR hybrid solution](../diagrams/hybrid-sequence.png)
+![Sequence of a CSR-SSR hybrid solution](../diagrams/hybrid-sequence.png){.auto}
 
 **Remark**: The replacement for the embedded data needs to be placed *before* the root module (in the example above `<script src="index.tsx"></script>`) is referenced.
 

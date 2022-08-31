@@ -18,7 +18,7 @@ The core Piral framework is represented by self-closed packages such as `siteles
 
 Taking `piral` as the framework of choice we can draw the following package hierarchy diagram.
 
-![Piral Package Hierarchy Diagram](../diagrams/blocks.svg)
+![Piral Package Hierarchy Diagram](../diagrams/blocks.svg){.auto}
 
 As you can see the `piral` package is placed on top of `piral-core` and `piral-ext`. While the latter delivers a "standardized" (i.e., opinionated) set of plugins, the former brings the main functionalities that define Piral.
 

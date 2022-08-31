@@ -24,7 +24,7 @@ The application shell determines how the pilet API looks like. In Piral we alrea
 
 Most APIs will be designed in a symmetric way, i.e., such that one call has a respective counter-part. An example is the "register" class of available API calls.
 
-![Register and Unregister APIs](../diagrams/piral-api.svg)
+![Register and Unregister APIs](../diagrams/piral-api.svg){.auto}
 
 For every register method (e.g., to register a page) there is an unregister method. Usually, we will only require to use the register method. In some cases, however, we may want to dynamically add (and then remove) some functionality.
 

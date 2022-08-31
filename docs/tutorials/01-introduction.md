@@ -38,7 +38,7 @@ When the pilets have reached a certain maturity level, a developer can publish t
 
 The following tutorials will start with guidance for the first steps through to advanced topics for working with the Piral framework.
 
-![Classic Frontend Monolith](../diagrams/overview.png)
+![Classic Frontend Monolith](../diagrams/overview.png){.auto}
 
 The diagram above illustrates the setup and process for developing with Piral. The prerequisites are fairly minimal and as a developer you only need your favorite editor, a terminal, an Internet browser and Node.js installed. The **Piral instance** (application shell) and the **pilets** (feature modules) can be executed and debugged in the emulator on the local development machine.
 

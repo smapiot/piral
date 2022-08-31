@@ -248,7 +248,7 @@ Pilets should remain rather small, however, when combined with dependencies, hea
 
 This could result in the following setup:
 
-![Bundle splitting with lazy loaded pages](../diagrams/bundle-splitting.png)
+![Bundle splitting with lazy loaded pages](../diagrams/bundle-splitting.png){.auto}
 
 The process is rather straight-forward. We use the `import` function and `React.lazy` (or another mechanism from your favorite framework) to trigger the lazy loading of a module. This way the following code,
 
@@ -304,7 +304,7 @@ export function setup(app: PiletApi) {
 
 We could, e.g., introduce a dedicated page where this extension is used. Furthermore, tiles, modal dialogs and other components may be introduced to only test this extension. In the following we go for a page, but this approach works for anything.
 
-![Testing extensions with temporary pages](../diagrams/extensions-debug.png)
+![Testing extensions with temporary pages](../diagrams/extensions-debug.png){.auto}
 
 The diagram above illustrates this idea. In code it looks as follows:
 

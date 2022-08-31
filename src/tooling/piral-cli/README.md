@@ -82,6 +82,23 @@ The resolution for plugins is as follows:
 
 Plugins are never loaded twice. Local versions have precedence.
 
+Using a plugin you can also attach to the hooks of the `pilet build/debug` and `piral build/debug` commands.
+
+```js
+module.exports = function (cliApi) {
+  cliApi.wrapCommand('debug-pilet', (args, run) => run({
+    ...args,
+    hooks: {
+      afterBuild({ outFile, outDir }) {
+        console.log('Build done', outFile, outDir);
+      },
+    },
+  }));
+};
+```
+
+In this case the `afterBuild` hook of the `pilet debug` command is set. You can do whatever else hook, too. Furthermore, you are not limited to a single command - you might want to wrap multiple here.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

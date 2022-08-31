@@ -14,7 +14,7 @@ A high developer convenience can be achieved by providing a seamless debugging e
 
 The essential development workflow is displayed below. We start with the app shell, which should be implemented up to a degree where some first pilets may be integrated. At some point, a "pilet factory" mode is started.
 
-![Full Development Life Cycle](../diagrams/piral-dev-life-cycle.png)
+![Full Development Life Cycle](../diagrams/piral-dev-life-cycle.png){.auto}
 
 The important aspect of the diagram above is the deployment independence of each layer. Teams responsible for the different pilets can deploy independently of other teams. In reality, some feature constraints and other business values may impact the deployment independence, but technically there are no such constraints if well set up.
 
