@@ -30,3 +30,5 @@ export * from './scripts';
 export * from './spec';
 export * from './template';
 export * from './url';
+export * from './version';
+export * from './watcher';
