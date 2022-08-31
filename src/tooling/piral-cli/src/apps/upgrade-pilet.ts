@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import { LogLevels, NpmClientType } from '../types';
 import {
-  readJson,
   installNpmPackage,
   checkExistingDirectory,
   patchPiletPackage,
@@ -24,6 +23,7 @@ import {
   getPiralPath,
   isMonorepoPackageRef,
   getPiletScaffoldData,
+  retrievePiletData,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -99,11 +99,11 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   }
 
   const npmClient = await determineNpmClient(root, defaultNpmClient);
-  const pckg = await readJson(root, 'package.json');
-  const { devDependencies = {}, dependencies = {}, piral, source } = pckg;
+  const { apps, piletPackage } = await retrievePiletData(root);
+  const { devDependencies = {}, dependencies = {}, source } = piletPackage;
 
-  if (piral && typeof piral === 'object') {
-    const sourceName = piral.name;
+  for (const { appPackage } of apps) {
+    const sourceName = appPackage.name;
     const language = /\.jsx?$/.test(source) ? 'js' : 'ts';
 
     if (!sourceName || typeof sourceName !== 'string') {
@@ -170,9 +170,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       log('generalDebug_0003', `Run: ${postUpgrade}`);
       await runScript(postUpgrade, root);
     }
-
-    logDone('Pilet upgraded successfully!');
-  } else {
-    fail('invalidPiletPackage_0041');
   }
+
+  logDone('Pilet upgraded successfully!');
 }

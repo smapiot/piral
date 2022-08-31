@@ -574,7 +574,7 @@ export async function patchPiletPackage(
   log('generalDebug_0003', `Succesfully patched the pilet.json.`);
 }
 
-export async function getPiletPackage(
+async function getPiletPackage(
   root: string,
   name: string,
   version: string,
@@ -582,11 +582,13 @@ export async function getPiletPackage(
   fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
+  const { piralCLI = { version: cliVersion } } = piralInfo;
   const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,
   };
+  const toolVersion = piralCLI.version;
   const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
   const scripts = newInfo
     ? {
@@ -617,13 +619,11 @@ export async function getPiletPackage(
       return deps;
     }, {}),
     [name]: `${version || piralInfo.version}`,
+    ['piral-cli']: toolVersion,
   };
 
   if (newInfo) {
-    const bundler = newInfo.bundler;
-    const version = `^${cliVersion}`;
-    devDependencies['piral-cli'] = version;
-    await appendBundler(devDependencies, bundler, version);
+    await appendBundler(devDependencies, newInfo.bundler, toolVersion);
   }
 
   return deepMerge(packageOverrides, {
