@@ -1,9 +1,9 @@
 const { resolve } = require('path');
 const { render, generated, generateStandardPage, getName, getDocsFrom } = require('@pidoc/core');
 
-function getCommands(docsFolder) {
+function getCommands(docsFolder, locale) {
   const commands = resolve(docsFolder, 'commands');
-  return getDocsFrom(commands);
+  return getDocsFrom(commands, locale);
 }
 
 function getRoute(basePath, name) {
@@ -21,7 +21,7 @@ function getType(file) {
 }
 
 exports.find = function (basePath, docsFolder, options) {
-  const commands = getCommands(docsFolder);
+  const commands = getCommands(docsFolder, options.locale);
   return commands.map((file) => {
     const name = getName(file);
     const route = getRoute(basePath, name);

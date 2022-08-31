@@ -2516,20 +2516,21 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@pidoc/components@0.14.3":
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.14.3.tgz#7d354dd40f474681aeb1d2dc9909c12f0b163aeb"
-  integrity sha512-Md8NMXQQoCVZuGTK9m1B1x51dcq9oXSKo0vtfxb7v84SXuJ6KzbKlQbI7gESDprPaUUkVQSKFx5ddMYMjExQkA==
+"@pidoc/components@0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.15.0.tgz#71bddb708e20779f8f61e22019c193c11c46449d"
+  integrity sha512-H/ZtTjO2ZkTFJsyyqm66gytgflcFVkYaMrcj8G1bZi6+f0jmykKD56vK6wKxlhPJorx9BcrQhGO6ab+9ZSBjJw==
   dependencies:
     flexsearch "^0.6.32"
     stickyfilljs "^2.1.0"
 
-"@pidoc/core@0.14.3":
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.14.3.tgz#fa940e87613d047e5567a776ff46ddee244c1301"
-  integrity sha512-wBclBBadV3hiW7kRns1C6EngezJyVdqMjsQgMVS+jCO+UupAopwEVXqXL18p1IeHawsEOoBrv0U1HuKqrIYx4Q==
+"@pidoc/core@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.15.0.tgz#958d5fefa5bcad2c2546d59c2cb0423711c67e53"
+  integrity sha512-ce/e9ScoQFWeSEueaUquI3tXSikooe4n5ESGtoRS4EKV3nwjFvzBhDvBhGr72NgXMLff/3opYsAjS/p0n/4RSg==
   dependencies:
-    "@pidoc/components" "0.14.3"
+    "@pidoc/components" "0.15.0"
+    chokidar "^3.5.3"
     keyword-extractor "0.0.20"
     markdown-it "^12.0.6"
     markdown-it-abbr "^1.0.4"
@@ -4731,7 +4732,7 @@ braces@^2.3.1:
     split-string "^3.0.2"
     to-regex "^3.0.1"
 
-braces@^3.0.1, braces@~3.0.2:
+braces@^3.0.2, braces@~3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/braces/-/braces-3.0.2.tgz#3454e1a462ee8d599e236df336cd9ea4f8afe107"
   integrity sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==
@@ -5193,7 +5194,7 @@ cheerio@^1.0.0-rc.10:
     parse5 "^7.0.0"
     parse5-htmlparser2-tree-adapter "^7.0.0"
 
-"chokidar@>=3.0.0 <4.0.0":
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
@@ -9466,10 +9467,10 @@ kras-management-portal@^0.13.0:
   resolved "https://registry.yarnpkg.com/kras-management-portal/-/kras-management-portal-0.13.0.tgz#550f2797fce399529897aaa871030644d96812c1"
   integrity sha512-NjjXTHKcJ/ECkz03L/HQSUVnkuzZkEV2mwcex36lxJNNwiUrYM5Ju0toAjhLnf8Zpc3nLEPnWKmoTwpSgGim2A==
 
-kras@^0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.15.0.tgz#d2f1cd3851c6210992a5c97f94f9a4cae1130b26"
-  integrity sha512-IgRLprvyuTX+uYNslkdOZS9gdnT5seM+p0ArKA10ONL3APDowfAa4JUbb47GIfRExSsCoRoDkkzrckz7R61dKg==
+kras@^0.15.1:
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.15.1.tgz#1f15b294f6ca9240043f41d1ae85d5b32e613d07"
+  integrity sha512-ftr5otMi+TQJPNoGwLYMoKM/lX2JhJVk99ikuYhHI7JSYrsZdv9+2A3Y8QlurILRqS1/tSQGBfA/XRfMdkbidA==
   dependencies:
     kras-management-portal "^0.13.0"
     yargs "^15.4.1"
@@ -11463,7 +11464,7 @@ picocolors@^1.0.0:
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
   integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
 
-picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.3:
+picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.3, picomatch@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
