@@ -119,10 +119,12 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   } = options;
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
+  const port = await getAvailablePort(originalPort);
   setLogLevel(logLevel);
 
+  await hooks.onBegin?.({ options, fullBase });
+
   await watcherTask(async (watcherContext) => {
-    await hooks.onBegin?.({ options, fullBase });
     progress('Reading configuration ...');
     const entryFiles = await retrievePiralRoot(fullBase, entry);
     const targetDir = dirname(entryFiles);
@@ -161,6 +163,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     const krasRootConfig = resolve(root, krasrc);
     const mocks = join(targetDir, 'mocks');
     const baseMocks = resolve(fullBase, 'mocks');
+
+
     const mocksExist = await checkExistingDirectory(mocks);
     const sources = [mocksExist ? mocks : undefined].filter(Boolean);
     const initial = createInitialKrasConfig(baseMocks, sources);
@@ -178,7 +182,6 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
         },
       },
     };
-    const port = await getAvailablePort(originalPort);
     const krasConfig = readKrasConfig({ port, initial, required }, krasBaseConfig, krasRootConfig);
 
     log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
@@ -192,6 +195,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     openBrowser(open, port, publicUrl, !!krasConfig.ssl);
     await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
     await new Promise((resolve) => krasServer.on('close', resolve));
-    await hooks.onEnd?.({});
   });
+
+  await hooks.onEnd?.({});
 }

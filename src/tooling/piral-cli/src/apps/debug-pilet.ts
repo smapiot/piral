@@ -217,10 +217,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
+  const port = await getAvailablePort(originalPort);
   setLogLevel(logLevel);
 
+  await hooks.onBegin?.({ options, fullBase });
+
   await watcherTask(async (watcherContext) => {
-    await hooks.onBegin?.({ options, fullBase });
     progress('Reading configuration ...');
     const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
     const entryList = Array.isArray(entry) ? entry : [entry];
@@ -333,7 +335,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           },
         };
         const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
-        const port = await getAvailablePort(originalPort);
         const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 
         log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
@@ -355,8 +356,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         openBrowser(open, port, publicUrl, !!krasConfig.ssl);
         await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
         await new Promise((resolve) => krasServer.on('close', resolve));
-        await hooks.onEnd?.({});
       }),
     );
   });
+
+  await hooks.onEnd?.({});
 }
