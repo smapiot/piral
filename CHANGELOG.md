@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.31 (tbd)
+
+- Fixed Angular Router handling non-existing base URL navigation (#535)
+- Fixed persistent settings to only use known keys (#539)
+
 ## 0.14.30 (August 26, 2022)
 
 - Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)
