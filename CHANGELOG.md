@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.31 (tbd)
+## 0.14.31 (September 7, 2022)
 
 - Fixed Angular Router handling non-existing base URL navigation (#535)
 - Fixed persistent settings to only use known keys (#539)
