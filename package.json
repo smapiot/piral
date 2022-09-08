@@ -53,7 +53,7 @@
     "@types/enzyme": "^3.1.18",
     "caniuse-lite": "^1.0.30001341",
     "esbuild": "^0.13.6",
-    "lerna": "^4.0.0",
+    "lerna": "^5.5.0",
     "prettier": "^2.1.1",
     "sass": "^1.34.0",
     "tslint": "^5.12.1",
