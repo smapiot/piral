@@ -2,8 +2,7 @@ import type { Subscription } from 'rxjs';
 import type { ComponentContext, Disposable } from 'piral-core';
 import * as ngCore from '@angular/core';
 import { Inject, Injectable, NgZone, OnDestroy, Optional } from '@angular/core';
-import { NavigationError, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { NavigationError, Router, Scroll } from '@angular/router';
 
 const ngc = ngCore as any;
 
@@ -37,14 +36,24 @@ export class RoutingService implements OnDestroy {
         }
       });
 
-      this.subscription = this.router.events.pipe(filter((e) => e instanceof NavigationError)).subscribe((e) => {
-        const path = (e as NavigationError).url;
+      this.subscription = this.router.events.subscribe((e: NavigationError | Scroll) => {
+        if (e instanceof NavigationError) {
+          const path = e.url;
 
-        if (!this.invalidRoutes.includes(path)) {
-          this.invalidRoutes.push(path);
+          if (!this.invalidRoutes.includes(path)) {
+            this.invalidRoutes.push(path);
+          }
+
+          nav.push(path);
+        } else if (e.type === 15) {
+          // consistency check to avoid #535 and other Angular-specific issues
+          const locationUrl = nav.path;
+          const routerUrl = e.routerEvent.url;
+
+          if (routerUrl !== locationUrl) {
+            nav.push(routerUrl);
+          }
         }
-
-        nav.push(path);
       });
     }
   }

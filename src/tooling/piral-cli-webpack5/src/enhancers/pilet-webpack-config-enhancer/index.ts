@@ -75,6 +75,7 @@ function piletV0WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   const { name, variables, externals, file } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
+  const banner = `//@pilet v:0`;
 
   withSetPath(compiler);
   setEnvironment(variables);
@@ -83,7 +84,7 @@ function piletV0WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   compiler.plugins.push(
     new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
-      banner: `//@pilet v:0`,
+      banner,
       entryOnly: true,
       include: file,
       raw: true,
@@ -100,6 +101,7 @@ function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   const { name, variables, externals, file } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
+  const banner = `//@pilet v:1(${jsonpFunction})`;
 
   withSetPath(compiler);
   setEnvironment(variables);
@@ -108,7 +110,7 @@ function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   compiler.plugins.push(
     new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
-      banner: `//@pilet v:1(${jsonpFunction})`,
+      banner,
       entryOnly: true,
       include: file,
       raw: true,
@@ -128,17 +130,18 @@ function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   const { name, variables, externals, file, importmap } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
+  const plugins = [];
 
   withExternals(compiler, externals);
   setEnvironment(variables);
 
   const dependencies = getDependencies(importmap, compiler);
-  const plugins = [];
+  const banner = `//@pilet v:2(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`;
 
   plugins.push(
     new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
-      banner: `//@pilet v:2(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`,
+      banner,
       entryOnly: true,
       include: file,
       raw: true,

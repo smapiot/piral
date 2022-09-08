@@ -26,6 +26,11 @@
 - Added automatic determination of npm client (#516)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 
+## 0.14.31 (September 7, 2022)
+
+- Fixed Angular Router handling non-existing base URL navigation (#535)
+- Fixed persistent settings to only use known keys (#539)
+
 ## 0.14.30 (August 26, 2022)
 
 - Improved default metadata using `piletConfig` from *package.json* in `pilet debug` (#458)

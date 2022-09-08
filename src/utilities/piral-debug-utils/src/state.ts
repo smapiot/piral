@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 
-const persistKey = 'dbg:persist-settings-data';
+export const settingsKeys = {
+  viewState: 'dbg:view-state',
+  loadPilets: 'dbg:load-pilets',
+  hardRefresh: 'dbg:hard-refresh',
+  viewOrigins: 'dbg:view-origins',
+  extensionCatalogue: 'dbg:extension-catalogue',
+  clearConsole: 'dbg:clear-console',
+  persistSettings: 'dbg:persist-settings-data',
+};
+
+const persistKey = settingsKeys.persistSettings;
 const persistSettings = !!localStorage.getItem(persistKey);
 
 const defaultSetter = (name: string, value: string) => {
@@ -30,11 +40,15 @@ if (persistSettings) {
 
 export function enablePersistance() {
   const data: Record<string, string> = {};
+  const validKeys = Object.keys(settingsKeys).map((m) => settingsKeys[m]);
 
   for (let i = 0; i < sessionStorage.length; i++) {
     const name = sessionStorage.key(i);
-    const value = sessionStorage.getItem(name);
-    data[name] = value;
+
+    if (validKeys.includes(name)) {
+      const value = sessionStorage.getItem(name);
+      data[name] = value;
+    }
   }
 
   localStorage.setItem(persistKey, JSON.stringify(data));
@@ -49,12 +63,12 @@ export function disablePersistance() {
 export const initialSetter = persistSettings ? persistentSetter : defaultSetter;
 
 export const initialSettings = {
-  viewState: sessionStorage.getItem('dbg:view-state') !== 'off',
-  loadPilets: sessionStorage.getItem('dbg:load-pilets') === 'on',
-  hardRefresh: sessionStorage.getItem('dbg:hard-refresh') === 'on',
-  viewOrigins: sessionStorage.getItem('dbg:view-origins') === 'on',
-  extensionCatalogue: sessionStorage.getItem('dbg:extension-catalogue') !== 'off',
-  clearConsole: sessionStorage.getItem('dbg:clear-console') === 'on',
+  viewState: sessionStorage.getItem(settingsKeys.viewState) !== 'off',
+  loadPilets: sessionStorage.getItem(settingsKeys.loadPilets) === 'on',
+  hardRefresh: sessionStorage.getItem(settingsKeys.hardRefresh) === 'on',
+  viewOrigins: sessionStorage.getItem(settingsKeys.viewOrigins) === 'on',
+  extensionCatalogue: sessionStorage.getItem(settingsKeys.extensionCatalogue) !== 'off',
+  clearConsole: sessionStorage.getItem(settingsKeys.clearConsole) === 'on',
   persistSettings,
   cataloguePath: '/$debug-extension-catalogue',
 };

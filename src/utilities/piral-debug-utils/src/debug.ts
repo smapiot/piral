@@ -2,7 +2,7 @@ import { DebugTracker } from './DebugTracker';
 import { VisualizationWrapper } from './VisualizationWrapper';
 import { ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
-import { setState, initialSettings, setNavigate, initialSetter, enablePersistance, disablePersistance } from './state';
+import { setState, initialSettings, setNavigate, initialSetter, enablePersistance, disablePersistance, settingsKeys } from './state';
 import { DebugCustomSetting, DebuggerOptions } from './types';
 
 export function installPiralDebug(options: DebuggerOptions) {
@@ -34,7 +34,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       type: 'boolean',
       label: 'State container logging',
       onChange(value) {
-        setValue('dbg:view-state', value ? 'on' : 'off');
+        setValue(settingsKeys.viewState, value ? 'on' : 'off');
       },
     },
     loadPilets: {
@@ -42,7 +42,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       type: 'boolean',
       label: 'Load available pilets',
       onChange(value) {
-        setValue('dbg:load-pilets', value ? 'on' : 'off');
+        setValue(settingsKeys.loadPilets, value ? 'on' : 'off');
       },
     },
     hardRefresh: {
@@ -50,7 +50,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       type: 'boolean',
       label: 'Full refresh on change',
       onChange(value) {
-        setValue('dbg:hard-refresh', value ? 'on' : 'off');
+        setValue(settingsKeys.hardRefresh, value ? 'on' : 'off');
       },
     },
     viewOrigins: {
@@ -58,7 +58,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       type: 'boolean',
       label: 'Visualize component origins',
       onChange(value, prev) {
-        setValue('dbg:view-origins', value ? 'on' : 'off');
+        setValue(settingsKeys.viewOrigins, value ? 'on' : 'off');
 
         if (prev !== value) {
           updateVisualize(value);
@@ -70,7 +70,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       type: 'boolean',
       label: 'Enable extension catalogue',
       onChange(value) {
-        setValue('dbg:extension-catalogue', value ? 'on' : 'off');
+        setValue(settingsKeys.extensionCatalogue, value ? 'on' : 'off');
       },
     },
     clearConsole: {
@@ -78,7 +78,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       type: 'boolean',
       label: 'Clear console during HMR',
       onChange(value) {
-        setValue('dbg:clear-console', value ? 'on' : 'off');
+        setValue(settingsKeys.clearConsole, value ? 'on' : 'off');
       },
     },
     persistSettings: {
@@ -374,11 +374,12 @@ export function installPiralDebug(options: DebuggerOptions) {
     if (!legacyBrowser && event.storageArea === sessionStorage) {
       // potentially unknowingly updated settings
       updateSettings({
-        viewState: sessionStorage.getItem('dbg:view-state') !== 'off',
-        loadPilets: sessionStorage.getItem('dbg:load-pilets') === 'on',
-        hardRefresh: sessionStorage.getItem('dbg:hard-refresh') === 'on',
-        viewOrigins: sessionStorage.getItem('dbg:view-origins') === 'on',
-        extensionCatalogue: sessionStorage.getItem('dbg:extension-catalogue') !== 'off',
+        viewState: sessionStorage.getItem(settingsKeys.viewState) !== 'off',
+        loadPilets: sessionStorage.getItem(settingsKeys.loadPilets) === 'on',
+        hardRefresh: sessionStorage.getItem(settingsKeys.hardRefresh) === 'on',
+        viewOrigins: sessionStorage.getItem(settingsKeys.viewOrigins) === 'on',
+        extensionCatalogue: sessionStorage.getItem(settingsKeys.extensionCatalogue) !== 'off',
+        clearConsole: sessionStorage.getItem(settingsKeys.clearConsole) === 'on',
       });
     }
   });
