@@ -16,6 +16,6 @@ describe('Util Extension.', () => {
     container.innerHTML = `<div>FOO<</div>`;
     const result = reactifyContent(container.childNodes) as React.ReactElement;
     const node = render(result);
-    expect(node.container.querySelectorAll('slot').length).toBe(1);
+    expect(node.container.querySelectorAll('piral-slot').length).toBe(1);
   });
 });

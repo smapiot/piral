@@ -94,7 +94,11 @@ function createDefaultState(imports, exports) {
 
         return {
           get path() {
-            return _nav.location.pathname;
+            if (_nav) {
+              return _nav.location.pathname;
+            }
+
+            return location.pathname;
           },
           push(target, state) {
             if (_nav) {
@@ -162,7 +166,11 @@ function createDefaultState(imports, exports) {
 
         return {
           get path() {
-            return _nav.location.pathname;
+            if (_nav) {
+              return _nav.location.pathname;
+            }
+
+            return location.pathname;
           },
           push(target, state) {
             if (_nav) {

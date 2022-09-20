@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { isfunc } from 'piral-base';
+import type {} from 'piral-debug-utils';
 import type { ForeignComponent, BaseComponentProps, ComponentContext } from '../types';
 
 interface ForeignComponentContainerProps<T> {
@@ -64,6 +65,6 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
 
   render() {
     const { $portalId } = this.props;
-    return <div data-portal-id={$portalId} ref={this.setNode} />;
+    return <piral-portal pid={$portalId} ref={this.setNode} />;
   }
 }

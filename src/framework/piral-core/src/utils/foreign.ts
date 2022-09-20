@@ -2,6 +2,10 @@ import { createElement, ComponentType, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 import { GlobalStateContext, ForeignComponent } from '../types';
 
+export const extensionName = 'piral-extension';
+export const portalName = 'piral-portal';
+export const slotName = 'piral-slot';
+
 export function attachDomPortal<TProps>(
   id: string,
   context: GlobalStateContext,
@@ -44,11 +48,11 @@ export function renderInDom<TProps>(
   component: ComponentType<TProps>,
   props: TProps,
 ) {
-  const portalId = 'data-portal-id';
+  const portalId = 'pid';
   let parent: Node = element;
 
   while (parent) {
-    if (parent instanceof Element && parent.hasAttribute(portalId)) {
+    if (parent instanceof Element && parent.localName === portalName && parent.hasAttribute(portalId)) {
       const id = parent.getAttribute(portalId);
       return attachDomPortal(id, context, element, component, props);
     }

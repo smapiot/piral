@@ -11,7 +11,7 @@ export interface Vue3ConverterOptions {
   selector?: string;
   /**
    * Defines the name of the root element.
-   * @default slot
+   * @default piral-slot
    */
   rootName?: string;
 }
@@ -21,7 +21,7 @@ interface Vue3State {
 }
 
 export function createConverter(config: Vue3ConverterOptions = {}) {
-  const { rootName = 'slot', selector = 'extension-component' } = config;
+  const { rootName = 'piral-slot', selector = 'extension-component' } = config;
   const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(
     root: Component<TProps>,

@@ -6,13 +6,13 @@ import { createExtension } from './extension';
 export interface PreactConverterOptions {
   /**
    * Defines the name of the root element.
-   * @default slot
+   * @default piral-slot
    */
   rootName?: string;
 }
 
 export function createConverter(config: PreactConverterOptions = {}) {
-  const { rootName = 'slot' } = config;
+  const { rootName = 'piral-slot' } = config;
   const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => ({
     mount(el, props, ctx) {

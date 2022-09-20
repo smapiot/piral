@@ -14,8 +14,8 @@ describe('Util Foreign.', () => {
     const context = {
       updatePortal: jest.fn(),
     } as any;
-    const portalId = 'data-portal-id';
-    const element = document.createElement('div') as HTMLDivElement;
+    const portalId = 'pid';
+    const element = document.createElement('piral-portal') as HTMLElement;
     element.setAttribute(portalId, '100');
 
     const result = changeDomPortal(portalId, current, context, element, DefaultLoadingIndicator, {});
@@ -43,8 +43,8 @@ describe('Util Foreign.', () => {
     const context = {
       showPortal: jest.fn(),
     } as any;
-    const portalId = 'data-portal-id';
-    const element = document.createElement('div') as HTMLDivElement;
+    const portalId = 'pid';
+    const element = document.createElement('piral-portal') as HTMLElement;
     element.setAttribute(portalId, '100');
     var [result] = renderInDom(context, element, DefaultLoadingIndicator, {});
     expect(result).toBe('100');
@@ -54,7 +54,7 @@ describe('Util Foreign.', () => {
     const context = {
       showPortal: jest.fn(),
     } as any;
-    const element = document.createElement('div') as HTMLDivElement;
+    const element = document.createElement('piral-portal') as HTMLElement;
     var [result] = renderInDom(context, element, DefaultLoadingIndicator, {});
     expect(result).toBe('root');
   });

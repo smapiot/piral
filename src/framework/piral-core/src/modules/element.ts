@@ -1,12 +1,31 @@
 import { ExtensionSlot } from '../components';
-import { tryParseJson, noop, reactifyContent, renderInDom, changeDomPortal } from '../utils';
 import { Disposable, GlobalStateContext } from '../types';
+import {
+  tryParseJson,
+  noop,
+  reactifyContent,
+  renderInDom,
+  changeDomPortal,
+  portalName,
+  extensionName,
+  slotName,
+} from '../utils';
 
 export interface Updatable {
   (newProps: any): void;
 }
 
 if (typeof window !== 'undefined' && 'customElements' in window) {
+  /**
+   * This is a nice abstraction allowing anyone to actually use the extension system
+   * brought by Piral. Not all props of the extension system are actually exposed.
+   *
+   * Usage:
+   *
+   * ```
+   * <piral-extension name="my-ext-name"></piral-extension>
+   * ```
+   */
   class PiralExtension extends HTMLElement {
     dispose: Disposable = noop;
     update: Updatable = noop;
@@ -45,6 +64,8 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     connectedCallback() {
+      this.style.display = 'contents';
+
       if (this.isConnected) {
         this.dispatchEvent(
           new CustomEvent('render-html', {
@@ -80,7 +101,44 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
   }
 
-  customElements.define('piral-extension', PiralExtension);
+  customElements.define(extensionName, PiralExtension);
+
+  /**
+   * This is a boundary to host elements from other frameworks - effectively vanishing
+   * at runtime.
+   *
+   * Usage:
+   *
+   * ```
+   * <piral-portal pid="host-1234"></piral-portal>
+   * ```
+   */
+  class PiralPortal extends HTMLElement {
+    connectedCallback() {
+      this.style.display = 'contents';
+    }
+  }
+
+  customElements.define(portalName, PiralPortal);
+
+  /**
+   * This is a virtual element to aggregate rendering from other frameworks, mostly
+   * used like piral-portal, but without context-hosting capabilities. This would
+   * be used exclusively within a foreign framework, not from Piral to initiate.
+   *
+   * Usage:
+   *
+   * ```
+   * <piral-slot></piral-slot>
+   * ```
+   */
+  class PiralSlot extends HTMLElement {
+    connectedCallback() {
+      this.style.display = 'contents';
+    }
+  }
+
+  customElements.define(slotName, PiralSlot);
 }
 
 export function renderElement(

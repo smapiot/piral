@@ -108,7 +108,7 @@ describe('ForeignComponentContainer component', () => {
     );
     await act(resolveAfter);
     expect(mount).toHaveBeenCalled();
-    const node = document.querySelector('[data-portal-id=foo]');
+    const node = document.querySelector('piral-portal[pid=foo]');
     expect(renderHtmlExtension).not.toHaveBeenCalled();
     node?.dispatchEvent(new CustomEvent('render-html', { detail: {} }));
     await act(resolveAfter);
