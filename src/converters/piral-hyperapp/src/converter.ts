@@ -6,13 +6,13 @@ import type { Component } from './types';
 export interface HyperappConverterOptions {
   /**
    * Defines the name of the root element.
-   * @default slot
+   * @default piral-slot
    */
   rootName?: string;
 }
 
 export function createConverter(config: HyperappConverterOptions = {}) {
-  const { rootName = 'slot' } = config;
+  const { rootName = 'piral-slot' } = config;
   const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(
     root: Component<TProps>,

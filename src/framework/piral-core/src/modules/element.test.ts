@@ -3,16 +3,6 @@ import { createListener } from 'piral-base';
 import { createActions } from '../state';
 import { renderElement } from './element';
 
-declare global {
-  interface HTMLElementTagNameMap {
-    "piral-extension": HTMLElement & {
-      params: any;
-      name: string;
-      empty: any;
-    };
-  }
-}
-
 function createMockContext(): [any, any] {
   const state: any = create(() => ({
     portals: {},

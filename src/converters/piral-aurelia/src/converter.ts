@@ -8,7 +8,7 @@ import type { AureliaModule } from './types';
 export interface AureliaConverterOptions {
   /**
    * Defines the name of the root element.
-   * @default span
+   * @default piral-slot
    */
   rootName?: string;
 }
@@ -18,7 +18,7 @@ interface AureliaLocals {
 }
 
 export function createConverter(config: AureliaConverterOptions = {}) {
-  const { rootName = 'span' } = config;
+  const { rootName = 'piral-slot' } = config;
 
   initialize();
 
