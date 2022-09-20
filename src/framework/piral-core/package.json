@@ -70,6 +70,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
+    "enhanced-resolve": "^5.10.0",
     "piral-base": "^0.14.31",
     "piral-debug-utils": "^0.14.31",
     "zustand": "^3.0.0"

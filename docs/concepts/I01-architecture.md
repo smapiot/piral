@@ -20,7 +20,7 @@ To make creating instances of Piral that effective the architecture of Piral nee
 
 Piral does not start from zero. The stack that is used by Piral is React-based. Nevertheless, the API supports any kind of framework, as long as it can work with an arbitrary element to render it into.
 
-Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to render on a website), **React Router** (for routing), **React Atom** (global state management using `React.Context`) and a React independent building block **Piral Base** (which allows loading modules at runtime).
+Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to render on a website), **React Router** (for routing), **Zustand** (global state container) and a React independent building block **Piral Base** (which allows loading modules at runtime via SystemJS).
 
 ![Building blocks of Piral](../diagrams/blocks.svg)
 

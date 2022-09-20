@@ -32,6 +32,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@pidoc/core": "^0.15.0"
+    "@pidoc/core": "^0.16.0"
   }
 }

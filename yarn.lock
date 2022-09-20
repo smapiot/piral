@@ -2624,20 +2624,20 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@pidoc/components@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.15.0.tgz#71bddb708e20779f8f61e22019c193c11c46449d"
-  integrity sha512-H/ZtTjO2ZkTFJsyyqm66gytgflcFVkYaMrcj8G1bZi6+f0jmykKD56vK6wKxlhPJorx9BcrQhGO6ab+9ZSBjJw==
+"@pidoc/components@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.16.0.tgz#3cb1cdcc57adf00ed0f63d642d21a0ca920cfac3"
+  integrity sha512-riWrIp/lVTVbjz53Yuy5iHbfPf/5bf4V/VUX1M+npP/ngEBMx5spoxMOjy7BXe//IpMjB3p+g7QCD1UWy1g6gw==
   dependencies:
     flexsearch "^0.6.32"
     stickyfilljs "^2.1.0"
 
-"@pidoc/core@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.15.0.tgz#958d5fefa5bcad2c2546d59c2cb0423711c67e53"
-  integrity sha512-ce/e9ScoQFWeSEueaUquI3tXSikooe4n5ESGtoRS4EKV3nwjFvzBhDvBhGr72NgXMLff/3opYsAjS/p0n/4RSg==
+"@pidoc/core@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.16.0.tgz#e989683b5bac126e5252ff9a93e1bfae3b580f65"
+  integrity sha512-txI/qpmQmc1Tu7Jv1wrKglRE4Nk8T76CJ4en13y3a6rJxxOAu528llmjDNKbDCbU7wIz5WZ4Q9zSXWLbe0qONw==
   dependencies:
-    "@pidoc/components" "0.15.0"
+    "@pidoc/components" "0.16.0"
     chokidar "^3.5.3"
     keyword-extractor "0.0.20"
     markdown-it "^12.0.6"
@@ -6627,7 +6627,7 @@ enhanced-resolve@^4.0.0:
     memory-fs "^0.5.0"
     tapable "^1.0.0"
 
-enhanced-resolve@^5.9.3:
+enhanced-resolve@^5.10.0, enhanced-resolve@^5.9.3:
   version "5.10.0"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.10.0.tgz#0dc579c3bb2a1032e357ac45b8f3a6f3ad4fb1e6"
   integrity sha512-T0yTFjdpldGY8PmuXXR0PyQ1ufZpEGiHVrp7zHKB7jdR4qlmZHhONVM5AQOAWXuF/w3dnHbEQVrNptJgt7F+cQ==
