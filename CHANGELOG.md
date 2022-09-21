@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.14.32 (tbd)
+## 0.14.32 (September 21, 2022)
 
 - Fixed `piral-blazor` calling navigation
 - Fixed order of wrapping in `piral-page-layouts`
