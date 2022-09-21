@@ -36,7 +36,7 @@ export interface NavigationLocation {
    * On the initial location, this will be the string default. On all subsequent
    * locations, this string will be a unique identifier.
    */
-  key: string;
+  key?: string;
 }
 
 export interface NavigationListener {
@@ -53,7 +53,7 @@ export interface NavigationUpdate {
 }
 
 export interface NavigationTransition extends NavigationUpdate {
-  retry(): void;
+  retry?(): void;
 }
 
 export interface NavigationApi {

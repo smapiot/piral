@@ -65,145 +65,19 @@ function createDefaultState(imports, exports) {
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v5';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v5';`,
-      `import { __RouterContext as RouterContext } from 'react-router'`,
+      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v5'`,
     );
-    exports.push(`
-      function useCurrentNavigation() {
-        const ctx = useRouterContext();
-
-        useEffect(() => {
-          _nav = ctx.history;
-          return () => {
-            _nav = undefined;
-          };
-        }, []);
-      }
-    `);
-
-    exports.push(`
-      export function createNavigation() {
-        const enhance = info => ({
-          ...info,
-          location: {
-            get href() {
-              return _nav.createHref(info.location);
-            },
-            ...info.location,
-          },
-        });
-
-        return {
-          get path() {
-            if (_nav) {
-              return _nav.location.pathname;
-            }
-
-            return location.pathname;
-          },
-          push(target, state) {
-            if (_nav) {
-              _nav.push(target, state);
-            }
-          },
-          replace(target, state) {
-            if (_nav) {
-              _nav.replace(target, state);
-            }
-          },
-          go(n) {
-            if (_nav) {
-              _nav.go(n);
-            }
-          },
-          block(blocker) {
-            if (!_nav) {
-              return _noop;
-            }
-            return _nav.block((location, action) => blocker(enhance({ location, action })));
-          },
-          listen(listener) {
-            if (!_nav) {
-              return _noop;
-            }
-            return _nav.listen((location, action) => listener(enhance({ location, action })));
-          },
-          router: {
-            history: _nav,
-          },
-        };
-      }
-    `);
   } else {
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v6';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6';`,
-      `import { UNSAFE_NavigationContext as RouterContext } from 'react-router'`,
+      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v6'`,
     );
-    exports.push(`
-      function useCurrentNavigation() {
-        const ctx = useRouterContext();
-
-        useEffect(() => {
-          _nav = ctx.navigator;
-          return () => {
-            _nav = undefined;
-          };
-        }, []);
-      }
-    `);
-
-    exports.push(`
-      export function createNavigation() {
-        const enhance = info => ({
-          ...info,
-          location: {
-            get href() {
-              return _nav.createHref(info.location);
-            },
-            ...info.location,
-          },
-        });
-
-        return {
-          get path() {
-            if (_nav) {
-              return _nav.location.pathname;
-            }
-
-            return location.pathname;
-          },
-          push(target, state) {
-            if (_nav) {
-              _nav.push(target, state);
-            }
-          },
-          replace(target, state) {
-            if (_nav) {
-              _nav.replace(target, state);
-            }
-          },
-          go(n) {
-            if (_nav) {
-              _nav.go(n);
-            }
-          },
-          block(blocker) {
-            if (!_nav) {
-              return _noop;
-            }
-            return _nav.block(transition => blocker(enhance(transition)));
-          },
-          listen(listener) {
-            if (!_nav) {
-              return _noop;
-            }
-            return _nav.listen(update => listener(enhance(update)));
-          },
-          router: _nav,
-        };
-      }
-    `);
   }
+
+  exports.push(`
+    export { createRedirect, createNavigation, useRouterContext };
+  `);
 
   exports.push(`
     export const publicPath = ${JSON.stringify(publicPath)};
@@ -260,8 +134,6 @@ function createRouteHandler(imports, exports) {
   const assignments = [];
 
   imports.push(
-    `import { useContext, useEffect, createElement } from 'react';`,
-    `import { Redirect } from 'react-router';`,
     `import { useGlobalStateContext } from 'piral-core/${cat}/hooks/globalState';`,
   );
 
@@ -275,18 +147,6 @@ function createRouteHandler(imports, exports) {
   } else {
     assignments.push('return paths;');
   }
-
-  exports.push(`
-    export function createRedirect(to) {
-      return () => createElement(Redirect, { to });
-    }
-  `);
-
-  exports.push(`
-    export function useRouterContext() {
-      return useContext(RouterContext);
-    }
-  `);
 
   exports.push(`
     export function useRouteFilter(paths) {
@@ -306,9 +166,6 @@ module.exports = function () {
 
   return `
     ${imports.join('\n')}
-
-    let _nav;
-    const _noop = () => {};
 
     ${exports.join('\n')}
   `;
