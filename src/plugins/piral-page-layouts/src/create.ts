@@ -40,7 +40,7 @@ function createPageWrapper(Wrapper = DefaultWrapper, fallback = 'default'): Comp
     const layout = props.meta?.layout || fallback;
     const registration = useGlobalState((s) => s.registry.pageLayouts[layout] || s.registry.pageLayouts[fallback]);
     const Layout = registration?.component || DefaultWrapper;
-    return createElement(Wrapper, props, createElement(Layout, props));
+    return createElement(Layout, props, createElement(Wrapper, props));
   };
 }
 

@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.14.32 (tbd)
+
+- Fixed `piral-blazor` calling navigation
+- Fixed order of wrapping in `piral-page-layouts`
+
 ## 0.14.31 (September 7, 2022)
 
 - Fixed Angular Router handling non-existing base URL navigation (#535)

@@ -26,6 +26,16 @@ function project(component: Element, destination: Element, options: BlazorOption
   destination.appendChild(component);
 }
 
+function makeUrl(href: string) {
+  const origin = document.location.origin;
+
+  if (!href.startsWith(origin)) {
+    return `${origin}${href}`;
+  }
+
+  return href;
+}
+
 interface BlazorLocals {
   id: string;
   referenceId: string;
@@ -65,8 +75,9 @@ export function createConverter(lazy: boolean) {
         listener = nav.listen((location, action) => {
           // POP is already handled by .NET
           if (action !== 'POP') {
-            const href = nav.createHref(location)
-            callNotifyLocationChanged(href, action === 'REPLACE');
+            const href = nav.createHref(location);
+            const url = makeUrl(href);
+            callNotifyLocationChanged(url, action === 'REPLACE');
           }
         });
       }
@@ -77,9 +88,7 @@ export function createConverter(lazy: boolean) {
         el,
         (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
         (ev) =>
-          ev.detail.replace
-            ? nav.replace(ev.detail.to, ev.detail.store)
-            : nav.push(ev.detail.to, ev.detail.state),
+          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.store) : nav.push(ev.detail.to, ev.detail.state),
       );
 
       (loader || (loader = boot()))
