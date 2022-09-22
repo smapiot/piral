@@ -28,6 +28,11 @@
 - Added automatic determination of npm client (#516)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
 
+## 0.14.32 (September 21, 2022)
+
+- Fixed `piral-blazor` calling navigation
+- Fixed order of wrapping in `piral-page-layouts`
+
 ## 0.14.31 (September 7, 2022)
 
 - Fixed Angular Router handling non-existing base URL navigation (#535)

@@ -73,6 +73,10 @@ export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, 
    * The meta data registered with the page.
    */
   meta: PiralPageMeta;
+  /**
+   * The children of the page.
+   */
+  children: ReactNode;
 }
 
 /**

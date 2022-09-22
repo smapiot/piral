@@ -87,9 +87,7 @@ export function createConverter(lazy: boolean) {
         el,
         (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
         (ev) =>
-          ev.detail.replace
-            ? nav.replace(ev.detail.to, ev.detail.store)
-            : nav.push(ev.detail.to, ev.detail.state),
+          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.store) : nav.push(ev.detail.to, ev.detail.state),
       );
 
       (loader || (loader = boot()))
