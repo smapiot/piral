@@ -13,7 +13,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       const load = async () => {
         for (const dllUrl of references) {
           if (dllUrl.endsWith('.dll')) {
-            const urlWithoutExtension = dllUrl.substr(0, dllUrl.length - 4);
+            const urlWithoutExtension = dllUrl.substring(0, dllUrl.length - 4);
             const pdbName = `${urlWithoutExtension}.pdb`;
             const pdbUrl = references.find((m) => m === pdbName);
 

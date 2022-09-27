@@ -22,7 +22,10 @@ function prefixMediaSources(component: Element, prefix: string) {
 }
 
 function project(component: Element, destination: Element, options: BlazorOptions) {
-  options?.resourcePathRoot && prefixMediaSources(component, options.resourcePathRoot);
+  if (options?.resourcePathRoot && !bootConfig.noMutation) {
+    prefixMediaSources(component, options.resourcePathRoot);
+  }
+
   destination.appendChild(component);
 }
 
@@ -46,7 +49,7 @@ interface BlazorLocals {
 }
 
 export function createConverter(lazy: boolean) {
-  const boot = createBootLoader(bootConfig);
+  const boot = createBootLoader(bootConfig.url, bootConfig.satellites);
   let loader = !lazy && boot();
   let listener: Disposable = undefined;
 

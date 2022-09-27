@@ -45,12 +45,23 @@ module.exports = function () {
   try {
     const blazorPackagePath = require.resolve('blazor/package.json');
     const releaseType = process.env.NODE_ENV === 'production' ? 'release' : 'debug';
+    const { blazorConfig = {} } = require(blazorPackagePath);
     const blazorBaseDir = resolve(dirname(blazorPackagePath), releaseType);
     const frameworkDir = resolve(blazorBaseDir, 'wwwroot', '_framework');
+    const renderMode = blazorConfig.renderMode || 'projection';
+    const noMutation = blazorConfig.noMutation || false;
+    const satellites = blazorConfig.satellites || [];
+    const url = blazorConfig.url || '_framework/blazor.webassembly.js';
+    const bootConfig = {
+      url,
+      satellites,
+      noMutation,
+      renderMode,
+    };
 
     copyFolderRecursiveSync(frameworkDir, outDir);
 
-    return `export default ${JSON.stringify('_framework/blazor.webassembly.js')};`;
+    return `export default (${JSON.stringify(bootConfig)});`;
   } catch (err) {
     throw new Error(`The npm package "blazor" was not found. Make sure to install it via "npm i blazor": ${err}`);
   }

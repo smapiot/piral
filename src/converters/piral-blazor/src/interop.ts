@@ -52,6 +52,16 @@ function computePath() {
   return '/';
 }
 
+function addScript(url: string) {
+  return new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onerror = () => reject();
+    script.onload = () => resolve();
+    document.body.appendChild(script);
+  });
+}
+
 export function activate(moduleName: string, props: any) {
   return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, props);
 }
@@ -104,11 +114,15 @@ export function initialize(scriptUrl: string, publicPath: string) {
   });
 }
 
-export function createBootLoader(scriptUrl: string) {
+export function createBootLoader(scriptUrl: string, satellites: Array<string>) {
   const publicPath = computePath();
+
   return () => {
     if (typeof window.$blazorLoader === 'undefined') {
-      window.$blazorLoader = initialize(scriptUrl, publicPath);
+      // we load all satellite scripts before we initialize blazor
+      window.$blazorLoader = Promise.all(satellites.map((url) => addScript(url))).then(() =>
+        initialize(scriptUrl, publicPath),
+      );
     }
 
     return window.$blazorLoader;
