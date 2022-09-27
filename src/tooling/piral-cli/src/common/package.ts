@@ -7,11 +7,18 @@ import { ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { readImportmap } from './importmap';
-import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames } from './constants';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
+import {
+  filesTar,
+  filesOnceTar,
+  declarationEntryExtensions,
+  bundlerNames,
+  piralJsonSchemaUrl,
+  piletJsonSchemaUrl,
+} from './constants';
 import {
   SourceLanguage,
   Framework,
@@ -210,7 +217,10 @@ export async function patchPiralPackage(
   await updateExistingJson(root, 'package.json', pkg);
   log('generalDebug_0003', `Succesfully patched the package.json.`);
 
-  await updateExistingJson(root, 'piral.json', { pilets: getPiletsInfo({}) });
+  await updateExistingJson(root, 'piral.json', {
+    $schema: piralJsonSchemaUrl,
+    pilets: getPiletsInfo({}),
+  });
   log('generalDebug_0003', `Succesfully patched the pilet.json.`);
 }
 
@@ -567,6 +577,7 @@ export async function patchPiletPackage(
   log('generalDebug_0003', `Succesfully patched the package.json.`);
 
   await updateExistingJson(root, 'pilet.json', {
+    $schema: piletJsonSchemaUrl,
     piralInstances: {
       [name]: {},
     },

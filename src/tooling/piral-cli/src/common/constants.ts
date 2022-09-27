@@ -3,6 +3,8 @@ export const filesTar = 'files';
 export const filesOnceTar = 'files_once';
 export const piralBaseRoot = 'piral-base/package.json';
 export const frameworkLibs = ['piral-native' as const, 'piral' as const, 'piral-core' as const, 'piral-base' as const];
+export const piletJsonSchemaUrl = 'https://schema.piral.io/v0/pilet.json';
+export const piralJsonSchemaUrl = 'https://schema.piral.io/v0/piral.json';
 export const entryModuleExtensions = ['.ts', '.tsx', '.js', '.jsx'];
 export const bundlerNames = [
   'esbuild' as const,
