@@ -305,7 +305,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     checkSanity(pilets);
 
     await hooks.beforeApp?.({ appInstanceDir, pilets });
-    const appDirs = [appInstanceDir] || (await getOrMakeApps(pilets[0], logLevel));
+    const appDirs = appInstanceDir ? [appInstanceDir] : (await getOrMakeApps(pilets[0], logLevel));
 
     await Promise.all(
       appDirs.map(async (appDir) => {
