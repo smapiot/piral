@@ -2,6 +2,7 @@
 
 ## 0.15.0 (tbd)
 
+- Fixed closing of dialogs to be immediate (#549)
 - Updated to React v18 (#501)
 - Updated `importmap` with `inherit` key
 - Moved templates to dedicated repository (#458)
