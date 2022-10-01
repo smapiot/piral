@@ -65,6 +65,7 @@
   "resolutions": {
     "ansi-html": "0.0.9",
     "ansi-regex": "5.0.1",
+    "chalk": "^4.0.0",
     "glob-parent": "5.1.2",
     "hermes-engine": "0.10.0",
     "highlight.js": "10.7.1",

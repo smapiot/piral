@@ -1,172 +1,25 @@
-const cat = process.env.NODE_ENV === 'test' ? 'src' : '_';
+const cg = require('./dist/codegen');
 
-function getRouterVersion() {
-  try {
-    const { version } = require('react-router/package.json');
-    const [major] = version.split('.');
-    return parseInt(major, 10);
-  } catch {
-    console.warn('Could not determine version of react-router. Falling back to v5');
-    return 5;
-  }
-}
-
-function getIdentifiers(packageName) {
-  const packageJson = `${packageName}/package.json`;
-
-  try {
-    const details = require(packageJson);
-
-    if (details.version) {
-      return [packageName, `${packageName}@${details.version}`];
-    }
-  } catch {}
-
-  return [packageName];
-}
-
-function createDependencies(imports, exports) {
-  const appName = process.env.BUILD_PCKG_NAME || '';
-  const externals = (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean);
-  const assignments = [];
-
-  if (appName) {
-    assignments.push(`deps['${appName}']={}`);
-  }
-
-  for (const name of externals) {
-    const identifiers = getIdentifiers(name);
-    const ref = `_${imports.length}`;
-    imports.push(`import * as ${ref} from ${JSON.stringify(name)}`);
-
-    for (const id of identifiers) {
-      assignments.push(`deps[${JSON.stringify(id)}]=${ref}`);
-    }
-  }
-
-  exports.push(`
-    export function fillDependencies(deps) {
-      ${assignments.join(';')}
-    }
-  `);
-}
-
-function createDefaultState(imports, exports) {
-  const publicPath = process.env.PIRAL_PUBLIC_PATH || '/';
-  const routerVersion = getRouterVersion();
-
-  imports.push(
-    `import { DefaultErrorInfo } from 'piral-core/${cat}/defaults/DefaultErrorInfo';`,
-    `import { DefaultLoadingIndicator } from 'piral-core/${cat}/defaults/DefaultLoadingIndicator';`,
-    `import { DefaultLayout } from 'piral-core/${cat}/defaults/DefaultLayout';`,
-  );
-
-  if (routerVersion < 6) {
-    imports.push(
-      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v5';`,
-      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v5';`,
-      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v5'`,
-    );
-  } else {
-    imports.push(
-      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v6';`,
-      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6';`,
-      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v6'`,
-    );
-  }
-
-  exports.push(`
-    export { createRedirect, createNavigation, useRouterContext };
-  `);
-
-  exports.push(`
-    export const publicPath = ${JSON.stringify(publicPath)};
-  `);
-
-  exports.push(`
-    export function createDefaultState() {
-      return {
-        app: {
-          error: undefined,
-          loading: typeof window !== 'undefined',
-        },
-        components: {
-          ErrorInfo: DefaultErrorInfo,
-          LoadingIndicator: DefaultLoadingIndicator,
-          Router: DefaultRouter,
-          RouteSwitch: DefaultRouteSwitch,
-          Layout: DefaultLayout,
-        },
-        errorComponents: {},
-        registry: {
-          extensions: {},
-          pages: {},
-          wrappers: {},
-        },
-        routes: {},
-        data: {},
-        portals: {},
-        modules: [],
-      };
-    }
-  `);
-}
-
-function createDebugHandler(imports, exports) {
-  // if we build the debug version of piral (debug and emulator build)
-  if (process.env.DEBUG_PIRAL) {
-    imports.push(`import { integrateDebugger } from "piral-core/${cat}/debugger"`);
-    exports.push(`export { integrateDebugger }`);
-  } else {
-    exports.push(`export function integrateDebugger() {}`);
-  }
-
-  // if we build the emulator version of piral (shipped to pilets)
-  if (process.env.DEBUG_PILET) {
-    imports.push(`import { integrateEmulator } from "piral-core/${cat}/emulator"`);
-    exports.push(`export { integrateEmulator }`);
-  } else {
-    exports.push(`export function integrateEmulator() {}`);
-  }
-}
-
-function createRouteHandler(imports, exports) {
-  const assignments = [];
-
-  imports.push(
-    `import { useGlobalStateContext } from 'piral-core/${cat}/hooks/globalState';`,
-  );
-
-  assignments.push(`
-    useCurrentNavigation();
-  `);
-
-  if (process.env.DEBUG_PILET) {
-    imports.push(`import { debugRouteFilter } from 'piral-debug-utils';`);
-    assignments.push('return debugRouteFilter(paths);');
-  } else {
-    assignments.push('return paths;');
-  }
-
-  exports.push(`
-    export function useRouteFilter(paths) {
-      ${assignments.join('\n')}
-    }
-  `);
-}
-
-module.exports = function () {
+module.exports = async function () {
   const exports = [];
   const imports = [];
+  const opts = {
+    root: process.cwd(),
+    cat: process.env.NODE_ENV === 'test' ? 'src' : '_',
+    appName: process.env.BUILD_PCKG_NAME || '',
+    externals: (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean),
+    publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
+    debug: !!process.env.DEBUG_PIRAL,
+    emulator: !!process.env.DEBUG_PILET,
+  };
 
-  createDependencies(imports, exports);
-  createDefaultState(imports, exports);
-  createDebugHandler(imports, exports);
-  createRouteHandler(imports, exports);
+  await cg.createDependencies(imports, exports, opts);
+  await cg.createDefaultState(imports, exports, opts);
+  await cg.createDebugHandler(imports, exports, opts);
+  await cg.createRouteHandler(imports, exports, opts);
 
   return `
     ${imports.join('\n')}
-
     ${exports.join('\n')}
   `;
 };

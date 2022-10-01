@@ -1,6 +1,7 @@
+// this file is bundled, so the references here will not be at runtime (i.e., for a user)
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
-import { satisfies, validate } from './version';
+import { satisfies, validate } from 'piral-cli/src/common/version';
 
 const systemResolve = System.constructor.prototype.resolve;
 const systemRegister = System.constructor.prototype.register;
@@ -34,15 +35,6 @@ function findMatchingPackage(id: string) {
   }
 
   return undefined;
-}
-
-function tryResolve(name: string, parent: string) {
-  try {
-    return System.resolve(name, parent);
-  } catch {
-    // just ignore - will be handled differently later.
-    return undefined;
-  }
 }
 
 function isPrimitiveExport(content: any) {
@@ -106,6 +98,15 @@ System.constructor.prototype.register = function (...args) {
 
   return systemRegister.apply(this, args);
 };
+
+function tryResolve(name: string, parent: string) {
+  try {
+    return System.resolve(name, parent);
+  } catch {
+    // just ignore - will be handled differently later.
+    return undefined;
+  }
+}
 
 export interface ModuleResolver {
   (): any;

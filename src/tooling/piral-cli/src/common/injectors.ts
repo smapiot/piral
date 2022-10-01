@@ -1,7 +1,7 @@
-import chalk from 'chalk';
 import { resolve } from 'path';
 import { liveIcon, settingsIcon } from './emoji';
 import { logInfo, log, logReset } from './log';
+import { chalk } from '../external';
 import { Bundler } from '../types';
 
 export function notifyServerOnline(bundlers: Array<Bundler>, path: string, api: string | false) {

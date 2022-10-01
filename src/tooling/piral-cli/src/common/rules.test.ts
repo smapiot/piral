@@ -1,5 +1,5 @@
 import { ruleSummary, runRules } from './rules';
-import chalk from 'chalk';
+import { chalk } from '../external';
 
 const rule = {
   run: jest.fn(),

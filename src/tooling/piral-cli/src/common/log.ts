@@ -1,111 +1,79 @@
 import * as messages from '../messages';
-import { join } from 'path';
 import { format } from 'util';
-import { createWriteStream } from 'fs';
-import { isWindows } from './info';
-import { stripAnsi } from '../external';
+import { ora } from '../external';
 import { LogLevels, QuickMessage } from '../types';
 
 type Messages = typeof messages;
 type MessageTypes = keyof Messages;
 let currentProgress: string = undefined;
-
-const logger = (() => {
-  try {
-    const logger = require('@parcel/logger');
-
-    // check to see if this is really right
-    if (typeof logger.verbose === 'function') {
-      return logger;
-    }
-  } catch {}
-
-  return require('../external').logger;
-})();
-
-// unfortunately, Parcel's support for verbose logging on Windows is broken
-if (isWindows) {
-  logger.verbose = function (message: string) {
-    if (this.logLevel < 4) {
-      return;
-    }
-
-    const currDate = new Date();
-    message = `[${currDate.toLocaleTimeString()}]: ${message}`;
-
-    if (this.logLevel > 4) {
-      if (!this.logFile) {
-        // the critical line is the filename; it must not contain colons!
-        const timestamp = currDate.toISOString().replace(/:/g, '');
-        const fileName = `parcel-debug-${timestamp}.log`;
-        this.logFile = createWriteStream(join(process.cwd(), fileName));
-      }
-
-      this.logFile.write(stripAnsi.default(message) + '\n');
-    }
-
-    this._log(message);
-  };
-}
+let logLevel = LogLevels.info;
+let instance = ora();
 
 export function getLogLevel(): LogLevels {
-  return logger.logLevel;
+  return logLevel;
 }
 
-export function setLogLevel(logLevel: LogLevels) {
-  logger.setOptions({ logLevel });
+export function setLogLevel(value: LogLevels) {
+  logLevel = value;
 }
 
 export function logInfo(message: string, ...args: Array<string | number | boolean>) {
   const msg = format(message, ...args);
-  logger.log(msg);
+  instance.info(msg);
   return msg;
 }
 
 export function logDebug(message: string, ...args: Array<string | number | boolean>) {
   const msg = format(message, ...args);
-  logger.verbose(msg);
+
+  if (logLevel >= LogLevels.debug) {
+    instance.info(msg);
+  }
+
   return msg;
 }
 
 export function logVerbose(message: string, ...args: Array<string | number | boolean>) {
   const msg = format(message, ...args);
-  logger.logLevel > 3 && logger.log(msg);
+
+  if (logLevel >= LogLevels.verbose) {
+    instance.info(msg);
+  }
+
   return msg;
 }
 
 export function logDone(message: string, ...args: Array<string | number | boolean>) {
   const msg = format(message, ...args);
-  logger.success(msg);
+  instance.succeed(msg);
   return msg;
 }
 
 export function logWarn(message: string, ...args: Array<string | number | boolean>) {
   const msg = format(message, ...args);
-  logger.warn(msg);
+  instance.warn(msg);
   return msg;
 }
 
 export function logFail(message: string, ...args: Array<string | number | boolean>) {
   const msg = format(message, ...args);
-  logger.error(msg);
+  instance.fail(msg);
   return msg;
 }
 
 export function progress(message: string, ...args: Array<string | number | boolean>) {
   currentProgress = format(message, ...args)
-  logger.progress(currentProgress);
+  instance.start(message);
 }
 
 export function logReset() {
-  logger.lines = 0;
-  logger.stopSpinner();
+  instance.stop();
 }
 
 export function logSuspend() {
   logReset();
 
-  return () => logger.progress(currentProgress);
+  return () => instance.start(currentProgress);
 }
 
 export function fail<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>): never {

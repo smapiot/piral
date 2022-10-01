@@ -60,17 +60,21 @@
   "scripts": {
     "cleanup": "rimraf esm lib",
     "build": "yarn build:commonjs && yarn build:esnext",
-    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
-    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "build:commonjs": "yarn build:commonjs:tsc && rimraf lib/utils/system.js && yarn build:commonjs:system",
+    "build:commonjs:tsc": "tsc --project tsconfig.json --outDir lib --module commonjs",
+    "build:commonjs:system": "esbuild src/utils/system.ts --bundle --outfile=lib/utils/system.js --format=cjs",
+    "build:esnext": "yarn build:esnext:tsc && rimraf esm/utils/system.js && yarn build:esnext:system",
+    "build:esnext:tsc": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "build:esnext:system": "esbuild src/utils/system.ts --bundle --outfile=esm/utils/system.js --format=esm",
     "typedoc": "typedoc --json ../../../docs/types/piral-base.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "systemjs": "^6.10.2",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@types/systemjs": "^6.1.1"
+    "@types/systemjs": "^6.1.1",
+    "systemjs": "^6.10.2"
   },
   "sharedDependencies": [
     "tslib"

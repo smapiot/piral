@@ -1,0 +1,30 @@
+import * as fs from 'graceful-fs';
+import { ResolverFactory, CachedInputFileSystem } from 'enhanced-resolve';
+
+const nodeFileSystem = new CachedInputFileSystem(fs, 4000);
+
+const nodeContext = {
+  environments: ['node+es3+es5+process+native'],
+};
+
+const enhancedResolve = ResolverFactory.createResolver({
+  aliasFields: ['browser'],
+  conditionNames: ['import', 'module', 'webpack', 'development', 'browser'],
+  extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx', '.json'],
+  exportsFields: ['exports'],
+  importsFields: ['imports'],
+  mainFields: ['browser', 'module', 'main'],
+  fileSystem: nodeFileSystem,
+});
+
+export function getModulePath(root: string, moduleName: string) {
+  return new Promise<string>((resolve, reject) => {
+    enhancedResolve.resolve(nodeContext, root, moduleName, {}, (err, res) => {
+      if (err || !res) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
