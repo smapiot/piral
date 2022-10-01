@@ -13,9 +13,9 @@ describe('Rules Module', () => {
     };
     expect(runException).toThrow(Error('[0080] Validation failed. Found 1 error(s).'));
 
-    let consoleSpy = jest.spyOn(console, 'log');
+    let consoleSpy = jest.spyOn(process.stderr, 'write');
     ruleSummary([], []);
-    expect(consoleSpy).toHaveBeenCalledWith(`✨  ${chalk.green.bold('Validation successful. No errors or warnings.')}`);
+    expect(consoleSpy).toHaveBeenLastCalledWith(`${chalk.green('✔')} Validation successful. No errors or warnings.\n`);
 
     jest.clearAllMocks();
     ruleSummary([], ['Warning!']);

@@ -4,7 +4,10 @@ const defaultPort = 12345;
 const error = Error('RangeError: Port should be >= 0 and < 65536.');
 
 jest.mock('../external', () => ({
-  getPort: (options: any) => {
+  ora() {
+    return {};
+  },
+  getPort(options: any) {
     if (options == undefined) {
       return Promise.resolve(defaultPort);
     } else if (options && options.port && options.port > 65536) {

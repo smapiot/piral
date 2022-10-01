@@ -1,6 +1,6 @@
 const cg = require('./dist/codegen');
 
-module.exports = async function () {
+module.exports = function () {
   const exports = [];
   const imports = [];
   const opts = {
@@ -13,10 +13,10 @@ module.exports = async function () {
     emulator: !!process.env.DEBUG_PILET,
   };
 
-  await cg.createDependencies(imports, exports, opts);
-  await cg.createDefaultState(imports, exports, opts);
-  await cg.createDebugHandler(imports, exports, opts);
-  await cg.createRouteHandler(imports, exports, opts);
+  cg.createDependencies(imports, exports, opts);
+  cg.createDefaultState(imports, exports, opts);
+  cg.createDebugHandler(imports, exports, opts);
+  cg.createRouteHandler(imports, exports, opts);
 
   return `
     ${imports.join('\n')}

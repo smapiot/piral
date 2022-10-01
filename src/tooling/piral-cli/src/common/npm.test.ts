@@ -28,13 +28,8 @@ jest.mock('child_process');
 
 jest.mock('../external', () => ({
   rc() {},
-  logger: {
-    stopSpinner() {},
-    verbose() {},
-    info() {},
-    error() {},
-    log() {},
-    setOptions() {},
+  ora() {
+    return {};
   },
 }));
 

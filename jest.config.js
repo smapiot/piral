@@ -1,3 +1,9 @@
+const config = require('piral-jest-utils').default;
+
 module.exports = {
-  ...require('piral-jest-utils').default,
+  ...config,
+  moduleNameMapper: {
+    ...config.moduleNameMapper,
+    '../external$': '<rootDir>/src/tooling/piral-cli/lib/external/index.js',
+  },
 };

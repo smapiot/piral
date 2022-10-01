@@ -1,11 +1,11 @@
 // this file is bundled, so the references here will not be at runtime (i.e., for a user)
 import { getModulePath } from 'piral-cli/src/external/resolve';
 
-async function getRouterVersion(root: string) {
+function getRouterVersion(root: string) {
   const router = 'react-router';
 
   try {
-    const modulePath = await getModulePath(root, `${router}/package.json`);
+    const modulePath = getModulePath(root, `${router}/package.json`);
     const { version } = require(modulePath);
     const [major] = version.split('.');
     return parseInt(major, 10);
@@ -15,11 +15,11 @@ async function getRouterVersion(root: string) {
   }
 }
 
-async function getIdentifiers(root: string, packageName: string) {
+function getIdentifiers(root: string, packageName: string) {
   const packageJson = `${packageName}/package.json`;
 
   try {
-    const modulePath = await getModulePath(root, packageJson);
+    const modulePath = getModulePath(root, packageJson);
     const details = require(modulePath);
 
     if (details.version) {
@@ -28,6 +28,14 @@ async function getIdentifiers(root: string, packageName: string) {
   } catch {}
 
   return [packageName];
+}
+
+function getModulePathOrDefault(root: string, name: string) {
+  try {
+    return getModulePath(root, name);
+  } catch {
+    return name;
+  }
 }
 
 interface CodegenOptions {
@@ -40,7 +48,7 @@ interface CodegenOptions {
   emulator: boolean;
 }
 
-export async function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
+export function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
   const { root, appName, externals } = opts;
   const assignments: Array<string> = [];
 
@@ -49,8 +57,8 @@ export async function createDependencies(imports: Array<string>, exports: Array<
   }
 
   for (const name of externals) {
-    const identifiers = await getIdentifiers(root, name);
-    const path = await getModulePath(root, name);
+    const identifiers = getIdentifiers(root, name);
+    const path = getModulePathOrDefault(root, name);
     const ref = `_${imports.length}`;
     imports.push(`import * as ${ref} from ${JSON.stringify(path)}`);
 
@@ -66,9 +74,9 @@ export async function createDependencies(imports: Array<string>, exports: Array<
   `);
 }
 
-export async function createDefaultState(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
+export function createDefaultState(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
   const { root, cat, publicPath } = opts;
-  const routerVersion = await getRouterVersion(root);
+  const routerVersion = getRouterVersion(root);
 
   imports.push(
     `import { DefaultErrorInfo } from 'piral-core/${cat}/defaults/DefaultErrorInfo';`,
@@ -127,7 +135,7 @@ export async function createDefaultState(imports: Array<string>, exports: Array<
   `);
 }
 
-export async function createDebugHandler(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
+export function createDebugHandler(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
   const { cat, debug, emulator } = opts;
 
   // if we build the debug version of piral (debug and emulator build)
@@ -147,7 +155,7 @@ export async function createDebugHandler(imports: Array<string>, exports: Array<
   }
 }
 
-export async function createRouteHandler(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
+export function createRouteHandler(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
   const { cat, emulator } = opts;
   const assignments = [];
 

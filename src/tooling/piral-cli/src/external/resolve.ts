@@ -18,13 +18,11 @@ const enhancedResolve = ResolverFactory.createResolver({
 });
 
 export function getModulePath(root: string, moduleName: string) {
-  return new Promise<string>((resolve, reject) => {
-    enhancedResolve.resolve(nodeContext, root, moduleName, {}, (err, res) => {
-      if (err || !res) {
-        reject(err);
-      } else {
-        resolve(res);
-      }
-    });
-  });
+  const res = enhancedResolve.resolveSync(nodeContext, root, moduleName);
+
+  if (!res) {
+    throw new Error(`Could not find module "${moduleName}".`);
+  }
+
+  return res;
 }
