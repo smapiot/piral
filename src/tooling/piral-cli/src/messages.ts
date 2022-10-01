@@ -2602,6 +2602,39 @@ export function bundlerUnspecified_0175(available: Array<string>): QuickMessage 
  * @kind Warning
  *
  * @summary
+ * No bundler has been installed yet.
+ *
+ * @abstract
+ * Piral allows you to set up your own tooling for building and debugging. This
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
+ *
+ * In case no bundler is yet installed the Piral CLI will automatically install
+ * the default bundler. However, you should consider installing a bundler of your
+ * choice (even if this could also be the default bundler) explicitly.
+ *
+ * @see
+ * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ *
+ * @example
+ * Use the following command to install esbuild as a bundler with the npm client:
+ *
+ * ```sh
+ * npm i piral-cli-esbuild --save-dev
+ * ```
+ */
+export function bundlerNotInstalled_0176(): QuickMessage {
+  return [
+    LogLevels.warning,
+    '0176',
+    `Installing default bundler since no bundler has been found.`,
+  ];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
  * An invalid argument for "commandName" was supplied.
  *
  * @abstract

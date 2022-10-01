@@ -13,6 +13,8 @@ export * from './http';
 export * from './importmap';
 export * from './info';
 export * from './injectors';
+export * from './inspect';
+export * from './interactive';
 export * from './io';
 export * from './language';
 export * from './log';
