@@ -316,7 +316,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('vars', apps.newPiralDefaults.variables)
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .string('appName')
+        .describe('appName', 'Sets the name for the new Piral app.')
+        .default('appName', apps.newPiralDefaults.appName);
     },
     run(args) {
       return apps.newPiral(args.base as string, {
@@ -333,6 +336,7 @@ const allCommands: Array<ToolCommand<any>> = [
         npmClient: args['npm-client'] as NpmClientType,
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
+        appName: args.appName as string,
       });
     },
   },
