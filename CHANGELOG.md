@@ -7,6 +7,7 @@
 - Updated `importmap` with `inherit` key
 - Moved templates to dedicated repository (#458)
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
+- Changed to ask if a bundler should be installed (#545)
 - Changed webpack configs to use `oneOf` for assets (#451)
 - Changed the internal state container to `zustand`
 - Changed portal boundary to `piral-portal` using `display: contents`
@@ -23,6 +24,7 @@
 - Added new convenience package `piral-hooks-utils`
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
 - Added `--feed` option to `piral debug` command
+- Added `--app-name` option to `piral new` command (#546)
 - Added `feed` provider for using `piral publish`
 - Added support for `importmap` in the app shell
 - Added semver possibilities for resolving shared dependencies

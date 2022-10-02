@@ -88,6 +88,8 @@ export function createNavigation(): NavigationApi {
         window.removeEventListener('piral-navigate', handler);
       };
     },
-    router: _nav,
+    get router() {
+      return _nav;
+    },
   };
 }
