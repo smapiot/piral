@@ -4,6 +4,6 @@ module.exports = {
   ...config,
   moduleNameMapper: {
     ...config.moduleNameMapper,
-    '../external$': '<rootDir>/src/tooling/piral-cli/lib/external/index.js',
+    './external$': '<rootDir>/src/tooling/piral-cli/lib/external/index.js',
   },
 };

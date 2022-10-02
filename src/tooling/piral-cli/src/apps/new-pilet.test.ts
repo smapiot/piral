@@ -23,7 +23,7 @@ jest.mock('../common/clients/npm', () => {
   };
 });
 
-jest.setTimeout(60000);
+jest.setTimeout(90000);
 
 describe('New Pilet Command', () => {
   it('scaffolding in an empty directory works', async () => {
