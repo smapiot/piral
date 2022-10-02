@@ -92,7 +92,7 @@ Sets the tag or version of the package to install. By default, this uses the ver
 
 - Aliases: `--piral-version`
 - Type: `string`
-- Default: `"0.14.30"`
+- Default: `"0.14.32"`
 
 ### `--force-overwrite`
 
@@ -153,3 +153,11 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
+
+### `--app-name`
+
+Sets the name for the new Piral app.
+
+
+- Type: `string`
+- Default: `undefined`

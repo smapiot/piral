@@ -1,4 +1,4 @@
-import { mkdtempSync, existsSync } from 'fs';
+import { mkdtempSync, existsSync, readFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
 import { newPiral } from './new-piral';
@@ -46,6 +46,25 @@ describe('New Piral Command', () => {
     expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
     expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+  });
+
+  it('scaffolding with custom app name works', async () => {
+    const dir = createTempDir();
+    await newPiral(dir, {
+      appName: 'test-name',
+      install: false,
+    });
+
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+
+    const packageContent = await JSON.parse(readFileSync(`${dir}/package.json`, 'utf8'));
+    expect(packageContent.name).toBe('test-name');
   });
 
   it('scaffolding for piral-core works', async () => {
