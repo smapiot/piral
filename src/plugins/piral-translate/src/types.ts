@@ -121,6 +121,16 @@ export interface LocalizationMessages {
 
 export interface PiletLocaleApi {
   /**
+   * Adds a list of translations to the existing translations.
+   *
+   * Internally, setTranslations is used, which means the translations will be exclusively used for
+   * retrieving translations for the pilet.
+   *
+   * @param messagesList The list of messages that extend the existing translations
+   * @param [isOverriding=true] Indicates whether the new translations overwrite the existing translations
+   */
+  addTranslations(messagesList: LocalizationMessages[], isOverriding?: boolean): void;
+  /**
    * Gets the currently selected language directly.
    */
   getCurrentLanguage(): string;

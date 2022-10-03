@@ -1,3 +1,5 @@
+import * as deepmerge from 'deepmerge';
+
 import type { PiralPlugin } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
@@ -70,6 +72,19 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
       let localTranslations: LocalizationMessages = {};
 
       return {
+        addTranslations(messages: LocalizationMessages[], isOverriding: boolean = true) {
+          const messagesToMerge: LocalizationMessages[] = messages;
+
+          if (isOverriding) {
+            messagesToMerge.unshift(localizer.messages);
+          } else {
+            messagesToMerge.push(localizer.messages);
+          }
+
+          this.setTranslations(
+            deepmerge.all(messagesToMerge),
+          );
+        },
         getCurrentLanguage(cb?: (l: string) => void): any {
           const selected = context.readState((s) => s.language.selected);
 
