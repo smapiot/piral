@@ -133,4 +133,85 @@ describe('Create Localize API', () => {
     const result = api.getCurrentLanguage();
     expect(result).toEqual('fr');
   });
+
+  it('addTranslations should add new translations if no value exists yet for the combination of language and key', (): void => {
+    const config = {
+      language: 'fr',
+      messages: {
+        fr: {
+          foo: 'fóo',
+          bar: 'bár',
+        },
+      },
+    };
+    const messagesToAdd = {
+      fr: {
+        foo: 'fóo (new)',
+        bar: 'bár (new)',
+        baz: 'báz (new)',
+      },
+    };
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
+    api.addTranslations([
+      messagesToAdd
+    ]);
+    const result = api.translate('baz');
+
+    expect(result).toEqual(messagesToAdd.fr.baz);
+  });
+
+  it('addTranslations should add new translations if overwriting is enabled and a value already exists for the combination of language and key', (): void => {
+    const config = {
+      language: 'fr',
+      messages: {
+        fr: {
+          foo: 'fóo',
+          bar: 'bár',
+        },
+      },
+    };
+    const messagesToAdd = {
+      fr: {
+        foo: 'fóo (new)',
+        bar: 'bár (new)',
+        baz: 'báz (new)',
+      },
+    };
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
+    api.addTranslations([
+      messagesToAdd
+    ]);
+    const result = api.translate('bar');
+
+    expect(result).toEqual(messagesToAdd.fr.bar);
+  });
+
+  it('addTranslations should not add new translations if overwriting is disabled and a value already exists for the combination of language and key', (): void => {
+    const config = {
+      language: 'fr',
+      messages: {
+        fr: {
+          foo: 'fóo',
+          bar: 'bár',
+        },
+      },
+    };
+    const messagesToAdd = {
+      fr: {
+        foo: 'fóo (neu)',
+        bar: 'bár (neu)',
+        baz: 'báz',
+      },
+    };
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
+    api.addTranslations(
+      [
+        messagesToAdd
+      ],
+      false
+    );
+    const result = api.translate('bar');
+
+    expect(result).toEqual(config.messages.fr.bar);
+  });
 });

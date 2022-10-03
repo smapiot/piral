@@ -62,7 +62,11 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-translate.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
+  "dependencies": {
+    "deepmerge": "^4.2.2"
+  },
   "devDependencies": {
+    "@types/deepmerge": "^2.2.0",
     "@types/react": "^18.0.0",
     "piral-core": "^0.14.32",
     "react": "^18.0.0"
