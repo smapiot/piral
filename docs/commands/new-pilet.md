@@ -138,3 +138,11 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
+
+### `--name`
+
+Sets the name for the new Pilet.
+
+
+- Type: `string`
+- Default: `undefined`
