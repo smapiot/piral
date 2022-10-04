@@ -28,6 +28,7 @@
 - Added semver possibilities for resolving shared dependencies
 - Added automatic determination of npm client (#516)
 - Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
+- Added functionality for extending the existing translations
 
 ## 0.14.32 (September 21, 2022)
 
