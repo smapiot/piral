@@ -90,7 +90,7 @@ export interface NewPiralOptions {
   /**
    * Sets new app name
    */
-  appName?: string;
+  name?: string;
 }
 
 export const newPiralDefaults: NewPiralOptions = {
@@ -107,7 +107,7 @@ export const newPiralDefaults: NewPiralOptions = {
   npmClient: undefined,
   bundlerName: 'none',
   variables: {},
-  appName: undefined,
+  name: undefined,
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
@@ -124,7 +124,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     logLevel = newPiralDefaults.logLevel,
     bundlerName = newPiralDefaults.bundlerName,
     variables = newPiralDefaults.variables,
-    appName = newPiralDefaults.appName,
+    name = newPiralDefaults.name,
     npmClient: defaultNpmClient = newPiralDefaults.npmClient,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
@@ -142,7 +142,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   if (success) {
     const npmClient = await determineNpmClient(root, defaultNpmClient);
     const packageRef = combinePackageRef(framework, version, 'registry');
-    const projectName = appName || basename(root);
+    const projectName = name || basename(root);
 
     progress(`Creating a new Piral instance in %s ...`, root);
 

@@ -51,7 +51,7 @@ describe('New Piral Command', () => {
   it('scaffolding with custom app name works', async () => {
     const dir = createTempDir();
     await newPiral(dir, {
-      appName: 'test-name',
+      name: 'test-name',
       install: false,
     });
 
