@@ -154,7 +154,7 @@ Sets the base directory. By default the current directory is used.
 - Type: `string`
 - Default: `process.cwd()`
 
-### `--app-name`
+### `--name`
 
 Sets the name for the new Piral app.
 

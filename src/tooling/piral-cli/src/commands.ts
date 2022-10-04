@@ -317,9 +317,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.')
-        .string('app-name')
-        .describe('app-name', 'Sets the name for the new Piral app.')
-        .default('app-name', apps.newPiralDefaults.appName);
+        .string('name')
+        .describe('name', 'Sets the name for the new Piral app.')
+        .default('name', apps.newPiralDefaults.name);
     },
     run(args) {
       return apps.newPiral(args.base as string, {
@@ -336,7 +336,7 @@ const allCommands: Array<ToolCommand<any>> = [
         npmClient: args['npm-client'] as NpmClientType,
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
-        appName: args['app-name'] as string,
+        name: args['name'] as string,
       });
     },
   },
@@ -709,7 +709,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('vars', apps.newPiletDefaults.variables)
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .string('name')
+        .describe('name', 'Sets the name for the new Pilet.')
+        .default('name', apps.newPiletDefaults.name);
     },
     run(args) {
       return apps.newPilet(args.base as string, {
@@ -724,6 +727,7 @@ const allCommands: Array<ToolCommand<any>> = [
         npmClient: args['npm-client'] as NpmClientType,
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
+        name: args['name'] as string,
       });
     },
   },

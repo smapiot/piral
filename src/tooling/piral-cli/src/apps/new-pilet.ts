@@ -90,6 +90,11 @@ export interface NewPiletOptions {
    * Places additional variables that should used when scaffolding.
    */
   variables?: Record<string, string>;
+
+  /**
+   * Sets Pilet's name
+   */
+  name?: string;
 }
 
 export const newPiletDefaults: NewPiletOptions = {
@@ -104,6 +109,7 @@ export const newPiletDefaults: NewPiletOptions = {
   npmClient: undefined,
   bundlerName: 'none',
   variables: {},
+  name: undefined,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -119,6 +125,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     bundlerName = newPiletDefaults.bundlerName,
     variables = newPiletDefaults.variables,
     npmClient: defaultNpmClient = newPiletDefaults.npmClient,
+    name = newPiletDefaults.name,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -129,7 +136,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
 
   if (success) {
     const npmClient = await determineNpmClient(root, defaultNpmClient);
-    const projectName = basename(root);
+    const projectName = name || basename(root);
 
     progress(`Scaffolding new pilet in %s ...`, root);
 
