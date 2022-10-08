@@ -14,6 +14,7 @@ const enhancedResolve = ResolverFactory.createResolver({
   exportsFields: ['exports'],
   importsFields: ['imports'],
   mainFields: ['browser', 'module', 'main'],
+  useSyncFileSystemCalls: true,
   fileSystem: nodeFileSystem,
 });
 
