@@ -84,6 +84,14 @@ module.exports = extendConfig({
 });
 ```
 
+If you want to name your Webpack configuration different than `webpack.config.js` you can use the `--config` CLI option.
+
+Example:
+
+```sh
+npx piral build --config my-webpack.js
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
