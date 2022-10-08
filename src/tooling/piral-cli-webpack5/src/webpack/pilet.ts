@@ -93,7 +93,8 @@ async function getConfig(
 
 const handler: PiletBuildHandler = {
   async create(options) {
-    const otherConfigPath = resolve(options.root, defaultWebpackConfig);
+    const { config = defaultWebpackConfig } = options.args._;
+    const otherConfigPath = resolve(options.root, config);
     const baseConfig = await getConfig(
       options.entryModule,
       options.outDir,
