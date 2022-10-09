@@ -86,11 +86,12 @@ export interface NavigationApi {
    */
   listen(listener: NavigationListener): Disposable;
   /**
-   * Gets the current path.
+   * Gets the current navigation / application path.
    */
   path: string;
   /**
-   * The original router behind the navigation.
+   * The original router behind the navigation. Don't depend on this
+   * as the implementation is router specific and may change over time.
    */
   router: any;
 }

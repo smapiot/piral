@@ -1,22 +1,28 @@
-import { withKey, withoutKey, GlobalStateContext } from 'piral-core';
+import type { GlobalStateContext, Dict } from 'piral-core';
 import { BreadcrumbRegistration } from './types';
 
-export function registerBreadcrumb(ctx: GlobalStateContext, name: string, value: BreadcrumbRegistration) {
+export function registerBreadcrumbs(ctx: GlobalStateContext, values: Dict<BreadcrumbRegistration>) {
   ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
-      breadcrumbs: withKey(state.registry.breadcrumbs, name, value),
+      breadcrumbs: {
+        ...state.registry.breadcrumbs,
+        ...values,
+      },
     },
   }));
 }
 
-export function unregisterBreadcrumb(ctx: GlobalStateContext, name: string) {
+export function unregisterBreadcrumbs(ctx: GlobalStateContext, names: Array<string>) {
   ctx.dispatch((state) => ({
     ...state,
     registry: {
       ...state.registry,
-      breadcrumbs: withoutKey(state.registry.breadcrumbs, name),
+      breadcrumbs: names.reduce((prev, name) => {
+        const { [name]: _, ...rest } = prev;
+        return rest;
+      }, state.registry.breadcrumbs),
     },
   }));
 }

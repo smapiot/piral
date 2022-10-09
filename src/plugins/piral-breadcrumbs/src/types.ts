@@ -1,4 +1,4 @@
-import type { ComponentType, ReactChild, ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type { Dict, BaseRegistration, RegistrationDisposer } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -9,15 +9,14 @@ declare module 'piral-core/lib/types/custom' {
   interface PiralCustomActions {
     /**
      * Registers a new breadcrumb.
-     * @param name The name of the breadcrumb.
-     * @param value The breadcrumb registration.
+     * @param values The breadcrumbs to register.
      */
-    registerBreadcrumb(name: string, value: BreadcrumbRegistration): void;
+    registerBreadcrumbs(values: Dict<BreadcrumbRegistration>): void;
     /**
      * Unregisters an existing breadcrumb.
      * @param name The name of the breadcrumb to be removed.
      */
-    unregisterBreadcrumb(name: string): void;
+    unregisterBreadcrumbs(names: Array<string>): void;
   }
 
   interface PiralCustomRegistryState {
@@ -84,7 +83,7 @@ export interface BreadcrumbSettings extends PiralCustomBreadcrumbSettings {
   /**
    * The title of the breadcrumb.
    */
-  title: ReactChild;
+  title: ReactNode;
 }
 
 export interface BreadcrumbRegistration extends BaseRegistration {
@@ -93,6 +92,11 @@ export interface BreadcrumbRegistration extends BaseRegistration {
 }
 
 export interface PiletBreadcrumbsApi {
+  /**
+   * Registers a set of breadcrumbs.
+   * @param values The different breadcrumb settings.
+   */
+  registerBreadcrumbs(values: Array<{ name?: string; } & BreadcrumbSettings>): RegistrationDisposer;
   /**
    * Registers a breadcrumb with the provided settings.
    * @param settings The settings for configuring the breadcrumb.

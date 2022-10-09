@@ -34,7 +34,18 @@ export interface HtmlComponent<TProps> {
  * The context to be transported into the generic components.
  */
 export interface ComponentContext {
+  /**
+   * The router-independent navigation API.
+   */
   navigation: NavigationApi;
+  /**
+   * The internal router object.
+   * @deprecated Exposes internals that can change at any time.
+   */
+  router: any;
+  /**
+   * The public path of the application.
+   */
   publicPath: string;
 }
 

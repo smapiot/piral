@@ -10,7 +10,7 @@ function getRouterVersion(root: string) {
     const [major] = version.split('.');
     return parseInt(major, 10);
   } catch {
-    console.warn(`Could not determine version of ${router}. Falling back to v5`);
+    console.warn(`⚠ Could not determine version of ${router}. Falling back to v5.`);
     return 5;
   }
 }
