@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions } from 'piral-core';
-import { registerBreadcrumb, unregisterBreadcrumb } from './actions';
+import { registerBreadcrumbs, unregisterBreadcrumbs } from './actions';
 
 describe('Breadcrumbs Actions Module', () => {
   it('registerBreadcrumb and unregisterBreadcrumb', () => {
@@ -13,7 +13,9 @@ describe('Breadcrumbs Actions Module', () => {
       },
     }));
     const ctx = createActions(state, createListener({}));
-    registerBreadcrumb(ctx, 'foo', 10);
+    registerBreadcrumbs(ctx, {
+      foo: 10 as any,
+    });
     expect((state.getState())).toEqual({
       foo: 5,
       registry: {
@@ -23,7 +25,7 @@ describe('Breadcrumbs Actions Module', () => {
         },
       },
     });
-    unregisterBreadcrumb(ctx, 'foo');
+    unregisterBreadcrumbs(ctx, ['foo']);
     expect((state.getState())).toEqual({
       foo: 5,
       registry: {
