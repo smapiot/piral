@@ -223,17 +223,16 @@ stages:
             inputs:
               workingFile: .npmrc
               customEndpoint: DefaultNpmConnection
+          - task: Yarn@2
+            displayName: Update Version
+            inputs:
+              Arguments: ci:version --apply --beta
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build CrossFx Emulator
             inputs:
               targetType: inline
               script: >-
-                ORIGVER=`yarn --silent ci:version`
-
-                VERSION="$ORIGVER-beta.$(previewId)"
-
-                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-cross-fx/package.json
-
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
@@ -275,17 +274,16 @@ stages:
             inputs:
               workingFile: .npmrc
               customEndpoint: DefaultNpmConnection
+          - task: Yarn@2
+            displayName: Update Version
+            inputs:
+              Arguments: ci:version --apply --beta
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Full Emulator
             inputs:
               targetType: inline
               script: >-
-                ORIGVER=`yarn --silent ci:version`
-
-                VERSION="$ORIGVER-beta.$(previewId)"
-
-                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/sample-piral/package.json
-
                 yarn build:demo-full --type emulator
 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
@@ -327,17 +325,16 @@ stages:
             inputs:
               workingFile: .npmrc
               customEndpoint: DefaultNpmConnection
+          - task: Yarn@2
+            displayName: Update Version
+            inputs:
+              Arguments: ci:version --apply --beta
+              customEndpoint: DefaultNpmConnection
           - task: Bash@3
             displayName: Build Minimal Emulator
             inputs:
               targetType: inline
               script: >-
-                ORIGVER=`yarn --silent ci:version`
-
-                VERSION="$ORIGVER-beta.$(previewId)"
-
-                sed -i -e "s/\(\"version\":\\s\+\"\)\([0-9]\+\.\?\)\+/\1$VERSION/" src/samples/minimal-piral/package.json
-
                 yarn build:demo-minimal --type emulator
 
                 mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
