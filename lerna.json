@@ -1,15 +1,4 @@
 {
-  "packages": [
-    "src/converters/*",
-    "src/framework/*",
-    "src/initializers/*",
-    "src/pages/*",
-    "src/plugins/*",
-    "src/samples/*",
-    "src/templates/*",
-    "src/tooling/*",
-    "src/utilities/*"
-  ],
   "npmClient": "yarn",
   "useWorkspaces": true,
   "version": "0.14.32"

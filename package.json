@@ -8,7 +8,6 @@
     "src/pages/*",
     "src/plugins/*",
     "src/samples/*",
-    "src/templates/*",
     "src/tooling/*",
     "src/utilities/*"
   ],

@@ -28,3 +28,6 @@ Piral has plugins for many use cases. https://docs.piral.io/plugins/overview
 Monorepos are not necessary but can be very useful. https://docs.piral.io/guidelines/tutorials/23-monorepo
 Extension components are a great tool to structure your application. https://docs.piral.io/guidelines/tutorials/24-extension-patterns
 Pilets are not tied to a particular app shell. You decide how flexible they can be used. https://docs.piral.io/guidelines/tutorials/26-multiple-app-shell
+The `siteless` npm package lets you create a complete micro frontends solution without having a dedicated page.
+Piral is most often used on the client for SPA apps, but also works on the server in SSR scenarios.
+Need to create an electron app that is extensibly with plugins? Piral does the heavy lifting.
