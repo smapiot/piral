@@ -173,9 +173,9 @@ The service can optionally expose an endpoint for an interactive login. The endp
 
 The field `interactiveAuth` of `401` error responses is used to determine the URL for the interactive login. Calling this URL results in an object that determines the polling endpoint, the login endpoint, and the expiration date for the login.
 
-#### Endpoint
+#### Auth Endpoint
 
-The service exposes a REST endpoint, which accepts a `POST` request from the client. With the `POST` request
+The service exposes a REST endpoint, which accepts a `POST` request from the client. With the `POST` request a new interactive login is requested.
 
 **Request**
 
@@ -213,6 +213,35 @@ Both URLs should be GET endpoints.
 **Error Response**
 
 This endpoint should always succeed. In case of urgent server issues, a response with HTTP status code `500` has to be served. Any non-`200` response will be treated as an error response.
+
+#### Status Endpoint
+
+The service exposes a REST endpoint, which accepts a `GET` request from the client. With the `GET` request an existing interactive login is queried for its completion and the eventual result.
+
+**Success Response**
+
+In case of an early termination (with indeterminate result, i.e., no error) return `202`.
+
+In case of a successful completion (either directly or through long polling / waiting for the result) the service should respond with `200` and the following content (typed as `AuthStatusApiResponse`):
+
+```ts
+interface AuthStatusApiResponse {
+  mode: 'none' | 'digest' | 'bearer' | 'basic';
+  token: string;
+}
+```
+
+The data from the response is used to build the `authorization` header of the requests requiring some authentication.
+
+**Error Response**
+
+This endpoint can fail with a `404` (in case no active authorization request has been found) or `400` (in case some required details are missing in the request). In case of urgent server issues, a response with HTTP status code `500` has to be served. Any non-`200` and non-`202` response will be treated as an error response.
+
+#### Login Page
+
+The login page must be linked in the `loginUrl` of the `AuthApiResponse`. The implementation is irrelevant for this specification, but it must give the user the ability to conclude the flow. A common implementation will contain some kind of reference to the original request, e.g., an ID transported via a query parameter. This is then used to show what application initiated the request and what is the purpose of this authorization request.
+
+The only requirement for finishing the flow is that once the user successfully logged in, the status endpoint reports a successful conclusion (and terminates all ongoing long polling requests with a successful response).
 
 ## Examples
 

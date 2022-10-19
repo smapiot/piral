@@ -95,6 +95,10 @@ export interface OidcConfig {
    * Overrides the default metadata URL if the server does not follow the standard paths.
    */
   metadataUrl?: string;
+  /**
+   * Determines if the OIDCS session should be automatically monitored.
+   */
+  monitorSession?: boolean;
 }
 
 /**

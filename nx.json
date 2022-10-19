@@ -1,0 +1,74 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "build:convert",
+          "build:commonjs",
+          "build:esnext",
+          "build:commonjs:tsc",
+          "build:commonjs:system",
+          "build:esnext:tsc",
+          "build:esnext:system",
+          "build:codegen",
+          "build:docs",
+          "build:bundle",
+          "build:emulator-sources",
+          "build:release",
+          "build:source",
+          "build:external"
+        ]
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "build:convert": {
+      "outputs": [
+        "{projectRoot}/convert.js",
+        "{projectRoot}/convert.d.ts"
+      ]
+    },
+    "build:commonjs": {
+      "outputs": [
+        "{projectRoot}/lib"
+      ]
+    },
+    "build:esnext": {
+      "outputs": [
+        "{projectRoot}/esm"
+      ]
+    },
+    "build:docs": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "build:bundle": {
+      "outputs": [
+        "{projectRoot}/*.min.js"
+      ]
+    },
+    "build:emulator-sources": {
+      "outputs": [
+        "{projectRoot}/dist/emulator"
+      ]
+    },
+    "build:release": {
+      "outputs": [
+        "{projectRoot}/dist/release"
+      ]
+    },
+    "build:external": {
+      "outputs": [
+        "{projectRoot}/lib/external/index.js"
+      ]
+    }
+  }
+}
