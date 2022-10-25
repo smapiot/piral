@@ -1,0 +1,95 @@
+{
+  "$id": "https://docs.piral.io/schemas/piral-v0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Schema for Piral Instances",
+  "description": "Defines the schema for the piral.json associated with Piral instances.",
+  "type": "object",
+  "required": [],
+  "properties": {
+    "pilets": {
+      "type": "object",
+      "description": "Determines the scaffolding and upgrading behavior of pilets using this Piral instance.",
+      "required": [],
+      "properties": {
+        "files": {
+          "type": "array",
+          "description": "The files to copy into scaffolded pilets.",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Defines the path of the file to get, which matches the path in the scaffolded pilet."
+              },
+              {
+                "type": "object",
+                "description": "Defines the specifics of the file to match and write out.",
+                "required": [
+                  "from",
+                  "to"
+                ],
+                "properties": {
+                  "from": {
+                    "type": "string",
+                    "description": "Sets the source path (from the current directory) of the file to get."
+                  },
+                  "to": {
+                    "type": "string",
+                    "description": "Sets the target path of the file (from the directory of the scaffolded pilet)."
+                  },
+                  "deep": {
+                    "type": "boolean",
+                    "description": "Defines if the provided path is a directory that should be copied deeply with all nested content."
+                  },
+                  "once": {
+                    "type": "boolean",
+                    "description": "Defines if the copying of files only applies to scaffolded pilets, i.e., will be ignored when doing an upgrade."
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "scripts": {
+          "type": "object",
+          "required": [],
+          "description": "Defines additional scripts to be placed in the package.json of scaffolded pilets."
+        },
+        "template": {
+          "type": "string",
+          "description": "The default template package to be used for scaffolding. By default, the 'default' template package is used."
+        },
+        "validators": {
+          "type": "object",
+          "required": [],
+          "description": "A map of validators to be used in a scaffolded pilet. Each key represents the name of the validator. Each value represents the options for the respective validator."
+        },
+        "devDependencies": {
+          "type": "object",
+          "required": [],
+          "description": "Defines additional entries for the devDependencies section of the package.json."
+        },
+        "preScaffold": {
+          "type": "string",
+          "description": "The script to run before doing the main scaffolding part."
+        },
+        "postScaffold": {
+          "type": "string",
+          "description": "The script to run after doing the main scaffolding part."
+        },
+        "preUpgrade": {
+          "type": "string",
+          "description": "The script to run before doing the main upgrade part."
+        },
+        "postUpgrade": {
+          "type": "string",
+          "description": "The script to run after doing the main upgrade part."
+        },
+        "packageOverrides": {
+          "type": "object",
+          "required": [],
+          "description": "Defines arbitrary overrides for the package.json of scaffolded pilets."
+        }
+      }
+    }
+  }
+}

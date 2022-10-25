@@ -14,18 +14,52 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 ### Breaking Changes in 0.15
 
-1. Changed the default bundler from `piral-cli-webpack` to `piral-cli-webpack5`
-2. Deprecated the usage of `renderInstance`
-3. Removed IE polyfills
-4. Deprecated package field `pilets.externals` in favor of `importmap`
+1. Removed IE polyfills
+2. Changed the default bundler from `piral-cli-webpack` to `piral-cli-webpack5`
+3. Changed the required minimum version of Node.js for `piral-cli` to 12.0.0
+4. Deprecated the usage of `renderInstance`
+5. Deprecated package field `pilets.externals` in favor of `importmap`
 
-#### 1) New Default Bundler
+#### 1) Removed IE Polyfills
+
+If you included the following import in your app shell:
+
+```ts
+import 'piral/polyfills';
+```
+
+then either keep them, remove them completely, or add additional polyfills yourself. As of now, this package only contains
+
+```ts
+import 'regenerator-runtime/runtime';
+```
+
+which you can also put in there yourself. If, for whatever reason, you are still interested in keeping IE11 support alive you'd need to add references to recreate the following (previous) import list:
+
+```ts
+import 'promise-polyfill/lib/polyfill';
+import 'url-polyfill';
+import 'whatwg-fetch';
+import 'current-script-polyfill';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+```
+
+Either way under certain conditions you may spare the import of the `regenerator-runtime` completely, too.
+
+#### 2) New Default Bundler
 
 The default bundler is used / installed in scenarios where no other bundler has been installed. If you've not explictly installed a bundler (e.g., `piral-cli-webpack`) beforehand we advise you to do that. The most reliable way to configure your default bundler is to just be explicit here.
 
 Otherwise, you can also tell the `piral-cli` what default bundler to use in general by configuring the *.piralrc* file in your home directory.
 
-#### 2) Deprecated `renderInstance`
+#### 3) Minimum Version of Node.js
+
+Previously, the `piral-cli` officially supported Node.js in version 10 with inofficial support for version 8. Now, the minimum version has been lifted to 12.0.0, even though we are not making any forced checks. This affects only some functionality of the CLI. So if you use an earlier version of Node.js, you might not even notice a change (at least for some functionality). In general, however, the `piral-cli` will not work for older Node.js versions.
+
+It might be that we'll even lift this to Node.js 14 in the future, but for now we'll try to keep the `piral-cli` as broadly placed as possible.
+
+#### 4) Deprecated `renderInstance`
 
 While this is not (yet) breaking it will be in the near future (when `renderInstance` is fully removed). We recommend everyone to replace the implicit `renderInstance` call with a more explicit version involving `createInstance`, `Piral` (both from `piral-core`) and `render` (from `react-dom`).
 
@@ -103,34 +137,7 @@ render(<Piral instance={instance} />, document.querySelector('#app')); // does t
 
 The goal with this is to provide more flexibility also in the `piral` package. Furthermore, this unifies the documentation in a very important area.
 
-#### 3) Removed IE Polyfills
-
-If you included the following import in your app shell:
-
-```ts
-import 'piral/polyfills';
-```
-
-then either keep them, remove them completely, or add additional polyfills yourself. As of now, this package only contains
-
-```ts
-import 'regenerator-runtime/runtime';
-```
-
-which you can also put in there yourself. If, for whatever reason, you are still interested in keeping IE11 support alive you'd need to add references to recreate the following (previous) import list:
-
-```ts
-import 'promise-polyfill/lib/polyfill';
-import 'url-polyfill';
-import 'whatwg-fetch';
-import 'current-script-polyfill';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
-```
-
-Either way under certain conditions you may spare the import of the `regenerator-runtime` completely, too.
-
-#### 4) Deprecated Package Field `pilets.externals`
+#### 5) Deprecated Package Field `pilets.externals`
 
 Before 0.15 the way of defining the centrally shared dependencies (or just "shared dependencies") was different than the way of defining the decentrally shared dependencies (or "distributed dependencies"). While shared dependencies have been using an array of strings called `externals` in the `pilets` section of the app shell's *package.json*, the distributed dependencies have been remarked using the standard importmaps format either specified in the *package.json* or in a dedicated file.
 
