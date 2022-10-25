@@ -27,7 +27,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build:docs": "piral-docs build",
+    "build:docs": "piral-docs build --no-versioned",
     "watch:docs": "piral-docs watch",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
