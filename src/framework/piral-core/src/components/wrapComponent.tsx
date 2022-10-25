@@ -3,7 +3,7 @@ import { PortalRenderer } from './PortalRenderer';
 import { ForeignComponentContainer } from './ForeignComponentContainer';
 import { useGlobalStateContext } from '../hooks';
 import { convertComponent, none } from '../utils';
-import { publicPath, } from '../../app.codegen';
+import { publicPath } from '../../app.codegen';
 import type { AnyComponent, ComponentConverters, ForeignComponent, PiletApi, BaseComponentProps } from '../types';
 
 // this is an arbitrary start number to have 6 digits
