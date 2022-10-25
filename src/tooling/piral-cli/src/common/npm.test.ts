@@ -31,6 +31,11 @@ jest.mock('../external', () => ({
   ora() {
     return {};
   },
+  getModulePath(root, moduleName) {
+    return require.resolve(moduleName, {
+      paths: [root],
+    });
+  },
 }));
 
 let specialCase = false;

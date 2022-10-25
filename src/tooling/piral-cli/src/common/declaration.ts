@@ -5,13 +5,12 @@ import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { entryModuleExtensions, piralBaseRoot } from './constants';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
+import { getModulePath } from '../external';
 import { LogLevels } from '../types';
 
 function findPiralBaseApi(root: string) {
   try {
-    const packageJsonPath = require.resolve(piralBaseRoot, {
-      paths: [root],
-    });
+    const packageJsonPath = getModulePath(root, piralBaseRoot);
     const project = require(packageJsonPath);
     const projectDir = dirname(packageJsonPath);
     // By default support for piral-base < 0.15

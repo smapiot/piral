@@ -6,6 +6,7 @@
 - Updated to React v18 (#501)
 - Updated `importmap` with `inherit` key
 - Moved templates to dedicated repository (#458)
+- Changed `piral-cli` to require at least Node.js v12
 - Changed the default bundler to be `piral-cli-webpack5` (#469)
 - Changed to ask if a bundler should be installed (#545)
 - Changed webpack configs to use `oneOf` for assets (#451)

@@ -2,7 +2,7 @@ import { tmpdir } from 'os';
 import { resolve, relative, join, dirname, basename } from 'path';
 import { createTgz } from './archive';
 import { log, progress, fail } from './log';
-import { readJson, copy, removeDirectory, checkExists, makeTempDir } from './io';
+import { readJson, copy, removeDirectory, checkExists, makeTempDir, createDirectory } from './io';
 import { getPossiblePiletMainPaths } from './inspect';
 
 async function getPiletContentDir(root: string, packageData: any) {
@@ -54,6 +54,12 @@ export async function createPiletPackage(baseDir: string, source: string, target
   log('generalDebug_0003', `Creating package with content from "${content}" ...`);
 
   await Promise.all(files.map((file) => copy(file, resolve(cwd, relative(root, file)))));
+
+  log('generalDebug_0003', `Creating directory if not exist for "${file}" ...`);
+
+  await createDirectory(dirname(file));
+
+  log('generalDebug_0003', `Creating compressed archive at "${file}" relative to "${root}" ...`);
 
   await createTgz(
     file,

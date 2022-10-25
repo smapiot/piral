@@ -7,6 +7,7 @@ import { legacyCoreExternals, frameworkLibs, defaultRegistry } from './constants
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
+import { getModulePath } from '../external';
 import { PackageType, NpmClientType } from '../types';
 
 const gitPrefix = 'git+';
@@ -350,16 +351,16 @@ export async function getCurrentPackageDetails(
   return [combinePackageRef(sourceName, desired, 'registry'), desired];
 }
 
-function tryResolve(...args: Parameters<typeof require.resolve>) {
+function tryResolve(packageName: string, baseDir = process.cwd()) {
   try {
-    return require.resolve(...args);
+    return getModulePath(baseDir, packageName);
   } catch {
     return undefined;
   }
 }
 
 export function tryResolvePackage(name: string, baseDir: string = undefined) {
-  let path = baseDir ? tryResolve(name, { paths: [baseDir] }) : tryResolve(name);
+  let path = baseDir ? tryResolve(name, baseDir) : tryResolve(name);
   const root = baseDir || process.cwd();
 
   if (!path) {
@@ -370,7 +371,7 @@ export function tryResolvePackage(name: string, baseDir: string = undefined) {
     } else if (name.includes('/', name.startsWith('@') ? name.indexOf('/') + 1 : 0)) {
       const parts = name.split('/');
       const mainPart = name.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
-      const mainPath = baseDir ? tryResolve(mainPart, { paths: [baseDir] }) : tryResolve(mainPart);
+      const mainPath = baseDir ? tryResolve(mainPart, baseDir) : tryResolve(mainPart);
       const searchStr = `${sep}${mainPart.replace('/', sep)}${sep}`;
 
       if (mainPath?.includes(searchStr)) {
@@ -471,9 +472,7 @@ export function getPackageVersion(
 
 function getExternalsFrom(root: string, packageName: string): Array<string> | undefined {
   try {
-    const target = require.resolve(`${packageName}/package.json`, {
-      paths: [root],
-    });
+    const target = getModulePath(root, `${packageName}/package.json`);
     return require(target).sharedDependencies;
   } catch (err) {
     log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);

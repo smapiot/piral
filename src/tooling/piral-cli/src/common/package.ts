@@ -19,6 +19,7 @@ import {
   piralJsonSchemaUrl,
   piletJsonSchemaUrl,
 } from './constants';
+import { getModulePath } from '../external';
 import {
   SourceLanguage,
   Framework,
@@ -496,9 +497,7 @@ export function findDependencyVersion(
 export async function findPackageVersion(rootPath: string, packageName: string): Promise<string> {
   try {
     log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
-    const moduleName = require.resolve(packageName, {
-      paths: [rootPath],
-    });
+    const moduleName = getModulePath(rootPath, packageName);
     const packageJson = await findFile(moduleName, 'package.json');
     return require(packageJson).version;
   } catch (e) {

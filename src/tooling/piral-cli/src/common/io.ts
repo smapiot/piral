@@ -1,12 +1,11 @@
 import * as rimraf from 'rimraf';
 import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
-import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
+import { join, resolve, basename, dirname, extname } from 'path';
 import { exists, lstat, unlink, statSync } from 'fs';
-import { mkdtemp, mkdir, mkdirSync, constants } from 'fs';
+import { mkdtemp, mkdir, constants } from 'fs';
 import { writeFile, readFile, readdir, copyFile } from 'fs';
 import { log } from './log';
 import { deepMerge } from './merge';
-import { nodeVersion } from './info';
 import { computeHash } from './hash';
 import { ForceOverwrite } from './enums';
 import { promptConfirm } from './interactive';
@@ -17,41 +16,8 @@ function promptOverwrite(file: string) {
   return promptConfirm(message, false);
 }
 
-function createDirectoryLegacy(targetDir: string) {
-  const initDir = isAbsolute(targetDir) ? sep : '';
-
-  return targetDir.split(sep).reduce((parentDir, childDir) => {
-    const curDir = resolve(parentDir, childDir);
-
-    try {
-      mkdirSync(curDir);
-    } catch (err) {
-      if (err.code === 'EEXIST') {
-        return curDir;
-      }
-
-      if (err.code === 'ENOENT') {
-        throw new Error(`EACCES: permission denied, mkdir '${parentDir}'`);
-      }
-
-      const caughtErr = ['EACCES', 'EPERM', 'EISDIR'].indexOf(err.code) > -1;
-
-      if (!caughtErr || (caughtErr && curDir === resolve(targetDir))) {
-        throw err;
-      }
-    }
-
-    return curDir;
-  }, initDir);
-}
-
 function isFile(file: string) {
   return statSync(file).isFile();
-}
-
-function isLegacy() {
-  const parts = nodeVersion.split('.');
-  return +parts[0] < 10 || (+parts[0] === 10 && +parts[1] < 12);
 }
 
 export interface Destination {
@@ -91,20 +57,8 @@ export function removeDirectory(targetDir: string) {
 }
 
 export async function createDirectory(targetDir: string) {
-  if (isLegacy()) {
-    try {
-      log('generalDebug_0003', `Trying to create "${targetDir}" in legacy mode ...`);
-      createDirectoryLegacy(targetDir);
-      return true;
-    } catch (e) {
-      log('cannotCreateDirectory_0044');
-      log('generalDebug_0003', `Error while creating ${targetDir}: ${e}`);
-      return false;
-    }
-  }
-
   try {
-    log('generalDebug_0003', `Trying to create "${targetDir}" in modern mode ...`);
+    log('generalDebug_0003', `Trying to create "${targetDir}" ...`);
     await new Promise<void>((resolve, reject) => {
       mkdir(targetDir, { recursive: true }, (err) => (err ? reject(err) : resolve()));
     });

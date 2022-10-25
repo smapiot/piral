@@ -9,6 +9,7 @@ jest.mock('./io', () => ({
   makeTempDir: jest.fn(() => Promise.resolve('')),
   copy: jest.fn(() => Promise.resolve()),
   checkExists: jest.fn(() => Promise.resolve(true)),
+  createDirectory: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('./archive', () => ({
