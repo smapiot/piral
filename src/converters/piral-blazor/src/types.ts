@@ -5,6 +5,11 @@ declare global {
     Blazor: any;
     DotNet: any;
     $blazorLoader: Promise<HTMLDivElement>;
+    $blazorDependencies: Array<{
+      name: string;
+      url: string;
+      count: number;
+    }>;
   }
 }
 

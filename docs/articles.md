@@ -22,7 +22,7 @@ title: Articles About Piral
 ## Blog Posts
 
 - [Getting Started with Micro Frontends](https://dev.to/ibtisamarif831/getting-started-with-micro-frontends-c4)
-- [How we wrote our CLI integration tests ](https://dev.to/florianrappl/how-we-wrote-our-cli-integration-tests-53i3)
+- [How we wrote our CLI integration tests](https://dev.to/florianrappl/how-we-wrote-our-cli-integration-tests-53i3)
 - [Switching up your Spotify experience with microfrontends and Blazor , dev.to, 05/2021](https://dev.to/dantederuwe/switching-up-your-spotify-experience-with-microfrontends-and-blazor-4k72)
 - [My experiences creating a Netflix clone using microfrontends, dev.to, 03/2021](https://dev.to/dantederuwe/my-experiences-creating-a-netflix-clone-using-microfrontends-1n46)
 - [How Micro Frontends are being Implemented in 2020: A Survey, Bits and Pieces, 09/2020](https://blog.bitsrc.io/microfrontends-survey-evaluation-d2af7eade306)
@@ -38,15 +38,6 @@ title: Articles About Piral
 - [Microfrontends based on React, dev.to, 11/2019](https://dev.to/florianrappl/microfrontends-based-on-react-4oo9)
 - [What are Micro Frontends, Morioh, 10/2019](https://morioh.com/p/33aa986d8d3e)
 - [Taming the Frontend Monolith, Logrocket, 02/2019](https://blog.logrocket.com/taming-the-front-end-monolith-dbaede402c39/)
-
-## What's new in Piral
-
-- [What's new in Piral #6](https://dev.to/florianrappl/what-s-new-in-piral-6-ggf)
-- [What's new in Piral #5](https://dev.to/florianrappl/what-s-new-in-piral-5-b8k)
-- [What's new in Piral #4](https://dev.to/florianrappl/what-s-new-in-piral-4-4jlm)
-- [What's new in Piral #3](https://dev.to/florianrappl/what-s-new-in-piral-3-4onc)
-- [What's new in Piral #2](https://dev.to/florianrappl/what-s-new-in-piral-2-2baf)
-- [What's new in Piral #1](https://dev.to/florianrappl/what-s-new-in-piral-1-5a32)
 
 ## Talks at Conferences
 
