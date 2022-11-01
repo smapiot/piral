@@ -1,10 +1,7 @@
 import type { Subscription } from 'rxjs';
 import type { ComponentContext, Disposable } from 'piral-core';
-import * as ngCore from '@angular/core';
 import { Inject, Injectable, NgZone, OnDestroy, Optional } from '@angular/core';
 import { NavigationError, Router, Scroll } from '@angular/router';
-
-const ngc = ngCore as any;
 
 @Injectable()
 export class RoutingService implements OnDestroy {
@@ -62,53 +59,4 @@ export class RoutingService implements OnDestroy {
     this.dispose?.();
     this.subscription?.unsubscribe();
   }
-
-  static ɵfac =
-    'ɵɵinject' in ngc
-      ? (t: any) => new (t || RoutingService)(ngc.ɵɵinject('Context'), ngc.ɵɵinject(Router, 8), ngc.ɵɵinject(NgZone, 8))
-      : undefined;
-
-  static ɵprov =
-    'ɵɵngDeclareInjectable' in ngc
-      ? ngc.ɵɵdefineInjectable({ token: RoutingService, factory: RoutingService.ɵfac })
-      : undefined;
-}
-
-if ('ɵsetClassMetadata' in ngc) {
-  ngc.ɵsetClassMetadata(
-    RoutingService,
-    [
-      {
-        type: Injectable,
-        args: [{ name: 'resourceUrl' }],
-      },
-    ],
-    () => [
-      {
-        type: undefined,
-        decorators: [
-          {
-            type: Inject,
-            args: ['Context'],
-          },
-        ],
-      },
-      {
-        type: Router,
-        decorators: [
-          {
-            type: Optional,
-          },
-        ],
-      },
-      {
-        type: NgZone,
-        decorators: [
-          {
-            type: Optional,
-          },
-        ],
-      },
-    ],
-  );
 }
