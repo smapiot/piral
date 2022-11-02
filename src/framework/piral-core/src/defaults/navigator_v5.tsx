@@ -81,7 +81,7 @@ export function createNavigation(): NavigationApi {
       return _nav.block((location, action) => blocker(enhance(location, action)));
     },
     listen(listener) {
-      const handler = (e: CustomEvent) => listener(enhance(e.detail, _nav.action));
+      const handler = (e: CustomEvent) => listener(enhance(e.detail.location, _nav.action));
 
       window.addEventListener('piral-navigate', handler);
 
