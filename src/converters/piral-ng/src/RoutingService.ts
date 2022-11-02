@@ -29,7 +29,8 @@ export class RoutingService implements OnDestroy {
         const path = location.pathname;
 
         if (!this.invalidRoutes.includes(path)) {
-          this.zone.run(() => this.router.navigateByUrl(path));
+          const url = path + location.search + location.hash;
+          this.zone.run(() => this.router.navigateByUrl(url));
         }
       });
 
