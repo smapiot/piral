@@ -89,10 +89,10 @@ export function createNavigation(): NavigationApi {
         window.removeEventListener('piral-navigate', handler);
       };
     },
-    get router() {
-      return {
-        history: _nav,
-      };
+    router: {
+      get history() {
+        return _nav;
+      },
     },
   };
 }
