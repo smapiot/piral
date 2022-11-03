@@ -1,7 +1,6 @@
 import type { PiletApi } from 'piral-core';
 import type { BehaviorSubject } from 'rxjs';
 import type { NgOptions, ModuleInstanceResult } from './types';
-import * as ngCore from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import {
@@ -15,8 +14,6 @@ import {
 import { RoutingService } from './RoutingService';
 import { SharedModule } from './SharedModule';
 import { findComponents, getAnnotations } from './utils';
-
-const ngc = ngCore as any;
 
 interface ModuleDefinition {
   active: any;
@@ -82,50 +79,6 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
         }
       }
     }
-
-    static ɵfac =
-      'ɵɵinject' in ngc
-        ? (t: any) =>
-            new (t || BootstrapModule)(
-              ngc.ɵɵinject(ComponentFactoryResolver),
-              ngc.ɵɵinject(NgZone),
-              ngc.ɵɵinject(RoutingService),
-            )
-        : undefined;
-
-    static ɵmod =
-      'ɵɵdefineNgModule' in ngc
-        ? ngc.ɵɵdefineNgModule({
-            type: BootstrapModule,
-          })
-        : undefined;
-
-    static ɵinj =
-      'ɵɵdefineInjector' in ngc
-        ? ngc.ɵɵdefineInjector({
-            providers,
-            imports: [imports],
-          })
-        : undefined;
-  }
-
-  if ('ɵsetClassMetadata' in ngc) {
-    ngc.ɵsetClassMetadata(
-      BootstrapModule,
-      [
-        {
-          type: NgModule,
-          args: [
-            {
-              entryComponents: components,
-              providers,
-              imports,
-            },
-          ],
-        },
-      ],
-      () => [{ type: ComponentFactoryResolver }, { type: NgZone }, { type: RoutingService }],
-    );
   }
 
   return BootstrapModule;
@@ -167,39 +120,7 @@ export function createModuleInstance(component: any, standalone: boolean, piral:
     exports: exportsDef,
     schemas: schemasDef,
   })
-  class Module {
-    static ɵfac = 'ɵɵinject' in ngc ? (t: any) => new (t || Module)() : undefined;
-
-    static ɵmod =
-      'ɵɵdefineNgModule' in ngc
-        ? ngc.ɵɵdefineNgModule({
-            type: Module,
-          })
-        : undefined;
-
-    static ɵinj =
-      'ɵɵdefineInjector' in ngc
-        ? ngc.ɵɵdefineInjector({
-            imports: [importsDef],
-          })
-        : undefined;
-  }
-
-  if ('ɵsetClassMetadata' in ngc) {
-    ngc.ɵsetClassMetadata(Module, [
-      {
-        type: NgModule,
-        args: [
-          {
-            declarations,
-            imports: importsDef,
-            exports: exportsDef,
-            schemas: schemasDef,
-          },
-        ],
-      },
-    ]);
-  }
+  class Module {}
 
   defineModule(Module);
   return getModuleInstance(component, standalone, piral);
