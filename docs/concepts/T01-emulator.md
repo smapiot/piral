@@ -95,10 +95,10 @@ By default, the `piral declaration` command works against the current working di
 The command `piral declaration path/to/entry` supports *.html*, *.js*, *.jsx*, *.ts*, and *.tsx* files as entry points.
 :::
 
-There are some advantages of using `extraTypes` over `types`:
+There are some advantages of using `extraTypes` over `typings`:
 
 - Works in a monorepo, too
-- Avoids confusion for developers knowing that `types` comes from TypeScript directly
+- Avoids confusion for developers knowing that `typings` comes from TypeScript directly (like `types`)
 - Also accepts an array of entries, e.g., `["src/types.ts", "src/api.ts"]`
 
 ## Virtual Packages

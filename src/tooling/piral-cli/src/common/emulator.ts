@@ -3,7 +3,7 @@ import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from '
 import { createPiralStubIndexIfNotExists } from './template';
 import { filesTar, filesOnceTar } from './constants';
 import { cliVersion } from './info';
-import { createNpmPackage, makeExternals } from './npm';
+import { createNpmPackage } from './npm';
 import { createPiralDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
@@ -21,6 +21,7 @@ const packageJson = 'package.json';
 
 export async function createEmulatorSources(
   sourceDir: string,
+  externals: Array<string>,
   targetDir: string,
   targetFile: string,
   logLevel: LogLevels,
@@ -31,10 +32,9 @@ export async function createEmulatorSources(
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
   };
-  const allExternals = makeExternals(sourceDir, allDeps, piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
-    allExternals.filter(isValidDependency).map(async (name) => ({
+    externals.filter(isValidDependency).map(async (name) => ({
       name,
       version: await findDependencyVersion(piralPkg, sourceDir, name),
     })),
@@ -94,7 +94,7 @@ export async function createEmulatorSources(
       ...allDeps,
       ...externalDependencies,
     },
-    sharedDependencies: allExternals,
+    sharedDependencies: externals,
     repository: piralPkg.repository,
     bugs: piralPkg.bugs,
     author: piralPkg.author,

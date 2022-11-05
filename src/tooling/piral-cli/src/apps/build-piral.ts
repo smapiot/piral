@@ -221,7 +221,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
     await hooks.beforeEmulator?.({ root, externals, targetDir, outDir });
 
-    const rootDir = await createEmulatorSources(root, outDir, outFile, logLevel);
+    const rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
 
     await hooks.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
 

@@ -245,7 +245,9 @@ export async function getPiralPackage(app: string, data: PiralInstanceData, vers
     scripts: {
       start: 'piral debug',
       build: 'piral build',
+      postinstall: 'piral declaration',
     },
+    types: 'dist/index.d.ts',
     importmap: {
       imports: {},
       inherit: [
