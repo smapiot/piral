@@ -47,7 +47,7 @@ export function createConverter(_: NgConverterOptions = {}): NgConverter {
     },
     unmount(el, locals: NgState<TProps>) {
       locals.active = false;
-      locals.queued = locals.queued.then((dispose) => dispose && dispose());
+      locals.queued = locals.queued.then((dispose) => enqueue(() => dispose && dispose()));
     },
   });
   convert.defineModule = defineModule;
