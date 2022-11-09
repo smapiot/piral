@@ -11,6 +11,7 @@ import {
   NgModule,
   NgZone,
 } from '@angular/core';
+import { teardown } from './startup';
 import { RoutingService } from './RoutingService';
 import { SharedModule } from './SharedModule';
 import { findComponents, getAnnotations } from './utils';
@@ -77,6 +78,10 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
           ref.destroy();
           this.refs.splice(i, 1);
         }
+      }
+
+      if (this.refs.length === 0) {
+        teardown(BootstrapModule);
       }
     }
   }

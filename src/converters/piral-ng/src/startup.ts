@@ -1,6 +1,6 @@
 import type { ComponentContext } from 'piral-core';
 import type { NgOptions } from './types';
-import { enableProdMode, NgModuleRef, NgZone } from '@angular/core';
+import { enableProdMode, NgModuleRef, NgZone, PlatformRef } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { getNgVersion } from './utils';
@@ -11,9 +11,19 @@ function getVersionHandler(versions: Record<string, () => void>) {
   return versions[version];
 }
 
-const runningModules: Array<[any, NgModuleInt]> = [];
+const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
+
+export function teardown(BootstrapModule: any) {
+  const runningModuleIndex = runningModules.findIndex(([ref]) => ref === BootstrapModule);
+
+  if (runningModuleIndex !== -1) {
+    const [,,platform] = runningModules[runningModuleIndex];
+    runningModules.splice(runningModuleIndex, 1);
+    platform.destroy();
+  }
+}
 
 export function startup(
   BootstrapModule: any,
@@ -55,7 +65,7 @@ export function startup(
             z._properties[zoneIdentifier] = true;
           }
 
-          runningModules.push([BootstrapModule, instance]);
+          runningModules.push([BootstrapModule, instance, platform]);
         }
 
         return instance;
