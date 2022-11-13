@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, ɵɵFactoryDeclaration, ɵɵInjectorDeclaration, ɵɵNgModuleDeclaration } from '@angular/core';
 import { NgExtension } from './NgExtension';
 import { ResourceUrlPipe } from './ResourceUrlPipe';
 
@@ -15,4 +15,15 @@ const importsDef = [CommonModule];
 })
 export class SharedModule {
   static props = {};
+
+  static ɵfac: ɵɵFactoryDeclaration<SharedModule, never>;
+
+  static ɵmod: ɵɵNgModuleDeclaration<
+    SharedModule,
+    [typeof NgExtension, typeof ResourceUrlPipe],
+    [typeof CommonModule],
+    [typeof NgExtension, typeof ResourceUrlPipe]
+  >;
+
+  static ɵinj: ɵɵInjectorDeclaration<SharedModule>;
 }

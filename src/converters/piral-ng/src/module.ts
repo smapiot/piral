@@ -140,15 +140,16 @@ export function findModule(module: any) {
 }
 
 export function defineModule(module: any, opts: NgOptions = undefined) {
-  if (typeof module !== 'function') {
-    const [annotation] = getAnnotations(module);
+  const [annotation] = getAnnotations(module);
+
+  if (annotation) {
     availableModules.push({
       active: undefined,
       components: findComponents(annotation.exports),
       module,
       opts,
     });
-  } else {
+  } else if (typeof module === 'function') {
     const state = {
       current: undefined,
     };
