@@ -100,7 +100,7 @@ export interface NewPiletOptions {
 export const newPiletDefaults: NewPiletOptions = {
   target: '.',
   registry: config.registry,
-  source: 'piral',
+  source: undefined,
   forceOverwrite: ForceOverwrite.no,
   language: config.language,
   install: true,
@@ -131,7 +131,6 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   const root = resolve(fullBase, target);
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
-  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(fullBase, source);
   const success = await createDirectory(root);
 
   if (success) {
@@ -183,61 +182,73 @@ always-auth=true`,
       }),
     );
 
-    const isLocal = isLinkedPackage(sourceName, type, hadVersion);
+    if (source) {
+      const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(fullBase, source);
+      const isLocal = isLinkedPackage(sourceName, type, hadVersion);
 
-    if (!isLocal) {
-      const packageRef = combinePackageRef(sourceName, sourceVersion, type);
+      if (!isLocal) {
+        const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
-      progress(`Installing npm package %s ...`, packageRef);
-      await installNpmPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
+        progress(`Installing npm package %s ...`, packageRef);
+        await installNpmPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
+      } else {
+        progress(`Using locally available npm package %s ...`, sourceName);
+      }
+
+      const packageName = await getPackageName(root, sourceName, type);
+      const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, root);
+      const piralInfo = await readPiralPackage(root, packageName);
+
+      const isEmulator = checkAppShellPackage(piralInfo);
+
+      const { preScaffold, postScaffold, files, template: preSelectedTemplate } = getPiletsInfo(piralInfo);
+
+      if (preScaffold) {
+        progress(`Running preScaffold script ...`);
+        log('generalDebug_0003', `Run: ${preScaffold}`);
+        await runScript(preScaffold, root);
+      }
+
+      progress(`Taking care of templating ...`);
+
+      const data = getPiletScaffoldData(language, root, packageName, variables);
+      const chosenTemplate = template || preSelectedTemplate || 'default';
+      await scaffoldPiletSourceFiles(chosenTemplate, registry, data, forceOverwrite);
+
+      if (isEmulator) {
+        // in the emulator case we get the files (and files_once) from the contained tarballs
+        await copyPiralFiles(root, packageName, piralInfo, ForceOverwrite.yes, data);
+      } else {
+        // otherwise, we perform the same action as in the emulator creation
+        // just with a different target; not a created directory, but the root
+        const packageRoot = getPiralPath(root, packageName);
+        await copyScaffoldingFiles(packageRoot, root, files, piralInfo, data);
+      }
+
+      await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
+        language,
+        bundler: bundlerName,
+      });
+
+      if (install) {
+        progress(`Installing dependencies ...`);
+        await installNpmDependencies(npmClient, root);
+      }
+
+      if (postScaffold) {
+        progress(`Running postScaffold script ...`);
+        log('generalDebug_0003', `Run: ${postScaffold}`);
+        await runScript(postScaffold, root);
+      }
     } else {
-      progress(`Using locally available npm package %s ...`, sourceName);
-    }
+      const data = getPiletScaffoldData(language, root, undefined, variables);
+      const chosenTemplate = template || 'default';
+      await scaffoldPiletSourceFiles(chosenTemplate, registry, data, forceOverwrite);
 
-    const packageName = await getPackageName(root, sourceName, type);
-    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, root);
-    const piralInfo = await readPiralPackage(root, packageName);
-
-    const isEmulator = checkAppShellPackage(piralInfo);
-
-    const { preScaffold, postScaffold, files, template: preSelectedTemplate } = getPiletsInfo(piralInfo);
-
-    if (preScaffold) {
-      progress(`Running preScaffold script ...`);
-      log('generalDebug_0003', `Run: ${preScaffold}`);
-      await runScript(preScaffold, root);
-    }
-
-    progress(`Taking care of templating ...`);
-
-    const data = getPiletScaffoldData(language, root, packageName, variables);
-    const chosenTemplate = template || preSelectedTemplate || 'default';
-    await scaffoldPiletSourceFiles(chosenTemplate, registry, data, forceOverwrite);
-
-    if (isEmulator) {
-      // in the emulator case we get the files (and files_once) from the contained tarballs
-      await copyPiralFiles(root, packageName, piralInfo, ForceOverwrite.yes, data);
-    } else {
-      // otherwise, we perform the same action as in the emulator creation
-      // just with a different target; not a created directory, but the root
-      const packageRoot = getPiralPath(root, packageName);
-      await copyScaffoldingFiles(packageRoot, root, files, piralInfo, data);
-    }
-
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
-      language,
-      bundler: bundlerName,
-    });
-
-    if (install) {
-      progress(`Installing dependencies ...`);
-      await installNpmDependencies(npmClient, root);
-    }
-
-    if (postScaffold) {
-      progress(`Running postScaffold script ...`);
-      log('generalDebug_0003', `Run: ${postScaffold}`);
-      await runScript(postScaffold, root);
+      if (install) {
+        progress(`Installing dependencies ...`);
+        await installNpmDependencies(npmClient, root);
+      }
     }
 
     logDone(`Pilet scaffolded successfully!`);
