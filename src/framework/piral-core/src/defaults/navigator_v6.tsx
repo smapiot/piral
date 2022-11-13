@@ -52,11 +52,12 @@ export function createNavigation(): NavigationApi {
 
   return {
     get path() {
-      if (_nav) {
-        return _nav.location.pathname;
-      }
-
-      return location.pathname;
+      const loc = _nav ? _nav.location : location;
+      return loc.pathname;
+    },
+    get url() {
+      const loc = _nav ? _nav.location : location;
+      return `${loc.pathname}${loc.search}${loc.hash}`;
     },
     push(target, state) {
       if (_nav) {

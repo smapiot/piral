@@ -90,6 +90,10 @@ export interface NavigationApi {
    */
   path: string;
   /**
+   * Gets the current navigation path incl. search and hash parts.
+   */
+  url: string;
+  /**
    * The original router behind the navigation. Don't depend on this
    * as the implementation is router specific and may change over time.
    */
