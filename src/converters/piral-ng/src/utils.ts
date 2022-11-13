@@ -12,6 +12,10 @@ export interface NgAnnotation {
   selector: string;
 }
 
+export function getId() {
+  return Math.random().toString(36);
+}
+
 export function getNgVersion() {
   return VERSION.major || VERSION.full.split('.')[0];
 }
@@ -37,6 +41,11 @@ export function getAnnotations(component: any): Array<NgAnnotation> {
   }
 
   return annotations || [];
+}
+
+export function hasSelector(component: any, selector: string) {
+  const [annotation] = getAnnotations(component);
+  return annotation && annotation.selector === selector;
 }
 
 export function findComponents(exports: Array<any>): Array<any> {

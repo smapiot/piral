@@ -1,5 +1,6 @@
 import type { ForeignComponent, BaseComponentProps, Disposable } from 'piral-core';
-import type { NgModuleDefiner, PrepareBootstrapResult } from './types';
+import type { Type } from '@angular/core';
+import type { NgLazyType, NgModuleDefiner, PrepareBootstrapResult } from './types';
 import { BehaviorSubject } from 'rxjs';
 import { NgExtension } from './NgExtension';
 import { enqueue } from './queue';
@@ -22,13 +23,9 @@ interface NgState<TProps> {
 
 export function createConverter(_: NgConverterOptions = {}): NgConverter {
   const registry = new Map<any, PrepareBootstrapResult>();
-  const convert = <TProps extends BaseComponentProps>(component: any): ForeignComponent<TProps> => ({
+  const convert = <TProps extends BaseComponentProps>(component: Type<any> | NgLazyType): ForeignComponent<TProps> => ({
     mount(el, props, ctx, locals: NgState<TProps>) {
       locals.active = true;
-
-      if (!registry.has(component)) {
-        registry.set(component, prepareBootstrap(component, props.piral));
-      }
 
       if (!locals.props) {
         locals.props = new BehaviorSubject(props);
@@ -39,7 +36,15 @@ export function createConverter(_: NgConverterOptions = {}): NgConverter {
       }
 
       locals.queued = locals.queued.then(() =>
-        enqueue(() => locals.active && bootstrap(registry.get(component), el, locals.props, ctx)),
+        enqueue(async () => {
+          if (!registry.has(component)) {
+            registry.set(component, await prepareBootstrap(component, props.piral));
+          }
+
+          if (locals.active) {
+            bootstrap(registry.get(component), el, locals.props, ctx);
+          }
+        }),
       );
     },
     update(el, props, ctx, locals: NgState<TProps>) {
@@ -47,7 +52,7 @@ export function createConverter(_: NgConverterOptions = {}): NgConverter {
     },
     unmount(el, locals: NgState<TProps>) {
       locals.active = false;
-      locals.queued = locals.queued.then((dispose) => enqueue(() => dispose && dispose()));
+      locals.queued = locals.queued.then((dispose) => dispose && enqueue(dispose));
     },
   });
   convert.defineModule = defineModule;

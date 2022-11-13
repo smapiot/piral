@@ -1,5 +1,6 @@
 import type { PlatformRef, NgModuleRef } from '@angular/core';
 import type { ForeignComponent } from 'piral-core';
+import type { Type } from '@angular/core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNgApi {}
@@ -24,6 +25,24 @@ export type PrepareBootstrapResult = [...ModuleInstanceResult, any];
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
 
 /**
+ * Gives you the ability to use a component from a lazy loaded module.
+ */
+export interface NgComponentLoader {
+  /**
+   * Uses a component from a lazy loaded module.
+   * @param selector The selector defined for the component to load.
+   */
+  (selector: string): NgComponent;
+}
+
+export interface NgLazyType {
+  selector: string;
+  module: () => Promise<{ default: Type<any> }>;
+  opts: NgOptions;
+  state: any;
+}
+
+/**
  * Represents the interface implemented by a module definer function.
  */
 export interface NgModuleDefiner {
@@ -32,14 +51,21 @@ export interface NgModuleDefiner {
    * @param ngModule The module to use for running Angular.
    * @param opts The options to pass when bootstrapping.
    */
-  (module: any, opts?: NgOptions): void;
+  <T>(module: Type<T>, opts?: NgOptions): void;
+  /**
+   * Defines the module to lazy load for bootstrapping the Angular pilet.
+   * @param getModule The module lazy loader to use for running Angular.
+   * @param opts The options to pass when bootstrapping.
+   * @returns The module ID to be used to reference components.
+   */
+  <T>(getModule: () => Promise<{ default: Type<T> }>, opts?: NgOptions): NgComponentLoader;
 }
 
 export interface NgComponent {
   /**
    * The component root.
    */
-  component: any;
+  component: Type<any> | NgLazyType;
   /**
    * The type of the Angular component.
    */
@@ -62,7 +88,7 @@ export interface PiletNgApi {
    * @param component The component root.
    * @returns The Piral Ng component.
    */
-  fromNg(component: any): NgComponent;
+  fromNg<T>(component: Type<T>): NgComponent;
   /**
    * Angular component for displaying extensions of the given name.
    */

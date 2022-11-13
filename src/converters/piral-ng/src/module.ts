@@ -89,15 +89,19 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
   return BootstrapModule;
 }
 
-export function getModuleInstance(component: any, standalone: boolean, piral: PiletApi): ModuleInstanceResult {
+export function activateModuleInstance(moduleDef: ModuleDefinition, piral: PiletApi): ModuleInstanceResult {
+  if (!moduleDef.active) {
+    moduleDef.active = instantiateModule(moduleDef, piral);
+  }
+
+  return [moduleDef.active, moduleDef.opts];
+}
+
+export function getModuleInstance(component: any, standalone: boolean, piral: PiletApi) {
   const [moduleDef] = availableModules.filter((m) => m.components.includes(component));
 
   if (moduleDef) {
-    if (!moduleDef.active) {
-      moduleDef.active = instantiateModule(moduleDef, piral);
-    }
-
-    return [moduleDef.active, moduleDef.opts];
+    return activateModuleInstance(moduleDef, piral);
   }
 
   if (process.env.NODE_ENV === 'development') {
@@ -131,12 +135,27 @@ export function createModuleInstance(component: any, standalone: boolean, piral:
   return getModuleInstance(component, standalone, piral);
 }
 
+export function findModule(module: any) {
+  return availableModules.find(m => m.module === module);
+}
+
 export function defineModule(module: any, opts: NgOptions = undefined) {
-  const [annotation] = getAnnotations(module);
-  availableModules.push({
-    active: undefined,
-    components: findComponents(annotation.exports),
-    module,
-    opts,
-  });
+  if (typeof module !== 'function') {
+    const [annotation] = getAnnotations(module);
+    availableModules.push({
+      active: undefined,
+      components: findComponents(annotation.exports),
+      module,
+      opts,
+    });
+  } else {
+    const state = {
+      current: undefined,
+    };
+
+    return (selector: string) => ({
+      component: { selector, module, opts, state },
+      type: 'ng' as const,
+    });
+  }
 }
