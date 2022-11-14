@@ -62,6 +62,10 @@ stages:
       inputs:
         Arguments: build:demo-full
     - task: Yarn@2
+      displayName: Build Empty Shell
+      inputs:
+        Arguments: build:demo-empty
+    - task: Yarn@2
       displayName: Build Minimal Demo
       inputs:
         Arguments: build:demo-minimal
@@ -345,6 +349,57 @@ stages:
               customCommand: publish dist/demo-minimal/emulator/sample-minimal.tgz --tag next
               customEndpoint: DefaultNpmConnection
 
+  - deployment: PreReleaseDemoEmpty
+    displayName: PreRelease Demo Empty Package
+    condition: eq(variables['Build.SourceBranchName'], variables['previewBranch'])
+    pool:
+      vmImage: $(agentName)
+    environment: 'registry-npmjs-org'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: NodeTool@0
+            displayName: Use Node $(nodeVersion)
+            inputs:
+              versionSpec: $(nodeVersion)
+          - task: YarnInstaller@2
+            displayName: Install Yarn
+            inputs:
+              checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: setup
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
+          - task: Yarn@2
+            displayName: Update Version
+            inputs:
+              Arguments: ci:version --apply --beta
+              customEndpoint: DefaultNpmConnection
+          - task: Bash@3
+            displayName: Build Empty Emulator
+            inputs:
+              targetType: inline
+              script: >-
+                yarn build:demo-empty --type emulator
+
+                mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+          - task: Npm@1
+            displayName: Release Packages
+            inputs:
+              command: custom
+              customCommand: publish dist/demo-empty/emulator/sample-empty.tgz --tag next
+              customEndpoint: DefaultNpmConnection
+
 - stage: Release
 
   displayName: Release Packages
@@ -571,6 +626,57 @@ stages:
             inputs:
               command: custom
               customCommand: publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest
+              customEndpoint: DefaultNpmConnection
+
+  - deployment: ReleaseDemoEmpty
+    displayName: Release Demo Empty Package
+    condition: eq(variables['Build.SourceBranchName'], variables['releaseBranch'])
+    pool:
+      vmImage: $(agentName)
+    environment: 'registry-npmjs-org'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: NodeTool@0
+            displayName: Use Node $(nodeVersion)
+            inputs:
+              versionSpec: $(nodeVersion)
+          - task: YarnInstaller@2
+            displayName: Install Yarn
+            inputs:
+              checkLatest: true
+          - task: Yarn@2
+            displayName: Install Dependencies
+            inputs:
+              Arguments: install
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: setup
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+              customEndpoint: DefaultNpmConnection
+          - task: Yarn@2
+            displayName: Update Version
+            inputs:
+              Arguments: ci:version --apply
+              customEndpoint: DefaultNpmConnection
+          - task: Bash@3
+            displayName: Build Empty Emulator
+            inputs:
+              targetType: inline
+              script: >-
+                yarn build:demo-empty --type emulator
+
+                mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+          - task: Npm@1
+            displayName: Release Packages
+            inputs:
+              command: custom
+              customCommand: publish dist/demo-empty/emulator/sample-empty.tgz --tag latest
               customEndpoint: DefaultNpmConnection
 
   - deployment: ReleaseSiteless

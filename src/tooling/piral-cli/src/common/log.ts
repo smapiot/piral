@@ -62,8 +62,9 @@ export function logFail(message: string, ...args: Array<string | number | boolea
 }
 
 export function progress(message: string, ...args: Array<string | number | boolean>) {
-  currentProgress = format(message, ...args)
-  instance.start(message);
+  const msg = format(message, ...args)
+  instance.start(msg);
+  currentProgress = msg;
 }
 
 export function logReset() {

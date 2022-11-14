@@ -43,6 +43,16 @@ export interface NgLazyType {
 }
 
 /**
+ * The lazy loading interface for retrieving Angular components.
+ */
+export interface LazyType<T> {
+  /**
+   * Callback to be invoked for lazy loading an Angular module or component.
+   */
+  (): Promise<{ default: Type<T> }>;
+}
+
+/**
  * Represents the interface implemented by a module definer function.
  */
 export interface NgModuleDefiner {
@@ -58,7 +68,7 @@ export interface NgModuleDefiner {
    * @param opts The options to pass when bootstrapping.
    * @returns The module ID to be used to reference components.
    */
-  <T>(getModule: () => Promise<{ default: Type<T> }>, opts?: NgOptions): NgComponentLoader;
+  <T>(getModule: LazyType<T>, opts?: NgOptions): NgComponentLoader;
 }
 
 export interface NgComponent {

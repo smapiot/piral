@@ -29,6 +29,8 @@
     "build:demo-full": "piral build src/samples/sample-piral/src/index.html --target dist/demo-full/index.html",
     "watch:demo-minimal": "piral debug src/samples/minimal-piral/src/index.html",
     "build:demo-minimal": "piral build src/samples/minimal-piral/src/index.html --target dist/demo-minimal/index.html",
+    "watch:demo-empty": "piral debug src/samples/empty-piral/src/index.html",
+    "build:demo-empty": "piral build src/samples/empty-piral/src/index.html --target dist/demo-empty/index.html",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --project tsconfig.json",
     "prettify": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
     "cleanup": "lerna run cleanup",

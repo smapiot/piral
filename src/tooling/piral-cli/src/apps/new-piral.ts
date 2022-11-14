@@ -177,7 +177,7 @@ always-auth=true`,
       );
     }
 
-    await createFileIfNotExists(root, 'piral.json', JSON.stringify({}));
+    await createFileIfNotExists(root, 'piral.json', JSON.stringify({}, undefined, 2));
 
     progress(`Installing npm package ${packageRef} ...`);
 
