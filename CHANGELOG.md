@@ -26,6 +26,7 @@
 - Added new npm script running bundler `piral-cli-xbuild` (#470)
 - Added `--feed` option to `piral debug` command
 - Added `--app-name` option to `piral new` command (#546)
+- Added lazy loading to `piral-ng` via `defineNgModule`
 - Added `feed` provider for using `piral publish`
 - Added support for `importmap` in the app shell
 - Added semver possibilities for resolving shared dependencies
