@@ -220,3 +220,39 @@ Another possibility is that remote packages can be added:
 ```
 
 In case of remote packages no side-bundle is created. Instead, the given URL will be used as a side-bundle. Remote packages will give you a neat way to restrict shared dependencies to a pre-defined pool, which is then re-used consistently.
+
+## Inheritance
+
+In addition to the `imports` key the `piral-cli` also supports another key called `inherit`. This is just an array of strings resolving to other packages or importmaps. For instance, the following importmap inherits the importmap from `piral-core`:
+
+```json
+{
+  "imports": {},
+  "inherit": ["piral-core"]
+}
+```
+
+In this case `piral-core` is detected as a package as `piral-core/package.json` exists. This will cause `piral-core/package.json` to be loaded to retrieve the `importmap` key. The specific importmap resolution is the same as for the current file.
+
+The importmap could also be specified directly, e.g., from a shared package:
+
+```json
+{
+  "imports": {},
+  "inherit": ["my-shared-package/importmap.json"]
+}
+```
+
+Or alternatively, with use of a relative or absolute path:
+
+```json
+{
+  "imports": {},
+  "inherit": ["./shared/importmap.json"]
+}
+```
+
+The precedence of the lookup is:
+
+1. See if `<inherited-name>/package.json` exists. Follow up on any `importmap` property from the file if exists.
+2. See if `<inherited-name>` exists. Take it if it exists. **Note**: This has to be an importmap (JSON) then.
