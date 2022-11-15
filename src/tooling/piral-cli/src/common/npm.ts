@@ -360,36 +360,8 @@ function tryResolve(packageName: string, baseDir = process.cwd()) {
 }
 
 export function tryResolvePackage(name: string, baseDir: string = undefined) {
-  let path = baseDir ? tryResolve(name, baseDir) : tryResolve(name);
+  const path = baseDir ? tryResolve(name, baseDir) : tryResolve(name);
   const root = baseDir || process.cwd();
-
-  if (!path) {
-    if (name.startsWith('.')) {
-      path = resolve(root, name);
-    } else if (isAbsolute(name)) {
-      path = name;
-    } else if (name.includes('/', name.startsWith('@') ? name.indexOf('/') + 1 : 0)) {
-      const parts = name.split('/');
-      const mainPart = name.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
-      const mainPath = baseDir ? tryResolve(mainPart, baseDir) : tryResolve(mainPart);
-      const searchStr = `${sep}${mainPart.replace('/', sep)}${sep}`;
-
-      if (mainPath?.includes(searchStr)) {
-        const rest = name.startsWith('@') ? parts.slice(2) : parts.slice(1);
-        path = mainPath.substring(0, mainPath.indexOf(searchStr) + searchStr.length) + rest.join(sep);
-      }
-    } else {
-      path = resolve(root, 'node_modules', name);
-    }
-
-    if (!existsSync(path)) {
-      path = `${path}.js`;
-
-      if (!existsSync(path)) {
-        path = undefined;
-      }
-    }
-  }
 
   if (!path) {
     log('generalDebug_0003', `Could not resolve the package "${name}" in "${root}".`);

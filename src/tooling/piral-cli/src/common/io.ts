@@ -141,20 +141,28 @@ export function getFileNames(target: string) {
   });
 }
 
-export async function findFile(topDir: string, fileName: string, stopDir = resolve(topDir, '/')): Promise<string> {
-  const path = join(topDir, fileName);
-  const exists = await checkExists(path);
+export async function findFile(
+  topDir: string,
+  fileName: string | Array<string>,
+  stopDir = resolve(topDir, '/'),
+): Promise<string> {
+  const fileNames = Array.isArray(fileName) ? fileName : [fileName];
 
-  if (!exists) {
-    if (topDir !== stopDir) {
-      const parentDir = resolve(topDir, '..');
-      return await findFile(parentDir, fileName, stopDir);
+  for (const fn of fileNames) {
+    const path = join(topDir, fn);
+    const exists = await checkExists(path);
+
+    if (exists) {
+      return path;
     }
-
-    return undefined;
   }
 
-  return path;
+  if (topDir !== stopDir) {
+    const parentDir = resolve(topDir, '..');
+    return await findFile(parentDir, fileNames, stopDir);
+  }
+
+  return undefined;
 }
 
 interface AnyPattern {

@@ -38,7 +38,27 @@ function getLocalDependencyVersion(
   return [details.version, details.version];
 }
 
-async function resolveImportmap(dir: string, importmap: Importmap) {
+function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
+  const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
+
+  if (inheritedImport) {
+    const packageDir = dirname(packageJson);
+    const packageDetails = require(packageJson);
+    return readImportmap(packageDir, packageDetails, true);
+  } else {
+    const directImportmap = tryResolvePackage(inheritedImport, dir);
+
+    if (directImportmap) {
+      const content = require(directImportmap);
+      const baseDir = dirname(directImportmap);
+      return resolveImportmap(baseDir, content);
+    }
+  }
+
+  return Promise.resolve([]);
+}
+
+async function resolveImportmap(dir: string, importmap: Importmap): Promise<Array<SharedDependency>> {
   const dependencies: Array<SharedDependency> = [];
   const sharedImports = importmap?.imports;
   const inheritedImports = importmap?.inherit;
@@ -142,24 +162,18 @@ async function resolveImportmap(dir: string, importmap: Importmap) {
 
   if (Array.isArray(inheritedImports)) {
     for (const inheritedImport of inheritedImports) {
-      const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
+      const otherDependencies = await getInheritedDependencies(inheritedImport, dir);
 
-      if (packageJson) {
-        const packageDir = dirname(packageJson);
-        const packageDetails = require(packageJson);
-        const otherDependencies = await readImportmap(packageDir, packageDetails, true);
+      for (const dependency of otherDependencies) {
+        const entry = dependencies.find((dep) => dep.name === dependency.name);
 
-        for (const dependency of otherDependencies) {
-          const entry = dependencies.find((dep) => dep.name === dependency.name);
-
-          if (!entry) {
-            dependencies.push({
-              ...dependency,
-              parents: [inheritedImport],
-            });
-          } else if (Array.isArray(entry.parents)) {
-            entry.parents.push(inheritedImport);
-          }
+        if (!entry) {
+          dependencies.push({
+            ...dependency,
+            parents: [inheritedImport],
+          });
+        } else if (Array.isArray(entry.parents)) {
+          entry.parents.push(inheritedImport);
         }
       }
     }
@@ -184,7 +198,7 @@ export async function readImportmap(
     }
 
     const baseDir = dirname(resolve(dir, importmap));
-    return resolveImportmap(baseDir, content);
+    return await resolveImportmap(baseDir, content);
   } else if (typeof importmap === 'undefined' && inherited) {
     // Fall back to sharedDependencies or pilets.external if available
     const shared: Array<string> = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
@@ -201,5 +215,5 @@ export async function readImportmap(
     }
   }
 
-  return resolveImportmap(dir, importmap);
+  return await resolveImportmap(dir, importmap);
 }

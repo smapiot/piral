@@ -11,6 +11,7 @@ import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
+import { getModulePath } from '../external';
 import {
   filesTar,
   filesOnceTar,
@@ -18,8 +19,8 @@ import {
   bundlerNames,
   piralJsonSchemaUrl,
   piletJsonSchemaUrl,
+  frameworkLibs,
 } from './constants';
-import { getModulePath } from '../external';
 import {
   SourceLanguage,
   Framework,
@@ -496,16 +497,20 @@ export function findDependencyVersion(
   return findPackageVersion(rootPath, packageName);
 }
 
-export async function findPackageVersion(rootPath: string, packageName: string): Promise<string> {
-  try {
-    log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
-    const moduleName = getModulePath(rootPath, packageName);
-    const packageJson = await findFile(moduleName, 'package.json');
-    return require(packageJson).version;
-  } catch (e) {
-    log('cannotResolveDependency_0053', packageName, rootPath);
-    return 'latest';
+export async function findPackageVersion(rootPath: string, packageName: string | Array<string>): Promise<string> {
+  const packages = Array.isArray(packageName) ? packageName : [packageName];
+
+  for (const pckg of packages) {
+    try {
+      log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
+      const moduleName = getModulePath(rootPath, pckg);
+      const packageJson = await findFile(moduleName, 'package.json');
+      return require(packageJson).version;
+    } catch {}
   }
+
+  log('cannotResolveDependency_0053', packages, rootPath);
+  return 'latest';
 }
 
 export async function retrieveExternals(root: string, packageInfo: any) {
@@ -540,17 +545,20 @@ export async function retrievePiletsInfo(entryFile: string) {
   const packageInfo = require(packageJson);
   const info = getPiletsInfo(packageInfo);
   const externals = await retrieveExternals(root, packageInfo);
+  const dependencies = {
+    std: packageInfo.dependencies || {},
+    dev: packageInfo.devDependencies || {},
+    peer: packageInfo.peerDependencies || {},
+  };
+  const framework = frameworkLibs.find((lib) => lib in dependencies.std || lib in dependencies.dev);
 
   return {
     ...info,
     externals,
     name: packageInfo.name,
     version: packageInfo.version,
-    dependencies: {
-      std: packageInfo.dependencies || {},
-      dev: packageInfo.devDependencies || {},
-      peer: packageInfo.peerDependencies || {},
-    },
+    framework,
+    dependencies,
     scripts: packageInfo.scripts,
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root,

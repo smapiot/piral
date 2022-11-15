@@ -1231,8 +1231,12 @@ export function cannotResolveVersion_0052(name: string): QuickMessage {
  * }
  * ```
  */
-export function cannotResolveDependency_0053(name: string, rootDir: string): QuickMessage {
-  return [LogLevels.warning, '0053', `Could not resolve "${name}" from "${rootDir}". Taking "latest" version.`];
+export function cannotResolveDependency_0053(names: Array<string>, rootDir: string): QuickMessage {
+  return [
+    LogLevels.warning,
+    '0053',
+    `Could not resolve any package (tried "${names.join('", "')}") from "${rootDir}". Taking "latest" version.`,
+  ];
 }
 
 /**
@@ -2387,7 +2391,11 @@ export function publishFeedMissingUrl_0115(): QuickMessage {
  * ```
  */
 export function publishFeedMissingVersion_0116(): QuickMessage {
-  return [LogLevels.error, '0116', `The "feed" provider requires either a "--opts.version" argument or a package.json with a version.`];
+  return [
+    LogLevels.error,
+    '0116',
+    `The "feed" provider requires either a "--opts.version" argument or a package.json with a version.`,
+  ];
 }
 
 /**
@@ -2624,11 +2632,7 @@ export function bundlerUnspecified_0175(available: Array<string>): QuickMessage 
  * ```
  */
 export function bundlerNotInstalled_0176(): QuickMessage {
-  return [
-    LogLevels.warning,
-    '0176',
-    `Installing default bundler since no bundler has been found.`,
-  ];
+  return [LogLevels.warning, '0176', `Installing default bundler since no bundler has been found.`];
 }
 
 /**
