@@ -78,6 +78,7 @@
     "react-native": ">=0.60.0"
   },
   "dependencies": {
+    "piral-base": "^0.14.32",
     "piral-core": "^0.14.32",
     "react-router-dom": "^5.2.0",
     "react-router-native": "^5.2.0"

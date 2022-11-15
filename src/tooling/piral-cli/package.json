@@ -74,7 +74,7 @@
     "tar": "^4.4.8"
   },
   "dependencies": {
-    "dets": "^0.12.1",
+    "dets": "^0.12.2",
     "kras": "^0.15.2",
     "rimraf": "^3.0.0",
     "typescript": "^4.7.3",
