@@ -104,7 +104,7 @@
           "links": {
             "generator": "markdown",
             "segment": "documentation",
-            "exclude": "^t.*",
+            "exclude": "(tips|testimonials)",
             "dir": "."
           }
         }
