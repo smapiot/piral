@@ -89,7 +89,7 @@ The links for the alternatives listed above.
 - [Module Federation](https://webpack.js.org)
 - [Single SPA](https://single-spa.js.org)
 - [Web Components](https://www.webcomponents.org)
-- [Project Mosaic](https://www.mosaic9.org)
+- [Project Mosaic](https://opensource.zalando.com)
 - [Luigi](https://github.com/SAP/luigi)
 
 There are more alternatives, which have not been listed for brevity. Some of these are:

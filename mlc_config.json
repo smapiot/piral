@@ -5,6 +5,9 @@
     },
     {
       "pattern": "^https://docs.github.com/"
+    },
+    {
+      "pattern": "^https://app.fossa.com/"
     }
   ],
   "aliveStatusCodes": [429, 200]
