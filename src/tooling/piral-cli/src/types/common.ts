@@ -104,7 +104,7 @@ export interface TemplateFileLocation {
 export interface PiletsInfo {
   files: Array<string | TemplateFileLocation>;
   template: string;
-  externals?: Array<string>;
+  externals?: Array<SharedDependency>;
   devDependencies: Record<string, string | true>;
   scripts: Record<string, string>;
   validators: Record<string, any>;

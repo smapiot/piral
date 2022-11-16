@@ -2,14 +2,20 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
-import { getDependencies, getDependencyPackages, getDevDependencies, getDevDependencyPackages } from './language';
+import {
+  getDependencies,
+  getDependencyPackages,
+  getDevDependencies,
+  getDevDependencyPackages,
+  getFrameworkDependencies,
+} from './language';
 import { ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { readImportmap } from './importmap';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath } from './npm';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
 import { getModulePath } from '../external';
 import {
@@ -236,6 +242,7 @@ export async function getPiralPackage(app: string, data: PiralInstanceData, vers
     'piral-cli': `${version}`,
   };
   const dependencies = {
+    ...getFrameworkDependencies(framework, version),
     ...getDependencies(data.language, getDependencyPackages(framework, data.reactVersion, data.reactRouterVersion)),
   };
 
@@ -482,15 +489,27 @@ export function findDependencyVersion(
   pckg: Record<string, any>,
   rootPath: string,
   packageName: string,
+  parents: Array<string> = [],
 ): Promise<string> {
   const { devDependencies = {}, dependencies = {} } = pckg;
   const desiredVersion = dependencies[packageName] ?? devDependencies[packageName];
+  const [parent] = parents;
 
   if (desiredVersion) {
     if (isGitPackage(desiredVersion)) {
       return Promise.resolve(makeGitUrl(desiredVersion));
     } else if (isLocalPackage(rootPath, desiredVersion)) {
       return Promise.resolve(makeFilePath(rootPath, desiredVersion));
+    }
+  }
+
+  if (parent) {
+    // in case the dependency came from another package (= parent)
+    // we should start the lookup in its directory (pnpm issue)
+    const parentPath = tryResolvePackage(parent, rootPath);
+
+    if (parentPath) {
+      rootPath = dirname(parentPath);
     }
   }
 
@@ -513,7 +532,7 @@ export async function findPackageVersion(rootPath: string, packageName: string |
   return 'latest';
 }
 
-export async function retrieveExternals(root: string, packageInfo: any) {
+export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
   const sharedDependencies = await readImportmap(root, packageInfo);
 
   if (sharedDependencies.length === 0) {
@@ -522,10 +541,18 @@ export async function retrieveExternals(root: string, packageInfo: any) {
       ...packageInfo.dependencies,
     };
     const deps = packageInfo.pilets?.externals;
-    return makeExternals(root, allDeps, deps);
+    const externals = makeExternals(root, allDeps, deps);
+    return externals.map((ext) => ({
+      id: ext,
+      name: ext,
+      entry: ext,
+      type: 'local',
+      ref: undefined,
+      requireId: ext,
+    }));
   }
 
-  return sharedDependencies.map((m) => m.name);
+  return sharedDependencies;
 }
 
 export async function retrievePiletsInfo(entryFile: string) {

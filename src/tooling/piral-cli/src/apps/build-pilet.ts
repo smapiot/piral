@@ -340,7 +340,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           sourceMaps,
           contentHash,
           minify,
-          externals,
+          externals: externals.map(m => m.name),
           publicUrl,
           outFile: 'index.html',
           outDir,

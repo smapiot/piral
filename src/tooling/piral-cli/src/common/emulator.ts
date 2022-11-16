@@ -7,7 +7,7 @@ import { createNpmPackage } from './npm';
 import { createPiralDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
-import { LogLevels, TemplateFileLocation } from '../types';
+import { LogLevels, SharedDependency, TemplateFileLocation } from '../types';
 import {
   createDirectory,
   removeDirectory,
@@ -21,7 +21,7 @@ const packageJson = 'package.json';
 
 export async function createEmulatorSources(
   sourceDir: string,
-  externals: Array<string>,
+  externals: Array<SharedDependency>,
   targetDir: string,
   targetFile: string,
   logLevel: LogLevels,
@@ -34,10 +34,12 @@ export async function createEmulatorSources(
   };
 
   const externalPackages = await Promise.all(
-    externals.filter(isValidDependency).map(async (name) => ({
-      name,
-      version: await findDependencyVersion(piralPkg, sourceDir, name),
-    })),
+    externals
+      .filter((ext) => ext.type === 'local' && isValidDependency(ext.name))
+      .map(async (external) => ({
+        name: external.name,
+        version: await findDependencyVersion(piralPkg, sourceDir, external.name, external.parents),
+      })),
   );
   const externalDependencies = externalPackages.reduce((deps, dep) => {
     deps[dep.name] = dep.version;

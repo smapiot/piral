@@ -153,7 +153,7 @@ function getOrMakeApps({ apps, publicUrl }: AppInfo, logLevel: LogLevels) {
           optimizeModules: false,
           publicUrl,
           ignored,
-          externals,
+          externals: externals.map(m => m.name),
           piralInstances,
           entryFiles: appFile,
           logLevel,

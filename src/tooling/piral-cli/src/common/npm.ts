@@ -8,7 +8,7 @@ import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
 import { getModulePath } from '../external';
-import { PackageType, NpmClientType } from '../types';
+import { PackageType, NpmClientType, SharedDependency } from '../types';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
@@ -470,15 +470,17 @@ function getCoreExternals(root: string, dependencies: Record<string, string>): A
 export function makePiletExternals(
   root: string,
   dependencies: Record<string, string>,
-  externals: Array<string>,
+  externals: Array<SharedDependency>,
   fromEmulator: boolean,
   piralInfo: any,
 ): Array<string> {
+  const coreExternals = externals.map(m => m.name);
+
   if (fromEmulator) {
-    const { sharedDependencies = mergeExternals(externals, legacyCoreExternals) } = piralInfo;
+    const { sharedDependencies = mergeExternals(coreExternals, legacyCoreExternals) } = piralInfo;
     return sharedDependencies;
   } else {
-    return makeExternals(root, dependencies, externals);
+    return makeExternals(root, dependencies, coreExternals);
   }
 }
 

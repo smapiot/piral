@@ -45,7 +45,7 @@ const defaultTypings = {
 
 export function getDependencyPackages(framework: Framework, reactVersion: number, reactRouterVersion: number) {
   // take default packages only if piral-core
-  return framework !== 'piral-core'
+  return framework === 'piral-base'
     ? {}
     : {
         ...(reactVersion < 18 ? react17Deps : react18Deps),
@@ -61,6 +61,14 @@ export function getDevDependencyPackages(framework: Framework, reactVersion: num
         ...(reactVersion < 18 ? react17Typings : react18Typings),
         ...(reactRouterVersion < 6 ? reactRouter5Typings : {}),
       };
+}
+
+export function getFrameworkDependencies(framework: Framework, version: string) {
+  return {
+    ...(framework !== 'piral-base' ? { 'piral-base': `${version}` } : {}),
+    ...(framework !== 'piral-base' && framework !== 'piral-core' ? { 'piral-core': `${version}` } : {}),
+    [framework]: `${version}`,
+  };
 }
 
 export function getDependencies(language: SourceLanguage, packages: Record<string, string> = defaultDeps) {

@@ -26,10 +26,10 @@ export default async function (context: PiletRuleContext, options: Options = 'ig
     const markedPeerDependencies = Object.keys(context.peerDependencies);
     const markedPeerModules = context.peerModules;
     const missingExternals = externals
-      .map((name) => {
-        const valid = isValidDependency(name);
-        const missing = !(valid ? markedPeerDependencies : markedPeerModules).includes(name);
-        return { name, valid, missing };
+      .map((external) => {
+        const valid = isValidDependency(external.name);
+        const missing = !(valid ? markedPeerDependencies : markedPeerModules).includes(external.name);
+        return { name: external.name, valid, missing };
       })
       .filter((m) => m.missing);
 

@@ -41,7 +41,7 @@ function getLocalDependencyVersion(
 function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
   const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
 
-  if (inheritedImport) {
+  if (packageJson) {
     const packageDir = dirname(packageJson);
     const packageDetails = require(packageJson);
     return readImportmap(packageDir, packageDetails, true);

@@ -142,7 +142,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
         piralInstances,
         optimizeModules,
         hmr,
-        externals,
+        externals: externals.map(m => m.name),
         publicUrl,
         entryFiles,
         logLevel,
