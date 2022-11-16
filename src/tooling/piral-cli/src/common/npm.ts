@@ -1,4 +1,4 @@
-import { resolve, relative, dirname, isAbsolute, sep } from 'path';
+import { resolve, relative, dirname } from 'path';
 import { createReadStream, existsSync } from 'fs';
 import { log, fail } from './log';
 import { clients, detectClients, isWrapperClient } from './clients';
@@ -8,7 +8,7 @@ import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
 import { getModulePath } from '../external';
-import { PackageType, NpmClientType, SharedDependency } from '../types';
+import { PackageType, NpmClientType } from '../types';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
@@ -470,17 +470,14 @@ function getCoreExternals(root: string, dependencies: Record<string, string>): A
 export function makePiletExternals(
   root: string,
   dependencies: Record<string, string>,
-  externals: Array<SharedDependency>,
   fromEmulator: boolean,
   piralInfo: any,
 ): Array<string> {
-  const coreExternals = externals.map(m => m.name);
-
   if (fromEmulator) {
-    const { sharedDependencies = mergeExternals(coreExternals, legacyCoreExternals) } = piralInfo;
+    const { sharedDependencies = legacyCoreExternals } = piralInfo;
     return sharedDependencies;
   } else {
-    return makeExternals(root, dependencies, coreExternals);
+    return getCoreExternals(root, dependencies);
   }
 }
 
@@ -507,7 +504,7 @@ export function mergeExternals(customExternals?: Array<string>, coreExternals: A
   return coreExternals;
 }
 
-export function makeExternals(root: string, dependencies: Record<string, string>, externals?: Array<string>) {
+export function makeExternals(root: string, dependencies: Record<string, string>, externals: Array<string>) {
   const coreExternals = getCoreExternals(root, dependencies);
   return mergeExternals(externals, coreExternals);
 }

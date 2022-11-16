@@ -2,13 +2,6 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
-import {
-  getDependencies,
-  getDependencyPackages,
-  getDevDependencies,
-  getDevDependencyPackages,
-  getFrameworkDependencies,
-} from './language';
 import { ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
@@ -18,6 +11,13 @@ import { readJson, copy, updateExistingJson, findFile, checkExists } from './io'
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
 import { getModulePath } from '../external';
+import {
+  getDependencies,
+  getDependencyPackages,
+  getDevDependencies,
+  getDevDependencyPackages,
+  getFrameworkDependencies,
+} from './language';
 import {
   filesTar,
   filesOnceTar,
@@ -630,7 +630,7 @@ async function getPiletPackage(
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   const { piralCLI = { version: cliVersion } } = piralInfo;
-  const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
+  const { packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,
@@ -645,7 +645,7 @@ async function getPiletPackage(
         ...info.scripts,
       }
     : info.scripts;
-  const allExternals = makePiletExternals(root, piralDependencies, externals, fromEmulator, piralInfo);
+  const allExternals = makePiletExternals(root, piralDependencies, fromEmulator, piralInfo);
   const devDependencies: Record<string, string> = {
     ...Object.keys(typeDependencies).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || typeDependencies[name];

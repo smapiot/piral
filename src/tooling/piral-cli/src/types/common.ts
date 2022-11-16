@@ -104,7 +104,6 @@ export interface TemplateFileLocation {
 export interface PiletsInfo {
   files: Array<string | TemplateFileLocation>;
   template: string;
-  externals?: Array<SharedDependency>;
   devDependencies: Record<string, string | true>;
   scripts: Record<string, string>;
   validators: Record<string, any>;
@@ -147,6 +146,7 @@ export interface Rule<T extends RuleContext> {
 
 export interface PiralRuleContext extends RuleContext {
   info: PiletsInfo;
+  externals: Array<SharedDependency>;
 }
 
 export interface PiletRuleContext extends RuleContext {

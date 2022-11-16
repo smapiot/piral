@@ -6,7 +6,7 @@ export type Options = void;
  * Checks that the externals to be used in pilets are valid.
  */
 export default function (context: PiralRuleContext, options: Options = undefined) {
-  const { externals } = context.info;
+  const { externals } = context;
 
   if (!Array.isArray(externals)) {
     context.error(
