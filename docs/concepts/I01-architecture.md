@@ -6,11 +6,9 @@ section: Internals
 
 # Piral Architecture
 
-Overall, Piral can be considered a cure for the common frontend monolith. The frontend monolith describes an architecture where the backend is nicely split into different modules (called services), but the frontend is communicating directly to all these services effectively aggregating the backend split into one giant codebase.
+Overall, Piral can be considered a cure for the common frontend monolith. The frontend monolith describes an architecture where the whole codebase of the frontend is a single repository, which has to be built in one step to produce something. No incremental rollouts, features, or distributed development approaches can be performed here.
 
-![Classic Frontend Monolith](../diagrams/monolith.svg)
-
-Piral allows you to layout your application with a similar modularization approach. Instead of having to deal with one giant codebase, a Piral instance is usually just a very thin layer. This layer is what is primarily delivered to the end-user. The Piral instance is then responsible for gathering the (user-relevant) modules (called pilets) at runtime.
+Piral allows you to layout your application with modularization in mind. Instead of having to deal with one giant codebase, a Piral instance is usually just a very thin layer. This layer is what is primarily delivered to the end-user. The Piral instance is then responsible for gathering the (user-relevant) modules (called pilets) at runtime. These pilets can be developed in different repositories, e.g., owned by different teams.
 
 ![Modularization of the Monolith](../diagrams/modularization.svg)
 
@@ -62,14 +60,14 @@ You can extend and use state management in your Piral instance.
 
 ## Pilet API
 
-When pilets are setup they receive a special kind of object called the `Piral API`. The `Piral API` gives pilets access to the Piral instance to set up their components accordingly.
+When pilets are setup they receive a special kind of object called the `Pilet API`. The `Pilet API` gives pilets access to the Piral instance to set up their components accordingly.
 
 Setting up components may involve setting up dedicated (routes to) pages, tiles on a dashboard, general extensions, modal dialogs, and other components that need to be managed by the Piral instance.
 
-![Piral API registration methods](../diagrams/piral-api.svg)
+![Pilet API registration methods](../diagrams/piral-api.svg)
 
-For every `register*` API there is an `unregister*` API. All registrations can only be modified by their owners, i.e., if pilet A registered page A it cannot be unregistered by pilet B. The unregistration can be, however, performed at any time. Removing, e.g., a route will immediately remove it from the router. Thus if the page is currently shown we will instead see the not found page.
+For every `register*` API there should be an `unregister*` API (actually there *is*, but for some third-party plugins this might not be true even though we don't recommend this). All registrations can only be modified by their owners, i.e., if pilet A registered page A it cannot be unregistered by pilet B. The unregistration can be, however, performed at any time. Removing, e.g., a route will immediately remove it from the router. Thus if the page is currently shown we will instead see the not found page.
 
 Besides the `register*` kind of APIs, there are also `show*` kind of APIs. These do not have a counterpart like `hide*`. Instead, these APIs return a disposer function to yield the power for closing them only to the openers and trusted friends (i.e., functions that received the disposer).
 
-Finally, the last category of API calls is made up of the `create*` functions. These create a new kind of function that can be used to wrap existing components inside them.
+Finally, the last category of API calls is made up of the `create*` functions. These create a new kind of function that can be used to wrap existing components inside them. They should usually accept `AnyComponent` instances (i.e., independent of any framework), but could be also framework specific.

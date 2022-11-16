@@ -52,6 +52,14 @@
   dependencies:
     tslib "^2.3.0"
 
+"@asciidoctor/core@^2.2.6":
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/@asciidoctor/core/-/core-2.2.6.tgz#a59a9e8ab48ac0a615d5a3200214d3071291c5d5"
+  integrity sha512-TmB2K5UfpDpSbCNBBntXzKHcAk2EA3/P68jmWvmJvglVUdkO9V6kTAuXVe12+h6C4GK0ndwuCrHHtEVcL5t6pQ==
+  dependencies:
+    asciidoctor-opal-runtime "0.3.3"
+    unxhr "1.0.1"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6":
   version "7.18.6"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.18.6.tgz#3b25d38c89600baa2dcc219edfa88a74eb2c427a"
@@ -2619,20 +2627,21 @@
   dependencies:
     esquery "^1.0.1"
 
-"@pidoc/components@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.16.0.tgz#3cb1cdcc57adf00ed0f63d642d21a0ca920cfac3"
-  integrity sha512-riWrIp/lVTVbjz53Yuy5iHbfPf/5bf4V/VUX1M+npP/ngEBMx5spoxMOjy7BXe//IpMjB3p+g7QCD1UWy1g6gw==
+"@pidoc/components@0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@pidoc/components/-/components-0.16.1.tgz#1c49b86a82cced006e2a069d0193d1e601b79eae"
+  integrity sha512-s7Qwg6wTrI0ZoTrY0e/faLfBmJtCC8TVi9S9q5tkUohWbU6vl6ZbvLof5QoBv8u2Mr64M9wO0ps26DybW54+pg==
   dependencies:
     flexsearch "^0.6.32"
     stickyfilljs "^2.1.0"
 
-"@pidoc/core@^0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.16.0.tgz#e989683b5bac126e5252ff9a93e1bfae3b580f65"
-  integrity sha512-txI/qpmQmc1Tu7Jv1wrKglRE4Nk8T76CJ4en13y3a6rJxxOAu528llmjDNKbDCbU7wIz5WZ4Q9zSXWLbe0qONw==
+"@pidoc/core@^0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@pidoc/core/-/core-0.16.1.tgz#e9dba1f64c4fd897cc8e152ab4ce78532c61fd08"
+  integrity sha512-WTXN83R7Dqwv9WvgyOeiaIwRLFL7fHb3fKpUIHMrJgz1xhogCrRRexpjqBZNcmBXBcbg06ncDt4fRurUBq0FDg==
   dependencies:
-    "@pidoc/components" "0.16.0"
+    "@asciidoctor/core" "^2.2.6"
+    "@pidoc/components" "0.16.1"
     chokidar "^3.5.3"
     keyword-extractor "0.0.20"
     markdown-it "^12.0.6"
@@ -4229,6 +4238,14 @@ asap@^2.0.0, asap@~2.0.3, asap@~2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
+
+asciidoctor-opal-runtime@0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/asciidoctor-opal-runtime/-/asciidoctor-opal-runtime-0.3.3.tgz#2667635f858d3eb3fdfcf6795cf68138e2040174"
+  integrity sha512-/CEVNiOia8E5BMO9FLooo+Kv18K4+4JBFRJp8vUy/N5dMRAg+fRNV4HA+o6aoSC79jVU/aT5XvUpxSxSsTS8FQ==
+  dependencies:
+    glob "7.1.3"
+    unxhr "1.0.1"
 
 assert-never@^1.2.1:
   version "1.2.1"
@@ -6263,10 +6280,10 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-dets@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.12.1.tgz#3977a3ab37299431a9c2d22489bcd1f5153eb7bc"
-  integrity sha512-hoSit3cWGp7nG7FmfqnUyHFbePwn3BVuWE42mulZcxsskQrwUwp9Ddii4+64CfSBXK30mhVSklGKLkBClilQaw==
+dets@^0.12.2:
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.12.2.tgz#15285f0409f234707bc2c27c8b32aa5d43f9152b"
+  integrity sha512-RVDicEJWEue+XwtpVD5E1mpOSqQJY9A5inBtThqvIJAH0+Y74UloihvZtElE7p8m2F0gxKOq6iaekMQuVDGjdQ==
   dependencies:
     yargs "^15.4.1"
 
@@ -7643,6 +7660,18 @@ glob-to-regexp@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz#c75297087c851b9a578bd217dd59a92f59fe546e"
   integrity sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==
+
+glob@7.1.3:
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.3.tgz#3960832d3f1574108342dafd3a67b332c0969df1"
+  integrity sha512-vcfuiIxogLV4DlGBHIUOwI0IbrJ8HWPc4MU7HzviGeNho/UJDfi6B5p3sHeWIQ0KGIU0Jpxi5ZHxemQfLkkAwQ==
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.0.4"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
 
 glob@7.1.4:
   version "7.1.4"
@@ -14339,6 +14368,11 @@ unset-value@^1.0.0:
   dependencies:
     has-value "^0.3.1"
     isobject "^3.0.0"
+
+unxhr@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/unxhr/-/unxhr-1.0.1.tgz#92200322d66c728993de771f9e01eeb21f41bc7b"
+  integrity sha512-MAhukhVHyaLGDjyDYhy8gVjWJyhTECCdNsLwlMoGFoNJ3o79fpQhtQuzmAE4IxCMDwraF4cW8ZjpAV0m9CRQbg==
 
 upath@^2.0.1:
   version "2.0.1"
