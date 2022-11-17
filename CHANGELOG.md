@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.0 (tbd)
+## 0.15.0 (November 17, 2022)
 
 - Fixed closing of dialogs to be immediate (#549)
 - Updated to React v18 (#501)
