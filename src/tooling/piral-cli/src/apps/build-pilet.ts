@@ -22,6 +22,8 @@ import {
   cpuCount,
   concurrentWorkers,
   normalizePublicUrl,
+  combinePiletExternals,
+  retrievePiletsInfo,
 } from '../common';
 
 interface PiletData {
@@ -175,10 +177,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     entry = buildPiletDefaults.entry,
     target = buildPiletDefaults.target,
     publicUrl: originalPublicUrl = buildPiletDefaults.publicUrl,
+    logLevel = buildPiletDefaults.logLevel,
     minify = buildPiletDefaults.minify,
     sourceMaps = buildPiletDefaults.sourceMaps,
     contentHash = buildPiletDefaults.contentHash,
-    logLevel = buildPiletDefaults.logLevel,
     fresh = buildPiletDefaults.fresh,
     concurrency = buildPiletDefaults.concurrency,
     optimizeModules = buildPiletDefaults.optimizeModules,
@@ -206,9 +208,12 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
     const targetDir = dirname(entryModule);
-    const { peerDependencies, peerModules, root, appPackage, appFile, piletPackage, ignored, importmap } =
-      await retrievePiletData(targetDir, app);
-    const externals = [...Object.keys(peerDependencies), ...peerModules];
+    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap } = await retrievePiletData(
+      targetDir,
+      app,
+    );
+    const piralInstances = apps.map(m => m.appPackage.name);
+    const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
     const outDir = dirname(dest);
     const outFile = basename(dest);
@@ -225,7 +230,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     await callPiletBuild(
       {
         root,
-        piral: appPackage.name,
+        piralInstances,
         optimizeModules,
         sourceMaps,
         contentHash,
@@ -265,8 +270,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     return {
       id: piletPackage.name.replace(/[^a-zA-Z0-9\-]/gi, ''),
       root,
-      appFile,
-      appPackage,
+      apps,
       outDir,
       outFile,
       path: dest,
@@ -277,7 +281,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   if (type === 'standalone') {
     const distDir = dirname(resolve(fullBase, target));
     const outDir = resolve(distDir, 'standalone');
-    const { appFile, appPackage, root } = pilets[0];
+    const { apps, root } = pilets[0];
+
+    const { appPackage, appFile } = apps[0];
+    const piralInstances = [appPackage.name];
     const isEmulator = checkAppShellPackage(appPackage);
 
     logInfo('Building standalone solution ...');
@@ -294,31 +301,57 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       // in case of an emulator assets are not "seen" by the bundler, so we
       // just copy overthing over - this should work in most cases.
       await copy(dirname(appFile), outDir, ForceOverwrite.yes);
+      progress('Optimizing app shell ...');
+
+      // we don't need to care about externals or other things that are already
+      // part of the emulator
+      await callPiralBuild(
+        {
+          root,
+          piralInstances,
+          emulator: false,
+          standalone: true,
+          optimizeModules: false,
+          sourceMaps,
+          contentHash,
+          minify,
+          externals: [],
+          publicUrl,
+          outFile: 'index.html',
+          outDir,
+          entryFiles: appFile,
+          logLevel,
+          ignored: [],
+          _,
+        },
+        bundlerName,
+      );
+    } else {
+      // in this case we can just do the same steps as if
+      const { ignored, externals } = await retrievePiletsInfo(appFile);
+
+      await callPiralBuild(
+        {
+          root,
+          piralInstances,
+          emulator: false,
+          standalone: true,
+          optimizeModules: false,
+          sourceMaps,
+          contentHash,
+          minify,
+          externals: externals.map(m => m.name),
+          publicUrl,
+          outFile: 'index.html',
+          outDir,
+          entryFiles: appFile,
+          logLevel,
+          ignored,
+          _,
+        },
+        bundlerName,
+      );
     }
-
-    progress('Optimizing app shell ...');
-
-    await callPiralBuild(
-      {
-        root,
-        piral: appPackage.name,
-        emulator: false,
-        standalone: true,
-        optimizeModules: false,
-        sourceMaps,
-        contentHash,
-        minify,
-        externals: [],
-        publicUrl,
-        outFile: 'index.html',
-        outDir,
-        entryFiles: appFile,
-        logLevel,
-        ignored: [],
-        _,
-      },
-      bundlerName,
-    );
 
     logDone(`Standalone app available at "${outDir}"!`);
   } else if (type === 'manifest') {

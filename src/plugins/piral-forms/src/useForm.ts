@@ -1,7 +1,6 @@
+import type { History } from 'history';
 import { useState, useEffect, FormEvent } from 'react';
-import { isfunc } from 'piral-base';
-import { History } from 'history';
-import { useAction, useGlobalState, compare, generateId } from 'piral-core';
+import { isfunc, useAction, useGlobalState, isSame, generateId } from 'piral-core';
 import { usePrompt } from './usePrompt';
 import { FormProps, InputFormOptions, FormDataState } from './types';
 
@@ -32,7 +31,7 @@ function updateData<TFormData>(
   const { onChange } = options;
   updateState(id, state, {
     currentData: newData,
-    changed: !compare(newData, state.initialData),
+    changed: !isSame(newData, state.initialData),
     error: undefined,
   });
 
@@ -42,7 +41,7 @@ function updateData<TFormData>(
         const updatedData = { ...newData, ...data };
         updateState(id, state, {
           currentData: updatedData,
-          changed: !compare(updatedData, state.initialData),
+          changed: !isSame(updatedData, state.initialData),
           error: undefined,
         });
       })

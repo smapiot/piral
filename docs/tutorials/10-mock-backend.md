@@ -27,7 +27,7 @@ What kras brings to the table:
 <!-- markdown-link-check-disable-next-line -->
 All these capabilities can be used by routing through the development server (usually running at *http://localhost:1234*).
 
-![Middleware at the development server](../diagrams/kras-middleware.png)
+![Middleware at the development server](../diagrams/kras-middleware.png){.auto}
 
 The diagram above illustrates the relationship between the development server, the build server, and the different injectors.
 

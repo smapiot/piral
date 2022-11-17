@@ -67,23 +67,26 @@ export interface BaseBundleParameters {
 }
 
 export interface DebugPiralParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   hmr: boolean;
+  externals: Array<string>;
+  publicUrl: string;
+  outFile: string;
+  outDir: string;
+  entryFiles: string;
+  logLevel: LogLevels;
+}
+
+export interface WatchPiralParameters extends BaseBundleParameters {
+  piralInstances: Array<string>;
   externals: Array<string>;
   publicUrl: string;
   entryFiles: string;
   logLevel: LogLevels;
 }
 
-export interface WatchPiralParameters extends BaseBundleParameters {
-  piral: string;
-  externals: Array<string>;
-  entryFiles: string;
-  logLevel: LogLevels;
-}
-
 export interface BuildPiralParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   emulator: boolean;
   standalone: boolean;
   sourceMaps: boolean;
@@ -98,7 +101,7 @@ export interface BuildPiralParameters extends BaseBundleParameters {
 }
 
 export interface DebugPiletParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   hmr: boolean;
   externals: Array<string>;
   importmap: Array<SharedDependency>;
@@ -111,7 +114,7 @@ export interface DebugPiletParameters extends BaseBundleParameters {
 }
 
 export interface BuildPiletParameters extends BaseBundleParameters {
-  piral: string;
+  piralInstances: Array<string>;
   sourceMaps: boolean;
   contentHash: boolean;
   minify: boolean;
@@ -174,7 +177,7 @@ export interface PiralBuildHandler {
 export interface PiletBuildHandler {
   create(config: {
     root: string;
-    piral: string;
+    piralInstances: Array<string>;
     entryModule: string;
     targetDir: string;
     outDir: string;
@@ -216,6 +219,8 @@ export interface BundlerDefinition {
 
 export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2';
 
+export type SourceLanguage = 'js' | 'ts';
+
 export type PiletPublishScheme = 'none' | 'digest' | 'bearer' | 'basic';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
@@ -226,9 +231,9 @@ export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 
 export type PackageType = 'registry' | 'file' | 'git';
 
-export type NpmClientType = 'npm' | 'yarn' | 'pnpm' | 'lerna' | 'rush';
+export type NpmClientType = 'npm' | 'yarn' | 'pnp' | 'pnpm' | 'lerna' | 'rush';
 
-export type Framework = 'piral' | 'piral-core' | 'piral-base';
+export type Framework = 'piral-native' | 'piral' | 'piral-core' | 'piral-base';
 
 export interface StandardEnvProps {
   production?: boolean;
@@ -236,6 +241,6 @@ export interface StandardEnvProps {
   debugPilet?: boolean;
   root: string;
   publicPath?: string;
-  piral?: string;
+  piralInstances?: Array<string>;
   dependencies?: Array<string>;
 }

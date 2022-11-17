@@ -7,66 +7,78 @@ let errorOther = false;
 let errorResponse = false;
 let errorResponse2 = false;
 
-jest.mock('axios', () => ({
-  default: {
-    post(url, _, options) {
-      const found = url === apiUrl;
-      const auth = options.headers.authorization === 'Basic 123';
+jest.mock('../external', () => ({
+  rc(_, cfg) {
+    return cfg;
+  },
+  ora() {
+    return {
+      warn() {},
+      fail() {},
+    };
+  },
+  axios: {
+    default: {
+      post(url, _, options) {
+        const found = url === apiUrl;
+        const auth = options.headers.authorization === 'Basic 123';
 
-      if (errorRequest) {
-        return Promise.reject({
-          request: {},
-        });
-      } else if (errorOther) {
-        return Promise.reject({
-          message: 'error',
-        });
-      } else if (errorResponse) {
-        return Promise.reject({
-          response: {
-            status: 410,
-            statusText: 'Not Gone',
-            data: '{ "message": "This component is not available anymore." }',
-          },
-        });
-      } else if (errorResponse2) {
-        return Promise.reject({
-          response: {
-            status: 410,
-            statusText: 'Not Gone',
-            data: { message: 'This component is not available anymore.' },
-          },
-        });
-      } else if (!found) {
-        return Promise.reject({
-          response: {
-            status: 404,
-            statusText: 'Not found',
-          },
-        });
-      } else if (!auth) {
-        return Promise.reject({
-          response: {
-            status: 401,
-            statusText: 'Not authorized',
-          },
-        });
-      } else {
-        return Promise.resolve({
-          status: 200,
-          statusText: 'OK',
-        });
-      }
-    },
-    get(url, options) {
-      if (errorOther) {
-        return Promise.reject({
-          message: 'error',
-        });
-      }
-      return Promise.resolve({ data: 'test' });
+        if (errorRequest) {
+          return Promise.reject({
+            request: {},
+          });
+        } else if (errorOther) {
+          return Promise.reject({
+            message: 'error',
+          });
+        } else if (errorResponse) {
+          return Promise.reject({
+            response: {
+              status: 410,
+              statusText: 'Not Gone',
+              data: '{ "message": "This component is not available anymore." }',
+            },
+          });
+        } else if (errorResponse2) {
+          return Promise.reject({
+            response: {
+              status: 410,
+              statusText: 'Not Gone',
+              data: { message: 'This component is not available anymore.' },
+            },
+          });
+        } else if (!found) {
+          return Promise.reject({
+            response: {
+              status: 404,
+              statusText: 'Not found',
+            },
+          });
+        } else if (!auth) {
+          return Promise.reject({
+            response: {
+              status: 401,
+              statusText: 'Not authorized',
+            },
+          });
+        } else {
+          return Promise.resolve({
+            status: 200,
+            statusText: 'OK',
+          });
+        }
+      },
+      get(url, options) {
+        if (errorOther) {
+          return Promise.reject({
+            message: 'error',
+          });
+        }
+        return Promise.resolve({ data: 'test' });
+      },
     },
   },
+  FormData: jest.requireActual('form-data'),
 }));
 
 describe('HTTP Module', () => {

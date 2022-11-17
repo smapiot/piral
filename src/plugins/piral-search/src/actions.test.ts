@@ -1,4 +1,4 @@
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions } from 'piral-core';
 import { createActions as createSearchActions } from './actions';
@@ -15,7 +15,7 @@ const state = {
 
 describe('Search Action Module', () => {
   it('appendSearchResults cont appends new items with still loading', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       search: {
         input: 'yo',
@@ -24,11 +24,11 @@ describe('Search Action Module', () => {
           items: ['c'],
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.appendSearchResults(['a', 'b'], false);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       search: {
         input: 'yo',
@@ -41,7 +41,7 @@ describe('Search Action Module', () => {
   });
 
   it('appendSearchResults stop appends new items without still loading', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: [1, 2],
       search: {
         input: 'yo',
@@ -50,11 +50,11 @@ describe('Search Action Module', () => {
           items: ['c'],
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.appendSearchResults(['a'], true);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: [1, 2],
       search: {
         input: 'yo',
@@ -67,7 +67,7 @@ describe('Search Action Module', () => {
   });
 
   it('prependSearchResults cont prepends new items with still loading', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       search: {
         input: 'yo',
@@ -76,11 +76,11 @@ describe('Search Action Module', () => {
           items: ['c'],
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.prependSearchResults(['a', 'b'], false);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       search: {
         input: 'yo',
@@ -93,7 +93,7 @@ describe('Search Action Module', () => {
   });
 
   it('prependSearchResults stop prepends new items without still loading', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: [1, 2],
       search: {
         input: 'yo',
@@ -102,11 +102,11 @@ describe('Search Action Module', () => {
           items: ['c'],
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.prependSearchResults(['a'], true);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: [1, 2],
       search: {
         input: 'yo',
@@ -119,7 +119,7 @@ describe('Search Action Module', () => {
   });
 
   it('resetSearchResults cont resets the search results while still loading', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: [1, 2],
       search: {
         input: 'yo',
@@ -128,11 +128,11 @@ describe('Search Action Module', () => {
           items: ['c'],
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.resetSearchResults('yo', true);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: [1, 2],
       search: {
         input: 'yo',
@@ -145,7 +145,7 @@ describe('Search Action Module', () => {
   });
 
   it('resetSearchResults stop resets the search results without loading', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       search: {
         input: 'yo y',
@@ -154,11 +154,11 @@ describe('Search Action Module', () => {
           items: ['c'],
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.resetSearchResults('yo y', false);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       search: {
         input: 'yo y',
@@ -171,7 +171,7 @@ describe('Search Action Module', () => {
   });
 
   it('setSearchInput sets the input field accordingly', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       search: {
         input: 'yo y',
@@ -180,11 +180,11 @@ describe('Search Action Module', () => {
           items: ['c'],
         },
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.setSearchInput('test input');
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       search: {
         input: 'test input',
@@ -198,11 +198,11 @@ describe('Search Action Module', () => {
 
   it('immediately resets with loading false if some value is given but no provider found', () => {
     state.search.input = 'foo';
-    const globalState = Atom.of(state as any);
+    const globalState: any = create(() => state);
     const ctx = createActions(globalState, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
-    expect(deref(globalState).search.results.loading).toBe(false);
+    expect(globalState.getState().search.results.loading).toBe(false);
   });
 
   it('immediately resets with loading true if some value is given and a provider is found', () => {
@@ -214,38 +214,38 @@ describe('Search Action Module', () => {
       clear() {},
       cancel() {},
     };
-    const globalState = Atom.of(state as any);
+    const globalState: any = create(() => state);
     const ctx = createActions(globalState, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
-    expect(deref(globalState).search.results.loading).toBe(true);
+    expect(globalState.getState().search.results.loading).toBe(true);
   });
 
   it('immediately resets with loading false if no value is given implicitly', () => {
     state.search.input = '';
-    const globalState = Atom.of(state as any);
+    const globalState: any = create(() => state);
     const ctx = createActions(globalState, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
-    expect(deref(globalState).search.results.loading).toBe(false);
+    expect(globalState.getState().search.results.loading).toBe(false);
   });
 
   it('immediately resets with loading false if no value is given explicitly', () => {
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     const dispose = ctx.triggerSearch('');
     dispose();
-    expect(deref(gs).search.results.loading).toBe(false);
+    expect(gs.getState().search.results.loading).toBe(false);
   });
 
   it('immediately resets with loading false if no value is given explicitly though immediate', () => {
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     const dispose = ctx.triggerSearch('', true);
     dispose();
-    expect(deref(gs).search.results.loading).toBe(false);
+    expect(gs.getState().search.results.loading).toBe(false);
   });
 
   it('resets with loading true if no value is given explicitly', () => {
@@ -257,11 +257,11 @@ describe('Search Action Module', () => {
       clear() {},
       cancel() {},
     };
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch('foo');
-    expect(deref(gs).search.results.loading).toBe(true);
+    expect(gs.getState().search.results.loading).toBe(true);
   });
 
   it('walks over all search providers', () => {
@@ -273,7 +273,7 @@ describe('Search Action Module', () => {
       foo: { search, clear, cancel },
       bar: { search, clear, cancel },
     };
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
@@ -291,7 +291,7 @@ describe('Search Action Module', () => {
         cancel() {},
       },
     };
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
@@ -310,7 +310,7 @@ describe('Search Action Module', () => {
         cancel,
       },
     };
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
@@ -330,7 +330,7 @@ describe('Search Action Module', () => {
         cancel,
       },
     };
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     const dispose = ctx.triggerSearch();
@@ -351,7 +351,7 @@ describe('Search Action Module', () => {
         cancel() {},
       },
     };
-    const gs = Atom.of(state as any);
+    const gs: any = create(() => state);
     const ctx = createActions(gs, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
@@ -360,17 +360,17 @@ describe('Search Action Module', () => {
   });
 
   it('registerSearchProvider and unregisterSearchProvider', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       registry: {
         foo: 5,
         searchProviders: {},
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     ctx.defineActions(createSearchActions());
     ctx.registerSearchProvider('foo', 10 as any);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -380,7 +380,7 @@ describe('Search Action Module', () => {
       },
     });
     ctx.unregisterSearchProvider('foo');
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,

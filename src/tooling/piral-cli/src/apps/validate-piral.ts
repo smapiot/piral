@@ -29,7 +29,7 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
 
   const rules = await getPiralRules();
   const entryFiles = await retrievePiralRoot(fullBase, entry);
-  const { root, dependencies, ignored: _, ...info } = await retrievePiletsInfo(entryFiles);
+  const { root, dependencies, ignored: _, externals, ...info } = await retrievePiletsInfo(entryFiles);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];
 
@@ -43,6 +43,7 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
       warnings.push(log('generalWarning_0001', message));
     },
     logLevel,
+    externals,
     entry: entryFiles,
     dependencies: dependencies.std,
     devDependencies: dependencies.dev,

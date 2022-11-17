@@ -1,12 +1,12 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createNotificationsApi } from './create';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     registry: {
       extensions: {},
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -15,7 +15,7 @@ function createMockContainer() {
       defineActions() {},
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,
@@ -46,7 +46,7 @@ describe('Create Notifications API Extensions', () => {
     });
     expect(container.context.openNotification).toHaveBeenCalled();
     expect(container.context.closeNotification).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(100);
+    jest.advanceTimersByTime(120);
     expect(container.context.closeNotification).toHaveBeenCalled();
   });
 });

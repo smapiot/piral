@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ExtensionComponentProps, WrappedComponent } from '../types';
+import type {} from 'piral-debug-utils';
+import type { ExtensionComponentProps, WrappedComponent } from '../types';
 
 function removeAll(nodes: Array<ChildNode>) {
   nodes.forEach((node) => node.remove());
@@ -18,7 +19,7 @@ const SlotCarrier: React.FC<SlotCarrierProps> = ({ nodes }) => {
   }, [nodes]);
 
   if (nodes.length) {
-    return <slot ref={host} />;
+    return <piral-slot ref={host} />;
   }
 
   return null;

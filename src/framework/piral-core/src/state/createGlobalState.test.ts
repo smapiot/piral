@@ -1,12 +1,4 @@
-import { deref } from '@dbeining/react-atom';
 import { createGlobalState } from './createGlobalState';
-import {
-  DefaultErrorInfo,
-  DefaultLoadingIndicator,
-  DefaultLayout,
-  DefaultRouter,
-  DefaultRouteSwitch,
-} from '../components';
 
 process.env.PIRAL_PUBLIC_PATH = '/';
 
@@ -15,20 +7,22 @@ describe('Create Global State Module', () => {
 
   it('global state works with language as empty string', () => {
     const globalState = createGlobalState({});
-    expect(deref(globalState)).toEqual({
+    const tmp = globalState.getState();
+
+    console.log(tmp);
+
+    expect(tmp).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       routes: {},
       registry: {
@@ -44,20 +38,18 @@ describe('Create Global State Module', () => {
 
   it('global state with custom language and translations', () => {
     const globalState = createGlobalState({});
-    expect(deref(globalState)).toEqual({
+    expect(globalState.getState()).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       routes: {},
       registry: {
@@ -77,20 +69,18 @@ describe('Create Global State Module', () => {
       '/foo': '...' as any,
     };
     const globalState = createGlobalState({ routes });
-    expect(deref(globalState)).toEqual({
+    expect(globalState.getState()).toEqual({
       app: {
         error: undefined,
-        layout: 'desktop',
         loading: true,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       routes,
       registry: {
@@ -106,20 +96,18 @@ describe('Create Global State Module', () => {
 
   it('global state can be created without arguments', () => {
     const globalState = createGlobalState();
-    expect(deref(globalState)).toEqual({
+    expect(globalState.getState()).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -137,20 +125,18 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState({
       app: {},
     });
-    expect(deref(globalState)).toEqual({
+    expect(globalState.getState()).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -168,20 +154,18 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState({
       app: {},
     });
-    expect(deref(globalState)).toEqual({
+    expect(globalState.getState()).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -197,28 +181,24 @@ describe('Create Global State Module', () => {
 
   it('global state with non-default breakpoints and more routes', () => {
     const globalState = createGlobalState({
-      app: {
-        layout: 'desktop',
-      },
+      app: {},
       routes: {
         '/': '...' as any,
         '/foo': '...' as any,
       },
     });
-    expect(deref(globalState)).toEqual({
+    expect(globalState.getState()).toEqual({
       app: {
-        layout: 'desktop',
         loading: true,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},
@@ -241,20 +221,18 @@ describe('Create Global State Module', () => {
         loading: false,
       },
     });
-    expect(deref(globalState)).toEqual({
+    expect(globalState.getState()).toEqual({
       app: {
-        layout: 'desktop',
         loading: false,
         error: undefined,
-        publicPath: '/',
       },
       errorComponents: {},
       components: {
-        ErrorInfo: DefaultErrorInfo,
-        LoadingIndicator: DefaultLoadingIndicator,
-        Router: DefaultRouter,
-        Layout: DefaultLayout,
-        RouteSwitch: DefaultRouteSwitch,
+        ErrorInfo: expect.anything(),
+        LoadingIndicator: expect.anything(),
+        Router: expect.anything(),
+        Layout: expect.anything(),
+        RouteSwitch: expect.anything(),
       },
       registry: {
         extensions: {},

@@ -4,7 +4,7 @@ title: Testimonials
 
 # Testimonials
 
-A collection of some statements from community members regarding Piral as a framework for microfrontends.
+A collection of some statements from community members regarding Piral as a framework for micro frontends.
 
 > Piral seems very good, the best frontend framework I've explored in the last weeks.
 
@@ -37,3 +37,11 @@ A collection of some statements from community members regarding Piral as a fram
 > Hands down the best micro frontends framework. Thanks to the magicians at smapiot for helping us go live quickly!
 
 *Hans Frey*
+
+> Best solution for micro-frontends. Flexible, extensible, robust.
+
+*Sven Wiemann*
+
+> Comparing all solutions out there it is safe to say that Piral is a mile ahead of everything else. Great job!
+
+*Takan Milosh*

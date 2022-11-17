@@ -1,4 +1,4 @@
-import type { ReactElement, ComponentType } from 'react';
+import type { ReactElement, ComponentType, ReactNode } from 'react';
 import type { Disposable, BaseComponentProps, AnyComponent } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -38,9 +38,19 @@ declare module 'piral-core/lib/types/custom' {
   interface PiralCustomRegistryState {}
 }
 
-export interface NotificationsHostProps {}
+export interface NotificationsHostProps {
+  /**
+   * The notifications to display.
+   */
+  children?: ReactNode;
+}
 
-export interface NotificationsToastProps extends BareNotificationProps {}
+export interface NotificationsToastProps extends BareNotificationProps {
+  /**
+   * The content of the toast to display.
+   */
+  children?: ReactNode;
+}
 
 export interface PiralCustomNotificationOptions {}
 

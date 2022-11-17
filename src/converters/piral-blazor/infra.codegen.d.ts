@@ -1,3 +1,10 @@
-declare const url: string;
+declare const config: BlazorBootConfig;
 
-export default url;
+interface BlazorBootConfig {
+  url: string;
+  satellites: Array<string>;
+  noMutation: boolean;
+  renderMode: 'webcomponent' | 'projection';
+}
+
+export default config;

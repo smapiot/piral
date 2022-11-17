@@ -8,7 +8,7 @@ section: Details
 
 # Monorepo
 
-While Piral was designed primarily for distributed development, i.e., where each microfrontend lives in its own repository, you can use Piral with any paradigm that you like. This includes having a monorepo, i.e., one repository where many (or all) of your pilets are developed.
+While Piral was designed primarily for distributed development, i.e., where each micro frontend lives in its own repository, you can use Piral with any paradigm that you like. This includes having a monorepo, i.e., one repository where many (or all) of your pilets are developed.
 
 Using a monorepo can have many advantages. However, keep in mind that some challenges arise, too. For instance, you'll have to take care that deployments are only done for the changed pilets otherwise you'll end up with a hidden monolith.
 

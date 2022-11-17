@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import type { RouteComponentProps } from 'react-router-dom';
 import { useGlobalState } from 'piral-core';
 import { PiralDashboardContainer, PiralDashboardTile } from './components';
 import { TileRegistration } from './types';

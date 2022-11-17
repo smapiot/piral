@@ -103,15 +103,19 @@ import { setupOidcClient } from 'piral-oidc';
 
 export const client = setupOidcClient({ ... });
 
-// app.ts
+// app.tsx
+import * as React from 'react';
 import { createOidcApi } from 'piral-oidc';
+import { createInstance } from 'piral-core';
 import { client } from './oidc';
+import { render } from 'react-dom';
 
 export function render() {
-  renderInstance({
+  const instance = createInstance({
     // ...
     plugins: [createOidcApi(client)],
   });
+  render(<Piral instance={instance} />, document.querySelector('#app'));
 }
 
 // index.ts
@@ -151,15 +155,19 @@ export const client = setupOidcClient({
     postLogoutUrl: location.origin + '/logout'
 });
 
-// app.ts
+// app.tsx
+import * as React from 'react';
 import { createOidcApi } from 'piral-oidc';
+import { createInstance } from 'piral-core';
 import { client } from './oidc';
+import { render } from 'react-dom';
 
 export function render() {
-  renderInstance({
+  const instance = createInstance({
     // ...
     plugins: [createOidcApi(client)],
   });
+  render(<Piral instance={instance} />, document.querySelector('#app'));
 }
 
 // index.ts

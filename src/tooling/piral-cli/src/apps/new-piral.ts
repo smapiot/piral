@@ -1,12 +1,10 @@
 import { resolve, basename } from 'path';
 import { frameworkKeys } from '../helpers';
-import { LogLevels, Framework, NpmClientType } from '../types';
+import { SourceLanguage, LogLevels, Framework, NpmClientType } from '../types';
 import {
   ForceOverwrite,
-  SourceLanguage,
   installNpmPackage,
-  updateExistingJson,
-  getPiralPackage,
+  patchPiralPackage,
   scaffoldPiralSourceFiles,
   createDirectory,
   createFileIfNotExists,
@@ -22,7 +20,6 @@ import {
   config,
   initNpmProject,
 } from '../common';
-import { sourceLanguageKeys } from '..';
 
 export interface NewPiralOptions {
   /**
@@ -89,6 +86,11 @@ export interface NewPiralOptions {
    * Places additional variables that should used when scaffolding.
    */
   variables?: Record<string, string>;
+
+  /**
+   * Sets new app name
+   */
+  name?: string;
 }
 
 export const newPiralDefaults: NewPiralOptions = {
@@ -102,9 +104,10 @@ export const newPiralDefaults: NewPiralOptions = {
   install: true,
   template: 'default',
   logLevel: LogLevels.info,
-  npmClient: config.npmClient,
+  npmClient: undefined,
   bundlerName: 'none',
   variables: {},
+  name: undefined,
 };
 
 export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions = {}) {
@@ -121,6 +124,8 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     logLevel = newPiralDefaults.logLevel,
     bundlerName = newPiralDefaults.bundlerName,
     variables = newPiralDefaults.variables,
+    name = newPiralDefaults.name,
+    npmClient: defaultNpmClient = newPiralDefaults.npmClient,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -130,13 +135,14 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   }
 
   setLogLevel(logLevel);
+
   progress('Preparing source and target ...');
   const success = await createDirectory(root);
 
   if (success) {
-    const npmClient = await determineNpmClient(root, options.npmClient);
+    const npmClient = await determineNpmClient(root, defaultNpmClient);
     const packageRef = combinePackageRef(framework, version, 'registry');
-    const projectName = basename(root);
+    const projectName = name || basename(root);
 
     progress(`Creating a new Piral instance in %s ...`, root);
 
@@ -171,20 +177,19 @@ always-auth=true`,
       );
     }
 
+    await createFileIfNotExists(root, 'piral.json', JSON.stringify({}, undefined, 2));
+
     progress(`Installing npm package ${packageRef} ...`);
 
     await installNpmPackage(npmClient, packageRef, root, '--save-exact');
 
     progress(`Taking care of templating ...`);
 
-    await updateExistingJson(root, 'package.json', getPiralPackage(app, language, version, framework, bundlerName));
+    const data = getPiralScaffoldData(language, root, app, framework, variables);
 
-    await scaffoldPiralSourceFiles(
-      template,
-      registry,
-      getPiralScaffoldData(language, root, app, framework, variables),
-      forceOverwrite,
-    );
+    await patchPiralPackage(root, app, data, version, bundlerName);
+
+    await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
 
     if (install) {
       progress(`Installing dependencies ...`);

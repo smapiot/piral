@@ -21,19 +21,20 @@ import {
   getPackageVersion,
   isGitPackage,
   makeExternals,
+  findPackageRoot,
 } from './npm';
 
 jest.mock('child_process');
 
 jest.mock('../external', () => ({
   rc() {},
-  logger: {
-    stopSpinner() {},
-    verbose() {},
-    info() {},
-    error() {},
-    log() {},
-    setOptions() {},
+  ora() {
+    return {};
+  },
+  getModulePath(root, moduleName) {
+    return require.resolve(moduleName, {
+      paths: [root],
+    });
   },
 }));
 
@@ -65,7 +66,7 @@ jest.mock('fs', () => ({
   existsSync: (file: string) => {
     return true;
   },
-  readFile: (file: string, type: string, callback: (err: NodeJS.ErrnoException, data: string) => void) => {
+  readFile: (file: string, type: string, callback: (err: NodeJS.ErrnoException | undefined, data: string) => void) => {
     return callback(undefined, '');
   },
   realpathSync: () => ({}),
@@ -73,6 +74,18 @@ jest.mock('fs', () => ({
 }));
 
 describe('npm Module', () => {
+  it('findPackageRoot correctly resolves the package root of parcel-bundler', () => {
+    const dir = process.cwd();
+    const version = findPackageRoot('webpack', dir);
+    expect(version).toBe(resolve(dir, 'node_modules', 'webpack', 'package.json'));
+  });
+
+  it('findPackageRoot returns undefined for invalid package', () => {
+    const dir = process.cwd();
+    const version = findPackageRoot('foo-bar-not-exist', dir);
+    expect(version).toBeUndefined();
+  });
+
   it('dissects a fully qualified name with latest correctly', async () => {
     wrongCase = false;
     const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@latest');
@@ -307,7 +320,7 @@ describe('npm Module', () => {
   });
 
   it('check if package from nothing is not local', () => {
-    const result = isLocalPackage('./', null);
+    const result = isLocalPackage('./', '');
     expect(result).toBeFalsy();
   });
 
@@ -351,7 +364,7 @@ describe('npm Module', () => {
     expect(result).toBeTruthy();
     result = isGitPackage('git+');
     expect(result).toBeTruthy();
-    result = isGitPackage(null);
+    result = isGitPackage('');
     expect(result).toBeFalsy();
   });
 
@@ -382,11 +395,11 @@ describe('npm Module', () => {
   it('combine package refernce', () => {
     let result = combinePackageRef('foo', '1.0.0', 'registry');
     expect(result).toBe('foo@1.0.0');
-    result = combinePackageRef('foo', null, 'registry');
+    result = combinePackageRef('foo', '', 'registry');
     expect(result).toBe('foo@latest');
-    result = combinePackageRef('foo', null, 'file');
+    result = combinePackageRef('foo', '', 'file');
     expect(result).toBe('foo');
-    result = combinePackageRef('foo', null, 'git');
+    result = combinePackageRef('foo', '', 'git');
     expect(result).toBe('foo');
   });
 
@@ -417,18 +430,18 @@ describe('npm Module', () => {
     expect(result).toEqual('1.0.0');
     result = getPackageVersion(false, 'foo', '1.0.0', 'registry', './');
     expect(result).toBeFalsy();
-    result = getPackageVersion(true, './foo.tgz', null, 'file', './');
+    result = getPackageVersion(true, './foo.tgz', '', 'file', './');
     expect(result).toEqual('file:foo.tgz');
-    result = getPackageVersion(true, 'git+https://.foo.git', null, 'git', null);
+    result = getPackageVersion(true, 'git+https://.foo.git', '', 'git', '');
     expect(result).toEqual('git+https://.foo.git');
   });
 
   it('gets path to git package', () => {
-    const result = getCurrentPackageDetails('./', './foo.tgz', null, 'file://foo.tgz', './');
+    const result = getCurrentPackageDetails('./', './foo.tgz', '', 'file://foo.tgz', './');
     result.then(([path, version]) => {
       expect(path).not.toBeUndefined();
     });
-    const result2 = getCurrentPackageDetails('./', './foo.tgz', null, 'git+https://.foo.git', './');
+    const result2 = getCurrentPackageDetails('./', './foo.tgz', '', 'git+https://.foo.git', './');
     result2.then(([path, version]) => {
       expect(path).not.toBeUndefined();
     });
@@ -441,32 +454,12 @@ describe('npm Module', () => {
 
   it('makeExternals without externals returns coreExternals', () => {
     const externals = makeExternals(process.cwd(), { piral: '*' });
-    expect(externals).toEqual([
-      'react',
-      'react-dom',
-      'react-router',
-      'react-router-dom',
-      'history',
-      'tslib',
-      'path-to-regexp',
-      '@libre/atom',
-      '@dbeining/react-atom',
-    ]);
+    expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
   it('makeExternals with no externals returns coreExternals', () => {
     const externals = makeExternals(process.cwd(), { piral: '*' }, []);
-    expect(externals).toEqual([
-      'react',
-      'react-dom',
-      'react-router',
-      'react-router-dom',
-      'history',
-      'tslib',
-      'path-to-regexp',
-      '@libre/atom',
-      '@dbeining/react-atom',
-    ]);
+    expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
   it('makeExternals with exclude coreExternals returns empty set', () => {
@@ -483,43 +476,18 @@ describe('npm Module', () => {
       'react-dom',
       'react-router',
       'react-router-dom',
-      'history',
       'tslib',
-      'path-to-regexp',
-      '@libre/atom',
-      '@dbeining/react-atom',
     ]);
   });
 
   it('makeExternals with external duplicate only reflects coreExternals', () => {
     const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'foo']);
-    expect(externals).toEqual([
-      'react',
-      'foo',
-      'react-dom',
-      'react-router',
-      'react-router-dom',
-      'history',
-      'tslib',
-      'path-to-regexp',
-      '@libre/atom',
-      '@dbeining/react-atom',
-    ]);
+    expect(externals).toEqual(['react', 'foo', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
   it('makeExternals with explicit include and exclude', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-calendar', '!history']);
-    expect(externals).toEqual([
-      'react',
-      'react-calendar',
-      'react-dom',
-      'react-router',
-      'react-router-dom',
-      'tslib',
-      'path-to-regexp',
-      '@libre/atom',
-      '@dbeining/react-atom',
-    ]);
+    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-calendar', '!tslib']);
+    expect(externals).toEqual(['react', 'react-calendar', 'react-dom', 'react-router', 'react-router-dom']);
   });
 
   it('makeExternals with all exclude and explicit include', () => {

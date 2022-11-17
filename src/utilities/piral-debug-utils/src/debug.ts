@@ -2,22 +2,22 @@ import { DebugTracker } from './DebugTracker';
 import { VisualizationWrapper } from './VisualizationWrapper';
 import { ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
-import { setState, initialSettings, initialSetter, enablePersistance, disablePersistance, settingsKeys } from './state';
+import { setState, initialSettings, setNavigate, initialSetter, enablePersistance, disablePersistance, settingsKeys } from './state';
 import { DebugCustomSetting, DebuggerOptions } from './types';
 
 export function installPiralDebug(options: DebuggerOptions) {
   const {
-    injectPilet,
     getGlobalState,
     getExtensions,
     getDependencies,
     getRoutes,
     getPilets,
-    setPilets,
     fireEvent,
     integrate,
-    createApi,
-    loadPilet,
+    removePilet,
+    updatePilet,
+    addPilet,
+    navigate,
     customSettings = {},
   } = options;
   const events = [];
@@ -159,17 +159,6 @@ export function installPiralDebug(options: DebuggerOptions) {
     });
   };
 
-  const activatePilet = (pilet: any) => {
-    try {
-      const { createApi } = options;
-      const newApi = createApi(pilet);
-      injectPilet(pilet);
-      pilet.setup(newApi);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const togglePilet = (name: string) => {
     const pilet: any = getPilets().find((m) => m.name === name);
 
@@ -178,25 +167,14 @@ export function installPiralDebug(options: DebuggerOptions) {
     } else if (pilet.disabled) {
       if (pilet.original) {
         // everything is fine, let's use the cached version
-        activatePilet(pilet.original);
+        updatePilet(pilet.original);
       } else {
         // something fishy is going on - let's just try to activate the same pilet
-        activatePilet({ ...pilet, disabled: false });
+        updatePilet({ ...pilet, disabled: false });
       }
     } else {
-      injectPilet({ name, disabled: true, original: pilet } as any);
+      updatePilet({ name, disabled: true, original: pilet });
     }
-  };
-
-  const removePilet = (name: string) => {
-    const pilets = getPilets().filter((m) => m.name !== name);
-    injectPilet({ name } as any);
-    setPilets(pilets);
-  };
-
-  const appendPilet = (meta: any) => {
-    const { loadPilet } = options;
-    loadPilet(meta).then(activatePilet);
   };
 
   const toggleVisualize = () => {
@@ -233,15 +211,32 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   const systemResolve = System.constructor.prototype.resolve;
   const depMap: Record<string, Record<string, string>> = {};
+  const subDeps: Record<string, string> = {};
+
+  const findAncestor = (parent: string) => {
+    while (subDeps[parent]) {
+      parent = subDeps[parent];
+    }
+
+    return parent;
+  };
 
   System.constructor.prototype.resolve = function (...args) {
     const [url, parent] = args;
     const result = systemResolve.call(this, ...args);
 
-    if (parent) {
-      const deps = depMap[parent] || {};
+    if (!parent) {
+      return result;
+    }
+
+    const ancestor = findAncestor(parent);
+
+    if (url.startsWith('./')) {
+      subDeps[result] = ancestor;
+    } else {
+      const deps = depMap[ancestor] || {};
       deps[url] = result;
-      depMap[parent] = deps;
+      depMap[ancestor] = deps;
     }
 
     return result;
@@ -258,10 +253,6 @@ export function installPiralDebug(options: DebuggerOptions) {
       date: process.env.BUILD_TIME_FULL,
       cli: process.env.PIRAL_CLI_VERSION,
       compat: process.env.DEBUG_PIRAL,
-    },
-    pilets: {
-      loadPilet,
-      createApi,
     },
   };
 
@@ -407,7 +398,7 @@ export function installPiralDebug(options: DebuggerOptions) {
         case 'update-settings':
           return updateSettings(content.settings);
         case 'append-pilet':
-          return appendPilet(content.meta);
+          return addPilet(content.meta);
         case 'remove-pilet':
           return removePilet(content.name);
         case 'toggle-pilet':
@@ -421,6 +412,8 @@ export function installPiralDebug(options: DebuggerOptions) {
       }
     }
   });
+
+  setNavigate(navigate);
 
   integrate({
     components: {
@@ -438,7 +431,7 @@ export function installPiralDebug(options: DebuggerOptions) {
           if (!legacyBrowser) {
             // Chrome, Firefox, ... (full capability)
             const err = new Error();
-            const lastLine = err.stack.split('\n')[7];
+            const lastLine = err.stack.split('\n')[6];
 
             if (lastLine) {
               const action = lastLine.replace(/^\s+at\s+(Atom\.|Object\.)?/, '');

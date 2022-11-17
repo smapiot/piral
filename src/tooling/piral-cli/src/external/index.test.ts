@@ -1,4 +1,4 @@
-import * as externals from './index';
+import * as externals from '../external';
 
 describe('Externals module', () => {
   it('exports the FormData class', () => {
@@ -27,7 +27,7 @@ describe('Externals module', () => {
   });
 
   it('exports the logger module', () => {
-    const logger = externals.logger;
+    const logger = externals.ora;
     expect(logger).not.toBeUndefined();
   });
 

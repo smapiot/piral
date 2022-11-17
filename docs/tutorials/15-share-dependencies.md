@@ -37,9 +37,6 @@ Besides the dependencies that are specified in the `externals` list of the *pack
 - `react-router-dom`
 - `history`
 - `tslib`
-- `path-to-regexp`
-- `@libre/atom`
-- `@dbeining/react-atom`
 
 These are dependencies that are coming directly or indirectly from `piral-core`. Any other dependency needs to be added to the `externals` list above.
 
@@ -127,7 +124,7 @@ The mechanism to share dependencies used in pilets is called "import maps". Impo
 
 The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load it again. Otherwise, it will load the different resources.
 
-![Using Import Maps to Share Dependencies](../diagrams/import-maps.png)
+![Using Import Maps to Share Dependencies](../diagrams/import-maps.png){.auto}
 
 That way you can safely use multiple versions of your dependencies. If you consolidate them you'll get a performance improvement. Otherwise, you'll get the performance penalty as usual, however, you gained the flexibility to independently choose your version.
 

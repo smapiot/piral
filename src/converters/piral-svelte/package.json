@@ -36,6 +36,10 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -55,6 +59,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib convert.d.ts convert.js",
     "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
@@ -65,7 +70,5 @@
   "devDependencies": {
     "piral-core": "^0.14.32"
   },
-  "peerDependencies": {
-    "piral-core": "0.14.x"
-  }
+  "peerDependencies": {}
 }

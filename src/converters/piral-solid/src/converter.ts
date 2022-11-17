@@ -6,13 +6,13 @@ import { createExtension } from './extension';
 export interface SolidConverterOptions {
   /**
    * Defines the name of the root element.
-   * @default slot
+   * @default piral-slot
    */
   rootName?: string;
 }
 
 export function createConverter(config: SolidConverterOptions = {}) {
-  const { rootName = 'slot' } = config;
+  const { rootName = 'piral-slot' } = config;
   const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(root: Component<TProps>): ForeignComponent<TProps> => ({
     mount(el, props, context, locals) {

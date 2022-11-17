@@ -45,52 +45,58 @@ jest.mock('path', () =>
 );
 
 const fileNotFoundError = 'File not found!';
-jest.mock('tar', () => ({
-  create: (options: CreateOptions & FileOptions, fileList: ReadonlyArray<string>) => {
-    return new Promise((resolve, reject) => {
-      if (options.file && options.file == 'foo.txt') {
-        resolve(true);
-      } else {
-        reject(fileNotFoundError);
-      }
-    });
+
+jest.mock('../external', () => ({
+  ora() {
+    return {};
   },
-  extract: (options: ExtractOptions & FileOptions, fileList?: ReadonlyArray<string>) => {
-    return new Promise((resolve, reject) => {
-      if (options.file && options.file.includes('foo.tgz')) {
-        resolve(true);
-      } else {
-        reject(fileNotFoundError);
-      }
-    });
-  },
-  Parse: () => {
-    return {
-      position: 0,
-      _stream: new Stream(),
-      _ended: false,
-      _streamEnd: () => {
-        this._ended = true;
-        console.log('_streamEnd');
-      },
-      process: (c: Buffer) => {
-        console.log('process');
-      },
-      _startEntry: (c: Buffer) => {
-        console.log('_startEntry');
-      },
-      on: (event: string, listener: (...args: any[]) => {}) => {
-        console.log(`on event: ${event}`);
-      },
-      once: (event: string, listener: (...args: any[]) => {}) => {
-        console.log(`once event: ${event}`);
-      },
-      emit: (event: string | symbol, ...args: any[]) => {
-        console.log(`emit event: ${event.toString()}`);
-        return true;
-      },
-    } as any;
-  },
+  tar: {
+    create: (options: CreateOptions & FileOptions, fileList: ReadonlyArray<string>) => {
+      return new Promise((resolve, reject) => {
+        if (options.file && options.file == 'foo.txt') {
+          resolve(true);
+        } else {
+          reject(fileNotFoundError);
+        }
+      });
+    },
+    extract: (options: ExtractOptions & FileOptions, fileList?: ReadonlyArray<string>) => {
+      return new Promise((resolve, reject) => {
+        if (options.file && options.file.includes('foo.tgz')) {
+          resolve(true);
+        } else {
+          reject(fileNotFoundError);
+        }
+      });
+    },
+    Parse: () => {
+      return {
+        position: 0,
+        _stream: new Stream(),
+        _ended: false,
+        _streamEnd: () => {
+          this._ended = true;
+          console.log('_streamEnd');
+        },
+        process: (c: Buffer) => {
+          console.log('process');
+        },
+        _startEntry: (c: Buffer) => {
+          console.log('_startEntry');
+        },
+        on: (event: string, listener: (...args: any[]) => {}) => {
+          console.log(`on event: ${event}`);
+        },
+        once: (event: string, listener: (...args: any[]) => {}) => {
+          console.log(`once event: ${event}`);
+        },
+        emit: (event: string | symbol, ...args: any[]) => {
+          console.log(`emit event: ${event.toString()}`);
+          return true;
+        },
+      } as any;
+    },
+  }
 }));
 
 describe('Archive Module', () => {

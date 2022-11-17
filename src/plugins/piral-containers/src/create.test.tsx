@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import create from 'zustand';
+import { render, fireEvent } from '@testing-library/react';
 import { StateContext } from 'piral-core';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { createContainersApi } from './create';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = create(() => ({}));
   return {
     context: {
       on: jest.fn(),
@@ -18,10 +18,10 @@ function createMockContainer() {
       },
       state,
       readState(read) {
-        return read(deref(state));
+        return read(state.getState());
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,
@@ -48,20 +48,17 @@ describe('Piral-Containers create module', () => {
       },
     });
 
-    const MyComponent = () => null;
+    const MyComponent = ({ state, actions }) => <button role="button" onClick={actions.increment}>{state.count}</button>;
     MyComponent.displayName = 'MyComponent';
     const ConnectedComponent = connect(MyComponent);
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <ConnectedComponent />
       </StateContext.Provider>,
     );
-    const instance = node.find(MyComponent);
-
-    expect(instance.length).toBe(1);
-    expect(instance.prop('state')).toEqual({
-      count: 0,
-    });
-    expect(Object.keys(instance.prop('actions'))).toEqual(['increment']);
+    const button = node.getByRole("button");
+    expect(button.textContent).toEqual('0');
+    fireEvent.click(button);
+    expect(button.textContent).toEqual('1');
   });
 });

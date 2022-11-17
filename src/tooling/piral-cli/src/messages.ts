@@ -184,6 +184,53 @@ export function appInstanceInvalid_0011(): QuickMessage {
  * @kind Error
  *
  * @summary
+ * Reported when no valid Piral instance was specified.
+ *
+ * @abstract
+ * The Piral instance is defined either in the package.json or in the pilet.json.
+ *
+ * The resolution of the Piral instance is done via the `require.resolve` function of Node.js. Thus, if the defined module is simply not yet installed this error will be shown.
+ *
+ * @see
+ * - [npm i](https://docs.npmjs.com/cli/install)
+ * - [npm install is missing modules](https://stackoverflow.com/questions/24652681/npm-install-is-missing-modules)
+ *
+ * @example
+ * Assuming that the available pilet.json of your pilet contains content such as:
+ *
+ * ```json
+ * {
+ *   // ...
+ *   "piralInstances": {
+ *     "my-app-shell": {}
+ *   }
+ * }
+ * ```
+ *
+ * However, running
+ *
+ * ```sh
+ * ls node_modules/my-app-shell
+ * ```
+ *
+ * returns an error.
+ *
+ * To mitigate it try running
+ *
+ * ```sh
+ * npm i
+ * ```
+ *
+ * which will install all dependencies.
+ */
+export function appInstancesNotGiven_0012(): QuickMessage {
+  return [LogLevels.error, '0012', `No Piral instances have been provided.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
  * No valid package.json found
  *
  * @abstract
@@ -390,6 +437,209 @@ export function packageNotInstalled_0023(name: string): QuickMessage {
  */
 export function packageVersionInvalid_0024(version: string): QuickMessage {
   return [LogLevels.error, '0024', `The given package version "${version}" is invalid.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * Cannot add the shared dependency since its version constraint is not satisfied.
+ *
+ * @abstract
+ * The importmap definition allows you to define a version specifier separated with
+ * the '@' character. If you write down a version specifier then it has to be
+ * fulfilled already from the local version, otherwise the packaged version can
+ * potentially not be resolved at runtime. This would resolve in a pilet that fails
+ * when running in isolation and most likely fails when running with other pilets.
+ *
+ * @see
+ * - [import-maps specification](https://github.com/WICG/import-maps)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo@^3.2.1": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * For the error to occur the specifier (^3.2.1) potentially does not match the version (e.g., if
+ * the version of the dependency is 3.1.2).
+ *
+ * One strategy is to remove the specifier, which will automatically use the exact current version
+ * as specifier:
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * The best way, however, is to look at the used version and adjust the specifier to be correct again.
+ * Alternatively, change the used version to satisfy the constraint again.
+ */
+export function importMapVersionSpecNotSatisfied_0025(depName: string, version: string): QuickMessage {
+  return [LogLevels.error, '0025', `The dependency "${depName}" in only available in version "${version}".`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The version spec part of the importmap identifer is invalid.
+ *
+ * @abstract
+ * The importmap definition allows you to define a version specifier separated with
+ * the '@' character. This part has to follow the semver convention and rules.
+ *
+ * Check your specifier via online tools such as "Semver check" to verify it is
+ * valid and follows the semver specification.
+ *
+ * @see
+ * - [Online Checker](https://jubianchi.github.io/semver-check/)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo@bar": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * For the error to occur the specifier (bar) is not following the semver specification.
+ *
+ * One way is to remove the version spec, which will resolve to an exact version specifier
+ * and therefore always works:
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo": "foo"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * The best way, however, is to look at the used version and adjust the specifier to be correct again,
+ * such as "^1.2.3" or "1.x" or "3" etc.
+ */
+export function importMapVersionSpecInvalid_0026(depName: string): QuickMessage {
+  return [LogLevels.error, '0026', `The dependency "${depName}" has an invalid version spec.`];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The provided importmap reference could not be resolved.
+ *
+ * @abstract
+ * The importmap consists of keys and values. The keys represent the packages names and optional
+ * version specifiers to demand at runtime. The values represent the entry point or URL to use
+ * when the dependency is not yet loaded.
+ *
+ * In case of a non-URL value the reference has either to be a valid package name or a file path
+ * that leads to either a package or valid JS module. Either way, it needs to exist. If the path
+ * is invalid an error will be emitted.
+ *
+ * @see
+ * - [npm Install](https://docs.npmjs.com/cli/install)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "foo@bar": "./node_modules/prect"
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * Note the potential misspelling. It maybe should have been "./node_modules/preact". In such
+ * cases the reference may not be resolved locally. If everything was written correctly the
+ * node modules are most likely not installed (correctly).
+ */
+export function importMapReferenceNotFound_0027(dir: string, reference: string): QuickMessage {
+  return [
+    LogLevels.error,
+    '0027',
+    `The reference to "${reference}" could not be resolved from "${dir}". Are you sure the file or package exists?`,
+  ];
+}
+
+/**
+ * @kind Error
+ *
+ * @summary
+ * The provided importmap file could not be found.
+ *
+ * @abstract
+ * The importmap can be referenced in a file from the package.json. If the named
+ * file cannot be found the build process has to be stopped. Make sure that the
+ * file has been specified relative to the package.json where it was referenced
+ * from.
+ *
+ * @see
+ * - [import-maps specification](https://github.com/WICG/import-maps)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": "./import-map.json"
+ * }
+ * ```
+ *
+ * If the importmap has instead been (re)named "importmap.json" then this will not work.
+ * Likewise, with the reference above the file is expected to be in the same directory
+ * as the package.json. If it is, e.g., in the "src" subfolder you'd should reference it
+ * as "./src/import-map.json" instead.
+ */
+export function importMapFileNotFound_0028(dir: string, file: string): QuickMessage {
+  return [LogLevels.error, '0028', `The importmap "${file}" could not be found at "${dir}".`];
 }
 
 /**
@@ -981,8 +1231,12 @@ export function cannotResolveVersion_0052(name: string): QuickMessage {
  * }
  * ```
  */
-export function cannotResolveDependency_0053(name: string, rootDir: string): QuickMessage {
-  return [LogLevels.warning, '0053', `Could not resolve "${name}" from "${rootDir}". Taking "latest" version.`];
+export function cannotResolveDependency_0053(names: Array<string>, rootDir: string): QuickMessage {
+  return [
+    LogLevels.warning,
+    '0053',
+    `Could not resolve any package (tried "${names.join('", "')}") from "${rootDir}". Taking "latest" version.`,
+  ];
 }
 
 /**
@@ -2014,24 +2268,24 @@ export function publishEmulatorFilesUnexpected_0111(directory: string): QuickMes
  * @kind Error
  *
  * @summary
- * The "xcopy" provider requires a "--fields.target" argument.
+ * The "xcopy" provider requires a "--opts.target" argument.
  *
  * @abstract
  * The `piral publish --type release` command requires the selection of a suitable
  * provider for running successfully. The "xcopy" provider just copies the sources from
  * the output directory (source) to a specified target directory.
  *
- * Make sure to supply the target directory via the `--fields.target` command line flag.
+ * Make sure to supply the target directory via the `--opts.target` command line flag.
  *
  * @example
  * The following command would specify `/temp/dest` as target directory:
  *
  * ```sh
- * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * piral publish --type release --provider xcopy --opts.target "/temp/dest"
  * ```
  */
 export function publishXcopyMissingTarget_0112(): QuickMessage {
-  return [LogLevels.error, '0112', `The "xcopy" provider requires a "--fields.target" argument.`];
+  return [LogLevels.error, '0112', `The "xcopy" provider requires a "--opts.target" argument.`];
 }
 
 /**
@@ -2054,7 +2308,7 @@ export function publishXcopyMissingTarget_0112(): QuickMessage {
  * The following command uses the in-built "xcopy" provider for releasing to a local directory.
  *
  * ```sh
- * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * piral publish --type release --provider xcopy --opts.target "/temp/dest"
  * ```
  */
 export function publishProviderMissing_0113(providerName: string, availableProviders: Array<string>): QuickMessage {
@@ -2075,7 +2329,7 @@ export function publishProviderMissing_0113(providerName: string, availableProvi
  * The following command uses the in-built "xcopy" provider for releasing to a local directory.
  *
  * ```sh
- * piral publish --type release --provider xcopy --fields.target "/temp/dest"
+ * piral publish --type release --provider xcopy --opts.target "/temp/dest"
  * ```
  *
  * The type is "release".
@@ -2137,7 +2391,11 @@ export function publishFeedMissingUrl_0115(): QuickMessage {
  * ```
  */
 export function publishFeedMissingVersion_0116(): QuickMessage {
-  return [LogLevels.error, '0116', `The "feed" provider requires either a "--opts.version" argument or a package.json with a version.`];
+  return [
+    LogLevels.error,
+    '0116',
+    `The "feed" provider requires either a "--opts.version" argument or a package.json with a version.`,
+  ];
 }
 
 /**
@@ -2190,7 +2448,8 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * - v2: will use SystemJS for integration of the pilet (default)
  *
  * The v1 version has better support for older browsers, but requires a polyfill to work
- * correctly. This polyfill is part of the standard Piral polyfills.
+ * correctly. This polyfill is part of the `piral-ie11polyfills-utils` package.
+ * Alternatively, use the `currentScript-polyfill` package.
  *
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
@@ -2219,8 +2478,8 @@ export function invalidSchemaVersion_0171(schemaVersion: string, schemas: Array<
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where multiple bundlers are installed the first one is picked. This
  * may not be what you want. In this scenario you can override the selection by
@@ -2254,8 +2513,8 @@ export function bundlerMissing_0172(bundlerName: string, installed: Array<string
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where no bundler is installed and the default bundler could not be
  * successfully installed this error is shown.
@@ -2317,8 +2576,8 @@ export function bundlingFailed_0174(error: string): QuickMessage {
  *
  * @abstract
  * Piral allows you to set up your own tooling for building and debugging. This
- * is a powerful concept. By default, the Webpack bundler is used. Alternatives
- * include Parcel and Rollup.
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
  *
  * In case where multiple bundlers are installed the first one is picked. This
  * may not be what you want. In this scenario you can explicitly set the bundler
@@ -2345,6 +2604,35 @@ export function bundlerUnspecified_0175(available: Array<string>): QuickMessage 
     '0175',
     `No bundler has been specified even though multiple are available. Choices: ${s}.`,
   ];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * No bundler has been installed yet.
+ *
+ * @abstract
+ * Piral allows you to set up your own tooling for building and debugging. This
+ * is a powerful concept. By default, the Webpack v5 bundler is used.
+ * Alternatives include Parcel and Rollup.
+ *
+ * In case no bundler is yet installed the Piral CLI will automatically install
+ * the default bundler. However, you should consider installing a bundler of your
+ * choice (even if this could also be the default bundler) explicitly.
+ *
+ * @see
+ * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ *
+ * @example
+ * Use the following command to install esbuild as a bundler with the npm client:
+ *
+ * ```sh
+ * npm i piral-cli-esbuild --save-dev
+ * ```
+ */
+export function bundlerNotInstalled_0176(): QuickMessage {
+  return [LogLevels.warning, '0176', `Installing default bundler since no bundler has been found.`];
 }
 
 /**

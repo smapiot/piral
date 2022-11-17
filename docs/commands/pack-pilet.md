@@ -1,4 +1,4 @@
-# `pack-pilet`
+# `pilet pack`
 
 Creates a pilet package that can be published.
 
@@ -7,13 +7,13 @@ Creates a pilet package that can be published.
 From the command line:
 
 ```sh
-pb pack-pilet [source]
+pilet pack [source]
 ```
 
 Alternative:
 
 ```sh
-pilet pack [source]
+pb pack-pilet [source]
 ```
 
 ## Aliases

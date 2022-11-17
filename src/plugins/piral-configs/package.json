@@ -30,13 +30,18 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
     "esm",
     "lib",
-    "src"
+    "src",
+    "piral-configs.min.js"
   ],
   "repository": {
     "type": "git",
@@ -46,7 +51,9 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "cleanup": "rimraf esm lib piral-configs.min.js",
+    "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-configs.min.js --bundle --external:piral-core --minify --global-name=piralConfigs",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-configs.json src --exclude \"src/**/*.test.*\"",
@@ -60,6 +67,6 @@
     "piral-core": "^0.14.32"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x"
+    "piral-core": "0.14.x || 0.15.x"
   }
 }

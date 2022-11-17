@@ -2,13 +2,23 @@ import { openBrowser } from './browser';
 
 let error = false;
 
-jest.mock('open', () => (...args) => {
-  if (error) {
-    throw new Error('Error occured');
-  } else {
-    return null;
-  }
-});
+jest.mock('../external', () => ({
+  rc(_, cfg) {
+    return cfg;
+  },
+  ora() {
+    return {
+      fail() {},
+    };
+  },
+  open() {
+    if (error) {
+      throw new Error('Error occured');
+    } else {
+      return null;
+    }
+  },
+}));
 
 describe('Browser Module', () => {
   it('opens browser successfully', async () => {

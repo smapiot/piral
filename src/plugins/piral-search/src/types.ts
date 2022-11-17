@@ -1,4 +1,4 @@
-import type { ReactChild, ComponentType, ReactElement } from 'react';
+import type { ReactChild, ComponentType, ReactElement, ReactNode } from 'react';
 import type {
   Dict,
   Disposable,
@@ -90,6 +90,10 @@ export interface SearchContainerProps {
    * Gets if the results are still gathered.
    */
   loading: boolean;
+  /**
+   * The search to display.
+   */
+  children?: ReactNode;
 }
 
 export interface SearchInputProps {
@@ -99,7 +103,12 @@ export interface SearchInputProps {
 
 export interface SearchResultComponentProps extends BaseComponentProps {}
 
-export interface SearchResultProps {}
+export interface SearchResultProps {
+  /**
+   * The search results to display.
+   */
+  children?: ReactNode;
+}
 
 export type SearchResultType = string | ReactElement<any> | AnyComponent<SearchResultComponentProps>;
 

@@ -42,6 +42,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     uiLocales,
     metadata,
     metadataUrl,
+    monitorSession,
   } = config;
 
   const isMainWindow = () => (parentName ? parentName === window.parent?.name : window === window.top);
@@ -62,6 +63,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     response_mode: responseMode,
     metadata,
     metadataUrl,
+    monitorSession,
   });
 
   if (logLevel !== undefined) {

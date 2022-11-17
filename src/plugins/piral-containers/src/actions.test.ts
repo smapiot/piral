@@ -1,8 +1,8 @@
-import { Atom, swap, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createState, destroyState, replaceState } from './actions';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = create(() => ({}));
   return {
     context: {
       converters: {},
@@ -15,7 +15,7 @@ function createMockContainer() {
         return read(state);
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,
@@ -29,7 +29,7 @@ describe('Piral-Containers actions module', () => {
       bar: 'qxz',
     };
     createState(context, 'foo', initialData);
-    const state: any = deref(context.state);
+    const state: any = (context.state.getState());
     expect(state.containers.foo).toBe(initialData);
   });
 
@@ -40,7 +40,7 @@ describe('Piral-Containers actions module', () => {
     };
     createState(context, 'foo', initialData);
     destroyState(context, 'foo');
-    const state: any = deref(context.state);
+    const state: any = (context.state.getState());
     expect(state.containers.foo).toBeUndefined();
   });
 
@@ -54,7 +54,7 @@ describe('Piral-Containers actions module', () => {
     };
     createState(context, 'foo', initialData);
     replaceState(context, 'foo', (state) => updatedData);
-    const state: any = deref(context.state);
+    const state: any = (context.state.getState());
     expect(state.containers.foo).toEqual({
       ...initialData,
       ...updatedData,
@@ -71,7 +71,7 @@ describe('Piral-Containers actions module', () => {
     };
     createState(context, 'foo', initialData);
     replaceState(context, 'foo', (state) => updatedData);
-    const state: any = deref(context.state);
+    const state: any = (context.state.getState());
     expect(state.containers.foo).toEqual({
       ...initialData,
       ...updatedData,
@@ -85,7 +85,7 @@ describe('Piral-Containers actions module', () => {
     };
     createState(context, 'foo', initialData);
     replaceState(context, 'foo', (state) => state);
-    const state: any = deref(context.state);
+    const state: any = (context.state.getState());
     expect(state.containers.foo).toEqual(initialData);
   });
 });

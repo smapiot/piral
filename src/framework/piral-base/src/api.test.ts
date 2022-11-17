@@ -1,4 +1,4 @@
-import { initializeApi } from './api';
+import { initializeApi, mergeApis } from './api';
 
 const moduleMetadata = {
   name: 'my-module',
@@ -21,5 +21,17 @@ describe('API Module', () => {
       version: moduleMetadata.version,
       hash: moduleMetadata.hash,
     });
+  });
+
+  it('mergeApis merges multiple APIs', () => {
+    const baseApi: any = {
+      a: 'foo',
+    };
+    const newApi = mergeApis(baseApi, [() => ({ b: 'bar' }) as any], {} as any);
+    expect(newApi).toEqual({
+      a: 'foo',
+      b: 'bar',
+    });
+    expect(newApi).toBe(baseApi);
   });
 });

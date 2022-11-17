@@ -1,13 +1,13 @@
 import { join, resolve, relative } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from './package';
-import { createFileFromTemplateIfNotExists } from './template';
+import { createPiralStubIndexIfNotExists } from './template';
 import { filesTar, filesOnceTar } from './constants';
 import { cliVersion } from './info';
-import { createNpmPackage, makeExternals } from './npm';
+import { createNpmPackage } from './npm';
 import { createPiralDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
-import { LogLevels, TemplateFileLocation } from '../types';
+import { LogLevels, SharedDependency, TemplateFileLocation } from '../types';
 import {
   createDirectory,
   removeDirectory,
@@ -21,6 +21,7 @@ const packageJson = 'package.json';
 
 export async function createEmulatorSources(
   sourceDir: string,
+  externals: Array<SharedDependency>,
   targetDir: string,
   targetFile: string,
   logLevel: LogLevels,
@@ -31,16 +32,22 @@ export async function createEmulatorSources(
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
   };
-  const allExternals = makeExternals(sourceDir, allDeps, piralPkg.pilets?.externals);
 
   const externalPackages = await Promise.all(
-    allExternals.filter(isValidDependency).map(async (name) => ({
-      name,
-      version: await findDependencyVersion(piralPkg, sourceDir, name),
-    })),
+    externals
+      .filter((ext) => ext.type === 'local' && isValidDependency(ext.name))
+      .map(async (external) => ({
+        name: external.name,
+        version: await findDependencyVersion(piralPkg, sourceDir, external.name, external.parents),
+      })),
   );
   const externalDependencies = externalPackages.reduce((deps, dep) => {
     deps[dep.name] = dep.version;
+    return deps;
+  }, {} as Record<string, string>);
+
+  const importmapEntries = externalPackages.reduce((deps, dep) => {
+    deps[dep.name] = dep.name;
     return deps;
   }, {} as Record<string, string>);
 
@@ -70,6 +77,9 @@ export async function createEmulatorSources(
     license: piralPkg.license,
     homepage: piralPkg.homepage,
     keywords: piralPkg.keywords,
+    importmap: {
+      imports: importmapEntries,
+    },
     pilets: {
       ...piralPkg.pilets,
       files: filesMap,
@@ -86,7 +96,7 @@ export async function createEmulatorSources(
       ...allDeps,
       ...externalDependencies,
     },
-    sharedDependencies: allExternals,
+    sharedDependencies: externals.map(m => m.name),
     repository: piralPkg.repository,
     bugs: piralPkg.bugs,
     author: piralPkg.author,
@@ -116,7 +126,7 @@ export async function createEmulatorSources(
   await copyScaffoldingFiles(sourceDir, rootDir, piralPkg.files ?? []);
 
   // actually including this one hints that the app shell should have been included - which is forbidden
-  await createFileFromTemplateIfNotExists('piral', targetDir, 'index.js', ForceOverwrite.yes, {
+  await createPiralStubIndexIfNotExists(targetDir, 'index.js', ForceOverwrite.yes, {
     name: piralPkg.name,
     outFile: targetFile,
   });

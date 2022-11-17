@@ -1,6 +1,6 @@
-import { isfunc } from 'piral-base';
 import { ReactChild, isValidElement, createElement } from 'react';
 import {
+  isfunc,
   buildName,
   PiralPlugin,
   Dict,

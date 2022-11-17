@@ -5,18 +5,37 @@ import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo } from './package';
 import { entryModuleExtensions, piralBaseRoot } from './constants';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
+import { getModulePath } from '../external';
 import { LogLevels } from '../types';
 
-function findPiralBaseApi(root: string) {
+function findPiralBaseRoot(root: string, framework: string) {
+  const piralJson = `${framework}/package.json`;
+
+  if (piralJson !== piralBaseRoot) {
+    try {
+      const packageJsonPath = getModulePath(root, piralJson);
+      return dirname(packageJsonPath);
+    } catch {}
+  }
+
+  return root;
+}
+
+function findPiralBaseApi(root: string, framework: string) {
+  // for some package managers, e.g., pnpm we need to first go into
+  // some specifics before being able to retrieve "piral-base"
+  const baseRoot = findPiralBaseRoot(root, framework);
+
   try {
-    const file = require
-      .resolve(piralBaseRoot, {
-        paths: [root],
-      })
-      ?.replace(/\.js$/, '.d.ts');
+    const packageJsonPath = getModulePath(baseRoot, piralBaseRoot);
+    const projectDir = dirname(packageJsonPath);
+    const project = require(packageJsonPath);
+    // By default support for piral-base < 0.15
+    const { piletApiTypings = 'lib/types.d.ts' } = project;
+
     return [
       {
-        file,
+        file: resolve(projectDir, piletApiTypings),
         name: 'PiletApi',
       },
     ];
@@ -121,6 +140,7 @@ export async function createPiletDeclaration(
     types: [...types, ...files],
     plugins: [createExcludePlugin([name])],
     apis: [],
+    noModuleDeclaration: true,
     imports: allowedImports,
     logLevel,
     logger: createLogger(),
@@ -137,7 +157,7 @@ export async function createPiralDeclaration(
 ) {
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, root, externals } = await retrievePiletsInfo(entryFiles);
+  const { name, root, externals, framework } = await retrievePiletsInfo(entryFiles);
   const entryModules = await getEntryModules(entryFiles);
   const files = await getAllFiles(entryModules);
   const options: DeclOptions = {
@@ -145,8 +165,9 @@ export async function createPiralDeclaration(
     root,
     files,
     types: findDeclaredTypings(root),
-    apis: findPiralBaseApi(root),
-    imports: externals,
+    apis: findPiralBaseApi(root, framework),
+    noModuleDeclaration: true,
+    imports: externals.map(m => m.name),
     logLevel,
     logger: createLogger(),
   };

@@ -1,6 +1,6 @@
 # Tutorials
 
-The **Piral** framework offers the foundation for designing and realizing modular web applications. It provides a comprehensive set of functionality and extension points to realize a microfrontend solution tailored to your specific needs.
+The **Piral** framework offers the foundation for designing and realizing modular web applications. It provides a comprehensive set of functionality and extension points to realize a micro frontend solution tailored to your specific needs.
 
 This chapter of the documentation contains tutorials, which are intended to support developers in getting familiar with the rich feature set of the Piral framework.
 
@@ -14,7 +14,7 @@ The following tutorials are currently available:
 4. [The Pilet API](./04-the-pilet-api.md) - a closer look at the Pilet API
 5. [Customizing the API](./05-customizing-the-api.md) - how to extend and customize the Pilet API.
 6. [Piral Layout](./06-piral-layout.md) - set up the layout of your Piral instance.
-7. [Development Workflow](./07-development-workflow.md) - development of a microfrontend with Piral.
+7. [Development Workflow](./07-development-workflow.md) - development of a micro frontend with Piral.
 8. [The Piral CLI](./08-the-piral-cli.md) - details about the working with our tooling.
 9. [Pilet Best Practices](./09-pilet-best-practices.md) - recommendations for developing great pilets.
 10. [Mocking the Backend](./10-mock-backend.md) - develop offline-first with Piral.

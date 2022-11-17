@@ -72,11 +72,23 @@ export function createBreadcrumbsApi(config: DashboardConfig = {}): PiralPlugin<
       withAll(withBreadcrumbs(getBreadcrumbs(breadcrumbs)), withRootExtension('piral-breadcrumbs', Breadcrumbs)),
     );
 
-    return (api, target) => {
+    return (_, target) => {
       const pilet = target.name;
       let next = 0;
 
       return {
+        registerBreadcrumbs(values) {
+          const bc = {};
+
+          for (const value of values) {
+            const { name = next++, ...settings } = value;
+            const id = buildName(pilet, name);
+            bc[id] = settings;
+          }
+
+          context.registerBreadcrumbs(bc);
+          return () => context.unregisterBreadcrumbs(Object.keys(bc));
+        },
         registerBreadcrumb(name, settings?) {
           if (typeof name !== 'string') {
             settings = name;
@@ -84,16 +96,18 @@ export function createBreadcrumbsApi(config: DashboardConfig = {}): PiralPlugin<
           }
 
           const id = buildName(pilet, name);
-          context.registerBreadcrumb(id, {
-            pilet,
-            matcher: getMatcher(settings),
-            settings,
+          context.registerBreadcrumbs({
+            [id]: {
+              pilet,
+              matcher: getMatcher(settings),
+              settings,
+            },
           });
-          return () => api.unregisterBreadcrumb(name);
+          return () => context.unregisterBreadcrumbs([id]);
         },
         unregisterBreadcrumb(name) {
           const id = buildName(pilet, name);
-          context.unregisterBreadcrumb(id);
+          context.unregisterBreadcrumbs([id]);
         },
       };
     };

@@ -173,13 +173,13 @@ Without these extensions pilets could only share components with the app shell. 
 
 The following diagram illustrates this.
 
-![Page transitions without registered extensions](../diagrams/page-transitions-no-ext.png)
+![Page transitions without registered extensions](../diagrams/page-transitions-no-ext.png){.auto}
 
 Using extensions we can finally also share components between pilets. The mechanism allows you to specify what components you want to see displayed. This enables many scenarios, e.g., to render a specific extension always when certain data is available, or to avoid using a link determined by another pilet for linking.
 
 Instead, we can loosely couple the extensions. The following diagram shows some of these possibilities.
 
-![Page transitions with registered extensions](../diagrams/page-transitions-with-ext.png)
+![Page transitions with registered extensions](../diagrams/page-transitions-with-ext.png){.auto}
 
 Importantly, the sharing will always be indirect, i.e., the name of the owning pilets will never be mentioned. The name of the extension can be chosen using different principles. In general, it is not possible to make one recommendation - as every naming scheme has its pros and cons. Our only recommendation is to come up with conventions that are related to the problem domain they extension solves.
 

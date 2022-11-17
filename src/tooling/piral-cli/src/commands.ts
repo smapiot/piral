@@ -6,9 +6,7 @@ import {
   forceOverwriteKeys,
   keyOfForceOverwrite,
   valueOfForceOverwrite,
-  keyOfSourceLanguage,
   sourceLanguageKeys,
-  valueOfSourceLanguage,
   frameworkKeys,
   clientTypeKeys,
   schemaKeys,
@@ -27,6 +25,7 @@ import {
   PiletSchemaVersion,
   PiletBuildType,
   PiletPublishScheme,
+  SourceLanguage,
 } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
@@ -65,6 +64,9 @@ const allCommands: Array<ToolCommand<any>> = [
           describe: 'Sets the source root directory or index.html file for collecting all the information.',
           default: apps.debugPiralDefaults.entry,
         })
+        .string('target')
+        .describe('target', 'Sets the target directory or file of bundling.')
+        .default('target', apps.debugPiralDefaults.target)
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiralDefaults.port)
@@ -86,6 +88,8 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('bundler', availableBundlers)
         .describe('bundler', 'Sets the bundler to use.')
         .default('bundler', availableBundlers[0])
+        .string('feed')
+        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.')
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -93,6 +97,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.debugPiral(args.base as string, {
         entry: args.source as string,
+        target: args.target as string,
         port: args.port as number,
         hmr: args.hmr as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
@@ -101,6 +106,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         hooks: args.hooks as object,
+        feed: args.feed as string,
         _: args,
       });
     },
@@ -295,7 +301,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('force-overwrite', keyOfForceOverwrite(apps.newPiralDefaults.forceOverwrite))
         .choices('language', sourceLanguageKeys)
         .describe('language', 'Determines the programming language for the new Piral instance.')
-        .default('language', keyOfSourceLanguage(apps.newPiralDefaults.language))
+        .default('language', apps.newPiralDefaults.language)
         .string('template')
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiralDefaults.template)
@@ -310,7 +316,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('vars', apps.newPiralDefaults.variables)
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .string('name')
+        .describe('name', 'Sets the name for the new Piral app.')
+        .default('name', apps.newPiralDefaults.name);
     },
     run(args) {
       return apps.newPiral(args.base as string, {
@@ -320,13 +329,14 @@ const allCommands: Array<ToolCommand<any>> = [
         version: args.tag as string,
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
-        language: valueOfSourceLanguage(args.language as string),
+        language: args.language as SourceLanguage,
         install: args.install as boolean,
         template: args.template as string,
         logLevel: args['log-level'] as LogLevels,
         npmClient: args['npm-client'] as NpmClientType,
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
+        name: args['name'] as string,
       });
     },
   },
@@ -442,11 +452,11 @@ const allCommands: Array<ToolCommand<any>> = [
         .describe('app', 'Sets the name of the Piral instance.')
         .string('app-dir')
         .describe('app-dir', 'Sets the path to a custom Piral instance for serving.')
+        .string('feed')
+        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.')
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.')
-        .string('feed')
-        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
       return apps.debugPilet(args.base as string, {
@@ -684,7 +694,7 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('log-level', apps.newPiletDefaults.logLevel)
         .choices('language', sourceLanguageKeys)
         .describe('language', 'Determines the programming language for the new pilet.')
-        .default('language', keyOfSourceLanguage(apps.newPiletDefaults.language))
+        .default('language', apps.newPiletDefaults.language)
         .string('template')
         .describe('template', 'Sets the boilerplate template package to be used when scaffolding.')
         .default('template', apps.newPiletDefaults.template)
@@ -699,7 +709,10 @@ const allCommands: Array<ToolCommand<any>> = [
         .default('vars', apps.newPiletDefaults.variables)
         .string('base')
         .default('base', process.cwd())
-        .describe('base', 'Sets the base directory. By default the current directory is used.');
+        .describe('base', 'Sets the base directory. By default the current directory is used.')
+        .string('name')
+        .describe('name', 'Sets the name for the new Pilet.')
+        .default('name', apps.newPiletDefaults.name);
     },
     run(args) {
       return apps.newPilet(args.base as string, {
@@ -707,13 +720,14 @@ const allCommands: Array<ToolCommand<any>> = [
         source: args.source as string,
         registry: args.registry as string,
         forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
-        language: valueOfSourceLanguage(args.language as string),
+        language: args.language as SourceLanguage,
         logLevel: args['log-level'] as LogLevels,
         install: args.install as boolean,
         template: args.template as string,
         npmClient: args['npm-client'] as NpmClientType,
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
+        name: args['name'] as string,
       });
     },
   },

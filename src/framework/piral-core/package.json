@@ -11,6 +11,14 @@
     "core",
     "functional"
   ],
+  "importmap": {
+    "imports": {
+      "react": "react",
+      "react-dom": "react-dom",
+      "react-router": "react-router",
+      "react-router-dom": "react-router-dom"
+    }
+  },
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
@@ -28,19 +36,20 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
+    "dist",
     "esm",
     "lib",
     "src",
-    "debug-pilet.d.ts",
-    "debug-piral.d.ts",
-    "debug-pilet.js",
-    "debug-piral.js",
-    "dependencies.codegen",
-    "dependencies.codegen.native.js"
+    "app.codegen",
+    "app.codegen.d.ts"
   ],
   "funding": {
     "type": "github",
@@ -54,17 +63,18 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
-    "build:convert": "tsc debug-pilet.ts debug-piral.ts --skipLibCheck --declaration",
+    "cleanup": "rimraf dist esm lib",
+    "build": "yarn build:commonjs && yarn build:esnext && yarn build:codegen",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "build:codegen": "esbuild src/tools/codegen.ts --bundle --outfile=dist/codegen.js --format=cjs --platform=node --external:pnpapi",
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@dbeining/react-atom": "^4.0.0",
     "piral-base": "^0.14.32",
-    "piral-debug-utils": "^0.14.32"
+    "piral-debug-utils": "^0.14.32",
+    "zustand": "^3.0.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -73,22 +83,20 @@
     "react-router-dom": "5.x"
   },
   "devDependencies": {
-    "@types/history": "^4.7.8",
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0"
   },
   "sharedDependencies": [
     "react",
     "react-dom",
     "react-router",
     "react-router-dom",
-    "history",
-    "tslib",
-    "path-to-regexp",
-    "@libre/atom",
-    "@dbeining/react-atom"
+    "tslib"
   ]
 }

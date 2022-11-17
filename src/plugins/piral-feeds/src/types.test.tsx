@@ -1,20 +1,32 @@
 import * as React from 'react';
-import * as piralCore from 'piral-core';
-import { mount } from 'enzyme';
+import create from 'zustand';
+import { StateContext } from 'piral-core';
+import { DefaultErrorInfo } from 'piral-core/lib/defaults/DefaultErrorInfo.js';
+import { render } from '@testing-library/react';
 import './types';
 
-jest.mock('piral-core/lib/hooks/globalState', () => ({
-  useGlobalState() {
-    return [];
-  },
-}));
+const FeedErrorInfo = () => <div role="feed_error" />;
+
+const mockState = {
+  state: create(() => ({
+    errorComponents: {
+      feed: FeedErrorInfo,
+    },
+    registry: {
+      extensions: {},
+    },
+  })),
+};
 
 (React as any).useMemo = (cb) => cb();
 
 describe('Extended Error Info Component for Feeds', () => {
   it('renders the switch-case in the feed error case', () => {
-    const { DefaultErrorInfo } = piralCore;
-    const node = mount(<DefaultErrorInfo type="feed" error="foo" />);
-    expect(node.findWhere((n) => n.key() === 'default_error').length).toBe(1);
+    const node = render(
+      <StateContext.Provider value={mockState as any}>
+        <DefaultErrorInfo type="feed" error="foo" />
+      </StateContext.Provider>,
+    );
+    expect(node.getAllByRole('feed_error').length).toBe(1);
   });
 });

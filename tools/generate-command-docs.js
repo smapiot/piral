@@ -10,7 +10,8 @@ const nl = '\n';
 const { commands } = require(commandFolder);
 
 function generateHead(command) {
-  return `# \`${command}\``;
+  const parts = command.split('-');
+  return `# \`${parts.pop()} ${parts.join('-')}\``;
 }
 
 function getCommandPath(command) {
@@ -239,7 +240,6 @@ function generateBody(command, validators) {
     }
   }
 
-  const hasAlt = command.name.endsWith('-piral') || command.name.endsWith('-pilet');
   const parts = command.name.split('-');
   const content = `
 ${command.description || 'No description available.'}
@@ -248,16 +248,12 @@ ${command.description || 'No description available.'}
 
 From the command line:
 
-${shell(`pb ${command.name} ${command.arguments.join(' ')}`)}
-${
-  hasAlt
-    ? `
+${shell(`${parts.pop()} ${parts.join('-')} ${command.arguments.join(' ')}`)}
+
 Alternative:
 
-${shell(`${parts.pop()} ${parts.join('-')} ${command.arguments.join(' ')}`)}
-`
-    : ''
-}
+${shell(`pb ${command.name} ${command.arguments.join(' ')}`)}
+
 ## Aliases
 
 Instead of \`${command.name}\` you can also use:

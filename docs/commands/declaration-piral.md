@@ -1,4 +1,4 @@
-# `declaration-piral`
+# `piral declaration`
 
 Creates the TypeScript declaration file (index.d.ts) for a Piral instance.
 
@@ -7,13 +7,13 @@ Creates the TypeScript declaration file (index.d.ts) for a Piral instance.
 From the command line:
 
 ```sh
-pb declaration-piral [source]
+piral declaration [source]
 ```
 
 Alternative:
 
 ```sh
-piral declaration [source]
+pb declaration-piral [source]
 ```
 
 ## Aliases

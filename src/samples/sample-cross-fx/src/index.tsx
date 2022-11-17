@@ -1,3 +1,4 @@
+// @ts-nocheck
 import 'core-js/es/reflect';
 import 'core-js/stable/reflect';
 import 'core-js/features/reflect';
@@ -8,7 +9,7 @@ import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
 import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 
 import * as React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { createInstance, LayoutProps, LoadingIndicatorProps, Piral, SetComponent, SetRoute } from 'piral-core';
 import { createVueApi } from 'piral-vue';
 import { createNgApi } from 'piral-ng';
@@ -74,13 +75,12 @@ const instance = createInstance({
   },
 });
 
-const app = (
+const root = createRoot(document.querySelector('#app'));
+root.render(
   <Piral instance={instance}>
     <SetComponent name="LoadingIndicator" component={Loader} />
     <SetComponent name="Layout" component={Layout} />
     <SetComponent name="DashboardContainer" component={DashboardContainer} />
     <SetRoute path="/" component={Dashboard} />
-  </Piral>
+  </Piral>,
 );
-
-render(app, document.querySelector('#app'));

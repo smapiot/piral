@@ -1,3 +1,5 @@
+export { isfunc, requireModule } from 'piral-base';
+
 export * from './compare';
 export * from './data';
 export * from './extension';

@@ -34,6 +34,10 @@ Sets the translations (custom language to key to string mapping) for the pilet.
 
 Gets the translations defined in the pilet.
 
+### `addTranslations()`
+
+Adds a list of translations (custom language to key to string mapping) to the existing translations for the pilet.
+
 ## Usage
 
 ::: summary: For pilet authors

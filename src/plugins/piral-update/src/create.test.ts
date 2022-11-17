@@ -1,8 +1,9 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createUpdateApi } from './create';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = create(() => ({}));
+
   return {
     context: {
       on: jest.fn(),
@@ -11,7 +12,7 @@ function createMockContainer() {
       defineActions() {},
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,

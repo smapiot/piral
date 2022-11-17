@@ -1,6 +1,6 @@
 import * as actions from './actions';
 import { PiralPlugin } from 'piral-core';
-import { PiralAuthApi, UserInfo } from './types';
+import { PiletAuthApi, UserInfo } from './types';
 
 /**
  * Available configuration options for the auth plugin.
@@ -15,7 +15,7 @@ export interface AuthConfig {
 /**
  * Creates new Pilet API extensions for enabling authentication support.
  */
-export function createAuthApi(config: AuthConfig = {}): PiralPlugin<PiralAuthApi> {
+export function createAuthApi(config: AuthConfig = {}): PiralPlugin<PiletAuthApi> {
   const { user } = config;
 
   return (context) => {

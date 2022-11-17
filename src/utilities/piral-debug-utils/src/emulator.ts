@@ -1,21 +1,18 @@
-import { isfunc, PiletRequester, setupPilet } from 'piral-base';
-import { freezeRouteRefresh, DebugRouteSwitch } from './DebugRouteSwitch';
-import { EmulatorConnectorOptions } from './types';
+import { freezeRouteRefresh, useDebugRouteHandling } from './DebugRouteSwitch';
+import type { PiletRequester } from 'piral-base';
+import type { EmulatorConnectorOptions } from './types';
 
-export function withEmulatorPilets(requestPilets: PiletRequester, options: EmulatorConnectorOptions): PiletRequester {
-  const { loadPilet, createApi, injectPilet, integrate, piletApiFallback = '/$pilet-api' } = options;
+export const debugRouteFilter = useDebugRouteHandling;
+
+export function installPiletEmulator(requestPilets: PiletRequester, options: EmulatorConnectorOptions) {
+  const { addPilet, removePilet, integrate, piletApiFallback = '/$pilet-api' } = options;
+
   // check if pilets should be loaded
   const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
   const noPilets: PiletRequester = () => Promise.resolve([]);
   const requester = loadPilets ? requestPilets : noPilets;
 
-  integrate?.({
-    components: {
-      RouteSwitch: DebugRouteSwitch,
-    },
-  });
-
-  return () => {
+  integrate(() => {
     const promise = requester();
 
     // the window['dbg:pilet-api'] should point to an API address used as a proxy, fall back to '/$pilet-api' if unavailable
@@ -48,35 +45,24 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
         // some bundlers may have fired before writing to the disk
         // so we give them a bit of time before actually loading the pilet
         timeoutCache[name] = setTimeout(() => {
-          const clearConsole = sessionStorage.getItem('dbg:clear-console') === 'on';
           // we should make sure to only refresh the page / router if pilets have been loaded
           const unfreeze = freezeRouteRefresh();
 
           // tear down pilet
-          injectPilet({ name } as any);
+          removePilet(meta.name)
+            .then(() => {
+              const clearConsole = sessionStorage.getItem('dbg:clear-console') === 'on';
 
-          if (clearConsole) {
-            console.clear();
-          }
-
-          console.log('Updating pilet %c%s ...', 'color: green; background: white; font-weight: bold', name);
-
-          // load and evaluate pilet
-          loadPilet(meta).then((pilet) => {
-            try {
-              if (isfunc(injectPilet)) {
-                injectPilet(pilet);
+              if (clearConsole) {
+                console.clear();
               }
 
-              // setup actual pilet
-              setupPilet(pilet, createApi);
-
-              // disable route cache, should be zero again and lead to route refresh
-              unfreeze();
-            } catch (error) {
-              console.error(error);
-            }
-          });
+              console.log('Updating pilet %c%s ...', 'color: green; background: white; font-weight: bold', name);
+            })
+            // load and evaluate pilet
+            .then(() => addPilet(meta))
+            // then disable route cache, should be zero again and lead to route refresh
+            .then(unfreeze, unfreeze);
         }, timeout);
       } else {
         location.reload();
@@ -95,5 +81,5 @@ export function withEmulatorPilets(requestPilets: PiletRequester, options: Emula
           return [...feedPilets, ...debugPilets];
         }),
       );
-  };
+  });
 }

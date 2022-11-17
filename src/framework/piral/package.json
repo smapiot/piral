@@ -10,6 +10,9 @@
     "portal",
     "spa"
   ],
+  "importmap": {
+    "imports": {}
+  },
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
@@ -29,6 +32,10 @@
     },
     "./polyfills": {
       "import": "./polyfills.js"
+    },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
     },
     "./package.json": "./package.json"
   },
@@ -65,23 +72,17 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "core-js": "^3.6.4",
-    "current-script-polyfill": "^1.0.0",
+    "piral-base": "^0.14.32",
     "piral-core": "^0.14.32",
     "piral-ext": "^0.14.32",
-    "promise-polyfill": "^8.1.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "url-polyfill": "^1.1.5",
-    "whatwg-fetch": "^3.0.0"
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@dbeining/react-atom": "^4.0.0",
-    "@types/fluent": "^0.11.0",
-    "@types/history": "^4.7.8",
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6"
   },
@@ -90,10 +91,6 @@
     "react-dom",
     "react-router",
     "react-router-dom",
-    "history",
-    "tslib",
-    "path-to-regexp",
-    "@libre/atom",
-    "@dbeining/react-atom"
+    "tslib"
   ]
 }

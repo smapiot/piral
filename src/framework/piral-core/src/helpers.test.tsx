@@ -1,7 +1,7 @@
+import create from 'zustand';
 import { createPiletOptions, PiletOptionsConfig } from './helpers';
 import { globalDependencies } from './modules';
 import { PiletMetadata } from 'piral-base';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 
 function createMockApi(meta: PiletMetadata) {
   return {
@@ -13,7 +13,7 @@ function createMockApi(meta: PiletMetadata) {
 }
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     registry: {
       pages: {},
       extensions: {},
@@ -22,7 +22,7 @@ function createMockContainer() {
     routes: {},
     components: {},
     modules: [],
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -30,19 +30,20 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       dispatch(cb) {
-        swap(state, cb);
+        state.setState(cb(state.getState()));
       },
       readState(cb) {
-        return cb(deref(state));
+        return cb(state.getState());
       },
       setComponent(name, comp) {
-        swap(state, (s) => ({
+        const s = state.getState();
+        state.setState({
           ...s,
           components: {
             ...s.components,
             [name]: comp,
           },
-        }));
+        });
       },
     } as any,
   };
@@ -85,7 +86,7 @@ describe('Piral-Core helpers module', () => {
     const options = createPiletOptions(optionsConfig);
 
     // Assert
-    expect(options.pilets.length).toEqual(providedPilets.length);
+    expect(options.pilets?.length).toEqual(providedPilets.length);
 
     if (wasUndefined) {
       process.env.DEBUG_PIRAL = undefined;

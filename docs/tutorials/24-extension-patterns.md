@@ -38,7 +38,7 @@ const MachineDataPage = ({ data }) => {
 
 **Note**: In this example we omit definitions of helper components such as `InfoGrid` and `InfoBox` to focus on the extension placement alone.
 
-Let's say we might assume that some other microfrontend might have something to contribute to this *page* (i.e., not the grid itself). We can just place an "info placeholder" extension slot, i.e., a slot that could be used for further information later on.
+Let's say we might assume that some other micro frontend might have something to contribute to this *page* (i.e., not the grid itself). We can just place an "info placeholder" extension slot, i.e., a slot that could be used for further information later on.
 
 ```jsx
 const MachineDataPage = ({ data, piral }) => {
@@ -57,16 +57,16 @@ const MachineDataPage = ({ data, piral }) => {
 };
 ```
 
-Now microfrontends can come up with some more things to display on the machine data page.
+Now micro frontends can come up with some more things to display on the machine data page.
 
 ## Actions Placeholder
 
-A good way to leverage extensions is to use them as doors for pages or functionality coming from other microfrontends. Let's say we have two microfrontends:
+A good way to leverage extensions is to use them as doors for pages or functionality coming from other micro frontends. Let's say we have two micro frontends:
 
 - machine overview (A)
 - edit machine data (B)
 
-Classically, you might think that microfrontend A should have a page like this:
+Classically, you might think that micro frontend A should have a page like this:
 
 ```jsx
 const MachineOverviewPage = ({ data }) => {
@@ -89,7 +89,7 @@ const MachineOverviewPage = ({ data }) => {
 };
 ```
 
-On this page the microfrontend lists the machines and their available actions (in this case in form of links). However, if some links (such as the one to edit a machine, see `/machine/${machine.id}/edit`) come from pages registered in another microfrontend we have a problem: How can we be sure that this is the right link and that this link remains correct?
+On this page the micro frontend lists the machines and their available actions (in this case in form of links). However, if some links (such as the one to edit a machine, see `/machine/${machine.id}/edit`) come from pages registered in another micro frontend we have a problem: How can we be sure that this is the right link and that this link remains correct?
 
 To solve this you could
 
@@ -121,7 +121,7 @@ const MachineOverviewPage = ({ data, piral }) => {
 };
 ```
 
-where microfrontend B registers an extension like:
+where micro frontend B registers an extension like:
 
 ```jsx
 api.registerExtension("machine-actions", ({ params }) => {
@@ -136,7 +136,7 @@ api.registerExtension("machine-actions", ({ params }) => {
 });
 ```
 
-Now the microfrontend owning the route also owns the visible link to the route. This is wonderful, as no other microfrontend needs to care about how the route looks like, if it exists, or how to trigger it. It could be easily replaced by microfrontend B with a button that triggers some dialog or anything else. No changes on microfrontend A are necessary.
+Now the micro frontend owning the route also owns the visible link to the route. This is wonderful, as no other micro frontend needs to care about how the route looks like, if it exists, or how to trigger it. It could be easily replaced by micro frontend B with a button that triggers some dialog or anything else. No changes on micro frontend A are necessary.
 
 ## Catalogue Overview
 
@@ -244,9 +244,9 @@ The dynamic selection pattern and the catalogue pattern can also be expanded wit
 
 So far we've seen that an extension slot can (and should) provide data that is useful to be shown in the current position. For instance, on a machine details page the data available for the machine would be passed into the extension slot - just to give all registered extension components *as much information* as we can.
 
-But what happens in the other way round? Let's say we have another microfrontend that is located somewhere else (e.g., billing information) and suddenly wants to show data from the machine overview? Implementing the call to the machine overview API would violate the determined domain boundaries. Potentially, the data has also already been retrieved from the microfrontend that deals with machines.
+But what happens in the other way round? Let's say we have another micro frontend that is located somewhere else (e.g., billing information) and suddenly wants to show data from the machine overview? Implementing the call to the machine overview API would violate the determined domain boundaries. Potentially, the data has also already been retrieved from the micro frontend that deals with machines.
 
-To deal with that we can register an extension component in the machine microfrontend:
+To deal with that we can register an extension component in the machine micro frontend:
 
 ```jsx
 api.registerExtension('use-machine-overview', ({ params }) => {

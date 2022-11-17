@@ -1,6 +1,6 @@
 import { log } from './log';
-import { open } from '../external';
 import { config } from './config';
+import { open } from '../external';
 
 export async function openBrowserAt(address: string) {
   try {

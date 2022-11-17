@@ -5,7 +5,7 @@ import { createExtension } from './extension';
 export interface NgjsConverterOptions {
   /**
    * Defines the name of the root element.
-   * @default slot
+   * @default piral-slot
    */
   rootName?: string;
 }
@@ -15,7 +15,7 @@ interface NgjsState {
 }
 
 export function createConverter(config: NgjsConverterOptions = {}) {
-  const { rootName = 'slot' } = config;
+  const { rootName = 'piral-slot' } = config;
   const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(name: string, root: IModule): ForeignComponent<TProps> => ({
     mount(el, props, ctx, locals: NgjsState) {

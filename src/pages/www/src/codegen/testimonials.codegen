@@ -26,5 +26,5 @@ module.exports = function() {
     sxMatch = sx.exec(content);
   }
 
-  return `module.exports = ${JSON.stringify(items)}`;
+  return `export default ${JSON.stringify(items)}`;
 };

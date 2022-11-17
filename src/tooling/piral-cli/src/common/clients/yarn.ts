@@ -7,7 +7,7 @@ import { MemoryStream } from '../MemoryStream';
 // Helpers:
 
 function runYarnProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
-  log('generalDebug_0003', 'Starting the Yarn@1 process ...');
+  log('generalDebug_0003', 'Starting the Yarn Classic process ...');
   const cwd = resolve(process.cwd(), target);
   return runCommand('yarn', args, cwd, output);
 }
@@ -33,19 +33,19 @@ function convert(flags: Array<string>) {
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runYarnProcess(['install', ...convert(flags)], target, ms);
-  log('generalDebug_0003', `Yarn@1 install dependencies result: ${ms.value}`);
+  log('generalDebug_0003', `Yarn Classic install dependencies result: ${ms.value}`);
   return ms.value;
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runYarnProcess(['add', packageRef, ...convert(flags)], target, ms);
-  log('generalDebug_0003', `Yarn@1 install package result: ${ms.value}`);
+  log('generalDebug_0003', `Yarn Classic install package result: ${ms.value}`);
   return ms.value;
 }
 
-export async function detectClient(root: string) {
-  return !!(await findFile(root, 'yarn.lock'));
+export async function detectClient(root: string, stopDir = resolve(root, '/')) {
+  return !!(await findFile(root, 'yarn.lock', stopDir));
 }
 
 export async function initProject(projectName: string, target: string) {}

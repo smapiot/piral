@@ -30,13 +30,18 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
     "esm",
     "lib",
-    "src"
+    "src",
+    "piral-forms.min.js"
   ],
   "repository": {
     "type": "git",
@@ -46,16 +51,25 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "cleanup": "rimraf esm lib piral-forms.min.js",
+    "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-forms.min.js --bundle --external:piral-core --external:react --external:react-router-dom --minify --global-name=piralForms",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-forms.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.14.32"
+    "@types/history": "^4.7.8",
+    "@types/react": "^18.0.0",
+    "@types/react-router-dom": "^5.1.6",
+    "piral-core": "^0.14.32",
+    "react": "^18.0.0",
+    "react-router-dom": "^5.2.0"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x"
+    "piral-core": "0.14.x || 0.15.x",
+    "react": ">=16.8.0",
+    "react-router-dom": "5.x"
   }
 }

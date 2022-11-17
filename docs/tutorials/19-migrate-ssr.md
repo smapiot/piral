@@ -8,7 +8,7 @@ section: Details
 
 # Migration of SSR Applications
 
-Many applications have been already written and do not play well with the concept of microfrontends out of the box. Luckily, different migration options exist. While SPAs are quite straightforward to migrate, classical multiple page applications can be a challenge.
+Many applications have been already written and do not play well with the concept of micro frontends out of the box. Luckily, different migration options exist. While SPAs are quite straightforward to migrate, classical multiple page applications can be a challenge.
 
 In this tutorial, we'll cover some of these options and show their required effort, as well as where they excel and what they don't cover.
 

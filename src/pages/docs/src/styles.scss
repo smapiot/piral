@@ -1,5 +1,10 @@
 @import '../../../../node_modules/@pidoc/core/src/styles/variables';
 
+
+.image-card {
+  flex: 0 0 194px !important;
+}
+
 body.dark {
   h2.plugin {
     color: $docs-color-text-dark;

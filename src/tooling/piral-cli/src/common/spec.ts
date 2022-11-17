@@ -47,6 +47,7 @@ export function getPiletSpecMeta(target: string, basePath: string) {
         dependencies: getDependencies(plainDependencies, basePath),
       };
     } else {
+      // uses no arguments
       return {
         spec: 'v0',
         hash: computeHash(content),

@@ -1,13 +1,23 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { RouteComponentProps } from 'react-router';
-import type { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet } from 'piral-base';
+import type {
+  PiletApi,
+  Pilet,
+  PiletEntry,
+  PiletEntries,
+  PiletMetadata,
+  EventEmitter,
+  PiletLoader,
+  PiletLoadingStrategy,
+} from 'piral-base';
+import type {} from 'piral-debug-utils';
 import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
 import type { AnyComponent } from './components';
 import type { ExtensionParams, ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
 import type { Disposable } from './utils';
 
-export { PiletApi, Pilet, PiletMetadata, EventEmitter, SinglePilet, MultiPilet };
+export { PiletApi, Pilet, PiletMetadata, EventEmitter, PiletEntry, PiletEntries, PiletLoader, PiletLoadingStrategy };
 
 /**
  * The props that every registered component obtains.
@@ -42,6 +52,11 @@ export interface ExtensionComponentProps<T> extends BaseComponentProps {
    */
   children?: ReactNode;
 }
+
+/**
+ * The meta data registered for a page.
+ */
+export interface PiralPageMeta extends PiralCustomPageMeta {}
 
 /**
  * The props that every registered page component obtains.
@@ -148,7 +163,7 @@ export interface PiletCoreApi {
   renderHtmlExtension<TName>(element: HTMLElement | ShadowRoot, props: ExtensionSlotProps<TName>): Disposable;
 }
 
-declare module 'piral-base/lib/types' {
+declare module 'piral-base/lib/types/runtime' {
   interface PiletApi extends PiletCustomApi, PiletCoreApi {}
 }
 

@@ -24,20 +24,25 @@ Let's recap how the layout was done in the scaffolding process:
 
 ```jsx
 import * as React from 'react';
-import { renderInstance } from 'piral';
+import { render } from 'react-dom';
+import { createInstance, Piral } from 'piral';
 
-renderInstance({
-  layout: {
-    ErrorInfo: ({ type }) => (
-      <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
-    ),
-    DashboardContainer: MyDashboardContainer,
-    DashboardTile: MyDashboardTile,
+const instance = createInstance({
+  state: {
+    components: {
+      ErrorInfo: ({ type }) => (
+        <span style={{ color: 'red', fontWeight: 'bold' }}>Error: {type}</span>
+      ),
+      DashboardContainer: MyDashboardContainer,
+      DashboardTile: MyDashboardTile,
+    },
   },
 });
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
 ```
 
-We use a single property called `layout`, which expects an object with components that are used to represent various building blocks.
+We initialize the application's state to a set of `components` defining which components that are used to represent various building blocks.
 
 The components allow us to define the different parts of the application for visualization. For a dashboard, we have a container (exposing the potential grid or any other means of exposing the different tiles) and its tiles. If no special styling or definition should be considered the part does not need to be defined.
 

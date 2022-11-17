@@ -1,12 +1,21 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
-import { toExtension } from './extension';
+import { render } from '@testing-library/react';
+import { reactifyContent, toExtension } from './extension';
 
 describe('Util Extension.', () => {
   it('Convert some component to an extension component.', () => {
-    const Component = (props) => <b>{props.title}</b>;
+    const Component = ({ title }) => <b>{title}</b>;
+    const piral: any = {};
     const Extension = toExtension(Component);
-    const node = mount(<Extension piral={undefined} params={{ title: 'Foo' }} />);
-    expect(node.find('b').length).toBe(1);
+    const node = render(<Extension piral={piral} params={{ title: 'Foo' }} />);
+    expect(node.container.querySelectorAll('b').length).toBe(1);
+  });
+
+  it('reactifyContent.', async () => {
+    const container = document.body.appendChild(document.createElement('div'));
+    container.innerHTML = `<div>FOO<</div>`;
+    const result = reactifyContent(container.childNodes) as React.ReactElement;
+    const node = render(result);
+    expect(node.container.querySelectorAll('piral-slot').length).toBe(1);
   });
 });

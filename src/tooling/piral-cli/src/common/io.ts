@@ -1,11 +1,11 @@
 import * as rimraf from 'rimraf';
 import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
-import { join, resolve, basename, dirname, extname, isAbsolute, sep } from 'path';
-import { exists, mkdir, lstat, unlink, mkdirSync, statSync } from 'fs';
-import { writeFile, readFile, readdir, copyFile, constants } from 'fs';
+import { join, resolve, basename, dirname, extname } from 'path';
+import { exists, lstat, unlink, statSync } from 'fs';
+import { mkdtemp, mkdir, constants } from 'fs';
+import { writeFile, readFile, readdir, copyFile } from 'fs';
 import { log } from './log';
 import { deepMerge } from './merge';
-import { nodeVersion } from './info';
 import { computeHash } from './hash';
 import { ForceOverwrite } from './enums';
 import { promptConfirm } from './interactive';
@@ -16,41 +16,29 @@ function promptOverwrite(file: string) {
   return promptConfirm(message, false);
 }
 
-function createDirectoryLegacy(targetDir: string) {
-  const initDir = isAbsolute(targetDir) ? sep : '';
-
-  return targetDir.split(sep).reduce((parentDir, childDir) => {
-    const curDir = resolve(parentDir, childDir);
-
-    try {
-      mkdirSync(curDir);
-    } catch (err) {
-      if (err.code === 'EEXIST') {
-        return curDir;
-      }
-
-      if (err.code === 'ENOENT') {
-        throw new Error(`EACCES: permission denied, mkdir '${parentDir}'`);
-      }
-
-      const caughtErr = ['EACCES', 'EPERM', 'EISDIR'].indexOf(err.code) > -1;
-
-      if (!caughtErr || (caughtErr && curDir === resolve(targetDir))) {
-        throw err;
-      }
-    }
-
-    return curDir;
-  }, initDir);
-}
-
 function isFile(file: string) {
   return statSync(file).isFile();
 }
 
-function isLegacy() {
-  const parts = nodeVersion.split('.');
-  return +parts[0] < 10 || (+parts[0] === 10 && +parts[1] < 12);
+export interface Destination {
+  outDir: string;
+  outFile: string;
+}
+
+export function getDestination(entryFiles: string, target: string): Destination {
+  const isdir = extname(target) !== '.html';
+
+  if (isdir) {
+    return {
+      outDir: target,
+      outFile: basename(entryFiles),
+    };
+  } else {
+    return {
+      outDir: dirname(target),
+      outFile: basename(target),
+    };
+  }
 }
 
 export async function removeAny(target: string) {
@@ -69,20 +57,8 @@ export function removeDirectory(targetDir: string) {
 }
 
 export async function createDirectory(targetDir: string) {
-  if (isLegacy()) {
-    try {
-      log('generalDebug_0003', `Trying to create "${targetDir}" in legacy mode ...`);
-      createDirectoryLegacy(targetDir);
-      return true;
-    } catch (e) {
-      log('cannotCreateDirectory_0044');
-      log('generalDebug_0003', `Error while creating ${targetDir}: ${e}`);
-      return false;
-    }
-  }
-
   try {
-    log('generalDebug_0003', `Trying to create "${targetDir}" in modern mode ...`);
+    log('generalDebug_0003', `Trying to create "${targetDir}" ...`);
     await new Promise<void>((resolve, reject) => {
       mkdir(targetDir, { recursive: true }, (err) => (err ? reject(err) : resolve()));
     });
@@ -112,6 +88,18 @@ export async function getEntryFiles(content: string, basePath: string) {
   }
 
   return results;
+}
+
+export function makeTempDir(prefix: string) {
+  return new Promise<string>((resolve, reject) =>
+    mkdtemp(prefix, (err, folder) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(folder);
+      }
+    }),
+  );
 }
 
 export function checkExists(target: string) {
@@ -153,21 +141,28 @@ export function getFileNames(target: string) {
   });
 }
 
-export async function findFile(topDir: string, fileName: string): Promise<string> {
-  const path = join(topDir, fileName);
-  const exists = await checkExists(path);
+export async function findFile(
+  topDir: string,
+  fileName: string | Array<string>,
+  stopDir = resolve(topDir, '/'),
+): Promise<string> {
+  const fileNames = Array.isArray(fileName) ? fileName : [fileName];
 
-  if (!exists) {
-    const parentDir = resolve(topDir, '..');
+  for (const fn of fileNames) {
+    const path = join(topDir, fn);
+    const exists = await checkExists(path);
 
-    if (parentDir !== topDir) {
-      return await findFile(parentDir, fileName);
+    if (exists) {
+      return path;
     }
-
-    return undefined;
   }
 
-  return path;
+  if (topDir !== stopDir) {
+    const parentDir = resolve(topDir, '..');
+    return await findFile(parentDir, fileNames, stopDir);
+  }
+
+  return undefined;
 }
 
 interface AnyPattern {
@@ -371,12 +366,21 @@ export async function mergeWithJson<T>(targetDir: string, fileName: string, newC
   return deepMerge(originalContent, newContent);
 }
 
-export async function readJson<T = any>(targetDir: string, fileName: string) {
+export async function readJson<T = any>(targetDir: string, fileName: string, defaultValue = {}) {
   const targetFile = join(targetDir, fileName);
   const content = await new Promise<string>((resolve) => {
     readFile(targetFile, 'utf8', (err, c) => (err ? resolve('') : resolve(c)));
   });
-  return JSON.parse(content || '{}') as T;
+
+  if (content) {
+    try {
+      return JSON.parse(content) as T;
+    } catch (ex) {
+      log('generalError_0002', `Invalid JSON found in file "${fileName}" at "${targetDir}".`);
+    }
+  }
+
+  return defaultValue as T;
 }
 
 export function readBinary(targetDir: string, fileName: string) {

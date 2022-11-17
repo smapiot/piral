@@ -8,7 +8,79 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 ## Why and When
 
-tbd
+Sometimes you have some pages that are radically different than the usual pages / layout. For instance, while most pages in a single application should be shown with a header, footer, and navigation, a login page is usually shown without these elements (or with just some of them, e.g., the footer).
+
+Of course, you could leave this layout to the page itself, e.g., that
+
+```jsx
+const PageA = () => (
+  <>
+    <Header />
+    <Navigation />
+    <ActualContentOfPageA />
+    <Footer />
+  </>
+);
+```
+
+while another page is
+
+```jsx
+const PageB = () => (
+  <>
+    <ActualContentOfPageB />
+    <Footer />
+  </>
+);
+```
+
+however, this is rather cumbersome and inconvient to write. If the `Footer` (or other used elements) are not globally available it may be even impossible for a page to use these artifacts. Surely, you could use an extension to transport these, but then again it would remain rather cumbersome and inconvenient to write.
+
+A nice way out is to use this plugin, which enables the use of distributed, reusable layouts. It allows you to register a page together with its layout.
+
+Beforehand you'd have:
+
+```js
+const PageA = () => (
+  <>
+    <Header />
+    <Navigation />
+    <ActualContentOfPageA />
+    <Footer />
+  </>
+);
+
+export function setup(app) {
+  app.registerPage('/page-a', PageA);
+}
+```
+
+Now you can write:
+
+```js
+export function setup(app) {
+  app.registerPage('/page-a', ActualContentOfPageA, {
+    layout: 'standard',
+  });
+}
+```
+
+So if the `standard` layout has been registered like so:
+
+```js
+export function setup(app) {
+  app.registerPageLayout('standard', ({ children }) => (
+  <>
+    <Header />
+    <Navigation />
+    {children}
+    <Footer />
+  </>
+));
+}
+```
+
+Then it would just work. Otherwise, it will always fall back to the `default` layout, which is also the default choice for the `layout` key in the provided metadata of `registerPage`.
 
 ## Documentation
 

@@ -13,7 +13,7 @@ export interface HtmlComponent<TProps> {
 
 const convert = createConverter(true);
 const loader = createDependencyLoader(convert);
-let blazorOptions: BlazorOptions = undefined;
+let blazorOptions: BlazorOptions | undefined = undefined;
 
 export interface BlazorConverter {
   (moduleName: string, args?: Record<string, any>): HtmlComponent<any>;
@@ -23,7 +23,7 @@ export function defineBlazorOptions(options: BlazorOptions) {
   blazorOptions = options;
 }
 
-export const fromBlazor: BlazorConverter = (moduleName, args) => ({
+export const fromBlazor: BlazorConverter = (moduleName, args = {}) => ({
   type: 'html',
   component: convert(moduleName, loader.getDependency(), args, blazorOptions),
 });

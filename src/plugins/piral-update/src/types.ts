@@ -1,5 +1,5 @@
-import type { Dict, GlobalStateContext, PiletMetadata } from 'piral-core';
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
+import type { Dict, GlobalStateContext, PiletEntries } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletUpdateApi {}
@@ -20,7 +20,7 @@ declare module 'piral-core/lib/types/custom' {
 
     approveUpdate(): void;
 
-    checkForUpdates(pilets: Array<PiletMetadata>): void;
+    checkForUpdates(pilets: PiletEntries): void;
 
     setUpdateMode(piletName: string, mode: PiletUpdateMode): void;
   }
@@ -40,17 +40,18 @@ export interface UpdateModeRegistration {
 export interface UpdatabilityState {
   active: boolean;
   lastHash: string;
-  target: Array<PiletMetadata>;
+  target: PiletEntries;
 }
 
 export interface ListenCallback {
-  (notify: (pilets: Array<PiletMetadata>) => void, context: GlobalStateContext): void;
+  (notify: (pilets: PiletEntries) => void, context: GlobalStateContext): void;
 }
 
 export interface UpdateDialogProps {
-  piletsToUpdate: Array<PiletMetadata>;
+  piletsToUpdate: PiletEntries;
   onApprove(): void;
   onReject(): void;
+  children?: ReactNode;
 }
 
 export type PiletUpdateMode = 'allow' | 'block' | 'ask';

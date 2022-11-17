@@ -7,6 +7,7 @@ import { legacyCoreExternals, frameworkLibs, defaultRegistry } from './constants
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
+import { getModulePath } from '../external';
 import { PackageType, NpmClientType } from '../types';
 
 const gitPrefix = 'git+';
@@ -43,6 +44,10 @@ async function detectMonorepoRoot(root: string): Promise<[] | [string, NpmClient
     const packageJson = await readJson(root, 'package.json');
 
     if (Array.isArray(packageJson?.workspaces)) {
+      if (await checkExists(resolve(root, '.pnp.cjs'))) {
+        return [root, 'pnp'];
+      }
+
       if (await checkExists(resolve(root, 'yarn.lock'))) {
         return [root, 'yarn'];
       }
@@ -74,8 +79,6 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
       `Results of the lock file check: ${searchedClients.map((m) => `${m.client}=${m.result}`).join(', ')}`,
     );
 
-    const defaultClient = config.npmClient;
-
     if (foundClients.length > 1) {
       const wrapperClient = foundClients.find((m) => isWrapperClient(m.client));
 
@@ -97,12 +100,14 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
       return client;
     }
 
+    const defaultClient = config.npmClient;
+
     if (clientTypeKeys.includes(defaultClient)) {
       log('generalDebug_0003', `Using the default client: "${defaultClient}".`);
       return defaultClient;
     }
 
-    log('generalDebug_0003', 'Using the default "npm" client.');
+    log('generalDebug_0003', 'Using the fallback "npm" client.');
     return 'npm';
   }
 
@@ -171,7 +176,7 @@ export function publishNpmPackage(
   interactive = false,
 ): Promise<string> {
   const { publishPackage, loginUser } = clients.npm;
-  return publishPackage(target, file, ...flags).catch((err) => {
+  return publishPackage(target, file, ...flags).catch(err => {
     if (!interactive) {
       throw err;
     }
@@ -346,12 +351,35 @@ export async function getCurrentPackageDetails(
   return [combinePackageRef(sourceName, desired, 'registry'), desired];
 }
 
+function tryResolve(packageName: string, baseDir = process.cwd()) {
+  try {
+    return getModulePath(baseDir, packageName);
+  } catch {
+    return undefined;
+  }
+}
+
+export function tryResolvePackage(name: string, baseDir: string = undefined) {
+  const path = baseDir ? tryResolve(name, baseDir) : tryResolve(name);
+  const root = baseDir || process.cwd();
+
+  if (!path) {
+    log('generalDebug_0003', `Could not resolve the package "${name}" in "${root}".`);
+  } else {
+    log('generalVerbose_0004', `Resolved the package "${name}" (from "${root}") to be "${path}".`);
+  }
+
+  return path;
+}
+
+export function findPackageRoot(pck: string, baseDir: string = undefined) {
+  return tryResolvePackage(`${pck}/package.json`, baseDir);
+}
+
 export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean) {
   if (type === 'registry' && !hadVersion) {
-    try {
-      require.resolve(`${name}/package.json`);
-      return true;
-    } catch {}
+    const root = findPackageRoot(name);
+    return typeof root === 'string';
   }
 
   return false;
@@ -416,9 +444,7 @@ export function getPackageVersion(
 
 function getExternalsFrom(root: string, packageName: string): Array<string> | undefined {
   try {
-    const target = require.resolve(`${packageName}/package.json`, {
-      paths: [root],
-    });
+    const target = getModulePath(root, `${packageName}/package.json`);
     return require(target).sharedDependencies;
   } catch (err) {
     log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);
@@ -444,15 +470,14 @@ function getCoreExternals(root: string, dependencies: Record<string, string>): A
 export function makePiletExternals(
   root: string,
   dependencies: Record<string, string>,
-  externals: Array<string>,
   fromEmulator: boolean,
   piralInfo: any,
 ): Array<string> {
   if (fromEmulator) {
-    const { sharedDependencies = mergeExternals(externals, legacyCoreExternals) } = piralInfo;
+    const { sharedDependencies = legacyCoreExternals } = piralInfo;
     return sharedDependencies;
   } else {
-    return makeExternals(root, dependencies, externals);
+    return getCoreExternals(root, dependencies);
   }
 }
 
@@ -479,7 +504,7 @@ export function mergeExternals(customExternals?: Array<string>, coreExternals: A
   return coreExternals;
 }
 
-export function makeExternals(root: string, dependencies: Record<string, string>, externals?: Array<string>) {
+export function makeExternals(root: string, dependencies: Record<string, string>, externals: Array<string>) {
   const coreExternals = getCoreExternals(root, dependencies);
   return mergeExternals(externals, coreExternals);
 }

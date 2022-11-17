@@ -95,6 +95,10 @@ export interface OidcConfig {
    * Overrides the default metadata URL if the server does not follow the standard paths.
    */
   metadataUrl?: string;
+  /**
+   * Determines if the OIDCS session should be automatically monitored.
+   */
+  monitorSession?: boolean;
 }
 
 /**
@@ -199,7 +203,7 @@ export interface OidcClient {
   extendHeaders(req: OidcRequest): void;
 }
 
-export interface PiralOidcApi {
+export interface PiletOidcApi {
   /**
    * Gets the currently valid access token, if any.
    */
@@ -212,7 +216,7 @@ export interface PiralOidcApi {
 }
 
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralOidcApi {}
+  interface PiletCustomApi extends PiletOidcApi {}
 }
 
 /**

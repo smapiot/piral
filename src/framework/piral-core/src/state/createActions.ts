@@ -1,14 +1,16 @@
 import * as actions from '../actions';
-import { Atom } from '@dbeining/react-atom';
+import { UseBoundStore } from 'zustand';
+import { createNavigation } from '../../app.codegen';
 import { EventEmitter, GlobalState, GlobalStateContext, PiralDefineActions } from '../types';
 
-function createContext(state: Atom<GlobalState>, events: EventEmitter) {
+function createContext(state: UseBoundStore<GlobalState>, events: EventEmitter) {
   const ctx = {
     ...events,
     apis: {},
     converters: {
       html: ({ component }) => component,
     },
+    navigation: createNavigation(),
     state,
   } as GlobalStateContext;
   return ctx;
@@ -23,7 +25,7 @@ export function includeActions(ctx: GlobalStateContext, actions: PiralDefineActi
   }
 }
 
-export function createActions(state: Atom<GlobalState>, events: EventEmitter): GlobalStateContext {
+export function createActions(state: UseBoundStore<GlobalState>, events: EventEmitter): GlobalStateContext {
   const context = createContext(state, events);
   includeActions(context, actions);
   return context;

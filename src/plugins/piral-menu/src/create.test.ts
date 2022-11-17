@@ -1,4 +1,4 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createElement, FC } from 'react';
 import { createMenuApi } from './create';
 
@@ -6,11 +6,11 @@ const StubComponent: FC = (props) => createElement('div', props);
 StubComponent.displayName = 'StubComponent';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     registry: {
       extensions: {},
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -23,7 +23,7 @@ function createMockContainer() {
       },
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,

@@ -1,5 +1,5 @@
 import { createOidcApi } from './create';
-import { PiralOidcApi } from './types';
+import { PiletOidcApi } from './types';
 
 declare module 'piral-oidc/src/types' {
   interface PiralCustomOidcProfile {
@@ -33,7 +33,7 @@ describe('Piral-Oidc create module', () => {
   });
 
   it('api.getAccessToken() should return the client.token()', () => {
-    const api = createOidcApi(mock)(context) as PiralOidcApi;
+    const api = createOidcApi(mock)(context) as PiletOidcApi;
     expect(api.getAccessToken()).toBe(mockToken);
   });
 
@@ -42,7 +42,7 @@ describe('Piral-Oidc create module', () => {
   });
 
   it('api.getProfile() should return client.account()', async () => {
-    const api = createOidcApi(mock)(context) as PiralOidcApi;
+    const api = createOidcApi(mock)(context) as PiletOidcApi;
     const profile = await api.getProfile();
     expect(profile).toEqual(mockProfile);
     // This is asserting the custom claims works, otherwise we would get a type error

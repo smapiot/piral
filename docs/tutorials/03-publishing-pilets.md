@@ -14,7 +14,7 @@ A working Piral system requires the following components:
 2. A backend/service delivering the pilets (referred to as "Feed Service")
 3. A way to publish/integrate the created pilets, such that they can be delivered by the feed service
 
-In terms of microfrontends, that's as minimal as it can be. Most solutions require special servers or modifications to infrastructure.
+In terms of micro frontends, that's as minimal as it can be. Most solutions require special servers or modifications to infrastructure.
 
 We designed Piral to be as simple as possible while remaining as flexible and powerful as possible. The SPA-first approach removes any need for a server. With Piral you can go serverless if you want to.
 

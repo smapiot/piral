@@ -60,13 +60,17 @@ const defaultIndexHtml = `
 `;
 
 const defaultIndexTsx = `
-  import { renderInstance } from 'piral';
+  import * as React from 'react';
+  import { render } from 'react-dom';
+  import { createInstance, Piral } from 'piral';
 
-  renderInstance({
+  const instance = createInstance({
     requestPilets() {
       return Promise.resolve([]);
     },
   });
+
+  render(<Piral instance={instance} />, document.querySelector('#app'));
 `;
 
 const tsConfigJson = `
@@ -117,8 +121,8 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
 describe('Build Piral Command', () => {
   beforeEach(() => {
     setBundler({
-      name: 'parcel',
-      actions: require(resolve(__dirname, '../../../piral-cli-parcel/lib/actions')),
+      name: 'webpack5',
+      actions: require(resolve(__dirname, '../../../piral-cli-webpack5/lib/actions')),
     });
   });
 

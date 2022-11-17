@@ -1,10 +1,11 @@
-import { includeDependency, includeBundle } from './dependency';
-import { loadUmdPilet } from './umd';
-import { loadLegacyPilet } from './legacy';
-import { loadSystemPilet } from './system';
-import type { Pilet, PiletMetadata, DefaultLoaderConfig, PiletLoader, CustomSpecLoaders } from './types';
-
-const inBrowser = typeof document !== 'undefined';
+import loadBundle from './loaders/bundle';
+import loadEmpty from './loaders/empty';
+import loadV0 from './loaders/v0';
+import loadV1 from './loaders/v1';
+import loadV2 from './loaders/v2';
+import { isfunc } from './utils';
+import { inspectPilet } from './inspect';
+import type { DefaultLoaderConfig, PiletLoader, CustomSpecLoaders } from './types';
 
 /**
  * Extends the default loader with the spec loaders, if any are given.
@@ -18,7 +19,7 @@ export function extendLoader(fallback: PiletLoader, specLoaders: CustomSpecLoade
       if (typeof meta.spec === 'string') {
         const loaderOverride = specLoaders[meta.spec];
 
-        if (typeof loaderOverride === 'function') {
+        if (isfunc(loaderOverride)) {
           return loaderOverride(meta);
         }
       }
@@ -33,18 +34,23 @@ export function extendLoader(fallback: PiletLoader, specLoaders: CustomSpecLoade
 /**
  * Gets the default loader provided by piral-base.
  * @param config The loader configuration.
- * @returns The function to load a pilet from metadata.
+ * @returns The function to load a pilet from its entry.
  */
-export function getDefaultLoader(config: DefaultLoaderConfig = {}) {
-  return (meta: PiletMetadata): Promise<Pilet> => {
-    if (inBrowser && 'link' in meta && meta.spec === 'v2') {
-      return loadSystemPilet(meta);
-    } else if (inBrowser && 'requireRef' in meta && meta.spec !== 'v2') {
-      return loadUmdPilet(meta, config, includeDependency);
-    } else if (inBrowser && 'bundle' in meta && meta.bundle) {
-      return loadUmdPilet(meta, config, includeBundle);
-    } else {
-      return loadLegacyPilet(meta);
+export function getDefaultLoader(config: DefaultLoaderConfig = {}): PiletLoader {
+  return (result) => {
+    const r = inspectPilet(result);
+
+    switch (r[0]) {
+      case 'v2':
+        return loadV2(r[1], config);
+      case 'v1':
+        return loadV1(r[1], config);
+      case 'v0':
+        return loadV0(r[1], config);
+      case 'bundle':
+        return loadBundle(r[1], config);
+      default:
+        return loadEmpty(r[1], config);
     }
   };
 }

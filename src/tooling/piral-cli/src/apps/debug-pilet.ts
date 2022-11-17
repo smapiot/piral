@@ -1,7 +1,7 @@
 import { join, dirname, resolve, relative, basename } from 'path';
-import { readKrasConfig, krasrc, buildKrasWithCli, defaultConfig } from 'kras';
+import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
 import { callDebugPiralFromMonoRepo, callPiletDebug } from '../bundler';
-import { LogLevels, PiletSchemaVersion } from '../types';
+import { AppDefinition, LogLevels, PiletSchemaVersion } from '../types';
 import {
   checkExistingDirectory,
   retrievePiletData,
@@ -21,6 +21,8 @@ import {
   findFile,
   createInitialKrasConfig,
   getAvailablePort,
+  combinePiletExternals,
+  watcherTask,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -132,45 +134,60 @@ export const debugPiletDefaults: DebugPiletOptions = {
   concurrency: cpuCount,
 };
 
-const injectorName = resolve(__dirname, '../injectors/pilet.js');
-
 interface AppInfo {
-  emulator: boolean;
-  appFile: string;
+  apps: Array<AppDefinition>;
+  root: string;
+  mocks: string;
   publicUrl: string;
-  appVersion: string;
   externals: Array<string>;
-  piral: string;
 }
 
-async function getOrMakeAppDir({ emulator, piral, appFile, publicUrl }: AppInfo, logLevel: LogLevels) {
-  if (!emulator) {
-    const { externals, root, ignored } = await retrievePiletsInfo(appFile);
-    const { dir } = await callDebugPiralFromMonoRepo({
-      root,
-      optimizeModules: false,
-      ignored,
-      externals,
-      piral,
-      entryFiles: appFile,
-      logLevel,
-      _: {},
-    });
-    return dir;
-  }
+function getOrMakeApps({ apps, publicUrl }: AppInfo, logLevel: LogLevels) {
+  return Promise.all(
+    apps.map(async ({ emulator, appFile, appPackage }) => {
+      if (!emulator) {
+        const piralInstances = [appPackage.name];
+        const { externals, root, ignored } = await retrievePiletsInfo(appFile);
+        const { dir } = await callDebugPiralFromMonoRepo({
+          root,
+          optimizeModules: false,
+          publicUrl,
+          ignored,
+          externals: externals.map(m => m.name),
+          piralInstances,
+          entryFiles: appFile,
+          logLevel,
+          _: {},
+        });
+        return dir;
+      }
 
-  return dirname(appFile);
+      return dirname(appFile);
+    }),
+  );
 }
 
 function checkSanity(pilets: Array<AppInfo>) {
   for (let i = 1; i < pilets.length; i++) {
     const previous = pilets[i - 1];
     const current = pilets[i];
+    const previousInstances = previous.apps;
+    const currentInstances = current.apps;
+    const previousInstancesNames = previousInstances
+      .map((m) => m.appPackage.name)
+      .sort()
+      .join(', ');
+    const currentInstancesNames = currentInstances
+      .map((m) => m.appPackage.name)
+      .sort()
+      .join(', ');
+    const previousInstancesVersions = previousInstances.map((m) => m.appPackage.version).join(', ');
+    const currentInstancesVersions = currentInstances.map((m) => m.appPackage.version).join(', ');
 
-    if (previous.piral !== current.piral) {
-      return log('piletMultiDebugAppShellDifferent_0301', previous.piral, current.piral);
-    } else if (previous.appVersion !== current.appVersion) {
-      return log('piletMultiDebugAppShellVersions_0302', previous.appVersion, current.appVersion);
+    if (previousInstancesNames !== currentInstancesNames) {
+      return log('piletMultiDebugAppShellDifferent_0301', previousInstancesNames, currentInstancesNames);
+    } else if (previousInstancesVersions !== currentInstancesVersions) {
+      return log('piletMultiDebugAppShellVersions_0302', previousInstancesVersions, currentInstancesVersions);
     } else if (previous.externals.length !== current.externals.length) {
       return log('piletMultiDebugExternalsDifferent_0303', previous.externals, current.externals);
     } else if (previous.externals.some((m) => !current.externals.includes(m))) {
@@ -200,129 +217,148 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
+  const port = await getAvailablePort(originalPort);
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
-  progress('Reading configuration ...');
-  const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
-  const entryList = Array.isArray(entry) ? entry : [entry];
-  const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
-  log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
 
-  const allEntries = await matchAnyPilet(fullBase, entryList);
-  const maxListeners = Math.max(2 + allEntries.length * 2, 16);
-  log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
-
-  if (allEntries.length === 0) {
-    fail('entryFileMissing_0077');
-  }
-
-  process.stderr.setMaxListeners(maxListeners);
-  process.stdout.setMaxListeners(maxListeners);
-  process.stdin.setMaxListeners(maxListeners);
-
-  const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
-    const targetDir = dirname(entryModule);
-    const { peerDependencies, peerModules, root, appPackage, appFile, ignored, emulator, importmap } =
-      await retrievePiletData(targetDir, app);
-    const externals = [...Object.keys(peerDependencies), ...peerModules];
-    const mocks = join(targetDir, 'mocks');
-    const dest = resolve(root, target);
-    const outDir = dirname(dest);
-    const outFile = basename(dest);
-    const mocksExists = await checkExistingDirectory(mocks);
-
-    await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
-
-    const bundler = await callPiletDebug(
-      {
-        root,
-        piral: appPackage.name,
-        optimizeModules,
-        hmr,
-        externals,
-        targetDir,
-        importmap,
-        outFile,
-        outDir,
-        entryModule: `./${relative(root, entryModule)}`,
-        logLevel,
-        version: schemaVersion,
-        ignored,
-        _,
-      },
-      bundlerName,
+  await watcherTask(async (watcherContext) => {
+    progress('Reading configuration ...');
+    const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
+    const entryList = Array.isArray(entry) ? entry : [entry];
+    const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
+    log(
+      'generalDebug_0003',
+      `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`,
     );
 
-    bundler.on((args) => {
-      hooks.afterBuild?.({ ...args, root, publicUrl, importmap, entryModule, schemaVersion, bundler, outFile, outDir });
+    const allEntries = await matchAnyPilet(fullBase, entryList);
+    const maxListeners = Math.max(2 + allEntries.length * 2, 16);
+    log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
+
+    if (allEntries.length === 0) {
+      fail('entryFileMissing_0077');
+    }
+
+    process.stderr.setMaxListeners(maxListeners);
+    process.stdout.setMaxListeners(maxListeners);
+    process.stdin.setMaxListeners(maxListeners);
+
+    const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
+      const targetDir = dirname(entryModule);
+      const { peerDependencies, peerModules, root, apps, ignored, importmap } = await retrievePiletData(targetDir, app);
+      const piralInstances = apps.map((m) => m.appPackage.name);
+      const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
+      const mocks = join(targetDir, 'mocks');
+      const dest = resolve(root, target);
+      const outDir = dirname(dest);
+      const outFile = basename(dest);
+      const mocksExists = await checkExistingDirectory(mocks);
+
+      await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
+
+      const bundler = await callPiletDebug(
+        {
+          root,
+          piralInstances,
+          optimizeModules,
+          hmr,
+          externals,
+          targetDir,
+          importmap,
+          outFile,
+          outDir,
+          entryModule: `./${relative(root, entryModule)}`,
+          logLevel,
+          version: schemaVersion,
+          ignored,
+          _,
+        },
+        bundlerName,
+      );
+
+      bundler.on((args) => {
+        hooks.afterBuild?.({
+          ...args,
+          root,
+          publicUrl,
+          importmap,
+          entryModule,
+          schemaVersion,
+          bundler,
+          outFile,
+          outDir,
+        });
+      });
+
+      return {
+        apps,
+        publicUrl,
+        externals,
+        bundler,
+        mocks: mocksExists ? mocks : undefined,
+        root,
+      };
     });
 
-    return {
-      emulator,
-      appFile,
-      publicUrl,
-      appVersion: appPackage.version,
-      externals,
-      piral: appPackage.name,
-      bundler,
-      mocks: mocksExists ? mocks : undefined,
-      root,
-    };
+    // sanity check see #250
+    checkSanity(pilets);
+
+    await hooks.beforeApp?.({ appInstanceDir, pilets });
+    const appDirs = appInstanceDir ? [appInstanceDir] : (await getOrMakeApps(pilets[0], logLevel));
+
+    await Promise.all(
+      appDirs.map(async (appDir) => {
+        const appRoot = dirname(await findFile(appDir, 'package.json'));
+        await hooks.afterApp?.({ appInstanceDir, pilets });
+
+        Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
+
+        const sources = pilets.map((m) => m.mocks).filter(Boolean);
+        const baseMocks = resolve(fullBase, 'mocks');
+        const krasBaseConfig = resolve(fullBase, krasrc);
+        const krasRootConfig = resolve(appRoot, krasrc);
+        const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
+        const required = {
+          injectors: {
+            piral: {
+              active: false,
+            },
+            pilet: {
+              active: true,
+              pilets,
+              app: appDir,
+              publicUrl,
+              handle: ['/', api],
+              api,
+            },
+          },
+        };
+        const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
+        const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
+
+        log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
+
+        const krasServer = buildKrasWithCli(krasConfig);
+        krasServer.setMaxListeners(maxListeners);
+        krasServer.removeAllListeners('open');
+        krasServer.on(
+          'open',
+          notifyServerOnline(
+            pilets.map((p) => p.bundler),
+            publicUrl,
+            krasConfig.api,
+          ),
+        );
+
+        await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
+        await krasServer.start();
+        openBrowser(open, port, publicUrl, !!krasConfig.ssl);
+        await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
+        await new Promise((resolve) => krasServer.on('close', resolve));
+      }),
+    );
   });
 
-  // sanity check see #250
-  checkSanity(pilets);
-
-  await hooks.beforeApp?.({ appInstanceDir, pilets });
-  const appDir = appInstanceDir || (await getOrMakeAppDir(pilets[0], logLevel));
-  const appRoot = dirname(await findFile(appDir, 'package.json'));
-  await hooks.afterApp?.({ appInstanceDir, pilets });
-
-  Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
-
-  const sources = pilets.map((m) => m.mocks).filter(Boolean);
-  const baseMocks = resolve(fullBase, 'mocks');
-  const krasBaseConfig = resolve(fullBase, krasrc);
-  const krasRootConfig = resolve(appRoot, krasrc);
-  const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
-  const required = {
-    injectors: {
-      piral: {
-        active: false,
-      },
-      pilet: {
-        active: true,
-        pilets,
-        app: appDir,
-        publicUrl,
-        handle: ['/', api],
-        api,
-      },
-    },
-  };
-  const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
-  const port = await getAvailablePort(originalPort);
-  const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
-
-  log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
-
-  const krasServer = buildKrasWithCli(krasConfig);
-  krasServer.setMaxListeners(maxListeners);
-  krasServer.removeAllListeners('open');
-  krasServer.on(
-    'open',
-    notifyServerOnline(
-      pilets.map((p) => p.bundler),
-      publicUrl,
-      krasConfig.api,
-    ),
-  );
-
-  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
-  await krasServer.start();
-  openBrowser(open, port, publicUrl, !!krasConfig.ssl);
-  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
-  await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});
 }

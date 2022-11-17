@@ -11,6 +11,12 @@
     "native",
     "react"
   ],
+  "importmap": {
+    "imports": {
+      "react-native": "react-native",
+      "react-router-native": "react-router-native"
+    }
+  },
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
@@ -27,6 +33,10 @@
     },
     "./lib/*": {
       "require": "./lib/*"
+    },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
     },
     "./package.json": "./package.json"
   },
@@ -48,6 +58,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib",
     "build": "yarn build:commonjs && yarn build:esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
@@ -55,22 +66,22 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "@types/history": "^4.7.2",
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-router-native": "^5.1.0",
-    "react": "^17.0.1",
-    "react-native": "^0.69.0"
+    "react": "^18.0.0",
+    "react-native": "^0.64.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-native": ">=0.60.0"
   },
   "dependencies": {
+    "piral-base": "^0.14.32",
     "piral-core": "^0.14.32",
-    "react-router-dom": "5.2.0",
-    "react-router-native": "5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-router-native": "^5.2.0"
   },
   "sharedDependencies": [
     "react",
@@ -78,10 +89,6 @@
     "react-router",
     "react-router-dom",
     "react-router-native",
-    "history",
-    "tslib",
-    "path-to-regexp",
-    "@libre/atom",
-    "@dbeining/react-atom"
+    "tslib"
   ]
 }

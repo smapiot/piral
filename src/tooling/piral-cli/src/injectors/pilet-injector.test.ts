@@ -4,10 +4,10 @@ import PiletInjector from './pilet-injector';
 
 const optionsMock = {
   pilets: [],
+  publicUrl: '/',
   api: '',
   app: '',
   active: true,
-  publicUrl: '/',
   meta: '',
   headers: {},
 };
@@ -16,7 +16,7 @@ const configMock: any = {
   port: 1234,
 };
 
-describe('Piral-CLI piral injector', () => {
+describe('Piral-CLI pilet injector', () => {
   it('PiletInjector is active when configured', () => {
     const core = new EventEmitter();
     const injector = new PiletInjector(optionsMock, configMock, core);
@@ -33,7 +33,7 @@ describe('Piral-CLI piral injector', () => {
     injector.name;
     injector.getOptions();
     //injector.getMetaOf(0);
-    injector.getMeta();
+    injector.getIndexMeta('http://localhost:9000');
 
     // Assert
     expect(injector.active).toBeFalsy();
@@ -76,7 +76,7 @@ describe('Piral-CLI piral injector', () => {
     const injector = new PiletInjector(optionsMock, configMock, core);
 
     // Act
-    const res = await injector.sendResponse('some/nice/invalid/path', 'localhost:1234');
+    const res = await injector.sendResponse('some/nice/invalid/path', 'localhost:1234', 'http://localhost:9000');
 
     // Assert
     expect(res).toBeUndefined();

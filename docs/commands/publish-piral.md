@@ -1,4 +1,4 @@
-# `publish-piral`
+# `piral publish`
 
 Publishes Piral instance build artifacts.
 
@@ -7,13 +7,13 @@ Publishes Piral instance build artifacts.
 From the command line:
 
 ```sh
-pb publish-piral [source]
+piral publish [source]
 ```
 
 Alternative:
 
 ```sh
-piral publish [source]
+pb publish-piral [source]
 ```
 
 ## Aliases
@@ -58,16 +58,33 @@ Sets the provider for publishing the release assets.
 
 
 - Type: `string`
-- Choices: `"none"`, `"xcopy"`
+- Choices: `"none"`, `"xcopy"`, `"feed"`
 - Default: `"none"`
 
-### `--fields`
+### `--opts`
 
-Sets additional fields to be included in the feed service request.
+Sets the options to forward to the chosen provider.
 
 
 - Type: `options`
 - Default: `{}`
+
+### `--interactive`
+
+Defines if authorization tokens can be retrieved interactively.
+
+
+- Type: `boolean`
+- Default: `false`
+
+### `--no-interactive`
+
+Opposite of:
+Defines if authorization tokens can be retrieved interactively.
+
+
+- Type: `boolean`
+- Default: `true`
 
 ### `--base`
 

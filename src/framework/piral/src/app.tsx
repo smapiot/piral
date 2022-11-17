@@ -1,6 +1,6 @@
 import { PiralConfiguration } from 'piral-core';
 import { createPiral } from './api';
-import { createInstanceElement } from './utils';
+import { createInstanceElement } from './instance';
 import { PiralRenderBaseOptions } from './types';
 
 /**
@@ -8,6 +8,7 @@ import { PiralRenderBaseOptions } from './types';
  * Very useful for server-side rendering.
  * @param config The configuration for creating the Piral instance.
  * @param options The options to use when rendering the Piral instance.
+ * @deprecated Use `createInstance` directly.
  * @example
 ```ts
 import { render } from 'react-dom';

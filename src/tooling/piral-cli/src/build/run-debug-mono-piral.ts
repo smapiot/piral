@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { setStandardEnvs, progress, logReset } from '../common';
+import { setStandardEnvs } from '../common';
 import type { LogLevels, PiralBuildHandler } from '../types';
 
 let handler: PiralBuildHandler;
@@ -8,19 +8,18 @@ function run(
   root: string,
   outFile: string,
   outDir: string,
-  piral: string,
+  piralInstances: Array<string>,
   hmr: boolean,
   externals: Array<string>,
+  publicUrl: string,
   entryFiles: string,
   logLevel: LogLevels,
   args: any,
 ) {
-  progress(`Preparing supplied Piral instance ...`);
-
   setStandardEnvs({
-    piral,
+    piralInstances,
     dependencies: externals,
-    publicPath: '/',
+    publicPath: publicUrl,
     production: false,
     debugPiral: true,
     debugPilet: true,
@@ -37,7 +36,7 @@ function run(
     sourceMaps: true,
     contentHash: false,
     minify: false,
-    publicUrl: '/',
+    publicUrl,
     hmr,
     logLevel,
     watch: true,
@@ -58,16 +57,15 @@ process.on('message', async (msg) => {
           root,
           msg.outFile,
           outDir,
-          msg.piral,
+          msg.piralInstances,
           true,
           msg.externals,
+          msg.publicUrl,
           msg.entryFiles,
           msg.logLevel,
           msg,
         );
         const result = await bundler.bundle();
-
-        logReset();
 
         if (result) {
           process.send({

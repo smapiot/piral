@@ -69,6 +69,7 @@ async function publishEmulator(
   }
 
   const files = await matchFiles(directory, '*.tgz');
+  log('generalDebug_0003', `Found ${files.length} in "${directory}": ${files.join(', ')}`);
 
   if (files.length !== 1) {
     fail('publishEmulatorFilesUnexpected_0111', directory);
@@ -79,6 +80,7 @@ async function publishEmulator(
     p.push(`--${c}`, args[c]);
     return p;
   }, [] as Array<string>);
+
   await publishNpmPackage(directory, file, flags, interactive);
 }
 

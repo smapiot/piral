@@ -29,6 +29,10 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -44,6 +48,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib",
     "build": "yarn build:commonjs && yarn build:esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
@@ -51,16 +56,19 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
-    "enzyme": "^3.11.0",
+    "@babel/core": "^7.0.0",
+    "@testing-library/dom": "^8.14.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "babel-jest": "^28",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^26.0.0",
-    "jest-cli": "^26.0.0",
-    "ts-jest": "^26.0.0"
+    "jest": "^28",
+    "jest-cli": "^28",
+    "jest-environment-jsdom": "^28",
+    "ts-jest": "^28"
   },
   "devDependencies": {
-    "@types/enzyme": "^3.1.18",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27",
     "piral-core": "^0.14.32"
   }
 }

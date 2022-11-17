@@ -1,5 +1,40 @@
 # Piral Changelog
 
+## 0.15.0 (tbd)
+
+- Fixed closing of dialogs to be immediate (#549)
+- Updated to React v18 (#501)
+- Updated `importmap` with `inherit` key
+- Moved templates to dedicated repository (#458)
+- Changed `piral-cli` to require at least Node.js v12
+- Changed the default bundler to be `piral-cli-webpack5` (#469)
+- Changed to ask if a bundler should be installed (#545)
+- Changed webpack configs to use `oneOf` for assets (#451)
+- Changed the internal state container to `zustand`
+- Changed portal boundary to `piral-portal` using `display: contents`
+- Changed default extension slot to `piral-slot` using `display: contents`
+- Deprecated the usage of `renderInstance` (#465)
+- Deprecated the usage of `externals` for `pilets`
+- Removed support for IE11 (#467)
+- Removed bundlers (except default) from Piral monorepo
+- Removed templating support for the emulator scaffolding files
+- Added new bundler `piral-cli-parcel2` (#436)
+- Added new bundler `piral-cli-rollup` (#435)
+- Added new bundler `piral-cli-vite` (#435)
+- Added pre-bundled minified versions to each plugin package
+- Added new convenience package `piral-hooks-utils`
+- Added new npm script running bundler `piral-cli-xbuild` (#470)
+- Added `--feed` option to `piral debug` command
+- Added `--app-name` option to `piral new` command (#546)
+- Added lazy loading to `piral-ng` via `defineNgModule`
+- Added `feed` provider for using `piral publish`
+- Added support for `importmap` in the app shell
+- Added semver possibilities for resolving shared dependencies
+- Added automatic determination of npm client (#516)
+- Added `minimal-piral` for quickly scaffolding pilets using a minimalistic API
+- Added `--config` parameter to `piral-cli-webpack5` (#544)
+- Added functionality for extending the existing translations
+
 ## 0.14.32 (September 21, 2022)
 
 - Fixed `piral-blazor` calling navigation

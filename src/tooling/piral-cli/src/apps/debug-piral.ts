@@ -14,9 +14,11 @@ import {
   config,
   normalizePublicUrl,
   logDone,
+  getDestination,
   createInitialKrasConfig,
   getAvailablePort,
   checkExistingDirectory,
+  watcherTask,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -24,6 +26,11 @@ export interface DebugPiralOptions {
    * Sets the path to the entry file.
    */
   entry?: string;
+
+  /**
+   * Sets the target directory where the output of the bundling should be placed.
+   */
+  target?: string;
 
   /**
    * Sets the port to use for the debug server.
@@ -62,6 +69,11 @@ export interface DebugPiralOptions {
   optimizeModules?: boolean;
 
   /**
+   * The URL of a pilet feed(s) used to include locally missing pilets.
+   */
+  feed?: string | Array<string>;
+
+  /**
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
@@ -81,6 +93,7 @@ export interface DebugPiralOptions {
 
 export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
+  target: './dist',
   port: config.port,
   publicUrl: '/',
   logLevel: LogLevels.info,
@@ -92,85 +105,97 @@ export const debugPiralDefaults: DebugPiralOptions = {
 export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOptions = {}) {
   const {
     entry = debugPiralDefaults.entry,
+    target = debugPiralDefaults.target,
     open = debugPiralDefaults.open,
     hmr = debugPiralDefaults.hmr,
     port: originalPort = debugPiralDefaults.port,
     publicUrl: originalPublicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     optimizeModules = debugPiralDefaults.optimizeModules,
+    feed,
     _ = {},
     hooks = {},
     bundlerName,
   } = options;
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
+  const port = await getAvailablePort(originalPort);
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
-  progress('Reading configuration ...');
-  const entryFiles = await retrievePiralRoot(fullBase, entry);
-  const targetDir = dirname(entryFiles);
-  const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
 
-  await checkCliCompatibility(root);
+  await watcherTask(async (watcherContext) => {
+    progress('Reading configuration ...');
+    const entryFiles = await retrievePiralRoot(fullBase, entry);
+    const targetDir = dirname(entryFiles);
+    const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
+    const piralInstances = [name];
+    const dest = getDestination(entryFiles, resolve(fullBase, target));
 
-  await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, name });
+    await checkCliCompatibility(root);
 
-  const bundler = await callPiralDebug(
-    {
-      root,
-      piral: name,
-      optimizeModules,
-      hmr,
-      externals,
-      publicUrl,
-      entryFiles,
-      logLevel,
-      ignored,
-      _,
-    },
-    bundlerName,
-  );
+    await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, piralInstances });
 
-  bundler.ready().then(() => logDone(`Ready!`));
+    const bundler = await callPiralDebug(
+      {
+        root,
+        piralInstances,
+        optimizeModules,
+        hmr,
+        externals: externals.map(m => m.name),
+        publicUrl,
+        entryFiles,
+        logLevel,
+        ignored,
+        ...dest,
+        _,
+      },
+      bundlerName,
+    );
 
-  bundler.on((args) => {
-    hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, name, bundler });
+    bundler.ready().then(() => logDone(`Ready!`));
+
+    bundler.on((args) => {
+      hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, piralInstances, bundler, ...dest });
+    });
+
+    const krasBaseConfig = resolve(fullBase, krasrc);
+    const krasRootConfig = resolve(root, krasrc);
+    const mocks = join(targetDir, 'mocks');
+    const baseMocks = resolve(fullBase, 'mocks');
+
+
+    const mocksExist = await checkExistingDirectory(mocks);
+    const sources = [mocksExist ? mocks : undefined].filter(Boolean);
+    const initial = createInitialKrasConfig(baseMocks, sources);
+    const required = {
+      injectors: {
+        piral: {
+          active: true,
+          handle: ['/'],
+          feed,
+          publicUrl,
+          bundler,
+        },
+        pilet: {
+          active: false,
+        },
+      },
+    };
+    const krasConfig = readKrasConfig({ port, initial, required }, krasBaseConfig, krasRootConfig);
+
+    log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
+
+    const krasServer = buildKrasWithCli(krasConfig);
+    krasServer.removeAllListeners('open');
+    krasServer.on('open', notifyServerOnline([bundler], publicUrl, krasConfig.api));
+
+    await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, publicUrl });
+    await krasServer.start();
+    openBrowser(open, port, publicUrl, !!krasConfig.ssl);
+    await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
+    await new Promise((resolve) => krasServer.on('close', resolve));
   });
 
-  const krasBaseConfig = resolve(fullBase, krasrc);
-  const krasRootConfig = resolve(root, krasrc);
-  const mocks = join(targetDir, 'mocks');
-  const baseMocks = resolve(fullBase, 'mocks');
-  const mocksExist = await checkExistingDirectory(mocks);
-  const sources = [mocksExist ? mocks : undefined].filter(Boolean);
-  const initial = createInitialKrasConfig(baseMocks, sources);
-  const required = {
-    injectors: {
-      piral: {
-        active: true,
-        handle: ['/'],
-        publicUrl,
-        bundler,
-      },
-      pilet: {
-        active: false,
-      },
-    },
-  };
-  const port = await getAvailablePort(originalPort);
-  const krasConfig = readKrasConfig({ port, initial, required }, krasBaseConfig, krasRootConfig);
-
-  log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
-
-  const krasServer = buildKrasWithCli(krasConfig);
-  krasServer.removeAllListeners('open');
-  krasServer.on('open', notifyServerOnline([bundler], publicUrl, krasConfig.api));
-
-  await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, publicUrl });
-  await krasServer.start();
-  openBrowser(open, port, publicUrl, !!krasConfig.ssl);
-  await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
-  await new Promise((resolve) => krasServer.on('close', resolve));
   await hooks.onEnd?.({});
 }

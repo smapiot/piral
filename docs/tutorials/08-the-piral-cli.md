@@ -40,7 +40,7 @@ We also have this tutorial available in form of a video.
 
 Before we continue, let's recap why the Piral CLI has been introduced in the first place. The following diagram shows the place of the Piral CLI in the Piral ecosystem.
 
-![Importance of the Piral CLI to the ecosystem](../diagrams/module-developer.png)
+![Importance of the Piral CLI to the ecosystem](../diagrams/module-developer.png){.auto}
 
 Initially, the Piral CLI helps to
 

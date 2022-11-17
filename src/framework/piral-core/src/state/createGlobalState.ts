@@ -1,11 +1,5 @@
-import { Atom } from '@dbeining/react-atom';
-import {
-  DefaultErrorInfo,
-  DefaultLoadingIndicator,
-  DefaultLayout,
-  DefaultRouter,
-  DefaultRouteSwitch,
-} from '../components';
+import create from 'zustand';
+import { createDefaultState } from '../../app.codegen';
 import { GlobalState, NestedPartial } from '../types';
 
 function extend<T>(defaultState: T, customState: NestedPartial<T>) {
@@ -24,31 +18,6 @@ function extend<T>(defaultState: T, customState: NestedPartial<T>) {
 }
 
 export function createGlobalState(customState: NestedPartial<GlobalState> = {}) {
-  const defaultState: GlobalState = {
-    app: {
-      error: undefined,
-      loading: typeof window !== 'undefined',
-      layout: 'desktop',
-      publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
-    },
-    components: {
-      ErrorInfo: DefaultErrorInfo,
-      LoadingIndicator: DefaultLoadingIndicator,
-      Router: DefaultRouter,
-      RouteSwitch: DefaultRouteSwitch,
-      Layout: DefaultLayout,
-    },
-    errorComponents: {},
-    registry: {
-      extensions: {},
-      pages: {},
-      wrappers: {},
-    },
-    routes: {},
-    data: {},
-    portals: {},
-    modules: [],
-  };
-
-  return Atom.of(extend(defaultState, customState));
+  const defaultState: GlobalState = createDefaultState();
+  return create(() => extend(defaultState, customState));
 }

@@ -1,28 +1,19 @@
 import * as React from 'react';
-import { act } from 'react-dom/test-utils';
-import { mount, ReactWrapper } from 'enzyme';
+import { render, act } from '@testing-library/react';
 import { Piral } from './Piral';
-import { PiralRouter } from './components';
 import { createInstance } from './createInstance';
-
-async function waitForComponentToPaint<P = {}>(wrapper: ReactWrapper<P>, amount = 0) {
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, amount));
-    wrapper.update();
-  });
-}
 
 describe('Piral Component', () => {
   it('renders the Piral instance with default settings', async () => {
-    const node = mount(<Piral />);
-    await waitForComponentToPaint(node);
-    expect(node.find(PiralRouter).length).toBe(1);
+    const node = render(<Piral />);
+    await act(() => Promise.resolve());
+    expect(node.container.childNodes.length).toBe(1);
   });
 
   it('renders the Piral instance with custom settings', async () => {
     const instance = createInstance();
-    const node = mount(<Piral instance={instance} />);
-    await waitForComponentToPaint(node);
-    expect(node.find(PiralRouter).length).toBe(1);
+    const node = render(<Piral instance={instance} />);
+    await act(() => Promise.resolve());
+    expect(node.container.childNodes.length).toBe(1);
   });
 });

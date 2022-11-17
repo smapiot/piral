@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useGlobalState } from '../hooks';
-import {
-  ComponentsState,
-  ErrorInfoProps,
-  LoadingIndicatorProps,
-  RouterProps,
-  LayoutProps,
-  RouteSwitchProps,
-} from '../types';
+import { ComponentsState } from '../types';
 
+/**
+ * Gets a registered layout component by its name.
+ * This will always return a valid component. If nothing is found
+ * then the returned component will just return null.
+ * @param name The name of the registered layout component.
+ * @returns The registered layout component or an empty stub component.
+ */
 export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey): ComponentsState[TKey] {
   return (props) => {
     const Component = useGlobalState((s) => s.components[name]);
@@ -21,34 +21,34 @@ export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey
  * Gets the currently registered ErrorInfo component.
  * By default the DefaultErrorInfo component is used.
  */
-export const PiralError: React.ComponentType<ErrorInfoProps> = getPiralComponent('ErrorInfo');
+export const RegisteredErrorInfo = getPiralComponent('ErrorInfo');
 
 /**
  * Gets the currently registered LoadingIndicator component.
  * By default only Loading is rendered.
  */
-export const PiralLoadingIndicator: React.ComponentType<LoadingIndicatorProps> = getPiralComponent('LoadingIndicator');
+export const RegisteredLoadingIndicator = getPiralComponent('LoadingIndicator');
 
 /**
  * Gets the currently registered Router component.
  * By default the BrowserRouter is used.
  */
-export const PiralRouter: React.ComponentType<RouterProps> = getPiralComponent('Router');
+export const RegisteredRouter = getPiralComponent('Router');
 
 /**
  * Gets the currently registered Route Switch component.
  * By default the DefaultRouteSwitch component is used.
  */
-export const PiralRouteSwitch: React.ComponentType<RouteSwitchProps> = getPiralComponent('RouteSwitch');
+export const RegisteredRouteSwitch = getPiralComponent('RouteSwitch');
 
 /**
  * Gets the currently registered Layout component.
  * By default the children are rendered.
  */
-export const PiralLayout: React.ComponentType<LayoutProps> = getPiralComponent('Layout');
+export const RegisteredLayout = getPiralComponent('Layout');
 
 /**
  * Gets the currently registered Debug component.
  * By default nothing is used.
  */
-export const PiralDebug: React.ComponentType = getPiralComponent('Debug');
+export const RegisteredDebug = getPiralComponent('Debug');

@@ -187,7 +187,7 @@ module.exports = config => {
 };
 ```
 
-If this file should be part of all your pilets then place it already in the app shell and configure a scaffolding rule for it. [More on this topic in the reference section](../reference/scaffolding.md).
+If this file should be part of all your pilets then place it already in the app shell and configure a scaffolding rule for it. [More on this topic in the reference section](../concepts/I03-scaffolding.md).
 
 ## Conclusion
 

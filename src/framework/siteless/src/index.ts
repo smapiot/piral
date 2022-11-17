@@ -1,20 +1,26 @@
+import { createElement, ComponentType } from 'react';
+import { render } from 'react-dom';
 import { createLazyApi } from 'piral-lazy';
-import { PiletLoader, PiletLoadingStrategy } from 'piral-base';
 import {
-  renderInstance,
+  requireModule,
+  createInstance,
+  PiletLoader,
+  PiletLoadingStrategy,
   AnyComponent,
   PiletRequester,
   ComponentsState,
   ErrorComponentsState,
   PiralPlugin,
   PiralInstance,
-  PiralConfiguration,
   PiralExtSettings,
   GlobalState,
   NestedPartial,
   PiralDefineActions,
   withApi,
   useGlobalState,
+  Piral,
+  PiralInstanceOptions,
+  createStandardApi,
 } from 'piral';
 
 declare module 'piral-core/lib/types/custom' {
@@ -23,6 +29,11 @@ declare module 'piral-core/lib/types/custom' {
 
 declare global {
   interface Window {
+    /**
+     * Loads a shared dependency.
+     * @param moduleName The name of the module to require.
+     */
+    require(moduleName: string): any;
     /**
      * Initializes the Piral app shell.
      * @param requestPilets Defines how pilets should be requested.
@@ -39,7 +50,7 @@ declare global {
 
 export type GenericComponents<T> = Partial<
   {
-    [P in keyof T]: T[P] extends React.ComponentType<infer C> ? AnyComponent<C> : T[P];
+    [P in keyof T]: T[P] extends ComponentType<infer C> ? AnyComponent<C> : T[P];
   }
 >;
 
@@ -48,7 +59,7 @@ export interface SitelessOptions {
    * Sets an optional middleware for adjusting the configuration.
    * @default cfg => cfg
    */
-  middleware?: (config: PiralConfiguration) => PiralConfiguration;
+  middleware?: (config: PiralInstanceOptions) => PiralInstanceOptions;
   /**
    * Customizes the plugin settings.
    */
@@ -151,19 +162,53 @@ function createSitelessApi(): PiralPlugin<SitelessApi> {
   });
 }
 
+function noChange<T>(config: T) {
+  return config;
+}
+
+//@ts-ignore
+window.require = requireModule;
+
 window.initializePiral = (requestPilets, selector = document.querySelector('#app'), options = {}) => {
-  const { actions, errors, layout, loadPilet, middleware, plugins = [], settings, state, strategy } = options;
-  return renderInstance({
+  const {
     actions,
     errors,
     layout,
     loadPilet,
-    middleware,
-    requestPilets,
-    plugins: [...plugins, createSitelessApi(), createLazyApi()],
-    async: strategy,
     settings,
     state,
-    selector,
-  });
+    strategy,
+    middleware = noChange,
+    plugins: customPlugins = [],
+  } = options;
+  const target = selector instanceof Element ? selector : document.querySelector(selector);
+  const plugins = [...createStandardApi(settings), createSitelessApi(), createLazyApi(), ...customPlugins];
+  const instance = createInstance(
+    middleware({
+      actions,
+      loadPilet,
+      requestPilets,
+      shareDependencies(deps) {
+        return {
+          ...deps,
+          'piral-core': require('piral-core'),
+        };
+      },
+      plugins,
+      async: strategy,
+      state: {
+        ...state,
+        components: {
+          ...state?.components,
+          ...layout,
+        },
+        errorComponents: {
+          ...state?.errorComponents,
+          ...errors,
+        },
+      },
+    }),
+  );
+  render(createElement(Piral, { instance }), target);
+  return instance;
 };

@@ -28,6 +28,10 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -44,6 +48,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
+    "cleanup": "rimraf esm lib",
     "build": "yarn build:commonjs && yarn build:esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
@@ -54,7 +59,6 @@
     "piral-base": "^0.14.32"
   },
   "peerDependencies": {
-    "piral-base": "0.14.x",
     "react": ">=16.8.0",
     "react-router": ">=5.0.0"
   }

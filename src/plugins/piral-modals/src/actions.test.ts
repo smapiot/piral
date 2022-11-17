@@ -1,20 +1,20 @@
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createListener } from 'piral-base';
 import { createActions } from 'piral-core';
 import { registerModal, unregisterModal, openModal, closeModal } from './actions';
 
 describe('Modals Actions Module', () => {
   it('registerModal and unregisterModal', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       registry: {
         foo: 5,
         modals: {},
       },
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     registerModal(ctx, 'foo', 10);
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -24,7 +24,7 @@ describe('Modals Actions Module', () => {
       },
     });
     unregisterModal(ctx, 'foo');
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -34,26 +34,26 @@ describe('Modals Actions Module', () => {
   });
 
   it('openModal adds a new modal', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       modals: [{ id: 'b' }],
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     openModal(ctx, { id: 'a' });
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       modals: [{ id: 'a' }, { id: 'b' }],
     });
   });
 
   it('closeModal removes an existing modal', () => {
-    const state = Atom.of({
+    const state: any = create(() => ({
       foo: 5,
       modals: [{ id: 'a' }, { id: 'b' }, { id: 'c' }],
-    });
+    }));
     const ctx = createActions(state, createListener({}));
     closeModal(ctx, { id: 'b' });
-    expect(deref(state)).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       modals: [{ id: 'a' }, { id: 'c' }],
     });

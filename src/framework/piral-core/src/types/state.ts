@@ -1,9 +1,9 @@
-import type { ComponentType, ReactPortal } from 'react';
+import type { ComponentType, ReactPortal, PropsWithChildren } from 'react';
 import type { RouteComponentProps } from 'react-router';
-import type { Atom } from '@dbeining/react-atom';
 import type { LoadPiletsOptions } from 'piral-base';
+import type { UseBoundStore } from 'zustand';
 import type { Dict, Without } from './common';
-import type { LayoutType } from './layout';
+import type { NavigationApi } from './navigation';
 import type { SharedDataItem, DataStoreTarget } from './data';
 import type {
   PiralCustomActions,
@@ -12,7 +12,6 @@ import type {
   PiralCustomComponentsState,
 } from './custom';
 import type {
-  PiletMetadata,
   EventEmitter,
   Pilet,
   BaseComponentProps,
@@ -20,6 +19,7 @@ import type {
   ExtensionComponentProps,
   PiletsBag,
   PiralPageMeta,
+  PiletEntry,
 } from './api';
 import type {
   ComponentConverters,
@@ -35,14 +35,7 @@ export interface StateDispatcher<TState> {
   (state: TState): Partial<TState>;
 }
 
-declare module './components' {
-  interface ComponentContext {
-    state: Atom<GlobalState>;
-    readState: PiralActions['readState'];
-  }
-}
-
-export type WrappedComponent<TProps> = ComponentType<Without<TProps, keyof BaseComponentProps>>;
+export type WrappedComponent<TProps> = ComponentType<PropsWithChildren<Without<TProps, keyof BaseComponentProps>>>;
 
 /**
  * The base type for pilet component registration in the global state context.
@@ -121,10 +114,6 @@ export interface ComponentsState extends PiralCustomComponentsState {
  */
 export interface AppState {
   /**
-   * Information for the layout computation.
-   */
-  layout: LayoutType;
-  /**
    * Gets if the application is currently performing a background loading
    * activity, e.g., for loading modules asynchronously or fetching
    * translations.
@@ -134,10 +123,6 @@ export interface AppState {
    * Gets an unrecoverable application error, if any.
    */
   error: Error | undefined;
-  /**
-   * Gets the public path of the application.
-   */
-  publicPath: string;
 }
 
 /**
@@ -185,7 +170,7 @@ export interface GlobalState extends PiralCustomState {
   /**
    * Gets the loaded modules.
    */
-  modules: Array<PiletMetadata>;
+  modules: Array<Pilet>;
   /**
    * The foreign component portals to render.
    */
@@ -228,10 +213,22 @@ export interface PiralActions extends PiralCustomActions {
    */
   initialize(loading: boolean, error: Error | undefined, modules: Array<Pilet>): void;
   /**
-   * Injects a pilet at runtime - removes the pilet from registry first if available.
+   * Injects an evaluated pilet at runtime - removes the pilet from registry first if available.
    * @param pilet The pilet to be injected.
+   * @returns The injected pilet.
    */
-  injectPilet(pilet: Pilet): void;
+  injectPilet(pilet: Pilet): Pilet;
+  /**
+   * Adds a pilet at runtime by loading it, evaluating it, and then injecting it.
+   * @param pilet The pilet to be added.
+   * @returns The promise indicating when the pilet was fully added.
+   */
+  addPilet(pilet: PiletEntry): Promise<void>;
+  /**
+   * Removes a pilet by unloading it and deleting all component registrations.
+   * @param name The name of the pilet to remove.
+   */
+  removePilet(name: string): Promise<void>;
   /**
    * Defines a single action for Piral.
    * @param actionName The name of the action to define.
@@ -260,11 +257,6 @@ export interface PiralActions extends PiralCustomActions {
    * @param expiration The time for when to dispose the shared item.
    */
   tryWriteDataItem(name: string, value: any, owner: string, target: DataStoreTarget, expiration: number): boolean;
-  /**
-   * Performs a layout change.
-   * @param current The layout to take.
-   */
-  changeLayout(current: LayoutType): void;
   /**
    * Registers a new route to be resolved.
    * @param route The route to register.
@@ -356,7 +348,7 @@ export interface GlobalStateContext extends PiralActions, EventEmitter {
    * The global state context atom.
    * Changes to the state should always be dispatched via the `dispatch` action.
    */
-  state: Atom<GlobalState>;
+  state: UseBoundStore<GlobalState>;
   /**
    * The API objects created for the loaded pilets.
    */
@@ -365,6 +357,10 @@ export interface GlobalStateContext extends PiralActions, EventEmitter {
    * The available component converters.
    */
   converters: ComponentConverters<any>;
+  /**
+   * The navigation manager for the whole instance.
+   */
+  navigation: NavigationApi;
   /**
    * The initial options.
    */

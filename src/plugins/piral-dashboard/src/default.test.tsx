@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { DefaultContainer } from './default';
 
 jest.mock('piral-core', () => ({
@@ -35,10 +35,10 @@ const state = {
 
 (React as any).useMemo = (cb) => cb();
 
-const StubDashboard: React.FC = () => <div />;
+const StubDashboard: React.FC = () => <div role="dashboard" />;
 StubDashboard.displayName = 'StubDashboard';
 
-const StubTile: React.FC = () => <div />;
+const StubTile: React.FC = () => <div role="tile" />;
 StubTile.displayName = 'StubTile';
 
 describe('Default Dashboard Component', () => {
@@ -47,13 +47,13 @@ describe('Default Dashboard Component', () => {
       component: StubTile,
       preferences: {},
     };
-    const node = mount(
-      <DefaultContainer history={undefined} location={undefined} match={undefined}>
+    const node = render(
+      <DefaultContainer>
         <StubTile />
       </DefaultContainer>,
     );
-    expect(node.find(StubDashboard).length).toBe(0);
-    expect(node.find(StubTile).length).toBe(1);
+    expect(node.queryByRole("dashboard")).toBe(null);
+    expect(node.getAllByRole("tile").length).toBe(1);
   });
 
   it('renders the provided extension in the default case', () => {
@@ -62,12 +62,12 @@ describe('Default Dashboard Component', () => {
         component: StubDashboard,
       },
     ];
-    const node = mount(
-      <DefaultContainer history={undefined} location={undefined} match={undefined}>
+    const node = render(
+      <DefaultContainer>
         <StubTile />
       </DefaultContainer>,
     );
-    expect(node.find(StubTile).length).toBe(0);
-    expect(node.find(StubDashboard).length).toBe(1);
+    expect(node.queryByRole("tile")).toBe(null);
+    expect(node.getAllByRole("dashboard").length).toBe(1);
   });
 });

@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { PiletMetadata } from 'piral-base';
+import { PiletEntries } from 'piral-base';
 import { MaybeAsync, PiralSsrExternalScript } from './types';
 
 const bundleUrl = '__bundleUrl__';
@@ -49,7 +49,7 @@ export function modifyUrlReferences(content: string, link?: string) {
  * @returns A promise leading to an array of (embedded, i.e., pre-loaded) pilets.
  */
 export function loadPilets(
-  metadata: Array<PiletMetadata>,
+  metadata: PiletEntries,
   getPilet: (url: string) => MaybeAsync<string | false> = () => false,
 ) {
   return Promise.all(

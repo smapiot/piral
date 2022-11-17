@@ -1,32 +1,19 @@
-import { setupPilet } from 'piral-base';
-import { withKey, GlobalStateContext, PiletMetadata } from 'piral-core';
+import { withKey, GlobalStateContext, PiletEntries, PiletMetadata } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
 function getPiletHash(pilet: PiletMetadata) {
-  if ('link' in pilet) {
-    return {
-      name: pilet.name || '',
-      link: pilet.link || '',
-    };
-  } else if ('hash' in pilet) {
-    return {
-      name: pilet.name || '',
-      hash: pilet.hash || '',
-    };
-  } else if ('version' in pilet) {
-    return {
-      name: pilet.name || '',
-      version: pilet.version || '',
-    };
-  } else {
-    return {
-      name: pilet['name'] || '',
-    };
-  }
+  return {
+    name: pilet.name,
+    version: pilet.version,
+  };
 }
 
-function computePiletHash(pilets: Array<PiletMetadata>) {
-  return JSON.stringify(pilets.map(getPiletHash).sort((a, b) => a.name.localeCompare(b.name)));
+function sortPilets(a: { name: string }, b: { name: string }) {
+  return a.name.localeCompare(b.name);
+}
+
+function computePiletHash(pilets: PiletEntries) {
+  return JSON.stringify(pilets.map(getPiletHash).sort(sortPilets));
 }
 
 export function rejectUpdate(ctx: GlobalStateContext) {
@@ -43,21 +30,14 @@ export function rejectUpdate(ctx: GlobalStateContext) {
 export function approveUpdate(ctx: GlobalStateContext) {
   const pilets = ctx.readState((s) => s.updatability.target);
 
-  for (const meta of pilets) {
-    ctx.options.loadPilet(meta).then((pilet) => {
-      try {
-        ctx.injectPilet(pilet);
-        setupPilet(pilet, ctx.options.createApi);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+  for (const pilet of pilets) {
+    ctx.addPilet(pilet);
   }
 
   ctx.rejectUpdate();
 }
 
-export function checkForUpdates(ctx: GlobalStateContext, pilets: Array<PiletMetadata>) {
+export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
   const checkHash = computePiletHash(pilets);
   const lastHash = ctx.readState((s) => s.updatability.lastHash || computePiletHash(s.modules));
 

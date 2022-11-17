@@ -22,7 +22,10 @@ function prefixMediaSources(component: Element, prefix: string) {
 }
 
 function project(component: Element, destination: Element, options: BlazorOptions) {
-  options?.resourcePathRoot && prefixMediaSources(component, options.resourcePathRoot);
+  if (options?.resourcePathRoot && !bootConfig.noMutation) {
+    prefixMediaSources(component, options.resourcePathRoot);
+  }
+
   destination.appendChild(component);
 }
 
@@ -46,7 +49,7 @@ interface BlazorLocals {
 }
 
 export function createConverter(lazy: boolean) {
-  const boot = createBootLoader(bootConfig);
+  const boot = createBootLoader(bootConfig.url, bootConfig.satellites);
   let loader = !lazy && boot();
   let listener: Disposable = undefined;
 
@@ -66,17 +69,16 @@ export function createConverter(lazy: boolean) {
   ): ForeignComponent<TProps> => ({
     mount(el, data, ctx, locals: BlazorLocals) {
       const props = { ...args, ...data };
-      const nav = ctx.router.history;
+      const nav = ctx.navigation;
       el.setAttribute('data-blazor-pilet-root', 'true');
 
       addGlobalEventListeners(el);
 
       if (listener === undefined) {
-        listener = nav.listen((location, action) => {
+        listener = nav.listen(({ location, action }) => {
           // POP is already handled by .NET
           if (action !== 'POP') {
-            const href = nav.createHref(location);
-            const url = makeUrl(href);
+            const url = makeUrl(location.href);
             callNotifyLocationChanged(url, action === 'REPLACE');
           }
         });

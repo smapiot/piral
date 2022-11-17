@@ -1,8 +1,7 @@
-import { mkdtempSync, existsSync } from 'fs';
+import { mkdtempSync, existsSync, readFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
 import { newPilet } from './new-pilet';
-import { SourceLanguage } from '../common';
 
 function createTempDir() {
   return mkdtempSync(join(tmpdir(), 'piral-tests-new-pilet-'));
@@ -14,18 +13,20 @@ jest.mock('../common/clients/npm', () => {
   return {
     ...original,
     installPackage: (...args) => {
-      if (args[0].startsWith('@smapiot/')) {
-        return Promise.resolve();
-      } else {
-        return original.installPackage(...args);
-      }
+      return original.installPackage(
+        ...args,
+        '--no-package-lock',
+        '--no-save',
+        '--registry=https://registry.npmjs.org/',
+      );
     },
   };
 });
 
+jest.setTimeout(90000);
+
 describe('New Pilet Command', () => {
   it('scaffolding in an empty directory works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPilet(dir, {
       install: false,
@@ -56,7 +57,6 @@ describe('New Pilet Command', () => {
   });
 
   it('should scaffold without creating npmrc file', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPilet(dir, {
       install: false,
@@ -70,10 +70,9 @@ describe('New Pilet Command', () => {
   });
 
   it('scaffolding with language JS works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPilet(dir, {
-      language: SourceLanguage.js,
+      language: 'js',
       install: false,
       source: 'piral@latest',
     });
@@ -82,5 +81,22 @@ describe('New Pilet Command', () => {
     expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeFalsy();
     expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeTruthy();
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+  });
+
+  it('should set pilet name if passed as argument', async () => {
+    const dir = createTempDir();
+    await newPilet(dir, {
+      install: false,
+      source: 'piral@latest',
+      name: 'testpiralname',
+    });
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+
+    const packageContent = await JSON.parse(readFileSync(`${dir}/package.json`, 'utf8'));
+    expect(packageContent.name).toBe('testpiralname');
   });
 });

@@ -1,4 +1,3 @@
-import { resolve } from 'path';
 import { setStandardEnvs } from '../common';
 import type { BundleHandlerResponse, LogLevels, PiralBuildHandler } from '../types';
 
@@ -9,7 +8,7 @@ function run(
   root: string,
   outFile: string,
   outDir: string,
-  piral: string,
+  piralInstances: Array<string>,
   hmr: boolean,
   externals: Array<string>,
   publicUrl: string,
@@ -22,7 +21,7 @@ function run(
     debugPiral: true,
     dependencies: externals,
     publicPath: publicUrl,
-    piral,
+    piralInstances,
   });
 
   return handler.create({
@@ -58,12 +57,11 @@ process.on('message', async (msg) => {
 
         break;
       case 'start':
-        const dist = resolve(root, 'dist');
         bundler = await run(
           root,
           msg.outFile,
-          dist,
-          msg.piral,
+          msg.outDir,
+          msg.piralInstances,
           msg.hmr,
           msg.externals,
           msg.publicUrl,
@@ -92,7 +90,7 @@ process.on('message', async (msg) => {
 
           process.send({
             type: 'done',
-            outDir: dist,
+            outDir: msg.outDir,
           });
         }
 

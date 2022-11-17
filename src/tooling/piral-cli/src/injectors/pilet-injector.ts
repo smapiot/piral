@@ -5,16 +5,14 @@ import { readFileSync, existsSync, statSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { log } from '../common/log';
 import { getPiletSpecMeta } from '../common/spec';
-import { config } from '../common/config';
+import { config as commonConfig } from '../common/config';
 import { axios, mime, jju } from '../external';
 import { Bundler } from '../types';
-
-const { host } = config;
 
 interface Pilet {
   bundler: Bundler;
   root: string;
-  meta: PiletMetadata;
+  getMeta(basePath: string): PiletMetadata;
 }
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
@@ -32,7 +30,7 @@ interface PiletMetadata {
   [key: string]: unknown;
 }
 
-function fillPiletMeta(pilet: Pilet, basePath: string, metaFile: string) {
+function fillPiletMeta(pilet: Pilet, metaFile: string, subPath: string) {
   const { root, bundler } = pilet;
   const metaPath = join(root, metaFile);
   const packagePath = join(root, 'package.json');
@@ -40,19 +38,21 @@ function fillPiletMeta(pilet: Pilet, basePath: string, metaFile: string) {
   const metaOverride = existsSync(metaPath) ? jju.parse(readFileSync(metaPath, 'utf8')) : undefined;
   const file = bundler.bundle.name.replace(/^[\/\\]/, '');
   const target = join(bundler.bundle.dir, file);
-  const url = new URL(file, basePath);
-  const meta = {
-    custom: def.custom,
-    config: def.piletConfig,
-    ...metaOverride,
-    name: def.name,
-    version: def.version,
-    link: `${url.href}?updated=${Date.now()}`,
-    ...getPiletSpecMeta(target, basePath),
-  };
 
-  pilet.meta = meta;
-  return JSON.stringify(meta);
+  pilet.getMeta = (parentPath) => {
+    const basePath = `${parentPath}${subPath}`;
+    const url = new URL(file, basePath);
+
+    return {
+      custom: def.custom,
+      config: def.piletConfig,
+      ...metaOverride,
+      name: def.name,
+      version: def.version,
+      link: `${url.href}?updated=${Date.now()}`,
+      ...getPiletSpecMeta(target, basePath),
+    };
+  };
 }
 
 async function loadFeed(feed: string) {
@@ -75,25 +75,24 @@ async function loadFeed(feed: string) {
 
 export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
-  private piletApi: string;
+  private serverConfig: KrasConfiguration;
   private indexPath: string;
 
-  constructor(options: PiletInjectorConfig, config: KrasConfiguration, core: EventEmitter) {
-    this.config = options;
+  constructor(config: PiletInjectorConfig, serverConfig: KrasConfiguration, core: EventEmitter) {
+    this.config = config;
+    this.serverConfig = serverConfig;
 
     if (this.config.active) {
-      // either take a full URI or make it an absolute path relative to the current origin
-      this.piletApi = /^https?:/.test(options.api)
-        ? options.api
-        : `${config.ssl ? 'https' : 'http'}://${host}:${config.port}${options.api}`;
-
-      const { pilets, api, publicUrl } = options;
+      const { pilets, api, publicUrl } = config;
       this.indexPath = `${publicUrl}index.html`;
       const cbs = {};
 
       core.on('user-connected', (e) => {
         if (e.target === '*' && e.url === api.substring(1)) {
-          cbs[e.id] = (msg: string) => e.ws.send(msg);
+          cbs[e.id] = {
+            baseUrl: e.req.headers.origin,
+            notify: (msg: string) => e.ws.send(msg),
+          };
         }
       });
 
@@ -103,11 +102,12 @@ export default class PiletInjector implements KrasInjector {
 
       pilets.forEach((p, i) =>
         p.bundler.on(() => {
-          const basePath = `${this.piletApi}/${i}/`;
-          const meta = fillPiletMeta(p, basePath, options.meta);
+          fillPiletMeta(p, config.meta, `/${i}/`);
 
           for (const id of Object.keys(cbs)) {
-            cbs[id](meta);
+            const { baseUrl, notify } = cbs[id];
+            const meta = this.getPiletMeta(baseUrl, p);
+            notify(meta);
           }
         }),
       );
@@ -132,9 +132,29 @@ export default class PiletInjector implements KrasInjector {
 
   setOptions() {}
 
-  async getMeta() {
+  getPiletApi(baseUrl: string) {
+    const { api } = this.config;
+
+    if (/^https?:/.test(api)) {
+      return api;
+    } else if (baseUrl) {
+      return `${baseUrl}${api}`;
+    } else {
+      const { ssl, port } = this.serverConfig;
+      const { host } = commonConfig;
+      return `${ssl ? 'https' : 'http'}://${host}:${port}${api}`;
+    }
+  }
+
+  getPiletMeta(baseUrl: string, pilet: Pilet) {
+    const basePath = this.getPiletApi(baseUrl);
+    return JSON.stringify(pilet.getMeta(basePath));
+  }
+
+  async getIndexMeta(baseUrl: string) {
     const { pilets, feed } = this.config;
-    const localPilets = pilets.map((pilet) => pilet.meta).filter(Boolean);
+    const basePath = this.getPiletApi(baseUrl);
+    const localPilets = pilets.map((pilet) => pilet.getMeta?.(basePath)).filter(Boolean);
     const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
     return JSON.stringify(mergedPilets);
   }
@@ -187,7 +207,7 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, type, url);
   }
 
-  async sendResponse(path: string, url: string): Promise<KrasResult> {
+  async sendResponse(path: string, url: string, baseUrl: string): Promise<KrasResult> {
     const { pilets } = this.config;
     const [index, ...rest] = path.split('/');
     const pilet = pilets[+index];
@@ -195,7 +215,7 @@ export default class PiletInjector implements KrasInjector {
 
     if (!path) {
       await bundler?.ready();
-      const content = await this.getMeta();
+      const content = await this.getIndexMeta(baseUrl);
       return this.sendContent(content, 'application/json', url);
     } else {
       return bundler?.ready().then(() => {
@@ -208,11 +228,11 @@ export default class PiletInjector implements KrasInjector {
     }
   }
 
-  sendIndexFile(target: string, url: string): KrasResponse {
+  sendIndexFile(target: string, url: string, baseUrl: string): KrasResponse {
     const indexHtml = readFileSync(target, 'utf8');
 
     // mechanism to inject server side debug piletApi config into piral emulator
-    const windowInjectionScript = `window['dbg:pilet-api'] = '${this.piletApi}';`;
+    const windowInjectionScript = `window['dbg:pilet-api'] = '${this.getPiletApi(baseUrl)}';`;
     const findStr = `<script`;
     const replaceStr = `<script>/* Pilet Debugging Emulator Config Injection */${windowInjectionScript}</script><script`;
     const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);
@@ -222,6 +242,7 @@ export default class PiletInjector implements KrasInjector {
 
   handle(req: KrasRequest): KrasResponse {
     const { app, api, publicUrl } = this.config;
+    const baseUrl = req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined;
 
     if (!req.target) {
       if (req.url.startsWith(publicUrl)) {
@@ -230,7 +251,7 @@ export default class PiletInjector implements KrasInjector {
 
         if (existsSync(target) && statSync(target).isFile()) {
           if (req.url === this.indexPath) {
-            return this.sendIndexFile(target, req.url);
+            return this.sendIndexFile(target, req.url, baseUrl);
           } else {
             return this.sendFile(target, req.url);
           }
@@ -245,7 +266,7 @@ export default class PiletInjector implements KrasInjector {
       return undefined;
     } else if (req.target === api) {
       const path = req.url.substring(1).split('?')[0];
-      return this.sendResponse(path, req.url);
+      return this.sendResponse(path, req.url, baseUrl);
     }
   }
 }

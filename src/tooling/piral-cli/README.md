@@ -23,11 +23,14 @@ Right now the following generic plugins exist:
 
 Also the following bundler plugin exists (bringing build / debug capabilities):
 
-- [**piral-cli-parcel**](https://github.com/smapiot/piral), provides an integration for Parcel (v1) as a bundler
-- [**piral-cli-parcel2**](https://github.com/smapiot/piral), provides an integration for Parcel (v2) as a bundler
-- [**piral-cli-webpack**](https://github.com/smapiot/piral), provides an integration for Webpack (v4) as a bundler
+- [**piral-cli-parcel**](https://github.com/smapiot/piral-cli-parcel), provides an integration for Parcel (v1) as a bundler
+- [**piral-cli-parcel2**](https://github.com/smapiot/piral-cli-parcel2), provides an integration for Parcel (v2) as a bundler
+- [**piral-cli-webpack**](https://github.com/smapiot/piral-cli-webpack), provides an integration for Webpack (v4) as a bundler
 - [**piral-cli-webpack5**](https://github.com/smapiot/piral), provides an integration for Webpack (v5) as a bundler
-- [**piral-cli-esbuild**](https://github.com/smapiot/piral), provides an integration for ES Build as a bundler
+- [**piral-cli-esbuild**](https://github.com/smapiot/piral-cli-esbuild), provides an integration for ES Build as a bundler
+- [**piral-cli-rollup**](https://github.com/smapiot/piral-cli-rollup), provides an integration for Rollup as a bundler
+- [**piral-cli-vite**](https://github.com/smapiot/piral-cli-vite), provides an integration for Vite as a bundler
+- [**piral-cli-xbuild**](https://github.com/smapiot/piral-cli-xbuild), provides the possibility of using npm scripts for building and debugging
 
 You'll find an updated list [on NPM](https://www.npmjs.com/search?q=keywords%3Apiral-cli) using the keyword **piral-cli**.
 
@@ -78,6 +81,23 @@ The resolution for plugins is as follows:
 2. Take the plugins from the global modules
 
 Plugins are never loaded twice. Local versions have precedence.
+
+Using a plugin you can also attach to the hooks of the `pilet build/debug` and `piral build/debug` commands.
+
+```js
+module.exports = function (cliApi) {
+  cliApi.wrapCommand('debug-pilet', (args, run) => run({
+    ...args,
+    hooks: {
+      afterBuild({ outFile, outDir }) {
+        console.log('Build done', outFile, outDir);
+      },
+    },
+  }));
+};
+```
+
+In this case the `afterBuild` hook of the `pilet debug` command is set. You can do whatever else hook, too. Furthermore, you are not limited to a single command - you might want to wrap multiple here.
 
 ## License
 

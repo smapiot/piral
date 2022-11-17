@@ -32,13 +32,18 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
     "esm",
     "lib",
-    "src"
+    "src",
+    "piral-redux.min.js"
   ],
   "repository": {
     "type": "git",
@@ -48,7 +53,9 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "build": "yarn build:commonjs && yarn build:esnext",
+    "cleanup": "rimraf esm lib piral-redux.min.js",
+    "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-redux.min.js --bundle --external:piral-core --external:react --minify --global-name=piralRedux",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-redux.json src --exclude \"src/**/*.test.*\"",
@@ -59,11 +66,14 @@
     "redux": "^4.0.5"
   },
   "devDependencies": {
+    "@types/react": "^18.0.0",
     "@types/react-redux": "^5.0.19",
     "@types/redux": "^3.6.0",
-    "piral-core": "^0.14.32"
+    "piral-core": "^0.14.32",
+    "react": "^18.0.0"
   },
   "peerDependencies": {
-    "piral-core": "0.14.x"
+    "piral-core": "0.14.x || 0.15.x",
+    "react": ">=16.8.0"
   }
 }

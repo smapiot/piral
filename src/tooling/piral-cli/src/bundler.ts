@@ -1,15 +1,18 @@
 import { callDynamic, callStatic } from './build/bundler-calls';
 import { availableBundlers } from './helpers';
+import { isInteractive } from './external';
 import {
   installNpmPackage,
-  cliVersion,
+  compatVersion,
   fail,
   progress,
   log,
   determineNpmClient,
   patchModules,
+  bundlerNames,
   logReset,
   config,
+  promptSelect,
 } from './common';
 import {
   Bundler,
@@ -31,15 +34,27 @@ export interface QualifiedBundler {
 
 const bundlers: Array<QualifiedBundler> = [];
 
+async function getBundlerToInstall() {
+  const selectedBundler = config.bundler || 'webpack5';
+
+  if (isInteractive()) {
+    return await promptSelect('No bundler found. Which one do you want to install?', bundlerNames, selectedBundler);
+  }
+
+  log('bundlerNotInstalled_0176');
+  return selectedBundler;
+}
+
 async function installDefaultBundler(root: string) {
-  const selectedBundler = config.bundler || 'webpack';
-  log('generalDebug_0003', `Installation of default bundler for "${selectedBundler}".`);
+  const selectedBundler = await getBundlerToInstall();
+  log('generalDebug_0003', `Installation of bundler "${selectedBundler}".`);
   const selectedPackage = `piral-cli-${selectedBundler}`;
   log('generalDebug_0003', `Determining npm client at "${root}" ...`);
   const client = await determineNpmClient(root);
-  log('generalDebug_0003', `Prepare to install ${selectedPackage}@${cliVersion} using "${client}" into "${root}".`);
+  const packageId = `${selectedPackage}@^${compatVersion}`;
+  log('generalDebug_0003', `Prepare to install ${packageId} using "${client}" into "${root}".`);
   progress(`Installing ${selectedPackage} ...`);
-  await installNpmPackage(client, `${selectedPackage}@${cliVersion}`, root, '--save-dev', '--save-exact');
+  await installNpmPackage(client, packageId, root, '--save-dev', '--save-exact');
   log('generalDebug_0003', `Installed bundler from "${selectedPackage}".`);
 
   require('./inject').inject(selectedPackage);

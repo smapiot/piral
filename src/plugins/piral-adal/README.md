@@ -71,21 +71,25 @@ The separation into `setupAdalClient` and `createAdalApi` was done to simplify t
 
 Normally, you would want to have different modules here. As an example consider the following code:
 
-```ts
+```jsx
 // module adal.ts
 import { setupAdalClient } from 'piral-adal';
 
 export const client = setupAdalClient({ ... });
 
-// app.ts
+// app.tsx
+import * as React from 'react';
 import { createAdalApi } from 'piral-adal';
+import { createInstance } from 'piral-core';
 import { client } from './adal';
+import { render } from 'react-dom';
 
 export function render() {
-  renderInstance({
+  const instance = createInstance({
     // ...
     plugins: [createAdalApi(client)],
   });
+  render(<Piral instance={instance} />, document.querySelector('#app'));
 }
 
 // index.ts

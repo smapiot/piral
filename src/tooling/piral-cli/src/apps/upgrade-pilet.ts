@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import { LogLevels, NpmClientType } from '../types';
 import {
-  readJson,
   installNpmPackage,
   checkExistingDirectory,
   patchPiletPackage,
@@ -24,7 +23,7 @@ import {
   getPiralPath,
   isMonorepoPackageRef,
   getPiletScaffoldData,
-  SourceLanguage,
+  retrievePiletData,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -88,6 +87,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     logLevel = upgradePiletDefaults.logLevel,
     install = upgradePiletDefaults.install,
     variables = upgradePiletDefaults.variables,
+    npmClient: defaultNpmClient = upgradePiletDefaults.npmClient,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -98,13 +98,13 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     fail('invalidPiletTarget_0040');
   }
 
-  const npmClient = await determineNpmClient(root, options.npmClient);
-  const pckg = await readJson(root, 'package.json');
-  const { devDependencies = {}, dependencies = {}, piral, source } = pckg;
+  const npmClient = await determineNpmClient(root, defaultNpmClient);
+  const { apps, piletPackage } = await retrievePiletData(root);
+  const { devDependencies = {}, dependencies = {}, source } = piletPackage;
 
-  if (piral && typeof piral === 'object') {
-    const sourceName = piral.name;
-    const language = /\.jsx?$/.test(source) ? SourceLanguage.js : SourceLanguage.ts;
+  for (const { appPackage } of apps) {
+    const sourceName = appPackage.name;
+    const language = /\.jsx?$/.test(source) ? 'js' : 'ts';
 
     if (!sourceName || typeof sourceName !== 'string') {
       fail('invalidPiletPackage_0042');
@@ -170,9 +170,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       log('generalDebug_0003', `Run: ${postUpgrade}`);
       await runScript(postUpgrade, root);
     }
-
-    logDone('Pilet upgraded successfully!');
-  } else {
-    fail('invalidPiletPackage_0041');
   }
+
+  logDone('Pilet upgraded successfully!');
 }

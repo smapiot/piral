@@ -96,7 +96,7 @@ export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletMod
             alternative: simpleName,
             options,
             close() {
-              setTimeout(() => context.closeModal(dialog), 0);
+              context.closeModal(dialog);
             },
           };
           context.openModal(dialog);

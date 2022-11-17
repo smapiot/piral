@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { DefaultBreadcrumbsContainer } from './default';
 
 jest.mock('piral-core', () => ({
@@ -35,10 +35,10 @@ const state = {
 
 (React as any).useMemo = (cb) => cb();
 
-const StubBreadcrumbsContainer: React.FC = () => <div />;
+const StubBreadcrumbsContainer: React.FC = () => <ul />;
 StubBreadcrumbsContainer.displayName = 'StubBreadcrumbsContainer';
 
-const StubBreadcrumbItem: React.FC = () => <div />;
+const StubBreadcrumbItem: React.FC = () => <li />;
 StubBreadcrumbItem.displayName = 'BreadcrumbItem';
 
 describe('Default Breadcrumbs Component', () => {
@@ -47,13 +47,13 @@ describe('Default Breadcrumbs Component', () => {
       component: StubBreadcrumbItem,
       preferences: {},
     };
-    const node = mount(
+    const node = render(
       <DefaultBreadcrumbsContainer>
         <StubBreadcrumbItem />
       </DefaultBreadcrumbsContainer>,
     );
-    expect(node.find(StubBreadcrumbsContainer).length).toBe(0);
-    expect(node.find(StubBreadcrumbItem).length).toBe(1);
+    expect(node.queryByRole('list')).toBe(null);
+    expect(node.getAllByRole('listitem').length).toBe(1);
   });
 
   it('renders the provided extension in the default case', () => {
@@ -62,12 +62,12 @@ describe('Default Breadcrumbs Component', () => {
         component: StubBreadcrumbsContainer,
       },
     ];
-    const node = mount(
+    const node = render(
       <DefaultBreadcrumbsContainer>
         <StubBreadcrumbItem />
       </DefaultBreadcrumbsContainer>,
     );
-    expect(node.find(StubBreadcrumbItem).length).toBe(0);
-    expect(node.find(StubBreadcrumbsContainer).length).toBe(1);
+    expect(node.queryByRole('listitem')).toBe(null);
+    expect(node.getAllByRole('list').length).toBe(1);
   });
 });

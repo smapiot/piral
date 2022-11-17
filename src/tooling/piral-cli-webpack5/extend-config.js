@@ -14,22 +14,34 @@ function changePlugin(config, classRef, cb) {
     .filter(Boolean);
 }
 
+function matchesLoader(r, loaderPath, cb, otherwise) {
+  const uses = r.use || [];
+
+  if (uses.some((m) => m && (m === loaderPath || (typeof m === 'object' && m.loader === loaderPath)))) {
+    if (typeof cb === 'function') {
+      return cb(r);
+    } else {
+      return cb;
+    }
+  } else if (typeof otherwise === 'function') {
+    return otherwise();
+  }
+
+  return r;
+}
+
 function changeRule(config, name, cb) {
   const loaderPath = require.resolve(name);
   config.module.rules = config.module.rules
-    .map((rule) => {
-      const uses = rule.use || [];
-
-      if (uses.some((m) => m && (m === loaderPath || (typeof m === 'object' && m.loader === loaderPath)))) {
-        if (typeof cb === 'function') {
-          return cb(rule);
-        } else {
-          return cb;
+    .map((rule) =>
+      matchesLoader(rule, loaderPath, cb, () => {
+        if (rule.oneOf) {
+          rule.oneOf = rule.oneOf.map((r) => matchesLoader(r, loaderPath, cb)).filter(Boolean);
         }
-      }
 
-      return rule;
-    })
+        return rule;
+      }),
+    )
     .filter(Boolean);
 }
 
@@ -89,10 +101,6 @@ function changeLoaderOptions(config, name, options) {
 module.exports = function (override) {
   return (config) => {
     if (override && typeof override === 'object') {
-      if ('fileLoaderOptions' in override) {
-        changeLoaderOptions(config, 'file-loader', override.fileLoaderOptions);
-      }
-
       if ('tsLoaderOptions' in override) {
         changeLoaderOptions(config, 'ts-loader', override.tsLoaderOptions);
       }
@@ -146,12 +154,12 @@ module.exports = function (override) {
       }
 
       if ('rules' in override && Array.isArray(override.rules)) {
-        config.module.rules.push(...override.rules);
+        config.module.rules.unshift(...override.rules);
       }
 
       if ('updatePlugins' in override && Array.isArray(override.updatePlugins)) {
         override.updatePlugins.forEach((def) => {
-          if (def.type && def.rule) {
+          if (def.type && def.plugin) {
             changePlugin(config, def.type, def.plugin);
           }
         });

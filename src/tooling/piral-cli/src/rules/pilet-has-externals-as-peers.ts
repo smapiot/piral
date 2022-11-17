@@ -1,5 +1,5 @@
 import { PiletRuleContext } from '../types';
-import { getPiletsInfo, getSourceFiles, isValidDependency } from '../common';
+import { retrieveExternals, getSourceFiles, isValidDependency } from '../common';
 
 export type Options = 'ignore' | 'active' | 'only-used';
 
@@ -21,14 +21,15 @@ Received: Missing "${missingNames.join('", "')}".
  */
 export default async function (context: PiletRuleContext, options: Options = 'ignore') {
   if (options !== 'ignore') {
-    const { externals } = getPiletsInfo(context.data.appPackage);
+    const [app] = context.apps;
+    const externals = await retrieveExternals(app.appRoot, app.appPackage);
     const markedPeerDependencies = Object.keys(context.peerDependencies);
     const markedPeerModules = context.peerModules;
     const missingExternals = externals
-      .map((name) => {
-        const valid = isValidDependency(name);
-        const missing = !(valid ? markedPeerDependencies : markedPeerModules).includes(name);
-        return { name, valid, missing };
+      .map((external) => {
+        const valid = isValidDependency(external.name);
+        const missing = !(valid ? markedPeerDependencies : markedPeerModules).includes(external.name);
+        return { name: external.name, valid, missing };
       })
       .filter((m) => m.missing);
 

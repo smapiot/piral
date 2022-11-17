@@ -1,22 +1,16 @@
 import { ComponentType } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute } from '../utils';
+import { runPilet } from 'piral-base';
+import { withKey, replaceOrAddItem, removeNested, withProvider, withRoute, noop } from '../utils';
 import {
-  LayoutType,
   ComponentsState,
   ErrorComponentsState,
   BaseRegistration,
   RegistryState,
   GlobalStateContext,
   Pilet,
+  PiletEntry,
 } from '../types';
-
-export function changeLayout(ctx: GlobalStateContext, current: LayoutType) {
-  ctx.dispatch((state) => ({
-    ...state,
-    app: withKey(state.app, 'layout', current),
-  }));
-}
 
 export function initialize(ctx: GlobalStateContext, loading: boolean, error: Error | undefined, modules: Array<Pilet>) {
   ctx.dispatch((state) => ({
@@ -30,7 +24,29 @@ export function initialize(ctx: GlobalStateContext, loading: boolean, error: Err
   }));
 }
 
-export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {
+export function addPilet(ctx: GlobalStateContext, meta: PiletEntry): Promise<void> {
+  return ctx.options
+    .loadPilet(meta)
+    .then((pilet) => ctx.injectPilet(pilet))
+    .then((pilet) => runPilet(ctx.options.createApi, pilet, ctx.options.hooks))
+    .then(noop);
+}
+
+export function removePilet(ctx: GlobalStateContext, name: string): Promise<void> {
+  ctx.dispatch((state) => ({
+    ...state,
+    modules: state.modules.filter((m) => m.name !== name),
+    registry: removeNested<RegistryState, BaseRegistration>(state.registry, (m) => m.pilet === name),
+  }));
+
+  ctx.emit('unload-pilet', {
+    name,
+  });
+
+  return Promise.resolve();
+}
+
+export function injectPilet(ctx: GlobalStateContext, pilet: Pilet): Pilet {
   ctx.dispatch((state) => ({
     ...state,
     modules: replaceOrAddItem(state.modules, pilet, (m) => m.name === pilet.name),
@@ -40,6 +56,8 @@ export function injectPilet(ctx: GlobalStateContext, pilet: Pilet) {
   ctx.emit('unload-pilet', {
     name: pilet.name,
   });
+
+  return pilet;
 }
 
 export function setComponent<TKey extends keyof ComponentsState>(

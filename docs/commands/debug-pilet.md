@@ -1,4 +1,4 @@
-# `debug-pilet`
+# `pilet debug`
 
 Starts the debugging process for a pilet using a Piral instance.
 
@@ -7,13 +7,13 @@ Starts the debugging process for a pilet using a Piral instance.
 From the command line:
 
 ```sh
-pb debug-pilet [source..]
+pilet debug [source..]
 ```
 
 Alternative:
 
 ```sh
-pilet debug [source..]
+pb debug-pilet [source..]
 ```
 
 ## Aliases
@@ -74,7 +74,7 @@ Sets the maximum number of concurrent build jobs.
 
 
 - Type: `number`
-- Default: `12`
+- Default: `16`
 
 ### `--open`
 
@@ -161,14 +161,6 @@ Sets the path to a custom Piral instance for serving.
 - Type: `string`
 - Default: `undefined`
 
-### `--base`
-
-Sets the base directory. By default the current directory is used.
-
-
-- Type: `string`
-- Default: `process.cwd()`
-
 ### `--feed`
 
 Sets the URL of a pilet feed for including remote pilets.
@@ -176,3 +168,11 @@ Sets the URL of a pilet feed for including remote pilets.
 
 - Type: `string`
 - Default: `undefined`
+
+### `--base`
+
+Sets the base directory. By default the current directory is used.
+
+
+- Type: `string`
+- Default: `process.cwd()`

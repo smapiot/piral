@@ -12,6 +12,7 @@ Piral is developed as a monorepo.
 - [piral-hyperapp](./piral-hyperapp/README.md) provides integration for *Hyperapp*
 - [piral-inferno](./piral-inferno/README.md) provides integration for *Inferno*
 - [piral-litel](./piral-litel/README.md) provides integration for *LitElement*
+- [piral-million](./piral-million/README.md) provides integration for *Million*
 - [piral-mithril](./piral-mithril/README.md) provides integration for *Mithril*
 - [piral-ng](./piral-ng/README.md) provides integration for *Angular*
 - [piral-ngjs](./piral-ngjs/README.md) provides integration for *Angular.js*

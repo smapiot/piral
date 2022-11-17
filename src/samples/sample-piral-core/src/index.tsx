@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import {
   createInstance,
@@ -9,6 +9,7 @@ import {
   Piral,
   SetComponent,
   SetRoute,
+  LayoutProps,
 } from 'piral-core';
 import { createMenuApi } from 'piral-menu';
 import { createFeedsApi } from 'piral-feeds';
@@ -149,25 +150,21 @@ const Notifications: React.FC = () => {
   );
 };
 
-const Layout: React.FC = ({ children }) => {
-  const layout = useGlobalState((s) => s.app.layout);
-
-  return (
-    <div className="app-container">
-      <div className="app-header">
-        <h1>Sample Portal ({layout})</h1>
-        <SearchForm />
-        <Menu />
-      </div>
-      <div className="app-content">{children}</div>
-      <div className="app-footer">
-        For more information or the source code check out our{' '}
-        <a href="https://github.com/smapiot/piral">GitHub repository</a>.
-      </div>
-      <Notifications />
+const Layout: React.FC<LayoutProps> = ({ children, currentLayout }) => (
+  <div className="app-container">
+    <div className="app-header">
+      <h1>Sample Portal ({currentLayout})</h1>
+      <SearchForm />
+      <Menu />
     </div>
-  );
-};
+    <div className="app-content">{children}</div>
+    <div className="app-footer">
+      For more information or the source code check out our{' '}
+      <a href="https://github.com/smapiot/piral">GitHub repository</a>.
+    </div>
+    <Notifications />
+  </div>
+);
 
 const instance = createInstance({
   availablePilets,
@@ -186,7 +183,8 @@ const instance = createInstance({
   },
 });
 
-const app = (
+const root = createRoot(document.querySelector('#app'));
+root.render(
   <Piral instance={instance}>
     <SetComponent name="LoadingIndicator" component={Loader} />
     <SetComponent name="Layout" component={Layout} />
@@ -194,5 +192,3 @@ const app = (
     <SetRoute path="/sitemap" component={Sitemap} />
   </Piral>
 );
-
-render(app, document.querySelector('#app'));

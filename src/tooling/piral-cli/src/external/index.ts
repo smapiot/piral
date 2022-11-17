@@ -1,5 +1,3 @@
-import logger = require('@parcel/logger');
-import stripAnsi = require('strip-ansi');
 import inquirer = require('inquirer');
 import jju = require('jju');
 import glob = require('glob');
@@ -10,5 +8,10 @@ import axios = require('axios');
 import mime = require('mime');
 import getPort = require('get-port');
 import open = require('open');
+import chalk = require('chalk');
 
-export { logger, inquirer, glob, tar, FormData, rc, axios, mime, stripAnsi, getPort, open, jju };
+import isInteractive from 'is-interactive';
+import ora from 'ora';
+import { getModulePath } from './resolve';
+
+export { chalk, inquirer, isInteractive, ora, glob, tar, FormData, rc, axios, mime, getPort, open, jju, getModulePath };

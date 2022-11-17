@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type {
   Dict,
   WrappedComponent,
@@ -75,11 +75,25 @@ export interface ModalsHostProps {
    * Callback to invoke closing the modal dialog.
    */
   close(): void;
+  /**
+   * The dialogs to display.
+   */
+  children?: ReactNode;
 }
 
 export interface ModalsDialogProps extends OpenModalDialog {
+  /**
+   * The layout options given for the current dialog.
+   */
   layout: ModalLayoutOptions;
+  /**
+   * The provided default options.
+   */
   defaults: any;
+  /**
+   * The content of the dialog to display.
+   */
+  children?: ReactNode;
 }
 
 /**

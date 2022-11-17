@@ -12,7 +12,7 @@ If you want to run the sample you can do it with our CLI tool (which should be a
 yarn watch:demo-cross
 ```
 
-This will open a development server sitting at `http://localhost:1234`. Right now our CLI is just a tiny wrapper around Parcel :rocket:.
+This will open a development server sitting at `http://localhost:1234`.
 
 ## Building
 

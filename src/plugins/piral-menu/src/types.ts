@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type {
   WrappedComponent,
   Dict,
@@ -62,6 +62,10 @@ export interface MenuContainerProps {
    * The type of the menu.
    */
   type: MenuType;
+  /**
+   * The menu items to display.
+   */
+  children?: ReactNode;
 }
 
 export interface MenuItemProps {
@@ -73,6 +77,10 @@ export interface MenuItemProps {
    * The provided menu settings.
    */
   meta: MenuSettings;
+  /**
+   * The content of the menu item.
+   */
+  children?: ReactNode;
 }
 
 /**

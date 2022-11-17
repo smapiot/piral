@@ -50,7 +50,7 @@ function getFileSizeInKB(path: string) {
 export default async function (context: PiletRuleContext, options: Options = -50) {
   if (options !== 0 && typeof options === 'number') {
     const maxSize = Math.abs(options);
-    const { main } = context.data.piletPackage;
+    const { main } = context.piletPackage;
     const path = await getPiletMainPath(main, context.root);
 
     if (path) {

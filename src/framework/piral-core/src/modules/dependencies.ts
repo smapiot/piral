@@ -1,5 +1,6 @@
-import { PiletMetadata, AvailableDependencies, isfunc } from 'piral-base';
-import fillDependencies from '../../dependencies.codegen';
+import { isfunc } from 'piral-base';
+import type { AvailableDependencies, PiletEntries } from '../types';
+import { fillDependencies } from '../../app.codegen';
 
 /**
  * The global dependencies, which represent the dependencies
@@ -30,6 +31,6 @@ return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
   .then(res => res.items);
 ```
  */
-export function defaultModuleRequester(): Promise<Array<PiletMetadata>> {
+export function defaultModuleRequester(): Promise<PiletEntries> {
   return Promise.resolve([]);
 }

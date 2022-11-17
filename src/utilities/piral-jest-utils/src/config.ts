@@ -3,12 +3,14 @@ import { resolve } from 'path';
 
 const config: Config.InitialOptions = {
   collectCoverage: true,
-  setupFiles: [resolve(__dirname, 'setup.js')],
+  setupFiles: [resolve(__dirname, 'setupBefore.js')],
+  setupFilesAfterEnv: [resolve(__dirname, 'setupAfter.js')],
   roots: ['src/'],
   testEnvironment: 'jsdom',
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.codegen$': resolve(__dirname, 'codegen.js'),
   },
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
@@ -19,10 +21,25 @@ const config: Config.InitialOptions = {
   globals: {
     NODE_ENV: 'test',
     'ts-jest': {
-      diagnostics: false,
+      diagnostics: {
+        ignoreCodes: [
+          'TS151001',
+          'TS2786',
+          'TS2345',
+          'TS2322',
+          'TS2554',
+          'TS2717',
+          'TS2488',
+          'TS2739',
+          'TS2339',
+          'TS2741',
+          'TS2532',
+          'TS1117',
+          'TS2740',
+        ],
+      },
     },
   },
-  testURL: 'http://localhost',
   verbose: true,
 };
 

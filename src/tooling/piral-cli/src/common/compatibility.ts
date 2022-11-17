@@ -1,5 +1,6 @@
 import { findCompatVersion, compatVersion, cliVersion } from './info';
 import { findPackageVersion } from './package';
+import { frameworkLibs } from './constants';
 import { log } from './log';
 
 export function checkAppShellCompatibility(piralVersion: string) {
@@ -23,7 +24,7 @@ export function checkAppShellCompatibility(piralVersion: string) {
 
 export async function checkCliCompatibility(root: string) {
   log('generalDebug_0003', `Checking compatibility ...`);
-  const piralVersion = await findPackageVersion(root, 'piral-base');
+  const piralVersion = await findPackageVersion(root, frameworkLibs);
   const compatible = findCompatVersion(piralVersion);
   log('generalDebug_0003', `Used versions: "${compatible}" and "${compatVersion}".`);
 

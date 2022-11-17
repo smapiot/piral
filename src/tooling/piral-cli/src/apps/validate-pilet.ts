@@ -46,11 +46,11 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     peerModules,
     root,
     importmap,
+    apps,
+    piletPackage,
     ignored: _0,
-    emulator: _1,
-    ...data
   } = await retrievePiletData(target, app);
-  const { validators } = getPiletsInfo(data.appPackage);
+  const { validators } = getPiletsInfo(apps[0].appPackage);
   const errors: Array<string> = [];
   const warnings: Array<string> = [];
   const context: PiletRuleContext = {
@@ -68,7 +68,8 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     importmap,
     peerModules,
     root,
-    data,
+    apps,
+    piletPackage,
   };
 
   await runRules(rules, context, validators);

@@ -80,6 +80,7 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
     target = upgradePiralDefaults.target,
     logLevel = upgradePiralDefaults.logLevel,
     install = upgradePiralDefaults.install,
+    npmClient: defaultNpmClient = upgradePiralDefaults.npmClient,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
@@ -91,7 +92,7 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
     fail('packageJsonNotFound_0020');
   }
 
-  const npmClient = await determineNpmClient(root, options.npmClient);
+  const npmClient = await determineNpmClient(root, defaultNpmClient);
 
   progress(`Checking provided version ...`);
   const realVersion = await findSpecificVersion('piral-cli', version);

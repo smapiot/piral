@@ -49,9 +49,13 @@ export function createInstance(config: PiralInstanceOptions = {}): PiralInstance
   const usedPlugins = Array.isArray(definedPlugins) ? definedPlugins : [definedPlugins];
   const createApi = apiFactory(context, usedPlugins);
   const root = createApi({
-    name: 'root',
-    version: process.env.BUILD_PCKG_VERSION || '1.0.0',
-    spec: '',
+    name: '_',
+    version: '0',
+    spec: 'v0',
+    basePath: '',
+    link: '',
+    config: {},
+    dependencies: {},
   });
   const options = createPiletOptions({
     context,

@@ -28,8 +28,8 @@ export async function installPackage(packageRef: string, target = '.', ...flags:
   return ms.value;
 }
 
-export async function detectClient(root: string) {
-  return !!(await findFile(root, 'package-lock.json'));
+export async function detectClient(root: string, stopDir = resolve(root, '/')) {
+  return !!(await findFile(root, 'package-lock.json', stopDir));
 }
 
 export async function isProject(root: string, packageRef: string) {

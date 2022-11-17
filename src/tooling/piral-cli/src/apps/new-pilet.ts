@@ -1,8 +1,7 @@
 import { resolve, basename } from 'path';
-import { LogLevels, NpmClientType } from '../types';
+import { SourceLanguage, LogLevels, NpmClientType } from '../types';
 import {
   ForceOverwrite,
-  SourceLanguage,
   createDirectory,
   createFileIfNotExists,
   installNpmPackage,
@@ -30,6 +29,7 @@ import {
   getPiletScaffoldData,
   config,
   initNpmProject,
+  cliVersion,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -91,20 +91,26 @@ export interface NewPiletOptions {
    * Places additional variables that should used when scaffolding.
    */
   variables?: Record<string, string>;
+
+  /**
+   * Sets Pilet's name
+   */
+  name?: string;
 }
 
 export const newPiletDefaults: NewPiletOptions = {
   target: '.',
   registry: config.registry,
-  source: 'piral',
+  source: undefined,
   forceOverwrite: ForceOverwrite.no,
   language: config.language,
   install: true,
   template: undefined,
   logLevel: LogLevels.info,
-  npmClient: config.npmClient,
+  npmClient: undefined,
   bundlerName: 'none',
   variables: {},
+  name: undefined,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -119,17 +125,18 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     logLevel = newPiletDefaults.logLevel,
     bundlerName = newPiletDefaults.bundlerName,
     variables = newPiletDefaults.variables,
+    npmClient: defaultNpmClient = newPiletDefaults.npmClient,
+    name = newPiletDefaults.name,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
   setLogLevel(logLevel);
   progress('Preparing source and target ...');
-  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(fullBase, source);
   const success = await createDirectory(root);
 
   if (success) {
-    const npmClient = await determineNpmClient(root, options.npmClient);
-    const projectName = basename(root);
+    const npmClient = await determineNpmClient(root, defaultNpmClient);
+    const projectName = name || basename(root);
 
     progress(`Scaffolding new pilet in %s ...`, root);
 
@@ -168,6 +175,20 @@ always-auth=true`,
       );
     }
 
+    await createFileIfNotExists(
+      root,
+      'pilet.json',
+      JSON.stringify(
+        {
+          schemaVersion: 'v2',
+        },
+        undefined,
+        2,
+      ),
+    );
+
+    const usedSource = source || `empty-piral@${cliVersion}`;
+    const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(fullBase, usedSource);
     const isLocal = isLinkedPackage(sourceName, type, hadVersion);
 
     if (!isLocal) {

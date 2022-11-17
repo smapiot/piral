@@ -1,18 +1,18 @@
 import * as React from 'react';
+import create from 'zustand';
+import { render } from '@testing-library/react';
 import { Mediator } from './Mediator';
-import { Atom, swap, deref } from '@dbeining/react-atom';
-import { mount } from 'enzyme';
 import { StateContext } from '../state';
 import { PiletMetadata } from '../types';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     app: {
       layout: 'tablet',
       loading: false,
       error: undefined,
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -20,21 +20,22 @@ function createMockContainer() {
       emit: jest.fn(),
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
       readState(select) {
-        return select(deref(state));
+        return select(state.getState());
       },
       initialize(loading, error, modules) {
-        swap(state, (state) => ({
-          ...state,
+        const s = state.getState();
+        state.setState({
+          ...s,
           app: {
-            ...state.app,
+            ...s.app,
             error,
             loading,
           },
           modules,
-        }));
+        } as any);
       },
     } as any,
   };
@@ -49,11 +50,11 @@ describe('Component Mediator', () => {
       },
     };
     const { context } = createMockContainer();
-    const node = mount(
+    render(
       <StateContext.Provider value={context}>
         <Mediator options={options} />
       </StateContext.Provider>,
     );
-    expect(deref<any>(context.state).app.layout).toEqual('tablet');
+    expect(context.state.getState().app.layout).toEqual('tablet');
   });
 });

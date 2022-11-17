@@ -1,8 +1,8 @@
 declare module 'piral-core/lib/types/custom' {
-  interface PiletCustomApi extends PiralAdalApi {}
+  interface PiletCustomApi extends PiletAdalApi {}
 }
 
-export interface PiralAdalApi {
+export interface PiletAdalApi {
   /**
    * Gets the currently valid access token, if any.
    */

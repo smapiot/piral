@@ -1,24 +1,42 @@
-import { getDefaultLoader, extendLoader } from './loader';
+import { checkCreateApi, promisify, registerDependencies } from './utils';
 import { loadPilets, loadMetadata } from './load';
-import { registerDependencies } from './system';
-import { createPilets, createPilet } from './aggregate';
-import type { LoadPiletsOptions, PiletsLoaded, Pilet, PiletApiCreator, PiletLoadingStrategy } from './types';
+import { getDefaultLoader, extendLoader } from './loader';
+import { runPilet, runPilets } from './aggregate';
+import type {
+  PiletLifecycleHooks,
+  LoadPiletsOptions,
+  PiletsLoaded,
+  Pilet,
+  PiletApiCreator,
+  PiletLoadingStrategy,
+} from './types';
 
-function evalAll(createApi: PiletApiCreator, oldModules: Array<Pilet>, newModules: Array<Pilet>) {
-  if (!Array.isArray(oldModules)) {
+function runAll(
+  createApi: PiletApiCreator,
+  existingPilets: Array<Pilet>,
+  additionalPilets: Array<Pilet>,
+  hooks?: PiletLifecycleHooks,
+) {
+  if (!Array.isArray(existingPilets)) {
     return Promise.reject(`The existing pilets must be passed as an array.`);
   }
 
-  try {
-    for (const oldModule of oldModules) {
-      const [newModule] = newModules.filter((m) => m.name === oldModule.name);
+  if (!checkCreateApi(createApi)) {
+    return Promise.resolve([]);
+  }
 
-      if (newModule) {
-        newModules.splice(newModules.indexOf(newModule), 1);
+  try {
+    for (const existing of existingPilets) {
+      const { name } = existing;
+      const [newPilet] = additionalPilets.filter((pilet) => pilet.name === name);
+
+      if (newPilet) {
+        additionalPilets.splice(additionalPilets.indexOf(newPilet), 1);
       }
     }
 
-    return createPilets(createApi, [...oldModules, ...newModules]);
+    const pilets = [...existingPilets, ...additionalPilets];
+    return runPilets(createApi, pilets, hooks);
   } catch (err) {
     return Promise.reject(err);
   }
@@ -40,27 +58,33 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
       pilets = [],
       loadPilet = getDefaultLoader(config),
       loaders,
+      hooks,
     } = options;
-    const loader = loadMetadata(fetchPilets);
+    const loadingAll = loadMetadata(fetchPilets);
     const loadSingle = extendLoader(loadPilet, loaders);
 
-    return registerDependencies(dependencies).then(() =>
-      createPilets(createApi, pilets).then((allModules) => {
-        if (async && allModules.length > 0) {
-          cb(undefined, [...allModules]);
+    return registerDependencies(dependencies).then(() => {
+      if (!checkCreateApi(createApi)) {
+        cb(undefined, []);
+        return Promise.resolve();
+      }
+
+      return runPilets(createApi, pilets, hooks).then((integratedPilets) => {
+        if (async && integratedPilets.length > 0) {
+          cb(undefined, [...integratedPilets]);
         }
 
-        const followUp = loader.then((metadata) => {
+        const followUp = loadingAll.then((metadata) => {
           const promises = metadata.map((m) =>
-            loadSingle(m).then((mod) => {
-              const available = pilets.filter((m) => m.name === mod.name).length === 0;
+            loadSingle(m).then((app) => {
+              const available = pilets.filter((m) => m.name === app.name).length === 0;
 
               if (available) {
-                return createPilet(createApi, mod).then((newModule) => {
-                  allModules.push(newModule);
+                return runPilet(createApi, app, hooks).then((additionalPilet) => {
+                  integratedPilets.push(additionalPilet);
 
                   if (async) {
-                    cb(undefined, [...allModules]);
+                    cb(undefined, [...integratedPilets]);
                   }
                 });
               }
@@ -69,14 +93,14 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
 
           return Promise.all(promises).then(() => {
             if (!async) {
-              cb(undefined, allModules);
+              cb(undefined, integratedPilets);
             }
           });
         });
 
-        return async ? loader.then() : followUp.then();
-      }),
-    );
+        return async ? loadingAll.then() : followUp.then();
+      });
+    });
   };
 }
 
@@ -97,7 +121,7 @@ export function blazingStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): P
  */
 export function asyncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   standardStrategy(options, cb);
-  return Promise.resolve();
+  return promisify();
 }
 
 /**
@@ -113,12 +137,14 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
     pilets = [],
     loadPilet = getDefaultLoader(config),
     loaders,
+    hooks,
   } = options;
   const loadSingle = extendLoader(loadPilet, loaders);
+
   return registerDependencies(dependencies)
     .then(() => loadPilets(fetchPilets, loadSingle))
-    .then((newModules) => evalAll(createApi, pilets, newModules))
-    .then((modules) => cb(undefined, modules))
+    .then((additionalPilets) => runAll(createApi, pilets, additionalPilets, hooks))
+    .then((integratedPilets) => cb(undefined, integratedPilets))
     .catch((error) => cb(error, []));
 }
 
@@ -128,10 +154,11 @@ export function standardStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): 
  * considers the already given pilets.
  */
 export function syncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
-  const { createApi, dependencies = {}, pilets = [] } = options;
+  const { createApi, hooks, dependencies = {}, pilets = [] } = options;
+
   return registerDependencies(dependencies).then(() =>
-    evalAll(createApi, pilets, []).then(
-      (modules) => cb(undefined, modules),
+    runAll(createApi, pilets, [], hooks).then(
+      (integratedPilets) => cb(undefined, integratedPilets),
       (err) => cb(err, []),
     ),
   );
@@ -148,6 +175,6 @@ export function createDeferredStrategy(trigger: Promise<void>, strategy = standa
   return (options, cb) => {
     cb(undefined, []);
     trigger.then(() => strategy(options, cb));
-    return Promise.resolve();
+    return promisify();
   };
 }

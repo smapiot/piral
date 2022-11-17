@@ -1,3 +1,52 @@
+export interface Importmap {
+  imports: Record<string, string>;
+  inherit: Array<string>;
+}
+
+export interface PackageData {
+  name: string;
+  version: string;
+  description: string;
+  importmap?: Importmap;
+  main: string;
+  author:
+    | string
+    | {
+        name?: string;
+        url?: string;
+        email?: string;
+      };
+  dependencies: Record<string, string>;
+  peerDependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
+}
+
+// Shape of the package.json of a pilet
+export interface PiletPackageData extends PackageData {
+  piral?: {
+    name: string;
+  };
+  custom?: any;
+}
+
+// Shape of the package.json of a Piral instance or emulator
+export interface PiralPackageData extends PackageData {
+  pilets?: PiletsInfo;
+  piralCLI?: { generated: boolean; version: string };
+}
+
+export interface PiralInstancePackageData extends PiralPackageData {
+  root: string;
+  app: string;
+}
+
+export interface AppDefinition {
+  appPackage: PiralInstancePackageData;
+  appFile: string;
+  appRoot: string;
+  emulator: boolean;
+}
+
 export enum LogLevels {
   /**
    * Logging disabled
@@ -48,7 +97,6 @@ export interface ReleaseProvider {
 export interface TemplateFileLocation {
   from: string;
   to: string;
-  template?: boolean;
   deep?: boolean;
   once?: boolean;
 }
@@ -56,7 +104,6 @@ export interface TemplateFileLocation {
 export interface PiletsInfo {
   files: Array<string | TemplateFileLocation>;
   template: string;
-  externals: Array<string>;
   devDependencies: Record<string, string | true>;
   scripts: Record<string, string>;
   validators: Record<string, any>;
@@ -80,10 +127,12 @@ export interface RuleContext {
 
 export interface SharedDependency {
   id: string;
+  requireId: string;
   name: string;
   ref: string;
   type: 'local' | 'remote';
   entry: string;
+  parents?: Array<string>;
 }
 
 export interface RuleRunner<T extends RuleContext> {
@@ -97,16 +146,12 @@ export interface Rule<T extends RuleContext> {
 
 export interface PiralRuleContext extends RuleContext {
   info: PiletsInfo;
+  externals: Array<SharedDependency>;
 }
 
 export interface PiletRuleContext extends RuleContext {
-  data: PiralData;
+  apps: Array<AppDefinition>;
+  piletPackage: any;
   peerModules: Array<string>;
   importmap: Array<SharedDependency>;
-}
-
-export interface PiralData {
-  appFile: string;
-  appPackage: any;
-  piletPackage: any;
 }

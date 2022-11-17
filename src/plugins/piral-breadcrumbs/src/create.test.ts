@@ -1,12 +1,12 @@
-import { Atom, swap } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createBreadcrumbsApi } from './create';
 
 function createMockContainer() {
-  const state = Atom.of({
+  const state = create(() => ({
     registry: {
       extensions: {},
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -15,7 +15,7 @@ function createMockContainer() {
       defineActions() {},
       state,
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,
@@ -38,55 +38,52 @@ const moduleMetadata = {
 describe('Create Breadcrumb API Extensions', () => {
   it('createBreadcrumbsApi can register and unregister a breadcrumb', () => {
     const container = createMockContainer();
-    container.context.registerBreadcrumb = jest.fn();
-    container.context.unregisterBreadcrumb = jest.fn();
+    container.context.registerBreadcrumbs = jest.fn();
+    container.context.unregisterBreadcrumbs = jest.fn();
     const api = createApi(container);
     api.registerBreadcrumb('my-bc', {
       title: 'My breadcrumb',
       path: '/example',
     });
-    expect(container.context.registerBreadcrumb).toHaveBeenCalledTimes(1);
-    expect(container.context.unregisterBreadcrumb).toHaveBeenCalledTimes(0);
+    expect(container.context.registerBreadcrumbs).toHaveBeenCalledTimes(1);
+    expect(container.context.unregisterBreadcrumbs).toHaveBeenCalledTimes(0);
     api.unregisterBreadcrumb('my-bc');
-    expect(container.context.unregisterBreadcrumb).toHaveBeenCalledTimes(1);
-    expect(container.context.unregisterBreadcrumb.mock.calls[0][0]).toBe(
-      container.context.registerBreadcrumb.mock.calls[0][0],
-    );
+    expect(container.context.unregisterBreadcrumbs).toHaveBeenCalledTimes(1);
+    const ids = Object.keys(container.context.registerBreadcrumbs.mock.calls[0][0]);
+    expect(container.context.unregisterBreadcrumbs.mock.calls[0][0]).toEqual(ids);
   });
 
   it('createBreadcrumbsApi can dispose a registered breadcrumb', () => {
     const container = createMockContainer();
-    container.context.registerBreadcrumb = jest.fn();
-    container.context.unregisterBreadcrumb = jest.fn();
+    container.context.registerBreadcrumbs = jest.fn();
+    container.context.unregisterBreadcrumbs = jest.fn();
     const api = createApi(container);
     const dispose = api.registerBreadcrumb('my-bc', {
       title: 'My breadcrumb',
       path: '/example',
     });
-    expect(container.context.registerBreadcrumb).toHaveBeenCalledTimes(1);
-    expect(container.context.unregisterBreadcrumb).toHaveBeenCalledTimes(0);
+    expect(container.context.registerBreadcrumbs).toHaveBeenCalledTimes(1);
+    expect(container.context.unregisterBreadcrumbs).toHaveBeenCalledTimes(0);
     dispose();
-    expect(container.context.unregisterBreadcrumb).toHaveBeenCalledTimes(1);
-    expect(container.context.unregisterBreadcrumb.mock.calls[0][0]).toBe(
-      container.context.registerBreadcrumb.mock.calls[0][0],
-    );
+    expect(container.context.unregisterBreadcrumbs).toHaveBeenCalledTimes(1);
+    const ids = Object.keys(container.context.registerBreadcrumbs.mock.calls[0][0]);
+    expect(container.context.unregisterBreadcrumbs.mock.calls[0][0]).toEqual(ids);
   });
 
   it('createBreadcrumbsApi can dispose a registered anonymous breadcrumb', () => {
     const container = createMockContainer();
-    container.context.registerBreadcrumb = jest.fn();
-    container.context.unregisterBreadcrumb = jest.fn();
+    container.context.registerBreadcrumbs = jest.fn();
+    container.context.unregisterBreadcrumbs = jest.fn();
     const api = createApi(container);
     const dispose = api.registerBreadcrumb({
       title: 'My breadcrumb',
       path: '/example',
     });
-    expect(container.context.registerBreadcrumb).toHaveBeenCalledTimes(1);
-    expect(container.context.unregisterBreadcrumb).toHaveBeenCalledTimes(0);
+    expect(container.context.registerBreadcrumbs).toHaveBeenCalledTimes(1);
+    expect(container.context.unregisterBreadcrumbs).toHaveBeenCalledTimes(0);
     dispose();
-    expect(container.context.unregisterBreadcrumb).toHaveBeenCalledTimes(1);
-    expect(container.context.unregisterBreadcrumb.mock.calls[0][0]).toBe(
-      container.context.registerBreadcrumb.mock.calls[0][0],
-    );
+    expect(container.context.unregisterBreadcrumbs).toHaveBeenCalledTimes(1);
+    const ids = Object.keys(container.context.registerBreadcrumbs.mock.calls[0][0]);
+    expect(container.context.unregisterBreadcrumbs.mock.calls[0][0]).toEqual(ids);
   });
 });

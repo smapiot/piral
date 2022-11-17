@@ -1,4 +1,4 @@
-# `build-pilet`
+# `pilet build`
 
 Creates a production build for a pilet.
 
@@ -7,13 +7,13 @@ Creates a production build for a pilet.
 From the command line:
 
 ```sh
-pb build-pilet [source]
+pilet build [source]
 ```
 
 Alternative:
 
 ```sh
-pilet build [source]
+pb build-pilet [source]
 ```
 
 ## Aliases
@@ -66,7 +66,7 @@ Sets the maximum number of concurrent build jobs.
 
 
 - Type: `number`
-- Default: `12`
+- Default: `16`
 
 ### `--source-maps`
 

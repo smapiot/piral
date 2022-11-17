@@ -1,8 +1,8 @@
-import { Atom } from '@dbeining/react-atom';
+import create from 'zustand';
 import { defineAction, defineActions } from './define';
 
 function createMockContainer(initialState = {}) {
-  const state = Atom.of(initialState);
+  const state = create(() => initialState);
   return {
     context: {
       on: jest.fn(),

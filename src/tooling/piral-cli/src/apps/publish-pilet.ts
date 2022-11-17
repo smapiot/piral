@@ -19,6 +19,7 @@ import {
   retrievePiletData,
   removeDirectory,
   logInfo,
+  combinePiletExternals,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -134,14 +135,15 @@ async function getFiles(
     return await Promise.all(
       allEntries.map(async (entryModule) => {
         const targetDir = dirname(entryModule);
-        const { root, piletPackage, importmap, peerDependencies, peerModules, appPackage } = await retrievePiletData(
+        const { root, piletPackage, importmap, peerDependencies, peerModules, apps } = await retrievePiletData(
           targetDir,
         );
+        const piralInstances = apps.map((m) => m.appPackage.name);
         const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
         const dest = resolve(root, main);
         const outDir = dirname(dest);
         const outFile = basename(dest);
-        const externals = [...Object.keys(peerDependencies), ...peerModules];
+        const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
         progress('Triggering pilet build ...');
 
         if (fresh) {
@@ -154,7 +156,7 @@ async function getFiles(
         await callPiletBuild(
           {
             root,
-            piral: appPackage.name,
+            piralInstances,
             optimizeModules: false,
             sourceMaps: true,
             contentHash: true,

@@ -1,4 +1,4 @@
-# `upgrade-piral`
+# `piral upgrade`
 
 Upgrades the Piral instance to the latest version of the used Piral packages.
 
@@ -7,13 +7,13 @@ Upgrades the Piral instance to the latest version of the used Piral packages.
 From the command line:
 
 ```sh
-pb upgrade-piral [target-version]
+piral upgrade [target-version]
 ```
 
 Alternative:
 
 ```sh
-piral upgrade [target-version]
+pb upgrade-piral [target-version]
 ```
 
 ## Aliases
@@ -73,7 +73,7 @@ Sets the npm client to be used when upgrading.
 
 
 - Type: `string`
-- Choices: `"npm"`, `"pnpm"`, `"yarn"`, `"lerna"`, `"rush"`
+- Choices: `"npm"`, `"pnpm"`, `"pnp"`, `"yarn"`, `"lerna"`, `"rush"`
 - Default: `undefined`
 
 ### `--base`

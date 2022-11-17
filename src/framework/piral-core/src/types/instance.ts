@@ -1,16 +1,24 @@
+import type { ReactNode } from 'react';
 import type { PiletApi, PiletApiCreator, LoadPiletsOptions, EventEmitter } from 'piral-base';
 import type { GlobalStateContext } from './state';
 import type { LayoutBreakpoints } from './layout';
-import { PiralConfiguration } from './config';
+import type { PiralConfiguration } from './config';
 
 /**
- * The props of the Piral component.
+ * The props of the Piral context.
  */
-export interface PiralProps {
+export interface PiralContextProps {
   /**
    * The specific Piral instance to be used.
    */
   instance?: PiralInstance;
+  children?: ReactNode;
+}
+
+/**
+ * The props of the Piral component.
+ */
+export interface PiralProps extends PiralContextProps {
   /**
    * The custom breakpoints for the different layout modi.
    */

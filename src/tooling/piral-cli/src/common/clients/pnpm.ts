@@ -40,8 +40,8 @@ export async function installPackage(packageRef: string, target = '.', ...flags:
   return ms.value;
 }
 
-export async function detectClient(root: string) {
-  return !!(await findFile(root, 'pnpm-lock.yaml'));
+export async function detectClient(root: string, stopDir = resolve(root, '/')) {
+  return !!(await findFile(root, ['pnpm-lock.yaml', 'pnpm-workspace.yaml'], stopDir));
 }
 
 export async function initProject(projectName: string, target: string) {}

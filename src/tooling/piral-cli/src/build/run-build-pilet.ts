@@ -5,7 +5,7 @@ let handler: PiletBuildHandler;
 
 function run(
   root: string,
-  piral: string,
+  piralInstances: Array<string>,
   sourceMaps: boolean,
   contentHash: boolean,
   minify: boolean,
@@ -21,13 +21,13 @@ function run(
 ) {
   setStandardEnvs({
     production: true,
-    piral,
+    piralInstances,
     root,
   });
 
   return handler.create({
     root,
-    piral,
+    piralInstances,
     entryModule,
     targetDir,
     outDir,
@@ -54,7 +54,7 @@ process.on('message', async (msg) => {
       case 'start':
         const bundler = await run(
           process.cwd(),
-          msg.piral,
+          msg.piralInstances,
           msg.sourceMaps,
           msg.contentHash,
           msg.minify,

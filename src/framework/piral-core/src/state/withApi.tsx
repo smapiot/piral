@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { __RouterContext } from 'react-router';
 import { ErrorBoundary, wrapComponent } from '../components';
 import { defaultRender } from '../utils';
 import { AnyComponent, Errors, PiletApi, BaseComponentProps, GlobalStateContext } from '../types';
 
-const DefaultWrapper: React.FC = (props) => defaultRender(props.children);
+const DefaultWrapper: React.FC<React.PropsWithChildren<{}>> = (props) => defaultRender(props.children);
 
 function getWrapper(wrappers: Record<string, React.ComponentType<any>>, wrapperType: string) {
   const WrapAll = wrappers['*'];
@@ -26,7 +25,7 @@ function makeWrapper<TProps>(
   outerProps: any,
   wrapperType: string,
   errorType: keyof Errors,
-): React.FC<TProps> {
+): React.FC<React.PropsWithChildren<TProps>> {
   const OuterWrapper = context.readState((m) => getWrapper(m.registry.wrappers, wrapperType));
 
   return (props) => (

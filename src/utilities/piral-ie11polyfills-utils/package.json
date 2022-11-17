@@ -1,0 +1,67 @@
+{
+  "name": "piral-ie11polyfills-utils",
+  "version": "0.14.32",
+  "description": "A set of polyfills to use to make Piral instances IE11 compatible.",
+  "keywords": [
+    "piral",
+    "smapiot",
+    "pilet",
+    "modules",
+    "polyfills",
+    "ie11",
+    "utilities"
+  ],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "module": "esm/index.js",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./esm/": {
+      "import": "./esm/"
+    },
+    "./lib/": {
+      "require": "./lib/"
+    },
+    "./_/*": {
+      "import": "./esm/*.js",
+      "require": "./lib/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": true,
+  "files": [
+    "esm",
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "scripts": {
+    "cleanup": "rimraf esm lib",
+    "build": "yarn build:commonjs && yarn build:esnext",
+    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
+    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "typedoc": "typedoc --json ../../../docs/types/piral-debug-utils.json src --exclude \"src/**/*.test.*\"",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "core-js": "^3.6.4",
+    "current-script-polyfill": "^1.0.0",
+    "promise-polyfill": "^8.1.0",
+    "url-polyfill": "^1.1.5",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {},
+  "peerDependencies": {}
+}

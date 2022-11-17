@@ -1,7 +1,8 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type { RouteComponentProps, SwitchProps } from 'react-router';
 import type { FirstParametersOf, UnionOf } from './common';
 import type { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
+import type { NavigationApi } from './navigation';
 import type { LayoutType } from './layout';
 
 /**
@@ -33,7 +34,19 @@ export interface HtmlComponent<TProps> {
  * The context to be transported into the generic components.
  */
 export interface ComponentContext {
-  router: RouteComponentProps;
+  /**
+   * The router-independent navigation API.
+   */
+  navigation: NavigationApi;
+  /**
+   * The internal router object.
+   * @deprecated Exposes internals that can change at any time.
+   */
+  router: any;
+  /**
+   * The public path of the application.
+   */
+  publicPath: string;
 }
 
 /**
@@ -191,12 +204,39 @@ export interface LayoutProps {
    * The currently selected layout type.
    */
   currentLayout: LayoutType;
+  /**
+   * The page's content.
+   */
+  children: ReactNode;
 }
 
 /**
  * The props of a Router component.
  */
-export interface RouterProps {}
+export interface RouterProps {
+  /**
+   * The content to be rendered inside the router.
+   */
+  children?: ReactNode;
+  /**
+   * The public path to use.
+   */
+  publicPath: string;
+}
+
+/**
+ * Represents a path in the app registration.
+ */
+ export interface AppPath {
+  /**
+   * The exact path to use.
+   */
+  path: string;
+  /**
+   * The component to register for this path.
+   */
+  Component: ComponentType<RouteComponentProps>;
+}
 
 /**
  * The props of the RouteSwitch component.
@@ -209,14 +249,5 @@ export interface RouteSwitchProps extends SwitchProps {
   /**
    * The component to register for the different paths.
    */
-  paths: Array<{
-    /**
-     * The exact path to use.
-     */
-    path: string;
-    /**
-     * The component to register for this path.
-     */
-    Component: ComponentType<RouteComponentProps>;
-  }>;
+  paths: Array<AppPath>;
 }

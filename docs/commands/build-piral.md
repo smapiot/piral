@@ -1,4 +1,4 @@
-# `build-piral`
+# `piral build`
 
 Creates a production build for a Piral instance.
 
@@ -7,13 +7,13 @@ Creates a production build for a Piral instance.
 From the command line:
 
 ```sh
-pb build-piral [source]
+piral build [source]
 ```
 
 Alternative:
 
 ```sh
-piral build [source]
+pb build-piral [source]
 ```
 
 ## Aliases

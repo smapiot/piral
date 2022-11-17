@@ -29,17 +29,18 @@ export function createCoreApi(context: GlobalStateContext): PiletApiExtender<Pil
       unregisterPage(route) {
         context.unregisterPage(route);
       },
-      registerExtension(name, arg, defaults) {
-        context.registerExtension(name as string, {
+      registerExtension(name, reference, defaults) {
+        const component = withApi(context, reference, api, 'extension');
+        context.registerExtension(name, {
           pilet,
-          component: withApi(context, arg, api, 'extension'),
-          reference: arg,
+          component,
+          reference,
           defaults,
         });
-        return () => api.unregisterExtension(name, arg);
+        return () => api.unregisterExtension(name, reference);
       },
       unregisterExtension(name, arg) {
-        context.unregisterExtension(name as string, arg);
+        context.unregisterExtension(name, arg);
       },
       renderHtmlExtension(element, props) {
         const [dispose] = renderElement(context, element, props);

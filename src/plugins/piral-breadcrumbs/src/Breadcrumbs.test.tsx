@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import create from 'zustand';
+import { render } from '@testing-library/react';
 import { StateContext } from 'piral-core';
-import { Atom, swap, deref } from '@dbeining/react-atom';
 import { Breadcrumbs } from './Breadcrumbs';
 
-const MockBcContainer: React.FC = ({ children }) => <div>{children}</div>;
+const MockBcContainer: React.FC<any> = ({ children }) => <div role="container">{children}</div>;
 MockBcContainer.displayName = 'MockBcContainer';
 
-const MockBcItem: React.FC = ({ children }) => <div>{children}</div>;
+const MockBcItem: React.FC<any> = ({ children }) => <div role="dialog">{children}</div>;
 MockBcItem.displayName = 'MockBcTile';
 
 jest.mock('react-router', () => ({
@@ -22,7 +22,7 @@ jest.mock('react-router', () => ({
 }));
 
 function createMockContainer(breadcrumbs = {}) {
-  const state = Atom.of({
+  const state = create(() => ({
     components: {
       BreadcrumbsContainer: MockBcContainer,
       BreadcrumbItem: MockBcItem,
@@ -30,7 +30,7 @@ function createMockContainer(breadcrumbs = {}) {
     registry: {
       breadcrumbs,
     },
-  });
+  }));
   return {
     context: {
       on: jest.fn(),
@@ -39,10 +39,10 @@ function createMockContainer(breadcrumbs = {}) {
       defineActions() {},
       state,
       readState(read) {
-        return read(deref(state));
+        return read(state.getState());
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,
@@ -52,13 +52,13 @@ function createMockContainer(breadcrumbs = {}) {
 describe('Piral-Breadcrumb Container component', () => {
   it('uses container for a breadcrumbs', () => {
     const { context } = createMockContainer();
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Breadcrumbs />
       </StateContext.Provider>,
     );
-    expect(node.find(MockBcContainer).length).toBe(1);
-    expect(node.find(MockBcItem).length).toBe(0);
+    expect(node.getAllByRole("container").length).toBe(1);
+    expect(node.queryByRole("dialog")).toBe(null);
   });
 
   it('uses container and item for each breadcrumb', () => {
@@ -87,12 +87,12 @@ describe('Piral-Breadcrumb Container component', () => {
         },
       },
     });
-    const node = mount(
+    const node = render(
       <StateContext.Provider value={context}>
         <Breadcrumbs />
       </StateContext.Provider>,
     );
-    expect(node.find(MockBcContainer).length).toBe(1);
-    expect(node.find(MockBcItem).length).toBe(2);
+    expect(node.getAllByRole("container").length).toBe(1);
+    expect(node.getAllByRole("dialog").length).toBe(2);
   });
 });

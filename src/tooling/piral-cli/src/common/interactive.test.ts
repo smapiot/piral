@@ -6,6 +6,9 @@ jest.mock('../external', () => ({
   rc(_, cfg) {
     return cfg;
   },
+  ora() {
+    return {};
+  },
   inquirer: {
     prompt: (...any) => {
       return Promise.resolve({ q: answer });

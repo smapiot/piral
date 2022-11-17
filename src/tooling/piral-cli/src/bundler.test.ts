@@ -47,7 +47,10 @@ jest.mock('./common', () => ({
   config: {
     bundler: 'parcel',
   },
-  cliVersion: '1.0.0',
+  promptSelect(msg, choices, defval) {
+    return Promise.resolve(defval);
+  },
+  compatVersion: '1',
   installNpmPackage: jest.fn(),
   fail(msg) {
     throw new Error(msg);

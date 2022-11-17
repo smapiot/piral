@@ -1,12 +1,20 @@
 import type { FC } from 'react';
-import type { Pilet, PiletApiCreator, PiletLoader, PiletMetadata } from 'piral-base';
+import type { Pilet, PiletEntry, PiletRequester } from 'piral-base';
+
+export interface RouteHandler {
+  (paths: Array<RouteRegistration>): Array<RouteRegistration>;
+}
 
 export interface EmulatorConnectorOptions {
-  createApi: PiletApiCreator;
-  loadPilet: PiletLoader;
-  injectPilet?(pilet: Pilet): void;
+  addPilet(pilet: PiletEntry): Promise<void>;
+  removePilet(name: string): Promise<void>;
   piletApiFallback?: string;
-  integrate?(components: EmulatorComponents): void;
+  integrate(requester: PiletRequester): void;
+}
+
+export interface RouteRegistration {
+  path: string;
+  Component: React.ComponentType;
 }
 
 export interface ChangeSet {
@@ -18,7 +26,8 @@ export interface ChangeSet {
 }
 
 export interface EmulatorComponents {
-  components: Record<string, FC>;
+  routeFilter: RouteHandler;
+  requester: PiletRequester;
 }
 
 export interface DebugComponents {
@@ -56,14 +65,14 @@ export interface DebuggerExtensionOptions {
 
 export interface DebuggerOptions extends DebuggerExtensionOptions {
   getDependencies(): Array<string>;
-  createApi: PiletApiCreator;
-  loadPilet: PiletLoader;
-  injectPilet(pilet: Pilet): void;
   fireEvent(name: string, arg: any): void;
   getGlobalState(): any;
-  getPilets(): Array<PiletMetadata>;
+  getPilets(): Array<Pilet>;
   getExtensions(): Array<string>;
   getRoutes(): Array<string>;
-  setPilets(pilets: Array<PiletMetadata>): void;
   integrate(components: DebugComponents): void;
+  addPilet(pilet: PiletEntry): void;
+  removePilet(name: string): void;
+  updatePilet(data: any): void;
+  navigate(path: string, state?: any): void;
 }

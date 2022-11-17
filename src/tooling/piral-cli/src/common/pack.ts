@@ -1,20 +1,22 @@
-import { resolve, join } from 'path';
+import { tmpdir } from 'os';
+import { resolve, relative, join, dirname, basename } from 'path';
+import { createTgz } from './archive';
 import { log, progress, fail } from './log';
-import { readJson, move } from './io';
-import { createNpmPackage } from './npm';
-import { ForceOverwrite } from './enums';
+import { readJson, copy, removeDirectory, checkExists, makeTempDir, createDirectory } from './io';
+import { getPossiblePiletMainPaths } from './inspect';
 
-async function getFile(root: string, name: string, dest: string) {
-  const proposed = join(root, name);
+async function getPiletContentDir(root: string, packageData: any) {
+  const paths = getPossiblePiletMainPaths(packageData);
 
-  if (dest !== root) {
-    log('generalDebug_0003', `Moving file from "${root}" to "${dest}" ...`);
-    const file = await move(proposed, dest, ForceOverwrite.yes);
-    log('generalDebug_0003', 'Successfully moved file.');
-    return file;
+  for (const path of paths) {
+    const file = resolve(root, path);
+
+    if (await checkExists(file)) {
+      return dirname(file);
+    }
   }
 
-  return proposed;
+  return root;
 }
 
 export async function createPiletPackage(baseDir: string, source: string, target: string) {
@@ -36,13 +38,39 @@ export async function createPiletPackage(baseDir: string, source: string, target
     fail('packageJsonMissingVersion_0022');
   }
 
-  progress(`Packing pilet in ${dest} ...`);
-  log('generalDebug_0003', 'Creating package ...');
-  await createNpmPackage(root);
-  log('generalDebug_0003', 'Successfully created package.');
-  const name = `${pckg.name}-${pckg.version}.tgz`.replace(/@/g, '').replace(/\//g, '-');
-  log('generalDebug_0003', `Assumed package name "${name}".`);
-  const file = await getFile(root, name, dest);
+  const isFileTarget = target.endsWith('.tgz');
+  progress(`Packing pilet in "${root}" ...`);
+
+  const pckgName = pckg.name.replace(/@/g, '').replace(/\//g, '-');
+  const id = `${pckgName}-${pckg.version}`;
+  const name = isFileTarget ? basename(target) : `${id}.tgz`;
+  const file = isFileTarget ? dest : resolve(dest, name);
+  log('generalDebug_0003', `Assume package name "${name}".`);
+
+  const content = await getPiletContentDir(root, pckg);
+  const files = [resolve(root, 'package.json'), content];
+  const prefix = join(tmpdir(), `${id}-`);
+  const cwd = await makeTempDir(prefix);
+  log('generalDebug_0003', `Creating package with content from "${content}" ...`);
+
+  await Promise.all(files.map((file) => copy(file, resolve(cwd, relative(root, file)))));
+
+  log('generalDebug_0003', `Creating directory if not exist for "${file}" ...`);
+
+  await createDirectory(dirname(file));
+
+  log('generalDebug_0003', `Creating compressed archive at "${file}" relative to "${root}" ...`);
+
+  await createTgz(
+    file,
+    cwd,
+    files.map((f) => relative(root, f)),
+  );
+
+  log('generalDebug_0003', `Successfully created package from "${cwd}".`);
+
+  await removeDirectory(cwd);
+
   log('generalDebug_0003', `Packed file "${file}".`);
   return file;
 }

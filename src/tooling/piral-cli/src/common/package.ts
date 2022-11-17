@@ -2,30 +2,83 @@ import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
-import { getDependencies, getDevDependencies } from './language';
-import { SourceLanguage, ForceOverwrite } from './enums';
+import { ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
-import { computeHash } from './hash';
-import { applyTemplate } from './template';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, makePiletExternals, makeExternals } from './npm';
-import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames } from './constants';
+import { readImportmap } from './importmap';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { Framework, FileInfo, PiletsInfo, TemplateFileLocation, SharedDependency, PackageData } from '../types';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage } from './npm';
+import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
+import { getModulePath } from '../external';
+import {
+  getDependencies,
+  getDependencyPackages,
+  getDevDependencies,
+  getDevDependencyPackages,
+  getFrameworkDependencies,
+} from './language';
+import {
+  filesTar,
+  filesOnceTar,
+  declarationEntryExtensions,
+  bundlerNames,
+  piralJsonSchemaUrl,
+  piletJsonSchemaUrl,
+  frameworkLibs,
+} from './constants';
+import {
+  SourceLanguage,
+  Framework,
+  FileInfo,
+  PiletsInfo,
+  TemplateFileLocation,
+  PiletPackageData,
+  PiralPackageData,
+  SharedDependency,
+  PiletDefinition,
+  AppDefinition,
+  PiralInstancePackageData,
+} from '../types';
 
-function appendBundler(devDependencies: Record<string, string>, bundler: string, version: string) {
+export interface PiralInstanceData {
+  packageName: Framework;
+  language: SourceLanguage;
+  reactVersion: number;
+  reactRouterVersion: number;
+}
+
+async function appendBundler(devDependencies: Record<string, string>, bundler: string, proposedVersion: string) {
   if (bundler && bundler !== 'none') {
-    if (bundlerNames.includes(bundler as any)) {
-      devDependencies[`piral-cli-${bundler}`] = version;
-    } else if (!isValidDependency(bundler)) {
+    if (isValidDependency(bundler)) {
+      const sep = bundler.indexOf('@', 1);
+      const hasVersion = sep !== -1;
+      const proposedName = bundler.substring(0, hasVersion ? sep : bundler.length);
+      const givenVersion = hasVersion ? bundler.substring(sep + 1) : proposedVersion;
+      const name = bundlerNames.includes(proposedName as any) ? `piral-cli-${bundler}` : proposedName;
+      const versions = new Set([
+        givenVersion,
+        givenVersion.includes('-beta.') && 'next',
+        givenVersion.includes('-alpha.') && 'canary',
+        'latest',
+      ]);
+
+      for (const version of versions) {
+        if (version) {
+          const isAvailable = await findSpecificVersion(name, version);
+
+          // only if something was returned we know that the version exists; so we can take it.
+          if (isAvailable) {
+            devDependencies[name] = version;
+            return;
+          }
+        }
+      }
+
+      log('generalWarning_0001', `Could not find a valid version for the provided bundler "${bundler}".'`);
+    } else {
       //Error case - print warning and ignore
       log('generalWarning_0001', `The provided bundler name "${bundler}" does not refer to a valid package name.'`);
-    } else {
-      const sep = bundler.indexOf('@', 1);
-      const name = bundler.substring(0, sep !== -1 ? sep : bundler.length);
-      const version = sep !== -1 ? bundler.substring(sep + 1) : 'latest';
-      devDependencies[name] = version;
     }
   }
 }
@@ -48,7 +101,6 @@ function getDependencyVersion(
 interface FileDescriptor {
   sourcePath: string;
   targetPath: string;
-  template: boolean;
 }
 
 const globPatternStartIndicators = ['*', '?', '[', '!(', '?(', '+(', '@('];
@@ -58,12 +110,7 @@ async function getMatchingFiles(
   target: string,
   file: string | TemplateFileLocation,
 ): Promise<Array<FileDescriptor>> {
-  const {
-    from,
-    to,
-    deep = true,
-    template = false,
-  } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
+  const { from, to, deep = true } = typeof file === 'string' ? { from: file, to: file, deep: true } : file;
   const sourcePath = resolve(source, from);
   const targetPath = resolve(target, to);
   const isDirectory = await checkIsDirectory(sourcePath);
@@ -75,7 +122,6 @@ async function getMatchingFiles(
     return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(targetPath, relative(sourcePath, file)),
-      template,
     }));
   } else if (globPatternStartIndicators.some((m) => from.indexOf(m) !== -1)) {
     log('generalDebug_0003', `Matching using glob "${sourcePath}".`);
@@ -97,7 +143,6 @@ async function getMatchingFiles(
     return files.map((file) => ({
       sourcePath: file,
       targetPath: resolve(tarRoot, relative(relRoot, file)),
-      template,
     }));
   }
 
@@ -107,92 +152,119 @@ async function getMatchingFiles(
     {
       sourcePath,
       targetPath,
-      template,
     },
   ];
 }
 
 export function getPiralPath(root: string, name: string) {
-  try {
-    const path = require.resolve(`${name}/package.json`, {
-      paths: [root],
-    });
-    return dirname(path);
-  } catch (ex) {
-    log('generalDebug_0003', `Could not resolve the Piral path of "${name}" in "${root}": ${ex}.`);
+  const path = findPackageRoot(name, root);
+
+  if (!path) {
     fail('invalidPiralReference_0043');
   }
+
+  return dirname(path);
 }
 
-export function findPackageRoot(pck: string, baseDir: string) {
-  try {
-    return require.resolve(`${pck}/package.json`, {
-      paths: [baseDir],
-    });
-  } catch (ex) {
-    log('generalDebug_0003', `Could not find the package root in "${baseDir}": ${ex}.`);
-    return undefined;
-  }
-}
+function findPiralInstances(
+  proposedApps: Array<string>,
+  piletPackage: PiletPackageData,
+  piletDefinition: undefined | PiletDefinition,
+  baseDir: string,
+): Array<PiralInstancePackageData> {
+  if (proposedApps) {
+    // do nothing
+  } else if (piletDefinition) {
+    const availableApps = Object.keys(piletDefinition.piralInstances || {});
+    proposedApps = availableApps.filter((m) => piletDefinition.piralInstances[m].selected);
 
-function findPackage(pck: string | Array<string>, baseDir: string) {
-  if (Array.isArray(pck)) {
-    for (const item of pck) {
-      const result = findPackage(item, baseDir);
-
-      if (result) {
-        return result;
-      }
+    if (proposedApps.length === 0) {
+      proposedApps = availableApps.slice(0, 1);
     }
   } else {
-    const path = findPackageRoot(pck, baseDir);
-
-    if (path) {
-      log('generalDebug_0003', `Following the app package in "${path}" ...`);
-      const appPackage = require(path);
-      const relPath = appPackage && appPackage.app;
-      appPackage.app = relPath && resolve(dirname(path), relPath);
-      return appPackage;
-    }
+    proposedApps = [piletPackage.piral?.name].filter(Boolean);
   }
 
-  return undefined;
+  if (proposedApps.length > 0) {
+    return proposedApps.map((proposedApp) => {
+      const path = findPackageRoot(proposedApp, baseDir);
+
+      if (path) {
+        log('generalDebug_0003', `Following the app package in "${path}" ...`);
+        const appPackage = require(path);
+        const root = dirname(path);
+        const relPath = appPackage && appPackage.app;
+        appPackage.app = relPath && resolve(root, relPath);
+        appPackage.root = root;
+        return appPackage;
+      }
+
+      fail('appInstanceNotFound_0010', proposedApp);
+    });
+  }
+
+  return [];
 }
 
-export function readPiralPackage(root: string, name: string): Promise<PackageData> {
+export function readPiralPackage(root: string, name: string): Promise<PiralPackageData> {
   log('generalDebug_0003', `Reading the piral package in "${root}" ...`);
   const path = getPiralPath(root, name);
   return readJson(path, 'package.json');
 }
 
-export function getPiralPackage(
+export async function patchPiralPackage(
+  root: string,
   app: string,
-  language: SourceLanguage,
+  data: PiralInstanceData,
   version: string,
-  framework: Framework,
   bundler?: string,
 ) {
-  // take default packages only if piral-core
-  const packages = framework !== 'piral-core' ? {} : undefined;
-  // take default dev packages only if not piral-base
-  const typings = framework === 'piral-base' ? {} : undefined;
+  log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
+  const pkg = await getPiralPackage(app, data, version, bundler);
+
+  await updateExistingJson(root, 'package.json', pkg);
+  log('generalDebug_0003', `Succesfully patched the package.json.`);
+
+  await updateExistingJson(root, 'piral.json', {
+    $schema: piralJsonSchemaUrl,
+    pilets: getPiletsInfo({}),
+  });
+  log('generalDebug_0003', `Succesfully patched the pilet.json.`);
+}
+
+export async function getPiralPackage(app: string, data: PiralInstanceData, version: string, bundler?: string) {
+  const framework = data.packageName;
   const devDependencies = {
-    ...getDevDependencies(language, typings),
+    ...getDevDependencies(
+      data.language,
+      getDevDependencyPackages(framework, data.reactVersion, data.reactRouterVersion),
+    ),
     'piral-cli': `${version}`,
   };
   const dependencies = {
-    ...getDependencies(language, packages),
+    ...getFrameworkDependencies(framework, version),
+    ...getDependencies(data.language, getDependencyPackages(framework, data.reactVersion, data.reactRouterVersion)),
   };
 
-  appendBundler(devDependencies, bundler, version);
+  await appendBundler(devDependencies, bundler, version);
 
   return {
     app,
     scripts: {
       start: 'piral debug',
       build: 'piral build',
+      postinstall: 'piral declaration',
     },
-    pilets: getPiletsInfo({}),
+    types: 'dist/index.d.ts',
+    importmap: {
+      imports: {},
+      inherit: [
+        'piral-base', // this we take in any case
+        framework !== 'piral-base' && 'piral-core', // this we take unless we selected piral-base, then obviously core is not invited to the party
+        framework === 'piral' && 'piral', // this we take only if we selected piral
+        framework === 'piral-native' && 'piral-native', // this we also only take if we selected piral-native
+      ].filter(Boolean),
+    },
     dependencies,
     devDependencies,
   };
@@ -220,7 +292,6 @@ async function getAvailableFiles(
   return files.map((file) => ({
     sourcePath: file,
     targetPath: resolve(root, relative(base, file)),
-    template: fileMap.find((m) => resolve(source, m.from) === file)?.template || false,
   }));
 }
 
@@ -250,17 +321,13 @@ async function copyFiles(
   variables?: Record<string, string>,
 ) {
   for (const subfile of subfiles) {
-    const { sourcePath, targetPath, template } = subfile;
+    const { sourcePath, targetPath } = subfile;
     const exists = await checkExists(sourcePath);
 
     if (exists) {
       const overwrite = originalFiles.some((m) => m.path === targetPath && !m.changed);
       const force = overwrite ? ForceOverwrite.yes : forceOverwrite;
-      const written = await copy(sourcePath, targetPath, force);
-
-      if (written && template && variables) {
-        await applyTemplate(targetPath, variables);
-      }
+      await copy(sourcePath, targetPath, force);
     } else {
       fail('cannotFindFile_0046', sourcePath);
     }
@@ -331,7 +398,7 @@ function tryFindPackageVersion(packageName: string): string {
 export async function copyPiralFiles(
   root: string,
   name: string,
-  piralInfo: PackageData,
+  piralInfo: PiralPackageData,
   forceOverwrite: ForceOverwrite,
   variables: Record<string, string>,
   originalFiles?: Array<FileInfo>,
@@ -351,10 +418,9 @@ export async function copyPiralFiles(
   await copyFiles(files, forceOverwrite, originalFiles, variables);
 }
 
-export function getPiletsInfo(piralInfo: Partial<PackageData>): PiletsInfo {
+export function getPiletsInfo(piralInfo: Partial<PiralPackageData>): PiletsInfo {
   const {
     files = [],
-    externals = [],
     scripts = {},
     template = 'default',
     validators = {},
@@ -368,7 +434,6 @@ export function getPiletsInfo(piralInfo: Partial<PackageData>): PiletsInfo {
 
   return {
     files,
-    externals,
     scripts,
     template,
     validators,
@@ -424,9 +489,11 @@ export function findDependencyVersion(
   pckg: Record<string, any>,
   rootPath: string,
   packageName: string,
+  parents: Array<string> = [],
 ): Promise<string> {
   const { devDependencies = {}, dependencies = {} } = pckg;
   const desiredVersion = dependencies[packageName] ?? devDependencies[packageName];
+  const [parent] = parents;
 
   if (desiredVersion) {
     if (isGitPackage(desiredVersion)) {
@@ -436,21 +503,56 @@ export function findDependencyVersion(
     }
   }
 
+  if (parent) {
+    // in case the dependency came from another package (= parent)
+    // we should start the lookup in its directory (pnpm issue)
+    const parentPath = tryResolvePackage(parent, rootPath);
+
+    if (parentPath) {
+      rootPath = dirname(parentPath);
+    }
+  }
+
   return findPackageVersion(rootPath, packageName);
 }
 
-export async function findPackageVersion(rootPath: string, packageName: string): Promise<string> {
-  try {
-    log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
-    const moduleName = require.resolve(packageName, {
-      paths: [rootPath],
-    });
-    const packageJson = await findFile(moduleName, 'package.json');
-    return require(packageJson).version;
-  } catch (e) {
-    log('cannotResolveDependency_0053', packageName, rootPath);
-    return 'latest';
+export async function findPackageVersion(rootPath: string, packageName: string | Array<string>): Promise<string> {
+  const packages = Array.isArray(packageName) ? packageName : [packageName];
+
+  for (const pckg of packages) {
+    try {
+      log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
+      const moduleName = getModulePath(rootPath, pckg);
+      const packageJson = await findFile(moduleName, 'package.json');
+      return require(packageJson).version;
+    } catch {}
   }
+
+  log('cannotResolveDependency_0053', packages, rootPath);
+  return 'latest';
+}
+
+export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
+  const sharedDependencies = await readImportmap(root, packageInfo);
+
+  if (sharedDependencies.length === 0) {
+    const allDeps = {
+      ...packageInfo.devDependencies,
+      ...packageInfo.dependencies,
+    };
+    const deps = packageInfo.pilets?.externals;
+    const externals = makeExternals(root, allDeps, deps);
+    return externals.map((ext) => ({
+      id: ext,
+      name: ext,
+      entry: ext,
+      type: 'local',
+      ref: undefined,
+      requireId: ext,
+    }));
+  }
+
+  return sharedDependencies;
 }
 
 export async function retrievePiletsInfo(entryFile: string) {
@@ -468,23 +570,22 @@ export async function retrievePiletsInfo(entryFile: string) {
 
   const root = dirname(packageJson);
   const packageInfo = require(packageJson);
-  const allDeps = {
-    ...packageInfo.devDependencies,
-    ...packageInfo.dependencies,
-  };
   const info = getPiletsInfo(packageInfo);
-  const externals = makeExternals(root, allDeps, info.externals);
+  const externals = await retrieveExternals(root, packageInfo);
+  const dependencies = {
+    std: packageInfo.dependencies || {},
+    dev: packageInfo.devDependencies || {},
+    peer: packageInfo.peerDependencies || {},
+  };
+  const framework = frameworkLibs.find((lib) => lib in dependencies.std || lib in dependencies.dev);
 
   return {
     ...info,
     externals,
     name: packageInfo.name,
     version: packageInfo.version,
-    dependencies: {
-      std: packageInfo.dependencies || {},
-      dev: packageInfo.devDependencies || {},
-      peer: packageInfo.peerDependencies || {},
-    },
+    framework,
+    dependencies,
     scripts: packageInfo.scripts,
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root,
@@ -501,20 +602,40 @@ export async function patchPiletPackage(
   root: string,
   name: string,
   version: string,
-  piralInfo: PackageData,
+  piralInfo: PiralPackageData,
   fromEmulator: boolean,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
-  const { externals, packageOverrides, ...info } = getPiletsInfo(piralInfo);
-  const piral = {
-    comment: 'Keep this section to use the Piral CLI.',
-    name,
-  };
+  const pkg = await getPiletPackage(root, name, version, piralInfo, fromEmulator, newInfo);
+
+  await updateExistingJson(root, 'package.json', pkg);
+  log('generalDebug_0003', `Succesfully patched the package.json.`);
+
+  await updateExistingJson(root, 'pilet.json', {
+    $schema: piletJsonSchemaUrl,
+    piralInstances: {
+      [name]: {},
+    },
+  });
+  log('generalDebug_0003', `Succesfully patched the pilet.json.`);
+}
+
+async function getPiletPackage(
+  root: string,
+  name: string,
+  version: string,
+  piralInfo: PiralPackageData,
+  fromEmulator: boolean,
+  newInfo?: { language: SourceLanguage; bundler: string },
+) {
+  const { piralCLI = { version: cliVersion } } = piralInfo;
+  const { packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,
   };
+  const toolVersion = piralCLI.version;
   const typeDependencies = newInfo ? getDevDependencies(newInfo.language) : {};
   const scripts = newInfo
     ? {
@@ -524,21 +645,7 @@ export async function patchPiletPackage(
         ...info.scripts,
       }
     : info.scripts;
-  const peerModules = [];
-  const allExternals = makePiletExternals(root, piralDependencies, externals, fromEmulator, piralInfo);
-  const peerDependencies = {
-    ...allExternals.reduce((deps, name) => {
-      const valid = isValidDependency(name);
-      deps[name] = valid ? '*' : undefined;
-
-      if (!valid) {
-        peerModules.push(name);
-      }
-
-      return deps;
-    }, {}),
-    [name]: `*`,
-  };
+  const allExternals = makePiletExternals(root, piralDependencies, fromEmulator, piralInfo);
   const devDependencies: Record<string, string> = {
     ...Object.keys(typeDependencies).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || typeDependencies[name];
@@ -559,34 +666,30 @@ export async function patchPiletPackage(
       return deps;
     }, {}),
     [name]: `${version || piralInfo.version}`,
+    ['piral-cli']: toolVersion,
   };
 
   if (newInfo) {
-    const bundler = newInfo.bundler;
-    const version = `^${cliVersion}`;
-    devDependencies['piral-cli'] = version;
-    appendBundler(devDependencies, bundler, version);
+    await appendBundler(devDependencies, newInfo.bundler, toolVersion);
   }
 
-  const packageContent = deepMerge(packageOverrides, {
-    piral,
+  return deepMerge(packageOverrides, {
+    importmap: {
+      imports: {},
+      inherit: [name],
+    },
     devDependencies,
-    peerDependencies,
-    peerModules,
     dependencies: {
       [name]: undefined,
     },
     scripts,
   });
-
-  await updateExistingJson(root, 'package.json', packageContent);
-  log('generalDebug_0003', `Succesfully patched the package.json.`);
 }
 
 /**
  * Returns true if its an emulator package, otherwise it has to be a "raw" app shell.
  */
-export function checkAppShellPackage(appPackage: PackageData) {
+export function checkAppShellPackage(appPackage: PiralPackageData) {
   const { piralCLI = { generated: false, version: cliVersion } } = appPackage;
 
   if (piralCLI.generated) {
@@ -598,110 +701,38 @@ export function checkAppShellPackage(appPackage: PackageData) {
   return false;
 }
 
-function tryResolve(baseDir: string, name: string) {
-  try {
-    return require.resolve(name, {
-      paths: [baseDir],
-    });
-  } catch (ex) {
-    log('generalDebug_0003', `Could not resolve the package "${name}" in "${baseDir}": ${ex}`);
-    return undefined;
-  }
-}
+export function combinePiletExternals(
+  appShells: Array<string>,
+  peerDependencies: Record<string, string>,
+  peerModules: Array<string>,
+  importmap: Array<SharedDependency>,
+) {
+  const externals = [...Object.keys(peerDependencies), ...peerModules];
 
-interface Importmap {
-  imports: Record<string, string>;
-}
+  for (let i = importmap.length; i--; ) {
+    const entry = importmap[i];
 
-function normalizeDepName(s: string) {
-  return (s.startsWith('@') ? s.substring(1) : s).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
-}
-
-async function resolveImportmap(dir: string, importmap: Importmap) {
-  const dependencies: Array<SharedDependency> = [];
-  const sharedImports = importmap?.imports;
-
-  if (typeof sharedImports === 'object' && sharedImports) {
-    for (const depName of Object.keys(sharedImports)) {
-      const url = sharedImports[depName];
-      const assetName = normalizeDepName(depName);
-
-      if (typeof url !== 'string') {
-      } else if (/^https?:\/\//.test(url)) {
-        const hash = computeHash(url).substring(0, 7);
-
-        dependencies.push({
-          id: `${depName}@${hash}`,
-          entry: url,
-          name: depName,
-          ref: url,
-          type: 'remote',
-        });
-      } else if (url === depName) {
-        const entry = tryResolve(dir, depName);
-
-        if (entry) {
-          const packageJson = await findFile(dirname(entry), 'package.json');
-          const details = require(packageJson);
-
-          dependencies.push({
-            id: `${depName}@${details.version}`,
-            entry,
-            ref: `${assetName}.js`,
-            name: depName,
-            type: 'local',
-          });
-        }
-      } else {
-        const entry = resolve(dir, url);
-        const exists = await checkExists(entry);
-
-        if (exists) {
-          const packageJson = await findFile(dirname(entry), 'package.json');
-
-          if (packageJson) {
-            const details = require(packageJson);
-
-            dependencies.push({
-              id: `${depName}@${details.version}`,
-              entry,
-              name: depName,
-              ref: `${assetName}.js`,
-              type: 'local',
-            });
-          } else {
-            const hash = await getHash(entry);
-
-            dependencies.push({
-              id: `${depName}@${hash}`,
-              entry,
-              name: depName,
-              ref: `${assetName}.js`,
-              type: 'local',
-            });
-          }
-        }
+    // if the entry has no parents, i.e., it was explicitly mentioned in the importmap
+    // then keep it in the importmap (=> prefer the distributed approach, which will always work)
+    if (Array.isArray(entry.parents)) {
+      // only accept entry as a centrally shared dependency if the entry appears in all
+      // mentioned / referenced app shells
+      // in other cases (e.g., if one app shell does not share this) use the distributed
+      // mechanism to ensure that the dependency can also be resolved in this shell
+      if (appShells.every((app) => entry.parents.includes(app))) {
+        externals.push(entry.name);
+        importmap.splice(i, 1);
       }
     }
   }
 
-  return dependencies;
-}
-
-export async function readImportmap(dir: string, packageDetails: any) {
-  const importmap = packageDetails.importmap;
-
-  if (typeof importmap === 'string') {
-    const content = await readJson(dir, importmap);
-    const baseDir = dirname(resolve(dir, importmap));
-    return resolveImportmap(baseDir, content);
-  }
-
-  return resolveImportmap(dir, importmap);
+  return externals;
 }
 
 export async function retrievePiletData(target: string, app?: string) {
-  const packageJson = await findFile(target, 'package.json');
+  const piletJson = await findFile(target, 'pilet.json');
+  const proposedRoot = piletJson ? dirname(piletJson) : target;
+  const packageJson = await findFile(proposedRoot, 'package.json');
 
   if (!packageJson) {
     fail('packageJsonMissing_0075');
@@ -709,17 +740,31 @@ export async function retrievePiletData(target: string, app?: string) {
 
   const root = dirname(packageJson);
   const piletPackage = require(packageJson);
-  const appPackage = findPackage(
-    app || (piletPackage.piral && piletPackage.piral.name) || Object.keys(piletPackage.devDependencies),
-    target,
-  );
-  const appFile: string = appPackage && appPackage.app;
+  const piletDefinition = piletJson && require(piletJson);
+  const appPackages = findPiralInstances(app && [app], piletPackage, piletDefinition, target);
+  const apps: Array<AppDefinition> = [];
 
-  if (!appFile) {
-    fail('appInstanceInvalid_0011');
+  if (appPackages.length === 0) {
+    fail('appInstancesNotGiven_0012');
   }
 
-  const emulator = checkAppShellPackage(appPackage);
+  for (const appPackage of appPackages) {
+    const appFile: string = appPackage?.app;
+    const appRoot: string = appPackage?.root;
+
+    if (!appFile || !appRoot) {
+      fail('appInstanceInvalid_0011');
+    }
+
+    const emulator = checkAppShellPackage(appPackage);
+    apps.push({
+      appPackage,
+      appFile,
+      appRoot,
+      emulator,
+    });
+  }
+
   const importmap = await readImportmap(root, piletPackage);
 
   return {
@@ -729,10 +774,8 @@ export async function retrievePiletData(target: string, app?: string) {
     peerModules: piletPackage.peerModules || [],
     ignored: checkArrayOrUndefined(piletPackage, 'preservedDependencies'),
     importmap,
-    appFile,
+    apps,
     piletPackage,
-    appPackage,
-    emulator,
     root,
   };
 }

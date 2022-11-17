@@ -1,8 +1,7 @@
-import { mkdtempSync, existsSync } from 'fs';
+import { mkdtempSync, existsSync, readFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
 import { newPiral } from './new-piral';
-import { SourceLanguage } from '../common';
 
 function createTempDir() {
   return mkdtempSync(join(tmpdir(), 'piral-tests-new-piral-'));
@@ -14,18 +13,15 @@ jest.mock('../common/clients/npm', () => {
   return {
     ...original,
     installPackage: (...args) => {
-      if (args[0].startsWith('@smapiot/')) {
-        return Promise.resolve();
-      } else {
-        return original.installPackage(...args);
-      }
+      return original.installPackage(...args, '--no-package-lock', '--no-save');
     },
   };
 });
 
+jest.setTimeout(90000);
+
 describe('New Piral Command', () => {
   it('scaffolding in an empty directory works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, { install: false });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
@@ -38,10 +34,9 @@ describe('New Piral Command', () => {
   });
 
   it('scaffolding with language JS works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
-      language: SourceLanguage.js,
+      language: 'js',
       install: false,
     });
     expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
@@ -53,8 +48,26 @@ describe('New Piral Command', () => {
     expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
   });
 
+  it('scaffolding with custom app name works', async () => {
+    const dir = createTempDir();
+    await newPiral(dir, {
+      name: 'test-name',
+      install: false,
+    });
+
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/mocks/backend.js'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+
+    const packageContent = await JSON.parse(readFileSync(`${dir}/package.json`, 'utf8'));
+    expect(packageContent.name).toBe('test-name');
+  });
+
   it('scaffolding for piral-core works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
       framework: 'piral-core',
@@ -72,7 +85,6 @@ describe('New Piral Command', () => {
   });
 
   it('scaffolding for piral-base works', async () => {
-    jest.setTimeout(60000);
     const dir = createTempDir();
     await newPiral(dir, {
       framework: 'piral-base',

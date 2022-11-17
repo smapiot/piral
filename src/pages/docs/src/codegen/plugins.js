@@ -42,9 +42,9 @@ function isPluginType(fileName) {
   return pluginPackages.some((name) => fileName.endsWith(`${name}.json`));
 }
 
-function getPluginTypes(docsFolder) {
+function getPluginTypes(docsFolder, locale) {
   const types = resolve(docsFolder, 'types');
-  return getDocsFrom(types, /\.json$/).filter((file) => !file.endsWith('piral-ext.json') && isPluginType(file));
+  return getDocsFrom(types, locale, /\.json$/).filter((file) => !file.endsWith('piral-ext.json') && isPluginType(file));
 }
 
 function getPluginImage(name) {
@@ -58,7 +58,7 @@ function getRoute(basePath, name) {
 }
 
 exports.find = function (basePath, docsFolder, options) {
-  const files = getPluginTypes(docsFolder);
+  const files = getPluginTypes(docsFolder, options.locale);
   return files
     .map((file) => {
       const name = getName(file);

@@ -1,4 +1,4 @@
-# `new-piral`
+# `piral new`
 
 Creates a new Piral instance by adding all files and changes to the current project.
 
@@ -7,13 +7,13 @@ Creates a new Piral instance by adding all files and changes to the current proj
 From the command line:
 
 ```sh
-pb new-piral [target]
+piral new [target]
 ```
 
 Alternative:
 
 ```sh
-piral new [target]
+pb new-piral [target]
 ```
 
 ## Aliases
@@ -50,7 +50,7 @@ Sets the framework/library level to use.
 
 
 - Type: `string`
-- Choices: `"piral"`, `"piral-core"`, `"piral-base"`
+- Choices: `"piral-native"`, `"piral"`, `"piral-core"`, `"piral-base"`
 - Default: `"piral"`
 
 ### `--install`
@@ -92,7 +92,7 @@ Sets the tag or version of the package to install. By default, this uses the ver
 
 - Aliases: `--piral-version`
 - Type: `string`
-- Default: `"0.14.27"`
+- Default: `"0.14.32"`
 
 ### `--force-overwrite`
 
@@ -126,8 +126,8 @@ Sets the npm client to be used when scaffolding.
 
 
 - Type: `string`
-- Choices: `"npm"`, `"pnpm"`, `"yarn"`, `"lerna"`, `"rush"`
-- Default: `"npm"`
+- Choices: `"npm"`, `"pnpm"`, `"pnp"`, `"yarn"`, `"lerna"`, `"rush"`
+- Default: `undefined`
 
 ### `--bundler`
 
@@ -135,7 +135,7 @@ Sets the default bundler to install.
 
 
 - Type: `string`
-- Choices: `"none"`, `"parcel"`, `"webpack"`, `"webpack5"`, `"esbuild"`
+- Choices: `"none"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"webpack"`, `"webpack5"`, `"vite"`, `"xbuild"`
 - Default: `"none"`
 
 ### `--vars`
@@ -153,3 +153,11 @@ Sets the base directory. By default the current directory is used.
 
 - Type: `string`
 - Default: `process.cwd()`
+
+### `--name`
+
+Sets the name for the new Piral app.
+
+
+- Type: `string`
+- Default: `undefined`

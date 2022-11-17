@@ -9,7 +9,9 @@ function getChangelogVersion(changelogPath = defaultPath) {
   const matches = /^\#\# (\d+\.\d+\.\d+) .*/gm.exec(CHANGELOG);
 
   if (!matches) {
-    throw new Error('Invalid CHANGELOG format found. Need to fine line starting with "## x.y.z" to get the latest version.');
+    throw new Error(
+      'Invalid CHANGELOG format found. Need to fine line starting with "## x.y.z" to get the latest version.',
+    );
   }
 
   const version = matches[1];
@@ -28,15 +30,28 @@ function updateChangelogDate(changelogPath = defaultPath) {
   writeFileSync(changelogPath, newContent, 'utf8');
 }
 
+function getVersion(full, flags) {
+  const id = process.env.BUILD_BUILDID || '0';
+
+  if (flags.includes('--beta')) {
+    return `${full}-beta.${id}`;
+  } else if (flags.includes('--alpha')) {
+    return `${full}-alpha.${id}`;
+  }
+
+  return full;
+}
+
 if (require.main === module) {
-  const version = getChangelogVersion();
-  const arg = process.argv.pop();
+  const args = process.argv;
+  const changelogVersion = getChangelogVersion();
+  const version = getVersion(changelogVersion, args);
   const cwd = process.cwd();
   console.log(version);
 
-  if (arg === '--update') {
+  if (args.includes('--update')) {
     updateChangelogDate();
-  } else if (arg === '--apply') {
+  } else if (args.includes('--apply')) {
     execSync(`lerna version ${version} --no-git-tag-version --yes`, {
       cwd,
       stdio: 'inherit',

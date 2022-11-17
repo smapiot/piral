@@ -1,8 +1,8 @@
-import { Atom, swap, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { createAuthApi } from './create';
 
 function createMockContainer() {
-  const state = Atom.of({});
+  const state = create(() => ({}));
   return {
     context: {
       on: jest.fn(),
@@ -11,10 +11,10 @@ function createMockContainer() {
       defineActions() {},
       state,
       readState(read) {
-        return read(deref(state));
+        return read((state.getState()));
       },
       dispatch(update) {
-        swap(state, update);
+        state.setState(update(state.getState()));
       },
     } as any,
     api: {} as any,

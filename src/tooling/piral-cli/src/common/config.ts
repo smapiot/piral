@@ -1,7 +1,6 @@
-import { rc } from '../external';
-import { NpmClientType, PiletSchemaVersion } from '../types';
-import { SourceLanguage } from './enums';
 import { defaultRegistry } from './constants';
+import { rc } from '../external';
+import { SourceLanguage, NpmClientType, PiletSchemaVersion } from '../types';
 
 export interface PiralCliConfig {
   /**
@@ -72,14 +71,14 @@ export const config: PiralCliConfig = rc(
     apiKeys: {},
     url: undefined,
     cert: undefined,
-    npmClient: 'npm',
-    bundler: 'webpack',
+    npmClient: 'npm' as const,
+    bundler: 'webpack5' as const,
     piletApi: '/$pilet-api',
     validators: {},
-    schemaVersion: 'v2',
+    schemaVersion: 'v2' as const,
     openBrowser: false,
     port: 1234,
-    language: SourceLanguage.ts,
+    language: 'ts' as const,
     host: 'localhost',
     registry: defaultRegistry,
   },

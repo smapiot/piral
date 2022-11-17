@@ -3,6 +3,33 @@ import { emitRenderEvent, emitNavigateEvent } from './events';
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
 
+function createBase() {
+  // Nothing found, we need to guess
+  const el = document.createElement('base');
+  let baseUrl = el.href;
+
+  // The main app is served by a script - but we don't know which one
+  // hence we just iterate over all the local ones and use the script
+  // that is served from the "shortest" route - should work almost
+  // always and if not - one can always explicitely set a <base> node
+  for (let i = document.scripts.length; i--; ) {
+    const s = document.scripts[i];
+    const src = s.getAttribute('src');
+
+    if (src && src.startsWith('/')) {
+      const segEnd = src.lastIndexOf('/');
+      const newUrl = src.substring(0, segEnd + 1);
+
+      if (baseUrl.split('/').length > newUrl.split('/').length) {
+        baseUrl = newUrl;
+      }
+    }
+  }
+
+  el.href = baseUrl;
+  return document.head.appendChild(el);
+}
+
 function createBlazorStarter(publicPath: string): () => Promise<HTMLDivElement> {
   const root = document.body.appendChild(document.createElement('div'));
 
@@ -10,8 +37,7 @@ function createBlazorStarter(publicPath: string): () => Promise<HTMLDivElement> 
   root.id = 'blazor-root';
 
   if (publicPath) {
-    const baseElement =
-      document.head.querySelector('base') || document.head.appendChild(document.createElement('base'));
+    const baseElement = document.head.querySelector('base') || createBase();
     const originalBase = baseElement.href;
     baseElement.href = publicPath;
 
@@ -50,6 +76,16 @@ function computePath() {
   }
 
   return '/';
+}
+
+function addScript(url: string) {
+  return new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onerror = () => reject();
+    script.onload = () => resolve();
+    document.body.appendChild(script);
+  });
 }
 
 export function activate(moduleName: string, props: any) {
@@ -104,11 +140,15 @@ export function initialize(scriptUrl: string, publicPath: string) {
   });
 }
 
-export function createBootLoader(scriptUrl: string) {
+export function createBootLoader(scriptUrl: string, satellites: Array<string>) {
   const publicPath = computePath();
+
   return () => {
     if (typeof window.$blazorLoader === 'undefined') {
-      window.$blazorLoader = initialize(scriptUrl, publicPath);
+      // we load all satellite scripts before we initialize blazor
+      window.$blazorLoader = Promise.all(satellites.map((url) => addScript(url))).then(() =>
+        initialize(scriptUrl, publicPath),
+      );
     }
 
     return window.$blazorLoader;

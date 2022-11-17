@@ -1,9 +1,10 @@
 import { join, dirname, resolve, basename, isAbsolute } from 'path';
 import { installNpmPackageFromOptionalRegistry } from './npm';
-import { ForceOverwrite, SourceLanguage } from './enums';
+import { ForceOverwrite } from './enums';
 import { createDirectory, createFileIfNotExists, updateExistingJson } from './io';
-import { log, fail } from './log';
-import { Framework } from '../types';
+import { cliVersion, isWindows } from './info';
+import { log, fail, getLogLevel } from './log';
+import { Framework, SourceLanguage } from '../types';
 
 interface TemplateFile {
   path: string;
@@ -44,11 +45,18 @@ async function getTemplateFiles(
   }
 
   const templateRunner = getTemplatePackage(templatePackageName);
+  const logLevel = getLogLevel();
+  const details = {
+    forceOverwrite,
+    cliVersion,
+    isWindows,
+    logLevel,
+  };
 
   if (typeof templateRunner === 'function') {
-    return await templateRunner(root, data, forceOverwrite);
+    return await templateRunner(root, data, details);
   } else if ('default' in templateRunner && typeof templateRunner.default === 'function') {
-    return await templateRunner.default(root, data, forceOverwrite);
+    return await templateRunner.default(root, data, details);
   } else {
     fail(
       'generalError_0002',
@@ -95,16 +103,6 @@ function getTemplatePackageName(type: 'piral' | 'pilet', template: string) {
   return template;
 }
 
-function getLanguageName(language: SourceLanguage) {
-  switch (language) {
-    case SourceLanguage.js:
-      return 'js';
-    case SourceLanguage.ts:
-    default:
-      return 'ts';
-  }
-}
-
 export function getPiralScaffoldData(
   language: SourceLanguage,
   root: string,
@@ -117,9 +115,11 @@ export function getPiralScaffoldData(
     ...variables,
     root,
     src,
-    language: getLanguageName(language),
+    language,
     packageName,
-  };
+    reactVersion: parseInt(variables.reactVersion) || 18,
+    reactRouterVersion: parseInt(variables.reactRouterVersion) || 5,
+  } as const;
 }
 
 export async function scaffoldPiralSourceFiles(
@@ -149,9 +149,9 @@ export function getPiletScaffoldData(
     ...variables,
     root,
     src,
-    language: getLanguageName(language),
+    language,
     sourceName,
-  };
+  } as const;
 }
 
 export async function scaffoldPiletSourceFiles(

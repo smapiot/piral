@@ -1,6 +1,8 @@
 import { loadResource, loadResourceWithSymbol, unloadResource } from './interop';
 import type { createConverter } from './converter';
 
+const loadedDependencies = (window.$blazorDependencies ??= []);
+
 export function createDependencyLoader(convert: ReturnType<typeof createConverter>, lazy = true) {
   const definedBlazorReferences: Array<string> = [];
   let dependency: () => Promise<any>;
@@ -12,18 +14,32 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     defineBlazorReferences(references: Array<string>) {
       const load = async () => {
         for (const dllUrl of references) {
-          if (dllUrl.endsWith('.dll')) {
-            const urlWithoutExtension = dllUrl.substr(0, dllUrl.length - 4);
-            const pdbName = `${urlWithoutExtension}.pdb`;
-            const pdbUrl = references.find((m) => m === pdbName);
+          const dllName = dllUrl.substring(dllUrl.lastIndexOf('/') + 1);
 
-            if (pdbUrl) {
-              await loadResourceWithSymbol(dllUrl, pdbUrl);
+          if (dllUrl.endsWith('.dll')) {
+            const entry = loadedDependencies.find(m => m.name === dllName);
+
+            if (entry) {
+              entry.count++;
             } else {
-              await loadResource(dllUrl);
+              const urlWithoutExtension = dllUrl.substring(0, dllUrl.length - 4);
+              const pdbName = `${urlWithoutExtension}.pdb`;
+              const pdbUrl = references.find((m) => m === pdbName);
+
+              if (pdbUrl) {
+                await loadResourceWithSymbol(dllUrl, pdbUrl);
+              } else {
+                await loadResource(dllUrl);
+              }
+
+              loadedDependencies.push({
+                name: dllName,
+                url: dllUrl,
+                count: 1,
+              });
             }
 
-            definedBlazorReferences.push(dllUrl);
+            definedBlazorReferences.push(dllName);
           }
         }
       };
@@ -34,7 +50,12 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       const references = definedBlazorReferences.splice(0, definedBlazorReferences.length);
 
       for (const reference of references) {
-        await unloadResource(reference);
+        const entry = loadedDependencies.find(m => m.name === reference);
+
+        if (--entry.count === 0) {
+          loadedDependencies.splice(loadedDependencies.indexOf(entry), 1);
+          await unloadResource(entry.url);
+        }
       }
     },
   };

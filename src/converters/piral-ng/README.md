@@ -30,7 +30,7 @@ The extension slot module to be used in Angular components. This is not really n
 
 You can use the `fromNg` function from the Pilet API to convert your Angular components to components usable by your Piral instance.
 
-Example use:
+### Example Usage
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -75,7 +75,53 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-Angular Options:
+### Lazy Loading
+
+Even better, you can also lazy load the respective Angular module and components using the callback-based overload of `defineNgModule`:
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  // this "teaches" Piral about the given module, which is lazy loaded
+  // important; in this case `./AppModule.ts` has a `default` export
+  const loadComponent = piral.defineNgModule(() => import('./AppModule'));
+
+  // to fully lazy load we cannot reference the class anymore;
+  // instead we reference the selector of the component
+  piral.registerPage('/sample', loadComponent('angular-page'));
+}
+```
+
+In the example above, the `AngularPage` would have been defined to look like
+
+```js
+// ...
+@Component({
+  // ...
+  selector: 'angular-page',
+})
+export class AngularPage { /* ... */ }
+```
+
+which defines the selector (`angular-page`) matching the specified selector in the `setup` function.
+
+### Standalone Components
+
+The `piral-ng` plugin also supports Angular standalone components as rendering source.
+
+Standalone components can also be used with lazy loading.
+
+```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  // Just make sure that `AngularPage` exports the component as `default` export
+  piral.registerPage('/sample', piral.fromNg(() => import('./AngularPage')));
+}
+```
+
+### Angular Options
 
 You can optionally provide Options to `defineNgModule`, which are identical to those given to `bootstrapModule` during the Angular boot process. See https://angular.io/api/core/PlatformRef#bootstrapModule for possible values.
 

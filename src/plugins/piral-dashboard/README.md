@@ -116,17 +116,35 @@ const instance = createInstance({
 });
 ```
 
-To fully integrate the dashboard the `Dashboard` component can be used. It can be part of a page or a page itself:
+By default, the dashboard is located at the homepage (`/`). You can change this via the `routes` setting:
 
-```jsx
-<SetRoute path="/" component={Dashboard} />
+```ts
+const instance = createInstance({
+  // important part
+  plugins: [createDashboardApi({
+    routes: ['/dashboard'],
+  })],
+  // ...
+});
 ```
 
-The `Dashboard` component also comes with a prop called `filter`, which might be handy together with custom options for actually using multiple dashboards.
+Or alternatively, don't use any route for it and just reference the `Dashboard` component on any page or within the layout.
 
-```jsx
-<SetRoute path="/dashboard1" component={props => <Dashboard {...props} filter={tile => tile.preferences.category === 'self'} />} />
-<SetRoute path="/dashboard2" component={props => <Dashboard {...props} filter={tile => tile.preferences.category === 'group'} />} />
+```ts
+// for the instance
+const instance = createInstance({
+  // important part
+  plugins: [createDashboardApi({
+    routes: [],
+  })],
+  // ...
+});
+
+
+// in some component, maybe even in the layout
+import { Dashboard } from 'piral-dashboard';
+
+// then use: <Dashboard />
 ```
 
 ### Customizing

@@ -1,0 +1,25 @@
+const cg = require('./dist/codegen');
+
+module.exports = function () {
+  const exports = [];
+  const imports = [];
+  const opts = {
+    root: process.cwd(),
+    cat: process.env.NODE_ENV === 'test' ? 'src' : '_',
+    appName: process.env.BUILD_PCKG_NAME || '',
+    externals: (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean),
+    publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
+    debug: !!process.env.DEBUG_PIRAL,
+    emulator: !!process.env.DEBUG_PILET,
+  };
+
+  cg.createDependencies(imports, exports, opts);
+  cg.createDefaultState(imports, exports, opts);
+  cg.createDebugHandler(imports, exports, opts);
+  cg.createRouteHandler(imports, exports, opts);
+
+  return `
+    ${imports.join('\n')}
+    ${exports.join('\n')}
+  `;
+};

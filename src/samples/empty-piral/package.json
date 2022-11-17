@@ -1,0 +1,48 @@
+{
+  "name": "empty-piral",
+  "private": true,
+  "version": "0.14.32",
+  "description": "An empty app shell with no dependencies.",
+  "keywords": [
+    "portal",
+    "smapiot",
+    "sample",
+    "empty",
+    "independent",
+    "example",
+    "microfrontend",
+    "modules",
+    "spa"
+  ],
+  "importmap": {
+    "imports": {},
+    "inherit": ["piral-base"]
+  },
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "app": "src/index.html",
+  "files": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "dependencies": {
+    "piral-base": "^0.14.32"
+  },
+  "devDependencies": {
+    "piral-cli": "^0.14.32",
+    "piral-cli-webpack5": "^0.14.32"
+  },
+  "pilets": {},
+  "scripts": {
+    "build": "tsc",
+    "build:emulator-sources": "piral build --type emulator-sources --bundler webpack5",
+    "build:release": "piral build --type release --bundler webpack5",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}

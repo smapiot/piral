@@ -33,6 +33,7 @@
     "create-piral-instance": "./lib/cli.js"
   },
   "scripts": {
+    "cleanup": "rimraf lib",
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

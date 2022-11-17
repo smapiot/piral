@@ -1,8 +1,8 @@
-import { Atom, deref } from '@dbeining/react-atom';
+import create from 'zustand';
 import { readState, dispatch } from './state';
 
 function createMockContainer(initialState = {}) {
-  const state = Atom.of(initialState);
+  const state = create(() => initialState);
   return {
     context: {
       on: jest.fn(),
@@ -11,7 +11,7 @@ function createMockContainer(initialState = {}) {
       defineActions() {},
       state,
       read() {
-        return deref(state);
+        return state.getState();
       },
     } as any,
   };

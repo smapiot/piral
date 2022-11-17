@@ -6,13 +6,16 @@ import {
   getDefaultLoader,
   extendLoader,
   PiletLoader,
+  PiletLifecycleHooks,
 } from 'piral-base';
-import { DebuggerExtensionOptions } from 'piral-debug-utils';
+import type { DebuggerExtensionOptions } from 'piral-debug-utils';
 import { globalDependencies } from './modules';
 import type { Pilet, PiletRequester, GlobalStateContext, PiletLoadingStrategy, DependencySelector } from './types';
+import { integrateDebugger, integrateEmulator } from '../app.codegen';
 
 export interface PiletOptionsConfig {
   context: GlobalStateContext;
+  hooks?: PiletLifecycleHooks;
   loaders?: CustomSpecLoaders;
   loaderConfig?: DefaultLoaderConfig;
   availablePilets: Array<Pilet>;
@@ -25,6 +28,7 @@ export interface PiletOptionsConfig {
 }
 
 export function createPiletOptions({
+  hooks,
   context,
   loaders,
   loaderConfig,
@@ -43,20 +47,12 @@ export function createPiletOptions({
     createApi,
     pilets: availablePilets,
     fetchPilets: requestPilets,
+    hooks,
     dependencies: shareDependencies(globalDependencies),
   };
 
-  // if we build the debug version of piral (debug and emulator build)
-  if (process.env.DEBUG_PIRAL) {
-    const { integrate } = require('../debug-piral');
-    integrate(context, options, debug);
-  }
-
-  // if we build the emulator version of piral (shipped to pilets)
-  if (process.env.DEBUG_PILET) {
-    const { integrate } = require('../debug-pilet');
-    integrate(context, options);
-  }
+  integrateDebugger(context, options, debug);
+  integrateEmulator(context, options, debug);
 
   return options;
 }

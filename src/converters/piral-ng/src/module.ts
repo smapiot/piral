@@ -1,7 +1,6 @@
 import type { PiletApi } from 'piral-core';
 import type { BehaviorSubject } from 'rxjs';
 import type { NgOptions, ModuleInstanceResult } from './types';
-import * as ngCore from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import {
@@ -12,11 +11,10 @@ import {
   NgModule,
   NgZone,
 } from '@angular/core';
+import { teardown } from './startup';
 import { RoutingService } from './RoutingService';
 import { SharedModule } from './SharedModule';
 import { findComponents, getAnnotations } from './utils';
-
-const ngc = ngCore as any;
 
 interface ModuleDefinition {
   active: any;
@@ -81,65 +79,29 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
           this.refs.splice(i, 1);
         }
       }
+
+      if (this.refs.length === 0) {
+        teardown(BootstrapModule);
+      }
     }
-
-    static ɵfac =
-      'ɵɵinject' in ngc
-        ? (t: any) =>
-            new (t || BootstrapModule)(
-              ngc.ɵɵinject(ComponentFactoryResolver),
-              ngc.ɵɵinject(NgZone),
-              ngc.ɵɵinject(RoutingService),
-            )
-        : undefined;
-
-    static ɵmod =
-      'ɵɵdefineNgModule' in ngc
-        ? ngc.ɵɵdefineNgModule({
-            type: BootstrapModule,
-          })
-        : undefined;
-
-    static ɵinj =
-      'ɵɵdefineInjector' in ngc
-        ? ngc.ɵɵdefineInjector({
-            providers,
-            imports: [imports],
-          })
-        : undefined;
-  }
-
-  if ('ɵsetClassMetadata' in ngc) {
-    ngc.ɵsetClassMetadata(
-      BootstrapModule,
-      [
-        {
-          type: NgModule,
-          args: [
-            {
-              entryComponents: components,
-              providers,
-              imports,
-            },
-          ],
-        },
-      ],
-      () => [{ type: ComponentFactoryResolver }, { type: NgZone }, { type: RoutingService }],
-    );
   }
 
   return BootstrapModule;
 }
 
-export function getModuleInstance(component: any, standalone: boolean, piral: PiletApi): ModuleInstanceResult {
+export function activateModuleInstance(moduleDef: ModuleDefinition, piral: PiletApi): ModuleInstanceResult {
+  if (!moduleDef.active) {
+    moduleDef.active = instantiateModule(moduleDef, piral);
+  }
+
+  return [moduleDef.active, moduleDef.opts];
+}
+
+export function getModuleInstance(component: any, standalone: boolean, piral: PiletApi) {
   const [moduleDef] = availableModules.filter((m) => m.components.includes(component));
 
   if (moduleDef) {
-    if (!moduleDef.active) {
-      moduleDef.active = instantiateModule(moduleDef, piral);
-    }
-
-    return [moduleDef.active, moduleDef.opts];
+    return activateModuleInstance(moduleDef, piral);
   }
 
   if (process.env.NODE_ENV === 'development') {
@@ -167,50 +129,34 @@ export function createModuleInstance(component: any, standalone: boolean, piral:
     exports: exportsDef,
     schemas: schemasDef,
   })
-  class Module {
-    static ɵfac = 'ɵɵinject' in ngc ? (t: any) => new (t || Module)() : undefined;
-
-    static ɵmod =
-      'ɵɵdefineNgModule' in ngc
-        ? ngc.ɵɵdefineNgModule({
-            type: Module,
-          })
-        : undefined;
-
-    static ɵinj =
-      'ɵɵdefineInjector' in ngc
-        ? ngc.ɵɵdefineInjector({
-            imports: [importsDef],
-          })
-        : undefined;
-  }
-
-  if ('ɵsetClassMetadata' in ngc) {
-    ngc.ɵsetClassMetadata(Module, [
-      {
-        type: NgModule,
-        args: [
-          {
-            declarations,
-            imports: importsDef,
-            exports: exportsDef,
-            schemas: schemasDef,
-          },
-        ],
-      },
-    ]);
-  }
+  class Module {}
 
   defineModule(Module);
   return getModuleInstance(component, standalone, piral);
 }
 
+export function findModule(module: any) {
+  return availableModules.find(m => m.module === module);
+}
+
 export function defineModule(module: any, opts: NgOptions = undefined) {
   const [annotation] = getAnnotations(module);
-  availableModules.push({
-    active: undefined,
-    components: findComponents(annotation.exports),
-    module,
-    opts,
-  });
+
+  if (annotation) {
+    availableModules.push({
+      active: undefined,
+      components: findComponents(annotation.exports),
+      module,
+      opts,
+    });
+  } else if (typeof module === 'function') {
+    const state = {
+      current: undefined,
+    };
+
+    return (selector: string) => ({
+      component: { selector, module, opts, state },
+      type: 'ng' as const,
+    });
+  }
 }
