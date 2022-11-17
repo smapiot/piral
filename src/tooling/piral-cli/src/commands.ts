@@ -807,6 +807,62 @@ const allCommands: Array<ToolCommand<any>> = [
       });
     },
   },
+  {
+    name: 'add-piral-instance-pilet',
+    alias: ['add-shell-pilet', 'install-shell-pilet', 'add-app-pilet', 'with-app-pilet'],
+    description: 'Adds another Piral instance to the available apps hosting the current pilet.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the name of the Piral instance to be added.',
+          default: apps.addPiralInstancePiletDefaults.source,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.addPiralInstancePiletDefaults.logLevel)
+        .boolean('selected')
+        .describe('selected', 'Defines if the provided Piral instance should be selected initially.')
+        .default('selected', apps.addPiralInstancePiletDefaults.selected)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.addPiralInstancePilet(args.base as string, {
+        logLevel: args['log-level'] as LogLevels,
+        selected: args.selected as boolean,
+        source: args.source as string,
+      });
+    },
+  },
+  {
+    name: 'remove-piral-instance-pilet',
+    alias: ['remove-shell-pilet', 'uninstall-shell-pilet', 'remove-app-pilet', 'without-app-pilet'],
+    description: 'Removes an existing Piral instance from the available apps hosting the current pilet.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the name of the Piral instance to be removed.',
+          default: apps.removePiralInstancePiletDefaults.source,
+        })
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.removePiralInstancePiletDefaults.logLevel)
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.removePiralInstancePilet(args.base as string, {
+        logLevel: args['log-level'] as LogLevels,
+        source: args.source as string,
+      });
+    },
+  },
 ];
 
 class Commands implements ListCommands {

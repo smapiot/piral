@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.15.1 (tbd)
+
+- Improved documentation
+- Added `pilet add-piral-instance` command to `piral-cli` (#543)
+- Added `pilet remove-piral-instance` command `piral-cli` (#543)
+
 ## 0.15.0 (November 17, 2022)
 
 - Fixed closing of dialogs to be immediate (#549)
