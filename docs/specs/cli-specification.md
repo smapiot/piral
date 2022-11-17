@@ -50,10 +50,11 @@ When building the Piral instance for production, the following environment varia
 
 In addition, some special keys of the `package.json` are relevant for a production build:
 
-| Key                   | Purpose                             | Example            |
-|:----------------------|:------------------------------------|:-------------------|
-| `app`                 | Path to the root page to use.       | `"src/index.html"` |
-| `pilets`.`externals`  | Names of the shared dependencies.   | `["reactstrap"]`   |
+| Key                   | Purpose                                 | Example                            |
+|:----------------------|:----------------------------------------|:-----------------------------------|
+| `app`                 | Path to the root page to use.           | `"src/index.html"`                 |
+| `importmap`           | Indicates shared dependencies (new).    | `{ "imports": {}, "inherit": [] }` |
+| `pilets`.`externals`  | Names of the shared dependencies (old). | `["reactstrap"]`                   |
 
 The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before included as a module. In case of a Piral instance we will need to evaluate the `dependencies.codegen` file, if the environment variable `SHARED_DEPENDENCIES` is set.
 
@@ -77,10 +78,11 @@ For running the Piral instance in emulation mode, the set of relevant environmen
 
 As in the case for generating a production instance, some special keys of the `package.json` are also considered for the emulation mode:
 
-| Key                   | Purpose                             | Example            |
-|:----------------------|:------------------------------------|:-------------------|
-| `app`                 | Path to the root page to use.       | `"src/index.html"` |
-| `pilets`.`externals`  | Names of the shared dependencies.   | `["reactstrap"]`   |
+| Key                   | Purpose                                 | Example                            |
+|:----------------------|:----------------------------------------|:-----------------------------------|
+| `app`                 | Path to the root page to use.           | `"src/index.html"`                 |
+| `importmap`           | Indicates shared dependencies (new).    | `{ "imports": {}, "inherit": [] }` |
+| `pilets`.`externals`  | Names of the shared dependencies (old). | `["reactstrap"]`                   |
 
 The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before included as a module. In case of a Piral instance we will need to evaluate the `dependencies.codegen` file, if the environment variable `SHARED_DEPENDENCIES` is set.
 
@@ -97,12 +99,13 @@ Used environment variables:
 
 Some special fields of the `package.json` are used to switch on some building features.
 
-| Key                   | Purpose                             | Example                  |
-|:----------------------|:------------------------------------|:-------------------------|
-| `app`                 | Path to the root page to use.       | `"src/index.html"`       |
-| `peerDependencies`    | Indicates skipped dependencies.     | `{ "react": "*" }`       |
-| `peerModules`         | Names of additional shared modules. | `[ "react-dom/server" ]` |
-| `piral`.`name`        | Name of the Piral instance.         | `"sample-piral"`         |
+| Key                   | Purpose                                   | Example                            |
+|:----------------------|:------------------------------------------|:-----------------------------------|
+| `app`                 | Path to the root page to use.             | `"src/index.html"`                 |
+| `importmap`           | Indicates shared dependencies.            | `{ "imports": {}, "inherit": [] }` |
+| `peerDependencies`    | Indicates skipped dependencies (old).     | `{ "react": "*" }`                 |
+| `peerModules`         | Names of additional shared modules (old). | `[ "react-dom/server" ]`           |
+| `piral`.`name`        | Name of the Piral instance.               | `"sample-piral"`                   |
 
 Additionally, some feed servers may implement a bit more here. For instance, the official Piral Cloud Feed Service supports the following keys in the `package.json`:
 

@@ -65,7 +65,7 @@ Sets the base directory. By default the current directory is used.
 
 ### `has-externals-as-peers`
 
-Checks that "externals" dependencies have been specified in "peerDependencies".
+Checks that shared dependencies are properly specified.
 
 **Options**: `'ignore' | 'active' | 'only-used'`
 

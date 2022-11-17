@@ -97,10 +97,14 @@ Of course, such guards would also work without having the interface typed comple
 
 ### Handling Shared Dependencies
 
-Besides the typing aspect you'll also need to take care shared dependencies. If your pilet's *package.json* contains a (filled) `peerDependencies` section then some assumptions about the app shell are already done. There are now two extreme ways you can take:
+Besides the typing aspect you'll also need to take care shared dependencies. If your pilet's *package.json* contains a (filled) `peerDependencies` section or a (filled) `inherit` section of an `importmap` then some assumptions about the app shell are already done.
+
+There are now two extreme ways you can take:
 
 1. Make all `peerDependencies` normal `dependencies`, i.e., do not use shared dependencies at all.
-2. Move all `peerDependencies` to an `importmap`, i.e., make them implicitly shared if possible.
+2. Move all `peerDependencies` to `imports` of an `importmap`, i.e., make them implicitly shared if possible.
+
+For this kind of scenario you should not use `inherit` of an `importmap`.
 
 There is also a combination between (1) and (2) where some shared dependencies are put into `dependencies` and others are put into the `importmap`. Usually, this is the best way. Considering things like `react` are presumably shared and would not behave nicely if not shared, this also brings some advantages.
 
