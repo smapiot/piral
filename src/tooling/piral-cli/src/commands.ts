@@ -61,7 +61,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          describe: 'Sets the source Piral instance path for collecting all the information.',
           default: apps.debugPiralDefaults.entry,
         })
         .string('target')
@@ -121,7 +121,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          describe: 'Sets the source Piral instance path for collecting all the information.',
           default: apps.buildPiralDefaults.entry,
         })
         .string('target')
@@ -234,7 +234,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          describe: 'Sets the source Piral instance path for collecting all the information.',
           default: apps.declarationPiralDefaults.entry,
         })
         .string('target')
@@ -388,7 +388,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source root directory or index.html file for collecting all the information.',
+          describe: 'Sets the source Piral instance path for collecting all the information.',
           default: apps.validatePiralDefaults.entry,
         })
         .number('log-level')
@@ -489,7 +489,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source index.tsx file for collecting all the information.',
+          describe: 'Sets the source pilet path for collecting all the information.',
           default: apps.buildPiletDefaults.entry,
         })
         .string('target')
@@ -568,7 +568,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return argv
         .positional('source', {
           type: 'string',
-          describe: 'Sets the source package.json file for creating the package.',
+          describe: 'Sets the source pilet path for creating the package.',
           default: apps.packPiletDefaults.source,
         })
         .string('target')
@@ -814,9 +814,14 @@ const allCommands: Array<ToolCommand<any>> = [
     arguments: ['[source]'],
     flags(argv) {
       return argv
-        .positional('source', {
+        .positional('app', {
           type: 'string',
           describe: 'Sets the name of the Piral instance to be added.',
+          default: apps.addPiralInstancePiletDefaults.app,
+        })
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source pilet path where the Piral instance should be added.',
           default: apps.addPiralInstancePiletDefaults.source,
         })
         .number('log-level')
@@ -833,6 +838,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.addPiralInstancePilet(args.base as string, {
         logLevel: args['log-level'] as LogLevels,
         selected: args.selected as boolean,
+        app: args.app as string,
         source: args.source as string,
       });
     },
@@ -844,9 +850,14 @@ const allCommands: Array<ToolCommand<any>> = [
     arguments: ['[source]'],
     flags(argv) {
       return argv
-        .positional('source', {
+        .positional('app', {
           type: 'string',
           describe: 'Sets the name of the Piral instance to be removed.',
+          default: apps.removePiralInstancePiletDefaults.app,
+        })
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source pilet path where the Piral instance should be removed.',
           default: apps.removePiralInstancePiletDefaults.source,
         })
         .number('log-level')
@@ -859,6 +870,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.removePiralInstancePilet(args.base as string, {
         logLevel: args['log-level'] as LogLevels,
+        app: args.app as string,
         source: args.source as string,
       });
     },

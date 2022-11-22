@@ -11,6 +11,11 @@ export interface AddPiralInstancePiletOptions {
   /**
    * The name of the Piral instance to add.
    */
+  app?: string;
+
+  /**
+   * Sets the source directory for adding the Piral instance.
+   */
   source?: string;
 
   /**
@@ -21,17 +26,21 @@ export interface AddPiralInstancePiletOptions {
 
 export const addPiralInstancePiletDefaults: AddPiralInstancePiletOptions = {
   logLevel: LogLevels.info,
-  source: undefined,
+  app: undefined,
+  source: '.',
   selected: false,
 };
 
 export async function addPiralInstancePilet(baseDir = process.cwd(), options: AddPiralInstancePiletOptions = {}) {
   const {
     logLevel = addPiralInstancePiletDefaults.logLevel,
-    selected = addPiralInstancePiletDefaults.selected,
     source = addPiralInstancePiletDefaults.source,
+    selected = addPiralInstancePiletDefaults.selected,
+    app = addPiralInstancePiletDefaults.app,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
+
+
 }

@@ -3,25 +3,25 @@ import { createPiletPackage, logDone, setLogLevel, progress } from '../common';
 import { LogLevels } from '../types';
 
 export interface PackPiletOptions {
-  source?: string;
-  target?: string;
-  logLevel?: LogLevels;
-}
-
-export const packPiletDefaults: PackPiletOptions = {
   /**
    * Sets the source directory for creating the npm package.
    */
-  source: '.',
+  source?: string;
 
   /**
    * Sets the target directory for storing the tarball.
    */
-  target: '.',
+  target?: string;
 
   /**
    * Sets the log level to use (1-5).
    */
+  logLevel?: LogLevels;
+}
+
+export const packPiletDefaults: PackPiletOptions = {
+  source: '.',
+  target: '.',
   logLevel: LogLevels.info,
 };
 
