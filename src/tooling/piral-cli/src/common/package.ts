@@ -532,6 +532,14 @@ export async function findPackageVersion(rootPath: string, packageName: string |
   return 'latest';
 }
 
+function onlyUnique<T>(value: T, index: number, self: Array<T>) {
+  return self.indexOf(value) === index;
+}
+
+export function flattenExternals(dependencies: Array<SharedDependency>) {
+  return dependencies.map((m) => m.name).filter(onlyUnique);
+}
+
 export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
   const sharedDependencies = await readImportmap(root, packageInfo);
 
