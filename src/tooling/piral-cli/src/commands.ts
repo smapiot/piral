@@ -827,6 +827,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.addPiralInstancePiletDefaults.logLevel)
+        .choices('npm-client', clientTypeKeys)
+        .describe('npm-client', 'Sets the npm client to be used for adding the Piral instance.')
+        .default('npm-client', apps.addPiralInstancePiletDefaults.npmClient)
         .boolean('selected')
         .describe('selected', 'Defines if the provided Piral instance should be selected initially.')
         .default('selected', apps.addPiralInstancePiletDefaults.selected)
@@ -838,6 +841,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.addPiralInstancePilet(args.base as string, {
         logLevel: args['log-level'] as LogLevels,
         selected: args.selected as boolean,
+        npmClient: args['npm-client'] as NpmClientType,
         app: args.app as string,
         source: args.source as string,
       });

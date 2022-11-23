@@ -394,7 +394,7 @@ export function combinePackageRef(name: string, version: string, type: PackageTy
   return name;
 }
 
-export async function getPackageName(root: string, name: string, type: PackageType) {
+export async function getPackageName(root: string, name: string, type: PackageType): Promise<string> {
   switch (type) {
     case 'file':
       const originalPackageJson = await readJson(name, 'package.json');

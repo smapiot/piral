@@ -737,17 +737,21 @@ export function combinePiletExternals(
   return externals;
 }
 
-export async function retrievePiletData(target: string, app?: string) {
-  const piletJson = await findFile(target, 'pilet.json');
-  const proposedRoot = piletJson ? dirname(piletJson) : target;
+export async function findPiletRoot(proposedRoot: string) {
   const packageJson = await findFile(proposedRoot, 'package.json');
 
   if (!packageJson) {
     fail('packageJsonMissing_0075');
   }
 
-  const root = dirname(packageJson);
-  const piletPackage = require(packageJson);
+  return dirname(packageJson);
+}
+
+export async function retrievePiletData(target: string, app?: string) {
+  const piletJson = await findFile(target, 'pilet.json');
+  const proposedRoot = piletJson ? dirname(piletJson) : target;
+  const root = await findPiletRoot(proposedRoot);
+  const piletPackage = require(resolve(root, 'package.json'));
   const piletDefinition = piletJson && require(piletJson);
   const appPackages = findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
