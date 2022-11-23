@@ -16,16 +16,21 @@ const defaultPackageJson = (files: Array<any>) => `
       "piral"
     ],
     "dependencies": {
+      "piral-base": "*",
+      "piral-core": "*",
       "piral": "*"
     },
     "scripts": {
       "start": "piral debug",
       "build": "piral build"
     },
+    "importmap": {
+      "imports": {},
+      "inherit": ["piral-base", "piral-core"]
+    },
     "app": "./src/index.html",
     "pilets": {
       "files": ${JSON.stringify(files)},
-      "externals": [],
       "scripts": {
         "build": "npm run build-pilet",
         "start": "npm run debug-pilet"
@@ -43,7 +48,6 @@ const defaultPackageJson = (files: Array<any>) => `
       "@types/react-dom": "latest",
       "@types/react-router": "latest",
       "@types/react-router-dom": "latest",
-      "piral-cli": "*",
       "typescript": "latest"
     }
   }
@@ -120,10 +124,15 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
 
 describe('Build Piral Command', () => {
   beforeEach(() => {
+    process.env.NODE_ENV = undefined;
     setBundler({
       name: 'webpack5',
       actions: require(resolve(__dirname, '../../../piral-cli-webpack5/lib/actions')),
     });
+  });
+
+  afterEach(() => {
+    process.env.NODE_ENV = 'test';
   });
 
   it('missing source should result in an error', async () => {

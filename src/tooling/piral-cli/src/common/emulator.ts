@@ -1,5 +1,5 @@
 import { join, resolve, relative } from 'path';
-import { findDependencyVersion, copyScaffoldingFiles, isValidDependency } from './package';
+import { findDependencyVersion, copyScaffoldingFiles, isValidDependency, flattenExternals } from './package';
 import { createPiralStubIndexIfNotExists } from './template';
 import { filesTar, filesOnceTar } from './constants';
 import { cliVersion } from './info';
@@ -96,7 +96,7 @@ export async function createEmulatorSources(
       ...allDeps,
       ...externalDependencies,
     },
-    sharedDependencies: externals.map(m => m.name),
+    sharedDependencies: flattenExternals(externals),
     repository: piralPkg.repository,
     bugs: piralPkg.bugs,
     author: piralPkg.author,

@@ -23,6 +23,7 @@ import {
   getAvailablePort,
   combinePiletExternals,
   watcherTask,
+  flattenExternals,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -153,7 +154,7 @@ function getOrMakeApps({ apps, publicUrl }: AppInfo, logLevel: LogLevels) {
           optimizeModules: false,
           publicUrl,
           ignored,
-          externals: externals.map(m => m.name),
+          externals: flattenExternals(externals),
           piralInstances,
           entryFiles: appFile,
           logLevel,
