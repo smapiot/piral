@@ -14,27 +14,21 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
   private locals?: Record<string, any> = {};
   private current?: HTMLElement;
   private previous?: HTMLElement;
-  private handler = (ev: CustomEvent) => {
-    const { innerProps } = this.props;
-    ev.stopPropagation();
-    innerProps.piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
-  };
 
   private setNode = (node: HTMLDivElement) => {
     this.current = node;
   };
 
   componentDidMount() {
-    const node = this.current;
+    const { current } = this;
     const { $component, $context, innerProps } = this.props;
     const { mount } = $component;
 
-    if (node && isfunc(mount)) {
-      mount(node, innerProps, $context, this.locals);
-      node.addEventListener('render-html', this.handler, false);
+    if (current && isfunc(mount)) {
+      mount(current, innerProps, $context, this.locals);
     }
 
-    this.previous = node;
+    this.previous = current;
   }
 
   componentDidUpdate() {
@@ -51,13 +45,12 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
   }
 
   componentWillUnmount() {
-    const node = this.previous;
+    const { previous } = this;
     const { $component } = this.props;
     const { unmount } = $component;
 
-    if (node && isfunc(unmount)) {
-      unmount(node, this.locals);
-      node.removeEventListener('render-html', this.handler, false);
+    if (previous && isfunc(unmount)) {
+      unmount(previous, this.locals);
     }
 
     this.previous = undefined;

@@ -2,6 +2,7 @@
 
 ## 0.15.1 (tbd)
 
+- Fixed update of `piral-extension` web component inside foreign components
 - Improved documentation
 - Added `pilet add-piral-instance` command to `piral-cli` (#543)
 - Added `pilet remove-piral-instance` command `piral-cli` (#543)
