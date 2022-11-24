@@ -120,7 +120,10 @@ export function withProvider(provider: JSX.Element) {
  * @param component The component representing the route.
  * @returns The dispatcher.
  */
-export function withRoute<T>(path: string, component: ComponentType<RouteComponentProps<T>>) {
+export function withRoute<T extends { [K in keyof T]?: string } = {}>(
+  path: string,
+  component: ComponentType<RouteComponentProps<T>>,
+) {
   return (state: GlobalState): GlobalState => ({
     ...state,
     routes: withKey(state.routes, path, component),

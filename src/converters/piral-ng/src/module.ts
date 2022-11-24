@@ -13,8 +13,8 @@ import {
 } from '@angular/core';
 import { teardown } from './startup';
 import { RoutingService } from './RoutingService';
-import { SharedModule } from './SharedModule';
 import { findComponents, getAnnotations } from './utils';
+import { SharedModule } from '../common';
 
 interface ModuleDefinition {
   active: any;
@@ -136,7 +136,7 @@ export function createModuleInstance(component: any, standalone: boolean, piral:
 }
 
 export function findModule(module: any) {
-  return availableModules.find(m => m.module === module);
+  return availableModules.find((m) => m.module === module);
 }
 
 export function defineModule(module: any, opts: NgOptions = undefined) {

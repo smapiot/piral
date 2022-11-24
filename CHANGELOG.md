@@ -3,6 +3,7 @@
 ## 0.15.1 (tbd)
 
 - Fixed update of `piral-extension` web component inside foreign components
+- Fixed `piral-ng/common` for AoT builds with `ng-packagr` (#559)
 - Improved multi Piral instance debugging
 - Improved documentation
 - Added `pilet add-piral-instance` command to `piral-cli` (#543)

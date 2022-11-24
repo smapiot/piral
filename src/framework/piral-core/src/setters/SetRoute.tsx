@@ -5,7 +5,7 @@ import { useGlobalStateContext, useSetter } from '../hooks';
 /**
  * The props for the SetRoute component.
  */
-export interface SetRouteProps<T = {}> {
+export interface SetRouteProps<T extends { [K in keyof T]?: string } = {}> {
   /**
    * The path to the route.
    */
@@ -19,7 +19,10 @@ export interface SetRouteProps<T = {}> {
 /**
  * The component capable of setting a global route at mounting.
  */
-export function SetRoute<T = {}>({ path, component }: SetRouteProps<T>): React.ReactElement {
+export function SetRoute<T extends { [K in keyof T]?: string } = {}>({
+  path,
+  component,
+}: SetRouteProps<T>): React.ReactElement {
   const { setRoute } = useGlobalStateContext();
   useSetter(() => component && setRoute(path, component));
   // tslint:disable-next-line:no-null-keyword

@@ -82,7 +82,7 @@ export function setErrorComponent<TKey extends keyof ErrorComponentsState>(
   }));
 }
 
-export function setRoute<T = {}>(
+export function setRoute<T extends { [K in keyof T]?: string } = {}>(
   ctx: GlobalStateContext,
   path: string,
   component: ComponentType<RouteComponentProps<T>>,

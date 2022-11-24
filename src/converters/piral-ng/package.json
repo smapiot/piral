@@ -47,11 +47,10 @@
   },
   "sideEffects": false,
   "files": [
+    "common",
     "esm",
     "lib",
     "src",
-    "common.d.ts",
-    "common.js",
     "convert.d.ts",
     "convert.js",
     "extend-webpack.js"
@@ -64,8 +63,9 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib convert.d.ts convert.js",
-    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
+    "cleanup": "rimraf common esm lib convert.d.ts convert.js",
+    "build": "yarn build:ng && yarn build:commonjs && yarn build:esnext && yarn build:convert",
+    "build:ng": "ng-packagr -p src/common/ng-package.json",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
@@ -75,10 +75,12 @@
   "devDependencies": {
     "@angular/common": "^14.0.0",
     "@angular/compiler": "^14.0.0",
+    "@angular/compiler-cli": "^14.0.0",
     "@angular/core": "^14.0.0",
     "@angular/platform-browser": "^14.0.0",
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
+    "ng-packagr": "^14.0.0",
     "piral-core": "^0.15.0",
     "rxjs": "^7.3.0"
   },
