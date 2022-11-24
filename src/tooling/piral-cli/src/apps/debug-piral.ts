@@ -159,12 +159,12 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       hooks.afterBuild?.({ ...args, root, publicUrl, externals, entryFiles, piralInstances, bundler, ...dest });
     });
 
+    bundler.start();
+
     const krasBaseConfig = resolve(fullBase, krasrc);
     const krasRootConfig = resolve(root, krasrc);
     const mocks = join(targetDir, 'mocks');
     const baseMocks = resolve(fullBase, 'mocks');
-
-
     const mocksExist = await checkExistingDirectory(mocks);
     const sources = [mocksExist ? mocks : undefined].filter(Boolean);
     const initial = createInitialKrasConfig(baseMocks, sources);
@@ -187,8 +187,9 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
     const krasServer = buildKrasWithCli(krasConfig);
+    krasServer.setMaxListeners(16);
     krasServer.removeAllListeners('open');
-    krasServer.on('open', notifyServerOnline([bundler], publicUrl, krasConfig.api));
+    krasServer.on('open', notifyServerOnline(publicUrl, krasConfig.api));
 
     await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, publicUrl });
     await krasServer.start();

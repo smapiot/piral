@@ -811,7 +811,7 @@ const allCommands: Array<ToolCommand<any>> = [
     name: 'add-piral-instance-pilet',
     alias: ['add-shell-pilet', 'install-shell-pilet', 'add-app-pilet', 'with-app-pilet'],
     description: 'Adds another Piral instance to the available apps hosting the current pilet.',
-    arguments: ['[source]'],
+    arguments: ['<app> [source]'],
     flags(argv) {
       return argv
         .positional('app', {
@@ -851,7 +851,7 @@ const allCommands: Array<ToolCommand<any>> = [
     name: 'remove-piral-instance-pilet',
     alias: ['remove-shell-pilet', 'uninstall-shell-pilet', 'remove-app-pilet', 'without-app-pilet'],
     description: 'Removes an existing Piral instance from the available apps hosting the current pilet.',
-    arguments: ['[source]'],
+    arguments: ['<app> [source]'],
     flags(argv) {
       return argv
         .positional('app', {
@@ -867,6 +867,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.removePiralInstancePiletDefaults.logLevel)
+        .choices('npm-client', clientTypeKeys)
+        .describe('npm-client', 'Sets the npm client to be used for removing the Piral instance.')
+        .default('npm-client', apps.removePiralInstancePiletDefaults.npmClient)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -876,6 +879,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         app: args.app as string,
         source: args.source as string,
+        npmClient: args['npm-client'] as NpmClientType,
       });
     },
   },

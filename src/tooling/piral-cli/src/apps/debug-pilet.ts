@@ -306,14 +306,16 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     checkSanity(pilets);
 
     await hooks.beforeApp?.({ appInstanceDir, pilets });
-    const appDirs = appInstanceDir ? [appInstanceDir] : (await getOrMakeApps(pilets[0], logLevel));
+    const appDirs = appInstanceDir ? [appInstanceDir] : await getOrMakeApps(pilets[0], logLevel);
+
+    Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
+
+    pilets.forEach((p) => p.bundler.start());
 
     await Promise.all(
       appDirs.map(async (appDir) => {
         const appRoot = dirname(await findFile(appDir, 'package.json'));
         await hooks.afterApp?.({ appInstanceDir, pilets });
-
-        Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
 
         const sources = pilets.map((m) => m.mocks).filter(Boolean);
         const baseMocks = resolve(fullBase, 'mocks');
@@ -343,14 +345,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         const krasServer = buildKrasWithCli(krasConfig);
         krasServer.setMaxListeners(maxListeners);
         krasServer.removeAllListeners('open');
-        krasServer.on(
-          'open',
-          notifyServerOnline(
-            pilets.map((p) => p.bundler),
-            publicUrl,
-            krasConfig.api,
-          ),
-        );
+        krasServer.on('open', notifyServerOnline(publicUrl, krasConfig.api));
 
         await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
         await krasServer.start();

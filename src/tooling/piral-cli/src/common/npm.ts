@@ -146,6 +146,24 @@ export async function installNpmPackageFromOptionalRegistry(
   }
 }
 
+export async function uninstallNpmPackage(
+  client: NpmClientType,
+  packageRef: string,
+  target = '.',
+  ...flags: Array<string>
+): Promise<string> {
+  try {
+    const { uninstallPackage } = clients[client];
+    return await uninstallPackage(packageRef, target, ...flags);
+  } catch (ex) {
+    log(
+      'generalError_0002',
+      `Could not uninstall the package "${packageRef}" using ${client}. Make sure ${client} is correctly installed and accessible: ${ex}`,
+    );
+    throw ex;
+  }
+}
+
 export async function installNpmPackage(
   client: NpmClientType,
   packageRef: string,

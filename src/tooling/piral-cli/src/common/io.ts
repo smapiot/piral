@@ -209,14 +209,17 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
     matches.push(path);
   };
   const nameOfPackageJson = 'package.json';
+  const nameOfPiletJson = 'pilet.json';
   const exts = preferences.map((s) => s.substring(1)).join(',');
   const allPatterns = patterns.reduce<Array<AnyPattern>>((agg, curr) => {
     const patterns = [];
 
     if (/[a-zA-Z0-9\-\*]$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
-      patterns.push(curr, `${curr}.{${exts}}`, `${curr}/${nameOfPackageJson}`);
+      patterns.push(curr, `${curr}.{${exts}}`, `${curr}/${nameOfPackageJson}`, `${curr}/${nameOfPiletJson}`);
     } else if (curr.endsWith('/')) {
-      patterns.push(`${curr}index.{${exts}}`, `${curr}${nameOfPackageJson}`);
+      patterns.push(`${curr}index.{${exts}}`, `${curr}${nameOfPackageJson}`, `${curr}${nameOfPiletJson}`);
+    } else if (curr === '.' || curr === '..') {
+      patterns.push(`${curr}/index.{${exts}}`, `${curr}/${nameOfPackageJson}`, `${curr}/${nameOfPiletJson}`);
     } else {
       patterns.push(curr);
     }

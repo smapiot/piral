@@ -1,6 +1,6 @@
 import { dirname, resolve } from 'path';
-import { setLogLevel, progress, log, matchAnyPilet, findFile, readJson, writeJson, logDone, findPiletRoot } from '../common';
-import { LogLevels } from '../types';
+import { setLogLevel, progress, log, matchAnyPilet, findFile, readJson, writeJson, logDone, findPiletRoot, determineNpmClient, uninstallNpmPackage } from '../common';
+import { LogLevels, NpmClientType } from '../types';
 
 export interface RemovePiralInstancePiletOptions {
   /**
@@ -17,16 +17,24 @@ export interface RemovePiralInstancePiletOptions {
    * Sets the source directory for adding the Piral instance.
    */
   source?: string;
+
+  /**
+   * The npm client to be used when scaffolding.
+   * @example 'yarn'
+   */
+  npmClient?: NpmClientType;
 }
 
 export const removePiralInstancePiletDefaults: RemovePiralInstancePiletOptions = {
   logLevel: LogLevels.info,
   app: undefined,
   source: '.',
+  npmClient: undefined,
 };
 
 export async function removePiralInstancePilet(baseDir = process.cwd(), options: RemovePiralInstancePiletOptions = {}) {
   const {
+    npmClient: defaultNpmClient = removePiralInstancePiletDefaults.npmClient,
     logLevel = removePiralInstancePiletDefaults.logLevel,
     source = removePiralInstancePiletDefaults.source,
     app = removePiralInstancePiletDefaults.app,
@@ -35,33 +43,18 @@ export async function removePiralInstancePilet(baseDir = process.cwd(), options:
   setLogLevel(logLevel);
   progress('Reading configuration ...');
 
+  const npmClient = await determineNpmClient(fullBase, defaultNpmClient);
   const allEntries = await matchAnyPilet(fullBase, [source]);
 
   const tasks = allEntries.map(async (entryModule) => {
     const targetDir = dirname(entryModule);
     const piletJson = 'pilet.json';
-    const packageJson = 'package.json';
     const piletJsonPath = await findFile(targetDir, piletJson);
 
     if (piletJsonPath) {
       const piletJsonDir = dirname(piletJsonPath);
       const oldContent = await readJson(piletJsonDir, piletJson);
       const root = await findPiletRoot(piletJsonDir);
-      const packageData = await readJson(root, packageJson);
-
-      if ('dependencies' in packageData && app in packageData.dependencies) {
-        packageData.dependencies[app] = undefined;
-      }
-
-      if ('devDependencies' in packageData && app in packageData.devDependencies) {
-        packageData.devDependencies[app] = undefined;
-      }
-
-      if ('peerDependencies' in packageData && app in packageData.peerDependencies) {
-        packageData.peerDependencies[app] = undefined;
-      }
-
-      await writeJson(root, packageJson, packageData, true);
 
       if ('piralInstances' in oldContent && app in oldContent.piralInstances) {
         const newContent = {
@@ -74,6 +67,8 @@ export async function removePiralInstancePilet(baseDir = process.cwd(), options:
 
         await writeJson(piletJsonDir, piletJson, newContent, true);
       }
+
+      await uninstallNpmPackage(npmClient, app, root);
     } else {
       log('piletJsonNotAvailable_0180', targetDir);
     }

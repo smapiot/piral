@@ -10,6 +10,7 @@ type BundleListener = (args: any) => void;
 
 function createBundler(cwd: string, ps: ChildProcess, args: any) {
   let promise = Promise.resolve();
+  let started = false;
   const listeners: Array<BundleListener> = [];
   const bundle: BundleDetails = {
     dir: cwd,
@@ -28,10 +29,13 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
   const bundler = {
     bundle,
     start() {
-      ps.send({
-        type: 'bundle',
-        ...args,
-      });
+      if (!started) {
+        started = true;
+        ps.send({
+          type: 'bundle',
+          ...args,
+        });
+      }
     },
     on(cb: BundleListener) {
       listeners.push(cb);
