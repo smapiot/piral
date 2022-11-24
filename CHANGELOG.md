@@ -4,6 +4,7 @@
 
 - Fixed update of `piral-extension` web component inside foreign components
 - Fixed `piral-ng/common` for AoT builds with `ng-packagr` (#559)
+- Fixed scaffolding issue with not found Piral instances
 - Improved multi Piral instance debugging for pilets
 - Improved documentation
 - Added `pilet add-piral-instance` command to `piral-cli` (#543)

@@ -16,7 +16,7 @@ export async function installPiralInstance(
   npmClient: NpmClientType,
 ): Promise<[name: string, version: string]> {
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, usedSource);
-  const isLocal = isLinkedPackage(sourceName, type, hadVersion);
+  const isLocal = isLinkedPackage(sourceName, type, hadVersion, rootDir);
 
   if (!isLocal) {
     const packageRef = combinePackageRef(sourceName, sourceVersion, type);

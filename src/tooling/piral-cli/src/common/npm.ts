@@ -390,13 +390,13 @@ export function tryResolvePackage(name: string, baseDir: string = undefined) {
   return path;
 }
 
-export function findPackageRoot(pck: string, baseDir: string = undefined) {
+export function findPackageRoot(pck: string, baseDir: string) {
   return tryResolvePackage(`${pck}/package.json`, baseDir);
 }
 
-export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean) {
+export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean, target: string) {
   if (type === 'registry' && !hadVersion) {
-    const root = findPackageRoot(name);
+    const root = findPackageRoot(name, target);
     return typeof root === 'string';
   }
 
