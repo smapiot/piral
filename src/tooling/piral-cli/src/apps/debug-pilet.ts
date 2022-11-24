@@ -143,9 +143,15 @@ interface AppInfo {
   externals: Array<string>;
 }
 
+type PiralInstanceInfo = [appDir: string, appPort: number];
+
+function byPort(a: PiralInstanceInfo, b: PiralInstanceInfo) {
+  return a[1] - b[1];
+}
+
 function getOrMakeApps({ apps, publicUrl }: AppInfo, logLevel: LogLevels) {
   return Promise.all(
-    apps.map(async ({ emulator, appFile, appPackage }) => {
+    apps.map(async ({ emulator, appFile, appPackage, appPort }): Promise<PiralInstanceInfo> => {
       if (!emulator) {
         const piralInstances = [appPackage.name];
         const { externals, root, ignored } = await retrievePiletsInfo(appFile);
@@ -160,10 +166,10 @@ function getOrMakeApps({ apps, publicUrl }: AppInfo, logLevel: LogLevels) {
           logLevel,
           _: {},
         });
-        return dir;
+        return [dir, appPort];
       }
 
-      return dirname(appFile);
+      return [dirname(appFile), appPort];
     }),
   );
 }
@@ -218,7 +224,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
-  const port = await getAvailablePort(originalPort);
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
@@ -306,16 +311,20 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     checkSanity(pilets);
 
     await hooks.beforeApp?.({ appInstanceDir, pilets });
-    const appDirs = appInstanceDir ? [appInstanceDir] : await getOrMakeApps(pilets[0], logLevel);
+    const appInstances: Array<PiralInstanceInfo> = appInstanceDir
+      ? [[appInstanceDir, 0]]
+      : await getOrMakeApps(pilets[0], logLevel);
 
     Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
 
     pilets.forEach((p) => p.bundler.start());
 
     await Promise.all(
-      appDirs.map(async (appDir) => {
+      appInstances.sort(byPort).map(async ([appDir, appPort], i) => {
         const appRoot = dirname(await findFile(appDir, 'package.json'));
         await hooks.afterApp?.({ appInstanceDir, pilets });
+        const suggestedPort = appPort || originalPort + i;
+        const port = await getAvailablePort(suggestedPort);
 
         const sources = pilets.map((m) => m.mocks).filter(Boolean);
         const baseMocks = resolve(fullBase, 'mocks');

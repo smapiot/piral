@@ -196,6 +196,7 @@ function findPiralInstances(
         const relPath = appPackage && appPackage.app;
         appPackage.app = relPath && resolve(root, relPath);
         appPackage.root = root;
+        appPackage.port = piletDefinition?.piralInstances?.[proposedApp]?.port ?? 0;
         return appPackage;
       }
 
@@ -763,6 +764,7 @@ export async function retrievePiletData(target: string, app?: string) {
   for (const appPackage of appPackages) {
     const appFile: string = appPackage?.app;
     const appRoot: string = appPackage?.root;
+    const appPort = appPackage?.port;
 
     if (!appFile || !appRoot) {
       fail('appInstanceInvalid_0011');
@@ -774,6 +776,7 @@ export async function retrievePiletData(target: string, app?: string) {
       appFile,
       appRoot,
       emulator,
+      appPort,
     });
   }
 

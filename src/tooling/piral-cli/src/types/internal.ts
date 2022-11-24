@@ -8,6 +8,7 @@ export interface PiletDefinition {
     string,
     {
       selected?: boolean;
+      port?: number;
     }
   >;
 }
