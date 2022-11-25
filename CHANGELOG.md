@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.1 (tbd)
+## 0.15.1 (November 25, 2022)
 
 - Fixed update of `piral-extension` web component inside foreign components
 - Fixed `piral-ng/common` for AoT builds with `ng-packagr` (#559)
