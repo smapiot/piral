@@ -1,5 +1,15 @@
 # Piral Changelog
 
+## 0.15.1 (tbd)
+
+- Fixed update of `piral-extension` web component inside foreign components
+- Fixed `piral-ng/common` for AoT builds with `ng-packagr` (#559)
+- Fixed scaffolding issue with not found Piral instances
+- Improved multi Piral instance debugging for pilets
+- Improved documentation
+- Added `pilet add-piral-instance` command to `piral-cli` (#543)
+- Added `pilet remove-piral-instance` command to `piral-cli` (#543)
+
 ## 0.15.0 (November 17, 2022)
 
 - Fixed closing of dialogs to be immediate (#549)

@@ -6,25 +6,44 @@ section: Customization
 
 # Piral Instance Metadata
 
-The Piral CLI uses the *package.json* file for retrieving useful information. This includes the centrally shared dependencies or validation techniques to apply.
+The Piral CLI uses the *package.json* file, as well as an optional *piral.json* file for retrieving useful information. This includes the centrally shared dependencies or validation techniques to apply.
 
 ## Package Definition
 
-The additional fields for a Piral instance package are available as sketched in the following example:
+The additional fields for a Piral instance *package.json* are available as sketched in the following example:
 
 ```json
 {
   "name": "my-piral-instance",
   // ...
   "app": "src/index.html",
+  "importmap": {
+    "imports": {
+      "my-ui-lib": "my-ui-lib"
+    },
+    "inherit": [
+      "piral-base",
+      "piral-core"
+    ]
+  }
+}
+```
+
+The `app` field is necessary to signal the HTML file to be used as an entry point to the Piral CLI. All paths are relative to the *package.json*.
+
+The `importmap` defines the shared dependencies from the Piral instance. The `inherit` field lists the packages that already contain shared dependencies. In the previous example `piral-base` (shares `tslib` etc.) and `piral-core` (shares `react`, `react-router-dom` etc.) are referenced. If you don't want these dependencies to be shared then remove the respective element from the array.
+
+The `importmap` also gives you the possibility to share other dependencies. In the example above a package called `my-ui-lib` is shared, too.
+
+Additional the optional *piral.json* file can be used to define a bit more about the scaffolding process.
+
+```json
+{
   "pilets": {
     "preScaffold": "echo 'Pre Scaffold'",
     "postScaffold": "echo 'Post Scaffold'",
     "preUpgrade": "echo 'Pre Upgrade'",
     "postUpgrade": "echo 'Post Upgrade'",
-    "externals": [
-      "my-ui-lib"
-    ],
     "template": "@my-company/pilet-template",
     "files": [
       ".editorconfig",
@@ -61,9 +80,7 @@ The additional fields for a Piral instance package are available as sketched in 
 }
 ```
 
-The `pilets` field is completely optional. The `app` field is necessary to signal the HTML file to be used as an entry point to the Piral CLI. All paths are relative to the *package.json*.
-
-The names in the list of `externals` need to be aligned with the names of the dependencies in the `dependencies` field. These dependencies will be available to pilets as `peerDependencies` (or "externals"). Furthermore, the Piral CLI will instruct these dependencies to be fully included in the app.
+The `pilets` field is completely optional. All paths are relative to the *piral.json*.
 
 ### Pilet Lifecycle Hooks
 
@@ -71,7 +88,7 @@ The `preScaffold`, `postScaffold`, `preUpgrade`, and `postUpgrade` fields provid
 
 The lifecycle hooks are run in the following order:
 
-1. Pre-Scaffold is done after [optionally] creating the directory, but before anything else, e.g., the *tsconfig.json* has been scaffolded.
+1. Pre-Scaffold is done after (optionally) creating the directory, but before anything else, e.g., the *tsconfig.json* has been scaffolded.
 2. Post-Scaffold is done right before the scaffold command is exited, i.e., after everything has been scaffolded and copied accordingly.
 3. Pre-Upgrade is done before anything is touched, i.e., right before the command will start moving things around.
 4. Post-Upgrade is done right after the new/updated Piral instance has been added and all files etc. have been touched.
@@ -94,8 +111,6 @@ If a file is actually a folder then all the folder files are copied. For simple 
 ### Pilet Scripts
 
 The determined `scripts` provide an easy way to extend the scripts section of the `package.json` of a new pilet. The reason for this section is - like the `files` section - coherence. Likewise, the `devDependencies` can be used to inject some additional tools into a scaffolded pilet, e.g., a preferred solution for unit test, linting, or style coherence.
-
-**Remark**: The difference between the `devDependencies` (format like in the *package.json* - names with semver constraints) and the `externals` (just names, no version constraints) is explained fairly simple: every name mentioned in `externals` needs to be also present in the provided Piral instance (i.e., needs to occur in `dependencies` with a semver constraint), however, the `devDependencies` for a pilet do not need to be present in the Piral instance at all - thus specifying the semver constraint is necessary.
 
 In addition to the standard specification using a string for the version, the dependencies listed in the `devDependencies` can also be marked as `true`. Such a `devDependencies` entry will then use the version of the dependency as specified in either the `dependencies` or `devDependencies` of the Piral instance. If no such entry can be found, it will fall back to `"latest"`.
 

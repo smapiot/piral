@@ -1,7 +1,7 @@
 export async function concurrentWorkers<T, R>(
   items: Array<T>,
   concurrency: number,
-  worker: (item: T) => Promise<R>,
+  worker: (item: T, index: number) => Promise<R>,
 ): Promise<Array<R>> {
   const maxItems = items.length;
   const results: Array<R> = new Array(maxItems);
@@ -12,7 +12,7 @@ export async function concurrentWorkers<T, R>(
       while (offset < maxItems) {
         const i = offset++;
         const item = items[i];
-        results[i] = await worker(item);
+        results[i] = await worker(item, i);
       }
     }),
   );

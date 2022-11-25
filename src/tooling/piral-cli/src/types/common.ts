@@ -38,12 +38,14 @@ export interface PiralPackageData extends PackageData {
 export interface PiralInstancePackageData extends PiralPackageData {
   root: string;
   app: string;
+  port: number;
 }
 
 export interface AppDefinition {
   appPackage: PiralInstancePackageData;
   appFile: string;
   appRoot: string;
+  appPort: number;
   emulator: boolean;
 }
 

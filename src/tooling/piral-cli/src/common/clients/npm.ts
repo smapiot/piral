@@ -21,6 +21,13 @@ export async function installDependencies(target = '.', ...flags: Array<string>)
   return ms.value;
 }
 
+export async function uninstallPackage(packageRef: string, target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['uninstall', packageRef, ...flags], target, ms);
+  log('generalDebug_0003', `npm uninstall package result: ${ms.value}`);
+  return ms.value;
+}
+
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runNpmProcess(['install', packageRef, '--legacy-peer-deps', ...flags], target, ms);

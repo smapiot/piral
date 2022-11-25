@@ -23,6 +23,10 @@
             "type": "boolean",
             "description": "If provided defines if the app shell is selected. By default, only true if the entry is the first one and all others are false or not specified."
           },
+          "port": {
+            "type": "number",
+            "description": "Defines the default port to use when debugging."
+          },
           "path": {
             "type": "string",
             "description": "Defines the path to the emulator package of this app shell. If not given, the emulator package is resolved by the name of the given app shell key."

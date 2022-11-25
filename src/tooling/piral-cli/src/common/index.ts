@@ -29,6 +29,7 @@ export * from './port';
 export * from './rules';
 export * from './scaffold';
 export * from './scripts';
+export * from './shell';
 export * from './spec';
 export * from './template';
 export * from './url';

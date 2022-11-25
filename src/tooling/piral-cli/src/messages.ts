@@ -777,7 +777,7 @@ export function invalidPiletTarget_0040(): QuickMessage {
  * contains an object with additional fields.
  *
  * @see
- * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/metadata#pilets---package-definition)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/C31-pilet-metadata)
  *
  * @example
  * Your pilet's package.json may look similar to the following snippet:
@@ -826,7 +826,7 @@ export function invalidPiletPackage_0041(): QuickMessage {
  * should contain (among others) a field `name` pointing to the Piral instance to use.
  *
  * @see
- * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/metadata#pilets---package-definition)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/C31-pilet-metadata)
  *
  * @example
  * If your Piral instance is called `my-piral` then the package.json may look similar to
@@ -866,7 +866,7 @@ export function invalidPiletPackage_0042(): QuickMessage {
  * - The Piral instance's name is invalid (e.g., due to a typo)
  *
  * @see
- * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/metadata#pilets---package-definition)
+ * - [Pilet Package Definition](https://docs.piral.io/reference/documentation/C31-pilet-metadata)
  * - [Node Modules Loading](https://nodejs.org/api/modules.html#modules_loading_from_node_modules_folders)
  *
  * @example
@@ -1135,7 +1135,7 @@ export function gitLatestForUpgradeMissing_0051(): QuickMessage {
  * - Disk failures
  *
  * @see
- * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/metadata#piral-instance---package-definition)
+ * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/C21-piral-metadata)
  *
  * @example
  * The primary example hits when a dev dependency was specified that is otherwise not given.
@@ -1196,7 +1196,7 @@ export function cannotResolveVersion_0052(name: string): QuickMessage {
  * - Disk failures
  *
  * @see
- * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/metadata#piral-instance---package-definition)
+ * - [Piral Instance Package Definition](https://docs.piral.io/reference/documentation/C21-piral-metadata)
  *
  * @example
  * The primary example hits when a dev dependency was specified that is otherwise not given.
@@ -2491,7 +2491,7 @@ export function invalidSchemaVersion_0171(schemaVersion: string, schemas: Array<
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
  * - [esbuild](https://esbuild.github.io)
- * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/concepts/T02-bundlers)
  *
  * @example
  * Use the following command to make the parcel bundler available:
@@ -2523,7 +2523,7 @@ export function bundlerMissing_0172(bundlerName: string, installed: Array<string
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
  * - [esbuild](https://esbuild.github.io)
- * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/concepts/T02-bundlers)
  *
  * @example
  * Use the following command to make the parcel bundler available:
@@ -2555,7 +2555,7 @@ export function defaultBundlerMissing_0173(): QuickMessage {
  * - [Webpack](https://webpack.js.org)
  * - [Parcel](https://parceljs.org)
  * - [esbuild](https://esbuild.github.io)
- * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/concepts/T02-bundlers)
  *
  * @example
  * Use the following command to make the parcel bundler available:
@@ -2588,7 +2588,7 @@ export function bundlingFailed_0174(error: string): QuickMessage {
  * dependent we recommend setting the bundler explicitly.
  *
  * @see
- * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/concepts/T02-bundlers)
  *
  * @example
  * Use the following command to explicitly choose the Parcel bundler:
@@ -2622,7 +2622,7 @@ export function bundlerUnspecified_0175(available: Array<string>): QuickMessage 
  * choice (even if this could also be the default bundler) explicitly.
  *
  * @see
- * - [Pluggable bundlers](https://docs.piral.io/reference/documentation/bundlers)
+ * - [Pluggable bundlers](https://docs.piral.io/concepts/T02-bundlers)
  *
  * @example
  * Use the following command to install esbuild as a bundler with the npm client:
@@ -2633,6 +2633,34 @@ export function bundlerUnspecified_0175(available: Array<string>): QuickMessage 
  */
 export function bundlerNotInstalled_0176(): QuickMessage {
   return [LogLevels.warning, '0176', `Installing default bundler since no bundler has been found.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * No pilet.json has been found.
+ *
+ * @abstract
+ * For some functionality such as multi Piral instance support when debugging
+ * a pilet, a special file called pilet.json is required. While this file is
+ * optional in general, it must be available for certain tasks such as adding
+ * or removing a Piral instance for debugging purposes.
+ *
+ * @see
+ * - [Pluggable bundlers](https://docs.piral.io/concepts/T02-bundlers)
+ *
+ * @example
+ * If no pilet.json is yet available you can create one. It should be adjacent to
+ * the package.json of your pilet, even though different locations are also possible.
+ * By default, the following content can be used for an empty file:
+ *
+ * ```json
+ *
+ * ```
+ */
+export function piletJsonNotAvailable_0180(root: string): QuickMessage {
+  return [LogLevels.warning, '0180', `No "pilet.json" was found for the pilet at "${root}".`];
 }
 
 /**

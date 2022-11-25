@@ -33,10 +33,17 @@ export async function installDependencies(target = '.', ...flags: Array<string>)
   return ms.value;
 }
 
+export async function uninstallPackage(packageRef: string, target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runPnpmProcess(['remove', packageRef, ...convert(flags)], target, ms);
+  log('generalDebug_0003', `Pnpm remove package result: ${ms.value}`);
+  return ms.value;
+}
+
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
   await runPnpmProcess(['add', packageRef, ...convert(flags)], target, ms);
-  log('generalDebug_0003', `Pnpm install package result: ${ms.value}`);
+  log('generalDebug_0003', `Pnpm add package result: ${ms.value}`);
   return ms.value;
 }
 

@@ -1,0 +1,18 @@
+{
+  "name": "piral-ng-common",
+  "version": "0.15.0",
+  "description": "Common module for piral-ng.",
+  "keywords": [],
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/piral/issues"
+  },
+  "devDependencies": {},
+  "peerDependencies": {}
+}

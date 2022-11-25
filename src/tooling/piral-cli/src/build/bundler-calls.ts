@@ -10,6 +10,7 @@ type BundleListener = (args: any) => void;
 
 function createBundler(cwd: string, ps: ChildProcess, args: any) {
   let promise = Promise.resolve();
+  let started = false;
   const listeners: Array<BundleListener> = [];
   const bundle: BundleDetails = {
     dir: cwd,
@@ -28,10 +29,13 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
   const bundler = {
     bundle,
     start() {
-      ps.send({
-        type: 'bundle',
-        ...args,
-      });
+      if (!started) {
+        started = true;
+        ps.send({
+          type: 'bundle',
+          ...args,
+        });
+      }
     },
     on(cb: BundleListener) {
       listeners.push(cb);
@@ -54,7 +58,7 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
 export function callDynamic<T extends BaseBundleParameters>(name: string, path: string, args: T) {
   const cwd = args.root;
   return new Promise<Bundler>((resolve, reject) => {
-    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe' });
+    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe', env: process.env });
     const bundler = createBundler(cwd, ps, args);
     const setup = {
       type: 'init',
@@ -96,7 +100,7 @@ export function callDynamic<T extends BaseBundleParameters>(name: string, path: 
 export function callStatic<T extends BaseBundleParameters>(name: string, path: string, args: T) {
   const cwd = args.root;
   return new Promise<Bundler>((resolve, reject) => {
-    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe' });
+    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe', env: process.env });
     const bundler = createBundler(cwd, ps, args);
     const setup = {
       type: 'init',

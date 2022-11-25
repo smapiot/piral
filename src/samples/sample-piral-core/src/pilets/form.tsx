@@ -7,6 +7,8 @@ interface SampleFormData {
   lastName: string;
 }
 
+type IdPage = PageComponentProps<{ id: string }>;
+
 /**
  * Shows a form.
  */
@@ -19,7 +21,7 @@ export const FormPilet: Pilet = {
   basePath: '/pilets',
   link: '/pilets/connector',
   setup(piral: PiletApi) {
-    class MyForm extends React.Component<PageComponentProps & FormProps<SampleFormData>> {
+    class MyForm extends React.Component<IdPage & FormProps<SampleFormData>> {
       render() {
         const { formData, changeForm, changed, submitting, reset, error } = this.props;
         const { firstName, lastName } = formData;
@@ -91,7 +93,7 @@ export const FormPilet: Pilet = {
           }, 5000),
         );
       },
-      loadData(props: PageComponentProps) {
+      loadData(props: IdPage) {
         return new Promise<SampleFormData>((resolve) =>
           setTimeout(
             () =>

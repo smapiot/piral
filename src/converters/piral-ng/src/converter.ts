@@ -2,10 +2,10 @@ import type { ForeignComponent, BaseComponentProps, Disposable } from 'piral-cor
 import type { Type } from '@angular/core';
 import type { NgLazyType, NgModuleDefiner, PrepareBootstrapResult } from './types';
 import { BehaviorSubject } from 'rxjs';
-import { NgExtension } from './NgExtension';
 import { enqueue } from './queue';
 import { defineModule } from './module';
 import { bootstrap, prepareBootstrap } from './bootstrap';
+import { NgExtension } from '../common';
 
 export interface NgConverterOptions {}
 

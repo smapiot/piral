@@ -196,6 +196,7 @@ function findPiralInstances(
         const relPath = appPackage && appPackage.app;
         appPackage.app = relPath && resolve(root, relPath);
         appPackage.root = root;
+        appPackage.port = piletDefinition?.piralInstances?.[proposedApp]?.port ?? 0;
         return appPackage;
       }
 
@@ -532,6 +533,14 @@ export async function findPackageVersion(rootPath: string, packageName: string |
   return 'latest';
 }
 
+function onlyUnique<T>(value: T, index: number, self: Array<T>) {
+  return self.indexOf(value) === index;
+}
+
+export function flattenExternals(dependencies: Array<SharedDependency>) {
+  return dependencies.map((m) => m.name).filter(onlyUnique);
+}
+
 export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
   const sharedDependencies = await readImportmap(root, packageInfo);
 
@@ -729,17 +738,21 @@ export function combinePiletExternals(
   return externals;
 }
 
-export async function retrievePiletData(target: string, app?: string) {
-  const piletJson = await findFile(target, 'pilet.json');
-  const proposedRoot = piletJson ? dirname(piletJson) : target;
+export async function findPiletRoot(proposedRoot: string) {
   const packageJson = await findFile(proposedRoot, 'package.json');
 
   if (!packageJson) {
     fail('packageJsonMissing_0075');
   }
 
-  const root = dirname(packageJson);
-  const piletPackage = require(packageJson);
+  return dirname(packageJson);
+}
+
+export async function retrievePiletData(target: string, app?: string) {
+  const piletJson = await findFile(target, 'pilet.json');
+  const proposedRoot = piletJson ? dirname(piletJson) : target;
+  const root = await findPiletRoot(proposedRoot);
+  const piletPackage = require(resolve(root, 'package.json'));
   const piletDefinition = piletJson && require(piletJson);
   const appPackages = findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
@@ -751,6 +764,7 @@ export async function retrievePiletData(target: string, app?: string) {
   for (const appPackage of appPackages) {
     const appFile: string = appPackage?.app;
     const appRoot: string = appPackage?.root;
+    const appPort = appPackage?.port;
 
     if (!appFile || !appRoot) {
       fail('appInstanceInvalid_0011');
@@ -762,6 +776,7 @@ export async function retrievePiletData(target: string, app?: string) {
       appFile,
       appRoot,
       emulator,
+      appPort,
     });
   }
 

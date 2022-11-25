@@ -20,6 +20,7 @@ src/samples/*/esm
 src/templates/*/esm
 src/tooling/*/esm
 src/utilities/*/esm
+src/converters/piral-ng/common
 src/converters/*/convert.d.ts
 src/converters/*/convert.js
 src/**/*.min.js

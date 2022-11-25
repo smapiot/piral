@@ -97,22 +97,4 @@ describe('ForeignComponentContainer component', () => {
     expect(unmount).toHaveBeenCalled();
     container.unmount();
   });
-
-  it('listens to render-html', async () => {
-    const mount = jest.fn();
-    const renderHtmlExtension = jest.fn();
-    const component = { mount };
-    const props = { piral: { renderHtmlExtension }, meta: {} };
-    const container = render(
-      <ForeignComponentContainer $component={component} $context={undefined} $portalId="foo" innerProps={props} />,
-    );
-    await act(resolveAfter);
-    expect(mount).toHaveBeenCalled();
-    const node = document.querySelector('piral-portal[pid=foo]');
-    expect(renderHtmlExtension).not.toHaveBeenCalled();
-    node?.dispatchEvent(new CustomEvent('render-html', { detail: {} }));
-    await act(resolveAfter);
-    expect(renderHtmlExtension).toHaveBeenCalled();
-    container.unmount();
-  });
 });

@@ -4,15 +4,10 @@ import {
   ForceOverwrite,
   createDirectory,
   createFileIfNotExists,
-  installNpmPackage,
-  dissectPackageName,
   copyPiralFiles,
   patchPiletPackage,
   scaffoldPiletSourceFiles,
   installNpmDependencies,
-  combinePackageRef,
-  getPackageName,
-  getPackageVersion,
   readPiralPackage,
   getPiletsInfo,
   runScript,
@@ -23,13 +18,13 @@ import {
   log,
   logDone,
   determineNpmClient,
-  isLinkedPackage,
   copyScaffoldingFiles,
   getPiralPath,
   getPiletScaffoldData,
   config,
   initNpmProject,
   cliVersion,
+  installPiralInstance,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -187,21 +182,12 @@ always-auth=true`,
       ),
     );
 
-    const usedSource = source || `empty-piral@${cliVersion}`;
-    const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(fullBase, usedSource);
-    const isLocal = isLinkedPackage(sourceName, type, hadVersion);
-
-    if (!isLocal) {
-      const packageRef = combinePackageRef(sourceName, sourceVersion, type);
-
-      progress(`Installing npm package %s ...`, packageRef);
-      await installNpmPackage(npmClient, packageRef, root, '--save-dev', '--save-exact');
-    } else {
-      progress(`Using locally available npm package %s ...`, sourceName);
-    }
-
-    const packageName = await getPackageName(root, sourceName, type);
-    const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, root);
+    const [packageName, packageVersion] = await installPiralInstance(
+      source || `empty-piral@${cliVersion}`,
+      fullBase,
+      root,
+      npmClient,
+    );
     const piralInfo = await readPiralPackage(root, packageName);
 
     const isEmulator = checkAppShellPackage(piralInfo);

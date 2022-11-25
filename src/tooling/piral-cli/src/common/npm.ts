@@ -146,6 +146,24 @@ export async function installNpmPackageFromOptionalRegistry(
   }
 }
 
+export async function uninstallNpmPackage(
+  client: NpmClientType,
+  packageRef: string,
+  target = '.',
+  ...flags: Array<string>
+): Promise<string> {
+  try {
+    const { uninstallPackage } = clients[client];
+    return await uninstallPackage(packageRef, target, ...flags);
+  } catch (ex) {
+    log(
+      'generalError_0002',
+      `Could not uninstall the package "${packageRef}" using ${client}. Make sure ${client} is correctly installed and accessible: ${ex}`,
+    );
+    throw ex;
+  }
+}
+
 export async function installNpmPackage(
   client: NpmClientType,
   packageRef: string,
@@ -372,13 +390,13 @@ export function tryResolvePackage(name: string, baseDir: string = undefined) {
   return path;
 }
 
-export function findPackageRoot(pck: string, baseDir: string = undefined) {
+export function findPackageRoot(pck: string, baseDir: string) {
   return tryResolvePackage(`${pck}/package.json`, baseDir);
 }
 
-export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean) {
+export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean, target: string) {
   if (type === 'registry' && !hadVersion) {
-    const root = findPackageRoot(name);
+    const root = findPackageRoot(name, target);
     return typeof root === 'string';
   }
 
@@ -394,7 +412,7 @@ export function combinePackageRef(name: string, version: string, type: PackageTy
   return name;
 }
 
-export async function getPackageName(root: string, name: string, type: PackageType) {
+export async function getPackageName(root: string, name: string, type: PackageType): Promise<string> {
   switch (type) {
     case 'file':
       const originalPackageJson = await readJson(name, 'package.json');

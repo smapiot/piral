@@ -61,14 +61,14 @@ export interface PiralPageMeta extends PiralCustomPageMeta {}
 /**
  * The props that every registered page component obtains.
  */
-export interface RouteBaseProps<UrlParams = any, UrlState = any>
+export interface RouteBaseProps<UrlParams extends { [K in keyof UrlParams]?: string } = {}, UrlState = any>
   extends RouteComponentProps<UrlParams, {}, UrlState>,
     BaseComponentProps {}
 
 /**
  * The props used by a page component.
  */
-export interface PageComponentProps<T = any, S = any> extends RouteBaseProps<T, S> {
+export interface PageComponentProps<T extends { [K in keyof T]?: string } = {}, S = any> extends RouteBaseProps<T, S> {
   /**
    * The meta data registered with the page.
    */

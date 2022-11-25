@@ -7,6 +7,8 @@ export * from './publish-piral';
 export * from './validate-piral';
 export * from './new-pilet';
 export * from './upgrade-pilet';
+export * from './add-piral-instance-pilet';
+export * from './remove-piral-instance-pilet';
 export * from './debug-pilet';
 export * from './build-pilet';
 export * from './pack-pilet';

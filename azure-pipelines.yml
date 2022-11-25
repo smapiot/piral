@@ -51,26 +51,32 @@ stages:
         Arguments: setup
     - task: Yarn@2
       displayName: Build Core Demo
+      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-core
     - task: Yarn@2
       displayName: Build CrossFx Demo
+      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-cross
     - task: Yarn@2
       displayName: Build Full Demo
+      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-full
     - task: Yarn@2
       displayName: Build Empty Shell
+      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-empty
     - task: Yarn@2
       displayName: Build Minimal Demo
+      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-minimal
     - task: Yarn@2
       displayName: Build Landing Page
+      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:page
     - task: Yarn@2
@@ -79,6 +85,7 @@ stages:
         Arguments: ci:docs
     - task: Yarn@2
       displayName: Test Code
+      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: test
     - publish: $(System.DefaultWorkingDirectory)/dist

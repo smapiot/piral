@@ -1,7 +1,7 @@
 import * as fs from 'graceful-fs';
 import { ResolverFactory, CachedInputFileSystem } from 'enhanced-resolve';
 
-const nodeFileSystem = new CachedInputFileSystem(fs, 4000);
+const nodeFileSystem = new CachedInputFileSystem(fs, 100);
 
 const nodeContext = {
   environments: ['node+es3+es5+process+native'],
