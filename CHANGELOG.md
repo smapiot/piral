@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.2 (tbd)
+
+- Fixed import of common module in CommonJS build of `piral-ng`
+
 ## 0.15.1 (November 25, 2022)
 
 - Fixed update of `piral-extension` web component inside foreign components
