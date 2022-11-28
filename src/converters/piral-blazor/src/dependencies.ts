@@ -17,26 +17,25 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
           const dllName = dllUrl.substring(dllUrl.lastIndexOf('/') + 1);
 
           if (dllUrl.endsWith('.dll')) {
-            const entry = loadedDependencies.find(m => m.name === dllName);
+            const entry = loadedDependencies.find((m) => m.name === dllName);
 
             if (entry) {
               entry.count++;
+              await entry.promise;
             } else {
               const urlWithoutExtension = dllUrl.substring(0, dllUrl.length - 4);
               const pdbName = `${urlWithoutExtension}.pdb`;
               const pdbUrl = references.find((m) => m === pdbName);
-
-              if (pdbUrl) {
-                await loadResourceWithSymbol(dllUrl, pdbUrl);
-              } else {
-                await loadResource(dllUrl);
-              }
+              const promise = pdbUrl ? loadResourceWithSymbol(dllUrl, pdbUrl) : loadResource(dllUrl);
 
               loadedDependencies.push({
                 name: dllName,
                 url: dllUrl,
                 count: 1,
+                promise,
               });
+
+              await promise;
             }
 
             definedBlazorReferences.push(dllName);
@@ -50,7 +49,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       const references = definedBlazorReferences.splice(0, definedBlazorReferences.length);
 
       for (const reference of references) {
-        const entry = loadedDependencies.find(m => m.name === reference);
+        const entry = loadedDependencies.find((m) => m.name === reference);
 
         if (--entry.count === 0) {
           loadedDependencies.splice(loadedDependencies.indexOf(entry), 1);

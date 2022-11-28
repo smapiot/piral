@@ -9,6 +9,7 @@ declare global {
       name: string;
       url: string;
       count: number;
+      promise: Promise<void>;
     }>;
   }
 }
