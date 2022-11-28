@@ -166,12 +166,29 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
-function findPiralInstances(
+export function findPiralInstance(proposedApp: string, baseDir: string, port: number): PiralInstancePackageData {
+  const path = findPackageRoot(proposedApp, baseDir);
+
+  if (path) {
+    log('generalDebug_0003', `Following the app package in "${path}" ...`);
+    const appPackage = require(path);
+    const root = dirname(path);
+    const relPath = appPackage && appPackage.app;
+    appPackage.app = relPath && resolve(root, relPath);
+    appPackage.root = root;
+    appPackage.port = port;
+    return appPackage;
+  }
+
+  fail('appInstanceNotFound_0010', proposedApp);
+}
+
+export function findPiralInstances(
   proposedApps: Array<string>,
   piletPackage: PiletPackageData,
   piletDefinition: undefined | PiletDefinition,
   baseDir: string,
-): Array<PiralInstancePackageData> {
+) {
   if (proposedApps) {
     // do nothing
   } else if (piletDefinition) {
@@ -186,22 +203,9 @@ function findPiralInstances(
   }
 
   if (proposedApps.length > 0) {
-    return proposedApps.map((proposedApp) => {
-      const path = findPackageRoot(proposedApp, baseDir);
-
-      if (path) {
-        log('generalDebug_0003', `Following the app package in "${path}" ...`);
-        const appPackage = require(path);
-        const root = dirname(path);
-        const relPath = appPackage && appPackage.app;
-        appPackage.app = relPath && resolve(root, relPath);
-        appPackage.root = root;
-        appPackage.port = piletDefinition?.piralInstances?.[proposedApp]?.port ?? 0;
-        return appPackage;
-      }
-
-      fail('appInstanceNotFound_0010', proposedApp);
-    });
+    return proposedApps.map((proposedApp) =>
+      findPiralInstance(proposedApp, baseDir, piletDefinition?.piralInstances?.[proposedApp]?.port ?? 0),
+    );
   }
 
   return [];

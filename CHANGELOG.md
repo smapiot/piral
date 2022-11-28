@@ -5,6 +5,7 @@
 - Fixed import of common module in CommonJS build of `piral-ng`
 - Fixed issue of Angular components not being disposed (#561)
 - Improved loading of satellite dependencies in `piral-blazor`
+- Added `piral run-emulator` command to `piral-cli`
 
 ## 0.15.1 (November 25, 2022)
 
