@@ -1,6 +1,6 @@
 import { tmpdir } from 'os';
 import { mkdtemp } from 'fs';
-import { dirname, resolve } from 'path';
+import { dirname, join, resolve } from 'path';
 import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
 import { LogLevels, NpmClientType } from '../types';
 import {
@@ -16,6 +16,7 @@ import {
   createFileIfNotExists,
   ForceOverwrite,
   findPiralInstance,
+  determineNpmClient,
 } from '../common';
 
 export interface RunEmulatorPiralOptions {
@@ -65,8 +66,10 @@ export const runEmulatorPiralDefaults: RunEmulatorPiralOptions = {
 };
 
 function createTempDir() {
+  const root = join(tmpdir(), 'piral-cli-');
+
   return new Promise<string>((resolve, reject) =>
-    mkdtemp(tmpdir(), (err, dir) => {
+    mkdtemp(root, (err, dir) => {
       if (err) {
         reject(err);
       } else {
@@ -81,18 +84,18 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
     open = runEmulatorPiralDefaults.open,
     port: originalPort = runEmulatorPiralDefaults.port,
     logLevel = runEmulatorPiralDefaults.logLevel,
-    npmClient = runEmulatorPiralDefaults.npmClient,
+    npmClient: defaultNpmClient = runEmulatorPiralDefaults.npmClient,
     registry = runEmulatorPiralDefaults.registry,
     app,
     feed,
   } = options;
   const publicUrl = '/';
+  const api = config.piletApi;
   const fullBase = resolve(process.cwd(), baseDir);
   const baseMocks = resolve(fullBase, 'mocks');
   setLogLevel(logLevel);
 
   progress('Reading configuration ...');
-  const api = config.piletApi.replace(/^\/+/, '');
 
   process.stderr.setMaxListeners(16);
   process.stdout.setMaxListeners(16);
@@ -112,6 +115,7 @@ always-auth=true`,
     );
   }
 
+  const npmClient = await determineNpmClient(appRoot, defaultNpmClient);
   const [packageName] = await installPiralInstance(app, fullBase, appRoot, npmClient);
   const piral = findPiralInstance(packageName, appRoot, originalPort);
   const port = await getAvailablePort(piral.port);
@@ -129,7 +133,7 @@ always-auth=true`,
         pilets: [],
         app: dirname(piral.app),
         publicUrl,
-        handle: ['/', api],
+        handle: [publicUrl, api],
         api,
       },
     },
