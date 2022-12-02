@@ -125,11 +125,11 @@ export function createConverter(lazy: boolean) {
       locals.dispose();
 
       enqueueChange(locals, ([root]) => {
-        root.querySelector(`#${locals.id}`).appendChild(locals.node);
+        root.querySelector(`#${locals.id}`)?.appendChild(locals.node);
         deactivate(moduleName, locals.referenceId);
+        el.innerHTML = '';
       });
 
-      el.innerHTML = '';
       locals.state = 'removed';
     },
   });
