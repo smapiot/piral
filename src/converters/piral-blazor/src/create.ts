@@ -25,12 +25,14 @@ export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBla
     context.converters.blazor = ({ moduleName, args, dependency, options }) =>
       convert(moduleName, dependency, args, options);
 
-    return () => {
+    return (_, meta) => {
       const loader = createDependencyLoader(convert, lazy);
       let options: BlazorOptions;
 
       return {
-        defineBlazorReferences: loader.defineBlazorReferences,
+        defineBlazorReferences(references) {
+          return loader.defineBlazorReferences(references, meta);
+        },
         defineBlazorOptions(blazorOptions: BlazorOptions) {
           options = blazorOptions;
         },

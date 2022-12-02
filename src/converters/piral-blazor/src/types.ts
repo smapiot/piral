@@ -1,10 +1,16 @@
 import type { ForeignComponent } from 'piral-core';
 
+export type BlazorRootConfig = [root: HTMLDivElement, capabilities: Array<string>];
+
+export interface BlazorDependencyLoader {
+  (config: BlazorRootConfig): Promise<void>;
+}
+
 declare global {
   interface Window {
     Blazor: any;
     DotNet: any;
-    $blazorLoader: Promise<HTMLDivElement>;
+    $blazorLoader: Promise<BlazorRootConfig>;
     $blazorDependencies: Array<{
       name: string;
       url: string;
@@ -45,7 +51,7 @@ export interface BlazorComponent {
    * An optional dependency that needs to load before
    * the component can be properly displayed.
    */
-  dependency?: () => Promise<void>;
+  dependency?: BlazorDependencyLoader;
   /**
    * The type of the Blazor component.
    */
