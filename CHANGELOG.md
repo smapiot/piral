@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.3 (tbd)
+
+- Added support for Blazor custom elements in `piral-blazor`
+
 ## 0.15.2 (December 5, 2022)
 
 - Fixed import of common module in CommonJS build of `piral-ng`
