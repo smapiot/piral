@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.2 (tbd)
+## 0.15.2 (December 5, 2022)
 
 - Fixed import of common module in CommonJS build of `piral-ng`
 - Fixed issue of Angular components not being disposed (#561)
