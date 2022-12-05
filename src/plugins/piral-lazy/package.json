@@ -1,6 +1,6 @@
 {
   "name": "piral-lazy",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "Plugin for lazy loading third-party framework components in Piral.",
   "keywords": [
     "piral",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "piral-core": "^0.15.1",
+    "piral-core": "^0.15.2",
     "react": "^18.0.0"
   },
   "peerDependencies": {
