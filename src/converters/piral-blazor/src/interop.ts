@@ -1,4 +1,5 @@
 import { emitRenderEvent, emitNavigateEvent } from './events';
+import type { BlazorRootConfig } from './types';
 
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
@@ -30,7 +31,7 @@ function createBase() {
   return document.head.appendChild(el);
 }
 
-function createBlazorStarter(publicPath: string): () => Promise<HTMLDivElement> {
+function createBlazorStarter(publicPath: string): () => Promise<BlazorRootConfig> {
   const root = document.body.appendChild(document.createElement('div'));
 
   root.style.display = 'none';
@@ -55,14 +56,19 @@ function createBlazorStarter(publicPath: string): () => Promise<HTMLDivElement> 
 
       navManager.getBaseURI = () => originalBase;
 
-      return window.Blazor.start().then(() => {
-        baseElement.href = originalBase;
-        return root;
-      });
+      return window.Blazor.start()
+        .then(getCapabilities)
+        .then((capabilities) => {
+          baseElement.href = originalBase;
+          return [root, capabilities];
+        });
     };
   }
 
-  return () => window.Blazor.start().then(() => root);
+  return () =>
+    window.Blazor.start()
+      .then(getCapabilities)
+      .then((capabilities) => [root, capabilities]);
 }
 
 function computePath() {
@@ -88,39 +94,65 @@ function addScript(url: string) {
   });
 }
 
-export function activate(moduleName: string, props: any) {
+export function activate(moduleName: string, props: any): Promise<string> {
   return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, props);
 }
 
-export function reactivate(moduleName: string, referenceId: string, props: any) {
+export function reactivate(moduleName: string, referenceId: string, props: any): Promise<void> {
   return window.DotNet.invokeMethodAsync(coreLib, 'Reactivate', moduleName, referenceId, props).catch(() => {
     // Apparently an older version of Piral.Blazor, which does not support this
     // discard this error silently (in the future we may print warnings here)
   });
 }
 
-export function deactivate(moduleName: string, referenceId: string) {
+export function deactivate(moduleName: string, referenceId: string): Promise<void> {
   return window.DotNet.invokeMethodAsync(coreLib, 'Deactivate', moduleName, referenceId);
 }
 
-export function callNotifyLocationChanged(url: string, replace: boolean) {
+export function callNotifyLocationChanged(url: string, replace: boolean): Promise<void> {
   return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, replace);
 }
 
-export function loadResource(url: string) {
+export function getCapabilities(): Promise<Array<string>> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'GetCapabilities').catch(() => {
+    // Apparently an older version of Piral.Blazor, which does not support this
+    // discard this error silently (in the future we may print warnings here)
+    return [];
+  });
+}
+
+export function loadResource(url: string): Promise<void> {
   return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsFromLibrary', url);
 }
 
-export function loadResourceWithSymbol(dllUrl: string, pdbUrl: string) {
+export function loadResourceWithSymbol(dllUrl: string, pdbUrl: string): Promise<void> {
   return window.DotNet.invokeMethodAsync(coreLib, 'LoadComponentsWithSymbolsFromLibrary', dllUrl, pdbUrl);
 }
 
-export function unloadResource(url: string) {
+export function unloadResource(url: string): Promise<void> {
   return window.DotNet.invokeMethodAsync(coreLib, 'UnloadComponentsFromLibrary', url);
 }
 
+export interface PiletData {
+  dllUrl: string;
+  pdbUrl?: string;
+  name: string;
+  version: string;
+  config: string;
+  baseUrl: string;
+  dependencies: Array<string>;
+}
+
+export function loadBlazorPilet(id: string, data: PiletData) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'LoadPilet', id, data);
+}
+
+export function unloadBlazorPilet(id: string) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'UnloadPilet', id);
+}
+
 export function initialize(scriptUrl: string, publicPath: string) {
-  return new Promise<HTMLDivElement>((resolve, reject) => {
+  return new Promise<BlazorRootConfig>((resolve, reject) => {
     const startBlazor = createBlazorStarter(publicPath);
     const script = document.createElement('script');
     script.src = scriptUrl;
@@ -146,9 +178,7 @@ export function createBootLoader(scriptUrl: string, satellites: Array<string>) {
   return () => {
     if (typeof window.$blazorLoader === 'undefined') {
       // we load all satellite scripts before we initialize blazor
-      window.$blazorLoader = Promise.all(satellites.map((url) => addScript(url))).then(() =>
-        initialize(scriptUrl, publicPath),
-      );
+      window.$blazorLoader = Promise.all(satellites.map(addScript)).then(() => initialize(scriptUrl, publicPath));
     }
 
     return window.$blazorLoader;

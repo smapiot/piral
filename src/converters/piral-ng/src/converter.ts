@@ -42,7 +42,7 @@ export function createConverter(_: NgConverterOptions = {}): NgConverter {
           }
 
           if (locals.active) {
-            bootstrap(registry.get(component), el, locals.props, ctx);
+            return await bootstrap(registry.get(component), el, locals.props, ctx);
           }
         }),
       );

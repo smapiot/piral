@@ -4,6 +4,7 @@
   "description": "Common module for piral-ng.",
   "keywords": [],
   "author": "smapiot",
+  "main": "piral-ng-common.js",
   "homepage": "https://piral.io",
   "license": "MIT",
   "repository": {

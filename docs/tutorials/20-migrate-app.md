@@ -160,15 +160,20 @@ module.exports = {
       externals,
     }));
 
-    // Configure parcel-codegen-loader.
-    config.module.rules.unshift({
-      test: /\.codegen$/i,
-      use: [
-        {
-          loader: 'parcel-codegen-loader',
-        }
-      ]
-    });
+    const oneOfRule = config.module.rules.find(
+      (rule) => rule.oneOf !== undefined
+    );
+
+    if (oneOfRule) {
+      oneOfRule.oneOf.unshift({
+        test: /\.codegen$/i,
+        use: [
+          {
+            loader: "parcel-codegen-loader",
+          },
+        ],
+      });
+    }
 
     return config;
   },
@@ -176,7 +181,7 @@ module.exports = {
 };
 ```
 
-Of course, we could also switch over to the `piral-cli` using, e.g., `piral-cli-webpack` at this point. Nevertheless, having this just working without much effort is certainly a great stepping stone.
+Of course, we could also switch over to the `piral-cli` using, e.g., `piral-cli-webpack5` at this point. Nevertheless, having this just working without much effort is certainly a great stepping stone.
 
 ## What about Next.js
 

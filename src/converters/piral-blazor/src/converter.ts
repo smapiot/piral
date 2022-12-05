@@ -1,7 +1,7 @@
 import type { BaseComponentProps, Disposable, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
 import { activate, deactivate, createBootLoader, reactivate, callNotifyLocationChanged } from './interop';
-import { BlazorOptions } from './types';
+import { BlazorDependencyLoader, BlazorOptions, BlazorRootConfig } from './types';
 import bootConfig from '../infra.codegen';
 
 const noop = () => {};
@@ -44,7 +44,7 @@ interface BlazorLocals {
   referenceId: string;
   node: HTMLElement;
   dispose(): void;
-  update(root: HTMLElement): void;
+  update(config: BlazorRootConfig): void;
   state: 'fresh' | 'mounted' | 'removed';
 }
 
@@ -53,7 +53,7 @@ export function createConverter(lazy: boolean) {
   let loader = !lazy && boot();
   let listener: Disposable = undefined;
 
-  const enqueueChange = (locals: BlazorLocals, update: (root: HTMLDivElement) => void) => {
+  const enqueueChange = (locals: BlazorLocals, update: (root: BlazorRootConfig) => void) => {
     if (locals.state === 'mounted') {
       loader.then(update);
     } else {
@@ -63,7 +63,7 @@ export function createConverter(lazy: boolean) {
 
   const convert = <TProps extends BaseComponentProps>(
     moduleName: string,
-    dependency: () => Promise<void>,
+    dependency: BlazorDependencyLoader,
     args: Record<string, any>,
     options?: BlazorOptions,
   ): ForeignComponent<TProps> => ({
@@ -94,17 +94,19 @@ export function createConverter(lazy: boolean) {
       );
 
       (loader || (loader = boot()))
-        .then((root) =>
-          dependency()
+        .then((config) =>
+          dependency(config)
             .then(() => activate(moduleName, props))
             .then((refId) => {
+              const [root] = config;
+
               if (locals.state === 'fresh') {
                 locals.id = refId;
                 locals.node = root.querySelector(`#${locals.id} > div`);
                 project(locals.node, el, options);
                 locals.state = 'mounted';
                 locals.referenceId = refId;
-                locals.update(root);
+                locals.update(config);
                 locals.update = noop;
               }
             }),
@@ -122,12 +124,12 @@ export function createConverter(lazy: boolean) {
       el.removeAttribute('data-blazor-pilet-root');
       locals.dispose();
 
-      enqueueChange(locals, (root) => {
-        root.querySelector(`#${locals.id}`).appendChild(locals.node);
+      enqueueChange(locals, ([root]) => {
+        root.querySelector(`#${locals.id}`)?.appendChild(locals.node);
         deactivate(moduleName, locals.referenceId);
+        el.innerHTML = '';
       });
 
-      el.innerHTML = '';
       locals.state = 'removed';
     },
   });

@@ -883,6 +883,53 @@ const allCommands: Array<ToolCommand<any>> = [
       });
     },
   },
+  {
+    name: 'run-emulator-piral',
+    alias: ['start-emulator-piral', 'dev-emulator-portal'],
+    description: 'Starts a Piral instance emulator.',
+    arguments: ['[source]'],
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source Piral instance emulator package name.',
+          default: apps.runEmulatorPiralDefaults.app,
+        })
+        .number('port')
+        .describe('port', 'Sets the port of the local development server.')
+        .default('port', apps.runEmulatorPiralDefaults.port)
+        .string('registry')
+        .describe('registry', 'Sets the package registry to use for resolving the emulator.')
+        .default('registry', apps.runEmulatorPiralDefaults.registry)
+        .alias('registry', 'package-registry')
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.runEmulatorPiralDefaults.logLevel)
+        .choices('npm-client', clientTypeKeys)
+        .describe('npm-client', 'Sets the npm client to be used when installing the emulator.')
+        .default('npm-client', apps.runEmulatorPiralDefaults.npmClient)
+        .boolean('open')
+        .describe('open', 'Opens the Piral instance directly in the browser.')
+        .default('open', apps.runEmulatorPiralDefaults.open)
+        .string('feed')
+        .describe('feed', 'Sets the URL of a pilet feed for including remote pilets.')
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.runEmulatorPiral(args.base as string, {
+        port: args.port as number,
+        app: args.source as string,
+        npmClient: args['npm-client'] as NpmClientType,
+        registry: args.registry as string,
+        logLevel: args['log-level'] as LogLevels,
+        open: args.open as boolean,
+        feed: args.feed as string,
+      });
+    },
+  },
 ];
 
 class Commands implements ListCommands {

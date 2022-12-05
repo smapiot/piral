@@ -1,6 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/ng-packagr/ng-packagr/main/src/ng-package.schema.json",
   "dest": "../../common",
+  "assets": [
+    "index.d.ts",
+    "piral-ng-common.js"
+  ],
   "lib": {
     "entryFile": "./public_api.ts"
    }
