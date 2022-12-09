@@ -1,3 +1,4 @@
+import { PiletMetadata } from 'piral-core';
 import { emitRenderEvent, emitNavigateEvent } from './events';
 import type { BlazorRootConfig } from './types';
 
@@ -31,6 +32,29 @@ function createBase() {
   return document.head.appendChild(el);
 }
 
+function prepareForStartup() {
+  const originalApplyHotReload = window.Blazor._internal.applyHotReload;
+  const queue = [];
+  const applyChanges = (pilet: PiletMetadata) => {
+    if (pilet.config && pilet.config.blazorHotReload) {
+      for (const item of queue.splice(0, queue.length)) {
+        item();
+      }
+
+      window.Blazor._internal.applyHotReload = originalApplyHotReload;
+    }
+  };
+
+  window.Blazor._internal.applyHotReload = function (...args) {
+    queue.push(() => originalApplyHotReload.apply(this, args));
+  };
+
+  return getCapabilities().then((capabilities) => ({
+    capabilities,
+    applyChanges,
+  }));
+}
+
 function createBlazorStarter(publicPath: string): () => Promise<BlazorRootConfig> {
   const root = document.body.appendChild(document.createElement('div'));
 
@@ -57,18 +81,18 @@ function createBlazorStarter(publicPath: string): () => Promise<BlazorRootConfig
       navManager.getBaseURI = () => originalBase;
 
       return window.Blazor.start()
-        .then(getCapabilities)
-        .then((capabilities) => {
+        .then(prepareForStartup)
+        .then(({ capabilities, applyChanges }) => {
           baseElement.href = originalBase;
-          return [root, capabilities];
+          return [root, capabilities, applyChanges];
         });
     };
   }
 
   return () =>
     window.Blazor.start()
-      .then(getCapabilities)
-      .then((capabilities) => [root, capabilities]);
+      .then(prepareForStartup)
+      .then(({ capabilities, applyChanges }) => [root, capabilities, applyChanges]);
 }
 
 function computePath() {

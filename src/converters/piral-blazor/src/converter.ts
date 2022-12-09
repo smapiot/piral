@@ -1,6 +1,15 @@
 import type { BaseComponentProps, Disposable, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
-import { activate, deactivate, createBootLoader, reactivate, callNotifyLocationChanged, createElement, destroyElement, updateElement } from './interop';
+import {
+  activate,
+  deactivate,
+  createBootLoader,
+  reactivate,
+  callNotifyLocationChanged,
+  createElement,
+  destroyElement,
+  updateElement,
+} from './interop';
 import { BlazorDependencyLoader, BlazorOptions, BlazorRootConfig } from './types';
 import bootConfig from '../infra.codegen';
 
@@ -70,6 +79,7 @@ export function createConverter(lazy: boolean) {
   ): ForeignComponent<TProps> => ({
     mount(el, data, ctx, locals: BlazorLocals) {
       const props = { ...args, ...data };
+      const { piral } = data;
       const nav = ctx.navigation;
       el.setAttribute('data-blazor-pilet-root', 'true');
 
@@ -88,11 +98,11 @@ export function createConverter(lazy: boolean) {
       locals.state = 'fresh';
       locals.next = noop;
       locals.dispose = attachEvents(
-          el,
-          (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-          (ev) =>
-            ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.store) : nav.push(ev.detail.to, ev.detail.state),
-        );
+        el,
+        (ev) => piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
+        (ev) =>
+          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.store) : nav.push(ev.detail.to, ev.detail.state),
+      );
 
       function mountClassic(config: BlazorRootConfig) {
         return activate(moduleName, props).then((refId) => {
@@ -135,8 +145,10 @@ export function createConverter(lazy: boolean) {
         .then((config) =>
           dependency(config).then(() => {
             if (locals.state === 'fresh') {
-              const [_, capabilities] = config;
+              const [_, capabilities, applyChanges] = config;
               const fn = capabilities.includes('custom-element') ? mountModern : mountClassic;
+              applyChanges(piral.meta);
+
               return fn(config).then(() => {
                 locals.state = 'mounted';
                 locals.next(config);

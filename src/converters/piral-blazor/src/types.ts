@@ -1,6 +1,10 @@
-import type { ForeignComponent } from 'piral-core';
+import type { ForeignComponent, PiletMetadata } from 'piral-core';
 
-export type BlazorRootConfig = [root: HTMLDivElement, capabilities: Array<string>];
+export type BlazorRootConfig = [
+  root: HTMLDivElement,
+  capabilities: Array<string>,
+  applyChanges: (pilet: PiletMetadata) => void,
+];
 
 export interface BlazorDependencyLoader {
   (config: BlazorRootConfig): Promise<void>;
@@ -8,7 +12,14 @@ export interface BlazorDependencyLoader {
 
 declare global {
   interface Window {
-    Blazor: any;
+    Blazor: {
+      start(): Promise<void>;
+      emitNavigateEvent(target: Element, path: string, replace?: boolean): void;
+      _internal: {
+        navigationManager: any;
+        applyHotReload: any;
+      };
+    };
     DotNet: any;
     $blazorLoader: Promise<BlazorRootConfig>;
     $blazorDependencies: Array<{

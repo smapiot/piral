@@ -3,6 +3,7 @@
 ## 0.15.3 (tbd)
 
 - Added support for Blazor custom elements in `piral-blazor`
+- Added support for Blazor hot reload in `piral-blazor`
 
 ## 0.15.2 (December 5, 2022)
 
