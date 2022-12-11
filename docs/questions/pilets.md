@@ -8,7 +8,7 @@ title: Pilet Questions
 
 Pilets can be bundle split like any other module. Ideally, especially for larger pilets, the splitting occurs already in the root module that contains the `setup` function.
 
-Compare without bundle splitting:
+Compare a solution without bundle splitting:
 
 ```ts
 import MyTile from './MyTile';
@@ -50,23 +50,23 @@ const imagePath = require('./images/bar.png');
 
 Note that larger assets (e.g., videos) should be embedded via CDNs or specialized services. A pilet has a maximum file limit of 16 MB (which may be larger in your implementation, however, we do not recommend it).
 
-Our recommendation is to only include development-relevant resources (e.g., CSS files) or fast changing assets (e.g., icons only made for the current UX and very specific to the currently offered functionality) in the pilet. Everything else should be referenced from global resources.
+Our recommendation is to only include development-relevant resources (e.g., CSS files) or fast-changing assets (e.g., icons only made for the current UX and very specific to the currently offered functionality) in the pilet. Everything else should be referenced from global resources.
 
 ---------------------------------------
 
 ## How strong is the coupling from Piral to my pilets?
 
-This is a matter of your architecture. Naturally, a single file (root module) is required to touch / integrate your pilet components to the Piral instance. This is the `setup` function. Besides this single point of contact no other touchpoint is required - you could write just "plain" React components using your own abstractions and be happy.
+This is a matter of your architecture. Naturally, a single file (root module) is required to touch/integrate your pilet components to the Piral instance. This is the `setup` function. Besides this single point of contact, no other touchpoint is required - you could write just "plain" React components using your own abstractions and be happy.
 
-In general we recommend to design and use the pilets in such a way that reuse of common or presumably generic code is easily possible.
+In general, we recommend designing and using the pilets in such a way that the reuse of common or presumably generic code is easily possible.
 
 ---------------------------------------
 
 ## What is registerExtension?
 
-Most typical in a micro frontend the micro applications gets the full page. In Piral we baked in the concept of the app shell in such a fashion that usually the full page is already shared with components from different micro applications (pilets), e.g., menu entries, search results, modal dialogs...
+Most typically, in a micro frontend the micro applications get the full page. In Piral, we baked in the concept of the app shell in such a fashion that usually the full page is already shared with components from different micro applications (pilets), e.g., menu entries, search results, modal dialogs...
 
-However, most likely you will at one point in the future reach a point where even the content of a single page needs to be shared / used by different pilets, e.g., when you have a product detail page and want to have a "add to cart" button which manipulates the data from another pilet (shopping cart). In such a case the shopping cart pilet can register an extension with a known name (e.g., `add-to-cart`) and the product detail page could insert an extension slot with the name `add-to-cart`.
+However, most likely you will, at one point in the future, reach a point where even the content of a single page needs to be shared/used by different pilets, e.g., when you have a product detail page and want to have a "add to cart" button which manipulates the data from another pilet (shopping cart). In such a case the shopping cart pilet can register an extension with a known name (e.g., `add-to-cart`) and the product detail page could insert an extension slot with the name `add-to-cart`.
 
 Extension slots allow pilets to build mechanisms similar to, e.g., `registerTile`, `registerMenu`, ... but just generically.
 
@@ -74,11 +74,11 @@ Extension slots allow pilets to build mechanisms similar to, e.g., `registerTile
 
 ## Why do I need extensions?
 
-As discussed in the previous answers without extensions the content of a pilet page would be only determined by the pilet. In some cases we also want components / content / functionality from other pilets to be displayed there, too.
+As discussed in the previous answers, without extensions, the content of a pilet page would be only determined by the pilet. In some cases we also want components/content/functionality from other pilets to be displayed there, too.
 
-Coming up with some mechanism on, e.g., events, or the shared data, will be both - error prone and difficult to handle. The extension mechanism is simple and can be fully controlled, e.g., what fallback to use when no extension was registered for the given slot.
+Coming up with some mechanism on, e.g., events, or the shared data, will be both error prone and difficult to handle. The extension mechanism is simple and can be fully controlled, e.g., what fallback to use when no extension was registered for the given slot.
 
-All that's needed is a common name and understanding of the data and the rest will be done by Piral with the help of React.
+All that's needed is a common name and an understanding of the data and the rest will be done by Piral with the help of React.
 
 ---------------------------------------
 
@@ -94,7 +94,7 @@ For other (programmatic) navigation we recommend using the `useHistory()` hook t
 
 ## How can I sandbox my CSS?
 
-Sandboxing CSS is not so easy to do at runtime. That's why we rely on either the feed service or the pilet creation to solve this efficiently. In the best case you use some prefix unique per pilet.
+Sandboxing CSS is not so easy to do at runtime. That's why we rely on either the feed service or the pilet creation to solve this efficiently. In the best case, you use some prefix unique per pilet.
 
 One option for you is to use [Tailwind](https://tailwindcss.com). In your *tailwind.config.js* file place, e.g.:
 
@@ -119,23 +119,23 @@ The short answer is: no.
 
 Pilets should *never* contain any sensitive information.
 
-Even though you can feature flag pilets you should never assume that only certain people can read (or run) them. For this reason alone we do not recommend placing additional security measures to limit access to pilets. This will just slow down the time to first meaningful render without much additional security.
+Even though you can feature flag pilets you should never assume that only certain people can read (or run) them. For this reason alone we do not recommend placing additional security measures to limit access to pilets. This will just slow down the time to the first meaningful render without much additional security.
 
 ---------------------------------------
 
 ## When to create a new pilet?
 
-There is no direct guideline. It all depends on the project, the developers, and the domain model. We like to make multiple pilets when we identify multiple loading patterns, i.e., if things can / should be shipped independently (not only technically, but really also be provisioned differently) then having multiple pilets may make sense.
+There is no direct guideline. It all depends on the project, the developers, and the domain model. We like to make multiple pilets when we identify multiple loading patterns, i.e. if things can/should be shipped independently (not only technically, but really also be provisioned differently) then having multiple pilets may make sense.
 
-In general there is no limit on how many pilets can be provisioned for a single user. Performance-wise less may be better, however, keep in mind that the total code size matters, too. A range between 20 and 60 pilets is definitely no problem. In extreme scenarios going over 150 or 200 pilets may be acceptable, too.
+In general, there is no limit on how many pilets can be provisioned for a single user. Performance-wise less may be better, however, keep in mind that the total code size matters, too. A range between 20 and 60 pilets is definitely no problem. In extreme scenarios going over 150 or 200 pilets may be acceptable, too.
 
-If you feel like you need more advise don't hesitate to use the [community chat](https://gitter.im/piral-io/community).
+If you feel like you need more advice, don't hesitate to use the [community chat](https://gitter.im/piral-io/community).
 
 ---------------------------------------
 
 ## Can a pilet act as an instance to open a portal inside a portal?
 
-You can run any code, so you could have an instance in an instance - yes. But usually, you'd want to have it more flat. There are things that support that flatness. Once you start creating hierarchies you'll soon have an unmaintainable project.
+You can run any code, so you could have an instance in an instance - yes. But usually, you'd want to have it flatter. There are things that support that flatness. Once you start creating hierarchies you'll soon have an unmaintainable project.
 
 What we see more often is that extensions are then used to include component (trees) from an *arbitrary number of pilets* in one (or more) pilets.
 
@@ -143,7 +143,7 @@ What we see more often is that extensions are then used to include component (tr
 
 ## Can pilets have their own routing?
 
-Yes, definitely. In this pattern you'd register the pages with a prefix, e.g., `/my-prefix/*` and then handle all the routing within that prefix yourself.
+Yes, definitely. In this pattern, you'd register the pages with a prefix, e.g., `/my-prefix/*` and then handle all the routing within that prefix yourself.
 
 ---------------------------------------
 
@@ -161,7 +161,7 @@ No, pilets require an app shell (Piral instance) to work. A pilet is just a libr
 
 ## Do I need to create my own app shell?
 
-No, pilets could be also developed without an app shell. In order to avoid having to create your own app shell you could either use `sample-piral`, which is the app shell from our [demo](https://demo-full.piral.io/) based on `piral` or `empty-piral`, which represents an empty app shell based on `piral-core`.
+No, pilets could be also developed without an app shell. In order to avoid having to create your own app shell you could either use `sample-piral`, which is the app shell from our [demo](https://demo-full.piral.io/) based on `piral`, or `empty-piral`, which represents an empty app shell based on `piral-core`.
 
 A pilet could then be scaffolded like this:
 

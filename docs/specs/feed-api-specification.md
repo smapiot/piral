@@ -18,7 +18,7 @@ Besides the core functionality of publishing and retrieving pilets, the Piral Fe
 
 As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.
 
-The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
+The keywords *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
 ## Glossary
 
@@ -42,7 +42,7 @@ The endpoint needs to accept a `POST` request using basic authentication with an
 
 The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tarball (i.e., an npm package). The content detail of this file is explained in the Pilet Specification (see references).
 
-Other entries besides `file` may be used, too. These can be determined by implementation dependent requirements. The `piral-cli` supports filling these fields via the `--fields[field]` flag, followed by a value, e.g., `--fields.tag next`.
+Other entries besides `file` may be used, too. These can be determined by implementation-dependent requirements. The `piral-cli` supports filling these fields via the `--fields[field]` flag, followed by a value, e.g., `--fields.tag next`.
 
 **Request**
 
@@ -69,13 +69,13 @@ In case of a bad request (e.g., missing a `file` entry, or uploading an invalid 
 
 In case of a failed authentication, the HTTP response status code has to be `401`.
 
-In case of an app-store like feed service the feed may reject pilets in case of missing fees. In such scenarios the response should be `402`.
+In the case of an app-store-like feed service, the feed may reject pilets in case of missing fees. In such scenarios, the response should be `402`.
 
 In case of accepted authentication, but insufficient rights the HTTP response status code has to be `403`.
 
-In case of an existing entry (name and version are already there) the HTTP status has to be `409`.
+In case of an existing entry (name and version are already there), the HTTP status has to be `409`.
 
-In case where a pilet exceeds the limits defined by the feed service (e.g., pilet is 18 MB but the feed only accepts up to 16 MB) the HTTP status has to be `413`.
+In the case where a pilet exceeds the limits defined by the feed service (e.g., pilet is 18 MB but the feed only accepts up to 16 MB) the HTTP status has to be `413`.
 
 The error message should be transported via the status text. The exact response content may be defined by the implementation (e.g., could be a JSON message with an `error` field describing a potential error).
 
@@ -96,7 +96,7 @@ GET /api/v1/pilet
 Content-Type: application/json
 ```
 
-Arbitrary headers and query parameters may be transported. The evaluation of these parameters is implementation-specific and could be used for evaluation of feature flags or authorization purposes.
+Arbitrary headers and query parameters may be transported. The evaluation of these parameters is implementation-specific and could be used for the evaluation of feature flags or authorization purposes.
 
 **Success Response**
 
@@ -153,13 +153,13 @@ If the `requireRef` field is used then `PiletMetadataV1` will be used implicitly
 
 In `PiletMetadataV1` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
 
-For `PiletMetadataV2` pilets to be identified accurately the `spec` field needs to be available and set to `v2`. Otherwise, from the metadata perspective these pilets are almost identical to `PiletMetadataV1`. The major difference is that the actual JavaScript code is conforming to SystemJS instead of UMD.
+For `PiletMetadataV2` pilets to be identified accurately the `spec` field needs to be available and set to `v2`. Otherwise, from the metadata perspective, these pilets are almost identical to `PiletMetadataV1`. The major difference is that the actual JavaScript code is conforming to SystemJS instead of UMD.
 
 The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
 
 The `config` field can be used to transport frontend configuration to be leveraged by the specific pilet. This can be helpful to obtain things that should be easily configurable or changeable such as colors, frontend API keys (e.g., for Google Maps), or specific behavior.
 
-The `dependencies` field can be used to provide a list of scripts that should be loaded before running the pilet. The idea is that these script can live on a CDN (and thus be cached efficiently) and could be potentially shared (i.e., multiple pilets using the same scripts will only load the script once).
+The `dependencies` field can be used to provide a list of scripts that should be loaded before running the pilet. The idea is that these scripts can live on a CDN (and thus be cached efficiently) and could be potentially shared (i.e., multiple pilets using the same scripts will only load the script once).
 
 **Error Response**
 
@@ -175,7 +175,7 @@ The field `interactiveAuth` of `401` error responses is used to determine the UR
 
 #### Auth Endpoint
 
-The service exposes a REST endpoint, which accepts a `POST` request from the client. With the `POST` request a new interactive login is requested.
+The service exposes a REST endpoint, which accepts a `POST` request from the client. With the `POST` request, a new interactive login is requested.
 
 **Request**
 
@@ -206,7 +206,7 @@ interface AuthApiResponse {
 }
 ```
 
-The `loginUrl` should be opened in the browser by the user. The `callbackUrl` should be used by the client. The former represents the entry point to actually perform the login / obtain the credentials, while the latter can be used to get notified when the user successfully completed the login. The latter *should* be suitable to be used with long polling, otherwise it will be pinged until the user aborts or the `expires` is reached.
+The `loginUrl` should be opened in the browser by the user. The `callbackUrl` should be used by the client. The former represents the entry point to actually perform the login / obtain the credentials, while the latter can be used to get notified when the user successfully completed the login. The latter *should* be suitable to be used with long polling, otherwise, it will be pinged until the user aborts or the `expires` is reached.
 
 Both URLs should be GET endpoints.
 
@@ -216,13 +216,13 @@ This endpoint should always succeed. In case of urgent server issues, a response
 
 #### Status Endpoint
 
-The service exposes a REST endpoint, which accepts a `GET` request from the client. With the `GET` request an existing interactive login is queried for its completion and the eventual result.
+The service exposes a REST endpoint, which accepts a `GET` request from the client. With the `GET` request, an existing interactive login is queried for its completion and the eventual result.
 
 **Success Response**
 
-In case of an early termination (with indeterminate result, i.e., no error) return `202`.
+In the case of early termination (with an indeterminate result, i.e., no error) return `202`.
 
-In case of a successful completion (either directly or through long polling / waiting for the result) the service should respond with `200` and the following content (typed as `AuthStatusApiResponse`):
+In the case of successful completion (either directly or through long polling/waiting for the result) the service should respond with `200` and the following content (typed as `AuthStatusApiResponse`):
 
 ```ts
 interface AuthStatusApiResponse {
@@ -235,17 +235,17 @@ The data from the response is used to build the `authorization` header of the re
 
 **Error Response**
 
-This endpoint can fail with a `404` (in case no active authorization request has been found) or `400` (in case some required details are missing in the request). In case of urgent server issues, a response with HTTP status code `500` has to be served. Any non-`200` and non-`202` response will be treated as an error response.
+This endpoint can fail with a `404` (in case no active authorization request has been found) or `400` (in case some required details are missing in the request). In case of urgent server issues, a response with HTTP status code `500` has to be served. Any non-`200` and non-`202` responses will be treated as error responses.
 
 #### Login Page
 
-The login page must be linked in the `loginUrl` of the `AuthApiResponse`. The implementation is irrelevant for this specification, but it must give the user the ability to conclude the flow. A common implementation will contain some kind of reference to the original request, e.g., an ID transported via a query parameter. This is then used to show what application initiated the request and what is the purpose of this authorization request.
+The login page must be linked in the `loginUrl` of the `AuthApiResponse`. The implementation is irrelevant to this specification, but it must give the user the ability to conclude the flow. A common implementation will contain some kind of reference to the original request, e.g., an ID transported via a query parameter. This is then used to show what application initiated the request and what is the purpose of this authorization request.
 
 The only requirement for finishing the flow is that once the user successfully logged in, the status endpoint reports a successful conclusion (and terminates all ongoing long polling requests with a successful response).
 
 ## Examples
 
-Working feed service implementations exists and can be viewed online.
+Working feed service implementations exist and can be viewed online.
 
 Full list of known (sample / open-source) implementations:
 
@@ -300,7 +300,7 @@ const publishPilet = (rootUrl) => (req, res) => {
 
 ### Reading a Pilet
 
-This part is more complicated. In a nutshell it looks as follows:
+This part is more complicated. In a nutshell, it looks as follows:
 
 ```js
 function getPiletDefinition(stream, rootUrl) {
@@ -353,7 +353,7 @@ An officially supported online version can be found at [piral.cloud](https://www
 
 ## Limitations
 
-The Feed Service API specification only deals with the `GET` and the `POST` endpoint for pilets. It does not deal with the features that use pilets or the model used by the feed service. It also does not deal with the API key management.
+The Feed Service API specification only deals with the `GET` and the `POST` endpoint for pilets. It does not deal with the features that use pilets or the model used by the feed service. It also does not deal with API key management.
 
 We recommend using a model that distinguishes between **features** and **pilets**. A feature has multiple pilets, where every pilet has the same name, but a different version. A feature may select which pilet is active and under what conditions this pilet may be shown to an end-user. The specific rules for each feature are also not part of this specification.
 

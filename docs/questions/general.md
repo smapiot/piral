@@ -8,13 +8,13 @@ title: General Questions
 
 It's *pie-ral* and *pie-let* (and **not** *pee-ral* and *pee-let*). Just think of pies. They are delicious!
 
-Alternatively, you can think of pi like the number PI (π).
+Alternatively, you can think of pi as the number PI (π).
 
 ---------------------------------------
 
 ## What's the motivation behind Piral?
 
-We've build several extensible frontend applications in the past. Sometimes these applications have been shipped packaged as an app, sometimes they have been deployed as a webpage only, many times both. The general mechanism was always the same and we've detected a basic pattern that can be followed successfully to develop modern (grand scale) web apps.
+We've built several extensible frontend applications in the past. Sometimes these applications have been shipped packaged as an app, sometimes they have been deployed as a webpage only, and many times both. The general mechanism was always the same and we've detected a basic pattern that can be followed successfully to develop modern (grand scale) web apps.
 
 Piral is also a solution to successfully implement an architecture based on micro frontends.
 
@@ -22,9 +22,9 @@ Piral is also a solution to successfully implement an architecture based on micr
 
 ## Should I use Piral or Piral Core?
 
-Piral is a **framework**. As such it comes with everything *included*, e.g., React is specified as a dependency with a clear version. You can just install `piral`, provide a proper *index.html* and entry script and you are done.
+Piral is a **framework**. As such it comes with everything *included*, e.g., React is specified as a dependency with a clear version. You can just install `piral`, provide a proper *index.html* and entry script, and you are done.
 
-With `piral-core` you get a **library** that sits on top of other libraries. While some - very specialized - libraries are standard dependencies (i.e., installed for you), more generic ones such as React are peer dependencies. You need to install them. The advantage is that you are in charge what versions of these libraries to use (as long as they are compatible).
+With `piral-core` you get a **library** that sits on top of other libraries. While some - very specialized - libraries are standard dependencies (i.e., installed for you), more generic ones such as React are peer dependencies. You need to install them. The advantage is that you are in charge of what versions of these libraries to use (as long as they are compatible).
 
 All plugins (e.g., `piral-vue`) work with `piral-core`.
 
@@ -34,7 +34,7 @@ Bottom line: The technical differences aside `piral` comes with key dependencies
 
 ## What is Piral Base?
 
-While `piral` is build on top of `piral-core`, `piral-core` is itself build on top of `piral-base`. `piral-base` is framework agnostic and only brings all the logic, algorithms, and patterns to deal with pilets. As such you could also "build your on Piral" by using `piral-base`.
+While `piral` is built on top of `piral-core`, `piral-core` is itself built on top of `piral-base`. `piral-base` is framework agnostic and only brings all the logic, algorithms, and patterns to deal with pilets. As such you could also "build your own Piral" by using `piral-base`.
 
 `piral-base` may be the right thing if you like the architecture of Piral, but don't want to use React or our application design. This still allows you to use the same format for pilets, the Piral CLI, and the feed service. Plugins will not work.
 
@@ -56,9 +56,9 @@ The SPA can be hosted on a static storage, while the backend service may be run 
 
 Sometimes people believe that only web components follow a micro frontend architecture. Sometimes people think that having no API (e.g., just using the DOM for transporting events) is necessary for micro frontends. Both things are not true. This is one extreme perspective, which we have found not to be optimal for real-world scenarios.
 
-In reality the application shell will be constructed using some kind of framework or UI library. Realistically, there will be a tendency towards some UI solution such as React - mostly given by some kind of pattern library or preferred UI framework. In such cases it does not make sense to hide the framework of choice from the different modules. Piral makes sharing such dependencies easy.
+In reality, the application shell will be constructed using some kind of framework or UI library. Realistically, there will be a tendency towards some UI solutions such as React - mostly given by some kind of pattern library or preferred UI framework. In such cases, it does not make sense to hide the framework of choice from the different modules. Piral makes sharing such dependencies easy.
 
-We think Piral hits a sweep spot as it takes what makes puristic micro frontends great (independent applications coming together, independent releases, independent development) and adds the reason why we build monoliths for the UI in the first place (least bundle size, optimal user experience, coherent design by using a common UI framework).
+We think Piral hits a sweet spot as it takes what makes puristic micro frontends great (independent applications coming together, independent releases, independent development) and adds the reason why we build monoliths for the UI in the first place (least bundle size, optimal user experience, coherent design by using a common UI framework).
 
 ---------------------------------------
 
@@ -66,9 +66,9 @@ We think Piral hits a sweep spot as it takes what makes puristic micro frontends
 
 Piral was created with micro frontend architectures relying on heavy client-side interaction in mind. As such, the primary use case of Piral requires users to enable JavaScript.
 
-Nevertheless, for a couple of reasons you may want to offer a non-JS (or progressive) version of your application. You may want to offer enhanced SEO capabilities. You may want to reduce initial loading / rendering time. You may want to give non-JS users a bit more capabilities than just stating "Sorry - you need to enable JavaScript". We hear you loud and clear.
+Nevertheless, for a couple of reasons, you may want to offer a non-JS (or progressive) version of your application. You may want to offer enhanced SEO capabilities. You may want to reduce initial loading/rendering time. You may want to give non-JS users a bit more capabilities than just stating "Sorry - you need to enable JavaScript". We hear you loud and clear.
 
-Piral is fully compatible with server-side-rendering. However, to make a Piral instance really useful / enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../tutorials/11-server-side-rendering.md).
+Piral is fully compatible with server-side rendering. However, to make a Piral instance really useful/enjoyable together with SSR you'll need to implement some logic in your server generating the HTML responses. If you are interested in the required steps and necessary changes we recommend reading our [guideline for server-side rendering](../tutorials/11-server-side-rendering.md).
 
 ---------------------------------------
 
@@ -76,7 +76,7 @@ Piral is fully compatible with server-side-rendering. However, to make a Piral i
 
 The concept of an app shell is an ingredient that is optional for micro frontends, but for us a necessary usability and efficiency factor to ensure rapid development of the different pilets.
 
-The app shell could be also used fairly minimal and without any of the features that come for free with Piral (e.g., dashboard, menu entries, modal dialog management, ...). It will still be required to load the pilets and ensure proper isolation as well as communication between them.
+The app shell could be also used fairly minimally and without any of the features that come for free with Piral (e.g., dashboard, menu entries, modal dialog management, ...). It will still be required to load the pilets and ensure proper isolation as well as communication between them.
 
 If you are looking for "Piral without the app shell", then [check out Siteless](https://www.npmjs.com/package/siteless).
 
@@ -97,9 +97,9 @@ There are essentially two ways:
 1. Shallow by providing generic layout components that still require "wrapping" with Piral components obtaining their data from the state container running in your Piral instance.
 2. Deep by having a peer dependency on the `piral` package (and potential plugins relevant for your layout).
 
-In both cases the layout is externalized in form of a package.
+In both cases, the layout is externalized in form of a package.
 
-For the first method your layout is then embedded such as:
+For the first method, your layout is then embedded such as:
 
 ```jsx
 import { LoadingIndicator, DashboardContainer, DashboardTile, Layout } from 'my-layout-package';
@@ -123,7 +123,7 @@ For the second method your definition can already come fully established:
 import { layout } from 'my-layout-package';
 ```
 
-Each version has its own pros and cons.
+Each version has its pros and cons.
 
 ---------------------------------------
 
@@ -154,9 +154,9 @@ This will swap the layouts on changing to the selected routes.
 
 ## Why are components from other frameworks just contained in boxes?
 
-Potentially, you are just looking at the "cross-framework demo" that we set up. In order to illustrate Piral's cross-framework's abilities best we placed all components on a dashboard in form of single tiles. These tiles are represented in form of these "boxes".
+Potentially, you are just looking at the "cross-framework demo" that we set up. In order to illustrate Piral's cross-framework abilities best we placed all components on a dashboard in form of single tiles. These tiles are represented in form of these "boxes".
 
-Note that components provided by pilets (independent of their use, e.g., as pages, tiles, modal dialogs, ...) can always be written in any framework supported by the app shell. Non-React components are not constraint to tiles and can also still participant in the extension mechanism, having a simple way of sharing (i.e., using) components between frameworks.
+Note that components provided by pilets (independent of their use, e.g., as pages, tiles, modal dialogs, ...) can always be written in any framework supported by the app shell. Non-React components are not constrained to tiles and can also still participate in the extension mechanism, having a simple way of sharing (i.e., using) components between frameworks.
 
 ---------------------------------------
 
@@ -167,7 +167,7 @@ Well, if the question is: Is using Piral slower than just a monolith? Potentiall
 1. If Piral is used in the "classic" setup, where the feed service is called from the client-side then we'll have at least two-round trips (feed service, pilets) before anything meaningful will happen.
 2. If Piral is used with shallow server-side rendering then we still have at least a single round trip (pilets).
 
-In the latter case we are pretty much as fast as a monolith that used bundle splitting to obtain additional information.
+In the latter case, we are pretty much as fast as a monolith that used bundle splitting to obtain additional information.
 
 Obviously, any outcome would heavily depend on the target application and network situation.
 
@@ -175,7 +175,7 @@ Obviously, any outcome would heavily depend on the target application and networ
 
 ## How can I use TransitionGroup with Routes?
 
-In this way you'd use a layout with a custom routes handling. By default, the children of `Layout` are a `PiralRoutes` instance. If you discard the given children you can just use your own instance - as shown below.
+In this way, you'd use a layout with a custom route handling. By default, the children of `Layout` are a `PiralRoutes` instance. If you discard the given children you can just use your own instance - as shown below.
 
 ```jsx
 const AnimatedRoutes = withRouter(({ location }) => (
@@ -248,7 +248,7 @@ There is also the special fallback wrapper `*`, which is used if no specific wra
 
 ## My public path is different - how to configure Piral?
 
-The `piral build` command supports a `--public-url` flag that you can configure with your public path (e.g., `"/foo"`). When you use this, the `basename` of the `react-router` is also also changed, such that routes like `/bar` are still working as they should (e.g., working with `/foo/bar`).
+The `piral build` command supports a `--public-url` flag that you can configure with your public path (e.g., `"/foo"`). When you use this, the `basename` of the `react-router` is also changed, such that routes like `/bar` are still working as they should (e.g., working with `/foo/bar`).
 
 If you want to customize the public path for routing, i.e., the `basename` of the router then you could create your own `Router` component for this:
 

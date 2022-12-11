@@ -10,7 +10,7 @@ section: Details
 
 Piral already includes and uses React for UI purposes. The reasons to include a UI framework[^1] by default are simple: we don't want to reinvent the wheel. Knowing that an app shell will already need things like state management, efficient rendering, and routing brings us to use one of the existing frameworks.
 
-[^1]: ... or a library in case of React
+[^1]: ... or a library in the case of React
 
 React is not only popular enough to justify its use, but it is also lightweight and super easy to test. With isomorphic rendering, it also provides everything to present a full picture.
 
@@ -45,7 +45,7 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-Instead of passing in a React component we pass in a special object that has the `type` field set to `html`. This special object is called a *converter*. Converters allow to teach Piral how to convert from a foreign component to a React component.
+Instead of passing in a React component, we pass in a special object that has the `type` field set to `html`. This special object is called a *converter*. Converters allow teaching Piral how to convert from a foreign component to a React component.
 
 Using the foreign component converter is also a possible way to include any kind of framework component.
 
@@ -75,7 +75,7 @@ export function setup(piral) {
 }
 ```
 
-Besides the way to declare the converter the dependencies (in this case `vue`, as well as for development purposes the dependencies `vue-template-compiler` and `@vue/component-compiler-utils`) need to be included.
+Besides the way to declare the converter, the dependencies (in this case `vue`, as well as for development purposes the dependencies `vue-template-compiler` and `@vue/component-compiler-utils`) need to be included.
 
 Another thing to consider is that the way above would be quite verbose in case of multiple registrations. Here we can use an abstraction:
 
@@ -113,7 +113,7 @@ Once we hit multiple pilets using Vue we may want to bring this functionality to
 
 ## General Working
 
-The Piral context has a special object called `converters`, which represents the registration of all available converters. A converter may be registered as simple as:
+The Piral context has a special object called `converters`, which represents the registration of all available converters. A converter may be registered as simply as:
 
 ```ts
 context.converters.vue = ({ root }) => {
@@ -125,7 +125,7 @@ context.converters.vue = ({ root }) => {
 };
 ```
 
-Usually, converters are added as part of a Piral plugin. In a plugin the definition could be as simple as:
+Usually, converters are added as part of a Piral plugin. In a plugin, the definition could be as simple as:
 
 ```ts
 export function createVueApi(config) {
@@ -189,7 +189,7 @@ After the plugin is finished it can be integrated into the Piral instance to be 
 
 ## Lifecycle
 
-Another thing to note is that we may want to clean up when components are unmounted by Piral. As such besides the `mount` function an additional function exists: `unmount`.
+Another thing to note is that we may want to clean up when components are unmounted by Piral. As such besides the `mount` function, an additional function exists: `unmount`.
 
 Going back to the original example we have:
 
@@ -276,11 +276,11 @@ The unmount will *always* happen when the application is still running. In the c
 
 ## Context
 
-When creating well-designed converters the concept of *context* is important. This becomes especially important to not only allow one-way (from the foreign component to a React component) conversions, but also the other way round. Using Piral's extension mechanism, where components are offered in form of *extensions* two-way converters can be included, too.
+When creating well-designed converters the concept of *context* is important. This becomes especially important to not only allow one-way (from the foreign component to a React component) conversions but also the other way around. Using Piral's extension mechanism, where components are offered in form of *extensions* two-way converters can be included, too.
 
 To accomplish the React to specific foreign component conversion a special Pilet API function called `renderHtmlExtension` can be called.
 
-Using the original vanilla JS example we now want to show an extension in the page:
+Using the original vanilla JS example we now want to show an extension on the page:
 
 ```ts
 export function setup(piral: PiletApi) {
@@ -375,7 +375,7 @@ export function setup(piral: PiletApi) {
 
 In the provided example the context is directly transported into the `mount` function. However, in most cases, the `mount` function scope is not directly accessible, e.g., in the Vue components. In these cases, we need to have a way to inject the context such that any child can access it.
 
-While most frameworks come with a way to do this nicely, some lack this ability. In these cases, a communication via events may be appropriate.
+While most frameworks come with a way to do this nicely, some lack this ability. In these cases, communication via events may be appropriate.
 
 By default, the `context` comes with two fields: `router` and `state`. While the former is the React Router context containing parts such as `history`, the latter is an `Atom<GlobalState>` to allow listening for global state changes.
 

@@ -10,9 +10,9 @@ section: Details
 
 Piral makes the development of highly interactive distributed frontend applications quite easy. To enable this Piral uses an approach that focuses on developer experience by allowing using a serverless-first approach. As a consequence, the pilets are retrieved at runtime from a pilet feed service. This approach is also known as client-side rendering (CSR).
 
-Naturally, performance implications apply. While pilets should be cached indefinitely (i.e., they will only require a download if never downloaded or if they have been updated), the responsive from the feed service can never be cached. The additional round-trip time (RTT) to retrieve the pilet feed will add to the JavaScript evaluation and execution time.
+Naturally, performance implications apply. While pilets should be cached indefinitely (i.e., they will only require a download if never downloaded or if they have been updated), the responses from the feed service can never be cached. The additional round-trip time (RTT) to retrieve the pilet feed will add to the JavaScript evaluation and execution time.
 
-For server-side rendering (SSR) the `piral-ssr-utils` package can be quite helpful. It is a small library that comes with two parts. First, it will reduce the RTT by embedding the responsive from the public feed. Second, it can also include (all) the pilets for a request. Consequently, while the page request grows, subsequent requests are essentially eliminated.
+For server-side rendering (SSR) the `piral-ssr-utils` package can be quite helpful. It is a small library that comes with two parts. First, it will reduce the RTT by embedding the responses from the public feed. Second, it can also include (all) the pilets for a request. Consequently, while the page request grows, subsequent requests are essentially eliminated.
 
 ## CSR vs SSR
 
@@ -22,7 +22,7 @@ The diagram below shows this sequence.
 
 ![Sequence of CSR](../diagrams/csr-sequence.png){.auto}
 
-In SSR this changes a bit. Now its up to the webserver to do this aggregation. As a side effect we cannot just expose the app shell via some static storage, we actually need a webserver handling the logic.
+In SSR this changes a bit. Now it's up to the webserver to do this aggregation. As a side effect, we cannot just expose the app shell via some static storage, we actually need a webserver handling the logic.
 
 The diagram below shows this sequence.
 
@@ -32,9 +32,9 @@ The diagram below shows this sequence.
 
 ## General SSR Setup
 
-In the following paragraphs, we assume Node.js with Express to be used for the server part. Generally, the transfer to another framework within the Node.js ecosystem should be straight forward.
+In the following paragraphs, we assume Node.js with Express to be used for the server part. Generally, the transfer to another framework within the Node.js ecosystem should be straightforward.
 
-While you can separate the client and the server parts in different repositories, it mostly makes sense to have them in the same repository. A possible structure contains three folders, `src/client` for the client entry point, `src/server` for the server entry point, and `src/common` for the shared part.
+While you can separate the client and the server parts into different repositories, it makes sense to have them in the same repository. A possible structure contains three folders, `src/client` for the client entry point, `src/server` for the server entry point, and `src/common` for the shared part.
 
 The client part contains the `index.html` and the referenced root module, which could look as follows:
 
@@ -104,7 +104,7 @@ app.listen(port, () => {
 });
 ```
 
-We use the output dir as the source for static files and the template `index.html`. In any case, we fall back to use the index instead of a not found page. The index will be defined in the subsequent sections.
+We use the output dir as the source for static files and the template `index.html`. In any case, we fall back to using the index instead of a not found page. The index will be defined in the subsequent sections.
 
 A sample of this setup can be at [smapiot/sample-piral-ssr](https://github.com/smapiot/sample-piral-ssr).
 
@@ -119,7 +119,7 @@ async function sendIndex(_: express.Request, res: express.Response) {
 }
 ```
 
-We need to render the app from the server. For this we should make use of the previously defined and exported `createApp` function.
+We need to render the app from the server. For this, we should make use of the previously defined and exported `createApp` function.
 
 ```ts
 import axios from 'axios';
@@ -166,7 +166,7 @@ Filling the template is the most crucial part. Here, we assumed that the `index.
 </body>
 ```
 
-The important parts being the `<div id="app"></div>` for the main entry point, and the `<noscript id="data"></noscript>` as a replacement for the embedded data. At this point we have the hybrid that we introduced in the CSR vs SSR section.
+The important parts are the `<div id="app"></div>` for the main entry point, and the `<noscript id="data"></noscript>` as a replacement for the embedded data. At this point, we have the hybrid that we introduced in the CSR vs SSR section.
 
 The diagram below shows this sequence.
 
@@ -224,6 +224,6 @@ Generally, this approach gives us quite some flexibility. It allows us to use ca
 
 ## Conclusion
 
-SSR can be helpful to improve startup performance and user experience. The cost of optimizing the backend is, however, not negligible and should be considered, too. Providing the fastest response possible to pilet feed and general page requests could be already sufficient to ensure great user experience.
+SSR can be helpful to improve startup performance and user experience. The cost of optimizing the backend is, however, not negligible and should be considered, too. Providing the fastest response possible to pilet feed and general page requests could be already sufficient to ensure a great user experience.
 
-In the next part, we will look in more detail at the sharing mechanisms between pilets that offered by Piral.
+In the next part, we will look in more detail at the sharing mechanisms between pilets that are offered by Piral.

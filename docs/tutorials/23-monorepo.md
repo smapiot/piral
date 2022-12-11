@@ -8,11 +8,11 @@ section: Details
 
 # Monorepo
 
-While Piral was designed primarily for distributed development, i.e., where each micro frontend lives in its own repository, you can use Piral with any paradigm that you like. This includes having a monorepo, i.e., one repository where many (or all) of your pilets are developed.
+While Piral was designed primarily for distributed development, i.e., a setup where each micro frontend lives in its own repository, you can use Piral with any paradigm that you like. This includes having a monorepo, i.e., one single repository where many (or all) of your pilets are developed.
 
-Using a monorepo can have many advantages. However, keep in mind that some challenges arise, too. For instance, you'll have to take care that deployments are only done for the changed pilets otherwise you'll end up with a hidden monolith.
+Using a monorepo can have many advantages, but can, on the flipside, also create new challenges. For instance, you'll have to ensure that deployments are only made for the changed pilets. Otherwise, you'll end up with a hidden monolith.
 
-In this tutorial we'll walk over using Piral with a monorepo. We start by looking at the different types of repositories and distributed development strategies, before setting up a monorepo with [Lerna](https://lerna.js.org) or [Rush](https://rushjs.io/).
+In this tutorial, we'll walk over using Piral with a monorepo. We start by looking at the different types of repositories and distributed development strategies, before setting up a monorepo with [Lerna](https://lerna.js.org) or [Rush](https://rushjs.io/).
 
 ## Types of Repositories
 
@@ -20,9 +20,9 @@ The first type is the "central monorepo". This may be among the most popular pat
 
 Another type is the "central pipeline", which decomposes the monorepo into individual repositories with one exception: The build pipeline remains in the monorepo and aggregates the individual repositories into a single (fat) pipeline.
 
-A third type is the "distributed monorepo". In the previous pattern we scattered the repositories, but kept the single pipeline. What if we wanted to do it the other way round? Does it even make sense? It turns out, it may be useful. Potentially, we want to develop the UI incl. all fragments in a central place, but we still want to leave room for each team to have their own deployment processes.
+A third type is the "distributed monorepo". In comparison to the previous "central pipeline" type where the repositories are scattered, but use a single pipeline, the "distributed monorepo" keeps all packages in a single repository while scattering the pipelines into multiple repositories. This allows developing the UI, including all fragments, in a central place, while still leaving room for each team to have its own deployment processes.
 
-Finally, the type of repositories where Piral shines fully is "independent repositories". This is the hardest to achieve correctly, and therefore the perfect use case for Piral. In this type you will be having totally independent repositories with their own build processes giving each team full autonomy.
+Finally, the type where Piral truly shines is called "independent repositories". This is the hardest to achieve correctly, and therefore the perfect use case for Piral. Here, you will be having totally independent repositories with their own build processes, giving each team full autonomy.
 
 Of course, hybrids of these types are legit, too.
 
@@ -38,9 +38,9 @@ Any of these types may make sense depending on your problem and the available re
 
 ## Setting up a Monorepo
 
-If you want to lean how to setup a monorepo with piral choose one of these two options:
+If you want to learn how to set up a monorepo with piral, choose one of these two options:
 
 - [Setting up a monorepo with Piral and Lerna](./23.1-monorepo-lerna.md)
 - [Setting up a monorepo with Piral and Rush](./23.2-monorepo-rush.md)
 
-In the next tutorial we look into details of setting up a monorepo using Lerna.
+In the next tutorial, we'll look into the details of setting up a monorepo using Lerna.

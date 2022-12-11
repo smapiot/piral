@@ -114,21 +114,21 @@ declare module 'my-app-shell' {
 }
 ```
 
-**Important**: These are just type-declarations. We could, of course, declare a module like `foo-bar`, however, if that is indeed used in a pilet the build will potentially fail. As long as no module with the given name really exists the bundler will not be able to resolve it - independent of what TypeScript assumes.
+**Important**: These are just type-declarations. We could, of course, declare a module like `foo-bar`, however, if that is indeed used in a pilet the build will potentially fail. As long as no module with the given name exists, the bundler will not be able to resolve it - no matter what TypeScript assumes.
 
-The rule of thumb for sharing the type declarations is: Everything exported top-level will be associated with the app shell, everything exported from an explicitly declared module will be associated with that module.
+The rule of thumb for sharing the type declarations is: Everything exported top-level will be associated with the app shell, and everything exported from an explicitly declared module will be associated with that module.
 
 ## Sharing from Pilets
 
-The mechanism to share dependencies used in pilets is called "import maps". Import maps are also on the way to become [an official standard](https://wicg.github.io/import-maps/).
+The mechanism to share dependencies used in pilets is called "import maps". Import maps are also on the way to becoming [an official](https://wicg.github.io/import-maps/) standard](https://wicg.github.io/import-maps/).
 
-The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load it again. Otherwise, it will load the different resources.
+The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load again. Otherwise, it will load the different resources.
 
 ![Using Import Maps to Share Dependencies](../diagrams/import-maps.png){.auto}
 
-That way you can safely use multiple versions of your dependencies. If you consolidate them you'll get a performance improvement. Otherwise, you'll get the performance penalty as usual, however, you gained the flexibility to independently choose your version.
+That way you can safely use multiple versions of your dependencies. If you consolidate them you'll get a performance improvement. Otherwise, you'll get the usual performance penalty, but you'll gain the flexibility to independently choose your version.
 
-The effort to actually use import maps is quite low. The first step is to declare potentially shared dependencies via the pilet's *package.json*:
+The effort to use import maps is quite low. The first step is to declare potentially shared dependencies via the pilet's *package.json*:
 
 ```json
 {
@@ -142,7 +142,7 @@ The effort to actually use import maps is quite low. The first step is to declar
 }
 ```
 
-Independent of you reference the shared dependency from a local installation or remotely (via a URL usually pointing to a CDN) you should have installed the dependency locally (as a dev dependency). In the example before this would have required:
+Independent of whether you reference the shared dependency from a local installation or remotely (via a URL usually pointing to a CDN), you should have installed the dependency locally (as a dev dependency). In the example before, this would have required:
 
 ```sh
 npm i lodash --save-dev

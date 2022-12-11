@@ -19,7 +19,7 @@ The integration ties the Piral Inspector debug API to the current web applicatio
 
 Even without the `piral-debug-utils` package the debug API could be initiated. After all, it is exclusively using the window message API.
 
-Sending a message that can be received by the Piral Inspector (or any other code) looks like:
+Sending a message that can be received by the Piral Inspector (or any other code) looks like this:
 
 ```js
 window.postMessage(
@@ -52,11 +52,11 @@ The job of the `piral-debug-utils` is to properly use this API and cover all the
 
 The integration usually performs (if not configured otherwise) a connection to the route `/$pilet-api` (called the *debug route*). Users can overwrite this via the `window['dbg:pilet-api']` variable.
 
-In addition to a change of the default `requestPilets` function the integration also involves a WebSocket connection to the same address as the *debug route* (just using the `ws` protocol instead of `http`). Any incoming request will be treated like a pilet refresh.
+In addition to a change of the default `requestPilets` function, the integration also involves a WebSocket connection to the same address as the *debug route* (just using the `ws` protocol instead of `http`). Any incoming request will be treated like a pilet refresh.
 
 1. If `dbg:hard-refresh` (in `sessionStorage`) is set to `on` then the page will just be reloaded
 2. The incoming data is parsed and the `name` of the incoming object will be used as the pilet name
-3. The routing mechanism is paused to prevent unnecessary routing during the unload / reload cycle
+3. The routing mechanism is paused to prevent unnecessary routing during the unload/reload cycle
 4. If a pilet with the given name is loaded already, it will be unloaded
 5. A pilet is added using the incoming object as metadata
-6. The routing mechanism is restored, any potential changes are now reflected
+6. The routing mechanism is restored and any potential changes are now reflected

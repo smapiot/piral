@@ -18,7 +18,7 @@ We also have a video tutorial:
 
 ## Layout Basics
 
-Coming up with a great layout is a good start for supreme user experience. Before we start creating a large number of pilets the application shell should be in a good shape.
+Coming up with a great layout is a good start for a supreme user experience. Before we start creating a large number of pilets, the application shell should be in a good shape.
 
 Let's recap how the layout was done in the scaffolding process:
 
@@ -42,7 +42,7 @@ const instance = createInstance({
 render(<Piral instance={instance} />, document.querySelector('#app'));
 ```
 
-We initialize the application's state to a set of `components` defining which components that are used to represent various building blocks.
+We initialize the application's state to a set of `components` defining which components are used to represent various building blocks.
 
 The components allow us to define the different parts of the application for visualization. For a dashboard, we have a container (exposing the potential grid or any other means of exposing the different tiles) and its tiles. If no special styling or definition should be considered the part does not need to be defined.
 
@@ -70,13 +70,13 @@ const MyDashboardTile: React.FC<DashboardTileProps> = ({ columns, rows, resizabl
 );
 ```
 
-This will create a dashboard container with some title and a proper structure incl. some CSS classes for styling. Any React component (or way of creating React components for that matter) is valid.
+This will create a dashboard container with a title and a proper structure incl. some CSS classes for styling. Any React component (or way of creating React components for that matter) is valid.
 
 Besides the component-specific props (e.g., a tile receives its currently available number of `rows` and `columns`) we also get the standard `children` property. The children of the dashboard container are the different tiles. The tiles themselves are rendered using the dashboard tile component above, where the pilet defined part is passed in as `children`.
 
 ## Example Layout
 
-How does a sample layout (minus the CSS) look like?
+What does a sample layout (minus the CSS) look like?
 
 We start with the necessary imports
 
@@ -84,7 +84,7 @@ We start with the necessary imports
 import * as React from 'react';
 ```
 
-then we use the default layout object to define everything that we care, e.g.,
+then we use the default layout object to define everything that we care, e.g.:
 
 ```jsx
 const layout = {
@@ -103,7 +103,7 @@ const layout = {
 };
 ```
 
-At this point the used sub-builders and components need to be resolved.
+At this point, the used sub-builders and components need to be resolved.
 
 There are some really simple components in there, e.g., the `Loader` may look like
 
@@ -117,7 +117,7 @@ const LoadingIndicator = () => (
 );
 ```
 
-and more complicated ones such as the full `Layout` itself.
+...and more complicated ones such as the full `Layout` itself.
 
 ```jsx
 import { Menu, Notifications, Modals } from 'piral';
@@ -160,4 +160,4 @@ Layouts can be shared in multiple ways. The Piral independent way is a simple np
 
 Additionally, the layout can already be shared in a package that comes with a **peer dependency** to `piral`. In such a package we could expose a whole layout builder instance, such as the one shown in the example layout section.
 
-In the next tutorial we review the standard development cycle of a Piral instance and its associated pilets.
+In the next tutorial, we'll review the standard development cycle of a Piral instance and its associated pilets.

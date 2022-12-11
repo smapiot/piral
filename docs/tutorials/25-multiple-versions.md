@@ -96,7 +96,7 @@ What we want is:
 - In case the used version (e.g., version 4 of lodash) in the pilet is matching one provided in the app shell - take the shared one (i.e., external)
 - In case the used version (e.g., version 5 of lodash) in the pilet is not matching any provided in the app shell - bundle the currently used version with the pilet
 
-For the second bullet point you can also aim for a refinement, where you'd use pilet-shared dependencies to not directly bundle the dependency, but use one from the app shell if provided, otherwise take a version. In this guide we will not focus on this refinement. Let's try to get the goal above working using **Webpack** as our bundler.
+For the second bullet point you can also aim for a refinement, where you'd use pilet-shared dependencies to not directly bundle the dependency, but use one from the app shell if provided, otherwise take a version. In this guide, we will not focus on this refinement. Let's try to get the goal above working using **Webpack** as our bundler.
 
 Our assumption is that the app shell was built with the following externals, i.e., shared dependencies:
 
@@ -122,7 +122,7 @@ function getLodashVersion() {
 }
 ```
 
-This gets us the used / installed version in the current repository. As an example, if `lodash` was installed in version `5.4.3` we'd get `"5"`. If it's installed as `4.1.2` we'd get `"4"`.
+This gets us the used/installed version in the current repository. As an example, if `lodash` was installed in version `5.4.3` we'd get `"5"`. If it's installed as `4.1.2` we'd get `"4"`.
 
 Now we need to use this to manipulate the set externals. A little helper would be great again. The following piece helps:
 
@@ -193,4 +193,4 @@ If this file should be part of all your pilets then place it already in the app 
 
 In this tutorial you've seen different strategies to mitigate issues that may appear when you want to share multiple versions of the same dependency. Clearly, the best way forward is to rely on the implicit sharing of dependencies between your pilets. As seen, Piral allows you to move forward in various ways making it possible to find the right solution for your problem.
 
-In the next tutorial we look at how pilets can be developed for multiple Piral instances.
+In the next tutorial, we look at how pilets can be developed for multiple Piral instances.

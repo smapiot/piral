@@ -6,7 +6,7 @@ title: Pilet API Questions
 
 ## What is the createConnector?
 
-The `createConnector` function creates a so called "data feed connector". This is a simple HOC allowing you to separate data handling from rendering. The simplest case is a one-time HTTP call:
+The `createConnector` function creates a so-called "data feed connector". This is a simple HOC allowing you to separate data handling from rendering. The simplest case is a one-time HTTP call:
 
 ```jsx
 const connect = createConnector(() =>
@@ -20,19 +20,19 @@ const Page = connect(({ data }) => (
 ));
 ```
 
-The HOC injects a prop called `data` holding the result of the promise. The promise is lazy loaded - only when the component needs to be rendered.
+The HOC injects a prop called `data` holding the result of the promise. The promise is lazy-loaded - only when the component needs to be rendered.
 
 ---------------------------------------
 
 ## How to update the createConnector?
 
-The `createConnector` function also accepts an object for creating a data feed connector. This object declares the three sections:
+The `createConnector` function also accepts an object for creating a data feed connector. This object declares three sections:
 
 - `initialize` when the data should be first gathered (usually an HTTP request)
 - `connect` to start listening for data changes (usually an active WebSocket connection)
 - `update` to set how the data change should affect the current data state
 
-All in all this can be thought of as an implicit / already created reducer.
+All in all, this can be thought of as an implicit/already created reducer.
 
 ```ts
 const connect = createConnector({
@@ -67,7 +67,7 @@ The HOC is unaffected by this. Once the data updates the view is re-rendered.
 
 ## How to get shared with updates?
 
-The `getData` API is used to get the *current* snapshot of a shared data item. In order to avoid race conditions and to stay up to date we recommend a dual approach, where the `store-data` event is used for being informed about updates, while initializing the state via `getData`.
+The `getData` API is used to get the *current* snapshot of a shared data item. In order to avoid race conditions and to stay up to date, we recommend a dual approach, where the `store-data` event is used for being informed about updates while initializing the state via `getData`.
 
 In React this could be achieved via the `useState` and `useEffect` hooks:
 
@@ -112,7 +112,7 @@ declare module 'piral-menu/lib/types' {
 }
 ```
 
-A good place for this would be either the *index.tsx* of your app shell, or some reachable file from this module, e.g., a *types.ts* that contains your shared types.
+A good place for this would be either the *index.tsx* of your app shell or some reachable file from this module, e.g., a *types.ts* that contains your shared types.
 
 The *.d.ts* that is generated for the pilets should pick up the typings as long as they are well reachable within your application.
 

@@ -20,4 +20,4 @@ The upgrade process of a Piral instance does:
 2. Updates all Piral-related packages specified in `devDependencies` and `dependencies`
 3. Installs the updated dependencies incl. an updated `piral-cli`
 
-The mechanism compares the associated repositories of the packages starting with `piral` to the repository field from the `piral-cli` package. Only in case of an alignment the update is performed.
+The mechanism compares the associated repositories of the packages starting with `piral` to the repository field from the `piral-cli` package. Only in case of an alignment, the update is performed.

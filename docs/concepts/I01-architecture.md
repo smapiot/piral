@@ -12,13 +12,13 @@ Piral allows you to layout your application with modularization in mind. Instead
 
 ![Modularization of the Monolith](../diagrams/modularization.svg)
 
-To make creating instances of Piral that effective the architecture of Piral needs to deliver. Let's start with the used building blocks.
+To make creating instances of Piral effective, the architecture of Piral needs to deliver. Let's start with the used building blocks.
 
 ## Building Blocks
 
 Piral does not start from zero. The stack that is used by Piral is React-based. Nevertheless, the API supports any kind of framework, as long as it can work with an arbitrary element to render it into.
 
-Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to render on a website), **React Router** (for routing), **Zustand** (global state container) and a React independent building block **Piral Base** (which allows loading modules at runtime via SystemJS).
+Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to render on a website), **React Router** (for routing), **Zustand** (global state container), and a React independent building block **Piral Base** (which allows loading modules at runtime via SystemJS).
 
 ![Building blocks of Piral](../diagrams/blocks.svg)
 
@@ -36,11 +36,11 @@ The previous diagram shows the different layers contained in a pilet package. Mo
 
 ## Initial Loading
 
-The initial loading of a Piral instance is a multi-stage process. Essentially, compared to a standard React / JavaScript app we inserted the middle three boxes, which render the Piral instance triggering the pilet loading and their eventual integration.
+The initial loading of a Piral instance is a multi-stage process. Essentially, compared to a standard React/JavaScript app we inserted the middle three boxes, which render the Piral instance triggering the pilet loading and their eventual integration.
 
 ![Loading a Piral instance](../diagrams/loading.svg)
 
-Note that while pilets can be loaded from cache as well, we usually require at least one communication with a server to ensure that the cached pilets are the ones that should be loaded for the user. Updates on the pilets, different feature flags and other factors may influence this decision.
+Note that while pilets can be loaded from cache as well, we usually require at least one communication with a server to ensure that the cached pilets are the ones that should be loaded for the user. Updates on the pilets, different feature flags, and other factors may influence this decision.
 
 ## State Management
 
@@ -60,7 +60,7 @@ You can extend and use state management in your Piral instance.
 
 ## Pilet API
 
-When pilets are setup they receive a special kind of object called the `Pilet API`. The `Pilet API` gives pilets access to the Piral instance to set up their components accordingly.
+When pilets are set up, they receive a special kind of object called the `Pilet API`. The `Pilet API` gives pilets access to the Piral instance to set up their components accordingly.
 
 Setting up components may involve setting up dedicated (routes to) pages, tiles on a dashboard, general extensions, modal dialogs, and other components that need to be managed by the Piral instance.
 

@@ -14,9 +14,9 @@ The sample shows the essential use of piral-core with a very simple layout and a
 
 ![Cross Framework Demo](../diagrams/demo-cross.png)
 
-There are no backend connections, however, to demonstrate lazy loading and other covenience factors effectively a bit of artificial delay here and there may have been added.
+There are no backend connections, however, to demonstrate lazy loading and other convenience factors effectively a bit of artificial delay here and there may have been added.
 
-To show interaction between different frameworks extensions are used. Some links and simple interactivity are there to show the concepts.
+To show the interaction between different frameworks, extensions are used. Some links and simple interactivity are there to show the concepts.
 
 ## Links
 

@@ -10,16 +10,16 @@ section: Details
 
 Authentication is a crucial feature of most real-world applications. Even though the authentication itself and consequently any implied authorization needs to come from the backend, we see multiple points in the frontend where authentication and authorization are strongly demanded.
 
-In Piral we focus on two aspects regarding authentication:
+In Piral, we focus on two aspects regarding authentication:
 
-1. Allow intercepting network requests to inject required tokens or other relevant authentication information
-2. Transport current user information to all pilets
+1. Allow intercepting network requests to inject required tokens or other relevant authentication information.
+2. Transport current user information to all pilets.
 
-The two aspects can be implemented very easily, however, for convenience we've also published plugins that can deal with them easily.
+The two aspects can be implemented very easily, however, for convenience, we've also published plugins that can deal with them easily.
 
 ## Setup without Plugins
 
-Piral is nothing more than a plain React application. Thus it can be adjusted and used as a standard React application. This allows Piral to leverage any existing JavaScript library for the integration of authentication.
+Piral is nothing more than a plain React application. It can be adjusted and used like any other React application. This allows Piral to leverage any existing JavaScript library for the integration of authentication.
 
 Let's see an example using Microsoft's popular [MSAL library](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-overview).
 
@@ -45,7 +45,7 @@ if (location.pathname !== '/auth') {
 }
 ```
 
-The idea is simple. The `auth` module is always loaded and first checks if we are actually using the "silent" `/auth` route. If so, we do not need to load the full app, we just have to get back the token. Otherwise, we can start the full app.
+The idea is simple. The `auth` module is always loaded and first checks if we are using the "silent" `/auth` route. If so, we do not need to load the full app, we just have to get back the token. Otherwise, we can start the full app.
 
 The `auth.ts` module looks as follows.
 
@@ -96,7 +96,7 @@ export function logout() {
 }
 ```
 
-All we do here is to expose the functionality of the MSAL library. The rest of the application (e.g., `App.tsx` or `Landing.tsx`) are standard React components with or without Piral.
+All we do here is expose the functionality of the MSAL library. The rest of the application (e.g., `App.tsx` or `Landing.tsx`) are standard React components - they would look the same, with or without Piral.
 
 Other parts of the application can now use the `auth` module for obtaining user information. One example would be `fetch.ts`, which is used by all API calls.
 
@@ -149,7 +149,7 @@ export function account() {
 }
 ```
 
-Likewise, we could either change the `fetchWithToken` function in the `fetch.ts` module, or leverage that the Piral HTTP calls in `piral-fetch` are automatically using the token. This is also valid for `piral-axios`, `piral-urql`, and other network request plugins. They are already prepared for this.
+Likewise, we could either change the `fetchWithToken` function in the `fetch.ts` module or leverage that the Piral HTTP calls in `piral-fetch` are automatically using the token. This is also valid for `piral-axios`, `piral-urql`, and other network request plugins. They are already prepared for this.
 
 The plugin is, however, more than just a fancy wrapper of the MSAL capabilities. It also brings an additional pilet API.
 
@@ -189,7 +189,7 @@ This allows any pilet to make authenticated API requests - even if no plugin suc
 
 So far we've seen that using a plugin such as `piral-adal`, `piral-oidc`, or others makes sense to reduce boilerplate code and obtain a nice additional Pilet API function.
 
-Sometimes, however, we already want digested user information. Here, Piral struggles to provide a generic solution that "just works". Piral cannot possibly know how your backend or user structure looks like. Instead, Piral assumes that this information is provided somehow.
+Sometimes, however, we already want digested user information. Here, Piral struggles to provide a generic solution that "just works". Piral cannot possibly know what your backend or user structure looks like. Instead, Piral assumes that this information is provided somehow.
 
 `piral-auth` is an optional plugin that solves exactly that. What this plugin adds to the Pilet API is a `getUser` function. The information returned from this function is set in the Piral instance.
 
@@ -227,7 +227,7 @@ export default () => (
 );
 ```
 
-In scenarios where the user information changes during the lifetime of the application an action can be used. The `setUser` action makes this possible. If `undefined` is supplied then a "logout" is essentially communicated (i.e., no user available). Otherwise, just call `context.setUser` to update the user information:
+In scenarios where the user information changes during the lifetime of the application, an action can be used. The `setUser` action makes this possible. If `undefined` is supplied then a "logout" is essentially communicated (i.e., no user available). Otherwise, just call `context.setUser` to update the user information:
 
 ```jsx
 // App.tsx

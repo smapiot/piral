@@ -31,11 +31,11 @@ The additional fields for a Piral instance *package.json* are available as sketc
 
 The `app` field is necessary to signal the HTML file to be used as an entry point to the Piral CLI. All paths are relative to the *package.json*.
 
-The `importmap` defines the shared dependencies from the Piral instance. The `inherit` field lists the packages that already contain shared dependencies. In the previous example `piral-base` (shares `tslib` etc.) and `piral-core` (shares `react`, `react-router-dom` etc.) are referenced. If you don't want these dependencies to be shared then remove the respective element from the array.
+The `importmap` defines the shared dependencies from the Piral instance. The `inherit` field lists the packages that already contain shared dependencies. In the previous example, `piral-base` (shares `tslib` etc.) and `piral-core` (shares `react`, `react-router-dom`, etc.) are referenced. If you don't want these dependencies to be shared then remove the respective element from the array.
 
-The `importmap` also gives you the possibility to share other dependencies. In the example above a package called `my-ui-lib` is shared, too.
+The `importmap` also gives you the possibility to share other dependencies. In the example above, a package called `my-ui-lib` is shared, too.
 
-Additional the optional *piral.json* file can be used to define a bit more about the scaffolding process.
+Additionally, the optional *piral.json* file can be used to define a bit more about the scaffolding process.
 
 ```json
 {
@@ -95,9 +95,9 @@ The lifecycle hooks are run in the following order:
 
 ### Pilet Scaffolding Files
 
-The list of `files` contains paths to files relative to the `package.json` that should be copied to the pilet when scaffolding (or upgrading). The idea here is to include common files such as an `.editorconfig`, custom `tsconfig.json`, `tslint.json`, or others to provide some coherence when creating new repositories with pilets.
+The list of `files` contains paths to files relative to the `package.json` that should be copied to the pilet when scaffolding (or upgrading). The idea here is to include common files such as a `.editorconfig`, custom `tsconfig.json`, `tslint.json`, or others to provide some coherence when creating new repositories with pilets.
 
-**Note**: Depending on the development model no special files may be wanted, e.g., in a monorepo workflow all essential configuration files such as an *.editorconfig* are already present in the repository's root directory.
+**Note**: Depending on the development model, no special files may be wanted, e.g., in a monorepo workflow, all essential configuration files such as a *.editorconfig* are already present in the repository's root directory.
 
 If a file is actually a folder then all the folder files are copied. For simple strings that means that all files from, e.g., `src/mocks` are copied to `src/mocks`. If `from` and `to` are specified then the files from `from` are copied to the directory specified in `to`. Note that by default this is shallow.
 
@@ -132,7 +132,7 @@ The `preScaffold` and `postScaffold` installation scripts are run during scaffol
 
 1. The package from the Piral instance is installed
 2. The `preScaffold` script is run, if available
-3. Scaffolding tasks, such as updating of *package.json* or copying of the files are performed
+3. Scaffolding tasks, such as updating *package.json* or copying of the files are performed
 4. All dependencies are resolved and installed (if wanted)
 5. The `postScaffold` script is run, if available
 
@@ -142,7 +142,7 @@ The `preUpgrade` and `postUpgrade` upgrade scripts are run during upgrade (`pile
 
 1. The package from the Piral instance is (re-)installed
 2. The `preUpgrade` script is run, if available
-3. Scaffolding tasks, such as updating of *package.json* or copying of the files are performed
+3. Scaffolding tasks, such as updating *package.json* or copying of the files are performed
 4. All dependencies are resolved and (re-)installed
 5. The `postUpgrade` script is run, if available
 

@@ -23,7 +23,7 @@ For this scenario, we assume that the React-based application has been bundled u
 
 * First step: Try to install the Piral CLI and see if your application just works when running `piral debug`. Presumably, you'd need to have an index.html referencing your script entry point and other things.
 
-For this to work you'd need to change from a perspective that only scripts and stylesheets will be transpiled to using an HTML file as the entry point. Most likely, you already have an HTML file - it is just without any `<script>` or `<link rel=stylesheet>` tag (using the `html-webpack-plugin`) or already prepared for the output.
+For this to work, you'd need to change from a perspective that only scripts and stylesheets will be transpiled to using an HTML file as the entry point. Most likely, you already have an HTML file - it is just without any `<script>` or `<link rel=stylesheet>` tag (using the `html-webpack-plugin`) or already prepared for the output.
 
 Just move the HTML file to your source folder and add `<script src="index.tsx"></script>` to point to your script entry point (assumed: `index.tsx`). Likewise, do the same for your stylesheet with:
 
@@ -33,7 +33,7 @@ Just move the HTML file to your source folder and add `<script src="index.tsx"><
 
 Again, use the reference to the source file, not the expected outcome (e.g., a file with the `.css` extension) later. This will be properly changed by the bundler.
 
-* Second step: In case everything runs - wonderful! Otherwise, you'd try to install `piral-cli-webpack` instead. Make sure that `piral-cli-parcel` is removed when you try running `piral debug` again.
+* Second step: If everything runs - wonderful! Otherwise, you'd try to install `piral-cli-webpack` instead. Make sure that `piral-cli-parcel` is removed when you try running `piral debug` again.
 
 Let's assume it does not run (and still keeps on failing): Where is your webpack configuration special?
 
@@ -86,7 +86,7 @@ npm init pilet
 This will guide us through the available options. Afterward, we should check if everything is fine and remove potentially redundant entries in the *package.json*. For instance, we may see multiple entries for `react` or `react-dom`. Here, the entries that have been added to the `devDependencies` should remain, while others should be removed.
 
 ::: warning: Use the right Piral instance
-It is quite important to choose a suitable Piral instance, otherwise debugging is either not possible or not as desired. If you don't have a Piral instance available yet, just go with `piral-sample`. It is our demo and gives you parts such as a dashboard or a menu most app shells will contain.
+It is quite important to choose a suitable Piral instance, otherwise debugging is either not possible or not as desired. If you don't have a Piral instance available yet, just go with `piral-sample`. It is our demo and gives you parts such as a dashboard or a menu which most app shells will contain.
 :::
 
 **Important**: If the standard *index.css* is still in the *src* folder then the `pilet debug` and `pilet build` commands should be explicitly pointed to the *index.tsx* (or *index.jsx*) file.
@@ -130,7 +130,7 @@ dist
 
 Regarding the use of CSS in general: By default, Piral makes no restrictions on what you can put into your CSS from your pilets. As a result, two pilets may collide with each other in styling. Even worse, a pilet may destroy the global design of the app shell.
 
-Luckily, there are ways around this. The best practice here is to "namespace" our CSS, which is facilitated by usage of SASS or CSS-in-JS libraries. Pilets will need to give careful consideration to what "reset" or "normalization" libraries they're using, and micro frontends should decouple themselves from whatever CSS artifacts other pilets are exporting.
+Luckily, there are ways around this. The best practice here is to "namespace" our CSS, which is facilitated by the usage of SASS or CSS-in-JS libraries. Pilets will need to give careful consideration to what "reset" or "normalization" libraries they're using, and micro frontends should decouple themselves from whatever CSS artifacts other pilets are exporting.
 
 ## Create React App into App Shell
 
@@ -196,7 +196,7 @@ But your approach could also be more radical; essentially just taking the compon
 
 ## Conclusion
 
-Migrating to Piral is mostly simple and straight forward. Since Piral tries to be as easy and shallow to integrate as possible you can just leverage all the React components that you already have. We have some features to tackle this challenge:
+Migrating to Piral is mostly simple and straightforward. Since Piral tries to be as easy and shallow to integrate as possible you can just leverage all the React components that you already have. We have some features to tackle this challenge:
 
 * Support for multiple bundlers (Webpack, Parcel)
 * for Webpack we have plugins to be seamlessly integrated into your existing build configuration
