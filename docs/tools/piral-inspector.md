@@ -8,7 +8,7 @@ title: Piral Inspector
 
 To optimally work as a developer with your Piral Instance, and all of its containing pilets, Piral Inspector offers a great set of capabilities:
 
-- Getting information about the currently running Piral Instance, e.g. name and version
+- Getting information about the currently running Piral Instance, e.g., name and version
 - Overview on currently loaded pilets
 - Adding/Removing pilets on-the-fly
 - Overview of registered routes

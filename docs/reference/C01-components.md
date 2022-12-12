@@ -172,7 +172,7 @@ export function setup(api: PiletApi) {
 }
 ```
 
-Another benefit of distributing the layout is that you can now easily define parts of the layout from other frameworks, e.g. if the `MyLoadingIndicator` is actually an Angular component you could do something like:
+Another benefit of distributing the layout is that you can now easily define parts of the layout from other frameworks, e.g., if the `MyLoadingIndicator` is actually an Angular component you could do something like:
 
 ```ts
 import { PiletApi } from '<my-shell>';

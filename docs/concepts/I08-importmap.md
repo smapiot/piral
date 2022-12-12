@@ -44,7 +44,7 @@ The content of the file should be the importmaps JSON:
 }
 ```
 
-The content defines the (centrally) shared dependencies, e.g. if you want to share something like `preact` you can use:
+The content defines the (centrally) shared dependencies, e.g., if you want to share something like `preact` you can use:
 
 ```json
 {

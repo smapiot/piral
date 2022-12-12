@@ -84,7 +84,7 @@ All other options are usually variations of this.
 
 ## What can be done to improve reliability and performance?
 
-Besides the normal infrastructure scaling recommendations (e.g. horizontal scaling) you can leverage caching to reduce the amount of communication required with the feed service. Since all the pilet files are static, those should be able to be cached forever. Similarly, the list of pilets to be loaded shouldn't change very often, so that can be cached for a while, too.
+Besides the normal infrastructure scaling recommendations (e.g., horizontal scaling) you can leverage caching to reduce the amount of communication required with the feed service. Since all the pilet files are static, those should be able to be cached forever. Similarly, the list of pilets to be loaded shouldn't change very often, so that can be cached for a while, too.
 
 In addition, there are a couple of recommendations for the app shell to pilet relation:
 

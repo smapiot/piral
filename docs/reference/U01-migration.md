@@ -423,7 +423,7 @@ Finally, the best equivalent for `extendSharedDependencies` is `registerDependen
 
 1. The `withApi` API of the `piral-core` package changed its first argument. Instead of the `context.converters` it now expects the full `context`. This may break some plugins that used that internally.
 2. The `piral` package now comes with React 17 as a dependency. This is (in almost all practical cases) backward compatible so it should not represent an issue. If you really want to stay on React 16 then use the `piral-core` and `piral-ext` packages instead of the full `piral` package. `piral-core` still has a peer dependency to React - allowing versions 16 or 17.
-3. For full compatibility with npm v7 the `peerDependencies` in pilets will only contain valid package names. Therefore, submodule externals (e.g. `foo/bar`) will be placed in a new section called `peerModules`, which is not evaluated by npm but picked up by the Piral CLI.
+3. For full compatibility with npm v7 the `peerDependencies` in pilets will only contain valid package names. Therefore, submodule externals (e.g., `foo/bar`) will be placed in a new section called `peerModules`, which is not evaluated by npm but picked up by the Piral CLI.
 
 ## 0.11 to 0.12
 
