@@ -89,7 +89,7 @@ const instance = createInstance({
 });
 ```
 
-Via the options the `defaultPreferences` and the global / initially available `tiles` can be defined.
+Via the options the `defaultPreferences` and the global/initially available `tiles` can be defined.
 
 Consider for example:
 

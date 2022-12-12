@@ -6,15 +6,15 @@ section: Internals
 
 # Importmaps
 
-Importmaps are an emerging web standard that is supposed to bring convenience and performance benefits to web applications. Its main purpose are the aliasing of dependencies. In Piral importmaps can be used as a built-time construct to tell the `piral-cli` what dependencies should be reused.
+Importmaps are an emerging web standard that is supposed to bring convenience and performance benefits to web applications. Their main purpose is the aliasing of dependencies. In Piral importmaps can be used as a built-time construct to tell the `piral-cli` what dependencies should be reused.
 
-In general Piral distinguishes between three types of dependencies:
+In general, Piral distinguishes between three types of dependencies:
 
-- non-shared dependencies, i.e., dependencies that are bundled and can be optimized, e.g., by removing things that are not needed / referenced in the current build process
+- non-shared dependencies, i.e., dependencies that are bundled and can be optimized, e.g., by removing things that are not needed/referenced in the current build process
 - centrally shared dependencies, i.e., dependencies that are already bundled with an app shell, but otherwise not optimized
 - distributed shared dependencies, i.e., dependencies that are shipped (not bundled) unoptimized with a pilet - such that other pilets can use them, too
 
-Besides the standard `imports` key of the importmaps specification the `piral-cli` also allows a new key called `inherit`. This one can be used to specify packages coming with an importmap.
+Besides the standard `imports` key of the importmaps specification, the `piral-cli` also allows a new key called `inherit`. This one can be used to specify packages coming with an importmap.
 
 ## Piral Instance Importmaps
 
@@ -64,7 +64,7 @@ This will use the version of `preact` that is available from the current workspa
 }
 ```
 
-Or even use a specific directory as entry point for the shared dependency:
+Or even use a specific directory as the entry point for the shared dependency:
 
 ```json
 {
@@ -85,7 +85,7 @@ Usually, you don't want to start with your shared dependencies from scratch. You
 
 Here, you inherit the importmap defined in `piral-base` (sharing `tslib`), as well as the importmap from `piral-core` (sharing `react`, `react-dom`, `react-router`, `react-router-dom`).
 
-This way, you can either create re-usable packages containing importmaps or easily remove existing dependencies by not inhering from the parent importmaps. As an example, if you don't want to share `react-dom` then just change the previous importmaps definition to:
+This way, you can either create reusable packages containing importmaps or easily remove existing dependencies by not inhering from the parent importmaps. As an example, if you don't want to share `react-dom` then just change the previous importmaps definition to:
 
 ```json
 {
@@ -138,7 +138,7 @@ This will use the version of `emojis-list` that is available from the current wo
 }
 ```
 
-Or even use a specific directory as entry point for the shared dependency:
+Or even use a specific directory as the entry point for the shared dependency:
 
 ```json
 {
@@ -219,11 +219,11 @@ Another possibility is that remote packages can be added:
 }
 ```
 
-In case of remote packages no side-bundle is created. Instead, the given URL will be used as a side-bundle. Remote packages will give you a neat way to restrict shared dependencies to a pre-defined pool, which is then re-used consistently.
+In the case of remote packages, no side-bundle is created. Instead, the given URL will be used as a side-bundle. Remote packages will give you a neat way to restrict shared dependencies to a pre-defined pool, which is then re-used consistently.
 
 ## Inheritance
 
-In addition to the `imports` key the `piral-cli` also supports another key called `inherit`. This is just an array of strings resolving to other packages or importmaps. For instance, the following importmap inherits the importmap from `piral-core`:
+In addition to the `imports` key, the `piral-cli` also supports another key called `inherit`. This is just an array of strings resolving to other packages or importmaps. For instance, the following importmap inherits the importmap from `piral-core`:
 
 ```json
 {
@@ -243,7 +243,7 @@ The importmap could also be specified directly, e.g., from a shared package:
 }
 ```
 
-Or alternatively, with use of a relative or absolute path:
+Or alternatively, with the use of a relative or absolute path:
 
 ```json
 {

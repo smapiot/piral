@@ -8,7 +8,7 @@ section: Details
 
 # Events
 
-As already seen there are multiple ways to establish communication between pilets. The crucial point is "what's the purpose of the communication". If all we want is to distribute a piece of information to anyone listening *right now* then an *event* may be the right thing.
+As already seen, there are multiple ways to make pilets communicate with each other. The crucial point is "what's the purpose of the communication". If all we want is to distribute a piece of information to anyone listening *right now* then an *event* may be the right thing.
 
 Wikipedia defines the term such that ...
 
@@ -78,17 +78,17 @@ export interface PiralHelloEvent {
 }
 ```
 
-Using the `hello` event anywhere will give full completion on the event args, which reveals a single field `message` of type `string`. The `hello` event has therefore become a "known" event. All names that are not declared via the event map "unknown". Their type is implicitly referred to as `any`.
+Using the `hello` event anywhere will give full completion on the event args, which reveals a single field `message` of type `string`. The `hello` event has therefore become a "known" event. All names that are not declared via the event map are "unknown". Their type is implicitly referred to as `any`.
 
 ## Under the Hood
 
-The event implementation in Piral is lightweight and fast. Underneath we use custom events to leverage the browser's native way of distributing events quickly and reliable.
+The event implementation in Piral is lightweight and fast. Underneath we use custom events to leverage the browser's native way of distributing events quickly and reliably.
 
-We do not serialize the event args. Therefore, you are able to also transparent functions (e.g., callbacks) or compare object references.
+We do not serialize the event args. Therefore, you are able to also transport functions (e.g., callbacks) or compare object references.
 
 ![DOM Custom Events](../diagrams/custom-events.png){.auto}
 
-While it could be possible to fake Piral events in practice it would be very hard to do. Under the hood, Piral makes sure that the Piral events are properly packaged in a wrapper when being transported via a DOM custom event. The wrapper contains a special signature that is checked before distributing.
+While it could be possible to fake Piral events in practice it would be very hard to do. Under the hood, Piral makes sure that the Piral events are properly packaged in a wrapper when being transported via a DOM custom event. The wrapper contains a special signature that is checked before distribution.
 
 ## Conclusion
 

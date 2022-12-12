@@ -54,7 +54,7 @@ We distinguish between a variety of errors. Currently, the following types of er
 - Page
 - Not Found
 
-More types of errors may be added my plugins. As an example, the `piral-forms` plugin also adds the following error:
+More types of errors may be added by plugins. As an example, the `piral-forms` plugin also adds the following error:
 
 - Form
 
@@ -70,13 +70,13 @@ The loading error appears when the loading of the app shell failed. As an exampl
 
 It will always be shown as a blank page, thus we can not only style it like a page we may also need to add some layout to it.
 
-**Note**: In this layout, we should not reference internal links. The loading error page is decoupled from the standard router. Instead, we should only include functionality to restart the application and / or report the error.
+**Note**: In this layout, we should not reference internal links. The loading error page is decoupled from the standard router. Instead, we should only include functionality to restart the application and/or report the error.
 
 *Example*: The pilet feed service is offline and the network exception is not handled in the initial request.
 
 ### Extension
 
-The extension error appears when an extension crashes. As an example, if we crash during rendering of an extension then the error is shown.
+The extension error appears when an extension crashes. As an example, if we crash while rendering an extension, the error is shown.
 
 It will always be shown as the respective component containing the extension, which may be as prominent as a page or as little as a button.
 
@@ -92,7 +92,7 @@ It will always be shown as a normal page, thus we can style it like a page.
 
 ### Not Found
 
-The not found error appears when a page could not be found. Specifically, if a wrong URL / route is used (e.g., `/foo` when no page or custom route for `/foo` is registered) we'll see this error.
+The not found error appears when a page could not be found. Specifically, if a wrong URL/route is used (e.g., `/foo` when no page or custom route for `/foo` is registered) we'll see this error.
 
 It will always be shown as a normal page, thus we can style it like a page.
 
@@ -132,4 +132,4 @@ It will always be shown as the respective component containing the form, which m
 
 ### Others
 
-More types of errors could be added to the core, or by including a plugin. Thus we recommend to always handle the "default" (or anything else) case.
+More types of errors could be added to the core, or by including a plugin. Thus we recommend always handling the "default" (or anything else) case.

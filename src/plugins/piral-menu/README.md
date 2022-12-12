@@ -89,7 +89,7 @@ const instance = createInstance({
 });
 ```
 
-Via the options the `defaultSettings` and the global / initially available menu `items` can be defined.
+Via the options the `defaultSettings` and the global/initially available menu `items` can be defined.
 
 For example:
 

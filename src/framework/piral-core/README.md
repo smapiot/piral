@@ -30,7 +30,7 @@ const App = createInstance({
 
 **Remark**: For all available API options make sure to check out the [documentation](https://docs.piral.io).
 
-**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [piral.cloud](https://www.piral.cloud)) or your own API / mechanism to serve the modules.
+**Note**: The feed above should only be used for demonstration purposes. Either set up your own feed (more information at [piral.cloud](https://www.piral.cloud)) or your own API/mechanism to serve the modules.
 
 Finally, you can render this Piral instance by using the `render` function from `react-dom`:
 

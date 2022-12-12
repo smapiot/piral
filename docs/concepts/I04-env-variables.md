@@ -10,7 +10,7 @@ The `piral-cli` sets some environment variables depending on what kind of task i
 
 In pretty much all cases the environment variables `BUILD_TIME`, `BUILD_TIME_FULL`, `BUILD_PCKG_VERSION`, `BUILD_PCKG_NAME`, and `PIRAL_CLI_VERSION` are being set. In many bundlers (e.g., using `esbuild` via `piral-cli-esbuild`) you can access these variables in your frontend code via, e.g., `process.env.BUILD_TIME`. When the bundler supports this the reference in your frontend code will be just replaced with the current value of the environment variable.
 
-Some bundlers such as `parcel` v2 (e.g., via `piral-cli-parcel2`) will not allow you to access these variables. In that case you can still replace / use them via, e.g., some plugin for the bundler or a *.codegen* file.
+Some bundlers such as `parcel` v2 (e.g., via `piral-cli-parcel2`) will not allow you to access these variables. In that case, you can still replace/use them via, e.g., some plugin for the bundler or a *.codegen* file.
 
 ## General Variables
 
@@ -27,7 +27,7 @@ The following variables are always available:
 
 ## Piral Build Variables
 
-The following variables are available when `piral build` or `piral debug` (or related commands such as `piral publish`) is running:
+The following variables are available when `piral build` or `piral debug` (or related commands such as `piral publish`) are running:
 
 | Name | Purpose | Example |
 |------|---------|---------|
@@ -38,7 +38,7 @@ The following variables are available when `piral build` or `piral debug` (or re
 
 ## Pilet Build Variables
 
-The following variables are available when `pilet build` or `pilet debug` (or related commands such as `pilet publish`) is running:
+The following variables are available when `pilet build` or `pilet debug` (or related commands such as `pilet publish`) are running:
 
 | Name | Purpose | Example |
 |------|---------|---------|

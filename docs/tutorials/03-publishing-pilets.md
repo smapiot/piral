@@ -26,9 +26,9 @@ We also have a video tutorial:
 
 ## Piral Cloud Services
 
-In this spirit, we provide a free[^1] community edition of the service that you can use for providing the **feed service**, as well as a way to publish your pilets. This leaves you at the task of creating a Piral instance.
+In this spirit, we provide a free[^1] community edition of the service that you can use for providing the **feed service**, as well as a way to publish your pilets. This leaves you with the task of creating a Piral instance.
 
-**Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification, we also have published a Node.js sample implementation at GitHub ([https://github.com/smapiot/sample-pilet-service](https://github.com/smapiot/sample-pilet-service)). The sample implementation can also be installed or run locally very easily.
+**Remark:** The specification for a feed service is public. There should be everything you need if you already (or later) want to start building your own feed service. In addition to the publicly available specification, we also have published a Node.js sample implementation on GitHub ([https://github.com/smapiot/sample-pilet-service](https://github.com/smapiot/sample-pilet-service)). The sample implementation can also be installed or run locally very easily.
 
 The service can be found at [piral.cloud](https://www.piral.cloud). Registration is possible by using a Microsoft Account to log into the service. We do not need any personal data besides the email/account id, which is provided after your approval.
 
@@ -49,7 +49,7 @@ This quick start will show us how to
 
 ## Prerequisites
 
-We assume that a Piral instance and a pilet is available as prerequisites for this tutorial. If not, please follow the getting started tutorial.
+As prerequisites for this tutorial, we assume that a Piral instance and a pilet are available. If not, please follow the getting started tutorial.
 
 ## Creating a Feed in the Piral Feed Service
 
@@ -61,7 +61,7 @@ To use the community edition of the **feed service** as part of the Piral Cloud 
 
 ![Microsoft Login](../diagrams/ms-login.svg)
 
-Upon successful login the landing page of the feed service will be displayed.
+Upon successful login, the landing page of the feed service will be displayed.
 
 ### Create a Feed
 
@@ -83,9 +83,9 @@ Before we can publish our first pilet to our newly created feed, we need to obta
 
 ### Create an API Key
 
-To see al list of all available API keys, invoke the link `Manage API Keys` or press the "key" icon on the right-hand side of the feed bar of the current feed. As we did not create an API key, the list will be empty.
+To see a list of all available API keys, invoke the link `Manage API Keys` or press the "key" icon on the right-hand side of the feed bar of the current feed. As we did not create an API key, the list will be empty.
 
-By clicking the `Generate API Key` button we can provide all necessary information for generating our first API key.
+By clicking the `Generate API Key` button we can provide all the necessary information for generating our first API key.
 
 ![Generate API Keys](../diagrams/new-api-key.png)
 
@@ -93,10 +93,10 @@ Upon pressing the `Generate` button, a new API key will be created.
 
 ![The Generated API Key](../diagrams/generated-key.png)
 
-Once the generation has completed, the generated key itself will be shown for the first - and last - time. Make sure to copy it to a secure location. If you lose the key, you should revoke it, such that also no one else will be able to use it.
+Once the generation has been completed, the generated key itself will be shown for the first - and last - time. Make sure to copy it to a secure location. If you lose the key, you should revoke it, such that also no one else will be able to use it.
 
 ::: warning: Keep your API key secure
-The generated API key(s) should be treated as sensitive information. Anyone who is able to publish pilets potentially pushes code on your website, which is evaluated in the browsers of your users!
+The generated API key(s) should be treated as sensitive information. Anyone who can publish pilets potentially pushes code on your website, which is evaluated in the browsers of your users!
 
 By default, the API keys expire after 1 year. We encourage you to periodically roll the keys to minimize the risk of leaked keys.
 :::
@@ -113,9 +113,9 @@ Publishing a pilet works with the `piral-cli`. There is also a possibility for u
 
 ### Publish a Pilet
 
-For this tutorial, we will use the pilet (named `my-pilet`), which we have created in the previous tutorial. We want to push the pilet to our feed `my-tutorial-feed` using the generated API key.
+For this tutorial, we will use the pilet (named `my-pilet`), which we created in the previous tutorial. We want to push the pilet to our feed `my-tutorial-feed` using the generated API key.
 
-Since your feed will have a different name, just replace the name of the feed with your chosen name. When navigating to the "Manage Pilets" view for your feed, you will find the entire URL on the bottom of the page.
+Since your feed will have a different name, just replace the name of the feed with your chosen name. When navigating to the "Manage Pilets" view for your feed, you will find the entire URL at the bottom of the page.
 
 For publishing the pilet navigate to the folder of the pilet and invoke the following command:
 
@@ -132,14 +132,14 @@ You can find more information about the Piral CLI configuration [in one of the n
 The `--fresh` flag tells the Piral CLI to invoke a fresh build and do everything from building up to packaging the pilet. Without this flag, we would already need a packaged pilet ready for publishing.
 
 ::: warning: One publish per version
-The official feed service only takes one pilet per name + version combination. This is considered a feature, as pilets are served by their name using a version. Therefore, if you want to update / republish the pilet, make sure to update the version first.
+The official feed service only takes one pilet per name + version combination. This is considered a feature, as pilets are served by their name using a version. Therefore, if you want to update/republish the pilet, make sure to update the version first.
 
 To update the version of a pilet either change the `version` key in its *package.json* or run `npm version` (e.g., `npm version patch`).
 :::
 
 ### Check the Pilet Upload in the Feed Service
 
-The feed service allows you to view and manage available pilets. To view all published pilets invoke the `Manage Pilets` link of the corresponding feed, in our case `my-tutorial-feed`.
+The feed service allows you to view and manage available pilets. To view all published pilets, invoke the `Manage Pilets` link of the corresponding feed, in our case `my-tutorial-feed`.
 
 ![Published Pilets](../diagrams/published-pilets.png)
 
@@ -153,7 +153,7 @@ Now that the pilet is available via the feed Service, we just need to configure 
 const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed';
 ```
 
-Please assign your individual feed url accordingly. When you now launch your Piral instance using the piral-cli (`piral debug`), the newly published pilet will be loaded into the application shell.
+Please assign your individual feed URL accordingly. When you now launch your Piral instance using the piral-cli (`piral debug`), the newly published pilet will be loaded into the application shell.
 
 ## Next Steps
 

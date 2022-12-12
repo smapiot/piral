@@ -8,7 +8,7 @@ What `piral-systemjs-utils` offers are helper functions to actually support Syst
 
 ## Installation
 
-This should only be installed as a dependency (`dependencies`) as it is only designed mostly for runtime / consumption by Piral together with `piral-cli-webpack` or another bundler that is SystemJS compatible.
+This should only be installed as a dependency (`dependencies`) as it is only designed mostly for runtime/consumption by Piral together with `piral-cli-webpack` or another bundler that is SystemJS compatible.
 
 If you'd love to use yarn:
 

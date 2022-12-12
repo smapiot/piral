@@ -29,7 +29,7 @@ Naturally, for each option, more effort is required.
 
 ## Using iframes
 
-A really simply integration can be done by just placing an `<iframe>` with a proper `src`.
+A really simple integration can be done by just placing an `<iframe>` with a proper `src`.
 
 The following snippet shows the essential idea:
 
@@ -39,9 +39,9 @@ export function setup(app) {
 }
 ```
 
-The major problems with this approach come for instance with the styling. Not only does the `iframe` container need to be embedded properly, its content may also require some adjustments to look consistent. If the content of the embedded page contains conflicting parts (e.g., a navigation bar) that should not be there the problem is pretty much not directly solvable.
+The major problems with this approach come, for instance, with the styling. Not only does the `iframe` container need to be embedded properly, but its content may also require some adjustments to look consistent. If the content of the embedded page contains conflicting parts (e.g., a navigation bar) that should not be there the problem is pretty much not directly solvable.
 
-On the other hand, anything referenced like a JavaScript or a stylesheet just work as expected. There is no need to refine how interactions work.
+On the other hand, anything referenced like a JavaScript or a stylesheet just works as expected. There is no need to refine how interactions work.
 
 There are also solutions that try to make `<iframe>` fairly easy to use. One example here is [zoid](https://github.com/krakenjs/zoid).
 
@@ -57,7 +57,7 @@ There are also solutions that try to make `<iframe>` fairly easy to use. One exa
 
 ## Using HTML Fragments
 
-In most cases starting with the use of HTML fragments is the optimum solution before going for a full migration. The backend may not be touched here, too, even though some changes could be desired.
+In most cases starting with the use of HTML fragments is the optimum solution before going for a full migration. With this approach, it is even possible to not touch the backend, even though some changes here could be desired.
 
 The idea boils down to the following:
 
@@ -73,12 +73,12 @@ We lazy load the page's HTML content via `fetch`. In the example code, we use th
 
 To enable this CORS must be allowed. Additionally, it would be great if we would not receive the full HTML (i.e., something that also contains `<html>`, `<head>`, and `<body>`), but rather just the content fragment (e.g., `<div>my content...</div>`). There are techniques to reduce the retrieved data to the content fragment in the other case, too. Likewise, supporting both - full-page rendering and a content fragment response - on the server is also possible. Here, our suggestion is to send a custom header for the latter case or to be sensitive to standard CORS headers.
 
-Even with CORS active you may not be happy at this point. There are two main reasons:
+Even with CORS active, you may not be happy at this point. There are two main reasons:
 
 1. The page is rather static. If something only worked by using some JavaScript it is now broken.
 2. The fragment may depend on some CSS style that is not there.
 
-For the first point, some techniques may help. Of course, we can get the inserted `<script>` elements and re-add them explicitly (instead of the `innerHTML` way, which is used implicitly above). Alternatively, we "re-program" / port them in JS already. The latter is preferred in an ongoing migration, while the former is better in workaround scenarios, where the backend may still change.
+For the first point, some techniques may help. Of course, we can get the inserted `<script>` elements and re-add them explicitly (instead of the `innerHTML` way, which is used implicitly above). Alternatively, we "re-program"/port them in JS already. The latter is preferred in an ongoing migration, while the former is better in workaround scenarios, where the backend may still change.
 
 The second point can be solved similarly. Best case, the stylesheet is just referenced. For instance,
 
@@ -102,7 +102,7 @@ Alternatively, the style can be copied, too.
 
 **Advantages**:
 
-- Only few changes (if any) required on the backend
+- Only a few changes (if any) required on the backend
 - Seems to be fitting in nicely
 
 **Downsides**:
@@ -132,4 +132,4 @@ Returning a JSON serialization of the models instead of raw HTML (i.e., the rend
 
 There are multiple options for the migration of existing applications. Our recommendation is to start with the simplest and continue with more advanced techniques when it's necessary.
 
-In the next tutorial, we look at how an existing React application can be migrated efficiently to a modular frontend project.
+In the next tutorial, we'll look at how an existing React application can be migrated efficiently to a modular frontend project.

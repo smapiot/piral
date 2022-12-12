@@ -32,7 +32,7 @@ Indeed Piral works in a standard configuration by relying only on the npm ecosys
 
 > Code and styles are isolated to prevent conflicts or unintended overrides.
 
-A pilet is sandboxed from the main application. It cannot crash the main application or other pilets. Pilet specific translations or state is always kept in isolation. Communication between the pilets is done indirectly via events or extensible components.
+A pilet is sandboxed from the main application. It cannot crash the main application or other pilets. Pilet-specific translations or state is always kept in isolation. Communication between the pilets is done indirectly via events or extensible components.
 
 ✔️ **Separate deployment and team owners**
 
@@ -84,7 +84,7 @@ While some of the alternatives focus on multi-frameworks (i.e., having multiple 
 
 Piral tries to minimize the work required for setting up a micro frontend by not doing a micro frontend. Instead, modules are used, which are independent of a particular backend service. In the end, Piral is not trying to dictate how to cut your architecture, domain model, or available development resources, but rather giving you a toolbox to boost your productivity.
 
-The links for the alternatives listed above.
+The links for the alternatives are listed above.
 
 - [Module Federation](https://webpack.js.org)
 - [Single SPA](https://single-spa.js.org)
@@ -119,9 +119,9 @@ There are more alternatives, which have not been listed for brevity. Some of the
 
 **Stitching Location**: Where is the primary use case/stitching location?
 
-**Free Deployments**: Is the CI/CD pipeline out of the box (i.e., with the initial set up) fully decoupled that app shell and all modules can be deployed independently
+**Free Deployments**: Is the CI/CD pipeline out of the box (i.e., with the initial setup) fully decoupled such that the app shell and all modules can be deployed independently?
 
-**Free Development**: Is the development out of the box (i.e., with the initial set up) free to choose between monorepo, single repo, shared repo, etc. - and still works offline first?
+**Free Development**: Is the development out of the box (i.e., with the initial setup) free to choose between monorepo, single repo, shared repo, etc. - and still works offline first?
 
 **Decoupled Sharing**: Are aggregator components available that enable a decoupled way of sharing components that are resilient?
 

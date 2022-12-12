@@ -16,7 +16,7 @@ For building client-side micro frontends, a combination of tools is required. Th
 
 As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.
 
-The key words *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
+The keywords *MAY*, *MUST*, *MUST NOT*, *OPTIONAL*, *SHOULD*, and *SHOULD NOT* are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
 ## Glossary
 
@@ -56,7 +56,7 @@ In addition, some special keys of the `package.json` are relevant for a producti
 | `importmap`           | Indicates shared dependencies (new).    | `{ "imports": {}, "inherit": [] }` |
 | `pilets`.`externals`  | Names of the shared dependencies (old). | `["reactstrap"]`                   |
 
-The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before included as a module. In case of a Piral instance we will need to evaluate the `dependencies.codegen` file, if the environment variable `SHARED_DEPENDENCIES` is set.
+The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before being included as a module. In the case of a Piral instance, we will need to evaluate the `dependencies.codegen` file, if the environment variable `SHARED_DEPENDENCIES` is set.
 
 ### Building for Emulation Purposes
 
@@ -76,7 +76,7 @@ For running the Piral instance in emulation mode, the set of relevant environmen
 | `PIRAL_CLI_VERSION`   | The version the used Piral CLI.     | `0.14.0`           |
 | `PIRAL_PUBLIC_PATH`   | The chosen public path of the app.  | `/`                |
 
-As in the case for generating a production instance, some special keys of the `package.json` are also considered for the emulation mode:
+As in the case of generating a production instance, some special keys of the `package.json` are also considered for the emulation mode:
 
 | Key                   | Purpose                                 | Example                            |
 |:----------------------|:----------------------------------------|:-----------------------------------|
@@ -84,11 +84,11 @@ As in the case for generating a production instance, some special keys of the `p
 | `importmap`           | Indicates shared dependencies (new).    | `{ "imports": {}, "inherit": [] }` |
 | `pilets`.`externals`  | Names of the shared dependencies (old). | `["reactstrap"]`                   |
 
-The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before included as a module. In case of a Piral instance we will need to evaluate the `dependencies.codegen` file, if the environment variable `SHARED_DEPENDENCIES` is set.
+The bundler application also needs to understand that a file ending with `.codegen` should be pre-evaluated before being included as a module. In the case of a Piral instance, we will need to evaluate the `dependencies.codegen` file, if the environment variable `SHARED_DEPENDENCIES` is set.
 
 ## Building a Pilet
 
-A pilet is a module, which can be hosted in a Piral instances. It can be published to a feed service. The feed service then serves the modules for execution in the Piral instance. When building a pilet, the following environment variables are evaluated:
+A pilet is a module, which can be hosted in a Piral instance. It can be published to a feed service. The feed service then serves the modules for execution in the Piral instance. When building a pilet, the following environment variables are evaluated:
 
 Used environment variables:
 
@@ -118,7 +118,7 @@ Additionally, some feed servers may implement a bit more here. For instance, the
 
 The Piral supports specifying different mechanisms for loading pilets. To allow versioning of a pilet's loading mechanism, we use a special header line in the output bundle. If the first line starts with a comment such as `//@pilet`, it will be treated as the pilet schema version indicator.
 
-Right now, there are three available schema versions: the legacy version is indicated by `v0` (UMD), the improved version has `v1` (plain UMD using `currentScript`), and the current standard version is `v2` (using SystemJS). Backwards compatibility should always be given, when introducing a new schema version.
+Right now, there are three available schema versions: the legacy version is indicated by `v0` (UMD), the improved version has `v1` (plain UMD using `currentScript`), and the current standard version is `v2` (using SystemJS). Backward compatibility should always be given when introducing a new schema version.
 
 Most notably the following components should all be able to gracefully fall back:
 
@@ -299,7 +299,7 @@ module.exports = {
 
 This assumes that the source of the pilet is stored in `src` and the bundled files should be written to `dist`. The configuration supports TypeScript, CSS, and most media files.
 
-Critical is the correct definition of the `externals` and the output formatting. In the previous example we use the `v1` schema.
+Critical is the correct definition of the `externals` and the output formatting. In the previous example, we use the `v1` schema.
 
 ## Acknowledgements
 

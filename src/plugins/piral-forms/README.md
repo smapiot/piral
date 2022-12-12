@@ -10,8 +10,8 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 Quite often the management of forms is rather cumbersome. A form consists of multiple states, such as
 
-1. initial data loading (may be static / empty),
-2. handling of input (valid / invalid),
+1. initial data loading (may be static/empty),
+2. handling of input (valid/invalid),
 3. submission of forms (in flight processing)
 4. (potentially async) handling of rejected forms (frontend was OK but backend complains)
 

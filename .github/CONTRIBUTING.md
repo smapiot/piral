@@ -14,11 +14,11 @@ This project and everyone participating in it is governed by the [Code of Conduc
 
 ### Development Instructions
 
-Please find more information about how to setup your machine for developing Piral in [the source documentation](../src/README.md).
+Please find more information about how to set up your machine for developing Piral in [the source documentation](../src/README.md).
 
 ### Reporting Bugs
 
-Before creating bug report, please make sure that you first check the [existing issues](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Abug), as you might find that the issue is already reported. Fill out [the required template](https://github.com/smapiot/piral/issues/new?template=bug_report.md), the information it asks for helps us resolve issues faster.
+Before creating a bug report, please make sure that you first check the [existing issues](https://github.com/smapiot/piral/issues?q=is%3Aopen+is%3Aissue+label%3Abug), as you might find that the issue is already reported. Fill out [the required template](https://github.com/smapiot/piral/issues/new?template=bug_report.md), the information it asks for helps us resolve issues faster.
 
 Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer:, and find related reports :mag_right:.
 
@@ -35,7 +35,7 @@ Enhancements or general suggestions are tracked as [GitHub issues](https://docs.
 - **Use a clear and descriptive title** for the issue to identify the suggestion.
 - **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
 - **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
-- **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of Piral which the suggestion is related to. *Note*: We usually live in code. Any code you can already show would be the best illustration.
+- **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of Piral to which the suggestion is related. *Note*: We usually live in code. Any code you can already show would be the best illustration.
 
 ## Branching Model
 
@@ -56,18 +56,18 @@ The **documentation** branch is used for updates and fixes to the currently live
 
 The following table gives an overview:
 
-| Branch Name   | Builds Documentation | NPM Release / Tag | Version Suffix |
-| ------------- | -------------------- | ----------------- | -------------- |
-| main          | yes (indirectly)     | latest            | (none)         |
-| develop       | no                   | next              | beta           |
-| experimental  | no                   | canary            | alpha          |
-| documentation | yes                  | (none)            | (none)         |
+| Branch Name   | Builds Documentation | NPM Release/Tag | Version Suffix |
+| ------------- | -------------------- | --------------- | -------------- |
+| main          | yes (indirectly)     | latest          | (none)         |
+| develop       | no                   | next            | beta           |
+| experimental  | no                   | canary          | alpha          |
+| documentation | yes                  | (none)          | (none)         |
 
-If you don't know what to do - use `develop` as target for pull requests.
+If you don't know what to do - use `develop` as a target for pull requests.
 
 ### Supporting Branches
 
-Next to the main branches `main` and `develop`, our development model uses a few of supporting branches to aid parallel development between team members, ease tracking of features and to assist in quickly fixing live production problems. Unlike the main branches, these branches always have a limited life time, since they will be removed eventually.
+Next to the main branches `main` and `develop`, our development model uses a few supporting branches to aid parallel development between team members, ease tracking of features, and assist in quickly fixing live production problems. Unlike the main branches, these branches always have a limited lifetime, since they will be removed eventually.
 
 The two main different types of branches we may use are:
 
@@ -85,20 +85,20 @@ Naming convention:
 
 #### Creating a Hotfix Branch
 
-Create a branch **from** `main` which must merge back **into** either `main` and / or `develop`. While a *real* hotfix will apply to both immediately, a simple fix will just be applied to `develop`.
+Create a branch **from** `main` which must merge back **into** either `main` and/or `develop`. While a *real* hotfix will apply to both immediately, a simple fix will just be applied to `develop`.
 
 Naming convention:
 
 - `hotfix/{new-patch-version}`, e.g., `hotfix/1.2.1`
 - `hotfix/{issue-id}-{issue-description}`, e.g., `hotfix/#123-fixed-foo-undefined`
 
-Hotfix branches are normally created from the `main` branch (especially if they are applied to both `main` and `develop`, otherwise creating the branch from `develop` may be okay as well). For example, say version 1.2 is the current production release running live and causing troubles due to a severe bug. But changes on develop are yet unstable.
+Hotfix branches are normally created from the `main` branch (especially if they are applied to both `main` and `develop`, otherwise creating the branch from `develop` may be okay as well). For example, say version 1.2 is the current production release running live and causing troubles due to a severe bug, while changes on develop are yet unstable.
 
 ## Pull Request Process
 
 Following is a short guide on how to make a valid Pull Request.
 
-1. Firstly you need a local fork of the the project, so go ahead and press the `fork` button in
+1. Firstly you need a local fork of the project, so go ahead and press the `fork` button in
    GitHub. This will create a copy of the repository in your own GitHub account and you'll see a
    note that it's been forked underneath the project name: `Forked from smapiot/piral`.
    Clone the newly forked repository locally and set up a new remote that points to the original
@@ -111,7 +111,7 @@ Following is a short guide on how to make a valid Pull Request.
    You now have two remotes for this project on disk:
 
    1. `origin` which points to your GitHub fork of the project.
-      You can read and write to this remote.
+      You can read and write on this remote.
    2. `upstream` which points to the main project's GitHub repository.
       You can only read from this remote.
 
@@ -119,7 +119,7 @@ Following is a short guide on how to make a valid Pull Request.
 
 3. Do some work :) This is the fun part where you get to contribute to Piral :rocket:.
 
-4. Before pushing your code, few more task that need to be preformed:
+4. Before pushing your code, there are a few more tasks that need to be performed:
 
    - Make sure that the test and build scripts run successfully
 
@@ -141,4 +141,4 @@ Following is a short guide on how to make a valid Pull Request.
    [Piral repository](https://github.com/smapiot/piral/pulls) and issue a new pull
    request.
 
-You may merge the Pull Request in once you have the sign-off of at least one other (core) developer, or if you do not have permission to do that, you may request the reviewer to merge it for you.
+You may merge the Pull Request once you have the sign-off of at least one other (core) developer, or if you do not have permission to do that, you may request the reviewer to merge it for you.

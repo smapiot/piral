@@ -8,7 +8,7 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 ## Why and When
 
-Sometimes you have some pages that are radically different than the usual pages / layout. For instance, while most pages in a single application should be shown with a header, footer, and navigation, a login page is usually shown without these elements (or with just some of them, e.g., the footer).
+Sometimes you have some pages that are radically different than the usual pages/layout. For instance, while most pages in a single application should be shown with a header, footer, and navigation, a login page is usually shown without these elements (or with just some of them, e.g., the footer).
 
 Of course, you could leave this layout to the page itself, e.g., that
 

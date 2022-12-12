@@ -21,7 +21,7 @@ This scaffolds a new app shell in the current directory.
 ::: question: Do I need the npm initializers?
 No, you can also use the `piral-cli` directly. However, that way you need to have the `piral-cli` globally installed, which is generally not advisable.
 
-With the `piral-cli` installed globally you could run `piral new` instead of the command above.
+With the `piral-cli` installed globally, you could run `piral new` instead of the command above.
 :::
 
 All options that can be determined will be presented to you in a command line survey. If you want to skip this survey and take the default options you can use the `--defaults` flag:
@@ -72,7 +72,7 @@ Make sure to adapt the command above to the name of your app shell.
 ::: question: Do I need the npm initializers?
 No, same as with the scaffolding of the Piral instance.
 
-With the `piral-cli` installed globally you could run `pilet new ../my-piral-instance/develop/my-piral-instance-1.0.0.tgz` instead of the command above.
+With the `piral-cli` installed globally, you could run `pilet new ../my-piral-instance/develop/my-piral-instance-1.0.0.tgz` instead of the command above.
 :::
 
 This will scaffold a new pilet. The crucial part is the first argument, which is the path to the tarball'ed piral instance.
