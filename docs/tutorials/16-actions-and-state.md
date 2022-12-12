@@ -10,7 +10,7 @@ section: Details
 
 Piral comes with an integrated state management system: a state container. The state container can be changed using actions, which can be also defined.
 
-In general the flow follows the standard flux architecture:
+In general, the flow follows the standard flux architecture:
 
 1. Rendering couples to a state
 2. An action is invoked
@@ -40,7 +40,7 @@ const AppLoadingIndicator = () => {
 };
 ```
 
-**Remark**: It makes sense to only select the absolut minimum. Otherwise too many (unnecessary) re-renders may have a negative performance impact.
+**Remark**: It makes sense to only select the absolute minimum. Otherwise too many (unnecessary) re-renders may have a negative performance impact.
 
 Alternatively, you can always read the state from the global state context.
 
@@ -63,7 +63,7 @@ const AppLoadingIndicator = () => {
 };
 ```
 
-**Remark**: While the version above seems to be equivalent to the initial version using the `useGlobalState` hook it is not. `readState` works only *once*, while `useGlobalState` is connected and thus will *update* on changes. The method above would only update when `readState` changes, not when the read state changed.
+**Remark**: While the version above seems to be equivalent to the initial version using the `useGlobalState` hook it is not. `readState` works only *once*, while `useGlobalState` is connected and thus will *update* on changes. The method above would only update when `readState` changes, not when the read state changes.
 
 If multiple actions are required the `useActions` hook may be helpful.
 
@@ -138,7 +138,7 @@ context.defineActions({
 });
 ```
 
-If we already know the action at time of Piral instance creation we can supply it directly:
+If we already know the action at the time of Piral instance creation we can supply it directly:
 
 ```ts
 import { createInstance } from 'piral';
@@ -162,7 +162,7 @@ const instance = createInstance({
 
 **Remark**: The first argument of our custom action will always be the `GlobalStateContext`. This will be bound by Piral, such that no explicit handover is required.
 
-As a result our action can be used as follows:
+As a result, our action can be used as follows:
 
 ```jsx
 import { useAction } from 'piral';
@@ -206,7 +206,7 @@ declare module 'piral-core/lib/types/custom' {
 }
 ```
 
-The `PiralCustomState` interface is the top-level of the state.
+The `PiralCustomState` interface is the top level of the state.
 
 ## Conclusion
 

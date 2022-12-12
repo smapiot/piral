@@ -12,7 +12,7 @@ Wrappers allow you to target specific components with an outer shell. This outer
 
 There are three types of wrappers:
 
-- specific wrappers, e.g., `page`, `tile` etc.
+- specific wrappers, e.g., `page`, `tile`, etc.
 - the unspecific wrapper, i.e., `*`
 - the default wrapper
 
@@ -28,7 +28,7 @@ Wrappers should not be set at arbitrary times. They should only be set when the 
 
 The rule of thumb is to define a wrapper once (e.g., in the initial state container) and never touch it again.
 
-The wrapper is already applied when a component is registered, so changing the wrapper later involves re-registration of all components.
+The wrapper is already applied when a component is registered, so changing the wrapper later involves the re-registration of all components.
 
 ## Defining Wrappers
 
@@ -64,4 +64,4 @@ const SomePageWrapper = ({ meta, children }) => (
 );
 ```
 
-This makes wrappers ideal to implement additional layers for page / component protection or different layouts - depending on the provided props.
+This makes wrappers ideal to implement additional layers for page/component protection or different layouts - depending on the provided props.

@@ -41,7 +41,7 @@ piral --version
 ```
 
 ::: warning: Be cautious with global tools
-Installing utilities globally may be harmful. It is recommended to avoid doing that. If you don't want to install the `piral-cli` package globally then this is fine, too. The whole tutorial works without - just follows the tips below code snippets that use the global installation.
+Installing utilities globally may be harmful. It is recommended to avoid doing that. If you don't want to install the `piral-cli` package globally then this is fine, too. The whole tutorial works without doing so - just follow the tips below for code snippets that use the global installation.
 
 Usually local versions of the `piral-cli` (here the commands start with `npx` such as `npx piral` or `npx pilet`) are used.
 :::
@@ -50,7 +50,7 @@ For executing this tutorial, the `piral-cli` in version 0.14.0 or later is requi
 
 ## Create an Application Shell (Piral Instance)
 
-A Piral instance builds the application shell and as such the foundation for executing pilets. All central and shared functions like layout, navigation menus or notification handling will be configured in the Piral instance.
+A Piral instance builds the application shell and as such the foundation for executing pilets. All central and shared functions like layout, navigation menus, or notification handling will be configured in the Piral instance.
 
 In the end, the app shell is the foundation for the whole frontend. In the diagram below we see that the app shell is the top layer, which may (later on) hold other shared libraries or the shared UI components. The modules are then built later.
 
@@ -78,7 +78,7 @@ In **npm v6** you can write:
 npm init piral-instance --target my-app --defaults
 ```
 
-In **npm v7**, **npm v8** and higher you'd write:
+In **npm v7**, **npm v8**, and higher you'd write:
 
 ```sh
 npm init piral-instance -- --target my-app --defaults
@@ -114,10 +114,10 @@ To use the newly created Piral instance as the application shell (or simply "app
 npx piral build
 ```
 
-This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `emulator` and `release`. The latter contains the files for publishing the app shell to some host later on. The former contains a *emulator package*.
+This will trigger the build of a Piral instance. By default, this command will create two folders within the `dist` folder: `emulator` and `release`. The latter contains the files for publishing the app shell to some host later on. The former contains an *emulator package*.
 
 ::: tip: Only build the emulator
-The previously used command builds both, `release` and `emulator`. If you only want, e.g., the emulator package you can use the `--type` flag:
+The previously used command builds both `release` and `emulator`. If you only want, e.g., the emulator package you can use the `--type` flag:
 
 ```sh
 npx piral build --type emulator
@@ -160,7 +160,7 @@ In **npm v6** you can write:
 npm init pilet --target my-pilet --source ./my-app/dist/emulator/my-app-1.0.0.tgz --defaults
 ```
 
-In **npm v7**, **npm v8** and higher you'd write:
+In **npm v7**, **npm v8**, and higher you'd write:
 
 ```sh
 npm init pilet -- --target my-pilet --source ./my-app/dist/emulator/my-app-1.0.0.tgz --defaults
@@ -196,7 +196,7 @@ As for the application shell, the pilet can be started in debug mode using the `
 npx pilet debug
 ```
 
-When navigating to `http://localhost:1234`, the application shell will be started and the content of the pilet will be shown. Currently, a tile with "Welcome to Piral!" is shown on the dashboard with a link to the "Documentation" in the top navigation, and a short-lived notification "Hello from Piral!" appearing on the bottom right corner.
+When navigating to `http://localhost:1234`, the application shell will be started and the content of the pilet will be shown. Currently, a tile with "Welcome to Piral!" is shown on the dashboard with a link to the "Documentation" in the top navigation, and a short-lived notification "Hello from Piral!" appears on the bottom right corner.
 
 **Remark:** Although our pilet has already the setup for a menu entry and showing a notification, those entities are not visible when starting the pilet. The reason for this is that for our current version of the application shell no menu and no support for notifications have been configured yet. Subsequent tutorials will guide us through configuring further functions of the application shell.
 

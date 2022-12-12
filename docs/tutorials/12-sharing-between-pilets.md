@@ -8,7 +8,7 @@ section: Details
 
 # Sharing Between Pilets
 
-Pilets provide a great way to develop and release business functionality in isolation. However, in the real world, we may want to mix functionalities. As such one team should be responsible for a functionality that is shown as a dedicated page, while another team cares about a sub functionality that may appear on dedicated pages, but also in general or other components.
+Pilets provide a great way to develop and release business functionality in isolation. However, in the real world, we may want to mix functionalities. As such one team should be responsible for a functionality that is shown as a dedicated page, while another team cares about a sub-functionality that may appear on dedicated pages, but also in general or other components.
 
 ## Video
 
@@ -28,7 +28,7 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-One advantage of this approach is that different targets could be defined with a third parameter (not shown in the example above). This parameter contains options for setting an expiration time as well as a target, which could be used by the app shell to, e.g., synchronize with some user data service.
+One advantage of this approach is that different targets could be defined with a third parameter (not shown in the example above). This parameter contains options for setting an expiration time as well as a target, which could be used by the app shell for, e.g., synchronizing with some user data service.
 
 Independent of who owns the data, it can be read from any pilet.
 
@@ -55,7 +55,7 @@ While this can be also (ab)used to build some pilet-internal store (i.e., state 
 
 ## Functions
 
-For functions the same mechanism as for general data applies. Furthermore, since Piral does not restrict access to the DOM global functions could be placed, too, using the `window` context.
+For functions, the same mechanism as for general data applies. Furthermore, since Piral does not restrict access to the DOM global functions could be placed, too, using the `window` context.
 
 ```ts
 export function setup(piral: PiletApi) {
@@ -129,7 +129,7 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-In the end the `piral.Extension` component marks the extension slot, i.e., the place where the shared components of the respective extension container (referred by the `name` prop) should be rendered. The `params` prop allows us to forward the parameters to the shared components.
+In the end the `piral.Extension` component marks the extension slot, i.e., the place where the shared components of the respective extension container (referred to by the `name` prop) should be rendered. The `params` prop allows us to forward the parameters to the shared components.
 
 **Remark**: The extension (or to be more specific the shared component) can also be used within the pilet that defines it.
 
@@ -151,7 +151,7 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-In other cases we may want a special rendering (e.g., only the display the first child). The `render` prop would allow us to do that.
+In other cases, we may want a special rendering (e.g., only the display of the first child). The `render` prop would allow us to do that.
 
 ```jsx
 export function setup(piral: PiletApi) {
@@ -169,7 +169,7 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-Without these extensions pilets could only share components with the app shell. As a consequence, only page transitions would be possible (among specialized things such as dashboards, modal dialogs, ...).
+Without these extensions, pilets could only share components with the app shell. As a consequence, only page transitions would be possible (among specialized things such as dashboards, modal dialogs, ...).
 
 The following diagram illustrates this.
 
@@ -181,7 +181,7 @@ Instead, we can loosely couple the extensions. The following diagram shows some 
 
 ![Page transitions with registered extensions](../diagrams/page-transitions-with-ext.png){.auto}
 
-Importantly, the sharing will always be indirect, i.e., the name of the owning pilets will never be mentioned. The name of the extension can be chosen using different principles. In general, it is not possible to make one recommendation - as every naming scheme has its pros and cons. Our only recommendation is to come up with conventions that are related to the problem domain they extension solves.
+Importantly, the sharing will always be indirect, i.e., the name of the owning pilets will never be mentioned. The name of the extension can be chosen using different principles. In general, it is not possible to make one recommendation - as every naming scheme has its pros and cons. Our only recommendation is to come up with conventions that are related to the problem domain the extension solves.
 
 ## Conclusion
 

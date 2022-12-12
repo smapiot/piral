@@ -4,7 +4,7 @@ description: Details about the templates used for new pilets and Piral instances
 section: Tooling
 ---
 
-The `piral-cli` comes with a templating system that is used when you run `piral new` or `pilet new` (or derived scripts like the npm initializers `npm init piral-instance` / `npm init pilet`).
+The `piral-cli` comes with a templating system that is used when you run `piral new` or `pilet new` (or derived scripts like the npm initializers `npm init piral-instance`/`npm init pilet`).
 
 ## Rules for Selecting a Template
 
@@ -22,7 +22,7 @@ Name selection for pilet templates:
 2. If no `@` (namespaced) name is provided then use `@smapiot/pilet-template-<name>` as package name
 3. If a namespaced name is provided then take the template name as package name
 
-If you specify a namespaced template name such as `@foo/bar` then it will be taken as a package name. In this case `@foo/bar` will be searched in the currently selected registry. If nothing is found then the standard public npm registry will be used for the lookup.
+If you specify a namespaced template name such as `@foo/bar` then it will be taken as a package name. In this case, `@foo/bar` will be searched in the currently selected registry. If nothing is found then the standard public npm registry will be used for the lookup.
 
 Registry selection:
 

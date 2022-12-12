@@ -19,14 +19,14 @@ In addition, there might be multiple app shells installed. The `pilet upgrade` c
 
 An app shell is selected if
 
-- there is no *pilet.json*, but instead a `piral` section in the *package.json* mentioning the app shell by its name
+- there is no *pilet.json*, but instead, a `piral` section in the *package.json* mentioning the app shell by its name
 - it's the only app shell mentioned in *pilet.json* `piralInstances` property
 - no app shell has a property `selected: true` in the *pilet.json*
 - it was assigned the `selected: true` property
 
-The `piralInstances` might be used to determined what *can* be loaded and what *should* be loaded as an app shell.
+The `piralInstances` might be used to determine what *can* be loaded and what *should* be loaded as an app shell.
 
-The upgrade process of a pilet does (this is run for each selected app shell):
+The upgrade process of a pilet does the following (this is run for each selected app shell):
 
 1. Gets the current state of the pilet
 2. Installs the new version of the app shell

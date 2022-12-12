@@ -42,14 +42,14 @@ The screenshot below shows the kras management website:
 
 The configuration from kras can be either changed on demand (via the management endpoint) or upfront using a *.krasrc* file. More information about the *.krasrc* file can be found in the [kras documentation](https://github.com/FlorianRappl/kras/blob/master/README.md).
 
-We can use the configuration to set up kras in such a way that we enable / configure the three options mentioned above as desired. In the following three sections we'll cover the three options.
+We can use the configuration to set up kras in such a way that we enable/configure the three options mentioned above as desired. In the following three sections we'll cover the three options.
 
 ## Request Proxying
 
 <!-- markdown-link-check-disable-next-line -->
 The request proxying can be set up by a simple mapping, e.g., placing `/posts` to `https://jsonplaceholder.typicode.com/posts` will - if no other injector intercepts the request - forward requests from `http://localhost:1234/posts` to `https://jsonplaceholder.typicode.com/posts`. Likewise, `http://localhost:1234/posts/1` would be forwarded to `https://jsonplaceholder.typicode.com/posts/1`.
 
-The proxy injector is usually the last active injector. Any response of the proxy (e.g., a not found 404) will still lead to a response from this injector. Thus when the proxy injector is active (and captures some request) it is the last used injector.
+The proxy injector is usually the last active injector. Any response of the proxy (e.g., a not found 404) will still lead to a response from this injector. Thus when the proxy injector is active (and captures a request) it is the last used injector.
 
 ## Static Request Mocking
 
@@ -105,11 +105,11 @@ The three parts of the function signature are:
 
 - `ctx` is a global object referring to context settings and allows transporting state
 - `req` is the incoming request
-- `res` is a helper for building the outgoing response
+- `res` is a helper in building the outgoing response
 
-The function's result needs to be either `undefined` (representing not handled), a response object or a `Promise` yielding `undefined` or a response object.
+The function's result needs to be either `undefined` (representing not handled), a response object, or a `Promise` yielding `undefined` or a response object.
 
-The logic of a script injector can be as complex as required - even Node.js modules (either built-in, e.g., `fs` or retrieved via npm, e.g., `request`) can be used.
+The logic of a script injector can be as complex as required - even Node.js modules (either built-in, e.g., `fs`, or retrieved via npm, e.g., `request`) can be used.
 
 ## Next Steps
 

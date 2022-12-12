@@ -8,7 +8,7 @@ title: Plugin Questions
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-ng`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Angular components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-ng`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Angular components efficiently.
 
 For documentation on `piral-ng` please consult the [package information](https://npmjs.com/package/piral-ng).
 
@@ -18,7 +18,7 @@ For documentation on `piral-ng` please consult the [package information](https:/
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-ngjs`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Angular.js components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-ngjs`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Angular.js components efficiently.
 
 For documentation on `piral-ngjs` please consult the [package information](https://npmjs.com/package/piral-ngjs).
 
@@ -28,7 +28,7 @@ For documentation on `piral-ngjs` please consult the [package information](https
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-vue`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Vue components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-vue`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Vue components efficiently.
 
 For documentation on `piral-vue` please consult the [package information](https://npmjs.com/package/piral-vue).
 
@@ -38,7 +38,7 @@ For documentation on `piral-vue` please consult the [package information](https:
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-hyperapp`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Hyperapp components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-hyperapp`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Hyperapp components efficiently.
 
 For documentation on `piral-hyperapp` please consult the [package information](https://npmjs.com/package/piral-hyperapp).
 
@@ -48,7 +48,7 @@ For documentation on `piral-hyperapp` please consult the [package information](h
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-inferno`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Inferno components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-inferno`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Inferno components efficiently.
 
 For documentation on `piral-inferno` please consult the [package information](https://npmjs.com/package/piral-inferno).
 
@@ -60,7 +60,7 @@ For documentation on `piral-inferno` please consult the [package information](ht
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-preact`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Preact components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-preact`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Preact components efficiently.
 
 For documentation on `piral-preact` please consult the [package information](https://npmjs.com/package/piral-preact).
 
@@ -72,7 +72,7 @@ For documentation on `piral-preact` please consult the [package information](htt
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-aurelia`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Aurelia components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-aurelia`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Aurelia components efficiently.
 
 For documentation on `piral-aurelia` please consult the [package information](https://npmjs.com/package/piral-aurelia).
 
@@ -82,7 +82,7 @@ For documentation on `piral-aurelia` please consult the [package information](ht
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-litel`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Hyperapp components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-litel`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Hyperapp components efficiently.
 
 For documentation on `piral-litel` please consult the [package information](https://npmjs.com/package/piral-litel).
 
@@ -94,7 +94,7 @@ Short answer - yes.
 
 Since web components are just HTML elements you can already use the standard HTML render mode, as well as the possibility of rendering extensions as HTML elements.
 
-For an improved experience we recommend using web components together with LitElement. Here, our `piral-litel` plugin could be helpful.
+For an improved experience, we recommend using web components together with LitElement. Here, our `piral-litel` plugin could be helpful.
 
 ---------------------------------------
 
@@ -102,7 +102,7 @@ For an improved experience we recommend using web components together with LitEl
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-mithril`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Hyperapp components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-mithril`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Hyperapp components efficiently.
 
 For documentation on `piral-mithril` please consult the [package information](https://npmjs.com/package/piral-mithril).
 
@@ -112,9 +112,9 @@ For documentation on `piral-mithril` please consult the [package information](ht
 
 Short answer - yes.
 
-Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be build in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-blazor`, which is an plugin package that you can integrate into your Piral instance. As a result pilets can use any existing Hyperapp components efficiently.
+Piral is primarily using React, which makes it necessary for you to build your Piral instance in React. As such you should try to communicate that pilets should be built in React, too. However, we know that there are many different applications out there and reuse is desired. Therefore, we created `piral-blazor`, which is a plugin package that you can integrate into your Piral instance. As a result, pilets can use any existing Hyperapp components efficiently.
 
-As Blazor is quite a special technology (since its based on WebAssembly) there are some very special things to follow for integration. The result, however, could be worth it. As Piral gives you here a truly unique and wonderful way of building your application - modular, distributed, and with the fastest possible Blazor startup time!
+As Blazor is quite a special technology (since it's based on WebAssembly) there are some very special things to follow for integration. The result, however, could be worth it. As Piral gives you here a truly unique and wonderful way of building your application - modular, distributed, and with the fastest possible Blazor startup time!
 
 For documentation on `piral-blazor` please consult the [package information](https://npmjs.com/package/piral-blazor).
 
@@ -122,7 +122,7 @@ For documentation on `piral-blazor` please consult the [package information](htt
 
 ## Will piral-blazor work with Blazor Server instances?
 
-Indeed piral-blazor was created for WASM. What you could do for such a setup is using, e.g., iframes or HTML fragments (see https://docs.piral.io/guidelines/tutorials/19-migrate-ssr).
+Indeed piral-blazor was created for WASM. What you could do for such a setup is use, e.g., iframes or HTML fragments (see https://docs.piral.io/guidelines/tutorials/19-migrate-ssr).
 
 ---------------------------------------
 

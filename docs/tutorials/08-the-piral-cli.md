@@ -28,7 +28,7 @@ npx pilet [pilet-command]
 
 This will take the locally installed version. So these commands will only work in a pilet or Piral instance.
 
-Here, `any-command` is the union of all `piral-command` (suffixed with `-piral`) and all `pilet-command` (suffixed with `-pilet`) instructions. Additionally, some commands that that belong to neither category may be found here.
+Here, `any-command` is the union of all `piral-command` (suffixed with `-piral`) and all `pilet-command` (suffixed with `-pilet`) instructions. Additionally, some commands that belong to neither category may be found here.
 
 ## Video
 
@@ -112,7 +112,7 @@ module.exports = function (cliApi) {
 };
 ```
 
-This function receives the Piral CLI API (`cliApi`). With the CLI API we can do things such as wrapping commands or adding new commands. For commands the yargs[^1] command definition is followed.
+This function receives the Piral CLI API (`cliApi`). With the CLI API we can do things such as wrapping commands or adding new commands. For commands, the yargs[^1] command definition is followed.
 
 [^1]: Yargs is a popular [Node.js library](https://yargs.js.org/docs/) for parsing command line arguments.
 

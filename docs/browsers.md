@@ -25,7 +25,7 @@ The pilet schema indicates the specification that is followed for packaging and 
 The schema is applied at compile-time. So, if you built your pilet using an earlier (pre 0.10) version of Piral then an older schema (v0) was used. A rebuild is necessary to migrate to v1 or v2. The schema can be selected via a command line argument.
 :::
 
-The following browsers are not directly supported by Piral, but have been working up to some extend in the past:
+The following browsers are not directly supported by Piral, but have been working up to some extent in the past:
 
 | Browser           | Version | Notes                      |
 |-------------------|---------|----------------------------|

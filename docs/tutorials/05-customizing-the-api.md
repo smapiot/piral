@@ -8,7 +8,7 @@ section: Details
 
 # Customizing the Pilet API
 
-Turning back to the Piral instance we can determine how the Pilet API looks like. By default, the Pilet API is already extensive and well-suited for many use cases. Nevertheless, we may need to add another useful API to give our pilets the right set of capabilities.
+Turning back to the Piral instance we can determine what the Pilet API looks like. By default, the Pilet API is already extensive and well-suited for many use cases. Nevertheless, we may need to add another useful API to give our pilets the right set of capabilities.
 
 ## Video
 
@@ -90,7 +90,7 @@ interface PiralPlugin<T = Partial<PiletApi>> {
 }
 ```
 
-An example for such a function may be the following:
+An example of such a function may be the following:
 
 ```ts
 interface TrackingConfig {}
@@ -128,7 +128,7 @@ function createTrackingApi() {
 }
 ```
 
-The configuration has been left out for brevity, but we recommend to always have a `config` predefined, even though no options are available (yet).
+The configuration has been left out for brevity, but we recommend always having a `config` predefined, even though no options are available (yet).
 
 It could be used in the configuration by referencing the function in the array:
 
@@ -140,7 +140,7 @@ There are many plugins for Piral that extend the Pilet API.
 
 ## Using Piral Plugins
 
-As an example, consider that you already wrote plenty of components in Vue. How useful would it be to also support writing pilets with Vue? Luckily, there is the `piral-vue` package, which is a plugin for Piral that extends the Pilet API with Vue specific (or enabling) functionality.
+As an example, consider that you already wrote plenty of components in Vue. How useful would it be to also support writing pilets with Vue? Luckily, there is the `piral-vue` package, which is a plugin for Piral that extends the Pilet API with Vue-specific (or enabling) functionality.
 
 In the command-line we need to install the plugin first:
 

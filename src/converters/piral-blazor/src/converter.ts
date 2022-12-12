@@ -1,6 +1,6 @@
 import type { BaseComponentProps, Disposable, ForeignComponent } from 'piral-core';
 import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
-import { activate, deactivate, createBootLoader, reactivate, callNotifyLocationChanged } from './interop';
+import { activate, deactivate, createBootLoader, reactivate, callNotifyLocationChanged, createElement, destroyElement, updateElement } from './interop';
 import { BlazorDependencyLoader, BlazorOptions, BlazorRootConfig } from './types';
 import bootConfig from '../infra.codegen';
 
@@ -40,11 +40,10 @@ function makeUrl(href: string) {
 }
 
 interface BlazorLocals {
-  id: string;
-  referenceId: string;
-  node: HTMLElement;
+  unmount?(): void;
+  update?(props: any): void;
   dispose(): void;
-  update(config: BlazorRootConfig): void;
+  next(config: BlazorRootConfig): void;
   state: 'fresh' | 'mounted' | 'removed';
 }
 
@@ -54,10 +53,12 @@ export function createConverter(lazy: boolean) {
   let listener: Disposable = undefined;
 
   const enqueueChange = (locals: BlazorLocals, update: (root: BlazorRootConfig) => void) => {
-    if (locals.state === 'mounted') {
+    if (typeof update !== 'function') {
+      // nothing to do in this case
+    } else if (locals.state === 'mounted') {
       loader.then(update);
     } else {
-      locals.update = update;
+      locals.next = update;
     }
   };
 
@@ -85,51 +86,77 @@ export function createConverter(lazy: boolean) {
       }
 
       locals.state = 'fresh';
-      locals.update = noop;
+      locals.next = noop;
       locals.dispose = attachEvents(
-        el,
-        (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-        (ev) =>
-          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.store) : nav.push(ev.detail.to, ev.detail.state),
-      );
+          el,
+          (ev) => data.piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
+          (ev) =>
+            ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.store) : nav.push(ev.detail.to, ev.detail.state),
+        );
+
+      function mountClassic(config: BlazorRootConfig) {
+        return activate(moduleName, props).then((refId) => {
+          const [root] = config;
+          const node = root.querySelector(`#${refId} > div`);
+
+          locals.unmount = () => {
+            root.querySelector(`#${refId}`)?.appendChild(node);
+            deactivate(moduleName, refId);
+            el.innerHTML = '';
+          };
+
+          locals.update = (props) => {
+            reactivate(moduleName, refId, props);
+          };
+
+          project(node, el, options);
+        });
+      }
+
+      function mountModern(_: BlazorRootConfig) {
+        return createElement(moduleName, props).then((refId) => {
+          const child = document.createElement('piral-blazor-component');
+          child.setAttribute('rid', refId);
+          el.appendChild(child);
+
+          locals.unmount = () => {
+            destroyElement(refId);
+            child.remove();
+            el.innerHTML = '';
+          };
+
+          locals.update = (props) => {
+            updateElement(refId, props);
+          };
+        });
+      }
 
       (loader || (loader = boot()))
         .then((config) =>
-          dependency(config)
-            .then(() => activate(moduleName, props))
-            .then((refId) => {
-              const [root] = config;
-
-              if (locals.state === 'fresh') {
-                locals.id = refId;
-                locals.node = root.querySelector(`#${locals.id} > div`);
-                project(locals.node, el, options);
+          dependency(config).then(() => {
+            if (locals.state === 'fresh') {
+              const [_, capabilities] = config;
+              const fn = capabilities.includes('custom-element') ? mountModern : mountClassic;
+              return fn(config).then(() => {
                 locals.state = 'mounted';
-                locals.referenceId = refId;
-                locals.update(config);
-                locals.update = noop;
-              }
-            }),
+                locals.next(config);
+                locals.next = noop;
+              });
+            }
+          }),
         )
         .catch((err) => console.error(err));
     },
     update(el, data, ctx, locals: BlazorLocals) {
       enqueueChange(locals, () => {
-        const props = { ...args, ...data };
-        reactivate(moduleName, locals.referenceId, props);
+        locals.update?.({ ...args, ...data });
       });
     },
     unmount(el, locals: BlazorLocals) {
       removeGlobalEventListeners(el);
       el.removeAttribute('data-blazor-pilet-root');
       locals.dispose();
-
-      enqueueChange(locals, ([root]) => {
-        root.querySelector(`#${locals.id}`)?.appendChild(locals.node);
-        deactivate(moduleName, locals.referenceId);
-        el.innerHTML = '';
-      });
-
+      enqueueChange(locals, locals.unmount);
       locals.state = 'removed';
     },
   });

@@ -37,6 +37,6 @@ For more information, see the `CONTRIBUTING` guide.
 
 [What actually happened]
 
-## Possible Origin / Solution
+## Possible Origin/Solution
 
 [Optionally, share your idea to fix the issue]

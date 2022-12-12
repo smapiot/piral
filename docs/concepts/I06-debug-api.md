@@ -8,7 +8,7 @@ section: Internals
 
 The package `piral-debug-utils` is connecting a Piral instance to other tools such as the [Piral Inspector](https://github.com/smapiot/piral-inspector) which is a browser extension available for [Chrome](https://chrome.google.com/webstore/detail/piral-inspector/ikbpelpjfgmplidagknaaegjhfigcbfl?hl=en), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/piral-inspector/), [Edge](https://microsoftedge.microsoft.com/addons/detail/piral-inspector/hbdhpkhidilkmkbkklcbjgddbeodibml), and [Opera](https://addons.opera.com/en/extensions/details/piral-inspector/).
 
-You can also either place your own tooling on top of `piral-debug-utils` or create a web app where tools such as Piral Inspector could connect to. In this chapter we'll discuss the **producer** (e.g., `piral-debug-utils`) and **consumer** (e.g., Piral Inspector) side's of the debug API.
+You can also either place your own tooling on top of `piral-debug-utils` or create a web app to which tools such as Piral Inspector could connect. In this chapter, we'll discuss the **producer** (e.g., `piral-debug-utils`) and **consumer** (e.g., Piral Inspector) side of the debug API.
 
 ## Producer API
 
@@ -40,11 +40,11 @@ interface DebuggerOptions {
 }
 ```
 
-The `customSettings` can be used to bring additional settings to the debug utilities. In the Piral Inspector they are shown in the settings menu.
+The `customSettings` can be used to bring additional settings to the debug utilities. In the Piral Inspector, they are shown in the settings menu.
 
 The `integrate` function will be used to bring additional components relevant for debugging into the Piral Instance. The `piral-debug-utils` will register different components here, which are used to get notified in case of changes to the state container, to the current route, or bring up additional possibilities such as the extension catalogue.
 
-The `addPilet`, `removePilet`, and `updatePilet` functions are used to add, remove, or update a micro frontend. This is the Piral Inspector's way of actually adding more pilets (e.g., by giving it a feed URL), completely removing a pilet, or toggling (enabling / disabling) it.
+The `addPilet`, `removePilet`, and `updatePilet` functions are used to add, remove, or update a micro frontend. This is the Piral Inspector's way of actually adding more pilets (e.g., by giving it a feed URL), completely removing a pilet, or toggling (enabling/disabling) it.
 
 All other functions are used to retrieve parts of the current Piral instance state, e.g., `getDependencies` is used to get the list of the centrally shared dependencies.
 
@@ -146,7 +146,7 @@ interface CheckPiralDebugEventContent {
 }
 ```
 
-Data can also be send in the other direction, which is called a command.
+Data can also be sent in the other direction, which is called a command.
 
 ```ts
 type DebugCommand =
@@ -255,4 +255,4 @@ interface DependencyMapDebugCommand {
 }
 ```
 
-With these in mind the debug API is fully specified.
+With these in mind, the debug API is fully specified.

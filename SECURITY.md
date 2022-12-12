@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-If you find a vulnerability use the [GitHub issue tracker](https://github.com/smapiot/piral/issues) to inform us quickly.
+If you find a vulnerability, use the [GitHub issue tracker](https://github.com/smapiot/piral/issues) to inform us quickly.
 
 Security critical bugs get the highest possible priority and should be released within some hours (business days) to at most a day (weekends).
 

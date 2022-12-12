@@ -94,6 +94,18 @@ function addScript(url: string) {
   });
 }
 
+export function createElement(moduleName: string, props: any): Promise<string> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'CreateElement', moduleName, props);
+}
+
+export function updateElement(referenceId: string, props: any): Promise<string> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'UpdateElement', referenceId, props);
+}
+
+export function destroyElement(referenceId: string): Promise<string> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'DestroyElement', referenceId);
+}
+
 export function activate(moduleName: string, props: any): Promise<string> {
   return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, props);
 }

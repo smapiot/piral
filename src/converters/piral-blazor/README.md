@@ -67,8 +67,8 @@ Blazor with Piral works from two sides. We have the app shell's side and the sid
 The diagram has the following pieces:
 
 1. Your app shell using `piral`, which needs to reference the `piral-blazor` plugin. Effectively, this will use the `blazor` package at build-time to include the Blazor libraries. Additionally, it uses `Piral.Blazor.Core` to be able to reference the defined Blazor components.
-2. The TypeScript file in your Blazor pilets. That file will export the `setup` function to define which Blazor components to register / use in your app shell.
-3. The Blazor code in your Blazor pilets using the shared library `Piral.Blazor.Utils` for some convenience functions. This code will define all the Blazor components that can be registered / used in the pilet.
+2. The TypeScript file in your Blazor pilets. That file will export the `setup` function to define which Blazor components to register/use in your app shell.
+3. The Blazor code in your Blazor pilets using the shared library `Piral.Blazor.Utils` for some convenience functions. This code will define all the Blazor components that can be registered/used in the pilet.
 
 Naturally, you can add other dependencies to your Blazor pilet, too. These can be other npm packages for extending the JS part. Usually, however, you will add more NuGet packages to enhance your Blazor code.
 
@@ -82,7 +82,7 @@ The following functions are brought to the Pilet API.
 
 Adds the URLs to additional DLLs that need to be referenced for obtaining the Blazor components. At best this uses `require.resolve` to get the URL from the bundler.
 
-When you use the `blazorpilet` template you don't need to fill / use this. It is automatically used and filled with generated code. Only touch this one if you know what you are doing.
+When you use the `blazorpilet` template you don't need to fill/use this. It is automatically used and filled with generated code. Only touch this one if you know what you are doing.
 
 ### `fromBlazor()`
 
@@ -133,7 +133,7 @@ export function setup(piral: PiletApi) {
 
 In this case, you'll also have to install the `blazor` package. `piral-blazor` will use this under the hood to access the Blazor libraries.
 
-To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g. `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
+To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g., `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
 
 :::
 
@@ -156,7 +156,7 @@ const instance = createInstance({
 ```
 `piral-blazor` will use `blazor` under the hood to access the Blazor libraries.
 
-To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g. `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
+To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g., `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
 
 :::
 

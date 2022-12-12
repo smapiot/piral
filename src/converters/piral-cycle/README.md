@@ -37,7 +37,7 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-Piral provides two drivers to your Cycle.js component. Here, `TProps` are properties provided by Piral, e.g. `TileComponentProps`.
+Piral provides two drivers to your Cycle.js component. Here, `TProps` are properties provided by Piral, e.g., `TileComponentProps`.
 
 ```ts
 export interface PiralDomDrivers<TProps> extends Drivers {
