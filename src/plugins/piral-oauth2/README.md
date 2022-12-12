@@ -39,7 +39,7 @@ export async function setup(piral: PiletApi) {
 }
 ```
 
-Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
+Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect/reloading of the page).
 
 :::
 

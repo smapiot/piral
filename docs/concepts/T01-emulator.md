@@ -71,7 +71,7 @@ Extending this is possible, too. The first step is to reference additional `typi
 }
 ```
 
-If, for some reason, you cannot use the `typings` field you can use the artificial / non-official `extraTypes` field, too:
+If, for some reason, you cannot use the `typings` field you can use the artificial/non-official `extraTypes` field, too:
 
 ```json
 {

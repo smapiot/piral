@@ -6,7 +6,7 @@ A set of hooks and HOCs for pilets and Piral instances.
 
 ## Installation
 
-This should only be installed as a dependency (`dependencies`) as it is only designed mostly for runtime / consumption by Piral or pilets. You could also share it explicitly or implicitly from your Piral instance if you'd like to optimize usage in your pilets. It's not required though as the code provided by it is minimal and tree-shakable.
+This should only be installed as a dependency (`dependencies`) as it is only designed mostly for runtime/consumption by Piral or pilets. You could also share it explicitly or implicitly from your Piral instance if you'd like to optimize usage in your pilets. It's not required though as the code provided by it is minimal and tree-shakable.
 
 If you'd love to use yarn:
 

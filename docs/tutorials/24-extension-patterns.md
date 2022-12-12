@@ -127,7 +127,7 @@ where micro frontend B registers an extension like:
 api.registerExtension('machine-actions', ({ params }) => {
   const { id } = params;
 
-  // check if the given data has an id field as we assume / require
+  // check if the given data has an id field as we assume/require
   if (typeof id !== 'string') {
     return null;
   }

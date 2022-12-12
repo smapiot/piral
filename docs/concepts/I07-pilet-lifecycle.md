@@ -17,7 +17,7 @@ A pilet's lifecycle exists in two different categories:
 
 The offline lifecycle consists of
 
-1. Initialization / Scaffolding
+1. Initialization/Scaffolding
 2. Development & Testing
 3. Publishing
 4. Maintenance

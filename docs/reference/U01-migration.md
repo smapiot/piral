@@ -126,7 +126,7 @@ const instance = createInstance({
       .then((res) => res.json())
       .then((res) => res.items);
   },
-  state: { // important to register the layout / error components immediately
+  state: { // important to register the layout/error components immediately
     components: layout,
     errorComponents: errors,
   },

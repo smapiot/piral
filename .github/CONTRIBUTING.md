@@ -56,12 +56,12 @@ The **documentation** branch is used for updates and fixes to the currently live
 
 The following table gives an overview:
 
-| Branch Name   | Builds Documentation | NPM Release / Tag | Version Suffix |
-| ------------- | -------------------- | ----------------- | -------------- |
-| main          | yes (indirectly)     | latest            | (none)         |
-| develop       | no                   | next              | beta           |
-| experimental  | no                   | canary            | alpha          |
-| documentation | yes                  | (none)            | (none)         |
+| Branch Name   | Builds Documentation | NPM Release/Tag | Version Suffix |
+| ------------- | -------------------- | --------------- | -------------- |
+| main          | yes (indirectly)     | latest          | (none)         |
+| develop       | no                   | next            | beta           |
+| experimental  | no                   | canary          | alpha          |
+| documentation | yes                  | (none)          | (none)         |
 
 If you don't know what to do - use `develop` as a target for pull requests.
 
@@ -85,7 +85,7 @@ Naming convention:
 
 #### Creating a Hotfix Branch
 
-Create a branch **from** `main` which must merge back **into** either `main` and / or `develop`. While a *real* hotfix will apply to both immediately, a simple fix will just be applied to `develop`.
+Create a branch **from** `main` which must merge back **into** either `main` and/or `develop`. While a *real* hotfix will apply to both immediately, a simple fix will just be applied to `develop`.
 
 Naming convention:
 

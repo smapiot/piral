@@ -23,7 +23,7 @@ The following table compares the three from an out-of-the-box feature perspectiv
 | Error Handling   | ️️️✔️    | ️️️✔️     | ✔️    |
 | Error Display    | ️️️❌    | ️️️✔️     | ✔️    |
 | Global State     | ️️️❌    | ️️️✔️     | ✔️    |
-| Pages / Routing  | ️️️❌    | ️️️✔️     | ✔️    |
+| Pages/Routing    | ️️️❌    | ️️️✔️     | ✔️    |
 | Extension API    | ️️️❌    | ️️️✔️     | ✔️    |
 | Shared Data API  | ️️️❌    | ️️️✔️     | ✔️    |
 | Dashboard        | ️️️❌    | ️️️❌    | ✔️    |

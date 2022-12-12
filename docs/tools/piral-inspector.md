@@ -23,7 +23,7 @@ We provide the Piral Inspector as an extension for the following browsers:
 - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/piral-inspector/) (>= v50)
 - [Opera](https://addons.opera.com/en/extensions/details/piral-inspector/) (>= v50)
 
-## Installation of Add-On / Extension
+## Installation of Add-On/Extension
 
 ::: summary: Firefox
 

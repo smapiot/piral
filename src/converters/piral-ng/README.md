@@ -14,7 +14,7 @@ The following functions are brought to the Pilet API.
 
 ### `defineNgModule()`
 
-Communicates the usage of a pre-defined Angular module to Piral. Components declared / exported in the module will be bootstrapped within this module.
+Communicates the usage of a pre-defined Angular module to Piral. Components declared/exported in the module will be bootstrapped within this module.
 
 ### `fromNg()`
 
@@ -288,7 +288,7 @@ module.exports = (config) => {
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular 2+.
 
-The following polyfills / vendor libs should be imported *before* any other package.
+The following polyfills/vendor libs should be imported *before* any other package.
 
 ```ts
 import 'core-js/es/reflect';

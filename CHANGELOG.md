@@ -148,7 +148,7 @@
 
 - Updated dependencies
 - Fixed issue with `pilet build` of `--type standalone` when using importmap
-- Added `CUSTOM_ELEMENTS_SCHEMA` to default / fallback module in `piral-ng`
+- Added `CUSTOM_ELEMENTS_SCHEMA` to default/fallback module in `piral-ng`
 - Added automatic module cleanup on pilet teardown
 
 ## 0.14.19 (March 20, 2022)
@@ -782,7 +782,7 @@
 
 - Fixed bug in Piral CLI preventing to reference external resources
 - Fixed bug in Piral CLI that prevented immediate exit
-- Improved the `createPiral` function signature / behavior
+- Improved the `createPiral` function signature/behavior
 - Added `SetRedirect` component for declaring redirects
 
 ## 0.8.1 (October 23, 2019)

@@ -83,7 +83,7 @@ You can still create emulator packages of your app shell, which can be shipped t
 
 This can always be. We ship a module `piral/polyfills` that should bring compatibility even in IE11, however, this also makes some assumptions.
 
-While syntax constructs (e.g., `async` / `await`) should be transpiled fine, they sometimes depend also on runtime capabilities (e.g., `regenerator-runtime`). The `piral/polyfills` module delivers some helpers here, however, especially for API calls, there may be no delivered polyfill.
+While syntax constructs (e.g., `async`/`await`) should be transpiled fine, they sometimes depend also on runtime capabilities (e.g., `regenerator-runtime`). The `piral/polyfills` module delivers some helpers here, however, especially for API calls, there may be no delivered polyfill.
 
 In such cases please find out what you use and which polyfill (additionally to `piral/polyfills`) is required.
 
@@ -104,7 +104,7 @@ The debug server middleware `kras` can be configured freely. One option is to us
 }
 ```
 
-This example uses `kras`'s default certificate. It will / should not be trusted on your machine. You can also create your own (or use your own) trusted certificates. In this case, just set the given paths accordingly.
+This example uses `kras`'s default certificate. It will/should not be trusted on your machine. You can also create your own (or use your own) trusted certificates. In this case, just set the given paths accordingly.
 
 ---------------------------------------
 

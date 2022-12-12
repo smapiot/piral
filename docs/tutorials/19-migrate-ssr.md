@@ -78,7 +78,7 @@ Even with CORS active, you may not be happy at this point. There are two main re
 1. The page is rather static. If something only worked by using some JavaScript it is now broken.
 2. The fragment may depend on some CSS style that is not there.
 
-For the first point, some techniques may help. Of course, we can get the inserted `<script>` elements and re-add them explicitly (instead of the `innerHTML` way, which is used implicitly above). Alternatively, we "re-program" / port them in JS already. The latter is preferred in an ongoing migration, while the former is better in workaround scenarios, where the backend may still change.
+For the first point, some techniques may help. Of course, we can get the inserted `<script>` elements and re-add them explicitly (instead of the `innerHTML` way, which is used implicitly above). Alternatively, we "re-program"/port them in JS already. The latter is preferred in an ongoing migration, while the former is better in workaround scenarios, where the backend may still change.
 
 The second point can be solved similarly. Best case, the stylesheet is just referenced. For instance,
 

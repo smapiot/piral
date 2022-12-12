@@ -38,7 +38,7 @@ async function sendIndex(_: express.Request, res: express.Response) {
 }
 ```
 
-**Remark**: Use, e.g., the incoming request for retrieving custom pilet metadata responses (e.g., using feature flags). Otherwise, fully cache the response. Pilets can / should be cached in any case.
+**Remark**: Use, e.g., the incoming request for retrieving custom pilet metadata responses (e.g., using feature flags). Otherwise, fully cache the response. Pilets can/should be cached in any case.
 
 The provided snippet assumes that `readRemoteText` and `readRemoteJson` trigger an HTTP request with the method of your choice. While the former just returns the content of the response, the latter already parses the response body's JSON.
 

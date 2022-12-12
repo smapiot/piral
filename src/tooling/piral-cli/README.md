@@ -21,7 +21,7 @@ Right now the following generic plugins exist:
 - [**piral-cli-local-feed**](https://github.com/FlorianRappl/piral-cli-local-feed), provides the ability to start a local feed service
 - [**piral-cli-dotenv**](https://github.com/FlorianRappl/piral-cli-dotenv), provides the ability to easily integrate environment variables
 
-Also the following bundler plugin exists (bringing build / debug capabilities):
+Also the following bundler plugin exists (bringing build/debug capabilities):
 
 - [**piral-cli-parcel**](https://github.com/smapiot/piral-cli-parcel), provides an integration for Parcel (v1) as a bundler
 - [**piral-cli-parcel2**](https://github.com/smapiot/piral-cli-parcel2), provides an integration for Parcel (v2) as a bundler
@@ -77,7 +77,7 @@ module.exports = function (cliApi) {
 
 The resolution for plugins is as follows:
 
-1. Take the plugins from the local project (`piral-cli` must be installed / run locally)
+1. Take the plugins from the local project (`piral-cli` must be installed/run locally)
 2. Take the plugins from the global modules
 
 Plugins are never loaded twice. Local versions have precedence.

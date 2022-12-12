@@ -53,7 +53,7 @@ You can read more about shared dependencies in [the sharing dependencies tutoria
 
 ## Using the Global Data State
 
-We can also use the global state for sharing information. However, since pilets have no direct access to the global data store we need to choose a proper location first. One possibility is to use the `data` section, which is already exposed via the `getData` / `setData` Pilet APIs.
+We can also use the global state for sharing information. However, since pilets have no direct access to the global data store we need to choose a proper location first. One possibility is to use the `data` section, which is already exposed via the `getData`/`setData` Pilet APIs.
 
 This reduces the effort to set the data state. We have a couple of options.
 
@@ -111,7 +111,7 @@ The best way to share functions (or information in general) is to provide an API
 There are several reasons:
 
 - An API is well defined
-- An API is visible / strongly typed
+- An API is visible/strongly typed
 - An API can be customized *per* pilet
 - APIs are protected and cannot be changed
 

@@ -43,7 +43,7 @@ export async function setup(piral: PiletApi) {
 }
 ```
 
-Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect / reloading of the page).
+Note that this value may change if the Piral instance supports an "on the fly" login (i.e., a login without redirect/reloading of the page).
 
 If you need to use claims from the authentication:
 
@@ -52,7 +52,7 @@ import { PiletApi } from '<name-of-piral-instance>';
 
 export async function setup(piral: PiletApi) {
     const userClaims = await piral.getProfile();
-    // consume profile / claims information
+    // consume profile/claims information
 }
 ```
 

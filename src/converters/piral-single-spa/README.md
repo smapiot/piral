@@ -14,7 +14,7 @@ The following functions are brought to the Pilet API.
 
 ### `fromSingleSpa()`
 
-Transforms a standard single-spa component / microfrontend into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
+Transforms a standard single-spa component/microfrontend into a component that can be used in Piral, essentially wrapping it with a reference to the corresponding converter.
 
 ## Usage
 

@@ -8,7 +8,7 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-no
 
 Quite often you'll want to show notifications (such as errors, special events, information material, etc.) in a non-obtrusive toast notification (or some other way). The `piral-notifications` plugin helps you to do exactly that. It provides a simple component that you can place in your layout. Together with your styling rules the notifications are then managed by the plugin. Each pilet can open as many notifications as it wants. Notifications may decay over time or stay on the screen until closed.
 
-Alternatives: Browsers also allow to use the system's native notification API. This usually comes with the service worker / PWA modes, but could be used by pilets, too. Another way is to leave every pilet at defining its own notification system.
+Alternatives: Browsers also allow to use the system's native notification API. This usually comes with the service worker/PWA modes, but could be used by pilets, too. Another way is to leave every pilet at defining its own notification system.
 
 ## Video
 

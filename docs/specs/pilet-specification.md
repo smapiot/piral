@@ -10,7 +10,7 @@ A pilet is a small module that delivers additional functionality to a Piral inst
 
 ## Introduction
 
-A Piral instance alone only provides the shell for dynamically integrated modules called *pilets*. A pilet should be rather small and as atomic as possible. It could be bound to perform a certain task and / or to be delivered to certain users only.
+A Piral instance alone only provides the shell for dynamically integrated modules called *pilets*. A pilet should be rather small and as atomic as possible. It could be bound to perform a certain task and/or to be delivered to certain users only.
 
 At its core, a pilet is just a JavaScript library that exports at least a single function that is used by a Piral instance. This allows the pilet to integrate the provided functionality when called by the Piral instance.
 

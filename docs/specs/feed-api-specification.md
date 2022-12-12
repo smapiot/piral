@@ -34,7 +34,7 @@ Implementations that are Piral conform must implement at least the core API desi
 
 ### Publishing Pilets (Service Facing)
 
-A pilet feed service must provide an endpoint for publishing a pilet. By default, `/api/v1/pilet` is used. However, the exact path can be also adjusted as required to fit into an existing API / endpoint design.
+A pilet feed service must provide an endpoint for publishing a pilet. By default, `/api/v1/pilet` is used. However, the exact path can be also adjusted as required to fit into an existing API/endpoint design.
 
 #### Endpoint
 
@@ -206,7 +206,7 @@ interface AuthApiResponse {
 }
 ```
 
-The `loginUrl` should be opened in the browser by the user. The `callbackUrl` should be used by the client. The former represents the entry point to actually perform the login / obtain the credentials, while the latter can be used to get notified when the user successfully completed the login. The latter *should* be suitable to be used with long polling, otherwise, it will be pinged until the user aborts or the `expires` is reached.
+The `loginUrl` should be opened in the browser by the user. The `callbackUrl` should be used by the client. The former represents the entry point to actually perform the login/obtain the credentials, while the latter can be used to get notified when the user successfully completed the login. The latter *should* be suitable to be used with long polling, otherwise, it will be pinged until the user aborts or the `expires` is reached.
 
 Both URLs should be GET endpoints.
 
@@ -247,7 +247,7 @@ The only requirement for finishing the flow is that once the user successfully l
 
 Working feed service implementations exist and can be viewed online.
 
-Full list of known (sample / open-source) implementations:
+Full list of known (sample/open-source) implementations:
 
 - [Node.js implementation](https://github.com/smapiot/sample-pilet-service) by [Florian Rappl](https://github.com/FlorianRappl)
 - [Java implementation](https://github.com/scarrozzo/sample-pilet-service) by [Sergio Carrozzo](https://github.com/scarrozzo)
