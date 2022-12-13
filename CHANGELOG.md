@@ -4,6 +4,7 @@
 
 - Added support for Blazor custom elements in `piral-blazor`
 - Added support for Blazor hot reload in `piral-blazor`
+- Added support for custom emulator startup scripts
 
 ## 0.15.2 (December 5, 2022)
 
