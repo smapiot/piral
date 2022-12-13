@@ -244,6 +244,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-cross/emulator
+
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
@@ -295,6 +297,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-full/emulator
+
                 yarn build:demo-full --type emulator
 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
@@ -346,6 +350,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-minimal/emulator
+
                 yarn build:demo-minimal --type emulator
 
                 mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
@@ -397,6 +403,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-empty/emulator
+
                 yarn build:demo-empty --type emulator
 
                 mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
@@ -523,6 +531,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-cross/emulator
+
                 yarn build:demo-cross --type emulator
 
                 mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
@@ -574,6 +584,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-full/emulator
+
                 yarn build:demo-full --type emulator
 
                 mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
@@ -625,6 +637,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-minimal/emulator
+
                 yarn build:demo-minimal --type emulator
 
                 mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
@@ -676,6 +690,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/demo-empty/emulator
+
                 yarn build:demo-empty --type emulator
 
                 mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
@@ -727,6 +743,8 @@ stages:
             inputs:
               targetType: inline
               script: >-
+                rm -rf dist/siteless/emulator
+
                 yarn build:siteless
 
                 mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
