@@ -1,5 +1,5 @@
 function changePlugin(config, classRef, cb) {
-  config.module.plugins = config.module.plugins
+  config.plugins = config.plugins
     .map((plugin) => {
       if (plugin instanceof classRef) {
         if (typeof cb === 'function') {
@@ -154,7 +154,12 @@ module.exports = function (override) {
       }
 
       if ('rules' in override && Array.isArray(override.rules)) {
-        config.module.rules.unshift(...override.rules);
+        for (const rule of config.module.rules) {
+          if (Array.isArray(rule.oneOf)) {
+            rule.oneOf.unshift(...override.rules);
+            break;
+          }
+        }
       }
 
       if ('updatePlugins' in override && Array.isArray(override.updatePlugins)) {

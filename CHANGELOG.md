@@ -5,6 +5,7 @@
 - Added support for Blazor custom elements in `piral-blazor`
 - Added support for Blazor hot reload in `piral-blazor`
 - Fixed finding specific package versions using npm 8+ in `piral-cli`
+- Fixed issue with `piral-cli-webpack5/extend-config` when adding rules
 
 ## 0.15.2 (December 5, 2022)
 
