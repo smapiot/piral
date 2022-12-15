@@ -13,8 +13,6 @@ function copyFileSync(source, target) {
 }
 
 function copyFolderRecursiveSync(source, target) {
-  let files = [];
-
   // Check if folder needs to be created or integrated
   const targetFolder = join(target, basename(source));
 
@@ -22,16 +20,21 @@ function copyFolderRecursiveSync(source, target) {
     fs.mkdirSync(targetFolder);
   }
 
+  copyContentRecursiveSync(source, targetFolder);
+}
+
+function copyContentRecursiveSync(source, target) {
   // Copy
   if (fs.lstatSync(source).isDirectory()) {
-    files = fs.readdirSync(source);
+    const files = fs.readdirSync(source);
+
     files.forEach((file) => {
       const curSource = join(source, file);
 
       if (fs.lstatSync(curSource).isDirectory()) {
-        copyFolderRecursiveSync(curSource, targetFolder);
+        copyFolderRecursiveSync(curSource, target);
       } else {
-        copyFileSync(curSource, targetFolder);
+        copyFileSync(curSource, target);
       }
     });
   }
@@ -47,8 +50,7 @@ module.exports = function () {
     const releaseType = process.env.NODE_ENV === 'production' ? 'release' : 'debug';
     const { blazorConfig = {} } = require(blazorPackagePath);
     const blazorBaseDir = resolve(dirname(blazorPackagePath), releaseType);
-    const frameworkDir = resolve(blazorBaseDir, 'wwwroot', '_framework');
-    const renderMode = blazorConfig.renderMode || 'projection';
+    const wwwRootDir = resolve(blazorBaseDir, 'wwwroot');
     const noMutation = blazorConfig.noMutation || false;
     const satellites = blazorConfig.satellites || [];
     const url = blazorConfig.url || '_framework/blazor.webassembly.js';
@@ -56,10 +58,9 @@ module.exports = function () {
       url,
       satellites,
       noMutation,
-      renderMode,
     };
 
-    copyFolderRecursiveSync(frameworkDir, outDir);
+    copyContentRecursiveSync(wwwRootDir, outDir);
 
     return `export default (${JSON.stringify(bootConfig)});`;
   } catch (err) {
