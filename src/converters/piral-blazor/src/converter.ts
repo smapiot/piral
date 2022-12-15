@@ -10,7 +10,7 @@ import {
   destroyElement,
   updateElement,
 } from './interop';
-import { BlazorDependencyLoader, BlazorOptions, BlazorRootConfig } from './types';
+import { BlazorDependencyLoader, BlazorOptions, BlazorRootConfig, WebAssemblyStartOptions } from './types';
 import bootConfig from '../infra.codegen';
 
 const noop = () => {};
@@ -56,9 +56,9 @@ interface BlazorLocals {
   state: 'fresh' | 'mounted' | 'removed';
 }
 
-export function createConverter(lazy: boolean) {
+export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions) {
   const boot = createBootLoader(bootConfig.url, bootConfig.satellites);
-  let loader = !lazy && boot();
+  let loader = !lazy && boot(opts);
   let listener: Disposable = undefined;
 
   const enqueueChange = (locals: BlazorLocals, update: (root: BlazorRootConfig) => void) => {

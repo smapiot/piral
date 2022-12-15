@@ -1,7 +1,7 @@
 import type { PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { createDependencyLoader } from './dependencies';
-import type { BlazorOptions, PiletBlazorApi } from './types';
+import type { BlazorOptions, PiletBlazorApi, WebAssemblyStartOptions } from './types';
 
 /**
  * Available configuration options for the Blazor plugin.
@@ -12,6 +12,10 @@ export interface BlazorConfig {
    * @default true
    */
   lazy?: boolean;
+  /**
+   * Determines the start options to use for booting Blazor.
+   */
+  options?: WebAssemblyStartOptions;
 }
 
 /**
@@ -21,7 +25,7 @@ export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBla
   const { lazy } = config;
 
   return (context) => {
-    const convert = createConverter(lazy);
+    const convert = createConverter(lazy, config.options);
     context.converters.blazor = ({ moduleName, args, dependency, options }) =>
       convert(moduleName, dependency, args, options);
 

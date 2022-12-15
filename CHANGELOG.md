@@ -8,6 +8,7 @@
 - Added `debugTools` config in *piral.json* to include debug tooling in release builds
 - Fixed finding specific package versions using npm 8+ in `piral-cli`
 - Fixed issue with `piral-cli-webpack5/extend-config` when adding rules
+- Fixed CORS issue loading *boot.config.json* in `piral-blazor` (#568)
 
 ## 0.15.2 (December 5, 2022)
 
