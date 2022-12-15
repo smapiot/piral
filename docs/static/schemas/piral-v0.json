@@ -6,6 +6,11 @@
   "type": "object",
   "required": [],
   "properties": {
+    "debugTools": {
+      "type": "boolean",
+      "description": "Always includes the debug tools - not only in the emulator.",
+      "default": false
+    },
     "pilets": {
       "type": "object",
       "description": "Determines the scaffolding and upgrading behavior of pilets using this Piral instance.",

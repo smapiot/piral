@@ -1,15 +1,26 @@
 const cg = require('./dist/codegen');
 
+function getConfig(root) {
+  try {
+    return require(`${root}/piral.json`);
+  } catch {
+    return {};
+  }
+}
+
 module.exports = function () {
   const exports = [];
   const imports = [];
+  const root = process.cwd();
+  const cfg = getConfig(root);
+  const debug = typeof cfg.debugTools === 'boolean' ? cfg.debugTools : !!process.env.DEBUG_PIRAL;
   const opts = {
-    root: process.cwd(),
+    root,
     cat: process.env.NODE_ENV === 'test' ? 'src' : '_',
     appName: process.env.BUILD_PCKG_NAME || '',
     externals: (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean),
     publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
-    debug: !!process.env.DEBUG_PIRAL,
+    debug,
     emulator: !!process.env.DEBUG_PILET,
   };
 

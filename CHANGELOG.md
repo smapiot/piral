@@ -5,6 +5,7 @@
 - Added support for Blazor custom elements in `piral-blazor`
 - Added support for Blazor hot reload in `piral-blazor`
 - Added support for custom emulator startup scripts
+- Added `debugTools` config in *piral.json* to include debug tooling in release builds
 - Fixed finding specific package versions using npm 8+ in `piral-cli`
 - Fixed issue with `piral-cli-webpack5/extend-config` when adding rules
 
