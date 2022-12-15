@@ -28,7 +28,7 @@ A shared package is already bundled into the app shell and therefore does not ne
 A shared package makes sense when multiple pilets would need to access it anyway.
 :::
 
-To automatically share a package the `package.json` of the Piral instance needs to be changed. Using the `externals` field in the `pilets` section we can just add the package.
+To automatically share a package the `package.json` of the Piral instance needs to be changed. Using the `imports` field in the `importmap` section we can just add the package.
 
 ```json
 {
@@ -37,15 +37,27 @@ To automatically share a package the `package.json` of the Piral instance needs 
     "reactstrap": "latest",
     // ...
   },
-  "pilets": {
-    "externals": [
-      "reactstrap"
-    ],
+  "importmap": {
+    "imports": {
+      "reactstrap": "reactstrap"
+    }
   }
 }
 ```
 
 **Note**: Don't forget to add the dependency also to the `dependencies` section.
+
+If the shared package name (key, `reactstrap`) is the same as the used local package (value, `reactstrap`, too, in this case) you could also use an empty string or just a dot, e.g.:
+
+```json
+{
+  "importmap": {
+    "imports": {
+      "reactstrap": "."
+    }
+  }
+}
+```
 
 This way is our recommendation for core libraries (e.g., `react`, `react-dom`, ...) and component libraries such as the primary pattern library. It can, however, also be used for utility libraries (e.g., `lodash`) or other useful libraries.
 

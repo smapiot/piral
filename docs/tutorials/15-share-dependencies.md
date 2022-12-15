@@ -12,37 +12,55 @@ Sharing dependencies is one of the selling points of Piral. The key, however, is
 
 Our recommendation is to keep the sharing of dependencies from the app shell as practical as possible.
 
-## Implicit Sharing from the App Shell
+## Declarative Sharing from the App Shell
 
-The easiest way to share dependencies from the app shell is to declare them in the `externals` section of the *package.json*.
+The easiest way to share dependencies from the app shell is to declare them in the `importmap` section of the *package.json*.
 
 For instance, if we want to share the `reactstrap` dependency we can place the following snippet in the app shell's *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "reactstrap"
-    ],
+  "importmap": {
+    "imports": {
+      "reactstrap": "."
+    }
   },
   // ...
 }
 ```
 
-Besides the dependencies that are specified in the `externals` list of the *package.json* the following dependencies are anyway always added:
+Besides the dependencies that are specified in the `imports` object of the `importmap` you can also inherit importmaps from other packages using `inherit`. For instance, using
 
-- `react`
-- `react-dom`
-- `react-router`
-- `react-router-dom`
-- `history`
-- `tslib`
+```json
+{
+  "importmap": {
+    "inherit": [
+      "piral-base"
+    ]
+  },
+  // ...
+}
+```
 
-These are dependencies that are coming directly or indirectly from `piral-core`. Any other dependency needs to be added to the `externals` list above.
+you get automatically `tslib` as a shared dependency. If you would also add `piral-core` you'll also have `react`, `react-dom`, `react-router`, and `react-router-dom`:
 
-## Explicit Sharing from the App Shell
+```json
+{
+  "importmap": {
+    "inherit": [
+      "piral-base",
+      "piral-core"
+    ]
+  },
+  // ...
+}
+```
 
-Dependencies can also be "defined" or explicitly mentioned in the app shell. The mechanism for this works via the `shareDependencies` option of the `createInstance` function.
+You can remove inherited importmaps and replace them by explicit `imports` declarations, too.
+
+## Imperative Sharing from the App Shell
+
+Dependencies can also be "defined" or explicitly mentioned in the program code of the app shell. The mechanism for this works via the `shareDependencies` option of the `createInstance` function.
 
 ```js
 const instance = createInstance({
