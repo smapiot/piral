@@ -6,17 +6,17 @@ section: Customization
 
 # Loading Strategies
 
-To orchestrate how pilets are loaded a loading strategy is implemented. In most cases the default loading strategy is the most suitable one.
+To orchestrate how pilets are loaded a loading strategy is implemented. In most cases, the default loading strategy is the most suitable one.
 
 ::: tip: Strategies come with `piral.base`
 The package to come with the available loading strategies is the most basic Piral package `piral-base`, which forms the framework independent basis for Piral.
 :::
 
-Without any specifics the `standardStrategy` is used.
+Without any specifics, the `standardStrategy` is used.
 
 ## Default Loading Strategy
 
-The `standardStrategy` loads and evaluates all pilets before rendering. In the meantime Piral shows the defined loading spinner.
+The `standardStrategy` loads and evaluates all pilets before rendering. In the meantime, Piral shows the defined loading spinner.
 
 The execution is performed in the following way:
 
@@ -40,7 +40,7 @@ The advantage of this mode is that the application is rendered as soon as possib
 
 A natural evolution of the `asyncStrategy` is the `blazingStrategy`. This one also removes the loading spinner quite fast, however, waits until the metadata has been fetched.
 
-In contrast to the `asyncStrategy` and the `standardStrategy` pilets are loaded as fast as possible, without any barriers in between. As such, this strategy does not guarantee order, but sacrifices this constraint for being able to load (and thus show) the different pilets as soon as possible.
+In contrast to the `asyncStrategy` and the `standardStrategy` pilets are loaded as fast as possible, without any barriers in between. As such, this strategy does not guarantee order but sacrifices this constraint for being able to load (and thus show) the different pilets as soon as possible.
 
 While this strategy can make sense even for content-heavy applications, the UX needs to be quite optimized for the progressive loading behavior. Suddenly expanding menus, jumping scrollbars, and other effects may be disliked and should be gracefully handled.
 
@@ -88,6 +88,6 @@ interface LoadPiletsOptions {
 }
 ```
 
-Most importantly, the options have the `fetchPilets` function to get the pilet metadata. The options also transport the `createApi` function to construct an API object dedicated to be used in a pilet.
+Most importantly, the options have the `fetchPilets` function to get the pilet metadata. The options also transport the `createApi` function to construct an API object dedicated to being used in a pilet.
 
 All the other options are only overrides for specific functionality, e.g., to determine how exactly a pilet is loaded the `loadPilet` option can be used.

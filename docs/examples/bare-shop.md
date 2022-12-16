@@ -14,7 +14,7 @@ The sample shows how simple a micro frontend app can be set up and created; espe
 
 ![Microfrontends Demo](../diagrams/demo-mife.png)
 
-The styling of the given application was all inspired from the original demo. The code was written from scratch in React to illustrate how much simpler the code could look like.
+The styling of the given application was inspired by the original demo. The code was written from scratch in React to illustrate how much simpler the code could look.
 
 ## Links
 

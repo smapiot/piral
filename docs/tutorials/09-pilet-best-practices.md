@@ -67,7 +67,7 @@ export const Page: React.FC<{ data: MyData }> = ({ data }) => (
 
 The created connector can be used for multiple components. It will lazy load the data and persist the received content.
 
-Quite often, a simple data fetcher is not enough. In this case we may want to work with additional sections. Let's say we also need to create a WebSocket.
+Quite often, a simple data fetcher is not enough. In this case, we may want to work with additional sections. Let's say we also need to create a WebSocket.
 
 The transformed code now looks as follows:
 
@@ -113,7 +113,7 @@ The beauty of this approach is that we did not need to make any changes to our v
 
 Using components provided from other pilets is done via "extensions". The problem is that the extensions require the `Extension` component of the Pilet API to be integrated.
 
-Directly, code may look like this:
+Directly, the code may look like this:
 
 ```jsx
 // root module: index.tsx
@@ -132,7 +132,7 @@ export const Page: React.FC<PageComponentProps> = ({ piral }) => (
 
 Using the wrapper approach we may simply demand and forward the right component - without requiring access to the Pilet API directly.
 
-Consequently, code may be rewritten to looks as follows:
+Consequently, the code may be rewritten to look as follows:
 
 ```jsx
 // root module: index.tsx
@@ -164,7 +164,7 @@ We recommend keeping the dependency on the Piral instance as minimal as possible
 4. Your pilet should be more resilient against some API changes
 5. Your pilet may transfer to another technology more easily in the future
 
-In the best case, the only file mentioning an import from your Piral instance is the `index.tsx` / root module of the pilet.
+In the best case, the only file mentioning an import from your Piral instance is the `index.tsx`/root module of the pilet.
 
 We've seen this approach already in the section above.
 
@@ -200,7 +200,7 @@ export const Menu: React.FC<MenuComponentProps> = ({ piral }) => (
 );
 ```
 
-As we can see every component uses other part(s) of the provided `PiletApi`. Wrapping these components in the root module leads to less coupling in the modules/components.
+As we can see, every component uses other part(s) of the provided `PiletApi`. Wrapping these components in the root module leads to less coupling in the modules/components.
 
 After the refactoring the code looks as follows:
 
@@ -244,13 +244,13 @@ Using this approach our components are quite flexible. For instance, when unit t
 
 ## Bundle Splitting
 
-Pilets should remain rather small, however, when combined with dependencies, heavy UIs, and other features larger bundle sizes may occur. To avoid degrading user-experience code that is not immediately required should be split in different bundles.
+Pilets should remain rather small, however, when combined with dependencies, heavy UIs, and other features larger bundle sizes may occur. To avoid degrading user-experience code that is not immediately required should be split into different bundles.
 
 This could result in the following setup:
 
 ![Bundle splitting with lazy loaded pages](../diagrams/bundle-splitting.png){.auto}
 
-The process is rather straight-forward. We use the `import` function and `React.lazy` (or another mechanism from your favorite framework) to trigger the lazy loading of a module. This way the following code,
+The process is rather straightforward. We use the `import` function and `React.lazy` (or another mechanism from your favorite framework) to trigger the lazy loading of a module. This way the following code,
 
 ```jsx
 // root module: index.tsx
@@ -286,11 +286,11 @@ export default () => (
 );
 ```
 
-Again, things that would always be shown (e.g., menu items) should not be lazy-loaded. Here, the overhead would be too much. On the contrary, items should as tiles, pages, modals, ... could all be candidates of bundle splitting.
+Again, things that would always be shown (e.g., menu items) should not be lazy-loaded. Here, the overhead would be too much. On the contrary, items should as tiles, pages, modals, ... could all be candidates for bundle splitting.
 
 ## Testing Extensions
 
-Sometimes a core part of a pilet (potentially the only part) is the delivery of an extension for usage in other pilets. Testing this extension in isolation is not straight forward; after all how do you test something that is not in use right now?
+Sometimes a core part of a pilet (potentially the only part) is the delivery of an extension for usage in other pilets. Testing this extension in isolation is not straightforward; after all, how do you test something that is not in use right now?
 
 Consequently, we need to set up a proper development infrastructure without impacting any (production) deployments. The way we can easily solve this within a pilet is to use the `process.env.NODE_ENV` variable.
 
@@ -302,7 +302,7 @@ export function setup(app: PiletApi) {
 }
 ```
 
-We could, e.g., introduce a dedicated page where this extension is used. Furthermore, tiles, modal dialogs and other components may be introduced to only test this extension. In the following we go for a page, but this approach works for anything.
+We could, e.g., introduce a dedicated page where this extension is used. Furthermore, tiles, modal dialogs, and other components may be introduced to only test this extension. In the following, we go for a page, but this approach works for anything.
 
 ![Testing extensions with temporary pages](../diagrams/extensions-debug.png){.auto}
 
@@ -333,4 +333,4 @@ The crucial part is that we do not only place the registration of our testing co
 
 In this tutorial, we reviewed a couple of strategies to develop pilets that provide a robust and flexible basis.
 
-Now that we know what could be a good approach of developing a pilet form a more architecture point of view, it's time to see what other capabilities we may want to use for getting work done efficiently.
+Now that we know what could be a good approach to developing a pilet from an architectural point of view, it's time to see what other capabilities we may want to use for getting work done efficiently.

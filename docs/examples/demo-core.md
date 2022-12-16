@@ -16,7 +16,7 @@ The sample shows the essential use of piral-core with a very simple layout and a
 
 All backend interactions are mocked (e.g., via a `setTimeout`) to indicate only what Piral can do to sustain a good UX, for example by providing loading spinners.
 
-The shown connectors display how simple an interactive data feed can be connected. Furthermore, the form examples illustrate the ease of making robust form handling with Piral.
+The shown connectors display how simply an interactive data feed can be connected. Furthermore, the form examples illustrate the ease of making robust form handling with Piral.
 
 ## Links
 

@@ -1,5 +1,6 @@
+import { PiletMetadata } from 'piral-core';
 import { emitRenderEvent, emitNavigateEvent } from './events';
-import type { BlazorRootConfig } from './types';
+import type { BlazorRootConfig, WebAssemblyStartOptions } from './types';
 
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
@@ -31,7 +32,30 @@ function createBase() {
   return document.head.appendChild(el);
 }
 
-function createBlazorStarter(publicPath: string): () => Promise<BlazorRootConfig> {
+function prepareForStartup() {
+  const originalApplyHotReload = window.Blazor._internal.applyHotReload;
+  const queue = [];
+  const applyChanges = (pilet: PiletMetadata) => {
+    if (pilet.config && pilet.config.blazorHotReload) {
+      for (const item of queue.splice(0, queue.length)) {
+        item();
+      }
+
+      window.Blazor._internal.applyHotReload = originalApplyHotReload;
+    }
+  };
+
+  window.Blazor._internal.applyHotReload = function (...args) {
+    queue.push(() => originalApplyHotReload.apply(this, args));
+  };
+
+  return getCapabilities().then((capabilities) => ({
+    capabilities,
+    applyChanges,
+  }));
+}
+
+function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions) => Promise<BlazorRootConfig> {
   const root = document.body.appendChild(document.createElement('div'));
 
   root.style.display = 'none';
@@ -42,7 +66,7 @@ function createBlazorStarter(publicPath: string): () => Promise<BlazorRootConfig
     const originalBase = baseElement.href;
     baseElement.href = publicPath;
 
-    return () => {
+    return (opts) => {
       const navManager = window.Blazor._internal.navigationManager;
 
       //Overwrite to get NavigationManager in Blazor working, see https://github.com/smapiot/Piral.Blazor/issues/89
@@ -56,19 +80,19 @@ function createBlazorStarter(publicPath: string): () => Promise<BlazorRootConfig
 
       navManager.getBaseURI = () => originalBase;
 
-      return window.Blazor.start()
-        .then(getCapabilities)
-        .then((capabilities) => {
+      return window.Blazor.start(opts)
+        .then(prepareForStartup)
+        .then(({ capabilities, applyChanges }) => {
           baseElement.href = originalBase;
-          return [root, capabilities];
+          return [root, capabilities, applyChanges];
         });
     };
   }
 
-  return () =>
-    window.Blazor.start()
-      .then(getCapabilities)
-      .then((capabilities) => [root, capabilities]);
+  return (opts) =>
+    window.Blazor.start(opts)
+      .then(prepareForStartup)
+      .then(({ capabilities, applyChanges }) => [root, capabilities, applyChanges]);
 }
 
 function computePath() {
@@ -92,6 +116,18 @@ function addScript(url: string) {
     script.onload = () => resolve();
     document.body.appendChild(script);
   });
+}
+
+export function createElement(moduleName: string, props: any): Promise<string> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'CreateElement', moduleName, props);
+}
+
+export function updateElement(referenceId: string, props: any): Promise<string> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'UpdateElement', referenceId, props);
+}
+
+export function destroyElement(referenceId: string): Promise<string> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'DestroyElement', referenceId);
 }
 
 export function activate(moduleName: string, props: any): Promise<string> {
@@ -151,7 +187,11 @@ export function unloadBlazorPilet(id: string) {
   return window.DotNet.invokeMethodAsync(coreLib, 'UnloadPilet', id);
 }
 
-export function initialize(scriptUrl: string, publicPath: string) {
+export function initialize(scriptUrl: string, publicPath: string, opts: WebAssemblyStartOptions = {}) {
+  if (typeof opts.loadBootResource !== 'function') {
+    opts.loadBootResource = (type, name, url) => fetch(url, { method: 'GET', cache: 'no-cache' });
+  }
+
   return new Promise<BlazorRootConfig>((resolve, reject) => {
     const startBlazor = createBlazorStarter(publicPath);
     const script = document.createElement('script');
@@ -165,7 +205,7 @@ export function initialize(scriptUrl: string, publicPath: string) {
         emitNavigateEvent,
       });
 
-      startBlazor().then(resolve);
+      startBlazor(opts).then(resolve);
     };
 
     document.body.appendChild(script);
@@ -175,10 +215,10 @@ export function initialize(scriptUrl: string, publicPath: string) {
 export function createBootLoader(scriptUrl: string, satellites: Array<string>) {
   const publicPath = computePath();
 
-  return () => {
+  return (opts?: WebAssemblyStartOptions) => {
     if (typeof window.$blazorLoader === 'undefined') {
       // we load all satellite scripts before we initialize blazor
-      window.$blazorLoader = Promise.all(satellites.map(addScript)).then(() => initialize(scriptUrl, publicPath));
+      window.$blazorLoader = Promise.all(satellites.map(addScript)).then(() => initialize(scriptUrl, publicPath, opts));
     }
 
     return window.$blazorLoader;

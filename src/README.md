@@ -19,7 +19,7 @@ Piral is developed as a monorepo.
 
 For development you need to have the following software installed:
 
-- Git must be set up to clone / work with the repository
+- Git must be set up to clone/work with the repository
 - Node.js with NPM (for instructions see [Node.js website](https://nodejs.org/en/)), we recommend version 14 or later
 - Lerna, see [official website](https://lerna.js.org)
 - Yarn, see [official website](https://yarnpkg.com/lang/en/)
@@ -62,7 +62,7 @@ This will open a development server sitting at http://localhost:1234. Right now 
 
 For keeping parts of our documentation up-to-date we use a set of simple scripts. We added them to the global *package.json*, such that they are easily accessible.
 
-For instance running
+For instance, running
 
 ```sh
 yarn docgen
@@ -81,6 +81,6 @@ The versioning is fully managed via the *CHANGELOG.md* file. If you make a chang
 * Awesome feature 2
 ```
 
-Changes to `develop` will always result in a preview build (pre-release) of the packages. For the pre-release the latest version from the *CHANGELOG.md* is used. In addition the build id is added to make the pre-release unique and easy to identify.
+Changes to `develop` will always result in a preview build (pre-release) of the packages. For the pre-release, the latest version from *CHANGELOG.md* is used. In addition, the build id is added to make the pre-release unique and easy to identify.
 
 When merging into main the latest version block of the *CHANGELOG.md* will be changed to contain the current release date.

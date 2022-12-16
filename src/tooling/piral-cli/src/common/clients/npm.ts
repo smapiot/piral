@@ -81,9 +81,15 @@ export async function publishPackage(target = '.', file = '*.tgz', ...flags: Arr
 
 export async function findSpecificVersion(packageName: string, version: string) {
   const ms = new MemoryStream();
-  await runNpmProcess(['show', packageName, 'version', '--tag', version], '.', ms);
-  log('generalDebug_0003', `npm show result: ${ms.value}`);
-  return ms.value;
+
+  try {
+    await runNpmProcess(['show', packageName, 'version', '--tag', version], '.', ms);
+    log('generalDebug_0003', `npm show result: ${ms.value}`);
+    return ms.value;
+  } catch (ex) {
+    log('generalDebug_0003', `npm show result: ${ex}`);
+    return '';
+  }
 }
 
 export async function findTarball(packageRef: string, target = '.', ...flags: Array<string>) {

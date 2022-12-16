@@ -18,7 +18,7 @@ We have a public feed service online that you can use to get started. If you wan
 
 ## How can I make my own Feed Service?
 
-We have a [specification](../specs/feed-api-specification.md) online. Also a [sample using Node.js](https://github.com/smapiot/sample-pilet-service) is available. In case you need more we also offer our consulting services. Just [contact us](https://smapiot.com/contact) for more details.
+We have a [specification](../specs/feed-api-specification.md) online. Also, a [sample using Node.js](https://github.com/smapiot/sample-pilet-service) is available. In case you need more we also offer our consulting services. Just [contact us](https://smapiot.com/contact) for more details.
 
 ---------------------------------------
 
@@ -40,7 +40,7 @@ In order to configure the 404 not found redirects for netlify.com you'll need to
 
 ## How to configure Apache to run Piral?
 
-In order to configure the 404 not found redirects for an Apache webserver you'll need to provide a file called `.htaccess` with the following content:
+In order to configure the 404 not found redirects for an Apache webserver, you'll need to provide a file called `.htaccess` with the following content:
 
 ```plaintext
 RewriteEngine On
@@ -63,9 +63,9 @@ ErrorDocument 404 /
 
 The feed service is as reliable as you build it. If you are concerned about your feed service going down we recommend using multiple instances located at different data centers. Another option is to provide a CI build to include a static feed service response in your delivered HTML or JS. That way you can always fall back to a known configuration.
 
-Our feed service is reliable up to a certain degree. For the free community edition we don't give out any SLA. The paid enterprise edition has a SLA - just get in touch with us for details.
+Our feed service is reliable up to a certain degree. For the free community edition, we don't give out any SLA. The paid enterprise edition has an SLA - just get in touch with us for details.
 
-We will not shut down the free community edition. Also any planned changes to the infrastructure will be announced ahead of time (at least two weeks).
+We will not shut down the free community edition. Also, any planned changes to the infrastructure will be announced ahead of time (at least two weeks).
 
 ---------------------------------------
 
@@ -84,13 +84,13 @@ All other options are usually variations of this.
 
 ## What can be done to improve reliability and performance?
 
-Besides the normal infrastructure scaling recommendations (e.g. horizontal scaling) you can leverage caching to reduce the amount of communication required with the feed service. Since all the pilet files are static, those should be able to be cached forever. Similarly, the list of pilets to be loaded shouldn't change very often, so that can be cached for a while, too.
+Besides the normal infrastructure scaling recommendations (e.g., horizontal scaling) you can leverage caching to reduce the amount of communication required with the feed service. Since all the pilet files are static, those should be able to be cached forever. Similarly, the list of pilets to be loaded shouldn't change very often, so that can be cached for a while, too.
 
-In addition there are a couple of recommendations for the app shell to pilet relation:
+In addition, there are a couple of recommendations for the app shell to pilet relation:
 
 - Treat the app shell's APIs ("pilet API") super carefully. Don't bring them in too early and make sure to remove them gracefully (e.g., not by removing, but keeping at least a stub).
 - Be careful in dependency management. Update the shared dependencies only if you conclude that is possible without much problem. Also here, don't bring in too many shared dependencies if you don't want to get stuck on their versions. Pilets can still declare and share dependencies for efficiency; the shared dependencies of the app shell are just one way.
-- In general the more "dependent" your pilets are on the app shell (e.g., that the app shell delivers a specific dependency or API) the less flexible your solution becomes. As an example, if your pilets would only depend on the core set of, e.g., piral-core (such as registerPage) then they could be used with any app shell. This makes them super flexible. In reality, of course, you will always depend on a few assumptions - as this will make your integration quite seamless from the user's perspective.
+- In general, the more "dependent" your pilets are on the app shell (e.g., that the app shell delivers a specific dependency or API) the less flexible your solution becomes. As an example, if your pilets would only depend on the core set of, e.g., piral-core (such as registerPage) then they could be used with any app shell. This makes them super flexible. In reality, of course, you will always depend on a few assumptions - as this will make your integration quite seamless from the user's perspective.
 
 ---------------------------------------
 
@@ -98,7 +98,7 @@ In addition there are a couple of recommendations for the app shell to pilet rel
 
 The answer is *yes*, but some updates are required:
 
-1. Nx workspaces uses single *package.json* policy, however for pilet and piral build it is required for each app, so it is needed to add package json to each pilet and piral root code. It is possible to generate it on the fly while building, in this case it will be needed to write your own nx executor - "generate-package-json". Nx has the function `createPackageJson` in internal utilities, so it could be used on the base of nx executor ("generate-package-json"), however, it will be needed to update the result of this function according Piral and pilet needs.
+1. Nx workspaces uses a single *package.json* policy, however for pilet and piral build it is required for each app, so it is needed to add package json to each pilet and piral root code. It is possible to generate it on the fly while building, in this case, it will be needed to write your own nx executor - "generate-package-json". Nx has the function `createPackageJson` in internal utilities, so it could be used on the base of nx executor ("generate-package-json"), however, it will be needed to update the result of this function according to Piral and pilet needs.
 2. It will be needed to write custom commands in nx workspace file to build pilets and the Piral instance (it is also possible to use nx executor for this case, however, writing these commands in *workspace.json* is also ok).
 
 Here is the example of commands in *workspace.json* for `pilet build` and `piral build`.
@@ -136,6 +136,6 @@ Here is the example of commands in *workspace.json* for `pilet build` and `piral
 }
 ```
 
-*Note*: In `pilet build` commands comparing with `piral build` commands it is needed to install to install *node_modules*, that is because we pass `--base` parameter and use the pilet's app root directory and not the workspace root directory as in `piral build` command. That's because of internal build script of pilet - it could not resolve some dependency if the `--base` is workspace root and the source is some nested folder, however, for `piral build` it's fine.
+*Note*: In the `pilet build` command, compared to the `piral build` command, it is needed to install *node_modules* because we pass `--base` parameter and use the pilet's app root directory and not the workspace root directory as in the `piral build` command. That's because of the internal build script of a pilet - it could not resolve some dependency if the `--base` is workspace root and the source is some nested folder, however, for `piral build` it's fine.
 
 ---------------------------------------

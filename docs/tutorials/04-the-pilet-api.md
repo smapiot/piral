@@ -8,7 +8,7 @@ section: Details
 
 # The Pilet API
 
-So far we almost exclusively used existing elements without deeply understanding or touching them. Now it's time to see how pilet development may look in reality and how we can - from a pilet - bring in all the functionality to the application shell we want or need.
+So far, we have almost exclusively used existing elements without deeply understanding or touching them. Now it's time to see how pilet development may look in reality and how we can - from a pilet - bring in all the functionality to the application shell we want or need.
 
 ## Video
 
@@ -18,11 +18,11 @@ We also have a video tutorial:
 
 ## The Pilet Foundation
 
-As described earlier a pilet is just a library compiled as an UMD module that exposes a function called `setup`. The `setup` function receives a special object that we like to call the *pilet API*. It is the API *created specifically for the pilet*. This allows the pilet to bring in new functionality to the application shell (called Piral instance).
+As described earlier, a pilet is just a library compiled as a UMD module that exposes a function called `setup`. The `setup` function receives a special object that we like to call the *pilet API*. It is the API *created specifically for the pilet*. This allows the pilet to bring in new functionality to the application shell (called Piral instance).
 
-The application shell determines how the pilet API looks like. In Piral we already determine some common parts for the pilet API - things like an API to register pages, dashboard tiles, or modal dialogs. Furthermore, some convenience functions may also be included in the pilet API. For instance, in Piral we've added functions for handling the pilet's global state.
+The application shell determines what the pilet API looks like. In Piral we already determine some common parts for the pilet API - things like an API to register pages, dashboard tiles, or modal dialogs. Furthermore, some convenience functions may also be included in the pilet API. For instance, in Piral we've added functions for handling the pilet's global state.
 
-Most APIs will be designed in a symmetric way, i.e., such that one call has a respective counter-part. An example is the "register" class of available API calls.
+Most APIs will be designed in a symmetric way, i.e., such that one call has a respective counterpart. An example is the "register" class of available API calls.
 
 ![Register and Unregister APIs](../diagrams/piral-api.svg){.auto}
 
@@ -30,7 +30,7 @@ For every register method (e.g., to register a page) there is an unregister meth
 
 ## The Provided API
 
-As already mentioned the provided API is determined by the underlying application shell. Therefore, we cannot discuss the full API that may be available to a specific pilet. However, what we can do is to explain the API created by Piral - as it will be fully available in most pilets.
+As already mentioned the provided API is determined by the underlying application shell. Therefore, we cannot discuss the full API that may be available to a specific pilet. However, what we can do is explain the API created by Piral - as it will be fully available in most pilets.
 
 ![Display API in VSCode](../diagrams/pilet-api-vscode.png)
 
@@ -45,7 +45,7 @@ The API contains functions to be placed in the following categories:
 
 While some functionality definitely needs to be used (e.g., `registerPage` for showing a page) other functionality is rather optional and may be skipped (or even disabled by the application shell) on purpose.
 
-**Remark:** The architecture of what functionality goes into which pilet, as well as what to be used (and where) of the pilet API is completely in your hands. Our recommendation is to make pilets as simple and lightweight as possible. Furthermore, we recommend using the pilet API only in few places, such that most of your code would be "Piral independent".
+**Remark:** The architecture of what functionality goes into which pilet, as well as what of the pilet API is to be used (and where) is completely in your hands. Our recommendation is to make pilets as simple and lightweight as possible. Furthermore, we recommend using the pilet API only in a few places, such that most of your code would be "Piral independent".
 
 ## Adding a Page
 
@@ -108,20 +108,20 @@ export const MyPageMenu: React.FC = () => (
 
 We just use the standard `Link` from `react-router-dom`. There is no additional knowledge about Piral at all here. This is a general tendency in Piral - we always want to look for standard ways first as they are known already and much easier to transport than new knowledge.
 
-Additionally, its easier to use existing code or share this component with existing code.
+Additionally, it's easier to use existing code or share this component with existing code.
 
 But normally our components (e.g., pages) will not stay so simple, right?
 
 ## Extensions
 
-By far the most powerful concept that comes with Piral is the possibility of introducing "extension components". The mechanism for this is straight forward:
+By far the most powerful concept that comes with Piral is the possibility of introducing "extension components". The mechanism for this is straightforward:
 
-1. Components that can be extended with children / components from other pilets host an extension slot (giving it a name and passing in some data)
+1. Components that can be extended with children/components from other pilets host an extension slot (giving it a name and passing in some data)
 2. Pilets that want to integrate into some extension slot register an extension using the name of the slot
 
-Importantly, there is no guarantee that the slot or any components for it exist. While the slot has properties that allow, e.g., defining a fallback if no components are available, the extension components will never know that they are not actively needed.
+Importantly, there is no guarantee that the slot or any components for it exists. While the slot has properties that allow, e.g., defining a fallback if no components are available, the extension components will never know that they are not actively needed.
 
-Also keep in mind that the slot name is **not** bound to a single pilet. Any pilet may reuse a slot name and therefore there is also no guarantee that some props are always provided. It's up to the extension component to check that given props satisfy an expected data model. In case of a mismatch, the component should error out gracefully.
+Also, keep in mind that the slot name is **not** bound to a single pilet. Any pilet may reuse a slot name and therefore there is also no guarantee that some props are always provided. It's up to the extension component to check that given props satisfy an expected data model. In case of a mismatch, the component should fail gracefully.
 
 Let's see this in practice:
 
@@ -175,7 +175,7 @@ export function setup(app: PiletApi) {
 }
 ```
 
-For non-React applications extension slots can be created using the `renderHtmlExtension` function. This one takes an HTML container element and the extension slot props (`ExtensionSlotProps`) as arguments. It returns a disposer function that should be used when the extension is unmounted.
+For non-React applications, extension slots can be created using the `renderHtmlExtension` function. This one takes an HTML container element and the extension slot props (`ExtensionSlotProps`) as arguments. It returns a disposer function that should be used when the extension is unmounted.
 
 ## What about Data
 
@@ -216,9 +216,9 @@ export const MyPage: React.FC<MyPageProps> = ({ data }) => (
 );
 ```
 
-The only thing we did so far is describing how *the data should be presented*. The component should have nothing to do with *how to retrieve the data*.
+The only thing we did so far is describe how *the data should be presented*. The component should have nothing to do with *how to retrieve the data*.
 
-Obviously, we could introduce some functionality and separate it, but this is something that was already done in Piral. We can use `createConnector` in the `setup` function to get this smoothly.
+We could introduce some functionality and separate it, but this is something that was already done in Piral. We can use `createConnector` in the `setup` function to get this running smoothly.
 
 ```ts
 import { PiletApi } from 'my-app';

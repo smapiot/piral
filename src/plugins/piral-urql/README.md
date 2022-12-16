@@ -10,7 +10,7 @@ By default, these API extensions are not integrated in `piral`, so you'd need to
 
 ## Why and When
 
-If you use GraphQL in your application and want to provide a lightweight way of accessing the GraphQL API then this library may be for you. The reason for not just making `urql` a shared dependency (which you can do always) is that the authorization / token sharing just works. Additionally, this gives users of your pilets additional discoverability regarding the shared lib and its capabilities.
+If you use GraphQL in your application and want to provide a lightweight way of accessing the GraphQL API then this library may be for you. The reason for not just making `urql` a shared dependency (which you can do always) is that the authorization/token sharing just works. Additionally, this gives users of your pilets additional discoverability regarding the shared lib and its capabilities.
 
 Alternatively, expose a GraphQL library such as `urql` or `apollo` as a shared library.
 

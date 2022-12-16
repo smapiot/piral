@@ -28,7 +28,7 @@ A shared package is already bundled into the app shell and therefore does not ne
 A shared package makes sense when multiple pilets would need to access it anyway.
 :::
 
-To automatically share a package the `package.json` of the Piral instance needs to changed. Using the `externals` field in the `pilets` section we can just add the package.
+To automatically share a package the `package.json` of the Piral instance needs to be changed. Using the `imports` field in the `importmap` section we can just add the package.
 
 ```json
 {
@@ -37,15 +37,27 @@ To automatically share a package the `package.json` of the Piral instance needs 
     "reactstrap": "latest",
     // ...
   },
-  "pilets": {
-    "externals": [
-      "reactstrap"
-    ],
+  "importmap": {
+    "imports": {
+      "reactstrap": "reactstrap"
+    }
   }
 }
 ```
 
 **Note**: Don't forget to add the dependency also to the `dependencies` section.
+
+If the shared package name (key, `reactstrap`) is the same as the used local package (value, `reactstrap`, too, in this case) you could also use an empty string or just a dot, e.g.:
+
+```json
+{
+  "importmap": {
+    "imports": {
+      "reactstrap": "."
+    }
+  }
+}
+```
 
 This way is our recommendation for core libraries (e.g., `react`, `react-dom`, ...) and component libraries such as the primary pattern library. It can, however, also be used for utility libraries (e.g., `lodash`) or other useful libraries.
 
@@ -53,7 +65,7 @@ You can read more about shared dependencies in [the sharing dependencies tutoria
 
 ## Using the Global Data State
 
-We can also use the global state for sharing information. However, since pilets have no direct access to the global data store we need to choose a proper location first. One possibility is to use the `data` section, which is already exposed via the `getData` / `setData` Pilet APIs.
+We can also use the global state for sharing information. However, since pilets have no direct access to the global data store we need to choose a proper location first. One possibility is to use the `data` section, which is already exposed via the `getData`/`setData` Pilet APIs.
 
 This reduces the effort to set the data state. We have a couple of options.
 
@@ -75,7 +87,7 @@ instance.context.writeDataItem('foo', 'bar');
 
 The latter also allows you to set expiration and owner directly and will always write. The former behaves exactly as if a pilet would write.
 
-We also have access to the actions within React components defined in the Piral instance. The `useAction` hook gives us a possibility to obtain a reference to the previously mentioned `writeDataItem` action. This can look as follows:
+We also have access to the actions within React components defined in the Piral instance. The `useAction` hook gives us the possibility to obtain a reference to the previously mentioned `writeDataItem` action. This can look as follows:
 
 ```ts
 const MyComponentInPiral = () => {
@@ -106,16 +118,16 @@ This way is our recommendation for static data and functions that do not change 
 
 ## Extending the Pilet API
 
-The best way to share functions (or information in general) is to provide an API from the Piral instance. For simple (and not so important) parts this may be overkill, but for anything crucial it's the best way to go.
+The best way to share functions (or information in general) is to provide an API from the Piral instance. For simple (and not so important) parts this may be overkill, but for anything crucial, it's the best way to go.
 
 There are several reasons:
 
 - An API is well defined
-- An API is visible / strongly typed
+- An API is visible/strongly typed
 - An API can be customized *per* pilet
 - APIs are protected and cannot be changed
 
-This could be done as simple as:
+This could be done as simply as:
 
 ```ts
 function createCustomApi() {
@@ -149,4 +161,4 @@ This way is our recommendation for dynamic data and functions that require prote
 
 Sharing information from the Piral instance can be done in multiple ways. Depending on the needs of the application and its pilets one way or another may be the best. Usually, an app shell uses all these ways to build an outstanding experience for both - users and developers.
 
-In the next tutorial an advanced concept of Piral will be explained: converters. Converters are the secret sauce to allow cross framework presentation of components.
+In the next tutorial an advanced concept of Piral will be explained: converters. Converters are the secret sauce to allowing cross-framework presentation of components.

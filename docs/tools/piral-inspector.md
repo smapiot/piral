@@ -8,9 +8,9 @@ title: Piral Inspector
 
 To optimally work as a developer with your Piral Instance, and all of its containing pilets, Piral Inspector offers a great set of capabilities:
 
-- Getting information about the currently running Piral Instance, e.g. name and version
+- Getting information about the currently running Piral Instance, e.g., name and version
 - Overview on currently loaded pilets
-- Adding / Removing of pilets on-the-fly
+- Adding/Removing pilets on-the-fly
 - Overview of registered routes
 - Collection of emitted events
 - Collection of global states
@@ -23,7 +23,7 @@ We provide the Piral Inspector as an extension for the following browsers:
 - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/piral-inspector/) (>= v50)
 - [Opera](https://addons.opera.com/en/extensions/details/piral-inspector/) (>= v50)
 
-## Installation of Add-On / Extension
+## Installation of Add-On/Extension
 
 ::: summary: Firefox
 
@@ -114,7 +114,7 @@ In case you are currently running a Piral Instance in debug mode, you will see t
 
 Piral Inspector offers a wide variety of capabilities regarding Piral Instance and its corresponding pilets.
 
-The add-on/extension operates on a locally in debug mode running Piral Instance, and it directly interacts with it.
+The add-on/extension operates locally in debug mode running a Piral Instance, and it directly interacts with it.
 
 The following sections are shown inside the extension:
 
@@ -125,7 +125,7 @@ The following sections are shown inside the extension:
 - Events
 - State Container
 
-All of these sections will documented in the following chapters:
+All of these sections are documented in the following chapters:
 
 ### Piral Instance
 
@@ -165,7 +165,7 @@ Activates the option to visualize the origin of the modules as another icon in P
 
 ![Debug settings from the Piral Inspector](../diagrams/piralinspector_tool_visualizecomponentoriginicon.png)
 
-After clicking on the icon, the origin of each single tile will be displayed:
+After clicking on the icon, the origin of every single tile will be displayed:
 
 ![Debug settings for visualizations in the Piral Inspector](../diagrams/piralinspector_tool_visualizecomponentorigintile.png)
 
@@ -173,7 +173,7 @@ The origin will also be displayed when hovering over a tile.
 
 ### Available Pilets
 
-The Piral Inspector lists all the currently available pilets. Like illustrated in the table below.
+The Piral Inspector lists all the currently available pilets. As illustrated in the table below.
 
 ![Available pilets from the Piral Inspector](../diagrams/piralinspector_tool_availablepilets.png)
 
@@ -195,7 +195,7 @@ In case you chose a feed you have access to, the corresponding pilets will be lo
 
 First, you need to "Browse" to the pilet package file and then "Upload" it.
 
-In case you uploaded a proper pilet, it will be loaded and shown in the tile section and the list of available pilets. Per default, the new pilet will be active, but will be given a random name.
+In case you uploaded a proper pilet, it will be loaded and shown in the tile section and the list of available pilets. By default, the new pilet will be active but will be given a random name.
 
 ::: warning: Temporary feed
 The pilet will be loaded into a temporary feed, and this feed (including the pilets) will be removed when the predefined lifetime (by default 60 minutes) expires.

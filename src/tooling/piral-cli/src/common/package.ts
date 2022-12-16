@@ -60,6 +60,7 @@ async function appendBundler(devDependencies: Record<string, string>, bundler: s
         givenVersion,
         givenVersion.includes('-beta.') && 'next',
         givenVersion.includes('-alpha.') && 'canary',
+        givenVersion.includes('.') && givenVersion.split('.').slice(0, 2).join('.'),
         'latest',
       ]);
 

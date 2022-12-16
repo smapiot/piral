@@ -23,7 +23,7 @@ The following table compares the three from an out-of-the-box feature perspectiv
 | Error Handling   | ️️️✔️    | ️️️✔️     | ✔️    |
 | Error Display    | ️️️❌    | ️️️✔️     | ✔️    |
 | Global State     | ️️️❌    | ️️️✔️     | ✔️    |
-| Pages / Routing  | ️️️❌    | ️️️✔️     | ✔️    |
+| Pages/Routing    | ️️️❌    | ️️️✔️     | ✔️    |
 | Extension API    | ️️️❌    | ️️️✔️     | ✔️    |
 | Shared Data API  | ️️️❌    | ️️️✔️     | ✔️    |
 | Dashboard        | ️️️❌    | ️️️❌    | ✔️    |
@@ -58,7 +58,7 @@ Let's install `piral` (and we are done with the dependencies!):
 npm i piral
 ```
 
-This is it! Really? Well, we have not built, customized, or published this instance yet. Ideally, we use the `piral-cli` to do most of these tasks very efficiently without much configuration needs.
+This is it! Really? Well, we have not built, customized, or published this instance yet. Ideally, we use the `piral-cli` to do most of these tasks very efficiently without much configuration needed.
 
 We should always add the CLI as a *local* **dev** dependency.
 
@@ -70,19 +70,19 @@ To help us see the commands in action we can also use a *global* version of the 
 
 ## A Piral-Core Based Application
 
-Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-atom` are straight dependencies, common dependencies such as `react` are only peer referenced. This leaves many of the open choices up to the developer providing greater freedom.
+Here, we will rely on `piral-core`, which can be considered a library. While very special dependencies such as `react-atom` are straight dependencies, common dependencies such as `react` are only peer-referenced. This leaves many of the open choices up to the developer providing greater freedom.
 
 ::: warning: Peer dependencies
 You will need to pick (and reference) the versions of `react`, `react-dom`, `react-router`, and `react-router-dom`.
 :::
 
-We recommend using `piral-core` when you want to have more control what (versions of the) dependencies go in and how the API for the pilets look like.
+We recommend using `piral-core` when you want to have more control over what (versions of the) dependencies go in and what the API for the pilets look like.
 
 ## A Piral-Base Based Application
 
-Relying on `piral-base` we can build an application independent of React, state management or anything else - only with the loading and correct interpretation of pilets. This alone would not support *most* Piral plugins. However, the `piral-cli` and pilets in general are supported.
+Relying on `piral-base` we can build an application independent of React, state management, or anything else - only with the loading and correct interpretation of pilets. This alone would not support *most* Piral plugins. However, the `piral-cli` and pilets, in general, are supported.
 
-The result could be a new framework that leverages Piral, but using, e.g., Angular instead of React.
+The result could be a new framework that leverages Piral, while using, for example, Angular instead of React.
 
 ::: tip: Share tslib
 The `piral-base` package has a single dependency: `tslib`. Ideally, you set `importHelpers` to `true` in your *tsconfig.json* and share the dependency to `tslib` from your app shell.

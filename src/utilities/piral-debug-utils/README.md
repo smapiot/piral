@@ -8,7 +8,7 @@ What `piral-debug-utils` offers are utilities to provide reach debugging tools f
 
 ## Installation
 
-This should only be installed as a dependency (`dependencies`), but usually guarded to be active (or included in the bundle) only for development / emulation purposes (i.e., when developing pilets).
+This should only be installed as a dependency (`dependencies`), but usually guarded to be active (or included in the bundle) only for development/emulation purposes (i.e., when developing pilets).
 
 If you'd love to use yarn:
 

@@ -6,9 +6,9 @@ section: Customization
 
 # Layout Components
 
-In Piral micro frontends can define (i.e., "register") components to be used in different situations freely. This is great for many scenarios, but usually does not help with general layouting - as layouting quite often demands very specific components to be placed on very specific positions.
+In Piral micro frontends can define (i.e., "register") components to be used in different situations freely. This is great for many scenarios but usually does not help with general layouting - as layouting quite often demands very specific components to be placed on very specific positions.
 
-To help with general layouting Piral allows developers to define everything related to the general layout of the application in the app shell itself. Note, that this can still be delegated to pilets.
+To help with general layouting, Piral allows developers to define everything related to the general layout of the application in the app shell itself. Note, that this can still be delegated to pilets.
 
 ## State Container
 
@@ -29,7 +29,7 @@ const instance = createInstance({
 // ... use instance
 ```
 
-Alternativeley, registration of layout components can be done via the `SetComponent` component, e.g.,
+Alternatively, registration of layout components can be done via the `SetComponent` component, e.g.,
 
 ```jsx
 <Piral instance={instance}>
@@ -65,7 +65,7 @@ declare module 'piral-core/lib/types/custom' {
 
 Since the `piral-dashboard` plugin does not want to be biased regarding the actual display of the dashboard container and its tiles it allows the developer to set these components.
 
-As a plugin author we encourage you to register default values for these layouting components.
+As a plugin author, we encourage you to register default values for these layouting components.
 
 Example:
 
@@ -82,7 +82,7 @@ context.dispatch(state => ({
 
 The important part is that `state.components` should be able to override your layouting components. This way if the respective layouting components have already been defined (e.g., in the app shell) they won't be overwritten.
 
-The components itself should be always obtained via the `getPiralComponent` helper from `piral-core`. In the previous example that would be:
+The components themselves should be always obtained via the `getPiralComponent` helper from `piral-core`. In the previous example that would be:
 
 ```js
 import { getPiralComponent } from 'piral-core';
@@ -91,15 +91,15 @@ const PiralDashboardContainer = getPiralComponent('DashboardContainer');
 const PiralDashboardTile = getPiralComponent('DashboardTile');
 ```
 
-This way, nothing (`null`) would be rendered if the component is not yet part of the state container. Furthermore, the binding to the component would be "live" or "reactive", i.e., if - at a later point in time - a new / different component would be registered then any rendering would be immediately updated.
+This way, nothing (`null`) would be rendered if the component is not yet part of the state container. Furthermore, the binding to the component would be "live" or "reactive", i.e., if - at a later point in time - a new/different component would be registered then any rendering would be immediately updated.
 
-In any case using `getPiralComponent` you'd get a component a that can be used immediately.
+In any case, by using `getPiralComponent` you get a component that can be used immediately.
 
 ## Exposing Layouting to Pilets
 
-By default, the state container incl. the layouting part is not exposed to pilets. This is for a lot of reasons, but presumably you'll not care about those reasons and actually want to distribute your layout to pilets.
+By default, the state container incl. the layouting part is not exposed to pilets. This is for a lot of reasons, but presumably, you'll not care about those reasons and actually want to distribute your layout to pilets.
 
-While there are downsides to this approach (e.g., the layout pilet(s) would be required during development of a new pilet) the upside is that (parts of) the layout could be updated independently of the main application. This can also be very helpful with white-labelling.
+While there are downsides to this approach (e.g., the layout pilet(s) would be required during development of a new pilet) the upside is that (parts of) the layout could be updated independently of the main application. This can also be very helpful with white-labeling.
 
 The easiest way to expose the layouting capability to pilets is to create a new API for this:
 

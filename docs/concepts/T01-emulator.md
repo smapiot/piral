@@ -6,7 +6,7 @@ section: Tooling
 
 # Emulator Package
 
-To make developing pilets as easy and intuitive as possible the app shell can be packaged to serve as an emulator.
+To make developing pilets as easy and intuitive as possible, the app shell can be packaged to serve as an emulator.
 
 The emulator is essentially the app shell with special debug helpers (e.g., allowing usage with the Piral Inspector), source maps, and non-production sources (e.g., shipping with the full React error explanations and development warnings).
 
@@ -43,7 +43,7 @@ The following props are created:
 - `piralCLI` (to contain the current version)
 - `devDependencies` (from `devDependencies`, `dependencies`, and `pilets.externals`)
 
-The `piralCLI` property determines if the given package contains *raw* sources or already *pre-bundled* sources. In the latter case we will directly start a server from `app`, in the former case a lightweight version of `piral debug` is applied to the sources.
+The `piralCLI` property determines if the given package contains *raw* sources or already *pre-bundled* sources. In the latter case, we will directly start a server from `app`, in the former case, a lightweight version of `piral debug` is applied to the sources.
 
 ::: tip: Custom emulator
 If you build your emulator package on your own incl. already pre-bundled sources, make sure to include the following snippet in your *package.json*:
@@ -71,7 +71,7 @@ Extending this is possible, too. The first step is to reference additional `typi
 }
 ```
 
-If, for some reason, you cannot use the `typings` field you can use the artificial / non-official `extraTypes` field, too:
+If, for some reason, you cannot use the `typings` field you can use the artificial/non-official `extraTypes` field, too:
 
 ```json
 {
@@ -131,21 +131,21 @@ const instance = createInstance({
 This allows importing things from the `my-virtual-package` dependency in a pilet at runtime.
 
 ::: warning: Use real packages
-The downside is that some bundlers may have a problem with the virtual package. For instance, Parcel likes to resolve real paths first, and will complain if a package cannot be found.
+The downside is that some bundlers may have a problem with the virtual package. For instance, Parcel likes to resolve real paths first and will complain if a package cannot be found.
 
 We therefore recommend using only real packages. In a monorepo the cost of maintenance is negligible and they are much more flexible, introduce less magic, and could be reused.
 :::
 
 ## Types in Monorepos
 
-As the `typings` field in the *package.json* is already used for the declaration types, we may have a problem to properly define the path to the generated declaration. This is, however, essential to have a great monorepo experience.
+As the `typings` field in the *package.json* is already used for the declaration types, we may have a problem properly defining the path to the generated declaration. This is, however, essential to have a great monorepo experience.
 
-For specifying the path in a monorepo we can use the `types` field. Officially, the `types` field is synonymous to `typings`, however, in resolution it takes precedence. Thus it works just as it should.
+For specifying the path in a monorepo we can use the `types` field. Officially, the `types` field is synonymous with `typings`, however, in resolution it takes precedence. Thus it works just as it should.
 
 ::: tip: Avoid confusion
 Our recommendation is to use the artificial `extraTypes` field to avoid having `typings` and `types` specified. The latter may result in confusion among developers, which is never a good thing.
 
-In this approach we recommend using `extraTypes` for specifying the additional typings to consider when building the declaration, and `types` to refer to the generated declaration file.
+In this approach, we recommend using `extraTypes` for specifying the additional typings to consider when building the declaration, and `types` to refer to the generated declaration file.
 :::
 
 Note that for creating the emulator none of the two are directly taken. More details are in the [monorepo guideline](../tutorials/23-monorepo.md).

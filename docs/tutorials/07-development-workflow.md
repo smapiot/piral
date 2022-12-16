@@ -8,7 +8,7 @@ section: Details
 
 # Common Development Workflow
 
-Piral was created by following a SPA-first, serverless-first, and developer-first philosophy. As such developer convenience was a very high-priority for us.
+Piral was created by following a SPA-first, serverless-first, and developer-first philosophy. As such developer convenience was a very high priority for us.
 
 A high developer convenience can be achieved by providing a seamless debugging experience together was an easy setup and pleasant tools. Ideally, all standard tools just work.
 
@@ -38,9 +38,9 @@ Once the initial version of the app shell has been created it can be published a
 
 > Publish the npm package of the app shell in a private npm registry.
 
-Now the first pilets can be created. In the long run it makes sense to also publish some of the initial features of the app shell as a pilet. For instance, if the app shell contains some kind of feedback functionality this could be also exposed as a pilet.
+Now the first pilets can be created. In the long run, it makes sense to also publish some of the initial features of the app shell as a pilet. For instance, if the app shell contains some kind of feedback functionality this could be also exposed as a pilet.
 
-Our recommendation is to start with such functionality *within* the app shell and then outsource it once the platform stabilizes. Don't try to go to crazy with pilets first - the primary target of the setup phase should be a stable and reliable system that encourages developers to create great pilets.
+Our recommendation is to start with such functionality *within* the app shell and then outsource it once the platform stabilizes. Don't try to go too crazy with pilets first - the primary target of the setup phase should be a stable and reliable system that encourages developers to create great pilets.
 
 > Publish the first pilets to the created pilet feed.
 

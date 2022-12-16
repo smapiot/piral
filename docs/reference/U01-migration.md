@@ -49,21 +49,21 @@ Either way under certain conditions you may spare the import of the `regenerator
 
 #### 2) New Default Bundler
 
-The default bundler is used / installed in scenarios where no other bundler has been installed. If you've not explictly installed a bundler (e.g., `piral-cli-webpack`) beforehand we advise you to do that. The most reliable way to configure your default bundler is to just be explicit here.
+The default bundler is used/installed in scenarios where no other bundler has been installed. If you've not explicitly installed a bundler (e.g., `piral-cli-webpack`) beforehand we advise you to do that. The most reliable way to configure your default bundler is to just be explicit here.
 
 Otherwise, you can also tell the `piral-cli` what default bundler to use in general by configuring the *.piralrc* file in your home directory.
 
 #### 3) Minimum Version of Node.js
 
-Previously, the `piral-cli` officially supported Node.js in version 10 with inofficial support for version 8. Now, the minimum version has been lifted to 12.0.0, even though we are not making any forced checks. This affects only some functionality of the CLI. So if you use an earlier version of Node.js, you might not even notice a change (at least for some functionality). In general, however, the `piral-cli` will not work for older Node.js versions.
+Previously, the `piral-cli` officially supported Node.js in version 10 with unofficial support for version 8. Now, the minimum version has been lifted to 12.0.0, even though we are not making any forced checks. This affects only some functionality of the CLI. So if you use an earlier version of Node.js, you might not even notice a change (at least for some functionality). In general, however, the `piral-cli` will not work for older Node.js versions.
 
-It might be that we'll even lift this to Node.js 14 in the future, but for now we'll try to keep the `piral-cli` as broadly placed as possible.
+It might be that we'll even lift this to Node.js 14 in the future, but for now, we'll try to keep the `piral-cli` as broadly placed as possible.
 
 #### 4) Deprecated `renderInstance`
 
-While this is not (yet) breaking it will be in the near future (when `renderInstance` is fully removed). We recommend everyone to replace the implicit `renderInstance` call with a more explicit version involving `createInstance`, `Piral` (both from `piral-core`) and `render` (from `react-dom`).
+While this is not (yet) breaking it will be in the near future (when `renderInstance` is fully removed). We recommend everyone to replace the implicit `renderInstance` call with a more explicit version involving `createInstance`, `Piral` (both from `piral-core`), and `render` (from `react-dom`).
 
-If you want to change right now you'll need to replace a few parts with their lower level counterparts. Let's say you start with something like this:
+If you want to change right now you'll need to replace a few parts with their lower-level counterparts. Let's say you start with something like this:
 
 ```ts
 import { renderInstance, getUserLocale, setupLocalizer } from 'piral';
@@ -126,7 +126,7 @@ const instance = createInstance({
       .then((res) => res.json())
       .then((res) => res.items);
   },
-  state: { // important to register the layout / error components immediately
+  state: { // important to register the layout/error components immediately
     components: layout,
     errorComponents: errors,
   },
@@ -168,23 +168,23 @@ Will now be:
 }
 ```
 
-In general, this will also open to use benefits of the importmap system such as using remote references instead of local ones.
+In general, this will also open up benefits of the importmap system such as using remote references instead of local ones.
 
-If both, the `pilets.externals` ad the `importmap` fields are specified the `importmap` field takes precedence.
+If both `pilets.externals` and `importmap` fields are specified, `importmap` field takes precedence.
 
 ## 0.13 to 0.14
 
 ### Breaking Changes in 0.14
 
 1. The debug API does not work with the legacy Piral Inspector. The new API is supported from the Piral Inspector browser extension v0.7 upwards.
-2. By default the new pilet schema (v2) is used to build and debug pilets. Make sure the used feed service and app shell support this or use `--schema v1` when building or publishing pilets with the previous (v1) schema.
+2. By default, the new pilet schema (v2) is used to build and debug pilets. Make sure the used feed service and app shell support this or use `--schema v1` when building or publishing pilets with the previous (v1) schema.
 3. The API for the bundler plugins in the `piral-cli` changed. See below for details.
 4. The overall mechanism for converting Angular components (`piral-ng`) has changed. See below for details.
 5. Removed the functions `extendSharedDependencies` and `setSharedDependencies`. See below for details.
 
 #### 2) New Pilet Schema
 
-The new pilet schema (`v2`) uses SystemJS as output format. Still, a spec version marker is required (just with `v1`). For `v2` it looks as follows:
+The new pilet schema (`v2`) uses SystemJS as the output format. Still, a spec version marker is required (just with `v1`). For `v2` it looks as follows:
 
 ```js
 //@pilet v:2(<requireRef>, <sharedDependencies>)
@@ -202,7 +202,7 @@ Example:
 
 Here, the `requireRef` is `webpackChunkpr_piletwebpack5` and the `sharedDependencies` are `{"emojis-list@3.0.0":"emojis-list.js"}`, i.e., a single shared dependency named `emojis-list@3.0.0` (coming from the `emojis-list` package in version 3.0.0) which can be loaded via the local *emojis-list.js* file, if not available yet.
 
-We recommend to update custom feed server implementations to support `v2`. See the [specification](../specs/feed-api-specification.md) for details.
+We recommend updating custom feed server implementations to support `v2`. See the [specification](../specs/feed-api-specification.md) for details.
 
 #### 3) New Bundler API
 
@@ -346,7 +346,7 @@ Essentially, we only distinguish between pilet and Piral. The module itself is a
 
 #### 4) Updated `piral-ng`
 
-Previously, using Angular AoT was pretty much impossible. With the new approach this is possible in situations where you also bundle Angular with your pilet. Otherwise, in a shared Angular scenario you'll not be able to get AoT working.
+Previously, using Angular AoT was pretty much impossible. With the new approach, this is possible in situations where you also bundle Angular with your pilet. Otherwise, in a shared Angular scenario you'll not be able to get AoT working.
 
 The other thing that is new is that you can actually reuse modules. While the old approach of having an `NgModule` inserted into `fromNg` still works, we recommend inserting the module into `defineNgModule` instead.
 
@@ -422,8 +422,8 @@ Finally, the best equivalent for `extendSharedDependencies` is `registerDependen
 ### Breaking Changes in 0.13
 
 1. The `withApi` API of the `piral-core` package changed its first argument. Instead of the `context.converters` it now expects the full `context`. This may break some plugins that used that internally.
-2. The `piral` package now comes with React 17 as a dependency. This is (in almost all practical cases) backwards compatible so it should not represent an issue. If you really want to stay on React 16 then use the `piral-core` and `piral-ext` packages instead of the full `piral` package. `piral-core` still has a peer dependency to React - allowing versions 16 or 17.
-3. For full compatibility with npm v7 the `peerDependencies` in pilets will only contain valid package names. Therefore, submodule externals (e.g. `foo/bar`) will be placed in a new section called `peerModules`, which is not evaluated by npm but picked up by the Piral CLI.
+2. The `piral` package now comes with React 17 as a dependency. This is (in almost all practical cases) backward compatible so it should not represent an issue. If you really want to stay on React 16 then use the `piral-core` and `piral-ext` packages instead of the full `piral` package. `piral-core` still has a peer dependency to React - allowing versions 16 or 17.
+3. For full compatibility with npm v7 the `peerDependencies` in pilets will only contain valid package names. Therefore, submodule externals (e.g., `foo/bar`) will be placed in a new section called `peerModules`, which is not evaluated by npm but picked up by the Piral CLI.
 
 ## 0.11 to 0.12
 
