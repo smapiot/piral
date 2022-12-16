@@ -8,7 +8,7 @@
   "properties": {
     "debugTools": {
       "type": "boolean",
-      "description": "Always includes the debug tools - not only in the emulator.",
+      "description": "Always includes the debug tools - not only in the emulator. By default, debug tools are not included.",
       "default": false
     },
     "pilets": {
