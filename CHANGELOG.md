@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.4 (tbd)
+
+- Fixed issue loading `dotnetjs` in `piral-blazor`
+
 ## 0.15.3 (December 16, 2022)
 
 - Added support for Blazor custom elements in `piral-blazor`

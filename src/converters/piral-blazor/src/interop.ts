@@ -189,7 +189,7 @@ export function unloadBlazorPilet(id: string) {
 
 export function initialize(scriptUrl: string, publicPath: string, opts: WebAssemblyStartOptions = {}) {
   if (typeof opts.loadBootResource !== 'function') {
-    opts.loadBootResource = (type, name, url) => fetch(url, { method: 'GET', cache: 'no-cache' });
+    opts.loadBootResource = (type, name, url) => type === 'dotnetjs' ? url : fetch(url, { method: 'GET', cache: 'no-cache' });
   }
 
   return new Promise<BlazorRootConfig>((resolve, reject) => {
