@@ -90,6 +90,7 @@ export interface BuildPiralParameters extends BaseBundleParameters {
   emulator: boolean;
   standalone: boolean;
   sourceMaps: boolean;
+  watch: boolean;
   contentHash: boolean;
   minify: boolean;
   externals: Array<string>;
@@ -116,6 +117,7 @@ export interface DebugPiletParameters extends BaseBundleParameters {
 export interface BuildPiletParameters extends BaseBundleParameters {
   piralInstances: Array<string>;
   sourceMaps: boolean;
+  watch: boolean;
   contentHash: boolean;
   minify: boolean;
   externals: Array<string>;

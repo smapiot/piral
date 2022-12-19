@@ -142,6 +142,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('source-maps')
         .describe('source-maps', 'Create associated source maps for the bundles.')
         .default('source-maps', apps.buildPiralDefaults.sourceMaps)
+        .boolean('watch')
+        .describe('watch', 'Continuously re-builds while watching the source files.')
+        .default('watch', apps.buildPiralDefaults.watch)
         .boolean('subdir')
         .describe(
           'subdir',
@@ -175,6 +178,7 @@ const allCommands: Array<ToolCommand<any>> = [
         subdir: args.subdir as boolean,
         contentHash: args['content-hash'] as boolean,
         sourceMaps: args['source-maps'] as boolean,
+        watch: args.watch as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
         logLevel: args['log-level'] as LogLevels,
         type: args.type as PiralBuildType,
@@ -507,6 +511,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('source-maps')
         .describe('source-maps', 'Creates source maps for the bundles.')
         .default('source-maps', apps.buildPiletDefaults.sourceMaps)
+        .boolean('watch')
+        .describe('watch', 'Continuously re-builds while watching the source files.')
+        .default('watch', apps.buildPiletDefaults.watch)
         .boolean('fresh')
         .describe('fresh', 'Performs a fresh build by removing the target directory first.')
         .default('fresh', apps.buildPiletDefaults.fresh)
@@ -547,6 +554,7 @@ const allCommands: Array<ToolCommand<any>> = [
         bundlerName: args.bundler as string,
         declaration: args.declaration as boolean,
         sourceMaps: args['source-maps'] as boolean,
+        watch: args.watch as boolean,
         optimizeModules: args['optimize-modules'] as boolean,
         type: args.type as PiletBuildType,
         fresh: args.fresh as boolean,

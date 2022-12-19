@@ -70,6 +70,11 @@ export interface BuildPiralOptions {
   sourceMaps?: boolean;
 
   /**
+   * States if the build should run continuously and re-build when files change.
+   */
+  watch?: boolean;
+
+  /**
    * Sets the bundler to use for building, if any specific.
    */
   bundlerName?: string;
@@ -114,6 +119,7 @@ export const buildPiralDefaults: BuildPiralOptions = {
   type: 'all',
   subdir: true,
   sourceMaps: true,
+  watch: false,
   contentHash: true,
   optimizeModules: false,
 };
@@ -138,6 +144,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     logLevel = buildPiralDefaults.logLevel,
     minify = buildPiralDefaults.minify,
     sourceMaps = buildPiralDefaults.sourceMaps,
+    watch = buildPiralDefaults.watch,
     contentHash = buildPiralDefaults.contentHash,
     subdir = buildPiralDefaults.subdir,
     fresh = buildPiralDefaults.fresh,
@@ -190,6 +197,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         standalone: false,
         optimizeModules,
         sourceMaps,
+        watch,
         contentHash,
         minify: false,
         externals: externals.map(m => m.name),
@@ -261,6 +269,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         standalone: false,
         optimizeModules,
         sourceMaps,
+        watch,
         contentHash,
         minify,
         externals: externals.map(m => m.name),

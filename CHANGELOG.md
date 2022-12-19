@@ -3,6 +3,8 @@
 ## 0.15.4 (tbd)
 
 - Fixed issue loading `dotnetjs` in `piral-blazor`
+- Added `--watch` flag to `piral build` command to `piral-cli`
+- Added `--watch` flag to `pilet build` command to `piral-cli`
 
 ## 0.15.3 (December 16, 2022)
 
