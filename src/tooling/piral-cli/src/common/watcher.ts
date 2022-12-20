@@ -1,4 +1,4 @@
-import { watch } from 'fs';
+import { watch, existsSync } from 'fs';
 
 export interface WatcherRef<T> {
   end: Promise<void>;
@@ -54,14 +54,16 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
       disposers.push(dispose);
     },
     watch(file) {
-      const watcher = watch(
-        file,
-        {
-          persistent: false,
-        },
-        reRun,
-      );
-      disposers.push(() => watcher.close());
+      if (existsSync(file)) {
+        const watcher = watch(
+          file,
+          {
+            persistent: false,
+          },
+          reRun,
+        );
+        disposers.push(() => watcher.close());
+      }
     },
     dependOn(anotherRef) {
       anotherRef.onTrigger(reRun);

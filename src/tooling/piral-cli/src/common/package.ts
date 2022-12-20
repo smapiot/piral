@@ -167,13 +167,17 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
-export function findPiralInstance(proposedApp: string, baseDir: string, port: number): PiralInstancePackageData {
+export async function findPiralInstance(
+  proposedApp: string,
+  baseDir: string,
+  port: number,
+): Promise<PiralInstancePackageData> {
   const path = findPackageRoot(proposedApp, baseDir);
 
   if (path) {
     log('generalDebug_0003', `Following the app package in "${path}" ...`);
-    const appPackage = require(path);
     const root = dirname(path);
+    const appPackage = await readJson(root, basename(path));
     const relPath = appPackage && appPackage.app;
     appPackage.app = relPath && resolve(root, relPath);
     appPackage.root = root;
@@ -184,7 +188,7 @@ export function findPiralInstance(proposedApp: string, baseDir: string, port: nu
   fail('appInstanceNotFound_0010', proposedApp);
 }
 
-export function findPiralInstances(
+export async function findPiralInstances(
   proposedApps: Array<string>,
   piletPackage: PiletPackageData,
   piletDefinition: undefined | PiletDefinition,
@@ -204,8 +208,10 @@ export function findPiralInstances(
   }
 
   if (proposedApps.length > 0) {
-    return proposedApps.map((proposedApp) =>
-      findPiralInstance(proposedApp, baseDir, piletDefinition?.piralInstances?.[proposedApp]?.port ?? 0),
+    return Promise.all(
+      proposedApps.map((proposedApp) =>
+        findPiralInstance(proposedApp, baseDir, piletDefinition?.piralInstances?.[proposedApp]?.port ?? 0),
+      ),
     );
   }
 
@@ -530,7 +536,9 @@ export async function findPackageVersion(rootPath: string, packageName: string |
       log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
       const moduleName = getModulePath(rootPath, pckg);
       const packageJson = await findFile(moduleName, 'package.json');
-      return require(packageJson).version;
+      const root = dirname(packageJson);
+      const { version } = await readJson(root, 'package.json');
+      return version;
     } catch {}
   }
 
@@ -583,7 +591,7 @@ export async function retrievePiletsInfo(entryFile: string) {
   }
 
   const root = dirname(packageJson);
-  const packageInfo = require(packageJson);
+  const packageInfo = await readJson(root, 'package.json');
   const info = getPiletsInfo(packageInfo);
   const externals = await retrieveExternals(root, packageInfo);
   const dependencies = {
@@ -757,9 +765,9 @@ export async function retrievePiletData(target: string, app?: string) {
   const piletJson = await findFile(target, 'pilet.json');
   const proposedRoot = piletJson ? dirname(piletJson) : target;
   const root = await findPiletRoot(proposedRoot);
-  const piletPackage = require(resolve(root, 'package.json'));
-  const piletDefinition = piletJson && require(piletJson);
-  const appPackages = findPiralInstances(app && [app], piletPackage, piletDefinition, target);
+  const piletPackage = await readJson(root, 'package.json');
+  const piletDefinition = piletJson && await readJson(proposedRoot, 'pilet.json');
+  const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
 
   if (appPackages.length === 0) {

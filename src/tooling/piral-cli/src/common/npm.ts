@@ -1,5 +1,5 @@
 import { resolve, relative, dirname } from 'path';
-import { createReadStream, existsSync } from 'fs';
+import { createReadStream, existsSync, readFileSync } from 'fs';
 import { log, fail } from './log';
 import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
@@ -463,7 +463,8 @@ export function getPackageVersion(
 function getExternalsFrom(root: string, packageName: string): Array<string> | undefined {
   try {
     const target = getModulePath(root, `${packageName}/package.json`);
-    return require(target).sharedDependencies;
+    const content = JSON.parse(readFileSync(target, 'utf8'));
+    return content.sharedDependencies;
   } catch (err) {
     log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);
     return undefined;
