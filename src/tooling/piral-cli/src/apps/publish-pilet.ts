@@ -159,6 +159,7 @@ async function getFiles(
             piralInstances,
             optimizeModules: false,
             sourceMaps: true,
+            watch: false,
             contentHash: true,
             minify: true,
             externals,

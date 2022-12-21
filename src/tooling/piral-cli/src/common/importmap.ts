@@ -1,4 +1,4 @@
-import { resolve, dirname, isAbsolute } from 'path';
+import { resolve, dirname, isAbsolute, basename } from 'path';
 import { log, fail } from './log';
 import { satisfies, validate } from './version';
 import { computeHash } from './hash';
@@ -16,12 +16,14 @@ function getDependencyDetails(depName: string): [assetName: string, identifier: 
   return [assetName, id, version];
 }
 
-function getLocalDependencyVersion(
+async function getLocalDependencyVersion(
   packageJson: string,
   depName: string,
   versionSpec: string,
-): [offeredVersion: string, requiredVersion: string] {
-  const details = require(packageJson);
+): Promise<[offeredVersion: string, requiredVersion: string]> {
+  const packageDir = dirname(packageJson);
+  const packageFile = basename(packageJson);
+  const details = await readJson(packageDir, packageFile);
 
   if (versionSpec) {
     if (!validate(versionSpec)) {
@@ -38,24 +40,24 @@ function getLocalDependencyVersion(
   return [details.version, details.version];
 }
 
-function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
+async function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
   const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
 
   if (packageJson) {
     const packageDir = dirname(packageJson);
-    const packageDetails = require(packageJson);
+    const packageDetails = await readJson(packageDir, 'package.json');
     return readImportmap(packageDir, packageDetails, true);
   } else {
     const directImportmap = tryResolvePackage(inheritedImport, dir);
 
     if (directImportmap) {
-      const content = require(directImportmap);
       const baseDir = dirname(directImportmap);
-      return resolveImportmap(baseDir, content);
+      const content = await readJson(baseDir, basename(directImportmap));
+      return await resolveImportmap(baseDir, content);
     }
   }
 
-  return Promise.resolve([]);
+  return [];
 }
 
 async function resolveImportmap(dir: string, importmap: Importmap): Promise<Array<SharedDependency>> {
@@ -86,7 +88,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
 
         if (entry) {
           const packageJson = await findFile(dirname(entry), 'package.json');
-          const [version, requireVersion] = getLocalDependencyVersion(packageJson, depName, versionSpec);
+          const [version, requireVersion] = await getLocalDependencyVersion(packageJson, depName, versionSpec);
 
           dependencies.push({
             id: `${identifier}@${version}`,
@@ -104,7 +106,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
 
         if (entry) {
           const packageJson = await findFile(dirname(entry), 'package.json');
-          const [version, requireVersion] = getLocalDependencyVersion(packageJson, depName, versionSpec);
+          const [version, requireVersion] = await getLocalDependencyVersion(packageJson, depName, versionSpec);
 
           dependencies.push({
             id: `${identifier}@${version}`,
@@ -129,7 +131,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
           const packageJsonExists = await checkExists(packageJson);
 
           if (packageJsonExists) {
-            const [version, requireVersion] = getLocalDependencyVersion(packageJson, depName, versionSpec);
+            const [version, requireVersion] = await getLocalDependencyVersion(packageJson, depName, versionSpec);
 
             dependencies.push({
               id: `${identifier}@${version}`,

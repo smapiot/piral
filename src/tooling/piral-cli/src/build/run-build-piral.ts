@@ -9,6 +9,7 @@ function run(
   emulator: boolean,
   standalone: boolean,
   sourceMaps: boolean,
+  watch: boolean,
   contentHash: boolean,
   minify: boolean,
   externals: Array<string>,
@@ -42,7 +43,7 @@ function run(
     publicUrl,
     hmr: false,
     logLevel,
-    watch: false,
+    watch,
     args,
   });
 }
@@ -60,6 +61,7 @@ process.on('message', async (msg) => {
           msg.emulator,
           msg.standalone,
           msg.sourceMaps,
+          msg.watch,
           msg.contentHash,
           msg.minify,
           msg.externals,
@@ -72,7 +74,7 @@ process.on('message', async (msg) => {
         );
         const result = await bundler.bundle();
 
-        if (result) {
+        if (result && !msg.watch) {
           process.send({
             type: 'done',
             outDir: result.outDir,

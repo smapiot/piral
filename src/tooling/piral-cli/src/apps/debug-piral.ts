@@ -124,13 +124,15 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
   await hooks.onBegin?.({ options, fullBase });
 
-  await watcherTask(async (watcherContext) => {
-    progress('Reading configuration ...');
+  progress('Reading configuration ...');
+
+  const buildRef = await watcherTask(async (watcherContext) => {
     const entryFiles = await retrievePiralRoot(fullBase, entry);
-    const targetDir = dirname(entryFiles);
     const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
     const piralInstances = [name];
     const dest = getDestination(entryFiles, resolve(fullBase, target));
+
+    watcherContext.watch(join(root, 'package.json'));
 
     await checkCliCompatibility(root);
 
@@ -160,7 +162,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     });
 
     bundler.start();
+    return { bundler, entryFiles, root };
+  });
 
+  const serverRef = await watcherTask(async (watcherContext) => {
+    watcherContext.dependOn(buildRef);
+
+    const { bundler, entryFiles, root } = buildRef.data;
+    const targetDir = dirname(entryFiles);
     const krasBaseConfig = resolve(fullBase, krasrc);
     const krasRootConfig = resolve(root, krasrc);
     const mocks = join(targetDir, 'mocks');
@@ -182,6 +191,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
         },
       },
     };
+
+    watcherContext.watch(krasBaseConfig);
+    watcherContext.watch(krasRootConfig);
+
     const krasConfig = readKrasConfig({ port, initial, required }, krasBaseConfig, krasRootConfig);
 
     log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
@@ -195,8 +208,11 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     await krasServer.start();
     openBrowser(open, port, publicUrl, !!krasConfig.ssl);
     await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
-    await new Promise((resolve) => krasServer.on('close', resolve));
+
+    watcherContext.onClean(() => krasServer.stop());
   });
+
+  await Promise.all([buildRef.end, serverRef.end]);
 
   await hooks.onEnd?.({});
 }

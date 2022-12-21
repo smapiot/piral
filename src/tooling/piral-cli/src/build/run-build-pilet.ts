@@ -7,6 +7,7 @@ function run(
   root: string,
   piralInstances: Array<string>,
   sourceMaps: boolean,
+  watch: boolean,
   contentHash: boolean,
   minify: boolean,
   externals: Array<string>,
@@ -40,7 +41,7 @@ function run(
     contentHash,
     minify,
     logLevel,
-    watch: false,
+    watch,
     args,
   });
 }
@@ -56,6 +57,7 @@ process.on('message', async (msg) => {
           process.cwd(),
           msg.piralInstances,
           msg.sourceMaps,
+          msg.watch,
           msg.contentHash,
           msg.minify,
           msg.externals,
@@ -70,7 +72,7 @@ process.on('message', async (msg) => {
         );
         const result = await bundler.bundle();
 
-        if (result) {
+        if (result && !msg.watch) {
           process.send({
             type: 'done',
             outDir: result.outDir,

@@ -113,6 +113,11 @@ export interface BuildPiletOptions {
   sourceMaps?: boolean;
 
   /**
+   * States if the build should run continuously and re-build when files change.
+   */
+  watch?: boolean;
+
+  /**
    * Sets the bundler to use for building, if any specific.
    */
   bundlerName?: string;
@@ -165,6 +170,7 @@ export const buildPiletDefaults: BuildPiletOptions = {
   type: 'default',
   fresh: false,
   sourceMaps: true,
+  watch: false,
   contentHash: true,
   optimizeModules: false,
   schemaVersion: config.schemaVersion,
@@ -180,6 +186,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     logLevel = buildPiletDefaults.logLevel,
     minify = buildPiletDefaults.minify,
     sourceMaps = buildPiletDefaults.sourceMaps,
+    watch = buildPiletDefaults.watch,
     contentHash = buildPiletDefaults.contentHash,
     fresh = buildPiletDefaults.fresh,
     concurrency = buildPiletDefaults.concurrency,
@@ -233,6 +240,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
         piralInstances,
         optimizeModules,
         sourceMaps,
+        watch,
         contentHash,
         minify,
         externals,
@@ -313,6 +321,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           standalone: true,
           optimizeModules: false,
           sourceMaps,
+          watch: false,
           contentHash,
           minify,
           externals: [],
@@ -338,6 +347,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           standalone: true,
           optimizeModules: false,
           sourceMaps,
+          watch: false,
           contentHash,
           minify,
           externals: externals.map(m => m.name),

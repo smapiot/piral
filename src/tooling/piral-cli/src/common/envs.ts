@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { readFileSync } from 'fs';
 import { log } from './log';
 import { frameworkLibs } from './constants';
 import { pathSeparator, cliVersion, compatVersion } from './info';
@@ -11,7 +12,7 @@ function hasPath(path: string) {
 
 export function setStandardEnvs(options: StandardEnvProps) {
   log('generalDebug_0003', `Setting environment variables in "${options.root}" ...`);
-  const packageJson = require(join(options.root, 'package.json'));
+  const packageJson = JSON.parse(readFileSync(join(options.root, 'package.json'), 'utf8'));
   const binDir = join(options.root, 'node_modules', '.bin');
 
   process.env.BUILD_TIME = new Date().toDateString();
