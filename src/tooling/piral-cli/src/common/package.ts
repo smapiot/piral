@@ -563,7 +563,7 @@ export async function retrieveExternals(root: string, packageInfo: any): Promise
       ...packageInfo.dependencies,
     };
     const deps = packageInfo.pilets?.externals;
-    const externals = makeExternals(root, allDeps, deps);
+    const externals = await makeExternals(root, allDeps, deps);
     return externals.map((ext) => ({
       id: ext,
       name: ext,
@@ -667,7 +667,7 @@ async function getPiletPackage(
         ...info.scripts,
       }
     : info.scripts;
-  const allExternals = makePiletExternals(root, piralDependencies, fromEmulator, piralInfo);
+  const allExternals = await makePiletExternals(root, piralDependencies, fromEmulator, piralInfo);
   const devDependencies: Record<string, string> = {
     ...Object.keys(typeDependencies).reduce((deps, name) => {
       deps[name] = piralDependencies[name] || typeDependencies[name];

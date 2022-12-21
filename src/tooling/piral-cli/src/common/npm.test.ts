@@ -27,9 +27,23 @@ import {
 jest.mock('child_process');
 
 jest.mock('../external', () => ({
+  ...jest.requireActual('../external'),
   rc() {},
   ora() {
-    return {};
+    return {
+      succeed(msg) {
+        console.warn(msg);
+      },
+      warn(msg) {
+        console.warn(msg);
+      },
+      info(msg) {
+        console.info(msg);
+      },
+      fail(msg) {
+        console.error(msg);
+      },
+    };
   },
   getModulePath(root, moduleName) {
     return require.resolve(moduleName, {
@@ -54,9 +68,7 @@ jest.mock('./scripts', () => ({
 }));
 
 jest.mock('fs', () => ({
-  createReadStream() {
-    return undefined;
-  },
+  ...jest.requireActual('fs'),
   exists: (file: string, cb: (status: boolean) => void) =>
     cb(
       shouldFind &&
@@ -67,6 +79,12 @@ jest.mock('fs', () => ({
     return true;
   },
   readFile: (file: string, type: string, callback: (err: NodeJS.ErrnoException | undefined, data: string) => void) => {
+    const fs = jest.requireActual('fs');
+
+    if (fs.existsSync(file)) {
+      return fs.readFile(file, type, callback);
+    }
+
     return callback(undefined, '');
   },
   realpathSync: () => ({}),
@@ -384,11 +402,12 @@ describe('npm Module', () => {
   });
 
   it('verify whether package is linked', () => {
-    let result = isLinkedPackage('foo', 'registry', false);
+    const target = process.cwd();
+    let result = isLinkedPackage('foo', 'registry', false, target);
     expect(result).toBeFalsy();
-    result = isLinkedPackage('foo', 'file', false);
+    result = isLinkedPackage('foo', 'file', false, target);
     expect(result).toBeFalsy();
-    result = isLinkedPackage('foo', 'git', false);
+    result = isLinkedPackage('foo', 'git', false, target);
     expect(result).toBeFalsy();
   });
 
@@ -403,16 +422,16 @@ describe('npm Module', () => {
     expect(result).toBe('foo');
   });
 
-  it('retrieve package name', () => {
+  it('retrieve package name', async () => {
     let result = getPackageName('./', 'foo', 'file');
     expect(result).toBeInstanceOf(Promise);
-    result.then((message) => expect(message).toBeUndefined());
+    await result.then((message) => expect(message).toBeUndefined());
     result = getPackageName('./', 'foo', 'git');
     expect(result).toBeInstanceOf(Promise);
-    result.then((message) => expect(message).toBeUndefined());
+    await result.then((message) => expect(message).toBeUndefined());
     result = getPackageName('./', 'foo', 'registry');
     expect(result).toBeInstanceOf(Promise);
-    result.then((name) => expect(name).toEqual('foo'));
+    await result.then((name) => expect(name).toEqual('foo'));
   });
 
   it('gets path to file package', () => {
@@ -436,39 +455,39 @@ describe('npm Module', () => {
     expect(result).toEqual('git+https://.foo.git');
   });
 
-  it('gets path to git package', () => {
+  it('gets path to git package', async () => {
     const result = getCurrentPackageDetails('./', './foo.tgz', '', 'file://foo.tgz', './');
-    result.then(([path, version]) => {
+    await result.then(([path, version]) => {
       expect(path).not.toBeUndefined();
     });
     const result2 = getCurrentPackageDetails('./', './foo.tgz', '', 'git+https://.foo.git', './');
-    result2.then(([path, version]) => {
+    await result2.then(([path, version]) => {
       expect(path).not.toBeUndefined();
     });
     const result3 = getCurrentPackageDetails('./', './foo.tgz', '1.0.0', 'latest', './');
-    result3.then(([path, version]) => {
+    await result3.then(([path, version]) => {
       expect(path).toEqual('./foo.tgz@latest');
       expect(version).toEqual('latest');
     });
   });
 
-  it('makeExternals without externals returns coreExternals', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' });
+  it('makeExternals without externals returns coreExternals', async () => {
+    const externals = await makeExternals(process.cwd(), { piral: '*' }, []);
     expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
-  it('makeExternals with no externals returns coreExternals', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, []);
+  it('makeExternals with no externals returns coreExternals', async () => {
+    const externals = await makeExternals(process.cwd(), { piral: '*' }, []);
     expect(externals).toEqual(['react', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
-  it('makeExternals with exclude coreExternals returns empty set', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, ['!*']);
+  it('makeExternals with exclude coreExternals returns empty set', async () => {
+    const externals = await makeExternals(process.cwd(), { piral: '*' }, ['!*']);
     expect(externals).toEqual([]);
   });
 
-  it('makeExternals with externals concats coreExternals', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, ['foo', 'bar']);
+  it('makeExternals with externals concats coreExternals', async () => {
+    const externals = await makeExternals(process.cwd(), { piral: '*' }, ['foo', 'bar']);
     expect(externals).toEqual([
       'foo',
       'bar',
@@ -480,18 +499,18 @@ describe('npm Module', () => {
     ]);
   });
 
-  it('makeExternals with external duplicate only reflects coreExternals', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'foo']);
+  it('makeExternals with external duplicate only reflects coreExternals', async () => {
+    const externals = await makeExternals(process.cwd(), { piral: '*' }, ['react', 'foo']);
     expect(externals).toEqual(['react', 'foo', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
-  it('makeExternals with explicit include and exclude', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-calendar', '!tslib']);
+  it('makeExternals with explicit include and exclude', async () => {
+    const externals = await makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-calendar', '!tslib']);
     expect(externals).toEqual(['react', 'react-calendar', 'react-dom', 'react-router', 'react-router-dom']);
   });
 
-  it('makeExternals with all exclude and explicit include', () => {
-    const externals = makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-router-dom', '!*']);
+  it('makeExternals with all exclude and explicit include', async () => {
+    const externals = await makeExternals(process.cwd(), { piral: '*' }, ['react', 'react-router-dom', '!*']);
     expect(externals).toEqual(['react', 'react-router-dom']);
   });
 });

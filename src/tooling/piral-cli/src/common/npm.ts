@@ -1,5 +1,5 @@
 import { resolve, relative, dirname } from 'path';
-import { createReadStream, existsSync, readFileSync } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 import { log, fail } from './log';
 import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
@@ -419,9 +419,15 @@ export async function getPackageName(root: string, name: string, type: PackageTy
 
       if (!originalPackageJson.name) {
         const p = resolve(process.cwd(), name);
-        const s = createReadStream(p);
-        const i = await inspectPackage(s);
-        return i.name;
+
+        try {
+          const s = createReadStream(p);
+          const i = await inspectPackage(s);
+          return i.name;
+        } catch (err) {
+          log('generalError_0002', `Could not open package tarball at "${p}": "${err}`);
+          return undefined;
+        }
       }
 
       return originalPackageJson.name;
@@ -460,21 +466,22 @@ export function getPackageVersion(
   }
 }
 
-function getExternalsFrom(root: string, packageName: string): Array<string> | undefined {
+async function getExternalsFrom(root: string, packageName: string): Promise<Array<string> | undefined> {
   try {
     const target = getModulePath(root, `${packageName}/package.json`);
-    const content = JSON.parse(readFileSync(target, 'utf8'));
-    return content.sharedDependencies;
+    const dir = dirname(target);
+    const { sharedDependencies } = await readJson(dir, 'package.json');
+    return sharedDependencies;
   } catch (err) {
     log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);
     return undefined;
   }
 }
 
-function getCoreExternals(root: string, dependencies: Record<string, string>): Array<string> {
+async function getCoreExternals(root: string, dependencies: Record<string, string>): Promise<Array<string>> {
   for (const frameworkLib of frameworkLibs) {
     if (dependencies[frameworkLib]) {
-      const deps = getExternalsFrom(root, frameworkLib);
+      const deps = await getExternalsFrom(root, frameworkLib);
 
       if (deps) {
         return deps;
@@ -486,17 +493,17 @@ function getCoreExternals(root: string, dependencies: Record<string, string>): A
   return [];
 }
 
-export function makePiletExternals(
+export async function makePiletExternals(
   root: string,
   dependencies: Record<string, string>,
   fromEmulator: boolean,
   piralInfo: any,
-): Array<string> {
+): Promise<Array<string>> {
   if (fromEmulator) {
     const { sharedDependencies = legacyCoreExternals } = piralInfo;
     return sharedDependencies;
   } else {
-    return getCoreExternals(root, dependencies);
+    return await getCoreExternals(root, dependencies);
   }
 }
 
@@ -523,7 +530,7 @@ export function mergeExternals(customExternals?: Array<string>, coreExternals: A
   return coreExternals;
 }
 
-export function makeExternals(root: string, dependencies: Record<string, string>, externals: Array<string>) {
-  const coreExternals = getCoreExternals(root, dependencies);
+export async function makeExternals(root: string, dependencies: Record<string, string>, externals: Array<string>) {
+  const coreExternals = await getCoreExternals(root, dependencies);
   return mergeExternals(externals, coreExternals);
 }
