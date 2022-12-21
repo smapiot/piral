@@ -72,7 +72,7 @@ process.on('message', async (msg) => {
         );
         const result = await bundler.bundle();
 
-        if (result) {
+        if (result && !msg.watch) {
           process.send({
             type: 'done',
             outDir: result.outDir,
