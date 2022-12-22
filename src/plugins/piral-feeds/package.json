@@ -1,6 +1,6 @@
 {
   "name": "piral-feeds",
-  "version": "0.15.3",
+  "version": "0.15.4",
   "description": "Plugin for connecting data feeds in Piral.",
   "keywords": [
     "piral",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "piral-core": "^0.15.3",
+    "piral-core": "^0.15.4",
     "react": "^18.0.0"
   },
   "peerDependencies": {

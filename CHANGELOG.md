@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.4 (tbd)
+## 0.15.4 (December 21, 2022)
 
 - Fixed issue loading `dotnetjs` in `piral-blazor`
 - Added watcher for *package.json* and config files to `piral debug`
