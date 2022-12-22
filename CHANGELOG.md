@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.5 (tbd)
+
+- Fixed issue with exports not being returned in pilets (#570)
+
 ## 0.15.4 (December 21, 2022)
 
 - Fixed issue loading `dotnetjs` in `piral-blazor`
