@@ -64,6 +64,11 @@ export interface DebugPiralOptions {
   bundlerName?: string;
 
   /**
+   * Sets the relative path to the krasrc, if any.
+   */
+  krasrc?: string;
+
+  /**
    * States if the node modules should be included for target transpilation
    */
   optimizeModules?: boolean;
@@ -99,6 +104,7 @@ export const debugPiralDefaults: DebugPiralOptions = {
   logLevel: LogLevels.info,
   open: config.openBrowser,
   hmr: true,
+  krasrc: undefined,
   optimizeModules: false,
 };
 
@@ -111,6 +117,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     port: originalPort = debugPiralDefaults.port,
     publicUrl: originalPublicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
+    krasrc: customkrasrc = debugPiralDefaults.krasrc,
     optimizeModules = debugPiralDefaults.optimizeModules,
     feed,
     _ = {},
@@ -177,6 +184,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     const mocksExist = await checkExistingDirectory(mocks);
     const sources = [mocksExist ? mocks : undefined].filter(Boolean);
     const initial = createInitialKrasConfig(baseMocks, sources);
+    const configs = [krasBaseConfig, krasRootConfig];
     const required = {
       injectors: {
         piral: {
@@ -192,10 +200,13 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       },
     };
 
-    watcherContext.watch(krasBaseConfig);
-    watcherContext.watch(krasRootConfig);
+    if (customkrasrc) {
+      configs.push(resolve(fullBase, customkrasrc));
+    }
 
-    const krasConfig = readKrasConfig({ port, initial, required }, krasBaseConfig, krasRootConfig);
+    configs.forEach(cfg => watcherContext.watch(cfg));
+
+    const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 
     log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 

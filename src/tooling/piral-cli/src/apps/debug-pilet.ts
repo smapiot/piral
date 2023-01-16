@@ -87,6 +87,11 @@ export interface DebugPiletOptions {
   bundlerName?: string;
 
   /**
+   * Sets the relative path to the krasrc, if any.
+   */
+  krasrc?: string;
+
+  /**
    * States if the node modules should be included for target transpilation
    */
   optimizeModules?: boolean;
@@ -130,6 +135,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   port: config.port,
   publicUrl: '/',
   hmr: true,
+  krasrc: undefined,
   optimizeModules: false,
   schemaVersion: config.schemaVersion,
   concurrency: cpuCount,
@@ -213,6 +219,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     publicUrl: originalPublicUrl = debugPiletDefaults.publicUrl,
     logLevel = debugPiletDefaults.logLevel,
     concurrency = debugPiletDefaults.concurrency,
+    krasrc: customkrasrc = debugPiletDefaults.krasrc,
     optimizeModules = debugPiletDefaults.optimizeModules,
     schemaVersion = debugPiletDefaults.schemaVersion,
     _ = {},
@@ -331,6 +338,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         const krasBaseConfig = resolve(fullBase, krasrc);
         const krasRootConfig = resolve(appRoot, krasrc);
         const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
+        const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
         const required = {
           injectors: {
             piral: {
@@ -346,7 +354,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
             },
           },
         };
-        const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
+
+        if (customkrasrc) {
+          configs.push(resolve(fullBase, customkrasrc));
+        }
+
+        configs.forEach(cfg => watcherContext.watch(cfg));
+
         const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 
         log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
