@@ -3,6 +3,7 @@
 ## 0.15.5 (tbd)
 
 - Fixed issue with exports not being returned in pilets (#570)
+- Added support for localization to `piral-blazor`
 - Added `--krasrc` flag to `piral debug` and `pilet debug` (#572)
 
 ## 0.15.4 (December 21, 2022)
