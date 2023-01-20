@@ -11,7 +11,9 @@ title: Piral VS Code
 You can install the extension from:
 
 [![VS Code Logo](../diagrams/vscode-vscode-logo.svg){style="background-color: transparent"} **VS Code Marketplace**](https://marketplace.visualstudio.com/items?itemName=smapiot.vscode-piral) &nbsp; &middot; &nbsp;
-[![VSX Logo](../diagrams/vscode-vsx-logo.svg){style="background-color: transparent"} **Open VSX**](https://open-vsx.org/extension/smapiot/vscode-piral)
+[![VSX Logo](../diagrams/vscode-vsx-logo.svg){style="background-color: transparent"} **Open VSX**](https://open-vsx.org/extension/smapiot/vscode-piral) [^1]
+
+[^1]: For VS Code compatible editors like Gitpod, Eclipse Theia, or VSCodium.
 
 ## Piral VS Code In One Minute
 

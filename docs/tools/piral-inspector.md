@@ -69,7 +69,7 @@ It is also possible to dynamically add new pilets which are not being debugged a
 
 ![Add pilets from feed](../diagrams/piralinspector-feature-pilets-add-feed.png)
 
-The second way is to directly upload a pilet. To do this, your pilet must be packed (e.g. via `pilet pack`). The produced bundle can be uploaded via the controls in the below image. Once uploaded, the pilet will be integrated to the current application.
+The second way is to directly upload a pilet. To do this, your pilet must be packed (e.g., via `pilet pack`). The produced bundle can be uploaded via the controls in the below image. Once uploaded, the pilet will be integrated to the current application.
 
 ![Upload pilets](../diagrams/piralinspector-feature-pilets-upload.png)
 
@@ -140,7 +140,7 @@ Each Piral application features a global state which, depending on the level of 
 View a graph detailing the dependency and package structure of your application, including all pilets.
 :::
 
-Piral applications are inherently modular. A key feature of piral is dependency sharing, meaning that dependencies (i.e. packages) are not loaded multiple times, but just once, even if required by multiple pilets. This needs to be properly set up though.
+Piral applications are inherently modular. A key feature of piral is dependency sharing, meaning that dependencies (i.e., packages) are not loaded multiple times, but just once, even if required by multiple pilets. This needs to be properly set up though.
 
 Piral Inspector provides a feature which helps here: The "Dependencies" tab displays a graph of the application's dependency structure, from the app-shell to the pilets. In the following image, you can see the structure of a Piral sample application. The graph displays the app shell ("sample-piral", red), the pilets (gray) and the pilet's dependencies (purple). All pilets reference the same dependencies (`react`, for example), meaning that this dependency is properly shared between them.
 
@@ -178,7 +178,7 @@ Refreshes the current browser page when the currently debugged pilet changes.
 
 ### Visualize component origins
 
-While enabled, provides an additional button that visually indicates the _origin_ of the page's components, i.e. the pilet where a component is registered. This can be very useful for analyzing Piral applications, e.g. for detecting which pilet needs to be updated when you want to make changes to a specific component.
+While enabled, provides an additional button that visually indicates the _origin_ of the page's components, i.e., the pilet where a component is registered. This can be very useful for analyzing Piral applications, e.g., for detecting which pilet needs to be updated when you want to make changes to a specific component.
 
 ![Visualize component origins button](../diagrams/piralinspector-setting-visualize-component-origins-button.png)
 ![Visualize component origins result](../diagrams/piralinspector-setting-visualize-component-origins-result.png)
