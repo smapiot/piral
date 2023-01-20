@@ -168,7 +168,7 @@ This feature only has an impact when debugging _pilets_, i.e., when `pilet debug
 
 Activates/Deactivates the loading of the available pilets.
 
-### Full refresh on change
+### Full Refresh on Change
 
 ::: warning: Only for pilets
 This feature only has an impact when debugging _pilets_, i.e., when `pilet debug` is running.
@@ -176,25 +176,25 @@ This feature only has an impact when debugging _pilets_, i.e., when `pilet debug
 
 Refreshes the current browser page when the currently debugged pilet changes.
 
-### Visualize component origins
+### Visualize Component Origins
 
 While enabled, provides an additional button that visually indicates the _origin_ of the page's components, i.e., the pilet where a component is registered. This can be very useful for analyzing Piral applications, e.g., for detecting which pilet needs to be updated when you want to make changes to a specific component.
 
 ![Visualize component origins button](../diagrams/piralinspector-setting-visualize-component-origins-button.png)
 ![Visualize component origins result](../diagrams/piralinspector-setting-visualize-component-origins-result.png)
 
-### Enable extension catalogue
+### Enable Extension Catalogue
 
 Enables or disables the [extension catalogue](#extensions).
 
-### Clear console during HMR
+### Clear Console During HMR
 
 When enabled, clears the entire console when an HMT (Hot Module Replacement) is detected.
 
-### Persist settings
+### Persist Settings
 
 When enabled, any changes made to these settings are stored. If disabled, any settings made are erased when the session expires.
 
-### Switch to dark mode
+### Switch to Dark Mode
 
 Allows toggling the color mode of the extension panel.
