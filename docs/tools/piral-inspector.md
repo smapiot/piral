@@ -45,7 +45,15 @@ Here, ...
 
 ## Features
 
-The extensions features are categorized via the tabs. Each tab hides a distinct set of related features. These are described in the following sections.
+The extensions features are categorized via the tabs. Each tab hides a distinct set of related features. The following features are included and described in the upcoming sections:
+
+- [Pilets](#pilets)
+- [Pages](#pages)
+- [Extensions](#extensions)
+- [Events](#events)
+- [Pilets](#pilets)
+- [App State](#app-state)
+- [Dependencies](#dependencies)
 
 ### Pilets
 
