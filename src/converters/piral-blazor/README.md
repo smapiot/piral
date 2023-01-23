@@ -158,6 +158,16 @@ const instance = createInstance({
 
 To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g., `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
 
+For setting up localization you can supply options such as `initialLanguage` and `onLanguageChange` to the `createBlazorApi` call. While the former is used to set the initial language, the latter can be used to change the language later on. By default, `onLanguageChange` will be configured to listen to the `select-language` event emitted from Piral. This event is emitted (among others) by `piral-translate`, i.e., if you use this plugin it will just work.
+
+Otherwise, you can either emit the event yourself (transporting an object with `currentLanguage` set to the desired language), or use `onLanguageChange` to wire it to whatever event source / emitter you'd like.
+
+Ultimately, you can also call the `SetLanguage` in Piral.Blazor.Core from JavaScript like this:
+
+```js
+window.DotNet.invokeMethodAsync('Piral.Blazor.Core', 'SetLanguage', language);
+```
+
 :::
 
 ## License

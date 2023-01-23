@@ -22,7 +22,7 @@ export interface BlazorConfig {
    * this will hook on to the `select-language` event from Piral.
    * @param inform The callback to use for passing in a new locale.
    */
-  onLanguageChange?(inform: (language: string) => void): void;
+  onLanguageChange?: ((inform: (language: string) => void) => void) | false;
   /**
    * Determines the start options to use for booting Blazor.
    */
@@ -45,7 +45,7 @@ export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBla
     const { lazy, initialLanguage, onLanguageChange = createDefaultHandler(context) } = config;
     const convert = createConverter(lazy, config.options, {
       current: initialLanguage,
-      onChange: onLanguageChange,
+      onChange: onLanguageChange || (() => {}),
     });
     context.converters.blazor = ({ moduleName, args, dependency, options }) =>
       convert(moduleName, dependency, args, options);
