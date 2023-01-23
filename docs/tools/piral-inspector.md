@@ -2,229 +2,199 @@
 title: Piral Inspector
 ---
 
-# Piral Browser Extension
+# Piral Inspector
 
 ## Introduction
 
-To optimally work as a developer with your Piral Instance, and all of its containing pilets, Piral Inspector offers a great set of capabilities:
+[Piral Inspector](https://github.com/smapiot/piral-inspector) is a browser extension which streamlines your development process with Piral. It provides both deep insight unique to your Piral application and tools to debug it on the fly.
 
-- Getting information about the currently running Piral Instance, e.g., name and version
-- Overview on currently loaded pilets
-- Adding/Removing pilets on-the-fly
-- Overview of registered routes
-- Collection of emitted events
-- Collection of global states
+You can install the extension for the following browsers:
 
-As a developer of your Piral Instance, or your pilets, you are used to working with a web browser. And this is precisely the best place to get assisted by the Piral Inspector during the development or testing phase.
+[![Firefox Logo](../diagrams/piralinspector-browser-firefox.svg){style="background-color: transparent"} **Firefox**](https://addons.mozilla.org/en-US/firefox/addon/piral-inspector) &nbsp; &middot; &nbsp;
+[![Chrome Logo](../diagrams/piralinspector-browser-chrome.svg){style="background-color: transparent"} **Google Chrome**](https://chrome.google.com/webstore/detail/piral-inspector/ikbpelpjfgmplidagknaaegjhfigcbfl) &nbsp; &middot; &nbsp;
+[![Edge Logo](../diagrams/piralinspector-browser-edge.svg){style="background-color: transparent"} **Microsoft Edge**](https://microsoftedge.microsoft.com/addons/detail/piral-inspector/hbdhpkhidilkmkbkklcbjgddbeodibml) &nbsp; &middot; &nbsp;
+[![Opera Logo](../diagrams/piralinspector-browser-opera.svg){style="background-color: transparent"} **Opera**](https://addons.opera.com/en/extensions/details/piral-inspector)
 
-We provide the Piral Inspector as an extension for the following browsers:
+## Piral Inspector In One Minute
 
-- [Google Chrome](https://chrome.google.com/webstore/detail/piral-inspector/ikbpelpjfgmplidagknaaegjhfigcbfl) (>= v50)
-- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/piral-inspector/) (>= v50)
-- [Opera](https://addons.opera.com/en/extensions/details/piral-inspector/) (>= v50)
-
-## Installation of Add-On/Extension
-
-::: summary: Firefox
-
-Type the following URL into the browser address line followed by hitting enter:
-
-```plaintext
-about:addons
-```
-
-On the following page, you can search for "Piral Inspector", and you will see the add-on as the first result:
-
-![FirefoxAddOnSearchResultPiralInspector](../diagrams/piralinspector_firefox_add-on_searchresult.png)
-
-Click on "Piral Inspector".
-
-On the following details page, click on "Add to Firefox":
-
-![FirefoxAddOnAddToFirefoxPiralInspector](../diagrams/piralinspector_firefox_add-on_add.png)
-
-Now, a security message will appear, please click on "Add" to accept the required security settings:
-
-![FirefoxAddOnSecurityMessagePiralInspector](../diagrams/piralinspector_firefox_add-on_security.png)
-
-Piral Inspector is now available, and you can open it via the Web Developer Tools (Tools > Web Developer > Toggle Tools).
-
-On the tools bar, there now will also appear the Piral icon, and with a click on it, you will see the initial "Not connected" page.
-
-In case you are currently running a Piral Instance in debug mode, you will see the available pilets and registered routes.
-
-![FirefoxAddOnToolPiralInspector](../diagrams/piralinspector_firefox_add-on_tool.png)
+::: tip: TL;DR
+Piral Inspector only activates when you are _debugging a Piral application_ on _localhost_.
+The new _toolbar entries_ in the browser show you when Piral Inspector can be used.
+The actual features can all be accessed via the new _"Piral" tab_ in the browser's _developer tools_.
 :::
 
-::: summary: Google Chrome
+Once installed, the Piral Inspector extension injects two new areas into your browser: A toolbar entry and a new panel in the browser's developer tools.
 
-Type the following URL into the browser address line followed by hitting enter:
+The toolbar entry indicates whether you can use Piral Inspector on the current page. If it looks like this, the current page is either _not using Piral_ or it is _not running on localhost_ - in either case, you **cannot** use the Piral Inspector extension here:
 
-```plaintext
-https://chrome.google.com/webstore/category/extensions
-```
+![Piral Inspector - Disabled toolbar entry](../diagrams/piralinspector-extension-toolbar-gray.png)
 
-On the following page, you can search for "Piral Inspector", and you will see the add-on as the first result.
+If the toolbar entry has a green icon and shows the following message, you **can** use the extension's debugging capabilities on the current page:
 
-Click on "Add to Chrome".
+![Piral Inspector - Enabled toolbar entry](../diagrams/piralinspector-extension-toolbar-green.png)
 
-![GoogleChromeExtensionAddToChromePiralInspector](../diagrams/piralinspector_chrome_add-on_searchresult.png)
+In that case, the new "Piral" tab in the browser's developer tools will display the heart of the Piral Inspector:
 
-Now, a security message will appear, please click on "Add extension" to accept the required security settings:
+![Piral Inspector - developer tool tab](../diagrams/piralinspector-devtools-overview.png)
 
-![GoogleChromeExtensionSecurityMessagePiralInspector](../diagrams/piralinspector_chrome_add-on_security.png)
+Here, ...
+- **(1)** displays the application that you are debugging.
+- **(2)** allows you to configure the extension. See [Settings](#settings) for details.
+- **(3)** shows the feature tabs. Each tab holds a unique category of features. See [Features](#features) for details.
+- **(4)** shows the current tab's content.
 
-Piral Inspector is now available, and you can open it via the Developer Tools (View > Developer > Developer Tools).
+## Features
 
-On the tools bar, there now will also appear the Piral icon, and with a click on it, you will see the initial "Not connected" page.
+The extensions features are categorized via the tabs. Each tab hides a distinct set of related features. The following features are included and described in the upcoming sections:
 
-In case you are currently running a Piral Instance in debug mode, you will see the available pilets and registered routes.
+- [Pilets](#pilets)
+- [Pages](#pages)
+- [Extensions](#extensions)
+- [Events](#events)
+- [Pilets](#pilets)
+- [App State](#app-state)
+- [Dependencies](#dependencies)
 
-![GoogleChromeExtensionToolPiralInspector](../diagrams/piralinspector_chrome_add-on_tool.png)
+### Pilets
+
+::: tip: TL;DR
+The _Pilets_ tab allows you to view and modify the loaded pilets of your application. You can easily enable/disable pilets, as well as dynamically add new pilets either from a feed or from a locally built pilet bundle.
 :::
 
-::: summary: Opera
+When you are debugging an application which consists of multiple pilets, the Piral Inspector displays all those pilets and allows you to enable and disable them. This allows you to test and observe how the application behaves when pilets are present and missing. It is also possible to completely remove the pilet by pressing the ❌ button. In contrast to disabling a pilet via the toggle, a deleted pilet cannot be reenabled (in this session).
 
-Type the following URL into the browser address line followed by hitting enter:
+![Available pilets from the Piral Inspector](../diagrams/piralinspector-feature-pilets-available-pilets.png)
 
-```plaintext
-addons.opera.com/extensions
-```
+It is also possible to dynamically add new pilets which are not being debugged at the moment. There are two ways to do that. The first approach is to load the pilets from a feed address. This can be done by putting the feed's address into the textbox below and clicking "Add". The feed's pilets will then be loaded into the current application.
 
-On the following page, you can search for "Piral Inspector", and you will see the add-on as the first result.
+![Add pilets from feed](../diagrams/piralinspector-feature-pilets-add-feed.png)
 
-Click on "Add to Opera".
+The second way is to directly upload a pilet. To do this, your pilet must be packed (e.g., via `pilet pack`). The produced bundle can be uploaded via the controls in the below image. Once uploaded, the pilet will be integrated to the current application.
 
-![OperaExtensionAddToOperaPiralInspector](../diagrams/piralinspector_opera_add-on_searchresult.png)
-
-Now, a security message will appear, please click on "Add extension" to accept the required security settings:
-
-![OperaExtensionSecurityMessagePiralInspector](../diagrams/piralinspector_chrome_add-on_security.png)
-
-Piral Inspector is now available, and you can open it via the Developer Tools (Developer > Developer Tools).
-
-On the tools bar, there now will also appear the Piral icon, and with a click on it, you will see the initial "Not connected" page.
-
-In case you are currently running a Piral Instance in debug mode, you will see the available pilets and registered routes.
-
-![OperaExtensionToolPiralInspector](../diagrams/piralinspector_chrome_add-on_tool.png)
-:::
-
-## Using Piral Inspector
-
-Piral Inspector offers a wide variety of capabilities regarding Piral Instance and its corresponding pilets.
-
-The add-on/extension operates locally in debug mode running a Piral Instance, and it directly interacts with it.
-
-The following sections are shown inside the extension:
-
-- Information about Piral Instance
-- Available pilets
-- Add pilets
-- Registered Routes
-- Events
-- State Container
-
-All of these sections are documented in the following chapters:
-
-### Piral Instance
-
-In the very left top, the extension shows the name and the version of the currently running Piral Instance.
-
-Besides that, in the very right top, a click on the icon allows the user to adapt the extension's settings to its needs.
-
-![PiralInstanceToolPiralInspector](../diagrams/piralinspector_tool_piralinstance.png)
-
-In the debug setting, the user can activate/deactivate the following options:
-
-![DebugSettingsToolPiralInspector](../diagrams/piralinspector_tool_debugsettings.png)
-
-#### State Container Logging
-
-Activates/Deactivates the logging of changes in the state container to the Developer Tools console.
-
-#### Load Available Pilets
-
-Activates/Deactivates the loading of the available pilets.
-
-::: warning: Only for pilets
-This feature has an impact only when the emulator is used, i.e., when `pilet debug` is running.
-:::
-
-#### Full Refresh on Change
-
-Refreshes the current browser page in case there was a change in the debugged pilet.
-
-::: warning: Only for pilets
-This feature has an impact only when the emulator is used, i.e., when `pilet debug` is running.
-:::
-
-#### Visualize Component Origins
-
-Activates the option to visualize the origin of the modules as another icon in Piral Instance section:
-
-![Debug settings from the Piral Inspector](../diagrams/piralinspector_tool_visualizecomponentoriginicon.png)
-
-After clicking on the icon, the origin of every single tile will be displayed:
-
-![Debug settings for visualizations in the Piral Inspector](../diagrams/piralinspector_tool_visualizecomponentorigintile.png)
-
-The origin will also be displayed when hovering over a tile.
-
-### Available Pilets
-
-The Piral Inspector lists all the currently available pilets. As illustrated in the table below.
-
-![Available pilets from the Piral Inspector](../diagrams/piralinspector_tool_availablepilets.png)
-
-By clicking on the switch button on the left, the user can activate and deactivate each pilet.
-
-With a click on the "X" on the right, the user can remove each pilet individually.
-
-### Add Pilets
-
-There are two options to load additional pilets into the currently running Piral Instance:
-
-#### Add a Feed Address
-
-Enter a feed address into the text field and click on the "Add" button.
-
-In case you chose a feed you have access to, the corresponding pilets will be loaded and shown in the tile section and the list of available pilets. Per default, the new pilets will be active.
-
-#### Bundle Local Pilet and Upload It
-
-First, you need to "Browse" to the pilet package file and then "Upload" it.
-
-In case you uploaded a proper pilet, it will be loaded and shown in the tile section and the list of available pilets. By default, the new pilet will be active but will be given a random name.
+![Upload pilets](../diagrams/piralinspector-feature-pilets-upload.png)
 
 ::: warning: Temporary feed
-The pilet will be loaded into a temporary feed, and this feed (including the pilets) will be removed when the predefined lifetime (by default 60 minutes) expires.
+The uploaded pilet will be loaded into a _temporary feed_ which will be _deleted_ after _60 minutes_.
 :::
 
-![Add pilets to the Piral Inspector](../diagrams/piralinspector_tool_addpilets.png)
+### Pages
 
-### Registered Routes
+::: tip: TL;DR
+View all registered pages and quickly navigate to them with one click.
+:::
 
-This section shows all currently registered routes, and with a click on a single one, it will call the route.
+The extension displays all registered routes in a table. This includes routes from both the app shell and from pilets. It is possible to easily make the application navigate to those pages by clicking on the respective route.
 
-![Registered routes in the Piral Inspector](../diagrams/piralinspector_tool_registeredroutes.png)
+![Registered routes in the Piral Inspector](../diagrams/piralinspector-features-pages.png)
 
-In case the route needs one or more input parameters, a dialog will appear, and the user can provide the required information.
+If the route requires one or more parameters, the extension will prompt you for those parameters. You can enter these as a JSON string.
 
-![Registered routes parameters in the Piral Inspector](../diagrams/piralinspector_tool_registeredroutespara.png)
+![Registered routes parameters in the Piral Inspector](../diagrams/piralinspector-features-pages-custom.png)
+
+### Extensions
+
+::: tip: TL;DR
+View all registered extensions and render them, standalone, on a new page.
+:::
+
+A Piral application typically consists of multiple extensions registered by various pilets. Extensions themselves need to be "plugged into" a page via dedicated components. Since the extensions are, very often, rendered in different pilets than where they are written, this can potentially make finding and testing them very hard. Piral Inspector tackles two problems in the "Extensions" tab:
+
+1. Finding all registered extensions.
+2. Allowing to quickly test an extension in isolation.
+
+By default, the extension catalogue lists all registered extensions:
+
+![All extensions](../diagrams/piralinspector-feature-extensions-list.png)
+
+It is also possible to render an extension in isolation. To do so, click on the extension in the list, provide the parameters that the extension expects as a JSON string and click on "Render". The application will navigate to a new page which displays the extension (and only the extension), as it would in its "usual" location.
+
+![Render extension](../diagrams/piralinspector-feature-extensions-render.png)
 
 ### Events
 
-All events which occurred since the last refresh of the page are collected and shown in this section.
+::: tip: TL;DR
+View all events which have been emitted so far and manually publish events via the UI.
+:::
 
-![Events in the Piral Inspector](../diagrams/piralinspector_tool_events.png)
+Piral natively supports emitting and receiving events to loosely couple various components together. The Piral Inspector listens to all events emitted by a Piral application (once loaded) and displays these events in order, allowing to easily understand when the application emitted which event.
 
-Besides that, the user can emit a new event:
+![Events in the Piral Inspector](../diagrams/piralinspector-feature-events-list.png)
 
-![Emitting events in the Piral Inspector](../diagrams/piralinspector_tool_emitevent.png)
+In addition, it is possible to manually publish events using the "Emit new event" button:
 
-### State Container
+![Emitting events in the Piral Inspector](../diagrams/piralinspector-feature-events-publish.png)
 
-The final section shows the currently available global state (read-only):
+### App State
 
-![State container inspection via the Piral inspector](../diagrams/piralinspector_tool_statecontainer.png)
+::: tip: TL;DR
+View the app's global state.
+:::
+
+Each Piral application features a global state which, depending on the level of customization, defines large parts of the application's UI. Extensions and pages are, for example, registered within the global state. Viewing that state can become very important for debugging issues. Piral Inspector makes it possible to view the state in the "App State" tab. Here, you can navigate through the entire state tree, down to the very leaves.
+
+![State container inspection via the Piral inspector](../diagrams/piralinspector-feature-appstate-list.png)
+
+### Dependencies
+
+::: tip: TL;DR
+View a graph detailing the dependency and package structure of your application, including all pilets.
+:::
+
+Piral applications are inherently modular. A key feature of piral is dependency sharing, meaning that dependencies (i.e., packages) are not loaded multiple times, but just once, even if required by multiple pilets. This needs to be properly set up though.
+
+Piral Inspector provides a feature which helps here: The "Dependencies" tab displays a graph of the application's dependency structure, from the app-shell to the pilets. In the following image, you can see the structure of a Piral sample application. The graph displays the app shell ("sample-piral", red), the pilets (gray) and the pilet's dependencies (purple). All pilets reference the same dependencies (`react`, for example), meaning that this dependency is properly shared between them.
+
+![Dependency Graph](../diagrams/piralinspector-feature-dependencies-graph.png)
+
+## Settings
+
+::: tip: TL;DR
+Both the extension and the debugged application can be configured to some degree. Some settings only work when debugging an _app shell_, while others only work when debugging _pilets_.
+:::
+
+Piral Inspector provides several settings, both for the extension itself and the debugged application. The settings have the following effects:
+
+### State Container Logging
+
+Enables/Disables the state container console logs which are, by default, emitted by Piral. You can disable this if your browser console feels cluttered.
+
+![State Container Logs](../diagrams/piralinspector-setting-state-container-logging.png)
+
+### Load Available Pilets
+
+::: warning: Only for pilets
+This feature only has an impact when debugging _pilets_, i.e., when `pilet debug` is running.
+:::
+
+Activates/Deactivates the loading of the available pilets.
+
+### Full Refresh on Change
+
+::: warning: Only for pilets
+This feature only has an impact when debugging _pilets_, i.e., when `pilet debug` is running.
+:::
+
+Refreshes the current browser page when the currently debugged pilet changes.
+
+### Visualize Component Origins
+
+While enabled, provides an additional button that visually indicates the _origin_ of the page's components, i.e., the pilet where a component is registered. This can be very useful for analyzing Piral applications, e.g., for detecting which pilet needs to be updated when you want to make changes to a specific component.
+
+![Visualize component origins button](../diagrams/piralinspector-setting-visualize-component-origins-button.png)
+![Visualize component origins result](../diagrams/piralinspector-setting-visualize-component-origins-result.png)
+
+### Enable Extension Catalogue
+
+Enables or disables the [extension catalogue](#extensions).
+
+### Clear Console During HMR
+
+When enabled, clears the entire console when an HMT (Hot Module Replacement) is detected.
+
+### Persist Settings
+
+When enabled, any changes made to these settings are stored. If disabled, any settings made are erased when the session expires.
+
+### Switch to Dark Mode
+
+Allows toggling the color mode of the extension panel.

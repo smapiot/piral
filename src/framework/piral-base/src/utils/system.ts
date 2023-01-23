@@ -90,7 +90,7 @@ System.constructor.prototype.register = function (...args) {
           }
         }
       } else {
-        _export(...p);
+        return _export(...p);
       }
     };
     return getContent(exp, ctx);

@@ -111,7 +111,7 @@ export interface PiletBlazorApi {
    *
    * @param referenceUrls The URLs pointing to the different DLLs to include.
    */
-  defineBlazorReferences(referenceUrls: Array<string>): void;
+  defineBlazorReferences(referenceUrls: Array<string>, satellites?: Record<string, Array<string>>): void;
   /**
    * Wraps a Blazor module for use in Piral.
    *

@@ -11,6 +11,10 @@
       "description": "Always includes the debug tools - not only in the emulator. By default, debug tools are not included.",
       "default": false
     },
+    "emulatorStartup": {
+      "type": "string",
+      "description": "Defines the script file to use when the emulator should start. By default, a web server serving the contents from 'app' is started."
+    },
     "pilets": {
       "type": "object",
       "description": "Determines the scaffolding and upgrading behavior of pilets using this Piral instance.",

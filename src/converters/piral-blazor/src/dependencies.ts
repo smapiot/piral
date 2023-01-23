@@ -14,10 +14,14 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     getDependency() {
       return dependency;
     },
-    defineBlazorReferences(references: Array<string>, meta: Partial<PiletMetadata> = {}) {
+    defineBlazorReferences(references: Array<string>, meta: Partial<PiletMetadata> = {}, satellites = {}) {
       const load = async ([_, capabilities]: BlazorRootConfig) => {
         if (capabilities.includes('load')) {
           // new loading mechanism
+
+          if (!capabilities.includes('language')) {
+            satellites = undefined;
+          }
 
           const dependencies = references.filter((m) => m.endsWith('.dll'));
           const dllUrl = dependencies.pop();
@@ -32,6 +36,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
             config: JSON.stringify(meta.config || {}),
             baseUrl: meta.basePath || dllUrl.substring(0, dllUrl.lastIndexOf('/')).replace('/_framework/', '/'),
             dependencies,
+            satellites,
             dllUrl,
             pdbUrl,
           });

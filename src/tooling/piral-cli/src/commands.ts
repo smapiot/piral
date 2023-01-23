@@ -82,6 +82,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('hmr')
         .describe('hmr', 'Activates Hot Module Reloading (HMR).')
         .default('hmr', apps.debugPiralDefaults.hmr)
+        .string('krasrc')
+        .describe('krasrc', 'Sets a config file for overwriting the default kras options.')
+        .default('krasrc', apps.debugPiralDefaults.krasrc)
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.debugPiralDefaults.optimizeModules)
@@ -100,6 +103,7 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         port: args.port as number,
         hmr: args.hmr as boolean,
+        krasrc: args.krasrc as string,
         optimizeModules: args['optimize-modules'] as boolean,
         publicUrl: args['public-url'] as string,
         bundlerName: args.bundler as string,
@@ -443,6 +447,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('hmr')
         .describe('hmr', 'Activates Hot Module Reloading (HMR).')
         .default('hmr', apps.debugPiletDefaults.hmr)
+        .string('krasrc')
+        .describe('krasrc', 'Sets a config file for overwriting the default kras options.')
+        .default('krasrc', apps.debugPiletDefaults.krasrc)
         .boolean('optimize-modules')
         .describe('optimize-modules', 'Also includes the node modules for target transpilation.')
         .default('optimize-modules', apps.debugPiletDefaults.optimizeModules)
@@ -470,6 +477,7 @@ const allCommands: Array<ToolCommand<any>> = [
         port: args.port as number,
         hmr: args.hmr as boolean,
         bundlerName: args.bundler as string,
+        krasrc: args.krasrc as string,
         optimizeModules: args['optimize-modules'] as boolean,
         appInstanceDir: args['app-dir'] as string,
         app: args.app as string,

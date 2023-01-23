@@ -6,6 +6,7 @@ import {
   createBootLoader,
   reactivate,
   callNotifyLocationChanged,
+  setLanguage,
   createElement,
   destroyElement,
   updateElement,
@@ -56,8 +57,29 @@ interface BlazorLocals {
   state: 'fresh' | 'mounted' | 'removed';
 }
 
-export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions) {
-  const boot = createBootLoader(bootConfig.url, bootConfig.satellites);
+export interface LanguageOptions {
+  current: string | undefined;
+  onChange(inform: (language: string) => void): void;
+}
+
+export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions, language?: LanguageOptions) {
+  const bootLoader = createBootLoader(bootConfig.url, bootConfig.satellites);
+  const boot = (opts?: WebAssemblyStartOptions) =>
+    bootLoader(opts).then((res) => {
+      const [_, capabilities] = res;
+
+      if (language && capabilities.includes('language')) {
+        if (typeof language.current === 'string') {
+          setLanguage(language.current);
+        }
+
+        if (typeof language.onChange === 'function') {
+          language.onChange(setLanguage);
+        }
+      }
+
+      return res;
+    });
   let loader = !lazy && boot(opts);
   let listener: Disposable = undefined;
 

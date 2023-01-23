@@ -149,6 +149,10 @@ export function callNotifyLocationChanged(url: string, replace: boolean): Promis
   return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, replace);
 }
 
+export function setLanguage(language: string): Promise<void> {
+  return window.DotNet.invokeMethodAsync(coreLib, 'SetLanguage', language);
+}
+
 export function getCapabilities(): Promise<Array<string>> {
   return window.DotNet.invokeMethodAsync(coreLib, 'GetCapabilities').catch(() => {
     // Apparently an older version of Piral.Blazor, which does not support this
@@ -176,6 +180,7 @@ export interface PiletData {
   version: string;
   config: string;
   baseUrl: string;
+  satellites?: Record<string, Array<string>>;
   dependencies: Array<string>;
 }
 
@@ -189,7 +194,8 @@ export function unloadBlazorPilet(id: string) {
 
 export function initialize(scriptUrl: string, publicPath: string, opts: WebAssemblyStartOptions = {}) {
   if (typeof opts.loadBootResource !== 'function') {
-    opts.loadBootResource = (type, name, url) => type === 'dotnetjs' ? url : fetch(url, { method: 'GET', cache: 'no-cache' });
+    opts.loadBootResource = (type, name, url) =>
+      type === 'dotnetjs' ? url : fetch(url, { method: 'GET', cache: 'no-cache' });
   }
 
   return new Promise<BlazorRootConfig>((resolve, reject) => {
@@ -212,13 +218,15 @@ export function initialize(scriptUrl: string, publicPath: string, opts: WebAssem
   });
 }
 
-export function createBootLoader(scriptUrl: string, satellites: Array<string>) {
+export function createBootLoader(scriptUrl: string, extraScriptUrls: Array<string>) {
   const publicPath = computePath();
 
   return (opts?: WebAssemblyStartOptions) => {
     if (typeof window.$blazorLoader === 'undefined') {
       // we load all satellite scripts before we initialize blazor
-      window.$blazorLoader = Promise.all(satellites.map(addScript)).then(() => initialize(scriptUrl, publicPath, opts));
+      window.$blazorLoader = Promise.all(extraScriptUrls.map(addScript)).then(() =>
+        initialize(scriptUrl, publicPath, opts),
+      );
     }
 
     return window.$blazorLoader;
