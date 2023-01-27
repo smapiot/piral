@@ -253,9 +253,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       fail('entryFileMissing_0077');
     }
 
-    process.stderr.setMaxListeners(maxListeners);
-    process.stdout.setMaxListeners(maxListeners);
-    process.stdin.setMaxListeners(maxListeners);
+    process.stderr?.setMaxListeners(maxListeners);
+    process.stdout?.setMaxListeners(maxListeners);
+    process.stdin?.setMaxListeners(maxListeners);
 
     const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
       const targetDir = dirname(entryModule);

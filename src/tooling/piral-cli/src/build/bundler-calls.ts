@@ -71,9 +71,9 @@ export function callDynamic<T extends BaseBundleParameters>(name: string, path: 
       });
     };
 
-    ps.stderr.pipe(process.stderr);
-    ps.stdout.pipe(process.stdout);
-    ps.stdin.pipe(process.stdin);
+    ps.stderr && process.stderr && ps.stderr.pipe(process.stderr);
+    ps.stdout && process.stdout && ps.stdout.pipe(process.stdout);
+    ps.stdin && process.stdin && ps.stdin.pipe(process.stdin);
 
     ps.on('message', (msg: any) => {
       switch (msg.type) {
