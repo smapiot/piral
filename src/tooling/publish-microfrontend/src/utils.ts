@@ -1,9 +1,11 @@
 import glob from 'glob';
-import { stat, readFile } from 'fs/promises';
+import { existsSync, statSync } from 'fs';
+import { stat, readFile, readdir, copyFile, rm } from 'fs/promises';
 import { dirname, basename, resolve } from 'path';
 import { MemoryStream } from 'piral-cli/src/common/MemoryStream';
 import { downloadFile } from './http';
 import { runCommand } from './scripts';
+import { getRandomTempFile } from './io';
 
 function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
   const cwd = resolve(process.cwd(), target);
@@ -14,6 +16,24 @@ async function findTarball(packageRef: string, target = '.', ...flags: Array<str
   const ms = new MemoryStream();
   await runNpmProcess(['view', packageRef, 'dist.tarball', ...flags], target, ms);
   return ms.value;
+}
+
+async function createPackage(target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['pack', ...flags], target, ms);
+  return ms.value;
+}
+
+function onlyUnique<T>(value: T, index: number, self: Array<T>) {
+  return self.indexOf(value) === index;
+}
+
+function isFile(item: string) {
+  return statSync(item).isFile();
+}
+
+function isDirectory(item: string) {
+  return statSync(item).isDirectory();
 }
 
 function matchFiles(baseDir: string, pattern: string) {
@@ -59,12 +79,24 @@ export async function getFiles(
   switch (from) {
     case 'local': {
       const allFiles = await Promise.all(sources.map((s) => matchFiles(baseDir, s)));
-      // TODO:
-      // - Reduced files should be unique.
-      // - can be a mix of directories and files - if files are matched take those, otherwise take directories
-      // - for all matched directories look up if a `package.json` exists - if yes, run "npm pack" and replace the directory by the created npm package
-      // Finally return these files (created npm packages should be taken from a tmp directory, following the download approach below)
-      return allFiles.reduce((result, files) => [...result, ...files], []);
+      const allMatches = allFiles.reduce((result, files) => [...result, ...files], []).filter(onlyUnique);
+
+      if (allMatches.every(isDirectory)) {
+        const dirs = allMatches.filter(m => existsSync(resolve(m, 'package.json')));        
+        return Promise.all(dirs.map(async dir => {
+          const previousFiles = await readdir(dir);
+          await createPackage(dir);
+          const currentFiles = await readdir(dir);
+          const tarball = currentFiles.find(m => !previousFiles.includes(m) && m.endsWith('.tgz'));
+          const target = getRandomTempFile();
+          const source = resolve(dir, tarball);
+          await copyFile(source, target);
+          await rm(source);
+          return target;
+        }));
+      }
+
+      return allMatches.filter(isFile);
     }
     case 'remote': {
       const allFiles = await Promise.all(sources.map((s) => downloadFile(s, ca)));

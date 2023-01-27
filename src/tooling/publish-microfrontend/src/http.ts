@@ -2,12 +2,10 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { Agent } from 'https';
 import { Stream } from 'stream';
-import { createWriteStream } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
 import { logWarn } from './log';
 import { standardHeaders } from './common';
 import { getTokenInteractively } from './interactive';
+import { getRandomTempFile, streamToFile } from './io';
 
 function getMessage(body: string | { message?: string }) {
   if (typeof body === 'string') {
@@ -36,14 +34,6 @@ export interface PostFormResult {
 
 export type FormDataObj = Record<string, string | [Buffer, string]>;
 
-function streamToFile(source: Stream, target: string) {
-  const dest = createWriteStream(target);
-  return new Promise<Array<string>>((resolve, reject) => {
-    source.pipe(dest);
-    source.on('error', (err) => reject(err));
-    dest.on('finish', () => resolve([target]));
-  });
-}
 
 export async function downloadFile(url: string, ca?: Buffer): Promise<Array<string>> {
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
@@ -54,8 +44,7 @@ export async function downloadFile(url: string, ca?: Buffer): Promise<Array<stri
       headers: standardHeaders,
       httpsAgent,
     });
-    const rid = Math.random().toString(36).split('.').pop();
-    const target = join(tmpdir(), `microfrontend_${rid}.tgz`);
+    const target = getRandomTempFile();
     return streamToFile(res.data, target);
   } catch (error) {
     logWarn('Failed HTTP GET requested: %s', error.message);
