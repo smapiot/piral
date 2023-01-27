@@ -3,6 +3,7 @@
 ## 0.15.6 (tbd)
 
 - Fixed issue in `piral-cli` using the bundler without standard input (#575)
+- Added generic standalone CLI utility `publish-microfrontend`
 
 ## 0.15.5 (January 23, 2023)
 

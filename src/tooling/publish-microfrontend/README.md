@@ -4,6 +4,28 @@
 
 A simple command-line utility for publishing micro frontends to compatible feed services.
 
+## Usage
+
+You can publish any micro frontend using this tool using
+
+```sh
+npx publish-microfrontend --url <feed-url> --api-key <feed-api-key>
+```
+
+By default, this will take the current folder, pack it, and push it to a server. This server could also be configured in a `.microfrontendrc` file such as
+
+```json
+{
+  "url": "https://myfeed.com/api/v1/pilet"
+}
+```
+
+No API key is necessary. Depending on your feed server you might want to use interactive authentication:
+
+```sh
+npx publish-microfrontend --url <feed-url> --interactive
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
