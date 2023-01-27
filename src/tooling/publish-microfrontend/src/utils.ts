@@ -6,31 +6,17 @@ import { downloadFile } from './http';
 import { runCommand } from './scripts';
 
 function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
-    const cwd = resolve(process.cwd(), target);
-    return runCommand('npm', args, cwd, output);
-  }
-
-async function findTarball(packageRef: string, target = '.', ...flags: Array<string>) {
-    const ms = new MemoryStream();
-    await runNpmProcess(['view', packageRef, 'dist.tarball', ...flags], target, ms);
-    return ms.value;
-  }
-
-export async function getCa(cert: string | undefined): Promise<Buffer | undefined> {
-  if (cert && typeof cert === 'string') {
-    const statCert = await stat(cert).catch(() => undefined);
-
-    if (statCert?.isFile()) {
-      const dir = dirname(cert);
-      const file = basename(cert);
-      return await readFile(resolve(dir, file));
-    }
-  }
-
-  return undefined;
+  const cwd = resolve(process.cwd(), target);
+  return runCommand('npm', args, cwd, output);
 }
 
-export function matchFiles(baseDir: string, pattern: string) {
+async function findTarball(packageRef: string, target = '.', ...flags: Array<string>) {
+  const ms = new MemoryStream();
+  await runNpmProcess(['view', packageRef, 'dist.tarball', ...flags], target, ms);
+  return ms.value;
+}
+
+function matchFiles(baseDir: string, pattern: string) {
   return new Promise<Array<string>>((resolve, reject) => {
     glob(
       pattern,
@@ -50,7 +36,26 @@ export function matchFiles(baseDir: string, pattern: string) {
   });
 }
 
-export async function getFiles(baseDir: string, sources: Array<string>, from: string, ca: Buffer): Promise<Array<string>> {
+export async function getCa(cert: string | undefined): Promise<Buffer | undefined> {
+  if (cert && typeof cert === 'string') {
+    const statCert = await stat(cert).catch(() => undefined);
+
+    if (statCert?.isFile()) {
+      const dir = dirname(cert);
+      const file = basename(cert);
+      return await readFile(resolve(dir, file));
+    }
+  }
+
+  return undefined;
+}
+
+export async function getFiles(
+  baseDir: string,
+  sources: Array<string>,
+  from: string,
+  ca: Buffer,
+): Promise<Array<string>> {
   switch (from) {
     case 'local': {
       const allFiles = await Promise.all(sources.map((s) => matchFiles(baseDir, s)));

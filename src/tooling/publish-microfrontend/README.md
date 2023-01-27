@@ -26,6 +26,25 @@ No API key is necessary. Depending on your feed server you might want to use int
 npx publish-microfrontend --url <feed-url> --interactive
 ```
 
+## Config Options
+
+For the `.microfrontendrc` file the following options exist:
+
+- `url`: The URL of the feed service to use.
+- `apiKey`: The API key to use when authenticating.
+- `interactive`: Determines if the interactive login should be used to retrieve the authentication token / API key. Defaults to *false*.
+- `cert`: The path to the custom certificate to use as CA.
+- `mode`: The auth mode to use (can be 'none', 'basic', 'bearer', 'digest'). Defaults to *basic*.
+- `from`: Describes the source location (can be 'local', 'remote', 'npm'). Defaults to *local*.
+- `fields`: An object using key-value pairs to place additionally in the request's body.
+- `headers`: An object using key-value pairs to place additionally in the request's header.
+
+The config options can all be overriden by the CLI flags. They serve as the default values for the CLI flags.
+
+## CLI Flags
+
+The CLI flags are a superset of the shown config options.
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
