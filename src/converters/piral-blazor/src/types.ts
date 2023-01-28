@@ -46,6 +46,7 @@ declare global {
       _internal: {
         navigationManager: any;
         applyHotReload: any;
+        NavigationLock: any;
       };
     };
     DotNet: any;

@@ -5,6 +5,10 @@ import type { BlazorRootConfig, WebAssemblyStartOptions } from './types';
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
 
+function isDotNet6OrBelow() {
+  return typeof window.Blazor._internal.NavigationLock === 'undefined';
+}
+
 function createBase() {
   // Nothing found, we need to guess
   const el = document.createElement('base');
@@ -146,7 +150,11 @@ export function deactivate(moduleName: string, referenceId: string): Promise<voi
 }
 
 export function callNotifyLocationChanged(url: string, replace: boolean): Promise<void> {
-  return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, replace);
+  if (isDotNet6OrBelow()) {
+    return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, replace);
+  } else {
+    return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, undefined, replace);
+  }
 }
 
 export function setLanguage(language: string): Promise<void> {
