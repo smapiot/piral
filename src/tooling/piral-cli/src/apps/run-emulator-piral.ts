@@ -97,9 +97,9 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
 
   progress('Reading configuration ...');
 
-  process.stderr.setMaxListeners(16);
-  process.stdout.setMaxListeners(16);
-  process.stdin.setMaxListeners(16);
+  process.stderr?.setMaxListeners(16);
+  process.stdout?.setMaxListeners(16);
+  process.stdin?.setMaxListeners(16);
 
   const appRoot = await createTempDir();
 

@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 0.15.6 (tbd)
+
+- Fixed issue in `piral-cli` using the bundler without standard input (#575)
+- Fixed issue navigation interop for `piral-blazor` in .NET 7 (#577)
+- Added generic standalone CLI utility `publish-microfrontend`
+
 ## 0.15.5 (January 23, 2023)
 
 - Fixed issue with exports not being returned in pilets (#570)

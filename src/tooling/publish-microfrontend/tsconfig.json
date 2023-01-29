@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
+    "esModuleInterop": true,
     "declaration": false,
     "target": "ES6"
   },
