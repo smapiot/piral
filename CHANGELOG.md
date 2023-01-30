@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.6 (tbd)
+## 0.15.6 (January 30, 2023)
 
 - Fixed issue in `piral-cli` using the bundler without standard input (#575)
 - Fixed issue navigation interop for `piral-blazor` in .NET 7 (#577)
