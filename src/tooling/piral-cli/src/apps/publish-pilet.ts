@@ -1,4 +1,4 @@
-import { relative, dirname, basename, resolve } from 'path';
+import { relative, dirname, basename, resolve, isAbsolute } from 'path';
 import { callPiletBuild } from '../bundler';
 import { LogLevels, PiletSchemaVersion, PiletPublishSource, PiletPublishScheme } from '../types';
 import {
@@ -113,6 +113,11 @@ export const publishPiletDefaults: PublishPiletOptions = {
   interactive: false,
 };
 
+function isSubDir(parent: string, dir: string) {
+  const rel = relative(parent, dir);
+  return rel && !rel.startsWith('..') && !isAbsolute(rel);
+}
+
 async function getFiles(
   baseDir: string,
   sources: Array<string>,
@@ -135,24 +140,27 @@ async function getFiles(
     return await Promise.all(
       allEntries.map(async (entryModule) => {
         const targetDir = dirname(entryModule);
+
+        progress('Triggering pilet build ...');
         const { root, piletPackage, importmap, peerDependencies, peerModules, apps } = await retrievePiletData(
           targetDir,
         );
         const piralInstances = apps.map((m) => m.appPackage.name);
         const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
-        const dest = resolve(root, main);
+        const propDest = resolve(root, main);
+        log('generalDebug_0003', `Pilet "${name}" is supposed to generate artifact in "${propDest}".`);
+        const usePropDest = dirname(propDest) !== root && isSubDir(root, propDest);
+        const dest = usePropDest ? propDest : resolve(root, 'dist');
+        log('generalDebug_0003', `Pilet "${name}" is generating artifact in "${dest}".`);
         const outDir = dirname(dest);
         const outFile = basename(dest);
         const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
-        progress('Triggering pilet build ...');
+        log('generalDebug_0003', `Pilet "${name}" uses externals: ${externals.join(', ')}.`);
 
-        if (fresh) {
-          progress('Removing output directory ...');
-          await removeDirectory(outDir);
-        }
+        progress('Removing output directory ...');
+        await removeDirectory(outDir);
 
         logInfo('Bundle pilet ...');
-
         await callPiletBuild(
           {
             root,

@@ -1,5 +1,5 @@
-import { deepMerge } from 'piral-cli/utils';
 import type { Config } from '@jest/types';
+import { deepMerge } from './utils';
 import defaultConfig from './config';
 
 function extendConfig(userConfig: Config.InitialOptions) {
