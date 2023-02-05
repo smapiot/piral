@@ -71,9 +71,9 @@ export function callDynamic<T extends BaseBundleParameters>(name: string, path: 
       });
     };
 
-    ps.stderr && process.stderr && ps.stderr.pipe(process.stderr);
-    ps.stdout && process.stdout && ps.stdout.pipe(process.stdout);
-    ps.stdin && process.stdin && ps.stdin.pipe(process.stdin);
+    ps.stderr && process.stderr && ps.stderr.pipe(process.stderr, { end: false });
+    ps.stdout && process.stdout && ps.stdout.pipe(process.stdout, { end: false });
+    ps.stdin && process.stdin && ps.stdin.pipe(process.stdin, { end: false });
 
     ps.on('message', (msg: any) => {
       switch (msg.type) {
@@ -113,9 +113,9 @@ export function callStatic<T extends BaseBundleParameters>(name: string, path: s
       });
     };
 
-    ps.stderr && process.stderr && ps.stderr.pipe(process.stderr);
-    ps.stdout && process.stdout && ps.stdout.pipe(process.stdout);
-    ps.stdin && process.stdin && ps.stdin.pipe(process.stdin);
+    ps.stderr && process.stderr && ps.stderr.pipe(process.stderr, { end: false });
+    ps.stdout && process.stdout && ps.stdout.pipe(process.stdout, { end: false });
+    ps.stdin && process.stdin && ps.stdin.pipe(process.stdin, { end: false });
 
     ps.on('message', (msg: any) => {
       switch (msg.type) {
