@@ -4,6 +4,23 @@
   flex: 0 0 194px !important;
 }
 
+.deploy-guides {
+  display: inline-grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 5%;
+  grid-row-gap: 0.5em;
+
+  > p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > a {
+      flex: 1;
+    }
+  }
+}
+
 body.dark {
   h2.plugin {
     color: $docs-color-text-dark;

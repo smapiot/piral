@@ -7,7 +7,7 @@ The available guides:
 - [AWS Amplify](./aws-amplify.md)
 - [Buddy](./buddy.md)
 - [Cloudflare Pages](./cloudflare.md)
-- [Edge.io](./edgeio.md)
+- [Edgio](./edgio.md)
 - [GitHub Pages](./github.md)
 - [GitLab Pages](./gitlab.md)
 - [Google Cloud](./google-cloud.md)
