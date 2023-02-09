@@ -41,6 +41,14 @@
           "dir": "tutorials"
         },
         {
+          "title": "Deployments",
+          "links": {
+            "generator": "markdown",
+            "segment": "deploy",
+            "dir": "deploy"
+          }
+        },
+        {
           "title": "Example",
           "links": {
             "generator": "markdown",
