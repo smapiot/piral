@@ -37,7 +37,7 @@ describe('Piral-Tracker Tracker component', () => {
         <Tracker {...fake} />
       </StateContext.Provider>,
     );
-    expect(node.getAllByRole('list').length).toBe(0);
+    expect(node.queryAllByRole('list').length).toBe(0);
   });
 
   it('uses container and tracker of connected trackers', () => {
