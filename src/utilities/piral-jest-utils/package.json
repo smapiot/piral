@@ -50,8 +50,9 @@
   "scripts": {
     "cleanup": "rimraf esm lib",
     "build": "yarn build:commonjs && yarn build:esnext",
-    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
-    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs && yarn build:external --outfile=lib/utils.js --format=cjs",
+    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext && yarn build:external --outfile=esm/utils.js --format=esm",
+    "build:external": "esbuild src/utils.ts --bundle --platform=node",
     "typedoc": "typedoc --json ../../../docs/types/piral-jest-utils.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 0.15.7 (tbd)
+
+- Fixed inconsistency with `pilet build` using explicit target while `pilet publish` using `main` from *package.json*
+- Fixed reference to `piral-cli` in `piral-jest-utils`
+- Fixed cleanup of modules destroying singleton platform in `piral-ng` (#579) by @Siphalor
+- Added `usePiletApi` hook to `piral-core` for app shells
+
 ## 0.15.6 (January 30, 2023)
 
 - Fixed issue in `piral-cli` using the bundler without standard input (#575)

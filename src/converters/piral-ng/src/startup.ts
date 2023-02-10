@@ -1,8 +1,18 @@
 import type { ComponentContext } from 'piral-core';
 import type { NgOptions } from './types';
-import { enableProdMode, NgModuleRef, NgZone, PlatformRef } from '@angular/core';
+import {
+  createPlatformFactory,
+  enableProdMode,
+  NgModuleRef,
+  NgZone,
+  PlatformRef,
+  ɵALLOW_MULTIPLE_PLATFORMS as ALLOW_MULTIPLE_PLATFORMS,
+} from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import {
+  ɵplatformCoreDynamic as platformCoreDynamic,
+  ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS as INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
+} from '@angular/platform-browser-dynamic';
 import { getId, getNgVersion } from './utils';
 
 function getVersionHandler(versions: Record<string, () => void>) {
@@ -11,11 +21,19 @@ function getVersionHandler(versions: Record<string, () => void>) {
   return versions[version];
 }
 
+// Equivalent to platformBrowserDynamic, but with support for multiple platforms
+const customPlatformDynamicFactory = createPlatformFactory(platformCoreDynamic, 'piralDynamic', [
+  ...INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
+  {
+    provide: ALLOW_MULTIPLE_PLATFORMS,
+    useValue: true,
+  },
+]);
 const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 
 function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions) {
   const path = context.publicPath || '/';
-  const platform = platformBrowserDynamic([
+  const platform = customPlatformDynamicFactory([
     { provide: 'Context', useValue: context },
     { provide: APP_BASE_HREF, useValue: path },
   ]);
