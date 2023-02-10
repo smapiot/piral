@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.7 (tbd)
+## 0.15.7 (February 10, 2023)
 
 - Fixed inconsistency with `pilet build` using explicit target while `pilet publish` using `main` from *package.json*
 - Fixed reference to `piral-cli` in `piral-jest-utils`
