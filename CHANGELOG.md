@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.8 (tbd)
+
+- Added new plugin `piral-tracker` for always-on components
+
 ## 0.15.7 (February 10, 2023)
 
 - Fixed inconsistency with `pilet build` using explicit target while `pilet publish` using `main` from *package.json*
