@@ -1,6 +1,6 @@
 {
   "name": "piral-search",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "Plugin for centralizing search in Piral.",
   "keywords": [
     "piral",
@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "piral-core": "^0.15.6",
+    "piral-core": "^0.15.7",
     "react": "^18.0.0"
   },
   "peerDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "create-piral-instance",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "The NPM initializer to scaffold a new Piral instance.",
   "keywords": [
     "scaffold",
@@ -42,6 +42,6 @@
   },
   "dependencies": {
     "inquirer": "^6.2.2",
-    "piral-cli": "^0.15.6"
+    "piral-cli": "^0.15.7"
   }
 }
