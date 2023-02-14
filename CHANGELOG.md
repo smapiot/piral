@@ -3,6 +3,7 @@
 ## 0.15.8 (tbd)
 
 - Added new plugin `piral-tracker` for always-on components
+- Added optional `assetBaseUrl` property in `PiletInjector` configuration to specify base url of pilet asset
 
 ## 0.15.7 (February 10, 2023)
 

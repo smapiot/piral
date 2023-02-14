@@ -23,6 +23,10 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   app: string;
   feed?: string;
   headers: Record<string, string>;
+  /**
+   * Base url of pilet debug development server
+   */
+  assetBaseUrl?: string;
 }
 
 interface PiletMetadata {
@@ -83,14 +87,14 @@ export default class PiletInjector implements KrasInjector {
     this.serverConfig = serverConfig;
 
     if (this.config.active) {
-      const { pilets, api, publicUrl } = config;
+      const { pilets, api, publicUrl, assetBaseUrl } = config;
       this.indexPath = `${publicUrl}index.html`;
       const cbs = {};
 
       core.on('user-connected', (e) => {
         if (e.target === '*' && e.url === api.substring(1)) {
           cbs[e.id] = {
-            baseUrl: e.req.headers.origin,
+            baseUrl: assetBaseUrl || e.req.headers.origin,
             notify: (msg: string) => e.ws.send(msg),
           };
         }

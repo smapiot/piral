@@ -1,5 +1,26 @@
+jest.mock('../external', () => ({
+  jju: {
+    parse: () => ({
+      custom: 'mockCustom',
+      piletConfig: {},
+      name: 'mockName',
+      version: 'mockVersion',
+    }),
+  },
+  ora() {},
+  rc() {},
+}));
+
+jest.mock('fs', () => ({
+  readFileSync() {},
+  existsSync() {},
+}));
+
+jest.mock('path', () => ({ join() {} }));
+
 import { EventEmitter } from 'events';
 import { KrasRequest } from 'kras';
+import { Bundler } from '../types';
 import PiletInjector from './pilet-injector';
 
 const optionsMock = {
@@ -17,6 +38,10 @@ const configMock: any = {
 };
 
 describe('Piral-CLI pilet injector', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('PiletInjector is active when configured', () => {
     const core = new EventEmitter();
     const injector = new PiletInjector(optionsMock, configMock, core);
@@ -139,5 +164,86 @@ describe('Piral-CLI pilet injector', () => {
 
     // Assert
     expect(res).toBeUndefined();
+  });
+
+  it('PiletInjector piletmeta fetch reads baseUrl from assetBaseUrl in config', () => {
+    // Arrange
+    const requestOrigin = 'http://somehosturl.local';
+    const assetBaseUrl = 'http://configDefinedBaseAsseturl:4321';
+    let bundlerCallback;
+    function storeBundlerCallback(callback: (...args) => void) {
+      bundlerCallback = callback;
+    }
+    const getPiletApiSpy = jest.spyOn(PiletInjector.prototype, 'getPiletApi');
+    const optionsMock = {
+      pilets: [
+        {
+          bundler: { on: storeBundlerCallback, bundle: { name: 'mockBundle' } } as Bundler,
+          root: 'foobar',
+          getMeta: (_baseUrl: string) => ({ name: 'my-fake-pilet' }),
+        },
+      ],
+      api: 'http://someFakeApi:1234',
+      app: '',
+      publicUrl: '/',
+      meta: '',
+      headers: {},
+      active: true,
+    };
+    const core = new EventEmitter();
+    new PiletInjector({ ...optionsMock, assetBaseUrl }, configMock, core);
+
+    // Act
+    core.emit('user-connected', {
+      target: '*',
+      url: 'ttp://someFakeApi:1234',
+      id: 'fooId',
+      req: { headers: { origin: requestOrigin } },
+      ws: { send: () => {} },
+    });
+    bundlerCallback();
+
+    //Assert
+    expect(getPiletApiSpy).toHaveBeenCalledWith(assetBaseUrl);
+  });
+
+  it('PiletInjector piletmeta fetch reads baseUrl from headers origin if assetBaseUrl config is not defined', () => {
+    // Arrange
+    const requestOrigin = 'http://somehosturl.local';
+    let bundlerCallback;
+    function storeBundlerCallback(callback: (...args) => void) {
+      bundlerCallback = callback;
+    }
+    const getPiletApiSpy = jest.spyOn(PiletInjector.prototype, 'getPiletApi');
+    const optionsMock = {
+      pilets: [
+        {
+          bundler: { on: storeBundlerCallback, bundle: { name: 'mockBundle' } } as Bundler,
+          root: 'foobar',
+          getMeta: (_baseUrl: string) => ({ name: 'my-fake-pilet' }),
+        },
+      ],
+      api: 'http://someFakeApi:1234',
+      app: '',
+      publicUrl: '/',
+      meta: '',
+      headers: {},
+      active: true,
+    };
+    const core = new EventEmitter();
+    new PiletInjector(optionsMock, configMock, core);
+
+    // Act
+    core.emit('user-connected', {
+      target: '*',
+      url: 'ttp://someFakeApi:1234',
+      id: 'fooId',
+      req: { headers: { origin: requestOrigin } },
+      ws: { send: () => {} },
+    });
+    bundlerCallback();
+
+    //Assert
+    expect(getPiletApiSpy).toHaveBeenCalledWith(requestOrigin);
   });
 });
