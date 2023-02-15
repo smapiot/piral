@@ -65,12 +65,12 @@ export interface LanguageOptions {
 export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions, language?: LanguageOptions) {
   const bootLoader = createBootLoader(bootConfig.url, bootConfig.satellites);
   const boot = (opts?: WebAssemblyStartOptions) =>
-    bootLoader(opts).then((res) => {
+    bootLoader(opts).then(async (res) => {
       const [_, capabilities] = res;
 
       if (language && capabilities.includes('language')) {
         if (typeof language.current === 'string') {
-          setLanguage(language.current);
+          await setLanguage(language.current);
         }
 
         if (typeof language.onChange === 'function') {
