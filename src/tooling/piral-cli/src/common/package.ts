@@ -766,7 +766,7 @@ export async function retrievePiletData(target: string, app?: string) {
   const proposedRoot = piletJson ? dirname(piletJson) : target;
   const root = await findPiletRoot(proposedRoot);
   const piletPackage = await readJson(root, 'package.json');
-  const piletDefinition = piletJson && await readJson(proposedRoot, 'pilet.json');
+  const piletDefinition: PiletDefinition = piletJson && await readJson(proposedRoot, 'pilet.json');
   const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
 
@@ -801,6 +801,7 @@ export async function retrievePiletData(target: string, app?: string) {
     peerDependencies: piletPackage.peerDependencies || {},
     peerModules: piletPackage.peerModules || [],
     ignored: checkArrayOrUndefined(piletPackage, 'preservedDependencies'),
+    schema: piletDefinition?.schemaVersion,
     importmap,
     apps,
     piletPackage,

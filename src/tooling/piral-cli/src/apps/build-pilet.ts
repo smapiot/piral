@@ -173,7 +173,7 @@ export const buildPiletDefaults: BuildPiletOptions = {
   watch: false,
   contentHash: true,
   optimizeModules: false,
-  schemaVersion: config.schemaVersion,
+  schemaVersion: undefined,
   concurrency: cpuCount,
   declaration: true,
 };
@@ -191,7 +191,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     fresh = buildPiletDefaults.fresh,
     concurrency = buildPiletDefaults.concurrency,
     optimizeModules = buildPiletDefaults.optimizeModules,
-    schemaVersion = buildPiletDefaults.schemaVersion,
+    schemaVersion: originalSchemaVersion = buildPiletDefaults.schemaVersion,
     declaration = buildPiletDefaults.declaration,
     type = buildPiletDefaults.type,
     _ = {},
@@ -215,10 +215,11 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
     const targetDir = dirname(entryModule);
-    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap } = await retrievePiletData(
+    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap, schema } = await retrievePiletData(
       targetDir,
       app,
     );
+    const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || 'v2';
     const piralInstances = apps.map(m => m.appPackage.name);
     const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);

@@ -2,6 +2,7 @@
 
 ## 0.15.8 (tbd)
 
+- Fixed value of `schemaVersion` in *pilet.json* being ignored (#585)
 - Added new plugin `piral-tracker` for always-on components
 - Added option to reference assets on different URLs (#583)
 - Added option to merge existing feed pilet metadata in
