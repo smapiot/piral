@@ -28,7 +28,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   /**
    * Defines if properties from the feed (if given) meta response should be taken over to local pilets.
    */
-  merge?: boolean;
+  mergeConfig?: boolean;
   meta: string;
   api: string;
   app: string;
@@ -100,9 +100,11 @@ export default class PiletInjector implements KrasInjector {
       const cbs = {};
 
       core.on('user-connected', (e) => {
+        const baseUrl = assetUrl || e.req.headers.origin;
+
         if (e.target === '*' && e.url === api.substring(1)) {
           cbs[e.id] = {
-            baseUrl: assetUrl || e.req.headers.origin,
+            baseUrl,
             notify: (msg: string) => e.ws.send(msg),
           };
         }
@@ -183,7 +185,7 @@ export default class PiletInjector implements KrasInjector {
       return localPilets;
     }
 
-    const { merge = false } = this.config;
+    const { mergeConfig = false } = this.config;
     const names = localPilets.map((pilet) => pilet.name);
     const merged = [...localPilets];
 
@@ -192,7 +194,7 @@ export default class PiletInjector implements KrasInjector {
         const name = pilet.name;
         const isNew = name !== undefined && !names.includes(name);
 
-        if (!isNew && merge) {
+        if (!isNew && mergeConfig) {
           const existing = merged.find(m => m.name === name);
 
           if (existing.config === undefined) {
@@ -269,8 +271,8 @@ export default class PiletInjector implements KrasInjector {
   }
 
   handle(req: KrasRequest): KrasResponse {
-    const { app, api, publicUrl } = this.config;
-    const baseUrl = req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined;
+    const { app, api, publicUrl, assetUrl } = this.config;
+    const baseUrl = assetUrl || (req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined);
 
     if (!req.target) {
       if (req.url.startsWith(publicUrl)) {
