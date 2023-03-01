@@ -3,6 +3,8 @@
 ## 0.15.8 (tbd)
 
 - Added new plugin `piral-tracker` for always-on components
+- Added option to reference assets on different URLs (#583)
+- Added option to merge existing feed pilet metadata in
 
 ## 0.15.7 (February 10, 2023)
 

@@ -17,7 +17,18 @@ interface Pilet {
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   pilets: Array<Pilet>;
+  /**
+   * The base URL for the app shell / portal to be used.
+   */
   publicUrl: string;
+  /**
+   * The base URL for the pilet assets to be used.
+   */
+  assetUrl?: string;
+  /**
+   * Defines if properties from the feed (if given) meta response should be taken over to local pilets.
+   */
+  merge?: boolean;
   meta: string;
   api: string;
   app: string;
@@ -27,6 +38,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 
 interface PiletMetadata {
   name?: string;
+  config?: Record<string, any>;
   [key: string]: unknown;
 }
 
@@ -83,14 +95,14 @@ export default class PiletInjector implements KrasInjector {
     this.serverConfig = serverConfig;
 
     if (this.config.active) {
-      const { pilets, api, publicUrl } = config;
+      const { pilets, api, publicUrl, assetUrl } = config;
       this.indexPath = `${publicUrl}index.html`;
       const cbs = {};
 
       core.on('user-connected', (e) => {
         if (e.target === '*' && e.url === api.substring(1)) {
           cbs[e.id] = {
-            baseUrl: e.req.headers.origin,
+            baseUrl: assetUrl || e.req.headers.origin,
             notify: (msg: string) => e.ws.send(msg),
           };
         }
@@ -171,11 +183,27 @@ export default class PiletInjector implements KrasInjector {
       return localPilets;
     }
 
+    const { merge = false } = this.config;
     const names = localPilets.map((pilet) => pilet.name);
     const merged = [...localPilets];
 
     for (const remotePilets of remoteFeeds) {
-      const newPilets = remotePilets.filter((pilet) => pilet.name !== undefined && !names.includes(pilet.name));
+      const newPilets = remotePilets.filter((pilet) => {
+        const name = pilet.name;
+        const isNew = name !== undefined && !names.includes(name);
+
+        if (!isNew && merge) {
+          const existing = merged.find(m => m.name === name);
+
+          if (existing.config === undefined) {
+            existing.config = pilet.config;
+          } else if (pilet.config !== undefined) {
+            Object.assign(existing.config, pilet.config);
+          }
+        }
+
+        return isNew;
+      });
       names.push(...newPilets.map((p) => p.name));
       merged.push(...newPilets);
     }
