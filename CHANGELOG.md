@@ -5,6 +5,7 @@
 - Added new plugin `piral-tracker` for always-on components
 - Added option to reference assets on different URLs (#583)
 - Added option to merge existing feed pilet metadata in
+- Added priority loading in `piral-blazor` for special DLLs
 
 ## 0.15.7 (February 10, 2023)
 
