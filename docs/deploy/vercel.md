@@ -25,7 +25,7 @@ You can deploy to Vercel through the website UI or using Vercel's CLI (command l
 2. Vercel will ask you a few questions to configure the right settings. For most questions you can just press "Enter" and take the default.
 3. When asked for the directory where the code is located (`In which directory is your code located? ./`), choose `./dist/release`.
 4. When asked `Want to modify these settings? [y/N]`, choose `N`.
-5. Your application is deployed! (e.g., [piral-shell.vercel.app](https://piral-shell.vercel.app/))
+5. Your application is deployed! (e.g., `piral-shell.vercel.app`)
 
 ### Project config with vercel.json
 
