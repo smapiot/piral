@@ -12,11 +12,21 @@ In this file you an place any configuration you'd like to extend the standard ca
 
 ## Piral Injector
 
-(tbd)
+The `piral` injector can be used to configure how the application code is loaded. This makes it possible to introduce, e.g., custom headers (such as [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)) into the response - testing the app shell with different settings.
+
+```json
+{
+  "piral": {
+    "headers": {
+      "Content-Security-Policy": "default-src 'self'"
+    }
+  }
+}
+```
 
 ## Pilet Injector
 
-The pilet injector can be used to define the URL to be used when retrieving the pilet assets and metadata. By default, this URL is fully determined by the caller, which is in most cases what you want.
+The `pilet` injector can be used to define the URL to be used when retrieving the pilet assets and metadata. By default, this URL is fully determined by the caller, which is in most cases what you want.
 
 ```json
 {
@@ -35,6 +45,18 @@ You can also define if the config entries from remote pilets (i.e., obtained fro
   "injectors": {
     "pilet": {
       "mergeConfig": true
+    }
+  }
+}
+```
+
+Addtionally, the `pilet` injector can also define `headers` like the `piral` injector.
+
+```json
+{
+  "pilet": {
+    "headers": {
+      "Content-Security-Policy": "default-src 'self'"
     }
   }
 }

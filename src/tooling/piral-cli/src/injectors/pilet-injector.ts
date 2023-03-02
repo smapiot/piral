@@ -33,7 +33,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   api: string;
   app: string;
   feed?: string;
-  headers: Record<string, string>;
+  headers?: Record<string, string>;
 }
 
 interface PiletMetadata {

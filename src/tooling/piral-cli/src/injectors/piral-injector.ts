@@ -14,7 +14,7 @@ export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   publicUrl: string;
   feed?: string;
-  headers: Record<string, string>;
+  headers?: Record<string, string>;
 }
 
 export default class PiralInjector implements KrasInjector {
