@@ -4,8 +4,9 @@
 
 - Fixed value of `schemaVersion` in *pilet.json* being ignored (#585)
 - Added new plugin `piral-tracker` for always-on components
-- Added option to reference assets on different URLs (#583)
-- Added option to merge existing feed pilet metadata in
+- Added option to reference assets on different URLs in `pilet debug` (#583)
+- Added option to merge existing feed pilet metadata in `pilet debug`
+- Added DOM events to reflect the loading mechanism in `piral-blazor`
 - Added priority loading in `piral-blazor` for special DLLs
 
 ## 0.15.7 (February 10, 2023)

@@ -96,6 +96,7 @@ export function createConverter(
         }
       }
 
+      window.dispatchEvent(new CustomEvent('loaded-blazor-core'));
       return res;
     });
   let loader = !lazy && boot(opts);

@@ -91,3 +91,29 @@ interface LoadPiletsOptions {
 Most importantly, the options have the `fetchPilets` function to get the pilet metadata. The options also transport the `createApi` function to construct an API object dedicated to being used in a pilet.
 
 All the other options are only overrides for specific functionality, e.g., to determine how exactly a pilet is loaded the `loadPilet` option can be used.
+
+## Example: Wait for an Event
+
+Let's say you want to use the standard strategy, but with one addition: Instead of finishing when the pilets are loaded, you want to wait until some event is thrown. This could be very helpful, e.g., when you deal with Blazor and actually want to wait until Blazor is fully ready to render components.
+
+```ts
+import { standardStrategy } from 'piral-base';
+
+const instance = createInstance({
+  async: (options, pilets) => {
+    standardStrategy(options, pilets);
+    return new Promise(resolve => {
+      window.addEventListener('loaded-blazor-pilet', (ev: CustomEvent) => {
+        if (ev.detail.name === '@mycompany/blazor-layout') {
+          resolve();
+        }
+      });
+    });
+  },
+  plugins: [...createStandardApi(), createBlazorApi({ lazy: false })],
+};
+```
+
+The code above uses the standard strategy but does return a different promise, which only resolves when the `loaded-blazor-pilet` event for a particular (and important) pilet using Blazor is emitted.
+
+**Important**: In the special case above we require `lazy: false` in the `createBlazorApi` options to trigger the loading of Blazor. Otherwise, we reach a stalemate, where the application is waiting for Blazor to load, while Blazor is waiting for the application to start rendering. By setting `lazy` to false we resolve the stalemate - telling Blazor to proceed with the loading even though the application is not yet rendering.

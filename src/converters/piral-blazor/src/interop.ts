@@ -235,6 +235,8 @@ export function createBootLoader(scriptUrl: string, extraScriptUrls: Array<strin
 
   return (opts?: WebAssemblyStartOptions) => {
     if (typeof window.$blazorLoader === 'undefined') {
+      window.dispatchEvent(new CustomEvent('loading-blazor-core'));
+
       // we load all satellite scripts before we initialize blazor
       window.$blazorLoader = Promise.all(extraScriptUrls.map(addScript)).then(() =>
         initialize(scriptUrl, publicPath, opts),

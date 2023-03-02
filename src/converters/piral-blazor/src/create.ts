@@ -47,7 +47,7 @@ function createDefaultHandler(context: EventEmitter) {
  */
 export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBlazorApi> {
   return (context) => {
-    const { lazy, initialLanguage, onLanguageChange = createDefaultHandler(context), logLevel } = config;
+    const { lazy = true, initialLanguage, onLanguageChange = createDefaultHandler(context), logLevel } = config;
     const convert = createConverter(
       lazy,
       config.options,
