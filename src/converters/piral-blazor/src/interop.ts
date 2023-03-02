@@ -1,6 +1,6 @@
 import { PiletMetadata } from 'piral-core';
 import { emitRenderEvent, emitNavigateEvent } from './events';
-import type { BlazorRootConfig, WebAssemblyStartOptions } from './types';
+import type { BlazorLogLevel, BlazorRootConfig, WebAssemblyStartOptions } from './types';
 
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
@@ -120,6 +120,10 @@ function addScript(url: string) {
     script.onload = () => resolve();
     document.body.appendChild(script);
   });
+}
+
+export function setLogLevel(logLevel: BlazorLogLevel) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'SetLogLevel', logLevel);
 }
 
 export function createElement(moduleName: string, props: any): Promise<string> {
