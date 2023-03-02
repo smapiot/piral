@@ -61,7 +61,7 @@ export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBla
       convert(moduleName, dependency, args, options);
 
     return (_, meta) => {
-      const loader = createDependencyLoader(convert, lazy);
+      const loader = createDependencyLoader(convert);
       let options: BlazorOptions;
 
       return {

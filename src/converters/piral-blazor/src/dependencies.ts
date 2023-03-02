@@ -6,7 +6,7 @@ import type { BlazorDependencyLoader, BlazorRootConfig } from './types';
 const loadedDependencies = (window.$blazorDependencies ??= []);
 const depsWithPrios = (window.$blazorDependencyPrios ??= []);
 
-export function createDependencyLoader(convert: ReturnType<typeof createConverter>, lazy: boolean) {
+export function createDependencyLoader(convert: ReturnType<typeof createConverter>) {
   const definedBlazorReferences: Array<string> = [];
   const loadedBlazorPilets: Array<string> = [];
   let dependency: BlazorDependencyLoader;
@@ -87,7 +87,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
           window.dispatchEvent(new CustomEvent('loaded-blazor-pilet', { detail: meta }));
           resolve();
         };
-        let result = !lazy && convert.loader.then(load);
+        let result = !convert.lazy && convert.loader.then(load);
         dependency = (config) => result || (result = load(config));
       });
 

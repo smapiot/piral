@@ -215,5 +215,6 @@ export function createConverter(
   });
 
   convert.loader = loader;
+  convert.lazy = lazy;
   return convert;
 }
