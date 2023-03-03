@@ -181,7 +181,7 @@ export default class PiletInjector implements KrasInjector {
   }
 
   mergePilets(localPilets: Array<PiletMetadata>, remoteFeeds: Array<Array<PiletMetadata>>) {
-    if (!remoteFeeds) {
+    if (!remoteFeeds || !Array.isArray(remoteFeeds)) {
       return localPilets;
     }
 
@@ -190,7 +190,15 @@ export default class PiletInjector implements KrasInjector {
     const merged = [...localPilets];
 
     for (const remotePilets of remoteFeeds) {
+      if (!Array.isArray(remotePilets)) {
+        continue;
+      }
+
       const newPilets = remotePilets.filter((pilet) => {
+        if (!pilet || typeof pilet !== 'object') {
+          return false;
+        }
+        
         const name = pilet.name;
         const isNew = name !== undefined && !names.includes(name);
 
@@ -206,6 +214,7 @@ export default class PiletInjector implements KrasInjector {
 
         return isNew;
       });
+
       names.push(...newPilets.map((p) => p.name));
       merged.push(...newPilets);
     }
