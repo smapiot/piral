@@ -53,7 +53,7 @@ declare global {
     $blazorLoader: Promise<BlazorRootConfig>;
     $blazorDependencyPrios: Array<{
       prio: number;
-      promise: Promise<void>;
+      load(): Promise<void>;
     }>;
     $blazorDependencies: Array<{
       name: string;

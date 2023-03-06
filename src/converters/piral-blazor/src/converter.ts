@@ -182,7 +182,7 @@ export function createConverter(
         });
       }
 
-      (loader || (loader = boot()))
+      (loader || (convert.loader = loader = boot()))
         .then((config) =>
           dependency(config).then(() => {
             if (locals.state === 'fresh') {
