@@ -77,9 +77,19 @@ function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions
       navManager.navigateTo = (route: string, opts: { forceLoad: boolean; replaceHistoryEntry: boolean }) => {
         if (opts.forceLoad) {
           location.href = route;
-        } else {
-          window.Blazor.emitNavigateEvent(undefined, route, opts.replaceHistoryEntry);
+          return;
         }
+
+        if (route.startsWith(location.origin) && '') {
+          // normalize "local" absolute URLs
+          route = route.substring(location.origin.length);
+        } else if (/^https?:\/\//.test(route)) {
+          // prevent absolute URLs to be a standard navigation
+          location.href = route;
+          return;
+        }
+
+        window.Blazor.emitNavigateEvent(undefined, route, opts.replaceHistoryEntry);
       };
 
       navManager.getBaseURI = () => originalBase;
