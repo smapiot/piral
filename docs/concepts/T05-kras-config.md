@@ -8,7 +8,7 @@ section: Tooling
 
 The CLI uses [kras](https://www.npmjs.com/package/kras) to resolve a `.krasrc` configuration file.
 
-In this file you an place any configuration you'd like to extend the standard capabilities of the kras proxy server, which is used as a central proxy between the development server and any other servers (real or mocked).
+In this file you can place any configuration you'd like to extend the standard capabilities of the kras proxy server, which is used as a central proxy between the development server and any other servers (real or mocked).
 
 ## Piral Injector
 
