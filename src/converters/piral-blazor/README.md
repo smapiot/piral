@@ -190,8 +190,8 @@ The `piral-blazor` integration emits some events at the global object (`window`)
 
 - `loading-blazor-core` when the loading of (core) Blazor resources starts
 - `loaded-blazor-core` when the loading of (core) Blazor resources ends
-- `loading-blazor-pilet` when the loading of a Blazor pilet / its resources starts (the `detail` contain the pilet's metadata)
-- `loaded-blazor-pilet` when the loading of a Blazor pilet / its resources ends (the `detail` contain the pilet's metadata)
+- `loading-blazor-pilet` when the loading of a Blazor pilet / its resources starts (`detail` contains the pilet's metadata)
+- `loaded-blazor-pilet` when the loading of a Blazor pilet / its resources ends (`detail` contains the pilet's metadata)
 
 You can receive these events using, e.g.:
 
