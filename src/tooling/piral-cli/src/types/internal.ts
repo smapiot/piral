@@ -1,9 +1,11 @@
 import type { LogLevels } from './common';
+import type { PiletSchemaVersion } from './public';
 
 /**
  * Shape of the pilet.json
  */
 export interface PiletDefinition {
+  schemaVersion?: PiletSchemaVersion;
   piralInstances?: Record<
     string,
     {

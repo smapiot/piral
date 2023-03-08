@@ -31,7 +31,7 @@ To get started, you will need:
     - **Framework preset**: `None`
     - **Build command:** `npm run build`
     - **Build output directory:** `dist/release`
-    - **Environment variables (advanced)**: By default, Cloudflare Pages uses Node.js 12.18.0, but the Piral CLI [requires a higher version](/en/install/auto/#prerequisites).
+    - **Environment variables (advanced)**: By default, Cloudflare Pages uses Node.js 12.18.0, but the Piral CLI requires a higher version (at least 14).
 
     Add an environment variable with a **Variable name** of `NODE_VERSION` and a **Value** of `v14.19.2` or higher to tell Cloudflare to use a compatible Node version. Alternatively, add a `.nvmrc` file to your project to specify a Node version.
 

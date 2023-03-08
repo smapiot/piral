@@ -10,8 +10,15 @@ import {
   createElement,
   destroyElement,
   updateElement,
+  setLogLevel,
 } from './interop';
-import { BlazorDependencyLoader, BlazorOptions, BlazorRootConfig, WebAssemblyStartOptions } from './types';
+import {
+  BlazorDependencyLoader,
+  BlazorLogLevel,
+  BlazorOptions,
+  BlazorRootConfig,
+  WebAssemblyStartOptions,
+} from './types';
 import bootConfig from '../infra.codegen';
 
 const noop = () => {};
@@ -62,15 +69,26 @@ export interface LanguageOptions {
   onChange(inform: (language: string) => void): void;
 }
 
-export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions, language?: LanguageOptions) {
+export function createConverter(
+  lazy: boolean,
+  opts?: WebAssemblyStartOptions,
+  language?: LanguageOptions,
+  logLevel?: BlazorLogLevel,
+) {
   const bootLoader = createBootLoader(bootConfig.url, bootConfig.satellites);
   const boot = (opts?: WebAssemblyStartOptions) =>
-    bootLoader(opts).then((res) => {
+    bootLoader(opts).then(async (res) => {
       const [_, capabilities] = res;
+
+      if (capabilities.includes('logging')) {
+        if (typeof logLevel === 'number') {
+          await setLogLevel(logLevel);
+        }
+      }
 
       if (language && capabilities.includes('language')) {
         if (typeof language.current === 'string') {
-          setLanguage(language.current);
+          await setLanguage(language.current);
         }
 
         if (typeof language.onChange === 'function') {
@@ -78,6 +96,7 @@ export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions, l
         }
       }
 
+      window.dispatchEvent(new CustomEvent('loaded-blazor-core'));
       return res;
     });
   let loader = !lazy && boot(opts);
@@ -163,7 +182,7 @@ export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions, l
         });
       }
 
-      (loader || (loader = boot()))
+      (loader || (convert.loader = loader = boot()))
         .then((config) =>
           dependency(config).then(() => {
             if (locals.state === 'fresh') {
@@ -196,5 +215,6 @@ export function createConverter(lazy: boolean, opts?: WebAssemblyStartOptions, l
   });
 
   convert.loader = loader;
+  convert.lazy = lazy;
   return convert;
 }

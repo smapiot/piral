@@ -4,8 +4,9 @@ import type { createConverter } from './converter';
 import type { BlazorDependencyLoader, BlazorRootConfig } from './types';
 
 const loadedDependencies = (window.$blazorDependencies ??= []);
+const depsWithPrios = (window.$blazorDependencyPrios ??= []);
 
-export function createDependencyLoader(convert: ReturnType<typeof createConverter>, lazy = true) {
+export function createDependencyLoader(convert: ReturnType<typeof createConverter>) {
   const definedBlazorReferences: Array<string> = [];
   const loadedBlazorPilets: Array<string> = [];
   let dependency: BlazorDependencyLoader;
@@ -14,8 +15,23 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     getDependency() {
       return dependency;
     },
-    defineBlazorReferences(references: Array<string>, meta: Partial<PiletMetadata> = {}, satellites = {}) {
+    defineBlazorReferences(references: Array<string>, meta: Partial<PiletMetadata> = {}, satellites = {}, prio = 0) {
+      prio = Math.max(prio, 0);
+
+      const depWithPrio = {
+        prio,
+        load() {
+          return Promise.resolve();
+        },
+      };
+
+      let result: false | Promise<void> = false;
       const load = async ([_, capabilities]: BlazorRootConfig) => {
+        // let others finish first
+        await Promise.all(depsWithPrios.filter((m) => m.prio > prio).map((m) => m.load()));
+
+        window.dispatchEvent(new CustomEvent('loading-blazor-pilet', { detail: meta }));
+
         if (capabilities.includes('load')) {
           // new loading mechanism
 
@@ -74,9 +90,24 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
             }
           }
         }
+
+        // inform remaining that this one finished
+        window.dispatchEvent(new CustomEvent('loaded-blazor-pilet', { detail: meta }));
       };
-      let result = !lazy && convert.loader.then(load);
+
+      depWithPrio.load = () => {
+        if (!result) {
+          result = convert.loader.then(load);
+        }
+
+        return result;
+      };
+      result = !convert.lazy && convert.loader.then(load);
       dependency = (config) => result || (result = load(config));
+
+      if (prio) {
+        depsWithPrios.push(depWithPrio);
+      }
     },
     async releaseBlazorReferences() {
       const references = definedBlazorReferences.splice(0, definedBlazorReferences.length);

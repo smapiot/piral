@@ -8,6 +8,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
+      "enum": ["none", "v0", "v1", "v2"],
       "description": "The default output schema to be used when building the pilet."
     },
     "piralInstances": {

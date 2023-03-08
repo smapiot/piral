@@ -168,7 +168,39 @@ Ultimately, you can also call the `SetLanguage` in Piral.Blazor.Core from JavaSc
 window.DotNet.invokeMethodAsync('Piral.Blazor.Core', 'SetLanguage', language);
 ```
 
+Furthermore, it is possible to configure the (initial) log level via the `logLevel` option:
+
+```ts
+const instance = createInstance({
+  // important part
+  plugins: [createBlazorApi({
+    logLevel: 1, // everything except trace
+  })],
+  // ...
+});
+```
+
+The levels range from 0 (incl. trace) to 6 (nothing will be logged).
+
 :::
+
+## Events
+
+The `piral-blazor` integration emits some events at the global object (`window`):
+
+- `loading-blazor-core` when the loading of (core) Blazor resources starts
+- `loaded-blazor-core` when the loading of (core) Blazor resources ends
+- `loading-blazor-pilet` when the loading of a Blazor pilet / its resources starts (`detail` contains the pilet's metadata)
+- `loaded-blazor-pilet` when the loading of a Blazor pilet / its resources ends (`detail` contains the pilet's metadata)
+
+You can receive these events using, e.g.:
+
+```js
+window.addEventListener('loaded-blazor-pilet', (ev) => {
+  // your code here - could use:
+  // ev.detail.name --> name of the pilet
+});
+```
 
 ## License
 

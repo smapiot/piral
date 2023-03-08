@@ -51,6 +51,10 @@ declare global {
     };
     DotNet: any;
     $blazorLoader: Promise<BlazorRootConfig>;
+    $blazorDependencyPrios: Array<{
+      prio: number;
+      load(): Promise<void>;
+    }>;
     $blazorDependencies: Array<{
       name: string;
       url: string;
@@ -68,12 +72,22 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
+export const enum BlazorLogLevel {
+  trace = 0,
+  debug = 1,
+  info = 2,
+  warn = 3,
+  error = 4,
+  critical = 5,
+  none = 6,
+}
+
 /**
  * Additional options for the Blazor component
  */
 export interface BlazorOptions {
   /**
-   * The root path where resources are located
+   * The root path where resources are located.
    */
   resourcePathRoot?: string;
 }
@@ -111,8 +125,10 @@ export interface PiletBlazorApi {
    * their URLs.
    *
    * @param referenceUrls The URLs pointing to the different DLLs to include.
+   * @param satellites The URLs of the potential satellite DLLs to include.
+   * @param prio The loading priority of the DLLs. Higher numbers will always be loaded before lower numbers.
    */
-  defineBlazorReferences(referenceUrls: Array<string>, satellites?: Record<string, Array<string>>): void;
+  defineBlazorReferences(referenceUrls: Array<string>, satellites?: Record<string, Array<string>>, prio?: number): void;
   /**
    * Wraps a Blazor module for use in Piral.
    *

@@ -6708,10 +6708,10 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-dets@^0.12.2:
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.12.2.tgz#15285f0409f234707bc2c27c8b32aa5d43f9152b"
-  integrity sha512-RVDicEJWEue+XwtpVD5E1mpOSqQJY9A5inBtThqvIJAH0+Y74UloihvZtElE7p8m2F0gxKOq6iaekMQuVDGjdQ==
+dets@^0.12.3:
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.12.3.tgz#405a9630af782174ddc318edd4225ca99733a2a2"
+  integrity sha512-CX+aRITS2V2h8qSos09TvvPZRTti3OhFUSm5WW5RbfIkbFj7NrmsVzSHhbbp5pYuYvi40G1/Zo7KJ+C/4fUdzQ==
   dependencies:
     yargs "^15.4.1"
 
@@ -10085,10 +10085,10 @@ kras-management-portal@^0.13.0:
   resolved "https://registry.yarnpkg.com/kras-management-portal/-/kras-management-portal-0.13.0.tgz#550f2797fce399529897aaa871030644d96812c1"
   integrity sha512-NjjXTHKcJ/ECkz03L/HQSUVnkuzZkEV2mwcex36lxJNNwiUrYM5Ju0toAjhLnf8Zpc3nLEPnWKmoTwpSgGim2A==
 
-kras@^0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.15.2.tgz#84d1bf11d87a389e5287d6174ebae1c674e4ed67"
-  integrity sha512-qdI/Zauoi5GsxCpXQkxHkxLJUezv30yzaHr+a3GV15i/JmrlVmCOeeMHjcLVxxUCFGEYY/QAW6JC25/ZrTdRcw==
+kras@^0.15.4:
+  version "0.15.4"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.15.4.tgz#b38dbefd1f416f891a5e5fee614ee322cfd87bb8"
+  integrity sha512-+ldR91xS4YduVQ5FAmfQHwC84kdesa70ve40Iy9iFccy/4m2WGvmxmMAigpAq7RhFAZu3u7ijgkJHRJUp54WXg==
   dependencies:
     kras-management-portal "^0.13.0"
     yargs "^15.4.1"

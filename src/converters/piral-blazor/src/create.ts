@@ -1,7 +1,7 @@
 import type { EventEmitter, PiralPlugin } from 'piral-core';
 import { createConverter } from './converter';
 import { createDependencyLoader } from './dependencies';
-import type { BlazorOptions, PiletBlazorApi, WebAssemblyStartOptions } from './types';
+import type { BlazorLogLevel, BlazorOptions, PiletBlazorApi, WebAssemblyStartOptions } from './types';
 
 /**
  * Available configuration options for the Blazor plugin.
@@ -12,6 +12,11 @@ export interface BlazorConfig {
    * @default true
    */
   lazy?: boolean;
+  /**
+   * Determines the used log level, if any. Otherwise, will use
+   * the default log level (info).
+   */
+  logLevel?: BlazorLogLevel;
   /**
    * Determines the initial language to use, if any.
    * Otherwise, falls back to Blazor's default language.
@@ -42,21 +47,26 @@ function createDefaultHandler(context: EventEmitter) {
  */
 export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBlazorApi> {
   return (context) => {
-    const { lazy, initialLanguage, onLanguageChange = createDefaultHandler(context) } = config;
-    const convert = createConverter(lazy, config.options, {
-      current: initialLanguage,
-      onChange: onLanguageChange || (() => {}),
-    });
+    const { lazy = true, initialLanguage, onLanguageChange = createDefaultHandler(context), logLevel } = config;
+    const convert = createConverter(
+      lazy,
+      config.options,
+      {
+        current: initialLanguage,
+        onChange: onLanguageChange || (() => {}),
+      },
+      logLevel,
+    );
     context.converters.blazor = ({ moduleName, args, dependency, options }) =>
       convert(moduleName, dependency, args, options);
 
     return (_, meta) => {
-      const loader = createDependencyLoader(convert, lazy);
+      const loader = createDependencyLoader(convert);
       let options: BlazorOptions;
 
       return {
-        defineBlazorReferences(references, satellites) {
-          return loader.defineBlazorReferences(references, meta, satellites);
+        defineBlazorReferences(references, satellites, prio) {
+          return loader.defineBlazorReferences(references, meta, satellites, prio);
         },
         defineBlazorOptions(blazorOptions: BlazorOptions) {
           options = blazorOptions;

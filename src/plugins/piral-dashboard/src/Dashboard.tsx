@@ -8,6 +8,10 @@ export interface DashboardProps extends RouteComponentProps {
   filter?(tile: TileRegistration): boolean;
 }
 
+/**
+ * The dashboard component. Integrate this as a page or in a component
+ * where dashboard information (tiles) should be shown.
+ */
 export const Dashboard: React.FC<DashboardProps> = (props) => {
   const tiles = useGlobalState((s) => s.registry.tiles);
   const { filter = () => true } = props;

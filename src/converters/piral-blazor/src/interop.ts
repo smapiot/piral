@@ -1,6 +1,6 @@
 import { PiletMetadata } from 'piral-core';
 import { emitRenderEvent, emitNavigateEvent } from './events';
-import type { BlazorRootConfig, WebAssemblyStartOptions } from './types';
+import type { BlazorLogLevel, BlazorRootConfig, WebAssemblyStartOptions } from './types';
 
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
@@ -77,9 +77,19 @@ function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions
       navManager.navigateTo = (route: string, opts: { forceLoad: boolean; replaceHistoryEntry: boolean }) => {
         if (opts.forceLoad) {
           location.href = route;
-        } else {
-          window.Blazor.emitNavigateEvent(undefined, route, opts.replaceHistoryEntry);
+          return;
         }
+
+        if (route.startsWith(location.origin) && '') {
+          // normalize "local" absolute URLs
+          route = route.substring(location.origin.length);
+        } else if (/^https?:\/\//.test(route)) {
+          // prevent absolute URLs to be a standard navigation
+          location.href = route;
+          return;
+        }
+
+        window.Blazor.emitNavigateEvent(undefined, route, opts.replaceHistoryEntry);
       };
 
       navManager.getBaseURI = () => originalBase;
@@ -120,6 +130,10 @@ function addScript(url: string) {
     script.onload = () => resolve();
     document.body.appendChild(script);
   });
+}
+
+export function setLogLevel(logLevel: BlazorLogLevel) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'SetLogLevel', logLevel);
 }
 
 export function createElement(moduleName: string, props: any): Promise<string> {
@@ -231,6 +245,8 @@ export function createBootLoader(scriptUrl: string, extraScriptUrls: Array<strin
 
   return (opts?: WebAssemblyStartOptions) => {
     if (typeof window.$blazorLoader === 'undefined') {
+      window.dispatchEvent(new CustomEvent('loading-blazor-core'));
+
       // we load all satellite scripts before we initialize blazor
       window.$blazorLoader = Promise.all(extraScriptUrls.map(addScript)).then(() =>
         initialize(scriptUrl, publicPath, opts),

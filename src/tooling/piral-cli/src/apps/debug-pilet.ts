@@ -137,7 +137,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   hmr: true,
   krasrc: undefined,
   optimizeModules: false,
-  schemaVersion: config.schemaVersion,
+  schemaVersion: undefined,
   concurrency: cpuCount,
 };
 
@@ -221,7 +221,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     concurrency = debugPiletDefaults.concurrency,
     krasrc: customkrasrc = debugPiletDefaults.krasrc,
     optimizeModules = debugPiletDefaults.optimizeModules,
-    schemaVersion = debugPiletDefaults.schemaVersion,
+    schemaVersion: originalSchemaVersion = debugPiletDefaults.schemaVersion,
     _ = {},
     hooks = {},
     bundlerName,
@@ -259,7 +259,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
     const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
       const targetDir = dirname(entryModule);
-      const { peerDependencies, peerModules, root, apps, ignored, importmap } = await retrievePiletData(targetDir, app);
+      const { peerDependencies, peerModules, root, apps, ignored, importmap, schema } = await retrievePiletData(targetDir, app);
+      const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || 'v2';
       const piralInstances = apps.map((m) => m.appPackage.name);
       const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
       const mocks = join(targetDir, 'mocks');
