@@ -117,7 +117,7 @@ const instance = createInstance({
 
 ### Customizing
 
-You can customize the available menu registration settings.
+You can customize the available menu settings.
 
 ```ts
 import type {} from 'piral-menu';
