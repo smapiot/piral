@@ -36,7 +36,7 @@ Removes a menu item from the app shell. This requires a named menu item.
 
 You can use the `registerMenu` function from the Pilet API to add a new menu item in the app shell.
 
-**Note**: When the first argument is a string we call it a *named* menu item.
+**Note**: If the first argument is a string, we call it a *named* menu item.
 
 Example use:
 
@@ -45,7 +45,11 @@ import { PiletApi } from '<name-of-piral-instance>';
 import { MyMenuItem } from './MyMenuItem';
 
 export function setup(piral: PiletApi) {
+  // Register the `MyMenuItem` component for the default menu:
   piral.registerMenu(MyMenuItem);
+
+  // Register the `MyMenuItem` component for the special 'user' menu:
+  piral.registerMenu(MyMenuItem, { type: 'user' });
 }
 ```
 
@@ -60,9 +64,10 @@ import { PiletApi } from '<name-of-piral-instance>';
 import { MyTile } from './MyMenuItem';
 
 export function setup(piral: PiletApi) {
-  // register with a name
+  // Register the menu item with a unique name:
   piral.registerMenu('first', MyMenuItem);
-  // and unregister; maybe some time later?
+
+  // And, at some later time, unregister it via that name:
   piral.unregisterMenu('first');
 }
 ```
