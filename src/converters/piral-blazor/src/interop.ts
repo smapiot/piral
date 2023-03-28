@@ -74,7 +74,10 @@ function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions
       const navManager = window.Blazor._internal.navigationManager;
 
       //Overwrite to get NavigationManager in Blazor working, see https://github.com/smapiot/Piral.Blazor/issues/89
-      navManager.navigateTo = (route: string, opts: { forceLoad: boolean; replaceHistoryEntry: boolean }) => {
+      navManager.navigateTo = (
+        route: string,
+        opts: { forceLoad: boolean; replaceHistoryEntry: boolean; historyEntryState: any },
+      ) => {
         if (opts.forceLoad) {
           location.href = route;
           return;
@@ -89,7 +92,7 @@ function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions
           return;
         }
 
-        window.Blazor.emitNavigateEvent(undefined, route, opts.replaceHistoryEntry);
+        window.Blazor.emitNavigateEvent(undefined, route, opts.replaceHistoryEntry, opts.historyEntryState);
       };
 
       navManager.getBaseURI = () => originalBase;
@@ -163,11 +166,15 @@ export function deactivate(moduleName: string, referenceId: string): Promise<voi
   return window.DotNet.invokeMethodAsync(coreLib, 'Deactivate', moduleName, referenceId);
 }
 
-export function callNotifyLocationChanged(url: string, replace: boolean): Promise<void> {
+export function callNotifyLocationChanged(url: string, replace: boolean, state: any): Promise<void> {
   if (isDotNet6OrBelow()) {
     return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, replace);
   } else {
-    return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, undefined, replace);
+    if (state !== undefined && typeof state !== 'string') {
+      state = JSON.stringify(state);
+    }
+
+    return window.DotNet.invokeMethodAsync(wasmLib, 'NotifyLocationChanged', url, state, replace);
   }
 }
 
