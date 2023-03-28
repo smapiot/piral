@@ -601,6 +601,13 @@ export async function retrievePiletsInfo(entryFile: string) {
   };
   const framework = frameworkLibs.find((lib) => lib in dependencies.std || lib in dependencies.dev);
 
+  // See #591 - we should warn in case somebody shared piral packages
+  for (const external of externals) {
+    if (external.type === 'local' && external.name.startsWith('piral-') && external.name.indexOf('/') === -1) {
+      log('generalWarning_0001', `The dependency "${external.name}" should not be shared.`);
+    }
+  }
+
   return {
     ...info,
     externals,
