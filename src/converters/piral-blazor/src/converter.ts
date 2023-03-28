@@ -131,7 +131,7 @@ export function createConverter(
           // POP is already handled by .NET
           if (action !== 'POP') {
             const url = makeUrl(location.href);
-            callNotifyLocationChanged(url, action === 'REPLACE');
+            callNotifyLocationChanged(url, action === 'REPLACE', location.state);
           }
         });
       }
@@ -142,7 +142,7 @@ export function createConverter(
         el,
         (ev) => piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
         (ev) =>
-          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.store) : nav.push(ev.detail.to, ev.detail.state),
+          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.state) : nav.push(ev.detail.to, ev.detail.state),
       );
 
       function mountClassic(config: BlazorRootConfig) {
