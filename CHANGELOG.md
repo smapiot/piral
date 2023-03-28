@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.8 (tbd)
+## 0.15.8 (March 8, 2023)
 
 - Fixed value of `schemaVersion` in *pilet.json* being ignored (#585)
 - Added new plugin `piral-tracker` for always-on components

@@ -21,4 +21,6 @@ To show the interaction between different frameworks, extensions are used. Some 
 ## Links
 
 - [Demo Online](https://demo-cross.piral.io)
-- [Code on GitHub](https://github.com/smapiot/piral/tree/main/src/samples/sample-cross-fx)
+- [Code of the Piral instance on GitHub](https://github.com/smapiot/piral/tree/main/src/samples/sample-cross-fx)
+- [Code of the pilets on GitHub](https://github.com/smapiot/sample-cross-fx-pilets)
+- 

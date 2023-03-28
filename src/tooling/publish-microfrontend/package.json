@@ -1,6 +1,6 @@
 {
   "name": "publish-microfrontend",
-  "version": "0.15.7",
+  "version": "0.15.8",
   "description": "A CLI for publishing micro frontends to a feed service.",
   "keywords": [
     "modules",
