@@ -722,6 +722,35 @@ import 'core-js/proposals/reflect-metadata';
 import '@angular/compiler';
 ```
 
+### Angular 14
+
+In general, Angular 14 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^14",
+  "@angular/compiler": "^14",
+  "@angular/core": "^14",
+  "@angular/router": "^14",
+  "@angular/platform-browser": "^14",
+  "@angular/platform-browser-dynamic": "^14",
+  "core-js": "^3.19.0",
+  "rxjs": "~7.4",
+  "zone.js": "~0.11"
+}
+```
+
+Besides the usual imports the explicit import of the `@angular/compiler` package may be necessary.
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).

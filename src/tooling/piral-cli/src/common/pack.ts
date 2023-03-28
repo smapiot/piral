@@ -49,6 +49,16 @@ export async function createPiletPackage(baseDir: string, source: string, target
 
   const content = await getPiletContentDir(root, pckg);
   const files = [resolve(root, 'package.json'), content];
+  const readme = resolve(root, 'README.md');
+
+  if (Array.isArray(pckg.files)) {
+    files.push(...pckg.files.map(f => resolve(root, f)));
+  }
+
+  if (await checkExists(readme)) {
+    files.push(readme);
+  }
+
   const prefix = join(tmpdir(), `${id}-`);
   const cwd = await makeTempDir(prefix);
   log('generalDebug_0003', `Creating package with content from "${content}" ...`);

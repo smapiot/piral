@@ -3,6 +3,7 @@
 ## 0.15.9 (tbd)
 
 - Fixed transport of `state` in routes with `piral-blazor`
+- Changed `pilet pack` to include specified `files` and the *README.md* if available
 - Added warnings when plugins are included in the `importmap` (#591)
 
 ## 0.15.8 (March 8, 2023)
