@@ -19,6 +19,7 @@ import {
   getAvailablePort,
   checkExistingDirectory,
   watcherTask,
+  validateSharedDependencies,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -142,6 +143,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     watcherContext.watch(join(root, 'package.json'));
 
     await checkCliCompatibility(root);
+
+    validateSharedDependencies(externals);
 
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, piralInstances });
 

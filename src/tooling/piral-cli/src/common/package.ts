@@ -5,6 +5,7 @@ import { unpackTarball } from './archive';
 import { ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
+import { onlyUnique } from './utils';
 import { readImportmap } from './importmap';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
@@ -546,10 +547,6 @@ export async function findPackageVersion(rootPath: string, packageName: string |
   return 'latest';
 }
 
-function onlyUnique<T>(value: T, index: number, self: Array<T>) {
-  return self.indexOf(value) === index;
-}
-
 export function flattenExternals(dependencies: Array<SharedDependency>) {
   return dependencies.map((m) => m.name).filter(onlyUnique);
 }
@@ -601,13 +598,6 @@ export async function retrievePiletsInfo(entryFile: string) {
   };
   const framework = frameworkLibs.find((lib) => lib in dependencies.std || lib in dependencies.dev);
 
-  // See #591 - we should warn in case somebody shared piral packages
-  for (const external of externals) {
-    if (external.type === 'local' && external.name.startsWith('piral-') && external.name.indexOf('/') === -1) {
-      log('generalWarning_0001', `The dependency "${external.name}" should not be shared.`);
-    }
-  }
-
   return {
     ...info,
     externals,
@@ -619,6 +609,17 @@ export async function retrievePiletsInfo(entryFile: string) {
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root,
   };
+}
+
+export function validateSharedDependencies(externals: Array<SharedDependency | string>) {
+  // See #591 - we should warn in case somebody shared piral packages
+  for (const external of externals) {
+    const name = typeof external === 'string' ? external : external.name;
+
+    if (name.startsWith('piral-') && name.indexOf('/') === -1) {
+      log('invalidSharedDependency_0029', name);
+    }
+  }
 }
 
 export function isValidDependency(name: string) {
@@ -773,7 +774,7 @@ export async function retrievePiletData(target: string, app?: string) {
   const proposedRoot = piletJson ? dirname(piletJson) : target;
   const root = await findPiletRoot(proposedRoot);
   const piletPackage = await readJson(root, 'package.json');
-  const piletDefinition: PiletDefinition = piletJson && await readJson(proposedRoot, 'pilet.json');
+  const piletDefinition: PiletDefinition = piletJson && (await readJson(proposedRoot, 'pilet.json'));
   const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
 

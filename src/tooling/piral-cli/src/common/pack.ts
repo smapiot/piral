@@ -1,6 +1,7 @@
 import { tmpdir } from 'os';
 import { resolve, relative, join, dirname, basename } from 'path';
 import { createTgz } from './archive';
+import { onlyUnique } from './utils';
 import { log, progress, fail } from './log';
 import { readJson, copy, removeDirectory, checkExists, makeTempDir, createDirectory } from './io';
 import { getPossiblePiletMainPaths } from './inspect';
@@ -52,7 +53,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
   const readme = resolve(root, 'README.md');
 
   if (Array.isArray(pckg.files)) {
-    files.push(...pckg.files.map(f => resolve(root, f)));
+    files.push(...pckg.files.map((f) => resolve(root, f)));
   }
 
   if (await checkExists(readme)) {
@@ -63,7 +64,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
   const cwd = await makeTempDir(prefix);
   log('generalDebug_0003', `Creating package with content from "${content}" ...`);
 
-  await Promise.all(files.map((file) => copy(file, resolve(cwd, relative(root, file)))));
+  await Promise.all(files.filter(onlyUnique).map((file) => copy(file, resolve(cwd, relative(root, file)))));
 
   log('generalDebug_0003', `Creating directory if not exist for "${file}" ...`);
 

@@ -24,6 +24,7 @@ import {
   combinePiletExternals,
   watcherTask,
   flattenExternals,
+  validateSharedDependencies,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -268,6 +269,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       const outDir = dirname(dest);
       const outFile = basename(dest);
       const mocksExists = await checkExistingDirectory(mocks);
+
+      validateSharedDependencies(externals);
 
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 

@@ -643,6 +643,70 @@ export function importMapFileNotFound_0028(dir: string, file: string): QuickMess
 }
 
 /**
+ * @kind Warning
+ *
+ * @summary
+ * The given dependency seems to be a Piral plugin and should not be exposed
+ * as a shared dependency.
+ *
+ * @abstract
+ * While you should be quite restrictive in general regarding sharing dependencies,
+ * there are some dependencies that should never be shared. One area are dependencies
+ * that are only meant for the app shell and don't make sense somewhere else.
+ *
+ * Even though many dependencies might exist that fall into that area the only ones
+ * we know for sure are the so-called Piral plugins. These are dependencies that only
+ * make sense to be used within an app shell, i.e., a Piral instance (or host application).
+ *
+ * When the Piral CLI detects that you want to share such a dependency from an app shell,
+ * or alternatively within a pilet directly, it will print a warning. There might be false
+ * positives here, so having an error here might be a bit too much. Nevertheless, depending
+ * on your scenario you might want to treat these warnings as errors.
+ *
+ * @see
+ * - [Sharing dependencies](https://docs.piral.io/concepts/I08-importmap)
+ *
+ * @example
+ * Check the contents of the available package.json:
+ *
+ * ```sh
+ * cat package.json
+ * ```
+ *
+ * The displayed content should look similar to (i.e., contain an importmap such as):
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "piral-ng": ""
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * This would share the whole Piral plugin, which does not make much sense. First of all,
+ * the plugin is presumably already installed - it even could only be installed in a
+ * Piral instance. Second, there is no use of the exported function somewhere else.
+ *
+ * Instead, you potentially might want to share a submodule. For instance, in the example
+ * above the "piral-ng/common" submodule should be shared.
+ *
+ * ```json
+ * {
+ *   "importmap": {
+ *     "imports": {
+ *       "piral-ng/common": ""
+ *     }
+ *   }
+ * }
+ * ```
+ */
+export function invalidSharedDependency_0029(name: string): QuickMessage {
+  return [LogLevels.warning, '0029', `The dependency "${name}" should not be shared.`];
+}
+
+/**
  * @kind Error
  *
  * @summary

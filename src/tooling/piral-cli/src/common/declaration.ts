@@ -2,7 +2,7 @@ import { DeclOptions, generateDeclaration, createExcludePlugin, Logger } from 'd
 import { dirname, basename, resolve, extname } from 'path';
 import { progress, log, logWarn, logVerbose, logInfo } from './log';
 import { ForceOverwrite } from './enums';
-import { retrievePiralRoot, retrievePiletsInfo, flattenExternals } from './package';
+import { retrievePiralRoot, retrievePiletsInfo, flattenExternals, validateSharedDependencies } from './package';
 import { entryModuleExtensions, piralBaseRoot } from './constants';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
 import { getModulePath } from '../external';
@@ -171,6 +171,8 @@ export async function createPiralDeclaration(
     logLevel,
     logger: createLogger(),
   };
+
+  validateSharedDependencies(externals);
 
   if (options.apis.length) {
     return await createDeclarationFile(options, baseDir, target, forceOverwrite);
