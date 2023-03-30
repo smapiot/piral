@@ -270,7 +270,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       const outFile = basename(dest);
       const mocksExists = await checkExistingDirectory(mocks);
 
-      validateSharedDependencies(externals);
+      validateSharedDependencies(importmap);
 
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 

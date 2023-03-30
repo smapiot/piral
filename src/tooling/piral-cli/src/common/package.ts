@@ -611,12 +611,12 @@ export async function retrievePiletsInfo(entryFile: string) {
   };
 }
 
-export function validateSharedDependencies(externals: Array<SharedDependency | string>) {
+export function validateSharedDependencies(externals: Array<SharedDependency>) {
   // See #591 - we should warn in case somebody shared piral packages
   for (const external of externals) {
-    const name = typeof external === 'string' ? external : external.name;
+    const name = external.name;
 
-    if (name.startsWith('piral-') && name.indexOf('/') === -1) {
+    if (external.type === 'local' && name.startsWith('piral-') && name.indexOf('/') === -1) {
       log('invalidSharedDependency_0029', name);
     }
   }

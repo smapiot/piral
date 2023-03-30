@@ -227,7 +227,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     const outDir = dirname(dest);
     const outFile = basename(dest);
 
-    validateSharedDependencies(externals);
+    validateSharedDependencies(importmap);
 
     if (fresh) {
       progress('Removing output directory ...');
