@@ -5,6 +5,7 @@
 - Fixed transport of `state` in routes with `piral-blazor`
 - Changed `pilet pack` to include specified `files` and the *README.md* if available
 - Added warnings when plugins are included in the `importmap` (#591)
+- Added options to configure default debug flags for Piral instances (#590)
 
 ## 0.15.8 (March 8, 2023)
 

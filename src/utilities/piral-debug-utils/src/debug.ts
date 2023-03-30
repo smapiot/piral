@@ -2,8 +2,17 @@ import { DebugTracker } from './DebugTracker';
 import { VisualizationWrapper } from './VisualizationWrapper';
 import { ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
-import { setState, initialSettings, setNavigate, initialSetter, enablePersistance, disablePersistance, settingsKeys } from './state';
 import { DebugCustomSetting, DebuggerOptions } from './types';
+import {
+  setState,
+  getInitialSettings,
+  setInitialState,
+  setNavigate,
+  initialSetter,
+  enablePersistance,
+  disablePersistance,
+  settingsKeys,
+} from './state';
 
 export function installPiralDebug(options: DebuggerOptions) {
   const {
@@ -19,13 +28,17 @@ export function installPiralDebug(options: DebuggerOptions) {
     addPilet,
     navigate,
     customSettings = {},
+    defaultSettings = {},
   } = options;
   const events = [];
   const legacyBrowser = !new Error().stack;
+  const initialSettings = getInitialSettings(defaultSettings);
   const excludedRoutes = [initialSettings.cataloguePath];
   const selfSource = 'piral-debug-api';
   const debugApiVersion = 'v1';
   let setValue = initialSetter;
+
+  setInitialState(initialSettings);
 
   const settings: Record<string, DebugCustomSetting> = {
     ...customSettings,
