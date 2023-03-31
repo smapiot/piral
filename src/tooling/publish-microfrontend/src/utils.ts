@@ -5,6 +5,7 @@ import { dirname, basename, resolve } from 'path';
 import { MemoryStream } from 'piral-cli/src/common/MemoryStream';
 import { downloadFile } from './http';
 import { runCommand } from './scripts';
+import { logWarn } from './log';
 import { getRandomTempFile } from './io';
 
 function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
@@ -29,10 +30,18 @@ function onlyUnique<T>(value: T, index: number, self: Array<T>) {
 }
 
 function isFile(item: string) {
+  if (!item || typeof item !== 'string') {
+    return false;
+  }
+
   return statSync(item).isFile();
 }
 
 function isDirectory(item: string) {
+  if (!item || typeof item !== 'string') {
+    return false;
+  }
+
   return statSync(item).isDirectory();
 }
 
@@ -82,18 +91,37 @@ export async function getFiles(
       const allMatches = allFiles.reduce((result, files) => [...result, ...files], []).filter(onlyUnique);
 
       if (allMatches.every(isDirectory)) {
-        const dirs = allMatches.filter(m => existsSync(resolve(m, 'package.json')));        
-        return Promise.all(dirs.map(async dir => {
-          const previousFiles = await readdir(dir);
-          await createPackage(dir);
-          const currentFiles = await readdir(dir);
-          const tarball = currentFiles.find(m => !previousFiles.includes(m) && m.endsWith('.tgz'));
-          const target = getRandomTempFile();
-          const source = resolve(dir, tarball);
-          await copyFile(source, target);
-          await rm(source);
-          return target;
-        }));
+        const dirs = allMatches.filter((m) => existsSync(resolve(m, 'package.json')));
+        const createdFiles = await Promise.all(
+          dirs.map(async (dir) => {
+            const packagePath = resolve(dir, 'package.json');
+            const packageContent = await readFile(packagePath, 'utf8');
+
+            try {
+              const { name, version } = JSON.parse(packageContent);
+              const proposedName = `${name.replace('@', '').replace('/', '-')}-${version}.tgz`;
+              const previousFiles = await readdir(dir);
+
+              // what if previousFiles contains already an npm package with the name ... "<name>-<version>.tgz" ?
+              // do not pack package; use this one instead.
+              if (previousFiles.includes(proposedName)) {
+                return resolve(dir, proposedName);
+              }
+
+              await createPackage(dir);
+              const currentFiles = await readdir(dir);
+              const tarball = currentFiles.find((m) => !previousFiles.includes(m) && m.endsWith('.tgz'));
+              const target = getRandomTempFile();
+              const source = resolve(dir, tarball);
+              await copyFile(source, target);
+              await rm(source);
+              return target;
+            } catch {
+              logWarn('Encountered error in "%s". Skipping.', dir);
+            }
+          }),
+        );
+        return createdFiles.filter(isFile);
       }
 
       return allMatches.filter(isFile);
