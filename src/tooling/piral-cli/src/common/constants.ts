@@ -11,6 +11,7 @@ export const bundlerNames = [
   'parcel' as const,
   'parcel2' as const,
   'rollup' as const,
+  'rspack' as const,
   'webpack' as const,
   'webpack5' as const,
   'vite' as const,
