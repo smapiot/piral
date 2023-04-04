@@ -1,5 +1,5 @@
 import { ExtensionSlot } from '../components';
-import { Disposable, GlobalStateContext } from '../types';
+import { Disposable, GlobalStateContext, BaseExtensionSlotProps } from '../types';
 import {
   tryParseJson,
   noop,
@@ -29,12 +29,16 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   class PiralExtension extends HTMLElement {
     dispose: Disposable = noop;
     update: Updatable = noop;
+
     props = {
       name: this.getAttribute('name'),
+      emptySkipsRender: typeof this.getAttribute('empty-skips-render') === 'string',
       params: tryParseJson(this.getAttribute('params')),
       empty: undefined,
+      order: undefined,
+      render: undefined,
       children: reactifyContent(this.childNodes),
-    };
+    } as BaseExtensionSlotProps<string, any>;
 
     get params() {
       return this.props.params;
@@ -54,12 +58,39 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
       this.update(this.props);
     }
 
+    get order() {
+      return this.props.order;
+    }
+
+    set order(value) {
+      this.props.order = value;
+      this.update(this.props);
+    }
+
+    get render() {
+      return this.props.render;
+    }
+
+    set render(value) {
+      this.props.render = value;
+      this.update(this.props);
+    }
+
     get empty() {
       return this.props.empty;
     }
 
     set empty(value) {
       this.props.empty = value;
+      this.update(this.props);
+    }
+
+    get emptySkipsRender() {
+      return this.props.emptySkipsRender;
+    }
+
+    set emptySkipsRender(value) {
+      this.props.emptySkipsRender = value;
       this.update(this.props);
     }
 
@@ -93,11 +124,14 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
         case 'params':
           this.params = tryParseJson(newValue);
           break;
+        case 'empty-skips-render':
+          this.params = typeof newValue === 'string';
+          break;
       }
     }
 
     static get observedAttributes() {
-      return ['name', 'params'];
+      return ['name', 'params', 'empty-skips-render'];
     }
   }
 
