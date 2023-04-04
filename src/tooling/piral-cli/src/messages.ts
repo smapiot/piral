@@ -2731,6 +2731,26 @@ export function piletJsonNotAvailable_0180(root: string): QuickMessage {
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * Using the given platform is not supported.
+ *
+ * @abstract
+ * The Piral instance can run on multiple platforms. The platform is specified via
+ * the piral.json file.
+ *
+ * The standard platform is "web", which starts a web server using the server
+ * proxy kras.
+ *
+ * @example
+ * (tbd)
+ */
+export function platformNotSupported_0190(platform: string): QuickMessage {
+  return [LogLevels.error, '0190', `The given platform "${platform}" is not supported.`];
+}
+
+/**
  * @kind Warning
  *
  * @summary

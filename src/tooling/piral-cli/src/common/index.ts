@@ -25,6 +25,7 @@ export * from './package';
 export * from './parallel';
 export * from './patcher';
 export * from './patches';
+export * from './platform';
 export * from './port';
 export * from './rules';
 export * from './scaffold';

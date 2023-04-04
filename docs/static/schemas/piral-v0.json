@@ -47,6 +47,21 @@
         }
       }
     },
+    "target": {
+      "type": "object",
+      "description": "Defines the target platform of the Piral instance. By default, 'web' is used resolving to a website with debugging via kras.",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "description": "The platform where the Piral instance is to be run.",
+          "enum": ["web", "node"]
+        },
+        "options": {
+          "type": "object",
+          "description": "Further platform-specific options to use."
+        }
+      }
+    },
     "emulatorStartup": {
       "type": "string",
       "description": "Defines the script file to use when the emulator should start. By default, a web server serving the contents from 'app' is started."
