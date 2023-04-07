@@ -232,7 +232,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await hooks.onBegin?.({ options, fullBase });
 
-  await watcherTask(async (watcherContext) => {
+  const watcherRef = await watcherTask(async (watcherContext) => {
     progress('Reading configuration ...');
     const entryList = Array.isArray(entry) ? entry : [entry];
     const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
@@ -268,6 +268,9 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       validateSharedDependencies(importmap);
 
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
+
+      watcherContext.watch(join(root, 'package.json'));
+      watcherContext.watch(join(root, 'pilet.json'));
 
       const bundler = await callPiletDebug(
         {
@@ -354,6 +357,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       }),
     );
   });
+
+  await Promise.all([watcherRef.end]);
 
   await hooks.onEnd?.({});
 }

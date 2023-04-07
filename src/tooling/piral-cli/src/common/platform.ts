@@ -17,10 +17,14 @@ export interface PlatformTarget {
 }
 
 export function configurePlatform(target: Partial<PlatformSettings> = {}): PlatformTarget {
-  const { platform = 'web' } = target;
+  const { platform = 'web', ...options } = target;
 
   if (platform === 'web') {
-    return require('../platforms/web');
+    const { setup } = require('../platforms/web');
+    return setup(options);
+  } else if (platform === 'node') {
+    const { setup } = require('../platforms/node');
+    return setup(options);
   }
 
   return fail('platformNotSupported_0190', platform);

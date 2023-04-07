@@ -133,14 +133,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     const piralInstances = [name];
     const dest = getDestination(entryFiles, resolve(fullBase, target));
 
-    watcherContext.watch(join(root, 'package.json'));
-    watcherContext.watch(join(root, 'piral.json'));
-
     await checkCliCompatibility(root);
 
     validateSharedDependencies(externals);
 
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, piralInstances });
+
+    watcherContext.watch(join(root, 'package.json'));
+    watcherContext.watch(join(root, 'piral.json'));
 
     const bundler = await callPiralDebug(
       {

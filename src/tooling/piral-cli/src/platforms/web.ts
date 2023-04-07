@@ -8,7 +8,7 @@ import { checkExistingDirectory } from '../common/io';
 import { getAvailablePort } from '../common/port';
 import { PlatformStartShellOptions, PlatformStartModuleOptions } from '../types';
 
-export async function startModule(options: PlatformStartModuleOptions) {
+async function startModule(options: PlatformStartModuleOptions) {
   const {
     appDir,
     appRoot,
@@ -72,7 +72,7 @@ export async function startModule(options: PlatformStartModuleOptions) {
   registerEnd(() => krasServer.stop());
 }
 
-export async function startShell(options: PlatformStartShellOptions) {
+async function startShell(options: PlatformStartShellOptions) {
   const {
     fullBase,
     open,
@@ -132,4 +132,11 @@ export async function startShell(options: PlatformStartShellOptions) {
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
 
   registerEnd(() => krasServer.stop());
+}
+
+export function setup() {
+  return {
+    startModule,
+    startShell,
+  };
 }
